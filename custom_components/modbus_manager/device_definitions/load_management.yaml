@@ -7,40 +7,61 @@ helpers:
     - name: "available_surplus_power"
       unique_id: "available_surplus_power"
       value: >
-        {% set data = namespace(pv=0, home=0, battery=0, ev=0) %}
-        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*total_active_power$') %}
-          {% set data.pv = data.pv + entity_id.state | float(0) %}
-        {% endfor %}
-        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*home_consumption$') %}
-          {% set data.home = data.home + entity_id.state | float(0) %}
-        {% endfor %}
-        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*battery_power$') %}
-          {% set data.battery = data.battery + entity_id.state | float(0) %}
-        {% endfor %}
-        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*charging_power$') %}
-          {% set data.ev = data.ev + entity_id.state | float(0) %}
-        {% endfor %}
-        {{ (data.pv - data.home - data.battery - data.ev) | round(0) }}
+        {% try %}
+          {% set data = namespace(pv=0, home=0, battery=0, ev=0) %}
+          {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*total_active_power$') %}
+            {% if not is_state(entity_id.entity_id, 'unavailable') and not is_state(entity_id.entity_id, 'unknown') %}
+              {% set data.pv = data.pv + entity_id.state | float(0) %}
+            {% endif %}
+          {% endfor %}
+          {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*home_consumption$') %}
+            {% set data.home = data.home + entity_id.state | float(0) %}
+          {% endfor %}
+          {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*battery_power$') %}
+            {% set data.battery = data.battery + entity_id.state | float(0) %}
+          {% endfor %}
+          {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*charging_power$') %}
+            {% set data.ev = data.ev + entity_id.state | float(0) %}
+          {% endfor %}
+          {{ (data.pv - data.home - data.battery - data.ev) | round(0) }}
+        {% except %}
+          {{ 0 }}  {# Fallback bei Fehlern #}
+        {% endtry %}
+      attributes:
+        pv_power: "{{ data.pv }}"
+        home_consumption: "{{ data.home }}"
+        battery_power: "{{ data.battery }}"
+        ev_charging: "{{ data.ev }}"
+        last_update: "{{ now() }}"
       unit_of_measurement: "W"
       device_class: "power"
-      translation_key: "sensor.system.surplus_power"
 
     # Dynamische Lastpriorisierung
     - name: "load_priority_list"
       unique_id: "load_priority_list"
       value: >
         {% set devices = [] %}
+        {% set valid_priorities = [] %}
         {% for entity_id in states.number | selectattr('entity_id', 'match', '.*load_priority$') %}
-          {% set device = namespace() %}
-          {% set base_id = entity_id.entity_id.split('_load_priority')[0] %}
-          {% set device.entity_id = base_id %}
-          {% set device.priority = entity_id.state | int(99) %}
-          {% set device.min_power = states(base_id ~ '_min_power') | float(0) %}
-          {% set device.max_power = states(base_id ~ '_max_power') | float(11000) %}
-          {% set device.current_power = states(base_id ~ '_power') | float(0) %}
-          {% set devices = devices + [device] %}
+          {% if not is_state(entity_id.entity_id, 'unavailable') %}
+            {% set device = namespace() %}
+            {% set base_id = entity_id.entity_id.split('_load_priority')[0] %}
+            {% if states(base_id ~ '_power') not in ['unavailable', 'unknown'] %}
+              {% set device.entity_id = base_id %}
+              {% set device.priority = entity_id.state | int(99) %}
+              {% set device.min_power = states(base_id ~ '_min_power') | float(0) %}
+              {% set device.max_power = states(base_id ~ '_max_power') | float(11000) %}
+              {% set device.current_power = states(base_id ~ '_power') | float(0) %}
+              {% set device.available = true %}
+              {% set devices = devices + [device] %}
+              {% set valid_priorities = valid_priorities + [device.priority] %}
+            {% endif %}
+          {% endif %}
         {% endfor %}
         {{ devices | sort(attribute='priority') | list }}
+      attributes:
+        valid_device_count: "{{ devices | length }}"
+        priority_conflicts: "{{ valid_priorities | length != valid_priorities | unique | length }}"
 
 automations:
   # Dynamische Lastverteilung

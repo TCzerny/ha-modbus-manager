@@ -36,19 +36,27 @@ helpers:
     - name: "dynamic_energy_costs_today"
       unique_id: "dynamic_energy_costs_today"
       value: >
-        {% set data = namespace(cost=0, income=0) %}
-        {% set current_hour = now().hour %}
-        {% for hour in range(current_hour + 1) %}
-          {% set price = states('sensor.electricity_price_' ~ '%02d' | format(hour)) | float(0) %}
-          {% set consumption = states('sensor.energy_consumption_hour_' ~ '%02d' | format(hour)) | float(0) %}
-          {% set feedin = states('sensor.energy_feedin_hour_' ~ '%02d' | format(hour)) | float(0) %}
-          {% set data.cost = data.cost + (consumption * price) %}
-          {% set data.income = data.income + (feedin * (price * 0.8)) %}
-        {% endfor %}
-        {{ (data.cost - data.income) | round(2) }}
+        {% set cache_key = now().strftime('%Y%m%d_%H') %}
+        {% if state_attr('sensor.dynamic_energy_costs_today', 'cache_key') == cache_key %}
+          {{ state_attr('sensor.dynamic_energy_costs_today', 'value') }}
+        {% else %}
+          {% set data = namespace(cost=0, income=0) %}
+          {% set current_hour = now().hour %}
+          {% for hour in range(current_hour + 1) %}
+            {% set price = states('sensor.electricity_price_' ~ '%02d' | format(hour)) | float(0) %}
+            {% set consumption = states('sensor.energy_consumption_hour_' ~ '%02d' | format(hour)) | float(0) %}
+            {% set feedin = states('sensor.energy_feedin_hour_' ~ '%02d' | format(hour)) | float(0) %}
+            {% set data.cost = data.cost + (consumption * price) %}
+            {% set data.income = data.income + (feedin * (price * 0.8)) %}
+          {% endfor %}
+          {% set result = (data.cost - data.income) | round(2) %}
+          {{ result }}
+        {% endif %}
+      attributes:
+        cache_key: "{{ now().strftime('%Y%m%d_%H') }}"
+        last_calculation: "{{ now() }}"
       unit_of_measurement: "€"
       device_class: "monetary"
-      translation_key: "sensor.system.energy_costs_today"
 
     # Riemann'sche Summe für Energiekosten (Monat)
     - name: "monthly_energy_costs"
@@ -65,6 +73,26 @@ helpers:
       unit_of_measurement: "€"
       device_class: "monetary"
       translation_key: "sensor.system.energy_costs_month"
+
+    # Ergänzung: Gesamtübersicht aller PV-Anlagen
+    - name: "pv_system_overview"
+      unique_id: "pv_system_overview"
+      value: >
+        {% set data = namespace(yield=0, power=0, devices=0) %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*total_pv_yield$') %}
+          {% set data.yield = data.yield + entity_id.state | float(0) %}
+          {% set data.devices = data.devices + 1 %}
+        {% endfor %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*total_active_power$') %}
+          {% set data.power = data.power + entity_id.state | float(0) %}
+        {% endfor %}
+        {
+          "total_yield": data.yield,
+          "current_power": data.power,
+          "device_count": data.devices,
+          "last_updated": now()
+        }
+      translation_key: "sensor.system.pv_overview"
 
 automations:
   # Tägliche Energiestatistik
