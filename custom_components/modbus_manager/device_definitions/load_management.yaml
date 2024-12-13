@@ -1,115 +1,105 @@
-# Configuration for Load Management System
-
-registers:
-  read:
-    # Load Status
-    - { name: "load_status", address: 100, type: "uint16", translation_key: "sensor.load.status.state", entity_category: "diagnostic" }
-    - { name: "load_priority", address: 101, type: "uint16", translation_key: "sensor.load.status.priority", entity_category: "diagnostic" }
-    - { name: "load_mode", address: 102, type: "uint16", translation_key: "sensor.load.status.mode", entity_category: "diagnostic" }
-    
-    # Power Measurements
-    - { name: "load_power", address: 200, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", translation_key: "sensor.load.power.active" }
-    - { name: "load_reactive_power", address: 202, type: "int32", unit_of_measurement: "var", state_class: "measurement", scale: 1, swap: "word", translation_key: "sensor.load.power.reactive" }
-    - { name: "load_apparent_power", address: 204, type: "uint32", unit_of_measurement: "VA", state_class: "measurement", scale: 1, swap: "word", translation_key: "sensor.load.power.apparent" }
-    
-    # Energy Meters
-    - { name: "load_energy_consumed", address: 300, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word", translation_key: "sensor.load.energy.consumed" }
-    - { name: "load_energy_exported", address: 302, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word", translation_key: "sensor.load.energy.exported" }
-    
-    # Load Parameters
-    - { name: "load_voltage", address: 400, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.load.electric.voltage" }
-    - { name: "load_current", address: 401, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.load.electric.current" }
-    - { name: "load_frequency", address: 402, type: "uint16", unit_of_measurement: "Hz", device_class: "frequency", state_class: "measurement", scale: 0.01, translation_key: "sensor.load.electric.frequency" }
-    - { name: "load_power_factor", address: 403, type: "int16", scale: 0.001, state_class: "measurement", translation_key: "sensor.load.electric.power_factor" }
-
-  write:
-    # Load Control
-    - { name: "load_control", address: 1000, type: "uint16", translation_key: "register.load.control.enable", entity_category: "config" }
-    - { name: "load_power_limit", address: 1001, type: "uint16", translation_key: "register.load.control.power_limit", entity_category: "config" }
-    - { name: "load_priority_setting", address: 1002, type: "uint16", translation_key: "register.load.control.priority", entity_category: "config" }
-    - { name: "load_mode_setting", address: 1003, type: "uint16", translation_key: "register.load.control.mode", entity_category: "config" }
-
-polling:
-  fast:
-    interval: 10
-    registers: ["load_status", "load_power", "load_current"]
-  normal:
-    interval: 30
-    registers: ["load_voltage", "load_frequency", "load_power_factor", "load_reactive_power", "load_apparent_power"]
-  slow:
-    interval: 300
-    registers: ["load_energy_consumed", "load_energy_exported"]
-
-validation:
-  voltage:
-    min: 180
-    max: 270
-  current:
-    min: 0
-    max: 32
-  frequency:
-    min: 45
-    max: 55
-  power:
-    min: -10000
-    max: 10000
-  power_factor:
-    min: -1
-    max: 1
-
-automations:
-  - name: "load_overpower_warning"
-    trigger:
-      platform: numeric_state
-      entity_id: sensor.load_power
-      above: 8000
-      for: "00:01:00"
-    action:
-      service: notify.notify
-      data:
-        title: "{{ 'notification.load.power.warning.title'|translate }}"
-        message: "{{ 'notification.load.power.warning.message'|translate(power=states('sensor.load_power')) }}"
-
-  - name: "load_disconnection_alert"
-    trigger:
-      platform: state
-      entity_id: sensor.load_status
-      to: "0"
-    action:
-      service: notify.notify
-      data:
-        title: "{{ 'notification.load.disconnection.title'|translate }}"
-        message: "{{ 'notification.load.disconnection.message'|translate }}"
-
-  - name: "daily_energy_report"
-    trigger:
-      platform: time
-      at: "23:55:00"
-    action:
-      service: notify.notify
-      data:
-        title: "{{ 'notification.load.energy.daily.title'|translate }}"
-        message: "{{ 'notification.load.energy.daily.message'|translate(consumed=states('sensor.load_energy_consumed'), exported=states('sensor.load_energy_exported')) }}"
+# Load Management System
+# Koordiniert die Lastverteilung zwischen allen konfigurierten Geräten
 
 helpers:
   templates:
-    - name: "load_efficiency"
+    # Verfügbare Überschussleistung
+    - name: "available_surplus_power"
+      unique_id: "available_surplus_power"
       value: >
-        {% set active = states('sensor.load_power')|float %}
-        {% set apparent = states('sensor.load_apparent_power')|float %}
-        {{ (active / apparent * 100)|round(1) if apparent > 0 else 0 }}
-      translation_key: "sensor.load.metrics.efficiency"
+        {% set data = namespace(pv=0, home=0, battery=0, ev=0) %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*total_active_power$') %}
+          {% set data.pv = data.pv + entity_id.state | float(0) %}
+        {% endfor %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*home_consumption$') %}
+          {% set data.home = data.home + entity_id.state | float(0) %}
+        {% endfor %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*battery_power$') %}
+          {% set data.battery = data.battery + entity_id.state | float(0) %}
+        {% endfor %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*charging_power$') %}
+          {% set data.ev = data.ev + entity_id.state | float(0) %}
+        {% endfor %}
+        {{ (data.pv - data.home - data.battery - data.ev) | round(0) }}
+      unit_of_measurement: "W"
+      device_class: "power"
+      translation_key: "sensor.system.surplus_power"
 
-    - name: "load_utilization"
+    # Dynamische Lastpriorisierung
+    - name: "load_priority_list"
+      unique_id: "load_priority_list"
       value: >
-        {% set power = states('sensor.load_power')|float %}
-        {% set limit = states('sensor.load_power_limit')|float %}
-        {{ (power / limit * 100)|round(1) if limit > 0 else 0 }}
-      translation_key: "sensor.load.metrics.utilization"
+        {% set devices = [] %}
+        {% for entity_id in states.number | selectattr('entity_id', 'match', '.*load_priority$') %}
+          {% set device = namespace() %}
+          {% set base_id = entity_id.entity_id.split('_load_priority')[0] %}
+          {% set device.entity_id = base_id %}
+          {% set device.priority = entity_id.state | int(99) %}
+          {% set device.min_power = states(base_id ~ '_min_power') | float(0) %}
+          {% set device.max_power = states(base_id ~ '_max_power') | float(11000) %}
+          {% set device.current_power = states(base_id ~ '_power') | float(0) %}
+          {% set devices = devices + [device] %}
+        {% endfor %}
+        {{ devices | sort(attribute='priority') | list }}
 
-    - name: "energy_balance"
-      value: >
-        {% set consumed = states('sensor.load_energy_consumed')|float %}
-        {% set exported = states('sensor.load_energy_exported')|float %}
-        {{ (consumed - exported)|round(1) }}
-      translation_key: "sensor.load.metrics.energy_balance" 
+automations:
+  # Dynamische Lastverteilung
+  - name: "dynamic_load_distribution"
+    unique_id: "dynamic_load_distribution"
+    trigger:
+      - platform: state
+        entity_id: sensor.available_surplus_power
+      - platform: state
+        entity_id: sensor.load_priority_list
+    condition:
+      - condition: template
+        value_template: "{{ trigger.to_state.state | float(0) != trigger.from_state.state | float(0) }}"
+    action:
+      - service: script.distribute_power
+        data:
+          available_power: "{{ states('sensor.available_surplus_power') | float(0) }}"
+          priority_list: "{{ states('sensor.load_priority_list') }}"
+
+  # Lastspitzen-Vermeidung
+  - name: "peak_load_prevention"
+    unique_id: "peak_load_prevention"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.total_grid_power
+      above: 11000
+    action:
+      - service: script.reduce_managed_loads
+        data:
+          excess_power: "{{ states('sensor.total_grid_power') | float(0) - 11000 }}"
+
+scripts:
+  distribute_power:
+    sequence:
+      - service: script.calculate_power_distribution
+        data:
+          available_power: "{{ available_power }}"
+          priority_list: "{{ priority_list }}"
+      - parallel:
+          - repeat:
+              count: "{{ priority_list | length }}"
+              sequence:
+                - service: number.set_value
+                  target:
+                    entity_id: "{{ priority_list[repeat.index-1].entity_id }}_power_setpoint"
+                  data:
+                    value: "{{ priority_list[repeat.index-1].calculated_power }}"
+
+  reduce_managed_loads:
+    sequence:
+      - service: script.calculate_load_reduction
+        data:
+          excess_power: "{{ excess_power }}"
+      - parallel:
+          - repeat:
+              count: "{{ priority_list | length }}"
+              sequence:
+                - service: number.set_value
+                  target:
+                    entity_id: "{{ priority_list[repeat.index-1].entity_id }}_power_setpoint"
+                  data:
+                    value: "{{ priority_list[repeat.index-1].reduced_power }}"

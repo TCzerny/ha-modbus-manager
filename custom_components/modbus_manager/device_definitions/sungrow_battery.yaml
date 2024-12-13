@@ -1,145 +1,97 @@
-# Configuration for Sungrow Battery System
+# Sungrow SBR Batteriesystem
+# Basierend auf der Protokollversion 1.1.30.0
+
+include:
+  - common_entities.yaml
 
 registers:
   read:
-    # Device Information
-    - { name: "device_type", address: 13000, type: "uint16", translation_key: "sensor.device.info.type", entity_category: "diagnostic" }
-    - { name: "serial_number", address: 13002, type: "string", count: 8, translation_key: "sensor.device.info.serial_number", entity_category: "diagnostic" }
-    - { name: "firmware_version", address: 13010, type: "uint16", scale: 0.01, translation_key: "sensor.device.info.firmware_version", entity_category: "diagnostic" }
-    
     # Battery Status
-    - { name: "battery_status", address: 13100, type: "uint16", translation_key: "sensor.battery.status.state", entity_category: "diagnostic" }
-    - { name: "charge_status", address: 13101, type: "uint16", translation_key: "sensor.battery.status.charging", entity_category: "diagnostic" }
-    - { name: "battery_soc", address: 13102, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", translation_key: "sensor.battery.status.soc" }
-    
-    # Battery Measurements
-    - { name: "battery_voltage", address: 13200, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.electric.voltage" }
-    - { name: "battery_current", address: 13201, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.electric.current" }
-    - { name: "battery_power", address: 13202, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", translation_key: "sensor.battery.power.active" }
-    - { name: "battery_temperature", address: 13203, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.temperature" }
-    
-    # Energy Meters
-    - { name: "energy_charged", address: 13300, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word", translation_key: "sensor.battery.energy.charged" }
-    - { name: "energy_discharged", address: 13302, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word", translation_key: "sensor.battery.energy.discharged" }
-    
-    # Battery Health
-    - { name: "battery_health", address: 13400, type: "uint16", unit_of_measurement: "%", state_class: "measurement", translation_key: "sensor.battery.health.soh", entity_category: "diagnostic" }
-    - { name: "cycle_count", address: 13401, type: "uint16", state_class: "total_increasing", translation_key: "sensor.battery.health.cycles", entity_category: "diagnostic" }
-    
-    # Status and Errors
-    - { name: "error_code", address: 13500, type: "uint16", translation_key: "sensor.device.status.error_code", entity_category: "diagnostic" }
-    - { name: "warning_code", address: 13501, type: "uint16", translation_key: "sensor.device.status.warning_code", entity_category: "diagnostic" }
+    - { name: "battery_voltage", address: 13020, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.voltage" }
+    - { name: "battery_current", address: 13021, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.current" }
+    - { name: "battery_power", address: 13022, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", translation_key: "sensor.battery.power" }
+    - { name: "battery_level", address: 13024, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", translation_key: "sensor.battery.level" }
+    - { name: "battery_health", address: 13025, type: "uint16", unit_of_measurement: "%", state_class: "measurement", translation_key: "sensor.battery.health" }
+    - { name: "battery_temperature", address: 13026, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.temperature" }
+
+    # Energy Statistics
+    - { name: "daily_battery_charge", address: 13034, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.battery.charge.daily" }
+    - { name: "total_battery_charge", address: 13036, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.battery.charge.total" }
+    - { name: "daily_battery_discharge", address: 13038, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.battery.discharge.daily" }
+    - { name: "total_battery_discharge", address: 13040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.battery.discharge.total" }
 
   write:
-    # Control Registers
-    - { name: "charge_power_limit", address: 13000, type: "uint16", translation_key: "register.battery.control.charge_power", entity_category: "config" }
-    - { name: "discharge_power_limit", address: 13001, type: "uint16", translation_key: "register.battery.control.discharge_power", entity_category: "config" }
-    - { name: "charge_soc_limit", address: 13002, type: "uint16", translation_key: "register.battery.control.charge_soc", entity_category: "config" }
-    - { name: "discharge_soc_limit", address: 13003, type: "uint16", translation_key: "register.battery.control.discharge_soc", entity_category: "config" }
-    - { name: "operation_mode", address: 13004, type: "uint16", translation_key: "register.battery.control.mode", entity_category: "config" }
+    # Battery Control
+    - { name: "battery_charge_limit", address: 13100, type: "uint16", min: 0, max: 100, translation_key: "register.battery.charge_limit" }
+    - { name: "battery_discharge_limit", address: 13101, type: "uint16", min: 0, max: 100, translation_key: "register.battery.discharge_limit" }
+    - { name: "forced_charging", address: 13102, type: "uint16", min: 0, max: 1, translation_key: "register.battery.forced_charging" }
 
 polling:
   fast:
     interval: 10
-    registers: ["battery_status", "charge_status", "battery_soc", "battery_power", "battery_current"]
+    registers: [
+      "battery_power",
+      "battery_level",
+      "operating_state"
+    ]
   normal:
     interval: 30
-    registers: ["battery_voltage", "battery_temperature"]
+    registers: [
+      "battery_voltage",
+      "battery_current",
+      "battery_temperature"
+    ]
   slow:
     interval: 300
-    registers: ["energy_charged", "energy_discharged", "battery_health", "cycle_count"]
+    registers: [
+      "daily_battery_charge", "total_battery_charge",
+      "daily_battery_discharge", "total_battery_discharge",
+      "battery_health"
+    ]
 
 validation:
-  voltage:
-    min: 40
+  battery_level:
+    min: 0
+    max: 100
+  battery_temperature:
+    min: -20
     max: 60
-  current:
-    min: -125
-    max: 125
-  temperature:
-    min: 0
-    max: 45
-  power:
-    min: -5000
-    max: 5000
-  soc:
-    min: 0
-    max: 100
-  health:
-    min: 0
-    max: 100
 
 automations:
-  - name: "error_notification"
+  - name: "battery_low_notification"
     trigger:
-      platform: state
-      entity_id: sensor.error_code
-      from: "0"
-      to: "!= 0"
+      platform: numeric_state
+      entity_id: sensor.battery_level
+      below: 10
+      for: "00:10:00"
     action:
       service: notify.notify
       data:
-        title: "{{ 'notification.battery.error.title'|translate }}"
-        message: "{{ 'notification.battery.error.message'|translate(error_code=states('sensor.error_code')) }}"
+        title: "{{ 'notification.battery.low.title'|translate }}"
+        message: "{{ 'notification.battery.low.message'|translate(level=states('sensor.battery_level')) }}"
 
-  - name: "high_temperature_warning"
+  - name: "high_battery_temperature_warning"
     trigger:
       platform: numeric_state
       entity_id: sensor.battery_temperature
-      above: 40
-      for: "00:02:00"
+      above: 45
+      for: "00:05:00"
     action:
       service: notify.notify
       data:
         title: "{{ 'notification.battery.temperature.warning.title'|translate }}"
         message: "{{ 'notification.battery.temperature.warning.message'|translate(temperature=states('sensor.battery_temperature')) }}"
 
-  - name: "low_soc_warning"
-    trigger:
-      platform: numeric_state
-      entity_id: sensor.battery_soc
-      below: 20
-      for: "00:05:00"
-    action:
-      service: notify.notify
-      data:
-        title: "{{ 'notification.battery.soc.warning.title'|translate }}"
-        message: "{{ 'notification.battery.soc.warning.message'|translate(soc=states('sensor.battery_soc')) }}"
-
-  - name: "battery_health_report"
-    trigger:
-      platform: time
-      at: "00:00:00"
-    action:
-      service: notify.notify
-      data:
-        title: "{{ 'notification.battery.health.report.title'|translate }}"
-        message: "{{ 'notification.battery.health.report.message'|translate(health=states('sensor.battery_health'), cycles=states('sensor.cycle_count')) }}"
-
 helpers:
   templates:
-    - name: "battery_efficiency"
-      value: >
-        {% set charged = states('sensor.energy_charged')|float %}
-        {% set discharged = states('sensor.energy_discharged')|float %}
-        {{ (discharged / charged * 100)|round(1) if charged > 0 else 0 }}
-      translation_key: "sensor.battery.metrics.efficiency"
-
-    - name: "power_utilization"
+    - name: "battery_power_direction"
       value: >
         {% set power = states('sensor.battery_power')|float %}
-        {% set max_power = 5000 %}
-        {{ (abs(power) / max_power * 100)|round(1) }}
-      translation_key: "sensor.battery.metrics.utilization"
-
-    - name: "estimated_runtime"
-      value: >
-        {% set power = states('sensor.battery_power')|float %}
-        {% set soc = states('sensor.battery_soc')|float %}
-        {% set capacity = 10000 %}  # Wh
-        {% if power < -100 %}
-          {{ ((soc / 100 * capacity) / (-power) * 60)|round(0) }}
+        {% if power > 0 %}
+          {{ 'state.battery.discharging'|translate }}
+        {% elif power < 0 %}
+          {{ 'state.battery.charging'|translate }}
         {% else %}
-          0
+          {{ 'state.battery.idle'|translate }}
         {% endif %}
-      translation_key: "sensor.battery.metrics.runtime" 
+      translation_key: "sensor.battery.power_direction"

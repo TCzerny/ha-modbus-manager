@@ -10,22 +10,11 @@ import re
 def get_available_device_types():
     """Lädt die verfügbaren Gerätekonfigurationen aus dem device_definitions Verzeichner."""
     device_types = {
-        # Sungrow SHRT Series (Hybrid Inverter)
-        "sungrow_shrt": "Sungrow SH-RT (3-Phase with Battery)",
-        "sungrow_shrt_3p": "Sungrow SH-RT (3-Phase)",
-        "sungrow_shrt_1p_battery": "Sungrow SH-RT (1-Phase with Battery)",
-        "sungrow_shrt_1p": "Sungrow SH-RT (1-Phase)",
-        
-        # Sungrow SGRT Series (Grid Inverter)
-        "sungrow_sgrt": "Sungrow SG-RT (Base)",
-        "sungrow_sgrt_single": "Sungrow SG-RT (1-Phase)",
-        "sungrow_sgrt_three": "Sungrow SG-RT (3-Phase)",
+        # Sungrow Inverter
+        "sungrow_shrt": "Sungrow SH-RT Hybrid Inverter",
         
         # Sungrow Battery
         "sungrow_battery": "Sungrow Battery System",
-        
-        # Compleo Charging Station
-        "compleo_ebox_professional": "Compleo eBox Professional",
         
         # Common Definitions
         "common_entities": "Common Entities",
@@ -105,7 +94,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow):
         }
         
         # Füge anlagengroesse_kw nur für PV-Anlagen hinzu
-        if any(x in user_input.get("device_type", "") for x in ["shrt", "sgrt"]):
+        if "shrt" in user_input.get("device_type", ""):
             schema[vol.Required("anlagengroesse_kw", default=5)] = vol.All(
                 vol.Coerce(float), vol.Range(min=1, max=30)
             )

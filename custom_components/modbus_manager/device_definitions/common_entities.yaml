@@ -1,113 +1,99 @@
-# Common entities for all Sungrow devices
-
-registers:
-  read:
-    # Device Information
-    - { name: "device_type", address: 0, type: "uint16", translation_key: "sensor.device.info.type", entity_category: "diagnostic" }
-    - { name: "serial_number", address: 2, type: "string", count: 8, translation_key: "sensor.device.info.serial_number", entity_category: "diagnostic" }
-    - { name: "firmware_version", address: 10, type: "uint16", scale: 0.01, translation_key: "sensor.device.info.firmware_version", entity_category: "diagnostic" }
-    - { name: "protocol_version", address: 12, type: "uint16", scale: 0.01, translation_key: "sensor.device.info.protocol_version", entity_category: "diagnostic" }
-    
-    # Device Status
-    - { name: "operating_state", address: 100, type: "uint16", translation_key: "sensor.device.status.state", entity_category: "diagnostic" }
-    - { name: "error_code", address: 101, type: "uint16", translation_key: "sensor.device.status.error_code", entity_category: "diagnostic" }
-    - { name: "warning_code", address: 102, type: "uint16", translation_key: "sensor.device.status.warning_code", entity_category: "diagnostic" }
-    
-    # Network Information
-    - { name: "ip_address", address: 200, type: "string", count: 4, translation_key: "sensor.device.network.ip", entity_category: "diagnostic" }
-    - { name: "subnet_mask", address: 204, type: "string", count: 4, translation_key: "sensor.device.network.subnet", entity_category: "diagnostic" }
-    - { name: "gateway", address: 208, type: "string", count: 4, translation_key: "sensor.device.network.gateway", entity_category: "diagnostic" }
-    - { name: "modbus_address", address: 212, type: "uint16", translation_key: "sensor.device.network.modbus_address", entity_category: "diagnostic" }
-    
-    # System Time
-    - { name: "system_time", address: 300, type: "uint32", translation_key: "sensor.device.system.time", entity_category: "diagnostic" }
-    - { name: "running_time", address: 302, type: "uint32", unit_of_measurement: "h", state_class: "total_increasing", translation_key: "sensor.device.system.runtime", entity_category: "diagnostic" }
-    
-    # Environmental Data
-    - { name: "ambient_temperature", address: 400, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.device.environment.temperature" }
-    - { name: "enclosure_temperature", address: 401, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.device.environment.temperature_enclosure" }
-
-  write:
-    # System Control
-    - { name: "system_time", address: 1000, type: "uint32", translation_key: "register.device.system.time", entity_category: "config" }
-    - { name: "modbus_address", address: 1001, type: "uint16", translation_key: "register.device.network.modbus_address", entity_category: "config" }
-    - { name: "restart_device", address: 1002, type: "uint16", translation_key: "register.device.system.restart", entity_category: "config" }
-
-polling:
-  fast:
-    interval: 10
-    registers: ["operating_state", "error_code", "warning_code"]
-    batches:
-      - start: 100
-        count: 3
-  normal:
-    interval: 30
-    registers: ["ambient_temperature", "enclosure_temperature"]
-    batches:
-      - start: 400
-        count: 2
-  slow:
-    interval: 300
-    registers: ["running_time", "system_time"]
-
-validation:
-  temperature:
-    min: -20
-    max: 90
-  modbus_address:
-    min: 1
-    max: 247
-  system_time:
-    min: 946684800  # 2000-01-01
-    max: 2524608000  # 2050-01-01
-
-automations:
-  - name: "error_notification"
-    trigger:
-      platform: state
-      entity_id: sensor.error_code
-      from: "0"
-      to: "!= 0"
-    action:
-      service: notify.notify
-      data:
-        title: "{{ 'notification.device.error.title'|translate }}"
-        message: "{{ 'notification.device.error.message'|translate(error_code=states('sensor.error_code')) }}"
-
-  - name: "high_temperature_warning"
-    trigger:
-      platform: numeric_state
-      entity_id: sensor.enclosure_temperature
-      above: 75
-      for: "00:02:00"
-    action:
-      service: notify.notify
-      data:
-        title: "{{ 'notification.device.temperature.warning.title'|translate }}"
-        message: "{{ 'notification.device.temperature.warning.message'|translate(temperature=states('sensor.enclosure_temperature')) }}"
-
-  - name: "system_time_sync"
-    trigger:
-      platform: time_pattern
-      hours: "/12"
-    action:
-      service: modbus.write
-      data:
-        hub: modbus_hub
-        address: 1000
-        value: "{{ now().timestamp()|int }}"
+# Common entities for all Modbus devices
+# Provides base functionality for multi-device setups
+# Keine Register-Definitionen, nur Templates und Automationen
 
 helpers:
   templates:
-    - name: "uptime_days"
+    # Gesamt PV-Ertrag aller Wechselrichter
+    - name: "total_pv_yield_all"
+      unique_id: "total_pv_yield_all"
       value: >
-        {% set hours = states('sensor.running_time')|float %}
-        {{ (hours / 24)|round(1) }}
-      translation_key: "sensor.device.metrics.uptime_days"
+        {% set total = namespace(sum=0) %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*total_pv_yield$') %}
+          {% set total.sum = total.sum + entity_id.state | float(0) %}
+        {% endfor %}
+        {{ total.sum | round(2) }}
+      unit_of_measurement: "kWh"
+      device_class: "energy"
+      state_class: "total_increasing"
+      translation_key: "sensor.system.total_yield"
 
-    - name: "temperature_difference"
+    # Aktuelle Gesamt-PV-Leistung
+    - name: "total_active_power_all"
+      unique_id: "total_active_power_all"
       value: >
-        {% set ambient = states('sensor.ambient_temperature')|float %}
-        {% set enclosure = states('sensor.enclosure_temperature')|float %}
-        {{ (enclosure - ambient)|round(1) }}
-      translation_key: "sensor.device.metrics.temperature_difference"
+        {% set total = namespace(sum=0) %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*total_active_power$') %}
+          {% set total.sum = total.sum + entity_id.state | float(0) %}
+        {% endfor %}
+        {{ total.sum | round(0) }}
+      unit_of_measurement: "W"
+      device_class: "power"
+      state_class: "measurement"
+      translation_key: "sensor.system.total_power"
+
+    # Dynamische Stromkosten/Ertrag Berechnung pro Tag
+    - name: "dynamic_energy_costs_today"
+      unique_id: "dynamic_energy_costs_today"
+      value: >
+        {% set data = namespace(cost=0, income=0) %}
+        {% set current_hour = now().hour %}
+        {% for hour in range(current_hour + 1) %}
+          {% set price = states('sensor.electricity_price_' ~ '%02d' | format(hour)) | float(0) %}
+          {% set consumption = states('sensor.energy_consumption_hour_' ~ '%02d' | format(hour)) | float(0) %}
+          {% set feedin = states('sensor.energy_feedin_hour_' ~ '%02d' | format(hour)) | float(0) %}
+          {% set data.cost = data.cost + (consumption * price) %}
+          {% set data.income = data.income + (feedin * (price * 0.8)) %}
+        {% endfor %}
+        {{ (data.cost - data.income) | round(2) }}
+      unit_of_measurement: "€"
+      device_class: "monetary"
+      translation_key: "sensor.system.energy_costs_today"
+
+    # Riemann'sche Summe für Energiekosten (Monat)
+    - name: "monthly_energy_costs"
+      unique_id: "monthly_energy_costs"
+      value: >
+        {% set data = namespace(sum=0) %}
+        {% set start_of_month = now().replace(day=1, hour=0, minute=0, second=0, microsecond=0) %}
+        {% set days = (now() - start_of_month).days %}
+        {% for day in range(days + 1) %}
+          {% set daily_cost = states('sensor.dynamic_energy_costs_' ~ (start_of_month + timedelta(days=day)).strftime('%Y%m%d')) | float(0) %}
+          {% set data.sum = data.sum + daily_cost %}
+        {% endfor %}
+        {{ data.sum | round(2) }}
+      unit_of_measurement: "€"
+      device_class: "monetary"
+      translation_key: "sensor.system.energy_costs_month"
+
+automations:
+  # Tägliche Energiestatistik
+  - name: "daily_energy_statistics"
+    unique_id: "daily_energy_statistics"
+    trigger:
+      platform: time
+      at: "23:59:59"
+    action:
+      - service: input_number.set_value
+        data:
+          entity_id: input_number.daily_energy_statistics
+          value: >
+            {% set yield = states('sensor.total_pv_yield_all') | float(0) %}
+            {% set consumption = states('sensor.total_consumption_all') | float(0) %}
+            {% set feedin = states('sensor.total_feedin_all') | float(0) %}
+            {{ yield - consumption - feedin }}
+      - service: recorder.purge
+        data:
+          keep_days: 7
+          repack: true
+
+validation:
+  power:
+    min: 0
+    max: 100000  # 100kW
+  energy:
+    min: 0
+    max: 1000000  # 1000kWh
+  monetary:
+    min: -1000
+    max: 1000
