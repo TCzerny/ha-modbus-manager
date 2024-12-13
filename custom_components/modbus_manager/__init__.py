@@ -9,7 +9,7 @@ from homeassistant.helpers.entity_component import EntityComponent
 from homeassistant.helpers.script import Script
 from homeassistant.const import CONF_NAME
 from .const import DOMAIN
-from .modbus_sungrow import ModbusSungrowHub
+from .modbus_hub import ModbusManagerHub
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -21,7 +21,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     slave = entry.data[CONF_SLAVE]
     device_type = entry.data["device_type"]
     
-    hub = ModbusSungrowHub(name, host, port, slave, device_type, hass)
+    hub = ModbusManagerHub(name, host, port, slave, device_type, hass)
     await hub.async_setup()
     
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = hub

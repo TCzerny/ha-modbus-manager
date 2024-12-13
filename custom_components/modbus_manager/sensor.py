@@ -1,7 +1,7 @@
 import logging
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.core import callback
-from .modbus_sungrow import ModbusSungrowHub
+from .modbus_hub import ModbusManagerHub
 from .const import DOMAIN
 import struct
 import asyncio
@@ -12,9 +12,9 @@ _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Modbus Manager sensors."""
-    hub: ModbusSungrowHub = hass.data[DOMAIN].get(entry.entry_id)
+    hub: ModbusManagerHub = hass.data[DOMAIN].get(entry.entry_id)
     if not hub:
-        _LOGGER.error("ModbusSungrowHub not found in hass.data")
+        _LOGGER.error("ModbusManagerHub not found in hass.data")
         return
 
     # Ensure coordinator exists
@@ -57,7 +57,7 @@ class ModbusSensor(CoordinatorEntity):
         "bool": (1, lambda x: bool(x[0]))
     }
 
-    def __init__(self, hub: ModbusSungrowHub, name: str, device_def: dict):
+    def __init__(self, hub: ModbusManagerHub, name: str, device_def: dict):
         """Initialisiert den Sensor."""
         if hub.name not in hub.coordinators:
             _LOGGER.error("Kein Coordinator für Hub %s gefunden", hub.name)

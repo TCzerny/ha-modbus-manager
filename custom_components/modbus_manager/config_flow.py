@@ -2,60 +2,11 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
-import os
-from pathlib import Path
 from .const import DOMAIN
-import re
-import logging
-import yaml
+from .modbus_hub import ModbusManagerHub  # Updated import if needed
 
-_LOGGER = logging.getLogger(__name__)
-
-def get_available_device_types() -> dict:
-    """Lädt die verfügbaren Gerätekonfigurationen dynamisch aus dem device_definitions Verzeichnis."""
-    device_types = {}
-    definitions_dir = Path(__file__).parent / "device_definitions"
-    
-    try:
-        for file in definitions_dir.glob("*.yaml"):
-            if file.stem not in ["common_entities", "load_management"]:
-                with open(file, "r") as f:
-                    config = yaml.safe_load(f)
-                    if config and "device_info" in config:
-                        device_types[file.stem] = config["device_info"]["name"]
-    except Exception as e:
-        _LOGGER.error("Fehler beim Laden der Gerätedefinitionen: %s", e)
-    
-    return device_types
-
-async def validate_input(data: dict) -> dict:
-    """Validiert die Eingabedaten."""
-    errors = {}
-    
-    # IP-Adresse/Hostname validieren
-    if not re.match(r'^[a-zA-Z0-9.-]+$', data.get("host", "")):
-        errors["host"] = "invalid_host"
-        
-    # Port-Bereich prüfen
-    port = data.get("port")
-    if not isinstance(port, int) or not 1 <= port <= 65535:
-        errors["port"] = "invalid_port"
-        
-    # Slave-ID-Bereich prüfen
-    slave_id = data.get("slave_id")
-    if not isinstance(slave_id, int) or not 1 <= slave_id <= 247:
-        errors["slave_id"] = "invalid_slave_id"
-        
-    # Scan-Intervall-Minimum
-    scan_interval = data.get("scan_interval")
-    if not isinstance(scan_interval, int) or scan_interval < 5:
-        errors["scan_interval"] = "interval_too_short"
-        
-    return errors
-
-@config_entries.HANDLERS.register(DOMAIN)
-class ModbusManagerHubConfigFlow(config_entries.ConfigFlow):
-    """Handle a config flow for Modbus Manager Hub."""
+class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
+    """Handle a config flow for Modbus Manager."""
 
     VERSION = 2
 
