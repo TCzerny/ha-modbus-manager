@@ -1,4 +1,4 @@
-# Configuration for Sungrow SGRT single-phase inverters
+# Configuration for Sungrow SGRT series inverters
 
 registers:
   read:
@@ -62,8 +62,8 @@ validation:
     min: -20
     max: 90
   power:
-    min: -6000
-    max: 6000
+    min: -22000
+    max: 22000
   power_factor:
     min: -1
     max: 1
@@ -117,4 +117,4 @@ helpers:
         {% set active = states('sensor.active_power')|float %}
         {% set apparent = states('sensor.apparent_power')|float %}
         {{ (active / apparent * 100)|round(1) if apparent > 0 else 0 }}
-      translation_key: "sensor.grid.metrics.efficiency"
+      translation_key: "sensor.grid.metrics.efficiency" 

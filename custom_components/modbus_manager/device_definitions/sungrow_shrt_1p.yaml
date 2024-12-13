@@ -1,0 +1,84 @@
+# Configuration for single-phase Sungrow SH-RT series inverters without battery
+# Supported models:
+# - SH3K6RT (3.6kW single-phase)
+# - SH4K6RT (4.6kW single-phase)
+# - SH5K6RT (5.6kW single-phase)
+
+registers:
+  read:
+    # Device Information
+    - { name: "device_type", address: 4999, type: "uint16", translation_key: "sensor.inverter.device_type" }
+    - { name: "serial_number", address: 4989, type: "string", translation_key: "sensor.inverter.serial_number" }
+    - { name: "software_version", address: 4998, type: "uint16", scale: 0.01, translation_key: "sensor.inverter.software_version" }
+    
+    # Energy Meters
+    - { name: "total_pv_generation", address: 13002, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", translation_key: "sensor.pv.production_total" }
+    - { name: "daily_pv_generation", address: 13001, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.pv.production_daily" }
+    - { name: "total_grid_import", address: 13003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", translation_key: "sensor.grid.import_total" }
+    - { name: "total_grid_export", address: 13005, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", translation_key: "sensor.grid.export_total" }
+    
+    # System Status
+    - { name: "system_state", address: 12999, type: "uint16", translation_key: "sensor.inverter.system_state" }
+    - { name: "running_state", address: 13000, type: "uint16", translation_key: "sensor.inverter.running_state" }
+    - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.temperature" }
+    
+    # PV Input
+    - { name: "mppt1_voltage", address: 5010, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.pv.voltage_1" }
+    - { name: "mppt1_current", address: 5011, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.pv.current_1" }
+    - { name: "mppt2_voltage", address: 5012, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.pv.voltage_2" }
+    - { name: "mppt2_current", address: 5013, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.pv.current_2" }
+    - { name: "total_dc_power", address: 5016, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", translation_key: "sensor.pv.power_total" }
+    
+    # Grid Measurements
+    - { name: "grid_voltage", address: 5018, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.voltage" }
+    - { name: "grid_current", address: 5019, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.current" }
+    - { name: "grid_power", address: 5020, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", translation_key: "sensor.grid.power" }
+    - { name: "grid_frequency", address: 5035, type: "uint16", unit_of_measurement: "Hz", device_class: "frequency", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.frequency" }
+    - { name: "power_factor", address: 5034, type: "int16", unit_of_measurement: "%", device_class: "power_factor", state_class: "measurement", scale: 0.001, translation_key: "sensor.grid.power_factor" }
+    
+    # Load Measurements
+    - { name: "load_power", address: 5024, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", translation_key: "sensor.load.power" }
+
+  write:
+    # System Control
+    - { name: "system_mode", address: 13049, type: "uint16", translation_key: "register.system.operation_mode" }
+    - { name: "export_power_limit", address: 13073, type: "uint16", translation_key: "register.grid.export_limit" }
+
+automations:
+  - name: "system_error_notification"
+    trigger:
+      platform: state
+      entity_id: sensor.inverter_error_code
+      from: "0"
+    action:
+      service: notify.notify
+      data:
+        title: "{{ 'notification.error_message'|translate }}"
+        message: "{{ 'notification.error_message'|translate(error_code=states('sensor.inverter_error_code')) }}"
+
+  - name: "grid_power_protection"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.grid_power
+      above: 5000
+    action:
+      service: notify.notify
+      data:
+        title: "{{ 'notification.grid_power_warning'|translate }}"
+        message: "{{ 'notification.grid_power_warning'|translate(power=states('sensor.grid_power')) }}"
+
+helpers:
+  templates:
+    - name: "self_consumption_rate"
+      value: >
+        {% set production = states('sensor.total_pv_generation')|float %}
+        {% set export = states('sensor.total_grid_export')|float %}
+        {{ ((production - export) / production * 100)|round(1) if production > 0 else 0 }}
+      translation_key: "sensor.pv.self_consumption_rate"
+
+    - name: "autarky_rate"
+      value: >
+        {% set consumption = states('sensor.load_power')|float %}
+        {% set import = states('sensor.total_grid_import')|float %}
+        {{ ((consumption - import) / consumption * 100)|round(1) if consumption > 0 else 0 }}
+      translation_key: "sensor.load.autarky_rate" 

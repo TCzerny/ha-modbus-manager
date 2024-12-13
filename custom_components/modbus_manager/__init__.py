@@ -14,7 +14,7 @@ from .modbus_sungrow import ModbusSungrowHub
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Richtet den Modbus Manager aus einem Konfigurationseintrag ein."""
+    """Set up the Modbus Manager from a configuration entry."""
     name = entry.data[CONF_NAME]
     host = entry.data[CONF_HOST]
     port = entry.data[CONF_PORT]
@@ -26,7 +26,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     
     hass.data.setdefault(DOMAIN, {})[entry.entry_id] = hub
     
-    # Weiterleitung der Einrichtung an Sensor- und Schalterplattformen
+    # Forward setup to sensor and switch platforms
     hass.async_create_task(
         hass.config_entries.async_forward_entry_setup(entry, "sensor")
     )
@@ -37,47 +37,47 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Entlädt einen Konfigurationseintrag und entfernt alle zugehörigen Komponenten."""
+    """Unload a configuration entry and remove all associated components."""
     hub = hass.data[DOMAIN].get(entry.entry_id)
     if not hub:
         return True
 
-    # Hole die Registries
+    # Get registries
     ent_reg = entity_registry.async_get(hass)
     dev_reg = device_registry.async_get(hass)
 
-    # Entferne alle Entitäten, die zu diesem Hub gehören
+    # Remove all entities belonging to this hub
     entity_entries = entity_registry.async_entries_for_device(
         ent_reg,
         device_id=(DOMAIN, hub.name),
         include_disabled_entities=True
     )
     
-    _LOGGER.debug("Entferne %d Entitäten für %s", len(entity_entries), hub.name)
+    _LOGGER.debug("Removing %d entities for %s", len(entity_entries), hub.name)
     
     for entity_entry in entity_entries:
         ent_reg.async_remove(entity_entry.entity_id)
 
-    # Entferne Templates
+    # Remove templates
     device_def = hub.get_device_definition(hub.device_type)
     if device_def and 'helpers' in device_def and 'templates' in device_def['helpers']:
         for template_def in device_def['helpers']['templates']:
             template_name = f"{hub.name}_{template_def['name']}"
             template_entity_id = f"template.{template_name}"
             if ent_reg.async_get(template_entity_id):
-                _LOGGER.debug("Entferne Template: %s", template_name)
+                _LOGGER.debug("Removing template: %s", template_name)
                 ent_reg.async_remove(template_entity_id)
 
-    # Entferne Automatisierungen
+    # Remove automations
     if device_def and 'automations' in device_def:
         for automation in device_def['automations']:
             automation_name = f"{hub.name}_{automation['name']}"
             automation_entity_id = f"automation.{automation_name}"
             if ent_reg.async_get(automation_entity_id):
-                _LOGGER.debug("Entferne Automation: %s", automation_name)
+                _LOGGER.debug("Removing automation: %s", automation_name)
                 ent_reg.async_remove(automation_entity_id)
 
-    # Entlade die Plattformen
+    # Unload platforms
     unload_ok = all(
         await asyncio.gather(
             *[
@@ -87,16 +87,16 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
         )
     )
 
-    # Entferne das Gerät aus der Registry
+    # Remove device from registry
     device_entry = dev_reg.async_get_device({(DOMAIN, hub.name)})
     if device_entry:
-        _LOGGER.debug("Entferne Gerät: %s", hub.name)
+        _LOGGER.debug("Removing device: %s", hub.name)
         dev_reg.async_remove_device(device_entry.id)
 
-    # Beende die Modbus-Verbindung
+    # Close Modbus connection
     if unload_ok:
         await hub.async_teardown()
         hass.data[DOMAIN].pop(entry.entry_id)
-        _LOGGER.info("Modbus Manager Integration für %s erfolgreich entfernt", hub.name)
+        _LOGGER.info("Successfully removed Modbus Manager integration for %s", hub.name)
 
     return unload_ok

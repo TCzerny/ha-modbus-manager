@@ -1,127 +1,107 @@
-# Gemeinsame Entitäten für alle Modbus Manager Geräte
-# Summiert Werte über alle konfigurierten Geräte
+# Common entities for all Sungrow devices
 
-registers: {}  # Keine direkten Register, da dies eine virtuelle Konfiguration ist
+registers:
+  read:
+    # Device Information
+    - { name: "device_type", address: 0, type: "uint16", translation_key: "sensor.device.info.type", entity_category: "diagnostic" }
+    - { name: "serial_number", address: 2, type: "string", count: 8, translation_key: "sensor.device.info.serial_number", entity_category: "diagnostic" }
+    - { name: "firmware_version", address: 10, type: "uint16", scale: 0.01, translation_key: "sensor.device.info.firmware_version", entity_category: "diagnostic" }
+    - { name: "protocol_version", address: 12, type: "uint16", scale: 0.01, translation_key: "sensor.device.info.protocol_version", entity_category: "diagnostic" }
+    
+    # Device Status
+    - { name: "operating_state", address: 100, type: "uint16", translation_key: "sensor.device.status.state", entity_category: "diagnostic" }
+    - { name: "error_code", address: 101, type: "uint16", translation_key: "sensor.device.status.error_code", entity_category: "diagnostic" }
+    - { name: "warning_code", address: 102, type: "uint16", translation_key: "sensor.device.status.warning_code", entity_category: "diagnostic" }
+    
+    # Network Information
+    - { name: "ip_address", address: 200, type: "string", count: 4, translation_key: "sensor.device.network.ip", entity_category: "diagnostic" }
+    - { name: "subnet_mask", address: 204, type: "string", count: 4, translation_key: "sensor.device.network.subnet", entity_category: "diagnostic" }
+    - { name: "gateway", address: 208, type: "string", count: 4, translation_key: "sensor.device.network.gateway", entity_category: "diagnostic" }
+    - { name: "modbus_address", address: 212, type: "uint16", translation_key: "sensor.device.network.modbus_address", entity_category: "diagnostic" }
+    
+    # System Time
+    - { name: "system_time", address: 300, type: "uint32", translation_key: "sensor.device.system.time", entity_category: "diagnostic" }
+    - { name: "running_time", address: 302, type: "uint32", unit_of_measurement: "h", state_class: "total_increasing", translation_key: "sensor.device.system.runtime", entity_category: "diagnostic" }
+    
+    # Environmental Data
+    - { name: "ambient_temperature", address: 400, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.device.environment.temperature" }
+    - { name: "enclosure_temperature", address: 401, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.device.environment.temperature_enclosure" }
+
+  write:
+    # System Control
+    - { name: "system_time", address: 1000, type: "uint32", translation_key: "register.device.system.time", entity_category: "config" }
+    - { name: "modbus_address", address: 1001, type: "uint16", translation_key: "register.device.network.modbus_address", entity_category: "config" }
+    - { name: "restart_device", address: 1002, type: "uint16", translation_key: "register.device.system.restart", entity_category: "config" }
+
+polling:
+  fast:
+    interval: 10
+    registers: ["operating_state", "error_code", "warning_code"]
+  normal:
+    interval: 30
+    registers: ["ambient_temperature", "enclosure_temperature"]
+  slow:
+    interval: 300
+    registers: ["running_time", "system_time"]
+
+validation:
+  temperature:
+    min: -20
+    max: 90
+  modbus_address:
+    min: 1
+    max: 247
+  system_time:
+    min: 946684800  # 2000-01-01
+    max: 2524608000  # 2050-01-01
+
+automations:
+  - name: "error_notification"
+    trigger:
+      platform: state
+      entity_id: sensor.error_code
+      from: "0"
+      to: "!= 0"
+    action:
+      service: notify.notify
+      data:
+        title: "{{ 'notification.device.error.title'|translate }}"
+        message: "{{ 'notification.device.error.message'|translate(error_code=states('sensor.error_code')) }}"
+
+  - name: "high_temperature_warning"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.enclosure_temperature
+      above: 75
+      for: "00:02:00"
+    action:
+      service: notify.notify
+      data:
+        title: "{{ 'notification.device.temperature.warning.title'|translate }}"
+        message: "{{ 'notification.device.temperature.warning.message'|translate(temperature=states('sensor.enclosure_temperature')) }}"
+
+  - name: "system_time_sync"
+    trigger:
+      platform: time_pattern
+      hours: "/12"
+    action:
+      service: modbus.write
+      data:
+        hub: modbus_hub
+        address: 1000
+        value: "{{ now().timestamp()|int }}"
 
 helpers:
   templates:
-    # Summierung aller PV-Anlagen
-    - { name: "gesamt_pv_leistung", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.pv_leistung_gesamt_*') | sum(attribute='state') | float(0)" }
-    - { name: "gesamt_tagesertrag", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.tagesertrag_*') | sum(attribute='state') | float(0)" }
-    - { name: "gesamt_gesamtertrag", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.gesamtertrag_*') | sum(attribute='state') | float(0)" }
-    - { name: "gesamt_anlagenleistung", expression: "states.input_number | selectattr('entity_id', 'match', 'input_number.anlagengroesse_kw_*') | sum(attribute='state') | float(0)" }
-    
-    # Durchschnittliche Leistungswerte
-    - { name: "durchschnitt_wirkungsgrad", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.wirkungsgrad_*') | list | map(attribute='state') | map('float') | list | avg if states.sensor | selectattr('entity_id', 'match', 'sensor.wirkungsgrad_*') | list | length > 0 else 0" }
-    - { name: "durchschnitt_eigenverbrauch", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.eigenverbrauch_quote_*') | list | map(attribute='state') | map('float') | list | avg if states.sensor | selectattr('entity_id', 'match', 'sensor.eigenverbrauch_quote_*') | list | length > 0 else 0" }
-    
-    # Wirtschaftlichkeitsberechnungen über alle Anlagen
-    - { name: "gesamt_anlagenkosten", expression: "states.input_number | selectattr('entity_id', 'match', 'input_number.anlagenkosten_*') | sum(attribute='state') | float(0)" }
-    - { name: "gesamt_co2_einsparung", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.co2_einsparung_*') | sum(attribute='state') | float(0)" }
-    
-    # Zeitbasierte Ertragsberechnungen mit Riemann-Integral
-    - { name: "riemann_ertrag_tag", expression: >-
-        {% set now = now() %}
-        {% set midnight = now.replace(hour=0, minute=0, second=0, microsecond=0) %}
-        {% set intervals = (as_timestamp(now) - as_timestamp(midnight)) / 300 %}
-        {% set values = namespace(sum=0) %}
-        {% for sensor in states.sensor | selectattr('entity_id', 'match', 'sensor.pv_leistung_gesamt_*') %}
-          {% set values.sum = values.sum + (sensor.attributes.get('riemann_sum', 0)) %}
-        {% endfor %}
-        {{ (values.sum / 3600000) | round(3) }}
-      }
-    
-    # Dynamische Strompreis-Berechnungen
-    - { name: "riemann_einspeisung_ertrag", expression: >-
-        {% set now = now() %}
-        {% set midnight = now.replace(hour=0, minute=0, second=0, microsecond=0) %}
-        {% set values = namespace(sum=0) %}
-        {% for sensor in states.sensor | selectattr('entity_id', 'match', 'sensor.einspeisung_*') %}
-          {% set power = sensor.state | float(0) %}
-          {% set price = states('sensor.einspeiseverguetung') | float(0) %}
-          {% set values.sum = values.sum + (power * price * states(sensor).age.seconds / 360000) %}
-        {% endfor %}
-        {{ values.sum | round(2) }}
-      }
-    
-    - { name: "riemann_eigenverbrauch_ersparnis", expression: >-
-        {% set now = now() %}
-        {% set midnight = now.replace(hour=0, minute=0, second=0, microsecond=0) %}
-        {% set values = namespace(sum=0) %}
-        {% for sensor in states.sensor | selectattr('entity_id', 'match', 'sensor.pv_leistung_gesamt_*') %}
-          {% set total_power = sensor.state | float(0) %}
-          {% set grid_power = states('sensor.einspeisung_' + sensor.entity_id.split('_')[-1]) | float(0) %}
-          {% set self_consumption = total_power - grid_power %}
-          {% set price = states('sensor.aktueller_strompreis') | float(0) %}
-          {% set values.sum = values.sum + (self_consumption * price * states(sensor).age.seconds / 360000) %}
-        {% endfor %}
-        {{ values.sum | round(2) }}
-      }
-    
-    # Historische Preisberechnungen
-    - { name: "historischer_ertrag", expression: >-
-        {% set values = namespace(sum=0) %}
-        {% for sensor in states.sensor | selectattr('entity_id', 'match', 'sensor.gesamtertrag_*') %}
-          {% set ertrag = sensor.state | float(0) %}
-          {% set price_history = state_attr(sensor.entity_id, 'price_history') | default({}) %}
-          {% for timestamp, data in price_history.items() %}
-            {% set values.sum = values.sum + (data.ertrag * data.preis) %}
-          {% endfor %}
-        {% endfor %}
-        {{ values.sum | round(2) }}
-      }
+    - name: "uptime_days"
+      value: >
+        {% set hours = states('sensor.running_time')|float %}
+        {{ (hours / 24)|round(1) }}
+      translation_key: "sensor.device.metrics.uptime_days"
 
-  # Statistik-Sensoren für Gesamtanlage
-  statistics:
-    - name: "Gesamt PV-Leistung Statistik"
-      unique_id: "gesamt_pv_leistung_statistik"
-      state_class: "measurement"
-      unit_of_measurement: "W"
-      source: "sensor.gesamt_pv_leistung"
-      statistics_type: "mean"
-      
-    - name: "Gesamt Tagesertrag Statistik"
-      unique_id: "gesamt_tagesertrag_statistik"
-      state_class: "measurement"
-      unit_of_measurement: "kWh"
-      source: "sensor.gesamt_tagesertrag"
-      statistics_type: "sum"
-      
-    - name: "Gesamt CO2 Einsparung Statistik"
-      unique_id: "gesamt_co2_einsparung_statistik"
-      state_class: "measurement"
-      unit_of_measurement: "kg"
-      source: "sensor.gesamt_co2_einsparung"
-      statistics_type: "sum"
-
-automations:
-  - name: "Strompreis Änderung Dokumentation"
-    trigger:
-      platform: state
-      entity_id: sensor.aktueller_strompreis
-    action:
-      service: recorder.record_state_attributes
-      data_template:
-        entity_id: "sensor.gesamtertrag_*"
-        attributes:
-          price_history: >
-            {% set history = state_attr(trigger.entity_id, 'price_history') | default({}) %}
-            {% set history = history.update({
-              now().isoformat(): {
-                'preis': states('sensor.aktueller_strompreis') | float(0),
-                'ertrag': states('sensor.gesamtertrag') | float(0)
-              }
-            }) %}
-            {{ history }}
-
-  - name: "Tägliches Riemann-Integral Reset"
-    trigger:
-      platform: time
-      at: "00:00:00"
-    action:
-      service: homeassistant.update_entity
-      target:
-        entity_id: 
-          - sensor.riemann_ertrag_tag
-          - sensor.riemann_einspeisung_ertrag
-          - sensor.riemann_eigenverbrauch_ersparnis 
+    - name: "temperature_difference"
+      value: >
+        {% set ambient = states('sensor.ambient_temperature')|float %}
+        {% set enclosure = states('sensor.enclosure_temperature')|float %}
+        {{ (enclosure - ambient)|round(1) }}
+      translation_key: "sensor.device.metrics.temperature_difference"

@@ -1,78 +1,127 @@
+# Configuration for Compleo eBox Professional charging station
+
 registers:
   read:
-    # Basis-Informationen
-    - { name: "geraete_typ", address: 0, type: "uint16", description: "Gerätetyp-Identifikation" }
-    - { name: "seriennummer", address: 2, type: "string", count: 8, description: "Seriennummer des Geräts" }
-    - { name: "firmware_version", address: 10, type: "uint16", scale: 0.01, description: "Firmware Version" }
+    # Device Information
+    - { name: "device_type", address: 0, type: "uint16", translation_key: "sensor.device.info.type", entity_category: "diagnostic" }
+    - { name: "serial_number", address: 2, type: "string", count: 8, translation_key: "sensor.device.info.serial_number", entity_category: "diagnostic" }
+    - { name: "firmware_version", address: 10, type: "uint16", scale: 0.01, translation_key: "sensor.device.info.firmware_version", entity_category: "diagnostic" }
     
-    # Ladestatus
-    - { name: "ladestatus", address: 100, type: "uint16", description: "Aktueller Ladestatus (0: Bereit, 1: Fahrzeug verbunden, 2: Lädt, 3: Fehler)" }
-    - { name: "stecker_verriegelt", address: 101, type: "uint16", description: "Status der Steckerverriegelung" }
-    - { name: "fahrzeug_verbunden", address: 102, type: "uint16", description: "Fahrzeug verbunden Status" }
+    # Charging Status
+    - { name: "charging_status", address: 100, type: "uint16", translation_key: "sensor.charging.status.state", entity_category: "diagnostic" }
+    - { name: "plug_locked", address: 101, type: "uint16", translation_key: "sensor.charging.status.plug_locked", entity_category: "diagnostic" }
+    - { name: "vehicle_connected", address: 102, type: "uint16", translation_key: "sensor.charging.status.vehicle_connected", entity_category: "diagnostic" }
     
-    # Leistungsdaten
-    - { name: "aktuelle_leistung", address: 200, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
-    - { name: "aktuelle_stromstaerke", address: 202, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
-    - { name: "maximale_stromstaerke", address: 203, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    # Power Data
+    - { name: "current_power", address: 200, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", translation_key: "sensor.charging.power.active" }
+    - { name: "current_amperage", address: 202, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.charging.electric.current" }
+    - { name: "maximum_amperage", address: 203, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.charging.electric.current_limit" }
     
-    # Spannungen und Ströme pro Phase
-    - { name: "spannung_l1", address: 300, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
-    - { name: "strom_l1", address: 301, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
-    - { name: "spannung_l2", address: 302, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
-    - { name: "strom_l2", address: 303, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
-    - { name: "spannung_l3", address: 304, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
-    - { name: "strom_l3", address: 305, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    # Phase Measurements
+    - { name: "voltage_l1", address: 300, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.electric.voltage_l1" }
+    - { name: "current_l1", address: 301, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.electric.current_l1" }
+    - { name: "voltage_l2", address: 302, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.electric.voltage_l2" }
+    - { name: "current_l2", address: 303, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.electric.current_l2" }
+    - { name: "voltage_l3", address: 304, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.electric.voltage_l3" }
+    - { name: "current_l3", address: 305, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.grid.electric.current_l3" }
     
-    # Energiezähler
-    - { name: "energie_aktueller_ladevorgang", address: 400, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word" }
-    - { name: "energie_gesamt", address: 402, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    # Energy Meters
+    - { name: "energy_current_session", address: 400, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", translation_key: "sensor.charging.energy.session" }
+    - { name: "energy_total", address: 402, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word", translation_key: "sensor.charging.energy.total" }
     
-    # Temperaturen
-    - { name: "temperatur_intern", address: 500, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
-    - { name: "temperatur_stecker", address: 501, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+    # Temperatures
+    - { name: "temperature_internal", address: 500, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.device.temperature.internal" }
+    - { name: "temperature_plug", address: 501, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.device.temperature.plug" }
     
-    # Status und Fehler
-    - { name: "fehlercode", address: 600, type: "uint16", description: "Aktueller Fehlercode" }
-    - { name: "warncode", address: 601, type: "uint16", description: "Aktueller Warncode" }
+    # Status and Errors
+    - { name: "error_code", address: 600, type: "uint16", translation_key: "sensor.device.status.error_code", entity_category: "diagnostic" }
+    - { name: "warning_code", address: 601, type: "uint16", translation_key: "sensor.device.status.warning_code", entity_category: "diagnostic" }
 
   write:
-    # Steuerungsregister
-    - { name: "ladestation_freigeben", address: 1000, type: "uint16", description: "Ladestation freigeben (0: Gesperrt, 1: Freigegeben)" }
-    - { name: "max_ladestrom", address: 1001, type: "uint16", description: "Maximaler Ladestrom in A" }
-    - { name: "laden_starten_stoppen", address: 1002, type: "uint16", description: "Ladevorgang starten/stoppen (0: Stop, 1: Start)" }
-    - { name: "stecker_entriegeln", address: 1003, type: "uint16", description: "Stecker entriegeln (1: Entriegeln)" }
+    # Control Registers
+    - { name: "enable_charging", address: 1000, type: "uint16", translation_key: "register.charging.control.enable", entity_category: "config" }
+    - { name: "max_charging_current", address: 1001, type: "uint16", translation_key: "register.charging.control.current_limit", entity_category: "config" }
+    - { name: "start_stop_charging", address: 1002, type: "uint16", translation_key: "register.charging.control.start_stop", entity_category: "config" }
+    - { name: "unlock_plug", address: 1003, type: "uint16", translation_key: "register.charging.control.unlock_plug", entity_category: "config" }
+
+polling:
+  fast:
+    interval: 10
+    registers: ["charging_status", "current_power", "current_amperage"]
+  normal:
+    interval: 30
+    registers: ["voltage_l1", "voltage_l2", "voltage_l3", "current_l1", "current_l2", "current_l3", "temperature_internal", "temperature_plug"]
+  slow:
+    interval: 300
+    registers: ["energy_current_session", "energy_total"]
+
+validation:
+  voltage:
+    min: 180
+    max: 270
+  current:
+    min: 0
+    max: 32
+  temperature:
+    min: -20
+    max: 90
+  power:
+    min: 0
+    max: 22000
 
 automations:
-  - name: "Fehlerbenachrichtigung"
+  - name: "error_notification"
     trigger:
       platform: state
-      entity_id: sensor.fehlercode
+      entity_id: sensor.error_code
       from: "0"
+      to: "!= 0"
     action:
       service: notify.notify
       data:
-        title: "Ladestation Fehler"
-        message: "Die Ladestation meldet einen Fehler (Code: {{ states('sensor.fehlercode') }})"
+        title: "{{ 'notification.charging.error.title'|translate }}"
+        message: "{{ 'notification.charging.error.message'|translate(error_code=states('sensor.error_code')) }}"
 
-  - name: "Ladevorgang Beendet"
+  - name: "charging_completed"
     trigger:
       platform: state
-      entity_id: sensor.ladestatus
+      entity_id: sensor.charging_status
       from: "2"
       to: "1"
+      for: "00:00:10"
     action:
       service: notify.notify
       data:
-        title: "Ladevorgang Beendet"
-        message: "Ladevorgang abgeschlossen. Geladene Energie: {{ states('sensor.energie_aktueller_ladevorgang') }} kWh"
+        title: "{{ 'notification.charging.completed.title'|translate }}"
+        message: "{{ 'notification.charging.completed.message'|translate(energy=states('sensor.energy_current_session')) }}"
 
-  - name: "Hohe Temperatur Warnung"
+  - name: "high_temperature_warning"
     trigger:
       platform: numeric_state
-      entity_id: sensor.temperatur_intern
+      entity_id: sensor.temperature_internal
       above: 60
+      for: "00:02:00"
     action:
       service: notify.notify
       data:
-        title: "Ladestation Temperaturwarnung"
-        message: "Die Temperatur der Ladestation ist über 60°C gestiegen!"
+        title: "{{ 'notification.charging.temperature.warning.title'|translate }}"
+        message: "{{ 'notification.charging.temperature.warning.message'|translate(temperature=states('sensor.temperature_internal')) }}"
+
+helpers:
+  templates:
+    - name: "charging_efficiency"
+      value: >
+        {% set power_ac = states('sensor.current_power')|float %}
+        {% set power_dc = states('sensor.charging_power_dc')|float %}
+        {{ (power_dc / power_ac * 100)|round(1) if power_ac > 0 else 0 }}
+      translation_key: "sensor.charging.metrics.efficiency"
+
+    - name: "phase_balance"
+      value: >
+        {% set l1 = states('sensor.current_l1')|float %}
+        {% set l2 = states('sensor.current_l2')|float %}
+        {% set l3 = states('sensor.current_l3')|float %}
+        {% set max_diff = max(l1, l2, l3) - min(l1, l2, l3) %}
+        {% set total = l1 + l2 + l3 %}
+        {{ (max_diff / total * 100)|round(1) if total > 0 else 0 }}
+      translation_key: "sensor.charging.metrics.phase_balance"

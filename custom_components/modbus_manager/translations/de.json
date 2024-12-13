@@ -1,0 +1,263 @@
+{
+    "config": {
+        "title": "Modbus Manager",
+        "step": {
+            "user": {
+                "title": "Modbus-Gerät konfigurieren",
+                "description": "Richten Sie Ihre Modbus-Geräteverbindung ein",
+                "data": {
+                    "name": "Gerätename",
+                    "host": "IP-Adresse/Hostname",
+                    "port": "Port",
+                    "slave_id": "Slave-ID",
+                    "scan_interval": "Scan-Intervall (Sekunden)",
+                    "device_type": "Gerätetyp",
+                    "system_size_kw": "Anlagengröße (kW)"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_host": "Ungültiger Hostname oder IP-Adresse",
+            "unknown": "Unbekannter Fehler aufgetreten"
+        },
+        "abort": {
+            "already_configured": "Gerät ist bereits konfiguriert"
+        }
+    },
+    "device": {
+        "info": {
+            "type": "Gerätetyp",
+            "serial_number": "Seriennummer",
+            "firmware_version": "Firmware-Version",
+            "protocol_version": "Protokoll-Version"
+        },
+        "status": {
+            "state": "Betriebszustand",
+            "error_code": "Fehlercode",
+            "warning_code": "Warncode"
+        },
+        "network": {
+            "ip": "IP-Adresse",
+            "subnet": "Subnetzmaske",
+            "gateway": "Gateway",
+            "modbus_address": "Modbus-Adresse"
+        },
+        "system": {
+            "time": "Systemzeit",
+            "runtime": "Laufzeit"
+        },
+        "environment": {
+            "temperature": "Umgebungstemperatur",
+            "temperature_enclosure": "Gehäusetemperatur"
+        },
+        "metrics": {
+            "uptime_days": "Betriebszeit (Tage)",
+            "temperature_difference": "Temperaturdifferenz"
+        }
+    },
+    "grid": {
+        "electric": {
+            "voltage": "Netzspannung",
+            "voltage_l1": "Netzspannung L1",
+            "voltage_l2": "Netzspannung L2",
+            "voltage_l3": "Netzspannung L3",
+            "current": "Netzstrom",
+            "current_l1": "Netzstrom L1",
+            "current_l2": "Netzstrom L2",
+            "current_l3": "Netzstrom L3",
+            "frequency": "Netzfrequenz",
+            "power_factor": "Leistungsfaktor"
+        },
+        "power": {
+            "active": "Wirkleistung",
+            "active_total": "Gesamtwirkleistung",
+            "active_l1": "Wirkleistung L1",
+            "active_l2": "Wirkleistung L2",
+            "active_l3": "Wirkleistung L3",
+            "reactive": "Blindleistung",
+            "reactive_total": "Gesamtblindleistung",
+            "apparent": "Scheinleistung",
+            "apparent_total": "Gesamtscheinleistung"
+        },
+        "energy": {
+            "total": "Gesamtenergie",
+            "today": "Energie heute"
+        },
+        "metrics": {
+            "power_quality": "Stromqualität",
+            "efficiency": "Netzeffizienz",
+            "phase_balance": "Phasenbalance"
+        }
+    },
+    "battery": {
+        "status": {
+            "state": "Batteriestatus",
+            "charging": "Ladestatus",
+            "soc": "Ladezustand"
+        },
+        "electric": {
+            "voltage": "Batteriespannung",
+            "current": "Batteriestrom"
+        },
+        "power": {
+            "active": "Batterieleistung"
+        },
+        "energy": {
+            "charged": "Geladene Energie",
+            "discharged": "Entladene Energie"
+        },
+        "temperature": "Batterietemperatur",
+        "health": {
+            "soh": "Gesundheitszustand",
+            "cycles": "Zyklenanzahl"
+        },
+        "metrics": {
+            "efficiency": "Batterieeffizienz",
+            "utilization": "Leistungsauslastung",
+            "runtime": "Geschätzte Laufzeit"
+        }
+    },
+    "load": {
+        "status": {
+            "state": "Verbraucherstatus",
+            "priority": "Verbraucherpriorität",
+            "mode": "Verbrauchermodus"
+        },
+        "power": {
+            "active": "Verbraucherleistung",
+            "reactive": "Blindleistung",
+            "apparent": "Scheinleistung"
+        },
+        "energy": {
+            "consumed": "Verbrauchte Energie",
+            "exported": "Exportierte Energie"
+        },
+        "electric": {
+            "voltage": "Verbraucherspannung",
+            "current": "Verbraucherstrom",
+            "frequency": "Verbraucherfrequenz",
+            "power_factor": "Verbraucher-Leistungsfaktor"
+        },
+        "metrics": {
+            "efficiency": "Verbrauchereffizienz",
+            "utilization": "Verbraucherauslastung",
+            "energy_balance": "Energiebilanz"
+        }
+    },
+    "notification": {
+        "device": {
+            "error": {
+                "title": "Gerätefehler",
+                "message": "Fehlercode {error_code} erkannt"
+            },
+            "temperature": {
+                "warning": {
+                    "title": "Hohe Temperatur Warnung",
+                    "message": "Gerätetemperatur bei {temperature}°C"
+                }
+            }
+        },
+        "grid": {
+            "error": {
+                "title": "Netzfehler",
+                "message": "Netzfehlercode {error_code} erkannt"
+            },
+            "temperature": {
+                "warning": {
+                    "title": "Hohe Temperatur Warnung",
+                    "message": "Netztemperatur bei {temperature}°C"
+                }
+            },
+            "phase_imbalance": {
+                "warning": {
+                    "title": "Phasenungleichgewicht Warnung",
+                    "message": "Signifikantes Phasenungleichgewicht erkannt"
+                }
+            },
+            "energy": {
+                "daily": {
+                    "title": "Täglicher Energiebericht",
+                    "message": "Energie heute: {energy} kWh"
+                }
+            }
+        },
+        "battery": {
+            "error": {
+                "title": "Batteriefehler",
+                "message": "Batteriefehlercode {error_code} erkannt"
+            },
+            "temperature": {
+                "warning": {
+                    "title": "Hohe Batterietemperatur",
+                    "message": "Batterietemperatur bei {temperature}°C"
+                }
+            },
+            "soc": {
+                "warning": {
+                    "title": "Niedriger Batteriestand",
+                    "message": "Batterieladung bei {soc}%"
+                }
+            },
+            "health": {
+                "report": {
+                    "title": "Batteriezustandsbericht",
+                    "message": "Gesundheit: {health}%, Zyklen: {cycles}"
+                }
+            }
+        },
+        "load": {
+            "power": {
+                "warning": {
+                    "title": "Hohe Last Warnung",
+                    "message": "Verbraucherleistung bei {power}W"
+                }
+            },
+            "disconnection": {
+                "title": "Verbraucher getrennt",
+                "message": "Verbraucher wurde getrennt"
+            },
+            "energy": {
+                "daily": {
+                    "title": "Verbraucher-Energiebericht",
+                    "message": "Verbraucht: {consumed} kWh, Exportiert: {exported} kWh"
+                }
+            }
+        }
+    },
+    "register": {
+        "device": {
+            "system": {
+                "time": "Systemzeit-Einstellung",
+                "restart": "Gerät neustarten"
+            },
+            "network": {
+                "modbus_address": "Modbus-Adresse Einstellung"
+            }
+        },
+        "grid": {
+            "control": {
+                "active_power": "Wirkleistungsregelung",
+                "reactive_power": "Blindleistungsregelung",
+                "power_factor": "Leistungsfaktorregelung"
+            }
+        },
+        "battery": {
+            "control": {
+                "charge_power": "Ladeleistungslimit",
+                "discharge_power": "Entladeleistungslimit",
+                "charge_soc": "Lade-SOC-Limit",
+                "discharge_soc": "Entlade-SOC-Limit",
+                "mode": "Betriebsmodus"
+            }
+        },
+        "load": {
+            "control": {
+                "enable": "Verbraucher aktivieren",
+                "power_limit": "Leistungslimit",
+                "priority": "Prioritätseinstellung",
+                "mode": "Moduseinstellung"
+            }
+        }
+    }
+} 

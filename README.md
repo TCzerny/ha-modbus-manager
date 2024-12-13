@@ -1,294 +1,117 @@
-# Modbus Manager für Home Assistant
+# Modbus Manager for Home Assistant
 
-[![hacs_badge](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/custom-components/hacs)
+[![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
-Eine leistungsstarke Home Assistant Integration zur Verwaltung von Modbus-Geräten mit vorkonfigurierten Gerätedefinitionen.
+A Home Assistant integration for managing Modbus devices with preconfigured device definitions and translations.
 
-## Unterstützte Geräte
+## ⚠️ Disclaimer
 
-- Sungrow Wechselrichter
-  - SG-RT Serie (einphasig)
-  - SG-RT Serie (dreiphasig)
-  - SH-RT Serie mit Batteriespeicher
-- Compleo eBOX Professional Wallbox
+This integration is provided "AS IS" without warranty of any kind. By using this integration, you agree that:
 
-## Features
+1. The use of this integration is at your own risk
+2. The author(s) will not be liable for any damages, direct or indirect, that may arise from the use of this integration
+3. The integration may interact with electrical devices and systems. Incorrect configuration or usage could potentially damage your devices
+4. You are responsible for ensuring compliance with your device manufacturer's warranty terms and conditions
+5. Always verify the correct operation of your system after making any changes
 
-### Allgemeine Features
-- Flexible Modbus-Gerätekonfiguration über YAML-Dateien
-- Automatische Sensor- und Entitätserstellung
-- Integrierte Automationen und Benachrichtigungen
-- Dynamische Berechnungen und Templates
-- Lastmanagement-Funktionen
+## Supported Devices
 
-### Sungrow Wechselrichter Features
-- Leistungs- und Energiemonitoring
-- Batteriemanagementsystem
-- Temperaturüberwachung
-- Fehler- und Warnmeldungen
-- Steuerungsfunktionen (Ein/Aus, Leistungsbegrenzung)
+### Sungrow SHRT Series (Hybrid Inverters)
+- Sungrow SH-RT (3-phase with battery)
+- Sungrow SH-RT (3-phase)
+- Sungrow SH-RT (1-phase with battery)
+- Sungrow SH-RT (1-phase)
 
-### Wallbox Features
-- Ladestatus und -steuerung
-- Energiemonitoring
-- Fehlerüberwachung
-- Temperaturmanagement
+### Sungrow SGRT Series (Grid Inverters)
+- Sungrow SG-RT (Base)
+- Sungrow SG-RT (1-phase)
+- Sungrow SG-RT (3-phase)
+
+### Sungrow Battery System
+- Battery status and control
+- Energy and power measurement
+- Health and diagnostic data
+
+### Compleo Charging Station
+- eBox Professional
+- Charging status and control
+- Energy and power measurement
+
+### Additional Modules
+- Common Entities (Base information for all devices)
+- Load Management System
 
 ## Installation
 
-### HACS Installation (empfohlen)
-1. Öffnen Sie HACS in Home Assistant
-2. Gehen Sie zu "Integrationen"
-3. Klicken Sie auf das 3-Punkte-Menü
-4. Wählen Sie "Eigenes Repository hinzufügen"
-5. Fügen Sie die URL dieses Repositories ein
-6. Wählen Sie "Integration" als Kategorie
-7. Klicken Sie auf "Hinzufügen"
+1. Add this repository to HACS as a "Custom Repository":
+   ```
+   https://github.com/YourRepository/modbus_manager
+   ```
 
-### Manuelle Installation
-1. Laden Sie den Inhalt dieses Repositories herunter
-2. Kopieren Sie den Ordner `custom_components/modbus_manager` in Ihren Home Assistant Ordner `config/custom_components/`
-3. Starten Sie Home Assistant neu
+2. Install the integration through HACS
 
-## Konfiguration
+3. Restart Home Assistant
 
-### Basis-Konfiguration
-1. Gehen Sie zu Einstellungen -> Geräte & Dienste
-2. Klicken Sie auf "Integration hinzufügen"
-3. Suchen Sie nach "Modbus Manager"
-4. Folgen Sie dem Konfigurationsassistenten
+## Configuration
 
-### Gerätespezifische Konfiguration
-Jedes Gerät wird über eine YAML-Datei im Ordner `device_definitions` konfiguriert. Die Konfiguration enthält:
-- Modbus-Register-Definitionen
-- Sensor-Konfigurationen
-- Automatisierungen
-- Berechnungsvorlagen
+1. Go to Settings -> Devices & Services
+2. Click "Add Integration"
+3. Search for "Modbus Manager"
+4. Select the desired device type from the list
+5. Enter the required connection parameters:
+   - Name: A unique name for the device
+   - Host: IP address or hostname of the device
+   - Port: Modbus TCP port (default: 502)
+   - Slave ID: Modbus slave ID (default: 1)
+   - Scan Interval: Update interval in seconds (default: 30)
+   - System Size (PV systems only): Size in kW (1-30)
 
-## Register-Definitionen
+## Features
 
-### Lese-Register
-```yaml
-read:
-  - name: "sensor_name"
-    address: 5000
-    type: "uint16"
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 0.1
-```
+### Automatic Device Detection
+- Preconfigured device definitions
+- Automatic setup of all relevant entities
+- Optimized polling intervals
 
-### Schreib-Register
-```yaml
-write:
-  - name: "control_parameter"
-    address: 1000
-    type: "uint16"
-    description: "Beschreibung der Funktion"
-```
+### Intelligent Load Management
+- Consumer prioritization
+- Dynamic power adjustment
+- Energy flow optimization
 
-## Automatisierungen
+### Advanced Monitoring
+- Detailed status displays
+- Power and energy measurement
+- Error and diagnostic reports
 
-Die Integration enthält vordefinierte Automatisierungen für:
-- Fehlerüberwachung
-- Temperaturwarnungen
-- Status-Benachrichtigungen
-- Energiemanagement
+### Automation Capabilities
+- Predefined automations
+- Event-based notifications
+- Adjustable thresholds
 
-## Templates und Berechnungen
+## Troubleshooting
 
-Unterstützung für:
-- Energieberechnungen
-- Leistungsoptimierung
-- Batteriemanagement
-- Preisbasierte Steuerung
+### Connection Issues
+1. Check the network connection to the device
+2. Ensure the Modbus TCP port (default: 502) is accessible
+3. Verify the device's slave ID
 
-## Optimierungen und Berechnungen
+### Data Errors
+1. Check the scan interval
+2. Verify Modbus register addresses
+3. Validate device configuration
 
-### Energieoptimierung
-- **Eigenverbrauchsoptimierung**: Automatische Anpassung der Batterieladung/-entladung basierend auf:
-  - Aktuelle PV-Produktion
-  - Haushaltsverbrauch
-  - Strompreise (optional)
-  - Wettervorhersage (optional)
+## Contributing
 
-### Batteriemanagement
-- **Dynamische SOC-Steuerung**:
-  ```yaml
-  templates:
-    - name: "battery_target_soc"
-      value: >
-        {% set price_factor = states('sensor.strompreis')|float %}
-        {% set pv_forecast = states('sensor.pv_forecast_today')|float %}
-        {% if price_factor > 0.30 %}
-          {% if pv_forecast > 10 %}
-            85
-          {% else %}
-            95
-          {% endif %}
-        {% else %}
-          60
-        {% endif %}
-  ```
+Contributions are welcome! Please create a Pull Request or Issue in the GitHub repository.
 
-### Lastmanagement
-- **Intelligente Verbrauchssteuerung**:
-  ```yaml
-  automations:
-    - name: "load_management"
-      trigger:
-        - platform: numeric_state
-          entity_id: sensor.grid_power
-          above: 5000
-      action:
-        - service: switch.turn_off
-          target:
-            entity_id: switch.high_power_device
-  ```
+## License
 
-### Preisbasierte Optimierung
-- **Riemann-Integral Berechnung**:
-  ```yaml
-  templates:
-    - name: "energy_cost_calculation"
-      value: >
-        {% set power = states('sensor.total_power')|float %}
-        {% set price = states('sensor.electricity_price')|float %}
-        {{ (power * price / 1000) | round(2) }}
-  ```
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## Vordefinierte Automatisierungen
+## Translations
 
-### Batterieüberwachung
-```yaml
-automations:
-  - name: "battery_protection"
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.battery_temperature
-        above: 40
-    condition:
-      - condition: numeric_state
-        entity_id: sensor.battery_soc
-        above: 85
-    action:
-      - service: modbus_manager.set_charge_power
-        data:
-          power: 0
-```
+The integration supports multiple languages through Home Assistant's translation system:
+- English (en)
+- German (de)
 
-### Eigenverbrauchsoptimierung
-```yaml
-automations:
-  - name: "self_consumption_optimization"
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.pv_power
-        above: sensor.house_consumption
-    action:
-      - service: modbus_manager.set_battery_mode
-        data:
-          mode: "charge"
-```
-
-### Netzüberlastungsschutz
-```yaml
-automations:
-  - name: "grid_protection"
-    trigger:
-      - platform: numeric_state
-        entity_id: sensor.grid_power
-        above: 15000
-    action:
-      - service: modbus_manager.reduce_charge_power
-        data:
-          reduction: 50
-```
-
-## Helfer und Templates
-
-### Energieberechnungen
-```yaml
-templates:
-  - name: "daily_self_consumption"
-    value: >
-      {% set total = states('sensor.daily_energy_production')|float %}
-      {% set grid = states('sensor.daily_grid_feed')|float %}
-      {{ ((total - grid) / total * 100)|round(1) }}
-```
-
-### Leistungsoptimierung
-```yaml
-templates:
-  - name: "optimal_charge_power"
-    value: >
-      {% set pv = states('sensor.pv_power')|float %}
-      {% set home = states('sensor.home_consumption')|float %}
-      {% set surplus = pv - home %}
-      {{ [surplus, 10000] | min }}
-```
-
-### Batterieeffizienz
-```yaml
-templates:
-  - name: "battery_efficiency"
-    value: >
-      {% set charge = states('sensor.total_battery_charge')|float %}
-      {% set discharge = states('sensor.total_battery_discharge')|float %}
-      {{ (discharge / charge * 100)|round(1) if charge > 0 else 0 }}
-```
-
-## Erweiterte Konfigurationsbeispiele
-
-### Dynamische Ladeleistung
-```yaml
-templates:
-  - name: "dynamic_charge_power"
-    value: >
-      {% set price = states('sensor.electricity_price')|float %}
-      {% set soc = states('sensor.battery_soc')|float %}
-      {% if price < 0.15 and soc < 80 %}
-        {{ 10000 }}
-      {% elif price < 0.25 and soc < 60 %}
-        {{ 5000 }}
-      {% else %}
-        {{ 0 }}
-      {% endif %}
-```
-
-### Wetterbasierte Steuerung
-```yaml
-automations:
-  - name: "weather_based_charging"
-    trigger:
-      - platform: state
-        entity_id: sensor.weather_forecast_today
-    action:
-      - service: modbus_manager.set_target_soc
-        data:
-          template: >
-            {% if trigger.to_state.state == 'sunny' %}
-              {{ 60 }}
-            {% else %}
-              {{ 85 }}
-            {% endif %}
-```
-
-## Fehlerbehebung
-
-### Bekannte Probleme
-- Liste bekannter Probleme und Lösungen
-
-### Debugging
-1. Aktivieren Sie das Debug-Logging
-2. Überprüfen Sie die Home Assistant Logs
-3. Kontaktieren Sie den Support
-
-## Beitragen
-
-Beiträge sind willkommen! Bitte erstellen Sie einen Pull Request oder ein Issue.
-
-## Lizenz
-
-Dieses Projekt ist unter der MIT-Lizenz lizenziert - siehe die [LICENSE](LICENSE) Datei für Details. 
+All entity names, sensors, and UI elements are defined in English and translated through the translation files. 

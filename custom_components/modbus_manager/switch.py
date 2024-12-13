@@ -6,40 +6,40 @@ from .const import DOMAIN
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Richtet die Modbus Manager Schalter ein."""
+    """Set up Modbus Manager switches."""
     hub: ModbusSungrowHub = hass.data[DOMAIN].get(entry.entry_id)
     if not hub:
-        _LOGGER.error("ModbusSungrowHub nicht in hass.data gefunden")
+        _LOGGER.error("ModbusSungrowHub not found in hass.data")
         return
 
-    # Stelle sicher, dass der Coordinator existiert
+    # Ensure coordinator exists
     await hub.read_registers(hub.device_type)
 
     device_definitions = hub.get_device_definition(hub.device_type)
     if not device_definitions:
-        _LOGGER.error("Keine Gerätekonfiguration gefunden für %s", hub.device_type)
+        _LOGGER.error("No device configuration found for %s", hub.device_type)
         return
 
     switches = []
     write_registers = device_definitions.get('registers', {}).get('write', [])
 
-    _LOGGER.debug("Erstelle %d Schalter für %s", len(write_registers), hub.name)
+    _LOGGER.debug("Creating %d switches for %s", len(write_registers), hub.name)
 
     for reg in write_registers:
         switch = ModbusSwitch(hub, reg['name'], reg)
         switches.append(switch)
-        _LOGGER.debug("Schalter erstellt: %s mit Konfiguration: %s", reg['name'], reg)
+        _LOGGER.debug("Switch created: %s with configuration: %s", reg['name'], reg)
 
     async_add_entities(switches, True)
 
 class ModbusSwitch(CoordinatorEntity):
-    """Repräsentiert einen einzelnen Modbus-Schalter."""
+    """Represents a single Modbus switch."""
 
     def __init__(self, hub: ModbusSungrowHub, name: str, device_def: dict):
-        """Initialisiert den Schalter."""
+        """Initialize the switch."""
         if hub.name not in hub.coordinators:
-            _LOGGER.error("Kein Coordinator für Hub %s gefunden", hub.name)
-            raise ValueError(f"Kein Coordinator für Hub {hub.name} gefunden")
+            _LOGGER.error("No coordinator found for hub %s", hub.name)
+            raise ValueError(f"No coordinator found for hub {hub.name}")
             
         super().__init__(hub.coordinators[hub.name])
         self._hub = hub
@@ -47,24 +47,24 @@ class ModbusSwitch(CoordinatorEntity):
         self._device_def = device_def
         self._state = False
         
-        # Erstelle eine eindeutige ID basierend auf dem Hub-Namen und Schalter-Namen
+        # Create unique ID based on hub name and switch name
         self._unique_id = f"{self._hub.name}_{self._name}"
         
-        _LOGGER.debug("Switch initialisiert: %s (ID: %s)", self.name, self._unique_id)
+        _LOGGER.debug("Switch initialized: %s (ID: %s)", self.name, self._unique_id)
 
     @property
     def unique_id(self):
-        """Eindeutige ID für den Schalter."""
+        """Unique ID for the switch."""
         return self._unique_id
 
     @property
     def name(self):
-        """Name des Schalters."""
+        """Name of the switch."""
         return f"{self._hub.name} {self._name}"
 
     @property
     def device_info(self):
-        """Geräteinformationen für Device Registry."""
+        """Device information for Device Registry."""
         return {
             "identifiers": {(DOMAIN, self._hub.name)},
             "name": self._hub.name,
@@ -75,19 +75,19 @@ class ModbusSwitch(CoordinatorEntity):
 
     @property
     def is_on(self):
-        """Gibt an, ob der Schalter eingeschaltet ist."""
+        """Return whether the switch is on."""
         return self._state
 
     async def async_turn_on(self, **kwargs):
-        """Schaltet den Schalter ein."""
+        """Turn the switch on."""
         await self._write_register(True)
 
     async def async_turn_off(self, **kwargs):
-        """Schaltet den Schalter aus."""
+        """Turn the switch off."""
         await self._write_register(False)
 
     async def _write_register(self, value):
-        """Schreibt einen Wert in das Modbus-Register."""
+        """Write a value to the Modbus register."""
         try:
             address = self._device_def.get("address")
             data_type = self._device_def.get("type")
@@ -98,15 +98,15 @@ class ModbusSwitch(CoordinatorEntity):
             elif data_type == "uint16":
                 data = [1] if value else [0]
             else:
-                _LOGGER.error("Nicht unterstützter Datentyp für Schalter: %s", data_type)
+                _LOGGER.error("Unsupported data type for switch: %s", data_type)
                 return
 
             response = await self._hub.client.write_registers(address, data, unit=unit)
             if response.isError():
-                _LOGGER.error(f"Fehler beim Schreiben des Schalters {self._name}: {response}")
+                _LOGGER.error(f"Error writing switch {self._name}: {response}")
             else:
-                _LOGGER.debug(f"Schalter {self._name} gesetzt auf {value}")
+                _LOGGER.debug(f"Switch {self._name} set to {value}")
                 self._state = value
                 self.async_write_ha_state()
         except Exception as e:
-            _LOGGER.error("Fehler beim Schreiben des Schalters: %s", e) 
+            _LOGGER.error("Error writing switch: %s", e) 

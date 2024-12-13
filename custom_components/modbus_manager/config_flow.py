@@ -8,17 +8,28 @@ from .const import DOMAIN
 
 def get_available_device_types():
     """Lädt die verfügbaren Gerätekonfigurationen aus dem device_definitions Verzeichner."""
-    device_types = {}
-    definitions_path = Path(__file__).parent / "device_definitions"
-    
-    if definitions_path.exists() and definitions_path.is_dir():
-        for file in definitions_path.glob("*.yaml"):
-            # Entferne .yaml Endung und konvertiere zu einem lesbaren Namen
-            key = file.stem  # z.B. "sungrow_sh10rt"
-            # Konvertiere zu einem benutzerfreundlichen Namen
-            name = key.replace("_", " ").title()  # z.B. "Sungrow Sh10Rt"
-            device_types[key] = name
-    
+    device_types = {
+        # Sungrow SHRT Series (Hybrid Inverter)
+        "sungrow_shrt": "Sungrow SH-RT (3-Phase with Battery)",
+        "sungrow_shrt_3p": "Sungrow SH-RT (3-Phase)",
+        "sungrow_shrt_1p_battery": "Sungrow SH-RT (1-Phase with Battery)",
+        "sungrow_shrt_1p": "Sungrow SH-RT (1-Phase)",
+        
+        # Sungrow SGRT Series (Grid Inverter)
+        "sungrow_sgrt": "Sungrow SG-RT (Base)",
+        "sungrow_sgrt_single": "Sungrow SG-RT (1-Phase)",
+        "sungrow_sgrt_three": "Sungrow SG-RT (3-Phase)",
+        
+        # Sungrow Battery
+        "sungrow_battery": "Sungrow Battery System",
+        
+        # Compleo Charging Station
+        "compleo_ebox_professional": "Compleo eBox Professional",
+        
+        # Common Definitions
+        "common_entities": "Common Entities",
+        "load_management": "Load Management System"
+    }
     return device_types
 
 @config_entries.HANDLERS.register(DOMAIN)
@@ -61,33 +72,23 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow):
                 return self.async_create_entry(title=user_input["name"], data=user_input)
 
         # Show configuration form
+        schema = {
+            vol.Required("name"): str,
+            vol.Required("host"): str,
+            vol.Required("port", default=502): int,
+            vol.Required("slave_id", default=1): int,
+            vol.Required("scan_interval", default=30): int,
+            vol.Required("device_type"): vol.In(device_types),
+        }
+        
+        # Füge anlagengroesse_kw nur für PV-Anlagen hinzu
+        if any(x in user_input.get("device_type", "") for x in ["shrt", "sgrt"]):
+            schema[vol.Required("anlagengroesse_kw", default=5)] = vol.All(
+                vol.Coerce(float), vol.Range(min=1, max=30)
+            )
+
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
-                {
-                    vol.Required("name"): str,
-                    vol.Required("host"): str,
-                    vol.Required("port", default=502): int,
-                    vol.Required("slave_id", default=1): int,
-                    vol.Required("scan_interval", default=30): int,
-                    vol.Required("device_type"): vol.In(
-                        [
-                            "sungrow_sh3k6",
-                            "sungrow_sh5k6",
-                            "sungrow_sh8rt",
-                            "sungrow_sh10rt",
-                            "sungrow_sh15rt",
-                            "sungrow_sg3rt",
-                            "sungrow_sg5rt",
-                            "sungrow_sg8rt",
-                            "sungrow_sg10rt",
-                            "compleo_ebox_professional"
-                        ]
-                    ),
-                    vol.Required("anlagengroesse_kw", default=5): vol.All(
-                        vol.Coerce(float), vol.Range(min=1, max=30)
-                    ),
-                }
-            ),
+            data_schema=vol.Schema(schema),
             errors=errors,
         ) 
