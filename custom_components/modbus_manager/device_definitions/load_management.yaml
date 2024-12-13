@@ -63,6 +63,63 @@ helpers:
         valid_device_count: "{{ devices | length }}"
         priority_conflicts: "{{ valid_priorities | length != valid_priorities | unique | length }}"
 
+    # Erweiterte Lastüberwachung
+    - name: "load_management_status"
+      unique_id: "load_management_status"
+      value: >
+        {% set data = namespace(
+          total_load=0,
+          peak_load=0,
+          devices=[],
+          load_distribution={},
+          optimization_potential=0
+        ) %}
+        
+        {# Sammle Lastdaten aller Geräte #}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*power$') %}
+          {% set device_name = entity_id.entity_id.split('.')[1].split('_power')[0] %}
+          {% set power = states(entity_id.entity_id)|float(0) %}
+          {% set priority = states(device_name ~ '_priority')|int(99) %}
+          {% set min_power = states(device_name ~ '_min_power')|float(0) %}
+          {% set max_power = states(device_name ~ '_max_power')|float(0) %}
+          
+          {% set device_data = {
+            'name': device_name,
+            'current_power': power,
+            'priority': priority,
+            'min_power': min_power,
+            'max_power': max_power,
+            'optimization_potential': max_power - power if power < max_power else 0
+          } %}
+          
+          {% set data.devices = data.devices + [device_data] %}
+          {% set data.total_load = data.total_load + power %}
+          {% set data.peak_load = data.peak_load if data.peak_load > power else power %}
+          {% set data.optimization_potential = data.optimization_potential + device_data.optimization_potential %}
+        {% endfor %}
+        
+        {# Berechne Lastverteilung #}
+        {% for device in data.devices %}
+          {% set data.load_distribution = data.load_distribution.update({
+            device.name: (device.current_power / data.total_load * 100)|round(1)
+          }) %}
+        {% endfor %}
+        
+        {
+          "current_status": {
+            "total_load": data.total_load,
+            "peak_load": data.peak_load,
+            "device_count": data.devices|length,
+            "load_distribution": data.load_distribution
+          },
+          "optimization": {
+            "potential": data.optimization_potential,
+            "recommendations": data.devices|sort(attribute='optimization_potential', reverse=true)|map(attribute='name')|list
+          },
+          "devices": data.devices|sort(attribute='priority'),
+          "last_update": now()
+        }
+
 automations:
   # Dynamische Lastverteilung
   - name: "dynamic_load_distribution"
@@ -92,6 +149,22 @@ automations:
       - service: script.reduce_managed_loads
         data:
           excess_power: "{{ states('sensor.total_grid_power') | float(0) - 11000 }}"
+
+  # Lastoptimierung
+  - name: "load_optimization"
+    unique_id: "load_optimization"
+    trigger:
+      platform: state
+      entity_id: sensor.load_management_status
+    condition:
+      condition: template
+      value_template: >
+        {% set status = states('sensor.load_management_status')|from_json %}
+        {{ status.optimization.potential > 1000 }}  # Mehr als 1kW Optimierungspotential
+    action:
+      - service: script.optimize_load_distribution
+        data:
+          optimization_data: "{{ states('sensor.load_management_status') }}"
 
 scripts:
   distribute_power:

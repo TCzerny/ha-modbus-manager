@@ -5,6 +5,8 @@ from .modbus_sungrow import ModbusSungrowHub
 from .const import DOMAIN
 import struct
 import asyncio
+import time
+from datetime import datetime
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -162,10 +164,88 @@ class ModbusSensor(CoordinatorEntity):
             return None
             
     async def _batch_read_registers(self, registers):
-        """Optimierte Batch-Lesung von Registern."""
+        """Optimierte Batch-Lesung von Registern mit Performance-Tracking."""
         try:
-            # Gruppiere zusammenhängende Register
-            register_groups = []
-            current_group = []
+            start_time = time.time()
             
-            for reg in sorted(registers, key=lambda x: x['address']):
+            # Gruppiere Register nach Adressbereich
+            register_groups = self._group_registers(registers)
+            
+            # Parallele Ausführung der Lesevorgänge
+            tasks = []
+            for group in register_groups:
+                start_address = group[0]['address']
+                count = group[-1]['address'] + group[-1].get('count', 1) - start_address
+                tasks.append(self._read_register_group(start_address, count))
+            
+            # Warte auf alle Ergebnisse
+            results = await asyncio.gather(*tasks, return_exceptions=True)
+            
+            # Verarbeite Ergebnisse
+            data = {}
+            for group, result in zip(register_groups, results):
+                if isinstance(result, Exception):
+                    _LOGGER.error("Fehler beim Lesen der Register-Gruppe: %s", result)
+                    continue
+                    
+                if result.isError():
+                    _LOGGER.error("Modbus-Fehler bei Register-Gruppe: %s", result)
+                    continue
+                    
+                offset = 0
+                for reg in group:
+                    count = reg.get('count', 1)
+                    data[reg['name']] = result.registers[offset:offset + count]
+                    offset += count
+            
+            # Performance-Metriken
+            end_time = time.time()
+            response_time = (end_time - start_time) * 1000  # ms
+            
+            self._update_metrics({
+                'response_time': response_time,
+                'success_rate': len(data) / len(registers) * 100,
+                'timestamp': datetime.now().isoformat()
+            })
+            
+            return data
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Batch-Lesen der Register: %s", e)
+            self._update_metrics({
+                'error': str(e),
+                'timestamp': datetime.now().isoformat()
+            })
+            return None
+
+    def _group_registers(self, registers):
+        """Gruppiert Register für optimale Batch-Lesungen."""
+        MAX_GROUP_SIZE = 125  # Modbus-Limit
+        groups = []
+        current_group = []
+        
+        for reg in sorted(registers, key=lambda x: x['address']):
+            if not current_group:
+                current_group.append(reg)
+                continue
+                
+            last_reg = current_group[-1]
+            current_size = reg['address'] + reg.get('count', 1) - current_group[0]['address']
+            
+            if (current_size <= MAX_GROUP_SIZE and 
+                reg['address'] <= last_reg['address'] + last_reg.get('count', 1) + 5):
+                current_group.append(reg)
+            else:
+                groups.append(current_group)
+                current_group = [reg]
+                
+        if current_group:
+            groups.append(current_group)
+            
+        return groups
+
+    def _update_metrics(self, metrics):
+        """Aktualisiert die Performance-Metriken."""
+        self._attr_extra_state_attributes.update({
+            'performance_metrics': metrics
+        })

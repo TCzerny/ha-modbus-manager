@@ -116,6 +116,71 @@ helpers:
           "last_check": now()
         }
 
+    # Detaillierter Systemstatus
+    - name: "system_health_monitor"
+      unique_id: "system_health_monitor"
+      value: >
+        {% set data = namespace(
+          devices={}, 
+          total_power=0, 
+          communication_errors=0,
+          last_errors=[],
+          performance={}
+        ) %}
+        
+        {# Geräte Status sammeln #}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*operating_state$') %}
+          {% set device_name = entity_id.entity_id.split('.')[1].split('_operating_state')[0] %}
+          {% set device = namespace(
+            state=states(entity_id.entity_id),
+            power=states(device_name ~ '_total_active_power')|float(0),
+            errors=states(device_name ~ '_error_code')|int(0),
+            last_update=state_attr(entity_id.entity_id, 'last_updated'),
+            response_time=state_attr(entity_id.entity_id, 'response_time')|float(0)
+          ) %}
+          
+          {% set data.devices = data.devices.update({
+            device_name: {
+              'state': device.state,
+              'power': device.power,
+              'errors': device.errors,
+              'last_update': device.last_update,
+              'response_time': device.response_time
+            }
+          }) %}
+          
+          {% if device.errors > 0 %}
+            {% set data.communication_errors = data.communication_errors + 1 %}
+            {% set data.last_errors = data.last_errors + [{
+              'device': device_name,
+              'error': device.errors,
+              'timestamp': device.last_update
+            }] %}
+          {% endif %}
+          
+          {% set data.total_power = data.total_power + device.power %}
+        {% endfor %}
+        
+        {# Performance-Metriken berechnen #}
+        {% set data.performance = {
+          'avg_response_time': (data.devices|map(attribute='response_time')|sum / data.devices|length)|round(3),
+          'max_response_time': data.devices|map(attribute='response_time')|max,
+          'error_rate': (data.communication_errors / data.devices|length * 100)|round(1)
+        } %}
+        
+        {
+          "devices": data.devices,
+          "system_status": {
+            "total_devices": data.devices|length,
+            "active_devices": data.devices|selectattr('state', 'eq', 'running')|list|length,
+            "total_power": data.total_power,
+            "communication_errors": data.communication_errors,
+            "last_errors": data.last_errors[-5:],  # Letzte 5 Fehler
+            "performance": data.performance
+          },
+          "last_update": now()
+        }
+
 automations:
   # Tägliche Energiestatistik
   - name: "daily_energy_statistics"
@@ -156,6 +221,46 @@ automations:
               - {{ issue }}
             {% endfor %}
             {% endif %}
+
+  # Erweiterte Systemüberwachung
+  - name: "system_monitoring"
+    unique_id: "system_monitoring"
+    trigger:
+      - platform: time_pattern
+        minutes: "/5"
+      - platform: event
+        event_type: modbus_manager_error
+    action:
+      - service: persistent_notification.create
+        data:
+          title: "Modbus System Status"
+          message: >
+            {% set status = states('sensor.system_health_monitor')|from_json %}
+            System Status:
+            - Aktive Geräte: {{ status.system_status.active_devices }}/{{ status.system_status.total_devices }}
+            - Gesamtleistung: {{ status.system_status.total_power|round(1) }} W
+            - Kommunikationsfehler: {{ status.system_status.communication_errors }}
+            
+            Performance:
+            - Durchschn. Antwortzeit: {{ status.system_status.performance.avg_response_time }} ms
+            - Max. Antwortzeit: {{ status.system_status.performance.max_response_time }} ms
+            - Fehlerrate: {{ status.system_status.performance.error_rate }}%
+            
+            {% if status.system_status.last_errors %}
+            Letzte Fehler:
+            {% for error in status.system_status.last_errors %}
+              - {{ error.device }}: Error {{ error.error }} ({{ error.timestamp }})
+            {% endfor %}
+            {% endif %}
+      
+      - condition: template
+        value_template: >
+          {% set status = states('sensor.system_health_monitor')|from_json %}
+          {{ status.system_status.performance.error_rate > 10 }}
+      - service: notify.supervisor
+        data:
+          title: "Hohe Modbus Fehlerrate"
+          message: "Die Modbus Fehlerrate liegt bei {{ status.system_status.performance.error_rate }}%"
 
 validation:
   power:
