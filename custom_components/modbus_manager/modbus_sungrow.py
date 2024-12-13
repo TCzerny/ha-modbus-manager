@@ -9,10 +9,10 @@ import asyncio
 _LOGGER = logging.getLogger(__name__)
 
 class ModbusSungrowHub:
-    """Klasse zur Verwaltung einer Modbus-Verbindung für Sungrow-Geräte."""
+    """Class for managing Modbus connection for Sungrow devices."""
 
     def __init__(self, name, host, port, slave, device_type, hass):
-        """Initialisiert das Hub."""
+        """Initialize the hub."""
         self.name = name
         self.host = host
         self.port = port

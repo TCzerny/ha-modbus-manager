@@ -3,23 +3,25 @@
         "title": "Modbus Manager",
         "step": {
             "user": {
-                "title": "Modbus-Gerät konfigurieren",
+                "title": "Modbus Gerätekonfiguration",
                 "description": "Richten Sie Ihre Modbus-Geräteverbindung ein",
                 "data": {
                     "name": "Gerätename",
-                    "host": "IP-Adresse/Hostname",
+                    "host": "Host",
                     "port": "Port",
-                    "slave_id": "Slave-ID",
-                    "scan_interval": "Scan-Intervall (Sekunden)",
-                    "device_type": "Gerätetyp",
-                    "system_size_kw": "Anlagengröße (kW)"
+                    "slave_id": "Slave ID",
+                    "scan_interval": "Scan-Intervall",
+                    "device_type": "Gerätetyp"
                 }
             }
         },
         "error": {
             "cannot_connect": "Verbindung fehlgeschlagen",
             "invalid_host": "Ungültiger Hostname oder IP-Adresse",
-            "unknown": "Unbekannter Fehler aufgetreten"
+            "unknown": "Unbekannter Fehler aufgetreten",
+            "invalid_port": "Port muss zwischen 1 und 65535 liegen",
+            "invalid_slave_id": "Slave ID muss zwischen 1 und 247 liegen",
+            "interval_too_short": "Scan-Intervall muss mindestens 5 Sekunden betragen"
         },
         "abort": {
             "already_configured": "Gerät ist bereits konfiguriert"
@@ -257,6 +259,21 @@
                 "power_limit": "Leistungslimit",
                 "priority": "Prioritätseinstellung",
                 "mode": "Moduseinstellung"
+            }
+        }
+    },
+    "sensor": {
+        "system": {
+            "total_yield": "Gesamter PV-Ertrag",
+            "total_power": "Gesamtleistung",
+            "energy_costs_today": "Energiekosten Heute",
+            "energy_costs_month": "Energiekosten Dieser Monat",
+            "pv_overview": "PV-System Übersicht"
+        },
+        "load": {
+            "status": {
+                "state": "Laststatus",
+                "priority": "Lastpriorität"
             }
         }
     }

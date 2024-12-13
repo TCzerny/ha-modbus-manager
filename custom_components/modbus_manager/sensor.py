@@ -11,13 +11,13 @@ from datetime import datetime
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Richtet die Modbus Manager Sensoren ein."""
+    """Set up Modbus Manager sensors."""
     hub: ModbusSungrowHub = hass.data[DOMAIN].get(entry.entry_id)
     if not hub:
-        _LOGGER.error("ModbusSungrowHub nicht in hass.data gefunden")
+        _LOGGER.error("ModbusSungrowHub not found in hass.data")
         return
 
-    # Stelle sicher, dass der Coordinator existiert
+    # Ensure coordinator exists
     await hub.read_registers(hub.device_type)
 
     device_definitions = hub.get_device_definition(hub.device_type)

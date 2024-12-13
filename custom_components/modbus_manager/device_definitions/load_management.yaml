@@ -1,9 +1,9 @@
 # Load Management System
-# Koordiniert die Lastverteilung zwischen allen konfigurierten Geräten
+# Coordinates load distribution between all configured devices
 
 helpers:
   templates:
-    # Verfügbare Überschussleistung
+    # Available surplus power
     - name: "available_surplus_power"
       unique_id: "available_surplus_power"
       value: >
@@ -25,7 +25,7 @@ helpers:
           {% endfor %}
           {{ (data.pv - data.home - data.battery - data.ev) | round(0) }}
         {% except %}
-          {{ 0 }}  {# Fallback bei Fehlern #}
+          {{ 0 }}  {# Fallback on errors #}
         {% endtry %}
       attributes:
         pv_power: "{{ data.pv }}"

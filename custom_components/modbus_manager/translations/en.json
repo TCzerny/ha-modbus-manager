@@ -3,23 +3,25 @@
         "title": "Modbus Manager",
         "step": {
             "user": {
-                "title": "Configure Modbus Device",
+                "title": "Modbus Device Configuration",
                 "description": "Set up your Modbus device connection",
                 "data": {
                     "name": "Device Name",
-                    "host": "IP Address/Hostname",
+                    "host": "Host",
                     "port": "Port",
                     "slave_id": "Slave ID",
-                    "scan_interval": "Scan Interval (seconds)",
-                    "device_type": "Device Type",
-                    "system_size_kw": "System Size (kW)"
+                    "scan_interval": "Scan Interval",
+                    "device_type": "Device Type"
                 }
             }
         },
         "error": {
             "cannot_connect": "Failed to connect",
             "invalid_host": "Invalid hostname or IP address",
-            "unknown": "Unknown error occurred"
+            "unknown": "Unknown error occurred",
+            "invalid_port": "Port must be between 1 and 65535",
+            "invalid_slave_id": "Slave ID must be between 1 and 247",
+            "interval_too_short": "Scan interval must be at least 5 seconds"
         },
         "abort": {
             "already_configured": "Device is already configured"
@@ -257,6 +259,21 @@
                 "power_limit": "Power Limit",
                 "priority": "Priority Setting",
                 "mode": "Mode Setting"
+            }
+        }
+    },
+    "sensor": {
+        "system": {
+            "total_yield": "Total PV Yield",
+            "total_power": "Total Power",
+            "energy_costs_today": "Energy Costs Today",
+            "energy_costs_month": "Energy Costs This Month",
+            "pv_overview": "PV System Overview"
+        },
+        "load": {
+            "status": {
+                "state": "Load Status",
+                "priority": "Load Priority"
             }
         }
     }
