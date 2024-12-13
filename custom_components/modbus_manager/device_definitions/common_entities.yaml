@@ -1,0 +1,127 @@
+# Gemeinsame Entitäten für alle Modbus Manager Geräte
+# Summiert Werte über alle konfigurierten Geräte
+
+registers: {}  # Keine direkten Register, da dies eine virtuelle Konfiguration ist
+
+helpers:
+  templates:
+    # Summierung aller PV-Anlagen
+    - { name: "gesamt_pv_leistung", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.pv_leistung_gesamt_*') | sum(attribute='state') | float(0)" }
+    - { name: "gesamt_tagesertrag", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.tagesertrag_*') | sum(attribute='state') | float(0)" }
+    - { name: "gesamt_gesamtertrag", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.gesamtertrag_*') | sum(attribute='state') | float(0)" }
+    - { name: "gesamt_anlagenleistung", expression: "states.input_number | selectattr('entity_id', 'match', 'input_number.anlagengroesse_kw_*') | sum(attribute='state') | float(0)" }
+    
+    # Durchschnittliche Leistungswerte
+    - { name: "durchschnitt_wirkungsgrad", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.wirkungsgrad_*') | list | map(attribute='state') | map('float') | list | avg if states.sensor | selectattr('entity_id', 'match', 'sensor.wirkungsgrad_*') | list | length > 0 else 0" }
+    - { name: "durchschnitt_eigenverbrauch", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.eigenverbrauch_quote_*') | list | map(attribute='state') | map('float') | list | avg if states.sensor | selectattr('entity_id', 'match', 'sensor.eigenverbrauch_quote_*') | list | length > 0 else 0" }
+    
+    # Wirtschaftlichkeitsberechnungen über alle Anlagen
+    - { name: "gesamt_anlagenkosten", expression: "states.input_number | selectattr('entity_id', 'match', 'input_number.anlagenkosten_*') | sum(attribute='state') | float(0)" }
+    - { name: "gesamt_co2_einsparung", expression: "states.sensor | selectattr('entity_id', 'match', 'sensor.co2_einsparung_*') | sum(attribute='state') | float(0)" }
+    
+    # Zeitbasierte Ertragsberechnungen mit Riemann-Integral
+    - { name: "riemann_ertrag_tag", expression: >-
+        {% set now = now() %}
+        {% set midnight = now.replace(hour=0, minute=0, second=0, microsecond=0) %}
+        {% set intervals = (as_timestamp(now) - as_timestamp(midnight)) / 300 %}
+        {% set values = namespace(sum=0) %}
+        {% for sensor in states.sensor | selectattr('entity_id', 'match', 'sensor.pv_leistung_gesamt_*') %}
+          {% set values.sum = values.sum + (sensor.attributes.get('riemann_sum', 0)) %}
+        {% endfor %}
+        {{ (values.sum / 3600000) | round(3) }}
+      }
+    
+    # Dynamische Strompreis-Berechnungen
+    - { name: "riemann_einspeisung_ertrag", expression: >-
+        {% set now = now() %}
+        {% set midnight = now.replace(hour=0, minute=0, second=0, microsecond=0) %}
+        {% set values = namespace(sum=0) %}
+        {% for sensor in states.sensor | selectattr('entity_id', 'match', 'sensor.einspeisung_*') %}
+          {% set power = sensor.state | float(0) %}
+          {% set price = states('sensor.einspeiseverguetung') | float(0) %}
+          {% set values.sum = values.sum + (power * price * states(sensor).age.seconds / 360000) %}
+        {% endfor %}
+        {{ values.sum | round(2) }}
+      }
+    
+    - { name: "riemann_eigenverbrauch_ersparnis", expression: >-
+        {% set now = now() %}
+        {% set midnight = now.replace(hour=0, minute=0, second=0, microsecond=0) %}
+        {% set values = namespace(sum=0) %}
+        {% for sensor in states.sensor | selectattr('entity_id', 'match', 'sensor.pv_leistung_gesamt_*') %}
+          {% set total_power = sensor.state | float(0) %}
+          {% set grid_power = states('sensor.einspeisung_' + sensor.entity_id.split('_')[-1]) | float(0) %}
+          {% set self_consumption = total_power - grid_power %}
+          {% set price = states('sensor.aktueller_strompreis') | float(0) %}
+          {% set values.sum = values.sum + (self_consumption * price * states(sensor).age.seconds / 360000) %}
+        {% endfor %}
+        {{ values.sum | round(2) }}
+      }
+    
+    # Historische Preisberechnungen
+    - { name: "historischer_ertrag", expression: >-
+        {% set values = namespace(sum=0) %}
+        {% for sensor in states.sensor | selectattr('entity_id', 'match', 'sensor.gesamtertrag_*') %}
+          {% set ertrag = sensor.state | float(0) %}
+          {% set price_history = state_attr(sensor.entity_id, 'price_history') | default({}) %}
+          {% for timestamp, data in price_history.items() %}
+            {% set values.sum = values.sum + (data.ertrag * data.preis) %}
+          {% endfor %}
+        {% endfor %}
+        {{ values.sum | round(2) }}
+      }
+
+  # Statistik-Sensoren für Gesamtanlage
+  statistics:
+    - name: "Gesamt PV-Leistung Statistik"
+      unique_id: "gesamt_pv_leistung_statistik"
+      state_class: "measurement"
+      unit_of_measurement: "W"
+      source: "sensor.gesamt_pv_leistung"
+      statistics_type: "mean"
+      
+    - name: "Gesamt Tagesertrag Statistik"
+      unique_id: "gesamt_tagesertrag_statistik"
+      state_class: "measurement"
+      unit_of_measurement: "kWh"
+      source: "sensor.gesamt_tagesertrag"
+      statistics_type: "sum"
+      
+    - name: "Gesamt CO2 Einsparung Statistik"
+      unique_id: "gesamt_co2_einsparung_statistik"
+      state_class: "measurement"
+      unit_of_measurement: "kg"
+      source: "sensor.gesamt_co2_einsparung"
+      statistics_type: "sum"
+
+automations:
+  - name: "Strompreis Änderung Dokumentation"
+    trigger:
+      platform: state
+      entity_id: sensor.aktueller_strompreis
+    action:
+      service: recorder.record_state_attributes
+      data_template:
+        entity_id: "sensor.gesamtertrag_*"
+        attributes:
+          price_history: >
+            {% set history = state_attr(trigger.entity_id, 'price_history') | default({}) %}
+            {% set history = history.update({
+              now().isoformat(): {
+                'preis': states('sensor.aktueller_strompreis') | float(0),
+                'ertrag': states('sensor.gesamtertrag') | float(0)
+              }
+            }) %}
+            {{ history }}
+
+  - name: "Tägliches Riemann-Integral Reset"
+    trigger:
+      platform: time
+      at: "00:00:00"
+    action:
+      service: homeassistant.update_entity
+      target:
+        entity_id: 
+          - sensor.riemann_ertrag_tag
+          - sensor.riemann_einspeisung_ertrag
+          - sensor.riemann_eigenverbrauch_ersparnis 

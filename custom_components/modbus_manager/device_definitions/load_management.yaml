@@ -1,0 +1,278 @@
+# Generisches Lastmanagement für alle Wechselrichter-Typen
+templates:
+  # Basis-Überschussberechnung
+  - name: "pv_ueberschuss_basis"
+    expression: "max(0, states('sensor.pv_leistung_gesamt')|float(0) - states('sensor.hausverbrauch')|float(0))"
+
+  # Batterie-korrigierter Überschuss (falls Batterie vorhanden)
+  - name: "pv_ueberschuss"
+    expression: >-
+      {% set basis = states('sensor.pv_ueberschuss_basis')|float(0) %}
+      {% if states('sensor.batterie_vorhanden')|bool %}
+        {{ max(0, basis - max(0, states('sensor.batterie_leistung')|float(0))) }}
+      {% else %}
+        {{ basis }}
+      {% endif %}
+
+  # Wetterbasierte Prognose
+  - name: "pv_prognose"
+    expression: >-
+      {% set current = states('sensor.pv_ueberschuss')|float(0) %}
+      {% set sun_elevation = states('sensor.sun_elevation')|float(0) %}
+      {% set cloud_coverage = states('sensor.weather_cloud_coverage')|float(0) if states('sensor.weather_cloud_coverage') != 'unavailable' else 50 %}
+      {% set rain_forecast = states('sensor.weather_rain_forecast')|float(0) if states('sensor.weather_rain_forecast') != 'unavailable' else 0 %}
+      {% set time_to_sunset = states('sensor.sun_next_setting')|as_datetime - now() %}
+      {% set hours_to_sunset = time_to_sunset.total_seconds() / 3600 %}
+      {% if sun_elevation > 0 and hours_to_sunset > 1 %}
+        {% set weather_factor = (1 - cloud_coverage/100 * 0.3) * (1 - rain_forecast/100 * 0.5) %}
+        {{ (current * weather_factor)|round(0) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  # Dynamische Preisberechnung
+  - name: "strompreis_dynamisch"
+    expression: >-
+      {% set base_price = states('input_number.strompreis_basis')|float(0.30) %}
+      {% set current_hour = now().hour %}
+      {% if states('sensor.strompreis_boerse') != 'unavailable' %}
+        {{ states('sensor.strompreis_boerse')|float(base_price) }}
+      {% elif states('input_boolean.hochtarif_aktiv') == 'on' and 
+            current_hour >= states('input_number.hochtarif_start')|int(6) and 
+            current_hour < states('input_number.hochtarif_ende')|int(22) %}
+        {{ states('input_number.strompreis_ht')|float(base_price) }}
+      {% else %}
+        {{ states('input_number.strompreis_nt')|float(base_price) }}
+      {% endif %}
+
+  # Verbraucher-Prioritäten
+  - name: "verbraucher_prioritaet"
+    expression: >-
+      {% set prio = {
+        'wallbox': states('input_number.prio_wallbox')|float(1),
+        'waermepumpe': states('input_number.prio_waermepumpe')|float(2),
+        'warmwasser': states('input_number.prio_warmwasser')|float(3),
+        'hausgeraete': states('input_number.prio_hausgeraete')|float(4)
+      } %}
+      {{ prio|tojson }}
+
+  # Optimale Ladeleistung für Wallbox
+  - name: "wallbox_ladeleistung_optimal"
+    expression: >-
+      {% set min_power = states('input_number.wallbox_min_power')|float(1380) %}
+      {% set max_power = states('input_number.wallbox_max_power')|float(11000) %}
+      {% set ueberschuss = states('sensor.pv_ueberschuss')|float(0) %}
+      {% set prognose = states('sensor.pv_prognose')|float(0) %}
+      {% set strompreis = states('sensor.strompreis_dynamisch')|float(0.30) %}
+      {% set max_preis = states('input_number.wallbox_max_preis')|float(0.40) %}
+      {% if ueberschuss >= min_power and prognose >= min_power and strompreis <= max_preis %}
+        {{ min(max_power, ueberschuss)|round(-2) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  # Optimale Leistung für Wärmepumpe
+  - name: "waermepumpe_leistung_optimal"
+    expression: >-
+      {% set min_power = states('input_number.waermepumpe_min_power')|float(500) %}
+      {% set max_power = states('input_number.waermepumpe_max_power')|float(3000) %}
+      {% set ueberschuss = states('sensor.pv_ueberschuss')|float(0) %}
+      {% set speicher_temp = states('sensor.speicher_temperatur')|float(45) %}
+      {% set ziel_temp = states('input_number.speicher_zieltemperatur')|float(55) %}
+      {% set strompreis = states('sensor.strompreis_dynamisch')|float(0.30) %}
+      {% set max_preis = states('input_number.waermepumpe_max_preis')|float(0.35) %}
+      {% if ueberschuss >= min_power and speicher_temp < ziel_temp and strompreis <= max_preis %}
+        {{ min(max_power, ueberschuss)|round(-1) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+automations:
+  - name: "Lastmanagement Prioritäten"
+    trigger:
+      - platform: state
+        entity_id: sensor.pv_ueberschuss
+      - platform: state
+        entity_id: sensor.strompreis_dynamisch
+    action:
+      - service: script.turn_on
+        target:
+          entity_id: script.lastmanagement_priorisierung
+
+  - name: "Wallbox Steuerung"
+    trigger:
+      - platform: state
+        entity_id: sensor.wallbox_ladeleistung_optimal
+      - platform: state
+        entity_id: binary_sensor.wallbox_connected
+    condition:
+      - condition: state
+        entity_id: input_boolean.wallbox_automatik
+        state: "on"
+      - condition: state
+        entity_id: binary_sensor.wallbox_connected
+        state: "on"
+    action:
+      - service: number.set_value
+        target:
+          entity_id: number.wallbox_charging_current_limit
+        data:
+          value: "{{ states('sensor.wallbox_ladeleistung_optimal')|float(0) / 230 }}"
+
+  - name: "Wärmepumpe Steuerung"
+    trigger:
+      - platform: state
+        entity_id: sensor.waermepumpe_leistung_optimal
+      - platform: numeric_state
+        entity_id: sensor.speicher_temperatur
+        below: input_number.speicher_zieltemperatur
+    condition:
+      - condition: state
+        entity_id: input_boolean.waermepumpe_automatik
+        state: "on"
+    action:
+      - service: climate.set_temperature
+        target:
+          entity_id: climate.waermepumpe
+        data:
+          temperature: "{{ states('input_number.speicher_zieltemperatur')|float }}"
+
+scripts:
+  lastmanagement_priorisierung:
+    sequence:
+      - variables:
+          ueberschuss: "{{ states('sensor.pv_ueberschuss')|float(0) }}"
+          strompreis: "{{ states('sensor.strompreis_dynamisch')|float(0.30) }}"
+          prios: "{{ states('sensor.verbraucher_prioritaet') }}"
+      - repeat:
+          count: "{{ prios|from_json|length }}"
+          sequence:
+            - variables:
+                current_device: "{{ prios|from_json|dict2items|sort(attribute='value')|map(attribute='key')|list[repeat.index-1] }}"
+            - choose:
+                - conditions:
+                    - condition: template
+                      value_template: "{{ current_device == 'wallbox' and ueberschuss >= states('input_number.wallbox_min_power')|float(1380) }}"
+                  sequence:
+                    - service: script.turn_on
+                      target:
+                        entity_id: script.wallbox_start
+                - conditions:
+                    - condition: template
+                      value_template: "{{ current_device == 'waermepumpe' and ueberschuss >= states('input_number.waermepumpe_min_power')|float(500) }}"
+                  sequence:
+                    - service: script.turn_on
+                      target:
+                        entity_id: script.waermepumpe_start
+
+input_boolean:
+  wallbox_automatik:
+    name: "Wallbox Automatik-Modus"
+    icon: mdi:ev-station
+  waermepumpe_automatik:
+    name: "Wärmepumpe Automatik-Modus"
+    icon: mdi:heat-pump
+  hochtarif_aktiv:
+    name: "Hochtarif aktiv"
+    icon: mdi:currency-eur
+
+input_number:
+  # Strompreis-Einstellungen
+  strompreis_basis:
+    name: "Basis-Strompreis"
+    min: 0.10
+    max: 1.00
+    step: 0.01
+    unit_of_measurement: "€/kWh"
+  strompreis_ht:
+    name: "Hochtarif-Preis"
+    min: 0.20
+    max: 1.00
+    step: 0.01
+    unit_of_measurement: "€/kWh"
+  strompreis_nt:
+    name: "Niedertarif-Preis"
+    min: 0.15
+    max: 0.80
+    step: 0.01
+    unit_of_measurement: "€/kWh"
+  hochtarif_start:
+    name: "Hochtarif Beginn"
+    min: 0
+    max: 23
+    step: 1
+    unit_of_measurement: "Uhr"
+  hochtarif_ende:
+    name: "Hochtarif Ende"
+    min: 0
+    max: 23
+    step: 1
+    unit_of_measurement: "Uhr"
+
+  # Verbraucher-Prioritäten
+  prio_wallbox:
+    name: "Priorität Wallbox"
+    min: 1
+    max: 10
+    step: 1
+  prio_waermepumpe:
+    name: "Priorität Wärmepumpe"
+    min: 1
+    max: 10
+    step: 1
+  prio_warmwasser:
+    name: "Priorität Warmwasser"
+    min: 1
+    max: 10
+    step: 1
+  prio_hausgeraete:
+    name: "Priorität Hausgeräte"
+    min: 1
+    max: 10
+    step: 1
+
+  # Wallbox-Einstellungen
+  wallbox_min_power:
+    name: "Wallbox Mindestleistung"
+    min: 1380
+    max: 3680
+    step: 100
+    unit_of_measurement: "W"
+  wallbox_max_power:
+    name: "Wallbox Maximalleistung"
+    min: 1380
+    max: 11000
+    step: 100
+    unit_of_measurement: "W"
+  wallbox_max_preis:
+    name: "Wallbox max. Strompreis"
+    min: 0.20
+    max: 1.00
+    step: 0.01
+    unit_of_measurement: "€/kWh"
+
+  # Wärmepumpen-Einstellungen
+  waermepumpe_min_power:
+    name: "Wärmepumpe Mindestleistung"
+    min: 500
+    max: 2000
+    step: 100
+    unit_of_measurement: "W"
+  waermepumpe_max_power:
+    name: "Wärmepumpe Maximalleistung"
+    min: 1000
+    max: 3000
+    step: 100
+    unit_of_measurement: "W"
+  waermepumpe_max_preis:
+    name: "Wärmepumpe max. Strompreis"
+    min: 0.20
+    max: 1.00
+    step: 0.01
+    unit_of_measurement: "€/kWh"
+  speicher_zieltemperatur:
+    name: "Speicher Zieltemperatur"
+    min: 35
+    max: 65
+    step: 1
+    unit_of_measurement: "°C" 

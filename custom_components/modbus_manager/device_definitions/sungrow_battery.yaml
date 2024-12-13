@@ -1,0 +1,73 @@
+# Gemeinsame Konfiguration für Sungrow Batteriesysteme
+# Unterstützt alle Sungrow Hybrid-Wechselrichter mit Batterie
+
+registers:
+  read:
+    # Batterie Basis-Parameter
+    - { name: "batterie_soc", address: 5038, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1 }
+    - { name: "batterie_leistung", address: 5022, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "batterie_spannung", address: 5039, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "batterie_strom", address: 5040, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "batterie_temperatur", address: 5041, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+    
+    # Batterie Status und Gesundheit
+    - { name: "batterie_zyklen", address: 5042, type: "uint16", state_class: "measurement" }
+    - { name: "batterie_status", address: 5043, type: "uint16", description: "Batteriestatus" }
+    - { name: "batterie_fehlercode", address: 5044, type: "uint16", description: "Batterie Fehlercode" }
+    - { name: "batterie_soh", address: 5045, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1 }
+    
+    # Batterie Energiezähler
+    - { name: "batterie_ladeenergie_gesamt", address: 5057, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    - { name: "batterie_entladeenergie_gesamt", address: 5059, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+
+  write:
+    # Batterie Steuerung
+    - { name: "batterie_betriebsmodus", address: 5103, type: "uint16", description: "Batteriebetriebsmodus (0: Auto, 1: Zwangsladung, 2: Zwangsentladung)" }
+    - { name: "batterie_min_soc", address: 5104, type: "uint16", description: "Minimaler Batterieladezustand in %" }
+    - { name: "batterie_ladeleistung", address: 5105, type: "uint16", description: "Maximale Batterieladeleistung in W" }
+    - { name: "batterie_entladeleistung", address: 5106, type: "uint16", description: "Maximale Batterieentladeleistung in W" }
+
+automations:
+  - name: "Batterie SOC Warnung"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.batterie_soc
+      below: 15
+    action:
+      service: notify.notify
+      data:
+        title: "Batterie fast leer"
+        message: "Der Batterieladezustand ist unter 15% gefallen!"
+
+  - name: "Batterie Temperatur Warnung"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.batterie_temperatur
+      above: 45
+    action:
+      service: notify.notify
+      data:
+        title: "Batterie Temperaturwarnung"
+        message: "Die Batterietemperatur ist über 45°C gestiegen!"
+
+  - name: "Batterie SOH Warnung"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.batterie_soh
+      below: 80
+    action:
+      service: notify.notify
+      data:
+        title: "Batterie Gesundheit"
+        message: "Die Batterie-Gesundheit ist unter 80% gefallen!"
+
+  - name: "Batterie Fehler"
+    trigger:
+      platform: state
+      entity_id: sensor.batterie_fehlercode
+      from: "0"
+    action:
+      service: notify.notify
+      data:
+        title: "Batterie Fehler"
+        message: "Die Batterie meldet einen Fehler (Code: {{ states('sensor.batterie_fehlercode') }})"

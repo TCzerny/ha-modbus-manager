@@ -1,0 +1,143 @@
+registers:
+  read:
+    # Basis-Informationen
+    - { name: "geraete_typ", address: 5000, type: "uint16", description: "Gerätetyp-Identifikation" }
+    - { name: "seriennummer", address: 5002, type: "string", count: 10, description: "Seriennummer des Geräts" }
+    - { name: "software_version", address: 5015, type: "uint16", scale: 0.01, description: "Software Version" }
+    
+    # Leistungsdaten
+    - { name: "pv_leistung_gesamt", address: 5016, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "pv1_leistung", address: 5018, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "pv2_leistung", address: 5020, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "batterie_leistung", address: 5022, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "netzleistung", address: 5024, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "hausverbrauch", address: 5026, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "ausgangsleistung_l1", address: 5028, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "ausgangsleistung_l2", address: 5030, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "ausgangsleistung_l3", address: 5032, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    
+    # Spannungen und Ströme PV
+    - { name: "pv1_spannung", address: 5034, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "pv1_strom", address: 5035, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "pv2_spannung", address: 5036, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "pv2_strom", address: 5037, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    
+    # Batterieparameter
+    - { name: "batterie_soc", address: 5038, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1 }
+    - { name: "batterie_spannung", address: 5039, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "batterie_strom", address: 5040, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "batterie_temperatur", address: 5041, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+    - { name: "batterie_zyklen", address: 5042, type: "uint16", state_class: "measurement" }
+    
+    # Netzparameter
+    - { name: "netzfrequenz", address: 5043, type: "uint16", unit_of_measurement: "Hz", device_class: "frequency", state_class: "measurement", scale: 0.01 }
+    - { name: "netzspannung_l1", address: 5044, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "netzspannung_l2", address: 5045, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "netzspannung_l3", address: 5046, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "netzstrom_l1", address: 5047, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "netzstrom_l2", address: 5048, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "netzstrom_l3", address: 5049, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    
+    # Energiezähler
+    - { name: "pv_tagesertrag", address: 5050, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    - { name: "pv_gesamtertrag", address: 5052, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    - { name: "batterie_ladeenergie_gesamt", address: 5054, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    - { name: "batterie_entladeenergie_gesamt", address: 5056, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    - { name: "netzbezug_gesamt", address: 5058, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    - { name: "netzeinspeisung_gesamt", address: 5060, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    
+    # Temperaturen
+    - { name: "geraetetemperatur", address: 5062, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+    
+    # Status und Fehler
+    - { name: "betriebsstatus", address: 5064, type: "uint16", description: "Aktueller Betriebsstatus" }
+    - { name: "fehlercode", address: 5065, type: "uint16", description: "Aktueller Fehlercode" }
+    - { name: "batterie_status", address: 5066, type: "uint16", description: "Batteriestatus" }
+
+  write:
+    # Steuerungsregister
+    - { name: "geraet_ein_aus", address: 5100, type: "uint16", description: "Gerät ein/ausschalten (0: Aus, 1: Ein)" }
+    - { name: "leistungsbegrenzung", address: 5102, type: "uint16", description: "Leistungsbegrenzung in %" }
+    - { name: "batterie_betriebsmodus", address: 5103, type: "uint16", description: "Batteriebetriebsmodus (0: Auto, 1: Zwangsladung, 2: Zwangsentladung)" }
+    - { name: "batterie_min_soc", address: 5104, type: "uint16", description: "Minimaler Batterieladezustand in %" }
+    - { name: "batterie_ladeleistung", address: 5105, type: "uint16", description: "Maximale Batterieladeleistung in W" }
+    - { name: "batterie_entladeleistung", address: 5106, type: "uint16", description: "Maximale Batterieentladeleistung in W" }
+    - { name: "phasenausgleich", address: 5107, type: "uint16", description: "Phasenausgleich aktivieren (0: Aus, 1: Ein)" }
+
+helpers:
+  templates:
+    - { name: "status_text", expression: "{% if states('sensor.betriebsstatus') == '0' %}Standby{% elif states('sensor.betriebsstatus') == '1' %}Normalbetrieb{% elif states('sensor.betriebsstatus') == '2' %}Fehler{% else %}Unbekannt{% endif %}" }
+    - { name: "batterie_status_text", expression: "{% if states('sensor.batterie_status') == '0' %}Standby{% elif states('sensor.batterie_status') == '1' %}Laden{% elif states('sensor.batterie_status') == '2' %}Entladen{% else %}Unbekannt{% endif %}" }
+    - { name: "autarkie", expression: "(1 - states('sensor.netzbezug_gesamt')|float(0) / states('sensor.hausverbrauch')|float(0)) * 100 if states('sensor.hausverbrauch')|float(0) > 0 else 0" }
+    - { name: "eigenverbrauch", expression: "(1 - states('sensor.netzeinspeisung_gesamt')|float(0) / states('sensor.pv_leistung_gesamt')|float(0)) * 100 if states('sensor.pv_leistung_gesamt')|float(0) > 0 else 0" }
+    - { name: "phasenungleichheit", expression: "((max(states('sensor.ausgangsleistung_l1')|float(0), states('sensor.ausgangsleistung_l2')|float(0), states('sensor.ausgangsleistung_l3')|float(0)) - min(states('sensor.ausgangsleistung_l1')|float(0), states('sensor.ausgangsleistung_l2')|float(0), states('sensor.ausgangsleistung_l3')|float(0))) / (states('sensor.ausgangsleistung_l1')|float(0) + states('sensor.ausgangsleistung_l2')|float(0) + states('sensor.ausgangsleistung_l3')|float(0))) * 100 if (states('sensor.ausgangsleistung_l1')|float(0) + states('sensor.ausgangsleistung_l2')|float(0) + states('sensor.ausgangsleistung_l3')|float(0)) > 100 else 0" }
+
+automations:
+  - name: "Fehlerbenachrichtigung"
+    trigger:
+      platform: state
+      entity_id: sensor.fehlercode
+      from: "0"
+    action:
+      service: notify.notify
+      data:
+        title: "Wechselrichter Fehler"
+        message: "Der Wechselrichter meldet einen Fehler (Code: {{ states('sensor.fehlercode') }})"
+
+  - name: "Batterie SOC Warnung"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.batterie_soc
+      below: 15
+    action:
+      service: notify.notify
+      data:
+        title: "Batterie fast leer"
+        message: "Der Batterieladezustand ist unter 15% gefallen!"
+
+  - name: "Hohe Temperatur Warnung"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.geraetetemperatur
+      above: 75
+    action:
+      service: notify.notify
+      data:
+        title: "Wechselrichter Temperaturwarnung"
+        message: "Die Gerätetemperatur ist über 75°C gestiegen!"
+
+  - name: "Phasenungleichheit Warnung"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.phasenungleichheit
+      above: 20
+      for:
+        minutes: 5
+    action:
+      service: notify.notify
+      data:
+        title: "Phasenungleichheit"
+        message: "Die Phasenungleichheit ist seit 5 Minuten über 20%!"
+
+  - name: "Automatischer Phasenausgleich"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.phasenungleichheit
+      above: 25
+      for:
+        minutes: 10
+    action:
+      service: switch.turn_on
+      target:
+        entity_id: switch.phasenausgleich
+
+  - name: "Batterie Temperatur Warnung"
+    trigger:
+      platform: numeric_state
+      entity_id: sensor.batterie_temperatur
+      above: 45
+    action:
+      service: notify.notify
+      data:
+        title: "Batterie Temperaturwarnung"
+        message: "Die Batterietemperatur ist über 45°C gestiegen!" 

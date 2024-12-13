@@ -1,0 +1,1 @@
+DOMAIN = 'modbus_manager' 
