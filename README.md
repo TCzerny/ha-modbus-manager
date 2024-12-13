@@ -45,7 +45,7 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 
 1. Add this repository to HACS as a "Custom Repository":
    ```
-   https://github.com/YourRepository/modbus_manager
+   https://github.com/TCzerny/modbus_manager
    ```
 
 2. Install the integration through HACS

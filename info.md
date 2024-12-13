@@ -56,7 +56,7 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 
 ## More Information
 
-For detailed documentation, visit [GitHub](https://github.com/YourRepository/modbus_manager).
+For detailed documentation, visit [GitHub](https://github.com/TCzerny/modbus_manager).
 
 ## Translations
 
