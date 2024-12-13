@@ -5,6 +5,7 @@ from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
 import os
 from pathlib import Path
 from .const import DOMAIN
+import re
 
 def get_available_device_types():
     """Lädt die verfügbaren Gerätekonfigurationen aus dem device_definitions Verzeichner."""
@@ -31,6 +32,28 @@ def get_available_device_types():
         "load_management": "Load Management System"
     }
     return device_types
+
+def validate_input(data):
+    """Validiert die Eingabedaten."""
+    errors = {}
+    
+    # IP-Adresse/Hostname validieren
+    if not re.match(r'^[a-zA-Z0-9.-]+$', data["host"]):
+        errors["host"] = "invalid_host"
+        
+    # Port-Bereich prüfen
+    if not 1 <= data["port"] <= 65535:
+        errors["port"] = "invalid_port"
+        
+    # Slave-ID-Bereich prüfen
+    if not 1 <= data["slave_id"] <= 247:
+        errors["slave_id"] = "invalid_slave_id"
+        
+    # Scan-Intervall-Minimum
+    if data["scan_interval"] < 5:
+        errors["scan_interval"] = "interval_too_short"
+        
+    return errors
 
 @config_entries.HANDLERS.register(DOMAIN)
 class ModbusManagerConfigFlow(config_entries.ConfigFlow):
@@ -59,7 +82,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow):
         if user_input is not None:
             try:
                 # Validate the data can be used to set up a connection
-                await validate_input(self.hass, user_input)
+                await validate_input(user_input)
             except CannotConnect:
                 errors["base"] = "cannot_connect"
             except InvalidHost:

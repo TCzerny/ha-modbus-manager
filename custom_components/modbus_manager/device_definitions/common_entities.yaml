@@ -37,9 +37,15 @@ polling:
   fast:
     interval: 10
     registers: ["operating_state", "error_code", "warning_code"]
+    batches:
+      - start: 100
+        count: 3
   normal:
     interval: 30
     registers: ["ambient_temperature", "enclosure_temperature"]
+    batches:
+      - start: 400
+        count: 2
   slow:
     interval: 300
     registers: ["running_time", "system_time"]

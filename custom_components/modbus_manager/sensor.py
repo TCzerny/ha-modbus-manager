@@ -3,6 +3,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.core import callback
 from .modbus_sungrow import ModbusSungrowHub
 from .const import DOMAIN
+import struct
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -41,6 +42,17 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
 class ModbusSensor(CoordinatorEntity):
     """Repräsentiert einen einzelnen Modbus-Sensor."""
+    
+    # Konstanten an den Anfang der Klasse
+    VALID_DATA_TYPES = {
+        "uint16": (1, lambda x: x[0]),
+        "uint32": (2, lambda x: (x[0] << 16) + x[1]),
+        "int16": (1, lambda x: x[0] - 65536 if x[0] > 32767 else x[0]),
+        "int32": (2, lambda x: ((x[0] << 16) + x[1]) - 4294967296 if ((x[0] << 16) + x[1]) > 2147483647 else ((x[0] << 16) + x[1])),
+        "float": (2, lambda x: struct.unpack('>f', bytes(x))[0]),
+        "string": (None, lambda x: ''.join([chr(i) for i in x]).strip('\x00')),
+        "bool": (1, lambda x: bool(x[0]))
+    }
 
     def __init__(self, hub: ModbusSungrowHub, name: str, device_def: dict):
         """Initialisiert den Sensor."""
@@ -125,43 +137,25 @@ class ModbusSensor(CoordinatorEntity):
     def _process_register_data(self, data, data_type):
         """Verarbeitet die rohen Registerdaten basierend auf dem angegebenen Typ."""
         try:
-            # Basis-Wert aus den Registern extrahieren
-            if data_type == "uint16":
-                value = data[0]
-            elif data_type == "uint32":
-                value = (data[0] << 16) + data[1]
-            elif data_type == "int16":
-                value = data[0]
-                if value > 32767:
-                    value -= 65536
-            elif data_type == "int32":
-                value = (data[0] << 16) + data[1]
-                if value > 2147483647:
-                    value -= 4294967296
-            elif data_type == "float":
-                import struct
-                value = struct.unpack('>f', bytes(data))[0]
-            elif data_type == "string":
-                return ''.join([chr(i) for i in data]).strip('\x00')
-            elif data_type == "bool":
-                return bool(data[0])
-            else:
+            if data_type not in self.VALID_DATA_TYPES:
                 _LOGGER.error("Unbekannter Datentyp: %s", data_type)
                 return None
-
-            # Skalierungsfaktor anwenden
+                
+            _, processor = self.VALID_DATA_TYPES[data_type]
+            value = processor(data)
+            
+            # Skalierung und Präzision anwenden
             scale = self._device_def.get("scale", 1)
-            if scale != 1:
-                value = value * scale
-                _LOGGER.debug("Skalierter Wert für %s: %f (Faktor: %f)", self._name, value, scale)
-
-            # Präzision anwenden
             precision = self._device_def.get("precision")
+            
+            if scale != 1:
+                value *= scale
+                
             if precision is not None:
                 value = round(value, precision)
-                _LOGGER.debug("Gerundeter Wert für %s: %f (Präzision: %d)", self._name, value, precision)
-
+                
             return value
+            
         except Exception as e:
             _LOGGER.error("Fehler bei der Verarbeitung der Registerdaten für %s: %s", self._name, e)
             return None

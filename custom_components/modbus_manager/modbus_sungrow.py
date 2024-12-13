@@ -20,12 +20,21 @@ class ModbusSungrowHub:
         self.hass = hass
         self.client = None
         self.coordinators = {}
+        self._device_definition_cache = {} # Cache für Gerätedefinitionen
 
     async def async_setup(self):
         """Richtet die Modbus-Verbindung ein."""
         try:
-            self.client = AsyncModbusTcpClient(self.host, self.port)
-            await self.client.connect()
+            self.client = AsyncModbusTcpClient(
+                self.host, 
+                self.port,
+                timeout=10,  # Timeout hinzufügen
+                retries=3    # Wiederholungsversuche hinzufügen
+            )
+            connected = await self.client.connect()
+            if not connected:
+                raise ConnectionError("Verbindung konnte nicht hergestellt werden")
+            
             _LOGGER.info("Modbus-Verbindung hergestellt zu %s:%s", self.host, self.port)
         except Exception as e:
             _LOGGER.error("Verbindung zum Modbus-Gerät fehlgeschlagen: %s", e)
