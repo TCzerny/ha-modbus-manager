@@ -4,6 +4,7 @@ from homeassistant.core import callback
 from .modbus_sungrow import ModbusSungrowHub
 from .const import DOMAIN
 import struct
+import asyncio
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -160,3 +161,11 @@ class ModbusSensor(CoordinatorEntity):
             _LOGGER.error("Fehler bei der Verarbeitung der Registerdaten für %s: %s", self._name, e)
             return None
             
+    async def _batch_read_registers(self, registers):
+        """Optimierte Batch-Lesung von Registern."""
+        try:
+            # Gruppiere zusammenhängende Register
+            register_groups = []
+            current_group = []
+            
+            for reg in sorted(registers, key=lambda x: x['address']):

@@ -1,0 +1,32 @@
+sungrow_shrt:
+  name: "Sungrow SH-RT Hybrid Inverter"
+  manufacturer: "Sungrow"
+  model: "SH-RT"
+  config_options:
+    anlagengroesse_kw:
+      type: float
+      min: 1
+      max: 30
+      default: 5
+    battery_type:
+      type: select
+      options:
+        - "No Battery"
+        - "Sungrow SBR"
+        - "BYD Battery-Box"
+    phase_config:
+      type: select
+      options:
+        - "3-Phase"
+        - "1-Phase"
+
+sungrow_battery:
+  name: "Sungrow Battery System"
+  manufacturer: "Sungrow"
+  model: "SBR"
+  config_options:
+    battery_capacity_kwh:
+      type: float
+      min: 1
+      max: 100
+      default: 10 

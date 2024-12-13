@@ -4,6 +4,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from datetime import timedelta
 import yaml
 from pathlib import Path
+import asyncio
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -23,22 +24,37 @@ class ModbusSungrowHub:
         self._device_definition_cache = {} # Cache für Gerätedefinitionen
 
     async def async_setup(self):
-        """Richtet die Modbus-Verbindung ein."""
-        try:
-            self.client = AsyncModbusTcpClient(
-                self.host, 
-                self.port,
-                timeout=10,  # Timeout hinzufügen
-                retries=3    # Wiederholungsversuche hinzufügen
-            )
-            connected = await self.client.connect()
-            if not connected:
-                raise ConnectionError("Verbindung konnte nicht hergestellt werden")
-            
-            _LOGGER.info("Modbus-Verbindung hergestellt zu %s:%s", self.host, self.port)
-        except Exception as e:
-            _LOGGER.error("Verbindung zum Modbus-Gerät fehlgeschlagen: %s", e)
-            raise
+        """Verbesserte Modbus-Verbindung mit Retry-Logik."""
+        retry_count = 0
+        max_retries = self.config.get("retries", 3)
+        retry_delay = self.config.get("retry_delay", 0.1)
+
+        while retry_count <= max_retries:
+            try:
+                self.client = AsyncModbusTcpClient(
+                    self.host,
+                    self.port,
+                    timeout=self.config.get("tcp_timeout", 3),
+                    retries=0,  # Wir handeln Retries selbst
+                    retry_on_empty=True,
+                    close_comm_on_error=True
+                )
+                connected = await self.client.connect()
+                if connected:
+                    _LOGGER.info("Modbus-Verbindung hergestellt zu %s:%s", self.host, self.port)
+                    return True
+                    
+            except Exception as e:
+                _LOGGER.warning(
+                    "Verbindungsversuch %d von %d fehlgeschlagen: %s",
+                    retry_count + 1, max_retries + 1, str(e)
+                )
+                
+            retry_count += 1
+            if retry_count <= max_retries:
+                await asyncio.sleep(retry_delay * retry_count)
+                
+        raise ConnectionError("Maximale Anzahl an Verbindungsversuchen erreicht")
 
     async def async_teardown(self):
         """Beendet die Modbus-Verbindung."""

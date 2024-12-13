@@ -94,6 +94,28 @@ helpers:
         }
       translation_key: "sensor.system.pv_overview"
 
+    # Geräte-Gesundheitsstatus
+    - name: "devices_health_status"
+      unique_id: "devices_health_status"
+      value: >
+        {% set devices = namespace(healthy=0, total=0, issues=[]) %}
+        {% for entity_id in states.sensor | selectattr('entity_id', 'match', '.*operating_state$') %}
+          {% set devices.total = devices.total + 1 %}
+          {% if not is_state(entity_id.entity_id, 'unavailable') 
+             and not is_state(entity_id.entity_id, 'unknown') %}
+            {% set devices.healthy = devices.healthy + 1 %}
+          {% else %}
+            {% set devices.issues = devices.issues + [entity_id.entity_id] %}
+          {% endif %}
+        {% endfor %}
+        {
+          "healthy_devices": devices.healthy,
+          "total_devices": devices.total,
+          "health_percentage": (devices.healthy / devices.total * 100) if devices.total > 0 else 0,
+          "issues": devices.issues,
+          "last_check": now()
+        }
+
 automations:
   # Tägliche Energiestatistik
   - name: "daily_energy_statistics"
@@ -114,6 +136,26 @@ automations:
         data:
           keep_days: 7
           repack: true
+
+  # Geräte-Monitoring
+  - name: "device_monitoring"
+    unique_id: "device_monitoring"
+    trigger:
+      platform: time_pattern
+      minutes: "/5"
+    action:
+      - service: persistent_notification.create
+        data:
+          title: "Modbus Geräte Status"
+          message: >
+            {% set status = states('sensor.devices_health_status') | from_json %}
+            Gesunde Geräte: {{ status.healthy_devices }}/{{ status.total_devices }} ({{ status.health_percentage }}%)
+            {% if status.issues | length > 0 %}
+            Probleme mit:
+            {% for issue in status.issues %}
+              - {{ issue }}
+            {% endfor %}
+            {% endif %}
 
 validation:
   power:
