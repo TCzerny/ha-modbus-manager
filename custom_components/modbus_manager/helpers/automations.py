@@ -1,78 +1,52 @@
-"""Automation helper functions for Modbus Manager."""
-from typing import Any, Dict, List, Optional
+"""Generic automation helpers for Modbus Manager."""
+from typing import Dict, Any
 
-def create_threshold_automation(
-    name: str,
-    unique_id: str,
-    entity_id: str,
-    threshold: float,
-    above: bool = True,
-    for_time: Optional[str] = None,
-    message_template: Optional[str] = None,
-    actions: Optional[List[Dict[str, Any]]] = None
-) -> Dict[str, Any]:
-    """Create a threshold-based automation."""
-    automation = {
-        "id": unique_id,
-        "alias": name,
-        "trigger": {
-            "platform": "numeric_state",
-            "entity_id": entity_id,
-            "above" if above else "below": threshold
+class AutomationHelper:
+    """Generic automation helper class."""
+
+    @staticmethod
+    def create_energy_storage_automation(device_name: str) -> Dict[str, Any]:
+        """Create energy storage automation for statistics."""
+        return {
+            "id": f"{device_name}_energy_storage",
+            "alias": f"{device_name} Energy Storage",
+            "trigger": {
+                "platform": "time",
+                "at": "00:00:00"
+            },
+            "action": [
+                {
+                    "service": "input_number.set_value",
+                    "target": {
+                        "entity_id": f"input_number.{device_name}_daily_energy"
+                    },
+                    "data": {
+                        "value": "{{ states('sensor.daily_energy')|float(0) }}"
+                    }
+                }
+            ]
         }
-    }
-    
-    if for_time:
-        automation["trigger"]["for"] = for_time
-        
-    if not actions:
-        if not message_template:
-            message_template = (
-                f"{'Above' if above else 'Below'} threshold: "
-                "{{{{ states(trigger.entity_id) }}}} "
-                "{{{{ state_attr(trigger.entity_id, 'unit_of_measurement') }}}}"
-            )
-            
-        actions = [{
-            "service": "persistent_notification.create",
-            "data": {
-                "title": name,
-                "message": message_template
-            }
-        }]
-        
-    automation["action"] = actions
-    return automation
 
-def create_value_change_automation(
-    name: str,
-    unique_id: str,
-    entity_id: str,
-    to_state: Optional[str] = None,
-    from_state: Optional[str] = None,
-    for_time: Optional[str] = None,
-    actions: Optional[List[Dict[str, Any]]] = None
-) -> Dict[str, Any]:
-    """Create a state-change based automation."""
-    trigger = {
-        "platform": "state",
-        "entity_id": entity_id
-    }
-    
-    if to_state is not None:
-        trigger["to"] = to_state
-    if from_state is not None:
-        trigger["from"] = from_state
-    if for_time:
-        trigger["for"] = for_time
-        
-    automation = {
-        "id": unique_id,
-        "alias": name,
-        "trigger": trigger
-    }
-    
-    if actions:
-        automation["action"] = actions
-        
-    return automation 
+    @staticmethod
+    def create_error_notification_automation(device_name: str) -> Dict[str, Any]:
+        """Create error notification automation."""
+        return {
+            "id": f"{device_name}_error_notification",
+            "alias": f"{device_name} Error Notification",
+            "trigger": {
+                "platform": "state",
+                "entity_id": f"sensor.{device_name}_error_code"
+            },
+            "condition": {
+                "condition": "numeric_state",
+                "entity_id": f"sensor.{device_name}_error_code",
+                "above": 0
+            },
+            "action": {
+                "service": "notify.notify",
+                "data": {
+                    "title": f"{device_name} Error",
+                    "message": "Error code: {{ trigger.to_state.state }}"
+                }
+            }
+        }

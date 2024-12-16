@@ -1,112 +1,292 @@
-import logging
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .modbus_sungrow import ModbusSungrowHub
-from .const import DOMAIN
+"""Modbus Manager Switch Platform."""
+from datetime import timedelta
+from typing import Any, Dict, Optional
 
-_LOGGER = logging.getLogger(__name__)
+from homeassistant.components.switch import SwitchEntity
+from homeassistant.core import callback
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
+from homeassistant.helpers.entity import DeviceInfo
+
+from .const import DOMAIN
+from .modbus_hub import ModbusManagerHub
+from .logger import ModbusManagerLogger
+
+_LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up Modbus Manager switches."""
-    hub: ModbusSungrowHub = hass.data[DOMAIN].get(entry.entry_id)
-    if not hub:
-        _LOGGER.error("ModbusSungrowHub not found in hass.data")
-        return
+    """Richte die Modbus Manager Switches ein."""
+    _LOGGER.debug(
+        "Switch Setup wird ausgeführt",
+        extra={
+            "entry_id": entry.entry_id
+        }
+    )
 
-    # Ensure coordinator exists
-    await hub.read_registers(hub.device_type)
+    # Prüfe ob die Domain existiert
+    if DOMAIN not in hass.data:
+        _LOGGER.error(
+            "Domain nicht in hass.data gefunden",
+            extra={
+                "entry_id": entry.entry_id
+            }
+        )
+        return False
 
-    device_definitions = hub.get_device_definition(hub.device_type)
-    if not device_definitions:
-        _LOGGER.error("No device configuration found for %s", hub.device_type)
-        return
+    # Prüfe ob der Hub existiert
+    if entry.entry_id not in hass.data[DOMAIN]:
+        _LOGGER.error(
+            "Hub nicht gefunden",
+            extra={
+                "entry_id": entry.entry_id
+            }
+        )
+        return False
 
-    switches = []
-    write_registers = device_definitions.get('registers', {}).get('write', [])
+    hub: ModbusManagerHub = hass.data[DOMAIN][entry.entry_id]
+    _LOGGER.debug(
+        "Hub gefunden",
+        extra={
+            "entry_id": entry.entry_id,
+            "hub_name": hub.name
+        }
+    )
 
-    _LOGGER.debug("Creating %d switches for %s", len(write_registers), hub.name)
+    try:
+        # Hole die Gerätedefinition
+        device_def = await hub.get_device_definition(hub.device_type)
+        if not device_def:
+            _LOGGER.error(
+                "Keine Gerätekonfiguration gefunden",
+                extra={
+                    "entry_id": entry.entry_id,
+                    "device_type": hub.device_type
+                }
+            )
+            return False
 
-    for reg in write_registers:
-        switch = ModbusSwitch(hub, reg['name'], reg)
-        switches.append(switch)
-        _LOGGER.debug("Switch created: %s with configuration: %s", reg['name'], reg)
+        _LOGGER.debug(
+            "Gerätekonfiguration geladen",
+            extra={
+                "entry_id": entry.entry_id,
+                "device_type": hub.device_type
+            }
+        )
+        
+        # Erstelle die Switches
+        switches = []
+        write_registers = device_def.get('registers', {}).get('write', [])
+        polling_config = device_def.get('polling', {})
+        
+        _LOGGER.info(
+            "Erstelle Switches",
+            extra={
+                "entry_id": entry.entry_id,
+                "switch_count": len(write_registers)
+            }
+        )
 
-    async_add_entities(switches, True)
-
-class ModbusSwitch(CoordinatorEntity):
-    """Represents a single Modbus switch."""
-
-    def __init__(self, hub: ModbusSungrowHub, name: str, device_def: dict):
-        """Initialize the switch."""
-        if hub.name not in hub.coordinators:
-            _LOGGER.error("No coordinator found for hub %s", hub.name)
-            raise ValueError(f"No coordinator found for hub {hub.name}")
+        # Erstelle einen Coordinator für jede Polling-Gruppe
+        for group_name, group_config in polling_config.items():
+            interval = group_config.get('interval', 30)
+            registers = group_config.get('registers', [])
             
-        super().__init__(hub.coordinators[hub.name])
+            if not registers:
+                continue
+                
+            coordinator = DataUpdateCoordinator(
+                hass,
+                _LOGGER,
+                name=f"{hub.name}_{group_name}",
+                update_method=lambda: hub.read_registers(hub.device_type),
+                update_interval=timedelta(seconds=interval),
+            )
+            
+            # Speichere den Coordinator im Hub
+            if hub.device_type not in hub.coordinators:
+                hub.coordinators[hub.device_type] = {}
+            hub.coordinators[hub.device_type][group_name] = coordinator
+            
+            _LOGGER.debug(
+                "Coordinator erstellt",
+                extra={
+                    "entry_id": entry.entry_id,
+                    "group": group_name,
+                    "interval": interval
+                }
+            )
+            
+            # Erstelle Switches für diese Gruppe
+            for reg_name in registers:
+                reg_def = next((r for r in write_registers if r['name'] == reg_name), None)
+                if reg_def:
+                    try:
+                        switch = ModbusSwitch(
+                            hub=hub,
+                            coordinator=coordinator,
+                            name=reg_name,
+                            device_def=reg_def,
+                            polling_group=group_name
+                        )
+                        switches.append(switch)
+                        _LOGGER.debug(
+                            "Switch erstellt",
+                            extra={
+                                "entry_id": entry.entry_id,
+                                "name": reg_name,
+                                "group": group_name
+                            }
+                        )
+                    except Exception as e:
+                        _LOGGER.error(
+                            "Fehler beim Erstellen des Switch",
+                            extra={
+                                "entry_id": entry.entry_id,
+                                "name": reg_name,
+                                "error": str(e)
+                            }
+                        )
+
+        if switches:
+            async_add_entities(switches)
+            _LOGGER.info(
+                "Switches erfolgreich hinzugefügt",
+                extra={
+                    "entry_id": entry.entry_id,
+                    "count": len(switches)
+                }
+            )
+            return True
+
+        return False
+
+    except Exception as e:
+        _LOGGER.error(
+            "Fehler beim Setup der Switches",
+            extra={
+                "entry_id": entry.entry_id,
+                "error": str(e)
+            }
+        )
+        return False
+
+class ModbusSwitch(CoordinatorEntity, SwitchEntity):
+    """Modbus Manager Switch Klasse."""
+
+    def __init__(
+        self,
+        hub: ModbusManagerHub,
+        coordinator: DataUpdateCoordinator,
+        name: str,
+        device_def: dict,
+        polling_group: str,
+    ):
+        """Initialisiere den Switch."""
+        super().__init__(coordinator)
+        
         self._hub = hub
         self._name = name
         self._device_def = device_def
+        self._polling_group = polling_group
         self._state = False
         
-        # Create unique ID based on hub name and switch name
-        self._unique_id = f"{self._hub.name}_{self._name}"
+        # Setze die Switch-Attribute
+        self._attr_name = f"{hub.name} {name}"
+        self._attr_unique_id = f"{hub.name}_{name}"
         
-        _LOGGER.debug("Switch initialized: %s (ID: %s)", self.name, self._unique_id)
+        # Setze die Geräte-Info
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, hub.name)},
+            name=hub.name,
+            manufacturer=device_def.get("manufacturer", "Unknown"),
+            model=hub.device_type,
+        )
+        
+        _LOGGER.debug(
+            f"Switch initialisiert: {self._name} "
+            f"(ID: {self._attr_unique_id}, "
+            f"Polling-Gruppe: {self._polling_group})"
+        )
 
     @property
-    def unique_id(self):
-        """Unique ID for the switch."""
-        return self._unique_id
+    def is_on(self) -> bool:
+        """Gib den aktuellen Zustand des Switch zurück."""
+        if not self.coordinator.data:
+            return False
+            
+        try:
+            # Hole die Rohdaten für diesen Switch
+            raw_value = self.coordinator.data.get(self._name)
+            if raw_value is None:
+                return False
+                
+            return bool(raw_value[0])
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Verarbeiten des Switch-Werts",
+                extra={
+                    "name": self._name,
+                    "error": str(e)
+                }
+            )
+            return False
 
-    @property
-    def name(self):
-        """Name of the switch."""
-        return f"{self._hub.name} {self._name}"
-
-    @property
-    def device_info(self):
-        """Device information for Device Registry."""
-        return {
-            "identifiers": {(DOMAIN, self._hub.name)},
-            "name": self._hub.name,
-            "manufacturer": "Sungrow",
-            "model": self._hub.device_type,
-            "via_device": (DOMAIN, self._hub.name),
-        }
-
-    @property
-    def is_on(self):
-        """Return whether the switch is on."""
-        return self._state
-
-    async def async_turn_on(self, **kwargs):
-        """Turn the switch on."""
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Schalte den Switch ein."""
         await self._write_register(True)
 
-    async def async_turn_off(self, **kwargs):
-        """Turn the switch off."""
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Schalte den Switch aus."""
         await self._write_register(False)
 
-    async def _write_register(self, value):
-        """Write a value to the Modbus register."""
+    async def _write_register(self, value: bool) -> None:
+        """Schreibe einen Wert in das Register."""
         try:
             address = self._device_def.get("address")
-            data_type = self._device_def.get("type")
-            unit = self._device_def.get("unit", 1)
+            reg_type = self._device_def.get("type", "uint16")
+            scale = self._device_def.get("scale", 1)
+            swap = self._device_def.get("swap")
 
-            if data_type == "bool":
-                data = [1] if value else [0]
-            elif data_type == "uint16":
-                data = [1] if value else [0]
-            else:
-                _LOGGER.error("Unsupported data type for switch: %s", data_type)
-                return
+            # Konvertiere den booleschen Wert in den entsprechenden Zahlenwert
+            write_value = 1 if value else 0
 
-            response = await self._hub.client.write_registers(address, data, unit=unit)
-            if response.isError():
-                _LOGGER.error(f"Error writing switch {self._name}: {response}")
-            else:
-                _LOGGER.debug(f"Switch {self._name} set to {value}")
+            # Schreibe den Wert über den Hub
+            success = await self._hub.write_register(
+                self._hub.name,
+                address,
+                write_value,
+                reg_type,
+                scale,
+                swap
+            )
+
+            if success:
+                _LOGGER.debug(
+                    "Switch-Wert geschrieben",
+                    extra={
+                        "name": self._name,
+                        "value": value
+                    }
+                )
                 self._state = value
                 self.async_write_ha_state()
+            else:
+                _LOGGER.error(
+                    "Fehler beim Schreiben des Switch-Werts",
+                    extra={
+                        "name": self._name,
+                        "value": value
+                    }
+                )
+
         except Exception as e:
-            _LOGGER.error("Error writing switch: %s", e) 
+            _LOGGER.error(
+                "Fehler beim Schreiben des Switch-Werts",
+                extra={
+                    "name": self._name,
+                    "error": str(e)
+                }
+            ) 

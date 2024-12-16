@@ -1,0 +1,206 @@
+# Sungrow SH-RT Hybrid Wechselrichter (3-Phasen mit Batterie)
+# Basierend auf https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
+
+device_info:
+  name: "Test Device"
+  manufacturer: "ModbusManager"
+  model: "Test"
+  description: "Testgerät für die Entwicklung"
+
+# Firmware-Konfiguration
+firmware:
+  version_register: 4953
+  version_type: "uint16"
+  auto_detect: true
+  fallback_version: "1.0.0"
+
+# Modbus-Konfiguration
+modbus:
+  slave_id: 1
+  connection:
+    timeout: 3
+    retry_delay: 0.1
+    max_retries: 3
+    batch_size: 100
+
+# Polling-Konfiguration
+polling:
+  fast:
+    interval: 5
+    registers: [
+      "arm_fw_1", "arm_fw_2", "arm_fw_3", "arm_fw_4", "arm_fw_5",
+      "arm_fw_6", "arm_fw_7", "arm_fw_8", "arm_fw_9", "arm_fw_10",
+      "arm_fw_11", "arm_fw_12", "arm_fw_13", "arm_fw_14", "arm_fw_15",
+      "dsp_fw_1", "dsp_fw_2", "dsp_fw_3", "dsp_fw_4", "dsp_fw_5",
+      "dsp_fw_6", "dsp_fw_7", "dsp_fw_8", "dsp_fw_9", "dsp_fw_10",
+      "dsp_fw_11", "dsp_fw_12", "dsp_fw_13", "dsp_fw_14", "dsp_fw_15"
+    ]
+  normal:
+    interval: 30
+    registers: []
+  slow:
+    interval: 600
+    registers: []
+
+# Register-Definitionen
+registers:
+  read:
+    # ARM Firmware Register (4953-4967)
+    - name: "arm_fw_1"
+      address: 4953
+      type: "uint16"
+      description: "ARM Firmware Register 1"
+      debug: true
+    - name: "arm_fw_2"
+      address: 4954
+      type: "uint16"
+      description: "ARM Firmware Register 2"
+      debug: true
+    - name: "arm_fw_3"
+      address: 4955
+      type: "uint16"
+      description: "ARM Firmware Register 3"
+      debug: true
+    - name: "arm_fw_4"
+      address: 4956
+      type: "uint16"
+      description: "ARM Firmware Register 4"
+      debug: true
+    - name: "arm_fw_5"
+      address: 4957
+      type: "uint16"
+      description: "ARM Firmware Register 5"
+      debug: true
+    - name: "arm_fw_6"
+      address: 4958
+      type: "uint16"
+      description: "ARM Firmware Register 6"
+      debug: true
+    - name: "arm_fw_7"
+      address: 4959
+      type: "uint16"
+      description: "ARM Firmware Register 7"
+      debug: true
+    - name: "arm_fw_8"
+      address: 4960
+      type: "uint16"
+      description: "ARM Firmware Register 8"
+      debug: true
+    - name: "arm_fw_9"
+      address: 4961
+      type: "uint16"
+      description: "ARM Firmware Register 9"
+      debug: true
+    - name: "arm_fw_10"
+      address: 4962
+      type: "uint16"
+      description: "ARM Firmware Register 10"
+      debug: true
+    - name: "arm_fw_11"
+      address: 4963
+      type: "uint16"
+      description: "ARM Firmware Register 11"
+      debug: true
+    - name: "arm_fw_12"
+      address: 4964
+      type: "uint16"
+      description: "ARM Firmware Register 12"
+      debug: true
+    - name: "arm_fw_13"
+      address: 4965
+      type: "uint16"
+      description: "ARM Firmware Register 13"
+      debug: true
+    - name: "arm_fw_14"
+      address: 4966
+      type: "uint16"
+      description: "ARM Firmware Register 14"
+      debug: true
+    - name: "arm_fw_15"
+      address: 4967
+      type: "uint16"
+      description: "ARM Firmware Register 15"
+      debug: true
+
+    # DSP Firmware Register (4968-4982)
+    - name: "dsp_fw_1"
+      address: 4968
+      type: "uint16"
+      description: "DSP Firmware Register 1"
+      debug: true
+    - name: "dsp_fw_2"
+      address: 4969
+      type: "uint16"
+      description: "DSP Firmware Register 2"
+      debug: true
+    - name: "dsp_fw_3"
+      address: 4970
+      type: "uint16"
+      description: "DSP Firmware Register 3"
+      debug: true
+    - name: "dsp_fw_4"
+      address: 4971
+      type: "uint16"
+      description: "DSP Firmware Register 4"
+      debug: true
+    - name: "dsp_fw_5"
+      address: 4972
+      type: "uint16"
+      description: "DSP Firmware Register 5"
+      debug: true
+    - name: "dsp_fw_6"
+      address: 4973
+      type: "uint16"
+      description: "DSP Firmware Register 6"
+      debug: true
+    - name: "dsp_fw_7"
+      address: 4974
+      type: "uint16"
+      description: "DSP Firmware Register 7"
+      debug: true
+    - name: "dsp_fw_8"
+      address: 4975
+      type: "uint16"
+      description: "DSP Firmware Register 8"
+      debug: true
+    - name: "dsp_fw_9"
+      address: 4976
+      type: "uint16"
+      description: "DSP Firmware Register 9"
+      debug: true
+    - name: "dsp_fw_10"
+      address: 4977
+      type: "uint16"
+      description: "DSP Firmware Register 10"
+      debug: true
+    - name: "dsp_fw_11"
+      address: 4978
+      type: "uint16"
+      description: "DSP Firmware Register 11"
+      debug: true
+    - name: "dsp_fw_12"
+      address: 4979
+      type: "uint16"
+      description: "DSP Firmware Register 12"
+      debug: true
+    - name: "dsp_fw_13"
+      address: 4980
+      type: "uint16"
+      description: "DSP Firmware Register 13"
+      debug: true
+    - name: "dsp_fw_14"
+      address: 4981
+      type: "uint16"
+      description: "DSP Firmware Register 14"
+      debug: true
+    - name: "dsp_fw_15"
+      address: 4982
+      type: "uint16"
+      description: "DSP Firmware Register 15"
+      debug: true
+
+  write:
+    # holding registers
+    - name: "inverter_start_stop"
+      address: 12999
+      type: "uint16"

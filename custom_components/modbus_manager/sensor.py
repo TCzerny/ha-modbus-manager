@@ -1,251 +1,283 @@
+"""Modbus Manager Sensor Platform."""
 import logging
-from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from homeassistant.core import callback
-from .modbus_hub import ModbusManagerHub
-from .const import DOMAIN
+from datetime import timedelta
 import struct
-import asyncio
-import time
-from datetime import datetime
+from typing import Any, Dict, Optional
 
-_LOGGER = logging.getLogger(__name__)
+from homeassistant.components.sensor import SensorEntity
+from homeassistant.core import callback
+from homeassistant.helpers.update_coordinator import (
+    CoordinatorEntity,
+    DataUpdateCoordinator,
+)
+from homeassistant.helpers.entity import DeviceInfo
+
+from .const import DOMAIN
+from .modbus_hub import ModbusManagerHub
+from .logger import ModbusManagerLogger
+
+_LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
-    """Set up Modbus Manager sensors."""
-    hub: ModbusManagerHub = hass.data[DOMAIN].get(entry.entry_id)
-    if not hub:
-        _LOGGER.error("ModbusManagerHub not found in hass.data")
-        return
+    """Richte die Modbus Manager Sensoren ein."""
+    _LOGGER.debug(
+        "Sensor Setup wird ausgeführt",
+        extra={
+            "entry_id": entry.entry_id
+        }
+    )
 
-    # Ensure coordinator exists
-    await hub.read_registers(hub.device_type)
+    # Prüfe ob die Domain existiert
+    if DOMAIN not in hass.data:
+        _LOGGER.error(
+            "Domain nicht in hass.data gefunden",
+            extra={
+                "entry_id": entry.entry_id
+            }
+        )
+        return False
 
-    device_definitions = hub.get_device_definition(hub.device_type)
-    if not device_definitions:
-        _LOGGER.error("Keine Gerätekonfiguration gefunden für %s", hub.device_type)
-        return
+    # Prüfe ob der Hub existiert
+    if entry.entry_id not in hass.data[DOMAIN]:
+        _LOGGER.error(
+            "Hub nicht gefunden",
+            extra={
+                "entry_id": entry.entry_id
+            }
+        )
+        return False
 
-    _LOGGER.debug("Gefundene Gerätekonfiguration: %s", device_definitions)
-    
-    sensors = []
-    read_registers = device_definitions.get('registers', {}).get('read', [])
-    
-    _LOGGER.info("Erstelle %d Sensoren aus der Konfiguration", len(read_registers))
+    hub: ModbusManagerHub = hass.data[DOMAIN][entry.entry_id]
+    _LOGGER.debug(
+        "Hub gefunden",
+        extra={
+            "entry_id": entry.entry_id,
+            "hub_name": hub.name
+        }
+    )
 
-    for reg in read_registers:
-        try:
-            sensor = ModbusSensor(hub, reg['name'], reg)
-            sensors.append(sensor)
-            _LOGGER.debug("Sensor erstellt: %s mit Konfiguration: %s", reg['name'], reg)
-        except Exception as e:
-            _LOGGER.error("Fehler beim Erstellen des Sensors %s: %s", reg['name'], e)
-            continue
+    try:
+        # Hole die Gerätedefinition
+        device_def = await hub.get_device_definition(hub.device_type)
+        if not device_def:
+            _LOGGER.error(
+                "Keine Gerätekonfiguration gefunden",
+                extra={
+                    "entry_id": entry.entry_id,
+                    "device_type": hub.device_type
+                }
+            )
+            return False
 
-    async_add_entities(sensors, True)
+        _LOGGER.debug(
+            "Gerätekonfiguration geladen",
+            extra={
+                "entry_id": entry.entry_id,
+                "device_type": hub.device_type
+            }
+        )
+        
+        # Erstelle die Sensoren
+        sensors = []
+        read_registers = device_def.get('registers', {}).get('read', [])
+        polling_config = device_def.get('polling', {})
+        
+        _LOGGER.info(
+            "Erstelle Sensoren",
+            extra={
+                "entry_id": entry.entry_id,
+                "sensor_count": len(read_registers)
+            }
+        )
 
-class ModbusSensor(CoordinatorEntity):
-    """Repräsentiert einen einzelnen Modbus-Sensor."""
-    
-    # Konstanten an den Anfang der Klasse
-    VALID_DATA_TYPES = {
-        "uint16": (1, lambda x: x[0]),
-        "uint32": (2, lambda x: (x[0] << 16) + x[1]),
-        "int16": (1, lambda x: x[0] - 65536 if x[0] > 32767 else x[0]),
-        "int32": (2, lambda x: ((x[0] << 16) + x[1]) - 4294967296 if ((x[0] << 16) + x[1]) > 2147483647 else ((x[0] << 16) + x[1])),
-        "float": (2, lambda x: struct.unpack('>f', bytes(x))[0]),
-        "string": (None, lambda x: ''.join([chr(i) for i in x]).strip('\x00')),
-        "bool": (1, lambda x: bool(x[0]))
-    }
-
-    def __init__(self, hub: ModbusManagerHub, name: str, device_def: dict):
-        """Initialisiert den Sensor."""
-        if hub.name not in hub.coordinators:
-            _LOGGER.error("Kein Coordinator für Hub %s gefunden", hub.name)
-            raise ValueError(f"Kein Coordinator für Hub {hub.name} gefunden")
+        # Erstelle einen Coordinator für jede Polling-Gruppe
+        for group_name, group_config in polling_config.items():
+            interval = group_config.get('interval', 30)
+            registers = group_config.get('registers', [])
             
-        super().__init__(hub.coordinators[hub.name])
+            if not registers:
+                continue
+                
+            coordinator = DataUpdateCoordinator(
+                hass,
+                _LOGGER,
+                name=f"{hub.name}_{group_name}",
+                update_method=lambda: hub.read_registers(hub.device_type),
+                update_interval=timedelta(seconds=interval),
+            )
+            
+            # Speichere den Coordinator im Hub
+            if hub.device_type not in hub.coordinators:
+                hub.coordinators[hub.device_type] = {}
+            hub.coordinators[hub.device_type][group_name] = coordinator
+            
+            _LOGGER.debug(
+                "Coordinator erstellt",
+                extra={
+                    "entry_id": entry.entry_id,
+                    "group": group_name,
+                    "interval": interval
+                }
+            )
+            
+            # Erstelle Sensoren für diese Gruppe
+            for reg_name in registers:
+                reg_def = next((r for r in read_registers if r['name'] == reg_name), None)
+                if reg_def:
+                    try:
+                        sensor = ModbusSensor(
+                            hub=hub,
+                            coordinator=coordinator,
+                            name=reg_name,
+                            device_def=reg_def,
+                            polling_group=group_name
+                        )
+                        sensors.append(sensor)
+                        _LOGGER.debug(
+                            "Sensor erstellt",
+                            extra={
+                                "entry_id": entry.entry_id,
+                                "name": reg_name,
+                                "group": group_name
+                            }
+                        )
+                    except Exception as e:
+                        _LOGGER.error(
+                            "Fehler beim Erstellen des Sensors",
+                            extra={
+                                "entry_id": entry.entry_id,
+                                "name": reg_name,
+                                "error": str(e)
+                            }
+                        )
+
+        if sensors:
+            async_add_entities(sensors)
+            _LOGGER.info(
+                "Sensoren erfolgreich hinzugefügt",
+                extra={
+                    "entry_id": entry.entry_id,
+                    "count": len(sensors)
+                }
+            )
+            return True
+
+        return False
+
+    except Exception as e:
+        _LOGGER.error(
+            "Fehler beim Setup der Sensoren",
+            extra={
+                "entry_id": entry.entry_id,
+                "error": str(e)
+            }
+        )
+        return False
+
+class ModbusSensor(CoordinatorEntity, SensorEntity):
+    """Modbus Manager Sensor Klasse."""
+
+    def __init__(
+        self,
+        hub: ModbusManagerHub,
+        coordinator: DataUpdateCoordinator,
+        name: str,
+        device_def: dict,
+        polling_group: str,
+    ):
+        """Initialisiere den Sensor."""
+        super().__init__(coordinator)
+        
         self._hub = hub
         self._name = name
         self._device_def = device_def
-        self._state = None
-        self._unit_of_measurement = device_def.get("unit_of_measurement")
-        self._device_class = device_def.get("device_class")
-        self._state_class = device_def.get("state_class")
+        self._polling_group = polling_group
         
-        # Erstelle eine eindeutige ID basierend auf dem Hub-Namen und Sensor-Namen
-        self._unique_id = f"{self._hub.name}_{self._name}"
+        # Setze die Sensor-Attribute
+        self._attr_name = f"{hub.name} {name}"
+        self._attr_unique_id = f"{hub.name}_{name}"
+        self._attr_native_unit_of_measurement = device_def.get("unit_of_measurement")
+        self._attr_device_class = device_def.get("device_class")
+        self._attr_state_class = device_def.get("state_class")
         
-        _LOGGER.debug("Sensor initialisiert: %s (ID: %s)", self.name, self._unique_id)
+        # Setze die Geräte-Info
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, hub.name)},
+            name=hub.name,
+            manufacturer=device_def.get("manufacturer", "Unknown"),
+            model=hub.device_type,
+        )
+        
+        _LOGGER.debug(
+            f"Sensor initialisiert: {self._name} "
+            f"(ID: {self._attr_unique_id}, "
+            f"Polling-Gruppe: {self._polling_group})"
+        )
 
     @property
-    def unique_id(self):
-        """Eindeutige ID für den Sensor."""
-        return self._unique_id
-
-    @property
-    def name(self):
-        """Name des Sensors."""
-        return f"{self._hub.name} {self._name}"
-
-    @property
-    def device_info(self):
-        """Geräteinformationen für Device Registry."""
-        return {
-            "identifiers": {(DOMAIN, self._hub.name)},
-            "name": self._hub.name,
-            "manufacturer": "Sungrow",
-            "model": self._hub.device_type,
-            "via_device": (DOMAIN, self._hub.name),
-        }
-
-    @property
-    def state(self):
-        """Aktueller Zustand des Sensors."""
-        return self._state
-
-    @property
-    def device_class(self):
-        """Gerätekategorie des Sensors."""
-        return self._device_class
-
-    @property
-    def unit_of_measurement(self):
-        """Einheit der Messung."""
-        return self._unit_of_measurement
-
-    @property
-    def state_class(self):
-        """Klasse des Zustands."""
-        return self._state_class
-
-    async def async_added_to_hass(self):
-        """Wird aufgerufen, wenn die Entität zu Home Assistant hinzugefügt wird."""
-        self.coordinator.async_add_listener(self.async_write_ha_state)
-        await super().async_added_to_hass()
-
-    @callback
-    def _handle_coordinator_update(self):
-        """Behandelt aktualisierte Daten vom Coordinator."""
-        if self.coordinator.data:
-            register_data = self.coordinator.data.get(self._name)
-            if register_data is not None:
-                self._state = self._process_register_data(register_data, self._device_def.get("type"))
-            else:
-                _LOGGER.error("Keine Daten für %s gefunden", self._name)
-                self._state = None
-        else:
-            self._state = None
-        self.async_write_ha_state()
-
-    def _process_register_data(self, data, data_type):
-        """Verarbeitet die rohen Registerdaten basierend auf dem angegebenen Typ."""
+    def native_value(self) -> Any:
+        """Gib den aktuellen Zustand des Sensors zurück."""
+        if not self.coordinator.data:
+            return None
+            
         try:
-            if data_type not in self.VALID_DATA_TYPES:
-                _LOGGER.error("Unbekannter Datentyp: %s", data_type)
+            # Hole die Rohdaten für diesen Sensor
+            raw_value = self.coordinator.data.get(self._name)
+            if raw_value is None:
                 return None
                 
-            _, processor = self.VALID_DATA_TYPES[data_type]
-            value = processor(data)
+            # Konvertiere die Daten basierend auf dem Datentyp
+            data_type = self._device_def.get("type", "uint16")
+            value = self._convert_value(raw_value, data_type)
             
-            # Skalierung und Präzision anwenden
+            # Wende Skalierung an
             scale = self._device_def.get("scale", 1)
-            precision = self._device_def.get("precision")
-            
             if scale != 1:
-                value *= scale
+                value = value * scale
                 
+            # Runde den Wert, falls erforderlich
+            precision = self._device_def.get("precision")
             if precision is not None:
                 value = round(value, precision)
                 
             return value
             
         except Exception as e:
-            _LOGGER.error("Fehler bei der Verarbeitung der Registerdaten für %s: %s", self._name, e)
+            _LOGGER.error(f"Fehler beim Verarbeiten des Sensorwerts {self._name}: {e}")
             return None
-            
-    async def _batch_read_registers(self, registers):
-        """Optimierte Batch-Lesung von Registern mit Performance-Tracking."""
+
+    def _convert_value(self, raw_value: Any, data_type: str) -> Any:
+        """Konvertiere den Rohwert in den korrekten Datentyp."""
         try:
-            start_time = time.time()
-            
-            # Gruppiere Register nach Adressbereich
-            register_groups = self._group_registers(registers)
-            
-            # Parallele Ausführung der Lesevorgänge
-            tasks = []
-            for group in register_groups:
-                start_address = group[0]['address']
-                count = group[-1]['address'] + group[-1].get('count', 1) - start_address
-                tasks.append(self._read_register_group(start_address, count))
-            
-            # Warte auf alle Ergebnisse
-            results = await asyncio.gather(*tasks, return_exceptions=True)
-            
-            # Verarbeite Ergebnisse
-            data = {}
-            for group, result in zip(register_groups, results):
-                if isinstance(result, Exception):
-                    _LOGGER.error("Fehler beim Lesen der Register-Gruppe: %s", result)
-                    continue
-                    
-                if result.isError():
-                    _LOGGER.error("Modbus-Fehler bei Register-Gruppe: %s", result)
-                    continue
-                    
-                offset = 0
-                for reg in group:
-                    count = reg.get('count', 1)
-                    data[reg['name']] = result.registers[offset:offset + count]
-                    offset += count
-            
-            # Performance-Metriken
-            end_time = time.time()
-            response_time = (end_time - start_time) * 1000  # ms
-            
-            self._update_metrics({
-                'response_time': response_time,
-                'success_rate': len(data) / len(registers) * 100,
-                'timestamp': datetime.now().isoformat()
-            })
-            
-            return data
-            
-        except Exception as e:
-            _LOGGER.error("Fehler beim Batch-Lesen der Register: %s", e)
-            self._update_metrics({
-                'error': str(e),
-                'timestamp': datetime.now().isoformat()
-            })
-            return None
-
-    def _group_registers(self, registers):
-        """Gruppiert Register für optimale Batch-Lesungen."""
-        MAX_GROUP_SIZE = 125  # Modbus-Limit
-        groups = []
-        current_group = []
-        
-        for reg in sorted(registers, key=lambda x: x['address']):
-            if not current_group:
-                current_group.append(reg)
-                continue
+            if not isinstance(raw_value, (list, tuple)):
+                raw_value = [raw_value]
                 
-            last_reg = current_group[-1]
-            current_size = reg['address'] + reg.get('count', 1) - current_group[0]['address']
-            
-            if (current_size <= MAX_GROUP_SIZE and 
-                reg['address'] <= last_reg['address'] + last_reg.get('count', 1) + 5):
-                current_group.append(reg)
+            if data_type == "uint16":
+                return raw_value[0]
+            elif data_type == "int16":
+                value = raw_value[0]
+                return value - 65536 if value > 32767 else value
+            elif data_type == "uint32":
+                if len(raw_value) < 2:
+                    return None
+                return (raw_value[0] << 16) + raw_value[1]
+            elif data_type == "int32":
+                if len(raw_value) < 2:
+                    return None
+                value = (raw_value[0] << 16) + raw_value[1]
+                return value - 4294967296 if value > 2147483647 else value
+            elif data_type in ["float", "float32"]:
+                if len(raw_value) < 2:
+                    return None
+                return struct.unpack('>f', struct.pack('>HH', raw_value[0], raw_value[1]))[0]
+            elif data_type == "string":
+                return ''.join([chr(x) for x in raw_value]).strip('\x00')
+            elif data_type == "bool":
+                return bool(raw_value[0])
             else:
-                groups.append(current_group)
-                current_group = [reg]
+                _LOGGER.warning(f"Unbekannter Datentyp: {data_type}")
+                return None
                 
-        if current_group:
-            groups.append(current_group)
-            
-        return groups
-
-    def _update_metrics(self, metrics):
-        """Aktualisiert die Performance-Metriken."""
-        self._attr_extra_state_attributes.update({
-            'performance_metrics': metrics
-        })
+        except Exception as e:
+            _LOGGER.error(f"Fehler bei der Datenkonvertierung für {self._name}: {e}")
+            return None

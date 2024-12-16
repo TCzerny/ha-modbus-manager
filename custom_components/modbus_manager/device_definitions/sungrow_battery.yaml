@@ -1,38 +1,39 @@
-# Sungrow SBR Batteriesystem
-# Basierend auf der Protokollversion 1.1.30.0
+# Sungrow Batteriesystem
 
-include:
-  - common_entities.yaml
+device_info:
+  name: "Sungrow Battery System"
+  manufacturer: "Sungrow"
+  model: "Battery"
+  supports_load_management: false
 
 registers:
   read:
     # Battery Status
-    - { name: "battery_voltage", address: 13020, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.voltage" }
-    - { name: "battery_current", address: 13021, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.current" }
-    - { name: "battery_power", address: 13022, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", translation_key: "sensor.battery.power" }
-    - { name: "battery_level", address: 13024, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", translation_key: "sensor.battery.level" }
-    - { name: "battery_health", address: 13025, type: "uint16", unit_of_measurement: "%", state_class: "measurement", translation_key: "sensor.battery.health" }
-    - { name: "battery_temperature", address: 13026, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, translation_key: "sensor.battery.temperature" }
+    - { name: "battery_voltage", address: 13020, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "battery_current", address: 13021, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "battery_power", address: 13022, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "battery_level", address: 13024, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement" }
+    - { name: "battery_health", address: 13025, type: "uint16", unit_of_measurement: "%", state_class: "measurement" }
+    - { name: "battery_temperature", address: 13026, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
 
     # Energy Statistics
-    - { name: "daily_battery_charge", address: 13034, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.battery.charge.daily" }
-    - { name: "total_battery_charge", address: 13036, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.battery.charge.total" }
-    - { name: "daily_battery_discharge", address: 13038, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.battery.discharge.daily" }
-    - { name: "total_battery_discharge", address: 13040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.battery.discharge.total" }
+    - { name: "daily_battery_charge", address: 13034, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_battery_charge", address: 13036, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "daily_battery_discharge", address: 13038, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_battery_discharge", address: 13040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
 
   write:
     # Battery Control
-    - { name: "battery_charge_limit", address: 13100, type: "uint16", min: 0, max: 100, translation_key: "register.battery.charge_limit" }
-    - { name: "battery_discharge_limit", address: 13101, type: "uint16", min: 0, max: 100, translation_key: "register.battery.discharge_limit" }
-    - { name: "forced_charging", address: 13102, type: "uint16", min: 0, max: 1, translation_key: "register.battery.forced_charging" }
+    - { name: "battery_charge_limit", address: 13100, type: "uint16", min: 0, max: 100 }
+    - { name: "battery_discharge_limit", address: 13101, type: "uint16", min: 0, max: 100 }
+    - { name: "forced_charging", address: 13102, type: "uint16", min: 0, max: 1 }
 
 polling:
   fast:
     interval: 10
     registers: [
       "battery_power",
-      "battery_level",
-      "operating_state"
+      "battery_level"
     ]
   normal:
     interval: 30
@@ -44,9 +45,7 @@ polling:
   slow:
     interval: 300
     registers: [
-      "daily_battery_charge", "total_battery_charge",
-      "daily_battery_discharge", "total_battery_discharge",
-      "battery_health"
+      "daily_battery_charge", "total_battery_charge"
     ]
 
 validation:
@@ -95,3 +94,16 @@ helpers:
           {{ 'state.battery.idle'|translate }}
         {% endif %}
       translation_key: "sensor.battery.power_direction"
+
+device_specific_templates:
+  - name: "battery_status"
+    value: >
+      {% set power = states('sensor.{{device_name}}_battery_power')|float(0) %}
+      {% if power > 0 %}
+        Entladen
+      {% elif power < 0 %}
+        Laden
+      {% else %}
+        Standby
+      {% endif %}
+

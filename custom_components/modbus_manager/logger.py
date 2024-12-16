@@ -1,116 +1,210 @@
-"""Enhanced logging for Modbus Manager."""
+"""Logging utilities for Modbus Manager."""
 import logging
-import json
 from datetime import datetime
-from typing import Any, Dict, List, Optional
-import time
+from typing import Any, Dict, List, Optional, Union
 
-_LOGGER = logging.getLogger(__name__)
+class ModbusManagerLogger(logging.Logger):
+    """Custom logger for Modbus Manager."""
 
-class ModbusLogger:
-    """Enhanced logging functionality for Modbus operations."""
-
-    def __init__(self, device_name: str, max_buffer_size: int = 100):
-        """Initialize logger.
+    def __init__(self, name: str):
+        """Initialize the logger.
         
         Args:
-            device_name: Name of the device being logged
-            max_buffer_size: Maximum number of log entries to keep
+            name: Name for the logger instance (e.g. 'hub_sungrow1')
         """
-        self.device_name = device_name
-        self.log_buffer: List[Dict[str, Any]] = []
-        self.max_buffer_size = max_buffer_size
-        self.start_time = time.time()
+        super().__init__(f"custom_components.modbus_manager.{name}")
+        self.name = name
+        self.logger = logging.getLogger(f"custom_components.modbus_manager.{name}")
+        
+        # Übernehme die Einstellungen vom Parent-Logger
+        self.parent = logging.getLogger("custom_components.modbus_manager")
+        self.setLevel(self.parent.level)
+        for handler in self.parent.handlers:
+            self.addHandler(handler)
+
+    def _format_message(self, msg: str, *args: Any, **kwargs: Any) -> str:
+        """Format log message with additional context.
+        
+        Args:
+            msg: Message to format (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        try:
+            # Loggen der übergebenen Argumente
+            self.logger.debug(f"Formatting message with args: {args} and kwargs: {kwargs}")
+            
+            # Sicherstellen, dass args nur iterierbare Objekte enthalten
+            safe_args = [arg for arg in args if isinstance(arg, (list, tuple, dict))]
+            if safe_args or ('{' in msg and '}' in msg):
+                msg = msg.format(*safe_args, **{k: v for k, v in kwargs.items() if not isinstance(v, (dict, list))})
+            
+            # Extrahiere Kontext-Daten aus kwargs
+            context_items = []
+            for k, v in kwargs.items():
+                if isinstance(v, (dict, list)):
+                    context_items.append(f"{k}={repr(v)}")
+                else:
+                    context_items.append(f"{k}={v}")
+            
+            context = ' '.join(context_items) if context_items else ''
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+            
+            return f"[{self.name}] {msg} {context}".strip()
+            
+        except Exception as e:
+            return f"[{self.name}] ERROR FORMATTING MESSAGE: {msg} (Error: {str(e)})"
+
+    def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log debug message.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.DEBUG):
+            self.logger.debug(self._format_message(msg, *args, **kwargs))
+
+    def info(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log info message.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.INFO):
+            self.logger.info(self._format_message(msg, *args, **kwargs))
+
+    def warning(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log warning message.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.WARNING):
+            self.logger.warning(self._format_message(msg, *args, **kwargs))
+
+    def error(self, msg: str, *args: Any, error: Optional[Exception] = None, **kwargs: Any) -> None:
+        """Log error message with optional exception.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            error: Optional exception to include in the log
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.ERROR):
+            if error:
+                kwargs['error'] = str(error)
+                kwargs['error_type'] = type(error).__name__
+            self.logger.error(self._format_message(msg, *args, **kwargs))
+
+    def exception(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log exception with traceback.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.ERROR):
+            self.logger.exception(self._format_message(msg, *args, **kwargs))
 
     def log_operation(
-        self, 
-        operation: str, 
-        registers: List[Dict[str, Any]], 
-        result: Optional[Any] = None, 
+        self,
+        operation: str,
+        registers: List[Dict[str, Any]],
+        result: Optional[Any] = None,
+        error: Optional[Exception] = None,
         duration: Optional[float] = None,
-        error: Optional[Exception] = None
+        **kwargs: Any
     ) -> None:
-        """Log a Modbus operation with details."""
-        try:
-            # Create safe copy of registers without sensitive data
-            safe_registers = [
-                {k: v for k, v in reg.items() if k not in ("password", "key")}
-                for reg in registers
-            ]
-
-            log_entry = {
-                "timestamp": datetime.now().isoformat(),
-                "device": self.device_name,
-                "operation": operation,
-                "registers": safe_registers,
-                "duration_ms": round(duration * 1000, 2) if duration else None,
-                "success": error is None,
-                "error": str(error) if error else None,
-                "result": result if not error else None
-            }
-            
-            self.log_buffer.append(log_entry)
-            while len(self.log_buffer) > self.max_buffer_size:
-                self.log_buffer.pop(0)
-                
-            if error:
-                _LOGGER.error(
-                    "Modbus operation failed - Device: %s, Operation: %s, Error: %s",
-                    self.device_name, operation, error
-                )
-            else:
-                _LOGGER.debug(
-                    "Modbus operation successful - Device: %s, Operation: %s, Duration: %sms",
-                    self.device_name, operation, log_entry["duration_ms"]
-                )
-                
-        except Exception as e:
-            _LOGGER.error("Error logging Modbus operation: %s", e)
-
-    def get_statistics(self) -> Dict[str, Any]:
-        """Calculate statistics from logged operations."""
-        try:
-            if not self.log_buffer:
-                return {
-                    "total_operations": 0,
-                    "uptime": round(time.time() - self.start_time, 2)
+        """Log a Modbus operation with details.
+        
+        Args:
+            operation: Type of operation (read/write)
+            registers: List of registers involved
+            result: Operation result (if successful)
+            error: Exception (if operation failed)
+            duration: Operation duration in seconds
+            **kwargs: Additional context information
+        """
+        log_data = {
+            "operation": operation,
+            "registers": [
+                {
+                    "name": reg.get("name", "unknown"),
+                    "address": reg.get("address", 0),
+                    "type": reg.get("type", "unknown")
                 }
-                
-            successful_ops = [op for op in self.log_buffer if op["success"]]
-            failed_ops = [op for op in self.log_buffer if not op["success"]]
-            
-            return {
-                "total_operations": len(self.log_buffer),
-                "successful_operations": len(successful_ops),
-                "failed_operations": len(failed_ops),
-                "success_rate": round(len(successful_ops) / len(self.log_buffer) * 100, 2),
-                "average_duration": round(
-                    sum(op["duration_ms"] for op in successful_ops if op["duration_ms"]) 
-                    / len([op for op in successful_ops if op["duration_ms"]])
-                    if successful_ops and any(op["duration_ms"] for op in successful_ops)
-                    else 0,
-                    2
-                ),
-                "most_common_errors": self._get_common_errors(failed_ops),
-                "uptime": round(time.time() - self.start_time, 2)
-            }
-        except Exception as e:
-            _LOGGER.error("Error calculating statistics: %s", e)
-            return {"error": str(e)}
+                for reg in registers
+            ],
+            "timestamp": datetime.now().isoformat(),
+            **kwargs
+        }
 
-    def _get_common_errors(self, failed_ops: List[Dict[str, Any]]) -> Dict[str, int]:
-        """Get most common error types."""
-        try:
-            error_counts: Dict[str, int] = {}
-            for op in failed_ops:
-                if op.get("error"):
-                    error_type = op["error"].split(":")[0]
-                    error_counts[error_type] = error_counts.get(error_type, 0) + 1
-            return dict(sorted(
-                error_counts.items(), 
-                key=lambda x: x[1], 
-                reverse=True
-            )[:5])
-        except Exception as e:
-            _LOGGER.error("Error processing error counts: %s", e)
-            return {} 
+        if duration is not None:
+            log_data["duration"] = f"{duration:.3f}s"
+
+        if error:
+            log_data["error"] = str(error)
+            log_data["error_type"] = type(error).__name__
+            self.error(
+                f"Modbus {operation} operation failed",
+                **log_data
+            )
+        else:
+            log_data["result"] = result
+            self.debug(
+                f"Modbus {operation} operation completed",
+                **log_data
+            )
+
+    def log_batch_operation(
+        self,
+        operation: str,
+        register_groups: List[List[Dict[str, Any]]],
+        results: Optional[List[Any]] = None,
+        errors: Optional[List[Exception]] = None,
+        duration: Optional[float] = None,
+        **kwargs: Any
+    ) -> None:
+        """Log a batch Modbus operation.
+        
+        Args:
+            operation: Type of operation (read/write)
+            register_groups: List of register groups
+            results: List of results (if successful)
+            errors: List of exceptions (if any failed)
+            duration: Total operation duration in seconds
+            **kwargs: Additional context information
+        """
+        log_data = {
+            "operation": f"batch_{operation}",
+            "group_count": len(register_groups),
+            "total_registers": sum(len(group) for group in register_groups),
+            "timestamp": datetime.now().isoformat(),
+            **kwargs
+        }
+
+        if duration is not None:
+            log_data["duration"] = f"{duration:.3f}s"
+            log_data["avg_group_duration"] = f"{duration/len(register_groups):.3f}s"
+
+        if errors and any(errors):
+            log_data["errors"] = [str(e) for e in errors if e]
+            log_data["error_count"] = sum(1 for e in errors if e)
+            self.error(
+                f"Batch {operation} operation partially failed",
+                **log_data
+            )
+        else:
+            log_data["success_count"] = len(results) if results else 0
+            self.debug(
+                f"Batch {operation} operation completed",
+                **log_data
+            )

@@ -1,81 +1,59 @@
-"""Template helper functions for Modbus Manager."""
-from typing import Any, Dict, Optional
-from homeassistant.const import (
-    DEVICE_CLASS_POWER,
-    DEVICE_CLASS_ENERGY,
-    DEVICE_CLASS_CURRENT,
-    DEVICE_CLASS_VOLTAGE,
-    DEVICE_CLASS_TEMPERATURE,
-)
+"""Generic template helpers for Modbus Manager."""
+from typing import Dict, Any
+from datetime import datetime, timedelta
+from ..const import STAT_TYPES
 
-def create_template_sensor(
-    name: str,
-    unique_id: str,
-    value_template: str,
-    unit: Optional[str] = None,
-    device_class: Optional[str] = None,
-    state_class: Optional[str] = None,
-    icon: Optional[str] = None,
-    attributes: Optional[Dict[str, Any]] = None
-) -> Dict[str, Any]:
-    """Create a template sensor configuration."""
-    sensor = {
-        "name": name,
-        "unique_id": unique_id,
-        "state": value_template,
-    }
-    
-    if unit:
-        sensor["unit_of_measurement"] = unit
-    if device_class:
-        sensor["device_class"] = device_class
-    if state_class:
-        sensor["state_class"] = state_class
-    if icon:
-        sensor["icon"] = icon
-    if attributes:
-        sensor["attributes"] = attributes
+class TemplateHelper:
+    """Generic template helper class."""
+
+    @staticmethod
+    def create_energy_statistics_template(device_name: str, source_entity: str) -> Dict[str, Any]:
+        """Create energy statistics templates for a device."""
+        templates = {}
         
-    return sensor
+        for stat_type in STAT_TYPES:
+            template_name = f"{device_name}_{stat_type}_energy"
+            templates[template_name] = {
+                "unique_id": template_name,
+                "name": f"{device_name} {stat_type.capitalize()} Energy",
+                "unit_of_measurement": "kWh",
+                "device_class": "energy",
+                "state_class": "total_increasing",
+                "value_template": (
+                    f"{{% set current = states('{source_entity}')|float(0) %}}\n"
+                    f"{{% set stored = state_attr('sensor.{device_name}_statistics', '{stat_type}_energy')|float(0) %}}\n"
+                    "{{ (current + stored)|round(1) }}"
+                )
+            }
+        
+        return templates
 
-def create_power_sensor(
-    name: str,
-    unique_id: str,
-    value_template: str,
-    state_class: str = "measurement"
-) -> Dict[str, Any]:
-    """Create a power sensor template."""
-    return create_template_sensor(
-        name=name,
-        unique_id=unique_id,
-        value_template=value_template,
-        unit="W",
-        device_class=DEVICE_CLASS_POWER,
-        state_class=state_class
-    )
+    @staticmethod
+    def create_power_flow_template(device_name: str) -> Dict[str, Any]:
+        """Create power flow template for a device."""
+        return {
+            "unique_id": f"{device_name}_power_flow",
+            "name": f"{device_name} Power Flow",
+            "icon": "mdi:flash",
+            "value_template": (
+                f"{{% set pv = states('sensor.{device_name}_pv_power')|float(0) %}}\n"
+                f"{{% set grid = states('sensor.{device_name}_grid_power')|float(0) %}}\n"
+                f"{{% set battery = states('sensor.{device_name}_battery_power')|float(0) %}}\n"
+                f"{{% set load = states('sensor.{device_name}_load_power')|float(0) %}}\n"
+                "{{ {'pv': pv, 'grid': grid, 'battery': battery, 'load': load} | tojson }}"
+            )
+        }
 
-def create_energy_sensor(
-    name: str,
-    unique_id: str,
-    value_template: str,
-    state_class: str = "total_increasing"
-) -> Dict[str, Any]:
-    """Create an energy sensor template."""
-    return create_template_sensor(
-        name=name,
-        unique_id=unique_id,
-        value_template=value_template,
-        unit="kWh",
-        device_class=DEVICE_CLASS_ENERGY,
-        state_class=state_class
-    )
-
-def calculate_daily_energy(sensor_value):
-    """Berechnet den täglichen PV-Ertrag."""
-    return sensor_value * 1.0
-
-def calculate_weekly_energy(sensor_value):
-    """Berechnet den wöchentlichen PV-Ertrag."""
-    return sensor_value * 1.0
-
-# Weitere Berechnungsfunktionen 
+    @staticmethod
+    def create_efficiency_template(device_name: str) -> Dict[str, Any]:
+        """Create efficiency calculation template."""
+        return {
+            "unique_id": f"{device_name}_efficiency",
+            "name": f"{device_name} Efficiency",
+            "unit_of_measurement": "%",
+            "value_template": (
+                f"{{% set input = states('sensor.{device_name}_dc_power')|float(0) %}}\n"
+                f"{{% set output = states('sensor.{device_name}_ac_power')|float(0) %}}\n"
+                "{{ ((output / input * 100) if input > 0 else 0)|round(1) }}"
+            )
+        }

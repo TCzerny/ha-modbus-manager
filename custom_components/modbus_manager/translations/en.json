@@ -6,274 +6,154 @@
                 "title": "Modbus Device Configuration",
                 "description": "Set up your Modbus device connection",
                 "data": {
-                    "name": "Device Name",
+                    "name": "Name",
                     "host": "Host",
                     "port": "Port",
-                    "slave_id": "Slave ID",
-                    "scan_interval": "Scan Interval",
+                    "slave": "Slave ID",
                     "device_type": "Device Type"
                 }
             }
         },
         "error": {
-            "cannot_connect": "Failed to connect",
-            "invalid_host": "Invalid hostname or IP address",
-            "unknown": "Unknown error occurred",
-            "invalid_port": "Port must be between 1 and 65535",
-            "invalid_slave_id": "Slave ID must be between 1 and 247",
-            "interval_too_short": "Scan interval must be at least 5 seconds"
-        },
-        "abort": {
-            "already_configured": "Device is already configured"
+            "invalid_host": "Invalid host address",
+            "cannot_connect": "Cannot connect",
+            "already_configured": "Device already configured"
         }
     },
-    "device": {
-        "info": {
-            "type": "Device Type",
+    "entity": {
+        "sensor": {
+            "inverter_serial": "Inverter Serial Number",
+            "device_code": "Device Type",
+            "daily_pv_gen_battery_discharge": "Daily PV Generation & Battery Discharge",
+            "total_pv_gen_battery_discharge": "Total PV Generation & Battery Discharge",
+            "inverter_temperature": "Inverter Temperature",
+            "system_status": "System Status",
+            "running_state": "Running State",
+            "mppt1_voltage": "MPPT1 Voltage",
+            "mppt1_current": "MPPT1 Current",
+            "mppt2_voltage": "MPPT2 Voltage",
+            "mppt2_current": "MPPT2 Current",
+            "grid_voltage_l1": "Grid Voltage L1",
+            "grid_voltage_l2": "Grid Voltage L2",
+            "grid_voltage_l3": "Grid Voltage L3",
+            "grid_current_l1": "Grid Current L1",
+            "grid_current_l2": "Grid Current L2",
+            "grid_current_l3": "Grid Current L3",
+            "phase_a_power": "Phase A Power",
+            "phase_b_power": "Phase B Power",
+            "phase_c_power": "Phase C Power",
+            "grid_frequency": "Grid Frequency",
+            "battery_voltage": "Battery Voltage",
+            "battery_current": "Battery Current",
+            "battery_power": "Battery Power",
+            "battery_level": "Battery Level",
+            "battery_health": "Battery Health",
+            "battery_temperature": "Battery Temperature",
+            "daily_battery_charge": "Daily Battery Charge",
+            "total_battery_charge": "Total Battery Charge",
+            "daily_battery_discharge": "Daily Battery Discharge",
+            "total_battery_discharge": "Total Battery Discharge",
+            "battery_max_charge_power": "Maximum Charge Power",
+            "battery_max_discharge_power": "Maximum Discharge Power",
+            "battery_capacity": "Battery Capacity",
             "serial_number": "Serial Number",
             "firmware_version": "Firmware Version",
-            "protocol_version": "Protocol Version"
-        },
-        "status": {
-            "state": "Operating State",
+            "device_status": "Device Status",
+            "charging_state": "Charging State",
+            "connected_state": "Connection State",
             "error_code": "Error Code",
-            "warning_code": "Warning Code"
+            "charging_power": "Charging Power",
+            "energy_total": "Total Energy",
+            "energy_session": "Session Energy",
+            "temperature": "Temperature",
+            "charging_current_limit": "Charging Current Limit",
+            "start_stop_charging": "Start/Stop Charging",
+            "reset_error": "Reset Error",
+            "inverter": {
+                "state": {
+                    "wait": "Waiting",
+                    "check": "Checking",
+                    "normal": "Normal",
+                    "fault": "Fault",
+                    "permanent_fault": "Permanent Fault",
+                    "power_limit": "Power Limit",
+                    "startup": "Starting Up",
+                    "shutdown": "Shutting Down",
+                    "standby": "Standby",
+                    "emergency": "Emergency"
+                },
+                "state_1": {
+                    "fault": "Fault",
+                    "standby": "Standby",
+                    "running": "Running",
+                    "stopping": "Stopping"
+                },
+                "metrics": {
+                    "self_consumption": "Self Consumption Rate",
+                    "autarky": "Autarky Rate"
+                }
+            },
+            "battery": {
+                "mode": {
+                    "standby": "Standby",
+                    "charge": "Charging",
+                    "discharge": "Discharging",
+                    "fault": "Fault"
+                },
+                "status": {
+                    "offline": "Offline",
+                    "standby": "Standby",
+                    "running": "Running",
+                    "fault": "Fault",
+                    "updating": "Updating"
+                },
+                "remaining_time": "Remaining Time",
+                "warning": {
+                    "none": "None",
+                    "low_soc": "Low State of Charge",
+                    "high_temp": "High Temperature",
+                    "low_temp": "Low Temperature"
+                }
+            },
+            "grid": {
+                "power_balance": "Grid Power Balance"
+            },
+            "charging": {
+                "state": {
+                    "idle": "Ready",
+                    "charging": "Charging",
+                    "completed": "Completed",
+                    "error": "Error"
+                },
+                "source": {
+                    "solar": "Solar",
+                    "solar_battery": "Solar + Battery",
+                    "grid": "Grid",
+                    "none": "Not charging"
+                }
+            }
         },
-        "network": {
-            "ip": "IP Address",
-            "subnet": "Subnet Mask",
-            "gateway": "Gateway",
-            "modbus_address": "Modbus Address"
-        },
-        "system": {
-            "time": "System Time",
-            "runtime": "Running Time"
-        },
-        "environment": {
-            "temperature": "Ambient Temperature",
-            "temperature_enclosure": "Enclosure Temperature"
-        },
-        "metrics": {
-            "uptime_days": "Uptime (Days)",
-            "temperature_difference": "Temperature Difference"
-        }
-    },
-    "grid": {
-        "electric": {
-            "voltage": "Grid Voltage",
-            "voltage_l1": "Grid Voltage L1",
-            "voltage_l2": "Grid Voltage L2",
-            "voltage_l3": "Grid Voltage L3",
-            "current": "Grid Current",
-            "current_l1": "Grid Current L1",
-            "current_l2": "Grid Current L2",
-            "current_l3": "Grid Current L3",
-            "frequency": "Grid Frequency",
-            "power_factor": "Power Factor"
-        },
-        "power": {
-            "active": "Active Power",
-            "active_total": "Total Active Power",
-            "active_l1": "Active Power L1",
-            "active_l2": "Active Power L2",
-            "active_l3": "Active Power L3",
-            "reactive": "Reactive Power",
-            "reactive_total": "Total Reactive Power",
-            "apparent": "Apparent Power",
-            "apparent_total": "Total Apparent Power"
-        },
-        "energy": {
-            "total": "Total Energy",
-            "today": "Today's Energy"
-        },
-        "metrics": {
-            "power_quality": "Power Quality",
-            "efficiency": "Grid Efficiency",
-            "phase_balance": "Phase Balance"
-        }
-    },
-    "battery": {
-        "status": {
-            "state": "Battery State",
-            "charging": "Charging Status",
-            "soc": "State of Charge"
-        },
-        "electric": {
-            "voltage": "Battery Voltage",
-            "current": "Battery Current"
-        },
-        "power": {
-            "active": "Battery Power"
-        },
-        "energy": {
-            "charged": "Energy Charged",
-            "discharged": "Energy Discharged"
-        },
-        "temperature": "Battery Temperature",
-        "health": {
-            "soh": "State of Health",
-            "cycles": "Cycle Count"
-        },
-        "metrics": {
-            "efficiency": "Battery Efficiency",
-            "utilization": "Power Utilization",
-            "runtime": "Estimated Runtime"
-        }
-    },
-    "load": {
-        "status": {
-            "state": "Load State",
-            "priority": "Load Priority",
-            "mode": "Load Mode"
-        },
-        "power": {
-            "active": "Load Power",
-            "reactive": "Reactive Power",
-            "apparent": "Apparent Power"
-        },
-        "energy": {
-            "consumed": "Energy Consumed",
-            "exported": "Energy Exported"
-        },
-        "electric": {
-            "voltage": "Load Voltage",
-            "current": "Load Current",
-            "frequency": "Load Frequency",
-            "power_factor": "Load Power Factor"
-        },
-        "metrics": {
-            "efficiency": "Load Efficiency",
-            "utilization": "Load Utilization",
-            "energy_balance": "Energy Balance"
+        "input_boolean": {
+            "allow_battery_car_charging": {
+                "name": "Allow Battery to EV Charging",
+                "state": {
+                    "on": "Enabled",
+                    "off": "Disabled"
+                }
+            }
         }
     },
     "notification": {
-        "device": {
-            "error": {
-                "title": "Device Error",
-                "message": "Error code {error_code} detected"
+        "charging": {
+            "complete": {
+                "title": "Charging Complete",
+                "message": "Vehicle fully charged\nEnergy: {energy} kWh\nCost: {cost} €"
             },
-            "temperature": {
-                "warning": {
-                    "title": "High Temperature Warning",
-                    "message": "Device temperature at {temperature}°C"
-                }
-            }
-        },
-        "grid": {
-            "error": {
-                "title": "Grid Error",
-                "message": "Grid error code {error_code} detected"
-            },
-            "temperature": {
-                "warning": {
-                    "title": "High Temperature Warning",
-                    "message": "Grid temperature at {temperature}°C"
-                }
-            },
-            "phase_imbalance": {
-                "warning": {
-                    "title": "Phase Imbalance Warning",
-                    "message": "Significant phase imbalance detected"
-                }
-            },
-            "energy": {
-                "daily": {
-                    "title": "Daily Energy Report",
-                    "message": "Today's energy: {energy} kWh"
-                }
-            }
-        },
-        "battery": {
-            "error": {
-                "title": "Battery Error",
-                "message": "Battery error code {error_code} detected"
-            },
-            "temperature": {
-                "warning": {
-                    "title": "High Battery Temperature",
-                    "message": "Battery temperature at {temperature}°C"
-                }
-            },
-            "soc": {
-                "warning": {
-                    "title": "Low Battery Warning",
-                    "message": "Battery at {soc}% charge"
-                }
-            },
-            "health": {
-                "report": {
-                    "title": "Battery Health Report",
-                    "message": "Health: {health}%, Cycles: {cycles}"
-                }
-            }
-        },
-        "load": {
-            "power": {
-                "warning": {
-                    "title": "High Load Warning",
-                    "message": "Load power at {power}W"
-                }
-            },
-            "disconnection": {
-                "title": "Load Disconnected",
-                "message": "Load has been disconnected"
-            },
-            "energy": {
-                "daily": {
-                    "title": "Load Energy Report",
-                    "message": "Consumed: {consumed} kWh, Exported: {exported} kWh"
-                }
-            }
-        }
-    },
-    "register": {
-        "device": {
-            "system": {
-                "time": "System Time Setting",
-                "restart": "Restart Device"
-            },
-            "network": {
-                "modbus_address": "Modbus Address Setting"
-            }
-        },
-        "grid": {
-            "control": {
-                "active_power": "Active Power Control",
-                "reactive_power": "Reactive Power Control",
-                "power_factor": "Power Factor Control"
-            }
-        },
-        "battery": {
-            "control": {
-                "charge_power": "Charge Power Limit",
-                "discharge_power": "Discharge Power Limit",
-                "charge_soc": "Charge SOC Limit",
-                "discharge_soc": "Discharge SOC Limit",
-                "mode": "Operation Mode"
-            }
-        },
-        "load": {
-            "control": {
-                "enable": "Load Enable",
-                "power_limit": "Power Limit",
-                "priority": "Priority Setting",
-                "mode": "Mode Setting"
-            }
-        }
-    },
-    "sensor": {
-        "system": {
-            "total_yield": "Total PV Yield",
-            "total_power": "Total Power",
-            "energy_costs_today": "Energy Costs Today",
-            "energy_costs_month": "Energy Costs This Month",
-            "pv_overview": "PV System Overview"
-        },
-        "load": {
-            "status": {
-                "state": "Load Status",
-                "priority": "Load Priority"
+            "pv": {
+                "title": "PV Charging Active",
+                "title_with_battery": "PV & Battery Charging Active",
+                "message": "Charging EV with solar power\nPV Power: {pv_power}W\nCharging Power: {charging_power}W\nPV Ratio: {pv_ratio}%",
+                "message_with_battery": "Charging EV with solar & battery power\nPV Power: {pv_power}W\nBattery Power: {battery_power}W\nCharging Power: {charging_power}W\nPV Ratio: {pv_ratio}%"
             }
         }
     }

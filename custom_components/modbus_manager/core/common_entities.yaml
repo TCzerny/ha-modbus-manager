@@ -1,6 +1,6 @@
 # Common entities for all Modbus devices
 # Provides base functionality for multi-device setups
-# Keine Register-Definitionen, nur Templates und Automationen
+# no registers, only templates and automations
 
 helpers:
   templates:
@@ -272,3 +272,56 @@ validation:
   monetary:
     min: -1000
     max: 1000
+
+# Gemeinsame Entitäten für alle Modbus-Geräte
+common_entities:
+  # Basis-Sensoren
+  sensors:
+    - name: "status"
+      type: "uint16"
+      translation_key: "sensor.device.status"
+      icon: "mdi:information"
+      
+    - name: "error_code"
+      type: "uint16"
+      translation_key: "sensor.device.error"
+      icon: "mdi:alert"
+      
+    - name: "temperature"
+      type: "int16"
+      unit_of_measurement: "°C"
+      device_class: "temperature"
+      state_class: "measurement"
+      scale: 0.1
+      
+  # Gemeinsame Templates
+  templates:
+    - name: "device_status_text"
+      value: >
+        {% if states('sensor.{{device_name}}_error_code')|int > 0 %}
+          {{ 'state.device.error'|translate }}
+        {% else %}
+          {{ states('sensor.{{device_name}}_status')|translate }}
+        {% endif %}
+      
+    - name: "device_uptime"
+      value: >
+        {% set uptime = states('sensor.{{device_name}}_uptime')|int %}
+        {{ timedelta(seconds=uptime) }}
+      unit_of_measurement: "s"
+      
+  # Gemeinsame Automationen
+  automations:
+    - name: "error_notification"
+      trigger:
+        platform: state
+        entity_id: sensor.{{device_name}}_error_code
+      condition:
+        condition: numeric_state
+        entity_id: sensor.{{device_name}}_error_code
+        above: 0
+      action:
+        service: notify.notify
+        data:
+          title: "{{ device_name }} Error"
+          message: "Error {{ states('sensor.{{device_name}}_error_code') }}"
