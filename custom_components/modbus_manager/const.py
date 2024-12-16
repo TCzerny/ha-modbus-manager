@@ -40,6 +40,8 @@ ERROR_ALREADY_CONFIGURED = "already_configured"
 REGISTER_CACHE_TIMEOUT = timedelta(seconds=5)
 OPERATION_TIMEOUT = timedelta(seconds=30)
 RECONNECT_DELAY = timedelta(seconds=60)
+METRICS_RESPONSE_TIME = timedelta(seconds=60)
+LOGGER_COMMUNICATION = timedelta(seconds=60)
 
 # Statistics
 STAT_DAILY = "daily"

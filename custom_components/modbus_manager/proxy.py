@@ -8,16 +8,14 @@ import time
 
 from .const import (
     MAX_REGISTERS_PER_READ,
-    REGISTER_CACHE_TIMEOUT,
-    METRICS_RESPONSE_TIME,
-    LOGGER_COMMUNICATION
+    REGISTER_CACHE_TIMEOUT
 )
 from .errors import ModbusDeviceError, handle_modbus_error
-from .logger import ModbusLogger
+from .logger import ModbusManagerLogger
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = ModbusManagerLogger(__name__)
 
-class ModbusProxy:
+class ModbusManagerProxy:
     """Proxy class for handling multiple Modbus requests efficiently."""
 
     def __init__(self, client: Any, slave: int, cache_timeout: float = REGISTER_CACHE_TIMEOUT.total_seconds()):
@@ -37,7 +35,7 @@ class ModbusProxy:
         self._request_queue: Dict[int, List[Tuple[int, int, asyncio.Future]]] = defaultdict(list)
         self._metrics: Dict[str, float] = defaultdict(float)
         self._batch_size = MAX_REGISTERS_PER_READ
-        self.logger = ModbusLogger(f"proxy_{slave}")
+        self.logger = ModbusManagerLogger(f"proxy_{slave}")
 
     async def read_registers(
         self, 

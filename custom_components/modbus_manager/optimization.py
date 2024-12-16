@@ -7,7 +7,7 @@ import logging
 
 _LOGGER = logging.getLogger(__name__)
 
-class ModbusOptimizer:
+class ModbusManagerOptimizer:
     """Optimize Modbus operations for better performance."""
 
     def __init__(self, max_batch_size: int = 125, cache_timeout: int = 5):

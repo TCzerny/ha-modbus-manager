@@ -1,13 +1,14 @@
 import logging
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
-from .modbus_sungrow import ModbusSungrowHub
+from .modbus_hub import ModbusManagerHub
 from .const import DOMAIN
+from .logger import ModbusManagerLogger
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Modbus Manager switches."""
-    hub: ModbusSungrowHub = hass.data[DOMAIN].get(entry.entry_id)
+    hub: ModbusManagerHub = hass.data[DOMAIN].get(entry.entry_id)
     if not hub:
         _LOGGER.error("ModbusSungrowHub not found in hass.data")
         return
@@ -35,7 +36,7 @@ async def async_setup_entry(hass, entry, async_add_entities):
 class ModbusSwitch(CoordinatorEntity):
     """Represents a single Modbus switch."""
 
-    def __init__(self, hub: ModbusSungrowHub, name: str, device_def: dict):
+    def __init__(self, hub: ModbusManagerHub, name: str, device_def: dict):
         """Initialize the switch."""
         if hub.name not in hub.coordinators:
             _LOGGER.error("No coordinator found for hub %s", hub.name)

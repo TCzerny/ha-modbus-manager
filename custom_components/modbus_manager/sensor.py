@@ -3,12 +3,13 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 from homeassistant.core import callback
 from .modbus_hub import ModbusManagerHub
 from .const import DOMAIN
+from .logger import ModbusManagerLogger
 import struct
 import asyncio
 import time
 from datetime import datetime
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Set up Modbus Manager sensors."""

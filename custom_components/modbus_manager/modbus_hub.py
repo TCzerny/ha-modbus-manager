@@ -13,12 +13,12 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
 from .errors import ModbusDeviceError, handle_modbus_error
-from .logger import ModbusLogger, ModbusManagerLogger
-from .optimization import ModbusOptimizer
-from .proxy import ModbusProxy
-from .device import ModbusDevice
+from .logger import ModbusManagerLogger
+from .optimization import ModbusManagerOptimizer
+from .proxy import ModbusManagerProxy
+from .device import ModbusManagerDevice
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = ModbusManagerLogger("modbus_manager_hub")
 
 class ModbusManagerHub:
     """Class for managing Modbus connection for devices."""
@@ -52,15 +52,15 @@ class ModbusManagerHub:
             slave=slave,
             device_type=device_type
         )
-        self.optimizer = ModbusOptimizer()
+        self.optimizer = ModbusManagerOptimizer()
         self.is_connected = False
         self.last_connect_attempt: Optional[datetime] = None
         self.reconnect_count = 0
         self.config: Dict[str, Any] = {}
         self.device_info: Dict[str, Any] = {}
         self._shutdown = False
-        self.proxy: Optional[ModbusProxy] = None
-        self.device: Optional[ModbusDevice] = None
+        self.proxy: Optional[ModbusManagerProxy] = None
+        self.device: Optional[ModbusManagerDevice] = None
 
     async def async_setup(self) -> bool:
         """Set up the Modbus connection with retry logic."""
@@ -95,20 +95,17 @@ class ModbusManagerHub:
                     if connected:
                         self.is_connected = True
                         self.logger.info(f"Connected to Modbus device at {self.host}:{self.port}")
-                        self.proxy = ModbusProxy(
+                        self.proxy = ModbusManagerProxy(
                             self.client,
                             self.slave,
-                            cache_timeout=self.config.get("cache_timeout", REGISTER_CACHE_TIMEOUT.total_seconds())
+                            cache_timeout=self.config.get("cache_timeout", 60)
                         )
-                        self.device = ModbusDevice(self)
+                        self.device = ModbusManagerDevice(self, self.hass, self.config)
                         self.logger.info("Hub setup complete")
                         return True
                         
                 except Exception as e:
-                    _LOGGER.warning(
-                        "Connection attempt %d of %d failed: %s",
-                        retry_count + 1, max_retries + 1, str(e)
-                    )
+                    _LOGGER.warning(f"Connection attempt failed: {e}")
                     
                 retry_count += 1
                 self.reconnect_count += 1
@@ -120,11 +117,7 @@ class ModbusManagerHub:
             
         except Exception as e:
             error = handle_modbus_error(e)
-            self.logger.log_operation(
-                "setup",
-                [],
-                error=error
-            )
+            
             raise error
 
     async def async_teardown(self) -> None:
@@ -209,11 +202,7 @@ class ModbusManagerHub:
             
         except Exception as e:
             error = handle_modbus_error(e)
-            self.logger.log_operation(
-                "create_coordinator",
-                [],
-                error=error
-            )
+            
             raise error
 
     async def _async_update_data(self, device_definition_name: str) -> Dict[str, Any]:
@@ -239,23 +228,13 @@ class ModbusManagerHub:
                 data.update(group_data)
 
             duration = time.time() - start_time
-            self.logger.log_operation(
-                "update_data",
-                registers,
-                result=data,
-                duration=duration
-            )
+            
             
             return data
 
         except Exception as e:
             error = handle_modbus_error(e)
-            self.logger.log_operation(
-                "update_data",
-                registers if 'registers' in locals() else [],
-                error=error,
-                duration=time.time() - start_time
-            )
+            
             raise error
 
     async def _read_register_group(self, registers: List[Dict[str, Any]]) -> Dict[str, Any]:

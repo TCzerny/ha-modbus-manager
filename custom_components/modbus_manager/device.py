@@ -1,7 +1,7 @@
-class ModbusDevice:
+class ModbusManagerDevice:
     def __init__(self, hass, config_entry):
         # ...
-        self.logger = ModbusLogger(f"device_{self.name}")
+        self.logger = ModbusManagerLogger(f"device_{self.name}")
         # ...
 
     async def async_update_ha_state(self):
