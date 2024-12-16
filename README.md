@@ -1,3 +1,6 @@
+## ⚠️ STILL IN DEVELOPMENT
+This repository is still in development and not ready for production use. Use at your own risk.
+
 # Modbus Manager for Home Assistant
 
 [![hacs_badge](https://img.shields.io/badge/HACS-Default-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
@@ -79,6 +82,8 @@ Currently supported device types:
 - Sungrow Battery System
 - Generic Modbus devices (through custom device definitions)
 
+- more to come....
+
 ## Device Definitions
 
 You can add support for new devices by creating YAML device definitions. See the [Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki) for more information.
@@ -90,7 +95,6 @@ Feel free to contribute to this project! Please read our [Contributing Guideline
 ## Support
 
 - Report bugs and feature requests on [GitHub Issues](https://github.com/TCzerny/ha-modbus-manager/issues)
-- Join the discussion in our [Discord Community](https://discord.gg/your-discord)
 
 ## License
 
