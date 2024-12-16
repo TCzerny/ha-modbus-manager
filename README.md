@@ -13,6 +13,7 @@ A flexible and powerful Modbus integration for Home Assistant that supports mult
 - Built-in error handling and retry mechanisms
 - Extensive monitoring and diagnostics
 - Support for multiple devices and manufacturers
+- Smart request proxy with caching and batching
 
 ## ⚠️ Disclaimer
 
@@ -23,6 +24,26 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 3. The integration may interact with electrical devices and systems. Incorrect configuration or usage could potentially damage your devices
 4. You are responsible for ensuring compliance with your device manufacturer's warranty terms and conditions
 5. Always verify the correct operation of your system after making any changes
+
+## Features
+
+### Advanced Request Handling
+- **Smart Request Proxy**: Automatically combines multiple register reads into optimized batches
+- **Intelligent Caching**: Caches register values to reduce device load
+- **Request Merging**: Combines adjacent or overlapping register requests
+- **Automatic Retry**: Handles communication errors with configurable retry logic
+
+### Performance Optimization
+- **Request Batching**: Groups multiple register reads into single Modbus transactions
+- **Register Grouping**: Automatically groups adjacent registers for efficient reading
+- **Cache Management**: Time-based cache with configurable timeout
+- **Request Queuing**: Smart queuing system for optimal request handling
+
+### Monitoring and Diagnostics
+- **Performance Metrics**: Track response times, success rates, and error rates
+- **Detailed Logging**: Comprehensive logging of all Modbus operations
+- **Error Tracking**: Detailed error tracking and categorization
+- **Health Monitoring**: Monitor device and connection health
 
 ## Installation
 
@@ -43,10 +64,13 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 
 ## Configuration
 
+### Basic Setup
 1. Go to Settings -> Devices & Services
 2. Click "Add Integration"
 3. Search for "Modbus Manager"
 4. Follow the configuration steps
+
+### Advanced Configuration Options
 
 ## Supported Devices
 
