@@ -12,7 +12,7 @@ class ModbusManagerLogger:
         Args:
             name: Name for the logger instance (e.g. 'hub_sungrow1')
         """
-        self.logger = logging.getLogger(__package__)
+        self.logger = logging.getLogger(f"custom_components.modbus_manager.{name}")
         self.name = name
 
     def _format_message(self, msg: str, **kwargs: Any) -> str:

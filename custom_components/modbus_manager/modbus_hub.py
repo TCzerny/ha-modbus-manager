@@ -100,12 +100,12 @@ class ModbusManagerHub:
                             self.slave,
                             cache_timeout=self.config.get("cache_timeout", 60)
                         )
-                        self.device = ModbusManagerDevice(self, self.hass, self.config)
+                        self.device = ModbusManagerDevice(self.hass, self.config)
                         self.logger.info("Hub setup complete")
                         return True
                         
                 except Exception as e:
-                    _LOGGER.warning(f"Connection attempt failed: {e}")
+                    _LOGGER.warning("Connection attempt failed:", error=e)
                     
                 retry_count += 1
                 self.reconnect_count += 1
@@ -117,7 +117,7 @@ class ModbusManagerHub:
             
         except Exception as e:
             error = handle_modbus_error(e)
-            
+           _LOGGER.error("Hub setup failed", error=error)
             raise error
 
     async def async_teardown(self) -> None:
