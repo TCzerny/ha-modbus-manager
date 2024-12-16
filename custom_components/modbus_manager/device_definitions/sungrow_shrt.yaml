@@ -1,5 +1,6 @@
 # Sungrow SH-RT Hybrid Wechselrichter (3-Phasen mit Batterie)
-# Basierend auf der Protokollversion 1.1.30.0
+# Basierend auf https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
+# und TI_20211231_Communication.Protocol.of.Residential.Hybrid.Inverter_V1.0.23_EN.pdf
 
 # Importiere gemeinsame Entities
 include:
@@ -7,46 +8,260 @@ include:
 
 registers:
   read:
-    # AC Output
-    - { name: "total_active_power", address: 13000, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, translation_key: "sensor.inverter.power.total" }
-    - { name: "phase_a_voltage", address: 13002, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.voltage.phase_a" }
-    - { name: "phase_b_voltage", address: 13003, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.voltage.phase_b" }
-    - { name: "phase_c_voltage", address: 13004, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.voltage.phase_c" }
-    - { name: "phase_a_current", address: 13005, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.current.phase_a" }
-    - { name: "phase_b_current", address: 13006, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.current.phase_b" }
-    - { name: "phase_c_current", address: 13007, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.current.phase_c" }
-    - { name: "grid_frequency", address: 13008, type: "uint16", unit_of_measurement: "Hz", device_class: "frequency", state_class: "measurement", scale: 0.01, translation_key: "sensor.inverter.grid.frequency" }
+    # System Status & Control
+    - { name: "device_type_code", address: 5000, type: "uint16" }
+    - { name: "rated_power", address: 5001, type: "uint32", unit_of_measurement: "W" }
+    - { name: "ac_output_type", address: 5002, type: "uint16" }
+    - { name: "operating_state", address: 5003, type: "uint16", translation_key: "sensor.inverter.state" }
+    - { name: "error_code", address: 5006, type: "uint16", translation_key: "sensor.inverter.error" }
+    - { name: "device_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+    - { name: "running_state", address: 5013, type: "uint16", translation_key: "sensor.inverter.running_state" }
+    - { name: "protocol_version", address: 5093, type: "uint16", scale: 0.001 }
+    
+    # Grid/AC Output
+    - { name: "grid_frequency", address: 5242, type: "uint16", unit_of_measurement: "Hz", device_class: "frequency", state_class: "measurement", scale: 0.01 }
+    - { name: "total_active_power", address: 5080, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "total_reactive_power", address: 5082, type: "int32", unit_of_measurement: "var", state_class: "measurement" }
+    - { name: "total_apparent_power", address: 5084, type: "int32", unit_of_measurement: "VA", state_class: "measurement" }
+    - { name: "power_factor", address: 5086, type: "int16", unit_of_measurement: "", scale: 0.001 }
+    - { name: "phase_a_voltage", address: 5018, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "phase_b_voltage", address: 5019, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "phase_c_voltage", address: 5020, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "phase_a_current", address: 5021, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "phase_b_current", address: 5022, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "phase_c_current", address: 5023, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
 
     # PV Input
-    - { name: "pv1_voltage", address: 13010, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.pv1.voltage" }
-    - { name: "pv1_current", address: 13011, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.pv1.current" }
-    - { name: "pv1_power", address: 13012, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", translation_key: "sensor.inverter.pv1.power" }
-    - { name: "pv2_voltage", address: 13014, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.pv2.voltage" }
-    - { name: "pv2_current", address: 13015, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, translation_key: "sensor.inverter.pv2.current" }
-    - { name: "pv2_power", address: 13016, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", translation_key: "sensor.inverter.pv2.power" }
+    - { name: "pv1_voltage", address: 5009, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "pv1_current", address: 5010, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "pv1_power", address: 5011, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "pv2_voltage", address: 5012, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "pv2_current", address: 5013, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "pv2_power", address: 5014, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "total_pv_power", address: 5016, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+
+    # PV Input (Ergänzungen)
+    - { name: "pv1_startup_voltage", address: 5225, type: "uint16", unit_of_measurement: "V", scale: 0.1 }
+    - { name: "pv2_startup_voltage", address: 5226, type: "uint16", unit_of_measurement: "V", scale: 0.1 }
+    - { name: "pv_insulation_resistance", address: 5166, type: "uint16", unit_of_measurement: "kΩ" }
+    
+    # Battery
+    - { name: "battery_voltage", address: 13019, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "battery_current", address: 13020, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "battery_power", address: 13021, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "battery_level", address: 13022, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement" }
+    - { name: "battery_temperature", address: 13023, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+    - { name: "battery_mode", address: 5246, type: "uint16", translation_key: "sensor.battery.mode" }
+    - { name: "battery_status", address: 5247, type: "uint16", translation_key: "sensor.battery.status" }
+    - { name: "battery_error_code", address: 5248, type: "uint16", translation_key: "sensor.battery.error" }
+    - { name: "battery_soc_maximum", address: 5249, type: "uint16", unit_of_measurement: "%", device_class: "battery" }
+    - { name: "battery_soc_minimum", address: 5250, type: "uint16", unit_of_measurement: "%", device_class: "battery" }
+    - { name: "battery_charge_power", address: 5251, type: "uint16", unit_of_measurement: "W", device_class: "power" }
+    - { name: "battery_discharge_power", address: 5252, type: "uint16", unit_of_measurement: "W", device_class: "power" }
+    - { name: "battery_charge_current_limit", address: 5253, type: "uint16", unit_of_measurement: "A", device_class: "current", scale: 0.1 }
+    - { name: "battery_discharge_current_limit", address: 5254, type: "uint16", unit_of_measurement: "A", device_class: "current", scale: 0.1 }
 
     # Energy Statistics
-    - { name: "daily_pv_yield", address: 13030, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.inverter.yield.daily" }
-    - { name: "total_pv_yield", address: 13032, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, translation_key: "sensor.inverter.yield.total" }
+    - { name: "daily_pv_yield", address: 5006, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_pv_yield", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "daily_battery_charge", address: 13034, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_battery_charge", address: 13036, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "daily_battery_discharge", address: 13038, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_battery_discharge", address: 13040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "daily_export_energy", address: 5035, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_export_energy", address: 5036, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "daily_import_energy", address: 5037, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_import_energy", address: 5038, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "daily_consumption", address: 5039, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_consumption", address: 5040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+
+    # Load Control
+    - { name: "load_mode", address: 5257, type: "uint16", translation_key: "sensor.load.mode" }
+    - { name: "load_power", address: 5259, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "backup_power", address: 5261, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+
+    # Battery (Ergänzungen)
+    - { name: "battery_type", address: 5245, type: "uint16" }
+    - { name: "battery_protocol_version", address: 5256, type: "uint16", scale: 0.001 }
+    - { name: "battery_nominal_capacity", address: 5259, type: "uint16", unit_of_measurement: "Ah" }
+    - { name: "battery_nominal_voltage", address: 5260, type: "uint16", unit_of_measurement: "V", scale: 0.1 }
+    - { name: "battery_manufacturer", address: 5261, type: "string", count: 3 }
+    - { name: "battery_firmware_version", address: 5264, type: "string", count: 3 }
+
+    # Grid Protection
+    - { name: "grid_voltage_high_protection", address: 5141, type: "uint16", unit_of_measurement: "V", scale: 0.1 }
+    - { name: "grid_voltage_low_protection", address: 5142, type: "uint16", unit_of_measurement: "V", scale: 0.1 }
+    - { name: "grid_freq_high_protection", address: 5143, type: "uint16", unit_of_measurement: "Hz", scale: 0.01 }
+    - { name: "grid_freq_low_protection", address: 5144, type: "uint16", unit_of_measurement: "Hz", scale: 0.01 }
+    - { name: "startup_time_protection", address: 5145, type: "uint16", unit_of_measurement: "s" }
+    - { name: "voltage_protection_time", address: 5146, type: "uint16", unit_of_measurement: "ms", scale: 10 }
+    - { name: "freq_protection_time", address: 5147, type: "uint16", unit_of_measurement: "ms", scale: 10 }
+
+    # System Time
+    - { name: "system_time_year", address: 5300, type: "uint16" }
+    - { name: "system_time_month", address: 5301, type: "uint16" }
+    - { name: "system_time_day", address: 5302, type: "uint16" }
+    - { name: "system_time_hour", address: 5303, type: "uint16" }
+    - { name: "system_time_minute", address: 5304, type: "uint16" }
+    - { name: "system_time_second", address: 5305, type: "uint16" }
+
+    # Inverter Status Details
+    - { name: "inverter_state_1", address: 4999, type: "uint16", translation_key: "sensor.inverter.state_1" }
+    - { name: "inverter_state_2", address: 5000, type: "uint16", translation_key: "sensor.inverter.state_2" }
+    - { name: "inverter_state_3", address: 5001, type: "uint16", translation_key: "sensor.inverter.state_3" }
+    
+    # Power Quality
+    - { name: "grid_voltage_a_b", address: 5024, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "grid_voltage_b_c", address: 5025, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "grid_voltage_c_a", address: 5026, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "phase_a_power", address: 5027, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "phase_b_power", address: 5029, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "phase_c_power", address: 5031, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+
+    # Detailed Energy Statistics
+    - { name: "load_power_total", address: 5044, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "export_power", address: 5046, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
+    - { name: "daily_load_energy", address: 5041, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_load_energy", address: 5042, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+
+    # Temperature Sensors
+    - { name: "radiator_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+    - { name: "ambient_temperature", address: 5008, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+
+    # Advanced Battery Metrics
+    - { name: "battery_cycles", address: 5072, type: "uint16", unit_of_measurement: "cycles", state_class: "total_increasing" }
+    - { name: "battery_state_of_health", address: 5073, type: "uint16", unit_of_measurement: "%", state_class: "measurement" }
+    - { name: "battery_warning", address: 5074, type: "uint16", translation_key: "sensor.battery.warning" }
+
+    # Grid Protection Settings
+    - { name: "grid_port_max_power", address: 5154, type: "uint32", unit_of_measurement: "W", device_class: "power" }
+    - { name: "grid_charge_max_power", address: 5155, type: "uint32", unit_of_measurement: "W", device_class: "power" }
+    - { name: "grid_charge_start_time", address: 5156, type: "uint16" }
+    - { name: "grid_charge_end_time", address: 5157, type: "uint16" }
+
+    # Hinzugefügte Sensoren aus modbus_sungrow.yaml
+    - { name: "inverter_serial", address: 4989, type: "string", device_class: "serial_number", state_class: "measurement", count: 10 }
+    - { name: "battery_serial", address: 10710, type: "string", device_class: "serial_number", state_class: "measurement", count: 10 }
+    - { name: "dev_code", address: 4999, type: "uint16" }
+    - { name: "daily_pv_gen_battery_discharge", address: 5002, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word" }
+    - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
+    - { name: "mppt1_voltage", address: 5010, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "mppt1_current", address: 5011, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
+    - { name: "mppt2_voltage", address: 5012, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
+    - { name: "mppt2_current", address: 5013, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
+    - { name: "total_dc_power", address: 5016, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word" }
+    - { name: "grid_frequency", address: 5035, type: "uint16", unit_of_measurement: "Hz", device_class: "frequency", state_class: "measurement", scale: 0.1, precision: 2 }
+    - { name: "reactive_power", address: 5032, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word" }
+    - { name: "power_factor", address: 5034, type: "int16", scale: 1, precision: 0 }
+    - { name: "battery_1_total_battery_discharge", address: 10747, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "battery_1_max_voltage_of_cell", address: 10756, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_position_of_max_voltage_cell", address: 10757, type: "uint16", device_class: "position", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_min_voltage_of_cell", address: 10758, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_position_of_min_voltage_cell", address: 10759, type: "uint16", device_class: "position", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_max_temperature_of_module", address: 10760, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
+    - { name: "battery_1_min_cell_voltage_of_module_2", address: 10773, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_min_cell_voltage_of_module_3", address: 10774, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_min_cell_voltage_of_module_4", address: 10775, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_min_cell_voltage_of_module_5", address: 10776, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_cell_type_of_module_1", address: 10780, type: "uint16", scale: 1, precision: 0 }
+    - { name: "battery_1_cell_type_of_module_2", address: 10781, type: "uint16", scale: 1, precision: 0 }
+    - { name: "battery_1_cell_type_of_module_3", address: 10782, type: "uint16", scale: 1, precision: 0 }
+    - { name: "battery_1_cell_type_of_module_4", address: 10783, type: "uint16", scale: 1, precision: 0 }
+    - { name: "battery_1_cell_type_of_module_5", address: 10784, type: "uint16", scale: 1, precision: 0 }
+    - { name: "battery_1_state_of_dc_switch", address: 10788, type: "uint16", scale: 1, precision: 0 }
+
+  write:
+    # System Control
+    - { name: "system_time_year", address: 5300, type: "uint16", min: 2000, max: 2099 }
+    - { name: "system_time_month", address: 5301, type: "uint16", min: 1, max: 12 }
+    - { name: "system_time_day", address: 5302, type: "uint16", min: 1, max: 31 }
+    - { name: "system_time_hour", address: 5303, type: "uint16", min: 0, max: 23 }
+    - { name: "system_time_minute", address: 5304, type: "uint16", min: 0, max: 59 }
+    - { name: "system_time_second", address: 5305, type: "uint16", min: 0, max: 59 }
+    
+    # Battery Control
+    - { name: "battery_charge_limit", address: 5253, type: "uint16", min: 0, max: 100 }
+    - { name: "battery_discharge_limit", address: 5254, type: "uint16", min: 0, max: 100 }
+    - { name: "battery_soc_min", address: 5250, type: "uint16", min: 10, max: 100 }
+    - { name: "battery_soc_max", address: 5249, type: "uint16", min: 10, max: 100 }
+    - { name: "battery_power_mode", address: 5246, type: "uint16", min: 0, max: 4 }
+
+    # Battery Control (Ergänzungen)
+    - { name: "forced_charge_discharge", address: 5255, type: "uint16", min: 0, max: 2 }
+    - { name: "charge_from_grid_function", address: 5256, type: "uint16", min: 0, max: 1 }
+    - { name: "battery_power_mode", address: 5257, type: "uint16", min: 0, max: 4 }
+
+    # Grid Control
+    - { name: "grid_port_max_power", address: 5154, type: "uint32", min: 0, max: 50000 }
+    - { name: "grid_charge_max_power", address: 5155, type: "uint32", min: 0, max: 50000 }
+    - { name: "grid_charge_start_time", address: 5156, type: "uint16", min: 0, max: 2359 }
+    - { name: "grid_charge_end_time", address: 5157, type: "uint16", min: 0, max: 2359 }
+
+    # Hinzugefügte Schreibregister aus modbus_sungrow.yaml
+    - { name: "grid_port_max_power", address: 5154, type: "uint32", min: 0, max: 50000 }
+    - { name: "grid_charge_max_power", address: 5155, type: "uint32", min: 0, max: 50000 }
+    - { name: "grid_charge_start_time", address: 5156, type: "uint16", min: 0, max: 2359 }
+    - { name: "grid_charge_end_time", address: 5157, type: "uint16", min: 0, max: 2359 }
 
 polling:
   fast:
     interval: 10
     registers: [
-      "total_active_power", 
-      "operating_state"
+      "total_active_power",
+      "battery_power",
+      "battery_level",
+      "operating_state",
+      "error_code",
+      "device_temperature",
+      "total_pv_power"
     ]
   normal:
     interval: 30
     registers: [
       "phase_a_voltage", "phase_b_voltage", "phase_c_voltage",
       "phase_a_current", "phase_b_current", "phase_c_current",
-      "pv1_power", "pv2_power"
+      "pv1_power", "pv2_power",
+      "battery_voltage", "battery_current", "battery_temperature",
+      "grid_frequency", "battery_mode",
+      "grid_voltage_a_b", "grid_voltage_b_c", "grid_voltage_c_a",
+      "phase_a_power", "phase_b_power", "phase_c_power",
+      "load_power_total", "export_power",
+      "radiator_temperature", "ambient_temperature",
+      "daily_pv_gen_battery_discharge",
+      "total_pv_gen_battery_discharge",
+      "inverter_temperature",
+      "mppt1_voltage",
+      "mppt1_current",
+      "mppt2_voltage",
+      "mppt2_current",
+      "total_dc_power",
+      "grid_frequency",
+      "reactive_power",
+      "power_factor",
+      "battery_1_total_battery_discharge",
+      "battery_1_max_voltage_of_cell",
+      "battery_1_position_of_max_voltage_cell",
+      "battery_1_min_voltage_of_cell",
+      "battery_1_position_of_min_voltage_cell",
+      "battery_1_max_temperature_of_module",
+      "battery_1_min_cell_voltage_of_module_2",
+      "battery_1_min_cell_voltage_of_module_3",
+      "battery_1_min_cell_voltage_of_module_4",
+      "battery_1_min_cell_voltage_of_module_5",
+      "battery_1_cell_type_of_module_1",
+      "battery_1_cell_type_of_module_2",
+      "battery_1_cell_type_of_module_3",
+      "battery_1_cell_type_of_module_4",
+      "battery_1_cell_type_of_module_5",
+      "battery_1_state_of_dc_switch"
     ]
   slow:
     interval: 300
     registers: [
-      "daily_pv_yield", "total_pv_yield"
+      "daily_pv_yield", "total_pv_yield",
+      "daily_battery_charge", "total_battery_charge",
+      "daily_battery_discharge", "total_battery_discharge"
     ]
 
 validation:
@@ -67,6 +282,29 @@ helpers:
         {% endif %}
       unit_of_measurement: "%"
       translation_key: "sensor.inverter.metrics.self_consumption"
+
+    - name: "battery_remaining_time"
+      value: >
+        {% set power = states('sensor.battery_power')|float %}
+        {% set level = states('sensor.battery_level')|float %}
+        {% set capacity = states('sensor.battery_nominal_capacity')|float %}
+        {% if power != 0 %}
+          {% set hours = (level * capacity / abs(power)) %}
+          {{ hours|round(1) }}
+        {% else %}
+          null
+        {% endif %}
+      unit_of_measurement: "h"
+      translation_key: "sensor.battery.remaining_time"
+
+    - name: "grid_power_balance"
+      value: >
+        {% set pv = states('sensor.total_pv_power')|float %}
+        {% set load = states('sensor.load_power_total')|float %}
+        {% set battery = states('sensor.battery_power')|float %}
+        {{ (pv + battery - load)|round(1) }}
+      unit_of_measurement: "W"
+      translation_key: "sensor.grid.power_balance"
 
 device_info:
   name: "Sungrow SH-RT Hybrid Inverter"
