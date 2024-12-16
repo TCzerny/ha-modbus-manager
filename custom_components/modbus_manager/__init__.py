@@ -1,39 +1,30 @@
-from homeassistant.core import HomeAssistant
-import asyncio
+"""The Modbus Manager integration."""
 import logging
+from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
-from homeassistant.helpers.typing import ConfigType
-from homeassistant.helpers import template, entity_registry, device_registry
-from homeassistant.helpers.entity_component import EntityComponent
-from homeassistant.helpers.script import Script
-from homeassistant.const import CONF_NAME
 from .const import DOMAIN
-from .modbus_hub import ModbusManagerHub
+from .helpers.entity_helper import EntityHelper
 
 _LOGGER = logging.getLogger(__name__)
 
+async def async_setup(hass: HomeAssistant, config: dict):
+    """Set up the Modbus Manager component."""
+    hass.data[DOMAIN] = {
+        "entity_helper": EntityHelper(hass.config.config_dir)
+    }
+    return True
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
-    """Set up the Modbus Manager from a configuration entry."""
-    name = entry.data[CONF_NAME]
-    host = entry.data[CONF_HOST]
-    port = entry.data[CONF_PORT]
-    slave = entry.data[CONF_SLAVE]
-    device_type = entry.data["device_type"]
+    """Set up Modbus Manager from a config entry."""
+    entity_helper = hass.data[DOMAIN]["entity_helper"]
+    device_config = entity_helper.get_device_definition(entry.data["device_type"])
     
-    hub = ModbusManagerHub(name, host, port, slave, device_type, hass)
-    await hub.async_setup()
-    
-    hass.data.setdefault(DOMAIN, {})[entry.entry_id] = hub
-    
-    # Forward setup to sensor and switch platforms
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, "sensor")
-    )
-    hass.async_create_task(
-        hass.config_entries.async_forward_entry_setup(entry, "switch")
-    )
-    
+    # Setup device with merged configuration
+    hub = ModbusManagerHub(hass, entry, device_config)
+    if not await hub.async_setup():
+        return False
+
+    hass.data[DOMAIN][entry.entry_id] = hub
     return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):

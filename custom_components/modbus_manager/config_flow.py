@@ -88,6 +88,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             
             self.logger.debug(f"Scanning directory: {definitions_dir}")
             
+            if not definitions_dir.exists():
+                self.logger.error(f"Device definitions directory not found: {definitions_dir}")
+                return {}
+            
             for file_path in definitions_dir.glob("*.yaml"):
                 self.logger.debug(f"Found file: {file_path.name}")
                 
@@ -98,6 +102,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 try:
                     with open(file_path, "r", encoding="utf-8") as f:
                         definition = yaml.safe_load(f)
+                        self.logger.debug(f"Loaded definition from {file_path.name}: {definition.keys()}")
                         if "device_info" in definition:
                             device_types[file_path.stem] = definition["device_info"]["name"]
                             self.logger.debug(f"Added device type: {file_path.stem} -> {definition['device_info']['name']}")

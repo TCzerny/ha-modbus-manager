@@ -197,3 +197,81 @@ scripts:
                     entity_id: "{{ priority_list[repeat.index-1].entity_id }}_power_setpoint"
                   data:
                     value: "{{ priority_list[repeat.index-1].reduced_power }}"
+
+# Lastmanagement-Konfiguration
+load_management:
+  # Prioritäten für Energieflüsse
+  priorities:
+    - name: "self_consumption"
+      description: "Eigenverbrauch maximieren"
+      conditions:
+        - "pv_power > load_power"
+        - "battery_level < battery_max_soc"
+      actions:
+        - charge_battery:
+            power: "min(pv_power - load_power, max_charge_power)"
+            
+    - name: "grid_charge"
+      description: "Netzbezug zu günstigen Zeiten"
+      conditions:
+        - "grid_price < low_price_threshold"
+        - "battery_level < battery_max_soc"
+      actions:
+        - charge_battery:
+            power: "min(available_grid_power, max_charge_power)"
+            
+    - name: "peak_shaving"
+      description: "Lastspitzen vermeiden"
+      conditions:
+        - "load_power > peak_limit"
+        - "battery_level > battery_min_soc"
+      actions:
+        - discharge_battery:
+            power: "min(load_power - peak_limit, max_discharge_power)"
+
+  # Gemeinsame Templates für Lastmanagement
+  templates:
+    - name: "current_load_priority"
+      value: >
+        {% set priorities = ['self_consumption', 'grid_charge', 'peak_shaving'] %}
+        {% for priority in priorities %}
+          {% if is_state('binary_sensor.{{device_name}}_' ~ priority ~ '_active', 'on') %}
+            {{ priority }}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+        
+    - name: "available_power"
+      value: >
+        {% set pv = states('sensor.{{device_name}}_pv_power')|float(0) %}
+        {% set grid = states('sensor.{{device_name}}_grid_power')|float(0) %}
+        {% set battery = states('sensor.{{device_name}}_battery_power')|float(0) %}
+        {{ pv + grid + battery }}
+      unit_of_measurement: "W"
+
+  # Automatisierungen für Lastmanagement
+  automations:
+    - name: "peak_load_warning"
+      trigger:
+        platform: numeric_state
+        entity_id: sensor.{{device_name}}_load_power
+        above: "{{ peak_warning_threshold }}"
+      action:
+        service: notify.notify
+        data:
+          title: "Peak Load Warning"
+          message: "Load approaching peak limit: {{ states('sensor.{{device_name}}_load_power') }}W"
+          
+    - name: "optimize_self_consumption"
+      trigger:
+        platform: state
+        entity_id: sensor.{{device_name}}_pv_power
+      condition:
+        condition: template
+        value_template: "{{ states('sensor.{{device_name}}_pv_power')|float > states('sensor.{{device_name}}_load_power')|float }}"
+      action:
+        service: number.set_value
+        target:
+          entity_id: number.{{device_name}}_battery_charge_power
+        data:
+          value: "{{ states('sensor.{{device_name}}_pv_power')|float - states('sensor.{{device_name}}_load_power')|float }}"

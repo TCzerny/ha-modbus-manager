@@ -4,6 +4,55 @@
 include:
   - common_entities.yaml
 
+device_info:
+  name: "Sungrow SH-RT Hybrid Inverter"
+  manufacturer: "Sungrow"
+  model: "SH-RT"
+  supports_load_management: true
+
+
+device_config:
+  # Firmware-Handling
+  firmware_handling:
+    auto_detect: true
+    version_register: 5000
+    version_type: "string"
+    update_on_version_change: true
+    fallback_version: "1.0.0"
+
+  # Modbus-Kommunikation
+  communication:
+    tcp_timeout: 3
+    retry_delay: 0.1
+    max_retries: 3
+    cache_timeout: 300
+    batch_size: 100
+
+  # Logging und Metriken
+  logging:
+    level: "INFO"
+    metrics_enabled: true
+    communication_log: false
+    operation_timeout: 30
+
+  # Standardwerte für Polling-Intervalle
+  default_polling:
+    fast: 10
+    normal: 30
+    slow: 300
+
+  # Validierung
+  validation:
+    enabled: true
+    timeout: 5
+    strict_mode: false
+
+  # Fehlerbehandlung
+  error_handling:
+    auto_reconnect: true
+    reconnect_delay: 60
+    max_reconnect_attempts: 3
+    
 firmware_versions:
   "1.0.0":  # Original Firmware
     registers:
@@ -191,7 +240,7 @@ registers:
 
 polling:
   fast:
-    interval: 10
+    interval: 5
     registers: [
       # System Status
       "system_status",
@@ -250,7 +299,10 @@ polling:
       "battery_1_max_temperature_of_module", "battery_1_min_temperature_of_module"
     ]
 
-device_info:
-  name: "Sungrow SH-RT Hybrid Inverter"
-  manufacturer: "Sungrow"
-  model: "SH-RT"
+
+
+device_specific_templates:
+  # ... (nur gerätespezifische Templates)
+
+device_specific_automations:
+  # ... (nur gerätespezifische Automationen)

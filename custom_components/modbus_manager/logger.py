@@ -19,6 +19,7 @@ class ModbusLogger:
 
     def debug(self, message: str) -> None:
         """Log debug message."""
+        print(f"DEBUG: {message}")  # Temporär für bessere Sichtbarkeit
         self._logger.debug(message)
 
     def info(self, message: str) -> None:
