@@ -20,38 +20,18 @@
             "already_configured": "Gerät bereits konfiguriert"
         }
     },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Geräteoptionen",
+                "data": {
+                    "allow_battery_car_charging": "Batterie-zu-Auto-Ladung erlauben"
+                }
+            }
+        }
+    },
     "entity": {
         "sensor": {
-            "inverter_serial": "Inverter Seriennummer",
-            "battery_serial": "Batterie Seriennummer",
-            "dev_code": "Gerätetyp-Code",
-            "daily_pv_gen_battery_discharge": "Tägliche PV-Erzeugung & Batteriedischarge",
-            "total_pv_gen_battery_discharge": "Gesamt PV-Erzeugung & Batteriedischarge",
-            "inverter_temperature": "Inverter Temperatur",
-            "mppt1_voltage": "MPPT1 Spannung",
-            "mppt1_current": "MPPT1 Strom",
-            "mppt2_voltage": "MPPT2 Spannung",
-            "mppt2_current": "MPPT2 Strom",
-            "total_dc_power": "Gesamt DC Leistung",
-            "grid_frequency": "Netzfrequenz",
-            "reactive_power": "Blindleistung",
-            "power_factor": "Leistungsfaktor",
-            "battery_1_total_battery_discharge": "Batterie 1 Gesamtentladung",
-            "battery_1_max_voltage_of_cell": "Batterie 1 Maximalspannung der Zelle",
-            "battery_1_position_of_max_voltage_cell": "Batterie 1 Position der maximalen Zellenspannung",
-            "battery_1_min_voltage_of_cell": "Batterie 1 Minimale Zellenspannung",
-            "battery_1_position_of_min_voltage_cell": "Batterie 1 Position der minimalen Zellenspannung",
-            "battery_1_max_temperature_of_module": "Batterie 1 Maximale Modultemperatur",
-            "battery_1_min_cell_voltage_of_module_2": "Batterie 1 Minimale Zellenspannung des Moduls 2",
-            "battery_1_min_cell_voltage_of_module_3": "Batterie 1 Minimale Zellenspannung des Moduls 3",
-            "battery_1_min_cell_voltage_of_module_4": "Batterie 1 Minimale Zellenspannung des Moduls 4",
-            "battery_1_min_cell_voltage_of_module_5": "Batterie 1 Minimale Zellenspannung des Moduls 5",
-            "battery_1_cell_type_of_module_1": "Batterie 1 Zelltyp des Moduls 1",
-            "battery_1_cell_type_of_module_2": "Batterie 1 Zelltyp des Moduls 2",
-            "battery_1_cell_type_of_module_3": "Batterie 1 Zelltyp des Moduls 3",
-            "battery_1_cell_type_of_module_4": "Batterie 1 Zelltyp des Moduls 4",
-            "battery_1_cell_type_of_module_5": "Batterie 1 Zelltyp des Moduls 5",
-            "battery_1_state_of_dc_switch": "Batterie 1 Zustand des DC-Schalters",
             "inverter": {
                 "state": {
                     "wait": "Warten",
@@ -64,12 +44,6 @@
                     "shutdown": "Herunterfahren",
                     "standby": "Standby",
                     "emergency": "Notfall"
-                },
-                "state_1": {
-                    "fault": "Fehler",
-                    "standby": "Standby",
-                    "running": "In Betrieb",
-                    "stopping": "Stoppt"
                 },
                 "metrics": {
                     "self_consumption": "Eigenverbrauchsquote",
@@ -90,7 +64,6 @@
                     "fault": "Fehler",
                     "updating": "Aktualisierung"
                 },
-                "remaining_time": "Verbleibende Zeit",
                 "warning": {
                     "none": "Keine",
                     "low_soc": "Niedriger Ladezustand",
@@ -98,8 +71,95 @@
                     "low_temp": "Niedrige Temperatur"
                 }
             },
-            "grid": {
-                "power_balance": "Netzleistungsbilanz"
+            "charging": {
+                "state": {
+                    "idle": "Bereit",
+                    "charging": "Lädt",
+                    "completed": "Abgeschlossen",
+                    "error": "Fehler"
+                },
+                "source": {
+                    "solar": "Solar",
+                    "solar_battery": "Solar + Batterie",
+                    "grid": "Netz",
+                    "none": "Keine Ladung"
+                }
+            },
+            "inverter_serial": "Wechselrichter Seriennummer",
+            "device_code": "Gerätetyp",
+            "daily_pv_gen_battery_discharge": "Tägliche PV-Erzeugung & Batterieentladung",
+            "total_pv_gen_battery_discharge": "Gesamte PV-Erzeugung & Batterieentladung",
+            "inverter_temperature": "Wechselrichter Temperatur",
+            "system_status": "Systemstatus",
+            "running_state": "Betriebszustand",
+            "mppt1_voltage": "MPPT1 Spannung",
+            "mppt1_current": "MPPT1 Strom",
+            "mppt2_voltage": "MPPT2 Spannung",
+            "mppt2_current": "MPPT2 Strom",
+            "grid_voltage_l1": "Netzspannung L1",
+            "grid_voltage_l2": "Netzspannung L2",
+            "grid_voltage_l3": "Netzspannung L3",
+            "grid_current_l1": "Netzstrom L1",
+            "grid_current_l2": "Netzstrom L2",
+            "grid_current_l3": "Netzstrom L3",
+            "phase_a_power": "Leistung Phase A",
+            "phase_b_power": "Leistung Phase B",
+            "phase_c_power": "Leistung Phase C",
+            "grid_frequency": "Netzfrequenz",
+            "battery_voltage": "Batteriespannung",
+            "battery_current": "Batteriestrom",
+            "battery_power": "Batterieleistung",
+            "battery_level": "Batterieladezustand",
+            "battery_health": "Batteriezustand",
+            "battery_temperature": "Batterietemperatur",
+            "daily_battery_charge": "Tägliche Batterieladung",
+            "total_battery_charge": "Gesamte Batterieladung",
+            "daily_battery_discharge": "Tägliche Batterieentladung",
+            "total_battery_discharge": "Gesamte Batterieentladung",
+            "battery_max_charge_power": "Maximale Ladeleistung",
+            "battery_max_discharge_power": "Maximale Entladeleistung",
+            "battery_capacity": "Batteriekapazität",
+            "serial_number": "Seriennummer",
+            "firmware_version": "Firmware Version",
+            "device_status": "Gerätestatus",
+            "charging_state": "Ladezustand",
+            "connected_state": "Verbindungsstatus",
+            "error_code": "Fehlercode",
+            "charging_power": "Ladeleistung",
+            "energy_total": "Gesamtenergie",
+            "energy_session": "Energie dieser Session",
+            "temperature": "Temperatur",
+            "charging_current_limit": "Ladestrom Limit",
+            "start_stop_charging": "Laden Start/Stop",
+            "reset_error": "Fehler zurücksetzen"
+        },
+        "input_boolean": {
+            "allow_battery_car_charging": {
+                "name": "Batterie-zu-Auto-Ladung",
+                "state": {
+                    "on": "Aktiviert",
+                    "off": "Deaktiviert"
+                }
+            }
+        }
+    },
+    "notification": {
+        "charging": {
+            "complete": {
+                "title": "Ladevorgang abgeschlossen",
+                "message": "Fahrzeug vollständig geladen\nEnergie: {energy} kWh\nKosten: {cost} €"
+            },
+            "pv": {
+                "title": "PV-Überschussladung aktiv",
+                "title_with_battery": "PV- & Batterie-Ladung aktiv",
+                "message": "Lade E-Auto mit Solarstrom\nPV-Leistung: {pv_power}W\nLadeleistung: {charging_power}W\nPV-Anteil: {pv_ratio}%",
+                "message_with_battery": "Lade E-Auto mit Solar- & Batteriestrom\nPV-Leistung: {pv_power}W\nBatterie-Leistung: {battery_power}W\nLadeleistung: {charging_power}W\nPV-Anteil: {pv_ratio}%"
+            }
+        },
+        "temperature": {
+            "high": {
+                "title": "Hohe Temperatur",
+                "message": "Wallbox Temperatur: {temperature}°C"
             }
         }
     }

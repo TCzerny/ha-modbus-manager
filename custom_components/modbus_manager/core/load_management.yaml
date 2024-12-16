@@ -198,7 +198,8 @@ scripts:
                   data:
                     value: "{{ priority_list[repeat.index-1].reduced_power }}"
 
-# Lastmanagement-Konfiguration
+# Lastmanagement-Konfiguration für unterstützte Geräte
+
 load_management:
   # Prioritäten für Energieflüsse
   priorities:
@@ -229,7 +230,40 @@ load_management:
         - discharge_battery:
             power: "min(load_power - peak_limit, max_discharge_power)"
 
-  # Gemeinsame Templates für Lastmanagement
+    - name: "pv_surplus_charging"
+      description: "PV-Überschussladung für E-Auto"
+      conditions:
+        - >
+          {% set pv_power = states('sensor.{{inverter_name}}_total_active_power')|float(0) %}
+          {% set home_power = states('sensor.{{inverter_name}}_load_power')|float(0) %}
+          {% set battery_power = states('sensor.{{inverter_name}}_battery_power')|float(0) %}
+          {% set surplus = pv_power - home_power %}
+          {% set car_connected = is_state('binary_sensor.{{wallbox_name}}_car_connected', 'on') %}
+          {% set allow_battery = states('input_boolean.allow_battery_car_charging')|default('off') %}
+          {% set battery_level = states('sensor.{{inverter_name}}_battery_level')|float(0) %}
+          {% set min_battery_level = states('number.{{inverter_name}}_battery_min_soc')|float(20) %}
+          {# Prüfe ob genug PV oder (wenn erlaubt) Batterie-Kapazität verfügbar ist #}
+          {{ (surplus > 1000 or (allow_battery == 'on' and battery_level > min_battery_level + 10)) 
+             and car_connected }}
+      actions:
+        - adjust_charging_current:
+            value: >
+              {% set pv_surplus = pv_power - home_power %}
+              {% set battery_available = states('input_boolean.allow_battery_car_charging') == 'on' %}
+              {% set max_current = states('number.{{wallbox_name}}_charging_current_limit')|float(32) %}
+              {% set min_current = 6 %}  # Mindestladestrom
+              
+              {# Berechne verfügbare Leistung #}
+              {% set available_power = pv_surplus %}
+              {% if battery_available and battery_level > min_battery_level + 10 %}
+                {% set max_battery_power = states('number.{{inverter_name}}_battery_max_discharge_power')|float(0) %}
+                {% set available_power = available_power + max_battery_power %}
+              {% endif %}
+              
+              {% set current = (available_power / 230 / 3)|round(0) %}  # 3-Phasen
+              {{ max(min(current, max_current), min_current) }}
+
+  # Gemeinsame Templates
   templates:
     - name: "current_load_priority"
       value: >
@@ -249,7 +283,23 @@ load_management:
         {{ pv + grid + battery }}
       unit_of_measurement: "W"
 
-  # Automatisierungen für Lastmanagement
+    - name: "pv_charging_status"
+      value: >
+        {% set pv_power = states('sensor.{{inverter_name}}_total_active_power')|float(0) %}
+        {% set charging_power = states('sensor.{{wallbox_name}}_charging_power')|float(0) %}
+        {% set battery_power = states('sensor.{{inverter_name}}_battery_power')|float(0) %}
+        {% set battery_used = battery_power > 0 and states('input_boolean.allow_battery_car_charging') == 'on' %}
+        {% set ratio = (charging_power / pv_power * 100)|round(1) if pv_power > 0 else 0 %}
+        {
+          "pv_power": pv_power,
+          "charging_power": charging_power,
+          "battery_power": battery_power,
+          "using_battery": battery_used,
+          "pv_ratio": ratio,
+          "is_pv_charging": ratio > 90 or battery_used
+        }
+
+  # Standardautomatisierungen
   automations:
     - name: "peak_load_warning"
       trigger:
@@ -261,17 +311,61 @@ load_management:
         data:
           title: "Peak Load Warning"
           message: "Load approaching peak limit: {{ states('sensor.{{device_name}}_load_power') }}W"
-          
-    - name: "optimize_self_consumption"
+
+    - name: "pv_surplus_charging_control"
       trigger:
-        platform: state
-        entity_id: sensor.{{device_name}}_pv_power
+        - platform: state
+          entity_id: sensor.{{inverter_name}}_total_active_power
+        - platform: state
+          entity_id: sensor.{{inverter_name}}_load_power
+        - platform: state
+          entity_id: binary_sensor.{{wallbox_name}}_car_connected
       condition:
-        condition: template
-        value_template: "{{ states('sensor.{{device_name}}_pv_power')|float > states('sensor.{{device_name}}_load_power')|float }}"
+        condition: and
+        conditions:
+          - condition: state
+            entity_id: binary_sensor.{{wallbox_name}}_car_connected
+            state: "on"
+          - condition: template
+            value_template: >
+              {% set pv_power = states('sensor.{{inverter_name}}_total_active_power')|float(0) %}
+              {% set home_power = states('sensor.{{inverter_name}}_load_power')|float(0) %}
+              {{ pv_power > home_power + 1000 }}
       action:
-        service: number.set_value
-        target:
-          entity_id: number.{{device_name}}_battery_charge_power
+        - service: number.set_value
+          target:
+            entity_id: number.{{wallbox_name}}_charging_current_limit
+          data:
+            value: >
+              {% set pv_power = states('sensor.{{inverter_name}}_total_active_power')|float(0) %}
+              {% set home_power = states('sensor.{{inverter_name}}_load_power')|float(0) %}
+              {% set surplus = pv_power - home_power %}
+              {% set current = (surplus / 230 / 3)|round(0) %}
+              {{ max(min(current, 32), 6) }}
+
+    - name: "pv_charging_notification"
+      trigger:
+        platform: template
+        value_template: >
+          {% set status = states('sensor.{{device_name}}_pv_charging_status')|from_json %}
+          {{ status.is_pv_charging }}
+      action:
+        service: notify.notify
         data:
-          value: "{{ states('sensor.{{device_name}}_pv_power')|float - states('sensor.{{device_name}}_load_power')|float }}"
+          title: >
+            {% if status.using_battery %}
+              PV- & Batterie-Ladung aktiv
+            {% else %}
+              PV-Überschussladung aktiv
+            {% endif %}
+          message: >
+            Lade E-Auto mit 
+            {% if status.using_battery %}
+              Solar- & Batteriestrom
+              Batterie-Leistung: {{ status.battery_power }}W
+            {% else %}
+              Solarstrom
+            {% endif %}
+            PV-Leistung: {{ status.pv_power }}W
+            Ladeleistung: {{ status.charging_power }}W
+            PV-Anteil: {{ status.pv_ratio }}%

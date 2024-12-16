@@ -2,29 +2,40 @@
 import logging
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
 from .const import DOMAIN
-from .helpers.entity_helper import EntityHelper
+from .modbus_hub import ModbusManagerHub
 
 _LOGGER = logging.getLogger(__name__)
 
 async def async_setup(hass: HomeAssistant, config: dict):
     """Set up the Modbus Manager component."""
-    hass.data[DOMAIN] = {
-        "entity_helper": EntityHelper(hass.config.config_dir)
-    }
+    hass.data[DOMAIN] = {}
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up Modbus Manager from a config entry."""
-    entity_helper = hass.data[DOMAIN]["entity_helper"]
-    device_config = entity_helper.get_device_definition(entry.data["device_type"])
+    name = entry.data[CONF_NAME]
+    host = entry.data[CONF_HOST]
+    port = entry.data[CONF_PORT]
+    slave = entry.data[CONF_SLAVE]
+    device_type = entry.data["device_type"]
     
-    # Setup device with merged configuration
-    hub = ModbusManagerHub(hass, entry, device_config)
+    # Erstelle Hub-Instanz
+    hub = ModbusManagerHub(name, host, port, slave, device_type, hass)
     if not await hub.async_setup():
         return False
 
     hass.data[DOMAIN][entry.entry_id] = hub
+    
+    # Forward setup to sensor and switch platforms
+    hass.async_create_task(
+        hass.config_entries.async_forward_entry_setup(entry, "sensor")
+    )
+    hass.async_create_task(
+        hass.config_entries.async_forward_entry_setup(entry, "switch")
+    )
+    
     return True
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
@@ -49,43 +60,45 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry):
     for entity_entry in entity_entries:
         ent_reg.async_remove(entity_entry.entity_id)
 
-    # Remove templates
+    # Remove templates and helpers
     device_def = hub.get_device_definition(hub.device_type)
-    if device_def and 'helpers' in device_def and 'templates' in device_def['helpers']:
-        for template_def in device_def['helpers']['templates']:
-            template_name = f"{hub.name}_{template_def['name']}"
-            template_entity_id = f"template.{template_name}"
-            if ent_reg.async_get(template_entity_id):
-                _LOGGER.debug("Removing template: %s", template_name)
-                ent_reg.async_remove(template_entity_id)
+    if device_def:
+        # Remove templates
+        if 'helpers' in device_def and 'templates' in device_def['helpers']:
+            for template_def in device_def['helpers']['templates']:
+                template_name = f"{hub.name}_{template_def['name']}"
+                template_entity_id = f"template.{template_name}"
+                if ent_reg.async_get(template_entity_id):
+                    _LOGGER.debug("Removing template: %s", template_name)
+                    ent_reg.async_remove(template_entity_id)
 
-    # Remove automations
-    if device_def and 'automations' in device_def:
-        for automation in device_def['automations']:
-            automation_name = f"{hub.name}_{automation['name']}"
-            automation_entity_id = f"automation.{automation_name}"
-            if ent_reg.async_get(automation_entity_id):
-                _LOGGER.debug("Removing automation: %s", automation_name)
-                ent_reg.async_remove(automation_entity_id)
+        # Remove automations
+        if 'automations' in device_def:
+            for automation in device_def['automations']:
+                automation_name = f"{hub.name}_{automation['name']}"
+                automation_entity_id = f"automation.{automation_name}"
+                if ent_reg.async_get(automation_entity_id):
+                    _LOGGER.debug("Removing automation: %s", automation_name)
+                    ent_reg.async_remove(automation_entity_id)
 
     # Unload platforms
     unload_ok = all(
         await asyncio.gather(
             *[
                 hass.config_entries.async_forward_entry_unload(entry, component)
-                for component in ["sensor", "switch"]
+                for component in ["sensor", "switch", "binary_sensor", "number"]
             ]
         )
     )
 
-    # Remove device from registry
-    device_entry = dev_reg.async_get_device({(DOMAIN, hub.name)})
-    if device_entry:
-        _LOGGER.debug("Removing device: %s", hub.name)
-        dev_reg.async_remove_device(device_entry.id)
-
-    # Close Modbus connection
     if unload_ok:
+        # Remove device from registry
+        device_entry = dev_reg.async_get_device({(DOMAIN, hub.name)})
+        if device_entry:
+            _LOGGER.debug("Removing device: %s", hub.name)
+            dev_reg.async_remove_device(device_entry.id)
+
+        # Close connection and cleanup
         await hub.async_teardown()
         hass.data[DOMAIN].pop(entry.entry_id)
         _LOGGER.info("Successfully removed Modbus Manager integration for %s", hub.name)

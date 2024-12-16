@@ -23,35 +23,52 @@
     "entity": {
         "sensor": {
             "inverter_serial": "Inverter Serial Number",
-            "battery_serial": "Battery Serial Number",
-            "dev_code": "Device Type Code",
+            "device_code": "Device Type",
             "daily_pv_gen_battery_discharge": "Daily PV Generation & Battery Discharge",
             "total_pv_gen_battery_discharge": "Total PV Generation & Battery Discharge",
             "inverter_temperature": "Inverter Temperature",
+            "system_status": "System Status",
+            "running_state": "Running State",
             "mppt1_voltage": "MPPT1 Voltage",
             "mppt1_current": "MPPT1 Current",
             "mppt2_voltage": "MPPT2 Voltage",
             "mppt2_current": "MPPT2 Current",
-            "total_dc_power": "Total DC Power",
+            "grid_voltage_l1": "Grid Voltage L1",
+            "grid_voltage_l2": "Grid Voltage L2",
+            "grid_voltage_l3": "Grid Voltage L3",
+            "grid_current_l1": "Grid Current L1",
+            "grid_current_l2": "Grid Current L2",
+            "grid_current_l3": "Grid Current L3",
+            "phase_a_power": "Phase A Power",
+            "phase_b_power": "Phase B Power",
+            "phase_c_power": "Phase C Power",
             "grid_frequency": "Grid Frequency",
-            "reactive_power": "Reactive Power",
-            "power_factor": "Power Factor",
-            "battery_1_total_battery_discharge": "Battery 1 Total Discharge",
-            "battery_1_max_voltage_of_cell": "Battery 1 Max Cell Voltage",
-            "battery_1_position_of_max_voltage_cell": "Battery 1 Position of Max Cell Voltage",
-            "battery_1_min_voltage_of_cell": "Battery 1 Min Cell Voltage",
-            "battery_1_position_of_min_voltage_cell": "Battery 1 Position of Min Cell Voltage",
-            "battery_1_max_temperature_of_module": "Battery 1 Max Module Temperature",
-            "battery_1_min_cell_voltage_of_module_2": "Battery 1 Min Cell Voltage of Module 2",
-            "battery_1_min_cell_voltage_of_module_3": "Battery 1 Min Cell Voltage of Module 3",
-            "battery_1_min_cell_voltage_of_module_4": "Battery 1 Min Cell Voltage of Module 4",
-            "battery_1_min_cell_voltage_of_module_5": "Battery 1 Min Cell Voltage of Module 5",
-            "battery_1_cell_type_of_module_1": "Battery 1 Cell Type of Module 1",
-            "battery_1_cell_type_of_module_2": "Battery 1 Cell Type of Module 2",
-            "battery_1_cell_type_of_module_3": "Battery 1 Cell Type of Module 3",
-            "battery_1_cell_type_of_module_4": "Battery 1 Cell Type of Module 4",
-            "battery_1_cell_type_of_module_5": "Battery 1 Cell Type of Module 5",
-            "battery_1_state_of_dc_switch": "Battery 1 State of DC Switch",
+            "battery_voltage": "Battery Voltage",
+            "battery_current": "Battery Current",
+            "battery_power": "Battery Power",
+            "battery_level": "Battery Level",
+            "battery_health": "Battery Health",
+            "battery_temperature": "Battery Temperature",
+            "daily_battery_charge": "Daily Battery Charge",
+            "total_battery_charge": "Total Battery Charge",
+            "daily_battery_discharge": "Daily Battery Discharge",
+            "total_battery_discharge": "Total Battery Discharge",
+            "battery_max_charge_power": "Maximum Charge Power",
+            "battery_max_discharge_power": "Maximum Discharge Power",
+            "battery_capacity": "Battery Capacity",
+            "serial_number": "Serial Number",
+            "firmware_version": "Firmware Version",
+            "device_status": "Device Status",
+            "charging_state": "Charging State",
+            "connected_state": "Connection State",
+            "error_code": "Error Code",
+            "charging_power": "Charging Power",
+            "energy_total": "Total Energy",
+            "energy_session": "Session Energy",
+            "temperature": "Temperature",
+            "charging_current_limit": "Charging Current Limit",
+            "start_stop_charging": "Start/Stop Charging",
+            "reset_error": "Reset Error",
             "inverter": {
                 "state": {
                     "wait": "Waiting",
@@ -100,6 +117,43 @@
             },
             "grid": {
                 "power_balance": "Grid Power Balance"
+            },
+            "charging": {
+                "state": {
+                    "idle": "Ready",
+                    "charging": "Charging",
+                    "completed": "Completed",
+                    "error": "Error"
+                },
+                "source": {
+                    "solar": "Solar",
+                    "solar_battery": "Solar + Battery",
+                    "grid": "Grid",
+                    "none": "Not charging"
+                }
+            }
+        },
+        "input_boolean": {
+            "allow_battery_car_charging": {
+                "name": "Allow Battery to EV Charging",
+                "state": {
+                    "on": "Enabled",
+                    "off": "Disabled"
+                }
+            }
+        }
+    },
+    "notification": {
+        "charging": {
+            "complete": {
+                "title": "Charging Complete",
+                "message": "Vehicle fully charged\nEnergy: {energy} kWh\nCost: {cost} €"
+            },
+            "pv": {
+                "title": "PV Charging Active",
+                "title_with_battery": "PV & Battery Charging Active",
+                "message": "Charging EV with solar power\nPV Power: {pv_power}W\nCharging Power: {charging_power}W\nPV Ratio: {pv_ratio}%",
+                "message_with_battery": "Charging EV with solar & battery power\nPV Power: {pv_power}W\nBattery Power: {battery_power}W\nCharging Power: {charging_power}W\nPV Ratio: {pv_ratio}%"
             }
         }
     }

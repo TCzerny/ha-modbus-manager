@@ -16,6 +16,7 @@ from .errors import ModbusDeviceError, handle_modbus_error
 from .logger import ModbusLogger
 from .optimization import ModbusOptimizer
 from .proxy import ModbusProxy
+from .device import ModbusDevice
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -51,6 +52,7 @@ class ModbusManagerHub:
         self.device_info: Dict[str, Any] = {}
         self._shutdown = False
         self.proxy: Optional[ModbusProxy] = None
+        self.device: Optional[ModbusDevice] = None
 
     async def async_setup(self) -> bool:
         """Set up the Modbus connection with retry logic."""
@@ -89,6 +91,7 @@ class ModbusManagerHub:
                             self.slave,
                             cache_timeout=self.config.get("cache_timeout", REGISTER_CACHE_TIMEOUT.total_seconds())
                         )
+                        self.device = ModbusDevice(self)
                         return True
                         
                 except Exception as e:
@@ -301,3 +304,55 @@ class ModbusManagerHub:
         
         # Erstelle neue Entities mit aktualisierten Registern
         await self.async_setup_new_entities(new_definitions)
+
+    async def setup_device(self) -> bool:
+        """Set up the device with firmware detection and register setup."""
+        try:
+            # Detect firmware version
+            if self.config.get("firmware_handling", {}).get("auto_detect", True):
+                firmware_version = await self.detect_firmware_version()
+                if firmware_version:
+                    self.logger.info(f"Detected firmware version: {firmware_version}")
+                    await self.update_register_definitions(firmware_version)
+                else:
+                    firmware_version = self.config["firmware_handling"]["fallback_version"]
+                    self.logger.warning(f"Using fallback firmware version: {firmware_version}")
+            
+            # Setup common entities
+            await self.setup_common_entities()
+            
+            # Setup device-specific entities
+            await self.setup_device_entities()
+            
+            # Setup templates and helpers
+            await self.setup_templates_and_helpers()
+            
+            return True
+            
+        except Exception as e:
+            self.logger.error(f"Error setting up device: {e}")
+            return False
+
+    async def setup_common_entities(self):
+        """Setup common entities from core/common_entities.yaml."""
+        common_def = self.load_common_definition()
+        if not common_def:
+            return
+        
+        for entity_type, entities in common_def.get("common_entities", {}).items():
+            for entity in entities:
+                await self.async_add_entity(entity_type, entity)
+
+    async def setup_templates_and_helpers(self):
+        """Setup templates and helper entities."""
+        device_def = self.get_device_definition(self.device_type)
+        if not device_def:
+            return
+        
+        # Setup energy monitoring templates
+        if device_def.get("supports_energy_monitoring", False):
+            await self.setup_energy_templates()
+        
+        # Setup cost calculation templates
+        if device_def.get("supports_cost_calculation", False):
+            await self.setup_cost_templates()
