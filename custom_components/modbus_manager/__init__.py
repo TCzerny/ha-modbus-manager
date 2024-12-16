@@ -26,6 +26,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     
     # Erstelle Hub-Instanz
     hub = ModbusManagerHub(name, host, port, slave, device_type, hass)
+    hub.config_entry = entry  # Füge config_entry zum Hub hinzu
+    
     if not await hub.async_setup():
         return False
 

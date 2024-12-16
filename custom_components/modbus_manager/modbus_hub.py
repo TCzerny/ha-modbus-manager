@@ -18,7 +18,7 @@ from .optimization import ModbusManagerOptimizer
 from .proxy import ModbusManagerProxy
 from .device import ModbusManagerDevice
 
-_LOGGER = ModbusManagerLogger("modbus_manager_hub")
+_LOGGER = logging.getLogger(__name__)
 
 class ModbusManagerHub:
     """Class for managing Modbus connection for devices."""
@@ -65,7 +65,7 @@ class ModbusManagerHub:
     async def async_setup(self) -> bool:
         """Set up the Modbus connection with retry logic."""
         try:
-            self.logger.debug("Setting up hub connection")
+            _LOGGER.debug("Setting up hub connection")
             # Load device configuration
             device_def = self.get_device_definition(self.device_type)
             if not device_def:
@@ -94,18 +94,18 @@ class ModbusManagerHub:
                     
                     if connected:
                         self.is_connected = True
-                        self.logger.info(f"Connected to Modbus device at {self.host}:{self.port}")
+                        _LOGGER.info("Connected to Modbus device at %s:%s", self.host, self.port)
                         self.proxy = ModbusManagerProxy(
                             self.client,
                             self.slave,
                             cache_timeout=self.config.get("cache_timeout", 60)
                         )
                         self.device = ModbusManagerDevice(self.hass, self.config)
-                        self.logger.info("Hub setup complete")
+                        _LOGGER.info("Hub setup complete")
                         return True
                         
                 except Exception as e:
-                    _LOGGER.warning("Connection attempt failed:", error=e)
+                    _LOGGER.warning("Connection attempt failed: %s", str(e))
                     
                 retry_count += 1
                 self.reconnect_count += 1
@@ -117,7 +117,7 @@ class ModbusManagerHub:
             
         except Exception as e:
             error = handle_modbus_error(e)
-           _LOGGER.error("Hub setup failed", error=error)
+            _LOGGER.error("Hub setup failed: %s", str(error))
             raise error
 
     async def async_teardown(self) -> None:
