@@ -272,3 +272,32 @@ class ModbusManagerHub:
         except Exception as e:
             self.is_connected = False
             raise handle_modbus_error(e)
+
+    async def detect_firmware_version(self):
+        """Detect firmware version from device."""
+        try:
+            # Lese Firmware-Version aus bekanntem Register
+            fw_register = await self.read_register(self.FIRMWARE_VERSION_REGISTER)
+            return self._parse_firmware_version(fw_register)
+        except Exception as e:
+            _LOGGER.warning("Could not detect firmware version: %s", e)
+            return None
+
+    async def update_register_definitions(self):
+        """Update register definitions based on firmware version."""
+        fw_version = await self.detect_firmware_version()
+        if fw_version:
+            # Lade passende Register-Definitionen
+            new_definitions = self._load_firmware_specific_definitions(fw_version)
+            if new_definitions:
+                await self._apply_new_definitions(new_definitions)
+                return True
+        return False
+
+    async def _apply_new_definitions(self, new_definitions):
+        """Apply new register definitions and update entities."""
+        # Entferne alte Entities
+        await self.async_remove_old_entities()
+        
+        # Erstelle neue Entities mit aktualisierten Registern
+        await self.async_setup_new_entities(new_definitions)
