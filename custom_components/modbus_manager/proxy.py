@@ -13,6 +13,7 @@ from .const import (
     LOGGER_COMMUNICATION
 )
 from .errors import ModbusDeviceError, handle_modbus_error
+from .logger import ModbusLogger
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -36,6 +37,7 @@ class ModbusProxy:
         self._request_queue: Dict[int, List[Tuple[int, int, asyncio.Future]]] = defaultdict(list)
         self._metrics: Dict[str, float] = defaultdict(float)
         self._batch_size = MAX_REGISTERS_PER_READ
+        self.logger = ModbusLogger(f"proxy_{slave}")
 
     async def read_registers(
         self, 
@@ -59,6 +61,7 @@ class ModbusProxy:
         # Check cache first
         cached = self._get_from_cache(cache_key)
         if cached is not None:
+            self.logger.debug(f"Read registers: address={address}, count={count}, result={cached}")
             return cached
 
         async with self._lock:

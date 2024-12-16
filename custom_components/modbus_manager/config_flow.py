@@ -1,4 +1,5 @@
 """Config flow for Modbus Manager."""
+import logging
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
@@ -7,6 +8,8 @@ from typing import Any, Dict, Optional
 import ipaddress
 from pathlib import Path
 import yaml
+
+from .logger import ModbusLogger
 
 from .const import (
     DOMAIN,
@@ -23,6 +26,8 @@ from .const import (
     ERROR_UNKNOWN,
 )
 
+_LOGGER = logging.getLogger(__name__)
+
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Modbus Manager."""
 
@@ -33,6 +38,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Initialize the config flow."""
         self._device_definitions: Dict[str, Any] = {}
         self._errors: Dict[str, str] = {}
+        self.logger = ModbusLogger(__name__)
 
     async def async_step_user(self, user_input: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
         """Handle the initial step."""
@@ -80,13 +86,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             definitions_dir = Path(__file__).parent / "device_definitions"
             device_types = {}
             
-            _LOGGER.debug("Scanning directory: %s", definitions_dir)
+            self.logger.debug(f"Scanning directory: {definitions_dir}")
             
             for file_path in definitions_dir.glob("*.yaml"):
-                _LOGGER.debug("Found file: %s", file_path.name)
+                self.logger.debug(f"Found file: {file_path.name}")
                 
                 if file_path.stem in ["common_entities", "device_info"]:
-                    _LOGGER.debug("Skipping file: %s", file_path.name)
+                    self.logger.debug(f"Skipping file: {file_path.name}")
                     continue
                     
                 try:
@@ -94,14 +100,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         definition = yaml.safe_load(f)
                         if "device_info" in definition:
                             device_types[file_path.stem] = definition["device_info"]["name"]
-                            _LOGGER.debug("Added device type: %s -> %s", file_path.stem, definition["device_info"]["name"])
+                            self.logger.debug(f"Added device type: {file_path.stem} -> {definition['device_info']['name']}")
                         else:
-                            _LOGGER.warning("No device_info found in %s", file_path.name)
+                            self.logger.warning(f"No device_info found in {file_path.name}")
                 except Exception as e:
-                    _LOGGER.warning("Error loading device definition %s: %s", file_path.name, e)
+                    self.logger.warning(f"Error loading device definition {file_path.name}: {str(e)}")
                     
             self._device_definitions = device_types
-            _LOGGER.info("Available device types: %s", device_types)
+            self.logger.info(f"Available device types: {device_types}")
             
         return self._device_definitions
 
@@ -130,6 +136,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     def __init__(self, config_entry):
         """Initialize options flow."""
         self.config_entry = config_entry
+        self.logger = ModbusLogger("options_flow")
 
     async def async_step_init(self, user_input=None):
         """Manage the options."""

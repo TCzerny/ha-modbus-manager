@@ -42,7 +42,7 @@ class ModbusManagerHub:
         self.client: Optional[AsyncModbusTcpClient] = None
         self.coordinators: Dict[str, DataUpdateCoordinator] = {}
         self._device_definition_cache: Dict[str, Any] = {}
-        self.logger = ModbusLogger(name)
+        self.logger = ModbusLogger(f"hub_{name}")
         self.optimizer = ModbusOptimizer()
         self.is_connected = False
         self.last_connect_attempt: Optional[datetime] = None
@@ -83,7 +83,7 @@ class ModbusManagerHub:
                     
                     if connected:
                         self.is_connected = True
-                        _LOGGER.info("Connected to Modbus device at %s:%s", self.host, self.port)
+                        self.logger.info(f"Connected to Modbus device at {self.host}:{self.port}")
                         self.proxy = ModbusProxy(
                             self.client,
                             self.slave,
