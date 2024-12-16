@@ -1,26 +1,39 @@
 """Development helpers for Modbus Manager."""
-import logging
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
+from .logger import ModbusManagerLogger
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = ModbusManagerLogger("development")
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:
     """Reload Modbus Manager config entry."""
-    _LOGGER.debug("Reloading Modbus Manager integration")
+    _LOGGER.debug("Reloading Modbus Manager integration", entry_id=entry.entry_id)
     
-    await hass.config_entries.async_reload(entry.entry_id)
-    _LOGGER.debug("Reload complete")
+    try:
+        await hass.config_entries.async_reload(entry.entry_id)
+        _LOGGER.info("Reload complete", entry_id=entry.entry_id)
+    except Exception as err:
+        _LOGGER.error("Failed to reload integration", error=err, entry_id=entry.entry_id)
 
 async def async_test_device_type(hass: HomeAssistant, device_type: str) -> None:
     """Test loading a specific device type."""
     from .config_flow import ModbusManagerConfigFlow
     
-    flow = ModbusManagerConfigFlow()
-    device_types = flow._get_available_device_types()
+    _LOGGER.debug("Testing device type", device_type=device_type)
     
-    _LOGGER.debug("Available device types: %s", device_types)
-    if device_type in device_types:
-        _LOGGER.debug("Device type '%s' found: %s", device_type, device_types[device_type])
-    else:
-        _LOGGER.error("Device type '%s' not found!", device_type) 
+    try:
+        flow = ModbusManagerConfigFlow()
+        device_types = flow._get_available_device_types()
+        
+        _LOGGER.debug("Available device types", types=device_types)
+        if device_type in device_types:
+            _LOGGER.info(
+                "Device type found", 
+                device_type=device_type, 
+                display_name=device_types[device_type]
+            )
+        else:
+            _LOGGER.error("Device type not found", device_type=device_type)
+            
+    except Exception as err:
+        _LOGGER.error("Error testing device type", error=err, device_type=device_type) 

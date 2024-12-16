@@ -11,6 +11,11 @@ from .const import (
     CONF_DEVICE_TYPE,
 )
 
+
+from .logger import ModbusManagerLogger
+
+_LOGGER = ModbusManagerLogger("config_flow")
+
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow."""
 

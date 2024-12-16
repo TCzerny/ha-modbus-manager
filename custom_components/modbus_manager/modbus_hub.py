@@ -13,7 +13,7 @@ from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
 from .errors import ModbusDeviceError, handle_modbus_error
-from .logger import ModbusLogger
+from .logger import ModbusLogger, ModbusManagerLogger
 from .optimization import ModbusOptimizer
 from .proxy import ModbusProxy
 from .device import ModbusDevice
@@ -43,7 +43,15 @@ class ModbusManagerHub:
         self.client: Optional[AsyncModbusTcpClient] = None
         self.coordinators: Dict[str, DataUpdateCoordinator] = {}
         self._device_definition_cache: Dict[str, Any] = {}
-        self.logger = ModbusLogger(f"hub_{name}")
+        self.logger = ModbusManagerLogger(f"hub_{name}")
+        self.logger.debug(
+            "Initializing hub", 
+            name=name, 
+            host=host, 
+            port=port, 
+            slave=slave,
+            device_type=device_type
+        )
         self.optimizer = ModbusOptimizer()
         self.is_connected = False
         self.last_connect_attempt: Optional[datetime] = None
@@ -57,6 +65,7 @@ class ModbusManagerHub:
     async def async_setup(self) -> bool:
         """Set up the Modbus connection with retry logic."""
         try:
+            self.logger.debug("Setting up hub connection")
             # Load device configuration
             device_def = self.get_device_definition(self.device_type)
             if not device_def:
@@ -92,6 +101,7 @@ class ModbusManagerHub:
                             cache_timeout=self.config.get("cache_timeout", REGISTER_CACHE_TIMEOUT.total_seconds())
                         )
                         self.device = ModbusDevice(self)
+                        self.logger.info("Hub setup complete")
                         return True
                         
                 except Exception as e:

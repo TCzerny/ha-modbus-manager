@@ -5,16 +5,19 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
 from .const import DOMAIN
 from .modbus_hub import ModbusManagerHub
+from .logger import ModbusManagerLogger
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = ModbusManagerLogger("init")
 
 async def async_setup(hass: HomeAssistant, config: dict):
     """Set up the Modbus Manager component."""
+    _LOGGER.debug("Setting up Modbus Manager integration")
     hass.data[DOMAIN] = {}
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry):
     """Set up Modbus Manager from a config entry."""
+    _LOGGER.debug("Setting up config entry", entry_id=entry.entry_id, name=entry.data[CONF_NAME])
     name = entry.data[CONF_NAME]
     host = entry.data[CONF_HOST]
     port = entry.data[CONF_PORT]
