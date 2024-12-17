@@ -59,7 +59,7 @@ firmware_versions:
   "1.0.0":  # Original Firmware
     registers:
       read:
-        - { name: "battery_power", address: 13021, type: "int32" }
+    - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
         # ... weitere Register
   
   "1.0.23":  # Neue Firmware mit geänderten Registern
@@ -68,11 +68,6 @@ firmware_versions:
         - { name: "battery_power", address: 13025, type: "int32" }
         # ... geänderte Register
 
-  "2.0.0":  # Komplett neue Firmware-Version
-    registers:
-      read:
-        - { name: "battery_power", address: 13030, type: "int32" }
-        # ... neue Register-Struktur
 
 registers:
   read:

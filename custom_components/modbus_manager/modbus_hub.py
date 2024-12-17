@@ -62,6 +62,14 @@ class ModbusManagerHub:
         self.proxy: Optional[ModbusManagerProxy] = None
         self.device: Optional[ModbusManagerDevice] = None
 
+        _LOGGER.debug("Initialisiere ModbusManagerDevice mit hass und config")
+        try:
+            self.device = ModbusManagerDevice(self.hass, self.config)
+            _LOGGER.info("ModbusManagerDevice erfolgreich initialisiert")
+        except Exception as e:
+            _LOGGER.error(f"Fehler bei der Initialisierung von ModbusManagerDevice: {e}")
+            raise
+
     async def async_setup(self) -> bool:
         """Set up the Modbus connection with retry logic."""
         try:
