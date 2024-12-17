@@ -3,6 +3,7 @@ import logging
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
+from homeassistant.helpers import entity_registry, device_registry
 from .const import DOMAIN
 from .modbus_hub import ModbusManagerHub
 from .logger import ModbusManagerLogger

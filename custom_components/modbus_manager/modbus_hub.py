@@ -40,30 +40,21 @@ class ModbusManagerHub:
         self.slave = slave
         self.device_type = device_type
         self.hass = hass
-        self.client: Optional[AsyncModbusTcpClient] = None
-        self.coordinators: Dict[str, DataUpdateCoordinator] = {}
-        self._device_definition_cache: Dict[str, Any] = {}
-        self.logger = ModbusManagerLogger(f"hub_{name}")
-        self.logger.debug(
-            "Initializing hub", 
-            name=name, 
-            host=host, 
-            port=port, 
-            slave=slave,
-            device_type=device_type
-        )
-        self.optimizer = ModbusManagerOptimizer()
-        self.is_connected = False
-        self.last_connect_attempt: Optional[datetime] = None
-        self.reconnect_count = 0
-        self.config: Dict[str, Any] = {}
-        self.device_info: Dict[str, Any] = {}
-        self._shutdown = False
-        self.proxy: Optional[ModbusManagerProxy] = None
-        self.device: Optional[ModbusManagerDevice] = None
+        self.config_entry = None
+        self.device = None
 
         _LOGGER.debug("Initialisiere ModbusManagerDevice mit hass und config")
         try:
+            # Definieren des config-Dictionary
+            self.config = {
+                "name": self.name,
+                "host": self.host,
+                "port": self.port,
+                "slave": self.slave,
+                "device_type": self.device_type,
+                # Fügen Sie hier weitere Konfigurationsparameter hinzu, falls nötig
+            }
+            
             self.device = ModbusManagerDevice(self.hass, self.config)
             _LOGGER.info("ModbusManagerDevice erfolgreich initialisiert")
         except Exception as e:
@@ -71,73 +62,13 @@ class ModbusManagerHub:
             raise
 
     async def async_setup(self) -> bool:
-        """Set up the Modbus connection with retry logic."""
-        try:
-            _LOGGER.debug("Setting up hub connection")
-            # Load device configuration
-            device_def = self.get_device_definition(self.device_type)
-            if not device_def:
-                raise UpdateFailed(f"No device definition found for {self.device_type}")
-            
-            self.device_info = device_def.get("device_info", {})
-            self.config = device_def.get("config", {})
+        """Set up the Modbus Manager Hub."""
+        return await self.device.async_setup()
 
-            # Initialize connection
-            retry_count = 0
-            max_retries = self.config.get("retries", 3)
-            retry_delay = self.config.get("retry_delay", 0.1)
-
-            while retry_count <= max_retries:
-                try:
-                    self.client = AsyncModbusTcpClient(
-                        self.host,
-                        self.port,
-                        timeout=self.config.get("tcp_timeout", 3),
-                        retries=0,
-                        retry_on_empty=True,
-                        close_comm_on_error=True
-                    )
-                    self.last_connect_attempt = datetime.now()
-                    connected = await self.client.connect()
-                    
-                    if connected:
-                        self.is_connected = True
-                        _LOGGER.info("Connected to Modbus device at %s:%s", self.host, self.port)
-                        self.proxy = ModbusManagerProxy(
-                            self.client,
-                            self.slave,
-                            cache_timeout=self.config.get("cache_timeout", 60)
-                        )
-                        self.device = ModbusManagerDevice(self.hass, self.config)
-                        _LOGGER.info("Hub setup complete")
-                        return True
-                        
-                except Exception as e:
-                    _LOGGER.warning("Connection attempt failed: %s", str(e))
-                    
-                retry_count += 1
-                self.reconnect_count += 1
-                
-                if retry_count <= max_retries:
-                    await asyncio.sleep(retry_delay * retry_count)
-                    
-            raise ConnectionError("Maximum number of connection attempts reached")
-            
-        except Exception as e:
-            error = handle_modbus_error(e)
-            _LOGGER.error("Hub setup failed: %s", str(error))
-            raise error
-
-    async def async_teardown(self) -> None:
-        """Close the Modbus connection."""
-        self._shutdown = True
-        if self.client:
-            self.is_connected = False
-            try:
-                await self.client.close()
-                _LOGGER.info("Modbus connection closed for %s", self.name)
-            except Exception as e:
-                _LOGGER.warning("Error closing Modbus connection for %s: %s", self.name, e)
+    async def async_teardown(self):
+        """Teardown method for the hub."""
+        if self.device:
+            await self.device.async_teardown()
 
     def get_device_definition(self, device_definition_name: str) -> Optional[Dict[str, Any]]:
         """Get device configuration with caching."""
