@@ -42,6 +42,7 @@ class ModbusManagerHub:
         self.hass = hass
         self.config_entry = None
         self.device = None
+        self._device_definition_cache: Dict[str, Dict[str, Any]] = {}
 
         _LOGGER.debug("Initialisiere ModbusManagerDevice mit hass und config")
         try:
@@ -54,6 +55,8 @@ class ModbusManagerHub:
                 "device_type": self.device_type,
                 # Fügen Sie hier weitere Konfigurationsparameter hinzu, falls nötig
             }
+            
+            _LOGGER.debug("Hub config: %s", self.config)
             
             self.device = ModbusManagerDevice(self.hass, self.config)
             _LOGGER.info("ModbusManagerDevice erfolgreich initialisiert")
@@ -214,24 +217,66 @@ class ModbusManagerHub:
             _LOGGER.warning("Could not detect firmware version: %s", e)
             return None
 
-    async def update_register_definitions(self):
+    async def update_register_definitions(self, firmware_version: str):
         """Update register definitions based on firmware version."""
-        fw_version = await self.detect_firmware_version()
-        if fw_version:
-            # Lade passende Register-Definitionen
-            new_definitions = self._load_firmware_specific_definitions(fw_version)
-            if new_definitions:
-                await self._apply_new_definitions(new_definitions)
-                return True
-        return False
-
-    async def _apply_new_definitions(self, new_definitions):
-        """Apply new register definitions and update entities."""
-        # Entferne alte Entities
-        await self.async_remove_old_entities()
+        try:
+            _LOGGER.debug("Aktualisiere Register-Definitionen für Firmware-Version %s", firmware_version)
+            
+            device_definitions = self.get_device_definition(self.device_type)
+            if not device_definitions:
+                _LOGGER.warning("Keine Gerätekonfiguration für %s gefunden", self.device_type)
+                return
+            
+            # Basis-Register laden (Read und Write)
+            base_registers = device_definitions.get('registers', {})
+            merged_registers = {
+                "read": base_registers.get('read', []).copy(),
+                "write": base_registers.get('write', []).copy()
+            }
+            
+            # Firmware-spezifische Änderungen laden
+            firmware_defs = device_definitions.get('firmware_versions', {}).get(firmware_version, {})
+            firmware_read_registers = firmware_defs.get('registers', {}).get('read', [])
+            firmware_write_registers = firmware_defs.get('registers', {}).get('write', [])
+            
+            # Update der Read-Register
+            for fw_reg in firmware_read_registers:
+                existing = next((reg for reg in merged_registers["read"] if reg["name"] == fw_reg["name"]), None)
+                if existing:
+                    _LOGGER.debug("Aktualisiere Register: %s", fw_reg["name"])
+                    merged_registers["read"].remove(existing)
+                else:
+                    _LOGGER.debug("Füge neues Register hinzu: %s", fw_reg["name"])
+                merged_registers["read"].append(fw_reg)
+            
+            # Update der Write-Register (falls vorhanden)
+            for fw_reg in firmware_write_registers:
+                existing = next((reg for reg in merged_registers["write"] if reg["name"] == fw_reg["name"]), None)
+                if existing:
+                    _LOGGER.debug("Aktualisiere Write-Register: %s", fw_reg["name"])
+                    merged_registers["write"].remove(existing)
+                else:
+                    _LOGGER.debug("Füge neues Write-Register hinzu: %s", fw_reg["name"])
+                merged_registers["write"].append(fw_reg)
+            
+            # Aktualisiere die internen Register-Definitionen
+            self.device.register_definitions = merged_registers
+            
+            _LOGGER.info(
+                "Register-Definitionen erfolgreich für Firmware-Version %s aktualisiert",
+                firmware_version
+            )
+            
+            # Informiere den Modbus-Hub, dass die Register-Definitionen aktualisiert wurden
+            await self.hass.data[DOMAIN][self.config_entry.entry_id].reload_registers(self.name, firmware_version)
         
-        # Erstelle neue Entities mit aktualisierten Registern
-        await self.async_setup_new_entities(new_definitions)
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Aktualisieren der Register-Definitionen: %s",
+                e,
+                firmware_version=firmware_version,
+                device=self.name
+            )
 
     async def setup_device(self) -> bool:
         """Set up the device with firmware detection and register setup."""
