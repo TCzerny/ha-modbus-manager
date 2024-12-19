@@ -399,72 +399,94 @@ class ModbusManagerHub:
             return None
 
     async def read_register(self, device_name: str, address: int, reg_type: str, count: int = 1, scale: float = 1, swap: Optional[str] = None) -> Any:
-        """Liest ein einzelnes Register.
-        
-        Args:
-            device_name: Name des Geräts
-            address: Modbus-Registeradresse
-            reg_type: Registertyp (uint16, int16, uint32, int32, float, string)
-            count: Anzahl der zu lesenden Register
-            scale: Skalierungsfaktor
-            swap: Byte-Reihenfolge (None oder 'word')
-            
-        Returns:
-            Verarbeiteter Registerwert oder Liste von Werten
-        """
+        """Liest ein einzelnes Register."""
         try:
             _LOGGER.debug(
-                "Lese Register",
+                "Starte Modbus-Lesevorgang",
                 extra={
                     "device": device_name,
                     "address": address,
                     "type": reg_type,
                     "count": count,
                     "scale": scale,
-                    "swap": swap
+                    "swap": swap,
+                    "connected": self.client.connected if self.client else False
                 }
             )
 
-            if not self.client.connected:
-                await self.client.connect()
+            if not self.client:
+                _LOGGER.error("Kein Modbus-Client verfügbar")
+                return None
 
-            # Lese die Register über den Proxy (dieser kümmert sich um Caching/Batching)
-            response = await self.proxy.read_registers(address, count, unit=self.slave)
-            
-            if not response:
-                _LOGGER.error(
-                    "Keine Antwort vom Register",
+            if not self.client.connected:
+                _LOGGER.debug("Verbinde mit Modbus-Gerät...")
+                if not await self.client.connect():
+                    _LOGGER.error(
+                        "Verbindung zum Modbus-Gerät fehlgeschlagen",
+                        extra={"host": self.host, "port": self.port}
+                    )
+                    return None
+                _LOGGER.debug("Verbindung hergestellt")
+
+            # Lese die Register über den Proxy
+            try:
+                response = await self.client.read_holding_registers(
+                    address=address,
+                    count=count,
+                    slave=self.slave
+                )
+                
+                _LOGGER.debug(
+                    "Modbus-Antwort erhalten",
                     extra={
+                        "device": device_name,
+                        "address": address,
+                        "response": response,
+                        "is_error": response.isError() if response else True
+                    }
+                )
+
+                if response and not response.isError():
+                    values = response.registers
+                    _LOGGER.debug(
+                        "Register erfolgreich gelesen",
+                        extra={
+                            "device": device_name,
+                            "address": address,
+                            "raw_values": values
+                        }
+                    )
+                    return values
+                else:
+                    error_msg = str(response) if response else "Keine Antwort"
+                    _LOGGER.error(
+                        "Modbus-Fehler",
+                        extra={
+                            "device": device_name,
+                            "address": address,
+                            "error": error_msg
+                        }
+                    )
+                    return None
+
+            except Exception as e:
+                _LOGGER.error(
+                    "Fehler bei Modbus-Kommunikation",
+                    extra={
+                        "error": str(e),
                         "device": device_name,
                         "address": address
                     }
                 )
                 return None
 
-            # Verarbeite die Rohdaten
-            value = await self._process_register_value(response, reg_type, scale, swap)
-            
-            _LOGGER.debug(
-                "Register gelesen",
-                extra={
-                    "device": device_name,
-                    "address": address,
-                    "raw_value": response,
-                    "processed_value": value,
-                    "type": reg_type
-                }
-            )
-            
-            return value
-
         except Exception as e:
             _LOGGER.error(
-                "Fehler beim Lesen des Registers",
+                "Allgemeiner Fehler beim Lesen des Registers",
                 extra={
                     "error": str(e),
                     "device": device_name,
-                    "address": address,
-                    "type": reg_type
+                    "address": address
                 }
             )
             return None
