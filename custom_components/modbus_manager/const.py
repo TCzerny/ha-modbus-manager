@@ -1,99 +1,37 @@
 """Constants for the Modbus Manager integration."""
-from datetime import timedelta
+from typing import Final
+from enum import Enum
+from homeassistant.const import Platform
 
-DOMAIN = "modbus_manager"
-VERSION = "1.0.0"
+DOMAIN: Final = "modbus_manager"
+CONF_DEVICE_TYPE: Final = "device_type"
 
-# Configuration
-CONF_NAME = "name"
-CONF_HOST = "host"
-CONF_PORT = "port"
-CONF_SLAVE = "slave"
-CONF_DEVICE_TYPE = "device_type"
-CONF_SCAN_INTERVAL = "scan_interval"
-CONF_TIMEOUT = "timeout"
-CONF_RETRIES = "retries"
-CONF_RETRY_DELAY = "retry_delay"
+# Default values
+DEFAULT_TIMEOUT: Final = 3  # Sekunden
+DEFAULT_RETRY_ON_EMPTY: Final = True
+DEFAULT_RETRIES: Final = 3
+DEFAULT_RETRY_DELAY: Final = 0.1
 
-# Defaults
-DEFAULT_NAME = "Modbus Device"
+# Standard-Werte
+DEFAULT_SLAVE = 1
 DEFAULT_PORT = 502
-DEFAULT_SLAVE_ID = 1
-DEFAULT_SCAN_INTERVAL = timedelta(seconds=30)
-DEFAULT_TIMEOUT = 3
-DEFAULT_RETRIES = 3
-DEFAULT_RETRY_DELAY = 0.1
 
-# Limits
-MIN_SLAVE_ID = 1
-MAX_SLAVE_ID = 247
+# Service Namen
+SERVICE_SET_BATTERY_MODE = "set_battery_mode"
+SERVICE_SET_INVERTER_MODE = "set_inverter_mode"
+SERVICE_SET_EXPORT_POWER_LIMIT = "set_export_power_limit"
 
-# Error Messages
-ERROR_INVALID_HOST = "invalid_host"
-ERROR_INVALID_PORT = "invalid_port"
-ERROR_INVALID_SLAVE_ID = "invalid_slave_id"
-ERROR_CANNOT_CONNECT = "cannot_connect"
-ERROR_UNKNOWN = "unknown"
-ERROR_ALREADY_CONFIGURED = "already_configured"
+# Event Namen
+EVENT_MODBUS_MANAGER_REGISTER_UPDATED = "modbus_manager_register_updated"
+EVENT_MODBUS_MANAGER_DEVICE_UPDATED = "modbus_manager_device_updated"
+EVENT_MODBUS_MANAGER_ERROR = "modbus_manager_error"
 
-# Timeouts
-REGISTER_CACHE_TIMEOUT = timedelta(seconds=5)
-OPERATION_TIMEOUT = timedelta(seconds=30)
-RECONNECT_DELAY = timedelta(seconds=60)
-METRICS_RESPONSE_TIME = timedelta(seconds=60)
-LOGGER_COMMUNICATION = timedelta(seconds=60)
+# Plattformen, die diese Integration nutzt
+PLATFORMS = [Platform.SENSOR, Platform.NUMBER, Platform.SWITCH, Platform.SELECT]
 
-# Statistics
-STAT_DAILY = "daily"
-STAT_WEEKLY = "weekly"
-STAT_MONTHLY = "monthly"
-STAT_YEARLY = "yearly"
-STAT_TYPES = [STAT_DAILY, STAT_WEEKLY, STAT_MONTHLY, STAT_YEARLY]
-
-# Device Types
-DEVICE_TYPES = {
-    "sungrow_shrt": "Sungrow SH-RT Hybrid Inverter",
-    "sungrow_battery": "Sungrow Battery System",
-    "compleo_ebox": "Compleo eBox",
-}
-
-# Template Types
-TEMPLATE_ENERGY = "energy"
-TEMPLATE_POWER = "power"
-TEMPLATE_STATUS = "status"
-
-# Modbus specific
-MAX_REGISTERS_PER_READ = 60  # Modbus Spezifikation: Max. 125 Register pro Lesevorgang
-
-# Register Types
-REGISTER_TYPE_HOLDING = "holding"
-REGISTER_TYPE_INPUT = "input"
-REGISTER_TYPE_COIL = "coil"
-REGISTER_TYPE_DISCRETE = "discrete"
-
-# Data Types
-DATA_TYPE_INT16 = "int16"
-DATA_TYPE_UINT16 = "uint16"
-DATA_TYPE_INT32 = "int32"
-DATA_TYPE_UINT32 = "uint32"
-DATA_TYPE_INT64 = "int64"
-DATA_TYPE_UINT64 = "uint64"
-DATA_TYPE_FLOAT32 = "float32"
-DATA_TYPE_FLOAT64 = "float64"
-DATA_TYPE_STRING = "string"
-
-# Event Types
-EVENT_DEVICE_STATUS_CHANGED = f"{DOMAIN}_device_status_changed"
-EVENT_REGISTER_UPDATED = f"{DOMAIN}_register_updated"
-EVENT_ERROR_OCCURRED = f"{DOMAIN}_error_occurred"
-
-# Service Names
-SERVICE_RELOAD = "reload"
-SERVICE_SYNC_TIME = "sync_device_time"
-SERVICE_BATCH_READ = "batch_read"
-SERVICE_TEST_DEVICE_TYPE = "test_device_type"
-
-# Polling Groups
-POLLING_GROUP_FAST = "fast"
-POLLING_GROUP_NORMAL = "normal"
-POLLING_GROUP_SLOW = "slow" 
+class NameType(Enum):
+    """Definiert die verschiedenen Typen von Namen/IDs."""
+    ENTITY_ID = "entity_id"          # Für Entity IDs (z.B. sensor.sungrow_inverter_battery_level)
+    UNIQUE_ID = "unique_id"          # Für eindeutige IDs (z.B. sungrow_inverter_battery_level)
+    DISPLAY_NAME = "display_name"    # Für UI-Anzeigenamen (z.B. Sungrow Battery Level)
+    BASE_NAME = "base_name"          # Für interne Referenzen (z.B. sungrow_battery_level)

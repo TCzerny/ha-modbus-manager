@@ -3,19 +3,23 @@
 
 device_info:
   name: "Test Device"
-  manufacturer: "ModbusManager"
-  model: "Test"
+  manufacturer: "Modbus Manager"
+  model: "Test Model"
   description: "Testgerät für die Entwicklung"
+
+# Unterstützte Funktionen
+supports_pv_system: true
+supports_energy_monitoring: true
+supports_power_flow: true
+supports_efficiency: true
+supports_energy_storage: true
+supports_load_management: true
+supports_error_notification: true
 
 # Firmware-Konfiguration
 firmware:
-  version_registers:
-    - name: "arm_software_version_1"
-      address: 4953
-    - name: "arm_software_version_2"
-      address: 4954
+  version_register: 4954
   version_type: "uint16"
-  version_format: "{:d}.{:d}.{:d}.{:d}"  # Format: Major.Minor.Build.Revision
   auto_detect: true
   fallback_version: "1.0.0"
 
@@ -23,23 +27,26 @@ firmware:
 modbus:
   slave_id: 1
   connection:
-    timeout: 3
-    retry_delay: 0.1
+    timeout: 5
+    retry_delay: 0.5
     max_retries: 3
-    batch_size: 100
+    batch_size: 10
 
 # Polling-Konfiguration
 polling:
   fast:
     interval: 5
     registers: [
-      "arm_software_version",
-      "dsp_software_version",
+      # ARM Version (Holding)
+      "dsp_software_version", "arm_software_version", "inverter_temperature",
+      "total_pv_gen_battery_discharge", "daily_pv_gen_battery_discharge", "device_code",
+      "bms_mode_selection_raw", "battery_forced_charge_discharge", "battery_forced_charge_discharge_power",
+      "battery_max_soc", "battery_min_soc",
       "inverter_start_stop"
     ]
   normal:
     interval: 30
-    registers: ["running_state"]
+    registers: ["inverter_serial"]
   slow:
     interval: 600
     registers: []
@@ -48,68 +55,362 @@ firmware_versions:
   "1.0.0":  # Original Firmware
     registers:
       read:
-        - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
+            - { name: "arm_software_version", address: 4954, type: "string", register_type: "input", count: 10 }
+
         # ... weitere Register
 
   "1.0.23":  # Neue Firmware mit geänderten Registern
     registers:
       read:
-        - { name: "battery_power", address: 13025, type: "int32" }
-        # ... geänderte Register       
-         
+            - { name: "arm_software_version", address: 4954, type: "string", register_type: "input", count: 10 }
+
+        # ... geänderte Register
+
 # Register-Definitionen
 registers:
-  read:
-    # ARM Software Version (4953-4967)
-    # Die Version wird aus mehreren Registern zusammengesetzt
-    # Beispiel: Register 4953 = 0x0123, 4954 = 0x0456 ergibt Version 1.23.4.56
-    - name: "arm_software_version_1"
-      address: 4953
-      type: "uint16"
-      description: "ARM Software Version Major/Minor (0xAABB = Version AA.BB)"
-      debug: true
-    - name: "arm_software_version_2"
-      address: 4954
-      type: "uint16"
-      description: "ARM Software Version Build/Revision (0xCCDD = Version CC.DD)"
-      debug: true
-    - name: "arm_software_version_3"
-      address: 4955
-      type: "uint16"
-      description: "ARM Software Version Additional Info 1"
-      debug: true
-    - name: "arm_software_version_4"
-      address: 4956
-      type: "uint16"
-      description: "ARM Software Version Additional Info 2"
-      debug: true
+  read:  # Input Register
+    # System Information (sortiert nach Adresse)
+    - { name: "arm_software_version", address: 4953, type: "string", register_type: "input", count: 15 }
+    - { name: "dsp_software_version", address: 4967, type: "string", register_type: "input", count: 15 }
+    - { name: "inverter_serial", address: 4989, type: "string", count: 10, register_type: "input" }
+    - { name: "device_code", address: 4999, type: "uint16", register_type: "input" }
+    - { name: "daily_pv_gen_battery_discharge", address: 5002, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, precision: 1 }
+    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2 }
+    - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
 
-    # DSP Software Version (4968-4982)
-    # Die Version wird aus mehreren Registern zusammengesetzt
-    # Beispiel: Register 4968 = 0x0123, 4969 = 0x0456 ergibt Version 1.23.4.56
-    - name: "dsp_software_version_1"
-      address: 4968
-      type: "uint16"
-      description: "DSP Software Version Major/Minor (0xAABB = Version AA.BB)"
-      debug: true
-    - name: "dsp_software_version_2"
-      address: 4969
-      type: "uint16"
-      description: "DSP Software Version Build/Revision (0xCCDD = Version CC.DD)"
-      debug: true
-    - name: "dsp_software_version_3"
-      address: 4970
-      type: "uint16"
-      description: "DSP Software Version Additional Info 1"
-      debug: true
-    - name: "dsp_software_version_4"
-      address: 4971
-      type: "uint16"
-      description: "DSP Software Version Additional Info 2"
-      debug: true
-
-  write:
+  write:  # Holding Register
     # holding registers
-    - name: "inverter_start_stop"
-      address: 12999
-      type: "uint16"
+    - { name: "bms_mode_selection_raw", address: 13049, type: "uint16",  }
+    - { name: "battery_forced_charge_discharge", address: 13050, type: "uint16", }
+    - { name: "battery_forced_charge_discharge_power", address: 13051, type: "uint16", min: 0, max: 5000 }
+    - { name: "battery_max_soc", address: 13057, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", min: 0, max: 100, scale: 0.1, precision: 1 }
+    - { name: "battery_min_soc", address: 13058, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", min: 0, max: 100, scale: 0.1, precision: 1   }
+
+# Input Helper für die Benutzeroberfläche
+input_number:
+  set_sg_min_soc:
+    name: Set min SoC
+    min: 0
+    max: 50
+    step: 1
+
+  set_sg_max_soc:
+    name: Set max SoC
+    min: 50
+    max: 100
+    step: 1
+
+  set_sg_reserved_soc_for_backup:
+    name: Set reserved SoC for backup
+    min: 0
+    max: 100
+    step: 1
+
+  set_sg_forced_charge_discharge_power:
+    name: Set forced charge discharge power in W
+    min: 0
+    max: 5000
+    step: 100
+
+  set_sg_battery_max_charge_power:
+    name: Set max battery charge power in W
+    min: 100
+    max: 5000
+    step: 100
+
+  set_sg_battery_max_discharge_power:
+    name: Set max battery discharge power in W
+    min: 100
+    max: 5000
+    step: 100
+
+  set_sg_battery_charging_start_power:
+    name: Set battery charging start power in W
+    min: 0
+    max: 1000
+    step: 10
+
+  set_sg_battery_discharging_start_power:
+    name: Set battery discharging start power in W
+    min: 0
+    max: 1000
+    step: 10
+
+  set_sg_export_power_limit:
+    name: Set export power limit
+    min: 0
+    max: 10500
+    step: 100
+
+input_select:
+  set_sg_inverter_run_mode:
+    name: Inverter mode
+    options:
+      - "Enabled"
+      - "Shutdown"
+
+  set_sg_ems_mode:
+    name: EMS mode
+    options:
+      - "Self-consumption mode (default)"
+      - "Forced mode"
+      - "External EMS"
+    icon: mdi:battery-unknown
+
+  set_sg_battery_forced_charge_discharge_cmd:
+    name: Battery forced charge discharge cmd
+    options:
+      - "Stop (default)"
+      - "Forced charge"
+      - "Forced discharge"
+    icon: mdi:battery-unknown
+
+  set_sg_export_power_limit_mode:
+    name: Export power limit mode
+    options:
+      - "Enabled"
+      - "Disabled"
+    icon: mdi:export
+
+  set_sg_global_mpp_scan_manual:
+    name: Global mpp scan manual
+    options:
+      - "Enabled"
+      - "Disabled"
+    icon: mdi:export
+
+# Vordefinierte Trigger für das Gerät
+device_triggers:
+  - id: "battery_low"
+    name: "Battery Low"
+    type: "numeric_state"
+    entity_id: "sensor.battery_soc"
+    below: 20
+    
+  - id: "battery_full"
+    name: "Battery Full"
+    type: "numeric_state"
+    entity_id: "sensor.battery_soc"
+    above: 90
+    
+  - id: "grid_export"
+    name: "Grid Export"
+    type: "numeric_state"
+    entity_id: "sensor.grid_power"
+    below: 0
+    
+  - id: "grid_import"
+    name: "Grid Import"
+    type: "numeric_state"
+    entity_id: "sensor.grid_power"
+    above: 0
+
+  - id: "pv_generating"
+    name: "PV Generating"
+    type: "numeric_state"
+    platform: "sensor"
+    entity_id: "sensor.pv_power"
+    above: 0
+
+# Vordefinierte Conditions für das Gerät
+device_conditions:
+  - id: "is_daytime"
+    name: "Is Daytime"
+    type: "time"
+    after: "sunrise"
+    before: "sunset"
+    
+  - id: "is_peak_time"
+    name: "Is Peak Time"
+    type: "time"
+    after: "14:00:00"
+    before: "20:00:00"
+    
+  - id: "battery_available"
+    name: "Battery Available"
+    type: "numeric_state"
+    entity_id: "sensor.battery_soc"
+    above: 5
+
+  - id: "battery_charging"
+    name: "Battery is Charging"
+    type: "numeric_state"
+    entity_id: "sensor.battery_power"
+    above: 0
+
+  - id: "grid_exporting"
+    name: "Grid is Exporting"
+    type: "numeric_state"
+    entity_id: "sensor.grid_power"
+    below: 0
+
+# Vordefinierte Actions für das Gerät
+device_actions:
+  - id: "set_battery_mode"
+    name: "Set Battery Mode"
+    type: "service"
+    service: "modbus_manager.set_battery_mode"
+    fields:
+      mode:
+        name: "Mode"
+        selector:
+          select:
+            options:
+              - label: "Forced Discharge"
+                value: "forced_discharge"
+              - label: "Forced Charge"
+                value: "forced_charge"
+              - label: "Battery Bypass"
+                value: "bypass"
+              - label: "Self Consumption"
+                value: "self_consumption"
+      power:
+        name: "Power (W)"
+        selector:
+          number:
+            min: 0
+            max: 5000
+            step: 100
+            unit_of_measurement: "W"
+            mode: "slider"
+        optional: true
+    
+  - id: "set_export_limit"
+    name: "Set Export Power Limit"
+    type: "service"
+    service: "modbus_manager.set_export_power_limit"
+    fields:
+      enabled:
+        name: "Enable Limit"
+        selector:
+          boolean: {}
+      limit:
+        name: "Limit (W)"
+        selector:
+          number:
+            min: 0
+            max: 10500
+            step: 100
+            unit_of_measurement: "W"
+            mode: "slider"
+        optional: true
+
+  - id: "set_inverter_mode"
+    name: "Set Inverter Mode"
+    type: "service"
+    service: "modbus_manager.set_inverter_mode"
+    fields:
+      mode:
+        name: "Mode"
+        selector:
+          select:
+            options:
+              - label: "Enable"
+                value: "Enabled"
+              - label: "Shutdown"
+                value: "Shutdown"
+
+# Beispiel-Automatisierungen für komplexere Logik
+automations:
+  - id: "battery_charge_during_export"
+    name: "Charge Battery During Grid Export"
+    description: "Lädt die Batterie wenn Strom ins Netz exportiert wird"
+    trigger:
+      - type: "numeric_state"
+        entity_id: "sensor.grid_power"
+        below: 0
+    condition:
+      - type: "numeric_state"
+        entity_id: "sensor.battery_soc"
+        below: 90
+      - type: "time"
+        after: "09:00:00"
+        before: "16:00:00"
+    action:
+      - service: "modbus_manager.set_battery_mode"
+        data:
+          mode: "forced_charge"
+          power: 3000
+          
+  - id: "battery_discharge_during_peak"
+    name: "Discharge Battery During Peak Hours"
+    description: "Entlädt die Batterie während der Spitzenlastzeiten"
+    trigger:
+      - type: "time_pattern"
+        hours: 14
+        minutes: 0
+        seconds: 0
+    condition:
+      - type: "numeric_state"
+        entity_id: "sensor.battery_soc"
+        above: 20
+    action:
+      - service: "modbus_manager.set_battery_mode"
+        data:
+          mode: "forced_discharge"
+          power: 3000
+      - service: "modbus_manager.set_export_power_limit"
+        data:
+          enabled: true
+          limit: 0
+          
+  - id: "auto_mode_at_night"
+    name: "Set Auto Mode at Night"
+    description: "Setzt den Batteriemodus nachts auf Auto"
+    trigger:
+      - type: "time_pattern"
+        hours: 22
+        minutes: 0
+        seconds: 0
+    action:
+      - service: "modbus_manager.set_battery_mode"
+        data:
+          mode: "self_consumption"
+
+# Input Synchronization
+input_sync:
+  # Export Power Limit
+  - source_entity: sensor.export_power_limit
+    target_entity: input_number.set_sg_export_power_limit
+
+  # Battery SoC Settings
+  - source_entity: sensor.max_soc
+    target_entity: input_number.set_sg_max_soc
+  - source_entity: sensor.min_soc
+    target_entity: input_number.set_sg_min_soc
+  - source_entity: sensor.reserved_soc_for_backup
+    target_entity: input_number.set_sg_reserved_soc_for_backup
+
+  # Battery Power Settings
+  - source_entity: sensor.battery_forced_charge_discharge_power
+    target_entity: input_number.set_sg_forced_charge_discharge_power
+  - source_entity: sensor.battery_max_charge_power
+    target_entity: input_number.set_sg_battery_max_charge_power
+  - source_entity: sensor.battery_max_discharge_power
+    target_entity: input_number.set_sg_battery_max_discharge_power
+  - source_entity: sensor.battery_charging_start_power
+    target_entity: input_number.set_sg_battery_charging_start_power
+  - source_entity: sensor.battery_discharging_start_power
+    target_entity: input_number.set_sg_battery_discharging_start_power
+
+  # Mode Settings
+  - source_entity: sensor.sungrow_inverter_state
+    target_entity: input_select.set_sg_inverter_run_mode
+    mapping:
+      "Stop": "Shutdown"
+      "Shutdown": "Shutdown"
+      "*": "Enabled"  # Alle anderen Werte
+  - source_entity: sensor.battery_forced_charge_discharge_cmd
+    target_entity: input_select.set_sg_battery_forced_charge_discharge_cmd
+  - source_entity: sensor.ems_mode_selection
+    target_entity: input_select.set_sg_ems_mode
+  - source_entity: sensor.export_power_limit_mode_raw
+    target_entity: input_select.set_sg_export_power_limit_mode
+    mapping:
+      "170": "Enabled"  # 0x00AA
+      "85": "Disabled"  # 0x0055
+  - source_entity: sensor.global_mpp_scan_manual_raw
+    target_entity: input_select.set_sg_global_mpp_scan_manual
+    mapping:
+      "170": "Enabled"  # 0x00AA
+      "85": "Disabled"  # 0x0055

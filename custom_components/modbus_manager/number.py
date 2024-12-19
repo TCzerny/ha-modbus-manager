@@ -1,13 +1,16 @@
-"""ModbusManager Sensor Platform."""
+"""ModbusManager Number Platform."""
 from __future__ import annotations
+
+import logging
+from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.number import NumberEntity
 
 from .const import DOMAIN
-from .device_base import ModbusManagerDeviceBase as ModbusManagerDevice
+from .device_base import ModbusManagerDeviceBase
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -17,16 +20,16 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Richte Sensor Entities basierend auf einem Config Entry ein."""
+    """Richte Number Entities basierend auf einem Config Entry ein."""
     hub = hass.data[DOMAIN][config_entry.entry_id]
     
     # Hole die Entities aus dem Hub
     entities = []
     for device in hub._devices.values():
-        if hasattr(device, "entities"):
+        if hasattr(device, "entity_manager"):
             entities.extend([
-                entity for entity in device.entities.values()
-                if isinstance(entity, SensorEntity)
+                entity for entity in device.entity_manager._entities.values()
+                if isinstance(entity, NumberEntity)
             ])
     
     if entities:

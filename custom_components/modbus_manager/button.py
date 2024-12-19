@@ -1,15 +1,12 @@
-"""ModbusManager Binary Sensor Platform."""
+"""ModbusManager Button Platform."""
 from __future__ import annotations
-
-import logging
-from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
-from .device_base import ModbusManagerDeviceBase
+from .device_base import ModbusManagerDeviceBase as ModbusManagerDevice
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -19,17 +16,17 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Richte Binary Sensor Entities basierend auf einem Config Entry ein."""
+    """Richte Button Entities basierend auf einem Config Entry ein."""
     hub = hass.data[DOMAIN][config_entry.entry_id]
     
-    # Sammle alle Binary Sensor Entities von allen Geräten
+    # Sammle alle Button Entities von allen Geräten
     entities = []
     for device in hub._devices.values():
-        if isinstance(device, ModbusManagerDeviceBase):
-            # Füge alle Binary Sensor Entities aus dem Device hinzu
+        if isinstance(device, ModbusManagerDevice):
+            # Füge alle Button Entities aus dem Device hinzu
             for entity in device.entities.values():
                 try:
-                    if hasattr(entity, 'entity_id') and entity.entity_id and "binary_sensor" in entity.entity_id:
+                    if hasattr(entity, 'entity_id') and entity.entity_id and "button" in entity.entity_id:
                         entities.append(entity)
                 except Exception as e:
                     _LOGGER.error(
@@ -42,5 +39,5 @@ async def async_setup_entry(
                     )
     
     if entities:
-        _LOGGER.debug(f"Füge {len(entities)} Binary Sensor Entities hinzu")
+        _LOGGER.debug(f"Füge {len(entities)} Button Entities hinzu")
         async_add_entities(entities) 

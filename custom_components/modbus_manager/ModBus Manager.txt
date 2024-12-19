@@ -1,0 +1,96 @@
+# ModBus Manager Integration
+
+## MAIN OBJECTIVES
+- Entwicklung einer flexiblen und erweiterbaren ModBus Integration für Home Assistant
+- Unterstützung verschiedener ModBus-Gerätetypen durch YAML-Definitionen
+- Implementierung von Geräte-spezifischen Funktionen und Berechnungen
+- Optimierte Performance durch intelligentes Polling und Caching
+- Robuste Fehlerbehandlung und ausführliches Logging
+
+## AGREEMENT
+- Alle Kommentare und Logs in Deutsch
+- Klare Dokumentation der Funktionalität
+- Einheitlicher Coding-Style
+- Modularer und wartbarer Code
+- Ausführliche Fehlerbehandlung
+
+## TASKS
+
+### Completed
+- [x] Basis-Struktur der Integration
+- [x] ModBus Kommunikation
+- [x] Geräte-Definitionen
+- [x] Entity Management
+- [x] Service Handling
+- [x] Berechnungen
+- [x] Test Suite
+- [x] Import-Optimierung und Konsolidierung
+  - [x] Hauptkomponenten (device_base.py, device_registers.py, device_entities.py, device_tests.py, modbus_hub.py)
+  - [x] Plattform-Dateien (binary_sensor.py, script.py, select.py, number.py)
+  - [x] Unterstützungsdateien (common_sensors.py, config_flow.py, firmware.py, template_entities.py, automation_entities.py)
+  - [x] Kern-Dateien (__init__.py, input_entities.py)
+
+### In Progress
+- [ ] Performance-Optimierung
+- [ ] Erweiterte Geräte-Tests
+- [ ] Dokumentation vervollständigen
+
+## MODULE STRUCTURE
+
+### Core Components
+- `__init__.py`: Integration Setup und Initialisierung
+- `modbus_hub.py`: ModBus Kommunikation und Hub-Management
+- `device_base.py`: Basis-Klasse für Geräte-Implementierung
+- `device_registers.py`: Register-Verarbeitung und Verwaltung
+- `device_entities.py`: Entity-Management und Zustandsverwaltung
+- `device_tests.py`: Test Suite für Geräte-Funktionalität
+
+### Platform Components
+- `binary_sensor.py`: Binary Sensor Platform
+- `script.py`: Script Platform
+- `select.py`: Select Platform
+- `number.py`: Number Platform
+- `sensor.py`: Sensor Platform
+- `switch.py`: Switch Platform
+
+### Support Components
+- `common_sensors.py`: Gemeinsam genutzte Sensor-Definitionen
+- `config_flow.py`: Konfigurations-Flow
+- `firmware.py`: Firmware-Management
+- `template_entities.py`: Template-basierte Entities
+- `automation_entities.py`: Automatisierungs-Entities
+- `input_entities.py`: Input-Entity-Typen
+
+### Helper Components
+- `const.py`: Konstanten und Konfigurationen
+- `logger.py`: Erweitertes Logging
+- `helpers.py`: Hilfsfunktionen
+- `errors.py`: Fehler-Definitionen
+
+### Configuration
+- `manifest.json`: Integration Manifest
+- `services.yaml`: Service-Definitionen
+- `device_definitions/`: Geräte-Definitionen in YAML
+
+### Import-Struktur
+Alle Module folgen diesem Import-Muster:
+1. `__future__` Imports
+2. Standard-Python-Bibliotheken
+3. Externe Bibliotheken (HomeAssistant)
+4. Lokale Module
+
+## CODING GUIDELINES
+- Klare Dokumentation aller Klassen und Methoden
+- Ausführliche Fehlerbehandlung mit Logging
+- Einheitliche Import-Struktur
+- Typisierung aller Funktionen und Variablen
+- Modulare und wiederverwendbare Komponenten
+
+
+
+
+
+
+
+
+

@@ -3,8 +3,8 @@
         "title": "Modbus Manager",
         "step": {
             "user": {
-                "title": "Modbus Gerätekonfiguration",
-                "description": "Richten Sie Ihre Modbus-Geräteverbindung ein",
+                "title": "Modbus Manager Konfiguration",
+                "description": "Konfiguriere eine neue Modbus Manager Verbindung",
                 "data": {
                     "name": "Name",
                     "host": "Host",
@@ -12,12 +12,30 @@
                     "slave": "Slave ID",
                     "device_type": "Gerätetyp"
                 }
+            },
+            "firmware": {
+                "title": "Firmware-Version",
+                "description": "Wählen Sie die Firmware-Version für Ihr {device_type}",
+                "data": {
+                    "firmware_version": "Firmware-Version"
+                }
             }
         },
         "error": {
-            "invalid_host": "Ungültige Host-Adresse",
-            "cannot_connect": "Verbindung nicht möglich",
-            "already_configured": "Gerät bereits konfiguriert"
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_host": "Ungültiger Hostname oder IP-Adresse",
+            "unknown": "Unerwarteter Fehler",
+            "firmware_not_detected": "Firmware-Version konnte nicht erkannt werden",
+            "invalid_firmware": "Ungültige Firmware-Version",
+            "device_exists": "Ein Gerät mit diesem Namen existiert bereits",
+            "no_device_definitions": "Keine Gerätedefinitionen gefunden"
+        },
+        "abort": {
+            "no_device_definitions": "Es wurden keine Gerätedefinitionen gefunden. Bitte stellen Sie sicher, dass mindestens eine YAML-Datei im device_definitions Verzeichnis existiert.",
+            "already_configured": "Gerät ist bereits konfiguriert"
+        },
+        "progress": {
+            "firmware_detect": "Versuche Firmware-Version zu erkennen..."
         }
     },
     "options": {
@@ -25,13 +43,32 @@
             "init": {
                 "title": "Geräteoptionen",
                 "data": {
-                    "allow_battery_car_charging": "Batterie-zu-Auto-Ladung erlauben"
+                    "firmware_version": "Firmware-Version",
+                    "allow_battery_car_charging": "Batterie-zu-Auto-Ladung erlauben",
+                    "auto_detect_firmware": "Firmware-Version automatisch erkennen"
                 }
             }
         }
     },
+    "device": {
+        "firmware": {
+            "auto_detect": "Automatische Erkennung",
+            "manual_select": "Manuelle Auswahl",
+            "unknown": "Unbekannte Version",
+            "not_supported": "Nicht unterstützte Version"
+        }
+    },
     "entity": {
         "sensor": {
+            "firmware": {
+                "name": "Firmware-Version",
+                "state": {
+                    "detecting": "Wird erkannt",
+                    "unknown": "Unbekannt",
+                    "not_supported": "Nicht unterstützt",
+                    "error": "Fehler bei der Erkennung"
+                }
+            },
             "inverter": {
                 "state": {
                     "wait": "Warten",
@@ -160,6 +197,18 @@
             "high": {
                 "title": "Hohe Temperatur",
                 "message": "Wallbox Temperatur: {temperature}°C"
+            }
+        }
+    },
+    "services": {
+        "update_firmware_version": {
+            "name": "Firmware-Version aktualisieren",
+            "description": "Aktualisiert die Firmware-Version des Geräts.",
+            "fields": {
+                "firmware_version": {
+                    "name": "Firmware-Version",
+                    "description": "Die neue Firmware-Version des Geräts."
+                }
             }
         }
     }
