@@ -24,13 +24,14 @@ _LOGGER = ModbusManagerLogger(__name__)
 class ModbusManagerDevice:
     """Class representing a Modbus device."""
 
-    def __init__(self, hub, device_type: str, config: dict):
+    def __init__(self, hub, device_type: str, config: dict, register_definitions: Optional[Dict[str, Any]] = None):
         """Initialisiert das Gerät.
         
         Args:
             hub: Referenz zum ModbusManagerHub
             device_type: Typ des Geräts (z.B. 'sungrow', 'fronius')
             config: Konfigurationsdaten aus dem Config Flow
+            register_definitions: Optional vorgeladene Register-Definitionen
         """
         # Initialisiere zuerst den Logger
         self.name = config.get("name", f"modbus_{device_type}")
@@ -46,7 +47,7 @@ class ModbusManagerDevice:
             self._logger.error("Kein Name in der Konfiguration gefunden")
             raise ValueError("Der Gerätename muss im Config Flow konfiguriert werden")
             
-        self._register_definitions = None  # Änderung zu None für bessere Kontrolle
+        self._register_definitions = register_definitions  # Verwende die übergebenen Definitionen
         self._cached_values = {}
         self._last_read = {}
         self._current_firmware_version = None
@@ -59,7 +60,9 @@ class ModbusManagerDevice:
             "Gerät initialisiert",
             extra={
                 "name": self.name,
-                "device_type": self.device_type
+                "device_type": self.device_type,
+                "register_definitions": register_definitions,
+                "config": config
             }
         )
 
@@ -260,7 +263,7 @@ class ModbusManagerDevice:
                     )
 
                     if reg_values:
-                        processed_value = await self.hub._process_register_value(
+                        processed_value = await self._process_register_value(
                             reg_values,
                             reg.get("type", "uint16"),
                             reg.get("scale", 1),
@@ -339,9 +342,11 @@ class ModbusManagerDevice:
                         "Keine Register in der Gerätedefinition gefunden",
                         extra={
                             "device": self.name,
-                            "device_type": self.device_type
+                            "device_type": self.device_type,
+                            "definition": device_def
                         }
                     )
+                    return {}
             return self._register_definitions
         except Exception as e:
             self._logger.error(
@@ -660,24 +665,43 @@ class ModbusManagerDevice:
         """Bereinige nicht mehr benötigte Entities."""
         try:
             # Hole alle registrierten Entities für dieses Gerät
-            device_entities = self.hass.data[DOMAIN].get(self.config["entry_id"], {}).get("entities", {})
-            
+            hub = self.hub
+            if not hub:
+                self._logger.error("Kein Hub verfügbar")
+                return
+
             # Erstelle eine Liste der aktuell gültigen Entity-IDs
             valid_entity_ids = set()
-            for reg_def in self.register_definitions.get("read", []):
-                entity_id = f"{self.config['name']}_{reg_def['name']}"
-                valid_entity_ids.add(entity_id)
+            if self._register_definitions and isinstance(self._register_definitions, dict):
+                for reg_def in self._register_definitions.get("read", []):
+                    entity_id = f"{self.config['name']}_{reg_def['name']}"
+                    valid_entity_ids.add(entity_id)
+            
+            self._logger.debug(
+                "Gültige Entity-IDs",
+                extra={
+                    "device": self.name,
+                    "valid_ids": list(valid_entity_ids)
+                }
+            )
             
             # Entferne Entities, die nicht mehr in den Definitionen sind
-            for entity_id, entity in list(device_entities.items()):
+            for entity_id, entity in list(self.entities.items()):
                 if entity_id not in valid_entity_ids:
-                    _LOGGER.debug(f"Entferne Entity {entity_id}")
-                    await entity.async_remove()
-                    if entity_id in device_entities:
-                        del device_entities[entity_id]
+                    self._logger.debug(
+                        "Entferne Entity",
+                        extra={
+                            "device": self.name,
+                            "entity_id": entity_id
+                        }
+                    )
+                    if hasattr(entity, 'async_remove'):
+                        await entity.async_remove()
+                    if entity_id in self.entities:
+                        del self.entities[entity_id]
 
         except Exception as e:
-            _LOGGER.error(
+            self._logger.error(
                 "Fehler beim Bereinigen der Entities",
                 extra={
                     "error": str(e),
@@ -689,31 +713,85 @@ class ModbusManagerDevice:
     async def create_entities(self):
         """Erstelle Entities basierend auf den Register-Definitionen."""
         try:
-            # Erstelle Entities für lesbare Register
-            for reg_def in self.register_definitions.get("read", []):
-                entity_id = f"{self.config['name']}_{reg_def['name']}"
-                if entity_id not in self.entities:
-                    entity_config = {
-                        "name": f"{self.config['name']} {reg_def.get('description', reg_def['name'])}",
-                        "unique_id": f"{self.config['entry_id']}_{reg_def['name']}",
-                        "device_class": reg_def.get("device_class"),
-                        "state_class": reg_def.get("state_class"),
-                        "unit_of_measurement": reg_def.get("unit"),
-                        "register": reg_def
-                    }
-                    self._entity_configs[entity_id] = entity_config
+            if not self._register_definitions:
+                self._logger.error("Keine Register-Definitionen vorhanden")
+                return
 
-            # Registriere die Entities bei Home Assistant
-            if self._entity_configs:
-                self.hass.async_create_task(
-                    self.hass.config_entries.async_forward_entry_setup(
-                        self.config["entry_id"],
-                        "sensor"
+            # Erstelle Entities für lesbare Register
+            if isinstance(self._register_definitions, dict):
+                read_registers = self._register_definitions.get("read", [])
+            else:
+                read_registers = []
+
+            self._logger.debug(
+                "Verarbeite Register-Definitionen",
+                extra={
+                    "device": self.name,
+                    "register_count": len(read_registers),
+                    "definitions": self._register_definitions
+                }
+            )
+
+            for reg_def in read_registers:
+                try:
+                    entity_id = f"{self.config['name']}_{reg_def['name']}"
+                    if entity_id not in self.entities:
+                        # Stelle sicher, dass die Einheit für die device_class korrekt ist
+                        unit = reg_def.get("unit_of_measurement", reg_def.get("unit"))
+                        device_class = reg_def.get("device_class")
+                        
+                        # Korrigiere die Einheit basierend auf der device_class
+                        if device_class == "temperature" and unit == "°C":
+                            unit = "°C"  # Stelle sicher, dass das richtige Grad-Symbol verwendet wird
+                        elif device_class == "energy" and not unit:
+                            unit = "kWh"  # Standard-Einheit für Energie
+                        
+                        entity_config = {
+                            "name": f"{self.config['name']} {reg_def.get('description', reg_def['name'])}",
+                            "unique_id": f"{self.config['entry_id']}_{reg_def['name']}",
+                            "device_class": device_class,
+                            "state_class": reg_def.get("state_class"),
+                            "unit_of_measurement": unit,
+                            "register": reg_def
+                        }
+                        self._entity_configs[entity_id] = entity_config
+                        self._logger.debug(
+                            "Entity-Konfiguration erstellt",
+                            extra={
+                                "device": self.name,
+                                "entity_id": entity_id,
+                                "config": entity_config
+                            }
+                        )
+                except Exception as e:
+                    self._logger.error(
+                        "Fehler beim Erstellen der Entity-Konfiguration",
+                        extra={
+                            "error": str(e),
+                            "device": self.name,
+                            "register": reg_def
+                        }
                     )
+
+            # Informiere über die erstellten Entity-Konfigurationen
+            if self._entity_configs:
+                self._logger.info(
+                    "Entity-Konfigurationen erstellt",
+                    extra={
+                        "device": self.name,
+                        "count": len(self._entity_configs)
+                    }
+                )
+            else:
+                self._logger.warning(
+                    "Keine Entity-Konfigurationen erstellt",
+                    extra={
+                        "device": self.name
+                    }
                 )
 
         except Exception as e:
-            _LOGGER.error(
+            self._logger.error(
                 "Fehler beim Erstellen der Entities",
                 extra={
                     "error": str(e),
@@ -725,12 +803,16 @@ class ModbusManagerDevice:
     async def async_update(self):
         """Update device data."""
         if not self._setup_complete:
-            _LOGGER.warning("Update wurde aufgerufen, bevor das Setup abgeschlossen war")
+            self._logger.warning("Update wurde aufgerufen, bevor das Setup abgeschlossen war")
             return
 
         try:
             # Aktualisiere die Werte aller Register
-            for reg_def in self.register_definitions.get("read", []):
+            if not self._register_definitions:
+                self._logger.warning("Keine Register-Definitionen vorhanden")
+                return
+
+            for reg_def in self._register_definitions.get("read", []):
                 try:
                     value = await self.hub.read_register(
                         device_name=self.config["name"],
@@ -747,7 +829,7 @@ class ModbusManagerDevice:
                         self.entities[entity_id].update_value(value)
 
                 except Exception as e:
-                    _LOGGER.error(
+                    self._logger.error(
                         "Fehler beim Lesen des Registers",
                         extra={
                             "error": str(e),
@@ -757,7 +839,7 @@ class ModbusManagerDevice:
                     )
 
         except Exception as e:
-            _LOGGER.error(
+            self._logger.error(
                 "Fehler beim Update des Geräts",
                 extra={
                     "error": str(e),
@@ -1157,3 +1239,56 @@ class ModbusManagerDevice:
                     "device": self.name
                 }
             )
+
+    async def _process_register_value(self, raw_value: List[int], reg_type: str, scale: float, swap: Optional[str]) -> Any:
+        """Verarbeitet die Rohdaten eines Registers basierend auf dem Typ."""
+        try:
+            if not raw_value:
+                return None
+
+            if reg_type == "uint16":
+                value = raw_value[0]
+            elif reg_type == "int16":
+                value = raw_value[0]
+                if value > 32767:
+                    value -= 65536
+            elif reg_type in ["uint32", "int32"]:
+                if len(raw_value) < 2:
+                    return None
+                if swap == "word":
+                    value = (raw_value[1] << 16) + raw_value[0]
+                else:
+                    value = (raw_value[0] << 16) + raw_value[1]
+                if reg_type == "int32" and value > 2147483647:
+                    value -= 4294967296
+            elif reg_type == "float":
+                if len(raw_value) < 2:
+                    return None
+                import struct
+                if swap == "word":
+                    value = struct.unpack(">f", struct.pack(">HH", raw_value[1], raw_value[0]))[0]
+                else:
+                    value = struct.unpack(">f", struct.pack(">HH", raw_value[0], raw_value[1]))[0]
+            elif reg_type == "string":
+                # Konvertiere die Werte in ASCII-Zeichen
+                return "".join(chr(x) for x in raw_value).strip("\x00")
+            else:
+                self._logger.warning(f"Unbekannter Registertyp: {reg_type}")
+                return None
+
+            # Skaliere den Wert (außer bei Strings)
+            if reg_type != "string":
+                value *= scale
+
+            return value
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler bei der Verarbeitung des Registerwerts",
+                extra={
+                    "error": str(e),
+                    "raw_value": raw_value,
+                    "type": reg_type
+                }
+            )
+            return None

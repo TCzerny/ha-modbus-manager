@@ -13,7 +13,10 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 
-from .const import DOMAIN, CONF_FIRMWARE_VERSION
+from .const import (
+    DOMAIN,
+    CONF_FIRMWARE_VERSION,
+)
 from .errors import ModbusDeviceError, handle_modbus_error
 from .logger import ModbusManagerLogger
 from .optimization import ModbusManagerOptimizer

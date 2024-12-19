@@ -29,26 +29,26 @@ polling:
     interval: 5
     registers: [
       # ARM Version (Holding)
-      "arm_5800", "arm_5801", "arm_5802",
-      
+      "dsp_software_version", "arm_software_version", "inverter_temperature",
+
       # ARM Version (Input)
-      "arm_i_5800", "arm_i_5801", "arm_i_5802",
-      
+      "total_pv_gen_battery_discharge", "daily_pv_gen_battery_discharge", "device_code",
+
       # MDSP Version (Holding)
       "mdsp_5815", "mdsp_5816", "mdsp_5817",
-      
+
       # MDSP Version (Input)
       "mdsp_i_5815", "mdsp_i_5816", "mdsp_i_5817",
-      
+
       # String Tests
       "arm_str", "arm_str_i",
       "mdsp_str", "mdsp_str_i",
-      
+
       "inverter_start_stop"
     ]
   normal:
     interval: 30
-    registers: ["running_state"]
+    registers: ["inverter_serial"]
   slow:
     interval: 600
     registers: []
@@ -64,42 +64,26 @@ firmware_versions:
     registers:
       read:
         - { name: "battery_power", address: 13025, type: "int32" }
-        # ... geänderte Register       
-         
+        # ... geänderte Register
+
 # Register-Definitionen
 registers:
   read:
-    # ARM Version einzeln
-    - { name: "arm_5800", address: 5800, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "arm_5801", address: 5801, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "arm_5802", address: 5802, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    # System Information
+    - { name: "inverter_serial", address: 4989, type: "string", count: 10 }
+    - { name: "device_code", address: 4999, type: "uint16" }
+    - { name: "daily_pv_gen_battery_discharge", address: 5002, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
+    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 1, swap: "word", precision: 1 }
+    - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
 
-    # ARM Version als Input Register
-    - { name: "arm_i_5800", address: 5800, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "arm_i_5801", address: 5801, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "arm_i_5802", address: 5802, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-
-    # MDSP Version einzeln
-    - { name: "mdsp_5815", address: 5815, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "mdsp_5816", address: 5816, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "mdsp_5817", address: 5817, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-
-    # MDSP Version als Input Register
-    - { name: "mdsp_i_5815", address: 5815, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "mdsp_i_5816", address: 5816, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "mdsp_i_5817", address: 5817, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-
-    # Kleine String-Tests
-    - { name: "arm_str", address: 5800, type: "string", count: 3, register_type: "holding", description: "ARM Version String (Holding)" }
-    - { name: "arm_str_i", address: 5800, type: "string", count: 3, register_type: "input", description: "ARM Version String (Input)" }
-    - { name: "mdsp_str", address: 5815, type: "string", count: 3, register_type: "holding", description: "MDSP Version String (Holding)" }
-    - { name: "mdsp_str_i", address: 5815, type: "string", count: 3, register_type: "input", description: "MDSP Version String (Input)" }
+    - { name: "arm_software_version", address: 4954, type: "uint16" }
+    - { name: "dsp_software_version", address: 4969, type: "uint16" }
 
   write:
-    - { name: "inverter_start_stop", 
-        address: 12999, 
-        type: "uint16", 
-        min: 0, 
+    - { name: "inverter_start_stop",
+        address: 12999,
+        type: "uint16",
+        min: 0,
         max: 5,
         options: {
           0: "Stop",
