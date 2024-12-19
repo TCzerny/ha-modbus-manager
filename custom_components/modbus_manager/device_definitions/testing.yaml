@@ -1,35 +1,99 @@
-# Test Device Definition
+# Sungrow SH-RT Hybrid Wechselrichter (3-Phasen mit Batterie)
+# Basierend auf https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
+
 device_info:
   name: "Test Device"
   manufacturer: "ModbusManager"
   model: "Test"
   description: "Testgerät für die Entwicklung"
 
+# Firmware-Konfiguration
+firmware:
+  version_register: 4954
+  version_type: "uint16"
+  auto_detect: true
+  fallback_version: "1.0.0"
+
+# Modbus-Konfiguration
+modbus:
+  slave_id: 1
+  connection:
+    timeout: 5
+    retry_delay: 0.5
+    max_retries: 3
+    batch_size: 10
+
+# Polling-Konfiguration
+polling:
+  fast:
+    interval: 5
+    registers: [
+      # ARM Version (Holding)
+      "arm_5800", "arm_5801", "arm_5802",
+      
+      # ARM Version (Input)
+      "arm_i_5800", "arm_i_5801", "arm_i_5802",
+      
+      # MDSP Version (Holding)
+      "mdsp_5815", "mdsp_5816", "mdsp_5817",
+      
+      # MDSP Version (Input)
+      "mdsp_i_5815", "mdsp_i_5816", "mdsp_i_5817",
+      
+      # String Tests
+      "arm_str", "arm_str_i",
+      "mdsp_str", "mdsp_str_i",
+      
+      "inverter_start_stop"
+    ]
+  normal:
+    interval: 30
+    registers: ["running_state"]
+  slow:
+    interval: 600
+    registers: []
+
+firmware_versions:
+  "1.0.0":  # Original Firmware
+    registers:
+      read:
+        - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
+        # ... weitere Register
+
+  "1.0.23":  # Neue Firmware mit geänderten Registern
+    registers:
+      read:
+        - { name: "battery_power", address: 13025, type: "int32" }
+        # ... geänderte Register       
+         
+# Register-Definitionen
 registers:
   read:
-    # Test der Register 4950-4970 als Holding Register
-    - { name: "holding_4950", address: 4950, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "holding_4951", address: 4951, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "holding_4952", address: 4952, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "holding_4953", address: 4953, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "holding_4954", address: 4954, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "holding_4968", address: 4968, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "holding_4969", address: 4969, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
-    - { name: "holding_4970", address: 4970, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    # ARM Version einzeln
+    - { name: "arm_5800", address: 5800, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "arm_5801", address: 5801, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "arm_5802", address: 5802, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
 
-    # Test der Register 4950-4970 als Input Register
-    - { name: "input_4950", address: 4950, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "input_4951", address: 4951, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "input_4952", address: 4952, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "input_4953", address: 4953, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "input_4954", address: 4954, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "input_4968", address: 4968, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "input_4969", address: 4969, type: "uint16", scale: 1, precision: 0, register_type: "input" }
-    - { name: "input_4970", address: 4970, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    # ARM Version als Input Register
+    - { name: "arm_i_5800", address: 5800, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "arm_i_5801", address: 5801, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "arm_i_5802", address: 5802, type: "uint16", scale: 1, precision: 0, register_type: "input" }
 
-    # Test der Register als zusammenhängender Block
-    - { name: "holding_block", address: 4950, type: "string", count: 5, register_type: "holding" }
-    - { name: "input_block", address: 4950, type: "string", count: 5, register_type: "input" }
+    # MDSP Version einzeln
+    - { name: "mdsp_5815", address: 5815, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "mdsp_5816", address: 5816, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "mdsp_5817", address: 5817, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+
+    # MDSP Version als Input Register
+    - { name: "mdsp_i_5815", address: 5815, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "mdsp_i_5816", address: 5816, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "mdsp_i_5817", address: 5817, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+
+    # Kleine String-Tests
+    - { name: "arm_str", address: 5800, type: "string", count: 3, register_type: "holding", description: "ARM Version String (Holding)" }
+    - { name: "arm_str_i", address: 5800, type: "string", count: 3, register_type: "input", description: "ARM Version String (Input)" }
+    - { name: "mdsp_str", address: 5815, type: "string", count: 3, register_type: "holding", description: "MDSP Version String (Holding)" }
+    - { name: "mdsp_str_i", address: 5815, type: "string", count: 3, register_type: "input", description: "MDSP Version String (Input)" }
 
   write:
     - { name: "inverter_start_stop", 
@@ -47,27 +111,3 @@ registers:
         }
       }
 
-polling:
-  fast:
-    interval: 5
-    registers: [
-      "holding_4950",
-      "holding_4951",
-      "holding_4952",
-      "holding_4953",
-      "holding_4954",
-      "holding_4968",
-      "holding_4969",
-      "holding_4970",
-      "input_4950",
-      "input_4951",
-      "input_4952",
-      "input_4953",
-      "input_4954",
-      "input_4968",
-      "input_4969",
-      "input_4970",
-      "holding_block",
-      "input_block",
-      "inverter_start_stop"
-    ]

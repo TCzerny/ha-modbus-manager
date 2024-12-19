@@ -14,6 +14,7 @@ CONF_SCAN_INTERVAL = "scan_interval"
 CONF_TIMEOUT = "timeout"
 CONF_RETRIES = "retries"
 CONF_RETRY_DELAY = "retry_delay"
+CONF_FIRMWARE_VERSION = "firmware_version"
 
 # Defaults
 DEFAULT_NAME = "Modbus Device"

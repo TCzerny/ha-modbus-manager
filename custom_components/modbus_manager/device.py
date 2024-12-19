@@ -13,6 +13,12 @@ from .const import DOMAIN
 from .logger import ModbusManagerLogger
 from typing import Dict, Any, Optional, List
 import aiofiles
+import logging
+from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.const import CONF_NAME
+
+_LOGGER = ModbusManagerLogger(__name__)
 
 
 class ModbusManagerDevice:
@@ -45,6 +51,9 @@ class ModbusManagerDevice:
         self._last_read = {}
         self._current_firmware_version = None
         self._coordinators = {}  # Lokales Dictionary für Koordinatoren
+        self.entities: Dict[str, Entity] = {}
+        self._setup_complete = False
+        self._entity_configs = {}
 
         self._logger.debug(
             "Gerät initialisiert",
@@ -619,141 +628,177 @@ class ModbusManagerDevice:
     async def async_setup(self) -> bool:
         """Führe das Setup des Geräts durch."""
         try:
-            self._logger.debug("Starte Geräte-Setup", extra={"device": self.name})
-
-            # Lade die Gerätedefinition
-            device_definition = await self.get_device_definition()
-            if not device_definition:
-                self._logger.error(
-                    "Keine Gerätedefinition gefunden", 
-                    extra={"device": self.name}
-                )
-                return False
-
-            # Bereinige alte Entitäten
-            await self._cleanup_entities()
-
-            # Speichere die Register-Definitionen
-            if "registers" in device_definition:
-                self._register_definitions = device_definition["registers"]
-            else:
-                self._logger.error(
-                    "Keine Register in der Gerätedefinition gefunden",
-                    extra={"device": self.name}
-                )
-                return False
-
-            # Firmware-Version erkennen (optional)
-            if self.config.get("firmware_handling", {}).get("auto_detect", False):
-                firmware_version = await self.detect_firmware_version()
-                if firmware_version:
-                    self._current_firmware_version = firmware_version
-                    self._logger.info(
-                        "Firmware-Version erkannt",
-                        extra={
-                            "version": firmware_version,
-                            "device": self.name
-                        }
-                    )
-
-            # Initialisiere die Polling-Intervalle
-            polling_config = device_definition.get("polling", {})
-            
-            # Erstelle Coordinators für jede Polling-Gruppe
-            for group_name, group_config in polling_config.items():
-                try:
-                    interval = group_config.get("interval", 30)
-                    
-                    coordinator = DataUpdateCoordinator(
-                        self.hass,
-                        self._logger,
-                        name=f"{self.name}_{group_name}",
-                        update_method=self.read_registers,
-                        update_interval=timedelta(seconds=interval),
-                    )
-                    
-                    self._coordinators[group_name] = coordinator
-                    
-                    # Erste Aktualisierung mit await
-                    await coordinator.async_refresh()
-                    
-                    self._logger.debug(
-                        "Koordinator initialisiert",
-                        extra={
-                            "device": self.name,
-                            "group": group_name,
-                            "interval": interval
-                        }
-                    )
-                except Exception as e:
-                    self._logger.error(
-                        "Fehler bei der Initialisierung des Koordinators",
-                        extra={
-                            "error": str(e),
-                            "device": self.name,
-                            "group": group_name
-                        }
-                    )
-                    continue
-
-            self._logger.info(
-                "Geräte-Setup abgeschlossen",
+            _LOGGER.debug(
+                "Starte Setup für Gerät",
                 extra={
-                    "device": self.name,
-                    "polling_groups": list(polling_config.keys())
+                    "device_type": self.device_type,
+                    "name": self.config.get(CONF_NAME)
                 }
             )
+
+            # Bereinige alte Entities
+            await self.cleanup_entities()
+
+            # Erstelle neue Entities basierend auf den Register-Definitionen
+            await self.create_entities()
+
+            self._setup_complete = True
             return True
 
         except Exception as e:
-            self._logger.error(
-                "Fehler beim Geräte-Setup",
-                error=e,
-                extra={"device": self.name}
+            _LOGGER.error(
+                "Fehler beim Setup des Geräts",
+                extra={
+                    "error": str(e),
+                    "device_type": self.device_type,
+                    "name": self.config.get(CONF_NAME)
+                }
             )
             return False
 
-    async def async_teardown(self):
-        """Bereinigt das Gerät und stoppt alle laufenden Prozesse."""
+    async def cleanup_entities(self):
+        """Bereinige nicht mehr benötigte Entities."""
         try:
-            self._logger.info("Starte Teardown für Gerät", extra={"device": self.name})
-
-            # Stoppe alle laufenden Koordinatoren
-            for coordinator in self.hass.data[DOMAIN].get("coordinators", {}).values():
-                await coordinator.async_shutdown()
-
-            # Bereinige Geräteregistrierungen
-            dev_reg = dr.async_get(self.hass)
-            device_entry = dev_reg.async_get_device(identifiers={(DOMAIN, self.name)})
-            if device_entry:
-                self._logger.debug(
-                    "Entferne Gerät aus Registry", extra={"device": self.name}
-                )
-                dev_reg.async_remove_device(device_entry.id)
-
-            # Bereinige Entitätsregistrierungen
-            ent_reg = er.async_get(self.hass)
-            entities = er.async_entries_for_device(
-                ent_reg,
-                device_entry.id if device_entry else None,
-                include_disabled_entities=True,
-            )
-            for entity in entities:
-                self._logger.debug(
-                    "Entferne Entität",
-                    extra={"entity_id": entity.entity_id, "device": self.name},
-                )
-                ent_reg.async_remove(entity.entity_id)
-
-            self._logger.info(
-                "Teardown erfolgreich abgeschlossen", extra={"device": self.name}
-            )
+            # Hole alle registrierten Entities für dieses Gerät
+            device_entities = self.hass.data[DOMAIN].get(self.config["entry_id"], {}).get("entities", {})
+            
+            # Erstelle eine Liste der aktuell gültigen Entity-IDs
+            valid_entity_ids = set()
+            for reg_def in self.register_definitions.get("read", []):
+                entity_id = f"{self.config['name']}_{reg_def['name']}"
+                valid_entity_ids.add(entity_id)
+            
+            # Entferne Entities, die nicht mehr in den Definitionen sind
+            for entity_id, entity in list(device_entities.items()):
+                if entity_id not in valid_entity_ids:
+                    _LOGGER.debug(f"Entferne Entity {entity_id}")
+                    await entity.async_remove()
+                    if entity_id in device_entities:
+                        del device_entities[entity_id]
 
         except Exception as e:
-            self._logger.error(
-                "Fehler beim Teardown", extra={"error": str(e), "device": self.name}
+            _LOGGER.error(
+                "Fehler beim Bereinigen der Entities",
+                extra={
+                    "error": str(e),
+                    "device_type": self.device_type,
+                    "name": self.config.get(CONF_NAME)
+                }
             )
-            raise
+
+    async def create_entities(self):
+        """Erstelle Entities basierend auf den Register-Definitionen."""
+        try:
+            # Erstelle Entities für lesbare Register
+            for reg_def in self.register_definitions.get("read", []):
+                entity_id = f"{self.config['name']}_{reg_def['name']}"
+                if entity_id not in self.entities:
+                    entity_config = {
+                        "name": f"{self.config['name']} {reg_def.get('description', reg_def['name'])}",
+                        "unique_id": f"{self.config['entry_id']}_{reg_def['name']}",
+                        "device_class": reg_def.get("device_class"),
+                        "state_class": reg_def.get("state_class"),
+                        "unit_of_measurement": reg_def.get("unit"),
+                        "register": reg_def
+                    }
+                    self._entity_configs[entity_id] = entity_config
+
+            # Registriere die Entities bei Home Assistant
+            if self._entity_configs:
+                self.hass.async_create_task(
+                    self.hass.config_entries.async_forward_entry_setup(
+                        self.config["entry_id"],
+                        "sensor"
+                    )
+                )
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Erstellen der Entities",
+                extra={
+                    "error": str(e),
+                    "device_type": self.device_type,
+                    "name": self.config.get(CONF_NAME)
+                }
+            )
+
+    async def async_update(self):
+        """Update device data."""
+        if not self._setup_complete:
+            _LOGGER.warning("Update wurde aufgerufen, bevor das Setup abgeschlossen war")
+            return
+
+        try:
+            # Aktualisiere die Werte aller Register
+            for reg_def in self.register_definitions.get("read", []):
+                try:
+                    value = await self.hub.read_register(
+                        device_name=self.config["name"],
+                        address=reg_def["address"],
+                        reg_type=reg_def.get("type", "uint16"),
+                        count=reg_def.get("count", 1),
+                        scale=reg_def.get("scale", 1),
+                        swap=reg_def.get("swap"),
+                        register_type=reg_def.get("register_type", "holding")
+                    )
+
+                    entity_id = f"{self.config['name']}_{reg_def['name']}"
+                    if entity_id in self.entities:
+                        self.entities[entity_id].update_value(value)
+
+                except Exception as e:
+                    _LOGGER.error(
+                        "Fehler beim Lesen des Registers",
+                        extra={
+                            "error": str(e),
+                            "register": reg_def["name"],
+                            "address": reg_def["address"]
+                        }
+                    )
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Update des Geräts",
+                extra={
+                    "error": str(e),
+                    "device_type": self.device_type,
+                    "name": self.config.get(CONF_NAME)
+                }
+            )
+
+    async def async_teardown(self):
+        """Teardown the device."""
+        try:
+            _LOGGER.debug(
+                "Starte Teardown für Gerät",
+                extra={
+                    "device_type": self.device_type,
+                    "name": self.config.get(CONF_NAME)
+                }
+            )
+
+            # Bereinige alle Entities
+            await self.cleanup_entities()
+
+            self._setup_complete = False
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Teardown des Geräts",
+                extra={
+                    "error": str(e),
+                    "device_type": self.device_type,
+                    "name": self.config.get(CONF_NAME)
+                }
+            )
+
+    def get_entity_configs(self) -> Dict[str, Any]:
+        """Gibt die Entity-Konfigurationen zurück."""
+        return self._entity_configs
+
+    def register_entity(self, entity_id: str, entity: Entity):
+        """Registriert eine Entity."""
+        self.entities[entity_id] = entity
 
     async def get_device_definition(self) -> Dict[str, Any]:
         """Lädt die Gerätekonfiguration basierend auf dem Gerätetyp."""
