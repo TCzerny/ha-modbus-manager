@@ -30,7 +30,6 @@ class ModbusManagerHub:
     """Class for managing Modbus connection for devices."""
 
     def __init__(self, name: str, host: str, port: int, slave: int, device_type: str, hass: HomeAssistant, config_entry: ConfigEntry):
-    def __init__(self, name: str, host: str, port: int, slave: int, device_type: str, hass: HomeAssistant, config_entry: ConfigEntry):
         """Initialize the hub.
         
         Args:
@@ -107,8 +106,7 @@ class ModbusManagerHub:
             _LOGGER.error("Verbindung zum Modbus-Gerät fehlgeschlagen")
             return False
         return await self.device.async_setup()
-            _LOGGER.error(f"Fehler bei der Initialisierung von ModbusManagerDevice: {e}")
-            raise
+
 
     async def async_setup(self) -> bool:
         """Set up the Modbus Manager Hub."""
@@ -119,18 +117,39 @@ class ModbusManagerHub:
 
     async def async_teardown(self):
         """Teardown method for the hub."""
-        if self.device:
-            await self.device.async_teardown()
-    async def async_teardown(self):
-        """Teardown method for the hub."""
-        if self.device:
-            await self.device.async_teardown()
-        if self.client:
-            if self.client.connected:
-            if self.client.connected:
-                await self.client.close()
-            self.client = None
-        _LOGGER.info(f"Modbus-Verbindung für {self.name} geschlossen")
+        try:
+            _LOGGER.debug("Starte Teardown für Hub %s", self.name)
+            
+            # Device Teardown
+            if self.device:
+                try:
+                    await self.device.async_teardown()
+                except Exception as e:
+                    _LOGGER.error("Fehler beim Device Teardown: %s", str(e))
+            
+            # Modbus Client Teardown
+            if hasattr(self, 'client') and self.client is not None:
+                try:
+                    if hasattr(self.client, 'connected') and self.client.connected:
+                        try:
+                            await self.client.close()
+                        except Exception as e:
+                            _LOGGER.error("Fehler beim Schließen der Modbus-Verbindung: %s", str(e))
+                except Exception as e:
+                    _LOGGER.error("Fehler beim Zugriff auf Modbus-Client-Attribute: %s", str(e))
+                finally:
+                    self.client = None
+            
+            _LOGGER.info("Modbus-Hub %s erfolgreich heruntergefahren", self.name)
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Hub Teardown",
+                extra={
+                    "error": str(e),
+                    "hub": self.name
+                }
+            )
 
     async def get_device_definition(self, device_definition_name: str) -> Optional[Dict]:
         """Lade die Gerätedefinition aus dem Cache oder der Datei."""
@@ -427,7 +446,7 @@ class ModbusManagerHub:
             _LOGGER.error(f"Allgemeiner Fehler beim Lesen von Register {address}: {e}")
             return None
 
-    async def read_register(self, device_name: str, address: int, reg_type: str, count: int = 1, scale: float = 1, swap: Optional[str] = None) -> Any:
+    async def read_register(self, device_name: str, address: int, reg_type: str, count: int = 1, scale: float = 1, swap: Optional[str] = None, register_type: str = "input") -> Any:
         """Liest ein einzelnes Register."""
         try:
             _LOGGER.debug(
@@ -439,6 +458,7 @@ class ModbusManagerHub:
                     "count": count,
                     "scale": scale,
                     "swap": swap,
+                    "register_type": register_type,
                     "connected": self.client.connected if self.client else False
                 }
             )
@@ -457,19 +477,36 @@ class ModbusManagerHub:
                     return None
                 _LOGGER.debug("Verbindung hergestellt")
 
-            # Lese die Register über den Proxy
+            # Wähle die richtige Lesefunktion basierend auf dem Register-Typ
             try:
-                response = await self.client.read_holding_registers(
-                    address=address,
-                    count=count,
-                    slave=self.slave
-                )
+                if register_type == "holding":
+                    response = await self.client.read_holding_registers(
+                        address=address,
+                        count=count,
+                        slave=self.slave
+                    )
+                elif register_type == "input":
+                    response = await self.client.read_input_registers(
+                        address=address,
+                        count=count,
+                        slave=self.slave
+                    )
+                else:
+                    _LOGGER.error(
+                        f"Unbekannter Register-Typ: {register_type}",
+                        extra={
+                            "device": device_name,
+                            "address": address
+                        }
+                    )
+                    return None
                 
                 _LOGGER.debug(
                     "Modbus-Antwort erhalten",
                     extra={
                         "device": device_name,
                         "address": address,
+                        "register_type": register_type,
                         "response": response,
                         "is_error": response.isError() if response else True
                     }
@@ -482,6 +519,7 @@ class ModbusManagerHub:
                         extra={
                             "device": device_name,
                             "address": address,
+                            "register_type": register_type,
                             "raw_values": values
                         }
                     )
@@ -493,6 +531,7 @@ class ModbusManagerHub:
                         extra={
                             "device": device_name,
                             "address": address,
+                            "register_type": register_type,
                             "error": error_msg
                         }
                     )
@@ -504,7 +543,8 @@ class ModbusManagerHub:
                     extra={
                         "error": str(e),
                         "device": device_name,
-                        "address": address
+                        "address": address,
+                        "register_type": register_type
                     }
                 )
                 return None
@@ -515,7 +555,8 @@ class ModbusManagerHub:
                 extra={
                     "error": str(e),
                     "device": device_name,
-                    "address": address
+                    "address": address,
+                    "register_type": register_type
                 }
             )
             return None

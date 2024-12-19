@@ -194,7 +194,8 @@ class ModbusManagerDevice:
                         {
                             "name": reg["name"],
                             "address": reg["address"],
-                            "type": reg.get("type", "uint16")
+                            "type": reg.get("type", "uint16"),
+                            "register_type": reg.get("register_type", "holding")
                         } for reg in group
                     ]
                 }
@@ -206,6 +207,7 @@ class ModbusManagerDevice:
                 address=start_address,
                 count=count,
                 reg_type="uint16",  # Rohdaten lesen
+                register_type=group[0].get("register_type", "holding")  # Verwende den Register-Typ aus der Definition
             )
 
             self._logger.debug(

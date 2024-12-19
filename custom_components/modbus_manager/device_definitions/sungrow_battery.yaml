@@ -22,6 +22,42 @@ registers:
     - { name: "daily_battery_discharge", address: 13038, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
     - { name: "total_battery_discharge", address: 13040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
 
+    # Battery Additional Values
+    - { name: "battery_1_voltage", address: 10740, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
+    - { name: "battery_1_current", address: 10741, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
+    - { name: "battery_1_temperature", address: 10742, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
+    - { name: "battery_1_soc", address: 10743, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1, precision: 1 }
+    - { name: "battery_1_soh", address: 10744, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1, precision: 1 }
+    - { name: "battery_1_total_charge", address: 10745, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
+    - { name: "battery_1_total_discharge", address: 10747, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
+
+    # battery cell values
+    - { name: "battery_1_max_voltage_of_cell", address: 10756, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_position_of_max_voltage_cell", address: 10757, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_min_voltage_of_cell", address: 10758, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_position_of_min_voltage_cell", address: 10759, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_max_temperature_of_module", address: 10760, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
+    - { name: "battery_1_position_of_max_temperature_of_module", address: 10761, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_min_temperature_of_module", address: 10762, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
+    - { name: "battery_1_position_of_min_temperature_of_module", address: 10763, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_max_cell_voltage_of_module_1", address: 10764, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_max_cell_voltage_of_module_2", address: 10765, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_max_cell_voltage_of_module_3", address: 10766, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_max_cell_voltage_of_module_4", address: 10767, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_max_cell_voltage_of_module_5", address: 10768, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_min_cell_voltage_of_module_1", address: 10772, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_min_cell_voltage_of_module_2", address: 10773, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_min_cell_voltage_of_module_3", address: 10774, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_min_cell_voltage_of_module_4", address: 10775, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_min_cell_voltage_of_module_5", address: 10776, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
+    - { name: "battery_1_cell_type_of_module_1", address: 10780, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_cell_type_of_module_2", address: 10781, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_cell_type_of_module_3", address: 10782, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_cell_type_of_module_4", address: 10783, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_cell_type_of_module_5", address: 10784, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "battery_1_state_of_dc_switch", address: 10788, type: "uint16", scale: 1, precision: 0 }
+
+
   write:
     # Battery Control
     - { name: "battery_charge_limit", address: 13100, type: "uint16", min: 0, max: 100 }

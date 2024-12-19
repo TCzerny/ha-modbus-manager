@@ -1,115 +1,73 @@
-# Sungrow SH-RT Hybrid Wechselrichter (3-Phasen mit Batterie)
-# Basierend auf https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
-
+# Test Device Definition
 device_info:
   name: "Test Device"
   manufacturer: "ModbusManager"
   model: "Test"
   description: "Testgerät für die Entwicklung"
 
-# Firmware-Konfiguration
-firmware:
-  version_registers:
-    - name: "arm_software_version_1"
-      address: 4953
-    - name: "arm_software_version_2"
-      address: 4954
-  version_type: "uint16"
-  version_format: "{:d}.{:d}.{:d}.{:d}"  # Format: Major.Minor.Build.Revision
-  auto_detect: true
-  fallback_version: "1.0.0"
+registers:
+  read:
+    # Test der Register 4950-4970 als Holding Register
+    - { name: "holding_4950", address: 4950, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "holding_4951", address: 4951, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "holding_4952", address: 4952, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "holding_4953", address: 4953, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "holding_4954", address: 4954, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "holding_4968", address: 4968, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "holding_4969", address: 4969, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
+    - { name: "holding_4970", address: 4970, type: "uint16", scale: 1, precision: 0, register_type: "holding" }
 
-# Modbus-Konfiguration
-modbus:
-  slave_id: 1
-  connection:
-    timeout: 3
-    retry_delay: 0.1
-    max_retries: 3
-    batch_size: 100
+    # Test der Register 4950-4970 als Input Register
+    - { name: "input_4950", address: 4950, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "input_4951", address: 4951, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "input_4952", address: 4952, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "input_4953", address: 4953, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "input_4954", address: 4954, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "input_4968", address: 4968, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "input_4969", address: 4969, type: "uint16", scale: 1, precision: 0, register_type: "input" }
+    - { name: "input_4970", address: 4970, type: "uint16", scale: 1, precision: 0, register_type: "input" }
 
-# Polling-Konfiguration
+    # Test der Register als zusammenhängender Block
+    - { name: "holding_block", address: 4950, type: "string", count: 5, register_type: "holding" }
+    - { name: "input_block", address: 4950, type: "string", count: 5, register_type: "input" }
+
+  write:
+    - { name: "inverter_start_stop", 
+        address: 12999, 
+        type: "uint16", 
+        min: 0, 
+        max: 5,
+        options: {
+          0: "Stop",
+          1: "Start",
+          2: "Debug Mode",
+          3: "Standby",
+          4: "Emergency Stop",
+          5: "Reset"
+        }
+      }
+
 polling:
   fast:
     interval: 5
     registers: [
-      "arm_software_version",
-      "dsp_software_version",
+      "holding_4950",
+      "holding_4951",
+      "holding_4952",
+      "holding_4953",
+      "holding_4954",
+      "holding_4968",
+      "holding_4969",
+      "holding_4970",
+      "input_4950",
+      "input_4951",
+      "input_4952",
+      "input_4953",
+      "input_4954",
+      "input_4968",
+      "input_4969",
+      "input_4970",
+      "holding_block",
+      "input_block",
       "inverter_start_stop"
     ]
-  normal:
-    interval: 30
-    registers: ["running_state"]
-  slow:
-    interval: 600
-    registers: []
-
-firmware_versions:
-  "1.0.0":  # Original Firmware
-    registers:
-      read:
-        - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
-        # ... weitere Register
-
-  "1.0.23":  # Neue Firmware mit geänderten Registern
-    registers:
-      read:
-        - { name: "battery_power", address: 13025, type: "int32" }
-        # ... geänderte Register       
-         
-# Register-Definitionen
-registers:
-  read:
-    # ARM Software Version (4953-4967)
-    # Die Version wird aus mehreren Registern zusammengesetzt
-    # Beispiel: Register 4953 = 0x0123, 4954 = 0x0456 ergibt Version 1.23.4.56
-    - name: "arm_software_version_1"
-      address: 4953
-      type: "uint16"
-      description: "ARM Software Version Major/Minor (0xAABB = Version AA.BB)"
-      debug: true
-    - name: "arm_software_version_2"
-      address: 4954
-      type: "uint16"
-      description: "ARM Software Version Build/Revision (0xCCDD = Version CC.DD)"
-      debug: true
-    - name: "arm_software_version_3"
-      address: 4955
-      type: "uint16"
-      description: "ARM Software Version Additional Info 1"
-      debug: true
-    - name: "arm_software_version_4"
-      address: 4956
-      type: "uint16"
-      description: "ARM Software Version Additional Info 2"
-      debug: true
-
-    # DSP Software Version (4968-4982)
-    # Die Version wird aus mehreren Registern zusammengesetzt
-    # Beispiel: Register 4968 = 0x0123, 4969 = 0x0456 ergibt Version 1.23.4.56
-    - name: "dsp_software_version_1"
-      address: 4968
-      type: "uint16"
-      description: "DSP Software Version Major/Minor (0xAABB = Version AA.BB)"
-      debug: true
-    - name: "dsp_software_version_2"
-      address: 4969
-      type: "uint16"
-      description: "DSP Software Version Build/Revision (0xCCDD = Version CC.DD)"
-      debug: true
-    - name: "dsp_software_version_3"
-      address: 4970
-      type: "uint16"
-      description: "DSP Software Version Additional Info 1"
-      debug: true
-    - name: "dsp_software_version_4"
-      address: 4971
-      type: "uint16"
-      description: "DSP Software Version Additional Info 2"
-      debug: true
-
-  write:
-    # holding registers
-    - name: "inverter_start_stop"
-      address: 12999
-      type: "uint16"
