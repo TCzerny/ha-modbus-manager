@@ -12,14 +12,11 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_NAME, CONF_PORT, CONF_SLAVE, Platform
 from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ConfigEntryNotReady
-from homeassistant.helpers import template, discovery
+from homeassistant.helpers import discovery
 
 from .const import CONF_DEVICE_TYPE, DEFAULT_SLAVE_ID, DOMAIN
 from .logger import ModbusManagerLogger
 from .modbus_hub import ModbusManagerHub
-from .helpers.templates import TemplateHelper
-from .helpers.automations import AutomationHelper
-from .helpers.entity_helper import EntityHelper
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -30,45 +27,48 @@ PLATFORMS = [Platform.SENSOR, Platform.SWITCH]
 async def async_setup(hass: HomeAssistant, config: dict) -> bool:
     """Richte die Modbus Manager Integration ein."""
     hass.data.setdefault(DOMAIN, {})
+    
+    # Initialisiere die Helper global
+    from .helpers.templates import TemplateHelper
+    from .helpers.automations import AutomationHelper
+    from .helpers.entity_helper import EntityHelper
+    
+    hass.data[DOMAIN]["helpers"] = {
+        "template": TemplateHelper(),
+        "automation": AutomationHelper(),
+        "entity": EntityHelper(hass.config.config_dir)
+    }
+    
     return True
 
 
 async def setup_helpers(hass: HomeAssistant, entry: ConfigEntry, device_def: dict) -> None:
     """Richte Templates, Automationen und Entities ein."""
     device_name = entry.data[CONF_NAME]
+    device_type = entry.data[CONF_DEVICE_TYPE]
     
-    # Initialisiere Helper
-    template_helper = TemplateHelper()
-    automation_helper = AutomationHelper()
-    entity_helper = EntityHelper(hass.config.config_dir)
+    # Hole die initialisierten Helper
+    template_helper = hass.data[DOMAIN]["helpers"]["template"]
+    automation_helper = hass.data[DOMAIN]["helpers"]["automation"]
+    entity_helper = hass.data[DOMAIN]["helpers"]["entity"]
     
     try:
-        # Lade gemeinsame Entities
-        common_entities = await hass.async_add_executor_job(entity_helper.load_common_entities)
-        if common_entities:
-            _LOGGER.debug(
-                "Gemeinsame Entities geladen",
-                extra={
-                    "entry_id": entry.entry_id,
-                    "count": len(common_entities)
-                }
+        # Richte gemeinsame Entities ein
+        await entity_helper.setup_common_entities(
+            hass=hass,
+            device_name=device_name,
+            device_type=device_type,
+            config_entry_id=entry.entry_id
+        )
+        
+        # Richte Lastmanagement ein, wenn das Gerät es unterstützt
+        if device_def.get("supports_load_management", False):
+            await entity_helper.setup_load_management(
+                hass=hass,
+                device_name=device_name,
+                device_type=device_type,
+                config_entry_id=entry.entry_id
             )
-            
-            # Erstelle die Entities
-            for platform, entities in common_entities.items():
-                for entity in entities:
-                    # Füge Gerätenamen zu Entity-IDs hinzu
-                    if "entity_id" in entity:
-                        entity["entity_id"] = f"{entity['entity_id']}_{device_name}"
-                    
-                    # Registriere die Entity
-                    await discovery.async_load_platform(
-                        hass,
-                        platform,
-                        DOMAIN,
-                        {"config": entity},
-                        entry.data
-                    )
         
         # Erstelle Templates basierend auf der Gerätedefinition
         if device_def.get("supports_energy_monitoring", False):
@@ -77,54 +77,31 @@ async def setup_helpers(hass: HomeAssistant, entry: ConfigEntry, device_def: dic
                 f"sensor.{device_name}_energy"
             )
             for template_id, template_config in templates.items():
-                await template.async_setup_template_entity(
-                    hass,
-                    template_id,
-                    template_config
-                )
+                await template_helper.setup_template(hass, template_id, template_config)
         
         if device_def.get("supports_power_flow", False):
             power_flow = template_helper.create_power_flow_template(device_name)
-            await template.async_setup_template_entity(
-                hass,
-                power_flow["unique_id"],
-                power_flow
-            )
+            await template_helper.setup_template(hass, power_flow["unique_id"], power_flow)
         
         if device_def.get("supports_efficiency", False):
             efficiency = template_helper.create_efficiency_template(device_name)
-            await template.async_setup_template_entity(
-                hass,
-                efficiency["unique_id"],
-                efficiency
-            )
+            await template_helper.setup_template(hass, efficiency["unique_id"], efficiency)
         
         # Erstelle Automationen basierend auf der Gerätedefinition
         if device_def.get("supports_energy_storage", False):
             automation = automation_helper.create_energy_storage_automation(device_name)
-            await hass.services.async_call(
-                "automation",
-                "reload",
-                {
-                    "entity_id": f"automation.{automation['id']}"
-                }
-            )
+            await automation_helper.setup_automation(hass, automation)
         
         if device_def.get("supports_error_notification", False):
             automation = automation_helper.create_error_notification_automation(device_name)
-            await hass.services.async_call(
-                "automation",
-                "reload",
-                {
-                    "entity_id": f"automation.{automation['id']}"
-                }
-            )
+            await automation_helper.setup_automation(hass, automation)
             
         _LOGGER.info(
             "Helper erfolgreich eingerichtet",
             extra={
                 "entry_id": entry.entry_id,
-                "name": device_name
+                "name": device_name,
+                "type": device_type
             }
         )
             
@@ -265,7 +242,6 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
 
         return unload_ok
-
     except Exception as e:
         _LOGGER.error(
             "Fehler beim Entladen der Integration",
@@ -275,3 +251,4 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             }
         )
         return False
+

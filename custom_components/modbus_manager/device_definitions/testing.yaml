@@ -7,15 +7,19 @@ device_info:
   model: "Test"
   description: "Testgerät für die Entwicklung"
 
+# Unterstützte Funktionen
+supports_pv_system: true
+supports_energy_monitoring: true
+supports_power_flow: true
+supports_efficiency: true
+supports_energy_storage: true
+supports_load_management: true
+supports_error_notification: true
+
 # Firmware-Konfiguration
 firmware:
-  version_registers:
-    - name: "arm_software_version_1"
-      address: 4953
-    - name: "arm_software_version_2"
-      address: 4954
+  version_register: 4954
   version_type: "uint16"
-  version_format: "{:d}.{:d}.{:d}.{:d}"  # Format: Major.Minor.Build.Revision
   auto_detect: true
   fallback_version: "1.0.0"
 
@@ -23,23 +27,37 @@ firmware:
 modbus:
   slave_id: 1
   connection:
-    timeout: 3
-    retry_delay: 0.1
+    timeout: 5
+    retry_delay: 0.5
     max_retries: 3
-    batch_size: 100
+    batch_size: 10
 
 # Polling-Konfiguration
 polling:
   fast:
     interval: 5
     registers: [
-      "arm_software_version",
-      "dsp_software_version",
+      # ARM Version (Holding)
+      "dsp_software_version", "arm_software_version", "inverter_temperature",
+
+      # ARM Version (Input)
+      "total_pv_gen_battery_discharge", "daily_pv_gen_battery_discharge", "device_code",
+
+      # MDSP Version (Holding)
+      "mdsp_5815", "mdsp_5816", "mdsp_5817",
+
+      # MDSP Version (Input)
+      "mdsp_i_5815", "mdsp_i_5816", "mdsp_i_5817",
+
+      # String Tests
+      "arm_str", "arm_str_i",
+      "mdsp_str", "mdsp_str_i",
+
       "inverter_start_stop"
     ]
   normal:
     interval: 30
-    registers: ["running_state"]
+    registers: ["inverter_serial"]
   slow:
     interval: 600
     registers: []
@@ -55,61 +73,34 @@ firmware_versions:
     registers:
       read:
         - { name: "battery_power", address: 13025, type: "int32" }
-        # ... geänderte Register       
-         
+        # ... geänderte Register
+
 # Register-Definitionen
 registers:
   read:
-    # ARM Software Version (4953-4967)
-    # Die Version wird aus mehreren Registern zusammengesetzt
-    # Beispiel: Register 4953 = 0x0123, 4954 = 0x0456 ergibt Version 1.23.4.56
-    - name: "arm_software_version_1"
-      address: 4953
-      type: "uint16"
-      description: "ARM Software Version Major/Minor (0xAABB = Version AA.BB)"
-      debug: true
-    - name: "arm_software_version_2"
-      address: 4954
-      type: "uint16"
-      description: "ARM Software Version Build/Revision (0xCCDD = Version CC.DD)"
-      debug: true
-    - name: "arm_software_version_3"
-      address: 4955
-      type: "uint16"
-      description: "ARM Software Version Additional Info 1"
-      debug: true
-    - name: "arm_software_version_4"
-      address: 4956
-      type: "uint16"
-      description: "ARM Software Version Additional Info 2"
-      debug: true
+    # System Information
+    - { name: "inverter_serial", address: 4989, type: "string", count: 10 }
+    - { name: "device_code", address: 4999, type: "uint16" }
+    - { name: "daily_pv_gen_battery_discharge", address: 5002, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
+    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2 }
+    - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
 
-    # DSP Software Version (4968-4982)
-    # Die Version wird aus mehreren Registern zusammengesetzt
-    # Beispiel: Register 4968 = 0x0123, 4969 = 0x0456 ergibt Version 1.23.4.56
-    - name: "dsp_software_version_1"
-      address: 4968
-      type: "uint16"
-      description: "DSP Software Version Major/Minor (0xAABB = Version AA.BB)"
-      debug: true
-    - name: "dsp_software_version_2"
-      address: 4969
-      type: "uint16"
-      description: "DSP Software Version Build/Revision (0xCCDD = Version CC.DD)"
-      debug: true
-    - name: "dsp_software_version_3"
-      address: 4970
-      type: "uint16"
-      description: "DSP Software Version Additional Info 1"
-      debug: true
-    - name: "dsp_software_version_4"
-      address: 4971
-      type: "uint16"
-      description: "DSP Software Version Additional Info 2"
-      debug: true
+    - { name: "arm_software_version", address: 4954, type: "uint16" }
+    - { name: "dsp_software_version", address: 4969, type: "uint16" }
 
   write:
-    # holding registers
-    - name: "inverter_start_stop"
-      address: 12999
-      type: "uint16"
+    - { name: "inverter_start_stop",
+        address: 12999,
+        type: "uint16",
+        min: 0,
+        max: 5,
+        options: {
+          0: "Stop",
+          1: "Start",
+          2: "Debug Mode",
+          3: "Standby",
+          4: "Emergency Stop",
+          5: "Reset"
+        }
+      }
+

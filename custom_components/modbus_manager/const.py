@@ -1,19 +1,23 @@
 """Constants for the Modbus Manager integration."""
-from datetime import timedelta
 
-DOMAIN = "modbus_manager"
-VERSION = "1.0.0"
+from datetime import timedelta
+from typing import Final
+
+DOMAIN: Final = "modbus_manager"
+HELPER_DOMAIN: Final = "modbus_manager_helpers"
 
 # Configuration
+CONF_DEVICE_TYPE = "device_type"
+CONF_FIRMWARE_VERSION = "1.0"
 CONF_NAME = "name"
 CONF_HOST = "host"
 CONF_PORT = "port"
 CONF_SLAVE = "slave"
-CONF_DEVICE_TYPE = "device_type"
 CONF_SCAN_INTERVAL = "scan_interval"
 CONF_TIMEOUT = "timeout"
 CONF_RETRIES = "retries"
 CONF_RETRY_DELAY = "retry_delay"
+
 
 # Defaults
 DEFAULT_NAME = "Modbus Device"
@@ -23,10 +27,14 @@ DEFAULT_SCAN_INTERVAL = timedelta(seconds=30)
 DEFAULT_TIMEOUT = 3
 DEFAULT_RETRIES = 3
 DEFAULT_RETRY_DELAY = 0.1
+DEFAULT_SCAN_INTERVAL = 30
 
 # Limits
 MIN_SLAVE_ID = 1
 MAX_SLAVE_ID = 247
+
+# Statistics Types
+STAT_TYPES = ["daily", "weekly", "monthly", "yearly"]
 
 # Error Messages
 ERROR_INVALID_HOST = "invalid_host"
@@ -50,6 +58,13 @@ STAT_MONTHLY = "monthly"
 STAT_YEARLY = "yearly"
 STAT_TYPES = [STAT_DAILY, STAT_WEEKLY, STAT_MONTHLY, STAT_YEARLY]
 
+# Register Types
+REGISTER_TYPE_HOLDING = "holding"
+REGISTER_TYPE_INPUT = "input"
+REGISTER_TYPE_COIL = "coil"
+REGISTER_TYPE_DISCRETE = "discrete"
+REGISTER_CACHE_TIMEOUT = 300  # Beispiel: 5 Minuten
+
 # Device Types
 DEVICE_TYPES = {
     "sungrow_shrt": "Sungrow SH-RT Hybrid Inverter",
@@ -64,12 +79,6 @@ TEMPLATE_STATUS = "status"
 
 # Modbus specific
 MAX_REGISTERS_PER_READ = 60  # Modbus Spezifikation: Max. 125 Register pro Lesevorgang
-
-# Register Types
-REGISTER_TYPE_HOLDING = "holding"
-REGISTER_TYPE_INPUT = "input"
-REGISTER_TYPE_COIL = "coil"
-REGISTER_TYPE_DISCRETE = "discrete"
 
 # Data Types
 DATA_TYPE_INT16 = "int16"
@@ -96,4 +105,4 @@ SERVICE_TEST_DEVICE_TYPE = "test_device_type"
 # Polling Groups
 POLLING_GROUP_FAST = "fast"
 POLLING_GROUP_NORMAL = "normal"
-POLLING_GROUP_SLOW = "slow" 
+POLLING_GROUP_SLOW = "slow"

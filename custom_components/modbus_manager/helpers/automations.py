@@ -1,9 +1,28 @@
 """Generic automation helpers for Modbus Manager."""
 from typing import Dict, Any
+from homeassistant.core import HomeAssistant
 
 class AutomationHelper:
     """Generic automation helper class."""
 
+ async def setup_automation(self, hass: HomeAssistant, automation_config: Dict[str, Any]) -> None:
+        """Setup an automation in Home Assistant."""
+        try:
+            # Erstellen Sie die Automation
+            await hass.services.async_call(
+                "automation",
+                "create",
+                {
+                    "alias": automation_config["alias"],
+                    "trigger": automation_config["trigger"],
+                    "action": automation_config["action"],
+                    "id": automation_config["id"],
+                },
+            )
+        except Exception as e:
+            raise Exception(f"Fehler beim Setup der Automation {automation_config['id']}: {str(e)}")
+        
+        
     @staticmethod
     def create_energy_storage_automation(device_name: str) -> Dict[str, Any]:
         """Create energy storage automation for statistics."""

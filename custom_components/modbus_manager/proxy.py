@@ -18,7 +18,7 @@ _LOGGER = ModbusManagerLogger(__name__)
 class ModbusManagerProxy:
     """Proxy class for handling multiple Modbus requests efficiently."""
 
-    def __init__(self, client: Any, slave: int, cache_timeout: float = REGISTER_CACHE_TIMEOUT.total_seconds()):
+    def __init__(self, client: Any, slave: int, cache_timeout: float = REGISTER_CACHE_TIMEOUT):
         """Initialize the proxy.
         
         Args:
@@ -29,7 +29,7 @@ class ModbusManagerProxy:
         self._client = client
         self._slave = slave
         self._cache: Dict[Tuple[int, int], Dict[str, Any]] = {}
-        self._cache_timeout = cache_timeout
+        self._cache_timeout = timedelta(seconds=REGISTER_CACHE_TIMEOUT)
         self._pending_requests: Dict[Tuple[int, int], asyncio.Future] = {}
         self._lock = asyncio.Lock()
         self._request_queue: Dict[int, List[Tuple[int, int, asyncio.Future]]] = defaultdict(list)

@@ -278,16 +278,19 @@ common_entities:
   # Basis-Sensoren
   sensors:
     - name: "status"
+      unique_id: "status"
       type: "uint16"
       translation_key: "sensor.device.status"
       icon: "mdi:information"
       
     - name: "error_code"
+      unique_id: "error_code"
       type: "uint16"
       translation_key: "sensor.device.error"
       icon: "mdi:alert"
       
     - name: "temperature"
+      unique_id: "temperature"
       type: "int16"
       unit_of_measurement: "°C"
       device_class: "temperature"
@@ -325,3 +328,112 @@ common_entities:
         data:
           title: "{{ device_name }} Error"
           message: "Error {{ states('sensor.{{device_name}}_error_code') }}"
+
+# Gemeinsame Entities für PV-Anlagen
+pv_system:
+  sensors:
+    - name: "total_yield"
+      unique_id: "total_yield"
+      unit_of_measurement: "kWh"
+      device_class: "energy"
+      state_class: "total"
+      value_template: >-
+        {% set devices = expand('sensor.*_total_pv_gen_battery_discharge') %}
+        {% set total = namespace(sum=0) %}
+        {% for device in devices %}
+          {% set value = device.state | float(0) %}
+          {% set total.sum = total.sum + value %}
+        {% endfor %}
+        {{ total.sum | round(1) }}
+
+    - name: "total_power"
+      unique_id: "total_power"
+      unit_of_measurement: "W"
+      device_class: "power"
+      state_class: "measurement"
+      value_template: >-
+        {% set devices = expand('sensor.*_inverter_power') %}
+        {% set total = namespace(sum=0) %}
+        {% for device in devices %}
+          {% set value = device.state | float(0) %}
+          {% set total.sum = total.sum + value %}
+        {% endfor %}
+        {{ total.sum | round(0) }}
+
+    - name: "daily_yield"
+      unique_id: "daily_yield"
+      unit_of_measurement: "kWh"
+      device_class: "energy"
+      state_class: "total_increasing"
+      value_template: >-
+        {% set devices = expand('sensor.*_daily_pv_gen_battery_discharge') %}
+        {% set total = namespace(sum=0) %}
+        {% for device in devices %}
+          {% set value = device.state | float(0) %}
+          {% set total.sum = total.sum + value %}
+        {% endfor %}
+        {{ total.sum | round(1) }}
+
+  automations:
+    - id: "daily_yield_reset"
+      alias: "Täglichen Ertrag zurücksetzen"
+      trigger:
+        platform: time
+        at: "00:00:00"
+      action:
+        - service: input_number.set_value
+          target:
+            entity_id: input_number.daily_yield
+          data:
+            value: 0
+
+    - id: "yield_statistics"
+      alias: "Ertragsstatistik aktualisieren"
+      trigger:
+        platform: time_pattern
+        minutes: "/15"
+      action:
+        - service: input_number.set_value
+          target:
+            entity_id: input_number.current_yield
+          data:
+            value: "{{ states('sensor.total_yield') }}"
+
+  load_management:
+    sensors:
+      - name: "grid_power_balance"
+        unique_id: "grid_power_balance"
+        unit_of_measurement: "W"
+        device_class: "power"
+        state_class: "measurement"
+        value_template: >-
+          {% set pv_power = states('sensor.total_power') | float(0) %}
+          {% set consumption = states('sensor.total_consumption') | float(0) %}
+          {{ (pv_power - consumption) | round(0) }}
+
+      - name: "energy_cost_savings"
+        unique_id: "energy_cost_savings"
+        unit_of_measurement: "EUR"
+        device_class: "monetary"
+        state_class: "total_increasing"
+        value_template: >-
+          {% set yield_kwh = states('sensor.daily_yield') | float(0) %}
+          {% set price = states('sensor.electricity_price') | float(0) %}
+          {{ (yield_kwh * price) | round(2) }}
+
+    automations:
+      - id: "excess_power_management"
+        alias: "Überschussleistung Management"
+        trigger:
+          platform: numeric_state
+          entity_id: sensor.grid_power_balance
+          above: 1000  # 1kW Überschuss
+        action:
+          - service: switch.turn_on
+            target:
+              entity_id: switch.battery_charging
+          - service: number.set_value
+            target:
+              entity_id: number.charging_power
+            data:
+              value: "{{ states('sensor.grid_power_balance') | float(0) }}"
