@@ -1,4 +1,4 @@
-"""ModbusManager Switch Platform."""
+"""ModbusManager Button Platform."""
 from __future__ import annotations
 
 from homeassistant.config_entries import ConfigEntry
@@ -16,17 +16,17 @@ async def async_setup_entry(
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Richte Switch Entities basierend auf einem Config Entry ein."""
+    """Richte Button Entities basierend auf einem Config Entry ein."""
     hub = hass.data[DOMAIN][config_entry.entry_id]
     
-    # Sammle alle Switch Entities von allen Geräten
+    # Sammle alle Button Entities von allen Geräten
     entities = []
     for device in hub._devices.values():
         if isinstance(device, ModbusManagerDevice):
-            # Füge alle Switch Entities aus dem Device hinzu
+            # Füge alle Button Entities aus dem Device hinzu
             for entity in device.entities.values():
                 try:
-                    if hasattr(entity, 'entity_id') and entity.entity_id and "switch" in entity.entity_id:
+                    if hasattr(entity, 'entity_id') and entity.entity_id and "button" in entity.entity_id:
                         entities.append(entity)
                 except Exception as e:
                     _LOGGER.error(
@@ -39,5 +39,5 @@ async def async_setup_entry(
                     )
     
     if entities:
-        _LOGGER.debug(f"Füge {len(entities)} Switch Entities hinzu")
+        _LOGGER.debug(f"Füge {len(entities)} Button Entities hinzu")
         async_add_entities(entities) 

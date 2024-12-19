@@ -1,8 +1,6 @@
 # Sungrow SH-RT Hybrid Wechselrichter (3-Phasen mit Batterie)
 # Basierend auf https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
 
-
-
 device_info:
   name: "Sungrow SH-RT Hybrid Inverter"
   manufacturer: "Sungrow"
@@ -10,13 +8,9 @@ device_info:
   supports_energy_monitoring: true
   supports_cost_calculation: true
   supports_load_management: true
+  device_category: inverter
+  supports_aggregation: true
 
-features:
-  energy_monitoring: true
-  power_flow: true
-  efficiency: true
-  error_notification: true
-  
 device_config:
   # Firmware-Handling
   firmware_handling:
@@ -58,14 +52,14 @@ device_config:
     auto_reconnect: true
     reconnect_delay: 60
     max_reconnect_attempts: 3
-    
+
 firmware_versions:
   "1.0.0":  # Original Firmware
     registers:
       read:
         - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
         # ... weitere Register
-  
+
   "1.0.23":  # Neue Firmware mit geänderten Registern
     registers:
       read:
@@ -76,15 +70,17 @@ firmware_versions:
 registers:
   read:
     # System Information
+    - { name: "system_state", address: 12999, type: "uint16", register_type: "input", precision: 0, scale: 1, state_class: "measurement" }
+    - { name: "running_state", address: 13000, type: "uint16", register_type: "input", precision: 0, scale: 1, state_class: "measurement" }
+
     - { name: "inverter_serial", address: 4989, type: "string", count: 10 }
     - { name: "device_code", address: 4999, type: "uint16" }
     - { name: "daily_pv_gen_battery_discharge", address: 5002, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word", precision: 1 }
+    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word", precision: 1, count: 2 }
     - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "system_status", address: 12999, type: "uint16", state_class: "measurement", translation_key: "sensor.system.status", scale: 1, precision: 0 }
-    - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
-    - { name: "arm_software_version", address: 4954, type: "uint16" }
-    - { name: "dsp_software_version", address: 4969, type: "uint16" }
+
+    - { name: "arm_software_version", address: 4953, type: "string", register_type: "input", count: 15 }
+    - { name: "dsp_software_version", address: 4967, type: "string", register_type: "input", count: 15 }
 
     # MPPT Values
     - { name: "mppt1_voltage", address: 5010, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
@@ -99,16 +95,13 @@ registers:
     - { name: "grid_current_l1", address: 5021, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
     - { name: "grid_current_l2", address: 5022, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
     - { name: "grid_current_l3", address: 5023, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
-    - { name: "phase_a_power", address: 5027, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "phase_b_power", address: 5029, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "phase_c_power", address: 5031, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
     - { name: "grid_frequency", address: 5035, type: "uint16", unit_of_measurement: "Hz", device_class: "frequency", state_class: "measurement", scale: 0.1, precision: 2 }
 
     # Meter Values
-    - { name: "meter_power", address: 5600, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "meter_power_l1", address: 5602, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "meter_power_l2", address: 5604, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "meter_power_l3", address: 5606, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
+    - { name: "meter_power", address: 5600, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0, swap: word, count: 2 }
+    - { name: "meter_power_l1", address: 5602, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0, swap: word, count: 2 }
+    - { name: "meter_power_l2", address: 5604, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0, swap: word, count: 2 }
+    - { name: "meter_power_l3", address: 5606, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0, swap: word, count: 2 }
     - { name: "meter_l1_voltage", address: 5740, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
     - { name: "meter_l2_voltage", address: 5741, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
     - { name: "meter_l3_voltage", address: 5742, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
@@ -117,9 +110,9 @@ registers:
     - { name: "meter_l3_current", address: 5745, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.01, precision: 0 }
 
     # Power Values
-    - { name: "total_dc_power", address: 5016, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "active_power", address: 5083, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
-    - { name: "reactive_power", address: 5032, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
+    - { name: "pv_power", address: 5016, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0, count: 2 }
+    - { name: "active_power", address: 5083, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0, count: 2 }
+    - { name: "reactive_power", address: 5032, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0, count: 2 }
     - { name: "power_factor", address: 5034, type: "int16", unit_of_measurement: "%", device_class: "power_factor", state_class: "measurement", scale: 0.001, precision: 3 }
     - { name: "bdc_power", address: 5627, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 100 }
 
@@ -128,172 +121,60 @@ registers:
     - { name: "bms_max_discharge_current", address: 5635, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 1, precision: 0 }
 
     # Backup Power Values
-    - { name: "total_backup_power", address: 5725, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "backup_l1_power", address: 5722, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "backup_l2_power", address: 5723, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "backup_l3_power", address: 5724, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "total_backup_power", address: 5725, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0, swap:"word", count: 2 }
+    - { name: "backup_l1_power", address: 5722, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "backup_l2_power", address: 5723, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
+    - { name: "backup_l3_power", address: 5724, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
 
     # Energy Values
-    - { name: "daily_pv_generation", address: 13001, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_pv_generation", address: 13002, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
+    - { name: "daily_yield", address: 13001, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
+    - { name: "total_pv_generation", address: 13002, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2 }
     - { name: "daily_exported_from_pv", address: 13004, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_exported_from_pv", address: 13005, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
-    - { name: "load_power", address: 13007, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
-    - { name: "export_power_raw", address: 13009, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
+    - { name: "total_exported_from_pv", address: 13005, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2 }
+    - { name: "load_power", address: 13007, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0, count: 2 }
+    - { name: "grid_power", address: 13009, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
     - { name: "daily_battery_charge_from_pv", address: 13011, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_battery_charge_from_pv", address: 13012, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
+    - { name: "total_battery_charge_from_pv", address: 13012, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2 }
     - { name: "daily_direct_energy_consumption", address: 13016, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_direct_energy_consumption", address: 13017, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
+    - { name: "total_direct_energy_consumption", address: 13017, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2 }
 
-    - { name: "daily_export_energy", address: 13044, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "total_export_energy", address: 13045, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "daily_import_energy", address: 13035, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "total_import_energy", address: 13036, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "daily_consumption", address: 5039, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "total_consumption", address: 5040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    # System Information
-    - { name: "inverter_serial", address: 4989, type: "string", count: 10 }
-    - { name: "device_code", address: 4999, type: "uint16" }
-    - { name: "daily_pv_gen_battery_discharge", address: 5002, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, swap: "word", precision: 1 }
-    - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "system_status", address: 12999, type: "uint16", state_class: "measurement", translation_key: "sensor.system.status", scale: 1, precision: 0 }
-    - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
-    - { name: "arm_software_version", address: 4954, type: "uint16" }
-    - { name: "dsp_software_version", address: 4969, type: "uint16" }
-
-    # MPPT Values
-    - { name: "mppt1_voltage", address: 5010, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "mppt1_current", address: 5011, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
-    - { name: "mppt2_voltage", address: 5012, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "mppt2_current", address: 5013, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
-
-    # Grid Values
-    - { name: "grid_voltage_l1", address: 5018, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "grid_voltage_l2", address: 5019, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "grid_voltage_l3", address: 5020, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "grid_current_l1", address: 5021, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
-    - { name: "grid_current_l2", address: 5022, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
-    - { name: "grid_current_l3", address: 5023, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 2 }
-    - { name: "phase_a_power", address: 5027, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "phase_b_power", address: 5029, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "phase_c_power", address: 5031, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "grid_frequency", address: 5035, type: "uint16", unit_of_measurement: "Hz", device_class: "frequency", state_class: "measurement", scale: 0.1, precision: 2 }
-
-    # Meter Values
-    - { name: "meter_power", address: 5600, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "meter_power_l1", address: 5602, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "meter_power_l2", address: 5604, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "meter_power_l3", address: 5606, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "meter_l1_voltage", address: 5740, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "meter_l2_voltage", address: 5741, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "meter_l3_voltage", address: 5742, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "meter_l1_current", address: 5743, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.01, precision: 0 }
-    - { name: "meter_l2_current", address: 5744, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.01, precision: 0 }
-    - { name: "meter_l3_current", address: 5745, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.01, precision: 0 }
-
-    # Power Values
-    - { name: "total_dc_power", address: 5016, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, swap: "word", precision: 0 }
-    - { name: "active_power", address: 5083, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
-    - { name: "reactive_power", address: 5032, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
-    - { name: "power_factor", address: 5034, type: "int16", unit_of_measurement: "%", device_class: "power_factor", state_class: "measurement", scale: 0.001, precision: 3 }
-    - { name: "bdc_power", address: 5627, type: "int16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 100 }
-
-    # BMS Values
-    - { name: "bms_max_charge_current", address: 5634, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "bms_max_discharge_current", address: 5635, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 1, precision: 0 }
-
-    # Backup Power Values
-    - { name: "total_backup_power", address: 5725, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "backup_l1_power", address: 5722, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "backup_l2_power", address: 5723, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "backup_l3_power", address: 5724, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 1, precision: 0 }
-
-    # Energy Values
-    - { name: "daily_pv_generation", address: 13001, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_pv_generation", address: 13002, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
-    - { name: "daily_exported_from_pv", address: 13004, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_exported_from_pv", address: 13005, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
-    - { name: "load_power", address: 13007, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
-    - { name: "export_power_raw", address: 13009, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
-    - { name: "daily_battery_charge_from_pv", address: 13011, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_battery_charge_from_pv", address: 13012, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
-    - { name: "daily_direct_energy_consumption", address: 13016, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_direct_energy_consumption", address: 13017, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
-
-    - { name: "daily_export_energy", address: 13044, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "total_export_energy", address: 13045, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "daily_import_energy", address: 13035, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "total_import_energy", address: 13036, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "daily_consumption", address: 5039, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "total_consumption", address: 5040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
+    - { name: "daily_export_energy", address: 13044, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1 }
+    - { name: "total_export_energy", address: 13045, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, count: 2, swap: word }
+    - { name: "daily_import_energy", address: 13035, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1 }
+    - { name: "total_import_energy", address: 13036, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, count: 2, swap: word }
+    - { name: "daily_consumption", address: 5039, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1 }
+    - { name: "total_consumption", address: 5040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, count: 2, swap: word }
 
     # Battery Values
     - { name: "battery_serial", address: 10710, type: "string", count: 10 }
     - { name: "battery_voltage", address: 13019, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
     - { name: "battery_current", address: 13020, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
-    - { name: "battery_power", address: 13021, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word" }
+    - { name: "battery_power", address: 13021, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", count: 2 }
     - { name: "battery_level", address: 13022, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement" }
     - { name: "battery_state_of_health", address: 13023, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1, precision: 0 }
     - { name: "battery_temperature", address: 13024, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
 
     # Battery Energy Statistics
-    - { name: "daily_battery_charge", address: 13039, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_battery_charge", address: 13040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "daily_battery_discharge", address: 13025, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_battery_discharge", address: 13026, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
+    - { name: "daily_battery_charge", address: 13039, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, precision: 1 }
+    - { name: "total_battery_charge", address: 13040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, precision: 1, count: 2, swap: word }
+    - { name: "daily_battery_discharge", address: 13025, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, precision: 1 }
+    - { name: "total_battery_discharge", address: 13026, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, precision: 1, count: 2, swap: word }
 
     # current
     - { name: "l1_current", address: 13030, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
     - { name: "l2_current", address: 13031, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
     - { name: "l3_current", address: 13032, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "total_active_power", address: 13033, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
-
-
-
-    # Battery Additional Values
-    - { name: "battery_1_voltage", address: 10740, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_current", address: 10741, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_temperature", address: 10742, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_soc", address: 10743, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_soh", address: 10744, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_total_charge", address: 10745, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "battery_1_total_discharge", address: 10747, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-
-    # battery cell values
-    - { name: "battery_1_max_voltage_of_cell", address: 10756, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_position_of_max_voltage_cell", address: 10757, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_min_voltage_of_cell", address: 10758, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_position_of_min_voltage_cell", address: 10759, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_max_temperature_of_module", address: 10760, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_position_of_max_temperature_of_module", address: 10761, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_min_temperature_of_module", address: 10762, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_position_of_min_temperature_of_module", address: 10763, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_max_cell_voltage_of_module_1", address: 10764, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_max_cell_voltage_of_module_2", address: 10765, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_max_cell_voltage_of_module_3", address: 10766, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_max_cell_voltage_of_module_4", address: 10767, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_max_cell_voltage_of_module_5", address: 10768, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_1", address: 10772, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_2", address: 10773, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_3", address: 10774, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_4", address: 10775, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_5", address: 10776, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_cell_type_of_module_1", address: 10780, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_cell_type_of_module_2", address: 10781, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_cell_type_of_module_3", address: 10782, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_cell_type_of_module_4", address: 10783, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_cell_type_of_module_5", address: 10784, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_state_of_dc_switch", address: 10788, type: "uint16", scale: 1, precision: 0 }
-
+    - { name: "total_active_power", address: 13033, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0, count: 2 }
 
 
   write:
+    # System Control
+    - { name: Inverter start stop, address: 12999, type: "uint16", precision: 0, state_class: measurement, scan_interval: 10 }
+    
     # holding registers
-    - { name: "inverter_start_stop", address: 12999, type: "uint16", min: 0, max: 1 }
-    - { name: "bms_mode_selection_raw", address: 13049, type: "uint16", min: 0, max: 1 }
-    - { name: "battery_forced_charge_discharge", address: 13050, type: "uint16", min: 0, max: 1 }
-    - { name: "battery_forced_charge_discharge_power", address: 13051, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", min: 0, max: 5000 }
+    - { name: "bms_mode_selection_raw", address: 13049, type: "uint16" }
+    - { name: "battery_forced_charge_discharge", address: 13050, type: "uint16", }
+    - { name: "battery_forced_charge_discharge_power", address: 13051, type: "uint16", min: 0, max: 5000 }
     - { name: "battery_max_soc", address: 13057, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", min: 0, max: 100, scale: 0.1, precision: 1 }
     - { name: "battery_min_soc", address: 13058, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", min: 0, max: 100, scale: 0.1, precision: 1   }
     # export power limit
@@ -302,13 +183,10 @@ registers:
 
     # undocumented
     - { name: "reserved_soc_for_battery", address: 13099, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", min: 0, max: 100, scale: 1 }
-    
-    - { name: "battery_max_charge_power", address: 33046, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 10, precision: 0 }
-    - { name: "battery_max_discharge_power", address: 33047, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 10, precision: 0 } 
-    - { name: "battery_capacity", address: 33048, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "measurement", scale: 0.01, precision: 1 } 
 
-
-
+    - { name: "battery_charge_limit", address: 33046, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 10, precision: 0 }
+    - { name: "battery_discharge_limit", address: 33047, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 10, precision: 0 }
+    - { name: "battery_capacity", address: 33048, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.01, precision: 1 }
 
     # Grid Control
     - { name: "grid_port_max_power", address: 5154, type: "uint32", min: 0, max: 5000 }
@@ -316,105 +194,23 @@ registers:
     - { name: "grid_charge_start_time", address: 5156, type: "uint16", min: 0, max: 2359 }
     - { name: "grid_charge_end_time", address: 5157, type: "uint16", min: 0, max: 2359 }
 
-    # Battery Values
-    - { name: "battery_serial", address: 10710, type: "string", count: 10 }
-    - { name: "battery_voltage", address: 13019, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
-    - { name: "battery_current", address: 13020, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
-    - { name: "battery_power", address: 13021, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word" }
-    - { name: "battery_level", address: 13022, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement" }
-    - { name: "battery_state_of_health", address: 13023, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1, precision: 0 }
-    - { name: "battery_temperature", address: 13024, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
+    # Input Select Register
+    - { name: "ems_mode", address: 13001, type: "uint16", description: "EMS Mode (0=Self-consumption, 1=Forced, 2=External EMS)" }
+    - { name: "battery_forced_charge_discharge", address: 13002, type: "uint16", description: "Battery Forced Charge/Discharge (0=Stop, 1=Charge, 2=Discharge)" }
+    - { name: "export_power_limit_mode", address: 13003, type: "uint16", description: "Export Power Limit Mode (0=Disabled, 1=Enabled)" }
+    - { name: "global_mpp_scan", address: 13004, type: "uint16", description: "Global MPP Scan (0=Disabled, 1=Enabled)" }
 
-    # Battery Energy Statistics
-    - { name: "daily_battery_charge", address: 13039, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_battery_charge", address: 13040, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "daily_battery_discharge", address: 13025, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_battery_discharge", address: 13026, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-
-    # current
-    - { name: "l1_current", address: 13030, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "l2_current", address: 13031, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "l3_current", address: 13032, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "total_active_power", address: 13033, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
-
-
-
-    # Battery Additional Values
-    - { name: "battery_1_voltage", address: 10740, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_current", address: 10741, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_temperature", address: 10742, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_soc", address: 10743, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_soh", address: 10744, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_total_charge", address: 10745, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "battery_1_total_discharge", address: 10747, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-
-    # battery cell values
-    - { name: "battery_1_max_voltage_of_cell", address: 10756, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_position_of_max_voltage_cell", address: 10757, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_min_voltage_of_cell", address: 10758, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_position_of_min_voltage_cell", address: 10759, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_max_temperature_of_module", address: 10760, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_position_of_max_temperature_of_module", address: 10761, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_min_temperature_of_module", address: 10762, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
-    - { name: "battery_1_position_of_min_temperature_of_module", address: 10763, type: "uint16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_max_cell_voltage_of_module_1", address: 10764, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_max_cell_voltage_of_module_2", address: 10765, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_max_cell_voltage_of_module_3", address: 10766, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_max_cell_voltage_of_module_4", address: 10767, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_max_cell_voltage_of_module_5", address: 10768, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_1", address: 10772, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_2", address: 10773, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_3", address: 10774, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_4", address: 10775, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_min_cell_voltage_of_module_5", address: 10776, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.0001, precision: 4 }
-    - { name: "battery_1_cell_type_of_module_1", address: 10780, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_cell_type_of_module_2", address: 10781, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_cell_type_of_module_3", address: 10782, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_cell_type_of_module_4", address: 10783, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_cell_type_of_module_5", address: 10784, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 1, precision: 0 }
-    - { name: "battery_1_state_of_dc_switch", address: 10788, type: "uint16", scale: 1, precision: 0 }
-
-
-
-  write:
-    # holding registers
-    - { name: "inverter_start_stop", address: 12999, type: "uint16", min: 0, max: 1 }
-    - { name: "bms_mode_selection_raw", address: 13049, type: "uint16", min: 0, max: 1 }
-    - { name: "battery_forced_charge_discharge", address: 13050, type: "uint16", min: 0, max: 1 }
-    - { name: "battery_forced_charge_discharge_power", address: 13051, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", min: 0, max: 5000 }
-    - { name: "battery_max_soc", address: 13057, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", min: 0, max: 100, scale: 0.1, precision: 1 }
-    - { name: "battery_min_soc", address: 13058, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", min: 0, max: 100, scale: 0.1, precision: 1   }
-    # export power limit
-    - { name: "export_power_limit", address: 13073, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", min: 0, max: 5000, scale: 1, precision: 0 }
-    - { name: "export_power_limit_raw", address: 13086, type: "uint16", min: 0, max: 1 }
-
-    # undocumented
-    - { name: "reserved_soc_for_battery", address: 13099, type: "uint16", unit_of_measurement: "%", device_class: "battery", state_class: "measurement", min: 0, max: 100, scale: 1 }
-    
-    - { name: "battery_max_charge_power", address: 33046, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 10, precision: 0 }
-    - { name: "battery_max_discharge_power", address: 33047, type: "uint16", unit_of_measurement: "W", device_class: "power", state_class: "measurement", scale: 10, precision: 0 } 
-    - { name: "battery_capacity", address: 33048, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "measurement", scale: 0.01, precision: 1 } 
-
-
-
-
-    # Grid Control
-    - { name: "grid_port_max_power", address: 5154, type: "uint32", min: 0, max: 5000 }
-    - { name: "grid_charge_max_power", address: 5155, type: "uint32", min: 0, max: 5000 }
-    - { name: "grid_charge_start_time", address: 5156, type: "uint16", min: 0, max: 2359 }
-    - { name: "grid_charge_end_time", address: 5157, type: "uint16", min: 0, max: 2359 }
-
+  
 
 polling:
   fast:
-    interval: 5
     interval: 5
     registers: [
       # System Status
       "system_status",
       "running_state",
       "inverter_temperature",
-      
+
       # Power Flow
       "total_active_power",
       "load_power",
@@ -422,20 +218,12 @@ polling:
       "battery_power",
       "battery_level",
       "total_dc_power",
-      "meter_power"
-      # System Status
-      "system_status",
-      "running_state",
-      "inverter_temperature",
-      
-      # Power Flow
-      "total_active_power",
-      "load_power",
-      "export_power_raw",
-      "battery_power",
-      "battery_level",
-      "total_dc_power",
-      "meter_power"
+      "meter_power",
+
+      # Meter Details
+      "meter_power_l1", "meter_power_l2", "meter_power_l3",
+      "meter_l1_voltage", "meter_l2_voltage", "meter_l3_voltage",
+      "meter_l1_current", "meter_l2_current", "meter_l3_current"
     ]
   normal:
     interval: 30
@@ -445,40 +233,18 @@ polling:
       "grid_current_l1", "grid_current_l2", "grid_current_l3",
       "phase_a_power", "phase_b_power", "phase_c_power",
       "grid_frequency",
-      
+
       # MPPT Values
       "mppt1_voltage", "mppt1_current",
       "mppt2_voltage", "mppt2_current",
-      
+
       # Battery Details
       "battery_voltage", "battery_current", "battery_temperature",
-      "battery_state_of_health",
-      
-      # Meter Details
-      "meter_power_l1", "meter_power_l2", "meter_power_l3",
-      "meter_l1_voltage", "meter_l2_voltage", "meter_l3_voltage",
-      "meter_l1_current", "meter_l2_current", "meter_l3_current"
-      # Grid Values
-      "grid_voltage_l1", "grid_voltage_l2", "grid_voltage_l3",
-      "grid_current_l1", "grid_current_l2", "grid_current_l3",
-      "phase_a_power", "phase_b_power", "phase_c_power",
-      "grid_frequency",
-      
-      # MPPT Values
-      "mppt1_voltage", "mppt1_current",
-      "mppt2_voltage", "mppt2_current",
-      
-      # Battery Details
-      "battery_voltage", "battery_current", "battery_temperature",
-      "battery_state_of_health",
-      
-      # Meter Details
-      "meter_power_l1", "meter_power_l2", "meter_power_l3",
-      "meter_l1_voltage", "meter_l2_voltage", "meter_l3_voltage",
-      "meter_l1_current", "meter_l2_current", "meter_l3_current"
+      "battery_state_of_health"
+
+
     ]
   slow:
-    interval: 600
     interval: 600
     registers: [
       # Energy Statistics
@@ -490,44 +256,1545 @@ polling:
       "daily_import_energy", "total_import_energy",
       "daily_battery_charge", "total_battery_charge",
       "daily_battery_discharge", "total_battery_discharge",
-      
+
       # Device Information
       "inverter_serial", "battery_serial",
-      
+
       # Battery Cell Details
       "battery_1_max_voltage_of_cell", "battery_1_min_voltage_of_cell",
       "battery_1_max_temperature_of_module", "battery_1_min_temperature_of_module"
     ]
 
 
+sensor:
+  - platform: filter
+    # NOTE: 2024-01-11: Unique id was adapted to match the sg_* uid pattern.
+    # If the default dashboard does show an "unavailable" sensor, remove the unavailable one
+    # and remove the suffix *_2 from daily_consumed_energy_2
+    name: "Daily consumed energy (filtered)"
+    entity_id: sensor.daily_consumed_energy
+    unique_id: sg_daily_consumed_energy_filtered
+    # commented following line, due to: 'device_class' is an invalid option for 'sensor.filter', check: device_class
+    # device_class: energy
+    # commented following line, due to: 'state_class' is an invalid option for 'sensor.filter', check: state_class
+    # state_class: total_increasing
+    filters:
+      - filter: time_simple_moving_average
+        window_size: "00:05"
+        precision: 2
 
-device_specific_templates:
-  # ... (nur gerätespezifische Templates)
+# 'virtual' template sensors for better readability
+template:
+  - binary_sensor:
+      - name: PV generating
+        unique_id: sg_pv_generating
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.running_state', 'unavailable') 
+          and not is_state('sensor.total_dc_power', 'unavailable') 
+          }}
+        state: >-
+          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
+            {# use available sensor running_state #}
+            {{ states('sensor.running_state')|int |bitwise_and(0x1) }}
+          {% else %} 
+            {# workaround for SH*RS inverters without working running_state #}
+            {% if states('sensor.total_dc_power')|int > 0 %}
+              1
+            {% else %} 
+              0 
+            {% endif %}
+          {% endif %}
 
-device_specific_automations:
-  # ... (nur gerätespezifische Automationen)
-      # Energy Statistics
-      "daily_pv_generation", "total_pv_generation",
-      "daily_exported_from_pv", "total_exported_from_pv",
-      "daily_battery_charge_from_pv", "total_battery_charge_from_pv",
-      "daily_direct_energy_consumption", "total_direct_energy_consumption",
-      "daily_export_energy", "total_export_energy",
-      "daily_import_energy", "total_import_energy",
-      "daily_battery_charge", "total_battery_charge",
-      "daily_battery_discharge", "total_battery_discharge",
-      
-      # Device Information
-      "inverter_serial", "battery_serial",
-      
-      # Battery Cell Details
-      "battery_1_max_voltage_of_cell", "battery_1_min_voltage_of_cell",
-      "battery_1_max_temperature_of_module", "battery_1_min_temperature_of_module"
-    ]
+      - name: PV generating (delay)
+        unique_id: sg_pv_generating_delay
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: "{{ not is_state('binary_sensor.pv_generating', 'unavailable') }}"
+        delay_on:
+          seconds: 60
+        state: "{{ states('binary_sensor.pv_generating') }}"
 
+      - name: Battery charging
+        unique_id: sg_battery_charging
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.running_state', 'unavailable')
+          or
+            (   not is_state('sensor.ems_mode_selection_raw', 'unavailable')
+            and not is_state('sensor.battery_forced_charge_discharge_cmd_raw', 'unavailable') 
+            and not is_state('sensor.battery_power_raw', 'unavailable') 
+            and not is_state('sensor.total_dc_power', 'unavailable')
+            and not is_state('sensor.load_power', 'unavailable') 
+            )
+          }}
+        state: >-
+          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
+            {# use available sensor running_state #}
+            {% if states('sensor.running_state')|int|bitwise_and(0x2) > 0 %}
+              on
+            {% else %}
+              off
+            {% endif %}
+          {% else %}
+            {# workaround for SH*RS inverters without working running_state #}
+            {% if (states('sensor.ems_mode_selection') ) == "Forced mode" %}
+              {# EMS forced mode #}
+              {% if (states('sensor.battery_forced_charge_discharge_cmd') == "Forced charge") %}
+                {# in mode Forced charge #}
+                {% if (states('sensor.battery_power_raw')|int > 0 ) %}
+                  {# power flow from/to battery #}
+                  on
+                {% else %} 
+                  {# no power flow from/to battery #}
+                  off
+                {% endif %}
+              {% else %}
+                {# in EMS mode, but not in mode Forced charge #}
+                off
+              {% endif %}
+            {% else %} 
+              {# not in EMS forced mode, assuming self consumption mode #}
+              {% if states('sensor.total_dc_power')|int > states('sensor.load_power')|int %}
+                {# more power generated than consumed. assuming battery charging #}
+                on
+              {% else %} 
+                off
+              {% endif %}
+            {% endif %}
+          {% endif %}
 
+      - name: Battery charging (delay)
+        unique_id: sg_battery_charging_delay
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: "{{ not is_state('binary_sensor.battery_charging', 'unavailable') }}"
+        delay_on:
+          seconds: 60
+        state: "{{ states('binary_sensor.battery_charging') }}"
 
-device_specific_templates:
-  # ... (nur gerätespezifische Templates)
+      - name: Battery discharging
+        unique_id: sg_battery_discharging
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.running_state', 'unavailable')
+          or
+            (   not is_state('sensor.ems_mode_selection_raw', 'unavailable')
+            and not is_state('sensor.battery_forced_charge_discharge_cmd_raw', 'unavailable')
+            and not is_state('sensor.battery_power_raw', 'unavailable')
+            and not is_state('sensor.total_dc_power', 'unavailable') 
+            and not is_state('sensor.load_power', 'unavailable') 
+            )
+          }}
+        state: >-
+          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
+            {# use available sensor running_state #}
+            {% if states('sensor.running_state')|int|bitwise_and(0x4) > 0 %}
+              on
+            {% else %}
+              off
+            {% endif %}
+          {% else %}
+            {# workaround for SH*RS inverters without working running_state #}
+            {% if (states('sensor.ems_mode_selection') ) == "Forced mode" %}
+              {# EMS forced mode #}
+              {% if (states('sensor.battery_forced_charge_discharge_cmd') == "Forced discharge") %}
+                {# in mode Forced discharge #}
+                {% if (states('sensor.battery_power_raw')|int > 0 ) %}
+                  {# power flow from/to battery #}
+                  on
+                {% else %} 
+                  {# no power flow from/to battery #}
+                  off
+                {% endif %}
+              {% else %} 
+                {# in EMS mode, but not in mode Forced charge #}
+                off
+              {% endif %}
+            {% else %} 
+              {# not in EMS forced mode, assuming self consumption mode #}
+              {% if ( ( states('sensor.total_dc_power')|int < states('sensor.load_power')|int ) ) and states('sensor.battery_power_raw')|int > 0 %}
+                {# more power consumed than generated and some battery power --> assuming battery discharging #}
+                on
+              {% else %} 
+                off
+              {% endif %}
+            {% endif %}
+          {% endif %}
 
-device_specific_automations:
-  # ... (nur gerätespezifische Automationen)
+      - name: Battery discharging (delay)
+        unique_id: sg_battery_discharging_delay
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: "{{ not is_state('binary_sensor.battery_discharging', 'unavailable') }}"
+        delay_on:
+          seconds: 60
+        state: "{{ states('binary_sensor.battery_discharging') }}"
+
+      - name: Exporting power
+        unique_id: sg_exporting_power
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.running_state', 'unavailable') 
+          and not is_state('sensor.export_power_raw', 'unavailable') 
+          }}
+        state: >-
+          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
+            {# use available sensor running_state #}
+            {{ states('sensor.running_state')|int|bitwise_and(0x10) > 0 }}
+          {% else %} 
+            {# workaround for SH*RS inverters without working running_state #}
+            {% if states('sensor.export_power_raw')|int > 0 %}
+              1
+            {% else %} 
+              0 
+            {% endif %}
+          {% endif %}
+
+      - name: Exporting power (delay)
+        unique_id: sg_exporting_power_delay
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: "{{ not is_state('binary_sensor.exporting_power', 'unavailable') }}"
+        delay_on:
+          seconds: 60
+        state: "{{ states('binary_sensor.exporting_power') }}"
+
+      - name: Importing power
+        unique_id: sg_importing_power
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.running_state', 'unavailable') 
+          and not is_state('sensor.running_state', 'unavailable')
+          }}
+        state: >-
+          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
+            {# use available sensor running_state #}
+            {{ states('sensor.running_state')|int|bitwise_and(0x20) > 0 }}
+          {% else %} 
+            {# workaround for SH*RS inverters without working running_state #}
+            {% if states('sensor.export_power_raw')|int < 0 %}
+              1
+            {% else %}
+              0
+            {% endif %}
+          {% endif %}
+
+      - name: Importing power (delay)
+        unique_id: sg_importing_power_delay
+        # TODO: test more with these parameters for template binary sensors
+        # device_class: none / power
+        # state_class: measurement
+        availability: "{{ not is_state('binary_sensor.importing_power', 'unavailable') }}"
+        delay_on:
+          seconds: 60
+        state: "{{ states('binary_sensor.importing_power') }}"
+
+  - sensor:
+      - name: MPPT1 power
+        unique_id: sg_mppt1_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.mppt1_voltage', 'unavailable') 
+          and not is_state('sensor.mppt1_current', 'unavailable') 
+          }}
+        state: "{{ (states('sensor.mppt1_voltage') | float * states('sensor.mppt1_current') | float) |int }}"
+
+      - name: MPPT2 power
+        unique_id: sg_mppt2_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.mppt2_voltage', 'unavailable') 
+          and not is_state('sensor.mppt2_current', 'unavailable' ) 
+          }}
+        state: "{{ (states('sensor.mppt2_voltage') | float * states('sensor.mppt2_current') | float) |int }}"
+
+      - name: Phase A power
+        unique_id: sg_phase_a_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.phase_a_voltage', 'unavailable')
+          and not is_state('sensor.phase_a_current', 'unavailable')
+          }}
+        state: "{{ (states('sensor.phase_a_voltage') | float * states('sensor.phase_a_current') | float) |int }}"
+
+      - name: Phase B power
+        unique_id: sg_phase_b_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.phase_b_voltage', 'unavailable') 
+          and not is_state('sensor.phase_b_current', 'unavailable') 
+          }}
+        state: "{{ (states('sensor.phase_b_voltage') | float * states('sensor.phase_b_current') | float) |int }}"
+
+      - name: Phase C power
+        unique_id: sg_phase_c_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.phase_c_voltage', 'unavailable')
+          and not is_state('sensor.phase_c_current', 'unavailable')
+          }}
+        state: "{{ (states('sensor.phase_c_voltage') | float * states('sensor.phase_c_current') | float) |int }}"
+
+      # template sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
+      - name: Meter active power
+        unique_id: sg_meter_active_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.meter_active_power_raw', 'unavailable')
+          and states('sensor.meter_active_power_raw')|int != 0x7FFFFFFF
+          }}
+        state: "{{ states('sensor.meter_active_power_raw') }}"
+
+      # template sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
+      - name: Meter phase A active power
+        unique_id: sg_meter_phase_a_active_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.meter_phase_a_active_power_raw', 'unavailable')
+          and states('sensor.meter_phase_a_active_power_raw')|int != 0x7FFFFFFF
+          }}
+        state: "{{ states('sensor.meter_phase_a_active_power_raw') }}"
+
+      # template sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
+      - name: Meter phase B active power
+        unique_id: sg_meter_phase_b_active_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.meter_phase_b_active_power_raw', 'unavailable') 
+          and states('sensor.meter_phase_b_active_power_raw')|int != 0x7FFFFFFF 
+          }}
+        state: "{{ states('sensor.meter_phase_b_active_power_raw') }}"
+
+      # template sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
+      - name: Meter phase C active power
+        unique_id: sg_meter_phase_c_active_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.meter_phase_c_active_power_raw', 'unavailable')
+          and states('sensor.meter_phase_c_active_power_raw')|int != 0x7FFFFFFF
+          }}
+        state: "{{ states('sensor.meter_phase_c_active_power_raw') }}"
+
+      - name: Sungrow inverter state
+        unique_id: sg_inverter_state
+        device_class: enum
+        availability: "{{ not is_state('sensor.system_state', 'unavailable') }}"
+        state: >-
+          {% if ((states('sensor.system_state') |int) in [0x0000,0x0040]) %}
+            Running
+          {% elif ((states('sensor.system_state') |int) == 0x0410) %}
+            Off-grid Charge
+          {% elif ((states('sensor.system_state') |int) == 0x0200) %}
+            Update Failed
+          {% elif ((states('sensor.system_state') |int) == 0x0400) %}
+            Maintain mode
+          {% elif ((states('sensor.system_state') |int) == 0x0800) %}
+            Forced mode
+          {% elif ((states('sensor.system_state') |int) == 0x1000) %}
+            Off-grid mode
+          {% elif ((states('sensor.system_state') |int) == 0x1111) %}
+            Un-Initialized
+          {% elif ((states('sensor.system_state') |int) in [0x0010,0x12000]) %}
+            Initial Standby
+          {% elif ((states('sensor.system_state') |int) in [0x1300,0x0002]) %}
+            Shutdown
+          {% elif ((states('sensor.system_state') |int) in [0x1400,0x0008] ) %}
+            Standby
+          {% elif ((states('sensor.system_state') |int) in [0x1500,0x0004] ) %}
+            Emergency Stop
+          {% elif ((states('sensor.system_state') |int) in [0x1600,0x0020]) %}
+            Startup
+          {% elif ((states('sensor.system_state') |int) == 0x1700) %}
+            AFCI self test shutdown
+          {% elif ((states('sensor.system_state') |int) == 0x1800) %}
+            Intelligent Station Building Status
+          {% elif ((states('sensor.system_state') |int) == 0x1900) %}
+            Safe Mode
+          {% elif ((states('sensor.system_state') |int) == 0x2000) %}
+            Open Loop
+          {% elif ((states('sensor.system_state') |int) == 0x2501) %}
+            Restarting
+          {% elif ((states('sensor.system_state') |int) == 0x4000) %}
+            External EMS mode
+          {% elif ((states('sensor.system_state') |int) in [0x55000,0x0100]) %}
+            Fault
+          {% elif ((states('sensor.system_state') |int) in [0x8000,0x0001]) %}
+            Stop
+          {% elif ((states('sensor.system_state') |int) in [0x8100,0x0080]) %}
+            De-rating Running
+          {% elif ((states('sensor.system_state') |int) == 0x8200) %}
+            Dispatch Run
+          {% elif ((states('sensor.system_state') |int) == 0x9100) %}
+            Warn Running
+          {% else %}
+            Unknown - should not see me! {{ (states('sensor.system_state') |int) }}
+          {% endif %}
+
+      - name: Sungrow device type
+        unique_id: sg_device_type
+        availability: "{{ not is_state('sensor.sungrow_device_type_code', 'unavailable') }}"
+        device_class: enum
+        state: >-
+          {% if ((states('sensor.sungrow_device_type_code') |int)  == 0x0D06) %}
+            SH3K6
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D07) %}
+            SH4K6
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D09) %}
+            SH5K-20  
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D03) %}
+            SH5K-V13
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D0A) %}
+            SH3K6-30
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D0B) %}
+            SH4K6-30
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D0C) %}
+            SH5K-30
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D17) %}
+            SH3.RS
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D0D) %}
+            SH3.6RS
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D18) %}
+            SH4.0RS
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D0F) %}
+            SH5.0RS
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D10) %}
+            SH6.0RS
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D1A) %}
+            SH8.0RS
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0D1B) %}
+            SH10RS
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E00) %}
+            SH5.0RT
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E01) %}
+            SH6.0RT
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E02) %}
+            SH8.0RT
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E03) %}
+            SH10RT
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E10) %}
+            SH5.0RT-20
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E11) %}
+            SH6.0RT-20
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E12) %}
+            SH8.0RT-20
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E13) %}
+            SH10RT-20
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E0C) %}
+            SH5.0RT-V112
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E0D) %}
+            SH6.0RT-V112
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E0E) %}
+            SH8.0RT-V112
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E0F) %}
+            SH10RT-V112
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E08) %}
+            SH5.0RT-V122
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E09) %}
+            SH6.0RT-V122
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E0A) %}
+            SH8.0RT-V122
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E0B) %}
+            SH10RT-V122
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E20) %}
+            SH5T-V11
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E21) %}
+            SH6T-V11
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E22) %}
+            SH8T-V11
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E23) %}
+            SH10T-V11
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E24) %}
+            SH12T-V11
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E25) %}
+            SH15T-V11
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E26) %}
+            SH20T-V11
+          {% elif ((states('sensor.sungrow_device_type_code') |int) == 0x0E28) %}
+            SH25T-V11
+          {% else %}
+            Unknown device code: {{ '%0x' % (states('sensor.sungrow_device_type_code') |int)  }}
+          {% endif %}
+
+      # make the sensor battery_forced_charge_discharge_cmd more human readable
+      # Inverter States from modbus reference manual
+      # 0xAA forced charge
+      # 0xBB forced discharge
+      # 0xCC Stop (default)
+      - name: Battery forced charge discharge cmd
+        unique_id: sg_battery_forced_charge_discharge_cmd
+        availability: "{{ not is_state('sensor.battery_forced_charge_discharge_cmd_raw', 'unavailable') }}"
+        # TODO: test state_class with enum
+        # state_class: measurement
+        device_class: enum
+        state: >-
+          {% if ((states('sensor.battery_forced_charge_discharge_cmd_raw') |int) == 0x00AA) %}
+            Forced charge
+          {% elif ((states('sensor.battery_forced_charge_discharge_cmd_raw') |int)  == 0x00BB) %}
+            Forced discharge
+          {% elif ((states('sensor.battery_forced_charge_discharge_cmd_raw') |int)  == 0x00CC) %}
+            Stop (default)
+          {% else %}
+            Unknown - should not see me! code: {{ (states('sensor.battery_forced_charge_discharge_cmd_raw') |int) }}
+          {% endif %}
+
+      - name: Export power limit mode
+        unique_id: sg_export_power_limit_mode
+        availability: "{{ not is_state('sensor.export_power_limit_mode_raw', 'unavailable') }}"
+        # TODO: test state_class with enum
+        # state_class: measurement
+        device_class: enum
+        state: >-
+          {% if ((states('sensor.export_power_limit_mode_raw') |int) == 0x00AA) %}
+            Enabled
+          {% elif ((states('sensor.export_power_limit_mode_raw') |int)  == 0x0055) %}
+            Disabled
+          {% else %}
+            Unknown - should not see me! code: {{ (states('sensor.export_power_limit_mode_raw') |int) }}
+          {% endif %}
+
+      # make the sensor ems_selection_raw more human readable
+      - name: EMS mode selection
+        unique_id: sg_ems_mode_selection
+        availability: "{{ not is_state('sensor.ems_mode_selection_raw', 'unavailable') }}"
+        # TODO: test state_class with enum with enum
+        # state_class: measurement
+        device_class: enum
+        state: >-
+          {% if ((states('sensor.ems_mode_selection_raw') |int) == 0) %}
+            Self-consumption mode (default)
+          {% elif ((states('sensor.ems_mode_selection_raw') |int) == 2) %}
+            Forced mode
+          {% elif ((states('sensor.ems_mode_selection_raw') |int) == 3) %}
+            External EMS
+          {% elif ((states('sensor.ems_mode_selection_raw') |int) == 4) %}
+            VPP
+          {% elif ((states('sensor.ems_mode_selection_raw') |int) == 8) %}
+            MicroGrid
+          {% else %}
+            Unknown - should not see me! code: {{ (states('sensor.ems_mode_selection_raw') |int) }}
+          {% endif %}
+
+      - name: Signed battery power # positive if charging and negative if discharging
+        unique_id: sg_signed_battery_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('binary_sensor.battery_charging', 'unavailable') 
+          and not is_state('binary_sensor.battery_discharging', 'unavailable')
+          and not is_state('sensor.battery_power_raw', 'unavailable')
+          }}
+        state: >-
+          {% if is_state('binary_sensor.battery_charging', 'on') %}
+            {{ (states('sensor.battery_power_raw') | float)}} 
+          {% elif is_state('binary_sensor.battery_discharging', 'on') %} 
+            {{ (states('sensor.battery_power_raw') | float * -1)}} 
+          {% else %} 
+            0 
+          {% endif %}
+
+      - name: Battery charging power # positive if charging else zero
+        unique_id: sg_battery_charging_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('binary_sensor.battery_charging', 'unavailable') 
+          and not is_state('sensor.battery_power_raw', 'unavailable')
+          }}
+        state: >-
+          {% if is_state('binary_sensor.battery_charging', 'on') %}
+            {{ states('sensor.battery_power_raw') }}
+          {% else %}
+            0
+          {% endif %}
+
+      - name: Battery discharging power # positive if discharging else zero
+        unique_id: sg_battery_discharging_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('binary_sensor.battery_discharging', 'unavailable') 
+          and not is_state('sensor.battery_power_raw', 'unavailable') 
+          }}
+        state: >-
+          {% if is_state('binary_sensor.battery_discharging', 'on') %}
+            {{ states('sensor.battery_power_raw') }}
+          {% else %}
+            0
+          {% endif %}
+
+      - name: Import power # power from grid: positive if importing, else zero
+        unique_id: sg_import_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: "{{ not is_state('sensor.export_power_raw', 'unavailable') }}"
+        state: >-
+          {% if states('sensor.export_power_raw')|int < 0 %}
+            {{ states('sensor.export_power_raw')|int *-1 }}
+          {% else %}
+            0
+          {% endif %}
+
+      - name: Export power # power to grid: positive if exporting, else zero
+        unique_id: sg_export_power
+        unit_of_measurement: W
+        device_class: power
+        state_class: measurement
+        availability: "{{states('sensor.export_power_raw')|is_number }}"
+        state: >-
+          {% if states('sensor.export_power_raw')|int > 0 %}
+            {{ states('sensor.export_power_raw') }}
+          {% else %}
+            0
+          {% endif %}
+
+      - name: "Monthly PV generation (current)"
+        unique_id: sg_monthly_pv_generation_current
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total_increasing
+        availability: >-
+          {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
+          {{ states('sensor.' ~ currMonth)|is_number }}
+        state: >
+          {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
+          {{ states('sensor.' ~ currMonth) }}
+
+      - name: "Yearly PV generation (current)"
+        unique_id: sg_yearly_pv_generation_current
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total_increasing
+        availability: >-
+          {% set currYear = 'yearly_pv_generation_' ~ now().year %}
+          {{ states('sensor.' ~ currYear)|is_number }}
+        state: >
+          {% set currYear = 'yearly_pv_generation_' ~ now().year %}
+          {{ states('sensor.' ~ currYear) }}
+
+      - name: "Monthly export (current)"
+        unique_id: sg_monthly_export_current
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total_increasing
+        availability: >-
+          {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
+          {{ states('sensor.' ~ currMonth)|is_number }}
+        state: >
+          {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
+          {{ states('sensor.' ~ currMonth) }}
+
+      - name: "Yearly export (current)"
+        unique_id: sg_yearly_export_current
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total_increasing
+        availability: >-
+          {% set currYear = 'yearly_export_' ~ now().year %}
+          {{ states('sensor.' ~ currYear)|is_number }}
+        state: >
+          {% set currYear = 'yearly_export_' ~ now().year %}
+          {{ states('sensor.' ~ currYear) }}
+
+      # If min_soc is set to 15 and max soc is set to 90,
+      # this "nominal battery level" will be between 15% and 90%
+      # while the "battery level" is between 0 and 100%
+      - name: "Battery level (nominal)"
+        unique_id: sg_battery_level_nom
+        unit_of_measurement: "%"
+        device_class: battery
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.battery_level', 'unavailable') 
+          and not is_state('sensor.min_soc', 'unavailable') 
+          and not is_state('sensor.max_soc', 'unavailable') 
+          }}
+        state: >-
+          {% set soc_min = states('sensor.min_soc') | float %}
+          {% set soc_max = states('sensor.max_soc') | float %}
+          {% set soc_cur = states('sensor.battery_level') | float %}
+          {{
+            (soc_min + ((soc_max - soc_min) * (soc_cur / 100))) | round(1)
+          }}
+
+      # If min_soc is set to 15 and max soc is set to 90,
+      # this "nominal battery charge" will be between 15% and 90% of the capacity value,
+      # reflecting the limits set by min_soc and max_soc
+      - name: "Battery charge (nominal)"
+        unique_id: sg_battery_charge_nom
+        unit_of_measurement: kWh
+        device_class: energy_storage
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.battery_capacity', 'unavailable')
+          and not is_state('sensor.battery_level_nominal', 'unavailable')
+          }}
+        state: >-
+          {{
+            ( states('sensor.battery_capacity') | float *
+            states('sensor.battery_level_nominal') | float / 100 )| round(1)
+          }}
+
+      # this is the actually **usable energy ** of the battery
+      # with respect to min/ max soc.
+      # If min_soc is set to 15 and max soc is set to 90,
+      # this value is 0.75 * capacity
+      - name: "Battery charge"
+        unique_id: sg_battery_charge
+        unit_of_measurement: kWh
+        device_class: energy_storage
+        state_class: measurement
+        availability: >-
+          {{ 
+          not is_state('sensor.battery_capacity', 'unavailable') 
+          and not is_state('sensor.battery_level', 'unavailable') 
+          and not is_state('sensor.min_soc', 'unavailable') 
+          and not is_state('sensor.max_soc', 'unavailable') 
+          }}
+        state: >-
+          {{ 
+            ( states('sensor.battery_capacity')|float 
+            * ( states('sensor.max_soc')|float - states('sensor.min_soc')|float ) /100 
+            * states('sensor.battery_level')|float /100 
+            ) |round(2)
+          }}
+
+      # NOTE: 2024-01-11: Unique id was adapted to match the sg_* uid pattern.
+      # If the default dashboard does show an "unavailable" sensor, remove the unavailable one
+      # and remove the suffix *_2 from daily_consumed_energy_2
+      - name: Daily consumed energy
+        unique_id: sg_daily_consumed_energy
+        unit_of_measurement: kWh
+        device_class: energy
+        # the state class is not total_increasing, because sometimes the read value are read at different times,
+        # resulting in decreasing values.
+        # "measurement" does not work, because it is incompatible with "energy"
+        state_class: total
+        availability: >-
+          {{ 
+          not is_state('sensor.daily_pv_generation', 'unavailable') 
+          and not is_state('sensor.daily_exported_energy', 'unavailable') 
+          and not is_state('sensor.daily_imported_energy', 'unavailable') 
+          and not is_state('sensor.daily_battery_charge', 'unavailable') 
+          and not is_state('sensor.daily_battery_discharge', 'unavailable') 
+          }}
+        state: >-
+          {{ 
+            (
+              states('sensor.daily_pv_generation')|float 
+              - states('sensor.daily_exported_energy')|float 
+              + states('sensor.daily_imported_energy')|float 
+              - states('sensor.daily_battery_charge')|float 
+              + states('sensor.daily_battery_discharge')|float
+            ) 
+          }}
+
+      # NOTE: 2024-01-11: Unique id was adapted to match the sg_* uid pattern.
+      # If the default dashboard does show an "unavailable" sensor, remove the unavailable one
+      # and remove the suffix *_2 from daily_consumed_energy_2
+      - name: Total consumed energy
+        unique_id: sg_total_consumed_energy
+        unit_of_measurement: kWh
+        device_class: energy
+        state_class: total
+        availability: >-
+          {{ 
+          not is_state('sensor.total_pv_generation', 'unavailable') 
+          and not is_state('sensor.total_exported_energy', 'unavailable') 
+          and not is_state('sensor.total_imported_energy', 'unavailable') 
+          and not is_state('sensor.total_battery_charge', 'unavailable') 
+          and not is_state('sensor.total_battery_discharge', 'unavailable') 
+          }}
+        state: >-
+          {{ 
+            (
+              states('sensor.total_pv_generation')|float 
+              - states('sensor.total_exported_energy')|float 
+              + states('sensor.total_imported_energy')|float 
+              - states('sensor.total_battery_charge')|float 
+              + states('sensor.total_battery_discharge')|float
+            )
+          }}
+
+# getting input for Min and Max SoC
+input_number:
+  set_sg_min_soc:
+    name: Set min SoC
+    min: 0
+    max: 50
+    step: 1
+    mode: box
+
+  set_sg_max_soc:
+    name: Set max SoC
+    min: 50
+    max: 100
+    step: 1
+    mode: box
+
+  set_sg_reserved_soc_for_backup:
+    name: Set reserved SoC for backup
+    min: 0
+    max: 100
+    step: 1
+    mode: box
+
+  set_sg_forced_charge_discharge_power:
+    name: Set forced charge discharge power in W
+    min: 0
+    max: 5000
+    step: 100
+    mode: box
+
+  set_sg_battery_max_charge_power:
+    name: Set max battery charge power in W
+    min: 100
+    max: 5000
+    step: 100
+    mode: box
+
+  set_sg_battery_max_discharge_power:
+    name: Set max battery discharge power in W
+    min: 100
+    max: 5000
+    step: 100
+    mode: box
+
+  set_sg_battery_charging_start_power:
+    name: Set battery charging start power in W
+    min: 0
+    max: 1000
+    step: 10
+    mode: box
+
+  set_sg_battery_discharging_start_power:
+    name: Set battery discharging start power in W
+    min: 0
+    max: 1000
+    step: 10
+    mode: box
+
+  set_sg_export_power_limit:
+    name: Set export power limit
+    min: 0
+    max: 10500
+    step: 100
+    mode: box
+
+input_select:
+  set_sg_inverter_run_mode:
+    name: Inverter mode
+    options:
+      - "Enabled"
+      - "Shutdown"
+    icon: mdi:power
+
+  set_sg_ems_mode:
+    name: EMS mode
+    options:
+      - "Self-consumption mode (default)"
+      - "Forced mode"
+      - "External EMS"
+    icon: mdi:battery-unknown
+
+  set_sg_battery_forced_charge_discharge_cmd:
+    name: Battery forced charge discharge cmd
+    options:
+      - "Stop (default)"
+      - "Forced charge"
+      - "Forced discharge"
+    icon: mdi:battery-unknown
+
+  set_sg_export_power_limit_mode:
+    name: Export power limit mode
+    options:
+      - "Enabled"
+      - "Disabled"
+    icon: mdi:export
+
+  set_sg_global_mpp_scan_manual:
+    name: Global mpp scan manual
+    options:
+      - "Enabled"
+      - "Disabled"
+    icon: mdi:solar-power
+
+# Automations: Write modbus registers on input changes via GUI
+# note: If you change a value by the sliders, it will take up to 60 seconds until the state variables are updated
+# Unfortunately, I could not find a way to "force update" modbus registers, yet...
+automation:
+  - id: "automation_sungrow_inverter_state"
+    alias: "sungrow inverter state"
+    description: "Enables/ stops the inverter"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_select.set_sg_inverter_run_mode
+    conditions: []
+    variables:
+      sg_start: 0xCF
+      sg_stop: 0xCE
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 12999 # reg 13000
+          value: >
+            {% if is_state('input_select.set_sg_inverter_run_mode', "Enabled") %}
+              {{sg_start}}
+            {% else %}
+              {{sg_stop}}
+            {% endif %}
+    mode: single
+
+  - id: "automation_sungrow_inverter_state_input_selector_update"
+    alias: "sungrow inverter enable/ stop input selector update"
+    description: "Updates enable/ stops input selector"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.sungrow_inverter_state
+    conditions:
+      - condition: template
+        value_template: "{{ not is_state('sensor.sungrow_inverter_state', 'unavailable') }}"
+    actions:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.set_sg_inverter_run_mode
+        data:
+          option: >
+            {% if is_state('sensor.sungrow_inverter_state', "Stop") or is_state('sensor.sungrow_inverter_state', "Shutdown") %}
+              Shutdown
+            {% else %}
+              Enabled
+            {% endif %}
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_max_soc"
+    alias: "sungrow inverter update max SoC"
+    description: "Updates Sungrow max Soc holding register"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_max_soc
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 13057 # reg 13058
+          value: "{{ states('input_number.set_sg_max_soc') | int *10}}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_max_soc_input_slider_update"
+    alias: "sungrow inverter max SoC input slider update"
+    description: "Updates Sungrow max Soc input slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.max_soc
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_max_soc
+        data:
+          value: "{{ states('sensor.max_soc') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_min_soc"
+    alias: "sungrow inverter update min SoC"
+    description: "Updates Sungrow min Soc holding register"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_min_soc
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 13058 # reg 13059
+          value: "{{ states('input_number.set_sg_min_soc') | int *10}}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_min_soc_input_slider_update"
+    alias: "sungrow inverter min SoC input slider update"
+    description: "Updates Sungrow min Soc input slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.min_soc
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_min_soc
+        data:
+          value: "{{ states('sensor.min_soc') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_reserved_soc_for_backup"
+    alias: "sungrow inverter update reserved soc for backup"
+    description: "Updates reserved SoC for backup register"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_reserved_soc_for_backup
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 13099 # reg 13100
+          value: "{{ states('input_number.set_sg_reserved_soc_for_backup') | int}}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_reserved_backup_soc_input_slider_update"
+    alias: "sungrow inverter reserved backup SoC input slider update"
+    description: "Updates Sungrow reserved backup Soc input slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.reserved_soc_for_backup
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_reserved_soc_for_backup
+        data:
+          value: "{{ states('sensor.reserved_soc_for_backup') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_forced_charge_discharge_cmd"
+    alias: "sungrow inverter update battery forced charge discharge cmd"
+    description: "Updates Sungrow holding register for battery forced charge discharge command"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_select.set_sg_battery_forced_charge_discharge_cmd
+    conditions: []
+    variables:
+      ems_forced_charge: 0xAA
+      ems_forced_discharge: 0xBB
+      ems_stop_default: 0xCC
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 13050 # reg 13051
+          value: >
+            {% if is_state('input_select.set_sg_battery_forced_charge_discharge_cmd', "Stop (default)") %} 
+              {{ems_stop_default}}
+            {% elif is_state('input_select.set_sg_battery_forced_charge_discharge_cmd', "Forced charge") %} 
+              {{ems_forced_charge}}
+            {% elif is_state('input_select.set_sg_battery_forced_charge_discharge_cmd', "Forced discharge") %} 
+              {{ems_forced_discharge}}
+            {% else %}
+              {{ems_stop_default}}
+            {% endif %}
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_forced_charge_discharge_cmd_input_select_update"
+    alias: "sungrow inverter update battery forced charge discharge cmd input select update"
+    description: "Updates Sungrow battery forced charge discharge cmd input select"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.battery_forced_charge_discharge_cmd
+    conditions:
+      - condition: template
+        value_template: "{{ not is_state('sensor.battery_forced_charge_discharge_cmd', 'unavailable') }}"
+    actions:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
+        data:
+          option: "{{ states('sensor.battery_forced_charge_discharge_cmd') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_ems_mode"
+    alias: "sungrow inverter update EMS mode"
+    description: "Updates EMS mode"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_select.set_sg_ems_mode
+    conditions: []
+    variables:
+      ems_mode_self_consume: 0
+      ems_mode_forced: 2
+      ems_mode_external: 3
+      ems_mode_vpp: 4
+      ems_mode_microgrid: 8
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 13049 # reg 13050
+          value: >
+            {% if is_state('input_select.set_sg_ems_mode', "Self-consumption mode (default)") %} 
+              {{ems_mode_self_consume}}
+            {% elif is_state('input_select.set_sg_ems_mode', "Forced mode") %} 
+              {{ems_mode_forced}}
+            {% elif is_state('input_select.set_sg_ems_mode', "External EMS") %} 
+              {{ems_mode_external}}
+            {% elif is_state('input_select.set_sg_ems_mode', "VPP") %} 
+              {{ems_mode_vpp}}
+            {% elif is_state('input_select.set_sg_ems_mode', "MicroGrid") %} 
+              {{ems_mode_microgrid}}
+            {% else %} 
+              {{ems_mode_self_consume}}
+            {% endif %}
+    mode: single
+
+  - id: "automation_sungrow_inverter_export_power_limit_mode_update"
+    alias: "sungrow inverter export power limit mode update"
+    description: "Updates Enable/Disable for export power limit mode"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.export_power_limit_mode_raw
+    conditions:
+      - condition: template
+        value_template: "{{ not is_state('sensor.export_power_limit_mode_raw', 'unavailable') }}"
+    actions:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.set_sg_export_power_limit_mode
+        data:
+          option: >
+            {% if ((states('sensor.export_power_limit_mode_raw') |int) == 0x00AA) %} 
+              Enabled
+            {% elif ((states('sensor.export_power_limit_mode_raw') |int) == 0x0055) %} 
+              Disabled
+            {% endif %}
+    mode: single
+
+  - id: "automation_sungrow_export_power_limit_mode"
+    alias: "sungrow inverter export power limit mode"
+    description: "Set export power limit mode"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_select.set_sg_export_power_limit_mode
+    conditions: []
+    variables:
+      export_limit_enable: 0xAA
+      export_limit_disable: 0x55
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 13086 # reg 13087
+          value: >
+            {% if is_state('input_select.set_sg_export_power_limit_mode', "Enabled") %} 
+              {{export_limit_enable}}
+            {% elif is_state('input_select.set_sg_export_power_limit_mode', "Disabled") %}
+              {{export_limit_disable}}
+            {% else %}
+              {{export_limit_disable}}
+            {% endif %}
+    mode: single
+
+  - id: "automation_sungrow_inverter_export_power_limit_update"
+    alias: "sungrow inverter export power limit update"
+    description: "Updates export power limit slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.export_power_limit
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_export_power_limit
+        data:
+          value: "{{ states('sensor.export_power_limit') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_set_export_power_limit"
+    alias: "sungrow inverter export power limit"
+    description: "Sets export power limit"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_export_power_limit
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 13073 # reg 13074
+          value: "{{ states('input_number.set_sg_export_power_limit') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_ems_mode_input_select_update"
+    alias: "sungrow inverter update EMS mode input select update"
+    description: "Updates EMS mode input select"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.ems_mode_selection
+    conditions:
+      - condition: template
+        value_template: "{{ not is_state('sensor.ems_mode_selection', 'unavailable') }}"
+    actions:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.set_sg_ems_mode
+        data:
+          option: "{{ states('sensor.ems_mode_selection') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_forced_charge_discharge_power"
+    alias: "sungrow inverter update battery forced charge discharge power"
+    description: "Sets battery forced charge discharge power"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_forced_charge_discharge_power
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 13051 # reg 13052
+          value: "{{ states('input_number.set_sg_forced_charge_discharge_power') | int}}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_forced_charge_discharge_power_input_slider_update"
+    alias: "sungrow inverter update battery forced charge discharge power input slider update"
+    description: "Updates battery forced charge discharge power input slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.battery_forced_charge_discharge_power
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_forced_charge_discharge_power
+        data:
+          value: "{{ states('sensor.battery_forced_charge_discharge_power') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_max_charge_power"
+    alias: "sungrow inverter update battery max charge power"
+    description: "Sets battery max charge power"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_battery_max_charge_power
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 33046 # reg 33047
+          value: "{{ states('input_number.set_sg_battery_max_charge_power') |float /10 |int}}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_max_charge_power_input_slider_update"
+    alias: "sungrow inverter update battery max charge power input slider update"
+    description: "Updates battery max charge power input slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.battery_max_charge_power
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_battery_max_charge_power
+        data:
+          value: "{{ states('sensor.battery_max_charge_power') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_max_discharge_power"
+    alias: "sungrow inverter update battery max discharge power"
+    description: "Sets battery max discharge power"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_battery_max_discharge_power
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 33047 # reg 33048
+          value: "{{ states('input_number.set_sg_battery_max_discharge_power')  |float /10 |int}}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_max_discharge_power_input_slider_update"
+    alias: "sungrow inverter update battery max discharge power input slider update"
+    description: "Updates battery max discharge power input slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.battery_max_discharge_power
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_battery_max_discharge_power
+        data:
+          value: "{{ states('sensor.battery_max_discharge_power') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_charging_start_power"
+    alias: "sungrow inverter update battery charging start power"
+    description: "Sets battery charging start power"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_battery_charging_start_power
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 33148 # reg 33149
+          value: "{{ states('input_number.set_sg_battery_charging_start_power') |float /10 |int}}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_charging_start_power_input_slider_update"
+    alias: "sungrow inverter update battery charging start power input slider update"
+    description: "Updates battery charging start power input slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.battery_charging_start_power
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_battery_charging_start_power
+        data:
+          value: "{{ states('sensor.battery_charging_start_power') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_discharging_start_power"
+    alias: "sungrow inverter update battery discharging start power"
+    description: "Sets battery discharging start power"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_number.set_sg_battery_discharging_start_power
+    conditions: []
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 33149 # reg 33150
+          value: "{{ states('input_number.set_sg_battery_discharging_start_power') |float /10 | int}}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_update_battery_discharging_start_power_input_slider_update"
+    alias: "sungrow inverter update battery discharging start power input slider update"
+    description: "Updates battery discharging start power input slider"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.battery_discharging_start_power
+    conditions: []
+    actions:
+      - action: input_number.set_value
+        target:
+          entity_id: input_number.set_sg_battery_discharging_start_power
+        data:
+          value: "{{ states('sensor.battery_discharging_start_power') }}"
+    mode: single
+
+  - id: "automation_sungrow_inverter_global_mpp_scan_manual_update"
+    alias: "sungrow inverter global mpp scan manual update"
+    description: "Updates Enable/Disable for global mpp scan manual"
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.global_mpp_scan_manual_raw
+    conditions:
+      - condition: template
+        value_template: "{{ not is_state('sensor.global_mpp_scan_manual_raw', 'unavailable') }}"
+    actions:
+      - action: input_select.select_option
+        target:
+          entity_id: input_select.set_sg_global_mpp_scan_manual
+        data:
+          option: >
+            {% if ((states('sensor.global_mpp_scan_manual_raw') | int(default=0)) == 0x00AA) %} 
+              Enabled
+            {% elif ((states('sensor.global_mpp_scan_manual_raw') | int(default=0)) == 0x0055) %} 
+              Disabled
+            {% endif %}
+    mode: single
+
+  - id: "automation_sungrow_global_mpp_scan_manual"
+    alias: "sungrow inverter global mpp scan manual"
+    description: "Set global mpp scan manual"
+    triggers:
+      - trigger: state
+        entity_id:
+          - input_select.set_sg_global_mpp_scan_manual
+    conditions: []
+    variables:
+      export_limit_enable: 0xAA
+      export_limit_disable: 0x55
+    actions:
+      - action: modbus.write_register
+        data_template:
+          hub: SungrowSHx
+          slave: SLAVE_ID
+          address: 30229 # reg 30230
+          value: >
+            {% if is_state('input_select.set_sg_global_mpp_scan_manual', "Enabled") %} 
+              {{export_limit_enable}}
+            {% elif is_state('input_select.set_sg_global_mpp_scan_manual', "Disabled") %}
+              {{export_limit_disable}}
+            {% else %}
+              {{export_limit_disable}}
+            {% endif %}
+    mode: single
+
+# Usage: Use these scripts to simplify automations
+# Example (Adjust to your needs with appropriate trigger):
+# automation:
+#  - alias: Forced Battery Charging Management
+#    description: "Manages forced battery charging during cheapest hours."
+#   triggers:
+#      - trigger: state
+#        entity_id:
+#          - binary_sensor.cheapest_hours_for_charging_timer
+#    actions:
+#      - choose:
+#          - conditions:
+#              - condition: state
+#                entity_id: binary_sensor.cheapest_hours_for_charging_timer
+#                state: 'on'
+#            sequence:
+#              - action: script.sg_forced_charge_battery_mode
+#          - conditions:
+#              - condition: state
+#                entity_id: binary_sensor.cheapest_hours_for_charging_timer
+#                state: 'off'
+#            sequence:
+#              - action: script.sg_self_consumption_mode
+
+script:
+  sg_set_forced_discharge_battery_mode:
+    sequence:
+      - action: input_select.select_option
+        data:
+          entity_id: input_select.set_sg_ems_mode
+          option: "Forced mode"
+      - action: input_select.select_option
+        data:
+          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
+          option: "Forced discharge"
+      # Uncomment notify action lines below for push notifications to mobile devices
+      # - action: notify.notify
+      #   data:
+      #     title: "Forced Battery Discharge"
+      #     message: "Switched to Forced Battery Discharge mode"
+
+  sg_set_forced_charge_battery_mode:
+    sequence:
+      - action: input_select.select_option
+        data:
+          entity_id: input_select.set_sg_ems_mode
+          option: "Forced mode"
+      - action: input_select.select_option
+        data:
+          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
+          option: "Forced charge"
+
+  sg_set_battery_bypass_mode:
+    sequence:
+      - action: input_select.select_option
+        data:
+          entity_id: input_select.set_sg_ems_mode
+          option: "Forced mode"
+      - action: input_select.select_option
+        data:
+          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
+          option: "Stop (default)"
+
+  sg_set_self_consumption_mode:
+    sequence:
+      - action: input_select.select_option
+        data:
+          entity_id: input_select.set_sg_ems_mode
+          option: "Self-consumption mode (default)"
+      - action: input_select.select_option
+        data:
+          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
+          option: "Stop (default)"

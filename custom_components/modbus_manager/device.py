@@ -1,1112 +1,723 @@
 """Modbus Manager Device Class."""
+from __future__ import annotations
 
-from pathlib import Path
-import yaml
 from datetime import timedelta
-from homeassistant.core import HomeAssistant
+from typing import Dict, Any, Optional
+
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
-from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+
+from homeassistant.components.input_number import DOMAIN as INPUT_NUMBER_DOMAIN
+from homeassistant.components.input_select import DOMAIN as INPUT_SELECT_DOMAIN
+
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
-from typing import Dict, Any, Optional, List
-import aiofiles
+from .entities import ModbusRegisterEntity
+from .input_entities import ModbusManagerInputNumber, ModbusManagerInputSelect
 
+_LOGGER = ModbusManagerLogger(__name__)
 
 class ModbusManagerDevice:
-    """Class representing a Modbus device."""
+    """Repräsentiert ein Modbus-Gerät."""
 
-    def __init__(self, hub, device_type: str, config: dict):
-        """Initialisiert das Gerät.
-        
-        Args:
-            hub: Referenz zum ModbusManagerHub
-            device_type: Typ des Geräts (z.B. 'sungrow', 'fronius')
-            config: Konfigurationsdaten aus dem Config Flow
-        """
-        # Initialisiere zuerst den Logger
-        self.name = config.get("name", f"modbus_{device_type}")
+    def __init__(
+        self,
+        hub,
+        device_type: str,
+        config: dict,
+        register_definitions: Optional[Dict[str, Any]] = None,
+    ):
+        """Initialisiert das Gerät."""
+        self.name = config.get("name")
         self._logger = ModbusManagerLogger(name=f"device_{self.name}")
         
-        # Dann die anderen Attribute
         self.hub = hub
         self.hass = hub.hass
         self.device_type = device_type
         self.config = config
+        self.entry_id = config.get("entry_id")
+        self.config_entry = config.get("config_entry")
         
-        if "name" not in config:
-            self._logger.error("Kein Name in der Konfiguration gefunden")
-            raise ValueError("Der Gerätename muss im Config Flow konfiguriert werden")
-            
-        self._register_definitions = None  # Änderung zu None für bessere Kontrolle
-        self._cached_values = {}
-        self._last_read = {}
-        self._current_firmware_version = None
-        self._coordinators = {}  # Lokales Dictionary für Koordinatoren
-
-        self._logger.debug(
-            "Gerät initialisiert",
-            extra={
-                "name": self.name,
-                "device_type": self.device_type
-            }
-        )
-
-    async def read_registers(self) -> Dict[str, Any]:
-        """Liest alle konfigurierten Register des Geräts."""
-        try:
-            self._logger.debug(
-                "Starte Register-Lesevorgang", 
-                extra={
-                    "device_type": self.device_type,
-                    "name": self.name
-                }
-            )
-
-            result = {}
-            register_defs = await self._get_register_definitions()
-            
-            self._logger.debug(
-                "Geladene Register-Definitionen",
-                extra={
-                    "device": self.name,
-                    "definitions": register_defs
-                }
-            )
-
-            if not register_defs:
-                self._logger.error("Keine Register-Definitionen gefunden")
-                return {}
-
-            # Extrahiere die lesbaren Register entsprechend der YAML-Struktur
-            read_registers = []
-            if isinstance(register_defs, dict):
-                if "registers" in register_defs and isinstance(register_defs["registers"], dict):
-                    read_registers = register_defs["registers"].get("read", [])
-                elif "read" in register_defs:
-                    read_registers = register_defs["read"]
-
-            if not read_registers:
-                self._logger.warning(
-                    "Keine lesbaren Register gefunden",
-                    extra={
-                        "device": self.name,
-                        "register_defs": register_defs
-                    }
-                )
-                return {}
-
-            self._logger.debug(
-                "Gefundene Register",
-                extra={
-                    "device": self.name,
-                    "count": len(read_registers),
-                    "registers": [reg.get("name") for reg in read_registers]
-                }
-            )
-
-            # Gruppiere Register nach Adressen für Batch-Lesungen
-            grouped_registers = self._group_registers(read_registers)
-
-            for group in grouped_registers:
-                try:
-                    # Lese die Gruppe von Registern
-                    values = await self._read_register_group(group)
-                    if values:
-                        result.update(values)
-                except Exception as e:
-                    self._logger.error(
-                        "Fehler beim Lesen einer Register-Gruppe",
-                        extra={
-                            "error": str(e),
-                            "addresses": [reg["address"] for reg in group],
-                            "device": self.name
-                        }
-                    )
-
-            self._logger.debug(
-                "Register-Lesevorgang abgeschlossen",
-                extra={
-                    "device": self.name,
-                    "register_count": len(result),
-                    "values": result
-                }
-            )
-
-            return result
-
-        except Exception as e:
-            self._logger.error(
-                "Fehler beim Lesen der Register", 
-                extra={
-                    "error": str(e),
-                    "device": self.name
-                }
-            )
-            return {}
-
-    def _group_registers(self, register_defs: List[Dict]) -> List[List[Dict]]:
-        """Gruppiert Register für optimierte Batch-Lesungen."""
-        # Sortiere nach Adresse
-        sorted_regs = sorted(register_defs, key=lambda x: x["address"])
-        groups = []
-        current_group = []
-
-        for reg in sorted_regs:
-            if not current_group:
-                current_group.append(reg)
-            else:
-                # Prüfe ob Register kontinuierlich sind
-                last_reg = current_group[-1]
-                if (
-                    reg["address"] - (last_reg["address"] + last_reg.get("count", 1))
-                ) <= 1:
-                    current_group.append(reg)
-                else:
-                    groups.append(current_group)
-                    current_group = [reg]
-
-        if current_group:
-            groups.append(current_group)
-
-        return groups
-
-    async def _read_register_group(self, group: List[Dict]) -> Dict[str, Any]:
-        """Liest eine Gruppe von Registern."""
-        if not group:
-            return {}
-
-        try:
-            # Bestimme Start- und Endadresse
-            start_address = group[0]["address"]
-            end_reg = group[-1]
-            count = (end_reg["address"] - start_address) + end_reg.get("count", 1)
-
-            self._logger.debug(
-                "Lese Register-Gruppe",
-                extra={
-                    "device": self.name,
-                    "start_address": start_address,
-                    "count": count,
-                    "registers": [
-                        {
-                            "name": reg["name"],
-                            "address": reg["address"],
-                            "type": reg.get("type", "uint16")
-                        } for reg in group
-                    ]
-                }
-            )
-
-            # Lese die Register als Block
-            values = await self.hub.read_register(
-                device_name=self.device_type,
-                address=start_address,
-                count=count,
-                reg_type="uint16",  # Rohdaten lesen
-            )
-
-            self._logger.debug(
-                "Rohdaten empfangen",
-                extra={
-                    "device": self.name,
-                    "start_address": start_address,
-                    "count": count,
-                    "raw_values": values
-                }
-            )
-
-            if not values:
-                self._logger.warning(
-                    "Keine Werte vom Register empfangen",
-                    extra={
-                        "device": self.name,
-                        "start_address": start_address,
-                        "count": count
-                    }
-                )
-                return {}
-
-            # Verarbeite die Werte für jedes Register
-            result = {}
-            for reg in group:
-                try:
-                    offset = reg["address"] - start_address
-                    reg_count = reg.get("count", 1)
-                    reg_values = values[offset : offset + reg_count]
-
-                    self._logger.debug(
-                        "Verarbeite Register",
-                        extra={
-                            "device": self.name,
-                            "register": reg["name"],
-                            "address": reg["address"],
-                            "type": reg.get("type", "uint16"),
-                            "raw_values": reg_values
-                        }
-                    )
-
-                    if reg_values:
-                        processed_value = await self.hub._process_register_value(
-                            reg_values,
-                            reg.get("type", "uint16"),
-                            reg.get("scale", 1),
-                            reg.get("swap"),
-                        )
-
-                        if processed_value is not None:
-                            result[reg["name"]] = processed_value
-                            self._logger.debug(
-                                "Register erfolgreich verarbeitet",
-                                extra={
-                                    "device": self.name,
-                                    "register": reg["name"],
-                                    "raw_value": reg_values,
-                                    "processed_value": processed_value
-                                }
-                            )
-                        else:
-                            self._logger.warning(
-                                "Register-Verarbeitung ergab None",
-                                extra={
-                                    "device": self.name,
-                                    "register": reg["name"],
-                                    "raw_value": reg_values
-                                }
-                            )
-                except Exception as e:
-                    self._logger.error(
-                        "Fehler bei der Verarbeitung eines einzelnen Registers",
-                        extra={
-                            "error": str(e),
-                            "device": self.name,
-                            "register": reg.get("name"),
-                            "address": reg.get("address")
-                        }
-                    )
-
-            return result
-
-        except Exception as e:
-            self._logger.error(
-                "Fehler beim Lesen einer Register-Gruppe",
-                extra={
-                    "error": str(e),
-                    "device": self.name,
-                    "start_address": start_address,
-                    "count": count
-                }
-            )
-            return {}
-
-    async def _get_register_definitions(self) -> List[Dict]:
-        """Lädt die Register-Definitionen für das Gerät."""
-        try:
-            if not self._register_definitions:
-                device_def = await self.get_device_definition()
-                self._logger.debug(
-                    "Geladene Gerätedefinition",
-                    extra={
-                        "device": self.name,
-                        "definition": device_def
-                    }
-                )
-                
-                if device_def and "registers" in device_def:
-                    self._register_definitions = device_def["registers"]
-                    self._logger.debug(
-                        "Register-Definitionen gesetzt",
-                        extra={
-                            "device": self.name,
-                            "registers": self._register_definitions
-                        }
-                    )
-                else:
-                    self._logger.error(
-                        "Keine Register in der Gerätedefinition gefunden",
-                        extra={
-                            "device": self.name,
-                            "device_type": self.device_type
-                        }
-                    )
-            return self._register_definitions
-        except Exception as e:
-            self._logger.error(
-                "Fehler beim Laden der Register-Definitionen",
-                extra={
-                    "error": str(e),
-                    "device": self.name
-                }
-            )
-            return {}
+        # YAML-Definitionen
+        self._device_config = register_definitions or {}
+        
+        # Entity-Verwaltung
+        self.entities: Dict[str, Any] = {}
+        self._register_data: Dict[str, Any] = {}
+        self._setup_complete = False
 
     @property
     def device_info(self) -> DeviceInfo:
-        """Return device information."""
-        return DeviceInfo(
-            identifiers={(DOMAIN, self.name)},
-            name=self.name,
-            manufacturer=self.config.get("manufacturer", "Unknown"),
-            model=self.config.get("model", "Unknown"),
-            sw_version=self._current_firmware_version,
-        )
-
-    async def async_update_ha_state(self):
-        """Update Home Assistant state."""
-        if self.config.get("firmware_handling", {}).get("auto_detect", False):
-            current_version = await self.detect_firmware_version()
-            if current_version != self._current_firmware_version:
-                self._logger.info(
-                    "Firmware version changed",
-                    old_version=self._current_firmware_version,
-                    new_version=current_version,
-                )
-                await self.update_register_definitions(current_version)
-                self._current_firmware_version = current_version
-
-    async def detect_firmware_version(self) -> Optional[str]:
-        """Erkennt die Firmware-Version aus den Registern.
-        
-        Die Version wird aus mehreren uint16-Registern zusammengesetzt:
-        - Erstes Register (z.B. 4953): 0xAABB = Version AA.BB
-        - Zweites Register (z.B. 4954): 0xCCDD = Version CC.DD
-        Ergibt: Version AA.BB.CC.DD
-        """
-        try:
-            device_def = await self.get_device_definition()
-            if not device_def or "firmware" not in device_def:
-                return None
-
-            firmware_config = device_def["firmware"]
-            version_registers = firmware_config.get("version_registers", [])
+        """Gibt die Geräteinformationen zurück."""
+        info = {
+            "identifiers": {(DOMAIN, self.name)},
+            "name": self.name,
+            "manufacturer": self.config.get("manufacturer", "Modbus Manager"),
+            "model": self.config.get("model", self.device_type)
+        }
             
-            if not version_registers:
-                self._logger.error("Keine Version-Register konfiguriert")
-                return None
-
-            version_parts = []
-            for reg in version_registers:
-                value = await self.hub.read_register(
-                    device_name=self.name,
-                    address=reg["address"],
-                    reg_type="uint16"
-                )
-                
-                if not value:
-                    self._logger.error(
-                        "Konnte Version-Register nicht lesen",
-                        extra={
-                            "register": reg["name"],
-                            "address": reg["address"]
-                        }
-                    )
-                    return None
-                
-                # Extrahiere Major und Minor aus dem uint16-Wert
-                # z.B. 0x0123 wird zu 1.23
-                major = (value[0] >> 8) & 0xFF
-                minor = value[0] & 0xFF
-                version_parts.extend([major, minor])
-
-            # Formatiere die Version entsprechend der Konfiguration
-            version_format = firmware_config.get("version_format", "{:d}.{:d}.{:d}.{:d}")
-            version = version_format.format(*version_parts)
-
-            self._logger.info(
-                "Firmware-Version erkannt",
-                extra={
-                    "device": self.name,
-                    "version": version,
-                    "raw_values": version_parts
-                }
-            )
-
-            return version
-
-        except Exception as e:
-            self._logger.error(
-                "Fehler bei der Firmware-Versionserkennung",
-                extra={
-                    "error": str(e),
-                    "device": self.name
-                }
-            )
-            return None
-
-    async def update_register_definitions(self, firmware_version: str) -> None:
-        """Aktualisiert die Register-Definitionen basierend auf der Firmware-Version."""
-        try:
-            self._logger.debug(
-                "Aktualisiere Register-Definitionen für Firmware-Version %s",
-                firmware_version,
-            )
-
-            # Lade die vollständige Geräte-Definition
-            device_definitions = await self.get_device_definition()
-            if not device_definitions:
-                self._logger.warning(
-                    "No device definitions found for %s", self.device_type
-                )
-                return
-
-            # Bereinige alte Entitäten vor dem Update
-            await self._cleanup_entities()
-
-            # Speichere die neuen Register-Definitionen
-            if "registers" in device_definitions:
-                self._register_definitions = device_definitions["registers"]
-                self._logger.debug(
-                    "Neue Register-Definitionen geladen",
-                    extra={
-                        "device": self.name,
-                        "registers": self._register_definitions
-                    }
-                )
-
-                # Aktualisiere die Polling-Konfiguration
-                polling_config = device_definitions.get("polling", {})
-                
-                # Aktualisiere oder erstelle Koordinatoren für jede Polling-Gruppe
-                for group_name, group_config in polling_config.items():
-                    interval = group_config.get("interval", 30)
-                    
-                    # Wenn der Koordinator bereits existiert, aktualisiere ihn
-                    if group_name in self._coordinators:
-                        coordinator = self._coordinators[group_name]
-                        coordinator.update_interval = timedelta(seconds=interval)
-                        await coordinator.async_refresh()
-                        self._logger.debug(
-                            "Koordinator aktualisiert",
-                            extra={
-                                "device": self.name,
-                                "group": group_name,
-                                "interval": interval
-                            }
-                        )
-                    else:
-                        # Erstelle einen neuen Koordinator
-                        coordinator = DataUpdateCoordinator(
-                            self.hass,
-                            self._logger,
-                            name=f"{self.name}_{group_name}",
-                            update_method=self.read_registers,
-                            update_interval=timedelta(seconds=interval),
-                        )
-                        self._coordinators[group_name] = coordinator
-                        await coordinator.async_refresh()
-                        self._logger.debug(
-                            "Neuer Koordinator erstellt",
-                            extra={
-                                "device": self.name,
-                                "group": group_name,
-                                "interval": interval
-                            }
-                        )
-
-                # Entferne nicht mehr benötigte Koordinatoren
-                for group_name in list(self._coordinators.keys()):
-                    if group_name not in polling_config:
-                        coordinator = self._coordinators.pop(group_name)
-                        await coordinator.async_shutdown()
-                        self._logger.debug(
-                            "Koordinator entfernt",
-                            extra={
-                                "device": self.name,
-                                "group": group_name
-                            }
-                        )
-
-                # Aktualisiere die Entitäten im Entity Registry
-                await self._update_entity_registry()
-
-            self._logger.info(
-                "Register-Definitionen erfolgreich aktualisiert",
-                extra={
-                    "device": self.name,
-                    "firmware_version": firmware_version,
-                    "coordinator_count": len(self._coordinators)
-                }
-            )
-
-        except Exception as e:
-            self._logger.error(
-                "Fehler beim Aktualisieren der Register-Definitionen",
-                extra={
-                    "error": str(e),
-                    "device": self.name,
-                    "firmware_version": firmware_version
-                }
-            )
-
-    async def _update_entity_registry(self):
-        """Aktualisiert die Entitäten im Entity Registry."""
-        try:
-            ent_reg = er.async_get(self.hass)
-            dev_reg = dr.async_get(self.hass)
-            
-            # Finde das Gerät im Device Registry
-            device_entry = dev_reg.async_get_device(
-                identifiers={(DOMAIN, self.name)}
-            )
-            
-            if not device_entry:
-                self._logger.error(
-                    "Gerät nicht im Device Registry gefunden",
-                    extra={"device": self.name}
-                )
-                return
-
-            # Hole alle Entitäten für dieses Gerät
-            entities = er.async_entries_for_device(
-                ent_reg,
-                device_entry.id,
-                include_disabled_entities=True
-            )
-
-            # Aktualisiere jede Entität
-            for entity in entities:
-                try:
-                    # Erzwinge eine Aktualisierung der Entität
-                    if entity.disabled:
-                        # Aktiviere deaktivierte Entitäten
-                        ent_reg.async_update_entity(
-                            entity.entity_id,
-                            disabled_by=None
-                        )
-                    
-                    # Trigger eine Aktualisierung
-                    self.hass.states.async_set(
-                        entity.entity_id,
-                        "unavailable",
-                        {
-                            "friendly_name": entity.name,
-                            "device_class": entity.device_class,
-                            "unit_of_measurement": entity.unit_of_measurement
-                        }
-                    )
-                    
-                    self._logger.debug(
-                        "Entität aktualisiert",
-                        extra={
-                            "device": self.name,
-                            "entity_id": entity.entity_id
-                        }
-                    )
-                
-                except Exception as e:
-                    self._logger.error(
-                        "Fehler beim Aktualisieren der Entität",
-                        extra={
-                            "error": str(e),
-                            "device": self.name,
-                            "entity_id": entity.entity_id
-                        }
-                    )
-
-        except Exception as e:
-            self._logger.error(
-                "Fehler beim Aktualisieren des Entity Registry",
-                extra={
-                    "error": str(e),
-                    "device": self.name
-                }
-            )
+        return DeviceInfo(**info)
 
     async def async_setup(self) -> bool:
-        """Führe das Setup des Geräts durch."""
+        """Führt das Setup des Geräts durch."""
         try:
-            self._logger.debug("Starte Geräte-Setup", extra={"device": self.name})
+            self._logger.debug(
+                "Starte Geräte-Setup",
+                extra={
+                    "device": self.name,
+                    "device_type": self.device_type
+                }
+            )
 
-            # Lade die Gerätedefinition
-            device_definition = await self.get_device_definition()
-            if not device_definition:
-                self._logger.error(
-                    "Keine Gerätedefinition gefunden", 
-                    extra={"device": self.name}
+            # Registriere das Gerät im Device Registry
+            dev_reg = dr.async_get(self.hass)
+            device_entry = dev_reg.async_get_or_create(
+                config_entry_id=self.entry_id,
+                **self.device_info
+            )
+
+            # Verarbeite Register-Definitionen
+            if "registers" in self._device_config:
+                self._logger.debug(
+                    "Verarbeite Register-Definitionen",
+                    extra={
+                        "device": self.name,
+                        "read_count": len(self._device_config["registers"].get("read", [])),
+                        "write_count": len(self._device_config["registers"].get("write", []))
+                    }
                 )
-                return False
+                
+                # Input Register (nur lesen)
+                for register in self._device_config["registers"].get("read", []):
+                    entity = await self._create_register_entity(register, writable=False)
+                    if entity:
+                        self.entities[entity.entity_id] = entity
+                
+                # Holding Register (lesen/schreiben)
+                for register in self._device_config["registers"].get("write", []):
+                    entity = await self._create_register_entity(register, writable=True)
+                    if entity:
+                        self.entities[entity.entity_id] = entity
 
-            # Bereinige alte Entitäten
-            await self._cleanup_entities()
+            # Erstelle Helper-Entities
+            await self._setup_helper_entities()
 
-            # Speichere die Register-Definitionen
-            if "registers" in device_definition:
-                self._register_definitions = device_definition["registers"]
-            else:
-                self._logger.error(
-                    "Keine Register in der Gerätedefinition gefunden",
-                    extra={"device": self.name}
-                )
-                return False
-
-            # Firmware-Version erkennen (optional)
-            if self.config.get("firmware_handling", {}).get("auto_detect", False):
-                firmware_version = await self.detect_firmware_version()
-                if firmware_version:
-                    self._current_firmware_version = firmware_version
-                    self._logger.info(
-                        "Firmware-Version erkannt",
-                        extra={
-                            "version": firmware_version,
-                            "device": self.name
-                        }
-                    )
-
-            # Initialisiere die Polling-Intervalle
-            polling_config = device_definition.get("polling", {})
+            self._setup_complete = True
             
-            # Erstelle Coordinators für jede Polling-Gruppe
-            for group_name, group_config in polling_config.items():
-                try:
-                    interval = group_config.get("interval", 30)
-                    
-                    coordinator = DataUpdateCoordinator(
-                        self.hass,
-                        self._logger,
-                        name=f"{self.name}_{group_name}",
-                        update_method=self.read_registers,
-                        update_interval=timedelta(seconds=interval),
-                    )
-                    
-                    self._coordinators[group_name] = coordinator
-                    
-                    # Erste Aktualisierung mit await
-                    await coordinator.async_refresh()
-                    
-                    self._logger.debug(
-                        "Koordinator initialisiert",
-                        extra={
-                            "device": self.name,
-                            "group": group_name,
-                            "interval": interval
-                        }
-                    )
-                except Exception as e:
-                    self._logger.error(
-                        "Fehler bei der Initialisierung des Koordinators",
-                        extra={
-                            "error": str(e),
-                            "device": self.name,
-                            "group": group_name
-                        }
-                    )
-                    continue
-
-            self._logger.info(
+            self._logger.debug(
                 "Geräte-Setup abgeschlossen",
                 extra={
                     "device": self.name,
-                    "polling_groups": list(polling_config.keys())
+                    "entities_count": len(self.entities)
                 }
             )
+            
             return True
 
         except Exception as e:
             self._logger.error(
-                "Fehler beim Geräte-Setup",
-                error=e,
-                extra={"device": self.name}
-            )
-            return False
-
-    async def async_teardown(self):
-        """Bereinigt das Gerät und stoppt alle laufenden Prozesse."""
-        try:
-            self._logger.info("Starte Teardown für Gerät", extra={"device": self.name})
-
-            # Stoppe alle laufenden Koordinatoren
-            for coordinator in self.hass.data[DOMAIN].get("coordinators", {}).values():
-                await coordinator.async_shutdown()
-
-            # Bereinige Geräteregistrierungen
-            dev_reg = dr.async_get(self.hass)
-            device_entry = dev_reg.async_get_device(identifiers={(DOMAIN, self.name)})
-            if device_entry:
-                self._logger.debug(
-                    "Entferne Gerät aus Registry", extra={"device": self.name}
-                )
-                dev_reg.async_remove_device(device_entry.id)
-
-            # Bereinige Entitätsregistrierungen
-            ent_reg = er.async_get(self.hass)
-            entities = er.async_entries_for_device(
-                ent_reg,
-                device_entry.id if device_entry else None,
-                include_disabled_entities=True,
-            )
-            for entity in entities:
-                self._logger.debug(
-                    "Entferne Entität",
-                    extra={"entity_id": entity.entity_id, "device": self.name},
-                )
-                ent_reg.async_remove(entity.entity_id)
-
-            self._logger.info(
-                "Teardown erfolgreich abgeschlossen", extra={"device": self.name}
-            )
-
-        except Exception as e:
-            self._logger.error(
-                "Fehler beim Teardown", extra={"error": str(e), "device": self.name}
-            )
-            raise
-
-    async def get_device_definition(self) -> Dict[str, Any]:
-        """Lädt die Gerätekonfiguration basierend auf dem Gerätetyp."""
-        try:
-            # Bestimme den Pfad zur Gerätedefinitionsdatei
-            definition_path = (
-                Path(__file__).parent
-                / "device_definitions"
-                / f"{self.device_type}.yaml"
-            )
-
-            self._logger.debug(
-                "Versuche Gerätedefinition zu laden",
-                extra={
-                    "device": self.name,
-                    "path": str(definition_path),
-                    "exists": definition_path.exists()
-                }
-            )
-
-            if not definition_path.exists():
-                self._logger.error(
-                    "Gerätedefinitionsdatei nicht gefunden",
-                    extra={
-                        "device_type": self.device_type,
-                        "path": str(definition_path),
-                    },
-                )
-                return None
-
-            # Lade die Gerätedefinition asynchron
-            async with aiofiles.open(definition_path, "r", encoding="utf-8") as f:
-                content = await f.read()
-                self._logger.debug(
-                    "YAML-Inhalt geladen",
-                    extra={
-                        "device": self.name,
-                        "content": content[:200]  # Zeige die ersten 200 Zeichen
-                    }
-                )
-                device_definition = yaml.safe_load(content)
-
-            self._logger.debug(
-                "Gerätedefinition geladen",
-                extra={
-                    "device": self.name,
-                    "definition": device_definition
-                }
-            )
-
-            # Verarbeite 'include' Direktiven
-            if "include" in device_definition:
-                for include_file in device_definition["include"]:
-                    include_path = Path(__file__).parent / include_file
-                    if include_path.exists():
-                        async with aiofiles.open(
-                            include_path, "r", encoding="utf-8"
-                        ) as f:
-                            include_content = await f.read()
-                            include_data = yaml.safe_load(include_content)
-                            # Merge die inkludierten Daten
-                            device_definition = self._merge_definitions(
-                                device_definition, include_data
-                            )
-                    else:
-                        self._logger.warning(
-                            "Include-Datei nicht gefunden",
-                            extra={"file": str(include_path), "device": self.name},
-                        )
-
-            # Verarbeite Firmware-spezifische Register
-            if "firmware_versions" in device_definition:
-                current_version = self._current_firmware_version or self.config.get(
-                    "firmware_handling", {}
-                ).get("fallback_version")
-                if (
-                    current_version
-                    and current_version in device_definition["firmware_versions"]
-                ):
-                    firmware_specific = device_definition["firmware_versions"][
-                        current_version
-                    ]
-                    device_definition = self._merge_definitions(
-                        device_definition, firmware_specific
-                    )
-
-            # Entferne die firmware_versions aus der finalen Definition
-            if "firmware_versions" in device_definition:
-                del device_definition["firmware_versions"]
-
-            return device_definition
-
-        except Exception as e:
-            self._logger.error(
-                "Fehler beim Laden der Gerätedefinition",
+                "Fehler beim Setup des Geräts",
                 extra={
                     "error": str(e),
                     "device": self.name,
-                    "device_type": self.device_type,
-                },
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def _create_register_entity(self, register_def: dict, writable: bool = False) -> Optional[ModbusRegisterEntity]:
+        """Erstellt eine Register-Entity."""
+        try:
+            # Hole das Polling-Intervall
+            polling_interval = str(register_def.get("polling_interval", 30))
+            
+            # Prüfe ob ein Koordinator für dieses Intervall existiert
+            if polling_interval not in self.hub.coordinators:
+                _LOGGER.error(
+                    "Kein Koordinator für das Polling-Intervall gefunden",
+                    extra={
+                        "polling_interval": polling_interval,
+                        "register": register_def.get("name"),
+                        "device": self.name
+                    }
+                )
+                return None
+
+            # Bestimme den Domain-Typ basierend auf den Register-Eigenschaften
+            if writable:
+                domain = "select" if "options" in register_def else "number"
+            else:
+                domain = "sensor"
+
+            # Erstelle die Entity
+            entity = ModbusRegisterEntity(
+                device=self,
+                register_name=register_def.get("name"),
+                register_config=register_def,
+                coordinator=self.hub.coordinators[polling_interval],
+            )
+            
+            # Setze die Entity-ID
+            entity.entity_id = f"{domain}.{register_def.get('name').lower()}"
+            
+            self._logger.debug(
+                "Register-Entity erstellt",
+                extra={
+                    "entity_id": entity.entity_id,
+                    "register": register_def.get("name"),
+                    "device": self.name,
+                    "domain": domain,
+                    "writable": writable
+                }
+            )
+            
+            return entity
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler beim Erstellen einer Register-Entity",
+                extra={
+                    "error": str(e),
+                    "register": register_def.get("name"),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
             )
             return None
 
-    def _merge_definitions(
-        self, base: Dict[str, Any], overlay: Dict[str, Any]
-    ) -> Dict[str, Any]:
-        """Führt zwei Definitionen zusammen.
-
-        Args:
-            base: Basis-Definition
-            overlay: Zu überlagernde Definition
-
-        Returns:
-            Zusammengeführte Definition
-        """
-        result = base.copy()
-
-        for key, value in overlay.items():
-            if (
-                key in result
-                and isinstance(result[key], dict)
-                and isinstance(value, dict)
-            ):
-                result[key] = self._merge_definitions(result[key], value)
-            elif (
-                key in result
-                and isinstance(result[key], list)
-                and isinstance(value, list)
-            ):
-                # Für Register: Ersetze bestehende Einträge mit gleichem Namen
-                if key == "registers":
-                    existing_names = {
-                        item.get("name"): i for i, item in enumerate(result[key])
-                    }
-                    for new_item in value:
-                        if new_item.get("name") in existing_names:
-                            result[key][existing_names[new_item["name"]]] = new_item
-                        else:
-                            result[key].append(new_item)
-                else:
-                    result[key].extend(value)
-            else:
-                result[key] = value
-
-        return result
-
-    async def write_register(self, register_name: str, value: Any) -> bool:
-        """Schreibt einen Wert in ein Register.
-        
-        Args:
-            register_name: Name des Registers aus der Gerätedefinition
-            value: Zu schreibender Wert
-            
-        Returns:
-            True wenn erfolgreich, False sonst
-        """
+    async def _setup_helper_entities(self):
+        """Erstellt Helper-Entities über die Registry API."""
         try:
+            # Input Numbers
+            if "input_number" in self._device_config:
+                for input_id, config in self._device_config["input_number"].items():
+                    # Erstelle Input Number Entity
+                    entity = ModbusManagerInputNumber(
+                        device=self,
+                        name=input_id,
+                        config=config,
+                        register_config=config.get("register", {})
+                    )
+                    
+                    if entity:
+                        # Setze die Entity-ID
+                        entity.entity_id = f"number.{input_id.lower()}"
+                        self.entities[entity.entity_id] = entity
+            
+            # Input Selects
+            if "input_select" in self._device_config:
+                for input_id, config in self._device_config["input_select"].items():
+                    if "options" in config and config["options"]:
+                        # Erstelle Input Select Entity
+                        entity = ModbusManagerInputSelect(
+                            device=self,
+                            name=input_id,
+                            config=config,
+                            register_config=config.get("register", {})
+                        )
+                        
+                        if entity:
+                            # Setze die Entity-ID
+                            entity.entity_id = f"select.{input_id.lower()}"
+                            self.entities[entity.entity_id] = entity
+            
             self._logger.debug(
-                "Starte Schreibvorgang",
+                "Helper-Entities erfolgreich erstellt",
                 extra={
                     "device": self.name,
-                    "register": register_name,
-                    "value": value
+                    "input_numbers": len(self._device_config.get("input_number", {})),
+                    "input_selects": len(self._device_config.get("input_select", {}))
                 }
             )
 
-            # Lade Register-Definitionen
-            register_defs = await self._get_register_definitions()
-            if not register_defs:
-                self._logger.error("Keine Register-Definitionen gefunden")
-                return False
+        except Exception as e:
+            self._logger.error(
+                "Fehler beim Erstellen der Helper-Entities",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
 
-            # Finde das Write-Register
-            write_registers = []
-            if isinstance(register_defs, dict):
-                if "registers" in register_defs and isinstance(register_defs["registers"], dict):
-                    write_registers = register_defs["registers"].get("write", [])
-                elif "write" in register_defs:
-                    write_registers = register_defs["write"]
+    
 
-            # Suche das spezifische Register
-            register = None
-            for reg in write_registers:
-                if reg.get("name") == register_name:
-                    register = reg
-                    break
+    async def async_update(self, polling_interval: str = "30") -> Dict[str, Any]:
+        """Aktualisiert die Registerwerte für das angegebene Polling-Intervall."""
+        try:
+            if not self._setup_complete:
+                return {}
 
-            if not register:
-                self._logger.error(
-                    "Register nicht gefunden",
+            data = {}
+            errors = []
+            
+            # Lese alle Register mit dem entsprechenden Polling-Intervall
+            if "registers" in self._device_config:
+                # Input Register (nur lesen)
+                for register in self._device_config["registers"].get("read", []):
+                    if str(register.get("polling_interval", "30")) == polling_interval:
+                        try:
+                            await self._read_register(register, data)
+                        except Exception as e:
+                            errors.append({
+                                "register": register.get("name"),
+                                "error": str(e)
+                            })
+                            self._logger.error(
+                                "Fehler beim Lesen eines Registers",
+                                extra={
+                                    "error": str(e),
+                                    "register": register.get("name"),
+                                    "device": self.name
+                                }
+                            )
+                            # Fahre mit dem nächsten Register fort
+                            continue
+                
+                # Holding Register (lesen/schreiben)
+                for register in self._device_config["registers"].get("write", []):
+                    if str(register.get("polling_interval", "30")) == polling_interval:
+                        try:
+                            await self._read_register(register, data)
+                        except Exception as e:
+                            errors.append({
+                                "register": register.get("name"),
+                                "error": str(e)
+                            })
+                            self._logger.error(
+                                "Fehler beim Lesen eines Registers",
+                                extra={
+                                    "error": str(e),
+                                    "register": register.get("name"),
+                                    "device": self.name
+                                }
+                            )
+                            # Fahre mit dem nächsten Register fort
+                            continue
+
+            # Aktualisiere die Register-Daten für dieses Intervall
+            for key, value in data.items():
+                self._register_data[key] = value
+            
+            # Logge eine Zusammenfassung
+            self._logger.debug(
+                "Update abgeschlossen",
+                extra={
+                    "device": self.name,
+                    "polling_interval": polling_interval,
+                    "successful_updates": len(data),
+                    "errors": len(errors),
+                    "error_details": errors if errors else None
+                }
+            )
+                
+            return data
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler beim Update der Register",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "polling_interval": polling_interval
+                }
+            )
+            return {}
+
+    async def _read_register(self, register: Dict[str, Any], values: Dict[str, Any]):
+        """Liest ein einzelnes Register."""
+        try:
+            reg_type = register.get("type", "uint16")
+            reg_count = register.get("count", 1)
+            swap = register.get("swap", "").lower()
+            
+            # Bestimme den Register-Typ für das Lesen
+            # Verwende immer "input" zum Lesen, außer es ist explizit "holding" spezifiziert
+            register_type = register.get("register_type", "input")
+            
+            self._logger.debug(
+                "Starte Modbus Register Lesevorgang",
+                extra={
+                    "register_name": register.get("name"),
+                    "address": register.get("address"),
+                    "count": reg_count,
+                    "type": reg_type,
+                    "register_type": register_type,
+                    "swap": swap,
+                    "device": self.name
+                }
+            )
+            
+            result = await self.hub.read_register(
+                device_name=self.name,
+                address=register["address"],
+                count=reg_count,
+                reg_type=reg_type,
+                register_type=register_type
+            )
+            
+            if result is not None:
+                # Verarbeite Word-Swap wenn nötig
+                if swap == "word" and len(result) >= 2:
+                    result = list(reversed(result))
+                
+                # Verarbeite den Wert mit der _process_register_value Methode
+                processed_value = self._process_register_value(
+                    register_name=register.get("name"),
+                    register_def=register,
+                    raw_value=result
+                )
+                
+                # Speichere den Wert
+                if processed_value is not None:
+                    values[register["name"]] = processed_value
+                
+                # Logging mit allen relevanten Informationen
+                log_extra = {
+                    "register_name": register.get("name"),
+                    "address": register.get("address"),
+                    "value": processed_value,
+                    "raw_result": result,
+                    "type": reg_type,
+                    "device": self.name
+                }
+                
+                # Füge optionale Parameter zum Log hinzu
+                if "scale" in register:
+                    log_extra["scale"] = register["scale"]
+                if "precision" in register:
+                    log_extra["precision"] = register["precision"]
+                if swap:
+                    log_extra["swap"] = swap
+                if "unit_of_measurement" in register:
+                    log_extra["unit"] = register["unit_of_measurement"]
+                if "device_class" in register:
+                    log_extra["device_class"] = register["device_class"]
+                if "state_class" in register:
+                    log_extra["state_class"] = register["state_class"]
+                
+                self._logger.debug(
+                    "Modbus Register erfolgreich gelesen",
+                    extra=log_extra
+                )
+            else:
+                self._logger.warning(
+                    "Modbus Register Lesevorgang ohne Ergebnis",
                     extra={
-                        "device": self.name,
-                        "register": register_name
+                        "register_name": register.get("name"),
+                        "address": register.get("address"),
+                        "type": reg_type,
+                        "device": self.name
+                    }
+                )
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler beim Lesen eines Registers",
+                extra={
+                    "error": str(e),
+                    "register_name": register.get("name"),
+                    "address": register.get("address"),
+                    "type": reg_type,
+                    "device": self.name
+                }
+            )
+
+    async def async_write_register(self, register_name: str, value: Any) -> bool:
+        """Schreibt einen Wert in ein Register."""
+        try:
+            # Suche in Holding Registern
+            register = next(
+                (r for r in self._device_config["registers"].get("write", [])
+                 if r["name"] == register_name),
+                None
+            )
+            
+            if not register:
+                self._logger.warning(
+                    "Register für Schreibvorgang nicht gefunden",
+                    extra={
+                        "register_name": register_name,
+                        "device": self.name
                     }
                 )
                 return False
 
-            # Schreibe den Wert
+            # Konvertiere den Wert in den richtigen Typ
+            try:
+                if isinstance(value, str):
+                    value = float(value)
+            except ValueError:
+                self._logger.error(
+                    "Ungültiger Wert für Register",
+                    extra={
+                        "register_name": register_name,
+                        "value": value,
+                        "device": self.name
+                    }
+                )
+                return False
+
+            # Skaliere den Wert wenn nötig (in die andere Richtung für das Schreiben)
+            scale = register.get("scale", 1)
+            if scale != 1:
+                value = value / scale
+
+            # Runde auf ganze Zahlen für das Register
+            value = int(round(value))
+
+            # Prüfe Minimal- und Maximalwerte nur wenn sie definiert sind
+            if "min" in register and value < register["min"]:
+                self._logger.warning(
+                    "Wert unter Minimum, setze auf Minimum",
+                    extra={
+                        "register_name": register_name,
+                        "value": value,
+                        "min": register["min"],
+                        "device": self.name
+                    }
+                )
+                value = register["min"]
+            elif "max" in register and value > register["max"]:
+                self._logger.warning(
+                    "Wert über Maximum, setze auf Maximum",
+                    extra={
+                        "register_name": register_name,
+                        "value": value,
+                        "max": register["max"],
+                        "device": self.name
+                    }
+                )
+                value = register["max"]
+
+            # Logging mit allen relevanten Informationen
+            log_extra = {
+                "register_name": register_name,
+                "address": register.get("address"),
+                "value": value,
+                "original_value": value * scale if scale != 1 else value,
+                "type": register.get("type", "uint16"),
+                "device": self.name
+            }
+
+            # Füge optionale Parameter zum Log hinzu
+            if scale != 1:
+                log_extra["scale"] = scale
+            if "unit_of_measurement" in register:
+                log_extra["unit"] = register["unit_of_measurement"]
+            if "device_class" in register:
+                log_extra["device_class"] = register["device_class"]
+            if "min" in register:
+                log_extra["min"] = register["min"]
+            if "max" in register:
+                log_extra["max"] = register["max"]
+
+            self._logger.debug(
+                "Starte Modbus Register Schreibvorgang",
+                extra=log_extra
+            )
+
             success = await self.hub.write_register(
                 device_name=self.name,
                 address=register["address"],
                 value=value,
                 reg_type=register.get("type", "uint16"),
-                scale=register.get("scale", 1),
-                swap=register.get("swap")
+                scale=1  # Skalierung wurde bereits oben durchgeführt
             )
 
             if success:
-                self._logger.info(
-                    "Schreibvorgang erfolgreich",
-                    extra={
-                        "device": self.name,
-                        "register": register_name,
-                        "value": value
-                    }
+                self._logger.debug(
+                    "Modbus Register erfolgreich geschrieben",
+                    extra=log_extra
                 )
             else:
-                self._logger.error(
-                    "Schreibvorgang fehlgeschlagen",
-                    extra={
-                        "device": self.name,
-                        "register": register_name,
-                        "value": value
-                    }
+                self._logger.warning(
+                    "Modbus Register Schreibvorgang fehlgeschlagen",
+                    extra=log_extra
                 )
 
             return success
 
         except Exception as e:
             self._logger.error(
-                "Fehler beim Schreiben des Registers",
+                "Fehler beim Schreiben eines Registers",
                 extra={
                     "error": str(e),
-                    "device": self.name,
-                    "register": register_name,
-                    "value": value
+                    "register_name": register_name,
+                    "value": value,
+                    "device": self.name
                 }
             )
             return False
 
-    async def write_registers(self, values: Dict[str, Any]) -> bool:
-        """Schreibt mehrere Werte in Register.
-        
-        Args:
-            values: Dictionary mit Register-Namen und Werten
-            
-        Returns:
-            True wenn alle Schreibvorgänge erfolgreich, False sonst
-        """
+    async def async_teardown(self):
+        """Bereinigt das Gerät und alle zugehörigen Entities."""
         try:
-            success = True
-            for register_name, value in values.items():
-                if not await self.write_register(register_name, value):
-                    success = False
-                    self._logger.error(
-                        "Fehler beim Schreiben eines Registers in der Gruppe",
-                        extra={
-                            "device": self.name,
-                            "register": register_name,
-                            "value": value
-                        }
-                    )
-            return success
-        except Exception as e:
-            self._logger.error(
-                "Fehler beim Schreiben mehrerer Register",
-                extra={
-                    "error": str(e),
-                    "device": self.name,
-                    "values": values
-                }
-            )
-            return False
-
-    async def _cleanup_entities(self):
-        """Bereinigt nicht mehr benötigte Entitäten basierend auf der aktuellen Gerätedefinition."""
-        try:
-            # Hole aktuelle Register-Definitionen
-            register_defs = await self._get_register_definitions()
-            if not register_defs or "registers" not in register_defs:
-                return
-
-            # Erstelle Liste aller gültigen Register-Namen
-            valid_registers = set()
-            if isinstance(register_defs["registers"], dict):
-                # Füge Read-Register hinzu
-                for reg in register_defs["registers"].get("read", []):
-                    valid_registers.add(reg["name"])
-                # Füge Write-Register hinzu
-                for reg in register_defs["registers"].get("write", []):
-                    valid_registers.add(reg["name"])
-
-            self._logger.debug(
-                "Gültige Register",
-                extra={
-                    "device": self.name,
-                    "registers": list(valid_registers)
-                }
-            )
-
-            # Hole Registry-Einträge
+            # Hole die Registries
             ent_reg = er.async_get(self.hass)
             dev_reg = dr.async_get(self.hass)
             
+            # Finde das Gerät
             device_entry = dev_reg.async_get_device(
                 identifiers={(DOMAIN, self.name)}
             )
             
-            if not device_entry:
-                self._logger.error("Gerät nicht im Device Registry gefunden")
-                return
-
-            # Hole alle Entitäten für dieses Gerät
-            entities = er.async_entries_for_device(
-                ent_reg,
-                device_entry.id,
-                include_disabled_entities=True
-            )
-
-            # Überprüfe jede Entität
-            for entity in entities:
-                try:
-                    # Extrahiere Register-Namen aus der Entity-ID
-                    # Format ist normalerweise: sensor.device_name_register_name
-                    parts = entity.entity_id.split("_")
-                    if len(parts) > 1:
-                        register_name = parts[-1]  # Letzter Teil sollte der Register-Name sein
-                        
-                        # Wenn das Register nicht mehr in der Definition existiert
-                        if register_name not in valid_registers:
-                            self._logger.info(
-                                "Entferne nicht mehr benötigte Entität",
+            if device_entry:
+                # Entferne alle Entities
+                entities = er.async_entries_for_device(
+                    ent_reg,
+                    device_entry.id,
+                    include_disabled_entities=True
+                )
+                
+                for entity in entities:
+                    if entity and entity.entity_id:
+                        try:
+                            await ent_reg.async_remove(entity.entity_id)
+                            self._logger.debug(
+                                f"Entity {entity.entity_id} wurde entfernt",
                                 extra={
                                     "device": self.name,
-                                    "entity_id": entity.entity_id,
-                                    "register": register_name
+                                    "entity_id": entity.entity_id
                                 }
                             )
-                            # Entferne die Entität
-                            ent_reg.async_remove(entity.entity_id)
-
+                        except Exception as e:
+                            self._logger.warning(
+                                "Fehler beim Entfernen einer Entity",
+                                extra={
+                                    "error": str(e),
+                                    "entity_id": entity.entity_id,
+                                    "device": self.name
+                                }
+                            )
+                
+                # Entferne das Gerät
+                try:
+                    dev_reg.async_remove_device(device_entry.id)
+                    self._logger.debug(
+                        "Gerät wurde entfernt",
+                        extra={
+                            "device": self.name
+                        }
+                    )
                 except Exception as e:
-                    self._logger.error(
-                        "Fehler beim Überprüfen einer Entität",
+                    self._logger.warning(
+                        "Fehler beim Entfernen des Geräts",
                         extra={
                             "error": str(e),
-                            "entity_id": entity.entity_id
+                            "device": self.name
                         }
                     )
 
+            # Bereinige interne Zustände
+            self.entities.clear()
+            self._register_data.clear()
+            self._setup_complete = False
+
         except Exception as e:
             self._logger.error(
-                "Fehler beim Bereinigen der Entitäten",
+                "Fehler beim Teardown des Geräts",
                 extra={
                     "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+
+    def _process_register_value(
+        self,
+        register_name: str,
+        register_def: Dict[str, Any],
+        raw_value: Any
+    ) -> Any:
+        """Verarbeitet den Rohwert eines Registers basierend auf seinem Typ."""
+        try:
+            if raw_value is None:
+                return None
+
+            reg_type = register_def.get("type", "uint16")
+            
+            # Für String-Register
+            if reg_type == "string":
+                try:
+                    # Konvertiere die Register-Werte in ASCII-Zeichen
+                    ascii_string = ""
+                    for value in raw_value:
+                        # Extrahiere die beiden ASCII-Zeichen aus jedem Register
+                        high_byte = (value >> 8) & 0xFF
+                        low_byte = value & 0xFF
+                        
+                        # Füge nur gültige ASCII-Zeichen hinzu
+                        if high_byte >= 32 and high_byte <= 126:  # Druckbare ASCII-Zeichen
+                            ascii_string += chr(high_byte)
+                        if low_byte >= 32 and low_byte <= 126:  # Druckbare ASCII-Zeichen
+                            ascii_string += chr(low_byte)
+                    
+                    # Entferne Nullbytes und Leerzeichen am Ende
+                    return ascii_string.strip('\x00 ')
+                    
+                except Exception as e:
+                    self._logger.error(
+                        "Fehler bei der String-Konvertierung",
+                        extra={
+                            "error": str(e),
+                            "register": register_name,
+                            "raw_value": raw_value,
+                            "device": self.name
+                        }
+                    )
+                    return None
+
+            # Für numerische Register
+            processed_value = None
+            
+            if isinstance(raw_value, (list, tuple)):
+                if len(raw_value) == 1:
+                    processed_value = raw_value[0]
+                else:
+                    # Behandle mehrere Register als ein Wert (z.B. für 32-bit Werte)
+                    if reg_type == "uint32" and len(raw_value) >= 2:
+                        processed_value = (raw_value[0] << 16) | raw_value[1]
+                    elif reg_type == "int32" and len(raw_value) >= 2:
+                        value = (raw_value[0] << 16) | raw_value[1]
+                        if value > 2147483647:  # 2^31 - 1
+                            processed_value = value - 4294967296  # 2^32
+                        else:
+                            processed_value = value
+                    elif reg_type == "float32" and len(raw_value) >= 2:
+                        import struct
+                        # Konvertiere zwei 16-bit Register in einen 32-bit Float
+                        combined = (raw_value[0] << 16) | raw_value[1]
+                        processed_value = struct.unpack('!f', struct.pack('!I', combined))[0]
+                    else:
+                        processed_value = raw_value[0]
+            else:
+                processed_value = raw_value
+
+            # Konvertiere zu float für weitere Verarbeitung
+            if processed_value is not None:
+                processed_value = float(processed_value)
+
+                # Skalierung anwenden wenn konfiguriert
+                if "scale" in register_def:
+                    processed_value = processed_value * register_def["scale"]
+
+                # Wert entsprechend der Präzision runden
+                if "precision" in register_def:
+                    processed_value = round(processed_value, register_def["precision"])
+
+            return processed_value
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler bei der Wertverarbeitung",
+                extra={
+                    "error": str(e),
+                    "register": register_name,
+                    "raw_value": raw_value,
+                    "register_type": reg_type,
                     "device": self.name
                 }
             )
+            return None
