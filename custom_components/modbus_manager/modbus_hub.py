@@ -9,8 +9,10 @@ import yaml
 import asyncio
 from pymodbus.client.tcp import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
+from pymodbus.exceptions import ModbusException
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.config_entries import ConfigEntry
 
 from .const import DOMAIN
@@ -28,6 +30,7 @@ class ModbusManagerHub:
     """Class for managing Modbus connection for devices."""
 
     def __init__(self, name: str, host: str, port: int, slave: int, device_type: str, hass: HomeAssistant, config_entry: ConfigEntry):
+    def __init__(self, name: str, host: str, port: int, slave: int, device_type: str, hass: HomeAssistant, config_entry: ConfigEntry):
         """Initialize the hub.
         
         Args:
@@ -37,6 +40,7 @@ class ModbusManagerHub:
             slave: Modbus slave ID
             device_type: Type of device from device definitions
             hass: HomeAssistant instance
+            config_entry: ConfigEntry instance
             config_entry: ConfigEntry instance
         """
         self.name = name
@@ -50,7 +54,17 @@ class ModbusManagerHub:
         self._device_definition_cache: Dict[str, Dict[str, Any]] = {}
         
         # Initialisiere das coordinators Wörterbuch
+        self.config_entry = config_entry
+        self.device = None
+        self._device_definition_cache: Dict[str, Dict[str, Any]] = {}
+        
+        # Initialisiere das coordinators Wörterbuch
         self.coordinators: Dict[str, DataUpdateCoordinator] = {}
+
+        self.client = AsyncModbusTcpClient(host=host, port=port)
+        #self.client.connect()
+
+        _LOGGER.debug("Initialisiere ModbusManagerDevice mit hass und config")
 
         self.client = AsyncModbusTcpClient(host=host, port=port)
         #self.client.connect()
@@ -93,12 +107,26 @@ class ModbusManagerHub:
             _LOGGER.error("Verbindung zum Modbus-Gerät fehlgeschlagen")
             return False
         return await self.device.async_setup()
+            _LOGGER.error(f"Fehler bei der Initialisierung von ModbusManagerDevice: {e}")
+            raise
+
+    async def async_setup(self) -> bool:
+        """Set up the Modbus Manager Hub."""
+        if not await self.client.connect():
+            _LOGGER.error("Verbindung zum Modbus-Gerät fehlgeschlagen")
+            return False
+        return await self.device.async_setup()
 
     async def async_teardown(self):
         """Teardown method for the hub."""
         if self.device:
             await self.device.async_teardown()
+    async def async_teardown(self):
+        """Teardown method for the hub."""
+        if self.device:
+            await self.device.async_teardown()
         if self.client:
+            if self.client.connected:
             if self.client.connected:
                 await self.client.close()
             self.client = None
@@ -178,6 +206,7 @@ class ModbusManagerHub:
             
         except Exception as e:
             error = handle_modbus_error(e)
+            
             
             raise error
 

@@ -15,6 +15,7 @@ from .modbus_hub import ModbusManagerHub
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
+_LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass, entry, async_add_entities):
     """Richte die Modbus Manager Switches ein."""
