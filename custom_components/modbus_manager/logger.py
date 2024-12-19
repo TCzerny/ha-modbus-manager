@@ -1,9 +1,9 @@
 """Logging utilities for Modbus Manager."""
 import logging
 from datetime import datetime
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
-class ModbusManagerLogger:
+class ModbusManagerLogger(logging.Logger):
     """Custom logger for Modbus Manager."""
 
     def __init__(self, name: str):
@@ -12,37 +12,107 @@ class ModbusManagerLogger:
         Args:
             name: Name for the logger instance (e.g. 'hub_sungrow1')
         """
-        self.logger = logging.getLogger(f"custom_components.modbus_manager.{name}")
+        super().__init__(f"custom_components.modbus_manager.{name}")
         self.name = name
+        self.logger = logging.getLogger(f"custom_components.modbus_manager.{name}")
+        
+        # Übernehme die Einstellungen vom Parent-Logger
+        self.parent = logging.getLogger("custom_components.modbus_manager")
+        self.setLevel(self.parent.level)
+        for handler in self.parent.handlers:
+            self.addHandler(handler)
 
-    def _format_message(self, msg: str, **kwargs: Any) -> str:
-        """Format log message with additional context."""
-        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
-        context = ' '.join(f"{k}={v}" for k, v in kwargs.items()) if kwargs else ''
-        return f"[{self.name}] {msg} {context}".strip()
+    def _format_message(self, msg: str, *args: Any, **kwargs: Any) -> str:
+        """Format log message with additional context.
+        
+        Args:
+            msg: Message to format (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        try:
+            # Loggen der übergebenen Argumente
+            self.logger.debug(f"Formatting message with args: {args} and kwargs: {kwargs}")
+            
+            # Sicherstellen, dass args nur iterierbare Objekte enthalten
+            safe_args = [arg for arg in args if isinstance(arg, (list, tuple, dict))]
+            if safe_args or ('{' in msg and '}' in msg):
+                msg = msg.format(*safe_args, **{k: v for k, v in kwargs.items() if not isinstance(v, (dict, list))})
+            
+            # Extrahiere Kontext-Daten aus kwargs
+            context_items = []
+            for k, v in kwargs.items():
+                if isinstance(v, (dict, list)):
+                    context_items.append(f"{k}={repr(v)}")
+                else:
+                    context_items.append(f"{k}={v}")
+            
+            context = ' '.join(context_items) if context_items else ''
+            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S.%f")[:-3]
+            
+            return f"[{self.name}] {msg} {context}".strip()
+            
+        except Exception as e:
+            return f"[{self.name}] ERROR FORMATTING MESSAGE: {msg} (Error: {str(e)})"
 
-    def debug(self, msg: str, **kwargs: Any) -> None:
-        """Log debug message."""
-        self.logger.debug(self._format_message(msg, **kwargs))
+    def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log debug message.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.DEBUG):
+            self.logger.debug(self._format_message(msg, *args, **kwargs))
 
-    def info(self, msg: str, **kwargs: Any) -> None:
-        """Log info message."""
-        self.logger.info(self._format_message(msg, **kwargs))
+    def info(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log info message.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.INFO):
+            self.logger.info(self._format_message(msg, *args, **kwargs))
 
-    def warning(self, msg: str, **kwargs: Any) -> None:
-        """Log warning message."""
-        self.logger.warning(self._format_message(msg, **kwargs))
+    def warning(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log warning message.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.WARNING):
+            self.logger.warning(self._format_message(msg, *args, **kwargs))
 
-    def error(self, msg: str, error: Optional[Exception] = None, **kwargs: Any) -> None:
-        """Log error message with optional exception."""
-        if error:
-            kwargs['error'] = str(error)
-            kwargs['error_type'] = type(error).__name__
-        self.logger.error(self._format_message(msg, **kwargs))
+    def error(self, msg: str, *args: Any, error: Optional[Exception] = None, **kwargs: Any) -> None:
+        """Log error message with optional exception.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            error: Optional exception to include in the log
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.ERROR):
+            if error:
+                kwargs['error'] = str(error)
+                kwargs['error_type'] = type(error).__name__
+            self.logger.error(self._format_message(msg, *args, **kwargs))
 
-    def exception(self, msg: str, **kwargs: Any) -> None:
-        """Log exception with traceback."""
-        self.logger.exception(self._format_message(msg, **kwargs))
+    def exception(self, msg: str, *args: Any, **kwargs: Any) -> None:
+        """Log exception with traceback.
+        
+        Args:
+            msg: Message to log (can be an f-string)
+            *args: Positional arguments for string formatting
+            **kwargs: Keyword arguments for context and string formatting
+        """
+        if self.isEnabledFor(logging.ERROR):
+            self.logger.exception(self._format_message(msg, *args, **kwargs))
 
     def log_operation(
         self,

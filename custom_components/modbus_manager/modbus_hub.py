@@ -8,8 +8,10 @@ from pathlib import Path
 import yaml
 import asyncio
 from pymodbus.client.tcp import AsyncModbusTcpClient
+from pymodbus.exceptions import ModbusException
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
 
 from .const import DOMAIN
 from .errors import ModbusDeviceError, handle_modbus_error
@@ -23,7 +25,7 @@ _LOGGER = logging.getLogger(__name__)
 class ModbusManagerHub:
     """Class for managing Modbus connection for devices."""
 
-    def __init__(self, name: str, host: str, port: int, slave: int, device_type: str, hass: HomeAssistant):
+    def __init__(self, name: str, host: str, port: int, slave: int, device_type: str, hass: HomeAssistant, config_entry: ConfigEntry):
         """Initialize the hub.
         
         Args:
@@ -33,6 +35,7 @@ class ModbusManagerHub:
             slave: Modbus slave ID
             device_type: Type of device from device definitions
             hass: HomeAssistant instance
+            config_entry: ConfigEntry instance
         """
         self.name = name
         self.host = host
@@ -40,9 +43,15 @@ class ModbusManagerHub:
         self.slave = slave
         self.device_type = device_type
         self.hass = hass
-        self.config_entry = None
+        self.config_entry = config_entry
         self.device = None
         self._device_definition_cache: Dict[str, Dict[str, Any]] = {}
+        
+        # Initialisiere das coordinators Wörterbuch
+        self.coordinators: Dict[str, DataUpdateCoordinator] = {}
+
+        self.client = AsyncModbusTcpClient(host=host, port=port)
+        #self.client.connect()
 
         _LOGGER.debug("Initialisiere ModbusManagerDevice mit hass und config")
         try:
@@ -53,25 +62,41 @@ class ModbusManagerHub:
                 "port": self.port,
                 "slave": self.slave,
                 "device_type": self.device_type,
-                # Fügen Sie hier weitere Konfigurationsparameter hinzu, falls nötig
+                "entry_id": self.config_entry.entry_id  # Hinzufügen der entry_id
             }
             
             _LOGGER.debug("Hub config: %s", self.config)
             
             self.device = ModbusManagerDevice(self.hass, self.config)
             _LOGGER.info("ModbusManagerDevice erfolgreich initialisiert")
+            
+            # Initialisiere den Proxy
+            self.proxy = ModbusManagerProxy(
+                client=self.client,
+                slave=self.slave
+            )
+            _LOGGER.debug("ModbusManagerProxy erfolgreich initialisiert")
+            
         except Exception as e:
             _LOGGER.error(f"Fehler bei der Initialisierung von ModbusManagerDevice: {e}")
             raise
 
     async def async_setup(self) -> bool:
         """Set up the Modbus Manager Hub."""
+        if not await self.client.connect():
+            _LOGGER.error("Verbindung zum Modbus-Gerät fehlgeschlagen")
+            return False
         return await self.device.async_setup()
 
     async def async_teardown(self):
         """Teardown method for the hub."""
         if self.device:
             await self.device.async_teardown()
+        if self.client:
+            if self.client.connected:
+                await self.client.close()
+            self.client = None
+        _LOGGER.info(f"Modbus-Verbindung für {self.name} geschlossen")
 
     def get_device_definition(self, device_definition_name: str) -> Optional[Dict[str, Any]]:
         """Get device configuration with caching."""
@@ -329,3 +354,225 @@ class ModbusManagerHub:
         # Setup cost calculation templates
         if device_def.get("supports_cost_calculation", False):
             await self.setup_cost_templates()
+
+    async def reload_registers(self, name: str, firmware_version: str):
+        """Lädt die Register basierend auf der Firmware-Version neu."""
+        try:
+            _LOGGER.debug(f"Lade Register für {name} mit Firmware-Version {firmware_version}")
+            await self.device.update_register_definitions(firmware_version)
+            # Zusätzliche Logik zum Neuladen der Register-Definitionen, falls erforderlich
+        except Exception as e:
+            _LOGGER.error(f"Fehler beim Reload der Register: {e}")
+
+    async def read_registers(self, device_type: str):
+        """Liest die Register für ein bestimmtes Gerät.
+
+        Args:
+            device_type: Der Typ des Geräts, dessen Register gelesen werden sollen.
+        """
+        try:
+            _LOGGER.debug("Lese Register für Gerätetyp: %s", device_type)
+            
+            # Erstelle einen Coordinator für den Gerätetyp, falls noch nicht vorhanden
+            if device_type not in self.coordinators:
+                coordinator = DataUpdateCoordinator(
+                    hass=self.hass,
+                    logger=_LOGGER,
+                    name=f"{self.name}_{device_type}_coordinator",
+                    update_method=self.device.read_registers,  # Keine Argumente erforderlich
+                    update_interval=timedelta(seconds=30)  # Anpassbar je nach Bedarf
+                )
+                self.coordinators[device_type] = coordinator
+                await coordinator.async_config_entry_first_refresh()
+            
+            _LOGGER.debug(f"Coordinator für {device_type} initialisiert")
+        
+        except Exception as e:
+            _LOGGER.error("Fehler beim Lesen der Register: %s", e)
+            raise
+
+    async def read_single_register(self, address: int, count: int = 1, unit: int = 1) -> Optional[List[int]]:
+        """Liest einzelne Register vom Modbus-Gerät."""
+        try:
+            _LOGGER.debug(f"Lese Register ab Adresse {address} mit Count {count} und Unit {unit}")
+            response = await self.client.read_input_registers(address, count, slave=unit)
+            if response.isError():
+                _LOGGER.error(f"Fehler beim Lesen von Register {address}: {response}")
+                return None
+            return response.registers
+        except ModbusException as e:
+            _LOGGER.error(f"Modbus-Fehler beim Lesen von Register {address}: {e}")
+            return None
+        except Exception as e:
+            _LOGGER.error(f"Allgemeiner Fehler beim Lesen von Register {address}: {e}")
+            return None
+
+    async def read_register(self, device_name: str, address: int, reg_type: str, count: int = 1, scale: float = 1, swap: Optional[str] = None) -> Any:
+        """Liest ein einzelnes Register.
+        
+        Args:
+            device_name: Name des Geräts
+            address: Modbus-Registeradresse
+            reg_type: Registertyp (uint16, int16, uint32, int32, float, string)
+            count: Anzahl der zu lesenden Register
+            scale: Skalierungsfaktor
+            swap: Byte-Reihenfolge (None oder 'word')
+            
+        Returns:
+            Verarbeiteter Registerwert
+        """
+        try:
+            if not self.client.connected:
+                await self.client.connect()
+
+            # Lese die Register
+            if reg_type == "string":
+                response = await self.client.read_holding_registers(address, count, slave=self.slave)
+            else:
+                response = await self.client.read_holding_registers(address, count, slave=self.slave)
+
+            if response.isError():
+                raise ModbusException(f"Fehler beim Lesen des Registers {address}: {response}")
+
+            # Verarbeite die Rohdaten
+            raw_value = response.registers
+            if not raw_value:
+                return None
+
+            # Verarbeite verschiedene Datentypen
+            if reg_type == "uint16":
+                value = raw_value[0]
+            elif reg_type == "int16":
+                value = raw_value[0]
+                if value > 32767:
+                    value -= 65536
+            elif reg_type in ["uint32", "int32"]:
+                if len(raw_value) < 2:
+                    return None
+                if swap == "word":
+                    value = (raw_value[1] << 16) + raw_value[0]
+                else:
+                    value = (raw_value[0] << 16) + raw_value[1]
+                if reg_type == "int32" and value > 2147483647:
+                    value -= 4294967296
+            elif reg_type == "float":
+                if len(raw_value) < 2:
+                    return None
+                import struct
+                if swap == "word":
+                    value = struct.unpack(">f", struct.pack(">HH", raw_value[1], raw_value[0]))[0]
+                else:
+                    value = struct.unpack(">f", struct.pack(">HH", raw_value[0], raw_value[1]))[0]
+            elif reg_type == "string":
+                # Konvertiere die Werte in ASCII-Zeichen
+                value = "".join(chr(x) for x in raw_value).strip("\x00")
+                return value  # Keine Skalierung für Strings
+            else:
+                _LOGGER.warning("Unbekannter Registertyp: %s", reg_type)
+                return None
+
+            # Skaliere den Wert
+            value *= scale
+
+            return value
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Lesen des Registers",
+                extra={
+                    "error": str(e),
+                    "address": address,
+                    "type": reg_type,
+                    "device": device_name
+                }
+            )
+            return None
+
+    async def write_register(self, device_name: str, address: int, value: Any, reg_type: str, scale: float = 1, swap: Optional[str] = None) -> bool:
+        """Schreibt einen Wert in ein Register.
+        
+        Args:
+            device_name: Name des Geräts
+            address: Modbus-Registeradresse
+            value: Zu schreibender Wert
+            reg_type: Registertyp (uint16, int16, uint32, int32, float, string)
+            scale: Skalierungsfaktor
+            swap: Byte-Reihenfolge (None oder 'word')
+            
+        Returns:
+            True wenn erfolgreich, False sonst
+        """
+        try:
+            if not self.client.connected:
+                await self.client.connect()
+
+            # Skaliere den Wert
+            if reg_type != "string":
+                value = value / scale
+
+            # Konvertiere den Wert in das richtige Format
+            if reg_type == "uint16":
+                register_value = int(value) & 0xFFFF
+                values = [register_value]
+            elif reg_type == "int16":
+                register_value = int(value)
+                if register_value < 0:
+                    register_value += 65536
+                values = [register_value]
+            elif reg_type in ["uint32", "int32"]:
+                register_value = int(value)
+                if reg_type == "int32" and register_value < 0:
+                    register_value += 4294967296
+                if swap == "word":
+                    values = [register_value & 0xFFFF, (register_value >> 16) & 0xFFFF]
+                else:
+                    values = [(register_value >> 16) & 0xFFFF, register_value & 0xFFFF]
+            elif reg_type == "float":
+                import struct
+                float_bytes = struct.pack(">f", float(value))
+                if swap == "word":
+                    values = [
+                        struct.unpack(">H", float_bytes[2:4])[0],
+                        struct.unpack(">H", float_bytes[0:2])[0]
+                    ]
+                else:
+                    values = [
+                        struct.unpack(">H", float_bytes[0:2])[0],
+                        struct.unpack(">H", float_bytes[2:4])[0]
+                    ]
+            elif reg_type == "string":
+                # Konvertiere String in Register-Werte
+                string_bytes = value.encode("ascii")
+                values = []
+                for i in range(0, len(string_bytes), 2):
+                    if i + 1 < len(string_bytes):
+                        values.append((string_bytes[i] << 8) + string_bytes[i + 1])
+                    else:
+                        values.append(string_bytes[i] << 8)
+            else:
+                _LOGGER.warning("Unbekannter Registertyp: %s", reg_type)
+                return False
+
+            # Schreibe die Register
+            if len(values) == 1:
+                response = await self.client.write_register(address, values[0], slave=self.slave)
+            else:
+                response = await self.client.write_registers(address, values, slave=self.slave)
+
+            if response.isError():
+                raise ModbusException(f"Fehler beim Schreiben des Registers {address}: {response}")
+
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Schreiben des Registers",
+                extra={
+                    "error": str(e),
+                    "address": address,
+                    "value": value,
+                    "type": reg_type,
+                    "device": device_name
+                }
+            )
+            return False

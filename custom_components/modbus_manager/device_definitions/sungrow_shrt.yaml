@@ -2,7 +2,7 @@
 # Basierend auf https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
 
 include:
-  - common_entities.yaml
+  - ../core/common_entities.yaml
 
 device_info:
   name: "Sungrow SH-RT Hybrid Inverter"
@@ -17,8 +17,8 @@ device_config:
   # Firmware-Handling
   firmware_handling:
     auto_detect: true
-    version_register: 5000
-    version_type: "string"
+    version_register: 4954
+    version_type: "uint16"
     update_on_version_change: true
     fallback_version: "1.0.0"
 
@@ -59,7 +59,7 @@ firmware_versions:
   "1.0.0":  # Original Firmware
     registers:
       read:
-    - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
+        - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
         # ... weitere Register
   
   "1.0.23":  # Neue Firmware mit geänderten Registern
@@ -79,6 +79,8 @@ registers:
     - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
     - { name: "system_status", address: 12999, type: "uint16", state_class: "measurement", translation_key: "sensor.system.status", scale: 1, precision: 0 }
     - { name: "running_state", address: 13000, type: "uint16", state_class: "measurement", translation_key: "sensor.running.state", scale: 1, precision: 0 }
+    - { name: "arm_software_version", address: 4954, type: "uint16" }
+    - { name: "dsp_software_version", address: 4969, type: "uint16" }
 
     # MPPT Values
     - { name: "mppt1_voltage", address: 5010, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1, precision: 1 }
@@ -131,7 +133,7 @@ registers:
     - { name: "daily_pv_generation", address: 13001, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
     - { name: "total_pv_generation", address: 13002, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
     - { name: "daily_exported_from_pv", address: 13004, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
-    - { name: "total_exported_from_pv", address: 13005, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, swap: "word" }
+    - { name: "total_exported_from_pv", address: 13005, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1 }
     - { name: "load_power", address: 13007, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
     - { name: "export_power_raw", address: 13009, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0 }
     - { name: "daily_battery_charge_from_pv", address: 13011, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }

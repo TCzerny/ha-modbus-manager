@@ -12,113 +12,96 @@ device_info:
 registers:
   read:
     # System Information
-    - { name: "serial_number", address: 1000, type: "string", count: 10 }
-    - { name: "firmware_version", address: 1010, type: "string", count: 5 }
-    - { name: "device_status", address: 1020, type: "uint16", translation_key: "sensor.device.status" }
-    
-    # Charging Status
-    - { name: "charging_state", address: 2000, type: "uint16", translation_key: "sensor.charging.state" }
-    - { name: "connected_state", address: 2001, type: "uint16", translation_key: "sensor.connection.state" }
-    - { name: "error_code", address: 2002, type: "uint16", translation_key: "sensor.error.code" }
+    - { name: "id", address: 0, type: "string", count: 25 }
+    - { name: "serial_number", address: 25, type: "string", count: 25, translation_key: "sensor.device.serial_number" }
+    - { name: "active_protocol", address: 50, type: "string", count: 25, translation_key: "sensor.device.protocol" }
+    - { name: "manufacturer", address: 100, type: "string", count: 25, translation_key: "sensor.device.manufacturer" }
+    #- { name: "platform_type", address: 125, type: "string", count: 25, translation_key: "sensor.device.platform_type" }
+    #- { name: "product_type", address: 150, type: "string", count: 25, translation_key: "sensor.device.product_type" }
+    - { name: "modbus_table_version", address: 175, type: "uint16" }
+    - { name: "firmware", address: 200, type: "string", count: 25, translation_key: "sensor.device.firmware" }
+    - { name: "number_of_sockets", address: 225, type: "uint16" }
+    - { name: "ocpp_state", address: 250, type: "uint16" }
+    - { name: "socket_1_mode_3_state", address: 275, type: "string", count: 25, translation_key: "sensor.device.status" }
+    - { name: "socket_1_cable_state", address: 300, type: "uint16", translation_key: "sensor.device.cable_status" }
     
     # Power Measurements
-    - { name: "charging_power", address: 2100, type: "uint32", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
-    - { name: "voltage_l1", address: 2102, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
-    - { name: "voltage_l2", address: 2103, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
-    - { name: "voltage_l3", address: 2104, type: "uint16", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement", scale: 0.1 }
-    - { name: "current_l1", address: 2105, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
-    - { name: "current_l2", address: 2106, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
-    - { name: "current_l3", address: 2107, type: "uint16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1 }
+    - { name: "actual_max_current_l1", address: 1000, type: "float32", unit_of_measurement: "A", device_class: "current", state_class: "measurement" }
+    - { name: "actual_max_current_l2", address: 1002, type: "float32", unit_of_measurement: "A", device_class: "current", state_class: "measurement" }
+    - { name: "actual_max_current_l3", address: 1004, type: "float32", unit_of_measurement: "A", device_class: "current", state_class: "measurement" }
+    - { name: "current_l1", address: 1006, type: "float32", unit_of_measurement: "A", device_class: "current", state_class: "measurement" }
+    - { name: "current_l2", address: 1008, type: "float32", unit_of_measurement: "A", device_class: "current", state_class: "measurement" }
+    - { name: "current_l3", address: 1010, type: "float32", unit_of_measurement: "A", device_class: "current", state_class: "measurement" }
+    - { name: "voltage_l1", address: 301, type: "float32", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement" }
+    - { name: "voltage_l2", address: 303, type: "float32", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement" }
+    - { name: "voltage_l3", address: 305, type: "float32", unit_of_measurement: "V", device_class: "voltage", state_class: "measurement" }
     
-    # Energy Measurements
-    - { name: "energy_total", address: 2200, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    - { name: "energy_session", address: 2202, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1 }
-    
-    # Temperature
-    - { name: "temperature", address: 2300, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1 }
-
   write:
     # Control Registers
-    - { name: "charging_current_limit", address: 3000, type: "uint16", min: 6, max: 32, unit_of_measurement: "A" }
-    - { name: "start_stop_charging", address: 3001, type: "uint16", min: 0, max: 1 }
-    - { name: "reset_error", address: 3002, type: "uint16", min: 0, max: 1 }
+    - { name: "max_current_l1", address: 1012, type: "float32", min: 0, max: 32, unit_of_measurement: "A" }
+    - { name: "max_current_l2", address: 1014, type: "float32", min: 0, max: 32, unit_of_measurement: "A" }
+    - { name: "max_current_l3", address: 1016, type: "float32", min: 0, max: 32, unit_of_measurement: "A" }
+    - { name: "fallback_max_current_l1", address: 1018, type: "float32", min: 0, max: 32, unit_of_measurement: "A" } # comment for now as this should not be used
+    - { name: "fallback_max_current_l2", address: 1020, type: "float32", min: 0, max: 32, unit_of_measurement: "A" } # comment for now as this should not be used
+    - { name: "fallback_max_current_l3", address: 1022, type: "float32", min: 0, max: 32, unit_of_measurement: "A" } # comment for now as this should not be used
+    - { name: "remaining_time_before_fallback", address: 1024, type: "uint16"}
+    - { name: "operative_state_of_box", address: 1028, type: "uint16", translation_key: "sensor.device.availability"}
 
 polling:
   fast:
-    interval: 5
+    interval: 10
     registers: [
-      "charging_state",
-      "charging_power",
-      "connected_state",
-      "error_code"
+      "socket_1_mode_3_state",
+      "socket_1_cable_state",
+      "current_l1",
+      "current_l2",
+      "current_l3",
+      "voltage_l1",
+      "voltage_l2",
+      "voltage_l3",
+      "actual_max_current_l1",
+      "actual_max_current_l2",
+      "actual_max_current_l3"
     ]
   normal:
     interval: 30
     registers: [
-      "voltage_l1", "voltage_l2", "voltage_l3",
-      "current_l1", "current_l2", "current_l3",
-      "temperature",
-      "energy_session"
+      "active_protocol"
     ]
   slow:
-    interval: 300
+    interval: 600
     registers: [
-      "energy_total",
-      "device_status"
+      "id",
+      "serial_number",
+      "manufacturer",
+      "firmware",
+      "modbus_table_version",
+      "number_of_sockets",
+      "ocpp_state",
     ]
 
 device_specific_templates:
-  - name: "charging_efficiency"
-    value: >
-      {% set power_in = states('sensor.{{device_name}}_charging_power')|float(0) %}
-      {% set power_out = states('sensor.{{device_name}}_output_power')|float(0) %}
-      {{ ((power_out / power_in * 100) if power_in > 0 else 0)|round(1) }}
-    unit_of_measurement: "%"
-    icon: "mdi:battery-charging"
-
-  - name: "charging_cost"
-    value: >
-      {% set energy = states('sensor.{{device_name}}_energy_session')|float(0) %}
-      {% set price = states('sensor.electricity_price')|float(0.30) %}
-      {{ (energy * price)|round(2) }}
-    unit_of_measurement: "€"
-    icon: "mdi:currency-eur"
-
-  - name: "pv_charging_efficiency"
-    value: >
-      {% set status = states('sensor.{{device_name}}_pv_charging_status')|from_json %}
-      {% set pv_power = status.pv_power %}
-      {% set charging_power = status.charging_power %}
-      {% if charging_power > 0 and pv_power > 0 %}
-        {{ (charging_power / pv_power * 100)|round(1) }}
-      {% else %}
+  - name: "Current Load of Wallbox"
+    unit_of_measurement: W
+    device_class: power
+    state: >
+      {% if states('sensor.{{device_name}}_current_l1') | float(0) > 0.11 or
+      states('sensor.{{device_name}}_current_l2') | float(0) > 0.11 or
+      states('sensor.{{device_name}}_current_l3') | float(0) > 0.11 %}
+        {{ ( ( states('sensor.{{device_name}}_current_l1') | float + states('sensor.{{device_name}}_current_l2') | float  + states('sensor.{{device_name}}_current_l3') | float ) - 0.10 ) * 220 }}
+      {%- else -%}
         0
-      {% endif %}
-    unit_of_measurement: "%"
-    icon: "mdi:solar-power"
+      {%- endif %}
 
-  - name: "charging_source"
-    value: >
-      {% set status = states('sensor.{{device_name}}_pv_charging_status')|from_json %}
-      {% if status.using_battery %}
-        "solar_battery"
-      {% elif status.is_pv_charging %}
-        "solar"
-      {% elif states('sensor.{{device_name}}_charging_power')|float(0) > 0 %}
-        "grid"
-      {% else %}
-        "none"
-      {% endif %}
-    icon: >
-      {% if value == "solar_battery" %}
-        mdi:battery-charging-100
-      {% elif value == "solar" %}
-        mdi:solar-power
-      {% elif value == "grid" %}
-        mdi:transmission-tower
-      {% else %}
-        mdi:power-plug-off
-      {% endif %}
+
+#  - name: "charging_cost"
+#    value: >
+#      {% set energy = states('sensor.{{device_name}}_energy_session')|float(0) %}
+#      {% set price = states('sensor.current_electricity_price')|float(0.30) %}
+#      {{ (energy * price)|round(2) }}
+#    unit_of_measurement: "€"
+#    icon: "mdi:currency-eur"
+
 
 device_specific_automations:
   - name: "charging_complete"
@@ -132,20 +115,62 @@ device_specific_automations:
         title: "{{ 'notification.charging.complete.title'|translate }}"
         message: "{{ 'notification.charging.complete.message'|translate(energy=states('sensor.{{device_name}}_energy_session'), cost=states('sensor.{{device_name}}_charging_cost')) }}"
 
-  - name: "high_temperature_warning"
+  - name: "{{device_name}}_automation_update_max_current_phases"
+    alias: "{{device_name}} update max current phases"
+    description: "Sets max current phase value. Below 6 always set to 0"
     trigger:
-      platform: numeric_state
-      entity_id: sensor.{{device_name}}_temperature
-      above: 60
+      - platform: state
+        entity_id:
+          - input_number.{{device_name}}_set_max_current_phases
+    condition:
+      - condition: state
+        entity_id: sensor.ebox_cable_status
+        state: "3"
+
     action:
-      service: notify.notify
-      data:
-        title: "Hohe Temperatur"
-        message: "Wallbox Temperatur: {{ states('sensor.{{device_name}}_temperature') }}°C"
+      - choose:
+        - conditions:
+            - condition: numeric_state
+              entity_id: input_number.{{device_name}}_set_max_current_phases
+              below: 6
+          sequence:
+            - service: modbus.write_register
+              data:
+                address: 1012
+                value:
+                  - 0
+                  - 0
+                  - 0
+                  - 0
+                  - 0
+                  - 0
+        - conditions:
+            - condition: numeric_state
+              entity_id: input_number.{{device_name}}_set_max_current_phases
+              above: 5
+          sequence:
+            - service: modbus.write_register
+              data_template:
+                address: 1012
+                value: >
+                  [{{ '0x%04x' % unpack(pack([[states('input_number.{{device_name}}_set_max_current_phases')|float(0), 16] | min, 5] | max, ">f")
+                  , ">h") | abs }}, {{ '0x%04x' %
+                  unpack(pack([[states('input_number.{{device_name}}_set_max_current_phases')|float(0),
+                  16] | min, 0] | max, ">f"), ">h", offset=2) | abs }}, {{ '0x%04x' % unpack(pack([[states('input_number.{{device_name}}_set_max_current_phases')|float(0), 16] | min, 5] | max, ">f")
+                  , ">h") | abs }}, {{ '0x%04x' %
+                  unpack(pack([[states('input_number.{{device_name}}_set_max_current_phases')|float(0),
+                  16] | min, 0] | max, ">f"), ">h", offset=2) | abs }}, {{ '0x%04x' % unpack(pack([[states('input_number.{{device_name}}_set_max_current_phases')|float(0), 16] | min, 5] | max, ">f")
+                  , ">h") | abs }}, {{ '0x%04x' %
+                  unpack(pack([[states('input_number.{{device_name}}_set_max_current_phases')|float(0),
+                  16] | min, 0] | max, ">f"), ">h", offset=2) | abs }}]
+    mode: single
 
 helpers:
   input_boolean:
-    - name: "allow_battery_car_charging"
-      initial: false
+    - name: "{{device_name}}_set_max_current_phases"
+      initial: 0
+      min: 0
+      max: 16
+      step: 1
       icon: "mdi:car-battery"
-      translation_key: "input_boolean.allow_battery_car_charging"
+      translation_key: "input_boolean.set_max_current_phases"

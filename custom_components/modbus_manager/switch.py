@@ -18,18 +18,18 @@ async def async_setup_entry(hass, entry, async_add_entities):
 
     device_definitions = hub.get_device_definition(hub.device_type)
     if not device_definitions:
-        _LOGGER.error("No device configuration found for %s", hub.device_type)
+        _LOGGER.error(f"No device configuration found for {hub.device_type}")
         return
 
     switches = []
     write_registers = device_definitions.get('registers', {}).get('write', [])
 
-    _LOGGER.debug("Creating %d switches for %s", len(write_registers), hub.name)
+    _LOGGER.debug(f"Creating {len(write_registers)} switches for {hub.name}")
 
     for reg in write_registers:
         switch = ModbusSwitch(hub, reg['name'], reg)
         switches.append(switch)
-        _LOGGER.debug("Switch created: %s with configuration: %s", reg['name'], reg)
+        _LOGGER.debug(f"Switch created: {reg['name']} with configuration: {reg}")
 
     async_add_entities(switches, True)
 
@@ -38,11 +38,13 @@ class ModbusSwitch(CoordinatorEntity):
 
     def __init__(self, hub: ModbusManagerHub, name: str, device_def: dict):
         """Initialize the switch."""
-        if hub.name not in hub.coordinators:
-            _LOGGER.error("No coordinator found for hub %s", hub.name)
-            raise ValueError(f"No coordinator found for hub {hub.name}")
+        if not hasattr(hub, "coordinators") or not hub.coordinators:
+            _LOGGER.error(f"No coordinators found for hub {hub.name}")
+            raise ValueError(f"No coordinators found for hub {hub.name}")
             
-        super().__init__(hub.coordinators[hub.name])
+        coordinator = next(iter(hub.coordinators.values()))
+        super().__init__(coordinator)
+        
         self._hub = hub
         self._name = name
         self._device_def = device_def
@@ -51,7 +53,7 @@ class ModbusSwitch(CoordinatorEntity):
         # Create unique ID based on hub name and switch name
         self._unique_id = f"{self._hub.name}_{self._name}"
         
-        _LOGGER.debug("Switch initialized: %s (ID: %s)", self.name, self._unique_id)
+        _LOGGER.debug(f"Switch initialized: {self.name} (ID: {self._unique_id})")
 
     @property
     def unique_id(self):
@@ -99,7 +101,7 @@ class ModbusSwitch(CoordinatorEntity):
             elif data_type == "uint16":
                 data = [1] if value else [0]
             else:
-                _LOGGER.error("Unsupported data type for switch: %s", data_type)
+                _LOGGER.error(f"Unsupported data type for switch: {data_type}")
                 return
 
             response = await self._hub.client.write_registers(address, data, unit=unit)
@@ -110,4 +112,4 @@ class ModbusSwitch(CoordinatorEntity):
                 self._state = value
                 self.async_write_ha_state()
         except Exception as e:
-            _LOGGER.error("Error writing switch: %s", e) 
+            _LOGGER.error(f"Error writing switch: {e}") 
