@@ -11,6 +11,7 @@ from pathlib import Path
 
 from homeassistant import config_entries
 from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers import device_registry as dr
 
 from .const import (
     DOMAIN,
@@ -34,15 +35,24 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         if user_input is not None:
             try:
-                # Erstelle eine eindeutige ID für den Config Entry
-                unique_id = f"{user_input[CONF_HOST]}_{user_input[CONF_PORT]}_{user_input[CONF_SLAVE]}_{user_input[CONF_NAME]}"
-                await self.async_set_unique_id(unique_id)
-                self._abort_if_unique_id_configured()
-
-                return self.async_create_entry(
-                    title=user_input[CONF_NAME],
-                    data=user_input
+                # Prüfe ob bereits ein Gerät mit diesem Namen existiert
+                device_registry = dr.async_get(self.hass)
+                existing_device = device_registry.async_get_device(
+                    identifiers={(DOMAIN, user_input[CONF_NAME])}
                 )
+                
+                if existing_device:
+                    errors["base"] = "device_exists"
+                else:
+                    # Erstelle eine eindeutige ID für den Config Entry
+                    unique_id = f"{user_input[CONF_HOST]}_{user_input[CONF_PORT]}_{user_input[CONF_SLAVE]}_{user_input[CONF_NAME]}"
+                    await self.async_set_unique_id(unique_id)
+                    self._abort_if_unique_id_configured()
+
+                    return self.async_create_entry(
+                        title=user_input[CONF_NAME],
+                        data=user_input
+                    )
             except Exception as e:
                 errors["base"] = str(e)
 

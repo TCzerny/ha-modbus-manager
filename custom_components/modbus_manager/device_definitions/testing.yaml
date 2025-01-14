@@ -74,9 +74,9 @@ registers:
     - { name: "dsp_software_version", address: 4967, type: "string", register_type: "input", count: 15 }
     - { name: "inverter_serial", address: 4989, type: "string", count: 10, register_type: "input" }
     - { name: "device_code", address: 4999, type: "uint16", register_type: "input" }
-    - { name: "daily_pv_gen_battery_discharge", address: 5002, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1, register_type: "input" }
-    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, register_type: "input" }
-    - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1, register_type: "input" }
+    - { name: "daily_pv_gen_battery_discharge", address: 5002, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, precision: 1 }
+    - { name: "total_pv_gen_battery_discharge", address: 5003, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2 }
+    - { name: "inverter_temperature", address: 5007, type: "int16", unit_of_measurement: "°C", device_class: "temperature", state_class: "measurement", scale: 0.1, precision: 1 }
 
   write:  # Holding Register
     # holding registers

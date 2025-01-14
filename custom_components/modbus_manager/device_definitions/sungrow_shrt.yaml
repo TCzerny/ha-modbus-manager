@@ -1,15 +1,11 @@
 # Sungrow SH-RT Hybrid Wechselrichter (3-Phasen mit Batterie)
-# Basierend auf https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
+# Basierend auf https://github.com/mkaiser/Sungx-Inverter-Modbus-Home-Assistant
 
 device_info:
-  name: "Sungrow SH-RT Hybrid Inverter"
+  name: "Sungrow SH-RT"
   manufacturer: "Sungrow"
   model: "SH-RT"
-  supports_energy_monitoring: true
-  supports_cost_calculation: true
-  supports_load_management: true
-  device_category: inverter
-  supports_aggregation: true
+  description: "3-Phasen Hybrid Wechselrichter mit Batterie"
 
 device_config:
   # Firmware-Handling
@@ -284,230 +280,6 @@ sensor:
         precision: 2
 
 # 'virtual' template sensors for better readability
-template:
-  - binary_sensor:
-      - name: PV generating
-        unique_id: sg_pv_generating
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: >-
-          {{ 
-          not is_state('sensor.running_state', 'unavailable') 
-          and not is_state('sensor.total_dc_power', 'unavailable') 
-          }}
-        state: >-
-          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
-            {# use available sensor running_state #}
-            {{ states('sensor.running_state')|int |bitwise_and(0x1) }}
-          {% else %} 
-            {# workaround for SH*RS inverters without working running_state #}
-            {% if states('sensor.total_dc_power')|int > 0 %}
-              1
-            {% else %} 
-              0 
-            {% endif %}
-          {% endif %}
-
-      - name: PV generating (delay)
-        unique_id: sg_pv_generating_delay
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: "{{ not is_state('binary_sensor.pv_generating', 'unavailable') }}"
-        delay_on:
-          seconds: 60
-        state: "{{ states('binary_sensor.pv_generating') }}"
-
-      - name: Battery charging
-        unique_id: sg_battery_charging
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: >-
-          {{ 
-          not is_state('sensor.running_state', 'unavailable')
-          or
-            (   not is_state('sensor.ems_mode_selection_raw', 'unavailable')
-            and not is_state('sensor.battery_forced_charge_discharge_cmd_raw', 'unavailable') 
-            and not is_state('sensor.battery_power_raw', 'unavailable') 
-            and not is_state('sensor.total_dc_power', 'unavailable')
-            and not is_state('sensor.load_power', 'unavailable') 
-            )
-          }}
-        state: >-
-          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
-            {# use available sensor running_state #}
-            {% if states('sensor.running_state')|int|bitwise_and(0x2) > 0 %}
-              on
-            {% else %}
-              off
-            {% endif %}
-          {% else %}
-            {# workaround for SH*RS inverters without working running_state #}
-            {% if (states('sensor.ems_mode_selection') ) == "Forced mode" %}
-              {# EMS forced mode #}
-              {% if (states('sensor.battery_forced_charge_discharge_cmd') == "Forced charge") %}
-                {# in mode Forced charge #}
-                {% if (states('sensor.battery_power_raw')|int > 0 ) %}
-                  {# power flow from/to battery #}
-                  on
-                {% else %} 
-                  {# no power flow from/to battery #}
-                  off
-                {% endif %}
-              {% else %}
-                {# in EMS mode, but not in mode Forced charge #}
-                off
-              {% endif %}
-            {% else %} 
-              {# not in EMS forced mode, assuming self consumption mode #}
-              {% if states('sensor.total_dc_power')|int > states('sensor.load_power')|int %}
-                {# more power generated than consumed. assuming battery charging #}
-                on
-              {% else %} 
-                off
-              {% endif %}
-            {% endif %}
-          {% endif %}
-
-      - name: Battery charging (delay)
-        unique_id: sg_battery_charging_delay
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: "{{ not is_state('binary_sensor.battery_charging', 'unavailable') }}"
-        delay_on:
-          seconds: 60
-        state: "{{ states('binary_sensor.battery_charging') }}"
-
-      - name: Battery discharging
-        unique_id: sg_battery_discharging
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: >-
-          {{ 
-          not is_state('sensor.running_state', 'unavailable')
-          or
-            (   not is_state('sensor.ems_mode_selection_raw', 'unavailable')
-            and not is_state('sensor.battery_forced_charge_discharge_cmd_raw', 'unavailable')
-            and not is_state('sensor.battery_power_raw', 'unavailable')
-            and not is_state('sensor.total_dc_power', 'unavailable') 
-            and not is_state('sensor.load_power', 'unavailable') 
-            )
-          }}
-        state: >-
-          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
-            {# use available sensor running_state #}
-            {% if states('sensor.running_state')|int|bitwise_and(0x4) > 0 %}
-              on
-            {% else %}
-              off
-            {% endif %}
-          {% else %}
-            {# workaround for SH*RS inverters without working running_state #}
-            {% if (states('sensor.ems_mode_selection') ) == "Forced mode" %}
-              {# EMS forced mode #}
-              {% if (states('sensor.battery_forced_charge_discharge_cmd') == "Forced discharge") %}
-                {# in mode Forced discharge #}
-                {% if (states('sensor.battery_power_raw')|int > 0 ) %}
-                  {# power flow from/to battery #}
-                  on
-                {% else %} 
-                  {# no power flow from/to battery #}
-                  off
-                {% endif %}
-              {% else %} 
-                {# in EMS mode, but not in mode Forced charge #}
-                off
-              {% endif %}
-            {% else %} 
-              {# not in EMS forced mode, assuming self consumption mode #}
-              {% if ( ( states('sensor.total_dc_power')|int < states('sensor.load_power')|int ) ) and states('sensor.battery_power_raw')|int > 0 %}
-                {# more power consumed than generated and some battery power --> assuming battery discharging #}
-                on
-              {% else %} 
-                off
-              {% endif %}
-            {% endif %}
-          {% endif %}
-
-      - name: Battery discharging (delay)
-        unique_id: sg_battery_discharging_delay
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: "{{ not is_state('binary_sensor.battery_discharging', 'unavailable') }}"
-        delay_on:
-          seconds: 60
-        state: "{{ states('binary_sensor.battery_discharging') }}"
-
-      - name: Exporting power
-        unique_id: sg_exporting_power
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: >-
-          {{ 
-          not is_state('sensor.running_state', 'unavailable') 
-          and not is_state('sensor.export_power_raw', 'unavailable') 
-          }}
-        state: >-
-          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
-            {# use available sensor running_state #}
-            {{ states('sensor.running_state')|int|bitwise_and(0x10) > 0 }}
-          {% else %} 
-            {# workaround for SH*RS inverters without working running_state #}
-            {% if states('sensor.export_power_raw')|int > 0 %}
-              1
-            {% else %} 
-              0 
-            {% endif %}
-          {% endif %}
-
-      - name: Exporting power (delay)
-        unique_id: sg_exporting_power_delay
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: "{{ not is_state('binary_sensor.exporting_power', 'unavailable') }}"
-        delay_on:
-          seconds: 60
-        state: "{{ states('binary_sensor.exporting_power') }}"
-
-      - name: Importing power
-        unique_id: sg_importing_power
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: >-
-          {{ 
-          not is_state('sensor.running_state', 'unavailable') 
-          and not is_state('sensor.running_state', 'unavailable')
-          }}
-        state: >-
-          {% if states('sensor.running_state')|is_number and states('sensor.running_state')|float > 0 %}
-            {# use available sensor running_state #}
-            {{ states('sensor.running_state')|int|bitwise_and(0x20) > 0 }}
-          {% else %} 
-            {# workaround for SH*RS inverters without working running_state #}
-            {% if states('sensor.export_power_raw')|int < 0 %}
-              1
-            {% else %}
-              0
-            {% endif %}
-          {% endif %}
-
-      - name: Importing power (delay)
-        unique_id: sg_importing_power_delay
-        # TODO: test more with these parameters for template binary sensors
-        # device_class: none / power
-        # state_class: measurement
-        availability: "{{ not is_state('binary_sensor.importing_power', 'unavailable') }}"
-        delay_on:
-          seconds: 60
-        state: "{{ states('binary_sensor.importing_power') }}"
 
   - sensor:
       - name: MPPT1 power
@@ -1172,7 +944,55 @@ input_select:
     options:
       - "Enabled"
       - "Disabled"
-    icon: mdi:solar-power
+    icon: mdi:export
+
+# Input Synchronization
+input_sync:
+  # Export Power Limit
+  - source_entity: sensor.export_power_limit
+    target_entity: input_number.set_sg_export_power_limit
+
+  # Battery SoC Settings
+  - source_entity: sensor.max_soc
+    target_entity: input_number.set_sg_max_soc
+  - source_entity: sensor.min_soc
+    target_entity: input_number.set_sg_min_soc
+  - source_entity: sensor.reserved_soc_for_backup
+    target_entity: input_number.set_sg_reserved_soc_for_backup
+
+  # Battery Power Settings
+  - source_entity: sensor.battery_forced_charge_discharge_power
+    target_entity: input_number.set_sg_forced_charge_discharge_power
+  - source_entity: sensor.battery_max_charge_power
+    target_entity: input_number.set_sg_battery_max_charge_power
+  - source_entity: sensor.battery_max_discharge_power
+    target_entity: input_number.set_sg_battery_max_discharge_power
+  - source_entity: sensor.battery_charging_start_power
+    target_entity: input_number.set_sg_battery_charging_start_power
+  - source_entity: sensor.battery_discharging_start_power
+    target_entity: input_number.set_sg_battery_discharging_start_power
+
+  # Mode Settings
+  - source_entity: sensor.sungrow_inverter_state
+    target_entity: input_select.set_sg_inverter_run_mode
+    mapping:
+      "Stop": "Shutdown"
+      "Shutdown": "Shutdown"
+      "*": "Enabled"  # Alle anderen Werte
+  - source_entity: sensor.battery_forced_charge_discharge_cmd
+    target_entity: input_select.set_sg_battery_forced_charge_discharge_cmd
+  - source_entity: sensor.ems_mode_selection
+    target_entity: input_select.set_sg_ems_mode
+  - source_entity: sensor.export_power_limit_mode_raw
+    target_entity: input_select.set_sg_export_power_limit_mode
+    mapping:
+      "170": "Enabled"  # 0x00AA
+      "85": "Disabled"  # 0x0055
+  - source_entity: sensor.global_mpp_scan_manual_raw
+    target_entity: input_select.set_sg_global_mpp_scan_manual
+    mapping:
+      "170": "Enabled"  # 0x00AA
+      "85": "Disabled"  # 0x0055
 
 # Automations: Write modbus registers on input changes via GUI
 # note: If you change a value by the sliders, it will take up to 60 seconds until the state variables are updated
@@ -1725,128 +1545,112 @@ automation:
             {% endif %}
     mode: single
 
-# Usage: Use these scripts to simplify automations
-# Example (Adjust to your needs with appropriate trigger):
-# automation:
-#  - alias: Forced Battery Charging Management
-#    description: "Manages forced battery charging during cheapest hours."
-#   triggers:
-#      - trigger: state
-#        entity_id:
-#          - binary_sensor.cheapest_hours_for_charging_timer
-#    actions:
-#      - choose:
-#          - conditions:
-#              - condition: state
-#                entity_id: binary_sensor.cheapest_hours_for_charging_timer
-#                state: 'on'
-#            sequence:
-#              - action: script.sg_forced_charge_battery_mode
-#          - conditions:
-#              - condition: state
-#                entity_id: binary_sensor.cheapest_hours_for_charging_timer
-#                state: 'off'
-#            sequence:
-#              - action: script.sg_self_consumption_mode
+# Automations with complex logic
+automation:
+  - id: battery_charge_during_export
+    alias: Battery Charge During Grid Export
+    description: Charge battery when exporting to grid
+    trigger:
+      - platform: numeric_state
+        entity_id: sensor.grid_power
+        above: 500  # When exporting more than 500W
+        for:
+          minutes: 5
+    condition:
+      - condition: time
+        after: '09:00:00'
+        before: '17:00:00'
+      - condition: numeric_state
+        entity_id: sensor.battery_level
+        below: 90
+    action:
+      - service: script.sg_set_forced_charge_battery_mode
 
+  - id: battery_discharge_during_peak
+    alias: Battery Discharge During Peak Hours
+    description: Discharge battery during peak consumption hours
+    trigger:
+      - platform: time
+        at: '17:00:00'
+    condition:
+      - condition: numeric_state
+        entity_id: sensor.battery_level
+        above: 20
+    action:
+      - service: script.sg_set_forced_discharge_battery_mode
+
+  - id: auto_mode_at_night
+    alias: Set Auto Mode at Night
+    description: Switch back to self-consumption mode at night
+    trigger:
+      - platform: time
+        at: '22:00:00'
+    action:
+      - service: script.sg_set_self_consumption_mode
+
+# Scripts for complex automations
 script:
   sg_set_forced_discharge_battery_mode:
     sequence:
-      - action: input_select.select_option
+      - service: select.select_option
+        target:
+          entity_id: select.set_sg_ems_mode
         data:
-          entity_id: input_select.set_sg_ems_mode
           option: "Forced mode"
-      - action: input_select.select_option
+      - service: select.select_option
+        target:
+          entity_id: select.set_sg_battery_forced_charge_discharge_cmd
         data:
-          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
           option: "Forced discharge"
-      # Uncomment notify action lines below for push notifications to mobile devices
-      # - action: notify.notify
-      #   data:
-      #     title: "Forced Battery Discharge"
-      #     message: "Switched to Forced Battery Discharge mode"
 
   sg_set_forced_charge_battery_mode:
     sequence:
-      - action: input_select.select_option
+      - service: select.select_option
+        target:
+          entity_id: select.set_sg_ems_mode
         data:
-          entity_id: input_select.set_sg_ems_mode
           option: "Forced mode"
-      - action: input_select.select_option
+      - service: select.select_option
+        target:
+          entity_id: select.set_sg_battery_forced_charge_discharge_cmd
         data:
-          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
           option: "Forced charge"
-
-  sg_set_battery_bypass_mode:
-    sequence:
-      - action: input_select.select_option
-        data:
-          entity_id: input_select.set_sg_ems_mode
-          option: "Forced mode"
-      - action: input_select.select_option
-        data:
-          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
-          option: "Stop (default)"
 
   sg_set_self_consumption_mode:
     sequence:
-      - action: input_select.select_option
-        data:
-          entity_id: input_select.set_sg_ems_mode
-          option: "Self-consumption mode (default)"
-      - action: input_select.select_option
-        data:
-          entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
-          option: "Stop (default)"
-
-  - id: "set_forced_discharge_mode"
-    name: "Set Forced Discharge Mode"
-    description: "Sets the inverter to forced discharge mode"
-    sequence:
-      - service: "select.select_option"
-        target: "select.set_sg_ems_mode"
-        data:
-          option: "Forced mode"
-      - service: "select.select_option"
-        target: "select.set_sg_battery_forced_charge_discharge_cmd"
-        data:
-          option: "Forced discharge"
-
-  - id: "set_forced_charge_mode"
-    name: "Set Forced Charge Mode"
-    description: "Sets the inverter to forced charge mode"
-    sequence:
-      - service: "select.select_option"
-        target: "select.set_sg_ems_mode"
-        data:
-          option: "Forced mode"
-      - service: "select.select_option"
-        target: "select.set_sg_battery_forced_charge_discharge_cmd"
-        data:
-          option: "Forced charge"
-
-  - id: "set_battery_bypass_mode"
-    name: "Set Battery Bypass Mode"
-    description: "Sets the inverter to battery bypass mode"
-    sequence:
-      - service: "select.select_option"
-        target: "select.set_sg_ems_mode"
-        data:
-          option: "Forced mode"
-      - service: "select.select_option"
-        target: "select.set_sg_battery_forced_charge_discharge_cmd"
-        data:
-          option: "Stop (default)"
-
-  - id: "set_self_consumption_mode"
-    name: "Set Self Consumption Mode"
-    description: "Sets the inverter to self consumption mode"
-    sequence:
-      - service: "select.select_option"
-        target: "select.set_sg_ems_mode"
+      - service: select.select_option
+        target:
+          entity_id: select.set_sg_ems_mode
         data:
           option: "Self-consumption mode (default)"
-      - service: "select.select_option"
-        target: "select.set_sg_battery_forced_charge_discharge_cmd"
+      - service: select.select_option
+        target:
+          entity_id: select.set_sg_battery_forced_charge_discharge_cmd
         data:
           option: "Stop (default)"
+
+# Input Sync Configuration
+input_sync:
+  # Export Power Limit
+  - source: sensor.export_power_limit
+    target: input_number.set_sg_export_power_limit
+
+  # Battery SoC Settings
+  - source: sensor.max_soc
+    target: input_number.set_sg_max_soc
+  - source: sensor.min_soc
+    target: input_number.set_sg_min_soc
+  - source: sensor.reserved_soc_for_backup
+    target: input_number.set_sg_reserved_soc_for_backup
+
+  # Battery Power Settings
+  - source: sensor.battery_forced_charge_discharge_power
+    target: input_number.set_sg_forced_charge_discharge_power
+  - source: sensor.battery_max_charge_power
+    target: input_number.set_sg_battery_max_charge_power
+  - source: sensor.battery_max_discharge_power
+    target: input_number.set_sg_battery_max_discharge_power
+  - source: sensor.battery_charging_start_power
+    target: input_number.set_sg_battery_charging_start_power
+  - source: sensor.battery_discharging_start_power
+    target: input_number.set_sg_battery_discharging_start_power
