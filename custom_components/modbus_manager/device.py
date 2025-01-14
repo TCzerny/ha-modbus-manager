@@ -7,6 +7,8 @@ from typing import Dict, Any, Optional
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.event import async_track_state_change_event
 
 from homeassistant.components.input_number import DOMAIN as INPUT_NUMBER_DOMAIN
 from homeassistant.components.input_select import DOMAIN as INPUT_SELECT_DOMAIN
@@ -15,6 +17,7 @@ from .const import DOMAIN
 from .logger import ModbusManagerLogger
 from .entities import ModbusRegisterEntity
 from .input_entities import ModbusManagerInputNumber, ModbusManagerInputSelect
+from homeassistant.const import CONF_NAME, CONF_DEVICE_ID
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -46,6 +49,7 @@ class ModbusManagerDevice:
         self.entities: Dict[str, Any] = {}
         self._register_data: Dict[str, Any] = {}
         self._setup_complete = False
+        self._remove_state_listeners = []
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -102,6 +106,9 @@ class ModbusManagerDevice:
 
             # Erstelle Helper-Entities
             await self._setup_helper_entities()
+
+            # Setup Automation Components
+            await self.setup_automation_components()
 
             self._setup_complete = True
             
@@ -221,7 +228,7 @@ class ModbusManagerDevice:
                             # Setze die Entity-ID
                             entity.entity_id = f"select.{input_id.lower()}"
                             self.entities[entity.entity_id] = entity
-            
+
             self._logger.debug(
                 "Helper-Entities erfolgreich erstellt",
                 extra={
@@ -240,8 +247,80 @@ class ModbusManagerDevice:
                     "traceback": e.__traceback__
                 }
             )
+            
+    async def setup_automation_components(self):
+        """Richtet die Automatisierungskomponenten ein."""
+        try:
+            # Registriere Device Triggers
+            if "device_triggers" in self._device_config:
+                self._logger.debug(
+                    "Registriere Device Triggers",
+                    extra={
+                        "device": self.name,
+                        "triggers_count": len(self._device_config["device_triggers"])
+                    }
+                )
+                
+                # Registriere die Trigger im Device Registry
+                dev_reg = dr.async_get(self.hass)
+                device = dev_reg.async_get_device({(DOMAIN, self.name)})
+                if device and device.id:
+                    self.hass.data.setdefault(DOMAIN, {}).setdefault("device_triggers", {})[device.id] = \
+                        self._device_config["device_triggers"]
 
-    
+            # Registriere Device Conditions
+            if "device_conditions" in self._device_config:
+                self._logger.debug(
+                    "Registriere Device Conditions",
+                    extra={
+                        "device": self.name,
+                        "conditions_count": len(self._device_config["device_conditions"])
+                    }
+                )
+                
+                # Registriere die Conditions im Device Registry
+                dev_reg = dr.async_get(self.hass)
+                device = dev_reg.async_get_device({(DOMAIN, self.name)})
+                if device and device.id:
+                    self.hass.data.setdefault(DOMAIN, {}).setdefault("device_conditions", {})[device.id] = \
+                        self._device_config["device_conditions"]
+
+            # Registriere Device Actions
+            if "device_actions" in self._device_config:
+                self._logger.debug(
+                    "Registriere Device Actions",
+                    extra={
+                        "device": self.name,
+                        "actions_count": len(self._device_config["device_actions"])
+                    }
+                )
+                
+                # Registriere die Actions im Device Registry
+                dev_reg = dr.async_get(self.hass)
+                device = dev_reg.async_get_device({(DOMAIN, self.name)})
+                if device and device.id:
+                    self.hass.data.setdefault(DOMAIN, {}).setdefault("device_actions", {})[device.id] = \
+                        self._device_config["device_actions"]
+
+            self._logger.debug(
+                "Automatisierungskomponenten erfolgreich eingerichtet",
+                extra={
+                    "device": self.name,
+                    "triggers": len(self._device_config.get("device_triggers", [])),
+                    "conditions": len(self._device_config.get("device_conditions", [])),
+                    "actions": len(self._device_config.get("device_actions", []))
+                }
+            )
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler beim Einrichten der Automatisierungskomponenten",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
 
     async def async_update(self, polling_interval: str = "30") -> Dict[str, Any]:
         """Aktualisiert die Registerwerte für das angegebene Polling-Intervall."""
@@ -721,3 +800,349 @@ class ModbusManagerDevice:
                 }
             )
             return None
+
+    async def setup_device(self) -> None:
+        """Set up the device."""
+        # Registriere das Gerät
+        device_registry = dr.async_get(self.hass)
+        device_registry.async_get_or_create(
+            config_entry_id=self.entry_id,
+            identifiers={(DOMAIN, self.name)},
+            name=self.name,
+            manufacturer=self.config.get("manufacturer", "Unknown"),
+            model=self.config.get("model", "Unknown"),
+        )
+
+        # Setup Input Synchronization
+        if "input_sync" in self._device_config:
+            await self.setup_input_sync()
+
+    async def setup_input_sync(self) -> None:
+        """Setup synchronization between Modbus registers and input helpers."""
+        for sync_config in self._device_config.get("input_sync", []):
+            source_entity = sync_config.get("source_entity")
+            target_entity = sync_config.get("target_entity")
+            mapping = sync_config.get("mapping", {})
+            
+            if not source_entity or not target_entity:
+                continue
+
+            @callback
+            def _state_changed_listener(event, target=target_entity, mapping=mapping):
+                """Handle source entity state changes."""
+                new_state = event.data.get("new_state")
+                if new_state is None or new_state.state in ("unknown", "unavailable"):
+                    return
+
+                # Bestimme den Service basierend auf dem Entity-Typ
+                domain = target.split(".")[0]
+                
+                # Verarbeite den Wert basierend auf dem Entity-Typ
+                if domain == "input_number":
+                    service = "set_value"
+                    try:
+                        value = float(new_state.state)
+                    except (ValueError, TypeError):
+                        return
+                    service_data = {"value": value}
+                    
+                elif domain == "input_text":
+                    service = "set_value"
+                    service_data = {"value": str(new_state.state)}
+                    
+                elif domain == "input_select":
+                    service = "select_option"
+                    # Wende das Mapping an, falls vorhanden
+                    if mapping:
+                        state_value = str(new_state.state)
+                        if state_value in mapping:
+                            option = mapping[state_value]
+                        elif "*" in mapping:  # Fallback für alle anderen Werte
+                            option = mapping["*"]
+                        else:
+                            option = state_value
+                    else:
+                        option = str(new_state.state)
+                    service_data = {"option": option}
+                    
+                elif domain == "input_boolean":
+                    service = "turn_on" if new_state.state == "on" else "turn_off"
+                    service_data = {}
+                else:
+                    return
+
+                service_data["entity_id"] = target
+                self.hass.async_create_task(
+                    self.hass.services.async_call(
+                        domain, service, service_data
+                    )
+                )
+
+            # Registriere den State Change Listener
+            remove_listener = async_track_state_change_event(
+                self.hass, [source_entity], _state_changed_listener
+            )
+            self._remove_state_listeners.append(remove_listener)
+
+    async def unload(self) -> None:
+        """Unload the device."""
+        # Entferne alle State Change Listener
+        while self._remove_state_listeners:
+            remove_listener = self._remove_state_listeners.pop()
+            remove_listener()
+
+    async def write_modbus_with_validation(self, register_name: str, value: Any, validation_rules: dict = None) -> bool:
+        """Schreibt einen Wert in ein Modbus-Register mit Validierung."""
+        try:
+            # Prüfe ob Schreibzugriff erlaubt ist
+            write_enabled = self.hass.states.get("input_boolean.enable_modbus_write")
+            if not write_enabled or write_enabled.state != "on":
+                self._logger.warning(
+                    "Modbus Schreibzugriff ist deaktiviert",
+                    extra={
+                        "register": register_name,
+                        "value": value
+                    }
+                )
+                return False
+
+            # Validiere den Wert
+            if validation_rules:
+                if "min" in validation_rules and value < validation_rules["min"]:
+                    self._logger.warning(
+                        "Wert unter Minimum",
+                        extra={
+                            "value": value,
+                            "min": validation_rules["min"],
+                            "register": register_name
+                        }
+                    )
+                    return False
+                if "max" in validation_rules and value > validation_rules["max"]:
+                    self._logger.warning(
+                        "Wert über Maximum",
+                        extra={
+                            "value": value,
+                            "max": validation_rules["max"],
+                            "register": register_name
+                        }
+                    )
+                    return False
+                if "allowed_values" in validation_rules and value not in validation_rules["allowed_values"]:
+                    self._logger.warning(
+                        "Wert nicht in erlaubten Werten",
+                        extra={
+                            "value": value,
+                            "allowed_values": validation_rules["allowed_values"],
+                            "register": register_name
+                        }
+                    )
+                    return False
+
+            # Schreibe den Wert
+            success = await self.async_write_register(register_name, value)
+            
+            if success:
+                self._logger.info(
+                    "Wert erfolgreich geschrieben",
+                    extra={
+                        "value": value,
+                        "register": register_name
+                    }
+                )
+            else:
+                self._logger.warning(
+                    "Fehler beim Schreiben",
+                    extra={
+                        "value": value,
+                        "register": register_name
+                    }
+                )
+                
+            return success
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler bei write_modbus_with_validation",
+                extra={
+                    "error": str(e),
+                    "value": value,
+                    "register": register_name
+                }
+            )
+            return False
+
+    async def set_battery_mode(self, mode: str, power: float = None) -> bool:
+        """Setzt den Batteriemodus mit Validierung."""
+        allowed_modes = {
+            "forced_discharge": {
+                "ems_mode": "Forced mode",
+                "battery_cmd": "Forced discharge"
+            },
+            "forced_charge": {
+                "ems_mode": "Forced mode",
+                "battery_cmd": "Forced charge"
+            },
+            "bypass": {
+                "ems_mode": "Forced mode",
+                "battery_cmd": "Stop (default)"
+            },
+            "self_consumption": {
+                "ems_mode": "Self-consumption mode (default)",
+                "battery_cmd": "Stop (default)"
+            }
+        }
+
+        if mode not in allowed_modes:
+            self._logger.warning(
+                "Ungültiger Batteriemodus",
+                extra={
+                    "mode": mode,
+                    "allowed_modes": list(allowed_modes.keys())
+                }
+            )
+            return False
+
+        try:
+            # Setze EMS Mode
+            success = await self.write_modbus_with_validation(
+                "bms_mode_selection_raw",
+                allowed_modes[mode]["ems_mode"],
+                {"allowed_values": ["Self-consumption mode (default)", "Forced mode"]}
+            )
+            if not success:
+                return False
+
+            # Setze Battery Command
+            success = await self.write_modbus_with_validation(
+                "battery_forced_charge_discharge",
+                allowed_modes[mode]["battery_cmd"],
+                {"allowed_values": ["Stop (default)", "Forced charge", "Forced discharge"]}
+            )
+            if not success:
+                return False
+
+            # Setze Power wenn angegeben
+            if power is not None:
+                success = await self.write_modbus_with_validation(
+                    "battery_forced_charge_discharge_power",
+                    power,
+                    {"min": 0, "max": 5000}
+                )
+                if not success:
+                    return False
+
+            return True
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler beim Setzen des Batteriemodus",
+                extra={
+                    "error": str(e),
+                    "mode": mode,
+                    "power": power
+                }
+            )
+            return False
+
+    async def set_inverter_mode(self, mode: str) -> bool:
+        """Setzt den Wechselrichter-Modus."""
+        try:
+            if mode not in ["Enabled", "Shutdown"]:
+                self._logger.warning(
+                    "Ungültiger Wechselrichter-Modus",
+                    extra={
+                        "mode": mode,
+                        "allowed_modes": ["Enabled", "Shutdown"]
+                    }
+                )
+                return False
+
+            value = 0xCF if mode == "Enabled" else 0xCE
+            return await self.write_modbus_with_validation(
+                "inverter_start_stop",
+                value,
+                {"allowed_values": [0xCF, 0xCE]}
+            )
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler beim Setzen des Wechselrichter-Modus",
+                extra={
+                    "error": str(e),
+                    "mode": mode
+                }
+            )
+            return False
+
+    async def set_export_power_limit(self, enabled: bool, limit: float = None) -> bool:
+        """Setzt die Einspeiselimitierung."""
+        try:
+            # Setze den Modus
+            success = await self.write_modbus_with_validation(
+                "export_power_limit_mode_raw",
+                0xAA if enabled else 0x55,
+                {"allowed_values": [0xAA, 0x55]}
+            )
+            if not success:
+                return False
+
+            # Setze das Limit wenn angegeben
+            if limit is not None:
+                success = await self.write_modbus_with_validation(
+                    "export_power_limit",
+                    limit,
+                    {"min": 0, "max": 10500}
+                )
+                if not success:
+                    return False
+
+            return True
+
+        except Exception as e:
+            self._logger.error(
+                "Fehler beim Setzen der Einspeiselimitierung",
+                extra={
+                    "error": str(e),
+                    "enabled": enabled,
+                    "limit": limit
+                }
+            )
+            return False
+
+    async def execute_action(self, action_id: str, **kwargs):
+        """Führt eine vordefinierte Aktion aus."""
+        if action_id not in self.actions:
+            raise ValueError(f"Unbekannte Aktion: {action_id}")
+
+        action = self.actions[action_id]
+        sequence = action.get("sequence", [])
+        
+        for step in sequence:
+            service = step.get("service")
+            target = step.get("target")
+            data = step.get("data", {})
+            
+            # Führe den Service-Call aus
+            await self.hass.services.async_call(
+                service.split(".")[0],
+                service.split(".")[1],
+                service_data=data,
+                target={"entity_id": target}
+            )
+
+    async def set_forced_discharge_mode(self):
+        """Setzt den Wechselrichter in den Forced Discharge Modus."""
+        await self.execute_action("set_forced_discharge_mode")
+
+    async def set_forced_charge_mode(self):
+        """Setzt den Wechselrichter in den Forced Charge Modus."""
+        await self.execute_action("set_forced_charge_mode")
+
+    async def set_battery_bypass_mode(self):
+        """Setzt den Wechselrichter in den Battery Bypass Modus."""
+        await self.execute_action("set_battery_bypass_mode")
+
+    async def set_self_consumption_mode(self):
+        """Setzt den Wechselrichter in den Self Consumption Modus."""
+        await self.execute_action("set_self_consumption_mode")

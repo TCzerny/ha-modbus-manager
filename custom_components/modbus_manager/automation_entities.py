@@ -2,20 +2,94 @@
 from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Callable
+import voluptuous as vol
 
-from homeassistant.const import CONF_NAME
-from homeassistant.core import HomeAssistant, callback
+from homeassistant.const import (
+    CONF_NAME, CONF_ID, CONF_TYPE, CONF_TRIGGER, 
+    CONF_ACTION, CONF_CONDITION, CONF_MODE,
+    CONF_ENTITY_ID, CONF_VALUE, CONF_SERVICE
+)
+from homeassistant.core import HomeAssistant, callback, Context
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.components.automation import DOMAIN as AUTOMATION_DOMAIN, AutomationEntity
 from homeassistant.components.script import DOMAIN as SCRIPT_DOMAIN, ScriptEntity
-from homeassistant.helpers import entity_registry as er
+from homeassistant.helpers import entity_registry as er, condition
 from homeassistant.helpers.script import Script, SCRIPT_MODE_SINGLE
+from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
+
+# Vordefinierte Trigger-Typen
+TRIGGER_TYPES = [
+    "state",  # Statusänderung einer Entity
+    "numeric_state",  # Numerischer Zustand (über/unter Schwellwert)
+    "time_pattern",  # Zeitbasiert
+    "template"  # Template-basiert
+]
+
+# Vordefinierte Condition-Typen
+CONDITION_TYPES = [
+    "state",  # Entity hat bestimmten Status
+    "numeric_state",  # Numerischer Zustand
+    "template",  # Template-Bedingung
+    "time"  # Zeitbasierte Bedingung
+]
+
+# Vordefinierte Action-Typen
+ACTION_TYPES = [
+    "service",  # Home Assistant Service aufrufen
+    "modbus_write",  # Modbus Register schreiben
+    "delay",  # Verzögerung
+    "template"  # Template-basierte Aktion
+]
+
+# Schema für Device Triggers
+DEVICE_TRIGGER_SCHEMA = vol.Schema({
+    vol.Required(CONF_ID): cv.string,
+    vol.Required(CONF_NAME): cv.string,
+    vol.Required(CONF_TYPE): vol.In(TRIGGER_TYPES),
+    vol.Required(CONF_ENTITY_ID): cv.entity_id,
+    vol.Optional("platform"): cv.string,
+    vol.Optional("above"): vol.Coerce(float),
+    vol.Optional("below"): vol.Coerce(float),
+    vol.Optional("after"): cv.string,
+    vol.Optional("before"): cv.string
+})
+
+# Schema für Device Conditions
+DEVICE_CONDITION_SCHEMA = vol.Schema({
+    vol.Required(CONF_ID): cv.string,
+    vol.Required(CONF_NAME): cv.string,
+    vol.Required(CONF_TYPE): vol.In(CONDITION_TYPES),
+    vol.Required(CONF_ENTITY_ID): cv.entity_id,
+    vol.Optional("above"): vol.Coerce(float),
+    vol.Optional("below"): vol.Coerce(float),
+    vol.Optional("after"): cv.string,
+    vol.Optional("before"): cv.string
+})
+
+# Schema für Device Actions
+DEVICE_ACTION_SCHEMA = vol.Schema({
+    vol.Required(CONF_ID): cv.string,
+    vol.Required(CONF_NAME): cv.string,
+    vol.Required(CONF_TYPE): vol.In(ACTION_TYPES),
+    vol.Required("service"): cv.string,
+    vol.Required("target"): {
+        vol.Required(CONF_ENTITY_ID): cv.entity_id
+    },
+    vol.Required("fields"): dict
+})
+
+# Schema für die YAML-Validierung der Device Automation Komponenten
+DEVICE_AUTOMATION_SCHEMA = vol.Schema({
+    vol.Optional("device_triggers"): vol.All(cv.ensure_list, [DEVICE_TRIGGER_SCHEMA]),
+    vol.Optional("device_conditions"): vol.All(cv.ensure_list, [DEVICE_CONDITION_SCHEMA]),
+    vol.Optional("device_actions"): vol.All(cv.ensure_list, [DEVICE_ACTION_SCHEMA])
+})
 
 class ModbusManagerAutomation(AutomationEntity):
     """Repräsentiert eine ModbusManager Automation."""
@@ -29,16 +103,29 @@ class ModbusManagerAutomation(AutomationEntity):
         """Initialisiere die Automation Entity."""
         self.device = device
         self._automation_id = automation_id
-        self._config = config
+        
+        # Validiere die Konfiguration
+        try:
+            self._config = AUTOMATION_SCHEMA(config)
+        except vol.Invalid as e:
+            _LOGGER.error(
+                "Ungültige Automatisierungskonfiguration",
+                extra={
+                    "error": str(e),
+                    "automation": automation_id,
+                    "device": device.name
+                }
+            )
+            raise
         
         # Erstelle die Basis-Konfiguration für die Automation
-        trigger_config = config.get("trigger", [])
-        action_config = config.get("action", [])
-        condition_config = config.get("condition", [])
+        trigger_config = self._config.get(CONF_TRIGGER, [])
+        action_config = self._config.get(CONF_ACTION, [])
+        condition_config = self._config.get(CONF_CONDITION, [])
         
         # Erstelle das Action-Script
         script_config = {
-            "mode": config.get("mode", "single"),
+            "mode": self._config.get(CONF_MODE, "single"),
             "sequence": action_config
         }
         action_script = Script(
@@ -54,19 +141,38 @@ class ModbusManagerAutomation(AutomationEntity):
         @callback
         def cond_func() -> bool:
             """Evaluiere die Bedingungen."""
-            return True  # TODO: Implementiere die tatsächliche Bedingungslogik
+            if not condition_config:
+                return True
+                
+            try:
+                hass = self.device.hass
+                return all(
+                    condition.async_from_config(hass, cond).async_run(hass)
+                    for cond in condition_config
+                )
+            except Exception as e:
+                _LOGGER.error(
+                    "Fehler bei der Auswertung der Bedingungen",
+                    extra={
+                        "error": str(e),
+                        "automation": self._automation_id,
+                        "device": self.device.name,
+                        "conditions": condition_config
+                    }
+                )
+                return False
             
         # Initialisiere die Basis-Klasse mit allen erforderlichen Parametern
         super().__init__(
             automation_id=automation_id,
-            name=config.get("alias", automation_id),
+            name=self._config.get("alias", automation_id),
             trigger_config=trigger_config,
             cond_func=cond_func,
             action_script=action_script,
             initial_state=True,
-            variables=config.get("variables", {}),
-            trigger_variables=config.get("trigger_variables", {}),
-            raw_config=config,
+            variables=self._config.get("variables", {}),
+            trigger_variables=self._config.get("trigger_variables", {}),
+            raw_config=self._config,
             blueprint_inputs={},
             trace_config=None
         )

@@ -1798,3 +1798,55 @@ script:
         data:
           entity_id: input_select.set_sg_battery_forced_charge_discharge_cmd
           option: "Stop (default)"
+
+  - id: "set_forced_discharge_mode"
+    name: "Set Forced Discharge Mode"
+    description: "Sets the inverter to forced discharge mode"
+    sequence:
+      - service: "select.select_option"
+        target: "select.set_sg_ems_mode"
+        data:
+          option: "Forced mode"
+      - service: "select.select_option"
+        target: "select.set_sg_battery_forced_charge_discharge_cmd"
+        data:
+          option: "Forced discharge"
+
+  - id: "set_forced_charge_mode"
+    name: "Set Forced Charge Mode"
+    description: "Sets the inverter to forced charge mode"
+    sequence:
+      - service: "select.select_option"
+        target: "select.set_sg_ems_mode"
+        data:
+          option: "Forced mode"
+      - service: "select.select_option"
+        target: "select.set_sg_battery_forced_charge_discharge_cmd"
+        data:
+          option: "Forced charge"
+
+  - id: "set_battery_bypass_mode"
+    name: "Set Battery Bypass Mode"
+    description: "Sets the inverter to battery bypass mode"
+    sequence:
+      - service: "select.select_option"
+        target: "select.set_sg_ems_mode"
+        data:
+          option: "Forced mode"
+      - service: "select.select_option"
+        target: "select.set_sg_battery_forced_charge_discharge_cmd"
+        data:
+          option: "Stop (default)"
+
+  - id: "set_self_consumption_mode"
+    name: "Set Self Consumption Mode"
+    description: "Sets the inverter to self consumption mode"
+    sequence:
+      - service: "select.select_option"
+        target: "select.set_sg_ems_mode"
+        data:
+          option: "Self-consumption mode (default)"
+      - service: "select.select_option"
+        target: "select.set_sg_battery_forced_charge_discharge_cmd"
+        data:
+          option: "Stop (default)"
