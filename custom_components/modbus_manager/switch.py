@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any
+from typing import Any, Callable
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
@@ -30,17 +30,11 @@ async def async_setup_entry(
     # Erstelle die Schreibsperre-Entity für jedes Gerät
     for device in hub._devices.values():
         if isinstance(device, ModbusManagerDevice):
-            # Verwende den Gerätenamen aus der Config Entry
-            device_name = config_entry.title
-            
             # Erstelle den Switch mit Gerätenamen als Präfix
             entities.append(
                 ModbusManagerWriteLockSwitch(
-                    hub=hub,
-                    entry_id=config_entry.entry_id,
-                    device_name=device_name,
-                    unique_id=f"{config_entry.entry_id}_write_lock",
-                    name=f"{device_name} Write Lock"
+                    device=device,
+                    name="Write Lock"
                 )
             )
             
@@ -65,28 +59,18 @@ class ModbusManagerWriteLockSwitch(SwitchEntity, RestoreEntity):
 
     def __init__(
         self,
-        hub: ModbusManagerHub,
-        entry_id: str,
-        device_name: str,
-        unique_id: str,
+        device: ModbusManagerDevice,
         name: str,
     ) -> None:
         """Initialize the switch."""
-        self._hub = hub
-        self._attr_unique_id = unique_id
-        self._attr_name = name
-        self._attr_is_on = False  # Default disabled
+        self._device = device
+        self._attr_unique_id = f"{device.entry_id}_{device.name}_write_lock"
+        self._attr_name = f"{device.name} {name}"
+        self._attr_is_on = True  # Default enabled (writing is locked)
         self._attr_should_poll = False
         self._attr_icon = "mdi:lock"  # Lock icon
-        
-        # Link the switch to the specific device
-        self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, entry_id)},
-            name=device_name,
-            manufacturer="Modbus Manager",
-            model="Modbus Device",
-            via_device=(DOMAIN, entry_id),  # Link to the hub
-        )
+        self._attr_device_info = device.device_info
+        self._remove_callbacks: list[Callable[[], None]] = []
 
     async def async_added_to_hass(self) -> None:
         """Run when entity about to be added to hass."""
@@ -97,12 +81,19 @@ class ModbusManagerWriteLockSwitch(SwitchEntity, RestoreEntity):
         if last_state:
             self._attr_is_on = last_state.state == "on"
 
+    async def async_will_remove_from_hass(self) -> None:
+        """Run when entity will be removed from hass."""
+        # Entferne alle Callbacks
+        for remove_callback in self._remove_callbacks:
+            remove_callback()
+        self._remove_callbacks.clear()
+
     async def async_turn_on(self, **kwargs: Any) -> None:
-        """Turn the entity on."""
+        """Turn the entity on (lock writing)."""
         self._attr_is_on = True
         self.async_write_ha_state()
 
     async def async_turn_off(self, **kwargs: Any) -> None:
-        """Turn the entity off."""
+        """Turn the entity off (allow writing)."""
         self._attr_is_on = False
         self.async_write_ha_state() 
