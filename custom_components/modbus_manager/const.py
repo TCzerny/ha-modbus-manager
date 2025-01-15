@@ -1,17 +1,11 @@
 """Constants for the Modbus Manager integration."""
+from typing import Final
 
-# Domain
-DOMAIN = "modbus_manager"
+DOMAIN: Final = "modbus_manager"
+CONF_DEVICE_TYPE: Final = "device_type"
 
-# Configuration Constants
-CONF_NAME = "name"
-CONF_HOST = "host"
-CONF_PORT = "port"
-CONF_SLAVE = "slave"
-CONF_DEVICE_TYPE = "device_type"
-
-# Error Constants
-ERROR_ALREADY_CONFIGURED = "already_configured"
-ERROR_CANNOT_CONNECT = "cannot_connect"
-ERROR_INVALID_AUTH = "invalid_auth"
-ERROR_UNKNOWN = "unknown"
+# Default values
+DEFAULT_TIMEOUT: Final = 3  # Sekunden
+DEFAULT_RETRY_ON_EMPTY: Final = True
+DEFAULT_RETRIES: Final = 3
+DEFAULT_RETRY_DELAY: Final = 0.1

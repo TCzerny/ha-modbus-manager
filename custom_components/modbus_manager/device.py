@@ -1,8 +1,9 @@
 """Modbus Manager Device Class."""
 from __future__ import annotations
 
+import asyncio
 from datetime import timedelta
-from typing import Dict, Any, Optional
+from typing import Dict, Any, Optional, List
 
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
@@ -22,97 +23,119 @@ from homeassistant.const import CONF_NAME, CONF_DEVICE_ID
 _LOGGER = ModbusManagerLogger(__name__)
 
 class ModbusManagerDevice:
-    """Repräsentiert ein Modbus-Gerät."""
+    """Modbus Manager Device class."""
 
     def __init__(
         self,
-        hub,
+        hub: ModbusManagerHub,
         device_type: str,
         config: dict,
-        register_definitions: Optional[Dict[str, Any]] = None,
-    ):
-        """Initialisiert das Gerät."""
-        self.name = config.get("name")
-        self._logger = ModbusManagerLogger(name=f"device_{self.name}")
-        
-        self.hub = hub
-        self.hass = hub.hass
-        self.device_type = device_type
-        self.config = config
-        self.entry_id = config.get("entry_id")
-        self.config_entry = config.get("config_entry")
-        
-        # YAML-Definitionen
-        self._device_config = register_definitions or {}
-        
-        # Entity-Verwaltung
-        self.entities: Dict[str, Any] = {}
+        register_definitions: dict,
+    ) -> None:
+        """Initialize the device."""
+        self._hub = hub
+        self.hass: HomeAssistant = hub.hass
+        self.device_type: str = device_type
+        self.config: dict = config
+        self.name: str = config.get(CONF_NAME)
+        self.entry_id: str = config.get("entry_id")
+        self._device_config: dict = register_definitions
         self._register_data: Dict[str, Any] = {}
-        self._setup_complete = False
-        self._remove_state_listeners = []
+        self._setup_complete: bool = False
+        self.entities: Dict[str, ModbusRegisterEntity] = {}
+        self._remove_state_listeners: list = []
+        
+        # Hole die Default-Polling-Intervalle
+        polling_config = register_definitions.get("device_config", {}).get("default_polling", {})
+        self._fast_interval = int(polling_config.get("fast", 5))
+        self._normal_interval = int(polling_config.get("normal", 15))
+        self._slow_interval = int(polling_config.get("slow", 600))
 
+        # Initialisiere die Koordinatoren
+        for interval in [self._fast_interval, self._normal_interval, self._slow_interval]:
+            if not self._hub.get_coordinator(interval):
+                self._hub.create_coordinator(interval)
     @property
     def device_info(self) -> DeviceInfo:
         """Gibt die Geräteinformationen zurück."""
+        device_info = self._device_config.get("device_info", {})
+        
+        # Basis-Informationen aus der Konfiguration
         info = {
             "identifiers": {(DOMAIN, self.name)},
             "name": self.name,
-            "manufacturer": self.config.get("manufacturer", "Modbus Manager"),
-            "model": self.config.get("model", self.device_type)
+            "manufacturer": device_info.get("manufacturer", "Unknown"),
+            "model": device_info.get("model", self.device_type),
         }
+        
+        # Firmware-Version aus den Registern
+        arm_version = self._register_data.get("arm_software_version")
+        dsp_version = self._register_data.get("dsp_software_version")
+        if arm_version or dsp_version:
+            versions = []
+            if arm_version:
+                versions.append(f"ARM: {arm_version}")
+            if dsp_version:
+                versions.append(f"DSP: {dsp_version}")
+            info["sw_version"] = " | ".join(versions)
+        
+        # Geräte-Code aus den Registern
+        device_code = self._register_data.get("device_code")
+        if device_code:
+            info["model"] = device_code
+            
+        # Seriennummer aus den Registern
+        inverter_serial = self._register_data.get("inverter_serial")
+        if inverter_serial:
+            info["hw_version"] = f"SN: {inverter_serial}"
             
         return DeviceInfo(**info)
 
     async def async_setup(self) -> bool:
-        """Führt das Setup des Geräts durch."""
+        """Setup the device."""
         try:
-            self._logger.debug(
-                "Starte Geräte-Setup",
-                extra={
-                    "device": self.name,
-                    "device_type": self.device_type
-                }
-            )
-
-            # Registriere das Gerät im Device Registry
-            dev_reg = dr.async_get(self.hass)
-            device_entry = dev_reg.async_get_or_create(
-                config_entry_id=self.entry_id,
-                **self.device_info
-            )
-
-            # Verarbeite Register-Definitionen
-            if "registers" in self._device_config:
-                self._logger.debug(
-                    "Verarbeite Register-Definitionen",
-                    extra={
-                        "device": self.name,
-                        "read_count": len(self._device_config["registers"].get("read", [])),
-                        "write_count": len(self._device_config["registers"].get("write", []))
-                    }
-                )
-                
-                # Input Register (nur lesen)
-                for register in self._device_config["registers"].get("read", []):
-                    entity = await self._create_register_entity(register, writable=False)
-                    if entity:
-                        self.entities[entity.entity_id] = entity
-                
-                # Holding Register (lesen/schreiben)
-                for register in self._device_config["registers"].get("write", []):
-                    entity = await self._create_register_entity(register, writable=True)
-                    if entity:
-                        self.entities[entity.entity_id] = entity
-
-            # Erstelle Helper-Entities
-            await self._setup_helper_entities()
-
-            # Setup Automation Components
-            await self.setup_automation_components()
-
+            # Hole die Register-Definitionen
+            registers = self._device_config.get("registers", {})
+            
+            # Erstelle Entities für lesbare Register
+            if "read" in registers:
+                for register in registers["read"]:
+                    register_name = register.get("name")
+                    if register_name:
+                        entity = await self._create_register_entity(
+                            register_name=register_name,
+                            register_def=register,
+                            writable=False
+                        )
+                        if entity:
+                            self.entities[register_name] = entity
+            
+            # Erstelle Entities für schreibbare Register
+            if "write" in registers:
+                for register in registers["write"]:
+                    register_name = register.get("name")
+                    if register_name:
+                        entity = await self._create_register_entity(
+                            register_name=register_name,
+                            register_def=register,
+                            writable=True
+                        )
+                        if entity:
+                            self.entities[register_name] = entity
+            
+            # Setup Input Synchronization wenn konfiguriert
+            if "input_sync" in self._device_config:
+                await self.setup_input_sync()
+            
+            # Starte das initiale Update für fast-polling Register
+            await self._initial_update()
+            
+            # Starte das verzögerte Setup für normal und slow-polling Register
+            asyncio.create_task(self._delayed_setup())
+            
             self._setup_complete = True
             
-            self._logger.debug(
+            _LOGGER.debug(
                 "Geräte-Setup abgeschlossen",
                 extra={
                     "device": self.name,
@@ -121,9 +144,9 @@ class ModbusManagerDevice:
             )
             
             return True
-
+            
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Setup des Geräts",
                 extra={
                     "error": str(e),
@@ -132,20 +155,136 @@ class ModbusManagerDevice:
                 }
             )
             return False
-
-    async def _create_register_entity(self, register_def: dict, writable: bool = False) -> Optional[ModbusRegisterEntity]:
-        """Erstellt eine Register-Entity."""
+        
+    async def _initial_update(self):
+        """Führt das initiale Update für wichtige Register durch."""
         try:
-            # Hole das Polling-Intervall
-            polling_interval = str(register_def.get("polling_interval", 30))
+            # Sofortiges Update für fast Register
+            update_tasks = []
             
-            # Prüfe ob ein Koordinator für dieses Intervall existiert
-            if polling_interval not in self.hub.coordinators:
+            # Verwende das fast_interval aus default_polling
+            if self._fast_interval:
+                update_tasks.append(self.async_update(self._fast_interval))
+            
+            if update_tasks:
+                results = await asyncio.gather(*update_tasks, return_exceptions=True)
+                
+                # Aktualisiere die Register-Daten
+                for result in results:
+                    if isinstance(result, dict):
+                        self._register_data.update(result)
+                
+                # Aktualisiere die Entities parallel
+                entity_update_tasks = []
+                for entity in self.entities.values():
+                    if hasattr(entity, "async_write_ha_state"):
+                        try:
+                            # Stelle sicher, dass die Entity initialisiert ist
+                            if not entity.hass:
+                                entity.hass = self.hass
+                            if not entity._attr_unique_id:
+                                entity._attr_unique_id = f"{self.name}_{entity.name}"
+                            
+                            # Aktualisiere den State
+                            if hasattr(entity, "_handle_coordinator_update"):
+                                try:
+                                    entity._handle_coordinator_update()
+                                except Exception as e:
+                                    _LOGGER.warning(
+                                        "Fehler beim Koordinator-Update",
+                                        extra={
+                                            "error": str(e),
+                                            "entity": entity.entity_id,
+                                            "device": self.name
+                                        }
+                                    )
+                            entity_update_tasks.append(entity.async_update_ha_state(force_refresh=True))
+                        except Exception as e:
+                            _LOGGER.warning(
+                                "Fehler beim Aktualisieren der Entity",
+                                extra={
+                                    "error": str(e),
+                                    "entity": entity.entity_id,
+                                    "device": self.name
+                                }
+                            )
+                
+                if entity_update_tasks:
+                    await asyncio.gather(*entity_update_tasks, return_exceptions=True)
+                    
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim initialen Update",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+
+    async def _delayed_setup(self):
+        """Führt verzögerte Setup-Aufgaben aus."""
+        try:
+            # Warte kurz, damit die wichtigen Register zuerst geladen werden
+            await asyncio.sleep(5)
+            
+            # Verwende normal und slow Intervalle
+            polling_intervals = set()
+            if self._normal_interval:
+                polling_intervals.add(self._normal_interval)
+            if self._slow_interval:
+                polling_intervals.add(self._slow_interval)
+            
+            # Erstelle Update-Tasks für alle Intervalle
+            update_tasks = []
+            for interval in polling_intervals:
+                update_tasks.append(self.async_update(interval))
+            
+            # Führe alle Updates parallel aus
+            if update_tasks:
+                results = await asyncio.gather(*update_tasks, return_exceptions=True)
+                
+                # Logge Fehler, falls welche aufgetreten sind
+                for interval, result in zip(polling_intervals, results):
+                    if isinstance(result, Exception):
+                        _LOGGER.warning(
+                            f"Fehler beim verzögerten Update für Intervall {interval}",
+                            extra={
+                                "error": str(result),
+                                "interval": interval,
+                                "device": self.name
+                            }
+                        )
+                    
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim verzögerten Setup",
+                extra={
+                    "error": str(e),
+                    "device": self.name
+                }
+            )
+
+    async def _create_register_entity(self, register_name, register_def, writable: bool = False):
+        """Erstelle eine Entity für ein Register."""
+        try:
+            # Bestimme das Polling-Intervall direkt aus der Register-Definition
+            polling = register_def.get("polling", "normal")
+            if polling == "fast":
+                polling_interval = self._fast_interval
+            elif polling == "slow":
+                polling_interval = self._slow_interval
+            else:  # "normal" oder nicht definiert
+                polling_interval = self._normal_interval
+            
+            # Hole den Koordinator für dieses Intervall
+            coordinator = self._hub.get_coordinator(polling_interval)
+            if not coordinator:
                 _LOGGER.error(
                     "Kein Koordinator für das Polling-Intervall gefunden",
                     extra={
                         "polling_interval": polling_interval,
-                        "register": register_def.get("name"),
+                        "register": register_name,
                         "device": self.name
                     }
                 )
@@ -160,42 +299,51 @@ class ModbusManagerDevice:
             # Erstelle die Entity
             entity = ModbusRegisterEntity(
                 device=self,
-                register_name=register_def.get("name"),
+                register_name=register_name,
                 register_config=register_def,
-                coordinator=self.hub.coordinators[polling_interval],
+                coordinator=coordinator,
             )
+            
+            # Formatiere den Entity-Namen korrekt (lowercase und underscores)
+            formatted_name = register_name.lower().replace(" ", "_")
+            entity_id = f"{domain}.{self.name.lower()}_{formatted_name}"
             
             # Setze die Entity-ID
-            entity.entity_id = f"{domain}.{register_def.get('name').lower()}"
+            entity.entity_id = entity_id
+            entity.platform = domain
             
-            self._logger.debug(
-                "Register-Entity erstellt",
-                extra={
-                    "entity_id": entity.entity_id,
-                    "register": register_def.get("name"),
-                    "device": self.name,
-                    "domain": domain,
-                    "writable": writable
-                }
-            )
+            # Füge die Entity zum entities Dictionary hinzu
+            self.entities[register_name] = entity
             
             return entity
-
+            
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Erstellen einer Register-Entity",
                 extra={
                     "error": str(e),
-                    "register": register_def.get("name"),
+                    "register": register_name,
                     "device": self.name,
                     "traceback": e.__traceback__
                 }
             )
             return None
-
     async def _setup_helper_entities(self):
         """Erstellt Helper-Entities über die Registry API."""
         try:
+            # Hole die Device Registry
+            dev_reg = dr.async_get(self.hass)
+            device = dev_reg.async_get_device({(DOMAIN, self.name)})
+            
+            if not device:
+                _LOGGER.error(
+                    "Gerät nicht in Registry gefunden",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return
+
             # Input Numbers
             if "input_number" in self._device_config:
                 for input_id, config in self._device_config["input_number"].items():
@@ -208,8 +356,21 @@ class ModbusManagerDevice:
                     )
                     
                     if entity:
-                        # Setze die Entity-ID
-                        entity.entity_id = f"number.{input_id.lower()}"
+                        # Setze die Entity-ID und unique_id mit Gerätenamen
+                        entity.entity_id = f"number.{self.name}_{input_id.lower()}"
+                        entity._attr_unique_id = f"{self.name}_{input_id}_number"
+                        
+                        # Registriere die Entity in der Entity Registry
+                        entity_registry = er.async_get(self.hass)
+                        entity_registry.async_get_or_create(
+                            domain="number",
+                            platform=DOMAIN,
+                            unique_id=entity._attr_unique_id,
+                            device_id=device.id,
+                            suggested_object_id=f"{self.name}_{input_id.lower()}",
+                            original_name=entity._attr_name
+                        )
+                        
                         self.entities[entity.entity_id] = entity
             
             # Input Selects
@@ -225,11 +386,24 @@ class ModbusManagerDevice:
                         )
                         
                         if entity:
-                            # Setze die Entity-ID
-                            entity.entity_id = f"select.{input_id.lower()}"
+                            # Setze die Entity-ID und unique_id mit Gerätenamen
+                            entity.entity_id = f"select.{self.name}_{input_id.lower()}"
+                            entity._attr_unique_id = f"{self.name}_{input_id}_select"
+                            
+                            # Registriere die Entity in der Entity Registry
+                            entity_registry = er.async_get(self.hass)
+                            entity_registry.async_get_or_create(
+                                domain="select",
+                                platform=DOMAIN,
+                                unique_id=entity._attr_unique_id,
+                                device_id=device.id,
+                                suggested_object_id=f"{self.name}_{input_id.lower()}",
+                                original_name=entity._attr_name
+                            )
+                            
                             self.entities[entity.entity_id] = entity
 
-            self._logger.debug(
+            _LOGGER.debug(
                 "Helper-Entities erfolgreich erstellt",
                 extra={
                     "device": self.name,
@@ -239,7 +413,7 @@ class ModbusManagerDevice:
             )
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Erstellen der Helper-Entities",
                 extra={
                     "error": str(e),
@@ -253,7 +427,7 @@ class ModbusManagerDevice:
         try:
             # Registriere Device Triggers
             if "device_triggers" in self._device_config:
-                self._logger.debug(
+                _LOGGER.debug(
                     "Registriere Device Triggers",
                     extra={
                         "device": self.name,
@@ -270,7 +444,7 @@ class ModbusManagerDevice:
 
             # Registriere Device Conditions
             if "device_conditions" in self._device_config:
-                self._logger.debug(
+                _LOGGER.debug(
                     "Registriere Device Conditions",
                     extra={
                         "device": self.name,
@@ -287,7 +461,7 @@ class ModbusManagerDevice:
 
             # Registriere Device Actions
             if "device_actions" in self._device_config:
-                self._logger.debug(
+                _LOGGER.debug(
                     "Registriere Device Actions",
                     extra={
                         "device": self.name,
@@ -302,7 +476,7 @@ class ModbusManagerDevice:
                     self.hass.data.setdefault(DOMAIN, {}).setdefault("device_actions", {})[device.id] = \
                         self._device_config["device_actions"]
 
-            self._logger.debug(
+            _LOGGER.debug(
                 "Automatisierungskomponenten erfolgreich eingerichtet",
                 extra={
                     "device": self.name,
@@ -313,7 +487,7 @@ class ModbusManagerDevice:
             )
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Einrichten der Automatisierungskomponenten",
                 extra={
                     "error": str(e),
@@ -321,66 +495,112 @@ class ModbusManagerDevice:
                     "traceback": e.__traceback__
                 }
             )
+    async def async_update(self, polling_interval: int) -> dict:
+        """Aktualisiert die Register für das angegebene Polling-Intervall."""
+        if not self._setup_complete:
+            return {}
 
-    async def async_update(self, polling_interval: str = "30") -> Dict[str, Any]:
-        """Aktualisiert die Registerwerte für das angegebene Polling-Intervall."""
+        # Bestimme das Polling-Level basierend auf dem Intervall
+        if polling_interval == self._fast_interval:
+            polling_level = "fast"
+        elif polling_interval == self._slow_interval:
+            polling_level = "slow"
+        else:
+            polling_level = "normal"
+
         try:
-            if not self._setup_complete:
-                return {}
-
             data = {}
             errors = []
+            tasks = []
+            register_groups = {}
             
-            # Lese alle Register mit dem entsprechenden Polling-Intervall
+            # Hole alle Register mit dem entsprechenden Polling-Level
             if "registers" in self._device_config:
-                # Input Register (nur lesen)
-                for register in self._device_config["registers"].get("read", []):
-                    if str(register.get("polling_interval", "30")) == polling_interval:
-                        try:
-                            await self._read_register(register, data)
-                        except Exception as e:
-                            errors.append({
-                                "register": register.get("name"),
-                                "error": str(e)
-                            })
-                            self._logger.error(
-                                "Fehler beim Lesen eines Registers",
-                                extra={
-                                    "error": str(e),
-                                    "register": register.get("name"),
-                                    "device": self.name
-                                }
-                            )
-                            # Fahre mit dem nächsten Register fort
-                            continue
-                
-                # Holding Register (lesen/schreiben)
-                for register in self._device_config["registers"].get("write", []):
-                    if str(register.get("polling_interval", "30")) == polling_interval:
-                        try:
-                            await self._read_register(register, data)
-                        except Exception as e:
-                            errors.append({
-                                "register": register.get("name"),
-                                "error": str(e)
-                            })
-                            self._logger.error(
-                                "Fehler beim Lesen eines Registers",
-                                extra={
-                                    "error": str(e),
-                                    "register": register.get("name"),
-                                    "device": self.name
-                                }
-                            )
-                            # Fahre mit dem nächsten Register fort
-                            continue
+                for section in ["read", "write"]:
+                    if section in self._device_config["registers"]:
+                        registers = [
+                            reg for reg in self._device_config["registers"][section]
+                            if reg.get("polling", "normal") == polling_level
+                        ]
+                        
+                        # Gruppiere Register nach Adresse und Typ
+                        for register in registers:
+                            if register.get("type") == "calculated":
+                                # Verarbeite berechnete Register direkt
+                                try:
+                                    processed_value = self._process_register_value(
+                                        register_name=register.get("name"),
+                                        register_def=register,
+                                        raw_value=None
+                                    )
+                                    if processed_value is not None:
+                                        data[register["name"]] = processed_value
+                                except Exception as e:
+                                    errors.append({
+                                        "register": register.get("name"),
+                                        "error": str(e)
+                                    })
+                                continue
 
-            # Aktualisiere die Register-Daten für dieses Intervall
-            for key, value in data.items():
-                self._register_data[key] = value
+                            # Gruppiere normale Register
+                            key = (
+                                register.get("address"),
+                                register.get("type", "uint16"),
+                                register.get("count", 1),
+                                register.get("register_type", "input")
+                            )
+                            if key not in register_groups:
+                                register_groups[key] = []
+                            register_groups[key].append(register)
+
+            # Erstelle Tasks für jede Registergruppe
+            for (address, reg_type, count, register_type), group in register_groups.items():
+                task = self._hub.read_register(
+                    device_name=self.name,
+                    address=address,
+                    count=count,
+                    reg_type=reg_type,
+                    register_type=register_type
+                )
+                tasks.append((task, group))
+
+            # Führe alle Lese-Tasks parallel aus
+            results = await asyncio.gather(
+                *(task for task, _ in tasks),
+                return_exceptions=True
+            )
+
+            # Verarbeite die Ergebnisse
+            for (task, group), result in zip(tasks, results):
+                if isinstance(result, Exception):
+                    for register in group:
+                        errors.append({
+                            "register": register.get("name"),
+                            "error": str(result)
+                        })
+                    continue
+
+                # Verarbeite die Werte für jedes Register in der Gruppe
+                for register in group:
+                    try:
+                        processed_value = self._process_register_value(
+                            register_name=register.get("name"),
+                            register_def=register,
+                            raw_value=result
+                        )
+                        if processed_value is not None:
+                            data[register["name"]] = processed_value
+                    except Exception as e:
+                        errors.append({
+                            "register": register.get("name"),
+                            "error": str(e)
+                        })
+
+            # Aktualisiere die Register-Daten
+            self._register_data.update(data)
             
             # Logge eine Zusammenfassung
-            self._logger.debug(
+            _LOGGER.debug(
                 "Update abgeschlossen",
                 extra={
                     "device": self.name,
@@ -394,7 +614,7 @@ class ModbusManagerDevice:
             return data
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Update der Register",
                 extra={
                     "error": str(e),
@@ -403,10 +623,23 @@ class ModbusManagerDevice:
                 }
             )
             return {}
-
     async def _read_register(self, register: Dict[str, Any], values: Dict[str, Any]):
         """Liest ein einzelnes Register."""
         try:
+            # Überspringe das Lesen für berechnete Register
+            if register.get("type") == "calculated":
+                # Verarbeite den Wert direkt
+                processed_value = self._process_register_value(
+                    register_name=register.get("name"),
+                    register_def=register,
+                    raw_value=None
+                )
+                
+                # Speichere den Wert wenn er nicht None ist
+                if processed_value is not None:
+                    values[register["name"]] = processed_value
+                return
+
             reg_type = register.get("type", "uint16")
             reg_count = register.get("count", 1)
             swap = register.get("swap", "").lower()
@@ -415,7 +648,7 @@ class ModbusManagerDevice:
             # Verwende immer "input" zum Lesen, außer es ist explizit "holding" spezifiziert
             register_type = register.get("register_type", "input")
             
-            self._logger.debug(
+            _LOGGER.debug(
                 "Starte Modbus Register Lesevorgang",
                 extra={
                     "register_name": register.get("name"),
@@ -426,9 +659,8 @@ class ModbusManagerDevice:
                     "swap": swap,
                     "device": self.name
                 }
-            )
-            
-            result = await self.hub.read_register(
+            )            
+            result = await self._hub.read_register(
                 device_name=self.name,
                 address=register["address"],
                 count=reg_count,
@@ -476,12 +708,12 @@ class ModbusManagerDevice:
                 if "state_class" in register:
                     log_extra["state_class"] = register["state_class"]
                 
-                self._logger.debug(
+                _LOGGER.debug(
                     "Modbus Register erfolgreich gelesen",
                     extra=log_extra
                 )
             else:
-                self._logger.warning(
+                _LOGGER.warning(
                     "Modbus Register Lesevorgang ohne Ergebnis",
                     extra={
                         "register_name": register.get("name"),
@@ -492,7 +724,7 @@ class ModbusManagerDevice:
                 )
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Lesen eines Registers",
                 extra={
                     "error": str(e),
@@ -502,7 +734,6 @@ class ModbusManagerDevice:
                     "device": self.name
                 }
             )
-
     async def async_write_register(self, register_name: str, value: Any) -> bool:
         """Schreibt einen Wert in ein Register."""
         try:
@@ -514,7 +745,7 @@ class ModbusManagerDevice:
             )
             
             if not register:
-                self._logger.warning(
+                _LOGGER.warning(
                     "Register für Schreibvorgang nicht gefunden",
                     extra={
                         "register_name": register_name,
@@ -528,7 +759,7 @@ class ModbusManagerDevice:
                 if isinstance(value, str):
                     value = float(value)
             except ValueError:
-                self._logger.error(
+                _LOGGER.error(
                     "Ungültiger Wert für Register",
                     extra={
                         "register_name": register_name,
@@ -548,7 +779,7 @@ class ModbusManagerDevice:
 
             # Prüfe Minimal- und Maximalwerte nur wenn sie definiert sind
             if "min" in register and value < register["min"]:
-                self._logger.warning(
+                _LOGGER.warning(
                     "Wert unter Minimum, setze auf Minimum",
                     extra={
                         "register_name": register_name,
@@ -559,7 +790,7 @@ class ModbusManagerDevice:
                 )
                 value = register["min"]
             elif "max" in register and value > register["max"]:
-                self._logger.warning(
+                _LOGGER.warning(
                     "Wert über Maximum, setze auf Maximum",
                     extra={
                         "register_name": register_name,
@@ -592,12 +823,12 @@ class ModbusManagerDevice:
             if "max" in register:
                 log_extra["max"] = register["max"]
 
-            self._logger.debug(
+            _LOGGER.debug(
                 "Starte Modbus Register Schreibvorgang",
                 extra=log_extra
             )
 
-            success = await self.hub.write_register(
+            success = await self._hub.write_register(
                 device_name=self.name,
                 address=register["address"],
                 value=value,
@@ -606,12 +837,12 @@ class ModbusManagerDevice:
             )
 
             if success:
-                self._logger.debug(
+                _LOGGER.debug(
                     "Modbus Register erfolgreich geschrieben",
                     extra=log_extra
                 )
             else:
-                self._logger.warning(
+                _LOGGER.warning(
                     "Modbus Register Schreibvorgang fehlgeschlagen",
                     extra=log_extra
                 )
@@ -619,7 +850,7 @@ class ModbusManagerDevice:
             return success
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Schreiben eines Registers",
                 extra={
                     "error": str(e),
@@ -653,8 +884,8 @@ class ModbusManagerDevice:
                 for entity in entities:
                     if entity and entity.entity_id:
                         try:
-                            await ent_reg.async_remove(entity.entity_id)
-                            self._logger.debug(
+                            ent_reg.async_remove(entity.entity_id)
+                            _LOGGER.debug(
                                 f"Entity {entity.entity_id} wurde entfernt",
                                 extra={
                                     "device": self.name,
@@ -662,7 +893,7 @@ class ModbusManagerDevice:
                                 }
                             )
                         except Exception as e:
-                            self._logger.warning(
+                            _LOGGER.warning(
                                 "Fehler beim Entfernen einer Entity",
                                 extra={
                                     "error": str(e),
@@ -670,18 +901,46 @@ class ModbusManagerDevice:
                                     "device": self.name
                                 }
                             )
+
+                # Entferne auch die Input Helper Entities
+                input_prefixes = [
+                    f"number.{self.name}_set_",
+                    f"select.{self.name}_set_",
+                ]
+                
+                for entity_id in list(self.hass.states.async_entity_ids()):
+                    if any(entity_id.startswith(prefix) for prefix in input_prefixes):
+                        try:
+                            # Entferne aus der Entity Registry
+                            ent_reg.async_remove(entity_id)
+                            _LOGGER.debug(
+                                f"Input Helper Entity {entity_id} wurde entfernt",
+                                extra={
+                                    "device": self.name,
+                                    "entity_id": entity_id
+                                }
+                            )
+                        except Exception as e:
+                            _LOGGER.warning(
+                                "Fehler beim Entfernen einer Input Helper Entity",
+                                extra={
+                                    "error": str(e),
+                                    "entity_id": entity_id,
+                                    "device": self.name
+                                }
+                            )
                 
                 # Entferne das Gerät
                 try:
                     dev_reg.async_remove_device(device_entry.id)
-                    self._logger.debug(
+                    _LOGGER.debug(
                         "Gerät wurde entfernt",
                         extra={
                             "device": self.name
                         }
                     )
                 except Exception as e:
-                    self._logger.warning(
+                    _LOGGER.warning(
                         "Fehler beim Entfernen des Geräts",
                         extra={
                             "error": str(e),
@@ -695,7 +954,7 @@ class ModbusManagerDevice:
             self._setup_complete = False
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Teardown des Geräts",
                 extra={
                     "error": str(e),
@@ -703,119 +962,154 @@ class ModbusManagerDevice:
                     "traceback": e.__traceback__
                 }
             )
-
     def _process_register_value(
         self,
         register_name: str,
         register_def: Dict[str, Any],
         raw_value: Any
     ) -> Any:
-        """Verarbeitet den Rohwert eines Registers basierend auf seinem Typ."""
-        try:
-            if raw_value is None:
-                return None
+        """Verarbeitet den Rohwert eines Registers basierend auf seiner Definition."""
+        if raw_value is None:
+            return None
 
+        try:
             reg_type = register_def.get("type", "uint16")
-            
-            # Für String-Register
+            swap = register_def.get("swap", "")
+
+            # Spezielle Behandlung für String-Register
             if reg_type == "string":
                 try:
-                    # Konvertiere die Register-Werte in ASCII-Zeichen
-                    ascii_string = ""
+                    # Jeder Register-Wert enthält 2 ASCII-Zeichen
+                    chars = []
                     for value in raw_value:
-                        # Extrahiere die beiden ASCII-Zeichen aus jedem Register
+                        # Extrahiere die beiden ASCII-Zeichen aus dem 16-bit Wert
                         high_byte = (value >> 8) & 0xFF
                         low_byte = value & 0xFF
-                        
-                        # Füge nur gültige ASCII-Zeichen hinzu
-                        if high_byte >= 32 and high_byte <= 126:  # Druckbare ASCII-Zeichen
-                            ascii_string += chr(high_byte)
-                        if low_byte >= 32 and low_byte <= 126:  # Druckbare ASCII-Zeichen
-                            ascii_string += chr(low_byte)
-                    
-                    # Entferne Nullbytes und Leerzeichen am Ende
-                    return ascii_string.strip('\x00 ')
-                    
+                        # Nur druckbare ASCII-Zeichen (32-126) und einige Steuerzeichen akzeptieren
+                        if 32 <= high_byte <= 126:
+                            chars.append(chr(high_byte))
+                        if 32 <= low_byte <= 126:
+                            chars.append(chr(low_byte))
+                    # Verbinde die Zeichen und entferne Whitespace
+                    result = ''.join(chars).strip()
+                    # Spezielle Behandlung für Battery Serial
+                    if register_name == "battery_serial" and not any(32 <= ord(c) <= 126 for c in result):
+                        return "Encrypted or Not Available"
+                    return result
                 except Exception as e:
-                    self._logger.error(
+                    _LOGGER.error(
                         "Fehler bei der String-Konvertierung",
                         extra={
                             "error": str(e),
                             "register": register_name,
-                            "raw_value": raw_value,
-                            "device": self.name
+                            "raw_value": raw_value
                         }
                     )
                     return None
 
             # Für numerische Register
-            processed_value = None
-            
             if isinstance(raw_value, (list, tuple)):
-                if len(raw_value) == 1:
-                    processed_value = raw_value[0]
+                # Behandle mehrere Register als ein Wert (z.B. für 32-bit Werte)
+                if reg_type in ["uint32", "int32", "float32"] and len(raw_value) >= 2:
+                    from pymodbus.payload import BinaryPayloadDecoder
+                    from pymodbus.constants import Endian
+                    
+                    # Die Standard HA Modbus-Komponente verwendet diese Konfiguration
+                    decoder = BinaryPayloadDecoder.fromRegisters(
+                        raw_value,
+                        byteorder=Endian.BIG,
+                        wordorder=Endian.LITTLE
+                    )
+                    
+                    if reg_type == "int32":
+                        processed_value = decoder.decode_32bit_int()
+                    elif reg_type == "uint32":
+                        processed_value = decoder.decode_32bit_uint()
+                    elif reg_type == "float32":
+                        processed_value = decoder.decode_32bit_float()
                 else:
-                    # Behandle mehrere Register als ein Wert (z.B. für 32-bit Werte)
-                    if reg_type == "uint32" and len(raw_value) >= 2:
-                        processed_value = (raw_value[0] << 16) | raw_value[1]
-                    elif reg_type == "int32" and len(raw_value) >= 2:
-                        value = (raw_value[0] << 16) | raw_value[1]
-                        if value > 2147483647:  # 2^31 - 1
-                            processed_value = value - 4294967296  # 2^32
-                        else:
-                            processed_value = value
-                    elif reg_type == "float32" and len(raw_value) >= 2:
-                        import struct
-                        # Konvertiere zwei 16-bit Register in einen 32-bit Float
-                        combined = (raw_value[0] << 16) | raw_value[1]
-                        processed_value = struct.unpack('!f', struct.pack('!I', combined))[0]
-                    else:
-                        processed_value = raw_value[0]
+                    # Einzelnes Register (16-bit)
+                    value = raw_value[0]
+                    if reg_type == "int16":
+                        # Konvertiere zu signed 16-bit
+                        if value > 32767:  # 2^15 - 1
+                            value = value - 65536  # 2^16
+                    processed_value = value
             else:
-                processed_value = raw_value
+                # Einzelner Wert
+                value = raw_value
+                if reg_type == "int16":
+                    # Konvertiere zu signed 16-bit
+                    if value > 32767:  # 2^15 - 1
+                        value = value - 65536  # 2^16
+                processed_value = value
 
-            # Konvertiere zu float für weitere Verarbeitung
-            if processed_value is not None:
-                processed_value = float(processed_value)
-
-                # Skalierung anwenden wenn konfiguriert
-                if "scale" in register_def:
-                    processed_value = processed_value * register_def["scale"]
-
-                # Wert entsprechend der Präzision runden
-                if "precision" in register_def:
-                    processed_value = round(processed_value, register_def["precision"])
+            # Spezielle Behandlungen für bestimmte Register
+            if register_name == "device_code":
+                hex_code = f"0x{int(processed_value):04X}"
+                device_type_mapping = self._device_config.get("device_type_mapping", {})
+                return device_type_mapping.get(hex_code, f"Unknown device code: {hex_code}")
+                
+            elif register_name == "system_state":
+                hex_code = f"0x{int(processed_value):04X}"
+                system_state_mapping = self._device_config.get("system_state_mapping", {})
+                return system_state_mapping.get(hex_code, f"Unknown state code: {hex_code}")
+                
+            elif register_name == "battery_forced_charge_discharge_cmd":
+                battery_cmd = self._get_register_value("battery_forced_charge_discharge")
+                if battery_cmd is not None:
+                    battery_cmd_mapping = self._device_config.get("battery_cmd_mapping", {})
+                    hex_code = f"0x{int(battery_cmd):04X}"
+                    return battery_cmd_mapping.get(hex_code, f"Unknown command code: {hex_code}")
 
             return processed_value
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler bei der Wertverarbeitung",
                 extra={
                     "error": str(e),
                     "register": register_name,
                     "raw_value": raw_value,
-                    "register_type": reg_type,
-                    "device": self.name
+                    "type": reg_type
                 }
             )
             return None
 
-    async def setup_device(self) -> None:
-        """Set up the device."""
-        # Registriere das Gerät
-        device_registry = dr.async_get(self.hass)
-        device_registry.async_get_or_create(
-            config_entry_id=self.entry_id,
-            identifiers={(DOMAIN, self.name)},
-            name=self.name,
-            manufacturer=self.config.get("manufacturer", "Unknown"),
-            model=self.config.get("model", "Unknown"),
-        )
+    def _get_register_value(self, register_name: str) -> Optional[float]:
+        """Hilfsmethode zum Abrufen eines Registerwerts."""
+        try:
+            # Suche zuerst in den Lese-Registern
+            register_def = next(
+                (reg for reg in self._device_config["registers"]["read"] 
+                 if reg["name"] == register_name),
+                None
+            )
+            
+            # Wenn nicht gefunden, suche in den Schreib-Registern
+            if not register_def:
+                register_def = next(
+                    (reg for reg in self._device_config["registers"].get("write", [])
+                     if reg["name"] == register_name),
+                    None
+                )
+            
+            if not register_def:
+                return None
 
-        # Setup Input Synchronization
-        if "input_sync" in self._device_config:
-            await self.setup_input_sync()
+            # Für berechnete Register
+            if register_def.get("type") == "calculated":
+                return self._register_data.get(register_name)
+                
+            # Für normale Register
+            raw_value = self._register_data.get(register_name)
+            if raw_value is None:
+                return None
+                
+            return self._process_register_value(register_name, register_def, raw_value)
+            
+        except Exception:
+            return None
 
     async def setup_input_sync(self) -> None:
         """Setup synchronization between Modbus registers and input helpers."""
@@ -897,7 +1191,7 @@ class ModbusManagerDevice:
             # Prüfe ob Schreibzugriff erlaubt ist
             write_enabled = self.hass.states.get("input_boolean.enable_modbus_write")
             if not write_enabled or write_enabled.state != "on":
-                self._logger.warning(
+                _LOGGER.warning(
                     "Modbus Schreibzugriff ist deaktiviert",
                     extra={
                         "register": register_name,
@@ -909,7 +1203,7 @@ class ModbusManagerDevice:
             # Validiere den Wert
             if validation_rules:
                 if "min" in validation_rules and value < validation_rules["min"]:
-                    self._logger.warning(
+                    _LOGGER.warning(
                         "Wert unter Minimum",
                         extra={
                             "value": value,
@@ -919,7 +1213,7 @@ class ModbusManagerDevice:
                     )
                     return False
                 if "max" in validation_rules and value > validation_rules["max"]:
-                    self._logger.warning(
+                    _LOGGER.warning(
                         "Wert über Maximum",
                         extra={
                             "value": value,
@@ -929,7 +1223,7 @@ class ModbusManagerDevice:
                     )
                     return False
                 if "allowed_values" in validation_rules and value not in validation_rules["allowed_values"]:
-                    self._logger.warning(
+                    _LOGGER.warning(
                         "Wert nicht in erlaubten Werten",
                         extra={
                             "value": value,
@@ -943,7 +1237,7 @@ class ModbusManagerDevice:
             success = await self.async_write_register(register_name, value)
             
             if success:
-                self._logger.info(
+                _LOGGER.info(
                     "Wert erfolgreich geschrieben",
                     extra={
                         "value": value,
@@ -951,7 +1245,7 @@ class ModbusManagerDevice:
                     }
                 )
             else:
-                self._logger.warning(
+                _LOGGER.warning(
                     "Fehler beim Schreiben",
                     extra={
                         "value": value,
@@ -962,7 +1256,7 @@ class ModbusManagerDevice:
             return success
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler bei write_modbus_with_validation",
                 extra={
                     "error": str(e),
@@ -994,7 +1288,7 @@ class ModbusManagerDevice:
         }
 
         if mode not in allowed_modes:
-            self._logger.warning(
+            _LOGGER.warning(
                 "Ungültiger Batteriemodus",
                 extra={
                     "mode": mode,
@@ -1035,7 +1329,7 @@ class ModbusManagerDevice:
             return True
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Setzen des Batteriemodus",
                 extra={
                     "error": str(e),
@@ -1049,7 +1343,7 @@ class ModbusManagerDevice:
         """Setzt den Wechselrichter-Modus."""
         try:
             if mode not in ["Enabled", "Shutdown"]:
-                self._logger.warning(
+                _LOGGER.warning(
                     "Ungültiger Wechselrichter-Modus",
                     extra={
                         "mode": mode,
@@ -1066,7 +1360,7 @@ class ModbusManagerDevice:
             )
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Setzen des Wechselrichter-Modus",
                 extra={
                     "error": str(e),
@@ -1100,7 +1394,7 @@ class ModbusManagerDevice:
             return True
 
         except Exception as e:
-            self._logger.error(
+            _LOGGER.error(
                 "Fehler beim Setzen der Einspeiselimitierung",
                 extra={
                     "error": str(e),
@@ -1146,3 +1440,11 @@ class ModbusManagerDevice:
     async def set_self_consumption_mode(self):
         """Setzt den Wechselrichter in den Self Consumption Modus."""
         await self.execute_action("set_self_consumption_mode")
+
+
+
+
+
+
+
+

@@ -40,6 +40,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
         self._device = device
         self._register_name = register_name
         self._register = register_config
+        self.hass = device.hass
         
         # Entity-Eigenschaften aus Register-Definition
         self._attr_name = register_config.get("name", register_name)
@@ -177,40 +178,24 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         try:
-            _LOGGER.debug(
-                "Koordinator-Update empfangen",
-                extra={
-                    "entity_id": self.entity_id,
-                    "register": self._register_name,
-                    "device": self._device.name,
-                    "has_data": self.coordinator.data is not None,
-                    "coordinator_name": self.coordinator.name
-                }
-            )
-            
+            if not self.coordinator.data:
+                return
+                
             # Hole den aktuellen Wert
             value = self.native_value
-            _LOGGER.debug(
-                "Aktueller Wert",
-                extra={
-                    "entity_id": self.entity_id,
-                    "register": self._register_name,
-                    "value": value
-                }
-            )
             
-            # Aktualisiere den State
-            self.async_write_ha_state()
+            # Aktualisiere den State nur wenn die Entity initialisiert ist
+            if hasattr(self, "hass") and self.hass:
+                self.async_write_ha_state()
             
         except Exception as e:
             _LOGGER.error(
                 "Fehler beim Verarbeiten des Koordinator-Updates",
                 extra={
                     "error": str(e),
-                    "entity_id": self.entity_id,
+                    "entity_id": getattr(self, "entity_id", None),
                     "register": self._register_name,
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
+                    "device": self._device.name
                 }
             )
 

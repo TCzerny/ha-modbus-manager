@@ -1,25 +1,39 @@
 """Config flow for Modbus Manager."""
 from __future__ import annotations
 
-import os
-import yaml
 from typing import Any
 import voluptuous as vol
-import aiofiles
-import asyncio
-from pathlib import Path
 
 from homeassistant import config_entries
+from homeassistant.const import (
+    CONF_HOST,
+    CONF_NAME,
+    CONF_PORT,
+    CONF_SLAVE,
+    CONF_SCAN_INTERVAL,
+)
+from homeassistant.components.modbus.const import (
+    DEFAULT_SCAN_INTERVAL,
+    DEFAULT_SLAVE,
+    MODBUS_DOMAIN,
+)
 from homeassistant.data_entry_flow import FlowResult
-from homeassistant.helpers import device_registry as dr
 
 from .const import (
     DOMAIN,
-    CONF_NAME,
-    CONF_HOST,
-    CONF_PORT,
-    CONF_SLAVE,
     CONF_DEVICE_TYPE,
+    DEFAULT_TIMEOUT,
+)
+
+STEP_USER_DATA_SCHEMA = vol.Schema(
+    {
+        vol.Required(CONF_NAME): str,
+        vol.Required(CONF_HOST): str,
+        vol.Required(CONF_PORT): int,
+        vol.Required(CONF_SLAVE, default=DEFAULT_SLAVE): int,
+        vol.Required(CONF_DEVICE_TYPE): str,
+        vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
+    }
 )
 
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -34,77 +48,36 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         errors = {}
 
         if user_input is not None:
-            try:
-                # Prüfe ob bereits ein Gerät mit diesem Namen existiert
-                device_registry = dr.async_get(self.hass)
-                existing_device = device_registry.async_get_device(
-                    identifiers={(DOMAIN, user_input[CONF_NAME])}
+            # Erstelle zuerst den Standard Modbus Hub
+            modbus_data = {
+                CONF_NAME: user_input[CONF_NAME],
+                CONF_HOST: user_input[CONF_HOST],
+                CONF_PORT: user_input[CONF_PORT],
+                CONF_SLAVE: user_input[CONF_SLAVE],
+                CONF_SCAN_INTERVAL: user_input.get(CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL),
+            }
+
+            # Erstelle den Standard Modbus Hub
+            modbus_entry = await self.hass.config_entries.flow.async_init(
+                MODBUS_DOMAIN,
+                context={"source": config_entries.SOURCE_IMPORT},
+                data=modbus_data,
+            )
+
+            if modbus_entry.type == config_entries.RESULT_TYPE_CREATE_ENTRY:
+                # Speichere die Modbus Entry ID für spätere Referenz
+                user_input["modbus_entry_id"] = modbus_entry.entry_id
+                
+                await self.async_set_unique_id(f"{DOMAIN}_{user_input[CONF_NAME]}")
+                self._abort_if_unique_id_configured()
+
+                return self.async_create_entry(
+                    title=user_input[CONF_NAME],
+                    data=user_input,
                 )
-                
-                if existing_device:
-                    errors["base"] = "device_exists"
-                else:
-                    # Erstelle eine eindeutige ID für den Config Entry
-                    unique_id = f"{user_input[CONF_HOST]}_{user_input[CONF_PORT]}_{user_input[CONF_SLAVE]}_{user_input[CONF_NAME]}"
-                    await self.async_set_unique_id(unique_id)
-                    self._abort_if_unique_id_configured()
 
-                    return self.async_create_entry(
-                        title=user_input[CONF_NAME],
-                        data=user_input
-                    )
-            except Exception as e:
-                errors["base"] = str(e)
-
-        # Lade die verfügbaren Device-Definitionen
-        device_types = []
-        device_defaults = {}
-        definitions_path = Path(__file__).parent / "device_definitions"
-        
-        if definitions_path.exists():
-            # Verwende asyncio.to_thread für das Auflisten der Dateien
-            filenames = await asyncio.to_thread(lambda: [f.name for f in definitions_path.glob("*.yaml")])
-            
-            for filename in filenames:
-                device_type = filename.replace(".yaml", "")
-                device_types.append(device_type)
-                
-                # Lade die Default-Werte aus der Device-Definition
-                try:
-                    async with aiofiles.open(definitions_path / filename, mode='r') as f:
-                        content = await f.read()
-                        try:
-                            config = yaml.safe_load(content)
-                            if "device_config" in config:
-                                device_defaults[device_type] = {
-                                    "port": config["device_config"].get("port", 502),
-                                    "slave": config["device_config"].get("slave", 1)
-                                }
-                        except yaml.YAMLError:
-                            continue
-                except Exception:
-                    continue
-
-        # Bestimme die Default-Werte basierend auf dem ausgewählten Device Type
-        default_port = 502
-        default_slave = 1
-        if user_input and CONF_DEVICE_TYPE in user_input:
-            device_type = user_input[CONF_DEVICE_TYPE]
-            if device_type in device_defaults:
-                default_port = device_defaults[device_type]["port"]
-                default_slave = device_defaults[device_type]["slave"]
-
-        # Zeige das Formular
         return self.async_show_form(
             step_id="user",
-            data_schema=vol.Schema(
-                {
-                    vol.Required(CONF_NAME): str,
-                    vol.Required(CONF_HOST): str,
-                    vol.Required(CONF_PORT, default=default_port): int,
-                    vol.Required(CONF_SLAVE, default=default_slave): int,
-                    vol.Required(CONF_DEVICE_TYPE): vol.In(device_types),
-                }
-            ),
+            data_schema=STEP_USER_DATA_SCHEMA,
             errors=errors,
         )
