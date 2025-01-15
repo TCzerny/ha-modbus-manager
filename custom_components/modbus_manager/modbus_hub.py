@@ -24,7 +24,7 @@ from homeassistant.helpers import device_registry as dr
 from .const import DOMAIN, CONF_DEVICE_TYPE
 from .logger import ModbusManagerLogger
 from .device import ModbusManagerDevice
-
+from .helpers import EntityNameHelper
 _LOGGER = ModbusManagerLogger(__name__)
 
 class ModbusManagerHub:
@@ -58,6 +58,7 @@ class ModbusManagerHub:
         
         # Koordinatoren für verschiedene Polling-Intervalle
         self.coordinators: Dict[int, DataUpdateCoordinator] = {}
+        self.name_helper = EntityNameHelper(self.config_entry)
 
     def get_coordinator(self, interval: int) -> DataUpdateCoordinator | None:
         """Gibt den Koordinator für das angegebene Intervall zurück."""
@@ -410,64 +411,52 @@ class ModbusManagerHub:
             return False
 
     async def _load_device_definition(self) -> Optional[dict]:
-        """Lädt die Gerätedefinition aus der YAML-Datei."""
+        """Lädt die Gerätedefinition."""
         try:
-            definition_path = (
-                Path(__file__).parent / "device_definitions" / f"{self.device_type}.yaml"
-            )
-
-            if not definition_path.exists():
-                _LOGGER.error(f"Gerätedefinition nicht gefunden: {self.device_type}")
+            # Erstelle den Name Helper
+            
+            # Lade die Definition
+            definition = await self._read_device_definition()
+            if not definition:
                 return None
 
-            async with aiofiles.open(definition_path, mode='r', encoding='utf-8') as f:
-                content = await f.read()
-                
-                # Ersetze die Slave-ID-Variable
-                content = content.replace("SLAVE_ID", str(self.slave))
-                
-                # Lade die YAML
-                definition = yaml.safe_load(content)
-                
-                if not definition:
-                    return None
+            # Aktualisiere die Register-Namen
+            if "registers" in definition:
+                for section in ["read", "write"]:
+                    if section in definition["registers"]:
+                        for register in definition["registers"][section]:
+                            if "name" in register:
+                                # Füge den Präfix zum base_name hinzu
+                                register["name"] = self.name_helper.convert(register["name"], NameType.BASE_NAME)
 
-                # Entferne Sonderzeichen und Leerzeichen aus dem Gerätenamen für die Entity-ID
-                sanitized_device_name = re.sub(r'[^\w\s-]', '', self.name.lower())
-                sanitized_device_name = re.sub(r'[-\s]+', '_', sanitized_device_name)
+            # Aktualisiere berechnete Register
+            if "calculated_registers" in definition:
+                for register in definition["calculated_registers"]:
+                    if "name" in register:
+                        # Füge den Präfix zum base_name hinzu
+                        register["name"] = self.name_helper.convert(register["name"], NameType.BASE_NAME)
 
-                # Aktualisiere die Register-Namen und Beschreibungen
-                if "registers" in definition:
-                    for reg_type in ["read", "write"]:
-                        if reg_type in definition["registers"]:
-                            for register in definition["registers"][reg_type]:
-                                if "name" in register:
-                                    # Generiere die Entity-ID mit Präfix
-                                    base_name = register["name"]
-                                    entity_id = f"sensor.{sanitized_device_name}_{base_name}"
-                                    
-                                    # Generiere den Anzeigenamen mit EINEM Präfix
-                                    if "description" in register:
-                                        display_name = register["description"]
-                                    else:
-                                        # Konvertiere snake_case in Title Case für bessere Lesbarkeit
-                                        words = base_name.split("_")
-                                        display_name = " ".join(word.capitalize() for word in words)
-                                    
-                                    # Setze Entity-ID und Namen
-                                    register["entity_id"] = entity_id
-                                    register["unique_id"] = f"{sanitized_device_name}_{base_name}"
-                                    register["name"] = f"{self.name} {display_name}"  # Genau EIN Präfix
+            # Aktualisiere Input Numbers
+            if "input_number" in definition:
+                for input_id, config in definition["input_number"].items():
+                    # Füge den Präfix zum base_name hinzu
+                    config["name"] = self.name_helper.convert(input_id, NameType.BASE_NAME)
 
-                return definition
+            # Aktualisiere Input Selects
+            if "input_select" in definition:
+                for input_id, config in definition["input_select"].items():
+                    # Füge den Präfix zum base_name hinzu
+                    config["name"] = self.name_helper.convert(input_id, NameType.BASE_NAME)
+
+            return definition
 
         except Exception as e:
             _LOGGER.error(
                 "Fehler beim Laden der Gerätedefinition",
                 extra={
                     "error": str(e),
-                    "device_type": self.device_type,
-                    "name": self.name
+                    "device": self.name,
+                    "traceback": e.__traceback__
                 }
             )
             return None
@@ -545,3 +534,36 @@ class ModbusManagerHub:
                 }
             )
             return 0
+
+    async def _read_device_definition(self) -> Optional[dict]:
+        """Liest die Gerätedefinition aus der YAML-Datei."""
+        try:
+            definition_path = (
+                Path(__file__).parent / "device_definitions" / f"{self.device_type}.yaml"
+            )
+            
+            if not definition_path.exists():
+                _LOGGER.error(f"Gerätedefinition nicht gefunden: {self.device_type}")
+                return None
+
+            async with aiofiles.open(definition_path, mode='r', encoding='utf-8') as f:
+                content = await f.read()
+                
+                # Ersetze die Slave-ID-Variable
+                content = content.replace("SLAVE_ID", str(self.slave))
+                
+                # Lade die YAML
+                definition = yaml.safe_load(content)
+                
+                return definition
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Lesen der Gerätedefinition",
+                extra={
+                    "error": str(e),
+                    "device_type": self.device_type,
+                    "name": self.name
+                }
+            )
+            return None

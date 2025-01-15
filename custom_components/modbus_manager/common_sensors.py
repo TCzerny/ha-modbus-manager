@@ -1,4 +1,4 @@
-"""Common Sensors für Modbus Manager."""
+"""Common sensors for Modbus Manager."""
 from datetime import timedelta
 from typing import Dict, List, Optional
 
@@ -10,6 +10,7 @@ from homeassistant.helpers.entity import Entity
 
 from .device import ModbusManagerDevice
 from .logger import ModbusManagerLogger
+from .helpers import EntityNameHelper, NameType
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -22,23 +23,19 @@ class AggregationSensor(SensorEntity):
         coordinator: DataUpdateCoordinator,
         config: dict,
         sensor_id: str,
+        config_entry,
     ):
         """Initialisiere den Sensor."""
         self.hass = hass
         self.coordinator = coordinator
         self._config = config
         self._sensor_id = sensor_id
-        self.entity_id = f"sensor.modbus_manager_{sensor_id}"
-
-    @property
-    def name(self) -> str:
-        """Name des Sensors."""
-        return self._config["name"]
-
-    @property
-    def unique_id(self) -> str:
-        """Eindeutige ID des Sensors."""
-        return f"modbus_manager_{self._config['unique_id']}"
+        
+        # Verwende den EntityNameHelper für die Namen
+        name_helper = EntityNameHelper(config_entry)
+        self.entity_id = name_helper.convert(sensor_id, NameType.ENTITY_ID, domain="sensor")
+        self._attr_unique_id = name_helper.convert(sensor_id, NameType.UNIQUE_ID)
+        self._attr_name = name_helper.convert(sensor_id, NameType.DISPLAY_NAME)
 
     @property
     def native_value(self):
@@ -236,7 +233,8 @@ class AggregationDevice:
                 self.hass,
                 self.coordinator,
                 sensor_config,
-                sensor_id
+                sensor_id,
+                self
             )
             for sensor_id, sensor_config in self._sensors.items()
         ]

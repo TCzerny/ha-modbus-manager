@@ -27,9 +27,7 @@ class ModbusManagerInputNumber(NumberEntity):
         self._config = config
         self._register = register_config
         
-        # Entity-Eigenschaften
-        self._attr_name = f"{device.name} {name}"
-        self._attr_unique_id = f"{device.name}_{name}"
+        # Entity-Eigenschaften werden in der Device-Klasse gesetzt
         self._attr_device_info = device.device_info
         
         # Number-Eigenschaften
@@ -67,9 +65,7 @@ class ModbusManagerInputSelect(SelectEntity):
         self._config = config
         self._register = register_config
         
-        # Entity-Eigenschaften
-        self._attr_name = f"{device.name} {name}"
-        self._attr_unique_id = f"{device.name}_{name}"
+        # Entity-Eigenschaften werden in der Device-Klasse gesetzt
         self._attr_device_info = device.device_info
         
         # Select-Eigenschaften

@@ -131,11 +131,6 @@ registers:
     - { name: "total_battery_charge_from_pv", address: 13012, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2, polling: "slow" }
     - { name: "daily_direct_energy_consumption", address: 13016, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total_increasing", scale: 0.1, precision: 1 }
     - { name: "total_direct_energy_consumption", address: 13017, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, swap: "word", precision: 1, count: 2 }
-
-    # Berechnete Energiewerte
-    - { name: "daily_consumed_energy", type: "calculated", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", precision: 1}
-    - { name: "total_consumed_energy", type: "calculated", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", precision: 1}
-
     - { name: "daily_export_energy", address: 13044, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, polling: "slow" }
     - { name: "total_export_energy", address: 13045, type: "uint32", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, count: 2, swap: word, polling: "slow" }
     - { name: "daily_import_energy", address: 13035, type: "uint16", unit_of_measurement: "kWh", device_class: "energy", state_class: "total", scale: 0.1, polling: "slow" }
@@ -210,6 +205,94 @@ registers:
     - { name: "battery_forced_charge_discharge", address: 13002, type: "uint16", description: "Battery Forced Charge/Discharge (0=Stop, 1=Charge, 2=Discharge)" }
     - { name: "export_power_limit_mode", address: 13003, type: "uint16", description: "Export Power Limit Mode (0=Disabled, 1=Enabled)" }
     - { name: "global_mpp_scan", address: 13004, type: "uint16", description: "Global MPP Scan (0=Disabled, 1=Enabled)" }
+
+# Berechnete Register
+calculated_registers:
+  # Berechnete Energiewerte
+  - name: "daily_consumed_energy"
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    precision: 1
+    calculation:
+      type: "sum"
+      sources: ["daily_direct_energy_consumption", "daily_battery_discharge"]
+
+  - name: "total_consumed_energy"
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    precision: 1
+    calculation:
+      type: "sum"
+      sources: ["total_direct_energy_consumption", "total_battery_discharge"]
+
+  # Berechnete Status-Sensoren
+  - name: "battery_forced_charge_discharge_cmd"
+    device_class: "enum"
+    calculation:
+      type: "mapping"
+      source: "battery_forced_charge_discharge"
+      map: "battery_cmd_mapping"
+
+  - name: "export_power_limit_mode"
+    device_class: "enum"
+    calculation:
+      type: "mapping"
+      source: "export_power_limit_raw"
+      map: "export_power_limit_mapping"
+
+  - name: "ems_mode_selection"
+    device_class: "enum"
+    calculation:
+      type: "mapping"
+      source: "bms_mode_selection_raw"
+      map: "ems_mode_mapping"
+
+  # Berechnete Power-Sensoren
+  - name: "import_power"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    calculation:
+      type: "conditional"
+      source: "grid_power"
+      condition: "positive"
+
+  - name: "export_power"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    calculation:
+      type: "conditional"
+      source: "grid_power"
+      condition: "negative"
+      absolute: true
+
+  # Berechnete Battery-Level/Charge Sensoren
+  - name: "battery_level_nominal"
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: "measurement"
+    calculation:
+      type: "formula"
+      formula: "battery_level * battery_state_of_health / 100"
+
+  - name: "battery_charge_nominal"
+    unit_of_measurement: "kWh"
+    device_class: "energy_storage"
+    state_class: "measurement"
+    calculation:
+      type: "formula"
+      formula: "battery_capacity * battery_level / 100"
+
+  - name: "battery_charge"
+    unit_of_measurement: "kWh"
+    device_class: "energy_storage"
+    state_class: "measurement"
+    calculation:
+      type: "formula"
+      formula: "battery_capacity * battery_level * battery_state_of_health / 10000"
 
 # some input helper sensors for setting some values
 input_number:
@@ -648,47 +731,47 @@ automation:
 # input sync which syncs the values coming from a modbus register to the input helpers
 input_sync:
   # Export Power Limit
-  - source_entity: sensor.{device_name}_export_power_limit
-    target_entity: input_number.{device_name}_set_export_power_limit
+  - source_entity: sensor.export_power_limit
+    target_entity: input_number.set_export_power_limit
 
   # Battery SoC Settings
-  - source_entity: sensor.{device_name}_max_soc
-    target_entity: input_number.{device_name}_set_max_soc
-  - source_entity: sensor.{device_name}_min_soc
-    target_entity: input_number.{device_name}_set_min_soc
-  - source_entity: sensor.{device_name}_reserved_soc_for_backup
-    target_entity: input_number.{device_name}_set_reserved_soc_for_backup
+  - source_entity: sensor.max_soc
+    target_entity: input_number.set_max_soc
+  - source_entity: sensor.min_soc
+    target_entity: input_number.set_min_soc
+  - source_entity: sensor.reserved_soc_for_backup
+    target_entity: input_number.set_reserved_soc_for_backup
 
   # Battery Power Settings
-  - source_entity: sensor.{device_name}_battery_forced_charge_discharge_power
-    target_entity: input_number.{device_name}_set_forced_charge_discharge_power
-  - source_entity: sensor.{device_name}_battery_max_charge_power
-    target_entity: input_number.{device_name}_set_battery_max_charge_power
-  - source_entity: sensor.{device_name}_battery_max_discharge_power
-    target_entity: input_number.{device_name}_set_battery_max_discharge_power
-  - source_entity: sensor.{device_name}_battery_charging_start_power
-    target_entity: input_number.{device_name}_set_battery_charging_start_power
-  - source_entity: sensor.{device_name}_battery_discharging_start_power
-    target_entity: input_number.{device_name}_set_battery_discharging_start_power
+  - source_entity: sensor.battery_forced_charge_discharge_power
+    target_entity: input_number.set_forced_charge_discharge_power
+  - source_entity: sensor.battery_max_charge_power
+    target_entity: input_number.set_battery_max_charge_power
+  - source_entity: sensor.battery_max_discharge_power
+    target_entity: input_number.set_battery_max_discharge_power
+  - source_entity: sensor.battery_charging_start_power
+    target_entity: input_number.set_battery_charging_start_power
+  - source_entity: sensor.battery_discharging_start_power
+    target_entity: input_number.set_battery_discharging_start_power
 
   # Mode Settings
-  - source_entity: sensor.{device_name}_running_state
-    target_entity: input_select.{device_name}_set_inverter_run_mode
+  - source_entity: sensor.running_state
+    target_entity: input_select.set_inverter_run_mode
     mapping:
       "Stop": "Shutdown"
       "Shutdown": "Shutdown"
       "*": "Enabled"  # Alle anderen Werte
-  - source_entity: sensor.{device_name}_battery_forced_charge_discharge_cmd
-    target_entity: input_select.{device_name}_set_battery_forced_charge_discharge_cmd
-  - source_entity: sensor.{device_name}_ems_mode_selection
-    target_entity: input_select.{device_name}_set_ems_mode
-  - source_entity: sensor.{device_name}_export_power_limit_mode_raw
-    target_entity: input_select.{device_name}_set_export_power_limit_mode
+  - source_entity: sensor.battery_forced_charge_discharge_cmd
+    target_entity: input_select.set_battery_forced_charge_discharge_cmd
+  - source_entity: sensor.ems_mode_selection
+    target_entity: input_select.set_ems_mode
+  - source_entity: sensor.export_power_limit_mode_raw
+    target_entity: input_select.set_export_power_limit_mode
     mapping:
       "170": "Enabled"  # 0x00AA
       "85": "Disabled"  # 0x0055
-  - source_entity: sensor.{device_name}_global_mpp_scan_manual_raw
-    target_entity: input_select.{device_name}_set_global_mpp_scan_manual
+  - source_entity: sensor.global_mpp_scan_manual_raw
+    target_entity: input_select.set_global_mpp_scan_manual
     mapping:
       "170": "Enabled"  # 0x00AA
       "85": "Disabled"  # 0x0055

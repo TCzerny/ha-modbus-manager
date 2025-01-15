@@ -5,20 +5,24 @@ import asyncio
 from datetime import timedelta
 from typing import Dict, Any, Optional, List
 
+
 from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers import entity_registry as er
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.const import CONF_NAME, CONF_DEVICE_ID
 from homeassistant.helpers.event import async_track_state_change_event
 
 from homeassistant.components.input_number import DOMAIN as INPUT_NUMBER_DOMAIN
 from homeassistant.components.input_select import DOMAIN as INPUT_SELECT_DOMAIN
 
-from .const import DOMAIN
+from .const import DOMAIN, NameType
 from .logger import ModbusManagerLogger
 from .entities import ModbusRegisterEntity
 from .input_entities import ModbusManagerInputNumber, ModbusManagerInputSelect
-from homeassistant.const import CONF_NAME, CONF_DEVICE_ID
+from .helpers import EntityNameHelper
+
+
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -44,6 +48,8 @@ class ModbusManagerDevice:
         self._setup_complete: bool = False
         self.entities: Dict[str, ModbusRegisterEntity] = {}
         self._remove_state_listeners: list = []
+        self.config_entry = hub.config_entry
+        self.name_helper = EntityNameHelper(self.config_entry)
         
         # Hole die Default-Polling-Intervalle
         polling_config = register_definitions.get("device_config", {}).get("default_polling", {})
@@ -266,36 +272,16 @@ class ModbusManagerDevice:
             )
 
     async def _create_register_entity(self, register_name, register_def, writable: bool = False):
-        """Erstelle eine Entity für ein Register."""
+        """Erstellt eine Entity für ein Register."""
         try:
-            # Bestimme das Polling-Intervall direkt aus der Register-Definition
-            polling = register_def.get("polling", "normal")
-            if polling == "fast":
-                polling_interval = self._fast_interval
-            elif polling == "slow":
-                polling_interval = self._slow_interval
-            else:  # "normal" oder nicht definiert
-                polling_interval = self._normal_interval
+            # Bestimme die Domain basierend auf dem Register-Typ
+            domain = "number" if writable else "sensor"
             
-            # Hole den Koordinator für dieses Intervall
-            coordinator = self._hub.get_coordinator(polling_interval)
+            # Hole den Coordinator vom Hub
+            coordinator = self._hub.get_coordinator(self._normal_interval)
             if not coordinator:
-                _LOGGER.error(
-                    "Kein Koordinator für das Polling-Intervall gefunden",
-                    extra={
-                        "polling_interval": polling_interval,
-                        "register": register_name,
-                        "device": self.name
-                    }
-                )
                 return None
-
-            # Bestimme den Domain-Typ basierend auf den Register-Eigenschaften
-            if writable:
-                domain = "select" if "options" in register_def else "number"
-            else:
-                domain = "sensor"
-
+            
             # Erstelle die Entity
             entity = ModbusRegisterEntity(
                 device=self,
@@ -303,14 +289,6 @@ class ModbusManagerDevice:
                 register_config=register_def,
                 coordinator=coordinator,
             )
-            
-            # Formatiere den Entity-Namen korrekt (lowercase und underscores)
-            formatted_name = register_name.lower().replace(" ", "_")
-            entity_id = f"{domain}.{self.name.lower()}_{formatted_name}"
-            
-            # Setze die Entity-ID
-            entity.entity_id = entity_id
-            entity.platform = domain
             
             # Füge die Entity zum entities Dictionary hinzu
             self.entities[register_name] = entity
@@ -328,6 +306,7 @@ class ModbusManagerDevice:
                 }
             )
             return None
+
     async def _setup_helper_entities(self):
         """Erstellt Helper-Entities über die Registry API."""
         try:
@@ -356,9 +335,10 @@ class ModbusManagerDevice:
                     )
                     
                     if entity:
-                        # Setze die Entity-ID und unique_id mit Gerätenamen
-                        entity.entity_id = f"number.{self.name}_{input_id.lower()}"
-                        entity._attr_unique_id = f"{self.name}_{input_id}_number"
+                        # Setze die Entity-ID und unique_id mit dem Helper
+                        entity.entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="number")
+                        entity._attr_unique_id = self.name_helper.convert(input_id, NameType.UNIQUE_ID)
+                        entity._attr_name = self.name_helper.convert(input_id, NameType.DISPLAY_NAME)
                         
                         # Registriere die Entity in der Entity Registry
                         entity_registry = er.async_get(self.hass)
@@ -367,12 +347,12 @@ class ModbusManagerDevice:
                             platform=DOMAIN,
                             unique_id=entity._attr_unique_id,
                             device_id=device.id,
-                            suggested_object_id=f"{self.name}_{input_id.lower()}",
+                            suggested_object_id=self.name_helper.convert(input_id, NameType.BASE_NAME),
                             original_name=entity._attr_name
                         )
                         
                         self.entities[entity.entity_id] = entity
-            
+
             # Input Selects
             if "input_select" in self._device_config:
                 for input_id, config in self._device_config["input_select"].items():
@@ -386,9 +366,10 @@ class ModbusManagerDevice:
                         )
                         
                         if entity:
-                            # Setze die Entity-ID und unique_id mit Gerätenamen
-                            entity.entity_id = f"select.{self.name}_{input_id.lower()}"
-                            entity._attr_unique_id = f"{self.name}_{input_id}_select"
+                            # Setze die Entity-ID und unique_id mit dem Helper
+                            entity.entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="select")
+                            entity._attr_unique_id = self.name_helper.convert(input_id, NameType.UNIQUE_ID)
+                            entity._attr_name = self.name_helper.convert(input_id, NameType.DISPLAY_NAME)
                             
                             # Registriere die Entity in der Entity Registry
                             entity_registry = er.async_get(self.hass)
@@ -397,7 +378,7 @@ class ModbusManagerDevice:
                                 platform=DOMAIN,
                                 unique_id=entity._attr_unique_id,
                                 device_id=device.id,
-                                suggested_object_id=f"{self.name}_{input_id.lower()}",
+                                suggested_object_id=self.name_helper.convert(input_id, NameType.BASE_NAME),
                                 original_name=entity._attr_name
                             )
                             
@@ -514,6 +495,8 @@ class ModbusManagerDevice:
             tasks = []
             register_groups = {}
             
+            # Erstelle den Name Helper
+            
             # Hole alle Register mit dem entsprechenden Polling-Level
             if "registers" in self._device_config:
                 for section in ["read", "write"]:
@@ -525,24 +508,6 @@ class ModbusManagerDevice:
                         
                         # Gruppiere Register nach Adresse und Typ
                         for register in registers:
-                            if register.get("type") == "calculated":
-                                # Verarbeite berechnete Register direkt
-                                try:
-                                    processed_value = self._process_register_value(
-                                        register_name=register.get("name"),
-                                        register_def=register,
-                                        raw_value=None
-                                    )
-                                    if processed_value is not None:
-                                        data[register["name"]] = processed_value
-                                except Exception as e:
-                                    errors.append({
-                                        "register": register.get("name"),
-                                        "error": str(e)
-                                    })
-                                continue
-
-                            # Gruppiere normale Register
                             key = (
                                 register.get("address"),
                                 register.get("type", "uint16"),
@@ -589,7 +554,9 @@ class ModbusManagerDevice:
                             raw_value=result
                         )
                         if processed_value is not None:
-                            data[register["name"]] = processed_value
+                            # Speichere den Wert mit präfixiertem Namen
+                            prefixed_name = self.name_helper.convert(register["name"], NameType.BASE_NAME)
+                            data[prefixed_name] = processed_value
                     except Exception as e:
                         errors.append({
                             "register": register.get("name"),
@@ -598,6 +565,22 @@ class ModbusManagerDevice:
 
             # Aktualisiere die Register-Daten
             self._register_data.update(data)
+
+            # Berechne die Werte für berechnete Register
+            if "calculated_registers" in self._device_config:
+                for register in self._device_config["calculated_registers"]:
+                    try:
+                        calculated_value = self._calculate_register_value(register)
+                        if calculated_value is not None:
+                            # Speichere den Wert mit präfixiertem Namen
+                            prefixed_name = self.name_helper.convert(register["name"], NameType.BASE_NAME)
+                            data[prefixed_name] = calculated_value
+                            self._register_data[prefixed_name] = calculated_value
+                    except Exception as e:
+                        errors.append({
+                            "register": register.get("name"),
+                            "error": str(e)
+                        })
             
             # Logge eine Zusammenfassung
             _LOGGER.debug(
@@ -864,6 +847,18 @@ class ModbusManagerDevice:
     async def async_teardown(self):
         """Bereinigt das Gerät und alle zugehörigen Entities."""
         try:
+            # Stoppe zuerst alle Koordinatoren
+            for coordinator in self._hub.coordinators.values():
+                coordinator.async_shutdown()
+
+            # Lösche alle Register-Daten
+            self._register_data.clear()
+            
+            # Entferne State Change Listener
+            while self._remove_state_listeners:
+                remove_listener = self._remove_state_listeners.pop()
+                remove_listener()
+
             # Hole die Registries
             ent_reg = er.async_get(self.hass)
             dev_reg = dr.async_get(self.hass)
@@ -950,7 +945,6 @@ class ModbusManagerDevice:
 
             # Bereinige interne Zustände
             self.entities.clear()
-            self._register_data.clear()
             self._setup_complete = False
 
         except Exception as e:
@@ -1120,6 +1114,10 @@ class ModbusManagerDevice:
             
             if not source_entity or not target_entity:
                 continue
+
+            # Füge Device-Namen zu den Entity-IDs hinzu
+            source_entity = f"{source_entity.split('.')[0]}.{self.name}_{source_entity.split('.')[1]}"
+            target_entity = f"{target_entity.split('.')[0]}.{self.name}_{target_entity.split('.')[1]}"
 
             @callback
             def _state_changed_listener(event, target=target_entity, mapping=mapping):
@@ -1440,6 +1438,101 @@ class ModbusManagerDevice:
     async def set_self_consumption_mode(self):
         """Setzt den Wechselrichter in den Self Consumption Modus."""
         await self.execute_action("set_self_consumption_mode")
+
+    def _calculate_register_value(self, register_def: Dict[str, Any]) -> Optional[float]:
+        """Berechnet den Wert eines berechneten Registers."""
+        try:
+            calculation = register_def.get("calculation", {})
+            calc_type = calculation.get("type")
+
+            if calc_type == "sum":
+                # Summiere die Werte aus den Quellen
+                sources = calculation.get("sources", [])
+                values = []
+                for source in sources:
+                    # Verwende den Helper für die präfixierten Namen
+                    prefixed_source = self.name_helper.convert(source, NameType.BASE_NAME)
+                    value = self._register_data.get(prefixed_source)
+                    if value is None:
+                        return None
+                    values.append(value)
+                return sum(values)
+
+            elif calc_type == "mapping":
+                # Wende eine Mapping-Tabelle auf den Quellwert an
+                source = calculation.get("source")
+                # Verwende den Helper für die präfixierten Namen
+                prefixed_source = self.name_helper.convert(source, NameType.BASE_NAME)
+                source_value = self._register_data.get(prefixed_source)
+                
+                if source_value is None:
+                    return None
+                    
+                # Konvertiere den Wert in einen Hex-String
+                hex_code = f"0x{int(source_value):04X}"
+                map_name = calculation.get("map")
+                mapping = self._device_config.get(map_name, {})
+                return mapping.get(hex_code, f"Unknown code: {hex_code}")
+
+            elif calc_type == "conditional":
+                # Bedingter Wert basierend auf einer Quelle
+                source = calculation.get("source")
+                condition = calculation.get("condition")
+                # Verwende den Helper für die präfixierten Namen
+                prefixed_source = self.name_helper.convert(source, NameType.BASE_NAME)
+                source_value = self._register_data.get(prefixed_source)
+                
+                if source_value is None:
+                    return None
+                    
+                if condition == "positive" and source_value > 0:
+                    return source_value
+                elif condition == "negative" and source_value < 0:
+                    return abs(source_value) if calculation.get("absolute", False) else source_value
+                return 0
+
+            elif calc_type == "formula":
+                # Berechne einen Wert basierend auf einer Formel
+                formula = calculation.get("formula", "")
+                # Ersetze die Variablennamen durch ihre Werte
+                variables = {}
+                for var in set(word for word in formula.split() if word.isalpha()):
+                    # Verwende den Helper für die präfixierten Namen
+                    prefixed_var = self.name_helper.convert(var, NameType.BASE_NAME)
+                    value = self._register_data.get(prefixed_var)
+                    if value is None:
+                        return None
+                    variables[var] = value
+                
+                # Evaluiere die Formel
+                try:
+                    result = eval(formula, {"__builtins__": {}}, variables)
+                    return float(result)
+                except Exception as e:
+                    _LOGGER.error(
+                        "Fehler bei der Formelberechnung",
+                        extra={
+                            "error": str(e),
+                            "formula": formula,
+                            "variables": variables,
+                            "device": self.name
+                        }
+                    )
+                    return None
+
+            return None
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei der Berechnung eines Registers",
+                extra={
+                    "error": str(e),
+                    "register": register_def.get("name"),
+                    "calculation": calculation,
+                    "device": self.name
+                }
+            )
+            return None
 
 
 

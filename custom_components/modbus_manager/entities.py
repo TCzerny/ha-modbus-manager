@@ -1,50 +1,48 @@
-"""Modbus Manager Entity Classes."""
+"""Modbus Manager entities."""
 from __future__ import annotations
 
-from typing import Any, Dict
+import logging
+from typing import Any, Dict, Optional
 
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-    DataUpdateCoordinator,
-)
+from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
 from homeassistant.core import callback
-import logging
-import asyncio
+
+from .helpers import EntityNameHelper, NameType
 
 _LOGGER = logging.getLogger(__name__)
 
 class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
-    """Entity für Modbus Register."""
-
-    # Standard-Einheiten für verschiedene Gerätetypen
-    DEVICE_CLASS_UNITS = {
-        "energy": "kWh",
-        "power": "W",
-        "current": "A",
-        "voltage": "V",
-        "temperature": "°C",
-        "battery": "%",
-        "frequency": "Hz"
-    }
+    """Modbus Register Entity."""
 
     def __init__(
         self,
-        device,
+        device: ModbusManagerDevice,
         register_name: str,
-        register_config: Dict[str, Any],
+        register_config: dict,
         coordinator: DataUpdateCoordinator,
     ) -> None:
         """Initialize the entity."""
         super().__init__(coordinator)
-        self._device = device
-        self._register_name = register_name
-        self._register = register_config
-        self.hass = device.hass
+        self.device = device
         
-        # Entity-Eigenschaften aus Register-Definition
-        self._attr_name = register_config.get("name", register_name)
-        self._attr_unique_id = f"{device.name}_{register_name}"
+        # Generiere alle Entity-Namen und IDs mit dem Helper
+        name_helper = EntityNameHelper(device.config_entry)
+        
+        # Der register_name kommt bereits mit Präfix aus dem device_definition
+        self.register_name = register_name
+        
+        # Speichere die Konfiguration
+        self.register_config = register_config
+        
+        # Setze die Entity-Attribute
+        # Entferne den Präfix für die Anzeige, da der Helper ihn wieder hinzufügt
+        display_name = name_helper._remove_device_prefix(register_name)
+        self._attr_name = name_helper.convert(display_name, NameType.DISPLAY_NAME)
+        self._attr_unique_id = name_helper.convert(display_name, NameType.UNIQUE_ID)
+        self.entity_id = name_helper.convert(display_name, NameType.ENTITY_ID, domain="sensor")
+        
+        # Device Info
         self._attr_device_info = device.device_info
         
         # Setze device_class wenn vorhanden
@@ -62,6 +60,17 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
         if "state_class" in register_config:
             self._attr_state_class = register_config["state_class"]
 
+    # Standard-Einheiten für verschiedene Gerätetypen
+    DEVICE_CLASS_UNITS = {
+        "energy": "kWh",
+        "power": "W",
+        "current": "A",
+        "voltage": "V",
+        "temperature": "°C",
+        "battery": "%",
+        "frequency": "Hz"
+    }
+
     @property
     def available(self) -> bool:
         """Return if entity is available."""
@@ -75,32 +84,32 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 _LOGGER.debug(
                     "Keine Daten vom Koordinator verfügbar",
                     extra={
-                        "register": self._register_name,
-                        "device": self._device.name
+                        "register": self.register_name,
+                        "device": self.device.name
                     }
                 )
                 return None
             
             # Hole den Wert aus den Coordinator-Daten
-            if self._device.name in self.coordinator.data:
-                device_data = self.coordinator.data[self._device.name]
-                value = device_data.get(self._register_name)
+            if self.device.name in self.coordinator.data:
+                device_data = self.coordinator.data[self.device.name]
+                value = device_data.get(self.register_name)
                 _LOGGER.debug(
                     "Wert aus Device-Daten gelesen",
                     extra={
-                        "register": self._register_name,
-                        "device": self._device.name,
+                        "register": self.register_name,
+                        "device": self.device.name,
                         "raw_value": value,
                         "device_data": device_data
                     }
                 )
             else:
-                value = self.coordinator.data.get(self._register_name)
+                value = self.coordinator.data.get(self.register_name)
                 _LOGGER.debug(
                     "Wert direkt aus Coordinator-Daten gelesen",
                     extra={
-                        "register": self._register_name,
-                        "device": self._device.name,
+                        "register": self.register_name,
+                        "device": self.device.name,
                         "raw_value": value,
                         "coordinator_data": self.coordinator.data
                     }
@@ -110,34 +119,34 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 _LOGGER.debug(
                     "Kein Wert für Register gefunden",
                     extra={
-                        "register": self._register_name,
-                        "device": self._device.name
+                        "register": self.register_name,
+                        "device": self.device.name
                     }
                 )
                 return None
 
             # Skalierung anwenden wenn konfiguriert
-            if "scale" in self._register:
-                value = value * self._register["scale"]
+            if "scale" in self.register_config:
+                value = value * self.register_config["scale"]
                 _LOGGER.debug(
                     "Skalierung angewendet",
                     extra={
-                        "register": self._register_name,
-                        "device": self._device.name,
-                        "scale": self._register["scale"],
+                        "register": self.register_name,
+                        "device": self.device.name,
+                        "scale": self.register_config["scale"],
                         "scaled_value": value
                     }
                 )
 
             # Runde auf die angegebene Präzision
-            if "precision" in self._register and isinstance(value, (int, float)):
-                value = round(value, self._register["precision"])
+            if "precision" in self.register_config and isinstance(value, (int, float)):
+                value = round(value, self.register_config["precision"])
                 _LOGGER.debug(
                     "Wert gerundet",
                     extra={
-                        "register": self._register_name,
-                        "device": self._device.name,
-                        "precision": self._register["precision"],
+                        "register": self.register_name,
+                        "device": self.device.name,
+                        "precision": self.register_config["precision"],
                         "rounded_value": value
                     }
                 )
@@ -149,8 +158,8 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 "Fehler beim Abrufen des Register-Werts",
                 extra={
                     "error": str(e),
-                    "register": self._register_name,
-                    "device": self._device.name,
+                    "register": self.register_name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -164,8 +173,8 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
             "Entity zu Home Assistant hinzugefügt",
             extra={
                 "entity_id": self.entity_id,
-                "register": self._register_name,
-                "device": self._device.name
+                "register": self.register_name,
+                "device": self.device.name
             }
         )
         
@@ -194,26 +203,26 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 extra={
                     "error": str(e),
                     "entity_id": getattr(self, "entity_id", None),
-                    "register": self._register_name,
-                    "device": self._device.name
+                    "register": self.register_name,
+                    "device": self.device.name
                 }
             )
 
     async def async_write_value(self, value: Any) -> None:
         """Write value to register if writable."""
         try:
-            if self._register.get("write", False):
+            if self.register_config.get("write", False):
                 _LOGGER.debug(
                     "Schreibe Wert in Register",
                     extra={
                         "entity_id": self.entity_id,
-                        "register": self._register_name,
+                        "register": self.register_name,
                         "value": value
                     }
                 )
                 
-                await self._device.async_write_register(
-                    self._register_name,
+                await self.device.async_write_register(
+                    self.register_name,
                     value
                 )
                 
@@ -227,9 +236,9 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 extra={
                     "error": str(e),
                     "entity_id": self.entity_id,
-                    "register": self._register_name,
+                    "register": self.register_name,
                     "value": value,
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             ) 
