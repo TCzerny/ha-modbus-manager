@@ -8,6 +8,8 @@ from typing import Any
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import importlib as helper_importlib
+from homeassistant.helpers.typing import ConfigType
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
@@ -17,7 +19,6 @@ PLATFORMS = [
     Platform.BINARY_SENSOR,
     Platform.BUTTON,
     Platform.NUMBER,
-    Platform.SCRIPT,
     Platform.SELECT,
     Platform.SENSOR,
     Platform.SWITCH

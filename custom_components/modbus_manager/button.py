@@ -6,7 +6,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
-from .device import ModbusManagerDevice
+from .device_base import ModbusManagerDeviceBase as ModbusManagerDevice
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
