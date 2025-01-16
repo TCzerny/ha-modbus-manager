@@ -1,15 +1,16 @@
-"""Modbus Manager Template Entity Classes."""
+"""ModbusManager Template Entity Support."""
 from __future__ import annotations
 
-from typing import Any, Dict
+import logging
+from typing import Any, Dict, Optional
 
-from homeassistant.components.sensor import SensorEntity
-from homeassistant.components.binary_sensor import BinarySensorEntity, BinarySensorDeviceClass
-from homeassistant.core import callback
-from homeassistant.helpers.event import async_track_template_result, TrackTemplate
-from homeassistant.helpers.template import Template
-from homeassistant.exceptions import TemplateError
+from homeassistant.components.template.sensor import TemplateSensor
+from homeassistant.components.template.binary_sensor import TemplateBinarySensor
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity import Entity
+from homeassistant.helpers.typing import ConfigType
 
+from .const import DOMAIN
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -146,7 +147,7 @@ class ModbusManagerTemplateBinarySensor(ModbusManagerTemplateEntity, BinarySenso
             try:
                 self._attr_device_class = BinarySensorDeviceClass(device_class)
             except ValueError:
-                _LOGGER.warning(
+                _LOGGER.error(
                     f"Ungültige Device Class für Binary Sensor: {device_class}",
                     extra={
                         "name": name,

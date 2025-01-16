@@ -1,22 +1,22 @@
-"""ModbusManager Automation Entities."""
+"""ModbusManager Automation Entity Support."""
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Callable
-import voluptuous as vol
+import logging
+from typing import Any, Dict, List, Optional
 
+from homeassistant.components.automation import DOMAIN as AUTOMATION_DOMAIN
+from homeassistant.components.script import DOMAIN as SCRIPT_DOMAIN
 from homeassistant.const import (
-    CONF_NAME, CONF_ID, CONF_TYPE, CONF_TRIGGER, 
-    CONF_ACTION, CONF_CONDITION, CONF_MODE,
-    CONF_ENTITY_ID, CONF_VALUE, CONF_SERVICE
+    CONF_CONDITION,
+    CONF_CONDITIONS,
+    CONF_TRIGGER,
+    CONF_TRIGGERS,
+    SERVICE_TURN_OFF,
+    SERVICE_TURN_ON
 )
-from homeassistant.core import HomeAssistant, callback, Context
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import Entity
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.components.automation import DOMAIN as AUTOMATION_DOMAIN, AutomationEntity
-from homeassistant.components.script import DOMAIN as SCRIPT_DOMAIN, ScriptEntity
-from homeassistant.helpers import entity_registry as er, condition
-from homeassistant.helpers.script import Script, SCRIPT_MODE_SINGLE
-from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers.script import Script
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger

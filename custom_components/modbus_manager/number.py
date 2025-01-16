@@ -1,12 +1,16 @@
 """ModbusManager Number Platform."""
 from __future__ import annotations
 
+import logging
+from typing import Any
+
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.components.number import NumberEntity
 
 from .const import DOMAIN
-from .device import ModbusManagerDevice
+from .device_base import ModbusManagerDeviceBase
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -19,15 +23,14 @@ async def async_setup_entry(
     """Richte Number Entities basierend auf einem Config Entry ein."""
     hub = hass.data[DOMAIN][config_entry.entry_id]
     
-    # Sammle alle Number Entities von allen Geräten
+    # Hole die Entities aus dem Hub
     entities = []
     for device in hub._devices.values():
-        if isinstance(device, ModbusManagerDevice):
-            # Füge alle Number Entities aus dem Device hinzu
-            for entity in device.entities.values():
-                if hasattr(entity, 'entity_id') and entity.entity_id.startswith('number.'):
-                    entities.append(entity)
+        if hasattr(device, "entity_manager"):
+            entities.extend([
+                entity for entity in device.entity_manager._entities.values()
+                if isinstance(entity, NumberEntity)
+            ])
     
     if entities:
-        _LOGGER.debug(f"Füge {len(entities)} Number Entities hinzu")
-        async_add_entities(entities) 
+        async_add_entities(entities, True) 

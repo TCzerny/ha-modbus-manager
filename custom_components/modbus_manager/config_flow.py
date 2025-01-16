@@ -1,29 +1,21 @@
 """Config flow for Modbus Manager."""
 from __future__ import annotations
 
+import logging
 import os
-from typing import Any
+from typing import Any, Dict, Optional
+
 import voluptuous as vol
-import yaml
-import aiofiles
-import aiofiles.os
 
 from homeassistant import config_entries
-from homeassistant.const import (
-    CONF_HOST,
-    CONF_NAME,
-    CONF_PORT,
-    CONF_SLAVE,
-)
-from homeassistant.helpers import device_registry as dr
+from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
+from homeassistant.data_entry_flow import FlowResult
 
-from .const import (
-    DOMAIN,
-    CONF_DEVICE_TYPE,
-    DEFAULT_SLAVE,
-    DEFAULT_PORT,
-)
+from .const import DOMAIN
+from .logger import ModbusManagerLogger
+
+_LOGGER = ModbusManagerLogger(__name__)
 
 async def async_get_available_device_definitions() -> dict[str, str]:
     """Liest die verfügbaren Gerätedefinitionen aus dem device_definitions Verzeichnis."""

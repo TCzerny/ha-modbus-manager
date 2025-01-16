@@ -1,6 +1,7 @@
 """Constants for the Modbus Manager integration."""
 from typing import Final
 from enum import Enum
+from homeassistant.const import Platform
 
 DOMAIN: Final = "modbus_manager"
 CONF_DEVICE_TYPE: Final = "device_type"
@@ -25,6 +26,8 @@ EVENT_MODBUS_MANAGER_REGISTER_UPDATED = "modbus_manager_register_updated"
 EVENT_MODBUS_MANAGER_DEVICE_UPDATED = "modbus_manager_device_updated"
 EVENT_MODBUS_MANAGER_ERROR = "modbus_manager_error"
 
+# Plattformen, die diese Integration nutzt
+PLATFORMS = [Platform.SENSOR, Platform.NUMBER, Platform.SWITCH, Platform.SELECT]
 
 class NameType(Enum):
     """Definiert die verschiedenen Typen von Namen/IDs."""

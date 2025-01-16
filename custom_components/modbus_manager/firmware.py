@@ -1,8 +1,19 @@
-"""Firmware management for Modbus Manager."""
-import logging
-from typing import Optional, Dict, Any
+"""ModbusManager Firmware Update Support."""
+from __future__ import annotations
 
-from .const import CONF_FIRMWARE_VERSION
+import logging
+import asyncio
+from typing import Any, Dict, Optional
+
+from homeassistant.components.update import (
+    UpdateDeviceClass,
+    UpdateEntity,
+    UpdateEntityFeature
+)
+from homeassistant.core import HomeAssistant
+from homeassistant.helpers.entity import Entity
+
+from .const import DOMAIN
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)

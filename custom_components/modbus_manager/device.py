@@ -31,7 +31,7 @@ class ModbusManagerDevice:
 
     def __init__(
         self,
-        hub: ModbusManagerHub,
+        hub,
         device_type: str,
         config: dict,
         register_definitions: dict,
@@ -52,15 +52,65 @@ class ModbusManagerDevice:
         self.name_helper = EntityNameHelper(self.config_entry)
         
         # Hole die Default-Polling-Intervalle
-        polling_config = register_definitions.get("device_config", {}).get("default_polling", {})
-        self._fast_interval = int(polling_config.get("fast", 5))
-        self._normal_interval = int(polling_config.get("normal", 15))
-        self._slow_interval = int(polling_config.get("slow", 600))
+        polling_config = register_definitions.get("polling", {})
+        self._fast_interval = int(polling_config.get("fast", {}).get("interval", 5))
+        self._normal_interval = int(polling_config.get("normal", {}).get("interval", 15))
+        self._slow_interval = int(polling_config.get("slow", {}).get("interval", 600))
 
+        # Initialisiere die Register-Listen nach Polling-Intervall
+        self._registers_by_interval = {
+            self._fast_interval: [],
+            self._normal_interval: [],
+            self._slow_interval: []
+        }
+        
+        # Lade die Register-Definitionen
+        registers = register_definitions.get("registers", {})
+        read_registers = registers.get("read", [])
+        write_registers = registers.get("write", [])
+        
+        # Ordne die Register den Polling-Intervallen zu
+        for register in read_registers + write_registers:
+            register_name = register.get("name")
+            if not register_name:
+                continue
+                
+            # Bestimme das Polling-Intervall für dieses Register
+            interval = self._normal_interval  # Standard-Intervall
+            
+            # Prüfe in welchem Polling-Intervall das Register definiert ist
+            for poll_type, poll_config in polling_config.items():
+                if register_name in poll_config.get("registers", []):
+                    interval = int(poll_config.get("interval", self._normal_interval))
+                    break
+            
+            # Füge das Register zur entsprechenden Liste hinzu
+            self._registers_by_interval[interval].append(register)
+        
+        _LOGGER.info(
+            "Device initialisiert",
+            extra={
+                "device": self.name,
+                "fast_register_count": len(self._registers_by_interval[self._fast_interval]),
+                "normal_register_count": len(self._registers_by_interval[self._normal_interval]),
+                "slow_register_count": len(self._registers_by_interval[self._slow_interval]),
+                "register_names": {
+                    "fast": [reg.get("name") for reg in self._registers_by_interval[self._fast_interval]],
+                    "normal": [reg.get("name") for reg in self._registers_by_interval[self._normal_interval]],
+                    "slow": [reg.get("name") for reg in self._registers_by_interval[self._slow_interval]]
+                }
+            }
+        )
+        
         # Initialisiere die Koordinatoren
         for interval in [self._fast_interval, self._normal_interval, self._slow_interval]:
             if not self._hub.get_coordinator(interval):
                 self._hub.create_coordinator(interval)
+
+        self.unique_id = f"modbus_manager_{self.name.lower()}"
+        self.manufacturer = config.get("manufacturer", "Unknown")
+        self.model = config.get("model", "Generic Modbus Device")
+        
     @property
     def device_info(self) -> DeviceInfo:
         """Gibt die Geräteinformationen zurück."""
@@ -179,44 +229,6 @@ class ModbusManagerDevice:
                 for result in results:
                     if isinstance(result, dict):
                         self._register_data.update(result)
-                
-                # Aktualisiere die Entities parallel
-                entity_update_tasks = []
-                for entity in self.entities.values():
-                    if hasattr(entity, "async_write_ha_state"):
-                        try:
-                            # Stelle sicher, dass die Entity initialisiert ist
-                            if not entity.hass:
-                                entity.hass = self.hass
-                            if not entity._attr_unique_id:
-                                entity._attr_unique_id = f"{self.name}_{entity.name}"
-                            
-                            # Aktualisiere den State
-                            if hasattr(entity, "_handle_coordinator_update"):
-                                try:
-                                    entity._handle_coordinator_update()
-                                except Exception as e:
-                                    _LOGGER.warning(
-                                        "Fehler beim Koordinator-Update",
-                                        extra={
-                                            "error": str(e),
-                                            "entity": entity.entity_id,
-                                            "device": self.name
-                                        }
-                                    )
-                            entity_update_tasks.append(entity.async_update_ha_state(force_refresh=True))
-                        except Exception as e:
-                            _LOGGER.warning(
-                                "Fehler beim Aktualisieren der Entity",
-                                extra={
-                                    "error": str(e),
-                                    "entity": entity.entity_id,
-                                    "device": self.name
-                                }
-                            )
-                
-                if entity_update_tasks:
-                    await asyncio.gather(*entity_update_tasks, return_exceptions=True)
                     
         except Exception as e:
             _LOGGER.error(
@@ -253,7 +265,7 @@ class ModbusManagerDevice:
                 # Logge Fehler, falls welche aufgetreten sind
                 for interval, result in zip(polling_intervals, results):
                     if isinstance(result, Exception):
-                        _LOGGER.warning(
+                        _LOGGER.error(
                             f"Fehler beim verzögerten Update für Intervall {interval}",
                             extra={
                                 "error": str(result),
@@ -274,24 +286,18 @@ class ModbusManagerDevice:
     async def _create_register_entity(self, register_name, register_def, writable: bool = False):
         """Erstellt eine Entity für ein Register."""
         try:
-            # Bestimme die Domain basierend auf dem Register-Typ
-            domain = "number" if writable else "sensor"
-            
             # Hole den Coordinator vom Hub
             coordinator = self._hub.get_coordinator(self._normal_interval)
             if not coordinator:
                 return None
             
-            # Erstelle die Entity
+            # Erstelle die Entity mit dem Original-Namen aus der Definition
             entity = ModbusRegisterEntity(
                 device=self,
-                register_name=register_name,
+                register_name=register_name,  # Original-Name aus der Definition
                 register_config=register_def,
-                coordinator=coordinator,
+                coordinator=coordinator
             )
-            
-            # Füge die Entity zum entities Dictionary hinzu
-            self.entities[register_name] = entity
             
             return entity
             
@@ -306,6 +312,117 @@ class ModbusManagerDevice:
                 }
             )
             return None
+
+    async def validate_helper_entities(self) -> bool:
+        """Validiert die Registrierung und Konfiguration der Helper-Entities."""
+        try:
+            # Hole die Entity Registry
+            entity_registry = er.async_get(self.hass)
+            
+            # Validiere Input Number Entities
+            if "input_number" in self._device_config:
+                for input_id, config in self._device_config["input_number"].items():
+                    # Erstelle erwartete Entity-ID
+                    expected_entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="number")
+                    
+                    # Prüfe ob Entity in Registry existiert
+                    entity = entity_registry.async_get(expected_entity_id)
+                    if not entity:
+                        _LOGGER.error(
+                            "Input Number Entity nicht in Registry gefunden",
+                            extra={
+                                "input_id": input_id,
+                                "expected_entity_id": expected_entity_id,
+                                "device": self.name
+                            }
+                        )
+                        return False
+                    
+                    # Validiere Entity-Attribute
+                    expected_unique_id = self.name_helper.convert(input_id, NameType.UNIQUE_ID)
+                    if entity.unique_id != expected_unique_id:
+                        _LOGGER.error(
+                            "Unique ID stimmt nicht überein",
+                            extra={
+                                "input_id": input_id,
+                                "expected": expected_unique_id,
+                                "actual": entity.unique_id,
+                                "device": self.name
+                            }
+                        )
+                        return False
+                    
+                    _LOGGER.debug(
+                        "Input Number Entity validiert",
+                        extra={
+                            "entity_id": expected_entity_id,
+                            "unique_id": expected_unique_id,
+                            "device": self.name
+                        }
+                    )
+
+            # Validiere Input Select Entities
+            if "input_select" in self._device_config:
+                for input_id, config in self._device_config["input_select"].items():
+                    # Erstelle erwartete Entity-ID
+                    expected_entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="select")
+                    
+                    # Prüfe ob Entity in Registry existiert
+                    entity = entity_registry.async_get(expected_entity_id)
+                    if not entity:
+                        _LOGGER.error(
+                            "Input Select Entity nicht in Registry gefunden",
+                            extra={
+                                "input_id": input_id,
+                                "expected_entity_id": expected_entity_id,
+                                "device": self.name
+                            }
+                        )
+                        return False
+                    
+                    # Validiere Entity-Attribute
+                    expected_unique_id = self.name_helper.convert(input_id, NameType.UNIQUE_ID)
+                    if entity.unique_id != expected_unique_id:
+                        _LOGGER.error(
+                            "Unique ID stimmt nicht überein",
+                            extra={
+                                "input_id": input_id,
+                                "expected": expected_unique_id,
+                                "actual": entity.unique_id,
+                                "device": self.name
+                            }
+                        )
+                        return False
+                    
+                    _LOGGER.debug(
+                        "Input Select Entity validiert",
+                        extra={
+                            "entity_id": expected_entity_id,
+                            "unique_id": expected_unique_id,
+                            "device": self.name
+                        }
+                    )
+
+            _LOGGER.info(
+                "Alle Helper-Entities erfolgreich validiert",
+                extra={
+                    "device": self.name,
+                    "input_numbers": len(self._device_config.get("input_number", {})),
+                    "input_selects": len(self._device_config.get("input_select", {}))
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei der Validierung der Helper-Entities",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
 
     async def _setup_helper_entities(self):
         """Erstellt Helper-Entities über die Registry API."""
@@ -326,19 +443,39 @@ class ModbusManagerDevice:
             # Input Numbers
             if "input_number" in self._device_config:
                 for input_id, config in self._device_config["input_number"].items():
-                    # Erstelle Input Number Entity
-                    entity = ModbusManagerInputNumber(
-                        device=self,
-                        name=input_id,
-                        config=config,
-                        register_config=config.get("register", {})
-                    )
-                    
-                    if entity:
+                    try:
+                        # Erstelle Input Number Entity
+                        entity = ModbusManagerInputNumber(
+                            device=self,
+                            name=input_id,
+                            config=config,
+                            register_config=config.get("register", {})
+                        )
+                        
+                        if not entity:
+                            _LOGGER.error(
+                                "Fehler beim Erstellen der Input Number Entity",
+                                extra={
+                                    "input_id": input_id,
+                                    "device": self.name
+                                }
+                            )
+                            continue
+
                         # Setze die Entity-ID und unique_id mit dem Helper
                         entity.entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="number")
                         entity._attr_unique_id = self.name_helper.convert(input_id, NameType.UNIQUE_ID)
                         entity._attr_name = self.name_helper.convert(input_id, NameType.DISPLAY_NAME)
+                        
+                        _LOGGER.debug(
+                            "Input Number Entity wird erstellt",
+                            extra={
+                                "entity_id": entity.entity_id,
+                                "unique_id": entity._attr_unique_id,
+                                "name": entity._attr_name,
+                                "device": self.name
+                            }
+                        )
                         
                         # Registriere die Entity in der Entity Registry
                         entity_registry = er.async_get(self.hass)
@@ -352,40 +489,74 @@ class ModbusManagerDevice:
                         )
                         
                         self.entities[entity.entity_id] = entity
-
-            # Input Selects
-            if "input_select" in self._device_config:
-                for input_id, config in self._device_config["input_select"].items():
-                    if "options" in config and config["options"]:
-                        # Erstelle Input Select Entity
-                        entity = ModbusManagerInputSelect(
-                            device=self,
-                            name=input_id,
-                            config=config,
-                            register_config=config.get("register", {})
-                        )
                         
-                        if entity:
-                            # Setze die Entity-ID und unique_id mit dem Helper
-                            entity.entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="select")
-                            entity._attr_unique_id = self.name_helper.convert(input_id, NameType.UNIQUE_ID)
-                            entity._attr_name = self.name_helper.convert(input_id, NameType.DISPLAY_NAME)
-                            
-                            # Registriere die Entity in der Entity Registry
-                            entity_registry = er.async_get(self.hass)
-                            entity_registry.async_get_or_create(
-                                domain="select",
-                                platform=DOMAIN,
-                                unique_id=entity._attr_unique_id,
-                                device_id=device.id,
-                                suggested_object_id=self.name_helper.convert(input_id, NameType.BASE_NAME),
-                                original_name=entity._attr_name
-                            )
-                            
-                            self.entities[entity.entity_id] = entity
+                    except Exception as e:
+                        _LOGGER.error(
+                            "Fehler bei der Input Number Entity-Erstellung",
+                            extra={
+                                "input_id": input_id,
+                                "error": str(e),
+                                "device": self.name
+                            }
+                        )
 
-            _LOGGER.debug(
-                "Helper-Entities erfolgreich erstellt",
+            # Nach der Erstellung aller Entities, validiere sie
+            validation_result = await self.validate_helper_entities()
+            if not validation_result:
+                _LOGGER.error(
+                    "Validierung der Helper-Entities fehlgeschlagen",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return
+
+            # Führe Entity-Tests durch
+            test_result = await self.test_helper_entities()
+            if not test_result:
+                _LOGGER.error(
+                    "Tests der Helper-Entities fehlgeschlagen",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return
+
+            # Führe Service-Tests durch
+            service_test_result = await self.test_service_calls()
+            if not service_test_result:
+                _LOGGER.error(
+                    "Service-Tests fehlgeschlagen",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return
+
+            # Führe End-to-End Tests durch
+            mapping_test_result = await self.test_register_mappings()
+            if not mapping_test_result:
+                _LOGGER.error(
+                    "End-to-End Tests fehlgeschlagen",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return
+
+            # Führe Berechnungstests durch
+            calculation_test_result = await self.test_calculations()
+            if not calculation_test_result:
+                _LOGGER.error(
+                    "Berechnungstests fehlgeschlagen",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return
+
+            _LOGGER.info(
+                "Helper-Entities erfolgreich erstellt, validiert und getestet",
                 extra={
                     "device": self.name,
                     "input_numbers": len(self._device_config.get("input_number", {})),
@@ -402,1048 +573,468 @@ class ModbusManagerDevice:
                     "traceback": e.__traceback__
                 }
             )
-            
-    async def setup_automation_components(self):
-        """Richtet die Automatisierungskomponenten ein."""
+
+    async def test_calculations(self) -> bool:
+        """Testet die Berechnungsfunktionalität für Register."""
         try:
-            # Registriere Device Triggers
-            if "device_triggers" in self._device_config:
-                _LOGGER.debug(
-                    "Registriere Device Triggers",
-                    extra={
-                        "device": self.name,
-                        "triggers_count": len(self._device_config["device_triggers"])
-                    }
-                )
-                
-                # Registriere die Trigger im Device Registry
-                dev_reg = dr.async_get(self.hass)
-                device = dev_reg.async_get_device({(DOMAIN, self.name)})
-                if device and device.id:
-                    self.hass.data.setdefault(DOMAIN, {}).setdefault("device_triggers", {})[device.id] = \
-                        self._device_config["device_triggers"]
-
-            # Registriere Device Conditions
-            if "device_conditions" in self._device_config:
-                _LOGGER.debug(
-                    "Registriere Device Conditions",
-                    extra={
-                        "device": self.name,
-                        "conditions_count": len(self._device_config["device_conditions"])
-                    }
-                )
-                
-                # Registriere die Conditions im Device Registry
-                dev_reg = dr.async_get(self.hass)
-                device = dev_reg.async_get_device({(DOMAIN, self.name)})
-                if device and device.id:
-                    self.hass.data.setdefault(DOMAIN, {}).setdefault("device_conditions", {})[device.id] = \
-                        self._device_config["device_conditions"]
-
-            # Registriere Device Actions
-            if "device_actions" in self._device_config:
-                _LOGGER.debug(
-                    "Registriere Device Actions",
-                    extra={
-                        "device": self.name,
-                        "actions_count": len(self._device_config["device_actions"])
-                    }
-                )
-                
-                # Registriere die Actions im Device Registry
-                dev_reg = dr.async_get(self.hass)
-                device = dev_reg.async_get_device({(DOMAIN, self.name)})
-                if device and device.id:
-                    self.hass.data.setdefault(DOMAIN, {}).setdefault("device_actions", {})[device.id] = \
-                        self._device_config["device_actions"]
-
-            _LOGGER.debug(
-                "Automatisierungskomponenten erfolgreich eingerichtet",
+            _LOGGER.info(
+                "Starte Test der Berechnungsfunktionalität",
                 extra={
-                    "device": self.name,
-                    "triggers": len(self._device_config.get("device_triggers", [])),
-                    "conditions": len(self._device_config.get("device_conditions", [])),
-                    "actions": len(self._device_config.get("device_actions", []))
+                    "device": self.name
                 }
             )
 
+            # Test 1: Formelauswertung
+            if "calculated_registers" in self._device_config:
+                for calc_register in self._device_config["calculated_registers"]:
+                    register_name = calc_register.get("name")
+                    calculation = calc_register.get("calculation", {})
+                    
+                    if calculation.get("type") == "formula":
+                        formula = calculation.get("formula", "")
+                        
+                        _LOGGER.debug(
+                            "Teste Formelberechnung",
+                            extra={
+                                "register": register_name,
+                                "formula": formula,
+                                "device": self.name
+                            }
+                        )
+
+                        # Teste mit Test-Werten
+                        test_values = {
+                            "battery_level": 75.5,
+                            "battery_state_of_health": 98.2,
+                            "battery_power": 2500.0,
+                            "grid_power": 1500.0
+                        }
+
+                        # Erstelle präfixierte Test-Werte
+                        prefixed_test_values = {}
+                        for key, value in test_values.items():
+                            prefixed_key = self.name_helper.convert(key, NameType.BASE_NAME)
+                            prefixed_test_values[prefixed_key] = value
+                            self._register_data[prefixed_key] = value
+
+                        # Berechne den Wert
+                        value = self._calculate_register_value(calc_register)
+                        if value is None:
+                            _LOGGER.error(
+                                "Formelberechnung fehlgeschlagen",
+                                extra={
+                                    "register": register_name,
+                                    "formula": formula,
+                                    "test_values": test_values,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+
+                        _LOGGER.debug(
+                            "Formelberechnung erfolgreich",
+                            extra={
+                                "register": register_name,
+                                "formula": formula,
+                                "result": value,
+                                "test_values": test_values,
+                                "device": self.name
+                            }
+                        )
+
+            # Test 2: Datentyp-Konvertierung
+            test_cases = [
+                {"type": "uint16", "value": 65535, "expected": 65535},
+                {"type": "int16", "value": -32768, "expected": -32768},
+                {"type": "uint32", "value": 4294967295, "expected": 4294967295},
+                {"type": "int32", "value": -2147483648, "expected": -2147483648},
+                {"type": "float32", "value": 3.14159, "expected": 3.14159}
+            ]
+
+            for test in test_cases:
+                register_def = {
+                    "name": f"test_{test['type']}",
+                    "type": test["type"]
+                }
+                
+                _LOGGER.debug(
+                    "Teste Datentyp-Konvertierung",
+                    extra={
+                        "type": test["type"],
+                        "value": test["value"],
+                        "expected": test["expected"],
+                        "device": self.name
+                    }
+                )
+
+                # Teste Konvertierung
+                result = self._process_register_value(register_def["name"], register_def, test["value"])
+                if result != test["expected"]:
+                    _LOGGER.error(
+                        "Datentyp-Konvertierung fehlgeschlagen",
+                        extra={
+                            "type": test["type"],
+                            "value": test["value"],
+                            "expected": test["expected"],
+                            "result": result,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Test 3: Skalierungsfaktoren
+            scale_tests = [
+                {"scale": 0.1, "value": 100, "expected": 10.0},
+                {"scale": 10, "value": 50, "expected": 500.0},
+                {"scale": 0.001, "value": 1000, "expected": 1.0}
+            ]
+
+            for test in scale_tests:
+                register_def = {
+                    "name": "test_scale",
+                    "type": "uint16",
+                    "scale": test["scale"]
+                }
+                
+                _LOGGER.debug(
+                    "Teste Skalierungsfaktor",
+                    extra={
+                        "scale": test["scale"],
+                        "value": test["value"],
+                        "expected": test["expected"],
+                        "device": self.name
+                    }
+                )
+
+                # Teste Skalierung
+                result = self._process_register_value(register_def["name"], register_def, test["value"])
+                if abs(result - test["expected"]) > 0.0001:  # Berücksichtige Fließkomma-Ungenauigkeit
+                    _LOGGER.error(
+                        "Skalierung fehlgeschlagen",
+                        extra={
+                            "scale": test["scale"],
+                            "value": test["value"],
+                            "expected": test["expected"],
+                            "result": result,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            _LOGGER.info(
+                "Alle Berechnungstests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+            return True
+
         except Exception as e:
             _LOGGER.error(
-                "Fehler beim Einrichten der Automatisierungskomponenten",
+                "Fehler bei Berechnungstests",
                 extra={
                     "error": str(e),
                     "device": self.name,
                     "traceback": e.__traceback__
-                }
-            )
-    async def async_update(self, polling_interval: int) -> dict:
-        """Aktualisiert die Register für das angegebene Polling-Intervall."""
-        if not self._setup_complete:
-            return {}
-
-        # Bestimme das Polling-Level basierend auf dem Intervall
-        if polling_interval == self._fast_interval:
-            polling_level = "fast"
-        elif polling_interval == self._slow_interval:
-            polling_level = "slow"
-        else:
-            polling_level = "normal"
-
-        try:
-            data = {}
-            errors = []
-            tasks = []
-            register_groups = {}
-            
-            # Erstelle den Name Helper
-            
-            # Hole alle Register mit dem entsprechenden Polling-Level
-            if "registers" in self._device_config:
-                for section in ["read", "write"]:
-                    if section in self._device_config["registers"]:
-                        registers = [
-                            reg for reg in self._device_config["registers"][section]
-                            if reg.get("polling", "normal") == polling_level
-                        ]
-                        
-                        # Gruppiere Register nach Adresse und Typ
-                        for register in registers:
-                            key = (
-                                register.get("address"),
-                                register.get("type", "uint16"),
-                                register.get("count", 1),
-                                register.get("register_type", "input")
-                            )
-                            if key not in register_groups:
-                                register_groups[key] = []
-                            register_groups[key].append(register)
-
-            # Erstelle Tasks für jede Registergruppe
-            for (address, reg_type, count, register_type), group in register_groups.items():
-                task = self._hub.read_register(
-                    device_name=self.name,
-                    address=address,
-                    count=count,
-                    reg_type=reg_type,
-                    register_type=register_type
-                )
-                tasks.append((task, group))
-
-            # Führe alle Lese-Tasks parallel aus
-            results = await asyncio.gather(
-                *(task for task, _ in tasks),
-                return_exceptions=True
-            )
-
-            # Verarbeite die Ergebnisse
-            for (task, group), result in zip(tasks, results):
-                if isinstance(result, Exception):
-                    for register in group:
-                        errors.append({
-                            "register": register.get("name"),
-                            "error": str(result)
-                        })
-                    continue
-
-                # Verarbeite die Werte für jedes Register in der Gruppe
-                for register in group:
-                    try:
-                        processed_value = self._process_register_value(
-                            register_name=register.get("name"),
-                            register_def=register,
-                            raw_value=result
-                        )
-                        if processed_value is not None:
-                            # Speichere den Wert mit präfixiertem Namen
-                            prefixed_name = self.name_helper.convert(register["name"], NameType.BASE_NAME)
-                            data[prefixed_name] = processed_value
-                    except Exception as e:
-                        errors.append({
-                            "register": register.get("name"),
-                            "error": str(e)
-                        })
-
-            # Aktualisiere die Register-Daten
-            self._register_data.update(data)
-
-            # Berechne die Werte für berechnete Register
-            if "calculated_registers" in self._device_config:
-                for register in self._device_config["calculated_registers"]:
-                    try:
-                        calculated_value = self._calculate_register_value(register)
-                        if calculated_value is not None:
-                            # Speichere den Wert mit präfixiertem Namen
-                            prefixed_name = self.name_helper.convert(register["name"], NameType.BASE_NAME)
-                            data[prefixed_name] = calculated_value
-                            self._register_data[prefixed_name] = calculated_value
-                    except Exception as e:
-                        errors.append({
-                            "register": register.get("name"),
-                            "error": str(e)
-                        })
-            
-            # Logge eine Zusammenfassung
-            _LOGGER.debug(
-                "Update abgeschlossen",
-                extra={
-                    "device": self.name,
-                    "polling_interval": polling_interval,
-                    "successful_updates": len(data),
-                    "errors": len(errors),
-                    "error_details": errors if errors else None
-                }
-            )
-                
-            return data
-
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Update der Register",
-                extra={
-                    "error": str(e),
-                    "device": self.name,
-                    "polling_interval": polling_interval
-                }
-            )
-            return {}
-    async def _read_register(self, register: Dict[str, Any], values: Dict[str, Any]):
-        """Liest ein einzelnes Register."""
-        try:
-            # Überspringe das Lesen für berechnete Register
-            if register.get("type") == "calculated":
-                # Verarbeite den Wert direkt
-                processed_value = self._process_register_value(
-                    register_name=register.get("name"),
-                    register_def=register,
-                    raw_value=None
-                )
-                
-                # Speichere den Wert wenn er nicht None ist
-                if processed_value is not None:
-                    values[register["name"]] = processed_value
-                return
-
-            reg_type = register.get("type", "uint16")
-            reg_count = register.get("count", 1)
-            swap = register.get("swap", "").lower()
-            
-            # Bestimme den Register-Typ für das Lesen
-            # Verwende immer "input" zum Lesen, außer es ist explizit "holding" spezifiziert
-            register_type = register.get("register_type", "input")
-            
-            _LOGGER.debug(
-                "Starte Modbus Register Lesevorgang",
-                extra={
-                    "register_name": register.get("name"),
-                    "address": register.get("address"),
-                    "count": reg_count,
-                    "type": reg_type,
-                    "register_type": register_type,
-                    "swap": swap,
-                    "device": self.name
-                }
-            )            
-            result = await self._hub.read_register(
-                device_name=self.name,
-                address=register["address"],
-                count=reg_count,
-                reg_type=reg_type,
-                register_type=register_type
-            )
-            
-            if result is not None:
-                # Verarbeite Word-Swap wenn nötig
-                if swap == "word" and len(result) >= 2:
-                    result = list(reversed(result))
-                
-                # Verarbeite den Wert mit der _process_register_value Methode
-                processed_value = self._process_register_value(
-                    register_name=register.get("name"),
-                    register_def=register,
-                    raw_value=result
-                )
-                
-                # Speichere den Wert
-                if processed_value is not None:
-                    values[register["name"]] = processed_value
-                
-                # Logging mit allen relevanten Informationen
-                log_extra = {
-                    "register_name": register.get("name"),
-                    "address": register.get("address"),
-                    "value": processed_value,
-                    "raw_result": result,
-                    "type": reg_type,
-                    "device": self.name
-                }
-                
-                # Füge optionale Parameter zum Log hinzu
-                if "scale" in register:
-                    log_extra["scale"] = register["scale"]
-                if "precision" in register:
-                    log_extra["precision"] = register["precision"]
-                if swap:
-                    log_extra["swap"] = swap
-                if "unit_of_measurement" in register:
-                    log_extra["unit"] = register["unit_of_measurement"]
-                if "device_class" in register:
-                    log_extra["device_class"] = register["device_class"]
-                if "state_class" in register:
-                    log_extra["state_class"] = register["state_class"]
-                
-                _LOGGER.debug(
-                    "Modbus Register erfolgreich gelesen",
-                    extra=log_extra
-                )
-            else:
-                _LOGGER.warning(
-                    "Modbus Register Lesevorgang ohne Ergebnis",
-                    extra={
-                        "register_name": register.get("name"),
-                        "address": register.get("address"),
-                        "type": reg_type,
-                        "device": self.name
-                    }
-                )
-
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Lesen eines Registers",
-                extra={
-                    "error": str(e),
-                    "register_name": register.get("name"),
-                    "address": register.get("address"),
-                    "type": reg_type,
-                    "device": self.name
-                }
-            )
-    async def async_write_register(self, register_name: str, value: Any) -> bool:
-        """Schreibt einen Wert in ein Register."""
-        try:
-            # Suche in Holding Registern
-            register = next(
-                (r for r in self._device_config["registers"].get("write", [])
-                 if r["name"] == register_name),
-                None
-            )
-            
-            if not register:
-                _LOGGER.warning(
-                    "Register für Schreibvorgang nicht gefunden",
-                    extra={
-                        "register_name": register_name,
-                        "device": self.name
-                    }
-                )
-                return False
-
-            # Konvertiere den Wert in den richtigen Typ
-            try:
-                if isinstance(value, str):
-                    value = float(value)
-            except ValueError:
-                _LOGGER.error(
-                    "Ungültiger Wert für Register",
-                    extra={
-                        "register_name": register_name,
-                        "value": value,
-                        "device": self.name
-                    }
-                )
-                return False
-
-            # Skaliere den Wert wenn nötig (in die andere Richtung für das Schreiben)
-            scale = register.get("scale", 1)
-            if scale != 1:
-                value = value / scale
-
-            # Runde auf ganze Zahlen für das Register
-            value = int(round(value))
-
-            # Prüfe Minimal- und Maximalwerte nur wenn sie definiert sind
-            if "min" in register and value < register["min"]:
-                _LOGGER.warning(
-                    "Wert unter Minimum, setze auf Minimum",
-                    extra={
-                        "register_name": register_name,
-                        "value": value,
-                        "min": register["min"],
-                        "device": self.name
-                    }
-                )
-                value = register["min"]
-            elif "max" in register and value > register["max"]:
-                _LOGGER.warning(
-                    "Wert über Maximum, setze auf Maximum",
-                    extra={
-                        "register_name": register_name,
-                        "value": value,
-                        "max": register["max"],
-                        "device": self.name
-                    }
-                )
-                value = register["max"]
-
-            # Logging mit allen relevanten Informationen
-            log_extra = {
-                "register_name": register_name,
-                "address": register.get("address"),
-                "value": value,
-                "original_value": value * scale if scale != 1 else value,
-                "type": register.get("type", "uint16"),
-                "device": self.name
-            }
-
-            # Füge optionale Parameter zum Log hinzu
-            if scale != 1:
-                log_extra["scale"] = scale
-            if "unit_of_measurement" in register:
-                log_extra["unit"] = register["unit_of_measurement"]
-            if "device_class" in register:
-                log_extra["device_class"] = register["device_class"]
-            if "min" in register:
-                log_extra["min"] = register["min"]
-            if "max" in register:
-                log_extra["max"] = register["max"]
-
-            _LOGGER.debug(
-                "Starte Modbus Register Schreibvorgang",
-                extra=log_extra
-            )
-
-            success = await self._hub.write_register(
-                device_name=self.name,
-                address=register["address"],
-                value=value,
-                reg_type=register.get("type", "uint16"),
-                scale=1  # Skalierung wurde bereits oben durchgeführt
-            )
-
-            if success:
-                _LOGGER.debug(
-                    "Modbus Register erfolgreich geschrieben",
-                    extra=log_extra
-                )
-            else:
-                _LOGGER.warning(
-                    "Modbus Register Schreibvorgang fehlgeschlagen",
-                    extra=log_extra
-                )
-
-            return success
-
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Schreiben eines Registers",
-                extra={
-                    "error": str(e),
-                    "register_name": register_name,
-                    "value": value,
-                    "device": self.name
                 }
             )
             return False
 
-    async def async_teardown(self):
-        """Bereinigt das Gerät und alle zugehörigen Entities."""
+    async def async_update(self, interval: int) -> Dict[str, Any]:
+        """Aktualisiert die Gerätedaten für das angegebene Intervall."""
         try:
-            # Stoppe zuerst alle Koordinatoren
-            for coordinator in self._hub.coordinators.values():
-                coordinator.async_shutdown()
-
-            # Lösche alle Register-Daten
-            self._register_data.clear()
+            # Hole die Register für dieses Intervall
+            registers = self._registers_by_interval.get(interval, [])
             
-            # Entferne State Change Listener
-            while self._remove_state_listeners:
-                remove_listener = self._remove_state_listeners.pop()
-                remove_listener()
-
-            # Hole die Registries
-            ent_reg = er.async_get(self.hass)
-            dev_reg = dr.async_get(self.hass)
-            
-            # Finde das Gerät
-            device_entry = dev_reg.async_get_device(
-                identifiers={(DOMAIN, self.name)}
-            )
-            
-            if device_entry:
-                # Entferne alle Entities
-                entities = er.async_entries_for_device(
-                    ent_reg,
-                    device_entry.id,
-                    include_disabled_entities=True
+            if not registers:
+                _LOGGER.debug(
+                    f"Keine Register für Intervall {interval}s",
+                    extra={
+                        "device": self.name,
+                        "interval": interval
+                    }
                 )
-                
-                for entity in entities:
-                    if entity and entity.entity_id:
-                        try:
-                            ent_reg.async_remove(entity.entity_id)
-                            _LOGGER.debug(
-                                f"Entity {entity.entity_id} wurde entfernt",
-                                extra={
-                                    "device": self.name,
-                                    "entity_id": entity.entity_id
-                                }
-                            )
-                        except Exception as e:
-                            _LOGGER.warning(
-                                "Fehler beim Entfernen einer Entity",
-                                extra={
-                                    "error": str(e),
-                                    "entity_id": entity.entity_id,
-                                    "device": self.name
-                                }
-                            )
-
-                # Entferne auch die Input Helper Entities
-                input_prefixes = [
-                    f"number.{self.name}_set_",
-                    f"select.{self.name}_set_",
-                ]
-                
-                for entity_id in list(self.hass.states.async_entity_ids()):
-                    if any(entity_id.startswith(prefix) for prefix in input_prefixes):
-                        try:
-                            # Entferne aus der Entity Registry
-                            ent_reg.async_remove(entity_id)
-                            _LOGGER.debug(
-                                f"Input Helper Entity {entity_id} wurde entfernt",
-                                extra={
-                                    "device": self.name,
-                                    "entity_id": entity_id
-                                }
-                            )
-                        except Exception as e:
-                            _LOGGER.warning(
-                                "Fehler beim Entfernen einer Input Helper Entity",
-                                extra={
-                                    "error": str(e),
-                                    "entity_id": entity_id,
-                                    "device": self.name
-                                }
-                            )
-                
-                # Entferne das Gerät
-                try:
-                    dev_reg.async_remove_device(device_entry.id)
-                    _LOGGER.debug(
-                        "Gerät wurde entfernt",
-                        extra={
-                            "device": self.name
-                        }
-                    )
-                except Exception as e:
-                    _LOGGER.warning(
-                        "Fehler beim Entfernen des Geräts",
-                        extra={
-                            "error": str(e),
-                            "device": self.name
-                        }
-                    )
-
-            # Bereinige interne Zustände
-            self.entities.clear()
-            self._setup_complete = False
-
+                return {}
+            
+            # Lese die Register
+            data = await self._hub._read_registers(registers)
+            
+            # Aktualisiere die lokalen Daten
+            self._register_data.update(data)
+            
+            return data
+            
         except Exception as e:
             _LOGGER.error(
-                "Fehler beim Teardown des Geräts",
+                "Fehler beim Aktualisieren der Gerätedaten",
                 extra={
                     "error": str(e),
+                    "device": self.name,
+                    "interval": interval,
+                    "traceback": e.__traceback__
+                }
+            )
+            return {}
+
+    async def _read_register(self, register: Dict[str, Any], values: Dict[str, Any]):
+        """Liest ein einzelnes Register."""
+        try:
+            register_name = register.get("name")
+            if not register_name:
+                _LOGGER.error(
+                    "Register hat keinen Namen",
+                    extra={
+                        "register": register,
+                        "device": self.name
+                    }
+                )
+                return
+                
+            # Lese den Wert
+            value = values.get(register_name)
+            if value is None:
+                _LOGGER.debug(
+                    "Kein Wert für Register gefunden",
+                    extra={
+                        "register": register_name,
+                        "device": self.name
+                    }
+                )
+                return
+                
+            # Verarbeite den Wert
+            try:
+                processed_value = await self._process_register_value(register_name, register, value)
+                if processed_value is not None:
+                    self._register_data[register_name] = processed_value
+            except Exception as e:
+                _LOGGER.error(
+                    "Fehler beim Verarbeiten des Register-Werts",
+                    extra={
+                        "error": str(e),
+                        "register": register_name,
+                        "device": self.name,
+                        "traceback": e.__traceback__
+                    }
+                )
+                
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Lesen des Registers",
+                extra={
+                    "error": str(e),
+                    "register": register.get("name"),
                     "device": self.name,
                     "traceback": e.__traceback__
                 }
             )
-    def _process_register_value(
-        self,
-        register_name: str,
-        register_def: Dict[str, Any],
-        raw_value: Any
-    ) -> Any:
-        """Verarbeitet den Rohwert eines Registers basierend auf seiner Definition."""
-        if raw_value is None:
-            return None
 
+    async def _update_entity_state(self, entity) -> bool:
+        """Aktualisiert den Zustand einer Entity."""
+        if not hasattr(entity, "_register"):
+            _LOGGER.error(
+                "Entity hat kein Register-Attribut",
+                extra={
+                    "entity": entity.entity_id,
+                    "device": self.name
+                }
+            )
+        return False
+            
+        register = entity._register
+        register_name = register.get("name")
+        if not register_name:
+            _LOGGER.error(
+                "Register hat keinen Namen",
+                extra={
+                    "entity": entity.entity_id,
+                    "device": self.name
+                }
+            )
+            return False
+            
         try:
-            reg_type = register_def.get("type", "uint16")
-            swap = register_def.get("swap", "")
+        # Hole den aktuellen Wert und aktualisiere den Zustand
+            value = self._register_data.get(register_name)
+            if value is None:
+                _LOGGER.debug(
+                    "Kein Wert für Register gefunden",
+                    extra={
+                        "entity": entity.entity_id,
+                        "register": register_name,
+                        "device": self.name
+                    }
+                )
+                return False
+                
+            entity._attr_native_value = value
+            entity.async_write_ha_state()
+            return True
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Aktualisieren des Entity-Zustands",
+                extra={
+                    "error": str(e),
+                    "entity": entity.entity_id if hasattr(entity, "entity_id") else "Unknown",
+                    "register": register_name,
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
 
-            # Spezielle Behandlung für String-Register
-            if reg_type == "string":
-                try:
-                    # Jeder Register-Wert enthält 2 ASCII-Zeichen
-                    chars = []
-                    for value in raw_value:
-                        # Extrahiere die beiden ASCII-Zeichen aus dem 16-bit Wert
-                        high_byte = (value >> 8) & 0xFF
-                        low_byte = value & 0xFF
-                        # Nur druckbare ASCII-Zeichen (32-126) und einige Steuerzeichen akzeptieren
-                        if 32 <= high_byte <= 126:
-                            chars.append(chr(high_byte))
-                        if 32 <= low_byte <= 126:
-                            chars.append(chr(low_byte))
-                    # Verbinde die Zeichen und entferne Whitespace
-                    result = ''.join(chars).strip()
-                    # Spezielle Behandlung für Battery Serial
-                    if register_name == "battery_serial" and not any(32 <= ord(c) <= 126 for c in result):
-                        return "Encrypted or Not Available"
-                    return result
-                except Exception as e:
+    async def _process_register_value(self, register_name: str, register_def: Dict[str, Any], raw_value: Any) -> Optional[Any]:
+        """Verarbeitet den Rohwert eines Registers."""
+        try:
+            if raw_value is None:
+                return None
+
+            reg_type = register_def.get("type", "uint16")
+            scale = register_def.get("scale", 1)
+            precision = register_def.get("precision")
+
+            # Konvertiere den Wert basierend auf dem Typ
+            try:
+                if reg_type == "uint16":
+                    value = int(raw_value) & 0xFFFF
+                elif reg_type == "int16":
+                    value = int(raw_value)
+                    if value > 32767:
+                        value -= 65536
+                elif reg_type == "uint32":
+                    value = int(raw_value) & 0xFFFFFFFF
+                elif reg_type == "int32":
+                    value = int(raw_value)
+                    if value > 2147483647:
+                        value -= 4294967296
+                elif reg_type == "float32":
+                    value = float(raw_value)
+                elif reg_type == "string":
+                    value = str(raw_value)
+                else:
                     _LOGGER.error(
-                        "Fehler bei der String-Konvertierung",
+                        "Ungültiger Register-Typ",
+                        extra={
+                            "type": reg_type,
+                            "register": register_name,
+                            "device": self.name
+                        }
+                    )
+                    return None
+            except (ValueError, TypeError) as e:
+                _LOGGER.error(
+                    "Fehler bei der Typkonvertierung",
+                    extra={
+                        "error": str(e),
+                        "type": reg_type,
+                        "raw_value": raw_value,
+                        "register": register_name,
+                        "device": self.name
+                    }
+                )
+                return None
+
+            # Skaliere den Wert wenn nötig
+            if scale != 1:
+                try:
+                    value = float(value) * scale
+                except (ValueError, TypeError) as e:
+                    _LOGGER.error(
+                        "Fehler bei der Skalierung",
                         extra={
                             "error": str(e),
+                            "scale": scale,
+                            "value": value,
                             "register": register_name,
-                            "raw_value": raw_value
+                            "device": self.name
                         }
                     )
                     return None
 
-            # Für numerische Register
-            if isinstance(raw_value, (list, tuple)):
-                # Behandle mehrere Register als ein Wert (z.B. für 32-bit Werte)
-                if reg_type in ["uint32", "int32", "float32"] and len(raw_value) >= 2:
-                    from pymodbus.payload import BinaryPayloadDecoder
-                    from pymodbus.constants import Endian
-                    
-                    # Die Standard HA Modbus-Komponente verwendet diese Konfiguration
-                    decoder = BinaryPayloadDecoder.fromRegisters(
-                        raw_value,
-                        byteorder=Endian.BIG,
-                        wordorder=Endian.LITTLE
+            # Runde auf die angegebene Präzision wenn definiert
+            if precision is not None:
+                try:
+                    value = round(float(value), precision)
+                except (ValueError, TypeError) as e:
+                    _LOGGER.error(
+                        "Fehler beim Runden",
+                        extra={
+                            "error": str(e),
+                            "precision": precision,
+                            "value": value,
+                            "register": register_name,
+                            "device": self.name
+                        }
                     )
-                    
-                    if reg_type == "int32":
-                        processed_value = decoder.decode_32bit_int()
-                    elif reg_type == "uint32":
-                        processed_value = decoder.decode_32bit_uint()
-                    elif reg_type == "float32":
-                        processed_value = decoder.decode_32bit_float()
-                else:
-                    # Einzelnes Register (16-bit)
-                    value = raw_value[0]
-                    if reg_type == "int16":
-                        # Konvertiere zu signed 16-bit
-                        if value > 32767:  # 2^15 - 1
-                            value = value - 65536  # 2^16
-                    processed_value = value
-            else:
-                # Einzelner Wert
-                value = raw_value
-                if reg_type == "int16":
-                    # Konvertiere zu signed 16-bit
-                    if value > 32767:  # 2^15 - 1
-                        value = value - 65536  # 2^16
-                processed_value = value
+                    return None
 
-            # Spezielle Behandlungen für bestimmte Register
-            if register_name == "device_code":
-                hex_code = f"0x{int(processed_value):04X}"
-                device_type_mapping = self._device_config.get("device_type_mapping", {})
-                return device_type_mapping.get(hex_code, f"Unknown device code: {hex_code}")
-                
-            elif register_name == "system_state":
-                hex_code = f"0x{int(processed_value):04X}"
-                system_state_mapping = self._device_config.get("system_state_mapping", {})
-                return system_state_mapping.get(hex_code, f"Unknown state code: {hex_code}")
-                
-            elif register_name == "battery_forced_charge_discharge_cmd":
-                battery_cmd = self._get_register_value("battery_forced_charge_discharge")
-                if battery_cmd is not None:
-                    battery_cmd_mapping = self._device_config.get("battery_cmd_mapping", {})
-                    hex_code = f"0x{int(battery_cmd):04X}"
-                    return battery_cmd_mapping.get(hex_code, f"Unknown command code: {hex_code}")
-
-            return processed_value
+            return value
 
         except Exception as e:
             _LOGGER.error(
-                "Fehler bei der Wertverarbeitung",
+                "Fehler bei der Register-Wert-Verarbeitung",
                 extra={
                     "error": str(e),
                     "register": register_name,
                     "raw_value": raw_value,
-                    "type": reg_type
+                    "device": self.name,
+                    "traceback": e.__traceback__
                 }
             )
             return None
 
-    def _get_register_value(self, register_name: str) -> Optional[float]:
-        """Hilfsmethode zum Abrufen eines Registerwerts."""
+    async def _update_calculated_registers(self):
+        """Aktualisiert die berechneten Register."""
         try:
-            # Suche zuerst in den Lese-Registern
-            register_def = next(
-                (reg for reg in self._device_config["registers"]["read"] 
-                 if reg["name"] == register_name),
-                None
-            )
-            
-            # Wenn nicht gefunden, suche in den Schreib-Registern
-            if not register_def:
-                register_def = next(
-                    (reg for reg in self._device_config["registers"].get("write", [])
-                     if reg["name"] == register_name),
-                    None
-                )
-            
-            if not register_def:
-                return None
+            if "calculated_registers" not in self._device_config:
+                return
 
-            # Für berechnete Register
-            if register_def.get("type") == "calculated":
-                return self._register_data.get(register_name)
-                
-            # Für normale Register
-            raw_value = self._register_data.get(register_name)
-            if raw_value is None:
-                return None
-                
-            return self._process_register_value(register_name, register_def, raw_value)
-            
-        except Exception:
-            return None
+            for register in self._device_config["calculated_registers"]:
+                try:
+                    register_name = register.get("name")
+                    if not register_name:
+                        continue
 
-    async def setup_input_sync(self) -> None:
-        """Setup synchronization between Modbus registers and input helpers."""
-        for sync_config in self._device_config.get("input_sync", []):
-            source_entity = sync_config.get("source_entity")
-            target_entity = sync_config.get("target_entity")
-            mapping = sync_config.get("mapping", {})
-            
-            if not source_entity or not target_entity:
-                continue
+                    value = self._calculate_register_value(register)
+                    if value is not None:
+                        self._register_data[register_name] = value
 
-            # Füge Device-Namen zu den Entity-IDs hinzu
-            source_entity = f"{source_entity.split('.')[0]}.{self.name}_{source_entity.split('.')[1]}"
-            target_entity = f"{target_entity.split('.')[0]}.{self.name}_{target_entity.split('.')[1]}"
-
-            @callback
-            def _state_changed_listener(event, target=target_entity, mapping=mapping):
-                """Handle source entity state changes."""
-                new_state = event.data.get("new_state")
-                if new_state is None or new_state.state in ("unknown", "unavailable"):
-                    return
-
-                # Bestimme den Service basierend auf dem Entity-Typ
-                domain = target.split(".")[0]
-                
-                # Verarbeite den Wert basierend auf dem Entity-Typ
-                if domain == "input_number":
-                    service = "set_value"
-                    try:
-                        value = float(new_state.state)
-                    except (ValueError, TypeError):
-                        return
-                    service_data = {"value": value}
-                    
-                elif domain == "input_text":
-                    service = "set_value"
-                    service_data = {"value": str(new_state.state)}
-                    
-                elif domain == "input_select":
-                    service = "select_option"
-                    # Wende das Mapping an, falls vorhanden
-                    if mapping:
-                        state_value = str(new_state.state)
-                        if state_value in mapping:
-                            option = mapping[state_value]
-                        elif "*" in mapping:  # Fallback für alle anderen Werte
-                            option = mapping["*"]
-                        else:
-                            option = state_value
-                    else:
-                        option = str(new_state.state)
-                    service_data = {"option": option}
-                    
-                elif domain == "input_boolean":
-                    service = "turn_on" if new_state.state == "on" else "turn_off"
-                    service_data = {}
-                else:
-                    return
-
-                service_data["entity_id"] = target
-                self.hass.async_create_task(
-                    self.hass.services.async_call(
-                        domain, service, service_data
-                    )
-                )
-
-            # Registriere den State Change Listener
-            remove_listener = async_track_state_change_event(
-                self.hass, [source_entity], _state_changed_listener
-            )
-            self._remove_state_listeners.append(remove_listener)
-
-    async def unload(self) -> None:
-        """Unload the device."""
-        # Entferne alle State Change Listener
-        while self._remove_state_listeners:
-            remove_listener = self._remove_state_listeners.pop()
-            remove_listener()
-
-    async def write_modbus_with_validation(self, register_name: str, value: Any, validation_rules: dict = None) -> bool:
-        """Schreibt einen Wert in ein Modbus-Register mit Validierung."""
-        try:
-            # Prüfe ob Schreibzugriff erlaubt ist
-            write_enabled = self.hass.states.get("input_boolean.enable_modbus_write")
-            if not write_enabled or write_enabled.state != "on":
-                _LOGGER.warning(
-                    "Modbus Schreibzugriff ist deaktiviert",
-                    extra={
-                        "register": register_name,
-                        "value": value
-                    }
-                )
-                return False
-
-            # Validiere den Wert
-            if validation_rules:
-                if "min" in validation_rules and value < validation_rules["min"]:
-                    _LOGGER.warning(
-                        "Wert unter Minimum",
+                except Exception as e:
+                    _LOGGER.error(
+                        "Fehler bei der Berechnung eines Registers",
                         extra={
-                            "value": value,
-                            "min": validation_rules["min"],
-                            "register": register_name
+                            "error": str(e),
+                            "register": register.get("name"),
+                            "device": self.name,
+                            "traceback": e.__traceback__
                         }
                     )
-                    return False
-                if "max" in validation_rules and value > validation_rules["max"]:
-                    _LOGGER.warning(
-                        "Wert über Maximum",
-                        extra={
-                            "value": value,
-                            "max": validation_rules["max"],
-                            "register": register_name
-                        }
-                    )
-                    return False
-                if "allowed_values" in validation_rules and value not in validation_rules["allowed_values"]:
-                    _LOGGER.warning(
-                        "Wert nicht in erlaubten Werten",
-                        extra={
-                            "value": value,
-                            "allowed_values": validation_rules["allowed_values"],
-                            "register": register_name
-                        }
-                    )
-                    return False
-
-            # Schreibe den Wert
-            success = await self.async_write_register(register_name, value)
-            
-            if success:
-                _LOGGER.info(
-                    "Wert erfolgreich geschrieben",
-                    extra={
-                        "value": value,
-                        "register": register_name
-                    }
-                )
-            else:
-                _LOGGER.warning(
-                    "Fehler beim Schreiben",
-                    extra={
-                        "value": value,
-                        "register": register_name
-                    }
-                )
-                
-            return success
 
         except Exception as e:
             _LOGGER.error(
-                "Fehler bei write_modbus_with_validation",
+                "Fehler bei der Aktualisierung der berechneten Register",
                 extra={
                     "error": str(e),
-                    "value": value,
-                    "register": register_name
+                    "device": self.name,
+                    "traceback": e.__traceback__
                 }
             )
-            return False
-
-    async def set_battery_mode(self, mode: str, power: float = None) -> bool:
-        """Setzt den Batteriemodus mit Validierung."""
-        allowed_modes = {
-            "forced_discharge": {
-                "ems_mode": "Forced mode",
-                "battery_cmd": "Forced discharge"
-            },
-            "forced_charge": {
-                "ems_mode": "Forced mode",
-                "battery_cmd": "Forced charge"
-            },
-            "bypass": {
-                "ems_mode": "Forced mode",
-                "battery_cmd": "Stop (default)"
-            },
-            "self_consumption": {
-                "ems_mode": "Self-consumption mode (default)",
-                "battery_cmd": "Stop (default)"
-            }
-        }
-
-        if mode not in allowed_modes:
-            _LOGGER.warning(
-                "Ungültiger Batteriemodus",
-                extra={
-                    "mode": mode,
-                    "allowed_modes": list(allowed_modes.keys())
-                }
-            )
-            return False
-
-        try:
-            # Setze EMS Mode
-            success = await self.write_modbus_with_validation(
-                "bms_mode_selection_raw",
-                allowed_modes[mode]["ems_mode"],
-                {"allowed_values": ["Self-consumption mode (default)", "Forced mode"]}
-            )
-            if not success:
-                return False
-
-            # Setze Battery Command
-            success = await self.write_modbus_with_validation(
-                "battery_forced_charge_discharge",
-                allowed_modes[mode]["battery_cmd"],
-                {"allowed_values": ["Stop (default)", "Forced charge", "Forced discharge"]}
-            )
-            if not success:
-                return False
-
-            # Setze Power wenn angegeben
-            if power is not None:
-                success = await self.write_modbus_with_validation(
-                    "battery_forced_charge_discharge_power",
-                    power,
-                    {"min": 0, "max": 5000}
-                )
-                if not success:
-                    return False
-
-            return True
-
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Setzen des Batteriemodus",
-                extra={
-                    "error": str(e),
-                    "mode": mode,
-                    "power": power
-                }
-            )
-            return False
-
-    async def set_inverter_mode(self, mode: str) -> bool:
-        """Setzt den Wechselrichter-Modus."""
-        try:
-            if mode not in ["Enabled", "Shutdown"]:
-                _LOGGER.warning(
-                    "Ungültiger Wechselrichter-Modus",
-                    extra={
-                        "mode": mode,
-                        "allowed_modes": ["Enabled", "Shutdown"]
-                    }
-                )
-                return False
-
-            value = 0xCF if mode == "Enabled" else 0xCE
-            return await self.write_modbus_with_validation(
-                "inverter_start_stop",
-                value,
-                {"allowed_values": [0xCF, 0xCE]}
-            )
-
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Setzen des Wechselrichter-Modus",
-                extra={
-                    "error": str(e),
-                    "mode": mode
-                }
-            )
-            return False
-
-    async def set_export_power_limit(self, enabled: bool, limit: float = None) -> bool:
-        """Setzt die Einspeiselimitierung."""
-        try:
-            # Setze den Modus
-            success = await self.write_modbus_with_validation(
-                "export_power_limit_mode_raw",
-                0xAA if enabled else 0x55,
-                {"allowed_values": [0xAA, 0x55]}
-            )
-            if not success:
-                return False
-
-            # Setze das Limit wenn angegeben
-            if limit is not None:
-                success = await self.write_modbus_with_validation(
-                    "export_power_limit",
-                    limit,
-                    {"min": 0, "max": 10500}
-                )
-                if not success:
-                    return False
-
-            return True
-
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Setzen der Einspeiselimitierung",
-                extra={
-                    "error": str(e),
-                    "enabled": enabled,
-                    "limit": limit
-                }
-            )
-            return False
-
-    async def execute_action(self, action_id: str, **kwargs):
-        """Führt eine vordefinierte Aktion aus."""
-        if action_id not in self.actions:
-            raise ValueError(f"Unbekannte Aktion: {action_id}")
-
-        action = self.actions[action_id]
-        sequence = action.get("sequence", [])
-        
-        for step in sequence:
-            service = step.get("service")
-            target = step.get("target")
-            data = step.get("data", {})
-            
-            # Führe den Service-Call aus
-            await self.hass.services.async_call(
-                service.split(".")[0],
-                service.split(".")[1],
-                service_data=data,
-                target={"entity_id": target}
-            )
-
-    async def set_forced_discharge_mode(self):
-        """Setzt den Wechselrichter in den Forced Discharge Modus."""
-        await self.execute_action("set_forced_discharge_mode")
-
-    async def set_forced_charge_mode(self):
-        """Setzt den Wechselrichter in den Forced Charge Modus."""
-        await self.execute_action("set_forced_charge_mode")
-
-    async def set_battery_bypass_mode(self):
-        """Setzt den Wechselrichter in den Battery Bypass Modus."""
-        await self.execute_action("set_battery_bypass_mode")
-
-    async def set_self_consumption_mode(self):
-        """Setzt den Wechselrichter in den Self Consumption Modus."""
-        await self.execute_action("set_self_consumption_mode")
 
     def _calculate_register_value(self, register_def: Dict[str, Any]) -> Optional[float]:
         """Berechnet den Wert eines berechneten Registers."""
         try:
             calculation = register_def.get("calculation", {})
             calc_type = calculation.get("type")
+            
+            _LOGGER.debug(
+                "Starte Berechnung für Register",
+                extra={
+                    "register": register_def.get("name"),
+                    "calc_type": calc_type,
+                    "device": self.name
+                }
+            )
 
             if calc_type == "sum":
                 # Summiere die Werte aus den Quellen
@@ -1454,6 +1045,15 @@ class ModbusManagerDevice:
                     prefixed_source = self.name_helper.convert(source, NameType.BASE_NAME)
                     value = self._register_data.get(prefixed_source)
                     if value is None:
+                        _LOGGER.debug(
+                            "Quellwert für Summenberechnung nicht gefunden",
+                            extra={
+                                "source": source,
+                                "prefixed_source": prefixed_source,
+                                "device": self.name,
+                                "verfügbare_register": list(self._register_data.keys())
+                            }
+                        )
                         return None
                     values.append(value)
                 return sum(values)
@@ -1466,6 +1066,15 @@ class ModbusManagerDevice:
                 source_value = self._register_data.get(prefixed_source)
                 
                 if source_value is None:
+                    _LOGGER.debug(
+                        "Quellwert für Mapping nicht gefunden",
+                        extra={
+                            "source": source,
+                            "prefixed_source": prefixed_source,
+                            "device": self.name,
+                            "verfügbare_register": list(self._register_data.keys())
+                        }
+                    )
                     return None
                     
                 # Konvertiere den Wert in einen Hex-String
@@ -1483,6 +1092,15 @@ class ModbusManagerDevice:
                 source_value = self._register_data.get(prefixed_source)
                 
                 if source_value is None:
+                    _LOGGER.debug(
+                        "Quellwert für Bedingung nicht gefunden",
+                        extra={
+                            "source": source,
+                            "prefixed_source": prefixed_source,
+                            "device": self.name,
+                            "verfügbare_register": list(self._register_data.keys())
+                        }
+                    )
                     return None
                     
                 if condition == "positive" and source_value > 0:
@@ -1492,25 +1110,75 @@ class ModbusManagerDevice:
                 return 0
 
             elif calc_type == "formula":
-                # Berechne einen Wert basierend auf einer Formel
                 formula = calculation.get("formula", "")
-                # Ersetze die Variablennamen durch ihre Werte
+                if not formula:
+                    _LOGGER.error(
+                        "Keine Formel definiert",
+                        extra={
+                            "register": register_def.get("name"),
+                            "device": self.name
+                        }
+                    )
+                    return None
+                
+                _LOGGER.debug(
+                    "Verarbeite Formel",
+                    extra={
+                        "original_formula": formula,
+                        "device": self.name
+                    }
+                )
+                
+                import re
                 variables = {}
-                for var in set(word for word in formula.split() if word.isalpha()):
-                    # Verwende den Helper für die präfixierten Namen
+                # Finde alle Variablen in der Formel (Wörter ohne mathematische Operatoren)
+                var_names = re.findall(r'\b[a-zA-Z_]\w*\b', formula)
+                
+                # Erstelle ein Mapping von Original-Variablennamen zu präfixierten Namen
+                var_mapping = {}
+                for var in var_names:
+                    # Ignoriere mathematische Funktionen
+                    if var in ['abs', 'min', 'max', 'round']:
+                        continue
+                        
+                    # Konvertiere den Variablennamen
                     prefixed_var = self.name_helper.convert(var, NameType.BASE_NAME)
+                    var_mapping[var] = prefixed_var
+                    
+                    # Hole den Wert aus den Register-Daten
                     value = self._register_data.get(prefixed_var)
                     if value is None:
+                        _LOGGER.debug(
+                            "Wert für Variable nicht gefunden",
+                            extra={
+                                "original_var": var,
+                                "prefixed_var": prefixed_var,
+                                "formula": formula,
+                                "device": self.name,
+                                "verfügbare_register": list(self._register_data.keys())
+                            }
+                        )
                         return None
-                    variables[var] = value
+                        
+                    variables[var] = float(value)
+                
+                _LOGGER.debug(
+                    "Variablen für Formel vorbereitet",
+                    extra={
+                        "formula": formula,
+                        "var_mapping": var_mapping,
+                        "variables": variables,
+                        "device": self.name
+                    }
+                )
                 
                 # Evaluiere die Formel
                 try:
-                    result = eval(formula, {"__builtins__": {}}, variables)
+                    result = eval(formula, {"__builtins__": None}, variables)
                     return float(result)
                 except Exception as e:
                     _LOGGER.error(
-                        "Fehler bei der Formelberechnung",
+                        "Fehler bei der Formelevaluierung",
                         extra={
                             "error": str(e),
                             "formula": formula,
@@ -1524,20 +1192,1768 @@ class ModbusManagerDevice:
 
         except Exception as e:
             _LOGGER.error(
-                "Fehler bei der Berechnung eines Registers",
+                "Fehler bei der Berechnung des Register-Werts",
                 extra={
                     "error": str(e),
                     "register": register_def.get("name"),
-                    "calculation": calculation,
-                    "device": self.name
+                    "device": self.name,
+                    "traceback": e.__traceback__
                 }
             )
             return None
 
+    async def _async_update_data(self) -> Dict[str, Any]:
+        """Aktualisiert die Gerätedaten."""
+        try:
+            _LOGGER.debug(
+                "Starte Datenaktualisierung",
+                extra={
+                    "device": self.name,
+                    "register_count": len(self._registers) if self._registers else 0
+                }
+            )
 
+            # Hole die Register-Werte
+            data = await self._hub._read_registers(self._registers)
+            
+            _LOGGER.debug(
+                "Datenaktualisierung abgeschlossen",
+                extra={
+                    "device": self.name,
+                    "verfügbare_register": list(data.keys()),
+                    "register_werte": data
+                }
+            )
+            
+            return data
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei der Datenaktualisierung",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return {}
 
+    async def test_helper_entities(self) -> bool:
+        """Testet die Funktionalität der Helper-Entities."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Helper-Entities",
+                extra={
+                    "device": self.name
+                }
+            )
 
+            # Test der Input Number Entities
+            if "input_number" in self._device_config:
+                for input_id, config in self._device_config["input_number"].items():
+                    try:
+                        # Hole die Entity
+                        entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="number")
+                        entity = self.entities.get(entity_id)
+                        
+                        if not entity:
+                            _LOGGER.error(
+                                "Input Number Entity nicht gefunden",
+                                extra={
+                                    "input_id": input_id,
+                                    "entity_id": entity_id,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+                        
+                        # Teste Schreibzugriff mit Minimal- und Maximalwert
+                        min_value = float(config.get("min", 0))
+                        max_value = float(config.get("max", 100))
+                        test_values = [min_value, max_value, (min_value + max_value) / 2]
+                        
+                        for value in test_values:
+                            _LOGGER.debug(
+                                "Teste Input Number mit Wert",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "value": value,
+                                    "device": self.name
+                                }
+                            )
+                            
+                            await entity.async_set_native_value(value)
+                            
+                            # Prüfe ob der Wert im Register angekommen ist
+                            register_name = config.get("register", {}).get("name")
+                            if register_name:
+                                register_value = self._register_data.get(register_name)
+                                if register_value is None:
+                                    _LOGGER.error(
+                                        "Register-Wert nicht gefunden",
+                                        extra={
+                                            "register": register_name,
+                                            "entity_id": entity_id,
+                                            "device": self.name
+                                        }
+                                    )
+                                    return False
+                            
+                            _LOGGER.debug(
+                                "Input Number Test erfolgreich",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "value": value,
+                                    "register_value": register_value,
+                                    "device": self.name
+                                }
+                            )
 
+            # Test der Input Select Entities
+            if "input_select" in self._device_config:
+                for input_id, config in self._device_config["input_select"].items():
+                    try:
+                        # Hole die Entity
+                        entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="select")
+                        entity = self.entities.get(entity_id)
+                        
+                        if not entity:
+                            _LOGGER.error(
+                                "Input Select Entity nicht gefunden",
+                                extra={
+                                    "input_id": input_id,
+                                    "entity_id": entity_id,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+                        
+                        # Teste alle verfügbaren Optionen
+                        options = config.get("options", [])
+                        for option in options:
+                            _LOGGER.debug(
+                                "Teste Input Select mit Option",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "option": option,
+                                    "device": self.name
+                                }
+                            )
+                            
+                            await entity.async_select_option(option)
+                            
+                            # Prüfe ob der Wert im Register angekommen ist
+                            register_name = config.get("register", {}).get("name")
+                            if register_name:
+                                register_value = self._register_data.get(register_name)
+                                if register_value is None:
+                                    _LOGGER.error(
+                                        "Register-Wert nicht gefunden",
+                                        extra={
+                                            "register": register_name,
+                                            "entity_id": entity_id,
+                                            "device": self.name
+                                        }
+                                    )
+                                    return False
+                            
+                            _LOGGER.debug(
+                                "Input Select Test erfolgreich",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "option": option,
+                                    "register_value": register_value,
+                                    "device": self.name
+                                }
+                            )
 
+            _LOGGER.info(
+                "Alle Helper-Entity Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name,
+                    "input_numbers": len(self._device_config.get("input_number", {})),
+                    "input_selects": len(self._device_config.get("input_select", {}))
+                }
+            )
+            return True
 
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Testen der Helper-Entities",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
 
+    async def test_service_calls(self) -> bool:
+        """Testet die Service-Aufrufe mit den Helper-Entities."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Service-Aufrufe",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test: Batteriemodus
+            battery_modes = {
+                "forced_discharge": {"power": 2500},
+                "forced_charge": {"power": 3000},
+                "bypass": {},
+                "self_consumption": {}
+            }
+
+            for mode, params in battery_modes.items():
+                _LOGGER.debug(
+                    "Teste Batteriemodus",
+                    extra={
+                        "mode": mode,
+                        "params": params,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_battery_mode(mode, params.get("power"))
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen des Batteriemodus",
+                        extra={
+                            "mode": mode,
+                            "params": params,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Test: Wechselrichter-Modi
+            inverter_modes = ["Enabled", "Shutdown"]
+            for mode in inverter_modes:
+                _LOGGER.debug(
+                    "Teste Wechselrichter-Modus",
+                    extra={
+                        "mode": mode,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_inverter_mode(mode)
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen des Wechselrichter-Modus",
+                        extra={
+                            "mode": mode,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Test: Einspeiselimitierung
+            export_power_tests = [
+                {"enabled": True, "limit": 5000},
+                {"enabled": False, "limit": None},
+                {"enabled": True, "limit": 10000}
+            ]
+
+            for test in export_power_tests:
+                _LOGGER.debug(
+                    "Teste Einspeiselimitierung",
+                    extra={
+                        "config": test,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_export_power_limit(test["enabled"], test["limit"])
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen der Einspeiselimitierung",
+                        extra={
+                            "config": test,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Validiere die Register-Werte nach den Tests
+            validation_result = await self.validate_helper_entities()
+            if not validation_result:
+                _LOGGER.error(
+                    "Validierung nach Service-Tests fehlgeschlagen",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return False
+
+            _LOGGER.info(
+                "Alle Service-Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Testen der Service-Aufrufe",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def test_register_mappings(self) -> bool:
+        """Führt End-to-End Tests der Register-Zuordnungen durch."""
+        try:
+            _LOGGER.info(
+                "Starte End-to-End Tests der Register-Zuordnungen",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test 1: Basis-Register
+            if "registers" in self._device_config:
+                for register_type in ["read", "write"]:
+                    for register in self._device_config["registers"].get(register_type, []):
+                        register_name = register.get("name")
+                        if not register_name:
+                            continue
+
+                        # Teste Register-Zuordnung
+                        prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                        
+                        _LOGGER.debug(
+                            "Teste Basis-Register",
+                            extra={
+                                "original_name": register_name,
+                                "prefixed_name": prefixed_name,
+                                "register_type": register_type,
+                                "device": self.name
+                            }
+                        )
+
+                        # Prüfe ob Register in den Daten existiert
+                        if prefixed_name not in self._register_data:
+                            _LOGGER.error(
+                                "Register nicht in Daten gefunden",
+                                extra={
+                                    "register": register_name,
+                                    "prefixed_name": prefixed_name,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+
+            # Test 2: Berechnete Register
+            if "calculated_registers" in self._device_config:
+                for calc_register in self._device_config["calculated_registers"]:
+                    register_name = calc_register.get("name")
+                    if not register_name:
+                        continue
+
+                    # Teste berechnetes Register
+                    prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                    calculation = calc_register.get("calculation", {})
+                    
+                    _LOGGER.debug(
+                        "Teste berechnetes Register",
+                        extra={
+                            "original_name": register_name,
+                            "prefixed_name": prefixed_name,
+                            "calculation_type": calculation.get("type"),
+                            "device": self.name
+                        }
+                    )
+
+                    # Prüfe Quell-Register für die Berechnung
+                    if calculation.get("type") == "formula":
+                        formula = calculation.get("formula", "")
+                        import re
+                        var_names = re.findall(r'\b[a-zA-Z_]\w*\b', formula)
+                        
+                        for var in var_names:
+                            if var in ['abs', 'min', 'max', 'round']:
+                                continue
+                                
+                            prefixed_var = self.name_helper.convert(var, NameType.BASE_NAME)
+                            if prefixed_var not in self._register_data:
+                                _LOGGER.error(
+                                    "Quell-Register für Formel nicht gefunden",
+                                    extra={
+                                        "variable": var,
+                                        "prefixed_variable": prefixed_var,
+                                        "formula": formula,
+                                        "device": self.name
+                                    }
+                                )
+                                return False
+
+                    # Berechne und validiere den Wert
+                    value = self._calculate_register_value(calc_register)
+                    if value is None:
+                        _LOGGER.error(
+                            "Berechnung fehlgeschlagen",
+                            extra={
+                                "register": register_name,
+                                "calculation": calculation,
+                                "device": self.name
+                            }
+                        )
+                        return False
+
+                    _LOGGER.debug(
+                        "Berechnung erfolgreich",
+                        extra={
+                            "register": register_name,
+                            "value": value,
+                            "device": self.name
+                        }
+                    )
+
+            # Test 3: Register-Entity Zuordnung
+            for entity_id, entity in self.entities.items():
+                if isinstance(entity, ModbusRegisterEntity):
+                    register_name = entity._register.get("name")
+                    if not register_name:
+                        continue
+
+                    prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                    
+                    _LOGGER.debug(
+                        "Teste Register-Entity Zuordnung",
+                        extra={
+                            "entity_id": entity_id,
+                            "register": register_name,
+                            "prefixed_name": prefixed_name,
+                            "device": self.name
+                        }
+                    )
+
+                    # Prüfe ob Entity korrekt aktualisiert wird
+                    if not await self._update_entity_state(entity):
+                        _LOGGER.error(
+                            "Entity-Aktualisierung fehlgeschlagen",
+                            extra={
+                                "entity_id": entity_id,
+                                "register": register_name,
+                                "device": self.name
+                            }
+                        )
+                        return False
+
+            _LOGGER.info(
+                "End-to-End Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei End-to-End Tests",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def test_calculations(self) -> bool:
+        """Testet die Berechnungsfunktionalität für Register."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Berechnungsfunktionalität",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test 1: Formelauswertung
+            if "calculated_registers" in self._device_config:
+                for calc_register in self._device_config["calculated_registers"]:
+                    register_name = calc_register.get("name")
+                    calculation = calc_register.get("calculation", {})
+                    
+                    if calculation.get("type") == "formula":
+                        formula = calculation.get("formula", "")
+                        
+                        _LOGGER.debug(
+                            "Teste Formelberechnung",
+                            extra={
+                                "register": register_name,
+                                "formula": formula,
+                                "device": self.name
+                            }
+                        )
+
+                        # Teste mit Test-Werten
+                        test_values = {
+                            "battery_level": 75.5,
+                            "battery_state_of_health": 98.2,
+                            "battery_power": 2500.0,
+                            "grid_power": 1500.0
+                        }
+
+                        # Erstelle präfixierte Test-Werte
+                        prefixed_test_values = {}
+                        for key, value in test_values.items():
+                            prefixed_key = self.name_helper.convert(key, NameType.BASE_NAME)
+                            prefixed_test_values[prefixed_key] = value
+                            self._register_data[prefixed_key] = value
+
+                        # Berechne den Wert
+                        value = self._calculate_register_value(calc_register)
+                        if value is None:
+                            _LOGGER.error(
+                                "Formelberechnung fehlgeschlagen",
+                                extra={
+                                    "register": register_name,
+                                    "formula": formula,
+                                    "test_values": test_values,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+
+                        _LOGGER.debug(
+                            "Formelberechnung erfolgreich",
+                            extra={
+                                "register": register_name,
+                                "formula": formula,
+                                "result": value,
+                                "test_values": test_values,
+                                "device": self.name
+                            }
+                        )
+
+            # Test 2: Datentyp-Konvertierung
+            test_cases = [
+                {"type": "uint16", "value": 65535, "expected": 65535},
+                {"type": "int16", "value": -32768, "expected": -32768},
+                {"type": "uint32", "value": 4294967295, "expected": 4294967295},
+                {"type": "int32", "value": -2147483648, "expected": -2147483648},
+                {"type": "float32", "value": 3.14159, "expected": 3.14159}
+            ]
+
+            for test in test_cases:
+                register_def = {
+                    "name": f"test_{test['type']}",
+                    "type": test["type"]
+                }
+                
+                _LOGGER.debug(
+                    "Teste Datentyp-Konvertierung",
+                    extra={
+                        "type": test["type"],
+                        "value": test["value"],
+                        "expected": test["expected"],
+                        "device": self.name
+                    }
+                )
+
+                # Teste Konvertierung
+                result = self._process_register_value(register_def["name"], register_def, test["value"])
+                if result != test["expected"]:
+                    _LOGGER.error(
+                        "Datentyp-Konvertierung fehlgeschlagen",
+                        extra={
+                            "type": test["type"],
+                            "value": test["value"],
+                            "expected": test["expected"],
+                            "result": result,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Test 3: Skalierungsfaktoren
+            scale_tests = [
+                {"scale": 0.1, "value": 100, "expected": 10.0},
+                {"scale": 10, "value": 50, "expected": 500.0},
+                {"scale": 0.001, "value": 1000, "expected": 1.0}
+            ]
+
+            for test in scale_tests:
+                register_def = {
+                    "name": "test_scale",
+                    "type": "uint16",
+                    "scale": test["scale"]
+                }
+                
+                _LOGGER.debug(
+                    "Teste Skalierungsfaktor",
+                    extra={
+                        "scale": test["scale"],
+                        "value": test["value"],
+                        "expected": test["expected"],
+                        "device": self.name
+                    }
+                )
+
+                # Teste Skalierung
+                result = self._process_register_value(register_def["name"], register_def, test["value"])
+                if abs(result - test["expected"]) > 0.0001:  # Berücksichtige Fließkomma-Ungenauigkeit
+                    _LOGGER.error(
+                        "Skalierung fehlgeschlagen",
+                        extra={
+                            "scale": test["scale"],
+                            "value": test["value"],
+                            "expected": test["expected"],
+                            "result": result,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            _LOGGER.info(
+                "Alle Berechnungstests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei Berechnungstests",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def _async_update_data(self) -> Dict[str, Any]:
+        """Aktualisiert die Gerätedaten."""
+        try:
+            _LOGGER.debug(
+                "Starte Datenaktualisierung",
+                extra={
+                    "device": self.name,
+                    "register_count": len(self._registers) if self._registers else 0
+                }
+            )
+
+            # Hole die Register-Werte
+            data = await self._hub._read_registers(self._registers)
+            
+            _LOGGER.debug(
+                "Datenaktualisierung abgeschlossen",
+                extra={
+                    "device": self.name,
+                    "verfügbare_register": list(data.keys()),
+                    "register_werte": data
+                }
+            )
+            
+            return data
+            
+        except Exception as e:
+                _LOGGER.error(
+                "Fehler bei der Datenaktualisierung",
+                    extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return {}
+
+    async def test_helper_entities(self) -> bool:
+        """Testet die Funktionalität der Helper-Entities."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Helper-Entities",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test der Input Number Entities
+            if "input_number" in self._device_config:
+                for input_id, config in self._device_config["input_number"].items():
+                    try:
+                        # Hole die Entity
+                        entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="number")
+                        entity = self.entities.get(entity_id)
+                        
+                        if not entity:
+                            _LOGGER.error(
+                                "Input Number Entity nicht gefunden",
+                                extra={
+                                    "input_id": input_id,
+                                    "entity_id": entity_id,
+                        "device": self.name
+                    }
+                )
+                return False
+                
+                        # Teste Schreibzugriff mit Minimal- und Maximalwert
+                        min_value = float(config.get("min", 0))
+                        max_value = float(config.get("max", 100))
+                        test_values = [min_value, max_value, (min_value + max_value) / 2]
+                        
+                        for value in test_values:
+                            _LOGGER.debug(
+                                "Teste Input Number mit Wert",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "value": value,
+                                    "device": self.name
+                                }
+                            )
+                            
+                            await entity.async_set_native_value(value)
+                            
+                            # Prüfe ob der Wert im Register angekommen ist
+                            register_name = config.get("register", {}).get("name")
+                            if register_name:
+                                register_value = self._register_data.get(register_name)
+                                if register_value is None:
+                                    _LOGGER.error(
+                                        "Register-Wert nicht gefunden",
+                                        extra={
+                                            "register": register_name,
+                                            "entity_id": entity_id,
+                                            "device": self.name
+                                        }
+                                    )
+                                    return False
+                            
+                            _LOGGER.debug(
+                                "Input Number Test erfolgreich",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "value": value,
+                                    "register_value": register_value,
+                                    "device": self.name
+                                }
+                            )
+
+            # Test der Input Select Entities
+            if "input_select" in self._device_config:
+                for input_id, config in self._device_config["input_select"].items():
+                    try:
+                        # Hole die Entity
+                        entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="select")
+                        entity = self.entities.get(entity_id)
+                        
+                        if not entity:
+                            _LOGGER.error(
+                                "Input Select Entity nicht gefunden",
+                                extra={
+                                    "input_id": input_id,
+                                    "entity_id": entity_id,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+                        
+                        # Teste alle verfügbaren Optionen
+                        options = config.get("options", [])
+                        for option in options:
+                            _LOGGER.debug(
+                                "Teste Input Select mit Option",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "option": option,
+                                    "device": self.name
+                                }
+                            )
+                            
+                            await entity.async_select_option(option)
+                            
+                            # Prüfe ob der Wert im Register angekommen ist
+                            register_name = config.get("register", {}).get("name")
+                            if register_name:
+                                register_value = self._register_data.get(register_name)
+                                if register_value is None:
+                                    _LOGGER.error(
+                                        "Register-Wert nicht gefunden",
+                                        extra={
+                                            "register": register_name,
+                                            "entity_id": entity_id,
+                                            "device": self.name
+                                        }
+                                    )
+                                    return False
+                            
+                            _LOGGER.debug(
+                                "Input Select Test erfolgreich",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "option": option,
+                                    "register_value": register_value,
+                                    "device": self.name
+                                }
+                            )
+
+            _LOGGER.info(
+                "Alle Helper-Entity Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name,
+                    "input_numbers": len(self._device_config.get("input_number", {})),
+                    "input_selects": len(self._device_config.get("input_select", {}))
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Testen der Helper-Entities",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def test_service_calls(self) -> bool:
+        """Testet die Service-Aufrufe mit den Helper-Entities."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Service-Aufrufe",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test: Batteriemodus
+            battery_modes = {
+                "forced_discharge": {"power": 2500},
+                "forced_charge": {"power": 3000},
+                "bypass": {},
+                "self_consumption": {}
+            }
+
+            for mode, params in battery_modes.items():
+                _LOGGER.debug(
+                    "Teste Batteriemodus",
+                    extra={
+                        "mode": mode,
+                        "params": params,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_battery_mode(mode, params.get("power"))
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen des Batteriemodus",
+                        extra={
+                            "mode": mode,
+                            "params": params,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Test: Wechselrichter-Modi
+            inverter_modes = ["Enabled", "Shutdown"]
+            for mode in inverter_modes:
+                _LOGGER.debug(
+                    "Teste Wechselrichter-Modus",
+                    extra={
+                        "mode": mode,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_inverter_mode(mode)
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen des Wechselrichter-Modus",
+                        extra={
+                            "mode": mode,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Test: Einspeiselimitierung
+            export_power_tests = [
+                {"enabled": True, "limit": 5000},
+                {"enabled": False, "limit": None},
+                {"enabled": True, "limit": 10000}
+            ]
+
+            for test in export_power_tests:
+                _LOGGER.debug(
+                    "Teste Einspeiselimitierung",
+                    extra={
+                        "config": test,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_export_power_limit(test["enabled"], test["limit"])
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen der Einspeiselimitierung",
+                        extra={
+                            "config": test,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Validiere die Register-Werte nach den Tests
+            validation_result = await self.validate_helper_entities()
+            if not validation_result:
+                _LOGGER.error(
+                    "Validierung nach Service-Tests fehlgeschlagen",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return False
+
+            _LOGGER.info(
+                "Alle Service-Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Testen der Service-Aufrufe",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def test_register_mappings(self) -> bool:
+        """Führt End-to-End Tests der Register-Zuordnungen durch."""
+        try:
+            _LOGGER.info(
+                "Starte End-to-End Tests der Register-Zuordnungen",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test 1: Basis-Register
+            if "registers" in self._device_config:
+                for register_type in ["read", "write"]:
+                    for register in self._device_config["registers"].get(register_type, []):
+            register_name = register.get("name")
+            if not register_name:
+                            continue
+
+                        # Teste Register-Zuordnung
+                        prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                        
+                        _LOGGER.debug(
+                            "Teste Basis-Register",
+                            extra={
+                                "original_name": register_name,
+                                "prefixed_name": prefixed_name,
+                                "register_type": register_type,
+                                "device": self.name
+                            }
+                        )
+
+                        # Prüfe ob Register in den Daten existiert
+                        if prefixed_name not in self._register_data:
+                _LOGGER.error(
+                                "Register nicht in Daten gefunden",
+                    extra={
+                                    "register": register_name,
+                                    "prefixed_name": prefixed_name,
+                        "device": self.name
+                    }
+                )
+                return False
+                
+            # Test 2: Berechnete Register
+            if "calculated_registers" in self._device_config:
+                for calc_register in self._device_config["calculated_registers"]:
+                    register_name = calc_register.get("name")
+                    if not register_name:
+                        continue
+
+                    # Teste berechnetes Register
+                    prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                    calculation = calc_register.get("calculation", {})
+                    
+                    _LOGGER.debug(
+                        "Teste berechnetes Register",
+                        extra={
+                            "original_name": register_name,
+                            "prefixed_name": prefixed_name,
+                            "calculation_type": calculation.get("type"),
+                            "device": self.name
+                        }
+                    )
+
+                    # Prüfe Quell-Register für die Berechnung
+                    if calculation.get("type") == "formula":
+                        formula = calculation.get("formula", "")
+                        import re
+                        var_names = re.findall(r'\b[a-zA-Z_]\w*\b', formula)
+                        
+                        for var in var_names:
+                            if var in ['abs', 'min', 'max', 'round']:
+                                continue
+                                
+                            prefixed_var = self.name_helper.convert(var, NameType.BASE_NAME)
+                            if prefixed_var not in self._register_data:
+                                _LOGGER.error(
+                                    "Quell-Register für Formel nicht gefunden",
+                                    extra={
+                                        "variable": var,
+                                        "prefixed_variable": prefixed_var,
+                                        "formula": formula,
+                                        "device": self.name
+                                    }
+                                )
+                                return False
+
+                    # Berechne und validiere den Wert
+                    value = self._calculate_register_value(calc_register)
+                    if value is None:
+                        _LOGGER.error(
+                            "Berechnung fehlgeschlagen",
+                            extra={
+                                "register": register_name,
+                                "calculation": calculation,
+                                "device": self.name
+                            }
+                        )
+                        return False
+
+                    _LOGGER.debug(
+                        "Berechnung erfolgreich",
+                        extra={
+                            "register": register_name,
+                            "value": value,
+                            "device": self.name
+                        }
+                    )
+
+            # Test 3: Register-Entity Zuordnung
+            for entity_id, entity in self.entities.items():
+                if isinstance(entity, ModbusRegisterEntity):
+                    register_name = entity._register.get("name")
+                    if not register_name:
+                        continue
+
+                    prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                    
+                    _LOGGER.debug(
+                        "Teste Register-Entity Zuordnung",
+                        extra={
+                            "entity_id": entity_id,
+                            "register": register_name,
+                            "prefixed_name": prefixed_name,
+                            "device": self.name
+                        }
+                    )
+
+                    # Prüfe ob Entity korrekt aktualisiert wird
+                    if not await self._update_entity_state(entity):
+                        _LOGGER.error(
+                            "Entity-Aktualisierung fehlgeschlagen",
+                            extra={
+                                "entity_id": entity_id,
+                                "register": register_name,
+                                "device": self.name
+                            }
+                        )
+                        return False
+
+            _LOGGER.info(
+                "End-to-End Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei End-to-End Tests",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def test_calculations(self) -> bool:
+        """Testet die Berechnungsfunktionalität für Register."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Berechnungsfunktionalität",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test 1: Formelauswertung
+            if "calculated_registers" in self._device_config:
+                for calc_register in self._device_config["calculated_registers"]:
+                    register_name = calc_register.get("name")
+                    calculation = calc_register.get("calculation", {})
+                    
+                    if calculation.get("type") == "formula":
+                        formula = calculation.get("formula", "")
+                        
+                        _LOGGER.debug(
+                            "Teste Formelberechnung",
+                            extra={
+                                "register": register_name,
+                                "formula": formula,
+                                "device": self.name
+                            }
+                        )
+
+                        # Teste mit Test-Werten
+                        test_values = {
+                            "battery_level": 75.5,
+                            "battery_state_of_health": 98.2,
+                            "battery_power": 2500.0,
+                            "grid_power": 1500.0
+                        }
+
+                        # Erstelle präfixierte Test-Werte
+                        prefixed_test_values = {}
+                        for key, value in test_values.items():
+                            prefixed_key = self.name_helper.convert(key, NameType.BASE_NAME)
+                            prefixed_test_values[prefixed_key] = value
+                            self._register_data[prefixed_key] = value
+
+                        # Berechne den Wert
+                        value = self._calculate_register_value(calc_register)
+                if value is None:
+                            _LOGGER.error(
+                                "Formelberechnung fehlgeschlagen",
+                                extra={
+                                    "register": register_name,
+                                    "formula": formula,
+                                    "test_values": test_values,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+
+                    _LOGGER.debug(
+                            "Formelberechnung erfolgreich",
+                        extra={
+                            "register": register_name,
+                                "formula": formula,
+                                "result": value,
+                                "test_values": test_values,
+                                "device": self.name
+                            }
+                        )
+
+            # Test 2: Datentyp-Konvertierung
+            test_cases = [
+                {"type": "uint16", "value": 65535, "expected": 65535},
+                {"type": "int16", "value": -32768, "expected": -32768},
+                {"type": "uint32", "value": 4294967295, "expected": 4294967295},
+                {"type": "int32", "value": -2147483648, "expected": -2147483648},
+                {"type": "float32", "value": 3.14159, "expected": 3.14159}
+            ]
+
+            for test in test_cases:
+                register_def = {
+                    "name": f"test_{test['type']}",
+                    "type": test["type"]
+                }
+                
+                _LOGGER.debug(
+                    "Teste Datentyp-Konvertierung",
+                    extra={
+                        "type": test["type"],
+                        "value": test["value"],
+                        "expected": test["expected"],
+                        "device": self.name
+                    }
+                )
+
+                # Teste Konvertierung
+                result = self._process_register_value(register_def["name"], register_def, test["value"])
+                if result != test["expected"]:
+                    _LOGGER.error(
+                        "Datentyp-Konvertierung fehlgeschlagen",
+                        extra={
+                            "type": test["type"],
+                            "value": test["value"],
+                            "expected": test["expected"],
+                            "result": result,
+                            "device": self.name
+                        }
+                    )
+                    return False
+                    
+            # Test 3: Skalierungsfaktoren
+            scale_tests = [
+                {"scale": 0.1, "value": 100, "expected": 10.0},
+                {"scale": 10, "value": 50, "expected": 500.0},
+                {"scale": 0.001, "value": 1000, "expected": 1.0}
+            ]
+
+            for test in scale_tests:
+                register_def = {
+                    "name": "test_scale",
+                    "type": "uint16",
+                    "scale": test["scale"]
+                }
+                
+                _LOGGER.debug(
+                    "Teste Skalierungsfaktor",
+                    extra={
+                        "scale": test["scale"],
+                        "value": test["value"],
+                        "expected": test["expected"],
+                        "device": self.name
+                    }
+                )
+
+                # Teste Skalierung
+                result = self._process_register_value(register_def["name"], register_def, test["value"])
+                if abs(result - test["expected"]) > 0.0001:  # Berücksichtige Fließkomma-Ungenauigkeit
+                    _LOGGER.error(
+                        "Skalierung fehlgeschlagen",
+                        extra={
+                            "scale": test["scale"],
+                            "value": test["value"],
+                            "expected": test["expected"],
+                            "result": result,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            _LOGGER.info(
+                "Alle Berechnungstests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+                return True
+                
+            except Exception as e:
+                _LOGGER.error(
+                "Fehler bei Berechnungstests",
+                    extra={
+                        "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def _async_update_data(self) -> Dict[str, Any]:
+        """Aktualisiert die Gerätedaten."""
+        try:
+            _LOGGER.debug(
+                "Starte Datenaktualisierung",
+                extra={
+                    "device": self.name,
+                    "register_count": len(self._registers) if self._registers else 0
+                }
+            )
+
+            # Hole die Register-Werte
+            data = await self._hub._read_registers(self._registers)
+            
+            _LOGGER.debug(
+                "Datenaktualisierung abgeschlossen",
+                extra={
+                    "device": self.name,
+                    "verfügbare_register": list(data.keys()),
+                    "register_werte": data
+                }
+            )
+            
+            return data
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei der Datenaktualisierung",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return {}
+
+    async def test_helper_entities(self) -> bool:
+        """Testet die Funktionalität der Helper-Entities."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Helper-Entities",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test der Input Number Entities
+            if "input_number" in self._device_config:
+                for input_id, config in self._device_config["input_number"].items():
+                    try:
+                        # Hole die Entity
+                        entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="number")
+                        entity = self.entities.get(entity_id)
+                        
+                        if not entity:
+                            _LOGGER.error(
+                                "Input Number Entity nicht gefunden",
+                                extra={
+                                    "input_id": input_id,
+                                    "entity_id": entity_id,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+                        
+                        # Teste Schreibzugriff mit Minimal- und Maximalwert
+                        min_value = float(config.get("min", 0))
+                        max_value = float(config.get("max", 100))
+                        test_values = [min_value, max_value, (min_value + max_value) / 2]
+                        
+                        for value in test_values:
+                            _LOGGER.debug(
+                                "Teste Input Number mit Wert",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "value": value,
+                                    "device": self.name
+                                }
+                            )
+                            
+                            await entity.async_set_native_value(value)
+                            
+                            # Prüfe ob der Wert im Register angekommen ist
+                            register_name = config.get("register", {}).get("name")
+                            if register_name:
+                                register_value = self._register_data.get(register_name)
+                                if register_value is None:
+                                    _LOGGER.error(
+                                        "Register-Wert nicht gefunden",
+                                        extra={
+                        "register": register_name,
+                                            "entity_id": entity_id,
+                                            "device": self.name
+                                        }
+                                    )
+                                    return False
+                            
+                            _LOGGER.debug(
+                                "Input Number Test erfolgreich",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "value": value,
+                                    "register_value": register_value,
+                                    "device": self.name
+                                }
+                            )
+
+            # Test der Input Select Entities
+            if "input_select" in self._device_config:
+                for input_id, config in self._device_config["input_select"].items():
+                    try:
+                        # Hole die Entity
+                        entity_id = self.name_helper.convert(input_id, NameType.ENTITY_ID, domain="select")
+                        entity = self.entities.get(entity_id)
+                        
+                        if not entity:
+                            _LOGGER.error(
+                                "Input Select Entity nicht gefunden",
+                                extra={
+                                    "input_id": input_id,
+                                    "entity_id": entity_id,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+                        
+                        # Teste alle verfügbaren Optionen
+                        options = config.get("options", [])
+                        for option in options:
+                            _LOGGER.debug(
+                                "Teste Input Select mit Option",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "option": option,
+                                    "device": self.name
+                                }
+                            )
+                            
+                            await entity.async_select_option(option)
+                            
+                            # Prüfe ob der Wert im Register angekommen ist
+                            register_name = config.get("register", {}).get("name")
+                            if register_name:
+                                register_value = self._register_data.get(register_name)
+                                if register_value is None:
+                                    _LOGGER.error(
+                                        "Register-Wert nicht gefunden",
+                                        extra={
+                                            "register": register_name,
+                                            "entity_id": entity_id,
+                                            "device": self.name
+                                        }
+                                    )
+                                    return False
+                            
+                            _LOGGER.debug(
+                                "Input Select Test erfolgreich",
+                                extra={
+                                    "entity_id": entity_id,
+                                    "option": option,
+                                    "register_value": register_value,
+                                    "device": self.name
+                                }
+                            )
+
+            _LOGGER.info(
+                "Alle Helper-Entity Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name,
+                    "input_numbers": len(self._device_config.get("input_number", {})),
+                    "input_selects": len(self._device_config.get("input_select", {}))
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Testen der Helper-Entities",
+                extra={
+                    "error": str(e),
+                        "device": self.name,
+                        "traceback": e.__traceback__
+                    }
+                )
+                return False
+            
+    async def test_service_calls(self) -> bool:
+        """Testet die Service-Aufrufe mit den Helper-Entities."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Service-Aufrufe",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test: Batteriemodus
+            battery_modes = {
+                "forced_discharge": {"power": 2500},
+                "forced_charge": {"power": 3000},
+                "bypass": {},
+                "self_consumption": {}
+            }
+
+            for mode, params in battery_modes.items():
+                _LOGGER.debug(
+                    "Teste Batteriemodus",
+                    extra={
+                        "mode": mode,
+                        "params": params,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_battery_mode(mode, params.get("power"))
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen des Batteriemodus",
+                        extra={
+                            "mode": mode,
+                            "params": params,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Test: Wechselrichter-Modi
+            inverter_modes = ["Enabled", "Shutdown"]
+            for mode in inverter_modes:
+                _LOGGER.debug(
+                    "Teste Wechselrichter-Modus",
+                    extra={
+                        "mode": mode,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_inverter_mode(mode)
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen des Wechselrichter-Modus",
+                        extra={
+                            "mode": mode,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Test: Einspeiselimitierung
+            export_power_tests = [
+                {"enabled": True, "limit": 5000},
+                {"enabled": False, "limit": None},
+                {"enabled": True, "limit": 10000}
+            ]
+
+            for test in export_power_tests:
+                _LOGGER.debug(
+                    "Teste Einspeiselimitierung",
+                    extra={
+                        "config": test,
+                        "device": self.name
+                    }
+                )
+                
+                success = await self.set_export_power_limit(test["enabled"], test["limit"])
+                if not success:
+                    _LOGGER.error(
+                        "Fehler beim Setzen der Einspeiselimitierung",
+                        extra={
+                            "config": test,
+                            "device": self.name
+                        }
+                    )
+                    return False
+
+            # Validiere die Register-Werte nach den Tests
+            validation_result = await self.validate_helper_entities()
+            if not validation_result:
+                _LOGGER.error(
+                    "Validierung nach Service-Tests fehlgeschlagen",
+                    extra={
+                        "device": self.name
+                    }
+                )
+                return False
+
+            _LOGGER.info(
+                "Alle Service-Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Testen der Service-Aufrufe",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def test_register_mappings(self) -> bool:
+        """Führt End-to-End Tests der Register-Zuordnungen durch."""
+        try:
+            _LOGGER.info(
+                "Starte End-to-End Tests der Register-Zuordnungen",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test 1: Basis-Register
+            if "registers" in self._device_config:
+                for register_type in ["read", "write"]:
+                    for register in self._device_config["registers"].get(register_type, []):
+                        register_name = register.get("name")
+                        if not register_name:
+                            continue
+
+                        # Teste Register-Zuordnung
+                        prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                        
+                        _LOGGER.debug(
+                            "Teste Basis-Register",
+                            extra={
+                                "original_name": register_name,
+                                "prefixed_name": prefixed_name,
+                                "register_type": register_type,
+                                "device": self.name
+                            }
+                        )
+
+                        # Prüfe ob Register in den Daten existiert
+                        if prefixed_name not in self._register_data:
+                            _LOGGER.error(
+                                "Register nicht in Daten gefunden",
+                                extra={
+                                    "register": register_name,
+                                    "prefixed_name": prefixed_name,
+                                    "device": self.name
+                                }
+                            )
+                            return False
+
+            # Test 2: Berechnete Register
+            if "calculated_registers" in self._device_config:
+                for calc_register in self._device_config["calculated_registers"]:
+                    register_name = calc_register.get("name")
+                    if not register_name:
+                        continue
+
+                    # Teste berechnetes Register
+                    prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                    calculation = calc_register.get("calculation", {})
+                    
+                    _LOGGER.debug(
+                        "Teste berechnetes Register",
+                        extra={
+                            "original_name": register_name,
+                            "prefixed_name": prefixed_name,
+                            "calculation_type": calculation.get("type"),
+                            "device": self.name
+                        }
+                    )
+
+                    # Prüfe Quell-Register für die Berechnung
+                    if calculation.get("type") == "formula":
+                        formula = calculation.get("formula", "")
+                        import re
+                        var_names = re.findall(r'\b[a-zA-Z_]\w*\b', formula)
+                        
+                        for var in var_names:
+                            if var in ['abs', 'min', 'max', 'round']:
+                                continue
+                                
+                            prefixed_var = self.name_helper.convert(var, NameType.BASE_NAME)
+                            if prefixed_var not in self._register_data:
+                                _LOGGER.error(
+                                    "Quell-Register für Formel nicht gefunden",
+                                    extra={
+                                        "variable": var,
+                                        "prefixed_variable": prefixed_var,
+                                        "formula": formula,
+                                        "device": self.name
+                                    }
+                                )
+                                return False
+
+                    # Berechne und validiere den Wert
+                    value = self._calculate_register_value(calc_register)
+                    if value is None:
+                        _LOGGER.error(
+                            "Berechnung fehlgeschlagen",
+                            extra={
+                                "register": register_name,
+                                "calculation": calculation,
+                                "device": self.name
+                            }
+                        )
+                        return False
+
+                    _LOGGER.debug(
+                        "Berechnung erfolgreich",
+                        extra={
+                            "register": register_name,
+                            "value": value,
+                            "device": self.name
+                        }
+                    )
+
+            # Test 3: Register-Entity Zuordnung
+            for entity_id, entity in self.entities.items():
+                if isinstance(entity, ModbusRegisterEntity):
+                    register_name = entity._register.get("name")
+                    if not register_name:
+                        continue
+
+                    prefixed_name = self.name_helper.convert(register_name, NameType.BASE_NAME)
+                    
+                    _LOGGER.debug(
+                        "Teste Register-Entity Zuordnung",
+                        extra={
+                            "entity_id": entity_id,
+                            "register": register_name,
+                            "prefixed_name": prefixed_name,
+                            "device": self.name
+                        }
+                    )
+
+                    # Prüfe ob Entity korrekt aktualisiert wird
+                    if not await self._update_entity_state(entity):
+                        _LOGGER.error(
+                            "Entity-Aktualisierung fehlgeschlagen",
+                            extra={
+                                "entity_id": entity_id,
+                                "register": register_name,
+                                "device": self.name
+                            }
+                        )
+                        return False
+
+            _LOGGER.info(
+                "End-to-End Tests erfolgreich abgeschlossen",
+                extra={
+                    "device": self.name
+                }
+            )
+            return True
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei End-to-End Tests",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False
+
+    async def test_calculations(self) -> bool:
+        """Testet die Berechnungsfunktionalität für Register."""
+        try:
+            _LOGGER.info(
+                "Starte Test der Berechnungsfunktionalität",
+                extra={
+                    "device": self.name
+                }
+            )
+
+            # Test 1: Formelauswertung
+            if "calculated_registers" in self._device_config:
+                for calc_register in self._device_config["calculated_registers"]:
+                    register_name = calc_register.get("name")
+                    calculation = calc_register.get("calculation", {})
+                    
+                    if calculation.get("type") == "formula":
+                        formula = calculation.get("formula", "")
+                        
+                        _LOGGER.debug(
+                            "Teste Formelberechnung",
+                            extra={
+                                "register": register_name,
+                                "formula": formula,
+                                "device": self.name
+                            }
+                        )
+
+                        # Teste mit Test-Werten
+                        test_values = {
+                            "battery_level": 75.5,

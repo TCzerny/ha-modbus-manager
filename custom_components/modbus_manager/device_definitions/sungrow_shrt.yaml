@@ -159,20 +159,7 @@ registers:
     - { name: "l3_current", address: 13032, type: "int16", unit_of_measurement: "A", device_class: "current", state_class: "measurement", scale: 0.1, precision: 1 }
     - { name: "total_active_power", address: 13033, type: "int32", unit_of_measurement: "W", device_class: "power", state_class: "measurement", swap: "word", scale: 1, precision: 0, count: 2, polling: "fast" }
 
-    # Berechnete Status-Sensoren
-    - { name: "battery_forced_charge_discharge_cmd", type: "calculated", device_class: "enum" }
-    - { name: "export_power_limit_mode", type: "calculated", device_class: "enum" }
-    - { name: "ems_mode_selection", type: "calculated", device_class: "enum"  }
-
-    # Berechnete Power-Sensoren
-    - { name: "import_power", type: "calculated", unit_of_measurement: "W", device_class: "power", state_class: "measurement" }
-    - { name: "export_power", type: "calculated", unit_of_measurement: "W", device_class: "power", state_class: "measurement"}
-
-    # Berechnete Battery-Level/Charge Sensoren
-    - { name: "battery_level_nominal", type: "calculated", unit_of_measurement: "%", device_class: "battery", state_class: "measurement" }
-    - { name: "battery_charge_nominal", type: "calculated", unit_of_measurement: "kWh", device_class: "energy_storage", state_class: "measurement"}
-    - { name: "battery_charge", type: "calculated", unit_of_measurement: "kWh", device_class: "energy_storage", state_class: "measurement"}
-
+    
   write:
     # System Control
    # - { name: Inverter start stop, address: 12999, type: "uint16", precision: 0, state_class: measurement, scan_interval: 10 }
@@ -403,7 +390,28 @@ input_number:
       type: "uint16"
       scale: 1
       precision: 0
+  
+  set_forced_charge_discharge_power:
+    name: Set forced charge-discharge power
+    min: 0
+    max: 5000
+    step: 100
+    unit_of_measurement: "W"
+    mode: "slider"
+    icon: "mdi:battery-charging"
+    description: "Leistung für erzwungenes Laden/Entladen"
 
+
+  set_export_power_limit:
+    name: Set export power limit
+    min: 0
+    max: 5000
+    step: 100
+    unit_of_measurement: "W"
+    mode: "slider"
+    icon: "mdi:transmission-tower-export"
+    description: "Maximale Export-Leistung"
+    
 # some input select helper sensors for setting some values
 input_select:
   set_inverter_run_mode:
@@ -871,3 +879,5 @@ ems_mode_mapping:
   "0x0003": "External EMS"
   "0x0004": "VPP"
   "0x0008": "MicroGrid"
+
+
