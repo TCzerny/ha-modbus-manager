@@ -91,6 +91,17 @@ class ModbusManagerHub:
             host = config_data[CONF_HOST]
             port = config_data.get(CONF_PORT, DEFAULT_PORT)
             
+            _LOGGER.debug(
+                "Initialisiere ModBus Client",
+                extra={
+                    "host": host,
+                    "port": port,
+                    "timeout": DEFAULT_TIMEOUT,
+                    "retries": DEFAULT_RETRIES,
+                    "reconnect_delay": DEFAULT_RETRY_DELAY
+                }
+            )
+            
             self._client = AsyncModbusTcpClient(
                 host=host,
                 port=port,
@@ -100,30 +111,71 @@ class ModbusManagerHub:
                 name=self.name
             )
             
-            # Verbinde den Client
-            if not await self._client.connect():
+            # Verbinde den Client mit Retry-Logik
+            retry_count = 0
+            max_retries = DEFAULT_RETRIES
+            while retry_count < max_retries:
+                try:
+                    if await self._client.connect():
+                        self._connected = True
+                        _LOGGER.info(
+                            "ModBus Verbindung hergestellt",
+                            extra={
+                                "host": host,
+                                "port": port,
+                                "retry": retry_count,
+                                "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
+                            }
+                        )
+                        break
+                    else:
+                        retry_count += 1
+                        _LOGGER.warning(
+                            "Verbindungsversuch fehlgeschlagen, versuche erneut",
+                            extra={
+                                "host": host,
+                                "port": port,
+                                "retry": retry_count,
+                                "max_retries": max_retries
+                            }
+                        )
+                        await asyncio.sleep(DEFAULT_RETRY_DELAY)
+                except Exception as connect_error:
+                    retry_count += 1
+                    _LOGGER.error(
+                        "Fehler beim Verbindungsversuch",
+                        extra={
+                            "error": str(connect_error),
+                            "host": host,
+                            "port": port,
+                            "retry": retry_count,
+                            "max_retries": max_retries
+                        }
+                    )
+                    await asyncio.sleep(DEFAULT_RETRY_DELAY)
+            
+            if not self._connected:
                 _LOGGER.error(
-                    "Verbindung zum ModBus Server fehlgeschlagen",
+                    "Verbindung zum ModBus Server fehlgeschlagen nach allen Versuchen",
                     extra={
                         "host": host,
                         "port": port,
+                        "retries": retry_count,
                         "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
                     }
                 )
                 return False
 
-            self._connected = True
-            _LOGGER.info(
-                "ModBus Verbindung hergestellt",
-                extra={
-                    "host": host,
-                    "port": port,
-                    "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
-                }
-            )
-
             # Initialisiere das Device
             device_type = config_data.get("device_type", "")
+            _LOGGER.debug(
+                "Initialisiere Device",
+                extra={
+                    "device_type": device_type,
+                    "name": config_data[CONF_NAME]
+                }
+            )
+            
             device_config = {
                 CONF_NAME: config_data[CONF_NAME],
                 CONF_SLAVE: config_data.get(CONF_SLAVE, DEFAULT_SLAVE),
@@ -134,15 +186,27 @@ class ModbusManagerHub:
             # Lade die Gerätedefinitionen
             definition_file = os.path.join(os.path.dirname(__file__), "device_definitions", f"{device_type}.yaml")
             try:
+                _LOGGER.debug(
+                    "Lade Gerätedefinition",
+                    extra={"file": definition_file}
+                )
                 async with aiofiles.open(definition_file, 'r') as f:
                     content = await f.read()
                     register_definitions = yaml.safe_load(content)
+                    _LOGGER.debug(
+                        "Gerätedefinition geladen",
+                        extra={
+                            "file": definition_file,
+                            "definitions": register_definitions.keys()
+                        }
+                    )
             except Exception as error:
                 _LOGGER.error(
                     "Fehler beim Laden der Gerätedefinition",
                     extra={
-                        "error": error,
-                        "file": definition_file
+                        "error": str(error),
+                        "file": definition_file,
+                        "traceback": error.__traceback__
                     }
                 )
                 return False
@@ -185,7 +249,8 @@ class ModbusManagerHub:
             _LOGGER.error(
                 "Fehler beim Setup des ModBus Hubs",
                 extra={
-                    "error": error,
+                    "error": str(error),
+                    "traceback": error.__traceback__,
                     "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
                 }
             )

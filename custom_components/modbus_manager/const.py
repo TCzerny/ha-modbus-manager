@@ -1,7 +1,13 @@
-"""Constants for the Modbus Manager integration."""
+"""ModbusManager Constants."""
+from __future__ import annotations
+
+import logging
 from typing import Final
 from enum import Enum
 from homeassistant.const import Platform
+
+# Setze Debug-Level für detaillierte Logging-Informationen
+logging.getLogger(__package__).setLevel(logging.DEBUG)
 
 DOMAIN: Final = "modbus_manager"
 CONF_DEVICE_TYPE: Final = "device_type"

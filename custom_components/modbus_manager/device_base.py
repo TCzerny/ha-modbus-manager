@@ -140,21 +140,58 @@ class ModbusManagerDeviceBase:
         try:
             _LOGGER.info(
                 "Starte Setup des Geräts",
-                extra={"device": self.name}
+                extra={
+                    "device": self.name,
+                    "type": self.device_type
+                }
             )
             
             # Initialisiere den Register-Processor
-            await self.register_processor.setup_registers(self._device_config)
+            _LOGGER.debug(
+                "Initialisiere Register-Processor",
+                extra={"device": self.name}
+            )
+            if not await self.register_processor.setup_registers(self._device_config):
+                _LOGGER.error(
+                    "Register-Processor Setup fehlgeschlagen",
+                    extra={"device": self.name}
+                )
+                return False
             
             # Initialisiere den Entity-Manager
-            await self.entity_manager.setup_entities(self._device_config)
+            _LOGGER.debug(
+                "Initialisiere Entity-Manager",
+                extra={"device": self.name}
+            )
+            if not await self.entity_manager.setup_entities(self._device_config):
+                _LOGGER.error(
+                    "Entity-Manager Setup fehlgeschlagen",
+                    extra={"device": self.name}
+                )
+                return False
             
             # Führe initiales Update durch
+            _LOGGER.debug(
+                "Führe initiales Update durch",
+                extra={"device": self.name}
+            )
             if not await self._initial_update():
+                _LOGGER.error(
+                    "Initiales Update fehlgeschlagen",
+                    extra={"device": self.name}
+                )
                 return False
                 
             # Führe verzögertes Setup durch
+            _LOGGER.debug(
+                "Führe verzögertes Setup durch",
+                extra={"device": self.name}
+            )
             if not await self._delayed_setup():
+                _LOGGER.error(
+                    "Verzögertes Setup fehlgeschlagen",
+                    extra={"device": self.name}
+                )
                 return False
                 
             # Führe Tests durch
@@ -164,7 +201,13 @@ class ModbusManagerDeviceBase:
                     extra={"device": self.name}
                 )
                 
+                test_results = {}
+                
                 # Teste Register-Verarbeitung
+                _LOGGER.debug(
+                    "Führe Register-Tests durch",
+                    extra={"device": self.name}
+                )
                 if not await self.test_suite.run_register_tests():
                     _LOGGER.error(
                         "Register-Tests fehlgeschlagen",
@@ -173,6 +216,10 @@ class ModbusManagerDeviceBase:
                     return False
                     
                 # Teste Entity-Verwaltung
+                _LOGGER.debug(
+                    "Führe Entity-Tests durch",
+                    extra={"device": self.name}
+                )
                 if not await self.test_suite.run_entity_tests():
                     _LOGGER.error(
                         "Entity-Tests fehlgeschlagen",
@@ -181,6 +228,10 @@ class ModbusManagerDeviceBase:
                     return False
                     
                 # Teste Berechnungen
+                _LOGGER.debug(
+                    "Führe Berechnungs-Tests durch",
+                    extra={"device": self.name}
+                )
                 if not await self.test_suite.run_calculation_tests():
                     _LOGGER.error(
                         "Berechnungs-Tests fehlgeschlagen",
@@ -189,6 +240,10 @@ class ModbusManagerDeviceBase:
                     return False
                     
                 # Teste Service-Aufrufe
+                _LOGGER.debug(
+                    "Führe Service-Tests durch",
+                    extra={"device": self.name}
+                )
                 if not await self.test_suite.run_service_tests():
                     _LOGGER.error(
                         "Service-Tests fehlgeschlagen",
@@ -196,11 +251,12 @@ class ModbusManagerDeviceBase:
                     )
                     return False
                     
+                test_results = await self.test_suite.get_test_results()
                 _LOGGER.info(
                     "Test-Suite erfolgreich abgeschlossen",
                     extra={
                         "device": self.name,
-                        "test_results": await self.test_suite.get_test_results()
+                        "test_results": test_results
                     }
                 )
                 
