@@ -29,27 +29,24 @@ class ModbusManagerTestSuite:
         service_handler: ModbusManagerServiceHandler,
         calculator: ModbusManagerCalculator,
     ) -> None:
-        """Initialisiert die Test Suite."""
-        try:
-            self._hass = hass
-            self._device = device
-            self._register_processor = register_processor
-            self._entity_manager = entity_manager
-            self._service_handler = service_handler
-            self._calculator = calculator
-            
-            self._test_results: Dict[str, Dict[str, Any]] = {}
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Initialisierung der Test Suite",
-                extra={
-                    "error": str(e),
-                    "device": device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            raise
+        """Initialisiere die Test Suite."""
+        self.hass = hass
+        self._device = device
+        self._register_processor = register_processor
+        self._entity_manager = entity_manager
+        self._service_handler = service_handler
+        self._calculator = calculator
+        
+        # Initialisiere Test-Ergebnisse
+        self._register_test_results = {}
+        self._entity_test_results = {}
+        self._calculation_test_results = {}
+        self._service_test_results = {}
+        
+        _LOGGER.debug(
+            "Test Suite initialisiert",
+            extra={"device": device.name}
+        )
 
     async def run_register_tests(self) -> Tuple[bool, Dict[str, Any]]:
         """Führt Tests für die Register-Verarbeitung durch."""
@@ -326,6 +323,32 @@ class ModbusManagerTestSuite:
             )
             return False, {"error": str(e)}
 
-    def get_test_results(self) -> Dict[str, Any]:
-        """Gibt die Ergebnisse aller Tests zurück."""
-        return self._test_results.copy() 
+    async def get_test_results(self) -> Dict[str, Any]:
+        """Gibt die Testergebnisse zurück."""
+        try:
+            results = {
+                "register_tests": self._register_test_results,
+                "entity_tests": self._entity_test_results,
+                "calculation_tests": self._calculation_test_results,
+                "service_tests": self._service_test_results,
+                "total_tests": len(self._register_test_results) + 
+                              len(self._entity_test_results) + 
+                              len(self._calculation_test_results) + 
+                              len(self._service_test_results),
+                "failed_tests": sum(1 for result in self._register_test_results.values() if not result["success"]) +
+                              sum(1 for result in self._entity_test_results.values() if not result["success"]) +
+                              sum(1 for result in self._calculation_test_results.values() if not result["success"]) +
+                              sum(1 for result in self._service_test_results.values() if not result["success"])
+            }
+            return results
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Abrufen der Testergebnisse",
+                extra={
+                    "error": str(e),
+                    "device": self._device.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return {} 

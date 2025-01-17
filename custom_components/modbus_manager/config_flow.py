@@ -4,15 +4,18 @@ from __future__ import annotations
 import logging
 import os
 from typing import Any, Dict, Optional
+import aiofiles
+import yaml
 
 import voluptuous as vol
 
 from homeassistant import config_entries
-from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT
+from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
+from homeassistant.helpers import device_registry as dr
 
-from .const import DOMAIN
+from .const import DOMAIN, DEFAULT_PORT, DEFAULT_SLAVE, CONF_DEVICE_TYPE
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -23,23 +26,21 @@ async def async_get_available_device_definitions() -> dict[str, str]:
     definition_dir = os.path.join(os.path.dirname(__file__), "device_definitions")
     
     try:
-        # Verwende aiofiles.os für asynchrones Auflisten der Dateien
-        filenames = await aiofiles.os.listdir(definition_dir)
+        filenames = os.listdir(definition_dir)
         
         for filename in filenames:
             if filename.endswith(".yaml"):
                 device_type = filename[:-5]  # Entferne .yaml
-                # Lade die YAML-Datei um den Anzeigenamen zu erhalten
                 try:
-                    async with aiofiles.open(os.path.join(definition_dir, filename), mode='r', encoding='utf-8') as f:
-                        content = await f.read()
-                        device_config = yaml.safe_load(content)
+                    with open(os.path.join(definition_dir, filename), mode='r', encoding='utf-8') as f:
+                        device_config = yaml.safe_load(f)
                         display_name = device_config.get("device_info", {}).get("name", device_type)
                         definitions[device_type] = display_name
-                except Exception:
+                except Exception as e:
+                    _LOGGER.error(f"Fehler beim Lesen von {filename}: {str(e)}")
                     definitions[device_type] = device_type.replace("_", " ").title()
-    except Exception:
-        pass
+    except Exception as e:
+        _LOGGER.error(f"Fehler beim Lesen des Verzeichnisses: {str(e)}")
     
     return definitions
 

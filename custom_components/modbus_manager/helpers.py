@@ -9,7 +9,6 @@ from .const import NameType
 
 _LOGGER = ModbusManagerLogger(__name__)
 
-
 class EntityNameHelper:
     """Helper class for entity naming conventions."""
 
@@ -42,7 +41,7 @@ class EntityNameHelper:
         """Entfernt den Gerätenamen als Präfix, falls vorhanden."""
         device_prefix = self._sanitized_device_name.lower() + "_"
         if name.lower().startswith(device_prefix):
-            return name[len(device_prefix) :]
+            return name[len(device_prefix):]
         return name
 
     def convert(

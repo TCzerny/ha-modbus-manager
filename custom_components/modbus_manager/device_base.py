@@ -12,8 +12,11 @@ from homeassistant.helpers.update_coordinator import (
     CoordinatorEntity,
     DataUpdateCoordinator
 )
+from homeassistant.const import CONF_NAME, CONF_SLAVE
+from homeassistant.helpers import entity_registry as er, device_registry as dr
+from homeassistant.helpers.entity import DeviceInfo
 
-from .const import DOMAIN, NameType
+from .const import DOMAIN, NameType, DEFAULT_SLAVE
 from .logger import ModbusManagerLogger
 from .helpers import EntityNameHelper
 
@@ -31,42 +34,77 @@ class ModbusManagerDeviceBase:
     ) -> None:
         """Initialize the device."""
         try:
-            self.hub = hub
+            self._hub = hub
             self.hass = hub.hass
             self.config = config
-            self.name = config[CONF_NAME]
             self.device_type = device_type
             self._device_config = register_definitions
+            self._slave = config.get(CONF_SLAVE, DEFAULT_SLAVE)
             
             # Initialisiere den Name Helper
-            self.name_helper = EntityNameHelper(config)
+            self.name_helper = EntityNameHelper(hub.entry)
             
-            # Hole die Registries
-            self._entity_registry = er.async_get(self.hass)
-            self._device_registry = dr.async_get(self.hass)
+            # Generiere eindeutige Namen
+            self.name = self.name_helper.convert(config[CONF_NAME], NameType.BASE_NAME)
+            self.unique_id = self.name_helper.convert(config[CONF_NAME], NameType.UNIQUE_ID)
             
             # Setze die Geräte-Identifikation
-            self.unique_id = f"modbus_manager_{self.name.lower()}"
-            self.manufacturer = config.get("manufacturer", "Unknown")
-            self.model = config.get("model", "Generic Modbus Device")
+            self.manufacturer = register_definitions.get("manufacturer", "Unknown")
+            self.model = register_definitions.get("model", "Generic Modbus Device")
+            
+            # Device Info für Home Assistant
+            self._attr_device_info = DeviceInfo(
+                identifiers={(DOMAIN, self.unique_id)},
+                name=self.name,
+                manufacturer=self.manufacturer,
+                model=self.model,
+                via_device=(DOMAIN, self._hub.unique_id)
+            )
+            
+            _LOGGER.debug(
+                "ModbusManager Device initialisiert",
+                extra={
+                    "name": self.name,
+                    "unique_id": self.unique_id,
+                    "type": device_type,
+                    "manufacturer": self.manufacturer,
+                    "model": self.model
+                }
+            )
             
             # Initialisiere die Update-Koordinatoren
             self._update_coordinators = {}
             self._remove_state_change_listeners = []
             
-            # Platzhalter für die Komponenten
-            self.register_processor = None
-            self.entity_manager = None
-            self.service_handler = None
-            self.calculator = None
-            self.test_suite = None
+            # Initialisiere die Komponenten
+            from .device_registers import ModbusManagerRegisterProcessor
+            from .device_entities import ModbusManagerEntityManager
+            from .device_services import ModbusManagerServiceHandler
+            from .device_calculations import ModbusManagerCalculator
+            from .device_tests import ModbusManagerTestSuite
+            
+            self.register_processor = ModbusManagerRegisterProcessor(self)
+            self.entity_manager = ModbusManagerEntityManager(self)
+            self.service_handler = ModbusManagerServiceHandler(self.hass, self)
+            self.calculator = ModbusManagerCalculator(self)
+            self.test_suite = ModbusManagerTestSuite(
+                self.hass,
+                self,
+                self.register_processor,
+                self.entity_manager,
+                self.service_handler,
+                self.calculator
+            )
+            
+            # Erstelle die entities Property für die Plattformen
+            self.entities = {}
             
         except Exception as e:
             _LOGGER.error(
                 "Fehler bei der Initialisierung des Basis-Geräts",
                 extra={
                     "error": str(e),
-                    "device": self.name,
+                    "device": config.get(CONF_NAME),
                     "traceback": e.__traceback__
                 }
             )
@@ -81,7 +119,7 @@ class ModbusManagerDeviceBase:
                 name=self.name,
                 manufacturer=self.manufacturer,
                 model=self.model,
-                via_device=(DOMAIN, self.hub.unique_id)
+                via_device=(DOMAIN, self._hub.unique_id)
             )
         except Exception as e:
             _LOGGER.error(
@@ -102,10 +140,12 @@ class ModbusManagerDeviceBase:
                 extra={"device": self.name}
             )
             
-            # Initialisiere die Register-Listen
-            if not await self._setup_register_lists():
-                return False
-                
+            # Initialisiere den Register-Processor
+            await self.register_processor.setup_registers(self._device_config)
+            
+            # Initialisiere den Entity-Manager
+            await self.entity_manager.setup_entities(self._device_config)
+            
             # Führe initiales Update durch
             if not await self._initial_update():
                 return False

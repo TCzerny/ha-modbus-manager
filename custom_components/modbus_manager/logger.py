@@ -16,7 +16,7 @@ class ModbusManagerLogger(logging.Logger):
         """
         super().__init__(f"custom_components.modbus_manager.{name}")
         self.name = name
-        self.logger = logging.getLogger(f"custom_components.modbus_manager.{name}")
+        self.logger = logging.getLogger(f"{name}")
         
         # Übernehme die Einstellungen vom Parent-Logger
         self.parent = logging.getLogger("custom_components.modbus_manager")

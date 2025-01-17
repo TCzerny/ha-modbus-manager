@@ -4,8 +4,8 @@ from __future__ import annotations
 import logging
 from typing import Any, Dict, Optional
 
-from homeassistant.components.input_number import InputNumber
-from homeassistant.components.input_select import InputSelect
+from homeassistant.components.number import NumberEntity, NumberMode
+from homeassistant.components.select import SelectEntity
 from homeassistant.const import CONF_NAME
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import Entity

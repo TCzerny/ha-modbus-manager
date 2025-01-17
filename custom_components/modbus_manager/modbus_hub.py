@@ -4,6 +4,9 @@ from __future__ import annotations
 import asyncio
 import logging
 from typing import Any, Dict, List, Optional, Set
+import os
+import yaml
+import aiofiles
 
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
@@ -28,10 +31,12 @@ from .const import (
     DEFAULT_TIMEOUT,
     DEFAULT_RETRY_ON_EMPTY,
     DEFAULT_RETRIES,
-    DEFAULT_RETRY_DELAY
+    DEFAULT_RETRY_DELAY,
+    NameType
 )
 from .device_base import ModbusManagerDeviceBase as ModbusManagerDevice
 from .logger import ModbusManagerLogger
+from .helpers import EntityNameHelper
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -42,12 +47,30 @@ class ModbusManagerHub:
         """Initialisiere den ModbusManager Hub."""
         self.hass = hass
         self.entry = entry
-        self.name = entry.data[CONF_NAME]
-        self._client: Optional[AsyncModbusTcpClient] = None
-        self._devices: Dict[str, ModbusManagerDevice] = {}
-        self._setup_lock = asyncio.Lock()
-        self._device_configs: Dict[str, Dict[str, Any]] = {}
-        self._connected = False
+        self._devices = {}
+        self._client = None
+        self._lock = asyncio.Lock()
+        
+        # Initialisiere den Name Helper
+        self.name_helper = EntityNameHelper(entry)
+        
+        # Generiere eindeutige Namen
+        self.name = self.name_helper.convert(entry.data[CONF_NAME], NameType.BASE_NAME)
+        self.unique_id = self.name_helper.convert(entry.data[CONF_NAME], NameType.UNIQUE_ID)
+        
+        _LOGGER.debug(
+            "ModbusManager Hub initialisiert",
+            extra={
+                "name": self.name,
+                "unique_id": self.unique_id,
+                "entry_id": entry.entry_id
+            }
+        )
+
+    @property
+    def name(self) -> str:
+        """Gibt den Namen des Hubs zurück."""
+        return self.entry.title
 
     async def async_setup(self) -> bool:
         """Richte den ModbusManager Hub ein."""
@@ -86,6 +109,57 @@ class ModbusManagerHub:
                     "entry_id": self.entry.entry_id
                 }
             )
+
+            # Initialisiere das Device
+            device_type = self.entry.data.get("device_type", "")
+            device_config = {
+                CONF_NAME: self.entry.data[CONF_NAME],
+                CONF_SLAVE: self.entry.data.get(CONF_SLAVE, DEFAULT_SLAVE),
+                CONF_HOST: self.entry.data[CONF_HOST],
+                CONF_PORT: self.entry.data.get(CONF_PORT, DEFAULT_PORT),
+            }
+            
+            # Lade die Gerätedefinitionen
+            definition_file = os.path.join(os.path.dirname(__file__), "device_definitions", f"{device_type}.yaml")
+            try:
+                async with aiofiles.open(definition_file, 'r') as f:
+                    content = await f.read()
+                    register_definitions = yaml.safe_load(content)
+            except Exception as error:
+                _LOGGER.error(
+                    "Fehler beim Laden der Gerätedefinition",
+                    extra={
+                        "error": error,
+                        "file": definition_file
+                    }
+                )
+                return False
+            
+            device = ModbusManagerDevice(
+                self,
+                device_type,
+                device_config,
+                register_definitions
+            )
+            
+            if await device.async_setup():
+                self._devices[self.entry.data[CONF_NAME]] = device
+                _LOGGER.info(
+                    "Device erfolgreich initialisiert",
+                    extra={
+                        "name": self.entry.data[CONF_NAME],
+                        "type": device_type
+                    }
+                )
+            else:
+                _LOGGER.error(
+                    "Device-Initialisierung fehlgeschlagen",
+                    extra={
+                        "name": self.entry.data[CONF_NAME],
+                        "type": device_type
+                    }
+                )
+                return False
 
             # Registriere den Stop-Handler
             self.hass.bus.async_listen_once(
@@ -157,7 +231,7 @@ class ModbusManagerHub:
             raise
 
     async def async_read_registers(self, slave: int, address: int, count: int) -> List[int]:
-        """Lese mehrere Register."""
+        """Liest mehrere Holding-Register."""
         try:
             if not self._connected or not self._client:
                 _LOGGER.error(
@@ -179,7 +253,7 @@ class ModbusManagerHub:
             
             if isinstance(result, ExceptionResponse):
                 _LOGGER.error(
-                    "ModBus Fehler beim Lesen",
+                    "ModBus Fehler beim Lesen der Holding-Register",
                     extra={
                         "slave": slave,
                         "address": address,
@@ -192,7 +266,7 @@ class ModbusManagerHub:
             values = result.registers if result and hasattr(result, 'registers') else []
             
             _LOGGER.debug(
-                "Register erfolgreich gelesen",
+                "Holding-Register erfolgreich gelesen",
                 extra={
                     "slave": slave,
                     "address": address,
@@ -203,14 +277,75 @@ class ModbusManagerHub:
             
             return values
 
-        except ModbusException as error:
+        except ModbusException as e:
             _LOGGER.error(
-                "ModBus Fehler beim Lesen der Register",
+                "ModBus Fehler beim Lesen der Holding-Register",
                 extra={
-                    "error": error,
+                    "error": str(e),
                     "slave": slave,
                     "address": address,
-                    "count": count
+                    "count": count,
+                    "traceback": e.__traceback__
+                }
+            )
+            return []
+
+    async def async_read_input_registers(self, slave: int, address: int, count: int) -> List[int]:
+        """Liest mehrere Input-Register."""
+        try:
+            if not self._connected or not self._client:
+                _LOGGER.error(
+                    "ModBus Client nicht verbunden",
+                    extra={
+                        "slave": slave,
+                        "address": address,
+                        "count": count
+                    }
+                )
+                return []
+
+            # Lese die Register
+            result = await self._client.read_input_registers(
+                address=address,
+                count=count,
+                slave=slave
+            )
+            
+            if isinstance(result, ExceptionResponse):
+                _LOGGER.error(
+                    "ModBus Fehler beim Lesen der Input-Register",
+                    extra={
+                        "slave": slave,
+                        "address": address,
+                        "count": count,
+                        "error": result
+                    }
+                )
+                return []
+                
+            values = result.registers if result and hasattr(result, 'registers') else []
+            
+            _LOGGER.debug(
+                "Input-Register erfolgreich gelesen",
+                extra={
+                    "slave": slave,
+                    "address": address,
+                    "count": count,
+                    "values": values
+                }
+            )
+            
+            return values
+
+        except ModbusException as e:
+            _LOGGER.error(
+                "ModBus Fehler beim Lesen der Input-Register",
+                extra={
+                    "error": str(e),
+                    "slave": slave,
+                    "address": address,
+                    "count": count,
+                    "traceback": e.__traceback__
                 }
             )
             return []

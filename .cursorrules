@@ -1,0 +1,85 @@
+# Cursor Rules für Modbus Manager
+# Diese Regeln helfen bei der systematischen und qualitativen Entwicklung
+
+# 1. Code-Änderungen
+- Immer erst die komplette Verarbeitungskette verstehen, bevor Änderungen vorgenommen werden
+- Keine voreiligen Annahmen treffen
+- Maximal eine logische Änderung pro Commit
+- Bei Fehlern: Erst analysieren, dann handeln
+
+# 2. Validierung & Tests
+- Jede Änderung muss validiert werden
+- Fehlerbehandlung immer berücksichtigen
+- Logging für wichtige Schritte implementieren
+- Edge Cases dokumentieren und testen
+
+# 3. Code-Struktur
+- Klare Trennung von Validierung und Verarbeitung
+- Einheitliche Fehlerbehandlung
+- Konsistente Logging-Struktur
+- Typisierung wo möglich
+
+# 4. YAML Verarbeitung
+## Register Definitionen
+- Pflichtfelder prüfen: name, type
+- Register-Typ gegen TYPE_CONVERTERS validieren
+- Polling-Intervall setzen (default: normal)
+
+## Berechnete Register
+- Unterstützte Formate:
+  ```yaml
+  # Format 1: calculation
+  calculation:
+    type: "sum"|"mapping"|"conditional"|"formula"
+    sources: [...]  # für sum
+    source: "..."   # für mapping/conditional
+    formula: "..."  # für formula
+    map: "..."      # für mapping
+  
+  # Format 2: formula/variables
+  formula: "..."
+  variables:
+    - name: "..."
+      source: "..."
+  ```
+- Beide Formate unterstützen
+- Bei Konvertierung Datenintegrität sicherstellen
+
+# 5. Fehlerbehandlung
+- Spezifische Fehlermeldungen
+- Kontext in Logs:
+  - device
+  - register/calc_id
+  - relevante Werte
+  - traceback
+- Graceful Degradation wo möglich
+
+# 6. Performance
+- Batch-Verarbeitung für Register
+- Caching wo sinnvoll
+- Asynchrone Verarbeitung
+- Ressourcen-Monitoring
+
+# 7. Wartbarkeit
+- Klare Dokumentation
+- Aussagekräftige Variablennamen
+- Modulare Struktur
+- Wiederverwendbare Komponenten
+
+# 8. Vorgehen bei Änderungen
+1. Analysiere den kompletten Datenfluss
+2. Identifiziere betroffene Komponenten
+3. Prüfe bestehende Tests/Validierung
+4. Implementiere Änderungen schrittweise
+5. Validiere jede Änderung
+6. Dokumentiere Entscheidungen
+
+# 9. Review-Checkliste
+- [ ] Datenfluss verstanden?
+- [ ] Alle Edge Cases berücksichtigt?
+- [ ] Fehlerbehandlung implementiert?
+- [ ] Logging ausreichend?
+- [ ] Tests angepasst/erstellt?
+- [ ] Dokumentation aktualisiert?
+- [ ] Performance-Impact geprüft?
+- [ ] Breaking Changes dokumentiert? 
