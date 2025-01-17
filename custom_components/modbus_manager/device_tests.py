@@ -3,14 +3,15 @@ from __future__ import annotations
 
 import logging
 import asyncio
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Tuple, Set
 
 from homeassistant.core import HomeAssistant
+from homeassistant.const import ATTR_DEVICE_CLASS, ATTR_UNIT_OF_MEASUREMENT
 
 from .const import DOMAIN, NameType
 from .logger import ModbusManagerLogger
 from .device_base import ModbusManagerDeviceBase
-from .device_registers import ModbusManagerRegisterProcessor
+from .device_registers import ModbusManagerRegisterProcessor, TYPE_CONVERTERS
 from .device_entities import ModbusManagerEntityManager
 from .device_services import ModbusManagerServiceHandler
 from .device_calculations import ModbusManagerCalculator
@@ -30,23 +31,85 @@ class ModbusManagerTestSuite:
         calculator: ModbusManagerCalculator,
     ) -> None:
         """Initialisiere die Test Suite."""
-        self.hass = hass
-        self._device = device
-        self._register_processor = register_processor
-        self._entity_manager = entity_manager
-        self._service_handler = service_handler
-        self._calculator = calculator
+        try:
+            self.hass = hass
+            self._device = device
+            self._register_processor = register_processor
+            self._entity_manager = entity_manager
+            self._service_handler = service_handler
+            self._calculator = calculator
+            
+            # Initialisiere die Testergebnisse
+            self._test_results = {}
+            self._register_test_results = {}
+            
+            _LOGGER.debug(
+                "Test Suite initialisiert",
+                extra={"device": device.name}
+            )
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei der Initialisierung der Test Suite",
+                extra={
+                    "error": str(e),
+                    "device": device.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            raise
+
+    def _validate_register_value(self, register: Dict[str, Any], value: Any) -> Tuple[bool, Optional[str]]:
+        """Validiert einen Register-Wert basierend auf der Konfiguration."""
+        try:
+            # Prüfe ob der Wert existiert
+            if value is None:
+                return False, "Kein Wert verfügbar"
+                
+            # Prüfe Register-Typ
+            reg_type = register.get("type", "uint16")
+            if reg_type not in TYPE_CONVERTERS:
+                return False, f"Ungültiger Register-Typ: {reg_type}"
+                
+            # Prüfe Wertebereich basierend auf Typ
+            try:
+                converted_value = TYPE_CONVERTERS[reg_type](value)
+            except (ValueError, TypeError):
+                return False, f"Wert {value} kann nicht in Typ {reg_type} konvertiert werden"
+                
+            # Prüfe Skalierung
+            scale = float(register.get("scale", 1.0))
+            try:
+                scaled_value = float(converted_value) * scale
+            except (ValueError, TypeError):
+                return False, f"Skalierung fehlgeschlagen: {converted_value} * {scale}"
+                
+            return True, None
+            
+        except Exception as e:
+            return False, str(e)
+
+    def _validate_entity_attributes(self, entity: Any) -> Tuple[bool, List[str]]:
+        """Validiert die Attribute einer Entity."""
+        errors = []
         
-        # Initialisiere Test-Ergebnisse
-        self._register_test_results = {}
-        self._entity_test_results = {}
-        self._calculation_test_results = {}
-        self._service_test_results = {}
-        
-        _LOGGER.debug(
-            "Test Suite initialisiert",
-            extra={"device": device.name}
-        )
+        # Prüfe Pflicht-Attribute
+        if not hasattr(entity, "unique_id"):
+            errors.append("Unique ID fehlt")
+        if not hasattr(entity, "name"):
+            errors.append("Name fehlt")
+            
+        # Prüfe optionale Attribute
+        if hasattr(entity, "device_class") and not isinstance(entity.device_class, str):
+            errors.append("Ungültiger device_class Typ")
+        if hasattr(entity, "unit_of_measurement") and not isinstance(entity.unit_of_measurement, str):
+            errors.append("Ungültiger unit_of_measurement Typ")
+            
+        # Prüfe Device-Info
+        if not hasattr(entity, "device_info") or not entity.device_info:
+            errors.append("Device Info fehlt")
+            
+        return len(errors) == 0, errors
 
     async def run_register_tests(self) -> Tuple[bool, Dict[str, Any]]:
         """Führt Tests für die Register-Verarbeitung durch."""
@@ -58,35 +121,71 @@ class ModbusManagerTestSuite:
                 "details": []
             }
             
+            # Sammle alle Register-Adressen für Überlappungsprüfung
+            used_addresses: Dict[str, Set[int]] = {
+                "input": set(),
+                "holding": set()
+            }
+            
             # Teste Register-Definitionen
-            register_data = self._register_processor.register_data
-            for register_name, value in register_data.items():
-                try:
+            for interval, registers in self._register_processor.registers_by_interval.items():
+                for register in registers:
                     results["total_tests"] += 1
+                    test_result = {
+                        "test": f"Register {register.get('name')}",
+                        "interval": interval,
+                        "checks": []
+                    }
                     
-                    # Prüfe ob der Wert gültig ist
-                    if value is not None:
-                        results["passed_tests"] += 1
-                        results["details"].append({
-                            "test": f"Register {register_name}",
-                            "status": "passed",
-                            "value": value
+                    # Prüfe Register-Adresse
+                    address = register.get("address")
+                    count = register.get("count", 1)
+                    reg_type = register.get("register_type", "input")
+                    
+                    # Prüfe auf Überlappungen
+                    address_range = set(range(address, address + count))
+                    if address_range.intersection(used_addresses[reg_type]):
+                        test_result["checks"].append({
+                            "check": "address_overlap",
+                            "status": "failed",
+                            "message": f"Adresse {address} überlappt mit existierenden Registern"
                         })
                     else:
-                        results["failed_tests"] += 1
-                        results["details"].append({
-                            "test": f"Register {register_name}",
-                            "status": "failed",
-                            "error": "Kein Wert verfügbar"
+                        used_addresses[reg_type].update(address_range)
+                        test_result["checks"].append({
+                            "check": "address_overlap",
+                            "status": "passed"
                         })
+                    
+                    # Prüfe Register-Wert
+                    register_name = register.get("name")
+                    if register_name:
+                        value = self._register_processor.register_data.get(register_name)
+                        is_valid, error = self._validate_register_value(register, value)
                         
-                except Exception as e:
-                    results["failed_tests"] += 1
-                    results["details"].append({
-                        "test": f"Register {register_name}",
-                        "status": "error",
-                        "error": str(e)
-                    })
+                        if is_valid:
+                            test_result["checks"].append({
+                                "check": "value_validation",
+                                "status": "passed",
+                                "value": value
+                            })
+                        else:
+                            test_result["checks"].append({
+                                "check": "value_validation",
+                                "status": "failed",
+                                "error": error
+                            })
+                    
+                    # Bewerte Gesamtergebnis des Register-Tests
+                    failed_checks = [c for c in test_result["checks"] if c["status"] == "failed"]
+                    if failed_checks:
+                        results["failed_tests"] += 1
+                        test_result["status"] = "failed"
+                    else:
+                        results["passed_tests"] += 1
+                        test_result["status"] = "passed"
+                        
+                    results["details"].append(test_result)
                     
             # Speichere die Ergebnisse
             self._test_results["register_tests"] = results
@@ -114,34 +213,69 @@ class ModbusManagerTestSuite:
                 "details": []
             }
             
+            # Sammle alle Entity-IDs für Duplikat-Prüfung
+            entity_ids = set()
+            
             # Teste Entity-Zustände
             for entity_id, entity in self._entity_manager.entities.items():
-                try:
-                    results["total_tests"] += 1
-                    
-                    # Prüfe ob die Entity einen Zustand hat
-                    if hasattr(entity, "_attr_native_value"):
-                        results["passed_tests"] += 1
-                        results["details"].append({
-                            "test": f"Entity {entity_id}",
-                            "status": "passed",
-                            "value": entity._attr_native_value
-                        })
-                    else:
-                        results["failed_tests"] += 1
-                        results["details"].append({
-                            "test": f"Entity {entity_id}",
-                            "status": "failed",
-                            "error": "Kein Zustand verfügbar"
-                        })
-                        
-                except Exception as e:
-                    results["failed_tests"] += 1
-                    results["details"].append({
-                        "test": f"Entity {entity_id}",
-                        "status": "error",
-                        "error": str(e)
+                results["total_tests"] += 1
+                test_result = {
+                    "test": f"Entity {entity_id}",
+                    "checks": []
+                }
+                
+                # Prüfe auf doppelte Entity-IDs
+                if entity_id in entity_ids:
+                    test_result["checks"].append({
+                        "check": "unique_id",
+                        "status": "failed",
+                        "error": "Doppelte Entity-ID gefunden"
                     })
+                else:
+                    entity_ids.add(entity_id)
+                    test_result["checks"].append({
+                        "check": "unique_id",
+                        "status": "passed"
+                    })
+                
+                # Prüfe Entity-Attribute
+                is_valid, errors = self._validate_entity_attributes(entity)
+                if is_valid:
+                    test_result["checks"].append({
+                        "check": "attributes",
+                        "status": "passed"
+                    })
+                else:
+                    test_result["checks"].append({
+                        "check": "attributes",
+                        "status": "failed",
+                        "errors": errors
+                    })
+                
+                # Prüfe Entity-Zustand
+                if hasattr(entity, "_attr_native_value"):
+                    test_result["checks"].append({
+                        "check": "state",
+                        "status": "passed",
+                        "value": entity._attr_native_value
+                    })
+                else:
+                    test_result["checks"].append({
+                        "check": "state",
+                        "status": "failed",
+                        "error": "Kein Zustand verfügbar"
+                    })
+                
+                # Bewerte Gesamtergebnis des Entity-Tests
+                failed_checks = [c for c in test_result["checks"] if c["status"] == "failed"]
+                if failed_checks:
+                    results["failed_tests"] += 1
+                    test_result["status"] = "failed"
+                else:
+                    results["passed_tests"] += 1
+                    test_result["status"] = "passed"
+                    
+                results["details"].append(test_result)
                     
             # Speichere die Ergebnisse
             self._test_results["entity_tests"] = results

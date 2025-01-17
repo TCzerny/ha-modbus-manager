@@ -6,14 +6,44 @@ from typing import Any, Dict, Optional
 
 from homeassistant.components.template.sensor import TemplateSensor
 from homeassistant.components.template.binary_sensor import TemplateBinarySensor
+from homeassistant.components.sensor import (
+    SensorEntity,
+    SensorStateClass,
+    SensorDeviceClass
+)
+from homeassistant.components.binary_sensor import (
+    BinarySensorEntity,
+    BinarySensorDeviceClass
+)
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.typing import ConfigType
+from homeassistant.helpers.template import Template, TemplateError
+from homeassistant.helpers.event import async_track_template_result, TrackTemplate
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
+
+# State Class Mapping
+STATE_CLASS_MAPPING = {
+    "measurement": SensorStateClass.MEASUREMENT,
+    "total": SensorStateClass.TOTAL,
+    "total_increasing": SensorStateClass.TOTAL_INCREASING,
+}
+
+# Device Class Mapping
+DEVICE_CLASS_MAPPING = {
+    "battery": SensorDeviceClass.BATTERY,
+    "current": SensorDeviceClass.CURRENT,
+    "energy": SensorDeviceClass.ENERGY,
+    "frequency": SensorDeviceClass.FREQUENCY,
+    "power": SensorDeviceClass.POWER,
+    "power_factor": SensorDeviceClass.POWER_FACTOR,
+    "temperature": SensorDeviceClass.TEMPERATURE,
+    "voltage": SensorDeviceClass.VOLTAGE,
+}
 
 class ModbusManagerTemplateEntity:
     """Basis-Klasse für Template Entities."""
@@ -128,8 +158,34 @@ class ModbusManagerTemplateSensor(ModbusManagerTemplateEntity, SensorEntity):
         
         # Sensor-spezifische Eigenschaften
         self._attr_native_unit_of_measurement = config.get("unit_of_measurement")
-        self._attr_device_class = config.get("device_class")
-        self._attr_state_class = config.get("state_class")
+        
+        # Device Class
+        if device_class := config.get("device_class"):
+            if device_class in DEVICE_CLASS_MAPPING:
+                self._attr_device_class = DEVICE_CLASS_MAPPING[device_class]
+            else:
+                _LOGGER.warning(
+                    "Ungültige device_class",
+                    extra={
+                        "device_class": device_class,
+                        "name": name,
+                        "valid_classes": list(DEVICE_CLASS_MAPPING.keys())
+                    }
+                )
+        
+        # State Class
+        if state_class := config.get("state_class"):
+            if state_class in STATE_CLASS_MAPPING:
+                self._attr_state_class = STATE_CLASS_MAPPING[state_class]
+            else:
+                _LOGGER.warning(
+                    "Ungültige state_class",
+                    extra={
+                        "state_class": state_class,
+                        "name": name,
+                        "valid_classes": list(STATE_CLASS_MAPPING.keys())
+                    }
+                )
 
     def _handle_state_update(self, result):
         """Handle the state update."""
@@ -147,11 +203,12 @@ class ModbusManagerTemplateBinarySensor(ModbusManagerTemplateEntity, BinarySenso
             try:
                 self._attr_device_class = BinarySensorDeviceClass(device_class)
             except ValueError:
-                _LOGGER.error(
-                    f"Ungültige Device Class für Binary Sensor: {device_class}",
+                _LOGGER.warning(
+                    "Ungültige device_class für Binary Sensor",
                     extra={
+                        "device_class": device_class,
                         "name": name,
-                        "device": device.name,
+                        "valid_classes": [cls.value for cls in BinarySensorDeviceClass]
                     }
                 )
 

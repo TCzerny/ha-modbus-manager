@@ -1,24 +1,16 @@
-"""Modbus Manager Base Device Class."""
+"""Modbus Manager Device Base."""
 from __future__ import annotations
 
-import logging
+from typing import Dict, Any, Optional, List, Set
 import asyncio
-from datetime import timedelta
-from typing import Any, Dict, List, Optional, Callable
-
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import Entity
-from homeassistant.helpers.update_coordinator import (
-    CoordinatorEntity,
-    DataUpdateCoordinator
-)
-from homeassistant.const import CONF_NAME, CONF_SLAVE
-from homeassistant.helpers import entity_registry as er, device_registry as dr
-from homeassistant.helpers.entity import DeviceInfo
+import logging
+import json
+import os
+import yaml
+from datetime import datetime
 
 from .const import DOMAIN, NameType, DEFAULT_SLAVE
 from .logger import ModbusManagerLogger
-from .helpers import EntityNameHelper
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -42,10 +34,10 @@ class ModbusManagerDeviceBase:
             self._slave = config.get(CONF_SLAVE, DEFAULT_SLAVE)
             
             # Initialisiere den Name Helper
-            self.name_helper = EntityNameHelper(hub.entry)
+            self.name_helper = EntityNameHelper(hub.entry, prefix=None)
             
             # Generiere eindeutige Namen
-            self.name = self.name_helper.convert(config[CONF_NAME], NameType.BASE_NAME)
+            self.name = config[CONF_NAME]  # Verwende den Original-Namen
             self.unique_id = self.name_helper.convert(config[CONF_NAME], NameType.UNIQUE_ID)
             
             # Setze die Geräte-Identifikation
@@ -112,25 +104,36 @@ class ModbusManagerDeviceBase:
 
     @property
     def device_info(self) -> DeviceInfo:
-        """Liefert die Geräte-Informationen."""
+        """Return device info."""
+        return self._attr_device_info
+
+    def update_entities(self) -> None:
+        """Aktualisiere die Entities aus dem Entity Manager."""
         try:
-            return DeviceInfo(
-                identifiers={(DOMAIN, self.unique_id)},
-                name=self.name,
-                manufacturer=self.manufacturer,
-                model=self.model,
-                via_device=(DOMAIN, self._hub.unique_id)
-            )
+            if hasattr(self, 'entity_manager') and self.entity_manager:
+                self.entities = self.entity_manager.entities
+                _LOGGER.debug(
+                    "Entities aus Entity Manager aktualisiert",
+                    extra={
+                        "device": self.name,
+                        "entity_count": len(self.entities),
+                        "entity_types": [type(e).__name__ for e in self.entities.values()]
+                    }
+                )
+            else:
+                _LOGGER.warning(
+                    "Entity Manager nicht verfügbar",
+                    extra={"device": self.name}
+                )
         except Exception as e:
             _LOGGER.error(
-                "Fehler beim Abrufen der Geräte-Informationen",
+                "Fehler beim Aktualisieren der Entities",
                 extra={
                     "error": str(e),
                     "device": self.name,
-                    "traceback": e.__traceback__
+                    "traceback": str(e.__traceback__)
                 }
             )
-            raise
 
     async def async_setup(self) -> bool:
         """Setup des Geräts."""

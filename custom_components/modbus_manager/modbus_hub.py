@@ -43,41 +43,53 @@ _LOGGER = ModbusManagerLogger(__name__)
 class ModbusManagerHub:
     """ModbusManager Hub Klasse."""
 
-    def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry | dict) -> None:
         """Initialisiere den ModbusManager Hub."""
         self.hass = hass
         self.entry = entry
         self._devices = {}
         self._client = None
         self._lock = asyncio.Lock()
+        self._connected = False
         
         # Initialisiere den Name Helper
         self.name_helper = EntityNameHelper(entry)
         
+        # Extrahiere die Konfigurationsdaten
+        config_data = entry.data if hasattr(entry, 'data') else entry
+        
         # Generiere eindeutige Namen
-        self.name = self.name_helper.convert(entry.data[CONF_NAME], NameType.BASE_NAME)
-        self.unique_id = self.name_helper.convert(entry.data[CONF_NAME], NameType.UNIQUE_ID)
+        self._name = self.name_helper.convert(config_data[CONF_NAME], NameType.BASE_NAME)
+        self._unique_id = self.name_helper.convert(config_data[CONF_NAME], NameType.UNIQUE_ID)
         
         _LOGGER.debug(
             "ModbusManager Hub initialisiert",
             extra={
-                "name": self.name,
-                "unique_id": self.unique_id,
-                "entry_id": entry.entry_id
+                "name": self._name,
+                "unique_id": self._unique_id,
+                "entry_id": entry.entry_id if hasattr(entry, 'entry_id') else None
             }
         )
 
     @property
     def name(self) -> str:
         """Gibt den Namen des Hubs zurück."""
-        return self.entry.title
+        return self._name
+
+    @property
+    def unique_id(self) -> str:
+        """Gibt die eindeutige ID des Hubs zurück."""
+        return self._unique_id
 
     async def async_setup(self) -> bool:
         """Richte den ModbusManager Hub ein."""
         try:
+            # Extrahiere die Konfigurationsdaten
+            config_data = self.entry.data if hasattr(self.entry, 'data') else self.entry
+            
             # Konfiguriere den ModBus Client
-            host = self.entry.data[CONF_HOST]
-            port = self.entry.data.get(CONF_PORT, DEFAULT_PORT)
+            host = config_data[CONF_HOST]
+            port = config_data.get(CONF_PORT, DEFAULT_PORT)
             
             self._client = AsyncModbusTcpClient(
                 host=host,
@@ -95,7 +107,7 @@ class ModbusManagerHub:
                     extra={
                         "host": host,
                         "port": port,
-                        "entry_id": self.entry.entry_id
+                        "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
                     }
                 )
                 return False
@@ -106,17 +118,17 @@ class ModbusManagerHub:
                 extra={
                     "host": host,
                     "port": port,
-                    "entry_id": self.entry.entry_id
+                    "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
                 }
             )
 
             # Initialisiere das Device
-            device_type = self.entry.data.get("device_type", "")
+            device_type = config_data.get("device_type", "")
             device_config = {
-                CONF_NAME: self.entry.data[CONF_NAME],
-                CONF_SLAVE: self.entry.data.get(CONF_SLAVE, DEFAULT_SLAVE),
-                CONF_HOST: self.entry.data[CONF_HOST],
-                CONF_PORT: self.entry.data.get(CONF_PORT, DEFAULT_PORT),
+                CONF_NAME: config_data[CONF_NAME],
+                CONF_SLAVE: config_data.get(CONF_SLAVE, DEFAULT_SLAVE),
+                CONF_HOST: config_data[CONF_HOST],
+                CONF_PORT: config_data.get(CONF_PORT, DEFAULT_PORT),
             }
             
             # Lade die Gerätedefinitionen
@@ -143,11 +155,11 @@ class ModbusManagerHub:
             )
             
             if await device.async_setup():
-                self._devices[self.entry.data[CONF_NAME]] = device
+                self._devices[config_data[CONF_NAME]] = device
                 _LOGGER.info(
                     "Device erfolgreich initialisiert",
                     extra={
-                        "name": self.entry.data[CONF_NAME],
+                        "name": config_data[CONF_NAME],
                         "type": device_type
                     }
                 )
@@ -155,7 +167,7 @@ class ModbusManagerHub:
                 _LOGGER.error(
                     "Device-Initialisierung fehlgeschlagen",
                     extra={
-                        "name": self.entry.data[CONF_NAME],
+                        "name": config_data[CONF_NAME],
                         "type": device_type
                     }
                 )
@@ -172,7 +184,10 @@ class ModbusManagerHub:
         except Exception as error:
             _LOGGER.error(
                 "Fehler beim Setup des ModBus Hubs",
-                extra={"error": error, "entry_id": self.entry.entry_id}
+                extra={
+                    "error": error,
+                    "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
+                }
             )
             return False
 

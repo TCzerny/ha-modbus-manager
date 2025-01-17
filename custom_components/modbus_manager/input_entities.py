@@ -35,6 +35,7 @@ class ModbusManagerInputNumber(NumberEntity):
         self._name = device.name_helper.convert(name, NameType.BASE_NAME)
         self._attr_name = device.name_helper.convert(name, NameType.DISPLAY_NAME)
         self._attr_unique_id = device.name_helper.convert(name, NameType.UNIQUE_ID)
+        self.entity_id = device.name_helper.convert(name, NameType.ENTITY_ID, domain="number")
         
         # Entity-Eigenschaften
         self._attr_device_info = device.device_info
@@ -54,6 +55,7 @@ class ModbusManagerInputNumber(NumberEntity):
                 "name": self._name,
                 "display_name": self._attr_name,
                 "unique_id": self._attr_unique_id,
+                "entity_id": self.entity_id,
                 "min": self._attr_native_min_value,
                 "max": self._attr_native_max_value,
                 "step": self._attr_native_step,
@@ -128,6 +130,7 @@ class ModbusManagerInputSelect(SelectEntity):
         self._name = device.name_helper.convert(name, NameType.BASE_NAME)
         self._attr_name = device.name_helper.convert(name, NameType.DISPLAY_NAME)
         self._attr_unique_id = device.name_helper.convert(name, NameType.UNIQUE_ID)
+        self.entity_id = device.name_helper.convert(name, NameType.ENTITY_ID, domain="select")
         
         # Entity-Eigenschaften
         self._attr_device_info = device.device_info
@@ -143,6 +146,7 @@ class ModbusManagerInputSelect(SelectEntity):
                 "name": self._name,
                 "display_name": self._attr_name,
                 "unique_id": self._attr_unique_id,
+                "entity_id": self.entity_id,
                 "options": self._attr_options,
                 "options_map": self._options_map,
                 "current_option": self._attr_current_option,

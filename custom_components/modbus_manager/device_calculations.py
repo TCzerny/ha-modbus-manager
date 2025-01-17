@@ -6,9 +6,9 @@ import asyncio
 import ast
 import operator
 
-from .logger import ModbusManagerLogger
-from .device_base import ModbusManagerDeviceBase
-from .const import NameType
+from logger import ModbusManagerLogger
+from device_base import ModbusManagerDeviceBase
+from const import NameType
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -17,14 +17,15 @@ class ModbusManagerCalculator:
 
     # Unterstützte Operatoren für Berechnungen
     _OPERATORS = {
-        ast.Add: operator.add,
-        ast.Sub: operator.sub,
-        ast.Mult: operator.mul,
-        ast.Div: operator.truediv,
-        ast.FloorDiv: operator.floordiv,
-        ast.Pow: operator.pow,
-        ast.Mod: operator.mod,
-        ast.USub: operator.neg,
+        ast.Add: lambda x, y: float(x) + float(y),
+        ast.Sub: lambda x, y: float(x) - float(y),
+        ast.Mult: lambda x, y: float(x) * float(y),
+        ast.Div: lambda x, y: float(x) / float(y) if float(y) != 0 else 0,
+        ast.FloorDiv: lambda x, y: float(x) // float(y) if float(y) != 0 else 0,
+        ast.Mod: lambda x, y: float(x) % float(y) if float(y) != 0 else 0,
+        ast.Pow: lambda x, y: float(x) ** float(y),
+        ast.USub: lambda x: -float(x),
+        ast.UAdd: lambda x: float(x),
     }
 
     def __init__(
@@ -233,20 +234,30 @@ class ModbusManagerCalculator:
             )
             return {}
 
-    async def calculate_value(self, formula: str, variables: Dict[str, Any]) -> Optional[float]:
-        """Berechnet einen Wert basierend auf einer Formel und Variablen."""
+    async def calculate_value(self, formula: str, variables: Dict[str, Any]) -> Optional[Any]:
+        """Berechnet den Wert einer Formel mit den gegebenen Variablen."""
         try:
             # Parse die Formel
-            node = ast.parse(formula, mode='eval')
+            tree = ast.parse(formula, mode='eval')
             
-            # Evaluiere den AST
-            result = self._eval_node(node.body, variables)
+            # Evaluiere die Formel
+            result = self._eval_node(tree.body, variables)
             
-            return float(result)
+            _LOGGER.debug(
+                "Formel erfolgreich ausgewertet",
+                extra={
+                    "formula": formula,
+                    "variables": variables,
+                    "result": result,
+                    "device": self._device.name
+                }
+            )
+            
+            return result
             
         except Exception as e:
             _LOGGER.error(
-                "Fehler bei der Berechnung des Werts",
+                "Fehler bei der Formel-Auswertung",
                 extra={
                     "error": str(e),
                     "formula": formula,
@@ -258,39 +269,70 @@ class ModbusManagerCalculator:
             return None
 
     def _eval_node(self, node: ast.AST, variables: Dict[str, Any]) -> Any:
-        """Evaluiert einen AST-Knoten."""
+        """Evaluiert einen AST-Knoten rekursiv."""
         try:
             # Name (Variable)
             if isinstance(node, ast.Name):
                 if node.id not in variables:
-                    raise ValueError(f"Unbekannte Variable: {node.id}")
+                    raise ValueError(f"Variable {node.id} nicht gefunden")
                 return variables[node.id]
-                
-            # Konstante
+            
+            # Konstante (Zahl)
             elif isinstance(node, ast.Constant):
                 return node.value
-                
-            # Unärer Operator
+            
+            # Unärer Operator (z.B. -x)
             elif isinstance(node, ast.UnaryOp):
                 operand = self._eval_node(node.operand, variables)
+                if type(node.op) not in self._OPERATORS:
+                    raise ValueError(f"Unärer Operator {type(node.op).__name__} nicht unterstützt")
                 return self._OPERATORS[type(node.op)](operand)
-                
-            # Binärer Operator
+            
+            # Binärer Operator (z.B. x + y)
             elif isinstance(node, ast.BinOp):
                 left = self._eval_node(node.left, variables)
                 right = self._eval_node(node.right, variables)
+                if type(node.op) not in self._OPERATORS:
+                    raise ValueError(f"Binärer Operator {type(node.op).__name__} nicht unterstützt")
                 return self._OPERATORS[type(node.op)](left, right)
-                
+            
+            # Vergleichsoperator (z.B. x > y)
+            elif isinstance(node, ast.Compare):
+                left = self._eval_node(node.left, variables)
+                for op, comparator in zip(node.ops, node.comparators):
+                    right = self._eval_node(comparator, variables)
+                    if isinstance(op, ast.Gt):
+                        return float(left) > float(right)
+                    elif isinstance(op, ast.Lt):
+                        return float(left) < float(right)
+                    elif isinstance(op, ast.GtE):
+                        return float(left) >= float(right)
+                    elif isinstance(op, ast.LtE):
+                        return float(left) <= float(right)
+                    elif isinstance(op, ast.Eq):
+                        return float(left) == float(right)
+                    elif isinstance(op, ast.NotEq):
+                        return float(left) != float(right)
+                    else:
+                        raise ValueError(f"Vergleichsoperator {type(op).__name__} nicht unterstützt")
+            
+            # If-Expression (x if condition else y)
+            elif isinstance(node, ast.IfExp):
+                test = self._eval_node(node.test, variables)
+                if test:
+                    return self._eval_node(node.body, variables)
+                else:
+                    return self._eval_node(node.orelse, variables)
+            
             else:
-                raise ValueError(f"Nicht unterstützter Knotentyp: {type(node)}")
+                raise ValueError(f"Nicht unterstützter AST-Knoten: {type(node).__name__}")
                 
         except Exception as e:
             _LOGGER.error(
-                "Fehler bei der Evaluierung des AST-Knotens",
+                "Fehler bei der Knoten-Auswertung",
                 extra={
                     "error": str(e),
-                    "node_type": type(node),
-                    "variables": variables,
+                    "node_type": type(node).__name__,
                     "device": self._device.name,
                     "traceback": e.__traceback__
                 }

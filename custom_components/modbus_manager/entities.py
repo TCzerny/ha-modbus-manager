@@ -5,16 +5,49 @@ import logging
 import asyncio
 from typing import Any, Dict, Optional
 
-from homeassistant.components.sensor import SensorEntity
+from homeassistant.components.sensor import (
+    SensorEntity,
+    SensorStateClass,
+    SensorDeviceClass,
+)
 from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
 from homeassistant.core import callback
 
 from .helpers import EntityNameHelper, NameType
+from .logger import ModbusManagerLogger
 
-_LOGGER = logging.getLogger(__name__)
+_LOGGER = ModbusManagerLogger(__name__)
+
+STATE_CLASS_MAPPING = {
+    "measurement": SensorStateClass.MEASUREMENT,
+    "total": SensorStateClass.TOTAL,
+    "total_increasing": SensorStateClass.TOTAL_INCREASING,
+}
+
+DEVICE_CLASS_MAPPING = {
+    "battery": SensorDeviceClass.BATTERY,
+    "current": SensorDeviceClass.CURRENT,
+    "energy": SensorDeviceClass.ENERGY,
+    "frequency": SensorDeviceClass.FREQUENCY,
+    "power": SensorDeviceClass.POWER,
+    "power_factor": SensorDeviceClass.POWER_FACTOR,
+    "temperature": SensorDeviceClass.TEMPERATURE,
+    "voltage": SensorDeviceClass.VOLTAGE,
+}
+
+DEVICE_CLASS_UNITS = {
+    SensorDeviceClass.ENERGY: "kWh",
+    SensorDeviceClass.POWER: "W",
+    SensorDeviceClass.CURRENT: "A",
+    SensorDeviceClass.VOLTAGE: "V",
+    SensorDeviceClass.TEMPERATURE: "°C",
+    SensorDeviceClass.BATTERY: "%",
+    SensorDeviceClass.FREQUENCY: "Hz",
+    SensorDeviceClass.POWER_FACTOR: "%"
+}
 
 class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
-    """Modbus Register Entity."""
+    """ModbusRegisterEntity."""
 
     def __init__(
         self,
@@ -24,7 +57,9 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
         coordinator: DataUpdateCoordinator,
     ) -> None:
         """Initialisiert die ModbusRegisterEntity."""
-        super().__init__(coordinator)
+        # Initialisiere die Basis-Klassen
+        CoordinatorEntity.__init__(self, coordinator)
+        SensorEntity.__init__(self)
         
         self.device = device
         self.name_helper = EntityNameHelper(device.config_entry)
@@ -45,6 +80,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
         # Setze die Entity-Attribute
         self._attr_name = self.display_name
         self._attr_unique_id = self.unique_id
+        self._attr_has_entity_name = True
         
         # Device Info
         self._attr_device_info = device.device_info
@@ -54,7 +90,18 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
         
         # Setze state_class wenn vorhanden
         if "state_class" in register_config:
-            self._attr_state_class = register_config["state_class"]
+            state_class = register_config["state_class"].lower()
+            if state_class in STATE_CLASS_MAPPING:
+                self._attr_state_class = STATE_CLASS_MAPPING[state_class]
+            else:
+                _LOGGER.warning(
+                    "Ungültige state_class",
+                    extra={
+                        "state_class": state_class,
+                        "entity_id": self.entity_id,
+                        "valid_classes": list(STATE_CLASS_MAPPING.keys())
+                    }
+                )
             
         _LOGGER.debug(
             "ModbusRegisterEntity initialisiert",
@@ -64,31 +111,36 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 "register_name": self.register_name,
                 "display_name": self.display_name,
                 "unique_id": self.unique_id,
-                "entity_id": self.entity_id
+                "entity_id": self.entity_id,
+                "attributes": {
+                    "device_class": self._attr_device_class,
+                    "unit": self._attr_native_unit_of_measurement,
+                    "state_class": self._attr_state_class
+                }
             }
         )
 
     def _setup_device_class_and_unit(self) -> None:
         """Setzt device_class und unit_of_measurement basierend auf der Konfiguration."""
-        # Standard-Einheiten für verschiedene Gerätetypen
-        DEVICE_CLASS_UNITS = {
-            "energy": "kWh",
-            "power": "W",
-            "current": "A",
-            "voltage": "V",
-            "temperature": "°C",
-            "battery": "%",
-            "frequency": "Hz"
-        }
-        
         # Setze device_class wenn vorhanden
         if "device_class" in self.register_config:
-            self._attr_device_class = self.register_config["device_class"]
-            
-            # Setze Standard-Einheit basierend auf device_class wenn keine Einheit definiert ist
-            if ("unit_of_measurement" not in self.register_config and 
-                self._attr_device_class in DEVICE_CLASS_UNITS):
-                self._attr_native_unit_of_measurement = DEVICE_CLASS_UNITS[self._attr_device_class]
+            device_class = self.register_config["device_class"].lower()
+            if device_class in DEVICE_CLASS_MAPPING:
+                self._attr_device_class = DEVICE_CLASS_MAPPING[device_class]
+                
+                # Setze Standard-Einheit basierend auf device_class wenn keine Einheit definiert ist
+                if ("unit_of_measurement" not in self.register_config and 
+                    self._attr_device_class in DEVICE_CLASS_UNITS):
+                    self._attr_native_unit_of_measurement = DEVICE_CLASS_UNITS[self._attr_device_class]
+            else:
+                _LOGGER.warning(
+                    "Ungültige device_class",
+                    extra={
+                        "device_class": device_class,
+                        "entity_id": self.entity_id,
+                        "valid_classes": list(DEVICE_CLASS_MAPPING.keys())
+                    }
+                )
         
         # Überschreibe mit spezifischer Einheit wenn definiert
         if "unit_of_measurement" in self.register_config:
@@ -117,7 +169,12 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
             "Entity zu Home Assistant hinzugefügt",
             extra={
                 "entity_id": self.entity_id,
-                "register_name": self.register_name
+                "register_name": self.register_name,
+                "attributes": {
+                    "device_class": self._attr_device_class,
+                    "unit": self._attr_native_unit_of_measurement,
+                    "state_class": self._attr_state_class
+                }
             }
         )
 
@@ -233,7 +290,12 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                         "entity": self.display_name,
                         "original_name": self.original_register_name,
                         "register_name": self.register_name,
-                        "value": self._attr_native_value
+                        "value": self._attr_native_value,
+                        "attributes": {
+                            "device_class": self._attr_device_class,
+                            "unit": self._attr_native_unit_of_measurement,
+                            "state_class": self._attr_state_class
+                        }
                     }
                 )
             else:
@@ -253,7 +315,6 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 extra={
                     "error": str(e),
                     "entity": self.display_name,
-                    "original_name": self.original_register_name,
                     "register_name": self.register_name,
                     "device": self.device.name,
                     "traceback": str(e.__traceback__)

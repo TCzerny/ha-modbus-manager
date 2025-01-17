@@ -26,21 +26,35 @@ async def async_get_available_device_definitions() -> dict[str, str]:
     definition_dir = os.path.join(os.path.dirname(__file__), "device_definitions")
     
     try:
+        # Lese Verzeichnisinhalt
         filenames = os.listdir(definition_dir)
         
         for filename in filenames:
             if filename.endswith(".yaml"):
                 device_type = filename[:-5]  # Entferne .yaml
                 try:
-                    with open(os.path.join(definition_dir, filename), mode='r', encoding='utf-8') as f:
-                        device_config = yaml.safe_load(f)
+                    async with aiofiles.open(os.path.join(definition_dir, filename), mode='r', encoding='utf-8') as f:
+                        content = await f.read()
+                        device_config = yaml.safe_load(content)
                         display_name = device_config.get("device_info", {}).get("name", device_type)
                         definitions[device_type] = display_name
                 except Exception as e:
-                    _LOGGER.error(f"Fehler beim Lesen von {filename}: {str(e)}")
+                    _LOGGER.error(
+                        "Fehler beim Lesen der Gerätedefinition",
+                        extra={
+                            "file": filename,
+                            "error": str(e)
+                        }
+                    )
                     definitions[device_type] = device_type.replace("_", " ").title()
     except Exception as e:
-        _LOGGER.error(f"Fehler beim Lesen des Verzeichnisses: {str(e)}")
+        _LOGGER.error(
+            "Fehler beim Lesen des Verzeichnisses",
+            extra={
+                "directory": definition_dir,
+                "error": str(e)
+            }
+        )
     
     return definitions
 
