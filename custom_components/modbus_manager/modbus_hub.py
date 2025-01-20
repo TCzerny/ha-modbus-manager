@@ -57,11 +57,22 @@ class ModbusManagerHub:
         self._entity_setup_tasks = {}
         self._pending_entities = set()
         
+        # Extrahiere und validiere die Konfigurationsdaten
+        if hasattr(entry, 'data'):
+            config_data = entry.data
+        elif isinstance(entry, dict):
+            config_data = entry
+        else:
+            raise ValueError(f"Ungültige Konfiguration: {type(entry)}")
+        
+        # Prüfe ob alle erforderlichen Konfigurationsfelder vorhanden sind
+        required_fields = [CONF_NAME, CONF_HOST]
+        for field in required_fields:
+            if field not in config_data:
+                raise ValueError(f"Pflichtfeld {field} fehlt in der Konfiguration")
+        
         # Initialisiere den Name Helper
         self.name_helper = EntityNameHelper(entry)
-        
-        # Extrahiere die Konfigurationsdaten
-        config_data = entry.data if hasattr(entry, 'data') else entry
         
         # Generiere eindeutige Namen
         self._name = self.name_helper.convert(config_data[CONF_NAME], NameType.BASE_NAME)

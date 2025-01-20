@@ -36,7 +36,18 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data.setdefault(DOMAIN, {})
         
         # Erstelle und initialisiere den Hub
-        hub = ModbusManagerHub(hass, entry)
+        try:
+            hub = ModbusManagerHub(hass, entry)
+        except ValueError as config_error:
+            _LOGGER.error(
+                "Ungültige Hub-Konfiguration",
+                extra={
+                    "error": str(config_error),
+                    "entry_id": entry.entry_id
+                }
+            )
+            return False
+            
         if not await hub.async_setup():
             _LOGGER.error(
                 "Hub-Setup fehlgeschlagen",
@@ -96,12 +107,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
             return False
             
-    except Exception as e:
+    except Exception as error:
         _LOGGER.error(
-            "Unerwarteter Fehler beim Setup",
+            "Fehler beim Setup der Integration",
             extra={
-                "error": str(e),
-                "entry_id": entry.entry_id
+                "error": str(error),
+                "entry_id": entry.entry_id,
+                "traceback": error.__traceback__
             }
         )
         return False

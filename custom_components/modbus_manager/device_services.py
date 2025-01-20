@@ -54,6 +54,15 @@ class ModbusManagerServiceHandler:
             # Hole die Service-Definitionen
             services = service_definitions.get("services", {})
             
+            _LOGGER.debug(
+                "Starte Service-Setup",
+                extra={
+                    "device": self._device.name,
+                    "service_count": len(services),
+                    "services": list(services.keys())
+                }
+            )
+            
             # Verarbeite die Services
             for service_id, service_config in services.items():
                 try:
@@ -66,6 +75,17 @@ class ModbusManagerServiceHandler:
                     if handler:
                         # Registriere den Service
                         service_name = self._device.name_helper.convert(service_id, NameType.SERVICE_NAME)
+                        
+                        _LOGGER.debug(
+                            "Registriere Service",
+                            extra={
+                                "device": self._device.name,
+                                "service_id": service_id,
+                                "service_name": service_name,
+                                "config": service_config
+                            }
+                        )
+                        
                         self._hass.services.async_register(
                             DOMAIN,
                             service_name,
@@ -75,6 +95,15 @@ class ModbusManagerServiceHandler:
                         
                         # Speichere die Service-Konfiguration
                         self._services[service_id] = service_config
+                        
+                        _LOGGER.info(
+                            "Service erfolgreich registriert",
+                            extra={
+                                "device": self._device.name,
+                                "service": service_name,
+                                "domain": DOMAIN
+                            }
+                        )
                         
                 except Exception as e:
                     _LOGGER.error(
@@ -223,36 +252,113 @@ class ModbusManagerServiceHandler:
     async def _create_service_handler(self, service_id: str, service_config: Dict[str, Any]) -> Optional[Callable]:
         """Erstellt einen Handler für einen Service."""
         try:
+            service_type = service_config["type"]
+            register = service_config["register"]
+            
+            _LOGGER.debug(
+                "Erstelle Service-Handler",
+                extra={
+                    "device": self._device.name,
+                    "service_id": service_id,
+                    "type": service_type,
+                    "register": register,
+                    "config": {k: v for k, v in service_config.items() if k != "register"}
+                }
+            )
+            
             async def service_handler(call: ServiceCall) -> None:
-                """Handler für den Service."""
+                """Handler für den Service-Aufruf."""
                 try:
-                    # Hole den Wert aus dem Service-Call
+                    # Validiere den Service-Aufruf
+                    if not call.data:
+                        _LOGGER.error(
+                            "Keine Daten im Service-Aufruf",
+                            extra={
+                                "device": self._device.name,
+                                "service": service_id,
+                                "call": call.__dict__
+                            }
+                        )
+                        return
+
                     value = call.data.get("value")
                     if value is None:
                         _LOGGER.error(
-                            "Kein Wert im Service-Call",
+                            "Kein Wert im Service-Aufruf",
                             extra={
-                                "service_id": service_id,
-                                "device": self._device.name
+                                "device": self._device.name,
+                                "service": service_id,
+                                "call_data": call.data,
+                                "expected_schema": {"value": f"Required ({service_type})"}
+                            }
+                        )
+                        return
+
+                    # Validiere den Wert basierend auf dem Service-Typ
+                    if not self._validate_service_value(service_config, value):
+                        _LOGGER.error(
+                            "Ungültiger Wert für Service",
+                            extra={
+                                "device": self._device.name,
+                                "service": service_id,
+                                "value": value,
+                                "type": service_type,
+                                "config": service_config
                             }
                         )
                         return
                         
-                    # Führe die Service-Aktion aus
-                    await self._execute_service_action(service_id, service_config, value)
-                    
-                except Exception as e:
-                    _LOGGER.error(
-                        "Fehler bei der Ausführung des Services",
+                    _LOGGER.debug(
+                        "Service wird ausgeführt",
                         extra={
-                            "error": str(e),
-                            "service_id": service_id,
-                            "value": value,
                             "device": self._device.name,
-                            "traceback": e.__traceback__
+                            "service": service_id,
+                            "value": value,
+                            "register": register,
+                            "type": service_type
                         }
                     )
                     
+                    # Schreibe den Wert in das Register
+                    try:
+                        await self._device.register_processor.write_register(register, value)
+                    except Exception as write_error:
+                        _LOGGER.error(
+                            "Fehler beim Schreiben des Register-Werts",
+                            extra={
+                                "error": str(write_error),
+                                "device": self._device.name,
+                                "service": service_id,
+                                "register": register,
+                                "value": value,
+                                "traceback": write_error.__traceback__
+                            }
+                        )
+                        return
+                    
+                    _LOGGER.info(
+                        "Service erfolgreich ausgeführt",
+                        extra={
+                            "device": self._device.name,
+                            "service": service_id,
+                            "value": value,
+                            "register": register,
+                            "type": service_type
+                        }
+                    )
+                    
+                except Exception as e:
+                    _LOGGER.error(
+                        "Fehler beim Service-Aufruf",
+                        extra={
+                            "error": str(e),
+                            "device": self._device.name,
+                            "service": service_id,
+                            "traceback": e.__traceback__,
+                            "call_data": getattr(call, "data", None)
+                        }
+                    )
+            
             return service_handler
             
         except Exception as e:
@@ -262,7 +368,8 @@ class ModbusManagerServiceHandler:
                     "error": str(e),
                     "service_id": service_id,
                     "device": self._device.name,
-                    "traceback": e.__traceback__
+                    "traceback": e.__traceback__,
+                    "config": service_config
                 }
             )
             return None

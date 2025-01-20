@@ -16,10 +16,30 @@ class EntityNameHelper:
         """Initialize the helper with the config entry.
 
         Args:
-            config_entry: The config entry containing the user-provided device name
+            config_entry: The config entry or dictionary containing the user-provided device name
         """
-        self.device_name = config_entry.data[CONF_NAME]
+        # Extrahiere die Konfigurationsdaten
+        if hasattr(config_entry, 'data'):
+            config_data = config_entry.data
+        elif isinstance(config_entry, dict):
+            config_data = config_entry
+        else:
+            raise ValueError(f"Ungültige Konfiguration: {type(config_entry)}")
+        
+        # Prüfe ob der Name vorhanden ist
+        if CONF_NAME not in config_data:
+            raise ValueError("Pflichtfeld CONF_NAME fehlt in der Konfiguration")
+            
+        self.device_name = config_data[CONF_NAME]
         self._sanitized_device_name = self._sanitize_name(self.device_name)
+        
+        _LOGGER.debug(
+            "EntityNameHelper initialisiert",
+            extra={
+                "device_name": self.device_name,
+                "sanitized_name": self._sanitized_device_name
+            }
+        )
 
     @staticmethod
     def _sanitize_name(name: str) -> str:
@@ -85,6 +105,9 @@ class EntityNameHelper:
             result = f"{self._title_case(self.device_name)} {self._title_case(clean_name)}"
 
         elif name_type == NameType.BASE_NAME:
+            result = f"{self._sanitized_device_name}_{self._sanitize_name(clean_name)}"
+
+        elif name_type == NameType.SERVICE_NAME:
             result = f"{self._sanitized_device_name}_{self._sanitize_name(clean_name)}"
 
         else:

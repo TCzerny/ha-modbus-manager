@@ -9,8 +9,12 @@ import os
 import yaml
 from datetime import datetime
 
+from homeassistant.const import CONF_NAME, CONF_SLAVE
+from homeassistant.helpers.entity import DeviceInfo
+
 from .const import DOMAIN, NameType, DEFAULT_SLAVE
 from .logger import ModbusManagerLogger
+from .helpers import EntityNameHelper
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -34,7 +38,7 @@ class ModbusManagerDeviceBase:
             self._slave = config.get(CONF_SLAVE, DEFAULT_SLAVE)
             
             # Initialisiere den Name Helper
-            self.name_helper = EntityNameHelper(hub.entry, prefix=None)
+            self.name_helper = EntityNameHelper(hub.entry)
             
             # Generiere eindeutige Namen
             self.name = config[CONF_NAME]  # Verwende den Original-Namen
