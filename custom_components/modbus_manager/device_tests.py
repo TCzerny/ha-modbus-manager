@@ -3,25 +3,15 @@ from __future__ import annotations
 
 import logging
 import asyncio
-<<<<<<< HEAD
 from typing import Any, Dict, List, Optional, Tuple, Set
 
 from homeassistant.core import HomeAssistant
 from homeassistant.const import ATTR_DEVICE_CLASS, ATTR_UNIT_OF_MEASUREMENT
-=======
-from typing import Any, Dict, List, Optional, Tuple
-
-from homeassistant.core import HomeAssistant
->>>>>>> task/name_helpers_2025-01-16_1
 
 from .const import DOMAIN, NameType
 from .logger import ModbusManagerLogger
 from .device_base import ModbusManagerDeviceBase
-<<<<<<< HEAD
 from .device_registers import ModbusManagerRegisterProcessor, TYPE_CONVERTERS
-=======
-from .device_registers import ModbusManagerRegisterProcessor
->>>>>>> task/name_helpers_2025-01-16_1
 from .device_entities import ModbusManagerEntityManager
 from .device_services import ModbusManagerServiceHandler
 from .device_calculations import ModbusManagerCalculator
@@ -40,22 +30,15 @@ class ModbusManagerTestSuite:
         service_handler: ModbusManagerServiceHandler,
         calculator: ModbusManagerCalculator,
     ) -> None:
-<<<<<<< HEAD
         """Initialisiere die Test Suite."""
         try:
             self.hass = hass
-=======
-        """Initialisiert die Test Suite."""
-        try:
-            self._hass = hass
->>>>>>> task/name_helpers_2025-01-16_1
             self._device = device
             self._register_processor = register_processor
             self._entity_manager = entity_manager
             self._service_handler = service_handler
             self._calculator = calculator
             
-<<<<<<< HEAD
             # Initialisiere die Testergebnisse
             self._test_results = {}
             self._register_test_results = {}
@@ -64,9 +47,6 @@ class ModbusManagerTestSuite:
                 "Test Suite initialisiert",
                 extra={"device": device.name}
             )
-=======
-            self._test_results: Dict[str, Dict[str, Any]] = {}
->>>>>>> task/name_helpers_2025-01-16_1
             
         except Exception as e:
             _LOGGER.error(
@@ -79,7 +59,6 @@ class ModbusManagerTestSuite:
             )
             raise
 
-<<<<<<< HEAD
     def _validate_register_value(self, register: Dict[str, Any], value: Any) -> Tuple[bool, Optional[str]]:
         """Validiert einen Register-Wert basierend auf der Konfiguration."""
         try:
@@ -132,8 +111,6 @@ class ModbusManagerTestSuite:
             
         return len(errors) == 0, errors
 
-=======
->>>>>>> task/name_helpers_2025-01-16_1
     async def run_register_tests(self) -> Tuple[bool, Dict[str, Any]]:
         """Führt Tests für die Register-Verarbeitung durch."""
         try:
@@ -144,7 +121,6 @@ class ModbusManagerTestSuite:
                 "details": []
             }
             
-<<<<<<< HEAD
             # Sammle alle Register-Adressen für Überlappungsprüfung
             used_addresses: Dict[str, Set[int]] = {
                 "input": set(),
@@ -210,37 +186,6 @@ class ModbusManagerTestSuite:
                         test_result["status"] = "passed"
                         
                     results["details"].append(test_result)
-=======
-            # Teste Register-Definitionen
-            register_data = self._register_processor.register_data
-            for register_name, value in register_data.items():
-                try:
-                    results["total_tests"] += 1
-                    
-                    # Prüfe ob der Wert gültig ist
-                    if value is not None:
-                        results["passed_tests"] += 1
-                        results["details"].append({
-                            "test": f"Register {register_name}",
-                            "status": "passed",
-                            "value": value
-                        })
-                    else:
-                        results["failed_tests"] += 1
-                        results["details"].append({
-                            "test": f"Register {register_name}",
-                            "status": "failed",
-                            "error": "Kein Wert verfügbar"
-                        })
-                        
-                except Exception as e:
-                    results["failed_tests"] += 1
-                    results["details"].append({
-                        "test": f"Register {register_name}",
-                        "status": "error",
-                        "error": str(e)
-                    })
->>>>>>> task/name_helpers_2025-01-16_1
                     
             # Speichere die Ergebnisse
             self._test_results["register_tests"] = results
@@ -268,7 +213,6 @@ class ModbusManagerTestSuite:
                 "details": []
             }
             
-<<<<<<< HEAD
             # Sammle alle Entity-IDs für Duplikat-Prüfung
             entity_ids = set()
             
@@ -332,36 +276,6 @@ class ModbusManagerTestSuite:
                     test_result["status"] = "passed"
                     
                 results["details"].append(test_result)
-=======
-            # Teste Entity-Zustände
-            for entity_id, entity in self._entity_manager.entities.items():
-                try:
-                    results["total_tests"] += 1
-                    
-                    # Prüfe ob die Entity einen Zustand hat
-                    if hasattr(entity, "_attr_native_value"):
-                        results["passed_tests"] += 1
-                        results["details"].append({
-                            "test": f"Entity {entity_id}",
-                            "status": "passed",
-                            "value": entity._attr_native_value
-                        })
-                    else:
-                        results["failed_tests"] += 1
-                        results["details"].append({
-                            "test": f"Entity {entity_id}",
-                            "status": "failed",
-                            "error": "Kein Zustand verfügbar"
-                        })
-                        
-                except Exception as e:
-                    results["failed_tests"] += 1
-                    results["details"].append({
-                        "test": f"Entity {entity_id}",
-                        "status": "error",
-                        "error": str(e)
-                    })
->>>>>>> task/name_helpers_2025-01-16_1
                     
             # Speichere die Ergebnisse
             self._test_results["entity_tests"] = results
@@ -543,7 +457,6 @@ class ModbusManagerTestSuite:
             )
             return False, {"error": str(e)}
 
-<<<<<<< HEAD
     async def get_test_results(self) -> Dict[str, Any]:
         """Gibt die Testergebnisse zurück."""
         try:
@@ -562,8 +475,3 @@ class ModbusManagerTestSuite:
                 }
             )
             return {} 
-=======
-    def get_test_results(self) -> Dict[str, Any]:
-        """Gibt die Ergebnisse aller Tests zurück."""
-        return self._test_results.copy() 
->>>>>>> task/name_helpers_2025-01-16_1

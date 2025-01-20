@@ -1,18 +1,10 @@
-<<<<<<< HEAD
 """ModbusManager Hub."""
-=======
-"""ModbusManager Hub Implementation."""
->>>>>>> task/name_helpers_2025-01-16_1
 from __future__ import annotations
 
 import asyncio
-import logging
-<<<<<<< HEAD
 import os
 import yaml
 import aiofiles
-=======
->>>>>>> task/name_helpers_2025-01-16_1
 from typing import Any, Dict, List, Optional, Set
 
 from pymodbus.client import AsyncModbusTcpClient
@@ -21,13 +13,8 @@ from pymodbus.pdu import ExceptionResponse
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-<<<<<<< HEAD
     CONF_NAME,
     CONF_HOST,
-=======
-    CONF_HOST,
-    CONF_NAME,
->>>>>>> task/name_helpers_2025-01-16_1
     CONF_PORT,
     CONF_SLAVE,
     EVENT_HOMEASSISTANT_STOP
@@ -43,16 +30,11 @@ from .const import (
     DEFAULT_TIMEOUT,
     DEFAULT_RETRY_ON_EMPTY,
     DEFAULT_RETRIES,
-<<<<<<< HEAD
     DEFAULT_RETRY_DELAY,
     NameType
 )
 from .helpers import EntityNameHelper
 
-=======
-    DEFAULT_RETRY_DELAY
-)
->>>>>>> task/name_helpers_2025-01-16_1
 from .device_base import ModbusManagerDeviceBase as ModbusManagerDevice
 from .logger import ModbusManagerLogger
 
@@ -61,7 +43,6 @@ _LOGGER = ModbusManagerLogger(__name__)
 class ModbusManagerHub:
     """ModbusManager Hub Klasse."""
 
-<<<<<<< HEAD
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry | dict) -> None:
         """Initialisiere den ModbusManager Hub."""
         self.hass = hass
@@ -185,25 +166,6 @@ class ModbusManagerHub:
                     "reconnect_delay": DEFAULT_RETRY_DELAY
                 }
             )
-=======
-    def __init__(self, hass: HomeAssistant, entry: ConfigEntry) -> None:
-        """Initialisiere den ModbusManager Hub."""
-        self.hass = hass
-        self.entry = entry
-        self.name = entry.data[CONF_NAME]
-        self._client: Optional[AsyncModbusTcpClient] = None
-        self._devices: Dict[str, ModbusManagerDevice] = {}
-        self._setup_lock = asyncio.Lock()
-        self._device_configs: Dict[str, Dict[str, Any]] = {}
-        self._connected = False
-
-    async def async_setup(self) -> bool:
-        """Richte den ModbusManager Hub ein."""
-        try:
-            # Konfiguriere den ModBus Client
-            host = self.entry.data[CONF_HOST]
-            port = self.entry.data.get(CONF_PORT, DEFAULT_PORT)
->>>>>>> task/name_helpers_2025-01-16_1
             
             self._client = AsyncModbusTcpClient(
                 host=host,
@@ -214,7 +176,6 @@ class ModbusManagerHub:
                 name=self.name
             )
             
-<<<<<<< HEAD
             # Verbinde den Client mit Retry-Logik
             retry_count = 0
             max_retries = DEFAULT_RETRIES
@@ -266,21 +227,10 @@ class ModbusManagerHub:
                         "port": port,
                         "retries": retry_count,
                         "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
-=======
-            # Verbinde den Client
-            if not await self._client.connect():
-                _LOGGER.error(
-                    "Verbindung zum ModBus Server fehlgeschlagen",
-                    extra={
-                        "host": host,
-                        "port": port,
-                        "entry_id": self.entry.entry_id
->>>>>>> task/name_helpers_2025-01-16_1
                     }
                 )
                 return False
 
-<<<<<<< HEAD
             # Initialisiere das Device
             device_type = config_data.get("device_type", "")
             _LOGGER.debug(
@@ -351,17 +301,6 @@ class ModbusManagerHub:
                     }
                 )
                 return False
-=======
-            self._connected = True
-            _LOGGER.info(
-                "ModBus Verbindung hergestellt",
-                extra={
-                    "host": host,
-                    "port": port,
-                    "entry_id": self.entry.entry_id
-                }
-            )
->>>>>>> task/name_helpers_2025-01-16_1
 
             # Registriere den Stop-Handler
             self.hass.bus.async_listen_once(
@@ -374,7 +313,6 @@ class ModbusManagerHub:
         except Exception as error:
             _LOGGER.error(
                 "Fehler beim Setup des ModBus Hubs",
-<<<<<<< HEAD
                 extra={
                     "error": str(error),
                     "traceback": error.__traceback__,
@@ -424,53 +362,6 @@ class ModbusManagerHub:
                     "value": value
                 }
             )
-=======
-                extra={"error": error, "entry_id": self.entry.entry_id}
-            )
-            return False
-
-    async def async_write_register(self, slave: int, address: int, value: Any) -> None:
-        """Schreibe einen Wert in ein Register."""
-        try:
-            if not self._connected or not self._client:
-                _LOGGER.error(
-                    "ModBus Client nicht verbunden",
-                    extra={
-                        "slave": slave,
-                        "address": address,
-                        "value": value
-                    }
-                )
-                return
-
-            # Schreibe den Wert
-            result = await self._client.write_register(
-                address=address,
-                value=value,
-                slave=slave
-            )
-            
-            if isinstance(result, ExceptionResponse):
-                _LOGGER.error(
-                    "ModBus Fehler beim Schreiben",
-                    extra={
-                        "slave": slave,
-                        "address": address,
-                        "value": value,
-                        "error": result
-                    }
-                )
-                return
-                
-            _LOGGER.debug(
-                "Register erfolgreich geschrieben",
-                extra={
-                    "slave": slave,
-                    "address": address,
-                    "value": value
-                }
-            )
->>>>>>> task/name_helpers_2025-01-16_1
 
         except ModbusException as error:
             _LOGGER.error(
@@ -485,11 +376,7 @@ class ModbusManagerHub:
             raise
 
     async def async_read_registers(self, slave: int, address: int, count: int) -> List[int]:
-<<<<<<< HEAD
         """Liest mehrere Holding-Register."""
-=======
-        """Lese mehrere Register."""
->>>>>>> task/name_helpers_2025-01-16_1
         try:
             if not self._connected or not self._client:
                 _LOGGER.error(
@@ -511,11 +398,7 @@ class ModbusManagerHub:
             
             if isinstance(result, ExceptionResponse):
                 _LOGGER.error(
-<<<<<<< HEAD
                     "ModBus Fehler beim Lesen der Holding-Register",
-=======
-                    "ModBus Fehler beim Lesen",
->>>>>>> task/name_helpers_2025-01-16_1
                     extra={
                         "slave": slave,
                         "address": address,
@@ -528,11 +411,7 @@ class ModbusManagerHub:
             values = result.registers if result and hasattr(result, 'registers') else []
             
             _LOGGER.debug(
-<<<<<<< HEAD
                 "Holding-Register erfolgreich gelesen",
-=======
-                "Register erfolgreich gelesen",
->>>>>>> task/name_helpers_2025-01-16_1
                 extra={
                     "slave": slave,
                     "address": address,
@@ -543,7 +422,6 @@ class ModbusManagerHub:
             
             return values
 
-<<<<<<< HEAD
         except ModbusException as e:
             _LOGGER.error(
                 "ModBus Fehler beim Lesen der Holding-Register",
@@ -613,16 +491,6 @@ class ModbusManagerHub:
                     "address": address,
                     "count": count,
                     "traceback": e.__traceback__
-=======
-        except ModbusException as error:
-            _LOGGER.error(
-                "ModBus Fehler beim Lesen der Register",
-                extra={
-                    "error": error,
-                    "slave": slave,
-                    "address": address,
-                    "count": count
->>>>>>> task/name_helpers_2025-01-16_1
                 }
             )
             return []
@@ -638,8 +506,5 @@ class ModbusManagerHub:
             asyncio.create_task(self._client.close())
             self._client = None
             self._connected = False
-<<<<<<< HEAD
 
 
-=======
->>>>>>> task/name_helpers_2025-01-16_1

@@ -1,19 +1,10 @@
-<<<<<<< HEAD
-"""ModbusManager Calculator."""
-=======
 """Modbus Manager Calculation Processing."""
->>>>>>> task/name_helpers_2025-01-16_1
 from __future__ import annotations
 
 from typing import Dict, Any, Optional, List
 import asyncio
 import ast
 import operator
-<<<<<<< HEAD
-import logging
-from datetime import datetime
-=======
->>>>>>> task/name_helpers_2025-01-16_1
 
 from .logger import ModbusManagerLogger
 from .device_base import ModbusManagerDeviceBase
@@ -26,24 +17,6 @@ class ModbusManagerCalculator:
 
     # Unterstützte Operatoren für Berechnungen
     _OPERATORS = {
-<<<<<<< HEAD
-        ast.Add: lambda x, y: float(x) + float(y),
-        ast.Sub: lambda x, y: float(x) - float(y),
-        ast.Mult: lambda x, y: float(x) * float(y),
-        ast.Div: lambda x, y: float(x) / float(y) if float(y) != 0 else 0,
-        ast.FloorDiv: lambda x, y: float(x) // float(y) if float(y) != 0 else 0,
-        ast.Mod: lambda x, y: float(x) % float(y) if float(y) != 0 else 0,
-        ast.Pow: lambda x, y: float(x) ** float(y),
-        ast.USub: lambda x: -float(x),
-        ast.UAdd: lambda x: float(x),
-        # Vergleichsoperatoren
-        ast.Gt: lambda x, y: float(x) > float(y),
-        ast.Lt: lambda x, y: float(x) < float(y),
-        ast.GtE: lambda x, y: float(x) >= float(y),
-        ast.LtE: lambda x, y: float(x) <= float(y),
-        ast.Eq: lambda x, y: float(x) == float(y),
-        ast.NotEq: lambda x, y: float(x) != float(y),
-=======
         ast.Add: operator.add,
         ast.Sub: operator.sub,
         ast.Mult: operator.mul,
@@ -52,7 +25,6 @@ class ModbusManagerCalculator:
         ast.Pow: operator.pow,
         ast.Mod: operator.mod,
         ast.USub: operator.neg,
->>>>>>> task/name_helpers_2025-01-16_1
     }
 
     def __init__(
@@ -193,11 +165,6 @@ class ModbusManagerCalculator:
                 try:
                     # Sammle die Variablenwerte
                     variables = {}
-<<<<<<< HEAD
-                    missing_vars = []
-                    
-=======
->>>>>>> task/name_helpers_2025-01-16_1
                     for var in calc_config["variables"]:
                         var_name = var["name"]
                         var_source = var["source"]
@@ -208,10 +175,6 @@ class ModbusManagerCalculator:
                         # Hole den Wert
                         value = register_data.get(prefixed_source)
                         if value is None:
-<<<<<<< HEAD
-                            missing_vars.append(var_source)
-=======
->>>>>>> task/name_helpers_2025-01-16_1
                             _LOGGER.debug(
                                 "Kein Wert für Variable gefunden",
                                 extra={
@@ -225,21 +188,6 @@ class ModbusManagerCalculator:
                             
                         variables[var_name] = value
                         
-<<<<<<< HEAD
-                    # Wenn Variablen fehlen, überspringe die Berechnung
-                    if missing_vars:
-                        _LOGGER.debug(
-                            "Nicht alle Variablen für Berechnung verfügbar",
-                            extra={
-                                "calc_id": calc_id,
-                                "missing_vars": missing_vars,
-                                "device": self._device.name
-                            }
-                        )
-                        continue
-                        
-=======
->>>>>>> task/name_helpers_2025-01-16_1
                     # Berechne den Wert
                     try:
                         result = await self.calculate_value(calc_config["formula"], variables)
@@ -285,32 +233,6 @@ class ModbusManagerCalculator:
             )
             return {}
 
-<<<<<<< HEAD
-    async def calculate_value(self, formula: str, variables: Dict[str, Any]) -> Optional[Any]:
-        """Berechnet den Wert einer Formel mit den gegebenen Variablen."""
-        try:
-            # Parse die Formel
-            tree = ast.parse(formula, mode='eval')
-            
-            # Evaluiere die Formel
-            result = self._eval_node(tree.body, variables)
-            
-            _LOGGER.debug(
-                "Formel erfolgreich ausgewertet",
-                extra={
-                    "formula": formula,
-                    "variables": variables,
-                    "result": result,
-                    "device": self._device.name
-                }
-            )
-            
-            return result
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Formel-Auswertung",
-=======
     async def calculate_value(self, formula: str, variables: Dict[str, Any]) -> Optional[float]:
         """Berechnet einen Wert basierend auf einer Formel und Variablen."""
         try:
@@ -325,7 +247,6 @@ class ModbusManagerCalculator:
         except Exception as e:
             _LOGGER.error(
                 "Fehler bei der Berechnung des Werts",
->>>>>>> task/name_helpers_2025-01-16_1
                 extra={
                     "error": str(e),
                     "formula": formula,
@@ -339,62 +260,6 @@ class ModbusManagerCalculator:
     def _eval_node(self, node: ast.AST, variables: Dict[str, Any]) -> Any:
         """Evaluiert einen AST-Knoten."""
         try:
-<<<<<<< HEAD
-            # Konstanten
-            if isinstance(node, ast.Constant):
-                return node.value
-                
-            # Variablen
-            elif isinstance(node, ast.Name):
-                if node.id not in variables:
-                    raise ValueError(f"Variable {node.id} nicht gefunden")
-                return variables[node.id]
-                
-            # Unäre Operationen
-            elif isinstance(node, ast.UnaryOp):
-                operand = self._eval_node(node.operand, variables)
-                if type(node.op) not in self._OPERATORS:
-                    raise ValueError(f"Nicht unterstützter unärer Operator: {type(node.op).__name__}")
-                return self._OPERATORS[type(node.op)](operand)
-                
-            # Binäre Operationen
-            elif isinstance(node, ast.BinOp):
-                left = self._eval_node(node.left, variables)
-                right = self._eval_node(node.right, variables)
-                if type(node.op) not in self._OPERATORS:
-                    raise ValueError(f"Nicht unterstützter binärer Operator: {type(node.op).__name__}")
-                return self._OPERATORS[type(node.op)](left, right)
-                
-            # Vergleiche
-            elif isinstance(node, ast.Compare):
-                left = self._eval_node(node.left, variables)
-                for op, comp in zip(node.ops, node.comparators):
-                    right = self._eval_node(comp, variables)
-                    if type(op) not in self._OPERATORS:
-                        raise ValueError(f"Nicht unterstützter Vergleichsoperator: {type(op).__name__}")
-                    if not self._OPERATORS[type(op)](left, right):
-                        return False
-                    left = right
-                return True
-                
-            # If-Expression (x if condition else y)
-            elif isinstance(node, ast.IfExp):
-                test = self._eval_node(node.test, variables)
-                if test:
-                    return self._eval_node(node.body, variables)
-                else:
-                    return self._eval_node(node.orelse, variables)
-                    
-            else:
-                raise ValueError(f"Nicht unterstützter AST-Knoten: {type(node).__name__}")
-                
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Knoten-Auswertung",
-                extra={
-                    "error": str(e),
-                    "node_type": type(node).__name__,
-=======
             # Name (Variable)
             if isinstance(node, ast.Name):
                 if node.id not in variables:
@@ -426,7 +291,6 @@ class ModbusManagerCalculator:
                     "error": str(e),
                     "node_type": type(node),
                     "variables": variables,
->>>>>>> task/name_helpers_2025-01-16_1
                     "device": self._device.name,
                     "traceback": e.__traceback__
                 }

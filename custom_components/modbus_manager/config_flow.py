@@ -4,29 +4,18 @@ from __future__ import annotations
 import logging
 import os
 from typing import Any, Dict, Optional
-<<<<<<< HEAD
 import aiofiles
 import yaml
-=======
->>>>>>> task/name_helpers_2025-01-16_1
 
 import voluptuous as vol
 
 from homeassistant import config_entries
-<<<<<<< HEAD
 from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
 from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import device_registry as dr
 
 from .const import DOMAIN, DEFAULT_PORT, DEFAULT_SLAVE, CONF_DEVICE_TYPE
-=======
-from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT
-from homeassistant.core import HomeAssistant
-from homeassistant.data_entry_flow import FlowResult
-
-from .const import DOMAIN
->>>>>>> task/name_helpers_2025-01-16_1
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -37,28 +26,18 @@ async def async_get_available_device_definitions() -> dict[str, str]:
     definition_dir = os.path.join(os.path.dirname(__file__), "device_definitions")
     
     try:
-<<<<<<< HEAD
         # Lese Verzeichnisinhalt
         filenames = os.listdir(definition_dir)
-=======
-        # Verwende aiofiles.os für asynchrones Auflisten der Dateien
-        filenames = await aiofiles.os.listdir(definition_dir)
->>>>>>> task/name_helpers_2025-01-16_1
         
         for filename in filenames:
             if filename.endswith(".yaml"):
                 device_type = filename[:-5]  # Entferne .yaml
-<<<<<<< HEAD
-=======
-                # Lade die YAML-Datei um den Anzeigenamen zu erhalten
->>>>>>> task/name_helpers_2025-01-16_1
                 try:
                     async with aiofiles.open(os.path.join(definition_dir, filename), mode='r', encoding='utf-8') as f:
                         content = await f.read()
                         device_config = yaml.safe_load(content)
                         display_name = device_config.get("device_info", {}).get("name", device_type)
                         definitions[device_type] = display_name
-<<<<<<< HEAD
                 except Exception as e:
                     _LOGGER.error(
                         "Fehler beim Lesen der Gerätedefinition",
@@ -76,12 +55,6 @@ async def async_get_available_device_definitions() -> dict[str, str]:
                 "error": str(e)
             }
         )
-=======
-                except Exception:
-                    definitions[device_type] = device_type.replace("_", " ").title()
-    except Exception:
-        pass
->>>>>>> task/name_helpers_2025-01-16_1
     
     return definitions
 

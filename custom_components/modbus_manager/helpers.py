@@ -2,7 +2,6 @@
 
 import re
 from enum import Enum
-<<<<<<< HEAD
 from typing import Any, Dict, List, Optional, Type, Union
 
 from homeassistant.const import CONF_NAME
@@ -16,16 +15,6 @@ from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 
-=======
-from typing import Optional
-from homeassistant.const import CONF_NAME
-from .logger import ModbusManagerLogger
-from .const import NameType
-
-_LOGGER = ModbusManagerLogger(__name__)
-
-
->>>>>>> task/name_helpers_2025-01-16_1
 class EntityNameHelper:
     """Helper class for entity naming conventions."""
 
@@ -33,7 +22,6 @@ class EntityNameHelper:
         """Initialize the helper with the config entry.
 
         Args:
-<<<<<<< HEAD
             config_entry: The config entry or dictionary containing the user-provided device name
         """
         # Extrahiere die Konfigurationsdaten
@@ -58,12 +46,6 @@ class EntityNameHelper:
                 "sanitized_name": self._sanitized_device_name
             }
         )
-=======
-            config_entry: The config entry containing the user-provided device name
-        """
-        self.device_name = config_entry.data[CONF_NAME]
-        self._sanitized_device_name = self._sanitize_name(self.device_name)
->>>>>>> task/name_helpers_2025-01-16_1
 
     @staticmethod
     def _sanitize_name(name: str) -> str:
@@ -85,11 +67,7 @@ class EntityNameHelper:
         """Entfernt den Gerätenamen als Präfix, falls vorhanden."""
         device_prefix = self._sanitized_device_name.lower() + "_"
         if name.lower().startswith(device_prefix):
-<<<<<<< HEAD
             return name[len(device_prefix):]
-=======
-            return name[len(device_prefix) :]
->>>>>>> task/name_helpers_2025-01-16_1
         return name
 
     def convert(
@@ -135,12 +113,9 @@ class EntityNameHelper:
         elif name_type == NameType.BASE_NAME:
             result = f"{self._sanitized_device_name}_{self._sanitize_name(clean_name)}"
 
-<<<<<<< HEAD
         elif name_type == NameType.SERVICE_NAME:
             result = f"{self._sanitized_device_name}_{self._sanitize_name(clean_name)}"
 
-=======
->>>>>>> task/name_helpers_2025-01-16_1
         else:
             raise ValueError(f"Unbekannter NameType: {name_type}")
 

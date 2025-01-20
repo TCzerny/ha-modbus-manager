@@ -1,25 +1,4 @@
 """Constants for the Modbus Manager integration."""
-<<<<<<< HEAD
-from __future__ import annotations
-
-import logging
-from typing import Final
-from enum import Enum
-from homeassistant.const import Platform
-
-# Setze Debug-Level für detaillierte Logging-Informationen
-logging.getLogger(__package__).setLevel(logging.DEBUG)
-
-DOMAIN: Final = "modbus_manager"
-CONF_DEVICE_TYPE: Final = "device_type"
-
-# Default values
-DEFAULT_TIMEOUT: Final = 3  # Sekunden
-DEFAULT_RETRY_ON_EMPTY: Final = True
-DEFAULT_RETRIES: Final = 3
-DEFAULT_RETRY_DELAY: Final = 0.1
-
-=======
 from typing import Final
 from enum import Enum
 from homeassistant.const import Platform
@@ -33,7 +12,6 @@ DEFAULT_RETRY_ON_EMPTY: Final = True
 DEFAULT_RETRIES: Final = 3
 DEFAULT_RETRY_DELAY: Final = 0.1
 
->>>>>>> task/name_helpers_2025-01-16_1
 # Standard-Werte
 DEFAULT_SLAVE = 1
 DEFAULT_PORT = 502
@@ -49,22 +27,6 @@ EVENT_MODBUS_MANAGER_DEVICE_UPDATED = "modbus_manager_device_updated"
 EVENT_MODBUS_MANAGER_ERROR = "modbus_manager_error"
 
 # Plattformen, die diese Integration nutzt
-<<<<<<< HEAD
-PLATFORMS = [
-    Platform.BINARY_SENSOR,
-    Platform.BUTTON,
-    Platform.NUMBER,
-    Platform.SELECT,
-    Platform.SENSOR,
-    Platform.SWITCH
-]
-
-class NameType(Enum):
-    """Typen für die Namenskonvertierung."""
-    BASE_NAME = "base_name"
-    UNIQUE_ID = "unique_id"
-    DISPLAY_NAME = "display_name"
-=======
 PLATFORMS = [Platform.SENSOR, Platform.NUMBER, Platform.SWITCH, Platform.SELECT]
 
 class NameType(Enum):
@@ -73,4 +35,3 @@ class NameType(Enum):
     UNIQUE_ID = "unique_id"          # Für eindeutige IDs (z.B. sungrow_inverter_battery_level)
     DISPLAY_NAME = "display_name"    # Für UI-Anzeigenamen (z.B. Sungrow Battery Level)
     BASE_NAME = "base_name"          # Für interne Referenzen (z.B. sungrow_battery_level)
->>>>>>> task/name_helpers_2025-01-16_1
