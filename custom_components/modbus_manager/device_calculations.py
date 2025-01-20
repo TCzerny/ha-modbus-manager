@@ -7,7 +7,7 @@ import ast
 import operator
 
 from .logger import ModbusManagerLogger
-from .device_base import ModbusManagerDeviceBase
+from .device_interfaces import IModbusManagerDevice
 from .const import NameType
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -29,7 +29,7 @@ class ModbusManagerCalculator:
 
     def __init__(
         self,
-        device: ModbusManagerDeviceBase,
+        device: IModbusManagerDevice,
     ) -> None:
         """Initialisiert den Calculator."""
         try:
@@ -260,29 +260,27 @@ class ModbusManagerCalculator:
     def _eval_node(self, node: ast.AST, variables: Dict[str, Any]) -> Any:
         """Evaluiert einen AST-Knoten."""
         try:
-            # Name (Variable)
-            if isinstance(node, ast.Name):
+            if isinstance(node, ast.Num):
+                return node.n
+            elif isinstance(node, ast.Name):
                 if node.id not in variables:
-                    raise ValueError(f"Unbekannte Variable: {node.id}")
+                    raise ValueError(f"Variable {node.id} nicht gefunden")
                 return variables[node.id]
-                
-            # Konstante
-            elif isinstance(node, ast.Constant):
-                return node.value
-                
-            # Unärer Operator
-            elif isinstance(node, ast.UnaryOp):
-                operand = self._eval_node(node.operand, variables)
-                return self._OPERATORS[type(node.op)](operand)
-                
-            # Binärer Operator
             elif isinstance(node, ast.BinOp):
                 left = self._eval_node(node.left, variables)
                 right = self._eval_node(node.right, variables)
-                return self._OPERATORS[type(node.op)](left, right)
-                
+                op = type(node.op)
+                if op not in self._OPERATORS:
+                    raise ValueError(f"Operator {op} nicht unterstützt")
+                return self._OPERATORS[op](left, right)
+            elif isinstance(node, ast.UnaryOp):
+                operand = self._eval_node(node.operand, variables)
+                op = type(node.op)
+                if op not in self._OPERATORS:
+                    raise ValueError(f"Operator {op} nicht unterstützt")
+                return self._OPERATORS[op](operand)
             else:
-                raise ValueError(f"Nicht unterstützter Knotentyp: {type(node)}")
+                raise ValueError(f"AST-Knoten {type(node)} nicht unterstützt")
                 
         except Exception as e:
             _LOGGER.error(
@@ -290,7 +288,6 @@ class ModbusManagerCalculator:
                 extra={
                     "error": str(e),
                     "node_type": type(node),
-                    "variables": variables,
                     "device": self._device.name,
                     "traceback": e.__traceback__
                 }

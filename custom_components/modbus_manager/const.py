@@ -6,6 +6,19 @@ from homeassistant.const import Platform
 DOMAIN: Final = "modbus_manager"
 CONF_DEVICE_TYPE: Final = "device_type"
 
+# Configuration keys
+CONF_SERVICES: Final = "services"
+CONF_REGISTER: Final = "register"
+CONF_MIN: Final = "min"
+CONF_MAX: Final = "max"
+CONF_STEP: Final = "step"
+CONF_OPTIONS: Final = "options"
+
+# Service types
+SERVICE_TYPE_NUMBER: Final = "number"
+SERVICE_TYPE_SELECT: Final = "select"
+SERVICE_TYPE_BUTTON: Final = "button"
+
 # Default values
 DEFAULT_TIMEOUT: Final = 3  # Sekunden
 DEFAULT_RETRY_ON_EMPTY: Final = True

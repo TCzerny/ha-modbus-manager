@@ -1,46 +1,40 @@
-"""Modbus Manager Device Interfaces."""
+"""Interfaces für Modbus Manager Komponenten."""
 from __future__ import annotations
 
 from abc import ABC, abstractmethod
-from typing import Dict, Any, Optional, List
+from typing import Any, Dict, Optional
+
 from homeassistant.core import HomeAssistant
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.helpers.entity import DeviceInfo
-
-from .const import DOMAIN, NameType
-from .logger import ModbusManagerLogger
-
-_LOGGER = ModbusManagerLogger(__name__)
 
 class IModbusManagerDevice(ABC):
-    """Interface für Modbus Manager Geräte."""
-    
+    """Interface für ein Modbus Manager Gerät."""
+
     @property
     @abstractmethod
     def hass(self) -> HomeAssistant:
-        """Home Assistant Instanz."""
+        """Gibt die Home Assistant Instanz zurück."""
         pass
-        
+
     @property
     @abstractmethod
     def name(self) -> str:
-        """Name des Geräts."""
+        """Gibt den Namen des Geräts zurück."""
         pass
-        
+
     @property
     @abstractmethod
-    def device_info(self) -> DeviceInfo:
-        """Geräteinformationen."""
+    def device_info(self) -> Dict[str, Any]:
+        """Gibt die Geräteinformationen zurück."""
         pass
-        
+
     @abstractmethod
-    def get_register_value(self, register_name: str) -> Any:
-        """Hole den Wert eines Registers."""
+    async def get_register_value(self, register_name: str) -> Optional[Any]:
+        """Gibt den Wert eines Registers zurück."""
         pass
-        
+
     @abstractmethod
     async def write_register(self, register_name: str, value: Any) -> bool:
-        """Schreibe einen Wert in ein Register."""
+        """Schreibt einen Wert in ein Register."""
         pass
 
 class IModbusManagerServiceProvider(ABC):

@@ -45,47 +45,40 @@ class ModbusManagerHub:
 
     def __init__(self, hass: HomeAssistant, entry: ConfigEntry | dict) -> None:
         """Initialisiere den ModbusManager Hub."""
-        self.hass = hass
-        self.entry = entry
-        self._devices = {}
-        self._client = None
-        self._lock = asyncio.Lock()
-        self._connected = False
-        
-        # Entity-Status-Tracking
-        self._entities_added = False
-        self._entity_setup_tasks = {}
-        self._pending_entities = set()
-        
-        # Extrahiere und validiere die Konfigurationsdaten
-        if hasattr(entry, 'data'):
-            config_data = entry.data
-        elif isinstance(entry, dict):
-            config_data = entry
-        else:
-            raise ValueError(f"Ungültige Konfiguration: {type(entry)}")
-        
-        # Prüfe ob alle erforderlichen Konfigurationsfelder vorhanden sind
-        required_fields = [CONF_NAME, CONF_HOST]
-        for field in required_fields:
-            if field not in config_data:
-                raise ValueError(f"Pflichtfeld {field} fehlt in der Konfiguration")
-        
-        # Initialisiere den Name Helper
-        self.name_helper = EntityNameHelper(entry)
-        
-        # Generiere eindeutige Namen
-        self._name = self.name_helper.convert(config_data[CONF_NAME], NameType.BASE_NAME)
-        self._unique_id = self.name_helper.convert(config_data[CONF_NAME], NameType.UNIQUE_ID)
-        
-        _LOGGER.debug(
-            "ModbusManager Hub initialisiert",
-            extra={
-                "name": self._name,
+        try:
+            self.hass = hass
+            if isinstance(entry, ConfigEntry):
+                self._config = dict(entry.data)
+                self._entry_id = entry.entry_id
+            else:
+                self._config = entry
+                self._entry_id = None
+
+            self._name = self._config.get(CONF_NAME)
+            self._name_helper = EntityNameHelper({CONF_NAME: self._name})
+            self._unique_id = self._name_helper.convert(self._name, NameType.UNIQUE_ID)
+            self._base_name = self._name_helper.convert(self._name, NameType.BASE_NAME)
+
+            _LOGGER.debug("ModbusManager Hub initialisiert", extra={
+                "name": self._base_name,
                 "unique_id": self._unique_id,
-                "entry_id": entry.entry_id if hasattr(entry, 'entry_id') else None
-            }
-        )
+                "entry_id": self._entry_id
+            })
+
+            self._devices = {}
+            self._entities_added = False
+            self._pending_entities = set()
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei der Initialisierung des ModBus Hubs",
+                extra={
+                    "error": str(e),
+                    "traceback": e.__traceback__,
+                    "entry_id": self._entry_id
+                }
+            )
+            raise
 
     @property
     def entities_added(self) -> bool:
@@ -146,7 +139,7 @@ class ModbusManagerHub:
         """Richte den ModbusManager Hub ein."""
         try:
             # Extrahiere die Konfigurationsdaten
-            config_data = self.entry.data if hasattr(self.entry, 'data') else self.entry
+            config_data = self._config if hasattr(self._config, 'data') else self._config
             
             # Setze den Entity-Setup-Status zurück
             self._entities_added = False
@@ -189,7 +182,7 @@ class ModbusManagerHub:
                                 "host": host,
                                 "port": port,
                                 "retry": retry_count,
-                                "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
+                                "entry_id": self._entry_id
                             }
                         )
                         break
@@ -226,7 +219,7 @@ class ModbusManagerHub:
                         "host": host,
                         "port": port,
                         "retries": retry_count,
-                        "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
+                        "entry_id": self._entry_id
                     }
                 )
                 return False
@@ -316,7 +309,7 @@ class ModbusManagerHub:
                 extra={
                     "error": str(error),
                     "traceback": error.__traceback__,
-                    "entry_id": self.entry.entry_id if hasattr(self.entry, 'entry_id') else None
+                    "entry_id": self._entry_id
                 }
             )
             return False

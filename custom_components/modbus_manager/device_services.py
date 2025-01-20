@@ -1,6 +1,7 @@
 """Modbus Manager Service Handling."""
 from __future__ import annotations
 
+import logging
 from typing import Dict, Any, Optional, List, Callable
 import asyncio
 import voluptuous as vol
@@ -16,398 +17,156 @@ from homeassistant.const import (
 )
 
 from .logger import ModbusManagerLogger
-from .const import DOMAIN, NameType
+from .const import DOMAIN, NameType, CONF_SERVICES, CONF_REGISTER, CONF_MIN, CONF_MAX, CONF_STEP, CONF_OPTIONS, SERVICE_TYPE_NUMBER, SERVICE_TYPE_SELECT, SERVICE_TYPE_BUTTON
 from .device_interfaces import IModbusManagerDevice, IModbusManagerServiceProvider
 
-_LOGGER = ModbusManagerLogger(__name__)
+_LOGGER = logging.getLogger(__name__)
 
 class ModbusManagerServiceHandler(IModbusManagerServiceProvider):
-    """Klasse für die Verwaltung von Modbus-Services."""
+    """Handler für ModbusManager Services."""
 
-    def __init__(
-        self,
-        hass: HomeAssistant,
-        device: IModbusManagerDevice,
-    ) -> None:
-        """Initialisiert den Service Handler."""
-        try:
-            self._hass = hass
-            self._device = device
-            self._services: Dict[str, Dict[str, Any]] = {}
-            self._service_handlers: Dict[str, Callable] = {}
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Initialisierung des Service Handlers",
-                extra={
-                    "error": str(e),
-                    "device": device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            raise
+    def __init__(self, device: IModbusManagerDevice) -> None:
+        """Initialisiere den Service Handler."""
+        self._device = device
+        self._services: Dict[str, Dict[str, Any]] = {}
+        self._service_handlers: Dict[str, Any] = {}
 
-    async def setup_services(self, service_definitions: Dict[str, Any]) -> None:
-        """Richtet die Services basierend auf der Konfiguration ein."""
+    async def setup_services(self, service_configs: list[dict]) -> bool:
+        """Richte die Services ein."""
         try:
-            # Hole die Service-Definitionen
-            services = service_definitions.get("services", {})
-            
-            _LOGGER.debug(
-                "Starte Service-Setup",
-                extra={
-                    "device": self._device.name,
-                    "service_count": len(services),
-                    "services": list(services.keys())
-                }
-            )
-            
-            # Verarbeite die Services
-            for service_id, service_config in services.items():
-                try:
-                    # Validiere die Service-Konfiguration
-                    if not self._validate_service_config(service_id, service_config):
-                        continue
-                        
-                    # Erstelle den Service-Handler
-                    handler = await self._create_service_handler(service_id, service_config)
-                    if handler:
-                        # Registriere den Service
-                        service_name = self._device.name_helper.convert(service_id, NameType.SERVICE_NAME)
-                        
-                        _LOGGER.debug(
-                            "Registriere Service",
-                            extra={
-                                "device": self._device.name,
-                                "service_id": service_id,
-                                "service_name": service_name,
-                                "config": service_config
-                            }
-                        )
-                        
-                        self._hass.services.async_register(
-                            DOMAIN,
-                            service_name,
-                            handler,
-                            schema=self._create_service_schema(service_config)
-                        )
-                        
-                        # Speichere die Service-Konfiguration
-                        self._services[service_id] = service_config
-                        
-                        _LOGGER.info(
-                            "Service erfolgreich registriert",
-                            extra={
-                                "device": self._device.name,
-                                "service": service_name,
-                                "domain": DOMAIN
-                            }
-                        )
-                        
-                except Exception as e:
-                    _LOGGER.error(
-                        "Fehler beim Einrichten eines Services",
-                        extra={
-                            "error": str(e),
-                            "service_id": service_id,
-                            "device": self._device.name,
-                            "traceback": e.__traceback__
-                        }
-                    )
-                    
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Setup der Services",
-                extra={
-                    "error": str(e),
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
-            )
+            for service_config in service_configs:
+                service_name = service_config.get(CONF_NAME)
+                if not service_name:
+                    _LOGGER.error("Service ohne Namen gefunden")
+                    continue
 
-    def _validate_service_config(self, service_id: str, service_config: Dict[str, Any]) -> bool:
-        """Validiert eine Service-Konfiguration."""
-        try:
-            # Prüfe ob alle erforderlichen Felder vorhanden sind
-            required_fields = ["name", "register", "type"]
-            for field in required_fields:
-                if field not in service_config:
-                    _LOGGER.error(
-                        f"Pflichtfeld {field} fehlt in der Service-Konfiguration",
-                        extra={
-                            "service_id": service_id,
-                            "device": self._device.name
-                        }
-                    )
-                    return False
-                    
-            # Prüfe den Service-Typ
-            service_type = service_config["type"]
-            if service_type not in ["number", "select", "button"]:
-                _LOGGER.error(
-                    "Ungültiger Service-Typ",
-                    extra={
-                        "type": service_type,
-                        "service_id": service_id,
-                        "device": self._device.name
-                    }
-                )
-                return False
+                if not self._validate_service_config(service_config):
+                    continue
+
+                self._services[service_name] = service_config
                 
-            # Prüfe typ-spezifische Felder
-            if service_type == "number":
-                if "minimum" not in service_config or "maximum" not in service_config:
-                    _LOGGER.error(
-                        "Minimum und Maximum müssen für Number-Services definiert sein",
-                        extra={
-                            "service_id": service_id,
-                            "device": self._device.name
-                        }
+                # Erstelle Service Handler
+                handler = self._create_service_handler(service_name, service_config)
+                if handler:
+                    self._service_handlers[service_name] = handler
+                    _LOGGER.debug(
+                        "Service Handler erstellt für %s",
+                        service_name
                     )
-                    return False
-                    
-            elif service_type == "select":
-                if "options" not in service_config:
-                    _LOGGER.error(
-                        "Options müssen für Select-Services definiert sein",
-                        extra={
-                            "service_id": service_id,
-                            "device": self._device.name
-                        }
-                    )
-                    return False
-                    
+
             return True
-            
-        except Exception as e:
+        except Exception as ex:
             _LOGGER.error(
-                "Fehler bei der Validierung der Service-Konfiguration",
-                extra={
-                    "error": str(e),
-                    "service_id": service_id,
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
+                "Fehler beim Setup der Services: %s",
+                str(ex),
+                exc_info=True
             )
             return False
 
-    def _create_service_schema(self, service_config: Dict[str, Any]) -> vol.Schema:
-        """Erstellt das Schema für einen Service."""
-        try:
-            schema = {}
-            
-            # Basis-Schema für alle Service-Typen
-            schema[vol.Required("value")] = self._get_value_schema(service_config)
-            
-            return vol.Schema(schema)
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Erstellen des Service-Schemas",
-                extra={
-                    "error": str(e),
-                    "config": service_config,
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            return vol.Schema({})
-
-    def _get_value_schema(self, service_config: Dict[str, Any]) -> Any:
-        """Erstellt das Schema für den Wert-Parameter eines Services."""
-        try:
-            service_type = service_config["type"]
-            
-            if service_type == "number":
-                return vol.All(
-                    vol.Coerce(float),
-                    vol.Range(
-                        min=float(service_config["minimum"]),
-                        max=float(service_config["maximum"])
-                    )
+    def _validate_service_config(self, config: dict) -> bool:
+        """Validiere die Service-Konfiguration."""
+        required_fields = [CONF_NAME, CONF_TYPE, CONF_REGISTER]
+        for field in required_fields:
+            if field not in config:
+                _LOGGER.error(
+                    "Pflichtfeld %s fehlt in Service-Konfiguration",
+                    field
                 )
-                
-            elif service_type == "select":
-                return vol.In(service_config["options"])
-                
-            elif service_type == "button":
-                return vol.Coerce(bool)
-                
-            else:
-                return vol.Coerce(str)
-                
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Erstellen des Wert-Schemas",
-                extra={
-                    "error": str(e),
-                    "config": service_config,
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            return vol.Coerce(str)
+                return False
 
-    async def _create_service_handler(self, service_id: str, service_config: Dict[str, Any]) -> Optional[Callable]:
-        """Erstellt einen Service-Handler."""
+        service_type = config[CONF_TYPE]
+        if service_type not in [SERVICE_TYPE_NUMBER, SERVICE_TYPE_SELECT, SERVICE_TYPE_BUTTON]:
+            _LOGGER.error(
+                "Ungültiger Service-Typ: %s",
+                service_type
+            )
+            return False
+
+        return True
+
+    def _create_service_handler(self, service_name: str, config: dict) -> Optional[Any]:
+        """Erstelle einen Service Handler."""
         try:
-            @callback
             async def service_handler(call: ServiceCall) -> None:
-                """Handler für den Service."""
+                """Handle den Service Call."""
                 try:
                     value = call.data.get("value")
-                    
-                    # Validiere den Wert
-                    if not self._validate_service_value(service_config, value):
+                    if value is None and config[CONF_TYPE] != SERVICE_TYPE_BUTTON:
                         _LOGGER.error(
-                            "Ungültiger Wert für Service",
-                            extra={
-                                "value": value,
-                                "service_id": service_id,
-                                "device": self._device.name
-                            }
+                            "Kein Wert für Service %s angegeben",
+                            service_name
                         )
                         return
-                        
-                    # Führe die Service-Aktion aus
-                    await self._execute_service_action(service_id, service_config, value)
-                    
-                except Exception as e:
+
+                    if not self._validate_service_value(config, value):
+                        return
+
+                    await self._execute_service_action(config, value)
+                except Exception as ex:
                     _LOGGER.error(
-                        "Fehler bei der Service-Ausführung",
-                        extra={
-                            "error": str(e),
-                            "service_id": service_id,
-                            "device": self._device.name,
-                            "traceback": e.__traceback__
-                        }
+                        "Fehler bei Service Ausführung %s: %s",
+                        service_name,
+                        str(ex),
+                        exc_info=True
                     )
-                    
+
             return service_handler
-            
-        except Exception as e:
+        except Exception as ex:
             _LOGGER.error(
-                "Fehler beim Erstellen des Service-Handlers",
-                extra={
-                    "error": str(e),
-                    "service_id": service_id,
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
+                "Fehler beim Erstellen des Service Handlers %s: %s",
+                service_name,
+                str(ex),
+                exc_info=True
             )
             return None
 
-    async def _execute_service_action(self, service_id: str, service_config: Dict[str, Any], value: Any) -> None:
-        """Führt die Service-Aktion aus."""
-        try:
-            register = service_config["register"]
-            
-            # Schreibe den Wert in das Register
-            success = await self._device.write_register(register, value)
-            
-            if success:
-                _LOGGER.info(
-                    "Service-Aktion erfolgreich ausgeführt",
-                    extra={
-                        "service_id": service_id,
-                        "register": register,
-                        "value": value,
-                        "device": self._device.name
-                    }
-                )
-            else:
-                _LOGGER.error(
-                    "Service-Aktion fehlgeschlagen",
-                    extra={
-                        "service_id": service_id,
-                        "register": register,
-                        "value": value,
-                        "device": self._device.name
-                    }
-                )
+    def _validate_service_value(self, config: dict, value: Any) -> bool:
+        """Validiere den Service-Wert."""
+        service_type = config[CONF_TYPE]
+
+        if service_type == SERVICE_TYPE_NUMBER:
+            try:
+                value = float(value)
+                min_val = float(config.get(CONF_MIN, float("-inf")))
+                max_val = float(config.get(CONF_MAX, float("inf")))
                 
-        except Exception as e:
+                if not min_val <= value <= max_val:
+                    _LOGGER.error(
+                        "Wert %s außerhalb des gültigen Bereichs [%s, %s]",
+                        value, min_val, max_val
+                    )
+                    return False
+            except ValueError:
+                _LOGGER.error("Ungültiger numerischer Wert: %s", value)
+                return False
+
+        elif service_type == SERVICE_TYPE_SELECT:
+            options = config.get(CONF_OPTIONS, [])
+            if value not in options:
+                _LOGGER.error(
+                    "Ungültige Option %s. Erlaubte Optionen: %s",
+                    value, options
+                )
+                return False
+
+        return True
+
+    async def _execute_service_action(self, config: dict, value: Any) -> None:
+        """Führe die Service-Aktion aus."""
+        register = config[CONF_REGISTER]
+        success = self._device.write_register(register, value)
+        
+        if success:
+            _LOGGER.debug(
+                "Wert %s erfolgreich in Register %s geschrieben",
+                value, register
+            )
+        else:
             _LOGGER.error(
-                "Fehler bei der Ausführung der Service-Aktion",
-                extra={
-                    "error": str(e),
-                    "service_id": service_id,
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
+                "Fehler beim Schreiben von %s in Register %s",
+                value, register
             )
 
-    def _validate_service_value(self, service_config: Dict[str, Any], value: Any) -> bool:
-        """Validiert einen Service-Wert."""
-        try:
-            service_type = service_config["type"]
-            
-            if service_type == "number":
-                try:
-                    value = float(value)
-                    minimum = float(service_config["minimum"])
-                    maximum = float(service_config["maximum"])
-                    
-                    if not minimum <= value <= maximum:
-                        _LOGGER.error(
-                            "Wert außerhalb des gültigen Bereichs",
-                            extra={
-                                "value": value,
-                                "minimum": minimum,
-                                "maximum": maximum,
-                                "device": self._device.name
-                            }
-                        )
-                        return False
-                        
-                except ValueError:
-                    _LOGGER.error(
-                        "Wert kann nicht in float konvertiert werden",
-                        extra={
-                            "value": value,
-                            "device": self._device.name
-                        }
-                    )
-                    return False
-                    
-            elif service_type == "select":
-                if value not in service_config["options"]:
-                    _LOGGER.error(
-                        "Ungültige Option für Select-Service",
-                        extra={
-                            "value": value,
-                            "options": service_config["options"],
-                            "device": self._device.name
-                        }
-                    )
-                    return False
-                    
-            elif service_type == "button":
-                try:
-                    value = bool(value)
-                except ValueError:
-                    _LOGGER.error(
-                        "Wert kann nicht in bool konvertiert werden",
-                        extra={
-                            "value": value,
-                            "device": self._device.name
-                        }
-                    )
-                    return False
-                    
-            return True
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Validierung des Service-Werts",
-                extra={
-                    "error": str(e),
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            return False
-
-    def get_service_config(self, service_id: str) -> Optional[Dict[str, Any]]:
+    def get_service_config(self, service_name: str) -> Optional[Dict[str, Any]]:
         """Gibt die Konfiguration eines Services zurück."""
-        return self._services.get(service_id) 
+        return self._services.get(service_name) 
