@@ -6,6 +6,7 @@ import logging
 import weakref
 from functools import lru_cache
 from typing import Any, Dict, List, Optional, TypedDict, Callable
+import ast
 
 from .const import DOMAIN, NameType
 from .device_base import ModbusManagerDeviceBase
@@ -572,9 +573,34 @@ class ModbusManagerRegisterProcessor:
                 elif calc_type == "formula":
                     formula = calc_def["calculation"].get("formula", "")
                     calc_def["formula"] = formula
-                    # Extrahiere Variablen aus der Formel
-                    var_names = set(n for n in formula.split() if n.isalpha())
-                    calc_def["variables"] = [{"name": v, "source": v} for v in var_names]
+                    # Extrahiere Variablen aus der Formel mit AST
+                    try:
+                        tree = ast.parse(formula, mode='eval')
+                        var_names = set()
+                        
+                        # Rekursive Funktion zum Extrahieren von Variablennamen
+                        def extract_vars(node):
+                            if isinstance(node, ast.Name):
+                                var_names.add(node.id)
+                            elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.Compare)):
+                                for child in ast.iter_child_nodes(node):
+                                    extract_vars(child)
+                                    
+                        extract_vars(tree.body)
+                        calc_def["variables"] = [{"name": v, "source": v} for v in var_names]
+                        
+                    except Exception as e:
+                        _LOGGER.error(
+                            "Fehler beim Extrahieren der Variablen aus der Formel",
+                            extra={
+                                "error": str(e),
+                                "formula": formula,
+                                "calc_id": calc_id,
+                                "device": self._device.name,
+                                "traceback": e.__traceback__
+                            }
+                        )
+                        return
 
             if await self._validate_calculation_async(calc_id, calc_def):
                 # Generiere alle benötigten Namen mit EntityNameHelper
@@ -1125,28 +1151,58 @@ class ModbusManagerRegisterProcessor:
                         
             elif calc_type == "formula":
                 formula = calc_def["calculation"].get("formula", "")
-                # Extrahiere Variablen aus der Formel
-                var_names = set(n for n in formula.split() if n.isalpha())
-                variables = {}
-                
-                # Sammle verfügbare Variablenwerte
-                for var_name in var_names:
-                    if var_name in available_values:
-                        variables[var_name] = available_values[var_name]
-                    else:
+                try:
+                    # Parse die Formel um Variablen zu extrahieren
+                    tree = ast.parse(formula, mode='eval')
+                    var_names = set()
+                    
+                    def extract_vars(node):
+                        if isinstance(node, ast.Name):
+                            var_names.add(node.id)
+                        elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.Compare)):
+                            for child in ast.iter_child_nodes(node):
+                                extract_vars(child)
+                                
+                    extract_vars(tree.body)
+                    
+                    # Sammle verfügbare Variablenwerte
+                    variables = {}
+                    missing_vars = []
+                    
+                    for var_name in var_names:
+                        prefixed_name = self._device.name_helper.convert(var_name, NameType.BASE_NAME)
+                        if prefixed_name in available_values:
+                            variables[var_name] = available_values[prefixed_name]
+                        else:
+                            missing_vars.append(var_name)
+                    
+                    if missing_vars:
                         _LOGGER.debug(
-                            "Variable für Formel nicht verfügbar",
+                            "Variablen für Formel nicht verfügbar",
                             extra={
                                 "calc_id": calc_id,
                                 "formula": formula,
-                                "missing_var": var_name,
+                                "missing_vars": missing_vars,
                                 "device": self._device.name
                             }
                         )
                         return
-                
-                # Berechne das Ergebnis mit dem Calculator
-                result = await self._device.calculator.calculate_value(formula, variables)
+                    
+                    # Berechne das Ergebnis mit dem Calculator
+                    result = await self._device.calculator.calculate_value(formula, variables)
+                    
+                except Exception as e:
+                    _LOGGER.error(
+                        "Fehler bei der Formelverarbeitung",
+                        extra={
+                            "error": str(e),
+                            "calc_id": calc_id,
+                            "formula": formula,
+                            "device": self._device.name,
+                            "traceback": e.__traceback__
+                        }
+                    )
+                    return
                 
             # Speichere das Ergebnis wenn vorhanden
             if result is not None:
@@ -1161,7 +1217,7 @@ class ModbusManagerRegisterProcessor:
                         "device": self._device.name
                     }
                 )
-            
+                
         except Exception as e:
             _LOGGER.error(
                 "Fehler bei der Verarbeitung des Berechnungstyps",

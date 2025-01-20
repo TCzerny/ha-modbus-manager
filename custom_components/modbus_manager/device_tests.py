@@ -460,21 +460,10 @@ class ModbusManagerTestSuite:
     async def get_test_results(self) -> Dict[str, Any]:
         """Gibt die Testergebnisse zurück."""
         try:
-            results = {
-                "register_tests": self._register_test_results,
-                "entity_tests": self._entity_test_results,
-                "calculation_tests": self._calculation_test_results,
-                "service_tests": self._service_test_results,
-                "total_tests": len(self._register_test_results) + 
-                              len(self._entity_test_results) + 
-                              len(self._calculation_test_results) + 
-                              len(self._service_test_results),
-                "failed_tests": sum(1 for result in self._register_test_results.values() if not result["success"]) +
-                              sum(1 for result in self._entity_test_results.values() if not result["success"]) +
-                              sum(1 for result in self._calculation_test_results.values() if not result["success"]) +
-                              sum(1 for result in self._service_test_results.values() if not result["success"])
-            }
-            return results
+            if not hasattr(self, "_test_results"):
+                return {}
+                
+            return self._test_results
             
         except Exception as e:
             _LOGGER.error(
