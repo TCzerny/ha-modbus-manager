@@ -406,10 +406,45 @@ class ModbusManagerEntityManager:
     async def update_entity_states(self, register_data: Dict[str, Any] = None) -> None:
         """Aktualisiert die Zustände aller Entities."""
         try:
-            for entity in self._entities.values():
-                if hasattr(entity, "async_write_ha_state"):
+            if not self._entities:
+                _LOGGER.debug(
+                    "Keine Entities zum Aktualisieren vorhanden",
+                    extra={
+                        "device": self._device.name
+                    }
+                )
+                return
+
+            for entity_id, entity in self._entities.items():
+                try:
+                    # Prüfe ob Entity initialisiert ist
+                    if not hasattr(entity, "hass") or not entity.hass:
+                        _LOGGER.debug(
+                            "Entity noch nicht initialisiert",
+                            extra={
+                                "device": self._device.name,
+                                "entity_id": entity_id
+                            }
+                        )
+                        continue
+
+                    # Prüfe ob Entity update_value und async_write_ha_state Methoden hat
+                    if not hasattr(entity, "async_write_ha_state"):
+                        _LOGGER.debug(
+                            "Entity hat keine async_write_ha_state Methode",
+                            extra={
+                                "device": self._device.name,
+                                "entity_id": entity_id,
+                                "entity_type": type(entity).__name__
+                            }
+                        )
+                        continue
+
+                    # Update den Entity-Wert wenn register_data vorhanden
                     if register_data and hasattr(entity, "_update_value"):
                         await entity._update_value(register_data)
+                        
+                    # Aktualisiere den Entity-State
                     await entity.async_write_ha_state()
                     
                     # Markiere das Entity-Setup als abgeschlossen
@@ -417,13 +452,26 @@ class ModbusManagerEntityManager:
                         await self._device._hub.async_entity_setup_complete(entity.entity_id)
                     
                     _LOGGER.debug(
-                        "Entity-Status aktualisiert",
+                        "Entity-Status erfolgreich aktualisiert",
                         extra={
                             "device": self._device.name,
-                            "entity_id": entity.entity_id,
+                            "entity_id": entity_id,
                             "state": getattr(entity, "_attr_native_value", None)
                         }
                     )
+
+                except Exception as entity_error:
+                    _LOGGER.error(
+                        "Fehler bei der Aktualisierung einer einzelnen Entity",
+                        extra={
+                            "error": str(entity_error),
+                            "device": self._device.name,
+                            "entity_id": entity_id,
+                            "traceback": entity_error
+                        }
+                    )
+                    continue
+
         except Exception as e:
             _LOGGER.error(
                 "Fehler bei der Entity-Status-Aktualisierung",
