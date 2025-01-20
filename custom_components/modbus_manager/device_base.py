@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import DOMAIN, NameType, DEFAULT_SLAVE
 from .logger import ModbusManagerLogger
+from .device_common import DeviceCommon
 
 from .device_registers import ModbusManagerRegisterProcessor
 from .device_entities import ModbusManagerEntityManager
@@ -82,90 +83,38 @@ class EntityNameHelper:
         else:
             raise ValueError(f"Unbekannter NameType: {name_type}")
 
-class ModbusManagerDeviceBase:
-    """Base class for Modbus Manager Device."""
+class ModbusManagerDeviceBase(DeviceCommon):
+    """Base class for Modbus Manager devices."""
 
-    def __init__(
-        self,
-        hub,
-        device_type: str,
-        config: dict,
-        register_definitions: dict,
-    ) -> None:
+    def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry):
         """Initialize the device."""
+        super().__init__(hass, config_entry)
+        self.register_processor = None  # Wird später initialisiert
+        self.entity_manager = None      # Wird später initialisiert
+        self.service_handler = None     # Wird später initialisiert
+        self.calculator = None          # Wird später initialisiert
+        self.test_suite = None          # Wird später initialisiert
+
+    async def async_setup(self) -> bool:
+        """Set up the device."""
         try:
-            self._hub = hub
-            self.hass = hub.hass
-            self.device_type = device_type
-            self._config = config
-            self.config_entry = hub.entry
-            self._device_config = register_definitions
-            self.name = config.get(CONF_NAME)
-            self._slave = config.get(CONF_SLAVE, DEFAULT_SLAVE)
+            # Lazy imports to avoid circular dependencies
+            from .device_registers import ModbusManagerRegisterProcessor
+            from .device_entities import ModbusManagerEntityManager
+            from .device_services import ModbusManagerServiceHandler
+            from .device_calculations import ModbusManagerCalculator
+            from .device_tests import ModbusManagerTestSuite
             
-            # Device Info
-            self._attr_device_info = DeviceInfo(
-                identifiers={(DOMAIN, self.name)},
-                name=self.name,
-                manufacturer="ModbusManager",
-                model=device_type
-            )
-            
-            # Name Helper
-            self.name_helper = EntityNameHelper(self.config_entry)
-            
-            # Initialisiere die Update-Koordinatoren
-            self._update_coordinators = {
-                "fast": DataUpdateCoordinator(
-                    self.hass,
-                    _LOGGER,
-                    name=f"{self.name}_fast",
-                    update_method=lambda: self.async_update("fast"),
-                    update_interval=timedelta(seconds=10)
-                ),
-                "normal": DataUpdateCoordinator(
-                    self.hass,
-                    _LOGGER,
-                    name=f"{self.name}_normal",
-                    update_method=lambda: self.async_update("normal"),
-                    update_interval=timedelta(seconds=30)
-                ),
-                "slow": DataUpdateCoordinator(
-                    self.hass,
-                    _LOGGER,
-                    name=f"{self.name}_slow",
-                    update_method=lambda: self.async_update("slow"),
-                    update_interval=timedelta(minutes=5)
-                )
-            }
-            
-            # Initialisiere die Komponenten
             self.register_processor = ModbusManagerRegisterProcessor(self)
             self.entity_manager = ModbusManagerEntityManager(self)
-            self.service_handler = ModbusManagerServiceHandler(self.hass, self)
+            self.service_handler = ModbusManagerServiceHandler(self)
             self.calculator = ModbusManagerCalculator(self)
-            self.test_suite = ModbusManagerTestSuite(
-                self.hass,
-                self,
-                self.register_processor,
-                self.entity_manager,
-                self.service_handler,
-                self.calculator
-            )
+            self.test_suite = ModbusManagerTestSuite(self)
             
-            # Erstelle die entities Property für die Plattformen
-            self.entities = {}
-            
+            return True
         except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Initialisierung des Basis-Geräts",
-                extra={
-                    "error": str(e),
-                    "device": config.get(CONF_NAME),
-                    "traceback": e.__traceback__
-                }
-            )
-            raise
+            _LOGGER.error("Error setting up device: %s", str(e))
+            return False
 
     @property
     def device_info(self) -> DeviceInfo:
@@ -199,255 +148,6 @@ class ModbusManagerDeviceBase:
                     "traceback": str(e.__traceback__)
                 }
             )
-
-    async def async_setup(self) -> bool:
-        """Setup des Geräts."""
-        try:
-            _LOGGER.info(
-                "Starte Setup des Geräts",
-                extra={
-                    "device": self.name,
-                    "type": self.device_type
-                }
-            )
-            
-            # Starte die Koordinatoren
-            for interval, coordinator in self._update_coordinators.items():
-                _LOGGER.debug(
-                    f"Starte {interval} Koordinator",
-                    extra={"device": self.name}
-                )
-                await coordinator.async_config_entry_first_refresh()
-            
-            # Initialisiere den Register-Processor
-            _LOGGER.debug(
-                "Initialisiere Register-Processor",
-                extra={"device": self.name}
-            )
-            if not await self.register_processor.setup_registers(self._device_config):
-                _LOGGER.error(
-                    "Register-Processor Setup fehlgeschlagen",
-                    extra={"device": self.name}
-                )
-                return False
-            
-            # Initialisiere den Entity-Manager
-            _LOGGER.debug(
-                "Initialisiere Entity-Manager",
-                extra={"device": self.name}
-            )
-            if not await self.entity_manager.setup_entities(self._device_config):
-                _LOGGER.error(
-                    "Entity-Manager Setup fehlgeschlagen",
-                    extra={"device": self.name}
-                )
-                return False
-            
-            # Führe initiales Update durch
-            _LOGGER.debug(
-                "Führe initiales Update durch",
-                extra={"device": self.name}
-            )
-            if not await self._initial_update():
-                _LOGGER.error(
-                    "Initiales Update fehlgeschlagen",
-                    extra={"device": self.name}
-                )
-                return False
-                
-            # Führe verzögertes Setup durch
-            _LOGGER.debug(
-                "Führe verzögertes Setup durch",
-                extra={"device": self.name}
-            )
-            if not await self._delayed_setup():
-                _LOGGER.error(
-                    "Verzögertes Setup fehlgeschlagen",
-                    extra={"device": self.name}
-                )
-                return False
-                
-            # Führe Tests durch
-            if self.test_suite:
-                _LOGGER.info(
-                    "Starte Test-Suite",
-                    extra={"device": self.name}
-                )
-                
-                test_results = {}
-                
-                # Teste Register-Verarbeitung
-                _LOGGER.debug(
-                    "Führe Register-Tests durch",
-                    extra={"device": self.name}
-                )
-                if not await self.test_suite.run_register_tests():
-                    _LOGGER.error(
-                        "Register-Tests fehlgeschlagen",
-                        extra={"device": self.name}
-                    )
-                    return False
-                    
-                # Teste Entity-Verwaltung
-                _LOGGER.debug(
-                    "Führe Entity-Tests durch",
-                    extra={"device": self.name}
-                )
-                if not await self.test_suite.run_entity_tests():
-                    _LOGGER.error(
-                        "Entity-Tests fehlgeschlagen",
-                        extra={"device": self.name}
-                    )
-                    return False
-                    
-                # Teste Berechnungen
-                _LOGGER.debug(
-                    "Führe Berechnungs-Tests durch",
-                    extra={"device": self.name}
-                )
-                if not await self.test_suite.run_calculation_tests():
-                    _LOGGER.error(
-                        "Berechnungs-Tests fehlgeschlagen",
-                        extra={"device": self.name}
-                    )
-                    return False
-                    
-                # Teste Service-Aufrufe
-                _LOGGER.debug(
-                    "Führe Service-Tests durch",
-                    extra={"device": self.name}
-                )
-                if not await self.test_suite.run_service_tests():
-                    _LOGGER.error(
-                        "Service-Tests fehlgeschlagen",
-                        extra={"device": self.name}
-                    )
-                    return False
-                    
-                test_results = await self.test_suite.get_test_results()
-                _LOGGER.info(
-                    "Test-Suite erfolgreich abgeschlossen",
-                    extra={
-                        "device": self.name,
-                        "test_results": test_results
-                    }
-                )
-                
-            _LOGGER.info(
-                "Setup des Geräts erfolgreich abgeschlossen",
-                extra={"device": self.name}
-            )
-            return True
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Setup des Geräts",
-                extra={
-                    "error": str(e),
-                    "device": self.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            return False
-
-    async def _setup_register_lists(self) -> bool:
-        """Initialisiert die Register-Listen."""
-        try:
-            if not self.register_processor:
-                _LOGGER.error(
-                    "Register-Processor nicht initialisiert",
-                    extra={"device": self.name}
-                )
-                return False
-                
-            return await self.register_processor.setup_registers()
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Initialisierung der Register-Listen",
-                extra={
-                    "error": str(e),
-                    "device": self.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            return False
-
-    async def _initial_update(self) -> bool:
-        """Führt ein initiales Update der Register durch."""
-        try:
-            if not self.register_processor:
-                _LOGGER.error(
-                    "Register-Processor nicht initialisiert",
-                    extra={"device": self.name}
-                )
-                return False
-                
-            # Update der "schnellen" Register
-            register_data = await self.register_processor.update_registers("fast")
-            if not register_data:
-                _LOGGER.error(
-                    "Initiales Update der Register fehlgeschlagen",
-                    extra={"device": self.name}
-                )
-                return False
-                
-            # Aktualisiere Entity-Zustände
-            if self.entity_manager:
-                await self.entity_manager.update_entity_states(register_data)
-                
-            return True
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim initialen Update",
-                extra={
-                    "error": str(e),
-                    "device": self.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            return False
-
-    async def _delayed_setup(self) -> bool:
-        """Führt verzögerte Setup-Tasks aus."""
-        try:
-            # Warte kurz, um dem System Zeit für die Initialisierung zu geben
-            await asyncio.sleep(2)
-            
-            if not self.register_processor:
-                _LOGGER.error(
-                    "Register-Processor nicht initialisiert",
-                    extra={"device": self.name}
-                )
-                return False
-                
-            # Update der "normalen" und "langsamen" Register
-            for interval in ["normal", "slow"]:
-                register_data = await self.register_processor.update_registers(interval)
-                if not register_data:
-                    _LOGGER.error(
-                        f"Update der {interval} Register fehlgeschlagen",
-                        extra={"device": self.name}
-                    )
-                    return False
-                    
-                # Aktualisiere Entity-Zustände
-                if self.entity_manager:
-                    await self.entity_manager.update_entity_states(register_data)
-                    
-            return True
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim verzögerten Setup",
-                extra={
-                    "error": str(e),
-                    "device": self.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            return False
 
     async def async_update(self, interval: str) -> Dict[str, Any]:
         """Aktualisiert die Register für das angegebene Intervall."""

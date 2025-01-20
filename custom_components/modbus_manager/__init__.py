@@ -1,8 +1,13 @@
 """The Modbus Manager Integration."""
 from __future__ import annotations
 
+<<<<<<< HEAD
 import asyncio
 import logging
+=======
+import logging
+import asyncio
+>>>>>>> task/name_helpers_2025-01-16_1
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -11,9 +16,24 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import importlib as helper_importlib
 from homeassistant.helpers.typing import ConfigType
 
+<<<<<<< HEAD
 from .const import DOMAIN, PLATFORMS
 from .modbus_hub import ModbusManagerHub
 from .logger import ModbusManagerLogger
+=======
+from .const import DOMAIN
+from .logger import ModbusManagerLogger
+from .modbus_hub import ModbusManagerHub
+
+PLATFORMS = [
+    Platform.BINARY_SENSOR,
+    Platform.BUTTON,
+    Platform.NUMBER,
+    Platform.SELECT,
+    Platform.SENSOR,
+    Platform.SWITCH
+]
+>>>>>>> task/name_helpers_2025-01-16_1
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -23,6 +43,7 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Modbus Manager from a config entry."""
+<<<<<<< HEAD
     try:
         hass.data.setdefault(DOMAIN, {})
         
@@ -108,6 +129,27 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             }
         )
         return False
+=======
+    hass.data.setdefault(DOMAIN, {})
+    
+    # Erstelle und initialisiere den Hub
+    hub = ModbusManagerHub(hass, entry)
+    if not await hub.async_setup():
+        return False
+        
+    # Speichere den Hub in hass.data
+    hass.data[DOMAIN][entry.entry_id] = hub
+    
+    # Importiere die Plattformen asynchron
+    for platform in PLATFORMS:
+        await helper_importlib.async_import_module(
+            name=f"custom_components.{DOMAIN}.{platform}",
+            hass=hass
+        )
+    
+    await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    return True
+>>>>>>> task/name_helpers_2025-01-16_1
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""

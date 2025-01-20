@@ -54,6 +54,7 @@ class ModbusManagerServiceHandler:
             # Hole die Service-Definitionen
             services = service_definitions.get("services", {})
             
+<<<<<<< HEAD
             _LOGGER.debug(
                 "Starte Service-Setup",
                 extra={
@@ -63,6 +64,8 @@ class ModbusManagerServiceHandler:
                 }
             )
             
+=======
+>>>>>>> task/name_helpers_2025-01-16_1
             # Verarbeite die Services
             for service_id, service_config in services.items():
                 try:
@@ -75,6 +78,7 @@ class ModbusManagerServiceHandler:
                     if handler:
                         # Registriere den Service
                         service_name = self._device.name_helper.convert(service_id, NameType.SERVICE_NAME)
+<<<<<<< HEAD
                         
                         _LOGGER.debug(
                             "Registriere Service",
@@ -86,6 +90,8 @@ class ModbusManagerServiceHandler:
                             }
                         )
                         
+=======
+>>>>>>> task/name_helpers_2025-01-16_1
                         self._hass.services.async_register(
                             DOMAIN,
                             service_name,
@@ -96,6 +102,7 @@ class ModbusManagerServiceHandler:
                         # Speichere die Service-Konfiguration
                         self._services[service_id] = service_config
                         
+<<<<<<< HEAD
                         _LOGGER.info(
                             "Service erfolgreich registriert",
                             extra={
@@ -105,6 +112,8 @@ class ModbusManagerServiceHandler:
                             }
                         )
                         
+=======
+>>>>>>> task/name_helpers_2025-01-16_1
                 except Exception as e:
                     _LOGGER.error(
                         "Fehler beim Einrichten eines Services",
@@ -252,6 +261,7 @@ class ModbusManagerServiceHandler:
     async def _create_service_handler(self, service_id: str, service_config: Dict[str, Any]) -> Optional[Callable]:
         """Erstellt einen Handler für einen Service."""
         try:
+<<<<<<< HEAD
             service_type = service_config["type"]
             register = service_config["register"]
             
@@ -304,10 +314,24 @@ class ModbusManagerServiceHandler:
                                 "value": value,
                                 "type": service_type,
                                 "config": service_config
+=======
+            async def service_handler(call: ServiceCall) -> None:
+                """Handler für den Service."""
+                try:
+                    # Hole den Wert aus dem Service-Call
+                    value = call.data.get("value")
+                    if value is None:
+                        _LOGGER.error(
+                            "Kein Wert im Service-Call",
+                            extra={
+                                "service_id": service_id,
+                                "device": self._device.name
+>>>>>>> task/name_helpers_2025-01-16_1
                             }
                         )
                         return
                         
+<<<<<<< HEAD
                     _LOGGER.debug(
                         "Service wird ausgeführt",
                         extra={
@@ -359,6 +383,23 @@ class ModbusManagerServiceHandler:
                         }
                     )
             
+=======
+                    # Führe die Service-Aktion aus
+                    await self._execute_service_action(service_id, service_config, value)
+                    
+                except Exception as e:
+                    _LOGGER.error(
+                        "Fehler bei der Ausführung des Services",
+                        extra={
+                            "error": str(e),
+                            "service_id": service_id,
+                            "value": value,
+                            "device": self._device.name,
+                            "traceback": e.__traceback__
+                        }
+                    )
+                    
+>>>>>>> task/name_helpers_2025-01-16_1
             return service_handler
             
         except Exception as e:
@@ -368,8 +409,12 @@ class ModbusManagerServiceHandler:
                     "error": str(e),
                     "service_id": service_id,
                     "device": self._device.name,
+<<<<<<< HEAD
                     "traceback": e.__traceback__,
                     "config": service_config
+=======
+                    "traceback": e.__traceback__
+>>>>>>> task/name_helpers_2025-01-16_1
                 }
             )
             return None

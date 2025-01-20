@@ -9,8 +9,8 @@ from typing import Any, Dict, List, Optional, TypedDict, Callable
 import ast
 
 from .const import DOMAIN, NameType
-from .device_base import ModbusManagerDeviceBase
 from .logger import ModbusManagerLogger
+from .device_common import DeviceCommon
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -25,186 +25,73 @@ class RegisterDefinition(TypedDict):
 # Typ-Konvertierungen als Lookup-Table
 TYPE_CONVERTERS: Dict[str, Callable] = {
     "uint16": lambda x: int(x) & 0xFFFF,
-    "int16": lambda x: (int(x) & 0xFFFF) - 65536 if (int(x) & 0xFFFF) > 32767 else int(x) & 0xFFFF,
+    "int16": lambda x: int(x) if int(x) < 32768 else int(x) - 65536,
     "uint32": lambda x: int(x) & 0xFFFFFFFF,
-    "int32": lambda x: (int(x) & 0xFFFFFFFF) - 4294967296 if (int(x) & 0xFFFFFFFF) > 2147483647 else int(x) & 0xFFFFFFFF,
-    "float32": float,
-    "string": str
-}
-
-# Standard-Werte für Register
-DEFAULT_VALUES = {
-    "type": "uint16",
-    "scale": 1.0,
-    "precision": 0,
-    "polling": "normal"  # Standard-Polling-Intervall
+    "int32": lambda x: int(x),
+    "float32": lambda x: float(x),
+    "string": str,
+    "bool": bool
 }
 
 class ModbusManagerRegisterProcessor:
-    """Class for processing Modbus registers."""
-
-    def __init__(self, device: ModbusManagerDeviceBase) -> None:
+    """Processor for Modbus Manager registers."""
+    
+    def __init__(self, device: DeviceCommon):
         """Initialize the register processor."""
-        try:
-            # Schwache Referenz auf das Device-Objekt
-            self._device = weakref.proxy(device)
-            
-            # Optimierte Datenstrukturen
-            self._register_data: Dict[str, Any] = {}
-            self._registers_by_interval: Dict[str, List[RegisterDefinition]] = {
-                "fast": [],
-                "normal": [],
-                "slow": []
-            }
-            self._calculated_registers: Dict[str, Dict[str, Any]] = {}
-            
-            # Cache-Größen basierend auf Register-Anzahl
-            self._cache_size = 32  # Basis-Größe, wird dynamisch angepasst
-            
-            # Fehler-Tracking
-            self._validation_errors: List[str] = []
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Initialisierung des Register-Prozessors",
-                extra={
-                    "error": str(e),
-                    "device": device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            raise
+        self.device = device
+        self.registers: Dict[str, RegisterDefinition] = {}
+        self.values: Dict[str, Any] = {}
 
     @property
     def cache_size(self) -> int:
         """Berechnet die optimale Cache-Größe basierend auf der Register-Anzahl."""
-        total_registers = sum(len(regs) for regs in self._registers_by_interval.values())
+        total_registers = sum(len(regs) for regs in self.registers.values())
         return max(32, min(total_registers * 2, 256))
 
     @lru_cache(maxsize=None)  # Größe wird dynamisch angepasst
     def _get_scale_factor(self, register_name: str) -> float:
         """Cached Zugriff auf Skalierungsfaktoren."""
-        register_def = next((r for r in self._registers_by_interval.values() 
-                           for reg in r if reg.get("name") == register_name), None)
+        register_def = next((r for r in self.registers.values() 
+                           if r.get("name") == register_name), None)
         return float(register_def.get("scale", 1)) if register_def else 1.0
 
     def _adjust_cache_sizes(self) -> None:
         """Passt die Cache-Größen dynamisch an."""
         new_size = self.cache_size
-        if new_size != self._cache_size:
-            self._cache_size = new_size
+        if new_size != self.cache_size:
+            self.cache_size = new_size
             self._get_scale_factor.cache_clear()
             # Setze neue Cache-Größe
             self._get_scale_factor = lru_cache(maxsize=new_size)(self._get_scale_factor.__wrapped__)
-
-    def _check_register_overlap(self, register: Dict[str, Any], existing_registers: List[Dict[str, Any]]) -> bool:
-        """Prüft ob sich ein Register mit existierenden Registern überlappt."""
-        try:
-            if not register or "address" not in register:
-                return False
-                
-            new_address = register["address"]
-            new_count = register.get("count", 1)  # Standard ist 1 Register
-            new_type = register.get("register_type", "input")
-            new_range = set(range(new_address, new_address + new_count))
-            
-            for existing in existing_registers:
-                if existing.get("register_type") != new_type:
-                    continue  # Verschiedene Register-Typen können sich nicht überlappen
-                    
-                existing_address = existing.get("address")
-                if existing_address is None:
-                    continue
-                    
-                existing_count = existing.get("count", 1)
-                existing_range = set(range(existing_address, existing_address + existing_count))
-                
-                if new_range.intersection(existing_range):
-                    _LOGGER.error(
-                        "Register-Überlappung gefunden",
-                        extra={
-                            "new_register": register["name"],
-                            "existing_register": existing.get("name"),
-                            "address_range": f"{new_address}-{new_address + new_count - 1}",
-                            "existing_range": f"{existing_address}-{existing_address + existing_count - 1}",
-                            "type": new_type,
-                            "device": self._device.name
-                        }
-                    )
-                    return True
-                    
-            return False
-            
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler bei der Überlappungsprüfung",
-                extra={
-                    "error": str(e),
-                    "register": register.get("name"),
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-            return True  # Im Fehlerfall als Überlappung behandeln
 
     def _validate_register_definition(self, register: Dict[str, Any]) -> bool:
         """Validiert eine Register-Definition."""
         try:
             # Prüfe ob register ein Dictionary ist
             if not isinstance(register, dict):
-                self._validation_errors.append(f"Register ist kein Dictionary: {register}")
                 return False
                 
             # Prüfe Pflichtfelder
             if not register.get("name"):
-                self._validation_errors.append("Register-Name fehlt")
                 return False
                 
             # Prüfe Register-Adresse
             if "address" not in register:
-                self._validation_errors.append(f"Register-Adresse fehlt für {register.get('name')}")
                 return False
                 
             try:
                 register["address"] = int(register["address"])
             except (ValueError, TypeError):
-                self._validation_errors.append(f"Ungültige Register-Adresse für {register.get('name')}: {register.get('address')}")
                 return False
                 
-            # Prüfe auf Register-Überlappungen
-            all_registers = []
-            for regs in self._registers_by_interval.values():
-                all_registers.extend(regs)
-                
-            if self._check_register_overlap(register, all_registers):
-                self._validation_errors.append(
-                    f"Register {register.get('name')} überlappt mit existierenden Registern"
-                )
-                return False
-
-            # Setze Standard-Werte für fehlende Felder
-            for key, default_value in DEFAULT_VALUES.items():
-                if key not in register:
-                    register[key] = default_value
-                    _LOGGER.debug(
-                        f"Standard-Wert für {key} gesetzt",
-                        extra={
-                            "register": register["name"],
-                            "value": default_value,
-                            "device": self._device.name
-                        }
-                    )
-
             # Prüfe Register-Typ
             reg_type = register.get("type", "uint16")
             if reg_type not in TYPE_CONVERTERS:
-                self._validation_errors.append(f"Ungültiger Register-Typ: {reg_type}")
                 return False
                 
             # Prüfe Register-Art (input/holding)
             register_type = register.get("register_type")
             if register_type not in ["input", "holding"]:
-                self._validation_errors.append(f"Ungültiger Register-Typ (input/holding) für {register.get('name')}")
                 return False
 
             # Prüfe Polling-Intervall
@@ -214,7 +101,7 @@ class ModbusManagerRegisterProcessor:
                     f"Ungültiges Polling-Intervall '{polling}', setze auf 'normal'",
                     extra={
                         "register": register["name"],
-                        "device": self._device.name
+                        "device": self.device.name
                     }
                 )
                 register["polling"] = "normal"
@@ -228,7 +115,7 @@ class ModbusManagerRegisterProcessor:
                     extra={
                         "register": register["name"],
                         "scale": register.get("scale"),
-                        "device": self._device.name
+                        "device": self.device.name
                     }
                 )
                 register["scale"] = 1.0
@@ -242,7 +129,7 @@ class ModbusManagerRegisterProcessor:
                     extra={
                         "register": register["name"],
                         "precision": register.get("precision"),
-                        "device": self._device.name
+                        "device": self.device.name
                     }
                 )
                 register["precision"] = 0
@@ -250,13 +137,12 @@ class ModbusManagerRegisterProcessor:
             return True
             
         except Exception as e:
-            self._validation_errors.append(f"Validierungsfehler: {str(e)}")
             _LOGGER.error(
                 "Fehler bei der Register-Validierung",
                 extra={
                     "error": str(e),
                     "register": register,
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -273,7 +159,7 @@ class ModbusManagerRegisterProcessor:
                         "Berechnungstyp fehlt",
                         extra={
                             "calc_id": calc_id,
-                            "device": self._device.name
+                            "device": self.device.name
                         }
                     )
                     return False
@@ -285,7 +171,7 @@ class ModbusManagerRegisterProcessor:
                             "Quellen für Summenberechnung fehlen",
                             extra={
                                 "calc_id": calc_id,
-                                "device": self._device.name
+                                "device": self.device.name
                             }
                         )
                         return False
@@ -295,7 +181,7 @@ class ModbusManagerRegisterProcessor:
                             "Quelle für Mapping/Conditional fehlt",
                             extra={
                                 "calc_id": calc_id,
-                                "device": self._device.name
+                                "device": self.device.name
                             }
                         )
                         return False
@@ -305,7 +191,7 @@ class ModbusManagerRegisterProcessor:
                             "Formel fehlt",
                             extra={
                                 "calc_id": calc_id,
-                                "device": self._device.name
+                                "device": self.device.name
                             }
                         )
                         return False
@@ -315,7 +201,7 @@ class ModbusManagerRegisterProcessor:
                         extra={
                             "calc_id": calc_id,
                             "type": calc_type,
-                            "device": self._device.name
+                            "device": self.device.name
                         }
                     )
                     return False
@@ -328,7 +214,7 @@ class ModbusManagerRegisterProcessor:
                     "Pflichtfelder fehlen in der Berechnungsdefinition",
                     extra={
                         "calc_id": calc_id,
-                        "device": self._device.name,
+                        "device": self.device.name,
                         "fields": ["formula", "variables"]
                     }
                 )
@@ -347,7 +233,7 @@ class ModbusManagerRegisterProcessor:
                         extra={
                             "invalid_vars": invalid_vars,
                             "calc_id": calc_id,
-                            "device": self._device.name
+                            "device": self.device.name
                         }
                     )
                     return False
@@ -360,7 +246,7 @@ class ModbusManagerRegisterProcessor:
                 extra={
                     "error": str(e),
                     "calc_id": calc_id,
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -369,11 +255,11 @@ class ModbusManagerRegisterProcessor:
     async def setup_registers(self, register_definitions: Dict[str, Any]) -> bool:
         """Richtet die Register basierend auf der Konfiguration ein."""
         try:
-            # Setze Validierungsfehler zurück
-            self._validation_errors = []
+            # Hole die Register-Definitionen
+            registers = register_definitions.get("registers", {})
             
             # Initialisiere Intervall-Listen
-            self._registers_by_interval = {
+            self.registers = {
                 "fast": [],
                 "normal": [],
                 "slow": []
@@ -393,14 +279,14 @@ class ModbusManagerRegisterProcessor:
                                 register["register_type"] = "input" if reg_type == "read" else "holding"
                                 if self._validate_register_definition(register):
                                     polling = register.get("polling", "normal")
-                                    self._registers_by_interval[polling].append(register)
+                                    self.registers[polling].append(register)
                                 else:
                                     _LOGGER.warning(
                                         "Register-Definition übersprungen",
                                         extra={
                                             "register": register,
-                                            "device": self._device.name,
-                                            "errors": self._validation_errors
+                                            "device": self.device.name,
+                                            "errors": self.errors
                                         }
                                     )
                 elif isinstance(registers, list):
@@ -408,14 +294,14 @@ class ModbusManagerRegisterProcessor:
                     for register in registers:
                         if self._validate_register_definition(register):
                             polling = register.get("polling", "normal")
-                            self._registers_by_interval[polling].append(register)
+                            self.registers[polling].append(register)
                         else:
                             _LOGGER.warning(
                                 "Register-Definition übersprungen",
                                 extra={
                                     "register": register,
-                                    "device": self._device.name,
-                                    "errors": self._validation_errors
+                                    "device": self.device.name,
+                                    "errors": self.errors
                                 }
                             )
                 else:
@@ -423,7 +309,7 @@ class ModbusManagerRegisterProcessor:
                         "Ungültiges Register-Format",
                         extra={
                             "type": type(registers),
-                            "device": self._device.name
+                            "device": self.device.name
                         }
                     )
                     return False
@@ -436,14 +322,14 @@ class ModbusManagerRegisterProcessor:
                 if isinstance(calc_registers, dict):
                     for calc_id, calc_def in calc_registers.items():
                         if self._validate_calculation(calc_id, calc_def):
-                            self._calculated_registers[calc_id] = calc_def
+                            self.values[calc_id] = calc_def
                         else:
                             _LOGGER.warning(
                                 "Berechnungsdefinition übersprungen",
                                 extra={
                                     "calc_id": calc_id,
-                                    "device": self._device.name,
-                                    "errors": self._validation_errors
+                                    "device": self.device.name,
+                                    "errors": self.errors
                                 }
                             )
                 elif isinstance(calc_registers, list):
@@ -453,21 +339,21 @@ class ModbusManagerRegisterProcessor:
                                 "Berechnungsdefinition ohne Namen übersprungen",
                                 extra={
                                     "calc_def": calc_def,
-                                    "device": self._device.name
+                                    "device": self.device.name
                                 }
                             )
                             continue
                             
                         calc_id = calc_def["name"]
                         if self._validate_calculation(calc_id, calc_def):
-                            self._calculated_registers[calc_id] = calc_def
+                            self.values[calc_id] = calc_def
                         else:
                             _LOGGER.warning(
                                 "Berechnungsdefinition übersprungen",
                                 extra={
                                     "calc_id": calc_id,
-                                    "device": self._device.name,
-                                    "errors": self._validation_errors
+                                    "device": self.device.name,
+                                    "errors": self.errors
                                 }
                             )
                             
@@ -478,10 +364,10 @@ class ModbusManagerRegisterProcessor:
             _LOGGER.info(
                 "Register-Setup abgeschlossen",
                 extra={
-                    "device": self._device.name,
-                    "total_registers": sum(len(regs) for regs in self._registers_by_interval.values()),
-                    "calculated_registers": len(self._calculated_registers),
-                    "validation_errors": len(self._validation_errors)
+                    "device": self.device.name,
+                    "total_registers": sum(len(regs) for regs in self.registers.values()),
+                    "calculated_registers": len(self.values),
+                    "validation_errors": len(self.errors)
                 }
             )
             
@@ -492,7 +378,7 @@ class ModbusManagerRegisterProcessor:
                 "Fehler beim Setup der Register",
                 extra={
                     "error": str(e),
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -506,7 +392,7 @@ class ModbusManagerRegisterProcessor:
                 return False
                 
             # Generiere eindeutige Namen mit dem EntityNameHelper
-            register["unique_id"] = self._device.name_helper.convert(
+            register["unique_id"] = self.device.name_helper.convert(
                 register["name"],
                 NameType.UNIQUE_ID
             )
@@ -523,7 +409,7 @@ class ModbusManagerRegisterProcessor:
                 extra={
                     "error": str(e),
                     "register": register,
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -532,85 +418,8 @@ class ModbusManagerRegisterProcessor:
     async def _validate_and_store_calculation(self, calc_id: str, calc_def: Dict[str, Any]) -> None:
         """Validiert eine Berechnung und speichert sie wenn gültig."""
         try:
-            # Konvertiere calculation Format zu formula/variables wenn nötig
-            if "calculation" in calc_def:
-                calc_type = calc_def["calculation"].get("type")
-                if calc_type == "sum":
-                    sources = calc_def["calculation"].get("sources", [])
-                    calc_def["formula"] = " + ".join(sources)
-                    calc_def["variables"] = [{"name": s, "source": s} for s in sources]
-                elif calc_type == "mapping":
-                    source = calc_def["calculation"].get("source")
-                    map_name = calc_def["calculation"].get("map")
-                    # TODO: Implementiere Mapping-Logik
-                    calc_def["formula"] = source
-                    calc_def["variables"] = [{"name": source, "source": source}]
-                elif calc_type == "conditional":
-                    source = calc_def["calculation"].get("source")
-                    condition = calc_def["calculation"].get("condition")
-                    absolute = calc_def["calculation"].get("absolute", False)
-                    
-                    if condition == "positive":
-                        calc_def["formula"] = f"{source} if {source} > 0 else 0"
-                    elif condition == "negative":
-                        if absolute:
-                            calc_def["formula"] = f"abs({source}) if {source} < 0 else 0"
-                        else:
-                            calc_def["formula"] = f"{source} if {source} < 0 else 0"
-                    else:
-                        calc_def["formula"] = source
-                        
-                    calc_def["variables"] = [{"name": source, "source": source}]
-                elif calc_type == "formula":
-                    formula = calc_def["calculation"].get("formula", "")
-                    calc_def["formula"] = formula
-                    # Extrahiere Variablen aus der Formel mit AST
-                    try:
-                        tree = ast.parse(formula, mode='eval')
-                        var_names = set()
-                        
-                        # Rekursive Funktion zum Extrahieren von Variablennamen
-                        def extract_vars(node):
-                            if isinstance(node, ast.Name):
-                                var_names.add(node.id)
-                            elif isinstance(node, (ast.BinOp, ast.UnaryOp, ast.Compare)):
-                                for child in ast.iter_child_nodes(node):
-                                    extract_vars(child)
-                                    
-                        extract_vars(tree.body)
-                        calc_def["variables"] = [{"name": v, "source": v} for v in var_names]
-                        
-                    except Exception as e:
-                        _LOGGER.error(
-                            "Fehler beim Extrahieren der Variablen aus der Formel",
-                            extra={
-                                "error": str(e),
-                                "formula": formula,
-                                "calc_id": calc_id,
-                                "device": self._device.name,
-                                "traceback": e.__traceback__
-                            }
-                        )
-                        return
-
             if await self._validate_calculation_async(calc_id, calc_def):
-                # Generiere alle benötigten Namen mit EntityNameHelper
-                calc_def["unique_id"] = self._device.name_helper.convert(
-                    calc_id,
-                    NameType.UNIQUE_ID
-                )
-                calc_def["name"] = self._device.name_helper.convert(
-                    calc_id,
-                    NameType.DISPLAY_NAME
-                )
-                # Generiere entity_id mit Domain
-                calc_def["entity_id"] = self._device.name_helper.convert(
-                    calc_id,
-                    NameType.ENTITY_ID,
-                    domain="sensor"  # Berechnete Register sind immer Sensoren
-                )
-                
-                self._calculated_registers[calc_id] = calc_def
+                self.values[calc_id] = calc_def
                 
         except Exception as e:
             _LOGGER.error(
@@ -618,7 +427,7 @@ class ModbusManagerRegisterProcessor:
                 extra={
                     "error": str(e),
                     "calc_id": calc_id,
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -627,94 +436,13 @@ class ModbusManagerRegisterProcessor:
         """Asynchrone Wrapper-Methode für die Berechnungsvalidierung."""
         return self._validate_calculation(calc_id, calc_def)
 
-    async def read_register(self, register: Dict[str, Any], values: List[int]) -> None:
-        """Liest ein einzelnes Register."""
-        try:
-            # Validiere register
-            if not isinstance(register, dict):
-                _LOGGER.error(
-                    "Register ist kein Dictionary",
-                    extra={
-                        "register_type": type(register),
-                        "register": register,
-                        "device": self._device.name
-                    }
-                )
-                return
-
-            register_name = register.get("name")
-            if not register_name:
-                _LOGGER.error(
-                    "Register hat keinen Namen",
-                    extra={
-                        "register": register,
-                        "device": self._device.name
-                    }
-                )
-                return
-                
-            # Konvertiere den Register-Namen
-            prefixed_name = self._device.name_helper.convert(register_name, NameType.BASE_NAME)
-            
-            # Verarbeite den Wert
-            if len(values) > 0:
-                processed_value = await self.process_register_value(register_name, register, values[0])
-                if processed_value is not None:
-                    self._register_data[prefixed_name] = processed_value
-                    _LOGGER.debug(
-                        "Register erfolgreich gelesen",
-                        extra={
-                            "register": register_name,
-                            "prefixed_name": prefixed_name,
-                            "raw_value": values[0],
-                            "processed_value": processed_value,
-                            "device": self._device.name
-                        }
-                    )
-                    
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Lesen des Registers",
-                extra={
-                    "error": str(e),
-                    "register": register.get("name") if isinstance(register, dict) else register,
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-
     async def process_register_value(self, register_name: str, register_def: Dict[str, Any], raw_value: Any) -> Optional[Any]:
         """Verarbeitet den Rohwert eines Registers."""
         try:
             if raw_value is None:
                 return None
-                
-            # Validiere register_def
-            if not isinstance(register_def, dict):
-                _LOGGER.error(
-                    "Register-Definition ist kein Dictionary",
-                    extra={
-                        "register": register_name,
-                        "register_def_type": type(register_def),
-                        "register_def": register_def,
-                        "device": self._device.name
-                    }
-                )
-                return None
 
-            # Hole den Register-Typ
             reg_type = register_def.get("type", "uint16")
-            if not isinstance(reg_type, str):
-                _LOGGER.error(
-                    "Register-Typ ist kein String",
-                    extra={
-                        "register": register_name,
-                        "type": reg_type,
-                        "type_type": type(reg_type),
-                        "device": self._device.name
-                    }
-                )
-                return None
             
             # Typ-Konvertierung über Lookup-Table
             converter = TYPE_CONVERTERS.get(reg_type)
@@ -724,7 +452,7 @@ class ModbusManagerRegisterProcessor:
                     extra={
                         "type": reg_type,
                         "register": register_name,
-                        "device": self._device.name
+                        "device": self.device.name
                     }
                 )
                 return None
@@ -739,14 +467,14 @@ class ModbusManagerRegisterProcessor:
                         "type": reg_type,
                         "raw_value": raw_value,
                         "register": register_name,
-                        "device": self._device.name,
+                        "device": self.device.name,
                         "traceback": e.__traceback__
                     }
                 )
                 return None
 
             # Optimierte Skalierung mit Cache
-            scale = register_def.get("scale", 1.0)
+            scale = self._get_scale_factor(register_name)
             if scale != 1:
                 try:
                     value = float(value) * scale
@@ -758,7 +486,7 @@ class ModbusManagerRegisterProcessor:
                             "scale": scale,
                             "value": value,
                             "register": register_name,
-                            "device": self._device.name,
+                            "device": self.device.name,
                             "traceback": e.__traceback__
                         }
                     )
@@ -767,21 +495,7 @@ class ModbusManagerRegisterProcessor:
             # Präzision anwenden wenn definiert
             precision = register_def.get("precision")
             if precision is not None:
-                try:
-                    value = round(float(value), precision)
-                except (ValueError, TypeError) as e:
-                    _LOGGER.error(
-                        "Fehler bei der Rundung",
-                        extra={
-                            "error": str(e),
-                            "precision": precision,
-                            "value": value,
-                            "register": register_name,
-                            "device": self._device.name,
-                            "traceback": e.__traceback__
-                        }
-                    )
-                    return None
+                value = round(float(value), precision)
 
             return value
 
@@ -791,67 +505,22 @@ class ModbusManagerRegisterProcessor:
                 extra={
                     "error": str(e),
                     "register": register_name,
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
             return None
 
-    async def _read_single_register(self, register: Dict[str, Any], reg_type: str, address: int, count: int) -> None:
-        """Liest ein einzelnes Register."""
-        try:
-            # Lese die Register basierend auf dem Typ
-            if reg_type == "input":
-                values = await self._device._hub.async_read_input_registers(
-                    slave=self._device._slave,
-                    address=address,
-                    count=count
-                )
-            else:  # holding register
-                values = await self._device._hub.async_read_registers(
-                    slave=self._device._slave,
-                    address=address,
-                    count=count
-                )
-
-            if values:
-                await self.read_register(register, values)
-            else:
-                _LOGGER.error(
-                    "Keine Werte vom Register gelesen",
-                    extra={
-                        "register": register.get("name", "Unbekannt"),
-                        "type": reg_type,
-                        "address": address,
-                        "count": count,
-                        "device": self._device.name
-                    }
-                )
-
-        except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Lesen des Registers",
-                extra={
-                    "error": str(e),
-                    "register": register.get("name", "Unbekannt"),
-                    "type": reg_type,
-                    "address": address,
-                    "count": count,
-                    "device": self._device.name,
-                    "traceback": e.__traceback__
-                }
-            )
-
     async def update_registers(self, interval: str) -> bool:
         """Aktualisiert die Register für das angegebene Intervall."""
         try:
             # Hole die Register für dieses Intervall
-            registers = self._registers_by_interval.get(interval, [])
+            registers = self.registers.get(interval, [])
 
             _LOGGER.debug(
                 f"Starte Register-Update",
                 extra={
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "interval": interval,
                     "register_count": len(registers)
                 }
@@ -861,7 +530,7 @@ class ModbusManagerRegisterProcessor:
                 _LOGGER.debug(
                     f"Keine Register für Intervall {interval}",
                     extra={
-                        "device": self._device.name,
+                        "device": self.device.name,
                         "interval": interval
                     }
                 )
@@ -881,7 +550,7 @@ class ModbusManagerRegisterProcessor:
                         extra={
                             "register_type": type(register),
                             "register": register,
-                            "device": self._device.name
+                            "device": self.device.name
                         }
                     )
                     failed_registers.append(register)
@@ -906,27 +575,27 @@ class ModbusManagerRegisterProcessor:
                             "address": address,
                             "count": count,
                             "batch_size": len(batch_registers),
-                            "device": self._device.name
+                            "device": self.device.name
                         }
                     )
 
                     # Lese die Register basierend auf dem Typ
                     if reg_type == "input":
-                        values = await self._device._hub.async_read_input_registers(
-                            slave=self._device._slave,
+                        values = await self.device._hub.async_read_input_registers(
+                            slave=self.device._slave,
                             address=address,
                             count=count
                         )
                     else:  # holding register
-                        values = await self._device._hub.async_read_registers(
-                            slave=self._device._slave,
+                        values = await self.device._hub.async_read_registers(
+                            slave=self.device._slave,
                             address=address,
                             count=count
                         )
 
                     if values:
                         for register in batch_registers:
-                            await self.read_register(register, values)
+                            await self.process_register_value(register["name"], register, values[0])
                             successful_registers.append(register)
                     else:
                         _LOGGER.error(
@@ -935,7 +604,7 @@ class ModbusManagerRegisterProcessor:
                                 "type": reg_type,
                                 "address": address,
                                 "count": count,
-                                "device": self._device.name
+                                "device": self.device.name
                             }
                         )
                         failed_registers.extend(batch_registers)
@@ -948,7 +617,7 @@ class ModbusManagerRegisterProcessor:
                             "type": reg_type,
                             "address": address,
                             "count": count,
-                            "device": self._device.name,
+                            "device": self.device.name,
                             "traceback": e.__traceback__
                         }
                     )
@@ -958,7 +627,7 @@ class ModbusManagerRegisterProcessor:
             _LOGGER.info(
                 "Register-Update abgeschlossen",
                 extra={
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "interval": interval,
                     "total_registers": len(registers),
                     "failed_registers": len(failed_registers),
@@ -971,7 +640,7 @@ class ModbusManagerRegisterProcessor:
                 _LOGGER.error(
                     "Zu viele Register-Updates fehlgeschlagen",
                     extra={
-                        "device": self._device.name,
+                        "device": self.device.name,
                         "interval": interval,
                         "failed_count": len(failed_registers),
                         "total_count": len(registers),
@@ -991,7 +660,7 @@ class ModbusManagerRegisterProcessor:
                 "Fehler beim Aktualisieren der Register",
                 extra={
                     "error": str(e),
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "interval": interval,
                     "traceback": e.__traceback__
                 }
@@ -1001,18 +670,18 @@ class ModbusManagerRegisterProcessor:
     async def update_calculated_registers(self) -> None:
         """Aktualisiert die berechneten Register."""
         try:
-            if not self._calculated_registers:
+            if not self.values:
                 _LOGGER.debug(
                     "Keine berechneten Register vorhanden",
                     extra={
-                        "device": self._device.name
+                        "device": self.device.name
                     }
                 )
                 return
 
             # Optimierte Datensammlung mit Set für schnellere Lookups
             required_sources = set()
-            for calc_def in self._calculated_registers.values():
+            for calc_def in self.values.values():
                 if "variables" in calc_def:
                     for var in calc_def["variables"]:
                         if isinstance(var, dict) and "source" in var:
@@ -1030,12 +699,12 @@ class ModbusManagerRegisterProcessor:
             available_values = {}
             for source in required_sources:
                 # Konvertiere den Quell-Namen
-                prefixed_source = self._device.name_helper.convert(source, NameType.BASE_NAME)
-                if prefixed_source in self._register_data:
-                    available_values[source] = self._register_data[prefixed_source]
+                prefixed_source = self.device.name_helper.convert(source, NameType.BASE_NAME)
+                if prefixed_source in self.values:
+                    available_values[source] = self.values[prefixed_source]
 
             # Verarbeite die Berechnungen
-            for calc_id, calc_def in self._calculated_registers.items():
+            for calc_id, calc_def in self.values.items():
                 try:
                     # Prüfe ob es sich um eine Berechnung oder direkte Formel handelt
                     if "calculation" in calc_def:
@@ -1051,11 +720,11 @@ class ModbusManagerRegisterProcessor:
                                 for var in calc_def["variables"]
                             }
                             # Berechne das Ergebnis mit dem Calculator
-                            result = await self._device.calculator.calculate_value(calc_def["formula"], variables)
+                            result = await self.device.calculator.calculate_value(calc_def["formula"], variables)
                             if result is not None:
                                 # Speichere das Ergebnis in den Register-Daten
-                                prefixed_calc_id = self._device.name_helper.convert(calc_id, NameType.BASE_NAME)
-                                self._register_data[prefixed_calc_id] = result
+                                prefixed_calc_id = self.device.name_helper.convert(calc_id, NameType.BASE_NAME)
+                                self.values[prefixed_calc_id] = result
                                 _LOGGER.debug(
                                     "Berechnetes Register aktualisiert",
                                     extra={
@@ -1063,7 +732,7 @@ class ModbusManagerRegisterProcessor:
                                         "formula": calc_def["formula"],
                                         "variables": variables,
                                         "result": result,
-                                        "device": self._device.name
+                                        "device": self.device.name
                                     }
                                 )
                         else:
@@ -1071,7 +740,7 @@ class ModbusManagerRegisterProcessor:
                                 "Nicht alle Variablen für Berechnung verfügbar",
                                 extra={
                                     "calc_id": calc_id,
-                                    "device": self._device.name,
+                                    "device": self.device.name,
                                     "missing_vars": [
                                         var["source"] for var in calc_def["variables"]
                                         if var["source"] not in available_values
@@ -1083,7 +752,7 @@ class ModbusManagerRegisterProcessor:
                             "Ungültiges Berechnungsformat",
                             extra={
                                 "calc_id": calc_id,
-                                "device": self._device.name
+                                "device": self.device.name
                             }
                         )
                         
@@ -1093,7 +762,7 @@ class ModbusManagerRegisterProcessor:
                         extra={
                             "error": str(e),
                             "calc_id": calc_id,
-                            "device": self._device.name,
+                            "device": self.device.name,
                             "traceback": e.__traceback__
                         }
                     )
@@ -1104,7 +773,7 @@ class ModbusManagerRegisterProcessor:
                 "Fehler bei der Aktualisierung der berechneten Register",
                 extra={
                     "error": str(e),
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -1161,7 +830,7 @@ class ModbusManagerRegisterProcessor:
                     missing_vars = []
                     
                     for var_name in var_names:
-                        prefixed_name = self._device.name_helper.convert(var_name, NameType.BASE_NAME)
+                        prefixed_name = self.device.name_helper.convert(var_name, NameType.BASE_NAME)
                         if prefixed_name in available_values:
                             variables[var_name] = available_values[prefixed_name]
                         else:
@@ -1174,13 +843,13 @@ class ModbusManagerRegisterProcessor:
                                 "calc_id": calc_id,
                                 "formula": formula,
                                 "missing_vars": missing_vars,
-                                "device": self._device.name
+                                "device": self.device.name
                             }
                         )
                         return
                     
                     # Berechne das Ergebnis mit dem Calculator
-                    result = await self._device.calculator.calculate_value(formula, variables)
+                    result = await self.device.calculator.calculate_value(formula, variables)
                     
                 except Exception as e:
                     _LOGGER.error(
@@ -1189,7 +858,7 @@ class ModbusManagerRegisterProcessor:
                             "error": str(e),
                             "calc_id": calc_id,
                             "formula": formula,
-                            "device": self._device.name,
+                            "device": self.device.name,
                             "traceback": e.__traceback__
                         }
                     )
@@ -1197,15 +866,15 @@ class ModbusManagerRegisterProcessor:
                 
             # Speichere das Ergebnis wenn vorhanden
             if result is not None:
-                prefixed_calc_id = self._device.name_helper.convert(calc_id, NameType.BASE_NAME)
-                self._register_data[prefixed_calc_id] = result
+                prefixed_calc_id = self.device.name_helper.convert(calc_id, NameType.BASE_NAME)
+                self.values[prefixed_calc_id] = result
                 _LOGGER.debug(
                     "Berechnetes Register aktualisiert",
                     extra={
                         "calc_id": calc_id,
                         "type": calc_type,
                         "result": result,
-                        "device": self._device.name
+                        "device": self.device.name
                     }
                 )
                 
@@ -1216,7 +885,7 @@ class ModbusManagerRegisterProcessor:
                     "error": str(e),
                     "calc_id": calc_id,
                     "type": calc_type if 'calc_type' in locals() else None,
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -1224,15 +893,15 @@ class ModbusManagerRegisterProcessor:
     def _store_calculated_value(self, calc_id: str, value: Any) -> None:
         """Speichert einen berechneten Wert."""
         try:
-            prefixed_name = self._device.name_helper.convert(calc_id, NameType.BASE_NAME)
-            self._register_data[prefixed_name] = value
+            prefixed_name = self.device.name_helper.convert(calc_id, NameType.BASE_NAME)
+            self.values[prefixed_name] = value
             
             _LOGGER.debug(
                 "Berechneter Wert gespeichert",
                 extra={
                     "calc_id": calc_id,
                     "value": value,
-                    "device": self._device.name
+                    "device": self.device.name
                 }
             )
             
@@ -1242,7 +911,7 @@ class ModbusManagerRegisterProcessor:
                 extra={
                     "error": str(e),
                     "calc_id": calc_id,
-                    "device": self._device.name,
+                    "device": self.device.name,
                     "traceback": e.__traceback__
                 }
             )
@@ -1250,9 +919,9 @@ class ModbusManagerRegisterProcessor:
     @property
     def register_data(self) -> Dict[str, Any]:
         """Gibt die aktuellen Register-Daten zurück."""
-        return self._register_data.copy()
+        return self.values.copy()
 
     @property
     def registers_by_interval(self) -> Dict[str, List[Dict[str, Any]]]:
         """Gibt die Register gruppiert nach Intervall zurück."""
-        return self._registers_by_interval.copy() 
+        return self.registers.copy() 
