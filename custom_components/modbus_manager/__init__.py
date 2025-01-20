@@ -1,8 +1,8 @@
 """The Modbus Manager Integration."""
 from __future__ import annotations
 
-import logging
 import asyncio
+import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
@@ -11,18 +11,9 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers import importlib as helper_importlib
 from homeassistant.helpers.typing import ConfigType
 
-from .const import DOMAIN
-from .logger import ModbusManagerLogger
+from .const import DOMAIN, PLATFORMS
 from .modbus_hub import ModbusManagerHub
-
-PLATFORMS = [
-    Platform.BINARY_SENSOR,
-    Platform.BUTTON,
-    Platform.NUMBER,
-    Platform.SELECT,
-    Platform.SENSOR,
-    Platform.SWITCH
-]
+from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 

@@ -7,14 +7,22 @@ import logging
 import json
 import os
 import yaml
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from homeassistant.const import CONF_NAME, CONF_SLAVE
+from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import DOMAIN, NameType, DEFAULT_SLAVE
 from .logger import ModbusManagerLogger
 from .helpers import EntityNameHelper
+from .device_registers import ModbusManagerRegisterProcessor
+from .device_entities import ModbusManagerEntityManager
+from .device_services import ModbusManagerServiceHandler
+from .device_calculations import ModbusManagerCalculator
+from .device_tests import ModbusManagerTestSuite
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -32,53 +40,50 @@ class ModbusManagerDeviceBase:
         try:
             self._hub = hub
             self.hass = hub.hass
-            self.config = config
             self.device_type = device_type
+            self._config = config
+            self.config_entry = hub.entry
             self._device_config = register_definitions
+            self.name = config.get(CONF_NAME)
             self._slave = config.get(CONF_SLAVE, DEFAULT_SLAVE)
             
-            # Initialisiere den Name Helper
-            self.name_helper = EntityNameHelper(hub.entry)
-            
-            # Generiere eindeutige Namen
-            self.name = config[CONF_NAME]  # Verwende den Original-Namen
-            self.unique_id = self.name_helper.convert(config[CONF_NAME], NameType.UNIQUE_ID)
-            
-            # Setze die Geräte-Identifikation
-            self.manufacturer = register_definitions.get("manufacturer", "Unknown")
-            self.model = register_definitions.get("model", "Generic Modbus Device")
-            
-            # Device Info für Home Assistant
+            # Device Info
             self._attr_device_info = DeviceInfo(
-                identifiers={(DOMAIN, self.unique_id)},
+                identifiers={(DOMAIN, self.name)},
                 name=self.name,
-                manufacturer=self.manufacturer,
-                model=self.model,
-                via_device=(DOMAIN, self._hub.unique_id)
+                manufacturer="ModbusManager",
+                model=device_type
             )
             
-            _LOGGER.debug(
-                "ModbusManager Device initialisiert",
-                extra={
-                    "name": self.name,
-                    "unique_id": self.unique_id,
-                    "type": device_type,
-                    "manufacturer": self.manufacturer,
-                    "model": self.model
-                }
-            )
+            # Name Helper
+            self.name_helper = EntityNameHelper(self.config_entry)
             
             # Initialisiere die Update-Koordinatoren
-            self._update_coordinators = {}
-            self._remove_state_change_listeners = []
+            self._update_coordinators = {
+                "fast": DataUpdateCoordinator(
+                    self.hass,
+                    _LOGGER,
+                    name=f"{self.name}_fast",
+                    update_method=lambda: self.async_update("fast"),
+                    update_interval=timedelta(seconds=10)
+                ),
+                "normal": DataUpdateCoordinator(
+                    self.hass,
+                    _LOGGER,
+                    name=f"{self.name}_normal",
+                    update_method=lambda: self.async_update("normal"),
+                    update_interval=timedelta(seconds=30)
+                ),
+                "slow": DataUpdateCoordinator(
+                    self.hass,
+                    _LOGGER,
+                    name=f"{self.name}_slow",
+                    update_method=lambda: self.async_update("slow"),
+                    update_interval=timedelta(minutes=5)
+                )
+            }
             
             # Initialisiere die Komponenten
-            from .device_registers import ModbusManagerRegisterProcessor
-            from .device_entities import ModbusManagerEntityManager
-            from .device_services import ModbusManagerServiceHandler
-            from .device_calculations import ModbusManagerCalculator
-            from .device_tests import ModbusManagerTestSuite
-            
             self.register_processor = ModbusManagerRegisterProcessor(self)
             self.entity_manager = ModbusManagerEntityManager(self)
             self.service_handler = ModbusManagerServiceHandler(self.hass, self)
@@ -149,6 +154,14 @@ class ModbusManagerDeviceBase:
                     "type": self.device_type
                 }
             )
+            
+            # Starte die Koordinatoren
+            for interval, coordinator in self._update_coordinators.items():
+                _LOGGER.debug(
+                    f"Starte {interval} Koordinator",
+                    extra={"device": self.name}
+                )
+                await coordinator.async_config_entry_first_refresh()
             
             # Initialisiere den Register-Processor
             _LOGGER.debug(
@@ -391,14 +404,17 @@ class ModbusManagerDeviceBase:
                 return {}
                 
             # Update der Register
-            register_data = await self.register_processor.update_registers(interval)
-            if not register_data:
+            success = await self.register_processor.update_registers(interval)
+            if not success:
                 _LOGGER.warning(
-                    f"Keine Daten beim Update der {interval} Register",
+                    f"Update der {interval} Register fehlgeschlagen",
                     extra={"device": self.name}
                 )
                 return {}
                 
+            # Hole die aktuellen Register-Daten
+            register_data = self.register_processor.get_register_data()
+            
             # Aktualisiere berechnete Register
             if self.calculator:
                 try:
@@ -409,7 +425,7 @@ class ModbusManagerDeviceBase:
                         extra={
                             "error": str(e),
                             "device": self.name,
-                            "traceback": e.__traceback__
+                            "traceback": str(e.__traceback__)
                         }
                     )
                     
@@ -423,11 +439,12 @@ class ModbusManagerDeviceBase:
                         extra={
                             "error": str(e),
                             "device": self.name,
-                            "traceback": e.__traceback__
+                            "traceback": str(e.__traceback__)
                         }
                     )
-                    
-            return register_data
+            
+            # Gib die Daten für den Coordinator zurück
+            return {self.name: register_data}
             
         except Exception as e:
             _LOGGER.error(
@@ -436,7 +453,7 @@ class ModbusManagerDeviceBase:
                     "error": str(e),
                     "interval": interval,
                     "device": self.name,
-                    "traceback": e.__traceback__
+                    "traceback": str(e.__traceback__)
                 }
             )
             return {} 

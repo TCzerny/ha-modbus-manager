@@ -44,146 +44,95 @@ class ModbusManagerEntityManager:
         """Gibt alle verwalteten Entities zurück."""
         return self._entities
 
-    def _create_entity(self, entity_type: str, name: str, config: Dict[str, Any], coordinator=None) -> Optional[Entity]:
+    def _create_entity(
+        self,
+        entity_type: str,
+        name: str,
+        config: Dict[str, Any],
+        coordinator: DataUpdateCoordinator = None
+    ) -> Optional[Entity]:
         """Erstellt eine Entity basierend auf Typ und Konfiguration."""
         try:
-            # Validiere die Basis-Konfiguration
+            # Validiere die Entity-Konfiguration
             if not self._validate_entity_config(entity_type, name, config):
+                return None
+
+            # Hole den passenden Coordinator basierend auf dem Polling-Intervall
+            if not coordinator:
+                polling = config.get("polling", "normal")
+                coordinator = self._device._update_coordinators.get(polling)
+                
+            if not coordinator:
                 _LOGGER.error(
-                    "Entity-Konfiguration ungültig",
+                    "Kein Coordinator verfügbar",
                     extra={
                         "device": self._device.name,
-                        "name": name,
-                        "type": entity_type,
-                        "errors": self._validation_errors
+                        "entity_type": entity_type,
+                        "name": name
                     }
                 )
                 return None
-
-            # Generiere Entity-IDs
-            unique_id = self._device.name_helper.convert(name, NameType.UNIQUE_ID)
-            display_name = self._device.name_helper.convert(name, NameType.DISPLAY_NAME)
-
-            # Bestimme die Domain basierend auf dem Entity-Typ und der Konfiguration
-            domain = {
-                "register": "sensor",
-                "switch": "switch",
-                "number": "number",
-                "select": "select",
-                "button": "button",
-                "binary_sensor": "binary_sensor"
-            }.get(entity_type)
-
-            # Überschreibe Domain wenn in der Konfiguration angegeben
-            if "entity_type" in config:
-                domain = config["entity_type"]
-
-            if not domain:
-                _LOGGER.error(
-                    "Keine Domain für Entity-Typ gefunden",
-                    extra={
-                        "device": self._device.name,
-                        "name": name,
-                        "type": entity_type
-                    }
-                )
-                return None
-
-            entity_id = self._device.name_helper.convert(name, NameType.ENTITY_ID, domain=domain)
-
-            _LOGGER.debug(
-                "Entity IDs generiert",
-                extra={
-                    "device": self._device.name,
-                    "name": name,
-                    "unique_id": unique_id,
-                    "entity_id": entity_id,
-                    "display_name": display_name,
-                    "domain": domain
-                }
-            )
 
             # Erstelle die Entity basierend auf dem Typ
             entity = None
-            try:
-                if entity_type == "register" or "calculation" in config:
-                    entity = ModbusRegisterEntity(
-                        device=self._device,
-                        register_name=name,
-                        register_config=config,
-                        coordinator=coordinator
-                    )
-                elif entity_type == "switch":
-                    entity = SwitchEntity()
-                elif entity_type == "number":
-                    entity = NumberEntity()
-                elif entity_type == "select":
-                    entity = SelectEntity()
-                elif entity_type == "button":
-                    entity = ButtonEntity()
-                elif entity_type == "binary_sensor":
-                    entity = BinarySensorEntity()
-                else:
-                    _LOGGER.error(
-                        f"Unbekannter Entity-Typ: {entity_type}",
-                        extra={
-                            "device": self._device.name,
-                            "name": name,
-                            "config": config
-                        }
-                    )
-                    return None
-
-                # Setze grundlegende Attribute
-                if entity:
-                    entity._attr_unique_id = unique_id
-                    entity._attr_name = display_name
-                    entity._attr_device_info = self._device.device_info
-                    entity.entity_id = entity_id
-
-                    # Setze optionale Attribute
-                    if "device_class" in config:
-                        entity._attr_device_class = config["device_class"]
-                    if "unit_of_measurement" in config:
-                        entity._attr_native_unit_of_measurement = config["unit_of_measurement"]
-                    if "state_class" in config:
-                        entity._attr_state_class = config["state_class"]
-
-                _LOGGER.debug(
-                    "Entity erfolgreich erstellt",
-                    extra={
-                        "device": self._device.name,
-                        "entity_id": entity.entity_id,
-                        "type": entity_type,
-                        "domain": domain,
-                        "attributes": {
-                            "unique_id": entity.unique_id,
-                            "name": entity.name,
-                            "device_class": getattr(entity, "_attr_device_class", None),
-                            "unit": getattr(entity, "_attr_native_unit_of_measurement", None),
-                            "state_class": getattr(entity, "_attr_state_class", None),
-                            "available": getattr(entity, "_attr_available", None),
-                            "should_poll": getattr(entity, "_attr_should_poll", None),
-                            "has_coordinator": coordinator is not None
-                        }
-                    }
+            
+            if entity_type == "register":
+                entity = ModbusRegisterEntity(
+                    device=self._device,
+                    name=name,
+                    register_config=config,
+                    coordinator=coordinator
                 )
-
-            except Exception as e:
+            elif entity_type == "button":
+                entity = ModbusManagerButton(
+                    device=self._device,
+                    name=name,
+                    config=config,
+                    coordinator=coordinator
+                )
+            elif entity_type == "switch":
+                entity = ModbusManagerSwitch(
+                    device=self._device,
+                    name=name,
+                    config=config,
+                    coordinator=coordinator
+                )
+            elif entity_type == "number":
+                entity = ModbusManagerInputNumber(
+                    device=self._device,
+                    name=name,
+                    config=config,
+                    coordinator=coordinator
+                )
+            elif entity_type == "select":
+                entity = ModbusManagerInputSelect(
+                    device=self._device,
+                    name=name,
+                    config=config,
+                    coordinator=coordinator
+                )
+            else:
                 _LOGGER.error(
-                    "Fehler bei der Entity-Instanziierung",
+                    "Unbekannter Entity-Typ",
                     extra={
-                        "error": str(e),
                         "device": self._device.name,
                         "type": entity_type,
-                        "name": name,
-                        "config": config,
-                        "traceback": str(e.__traceback__)
+                        "name": name
                     }
                 )
                 return None
 
-            return entity
+            if entity:
+                _LOGGER.debug(
+                    "Entity erstellt",
+                    extra={
+                        "device": self._device.name,
+                        "type": entity_type,
+                        "name": name,
+                        "coordinator": coordinator.name if coordinator else None
+                    }
+                )
+                return entity
 
         except Exception as e:
             _LOGGER.error(
@@ -193,7 +142,6 @@ class ModbusManagerEntityManager:
                     "device": self._device.name,
                     "type": entity_type,
                     "name": name,
-                    "config": config,
                     "traceback": str(e.__traceback__)
                 }
             )
@@ -217,7 +165,7 @@ class ModbusManagerEntityManager:
             # Register-spezifische Validierung
             if entity_type == "register":
                 # Pflichtfelder für Register
-                required_fields = ["type"]
+                required_fields = ["address"]
                 for field in required_fields:
                     if field not in config:
                         self._validation_errors.append(f"Pflichtfeld '{field}' fehlt für Register {name}")
@@ -275,23 +223,6 @@ class ModbusManagerEntityManager:
                     self._validation_errors.append(f"Ungültige State Class für {name}: {state_class}")
                     return False
 
-            # Validiere Berechnungen
-            if "calculation" in config:
-                calc_config = config["calculation"]
-                if not isinstance(calc_config, dict):
-                    self._validation_errors.append(f"Ungültige Berechnungskonfiguration für {name}")
-                    return False
-                
-                calc_type = calc_config.get("type")
-                if not calc_type:
-                    self._validation_errors.append(f"Kein Berechnungstyp für {name} angegeben")
-                    return False
-                
-                valid_calc_types = ["sum", "mapping", "conditional", "formula"]
-                if calc_type not in valid_calc_types:
-                    self._validation_errors.append(f"Ungültiger Berechnungstyp für {name}: {calc_type}")
-                    return False
-
             return True
 
         except Exception as e:
@@ -302,7 +233,6 @@ class ModbusManagerEntityManager:
                     "device": self._device.name,
                     "type": entity_type,
                     "name": name,
-                    "config": config,
                     "traceback": str(e.__traceback__)
                 }
             )
@@ -323,26 +253,32 @@ class ModbusManagerEntityManager:
             if "registers" in device_config:
                 registers = device_config["registers"]
                 if isinstance(registers, dict):
-                    for reg_type in ["read", "write"]:
-                        if reg_type in registers:
-                            for reg_config in registers[reg_type]:
-                                if "name" not in reg_config:
-                                    continue
-                                    
-                                coordinator = self._device._update_coordinators.get(reg_config.get("polling", "normal"))
-                                entity = self._create_entity("register", reg_config["name"], reg_config, coordinator)
-                                if entity:
-                                    # Verfolge das Entity-Setup
-                                    await self._device._hub.async_track_entity_setup(entity.entity_id)
-                                    self._entities[entity.unique_id] = entity
-                                    _LOGGER.debug(
-                                        f"Register-Entity hinzugefügt: {reg_config['name']}",
-                                        extra={
-                                            "device": self._device.name,
-                                            "entity_id": entity.entity_id,
-                                            "register_type": reg_type
-                                        }
-                                    )
+                    # Verarbeite read/write Register
+                    for reg_type, reg_list in registers.items():
+                        if not isinstance(reg_list, list):
+                            continue
+                            
+                        for reg_config in reg_list:
+                            if "name" not in reg_config:
+                                continue
+                                
+                            coordinator = self._device._update_coordinators.get(reg_config.get("polling", "normal"))
+                            entity = self._create_entity("register", reg_config["name"], reg_config, coordinator)
+                            if entity:
+                                # Registriere die Entity in Home Assistant
+                                await self._device.hass.async_add_entity(entity)
+                                
+                                # Verfolge das Entity-Setup
+                                await self._device._hub.async_track_entity_setup(entity.entity_id)
+                                self._entities[entity.unique_id] = entity
+                                _LOGGER.debug(
+                                    f"Register-Entity hinzugefügt: {reg_config['name']}",
+                                    extra={
+                                        "device": self._device.name,
+                                        "entity_id": entity.entity_id,
+                                        "register_type": reg_type
+                                    }
+                                )
 
             # Verarbeite berechnete Register
             if "calculated_registers" in device_config:
@@ -360,9 +296,15 @@ class ModbusManagerEntityManager:
                         # Füge den Entity-Typ hinzu
                         calc_config["entity_type"] = "sensor"
                         
+                        # Verwende den normalen Coordinator für berechnete Register
+                        coordinator = self._device._update_coordinators.get("normal")
+                        
                         # Erstelle die Entity
-                        entity = self._create_entity("register", calc_id, calc_config)
+                        entity = self._create_entity("register", calc_id, calc_config, coordinator)
                         if entity:
+                            # Registriere die Entity in Home Assistant
+                            await self._device.hass.async_add_entity(entity)
+                            
                             # Verfolge das Entity-Setup
                             await self._device._hub.async_track_entity_setup(entity.entity_id)
                             self._entities[entity.unique_id] = entity

@@ -15,6 +15,16 @@ from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> bool:
+    """Richte die ModbusManager Number Entities ein."""
+    return await setup_platform_entities(
+        hass=hass,
+        entry=entry,
+        async_add_entities=async_add_entities,
+        entity_types=[ModbusManagerInputNumber],
+        platform_name="Number"
+    )
+
 async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: ConfigEntry,

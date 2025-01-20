@@ -47,108 +47,53 @@ DEVICE_CLASS_UNITS = {
 }
 
 class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
-    """ModbusRegisterEntity."""
+    """Basisklasse für Modbus Register Entities."""
 
     def __init__(
         self,
-        device: "ModbusManagerDevice",
-        register_name: str,
-        register_config: dict,
+        device: "ModbusManagerDeviceBase",
+        name: str,
+        register_config: Dict[str, Any],
         coordinator: DataUpdateCoordinator,
     ) -> None:
-        """Initialisiert die ModbusRegisterEntity."""
-        # Initialisiere die Basis-Klassen
-        CoordinatorEntity.__init__(self, coordinator)
-        SensorEntity.__init__(self)
+        """Initialize the entity."""
+        super().__init__(coordinator)
         
         self.device = device
-        self.name_helper = EntityNameHelper(device.config_entry)
-        
-        # Speichere die Original-Konfiguration
         self.register_config = register_config
-        self.original_register_name = register_config.get("name")
+        self.original_register_name = name
         
-        if not self.original_register_name:
-            raise ValueError(f"Register hat keinen Namen in der Konfiguration: {register_config}")
-        
-        # Konvertiere den Register-Namen mit Präfix für verschiedene Verwendungszwecke
-        self.register_name = self.name_helper.convert(self.original_register_name, NameType.BASE_NAME)
-        self.display_name = self.name_helper.convert(self.original_register_name, NameType.DISPLAY_NAME)
-        self.unique_id = self.name_helper.convert(self.original_register_name, NameType.UNIQUE_ID)
-        self.entity_id = self.name_helper.convert(self.original_register_name, NameType.ENTITY_ID, domain="sensor")
+        # Konvertiere den Namen mit dem Name Helper
+        self.register_name = self.device.name_helper.convert(
+            name, NameType.REGISTER
+        )
         
         # Setze die Entity-Attribute
-        self._attr_name = self.display_name
-        self._attr_unique_id = self.unique_id
-        self._attr_has_entity_name = True
+        self._attr_name = register_config.get("name", name)
+        self._attr_unique_id = register_config.get("unique_id", f"{self.device.name}_{name}")
+        self._attr_device_class = register_config.get("device_class")
+        self._attr_native_unit_of_measurement = register_config.get("unit_of_measurement")
+        self._attr_state_class = register_config.get("state_class")
+        self._attr_native_value = None
         
-        # Device Info
-        self._attr_device_info = device.device_info
+        # Setze die Device Info
+        self._attr_device_info = self.device.device_info
         
-        # Setze device_class und unit_of_measurement
-        self._setup_device_class_and_unit()
-        
-        # Setze state_class wenn vorhanden
-        if "state_class" in register_config:
-            state_class = register_config["state_class"].lower()
-            if state_class in STATE_CLASS_MAPPING:
-                self._attr_state_class = STATE_CLASS_MAPPING[state_class]
-            else:
-                _LOGGER.warning(
-                    "Ungültige state_class",
-                    extra={
-                        "state_class": state_class,
-                        "entity_id": self.entity_id,
-                        "valid_classes": list(STATE_CLASS_MAPPING.keys())
-                    }
-                )
-            
         _LOGGER.debug(
-            "ModbusRegisterEntity initialisiert",
+            "Entity initialisiert",
             extra={
                 "device": self.device.name,
-                "original_name": self.original_register_name,
-                "register_name": self.register_name,
-                "display_name": self.display_name,
-                "unique_id": self.unique_id,
-                "entity_id": self.entity_id,
-                "attributes": {
-                    "device_class": self._attr_device_class,
-                    "unit": self._attr_native_unit_of_measurement,
-                    "state_class": self._attr_state_class
-                }
+                "name": self._attr_name,
+                "register": self.register_name,
+                "config": register_config
             }
         )
-
-    def _setup_device_class_and_unit(self) -> None:
-        """Setzt device_class und unit_of_measurement basierend auf der Konfiguration."""
-        # Setze device_class wenn vorhanden
-        if "device_class" in self.register_config:
-            device_class = self.register_config["device_class"].lower()
-            if device_class in DEVICE_CLASS_MAPPING:
-                self._attr_device_class = DEVICE_CLASS_MAPPING[device_class]
-                
-                # Setze Standard-Einheit basierend auf device_class wenn keine Einheit definiert ist
-                if ("unit_of_measurement" not in self.register_config and 
-                    self._attr_device_class in DEVICE_CLASS_UNITS):
-                    self._attr_native_unit_of_measurement = DEVICE_CLASS_UNITS[self._attr_device_class]
-            else:
-                _LOGGER.warning(
-                    "Ungültige device_class",
-                    extra={
-                        "device_class": device_class,
-                        "entity_id": self.entity_id,
-                        "valid_classes": list(DEVICE_CLASS_MAPPING.keys())
-                    }
-                )
-        
-        # Überschreibe mit spezifischer Einheit wenn definiert
-        if "unit_of_measurement" in self.register_config:
-            self._attr_native_unit_of_measurement = self.register_config["unit_of_measurement"]
 
     @property
     def available(self) -> bool:
         """Return if entity is available."""
+        if not self.coordinator:
+            return False
         return self.coordinator.last_update_success and self.coordinator.data is not None
 
     @property
@@ -181,7 +126,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
     async def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         try:
-            if not self.coordinator.data:
+            if not self.coordinator or not self.coordinator.data:
                 _LOGGER.debug(
                     "Keine Daten vom Coordinator",
                     extra={
@@ -207,9 +152,9 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 )
             
             # Aktualisiere den State nur wenn die Entity initialisiert ist
-            if hasattr(self, "hass") and self.hass:
-                await self.async_write_ha_state()
-            
+            if self.hass:
+                self.async_write_ha_state()
+
         except Exception as e:
             _LOGGER.error(
                 "Fehler beim Coordinator Update",
@@ -272,7 +217,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
             _LOGGER.debug(
                 "Keine Device-Daten zum Aktualisieren vorhanden",
                 extra={
-                    "entity": self.display_name,
+                    "entity": self._attr_name,
                     "device": self.device.name
                 }
             )
@@ -282,7 +227,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
             _LOGGER.debug(
                 "Entity sucht Register",
                 extra={
-                    "entity": self.display_name,
+                    "entity": self._attr_name,
                     "original_name": self.original_register_name,
                     "register_name": self.register_name,
                     "device": self.device.name,
@@ -299,7 +244,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                     _LOGGER.debug(
                         "Register-Wert ist None",
                         extra={
-                            "entity": self.display_name,
+                            "entity": self._attr_name,
                             "register_name": self.register_name,
                             "device": self.device.name
                         }
@@ -310,7 +255,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 _LOGGER.debug(
                     "Wert erfolgreich aktualisiert",
                     extra={
-                        "entity": self.display_name,
+                        "entity": self._attr_name,
                         "original_name": self.original_register_name,
                         "register_name": self.register_name,
                         "value": self._attr_native_value,
@@ -325,7 +270,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 _LOGGER.debug(
                     "Register nicht in Device-Daten gefunden",
                     extra={
-                        "entity": self.display_name,
+                        "entity": self._attr_name,
                         "original_name": self.original_register_name,
                         "register_name": self.register_name,
                         "verfügbare_register": list(device_data.keys())
@@ -337,7 +282,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 "Fehler beim Aktualisieren des Werts",
                 extra={
                     "error": str(e),
-                    "entity": self.display_name,
+                    "entity": self._attr_name,
                     "register_name": self.register_name,
                     "device": self.device.name,
                     "traceback": str(e.__traceback__)
