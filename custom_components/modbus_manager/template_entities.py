@@ -6,7 +6,6 @@ from typing import Any, Dict, Optional
 
 from homeassistant.components.template.sensor import TemplateSensor
 from homeassistant.components.template.binary_sensor import TemplateBinarySensor
-<<<<<<< HEAD
 from homeassistant.components.sensor import (
     SensorEntity,
     SensorStateClass,
@@ -21,18 +20,12 @@ from homeassistant.helpers.entity import Entity
 from homeassistant.helpers.typing import ConfigType
 from homeassistant.helpers.template import Template, TemplateError
 from homeassistant.helpers.event import async_track_template_result, TrackTemplate
-=======
-from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import Entity
-from homeassistant.helpers.typing import ConfigType
->>>>>>> task/name_helpers_2025-01-16_1
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 
-<<<<<<< HEAD
 # State Class Mapping
 STATE_CLASS_MAPPING = {
     "measurement": SensorStateClass.MEASUREMENT,
@@ -52,8 +45,6 @@ DEVICE_CLASS_MAPPING = {
     "voltage": SensorDeviceClass.VOLTAGE,
 }
 
-=======
->>>>>>> task/name_helpers_2025-01-16_1
 class ModbusManagerTemplateEntity:
     """Basis-Klasse für Template Entities."""
 

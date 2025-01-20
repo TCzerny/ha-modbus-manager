@@ -5,7 +5,6 @@ _Keine aktiven Tasks_
 1. [Name Helpers Integration](.tasks/2025-01-16_1_name_helpers.md) - Status: Abgeschlossen ✓
 2. [ModBus Import Fix](.tasks/2025-01-16_2_modbus_import_fix.md) - Status: Abgeschlossen ✓
 
-<<<<<<< HEAD
 # Cursor Rules für Modbus Manager
 # Diese Regeln helfen bei der systematischen und qualitativen Entwicklung
 
@@ -69,6 +68,4 @@ _Keine aktiven Tasks_
 2025-01-17_01:25:00 - Platform Setup verbessert
 2025-01-17_01:30:00 - Entity Registration optimiert
 
-=======
->>>>>>> task/name_helpers_2025-01-16_1
 DO NOT REMOVE

@@ -1,7 +1,6 @@
 """ModbusManager Button Platform."""
 from __future__ import annotations
 
-<<<<<<< HEAD
 from typing import Any, Dict
 
 from homeassistant.components.button import ButtonEntity
@@ -11,19 +10,11 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
 
 from .const import DOMAIN, NameType
-=======
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-
-from .const import DOMAIN
->>>>>>> task/name_helpers_2025-01-16_1
 from .device_base import ModbusManagerDeviceBase as ModbusManagerDevice
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 
-<<<<<<< HEAD
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> bool:
     """Richte die ModbusManager Button Entities ein."""
     return await setup_platform_entities(
@@ -110,36 +101,4 @@ class ModbusManagerButton(CoordinatorEntity, ButtonEntity):
     @property
     def available(self) -> bool:
         """Return if entity is available."""
-        return self.coordinator.last_update_success and self.coordinator.data is not None 
-=======
-async def async_setup_entry(
-    hass: HomeAssistant,
-    config_entry: ConfigEntry,
-    async_add_entities: AddEntitiesCallback,
-) -> None:
-    """Richte Button Entities basierend auf einem Config Entry ein."""
-    hub = hass.data[DOMAIN][config_entry.entry_id]
-    
-    # Sammle alle Button Entities von allen Geräten
-    entities = []
-    for device in hub._devices.values():
-        if isinstance(device, ModbusManagerDevice):
-            # Füge alle Button Entities aus dem Device hinzu
-            for entity in device.entities.values():
-                try:
-                    if hasattr(entity, 'entity_id') and entity.entity_id and "button" in entity.entity_id:
-                        entities.append(entity)
-                except Exception as e:
-                    _LOGGER.error(
-                        "Fehler beim Verarbeiten einer Entity",
-                        extra={
-                            "error": str(e),
-                            "device": device.name,
-                            "entity": str(entity)
-                        }
-                    )
-    
-    if entities:
-        _LOGGER.debug(f"Füge {len(entities)} Button Entities hinzu")
-        async_add_entities(entities) 
->>>>>>> task/name_helpers_2025-01-16_1
+        return self.coordinator.last_update_success and self.coordinator.data is not None
