@@ -15,12 +15,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 from .const import DOMAIN, NameType, DEFAULT_SLAVE
 from .logger import ModbusManagerLogger
 from .device_common import DeviceCommon
-
-from .device_registers import ModbusManagerRegisterProcessor
-from .device_entities import ModbusManagerEntityManager
-from .device_services import ModbusManagerServiceHandler
-from .device_calculations import ModbusManagerCalculator
-from .device_tests import ModbusManagerTestSuite
+from .device_interfaces import IModbusManagerDevice, IModbusManagerServiceProvider, IModbusManagerEntityProvider
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -83,7 +78,7 @@ class EntityNameHelper:
         else:
             raise ValueError(f"Unbekannter NameType: {name_type}")
 
-class ModbusManagerDeviceBase(DeviceCommon):
+class ModbusManagerDeviceBase(DeviceCommon, IModbusManagerDevice):
     """Base class for Modbus Manager devices."""
 
     def __init__(self, hass: HomeAssistant, config_entry: ConfigEntry):
@@ -107,7 +102,7 @@ class ModbusManagerDeviceBase(DeviceCommon):
             
             self.register_processor = ModbusManagerRegisterProcessor(self)
             self.entity_manager = ModbusManagerEntityManager(self)
-            self.service_handler = ModbusManagerServiceHandler(self)
+            self.service_handler = ModbusManagerServiceHandler(self.hass, self)
             self.calculator = ModbusManagerCalculator(self)
             self.test_suite = ModbusManagerTestSuite(self)
             
@@ -120,6 +115,18 @@ class ModbusManagerDeviceBase(DeviceCommon):
     def device_info(self) -> DeviceInfo:
         """Return device info."""
         return self._attr_device_info
+
+    def get_register_value(self, register_name: str) -> Any:
+        """Hole den Wert eines Registers."""
+        if self.register_processor:
+            return self.register_processor.get_register_value(register_name)
+        return None
+
+    async def write_register(self, register_name: str, value: Any) -> bool:
+        """Schreibe einen Wert in ein Register."""
+        if self.register_processor:
+            return await self.register_processor.write_register(register_name, value)
+        return False
 
     def update_entities(self) -> None:
         """Aktualisiere die Entities aus dem Entity Manager."""
