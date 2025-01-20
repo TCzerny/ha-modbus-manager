@@ -1,12 +1,12 @@
-"""ModbusManager Hub Implementation."""
+"""ModbusManager Hub."""
 from __future__ import annotations
 
 import asyncio
 import logging
-from typing import Any, Dict, List, Optional, Set
 import os
 import yaml
 import aiofiles
+from typing import Any, Dict, List, Optional, Set
 
 from pymodbus.client import AsyncModbusTcpClient
 from pymodbus.exceptions import ModbusException
@@ -14,8 +14,8 @@ from pymodbus.pdu import ExceptionResponse
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import (
-    CONF_HOST,
     CONF_NAME,
+    CONF_HOST,
     CONF_PORT,
     CONF_SLAVE,
     EVENT_HOMEASSISTANT_STOP
@@ -52,6 +52,11 @@ class ModbusManagerHub:
         self._lock = asyncio.Lock()
         self._connected = False
         
+        # Entity-Status-Tracking
+        self._entities_added = False
+        self._entity_setup_tasks = {}
+        self._pending_entities = set()
+        
         # Initialisiere den Name Helper
         self.name_helper = EntityNameHelper(entry)
         
@@ -72,6 +77,51 @@ class ModbusManagerHub:
         )
 
     @property
+    def entities_added(self) -> bool:
+        """Gibt zurück, ob alle Entities hinzugefügt wurden."""
+        return self._entities_added
+
+    @entities_added.setter
+    def entities_added(self, value: bool) -> None:
+        """Setzt den Status der Entity-Hinzufügung."""
+        self._entities_added = value
+        if value:
+            _LOGGER.info(
+                "Alle Entities wurden hinzugefügt",
+                extra={"hub": self.name}
+            )
+
+    async def async_track_entity_setup(self, entity_id: str) -> None:
+        """Verfolge das Setup einer Entity."""
+        self._pending_entities.add(entity_id)
+        _LOGGER.debug(
+            "Entity-Setup wird verfolgt",
+            extra={
+                "hub": self.name,
+                "entity_id": entity_id,
+                "pending_count": len(self._pending_entities)
+            }
+        )
+
+    async def async_entity_setup_complete(self, entity_id: str) -> None:
+        """Markiere das Setup einer Entity als abgeschlossen."""
+        if entity_id in self._pending_entities:
+            self._pending_entities.remove(entity_id)
+            _LOGGER.debug(
+                "Entity-Setup abgeschlossen",
+                extra={
+                    "hub": self.name,
+                    "entity_id": entity_id,
+                    "pending_count": len(self._pending_entities)
+                }
+            )
+
+    @property
+    def has_pending_entities(self) -> bool:
+        """Prüft, ob noch Entities auf Setup warten."""
+        return len(self._pending_entities) > 0
+
+    @property
     def name(self) -> str:
         """Gibt den Namen des Hubs zurück."""
         return self._name
@@ -86,6 +136,10 @@ class ModbusManagerHub:
         try:
             # Extrahiere die Konfigurationsdaten
             config_data = self.entry.data if hasattr(self.entry, 'data') else self.entry
+            
+            # Setze den Entity-Setup-Status zurück
+            self._entities_added = False
+            self._pending_entities.clear()
             
             # Konfiguriere den ModBus Client
             host = config_data[CONF_HOST]
@@ -441,3 +495,5 @@ class ModbusManagerHub:
             asyncio.create_task(self._client.close())
             self._client = None
             self._connected = False
+
+
