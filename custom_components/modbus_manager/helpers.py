@@ -18,34 +18,51 @@ _LOGGER = ModbusManagerLogger(__name__)
 class EntityNameHelper:
     """Helper class for entity naming conventions."""
 
-    def __init__(self, config_entry):
-        """Initialize the helper with the config entry.
+    def __init__(self, config: Union[ConfigEntry, Dict[str, Any], str]) -> None:
+        """Initialize the helper with the config.
 
         Args:
-            config_entry: The config entry or dictionary containing the user-provided device name
+            config: The configuration source, can be:
+                   - ConfigEntry: A Home Assistant config entry
+                   - Dict: A dictionary containing configuration
+                   - str: A direct device name
         """
-        # Extrahiere die Konfigurationsdaten
-        if hasattr(config_entry, 'data'):
-            config_data = config_entry.data
-        elif isinstance(config_entry, dict):
-            config_data = config_entry
-        else:
-            raise ValueError(f"Ungültige Konfiguration: {type(config_entry)}")
-        
-        # Prüfe ob der Name vorhanden ist
-        if CONF_NAME not in config_data:
-            raise ValueError("Pflichtfeld CONF_NAME fehlt in der Konfiguration")
+        try:
+            # Extrahiere die Konfigurationsdaten
+            if isinstance(config, str):
+                self.device_name = config
+            elif hasattr(config, 'data'):
+                config_data = config.data
+                if CONF_NAME not in config_data:
+                    raise ValueError("Pflichtfeld CONF_NAME fehlt in der ConfigEntry")
+                self.device_name = config_data[CONF_NAME]
+            elif isinstance(config, dict):
+                if CONF_NAME not in config:
+                    raise ValueError("Pflichtfeld CONF_NAME fehlt im Konfigurations-Dict")
+                self.device_name = config[CONF_NAME]
+            else:
+                raise ValueError(f"Ungültiger Konfigurationstyp: {type(config)}")
             
-        self.device_name = config_data[CONF_NAME]
-        self._sanitized_device_name = self._sanitize_name(self.device_name)
-        
-        _LOGGER.debug(
-            "EntityNameHelper initialisiert",
-            extra={
-                "device_name": self.device_name,
-                "sanitized_name": self._sanitized_device_name
-            }
-        )
+            self._sanitized_device_name = self._sanitize_name(self.device_name)
+            
+            _LOGGER.debug(
+                "EntityNameHelper initialisiert",
+                extra={
+                    "device_name": self.device_name,
+                    "sanitized_name": self._sanitized_device_name
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei der Initialisierung des EntityNameHelper",
+                extra={
+                    "error": str(e),
+                    "config_type": type(config),
+                    "traceback": e.__traceback__
+                }
+            )
+            raise
 
     @staticmethod
     def _sanitize_name(name: str) -> str:
@@ -83,6 +100,9 @@ class EntityNameHelper:
         Returns:
             Der konvertierte Name im gewünschten Format
 
+        Raises:
+            ValueError: Wenn ein ungültiger NameType übergeben wird oder
+                      wenn domain für ENTITY_ID fehlt
         """
         # Entferne zuerst mögliche Device-Präfixe
         clean_name = self._remove_device_prefix(name)

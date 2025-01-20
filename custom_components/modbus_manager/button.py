@@ -1,6 +1,7 @@
 """ModbusManager Button Platform."""
 from __future__ import annotations
 
+import logging
 from typing import Any, Dict
 
 from homeassistant.components.button import ButtonEntity
@@ -8,10 +9,13 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
+from homeassistant.helpers.entity_registry import EntityRegistry, async_get
 
 from .const import DOMAIN, NameType
 from .device_base import ModbusManagerDeviceBase as ModbusManagerDevice
+from .entities import ModbusRegisterEntity
 from .logger import ModbusManagerLogger
+from .device_common import setup_platform_entities
 
 _LOGGER = ModbusManagerLogger(__name__)
 

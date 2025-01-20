@@ -31,3 +31,49 @@ class DeviceCommon:
             return f"{self.name}_{register_name}".lower()
         else:  # DISPLAY_NAME
             return f"{self.name} {register_name}" 
+
+async def setup_platform_entities(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: Any,
+    entity_types: List[Any],
+    platform_name: str
+) -> bool:
+    """Gemeinsame Funktion zum Einrichten von Plattform-Entities."""
+    try:
+        hub = hass.data[DOMAIN][entry.entry_id]
+        if not hub:
+            _LOGGER.error(
+                "Hub nicht gefunden",
+                extra={"entry_id": entry.entry_id}
+            )
+            return False
+
+        entities = []
+        for device in hub._devices.values():
+            device_entities = await device.get_entities(entity_types)
+            if device_entities:
+                entities.extend(device_entities)
+
+        if entities:
+            _LOGGER.debug(
+                f"{platform_name} Entities werden hinzugefügt",
+                extra={
+                    "count": len(entities),
+                    "entry_id": entry.entry_id
+                }
+            )
+            async_add_entities(entities)
+
+        return True
+
+    except Exception as e:
+        _LOGGER.error(
+            f"Fehler beim Setup der {platform_name} Entities",
+            extra={
+                "error": str(e),
+                "entry_id": entry.entry_id,
+                "traceback": e.__traceback__
+            }
+        )
+        return False 

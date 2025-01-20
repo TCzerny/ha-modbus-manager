@@ -25,19 +25,43 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
         register_definitions: Dict[str, Any]
     ) -> None:
         """Initialisiere das Gerät."""
-        self._hub = hub
-        self._hass = hub.hass
-        self._device_type = device_type
-        self._device_config = device_config
-        self._register_definitions = register_definitions
-        self._name = device_config.get("name", "unknown")
-        self._name_helper = EntityNameHelper(self._name)
-        self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, self._name)},
-            name=self._name,
-            manufacturer="Modbus Manager",
-            model=self._device_type
-        )
+        try:
+            self._hub = hub
+            self._hass = hub.hass
+            self._device_type = device_type
+            self._device_config = device_config
+            self._register_definitions = register_definitions
+            self._name = device_config.get("name", "unknown")
+            
+            # Initialisiere den EntityNameHelper mit dem Gerätenamen
+            self._name_helper = EntityNameHelper(self._name)
+            
+            self._attr_device_info = DeviceInfo(
+                identifiers={(DOMAIN, self._name)},
+                name=self._name,
+                manufacturer="Modbus Manager",
+                model=self._device_type
+            )
+            
+            _LOGGER.debug(
+                "ModbusManagerDeviceBase initialisiert",
+                extra={
+                    "device_type": device_type,
+                    "name": self._name
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler bei der Initialisierung des ModbusManagerDeviceBase",
+                extra={
+                    "error": str(e),
+                    "device_type": device_type,
+                    "name": device_config.get("name", "unknown"),
+                    "traceback": e.__traceback__
+                }
+            )
+            raise
 
     @property
     def hass(self) -> HomeAssistant:
@@ -107,14 +131,26 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
             from .device_entities import ModbusManagerEntityManager
             from .device_calculations import ModbusManagerCalculator
             from .device_services import ModbusManagerServiceHandler
-            from .device_test import ModbusManagerTestSuite
+            from .device_tests import ModbusManagerTestSuite
 
             # Initialize components
             self._register_processor = ModbusManagerRegisterProcessor(self)
             self._entity_manager = ModbusManagerEntityManager(self)
             self._calculator = ModbusManagerCalculator(self)
             self._service_handler = ModbusManagerServiceHandler(self)
-            self._test_suite = ModbusManagerTestSuite(self)
+            self._test_suite = ModbusManagerTestSuite(
+                self.hass,
+                self,
+                self._register_processor,
+                self._entity_manager,
+                self._service_handler,
+                self._calculator
+            )
+
+            _LOGGER.debug(
+                "ModbusManagerDeviceBase Setup abgeschlossen",
+                extra={"device": self.name}
+            )
 
             return True
 

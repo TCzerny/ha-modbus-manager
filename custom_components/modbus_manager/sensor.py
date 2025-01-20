@@ -14,6 +14,7 @@ from .const import DOMAIN
 from .device_base import ModbusManagerDeviceBase
 from .entities import ModbusRegisterEntity
 from .logger import ModbusManagerLogger
+from .device_common import setup_platform_entities
 
 _LOGGER = ModbusManagerLogger(__name__)
 

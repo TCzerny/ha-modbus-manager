@@ -9,10 +9,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.helpers.update_coordinator import CoordinatorEntity, DataUpdateCoordinator
+from homeassistant.helpers.entity_registry import EntityRegistry, async_get
 
 from .const import DOMAIN, NameType
 from .device_base import ModbusManagerDeviceBase
+from .entities import ModbusRegisterEntity
 from .logger import ModbusManagerLogger
+from .device_common import setup_platform_entities
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -22,7 +25,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         hass=hass,
         entry=entry,
         async_add_entities=async_add_entities,
-        entity_types=[ModbusManagerBinarySensor],
+        entity_types=[ModbusRegisterEntity, BinarySensorEntity],
         platform_name="Binary Sensor"
     )
 
