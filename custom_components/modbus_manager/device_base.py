@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import asyncio
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, List
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
@@ -183,4 +183,26 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
                     "device": self.name,
                     "traceback": e.__traceback__
                 }
-            ) 
+            )
+
+    async def get_entities(self, entity_types: List[Any]) -> List[Any]:
+        """Gibt die Entities des Geräts zurück."""
+        try:
+            if not hasattr(self, "_entity_manager"):
+                _LOGGER.error(
+                    "Entity Manager nicht initialisiert",
+                    extra={"device": self.name}
+                )
+                return []
+            return [entity for entity in self._entity_manager.entities.values() 
+                   if any(isinstance(entity, entity_type) for entity_type in entity_types)]
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Abrufen der Entities",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return [] 

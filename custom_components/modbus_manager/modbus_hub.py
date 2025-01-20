@@ -81,6 +81,11 @@ class ModbusManagerHub:
             raise
 
     @property
+    def devices(self) -> Dict[str, Any]:
+        """Gibt die registrierten Geräte zurück."""
+        return self._devices
+
+    @property
     def entities_added(self) -> bool:
         """Gibt zurück, ob alle Entities hinzugefügt wurden."""
         return self._entities_added
