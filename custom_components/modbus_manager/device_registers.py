@@ -262,83 +262,106 @@ class ModbusManagerRegisterProcessor:
             )
             return False
 
-    def _validate_calculation(self, calc_id: str, calc_config: Dict[str, Any]) -> bool:
-        """Validiert eine Berechnungskonfiguration."""
+    def _validate_calculation(self, calc_id: str, calc_def: Dict[str, Any]) -> bool:
+        """Validiert eine Berechnungsdefinition."""
         try:
-            # Prüfe ob calc_config ein Dictionary ist
-            if not isinstance(calc_config, dict):
-                self._validation_errors.append(f"Berechnungskonfiguration ist kein Dictionary: {calc_config}")
-                return False
-
-            # Prüfe Berechnungstyp
-            calc_type = calc_config.get("type")
-            if not calc_type:
-                self._validation_errors.append(f"Kein Berechnungstyp für {calc_id} angegeben")
-                return False
-
-            valid_calc_types = ["sum", "mapping", "conditional", "formula"]
-            if calc_type not in valid_calc_types:
-                self._validation_errors.append(f"Ungültiger Berechnungstyp für {calc_id}: {calc_type}")
-                return False
-
-            # Validiere typ-spezifische Felder
-            if calc_type == "sum":
-                if "sources" not in calc_config:
-                    self._validation_errors.append(f"Keine Quellen für Sum-Berechnung {calc_id} angegeben")
+            # Prüfe ob calculation oder formula/variables Format
+            if "calculation" in calc_def:
+                calc_type = calc_def["calculation"].get("type")
+                if not calc_type:
+                    _LOGGER.error(
+                        "Berechnungstyp fehlt",
+                        extra={
+                            "calc_id": calc_id,
+                            "device": self._device.name
+                        }
+                    )
                     return False
-                # Passe Quell-Variablen an
-                sources = calc_config["sources"]
-                if isinstance(sources, list):
-                    calc_config["sources"] = [
-                        self._device.name_helper.convert(source, NameType.BASE_NAME)
-                        for source in sources
-                    ]
 
-            elif calc_type == "mapping":
-                if "source" not in calc_config:
-                    self._validation_errors.append(f"Keine Quelle für Mapping-Berechnung {calc_id} angegeben")
+                # Validiere basierend auf dem Typ
+                if calc_type == "sum":
+                    if "sources" not in calc_def["calculation"]:
+                        _LOGGER.error(
+                            "Quellen für Summenberechnung fehlen",
+                            extra={
+                                "calc_id": calc_id,
+                                "device": self._device.name
+                            }
+                        )
+                        return False
+                elif calc_type in ["mapping", "conditional"]:
+                    if "source" not in calc_def["calculation"]:
+                        _LOGGER.error(
+                            "Quelle für Mapping/Conditional fehlt",
+                            extra={
+                                "calc_id": calc_id,
+                                "device": self._device.name
+                            }
+                        )
+                        return False
+                elif calc_type == "formula":
+                    if "formula" not in calc_def["calculation"]:
+                        _LOGGER.error(
+                            "Formel fehlt",
+                            extra={
+                                "calc_id": calc_id,
+                                "device": self._device.name
+                            }
+                        )
+                        return False
+                else:
+                    _LOGGER.error(
+                        "Ungültiger Berechnungstyp",
+                        extra={
+                            "calc_id": calc_id,
+                            "type": calc_type,
+                            "device": self._device.name
+                        }
+                    )
                     return False
-                # Passe Quell-Variable an
-                calc_config["source"] = self._device.name_helper.convert(
-                    calc_config["source"], 
-                    NameType.BASE_NAME
+                    
+                return True
+                
+            # Prüfe formula/variables Format
+            elif not all(field in calc_def for field in ["formula", "variables"]):
+                _LOGGER.error(
+                    "Pflichtfelder fehlen in der Berechnungsdefinition",
+                    extra={
+                        "calc_id": calc_id,
+                        "device": self._device.name,
+                        "fields": ["formula", "variables"]
+                    }
                 )
-
-            elif calc_type == "conditional":
-                if "source" not in calc_config:
-                    self._validation_errors.append(f"Keine Quelle für Conditional-Berechnung {calc_id} angegeben")
+                return False
+                    
+            # Optimierte Variablenprüfung
+            if "variables" in calc_def:
+                invalid_vars = [
+                    var for var in calc_def["variables"]
+                    if not all(key in var for key in ["name", "source"])
+                ]
+                
+                if invalid_vars:
+                    _LOGGER.error(
+                        "Ungültige Variablendefinitionen gefunden",
+                        extra={
+                            "invalid_vars": invalid_vars,
+                            "calc_id": calc_id,
+                            "device": self._device.name
+                        }
+                    )
                     return False
-                # Passe Quell-Variable an
-                calc_config["source"] = self._device.name_helper.convert(
-                    calc_config["source"], 
-                    NameType.BASE_NAME
-                )
-
-            elif calc_type == "formula":
-                if "formula" not in calc_config:
-                    self._validation_errors.append(f"Keine Formel für Formula-Berechnung {calc_id} angegeben")
-                    return False
-                if "variables" in calc_config:
-                    # Passe Variablen-Namen in der Variablenliste an
-                    variables = calc_config["variables"]
-                    if isinstance(variables, list):
-                        for var in variables:
-                            if isinstance(var, dict) and "source" in var:
-                                var["source"] = self._device.name_helper.convert(
-                                    var["source"], 
-                                    NameType.BASE_NAME
-                                )
-
+                    
             return True
-
+            
         except Exception as e:
             _LOGGER.error(
-                "Fehler bei der Berechnungsvalidierung",
+                "Fehler bei der Validierung der Berechnungsdefinition",
                 extra={
                     "error": str(e),
                     "calc_id": calc_id,
                     "device": self._device.name,
-                    "traceback": str(e.__traceback__)
+                    "traceback": e.__traceback__
                 }
             )
             return False
@@ -346,15 +369,10 @@ class ModbusManagerRegisterProcessor:
     async def setup_registers(self, register_definitions: Dict[str, Any]) -> bool:
         """Richtet die Register basierend auf der Konfiguration ein."""
         try:
-            _LOGGER.info(
-                "Starte Register-Setup",
-                extra={"device": self._device.name}
-            )
-            
             # Setze Validierungsfehler zurück
             self._validation_errors = []
             
-            # Initialisiere Register-Listen
+            # Initialisiere Intervall-Listen
             self._registers_by_interval = {
                 "fast": [],
                 "normal": [],
@@ -365,14 +383,15 @@ class ModbusManagerRegisterProcessor:
             if "registers" in register_definitions:
                 registers = register_definitions["registers"]
                 
-                # Dictionary-Format: {"read": [...], "write": [...]}
+                # Prüfe ob registers ein Dictionary oder eine Liste ist
                 if isinstance(registers, dict):
-                    for reg_type in ["read", "write"]:
-                        if reg_type in registers:
-                            for register in registers[reg_type]:
+                    # Dictionary-Format: {"read": [...], "write": [...]}
+                    for reg_type, reg_list in registers.items():
+                        if isinstance(reg_list, list):
+                            for register in reg_list:
                                 # Setze register_type basierend auf der Definition
                                 register["register_type"] = "input" if reg_type == "read" else "holding"
-                                if await self._validate_and_sort_register(register):
+                                if self._validate_register_definition(register):
                                     polling = register.get("polling", "normal")
                                     self._registers_by_interval[polling].append(register)
                                 else:
@@ -384,36 +403,40 @@ class ModbusManagerRegisterProcessor:
                                             "errors": self._validation_errors
                                         }
                                     )
-            
+                elif isinstance(registers, list):
+                    # Listen-Format: [{"name": ..., "type": ..., ...}, ...]
+                    for register in registers:
+                        if self._validate_register_definition(register):
+                            polling = register.get("polling", "normal")
+                            self._registers_by_interval[polling].append(register)
+                        else:
+                            _LOGGER.warning(
+                                "Register-Definition übersprungen",
+                                extra={
+                                    "register": register,
+                                    "device": self._device.name,
+                                    "errors": self._validation_errors
+                                }
+                            )
+                else:
+                    _LOGGER.error(
+                        "Ungültiges Register-Format",
+                        extra={
+                            "type": type(registers),
+                            "device": self._device.name
+                        }
+                    )
+                    return False
+                            
             # Verarbeite berechnete Register
             if "calculated_registers" in register_definitions:
                 calc_registers = register_definitions["calculated_registers"]
                 
-                # Konvertiere Liste in Dict wenn nötig
-                if isinstance(calc_registers, list):
-                    calc_registers = {
-                        calc["name"]: calc 
-                        for calc in calc_registers 
-                        if "name" in calc
-                    }
-                
+                # Prüfe ob calculated_registers ein Dictionary oder eine Liste ist
                 if isinstance(calc_registers, dict):
-                    for calc_id, calc_config in calc_registers.items():
-                        # Stelle sicher, dass die Konfiguration vollständig ist
-                        if not isinstance(calc_config, dict):
-                            continue
-                            
-                        # Validiere die Berechnung
-                        if self._validate_calculation(calc_id, calc_config):
-                            self._calculated_registers[calc_id] = calc_config
-                            _LOGGER.debug(
-                                "Berechnetes Register hinzugefügt",
-                                extra={
-                                    "calc_id": calc_id,
-                                    "device": self._device.name,
-                                    "config": calc_config
-                                }
-                            )
+                    for calc_id, calc_def in calc_registers.items():
+                        if self._validate_calculation(calc_id, calc_def):
+                            self._calculated_registers[calc_id] = calc_def
                         else:
                             _LOGGER.warning(
                                 "Berechnungsdefinition übersprungen",
@@ -423,16 +446,54 @@ class ModbusManagerRegisterProcessor:
                                     "errors": self._validation_errors
                                 }
                             )
+                elif isinstance(calc_registers, list):
+                    for calc_def in calc_registers:
+                        if "name" not in calc_def:
+                            _LOGGER.warning(
+                                "Berechnungsdefinition ohne Namen übersprungen",
+                                extra={
+                                    "calc_def": calc_def,
+                                    "device": self._device.name
+                                }
+                            )
+                            continue
+                            
+                        calc_id = calc_def["name"]
+                        if self._validate_calculation(calc_id, calc_def):
+                            self._calculated_registers[calc_id] = calc_def
+                        else:
+                            _LOGGER.warning(
+                                "Berechnungsdefinition übersprungen",
+                                extra={
+                                    "calc_id": calc_id,
+                                    "device": self._device.name,
+                                    "errors": self._validation_errors
+                                }
+                            )
+                            
+            # Passe Cache-Größen an
+            self._adjust_cache_sizes()
+            
+            # Logge Setup-Ergebnis
+            _LOGGER.info(
+                "Register-Setup abgeschlossen",
+                extra={
+                    "device": self._device.name,
+                    "total_registers": sum(len(regs) for regs in self._registers_by_interval.values()),
+                    "calculated_registers": len(self._calculated_registers),
+                    "validation_errors": len(self._validation_errors)
+                }
+            )
             
             return True
             
         except Exception as e:
             _LOGGER.error(
-                "Fehler beim Register-Setup",
+                "Fehler beim Setup der Register",
                 extra={
                     "error": str(e),
                     "device": self._device.name,
-                    "traceback": str(e.__traceback__)
+                    "traceback": e.__traceback__
                 }
             )
             return False
@@ -1185,10 +1246,6 @@ class ModbusManagerRegisterProcessor:
                     "traceback": e.__traceback__
                 }
             )
-
-    def get_register_data(self) -> Dict[str, Any]:
-        """Gibt die aktuellen Register-Daten zurück."""
-        return self._register_data.copy() if hasattr(self, "_register_data") else {}
 
     @property
     def register_data(self) -> Dict[str, Any]:

@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import logging
 import asyncio
-from typing import Any, Dict, Optional
+from typing import Any, Dict, Optional, TYPE_CHECKING
 
 from homeassistant.components.sensor import (
     SensorEntity,
@@ -15,6 +15,9 @@ from homeassistant.core import callback
 
 from .helpers import EntityNameHelper, NameType
 from .logger import ModbusManagerLogger
+
+if TYPE_CHECKING:
+    from .device_base import ModbusManagerDeviceBase
 
 _LOGGER = ModbusManagerLogger(__name__)
 

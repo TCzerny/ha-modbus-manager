@@ -34,9 +34,10 @@ from .const import (
     DEFAULT_RETRY_DELAY,
     NameType
 )
+from .helpers import EntityNameHelper
+
 from .device_base import ModbusManagerDeviceBase as ModbusManagerDevice
 from .logger import ModbusManagerLogger
-from .helpers import EntityNameHelper
 
 _LOGGER = ModbusManagerLogger(__name__)
 
