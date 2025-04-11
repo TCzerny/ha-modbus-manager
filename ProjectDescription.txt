@@ -1,0 +1,85 @@
+ModBus Manager
+
+Wir entwickeln hier eine Homeassistant Integration mit dem Namen "Modbus Manager". die Integration verwaltet mehrere modbusähige Geräte.
+
+Ein Benutzer von Home Assistant kann mit dieser Integration ein neues Geräte einem Hub hinzufügen.
+Dabei muss er für das ModBus Gerät einen Namen, IP, port und slave_id angeben und kann aus einer der Definitions Dateien im Verzeichnis "device_definitions" auswählen. Am besten in einer DropdownBox.
+Daraufhin wird das Gerät mit allen definierten Entitäten angelegt. Alle Entitäten sind dem Geräte zugewiesen und auch das Geräte sollte dem Hub zugewiesen werden.
+
+In der Definitions Datei haben wir mehrere Bereich die verschiedene Entitäten definiert.
+Beispiel: sungrow_shrt.yaml welches ein Sungrow Wechselrichter SHxRT beschreibt.
+
+Definiert werden:
+
+registers.read -> Modbus register die als register_type: input gelesen werden sollen
+registers.write -> Modbus Holding register die auch beschrieben werden können.
+calculated_registers -> Berechnete Register, die aus schon vorhanden entitäten berechnet werden oder ein mapping stattfinden soll
+input_number -> sind Home Assistant Input Helfer welche es ermöglichen einen Wert in ein Holding-Register schreiben zu können
+input_select -> sind Home Assistant Select Helfer welche es ermöglichen einen Wert in ein Holding-Register schreiben zu können
+input_sync -> definiert eine source_entity dessen wert, sobald er aus dem modbus Geräte gelesen und aktualisiert wurde, in eine target_entity schreibt und diese mit dem wert aktualisiert
+device_type_mapping -> ist eine mapping tabelle, welches gelesene hex werte für die entität des device_codes in einen lesbaren String umformt.
+system_state_mapping -> ist eine mapping tabelle, welches gelesene hex werte für die entität des system_state in einen lesbaren String umformt.
+battery_cmd_mapping -> ist eine mapping tabelle, welches verwendet wird, um aus einem string aus einer input_select entität ein hex wert in das entsprechende modbus register schreibt
+export_power_limit_mapping -> ist eine mapping tabelle, welches verwendet wird, um aus einem string aus einer input_select entität ein hex wert in das entsprechende modbus register für das export_power_limit schreibt
+ems_mode_mapping -> ist eine mapping tabelle, welches verwendet wird, um aus einem string aus einer input_select entität ein hex wert in das entsprechende modbus register für den ems_mode schreibt
+
+device_info -> gundlegende Informationen über das Sungrow SHxRT gerät
+device_config -> parameter ob bestimmte funktionalitäten verwendet werden können. Defaultwerte zur communication mit dem Gerät. default_polling definiert die Defaultwerte in sekunden für fast, normal und slow polling intervalle
+
+Das default polling aller register ist der "normal" Wert. Außer bei den einzelnen registers.read oder registers.write ist ein polling: parameter angegeben und überschreibt das polling des entsprechenden registers auf fast oder slow um.
+
+Nach dem lesen der Definitions datei sollen alle Entitäten angelegt und korrekt wie schon beschrieben dem Geräte registriert werden.
+Ein löschen des Gerätes sollte all angelegten Entitäten sauber wieder löschen.
+
+Grundsätzlich gilt folgendes:
+Ein Benutzer kann bei der Anlage eines Gerätes einen Namen nur einmal verwenden. Es muss sichergestellt werden, das der Name eindeutig ist und kein zweitesmal verwendet werden kann.
+Die Geräte Definitions Datei sollte aus Template dienen. Alle Namen und id's in dem Template müssen angepasst werden
+Der vom Benutzer angegeben Geräte-NAME wird verwendet um ALLE Entitäten eindeutig zu definieren. Dafür wird eine name_helpers.py klasse verwendet.
+Bei der Anlage einer Entität wird der Name, die Bezeichnung, id, unique_id welche angelegt werden sollte mit dem vom Benutzer angegebenen Geräte-NAME als prefix versehen.
+Beispiel bei der Anlage eines der registers.read entitäten:
+
+- Aus der Definitions datei wurde gelesen:
+	registers:
+	  read:
+	    # System Information
+	    - { name: "running_state", address: 13000, type: "uint16", register_type: "input", precision: 0, scale: 1, state_class: "measurement", polling: "fast" }
+
+- Der Benutzer hat "TestDevice" als NAME aus dem Config_flow angegeben
+
+Nun sollte folgendes in Home Assistant angelegt werden:
+
+name: TestDevice Running State
+entity_id: sensor.testdevice_running_state
+unique_id: sensor.testdevice_running_state 
+
+Dies gilt auch für die übrigen definierten bereich in der Geräte-Definitions Datei. register, calculated_registers, input_number, input_sync
+bei caluclated_registers gibt es z.b. auch formulas zum berechnen des Wertes aus vorhandenen entitäten. Die ids in der formel müssen natürlich auch entsprechend mit dem GeräteNamen als Präfix versehen werden, bevor der wert aus diesen gelesen werden kann. Sie wurde ja auch mit anderen IDs angelegt.
+
+Beispiel:
+
+  - name: "battery_level_nominal"
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: "measurement"
+    calculation:
+      type: "formula"
+      formula: "battery_level * battery_state_of_health / 100"
+
+wird so behandelt:
+
+  - name: "testdevice_battery_level_nominal"
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: "measurement"
+    calculation:
+      type: "formula"
+      formula: "testdevice_battery_level * testdevice_battery_state_of_health / 100"   
+
+
+
+
+
+
+
+
+
