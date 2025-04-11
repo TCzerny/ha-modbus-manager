@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import logging
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union, Type
 
 from homeassistant.const import (
     STATE_UNAVAILABLE
@@ -162,6 +162,30 @@ class ModbusManagerEntityManager:
                 self._validation_errors.append(f"Ungültige Konfiguration für {name}")
                 return False
 
+            # Normalisiere den Entity-Typ
+            entity_type = entity_type.replace(" ", "_")
+
+            # Entity-Typ Validierung
+            valid_entity_types = [
+                "register",
+                "switch",
+                "number",
+                "select",
+                "button",
+                "binary_sensor",
+                "sensor"
+            ]
+            
+            if entity_type not in valid_entity_types and "calculation" not in config:
+                self._validation_errors.append(
+                    f"Ungültiger Entity-Typ für {name}: {entity_type}",
+                    extra={
+                        "device": self._device.name,
+                        "valid_types": valid_entity_types
+                    }
+                )
+                return False
+
             # Register-spezifische Validierung
             if entity_type == "register":
                 # Pflichtfelder für Register
@@ -187,53 +211,23 @@ class ModbusManagerEntityManager:
                         self._validation_errors.append(f"Negative Register-Adresse für {name}: {address}")
                         return False
 
-            # Entity-Typ Validierung
-            valid_entity_types = ["register", "switch", "number", "select", "button", "binary_sensor"]
-            if entity_type not in valid_entity_types and "calculation" not in config:
-                self._validation_errors.append(f"Ungültiger Entity-Typ für {name}: {entity_type}")
-                return False
-
             # Prüfe auf doppelte Entity-IDs
             unique_id = self._device.name_helper.convert(name, NameType.UNIQUE_ID)
             if unique_id in self._entities:
                 self._validation_errors.append(f"Doppelte Entity-ID: {unique_id}")
                 return False
 
-            # Optionale Attribute validieren
-            if "device_class" in config:
-                device_class = config["device_class"]
-                if not isinstance(device_class, str):
-                    self._validation_errors.append(f"Ungültige Device Class für {name}: {device_class}")
-                    return False
-
-            if "unit_of_measurement" in config:
-                unit = config["unit_of_measurement"]
-                if not isinstance(unit, str):
-                    self._validation_errors.append(f"Ungültige Unit für {name}: {unit}")
-                    return False
-
-            # State Class Validierung
-            if "state_class" in config:
-                state_class = config["state_class"]
-                valid_state_classes = ["measurement", "total", "total_increasing"]
-                if not isinstance(state_class, str):
-                    self._validation_errors.append(f"Ungültige State Class für {name}: {state_class}")
-                    return False
-                if state_class not in valid_state_classes:
-                    self._validation_errors.append(f"Ungültige State Class für {name}: {state_class}")
-                    return False
-
             return True
 
         except Exception as e:
+            self._validation_errors.append(f"Validierungsfehler: {str(e)}")
             _LOGGER.error(
                 "Fehler bei der Entity-Validierung",
                 extra={
                     "error": str(e),
                     "device": self._device.name,
-                    "type": entity_type,
                     "name": name,
-                    "traceback": str(e.__traceback__)
+                    "type": entity_type
                 }
             )
             return False
@@ -248,92 +242,49 @@ class ModbusManagerEntityManager:
             
             # Setze Validierungsfehler zurück
             self._validation_errors = []
-            
-            # Verarbeite Register-Entities
-            if "registers" in device_config:
-                registers = device_config["registers"]
-                if isinstance(registers, dict):
-                    # Verarbeite read/write Register
-                    for reg_type, reg_list in registers.items():
-                        if not isinstance(reg_list, list):
-                            continue
-                            
-                        for reg_config in reg_list:
-                            if "name" not in reg_config:
-                                continue
-                                
-                            coordinator = self._device._update_coordinators.get(reg_config.get("polling", "normal"))
-                            entity = self._create_entity("register", reg_config["name"], reg_config, coordinator)
-                            if entity:
-                                # Registriere die Entity in Home Assistant
-                                await self._device.hass.async_add_entity(entity)
-                                
-                                # Verfolge das Entity-Setup
-                                await self._device._hub.async_track_entity_setup(entity.entity_id)
-                                self._entities[entity.unique_id] = entity
-                                _LOGGER.debug(
-                                    f"Register-Entity hinzugefügt: {reg_config['name']}",
-                                    extra={
-                                        "device": self._device.name,
-                                        "entity_id": entity.entity_id,
-                                        "register_type": reg_type
-                                    }
-                                )
 
-            # Verarbeite berechnete Register
-            if "calculated_registers" in device_config:
-                calc_registers = device_config["calculated_registers"]
-                if isinstance(calc_registers, (dict, list)):
-                    # Konvertiere Liste in Dict wenn nötig
-                    if isinstance(calc_registers, list):
-                        calc_registers = {calc["name"]: calc for calc in calc_registers if "name" in calc}
-                    
-                    for calc_id, calc_config in calc_registers.items():
-                        # Stelle sicher, dass die Konfiguration vollständig ist
-                        if not isinstance(calc_config, dict):
-                            continue
-                            
-                        # Füge den Entity-Typ hinzu
-                        calc_config["entity_type"] = "sensor"
-                        
-                        # Verwende den normalen Coordinator für berechnete Register
-                        coordinator = self._device._update_coordinators.get("normal")
-                        
-                        # Erstelle die Entity
-                        entity = self._create_entity("register", calc_id, calc_config, coordinator)
-                        if entity:
-                            # Registriere die Entity in Home Assistant
-                            await self._device.hass.async_add_entity(entity)
-                            
-                            # Verfolge das Entity-Setup
-                            await self._device._hub.async_track_entity_setup(entity.entity_id)
-                            self._entities[entity.unique_id] = entity
-                            _LOGGER.debug(
-                                f"Berechnete Entity hinzugefügt: {calc_id}",
-                                extra={
-                                    "device": self._device.name,
-                                    "entity_id": entity.entity_id,
-                                    "config": calc_config
-                                }
-                            )
-
-            # Aktualisiere die Entities im Device
-            self._device.update_entities()
+            # Hole Register-Definitionen
+            registers = device_config.get("registers", {})
             
-            # Markiere das Setup als abgeschlossen
+            # Erstelle Register-Entities und konvertiere sie in spezifische Entity-Typen
+            for name, config in registers.items():
+                # Bestimme den Entity-Typ aus der Konfiguration
+                entity_type = config.get("entity_type", "register")
+                # Normalisiere den Entity-Typ (ersetze Leerzeichen durch Unterstrich)
+                entity_type = entity_type.replace(" ", "_")
+                
+                # Erstelle die Entity
+                entity = self._create_entity(entity_type, name, config)
+                if entity:
+                    unique_id = self._device.name_helper.convert(name, NameType.UNIQUE_ID)
+                    self._entities[unique_id] = entity
+                else:
+                    _LOGGER.warning(
+                        "Entity konnte nicht erstellt werden",
+                        extra={
+                            "device": self._device.name,
+                            "name": name,
+                            "type": entity_type
+                        }
+                    )
+
+            # Aktualisiere bestehende Entities
+            await self.update_entities()
+
+            # Setup abgeschlossen
             self._setup_complete = True
-            
+
             _LOGGER.info(
                 "Entity-Setup abgeschlossen",
                 extra={
                     "device": self._device.name,
                     "entity_count": len(self._entities),
-                    "entity_types": [type(e).__name__ for e in self._entities.values()]
+                    "entity_types": list(set(type(entity).__name__ for entity in self._entities.values()))
                 }
             )
-            
+
             return True
-            
+
         except Exception as e:
             _LOGGER.error(
                 "Fehler beim Entity-Setup",
@@ -421,5 +372,94 @@ class ModbusManagerEntityManager:
                     "error": str(e),
                     "device": self._device.name,
                     "traceback": e
+                }
+            )
+
+    def get_entities(self, entity_type: Union[str, List[Type[Entity]]]) -> List[Any]:
+        """Gibt alle Entities eines bestimmten Typs zurück.
+        
+        Args:
+            entity_type: Entweder ein String ("sensor", "switch", etc.) oder
+                        eine Liste von Entity-Klassen
+        """
+        try:
+            # Mapping von Entity-Typen zu Entity-Klassen
+            type_mapping = {
+                "sensor": [SensorEntity],
+                "binary_sensor": [BinarySensorEntity],
+                "switch": [SwitchEntity],
+                "number": [NumberEntity],
+                "select": [SelectEntity],
+                "button": [ButtonEntity],
+            }
+
+            # Bestimme die Entity-Klassen basierend auf dem Input
+            if isinstance(entity_type, str):
+                entity_classes = type_mapping.get(entity_type, [])
+                if not entity_classes:
+                    _LOGGER.warning(
+                        "Unbekannter Entity-Typ angefordert",
+                        extra={
+                            "device": self._device.name,
+                            "entity_type": entity_type
+                        }
+                    )
+                    return []
+            else:
+                entity_classes = entity_type
+
+            # Filtere die Entities nach Typ
+            entities = []
+            for entity in self._entities.values():
+                # Prüfe ob die Entity eine der gewünschten Klassen ist
+                if any(isinstance(entity, entity_class) for entity_class in entity_classes):
+                    # Prüfe ob die Entity auch ein ModbusRegisterEntity ist
+                    if isinstance(entity, ModbusRegisterEntity):
+                        entities.append(entity)
+
+            _LOGGER.debug(
+                "Entities gefiltert nach Typ",
+                extra={
+                    "device": self._device.name,
+                    "entity_type": str(entity_type),
+                    "count": len(entities)
+                }
+            )
+
+            return entities
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Abrufen der Entities nach Typ",
+                extra={
+                    "error": str(e),
+                    "device": self._device.name,
+                    "entity_type": str(entity_type),
+                    "traceback": e.__traceback__
+                }
+            )
+            return []
+
+    async def update_entities(self) -> None:
+        """Aktualisiert alle verwalteten Entities."""
+        try:
+            if not self._entities:
+                _LOGGER.debug(
+                    "Keine Entities zum Aktualisieren vorhanden",
+                    extra={"device": self._device.name}
+                )
+                return
+
+            for entity in self._entities.values():
+                if hasattr(entity, "async_update") and callable(entity.async_update):
+                    await entity.async_update()
+
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Aktualisieren der Entities",
+                extra={
+                    "error": str(e),
+                    "device": self._device.name,
+                    "traceback": str(e.__traceback__)
                 }
             ) 

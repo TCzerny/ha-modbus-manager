@@ -3,9 +3,11 @@ from __future__ import annotations
 
 import asyncio
 from typing import Any, Dict, Optional, List
+from datetime import timedelta
 
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
 from .const import DOMAIN
 from .device_interfaces import IModbusManagerDevice, IModbusManagerServiceProvider, IModbusManagerEntityProvider
@@ -19,7 +21,7 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
 
     def __init__(
         self,
-        hub,
+        hub: Any,
         device_type: str,
         device_config: Dict[str, Any],
         register_definitions: Dict[str, Any]
@@ -31,7 +33,8 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
             self._device_type = device_type
             self._device_config = device_config
             self._register_definitions = register_definitions
-            self._name = device_config.get("name", "unknown")
+            self._name = device_config.get("name", device_type)
+            self._slave = device_config.get("slave", 1)  # Default slave ID ist 1
             
             # Initialisiere den EntityNameHelper mit dem Gerätenamen
             self._name_helper = EntityNameHelper(self._name)
@@ -43,11 +46,14 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
                 model=self._device_type
             )
             
+            self._update_coordinators = {}
+            
             _LOGGER.debug(
                 "ModbusManagerDeviceBase initialisiert",
                 extra={
                     "device_type": device_type,
-                    "name": self._name
+                    "name": self._name,
+                    "slave": self._slave
                 }
             )
             
@@ -64,14 +70,19 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
             raise
 
     @property
-    def hass(self) -> HomeAssistant:
-        """Gibt die Home Assistant Instanz zurück."""
-        return self._hass
+    def name_helper(self) -> EntityNameHelper:
+        """Gibt den EntityNameHelper zurück."""
+        return self._name_helper
 
     @property
     def name(self) -> str:
         """Gibt den Namen des Geräts zurück."""
         return self._name
+
+    @property
+    def hass(self) -> HomeAssistant:
+        """Gibt die Home Assistant Instanz zurück."""
+        return self._hass
 
     @property
     def device_info(self) -> Dict[str, Any]:
@@ -133,8 +144,37 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
             from .device_services import ModbusManagerServiceHandler
             from .device_tests import ModbusManagerTestSuite
 
+            # Initialize update coordinators
+            self._update_coordinators = {
+                "fast": DataUpdateCoordinator(
+                    self._hass,
+                    _LOGGER,
+                    name=f"{self._name}_fast",
+                    update_method=self._async_update_data,
+                    update_interval=timedelta(seconds=5)
+                ),
+                "normal": DataUpdateCoordinator(
+                    self._hass,
+                    _LOGGER,
+                    name=f"{self._name}_normal",
+                    update_method=self._async_update_data,
+                    update_interval=timedelta(seconds=30)
+                ),
+                "slow": DataUpdateCoordinator(
+                    self._hass,
+                    _LOGGER,
+                    name=f"{self._name}_slow",
+                    update_method=self._async_update_data,
+                    update_interval=timedelta(minutes=5)
+                )
+            }
+
             # Initialize components
             self._register_processor = ModbusManagerRegisterProcessor(self)
+            
+            # Setup register processor
+            await self.setup_registers()
+            
             self._entity_manager = ModbusManagerEntityManager(self)
             self._calculator = ModbusManagerCalculator(self)
             self._service_handler = ModbusManagerServiceHandler(self)
@@ -146,6 +186,14 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
                 self._service_handler,
                 self._calculator
             )
+
+            # Setup entities
+            if not await self._entity_manager.setup_entities(self._device_config):
+                _LOGGER.error(
+                    "Fehler beim Setup der Entities",
+                    extra={"device": self.name}
+                )
+                return False
 
             _LOGGER.debug(
                 "ModbusManagerDeviceBase Setup abgeschlossen",
@@ -164,6 +212,29 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
                 }
             )
             return False
+
+    async def _async_update_data(self) -> Dict[str, Any]:
+        """Aktualisiert die Daten für die Koordinatoren."""
+        try:
+            # Hole die aktuellen Register-Werte
+            register_data = await self._register_processor.read_registers()
+            
+            # Aktualisiere die berechneten Register
+            await self._register_processor.update_calculated_registers()
+            
+            # Gib die Daten im richtigen Format zurück
+            return {self._name: register_data}
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Update der Daten",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return {}
 
     async def update_entities(self) -> None:
         """Aktualisiert die Entities des Geräts."""
@@ -185,8 +256,8 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
                 }
             )
 
-    async def get_entities(self, entity_types: List[Any]) -> List[Any]:
-        """Gibt die Entities des Geräts zurück."""
+    def get_entities(self, entity_type: str) -> List[Any]:
+        """Gibt die Entities eines bestimmten Typs zurück."""
         try:
             if not hasattr(self, "_entity_manager"):
                 _LOGGER.error(
@@ -194,15 +265,47 @@ class ModbusManagerDeviceBase(IModbusManagerDevice):
                     extra={"device": self.name}
                 )
                 return []
-            return [entity for entity in self._entity_manager.entities.values() 
-                   if any(isinstance(entity, entity_type) for entity_type in entity_types)]
+            return self._entity_manager.get_entities(entity_type)
         except Exception as e:
             _LOGGER.error(
                 "Fehler beim Abrufen der Entities",
                 extra={
                     "error": str(e),
+                    "entity_type": entity_type,
                     "device": self.name,
                     "traceback": e.__traceback__
                 }
             )
-            return [] 
+            return []
+
+    async def setup_registers(self) -> None:
+        """Richtet die Register ein."""
+        try:
+            # Hole Register-Definitionen als Listen
+            registers = self._register_definitions.get("registers", [])
+            calculations = self._register_definitions.get("calculated_registers", [])
+            
+            # Initialisiere Register
+            await self._register_processor.setup_registers(registers)
+            
+            # Initialisiere berechnete Register
+            await self._register_processor.setup_calculations(calculations)
+            
+            _LOGGER.debug(
+                "Register initialisiert",
+                extra={
+                    "device": self.name,
+                    "total_registers": len(registers),
+                    "total_calculations": len(calculations)
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Setup der Register",
+                extra={
+                    "error": str(e),
+                    "device": self.name,
+                    "traceback": str(e.__traceback__)
+                }
+            ) 

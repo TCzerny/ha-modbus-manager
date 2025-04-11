@@ -126,7 +126,8 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
             }
         )
 
-    async def _handle_coordinator_update(self) -> None:
+    @callback
+    def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
         try:
             if not self.coordinator or not self.coordinator.data:
@@ -142,7 +143,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
             # Hole die Daten für dieses Device
             if self.device.name in self.coordinator.data:
                 device_data = self.coordinator.data[self.device.name]
-                await self._update_value(device_data)
+                self._update_value(device_data)
             else:
                 _LOGGER.debug(
                     "Device nicht in Coordinator-Daten gefunden",
@@ -214,7 +215,7 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                 }
             ) 
 
-    async def _update_value(self, device_data: Dict[str, Any]) -> None:
+    def _update_value(self, device_data: Dict[str, Any]) -> None:
         """Aktualisiert den Wert der Entity basierend auf den Device-Daten."""
         if not device_data:
             _LOGGER.debug(
@@ -248,25 +249,22 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                         "Register-Wert ist None",
                         extra={
                             "entity": self._attr_name,
-                            "register_name": self.register_name,
+                            "register": self.register_name,
                             "device": self.device.name
                         }
                     )
                     return
-                
+                    
+                # Setze den Wert
                 self._attr_native_value = value
+                
                 _LOGGER.debug(
-                    "Wert erfolgreich aktualisiert",
+                    "Entity-Wert aktualisiert",
                     extra={
                         "entity": self._attr_name,
-                        "original_name": self.original_register_name,
-                        "register_name": self.register_name,
-                        "value": self._attr_native_value,
-                        "attributes": {
-                            "device_class": self._attr_device_class,
-                            "unit": self._attr_native_unit_of_measurement,
-                            "state_class": self._attr_state_class
-                        }
+                        "register": self.register_name,
+                        "value": value,
+                        "device": self.device.name
                     }
                 )
             else:
@@ -274,19 +272,19 @@ class ModbusRegisterEntity(CoordinatorEntity, SensorEntity):
                     "Register nicht in Device-Daten gefunden",
                     extra={
                         "entity": self._attr_name,
-                        "original_name": self.original_register_name,
-                        "register_name": self.register_name,
+                        "register": self.register_name,
+                        "device": self.device.name,
                         "verfügbare_register": list(device_data.keys())
                     }
                 )
 
         except Exception as e:
             _LOGGER.error(
-                "Fehler beim Aktualisieren des Werts",
+                "Fehler beim Aktualisieren des Entity-Werts",
                 extra={
                     "error": str(e),
                     "entity": self._attr_name,
-                    "register_name": self.register_name,
+                    "register": self.register_name,
                     "device": self.device.name,
                     "traceback": str(e.__traceback__)
                 }

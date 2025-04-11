@@ -51,7 +51,7 @@ async def setup_platform_entities(
 
         entities = []
         for device in hub._devices.values():
-            device_entities = await device.get_entities(entity_types)
+            device_entities = device.get_entities(platform_name.lower())
             if device_entities:
                 entities.extend(device_entities)
 

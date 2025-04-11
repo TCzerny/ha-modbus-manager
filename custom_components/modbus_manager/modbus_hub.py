@@ -290,6 +290,16 @@ class ModbusManagerHub:
                         "type": device_type
                     }
                 )
+
+                # Registriere das Device im Device Registry
+                device_registry = dr.async_get(self.hass)
+                device_registry.async_get_or_create(
+                    config_entry_id=self._entry_id,
+                    identifiers={(DOMAIN, device.name)},
+                    name=device.name,
+                    manufacturer="Modbus Manager",
+                    model=device_type
+                )
             else:
                 _LOGGER.error(
                     "Device-Initialisierung fehlgeschlagen",

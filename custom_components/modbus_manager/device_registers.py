@@ -255,119 +255,69 @@ class ModbusManagerRegisterProcessor:
     async def setup_registers(self, register_definitions: Dict[str, Any]) -> bool:
         """Richtet die Register basierend auf der Konfiguration ein."""
         try:
-            # Hole die Register-Definitionen
-            registers = register_definitions.get("registers", {})
-            
-            # Initialisiere Intervall-Listen
+            # Initialisiere Register-Listen
             self.registers = {
                 "fast": [],
                 "normal": [],
                 "slow": []
             }
             
-            # Verarbeite Register-Definitionen
-            if "registers" in register_definitions:
-                registers = register_definitions["registers"]
-                
-                # Prüfe ob registers ein Dictionary oder eine Liste ist
-                if isinstance(registers, dict):
-                    # Dictionary-Format: {"read": [...], "write": [...]}
-                    for reg_type, reg_list in registers.items():
-                        if isinstance(reg_list, list):
-                            for register in reg_list:
-                                # Setze register_type basierend auf der Definition
-                                register["register_type"] = "input" if reg_type == "read" else "holding"
-                                if self._validate_register_definition(register):
-                                    polling = register.get("polling", "normal")
-                                    self.registers[polling].append(register)
-                                else:
-                                    _LOGGER.warning(
-                                        "Register-Definition übersprungen",
-                                        extra={
-                                            "register": register,
-                                            "device": self.device.name,
-                                            "errors": self.errors
-                                        }
-                                    )
-                elif isinstance(registers, list):
-                    # Listen-Format: [{"name": ..., "type": ..., ...}, ...]
-                    for register in registers:
-                        if self._validate_register_definition(register):
-                            polling = register.get("polling", "normal")
-                            self.registers[polling].append(register)
-                        else:
-                            _LOGGER.warning(
-                                "Register-Definition übersprungen",
-                                extra={
-                                    "register": register,
-                                    "device": self.device.name,
-                                    "errors": self.errors
-                                }
-                            )
-                else:
-                    _LOGGER.error(
-                        "Ungültiges Register-Format",
-                        extra={
-                            "type": type(registers),
-                            "device": self.device.name
-                        }
-                    )
-                    return False
-                            
-            # Verarbeite berechnete Register
-            if "calculated_registers" in register_definitions:
-                calc_registers = register_definitions["calculated_registers"]
-                
-                # Prüfe ob calculated_registers ein Dictionary oder eine Liste ist
-                if isinstance(calc_registers, dict):
-                    for calc_id, calc_def in calc_registers.items():
-                        if self._validate_calculation(calc_id, calc_def):
-                            self.values[calc_id] = calc_def
-                        else:
-                            _LOGGER.warning(
-                                "Berechnungsdefinition übersprungen",
-                                extra={
-                                    "calc_id": calc_id,
-                                    "device": self.device.name,
-                                    "errors": self.errors
-                                }
-                            )
-                elif isinstance(calc_registers, list):
-                    for calc_def in calc_registers:
-                        if "name" not in calc_def:
-                            _LOGGER.warning(
-                                "Berechnungsdefinition ohne Namen übersprungen",
-                                extra={
-                                    "calc_def": calc_def,
-                                    "device": self.device.name
-                                }
-                            )
-                            continue
-                            
-                        calc_id = calc_def["name"]
-                        if self._validate_calculation(calc_id, calc_def):
-                            self.values[calc_id] = calc_def
-                        else:
-                            _LOGGER.warning(
-                                "Berechnungsdefinition übersprungen",
-                                extra={
-                                    "calc_id": calc_id,
-                                    "device": self.device.name,
-                                    "errors": self.errors
-                                }
-                            )
-                            
-            # Passe Cache-Größen an
-            self._adjust_cache_sizes()
+            # Initialisiere Werte-Dictionary
+            self.values = {}
             
+            # Verarbeite Register-Definitionen
+            if not register_definitions:
+                _LOGGER.warning(
+                    "Keine Register-Definitionen vorhanden",
+                    extra={"device": self.device.name}
+                )
+                return True
+                
+            # Hole die Register-Listen
+            read_registers = register_definitions.get("read", [])
+            write_registers = register_definitions.get("write", [])
+            
+            # Verarbeite Lese-Register
+            for register in read_registers:
+                if isinstance(register, dict):
+                    register["register_type"] = "input"
+                    if self._validate_register_definition(register):
+                        polling = register.get("polling", "normal")
+                        self.registers[polling].append(register)
+                        self.values[register["name"]] = None
+                    else:
+                        _LOGGER.warning(
+                            "Register-Definition übersprungen",
+                            extra={
+                                "register": register,
+                                "device": self.device.name
+                            }
+                        )
+                        
+            # Verarbeite Schreib-Register
+            for register in write_registers:
+                if isinstance(register, dict):
+                    register["register_type"] = "holding"
+                    if self._validate_register_definition(register):
+                        polling = register.get("polling", "normal")
+                        self.registers[polling].append(register)
+                        self.values[register["name"]] = None
+                    else:
+                        _LOGGER.warning(
+                            "Register-Definition übersprungen",
+                            extra={
+                                "register": register,
+                                "device": self.device.name
+                            }
+                        )
+                            
             # Logge Setup-Ergebnis
             _LOGGER.info(
                 "Register-Setup abgeschlossen",
                 extra={
                     "device": self.device.name,
                     "total_registers": sum(len(regs) for regs in self.registers.values()),
-                    "calculated_registers": len(self.values),
-                    "validation_errors": len(self.errors)
+                    "calculated_registers": len(self.values)
                 }
             )
             
@@ -923,5 +873,83 @@ class ModbusManagerRegisterProcessor:
 
     @property
     def registers_by_interval(self) -> Dict[str, List[Dict[str, Any]]]:
-        """Gibt die Register gruppiert nach Intervall zurück."""
-        return self.registers.copy() 
+        """Gibt die Register nach Intervall gruppiert zurück."""
+        result = {"fast": [], "normal": [], "slow": []}
+        for reg in self.registers.values():
+            interval = reg.get("polling", "normal")
+            result[interval].append(reg)
+        return result
+
+    async def read_registers(self) -> Dict[str, Any]:
+        """Liest alle Register und gibt die Werte zurück."""
+        try:
+            # Hole die aktuellen Register-Werte
+            register_data = {}
+            for interval in ["fast", "normal", "slow"]:
+                if await self.update_registers(interval):
+                    register_data.update(self.values)
+
+            # Aktualisiere die berechneten Register
+            await self.update_calculated_registers()
+            
+            return register_data
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Lesen der Register",
+                extra={
+                    "error": str(e),
+                    "device": self.device.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return {}
+
+    async def setup_calculations(self, calculation_definitions: List[Dict[str, Any]]) -> bool:
+        """Richtet die berechneten Register ein."""
+        try:
+            # Initialisiere berechnete Register
+            self.calculated_registers = {}
+            
+            # Verarbeite Berechnungsdefinitionen
+            for calc_def in calculation_definitions:
+                calc_id = calc_def.get("name")
+                if not calc_id:
+                    _LOGGER.warning(
+                        "Berechnungsdefinition ohne Namen übersprungen",
+                        extra={"device": self.device.name}
+                    )
+                    continue
+                    
+                if self._validate_calculation(calc_id, calc_def):
+                    self.calculated_registers[calc_id] = calc_def
+                    self.values[calc_id] = None
+                else:
+                    _LOGGER.warning(
+                        "Berechnungsdefinition übersprungen",
+                        extra={
+                            "calc_id": calc_id,
+                            "device": self.device.name
+                        }
+                    )
+            
+            _LOGGER.debug(
+                "Berechnete Register initialisiert",
+                extra={
+                    "device": self.device.name,
+                    "total_calculations": len(self.calculated_registers)
+                }
+            )
+            
+            return True
+            
+        except Exception as e:
+            _LOGGER.error(
+                "Fehler beim Setup der berechneten Register",
+                extra={
+                    "error": str(e),
+                    "device": self.device.name,
+                    "traceback": e.__traceback__
+                }
+            )
+            return False 

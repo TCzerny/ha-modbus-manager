@@ -48,3 +48,5 @@ class NameType(Enum):
     UNIQUE_ID = "unique_id"          # Für eindeutige IDs (z.B. sungrow_inverter_battery_level)
     DISPLAY_NAME = "display_name"    # Für UI-Anzeigenamen (z.B. Sungrow Battery Level)
     BASE_NAME = "base_name"          # Für interne Referenzen (z.B. sungrow_battery_level)
+    REGISTER = "register"            # Für Register-Namen (z.B. battery_level)
+    SERVICE_NAME = "service_name"    # Für Service-Namen (z.B. set_battery_level)

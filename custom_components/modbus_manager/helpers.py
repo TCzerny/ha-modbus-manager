@@ -136,6 +136,9 @@ class EntityNameHelper:
         elif name_type == NameType.SERVICE_NAME:
             result = f"{self._sanitized_device_name}_{self._sanitize_name(clean_name)}"
 
+        elif name_type == NameType.REGISTER:
+            result = self._sanitize_name(clean_name)
+
         else:
             raise ValueError(f"Unbekannter NameType: {name_type}")
 
