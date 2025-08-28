@@ -8,12 +8,13 @@ A custom integration for Home Assistant that manages Modbus devices through a te
 - **UI Setup**: Users select a template, enter IP, port, slave-ID and a prefix – entities are automatically generated
 - **Entity Generation**: Sensors are dynamically created from templates, with prefix for distinction and group tags for later aggregation
 - **Modbus Hub Management**: Each device is registered as its own virtual Modbus hub, communication runs through the standard Home Assistant Modbus API
-- **Aggregation Module**: Automatic generation of sum, average, max/min and status sensors over entities with the same group tag
+- **Aggregation Module**: Automatic generation of sum, average, max/min and count sensors over entities with the same group tag
 - **Live Refresh**: Aggregation sensors update immediately when related entities change via `async_track_state_change`
 - **Group Discovery**: All existing groups are detected and offered in the UI for aggregation configuration
-- **Advanced Data Processing**: Support for bit operations, enum mapping, bit flags and more
-- **Complete Entity Types**: Sensors, switches, numbers, select entities, binary sensors
+- **Advanced Data Processing**: Support for bit operations, enum mapping, bit flags, offset, multiplier, and sum_scale
+- **Complete Entity Types**: Sensors, binary sensors, numbers, selects, switches, buttons, text entities
 - **Robust Modbus Integration**: Fully integrated with the standard Home Assistant Modbus API, comprehensive error handling and validation
+- **Performance Monitoring**: Comprehensive metrics, operation tracking, and register optimization
 
 ## 📋 Supported Devices
 
@@ -31,7 +32,7 @@ A custom integration for Home Assistant that manages Modbus devices through a te
 
 ### Advanced Example Device
 - **Template**: `advanced_example.yaml`
-- **Description**: Demonstrates all advanced features
+- **Description**: Demonstrates advanced features
 - **Features**: Bit operations, enum mapping, bit flags, float conversion, control entities
 
 ## 🚀 Installation
@@ -95,7 +96,7 @@ sensors:
     swap: false  # for 32-bit values
     group: "energy_total"
     
-    # Advanced data processing features
+    # Advanced data processing features (IMPLEMENTED)
     offset: 0.0           # Add offset
     multiplier: 1.0       # Apply multiplier
     sum_scale: [0.1, 0.01]  # Scale factors for sum operations
@@ -103,30 +104,33 @@ sensors:
     bits: [0, 1, 2]      # Specific bit selection
     float: false          # Float conversion
     string: false         # String conversion
+    
+    # Control entities (IMPLEMENTED)
     control: "none"       # Control type (none, number, select, switch, text)
     min_value: 0.0       # Minimum value for number entities
     max_value: 100.0     # Maximum value for number entities
     step: 1.0            # Step size for number entities
     options: {}           # Options for select entities
+    
+    # Data mapping (IMPLEMENTED)
     map: {}              # Value mapping
     flags: {}            # Bit flags
     never_resets: false  # Never resets flag
-    entity_category: null # Entity category
-    icon: null           # Custom icon
+    
+    # Boolean sensor configuration (IMPLEMENTED)
+    true_value: 1        # Value for true state
+    false_value: 0       # Value for false state
+    bit_position: 0      # Bit position for boolean sensors
 ```
 
-## 🔧 Advanced Features
+## 🔧 Implemented Advanced Features
 
 ### Bit Operations
 ```yaml
-- name: "Status Flags"
+- name: "Status Register"
   data_type: "uint16"
-  bits: [0, 1, 2, 3]  # Read specific bits
-  flags:
-    0: "Error"
-    1: "Warning"
-    2: "Running"
-    3: "Connected"
+  shift_bits: 4  # Shift 4 bits to the right
+  bits: 8        # Use only lower 8 bits
 ```
 
 ### Enum Mapping
@@ -140,12 +144,47 @@ sensors:
     3: "Error"
 ```
 
+### Bit Flags
+```yaml
+- name: "System Status"
+  data_type: "uint16"
+  flags:
+    0: "Power On"
+    1: "Fan Active"
+    2: "Pump Active"
+```
+
 ### Sum Operations
 ```yaml
 - name: "Total Energy"
   data_type: "uint32"
   count: 2
-  sum_scale: [0.1, 0.01]  # Scale factors for each register
+  sum_scale: [1, 10000]  # r1*1 + r2*10000
+```
+
+### Control Entities
+```yaml
+# Number entity (read/write)
+- name: "Set Temperature"
+  control: "number"
+  min_value: 10.0
+  max_value: 50.0
+  step: 0.5
+
+# Select entity (read/write)
+- name: "Fan Speed"
+  control: "select"
+  options:
+    0: "Off"
+    1: "Low"
+    2: "Medium"
+
+# Switch entity (read/write)
+- name: "Power Switch"
+  control: "switch"
+  switch:
+    "on": 1
+    "off": 0
 ```
 
 ## 📈 Aggregation Features
@@ -159,10 +198,41 @@ The integration automatically detects all groups from templates and offers them 
 - **Maximum**: Highest value in a group
 - **Minimum**: Lowest value in a group
 - **Count**: Number of entities in a group
-- **Status**: Combined status from multiple entities
 
 ### Real-time Updates
 Aggregation sensors update immediately when any related entity changes, providing real-time insights.
+
+## 🚧 TODO: Planned Features
+
+### Advanced Data Processing
+- [ ] **Float Conversion**: Automatic 32-bit IEEE 754 float conversion
+- [ ] **String Processing**: Enhanced string handling and validation
+- [ ] **Advanced Bit Operations**: More complex bit manipulation functions
+- [ ] **Data Validation**: Input validation and error checking
+
+### Entity Enhancements
+- [ ] **Custom Icons**: Template-based icon configuration
+- [ ] **Entity Categories**: Support for entity_category parameter
+- [ ] **Advanced Control**: More sophisticated control entity types
+- [ ] **Conditional Logic**: Template-based conditional entity creation
+
+### Aggregation Improvements
+- [ ] **Status Aggregation**: Combined status from multiple entities
+- [ ] **Custom Aggregation Methods**: User-defined aggregation functions
+- [ ] **Aggregation Scheduling**: Configurable update intervals
+- [ ] **Historical Aggregation**: Time-based aggregation data
+
+### Performance & Monitoring
+- [ ] **Advanced Metrics**: More detailed performance analytics
+- [ ] **Alerting**: Performance threshold alerts
+- [ ] **Optimization Suggestions**: AI-powered optimization recommendations
+- [ ] **Batch Processing**: Enhanced register reading optimization
+
+### Template System
+- [ ] **Template Inheritance**: Base templates with overrides
+- [ ] **Template Validation**: Enhanced YAML validation
+- [ ] **Dynamic Templates**: Runtime template generation
+- [ ] **Template Versioning**: Version control for templates
 
 ## 🐛 Troubleshooting
 
@@ -191,6 +261,13 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guid
 3. Make your changes
 4. Add tests if applicable
 5. Submit a pull request
+
+### Contributing to TODO Features
+If you'd like to contribute to implementing the planned features:
+1. Check the TODO list above
+2. Create an issue to discuss the implementation
+3. Implement the feature with proper tests
+4. Update documentation accordingly
 
 ## 📄 License
 
