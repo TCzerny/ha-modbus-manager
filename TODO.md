@@ -182,6 +182,56 @@ This document tracks planned features that are described in the README but not y
   - Troubleshooting guides
   - Video tutorials
 
+## 🚀 Discussion-Inspired Features
+
+### Template Sensors (Mathematical Calculations)
+- [ ] **Automatic Power Calculations**
+  - MPPT Power = Voltage × Current
+  - Phase Power = Voltage × Current
+  - Battery Power with direction detection
+  - Energy consumption calculations
+  - Real-time mathematical operations
+
+### Advanced Binary Sensors
+- [ ] **Bit-based Status Sensors**
+  - Direct bit extraction from registers
+  - PV generating, battery charging/discharging
+  - Power flow detection (export/import)
+  - Load powering status
+  - Delay-based status updates
+
+### Input Entity Integration
+- [ ] **Native Input Support**
+  - Input numbers for configuration values
+  - Input selects for mode selection
+  - Bidirectional synchronization
+  - Real-time value updates
+  - Validation and constraints
+
+### Automation & Scripts
+- [ ] **Built-in Automation Support**
+  - Predefined automation templates
+  - Script execution capabilities
+  - State change triggers
+  - Conditional logic support
+  - Error handling in automations
+
+### Data Filtering & Processing
+- [ ] **Advanced Data Processing**
+  - Time-based filtering (moving averages)
+  - Data validation and error handling
+  - Invalid value detection (0x7FFFFFFF)
+  - Data smoothing algorithms
+  - Quality indicators
+
+### State Management
+- [ ] **Enhanced State Handling**
+  - Complex state calculations
+  - State mapping and translation
+  - Availability logic
+  - State persistence
+  - State synchronization
+
 ## 🎯 Priority Levels
 
 ### High Priority (Core Functionality)
@@ -189,18 +239,24 @@ This document tracks planned features that are described in the README but not y
 - [ ] String processing improvements
 - [ ] Entity category support
 - [ ] Status aggregation
+- [ ] Template sensors for calculations
+- [ ] Advanced binary sensors
 
 ### Medium Priority (User Experience)
 - [ ] Custom icons
 - [ ] Advanced control entities
 - [ ] Aggregation scheduling
 - [ ] Template validation
+- [ ] Input entity integration
+- [ ] Data filtering
 
 ### Low Priority (Nice to Have)
 - [ ] AI optimization suggestions
 - [ ] Template inheritance
 - [ ] Dynamic templates
 - [ ] Advanced metrics
+- [ ] Automation templates
+- [ ] Script execution
 
 ## 🤝 Contributing
 
@@ -212,14 +268,23 @@ If you'd like to contribute to implementing any of these features:
 4. **Implement with tests** - Ensure proper test coverage
 5. **Update documentation** - Keep README and other docs current
 
+### Contributing to MKaiser Features
+The MKaiser integration provides excellent examples of advanced Home Assistant features. When implementing these:
+
+1. **Analyze the approach** - Understand why they use templates vs. native features
+2. **Consider alternatives** - Can we implement this natively in our integration?
+3. **Maintain compatibility** - Ensure our implementation works with existing setups
+4. **Document decisions** - Explain why we chose our approach over MKaiser's
+
 ## 📋 Implementation Notes
 
 - **Backward Compatibility**: All new features must maintain backward compatibility
 - **Performance**: New features should not significantly impact performance
 - **Testing**: All features require comprehensive testing
 - **Documentation**: Features must be documented before merging
+- **MKaiser Compatibility**: Consider how our features complement or replace MKaiser approaches
 
 ---
 
 **Last Updated**: $(date)
-**Version**: 1.0.0 
+**Version**: 1.1.0 
