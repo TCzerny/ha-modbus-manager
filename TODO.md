@@ -418,3 +418,68 @@ controls:
     value: 1
     group: heat_control
 
+# 🧠 Entscheidungsgrundlagen & Architekturübersicht – Modbus Manager
+
+## ✅ Entscheidungsgrundlagen
+
+- **Template-gesteuerte Architektur**: Geräte werden über YAML-Templates beschrieben (`registers`, `calculated`, `controls`)
+- **Direkte Modbus-Steuerung**: UI-Entitäten wie `number`, `select`, `button` ersetzen `input_*` + `automation`
+- **Berechnete Sensoren via Jinja2**: Template-Sensoren mit `{prefix}`-Platzhalter ermöglichen Mehrgeräte-Support
+- **Versionierung im Template**: `version:`-Feld erkennt Änderungen und ermöglicht halbautomatische Updates
+- **Keine YAML-Konfiguration nötig**: Alle Geräte werden über UI (`config_flow`) eingerichtet
+- **Modularer Aufbau**: Jede Komponente ist unabhängig erweiterbar (Sensoren, Steuerung, Aggregation)
+- **Statistikdaten bleiben erhalten**: Bestehende Entitäten werden nicht gelöscht, sondern nur ergänzt
+
+---
+
+## 🔗 Relevante Links
+
+- 🔧 Projekt-Repo: [github.com/TCzerny/ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)
+- 📚 Home Assistant Dev Docs: [developers.home-assistant.io](https://developers.home-assistant.io/)
+- 🧪 Jinja2 Template-Editor: [HA Entwicklerwerkzeuge → Vorlagen](http://homeassistant.local:8123/developer-tools/template)
+- 🧠 MKaiser Vergleich: [github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant)
+
+---
+
+## 🧩 Architektur-Schritte
+
+### 🔧 Parsing & Struktur
+- `template_loader.py`: Lädt `registers`, `calculated`, `controls`
+- Platzhalter `{prefix}` im Template → dynamisch ersetzt
+- Unterstützung für `data_type`, `length`, `bitmask`
+
+### 🧠 Entitäten
+- `ModbusRegisterSensor`: Register mit Skalierung & Datentyp
+- `CalculatedSensor`: Berechnete Sensoren via Jinja2
+- `ModbusNumberEntity`, `ModbusSelectEntity`, `ModbusButtonEntity`: direkte Steuerung
+
+### 🚀 Setup & Update
+- `async_setup_entry()` prüft `template_version`
+- Ergänzt neue Entitäten → keine Löschung
+- Statistikdaten bleiben erhalten
+
+### 📁 Templates
+- Beispiel: `heatpump_generic.yaml`
+- Weitere geplant: `wallbox_generic.yaml`, `hvac_generic.yaml`
+
+---
+
+## 📋 Hinweise zur Umsetzung
+
+- Templates sollten `{prefix}` verwenden, um auf eigene Sensoren zuzugreifen
+- Template-Version wird im `config_entry` gespeichert
+- Entity Registry wird geprüft → keine Duplikate
+- UI-Hinweis bei Versionssprung möglich („Template aktualisiert“)
+- Aggregation über `group:`-Feld möglich (z. B. `pv_power`, `heat_energy`)
+
+---
+
+## 📦 Nächste Schritte
+
+- [ ] Branch `feature/template_refactor` erstellen  
+- [ ] Alle neuen Dateien integrieren (`template_loader.py`, `controls.py`, `calculated.py`, etc.)  
+- [ ] README erweitern mit Template-Schema  
+- [ ] UI-Funktion „Template aktualisieren“ ergänzen  
+- [ ] Weitere Templates schreiben
+
+
