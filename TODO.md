@@ -288,3 +288,133 @@ The MKaiser integration provides excellent examples of advanced Home Assistant f
 
 **Last Updated**: $(date)
 **Version**: 1.1.0 
+
+
+
+# 🧠 Modbus Manager Refactor – Architektur & Feature-Zusammenfassung
+
+## 👤 Entwickler: TCzerny  
+## 📦 Projekt: [ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)  
+## 📅 Stand: August 2025  
+
+---
+
+## 🧱 Architekturüberblick
+
+Ziel: Eine modulare, template-gesteuerte Plattform zur Verwaltung von Modbus-Geräten in Home Assistant – skalierbar für PV-Wechselrichter, Wärmepumpen, Wallboxen, Klimageräte, Heizungen u.v.m.
+
+### 🔧 Komponenten
+- `template_loader.py`: Parser für `registers`, `calculated`, `controls`
+- `entity_factory.py`: Erzeugt Entitäten aus Template-Daten
+- `controls.py`: Direkte Modbus-Steuerung (`number`, `select`, `button`)
+- `calculated.py`: Berechnete Sensoren via Jinja2
+- `async_setup_entry()`: Setup + Versionsvergleich + Ergänzung neuer Entitäten
+
+---
+
+## ✅ ToDo-Liste
+
+### 🔧 Parsing & Struktur
+- [x] Modularer Template-Parser (`template_loader.py`)
+- [x] Präfix-Platzhalter `{prefix}` in `calculated.template`
+- [x] Unterstützung für `data_type`, `length`, `bitmask`
+- [ ] Template-Versionierung (`version:`) + Vergleich
+
+### 🧠 Entitäten
+- [x] `ModbusRegisterSensor`
+- [x] `CalculatedSensor`
+- [x] `ModbusNumberEntity`, `ModbusSelectEntity`, `ModbusButtonEntity`
+
+### 🚀 Setup & Update
+- [x] Entity Registry prüfen → keine Duplikate
+- [x] Ergänzung neuer Entitäten bei Versionssprung
+- [ ] Speichern von `template_version` im `config_entry`
+
+### 📁 Templates
+- [x] `heatpump_generic.yaml`
+- [ ] `wallbox_generic.yaml`
+- [ ] `hvac_generic.yaml`
+
+### 🧠 UI & Optionen
+- [ ] Anzeige von Template-Version in `config_flow.py`
+- [ ] UI-Option „Template aktualisieren“
+
+---
+
+## 📁 Beispiel-Template: `heatpump_generic.yaml`
+
+```yaml
+name: Generic Heatpump
+type: heatpump
+version: 2
+slave_id: 1
+
+registers:
+  - name: "Flow Temperature"
+    address: 30010
+    unit: "°C"
+    scale: 0.1
+    device_class: temperature
+    state_class: measurement
+    group: heat_flow
+
+  - name: "Return Temperature"
+    address: 30012
+    unit: "°C"
+    scale: 0.1
+    device_class: temperature
+    state_class: measurement
+    group: heat_return
+
+  - name: "Compressor Status"
+    address: 30020
+    data_type: bitfield
+    bitmask: 0x01
+    device_class: running
+    group: heat_status
+
+  - name: "Total Heat Energy"
+    address: 30030
+    length: 2
+    data_type: uint32
+    unit: "kWh"
+    scale: 0.01
+    device_class: energy
+    state_class: total
+    group: heat_energy
+
+calculated:
+  - name: "Delta Temperature"
+    type: sensor
+    template: "{{ states('sensor.{prefix}_flow_temperature') | float - states('sensor.{prefix}_return_temperature') | float }}"
+    unit: "°C"
+    device_class: temperature
+    state_class: measurement
+    group: heat_delta
+
+controls:
+  - type: number
+    name: "Target Temperature"
+    address: 40010
+    scale: 0.1
+    unit: "°C"
+    min: 30
+    max: 60
+    step: 0.5
+    group: heat_control
+
+  - type: select
+    name: "Operation Mode"
+    address: 40020
+    options:
+      Auto: 1
+      Eco: 2
+      Boost: 3
+    group: heat_control
+
+  - type: button
+    name: "Restart Heatpump"
+    address: 40030
+    value: 1
+    group: heat_control
+
