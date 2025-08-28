@@ -1,89 +1,89 @@
-# Modbus Manager für Home Assistant
+# Modbus Manager for Home Assistant
 
-Eine Custom Integration für Home Assistant, die Modbus-Geräte über eine template-basierte, UI-konfigurierbare Plattform verwaltet. Ziel ist es, die manuelle Pflege von `configuration.yaml` zu ersetzen und eine skalierbare Lösung für die Verwaltung mehrerer Modbus-TCP-Geräte bereitzustellen.
+A custom integration for Home Assistant that manages Modbus devices through a template-based, UI-configurable platform. The goal is to replace manual maintenance of `configuration.yaml` and provide a scalable solution for managing multiple Modbus-TCP devices.
 
-## 🔧 Hauptfunktionen
+## 🔧 Main Features
 
-- **Geräte-Templates**: YAML-basierte Definitionen von Modbus-Geräten mit Register-Mapping, Skalierung, Einheiten, device_class, state_class und Gruppentags
-- **UI-Setup**: Nutzer wählen ein Template, geben IP, Port, Slave-ID und einen Präfix ein – die Entitäten werden automatisch erzeugt
-- **Entitätserzeugung**: Sensoren werden dynamisch aus Templates erstellt, mit Präfix zur Unterscheidung und Gruppentags für spätere Aggregation
-- **Modbus-Hub-Management**: Jeder Gerät wird als eigener virtueller Modbus-Hub registriert, Kommunikation läuft über die Standard Home Assistant Modbus-API
-- **Aggregationsmodul**: Automatische Erzeugung von Summen-, Durchschnitts-, Max-/Min- und Statussensoren über Entitäten mit gleichem group-Tag
-- **Live-Refresh**: Aggregationssensoren aktualisieren sich sofort bei Änderungen der zugehörigen Entitäten via `async_track_state_change`
-- **Group Discovery**: Alle vorhandenen Gruppen werden erkannt und im UI zur Konfiguration von Aggregationen angeboten
-- **Erweiterte Datenverarbeitung**: Unterstützung für Bit-Operationen, Enum-Mapping, Bit-Flags und mehr (basierend auf [modbus_connect](https://github.com/dmatscheko/modbus_connect))
-- **Vollständige Entity-Typen**: Sensoren, Schalter, Zahlen, Select-Entitäten, Binary-Sensoren
-- **Robuste Modbus-Integration**: Vollständig integriert mit der Standard Home Assistant Modbus-API, umfassende Fehlerbehandlung und Validierung
+- **Device Templates**: YAML-based definitions of Modbus devices with register mapping, scaling, units, device_class, state_class and group tags
+- **UI Setup**: Users select a template, enter IP, port, slave-ID and a prefix – entities are automatically generated
+- **Entity Generation**: Sensors are dynamically created from templates, with prefix for distinction and group tags for later aggregation
+- **Modbus Hub Management**: Each device is registered as its own virtual Modbus hub, communication runs through the standard Home Assistant Modbus API
+- **Aggregation Module**: Automatic generation of sum, average, max/min and status sensors over entities with the same group tag
+- **Live Refresh**: Aggregation sensors update immediately when related entities change via `async_track_state_change`
+- **Group Discovery**: All existing groups are detected and offered in the UI for aggregation configuration
+- **Advanced Data Processing**: Support for bit operations, enum mapping, bit flags and more (based on [modbus_connect](https://github.com/dmatscheko/modbus_connect))
+- **Complete Entity Types**: Sensors, switches, numbers, select entities, binary sensors
+- **Robust Modbus Integration**: Fully integrated with the standard Home Assistant Modbus API, comprehensive error handling and validation
 
-## 📋 Unterstützte Geräte
+## 📋 Supported Devices
 
 ### Sungrow SHx Inverter
 - **Template**: `sungrow_shx.yaml`
-- **Beschreibung**: Vollständige Unterstützung für Sungrow SHx Wechselrichter
-- **Register**: Temperatur, MPPT-Daten, Grid-Parameter, Energie-Statistiken
-- **Gruppen**: identification, energy_daily, energy_total, mppt1, mppt2, grid_l1, power_total, system
+- **Description**: Complete support for Sungrow SHx inverters
+- **Registers**: Temperature, MPPT data, grid parameters, energy statistics
+- **Groups**: identification, energy_daily, energy_total, mppt1, mppt2, grid_l1, power_total, system
 
 ### Compleo EBox Professional Wallbox
 - **Template**: `compleo_ebox.yaml`
-- **Beschreibung**: Template für Compleo EBox Professional Wallbox
-- **Register**: Lade-Status, Strom/Spannung/Leistung, Energie-Statistiken, Temperatur
-- **Gruppen**: identification, status, charging, energy_session, energy_total, time_session, system
+- **Description**: Template for Compleo EBox Professional wallbox
+- **Registers**: Charging status, current/voltage/power, energy statistics, temperature
+- **Groups**: identification, status, charging, energy_session, energy_total, time_session, system
 
 ### Advanced Example Device
 - **Template**: `advanced_example.yaml`
-- **Beschreibung**: Demonstriert alle erweiterten Features
-- **Features**: Bit-Operationen, Enum-Mapping, Bit-Flags, Float-Konvertierung, Control-Entitäten
+- **Description**: Demonstrates all advanced features
+- **Features**: Bit operations, enum mapping, bit flags, float conversion, control entities
 
 ## 🚀 Installation
 
-### HACS Installation (Empfohlen)
-1. Fügen Sie das Repository zu HACS hinzu
-2. Installieren Sie die Integration über HACS
-3. Starten Sie Home Assistant neu
+### HACS Installation (Recommended)
+1. Add the repository to HACS
+2. Install the integration via HACS
+3. Restart Home Assistant
 
-### Manuelle Installation
-1. Laden Sie den Code herunter
-2. Kopieren Sie den `custom_components/modbus_manager` Ordner in Ihren `custom_components` Ordner
-3. Starten Sie Home Assistant neu
+### Manual Installation
+1. Download the code
+2. Copy the `custom_components/modbus_manager` folder to your `custom_components` folder
+3. Restart Home Assistant
 
-## ⚙️ Konfiguration
+## ⚙️ Configuration
 
-### 1. Template auswählen
-- Gehen Sie zu **Konfiguration** → **Geräte & Dienste**
-- Klicken Sie auf **+ Integration hinzufügen**
-- Wählen Sie **Modbus Manager**
-- Wählen Sie ein verfügbares Template aus
+### 1. Select Template
+- Go to **Configuration** → **Devices & Services**
+- Click **+ Add Integration**
+- Select **Modbus Manager**
+- Choose an available template
 
-### 2. Geräte-Konfiguration
-- **Präfix**: Eindeutiger Name für das Gerät (z.B. `sungrow_1`)
-- **Host**: IP-Adresse des Modbus-Geräts
-- **Port**: Modbus-Port (Standard: 502)
-- **Slave ID**: Modbus-Slave-ID (Standard: 1)
-- **Timeout**: Verbindungs-Timeout in Sekunden (Standard: 3)
-- **Retries**: Anzahl der Wiederholungsversuche (Standard: 3)
+### 2. Device Configuration
+- **Prefix**: Unique name for the device (e.g., `sungrow_1`)
+- **Host**: IP address of the Modbus device
+- **Port**: Modbus port (default: 502)
+- **Slave ID**: Modbus slave ID (default: 1)
+- **Timeout**: Connection timeout in seconds (default: 3)
+- **Retries**: Number of retry attempts (default: 3)
 
-### 3. Aggregations-Konfiguration
-- Gehen Sie zu den **Optionen** der Integration
-- Wählen Sie **Aggregationen konfigurieren**
-- Wählen Sie die gewünschten Gruppen aus
-- Wählen Sie die Aggregations-Methoden (Summe, Durchschnitt, Max/Min, Anzahl)
+### 3. Aggregation Configuration
+- Go to the **Options** of the integration
+- Select **Configure Aggregations**
+- Choose the desired groups
+- Select the aggregation methods (sum, average, max/min, count)
 
-## 📊 Template-Format
+## 📊 Template Format
 
-Templates verwenden das folgende YAML-Format:
+Templates use the following YAML format:
 
 ```yaml
-name: "Gerätename"
-description: "Beschreibung des Geräts"
-manufacturer: "Hersteller"
-model: "Modell"
+name: "Device Name"
+description: "Device description"
+manufacturer: "Manufacturer"
+model: "Model"
 
 sensors:
-  - name: "Sensor-Name"
-    unique_id: "eindeutige_id"
+  - name: "Sensor Name"
+    unique_id: "unique_id"
     device_address: 1
     address: 1000
-    input_type: "input"  # input oder holding
+    input_type: "input"  # input or holding
     data_type: "uint16"  # uint16, int16, uint32, int32, string, float, boolean
     count: 1
     scan_interval: 600
@@ -92,164 +92,122 @@ sensors:
     device_class: "energy"
     state_class: "total_increasing"
     scale: 0.01
-    swap: false  # für 32-bit Werte
+    swap: false  # for 32-bit values
     group: "energy_total"
     
-    # Erweiterte Datenverarbeitung (modbus_connect Features)
-    offset: 0.0           # Offset hinzufügen
-    multiplier: 1.0       # Multiplikator anwenden
-    sum_scale: [1, 10000] # Mehrere Register kombinieren
-    shift_bits: 4         # Bit-Shift nach rechts
-    bits: 8               # Bit-Mask anwenden
-    float: false          # 32-bit Float
-    string: false         # String aus Registern
-    
-    # Control-Entitäten (read/write)
-    control: "none"       # none, number, select, switch, text
-    min_value: 0.0        # Für number-Entitäten
-    max_value: 100.0      # Für number-Entitäten
-    step: 1.0             # Für number-Entitäten
-    options:              # Für select-Entitäten
-      0: "Off"
-      1: "On"
-    switch:               # Für switch-Entitäten
-      "on": 1
-      "off": 0
-    
-    # Enum-Mapping und Bit-Flags
-    map:                  # Wert-zu-Text-Mapping
-      0: "Disabled"
-      1: "Enabled"
-    flags:                # Bit-Flag-Status
-      0: "Power On"
-      1: "Fan Active"
+    # Advanced data processing (modbus_connect features)
+    offset: 0.0           # Add offset
+    multiplier: 1.0       # Apply multiplier
+    sum_scale: [0.1, 0.01]  # Scale factors for sum operations
+    shift_bits: 0         # Bit shift operations
+    bits: [0, 1, 2]      # Specific bit selection
+    float: false          # Float conversion
+    string: false         # String conversion
+    control: "none"       # Control type (none, number, select, switch, text)
+    min_value: 0.0       # Minimum value for number entities
+    max_value: 100.0     # Maximum value for number entities
+    step: 1.0            # Step size for number entities
+    options: {}           # Options for select entities
+    map: {}              # Value mapping
+    flags: {}            # Bit flags
+    never_resets: false  # Never resets flag
+    entity_category: null # Entity category
+    icon: null           # Custom icon
 ```
 
-### Unterstützte Daten-Typen
-- **uint16**: 16-bit unsigned integer
-- **int16**: 16-bit signed integer  
-- **uint32**: 32-bit unsigned integer (2 Register)
-- **int32**: 32-bit signed integer (2 Register)
-- **float**: 32-bit IEEE 754 float (2 Register)
-- **string**: ASCII-String aus Registern
-- **boolean**: Boolean-Wert
+## 🔧 Advanced Features
 
-### Unterstützte Device Classes
-- `energy`, `power`, `voltage`, `current`, `temperature`, `frequency`, `duration`, `pressure`, `problem`, `switch`
+### Bit Operations
+```yaml
+- name: "Status Flags"
+  data_type: "uint16"
+  bits: [0, 1, 2, 3]  # Read specific bits
+  flags:
+    0: "Error"
+    1: "Warning"
+    2: "Running"
+    3: "Connected"
+```
 
-### Unterstützte State Classes
-- `measurement`, `total`, `total_increasing`
+### Enum Mapping
+```yaml
+- name: "Operating Mode"
+  data_type: "uint16"
+  map:
+    0: "Off"
+    1: "Standby"
+    2: "Running"
+    3: "Error"
+```
 
-### Erweiterte Datenverarbeitung
+### Sum Operations
+```yaml
+- name: "Total Energy"
+  data_type: "uint32"
+  count: 2
+  sum_scale: [0.1, 0.01]  # Scale factors for each register
+```
 
-#### Bit-Operationen
-- **shift_bits**: Verschiebt Bits nach rechts (z.B. `shift_bits: 4` für 4 Bits)
-- **bits**: Wendet Bit-Mask an (z.B. `bits: 8` für untere 8 Bits)
+## 📈 Aggregation Features
 
-#### Mathematische Operationen
-- **offset**: Addiert einen Offset zum Wert
-- **multiplier**: Multipliziert den Wert mit einem Faktor
-- **sum_scale**: Kombiniert mehrere Register mit Skalierungsfaktoren
+### Automatic Group Detection
+The integration automatically detects all groups from templates and offers them for aggregation configuration.
 
-#### Enum-Mapping und Flags
-- **map**: Konvertiert numerische Werte zu Text (z.B. 0="Off", 1="On")
-- **flags**: Extrahiert einzelne Bit-Status als separate Attribute
+### Supported Aggregation Types
+- **Sum**: Sum of all values in a group
+- **Average**: Average of all values in a group
+- **Maximum**: Highest value in a group
+- **Minimum**: Lowest value in a group
+- **Count**: Number of entities in a group
+- **Status**: Combined status from multiple entities
 
-#### Control-Entitäten
-- **control: number**: Erstellt eine Number-Entity mit min/max/step
-- **control: select**: Erstellt eine Select-Entity mit vordefinierten Optionen
-- **control: switch**: Erstellt eine Switch-Entity mit on/off-Werten
-- **control: text**: Erstellt eine Text-Entity für String-Eingaben
+### Real-time Updates
+Aggregation sensors update immediately when any related entity changes, providing real-time insights.
 
-### Performance & Optimization
+## 🐛 Troubleshooting
 
-#### Register Optimization
-- **Intelligent Grouping**: Automatically groups consecutive registers for batch reading
-- **Configurable Batch Size**: Set `max_read_size` for optimal performance
-- **Performance Monitoring**: Track operation success rates, duration, and throughput
+### Common Issues
+1. **Connection Errors**: Check IP address, port, and slave ID
+2. **No Data**: Verify register addresses and data types
+3. **Wrong Values**: Check scale, precision, and swap settings
+4. **Missing Entities**: Ensure template is properly formatted
 
-#### Advanced Modbus Configuration
-- **Connection Management**: Configurable timeout, retries, and reconnection settings
-- **Error Handling**: Automatic connection closure and recovery on errors
-- **Message Timing**: Configurable delays between operations and messages
-
-## 🧮 Aggregations-Methoden
-
-### Verfügbare Methoden
-- **Summe**: Addiert alle Werte einer Gruppe
-- **Durchschnitt**: Berechnet den Mittelwert aller Werte
-- **Maximum**: Zeigt den höchsten Wert an
-- **Minimum**: Zeigt den niedrigsten Wert an
-- **Anzahl**: Zählt die Anzahl der aktiven Entitäten
-
-### Automatische Einheiten-Erkennung
-Aggregationssensoren erkennen automatisch die Einheit der zugehörigen Sensoren und verwenden die häufigste Einheit.
-
-## 🔍 Troubleshooting
-
-### Häufige Probleme
-
-#### Keine Templates gefunden
-- Stellen Sie sicher, dass Templates im `device_templates` Verzeichnis vorhanden sind
-- Überprüfen Sie die YAML-Syntax der Template-Dateien
-- Prüfen Sie die Home Assistant Logs auf Fehlermeldungen
-
-#### Modbus-Verbindungsfehler
-- Überprüfen Sie IP-Adresse und Port
-- Stellen Sie sicher, dass der Slave-ID korrekt ist
-- Prüfen Sie Firewall-Einstellungen
-- Erhöhen Sie Timeout und Retry-Werte
-
-#### Aggregationssensoren funktionieren nicht
-- Stellen Sie sicher, dass Sensoren mit `group`-Tags konfiguriert sind
-- Überprüfen Sie, ob die Gruppierung korrekt eingerichtet ist
-- Prüfen Sie die Home Assistant Logs auf Fehlermeldungen
-
-#### Erweiterte Features funktionieren nicht
-- Überprüfen Sie die Template-Syntax für neue Felder
-- Stellen Sie sicher, dass alle erforderlichen Parameter korrekt gesetzt sind
-- Prüfen Sie die Logs auf Validierungsfehler
-
-### Logs aktivieren
-Fügen Sie folgendes zu Ihrer `configuration.yaml` hinzu:
-
+### Debug Mode
+Enable debug logging in `configuration.yaml`:
 ```yaml
 logger:
-  custom_components.modbus_manager: debug
+  default: info
+  logs:
+    custom_components.modbus_manager: debug
 ```
 
-## 🤝 Beitragen
+## 🤝 Contributing
 
-Beiträge sind willkommen! Bitte beachten Sie:
+We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
 
-1. Forken Sie das Repository
-2. Erstellen Sie einen Feature-Branch
-3. Committen Sie Ihre Änderungen
-4. Erstellen Sie einen Pull Request
+### Development Setup
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests if applicable
+5. Submit a pull request
 
-### Template-Entwicklung
-- Verwenden Sie das bestehende Template-Format
-- Testen Sie Ihre Templates gründlich
-- Dokumentieren Sie alle Register-Definitionen
-- Fügen Sie aussagekräftige Gruppentags hinzu
-- Nutzen Sie die erweiterten Datenverarbeitungsoptionen
+## 📄 License
 
-## 📄 Lizenz
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-Dieses Projekt steht unter der MIT-Lizenz. Siehe [LICENSE](LICENSE) für Details.
+## 🙏 Acknowledgments
 
-## 🙏 Danksagungen
-
-- **Sungrow Template**: Basierend auf [Sungrow-SHx-Inverter-Modbus-Home-Assistant](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant) von Martin Kaiser
-- **modbus_connect**: Erweiterte Features basierend auf [modbus_connect](https://github.com/dmatscheko/modbus_connect) von dmatscheko
-- **modbus_local_gateway**: Inspiration aus [modbus_local_gateway](https://github.com/timlaing/modbus_local_gateway) von Tim Laing
-- **Home Assistant Community**: Für die großartige Plattform und Unterstützung
+- Based on the excellent work of [modbus_connect](https://github.com/dmatscheko/modbus_connect)
+- Inspired by the Home Assistant community's need for better Modbus device management
+- Special thanks to all contributors and testers
 
 ## 📞 Support
 
-- **GitHub Issues**: [Probleme melden](https://github.com/TCzerny/ha-modbus-manager/issues)
-- **GitHub Discussions**: [Diskussionen](https://github.com/TCzerny/ha-modbus-manager/discussions)
+- **GitHub Issues**: [Report bugs or request features](https://github.com/TCzerny/ha-modbus-manager/issues)
+- **Discussions**: [Join the community](https://github.com/TCzerny/ha-modbus-manager/discussions)
+- **Documentation**: [Full documentation](https://github.com/TCzerny/ha-modbus-manager/wiki)
 
 ---
 
-**Entwickelt mit ❤️ für die Home Assistant Community** 
+**Made with ❤️ for the Home Assistant community** 
