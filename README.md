@@ -11,7 +11,7 @@ A custom integration for Home Assistant that manages Modbus devices through a te
 - **Aggregation Module**: Automatic generation of sum, average, max/min and status sensors over entities with the same group tag
 - **Live Refresh**: Aggregation sensors update immediately when related entities change via `async_track_state_change`
 - **Group Discovery**: All existing groups are detected and offered in the UI for aggregation configuration
-- **Advanced Data Processing**: Support for bit operations, enum mapping, bit flags and more (based on [modbus_connect](https://github.com/dmatscheko/modbus_connect))
+- **Advanced Data Processing**: Support for bit operations, enum mapping, bit flags and more
 - **Complete Entity Types**: Sensors, switches, numbers, select entities, binary sensors
 - **Robust Modbus Integration**: Fully integrated with the standard Home Assistant Modbus API, comprehensive error handling and validation
 
@@ -95,7 +95,7 @@ sensors:
     swap: false  # for 32-bit values
     group: "energy_total"
     
-    # Advanced data processing (modbus_connect features)
+    # Advanced data processing features
     offset: 0.0           # Add offset
     multiplier: 1.0       # Apply multiplier
     sum_scale: [0.1, 0.01]  # Scale factors for sum operations
@@ -198,7 +198,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- Based on the excellent work of [modbus_connect](https://github.com/dmatscheko/modbus_connect)
 - Inspired by the Home Assistant community's need for better Modbus device management
 - Special thanks to all contributors and testers
 
