@@ -1,35 +1,301 @@
+"""Aggregations Module for Modbus Manager."""
+from __future__ import annotations
+
+from typing import Dict, List, Any, Optional
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.event import async_track_state_change
+from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT
+
+from .const import DOMAIN
+from .logger import ModbusManagerLogger
+
+_LOGGER = ModbusManagerLogger(__name__)
 
 class ModbusAggregateSensor(SensorEntity):
-    def __init__(self, hass, name, group_tag, method="sum"):
-        self._hass = hass
+    """Representation of a Modbus Aggregate Sensor."""
+
+    def __init__(self, hass: HomeAssistant, name: str, unique_id: str, 
+                 group_tag: str, method: str, device_info: dict):
+        """Initialize the aggregate sensor."""
+        self.hass = hass
         self._attr_name = name
+        self._attr_unique_id = unique_id
         self._group_tag = group_tag
         self._method = method
-        self._state = None
+        self._attr_device_info = DeviceInfo(**device_info)
+        
+        # Entity properties
+        self._attr_native_value = None
+        self._attr_native_unit_of_measurement = ""
+        self._attr_device_class = None
+        self._attr_state_class = "measurement"
+        
+        # Tracking
+        self._tracked_entities = []
+        self._unsubscribe = None
+        
+        # Initialize tracking
+        self._setup_tracking()
+
+    def _setup_tracking(self):
+        """Setup state change tracking for entities in this group."""
+        try:
+            # Find all entities with matching group tag
+            self._find_group_entities()
+            
+            if not self._tracked_entities:
+                _LOGGER.warning("Keine Entitäten für Gruppe %s gefunden", self._group_tag)
+                return
+            
+            # Setup state change tracking using STANDARD Home Assistant API
+            self._unsubscribe = async_track_state_change(
+                self.hass,
+                self._tracked_entities,
+                self._state_changed
+            )
+            
+            _LOGGER.info("Tracking für %d Entitäten in Gruppe %s eingerichtet", 
+                        len(self._tracked_entities), self._group_tag)
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Einrichten des Trackings für Gruppe %s: %s", 
+                         self._group_tag, str(e))
+
+    def _find_group_entities(self):
+        """Find all entities that belong to this group."""
+        try:
+            all_states = self.hass.states.async_all()
+            
+            for state in all_states:
+                if state.domain == "sensor":
+                    attributes = state.attributes
+                    if attributes.get("group") == self._group_tag:
+                        self._tracked_entities.append(state.entity_id)
+            
+            _LOGGER.debug("Gefundene Entitäten für Gruppe %s: %s", 
+                         self._group_tag, self._tracked_entities)
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Finden der Gruppen-Entitäten: %s", str(e))
+
+    @callback
+    def _state_changed(self, entity_id: str, old_state, new_state):
+        """Handle state changes of tracked entities."""
+        try:
+            if new_state is None:
+                return
+            
+            # Update aggregate value
+            self._update_aggregate_value()
+            
+            # Notify Home Assistant about the change
+            self.async_write_ha_state()
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei State-Change für Gruppe %s: %s", 
+                         self._group_tag, str(e))
+
+    def _update_aggregate_value(self):
+        """Update the aggregate value based on current entity states."""
+        try:
+            values = []
+            valid_entities = 0
+            
+            for entity_id in self._tracked_entities:
+                state = self.hass.states.get(entity_id)
+                if state is None or state.state in ["unavailable", "unknown"]:
+                    continue
+                
+                try:
+                    value = float(state.state)
+                    values.append(value)
+                    valid_entities += 1
+                except (ValueError, TypeError):
+                    _LOGGER.debug("Entität %s hat keinen gültigen numerischen Wert: %s", 
+                                 entity_id, state.state)
+                    continue
+            
+            if not values:
+                self._attr_native_value = None
+                return
+            
+            # Calculate aggregate value based on method
+            if self._method == "sum":
+                result = sum(values)
+                self._attr_native_unit_of_measurement = self._get_common_unit()
+                
+            elif self._method == "average":
+                result = sum(values) / len(values)
+                self._attr_native_unit_of_measurement = self._get_common_unit()
+                
+            elif self._method == "max":
+                result = max(values)
+                self._attr_native_unit_of_measurement = self._get_common_unit()
+                
+            elif self._method == "min":
+                result = min(values)
+                self._attr_native_unit_of_measurement = self._get_common_unit()
+                
+            elif self._method == "count":
+                result = valid_entities
+                self._attr_native_unit_of_measurement = ""
+                
+            else:
+                _LOGGER.warning("Unbekannte Aggregations-Methode: %s", self._method)
+                result = None
+            
+            # Apply precision if needed
+            if result is not None and self._method != "count":
+                if self._method == "average":
+                    result = round(result, 2)
+                else:
+                    result = round(result, 3)
+            
+            self._attr_native_value = result
+            
+            _LOGGER.debug("Aggregat %s aktualisiert: %s = %s (aus %d Entitäten)", 
+                         self._attr_name, self._method, result, valid_entities)
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Aggregat-Berechnung für Gruppe %s: %s", 
+                         self._group_tag, str(e))
+            self._attr_native_value = None
+
+    def _get_common_unit(self) -> str:
+        """Get the most common unit of measurement from tracked entities."""
+        try:
+            units = {}
+            for entity_id in self._tracked_entities:
+                state = self.hass.states.get(entity_id)
+                if state and hasattr(state, 'attributes'):
+                    unit = state.attributes.get('unit_of_measurement', '')
+                    if unit:
+                        units[unit] = units.get(unit, 0) + 1
+            
+            if units:
+                # Return most common unit
+                return max(units, key=units.get)
+            
+            return ""
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Ermitteln der Einheit: %s", str(e))
+            return ""
+
+    async def async_added_to_hass(self):
+        """Entity added to hass."""
+        await super().async_added_to_hass()
+        
+        # Initial update
+        self._update_aggregate_value()
+        self.async_write_ha_state()
+
+    async def async_will_remove_from_hass(self):
+        """Entity will be removed from hass."""
+        if self._unsubscribe:
+            self._unsubscribe()
+        await super().async_will_remove_from_hass()
 
     @property
-    def state(self):
-        return self._state
+    def should_poll(self) -> bool:
+        """Return False as this entity is updated via state change tracking."""
+        return False
 
-    async def async_update(self):
-        # Finde alle Sensoren mit passendem group_tag
-        sensors = [
-            entity for entity in self._hass.states.async_all("sensor")
-            if entity.attributes.get("group") == self._group_tag
-        ]
+    @property
+    def extra_state_attributes(self) -> Dict[str, Any]:
+        """Return entity specific state attributes."""
+        return {
+            "group": self._group_tag,
+            "method": self._method,
+            "tracked_entities": self._tracked_entities,
+            "entity_count": len(self._tracked_entities)
+        }
 
-        values = []
-        for sensor in sensors:
-            try:
-                val = float(sensor.state)
-                values.append(val)
-            except (ValueError, TypeError):
-                continue
 
-        if self._method == "sum":
-            self._state = sum(values)
-        elif self._method == "average" and values:
-            self._state = round(sum(values) / len(values), 2)
-        else:
-            self._state = None
+class AggregationManager:
+    """Manager for creating and managing aggregate sensors."""
+    
+    def __init__(self, hass: HomeAssistant):
+        """Initialize the aggregation manager."""
+        self.hass = hass
+        self._aggregate_sensors = {}
+        self._group_discovery_done = False
+    
+    async def discover_groups(self) -> List[str]:
+        """Discover all available groups from existing sensors."""
+        try:
+            groups = set()
+            all_states = self.hass.states.async_all()
+            
+            for state in all_states:
+                if state.domain == "sensor":
+                    attributes = state.attributes
+                    group = attributes.get("group")
+                    if group:
+                        groups.add(group)
+            
+            discovered_groups = list(groups)
+            _LOGGER.info("Entdeckte Gruppen: %s", discovered_groups)
+            
+            self._group_discovery_done = True
+            return discovered_groups
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Gruppen-Entdeckung: %s", str(e))
+            return []
+    
+    async def create_aggregate_sensors(self, group_tag: str, methods: List[str] = None) -> List[ModbusAggregateSensor]:
+        """Create aggregate sensors for a specific group."""
+        if methods is None:
+            methods = ["sum", "average", "max", "min"]
+        
+        try:
+            sensors = []
+            
+            for method in methods:
+                sensor_name = f"{group_tag}_{method}"
+                unique_id = f"aggregate_{group_tag}_{method}"
+                
+                device_info = {
+                    "identifiers": {(DOMAIN, f"aggregate_{group_tag}")},
+                    "name": f"Aggregate {group_tag}",
+                    "manufacturer": "Modbus Manager",
+                    "model": "Aggregation Sensor",
+                    "via_device": (DOMAIN, "modbus_manager")
+                }
+                
+                sensor = ModbusAggregateSensor(
+                    hass=self.hass,
+                    name=sensor_name,
+                    unique_id=unique_id,
+                    group_tag=group_tag,
+                    method=method,
+                    device_info=device_info
+                )
+                
+                sensors.append(sensor)
+                self._aggregate_sensors[unique_id] = sensor
+            
+            _LOGGER.info("Aggregat-Sensoren für Gruppe %s erstellt: %s", 
+                        group_tag, [s.name for s in sensors])
+            
+            return sensors
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Erstellen der Aggregat-Sensoren für Gruppe %s: %s", 
+                         group_tag, str(e))
+            return []
+    
+    def get_aggregate_sensors(self) -> List[ModbusAggregateSensor]:
+        """Get all created aggregate sensors."""
+        return list(self._aggregate_sensors.values())
+    
+    def remove_aggregate_sensor(self, unique_id: str):
+        """Remove a specific aggregate sensor."""
+        if unique_id in self._aggregate_sensors:
+            sensor = self._aggregate_sensors[unique_id]
+            sensor.async_remove()
+            del self._aggregate_sensors[unique_id]
+            _LOGGER.info("Aggregat-Sensor %s entfernt", unique_id)

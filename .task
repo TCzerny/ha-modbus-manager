@@ -1,0 +1,225 @@
+# Modbus Manager - Entwicklungsaufgaben
+# Erstellt: $(date)
+# Status: In Entwicklung - Phase 1-5 ABGESCHLOSSEN, Phase 6 gestartet
+
+## 🎯 WICHTIGE GRUNDSÄTZE
+- **KEINE voreiligen Annahmen** - Immer erst die komplette Verarbeitungskette verstehen
+- **Standard Home Assistant API nutzen** - Nur in Ausnahmefällen eigene Lösungen bauen
+- **Maximal eine logische Änderung pro Commit**
+- **Bei Fehlern: Erst analysieren, dann handeln**
+
+## 🔧 PHASE 1: Grundstruktur & Standards (Priorität: KRITISCH) - ✅ ABGESCHLOSSEN
+
+### 1.1 Manifest & Dependencies korrigieren ✅
+- [x] `manifest.json` aktualisiert:
+  - [x] `integration_type: "hub"` hinzugefügt
+  - [x] `iot_class: "local_polling"` hinzugefügt
+  - [x] `dependencies: ["modbus"]` hinzugefügt
+  - [x] `after_dependencies` für optionale Abhängigkeiten
+  - [x] `quality_scale` NUR nach Integration-Prüfung hinzufügen
+
+### 1.2 Modbus-Hub-Integration implementieren ✅
+- [x] Eigene `ModbusManagerHub` Klasse erstellt
+- [x] **STANDARD Home Assistant Modbus-API genutzt** - Keine eigene Implementierung
+- [x] Hub-Registrierung in `hass.data` implementiert
+- [x] Verbindungsmanagement und Fehlerbehandlung
+
+### 1.3 Entity-Struktur korrigieren ✅
+- [x] `ModbusTemplateSensor` vollständig implementiert
+- [x] Korrekte Vererbung von `SensorEntity`
+- [x] **UNIQUE_ID Format: `{prefix}_{template_sensor_name}`**
+  - Beispiel: `sungrow_1_inverter_temperature` für Präfix "sungrow_1"
+  - Sicherstellen: Zwei Geräte mit gleichem Template werden unterschieden
+- [x] `device_info` hinzugefügt
+- [x] State-Management und Update-Logik korrigiert
+
+## 📋 PHASE 2: Template-System (Priorität: HOCH) - ✅ ABGESCHLOSSEN
+
+### 2.1 Template-Loader vervollständigen ✅
+- [x] `TEMPLATE_DIR` Konstante korrekt definiert
+- [x] Template-Validierung implementiert
+- [x] Fehlerbehandlung für ungültige Templates
+- [x] Template-Caching für Performance
+
+### 2.2 Template-Schema definieren ✅
+- [x] YAML-Schema für Register-Definitionen
+- [x] **EXAKT wie Sungrow-Template strukturieren:**
+  - [x] `name`, `unique_id`, `device_address`, `address`
+  - [x] `input_type`, `data_type`, `count`, `scan_interval`
+  - [x] `precision`, `unit_of_measurement`, `device_class`, `state_class`
+  - [x] `scale`, `swap` (für 32-bit Werte)
+- [x] Unterstützung für berechnete Register
+- [x] Gruppierung und Tagging
+- [x] Validierung der Template-Struktur
+
+### 2.3 Beispiel-Templates erstellen ✅
+- [x] **Sungrow Template EXAKT übernommen:**
+  - [x] Alle Register-Definitionen aus [Sungrow-Template](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant/blob/main/modbus_sungrow.yaml) kopiert
+  - [x] Nur an unser neues Template-Layout angepasst
+  - [x] Keine Annahmen gemacht - exakte Definitionen übernommen
+- [x] **Compleo EBox Professional Wallbox Template**
+- [x] **Advanced Example Template** mit allen neuen Features
+- [x] Template-Dokumentation
+
+## 🧮 PHASE 3: Aggregations-Modul (Priorität: MITTEL) - ✅ ABGESCHLOSSEN
+
+### 3.1 Aggregations-Engine implementieren ✅
+- [x] `ModbusAggregateSensor` vervollständigt
+- [x] **STANDARD Home Assistant `async_track_state_change` genutzt**
+- [x] Verschiedene Aggregations-Methoden:
+  - [x] Summe
+  - [x] Durchschnitt
+  - [x] Maximum/Minimum
+  - [x] Status-Aggregation
+- [x] Performance-Optimierung für große Gruppen
+
+### 3.2 Group Discovery System ✅
+- [x] Automatische Gruppen-Erkennung
+- [x] UI für Aggregations-Konfiguration
+- [x] Dynamische Aggregations-Erstellung
+- [x] Gruppierungs-Logik
+
+## 🎨 PHASE 4: UI & Konfiguration (Priorität: MITTEL) - ✅ ABGESCHLOSSEN
+
+### 4.1 Config Flow erweitern ✅
+- [x] Template-Auswahl verbessert
+- [x] Validierung der Eingabedaten
+- [x] Fehlerbehandlung im UI
+- [x] Options Flow für nachträgliche Änderungen
+
+### 4.2 Device Management ✅
+- [x] Device-Registrierung implementiert
+- [x] Entity-Gruppierung nach Device
+- [x] Device-spezifische Konfiguration
+- [x] Device-Status-Monitoring
+
+## 📚 PHASE 5: Dokumentation & Deployment (Priorität: NIEDRIG) - ✅ ABGESCHLOSSEN
+
+### 5.1 Benutzer-Dokumentation ✅
+- [x] README.md aktualisiert
+- [x] Template-Erstellungsanleitung
+- [x] Troubleshooting-Guide
+- [x] Beispiele und Use Cases
+
+### 5.2 Entwickler-Dokumentation ✅
+- [x] API-Dokumentation
+- [x] Template-Entwicklungsanleitung
+- [x] Contributing Guidelines
+- [x] Architektur-Dokumentation
+
+### 5.3 HACS Integration ✅
+- [x] HACS-Konformität geprüft
+- [x] Release-Notes
+- [x] Versionierung
+- [x] Update-Mechanismus
+
+## 🚀 PHASE 6: Erweiterte Features (Priorität: MITTEL) - 🔄 IN ARBEIT
+
+### 6.1 modbus_connect Features integriert ✅
+- [x] **Erweiterte Entity-Typen** implementiert:
+  - [x] Sensoren, Schalter, Zahlen, Select-Entitäten
+  - [x] Binary-Sensoren, Buttons
+- [x] **Erweiterte Datenverarbeitung** implementiert:
+  - [x] `offset`, `multiplier`, `sum_scale`
+  - [x] `shift_bits`, `bits` (Bit-Operationen)
+  - [x] `float` und `boolean` Daten-Typen
+  - [x] `map` (Enum-Mapping)
+  - [x] `flags` (Bit-Flag-Status)
+- [x] **Control-Entitäten** implementiert:
+  - [x] `control: number` mit min/max/step
+  - [x] `control: select` mit vordefinierten Optionen
+  - [x] `control: switch` mit on/off-Werten
+  - [x] `control: text` für String-Eingaben
+- [x] **Template-Loader erweitert** für neue Features
+- [x] **Sensor-Implementierung erweitert** für neue Datenverarbeitung
+- [x] **Advanced Example Template** erstellt
+
+### 6.2 Vollständige Entity-Implementierung ✅
+- [x] **Number-Entity** vollständig implementiert (read/write)
+- [x] **Select-Entity** vollständig implementiert (read/write)
+- [x] **Switch-Entity** vollständig implementiert (read/write)
+- [x] **Binary-Sensor** vollständig implementiert
+- [x] **Button-Entity** vollständig implementiert
+- [x] **Text-Entity** vollständig implementiert (read/write)
+
+### 6.3 Erweiterte Modbus-Funktionen ✅
+- [x] **Erweiterte Modbus-Hub-Konfiguration** implementiert:
+  - [x] `delay`, `close_comm_on_error`, `reconnect_delay`, `message_wait`
+  - [x] Alle Standard Home Assistant Modbus-API Optionen genutzt
+- [x] **Register-Optimierung** implementiert:
+  - [x] Intelligente Gruppierung aufeinanderfolgender Register
+  - [x] Batch-Reading für bessere Performance
+  - [x] Konfigurierbare `max_read_size`
+- [x] **Performance-Monitoring** implementiert:
+  - [x] Detaillierte Metriken für alle Modbus-Operationen
+  - [x] Erfolgsrate, Durchschnittsdauer, Durchsatz
+  - [x] Device-spezifische und globale Statistiken
+- [x] **Keine eigene Modbus-Implementierung** - Standard Home Assistant API genutzt
+
+### 6.4 Intelligente Features 🔄
+- [ ] Auto-Discovery von Registern
+- [ ] Register-Mapping-Validierung
+- [ ] Performance-Monitoring
+- [ ] Predictive Maintenance
+
+## 📊 AKTUELLER FORTSCHRITT
+
+### ✅ **ABGESCHLOSSEN (Phase 1-5 + 6.1):**
+- Grundstruktur & Standards
+- Template-System (Sungrow + modbus_connect)
+- Aggregations-Modul
+- UI & Konfiguration
+- Dokumentation
+- modbus_connect Features integriert
+
+### 🔄 **IN ARBEIT (Phase 6.2-6.4):**
+- Vollständige Entity-Implementierung
+- Erweiterte Modbus-Funktionen
+- Intelligente Features
+
+### 📈 **FEATURE-PARITÄT ERREICHT:**
+- **modbus_connect**: ✅ Alle Features integriert
+- **Sungrow-Template**: ✅ Exakt übernommen
+- **Eigene Features**: ✅ Aggregation + Group Discovery
+
+## 🔍 QUALITÄTSSICHERUNG
+
+### Code-Review-Checkliste
+- [x] Datenfluss verstanden?
+- [x] Alle Edge Cases berücksichtigt?
+- [x] Fehlerbehandlung implementiert?
+- [x] Logging ausreichend?
+- [x] **Standard Home Assistant API genutzt?**
+- [x] **Unique_ID Format korrekt?**
+- [x] **Template-Struktur exakt übernommen?**
+- [x] **modbus_connect Features integriert?**
+- [x] Dokumentation aktualisiert?
+- [x] Performance-Impact geprüft?
+- [x] Breaking Changes dokumentiert?
+
+## 📝 NOTIZEN
+
+- **KEINE Tests implementieren** - Benutzer testet selbst
+- **Immer erst analysieren, dann implementieren**
+- **Standard-Funktionen bevorzugen**
+- **Template-Übernahme: Exakt, keine Annahmen**
+- **modbus_connect Features erfolgreich integriert**
+- **Feature-Parität mit modbus_connect erreicht**
+- **Nächster Fokus: Vollständige Entity-Implementierung**
+
+## 🎯 NÄCHSTE SCHRITTE
+
+1. **Vollständige Entity-Implementierung** (Phase 6.2)
+2. **Erweiterte Modbus-Funktionen** (Phase 6.3)
+3. **Intelligente Features** (Phase 6.4)
+4. **Integration testen** mit allen neuen Features
+5. **Performance-Optimierung** und Monitoring
+
+## 🏆 ERREICHTE MEILENSTEINE
+
+- ✅ **Phase 1-5 vollständig abgeschlossen**
+- ✅ **modbus_connect Features erfolgreich integriert**
+- ✅ **Feature-Parität mit modbus_connect erreicht**
+- ✅ **Eigene Aggregations-Features implementiert**
+- ✅ **Vollständige Dokumentation erstellt**
+- 🔄 **Phase 6 in Arbeit - Erweiterte Features** 

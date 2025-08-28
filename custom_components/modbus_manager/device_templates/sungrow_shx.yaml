@@ -1,0 +1,329 @@
+# Sungrow SHx Inverter Template für Modbus Manager
+# Basierend auf: https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
+# Angepasst für Modbus Manager Template-Format
+
+name: "Sungrow SHx Inverter"
+description: "Template für Sungrow SHx Wechselrichter über Modbus TCP"
+manufacturer: "Sungrow"
+model: "SHx Series"
+
+sensors:
+  - name: "Sungrow inverter serial"
+    unique_id: "sg_inverter_serial"
+    device_address: 1
+    address: 4989
+    input_type: "input"
+    data_type: "string"
+    count: 10
+    scan_interval: 600
+    precision: 0
+    unit_of_measurement: ""
+    device_class: null
+    state_class: null
+    scale: 1.0
+    swap: false
+    group: "identification"
+
+  - name: "Sungrow device type code"
+    unique_id: "sg_dev_code"
+    device_address: 1
+    address: 4999
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 600
+    precision: 0
+    unit_of_measurement: ""
+    device_class: null
+    state_class: null
+    scale: 1.0
+    swap: false
+    group: "identification"
+
+  - name: "Daily PV generation & battery discharge"
+    unique_id: "sg_daily_pv_gen_battery_discharge"
+    device_address: 1
+    address: 5002
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 600
+    precision: 1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scale: 0.1
+    swap: false
+    group: "energy_daily"
+
+  - name: "Total PV generation & battery discharge"
+    unique_id: "sg_total_pv_gen_battery_discharge"
+    device_address: 1
+    address: 5003
+    input_type: "input"
+    data_type: "uint32"
+    count: 2
+    scan_interval: 600
+    precision: 1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    scale: 0.1
+    swap: true
+    group: "energy_total"
+
+  - name: "Inverter temperature"
+    unique_id: "sg_inverter_temperature"
+    device_address: 1
+    address: 5007
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scan_interval: 10
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scale: 0.1
+    swap: false
+    group: "system"
+
+  - name: "MPPT1 voltage"
+    unique_id: "sg_mppt1_voltage"
+    device_address: 1
+    address: 5010
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    scale: 0.1
+    swap: false
+    group: "mppt1"
+
+  - name: "MPPT1 current"
+    unique_id: "sg_mppt1_current"
+    device_address: 1
+    address: 5011
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    scale: 0.01
+    swap: false
+    group: "mppt1"
+
+  - name: "MPPT1 power"
+    unique_id: "sg_mppt1_power"
+    device_address: 1
+    address: 5012
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    scale: 1.0
+    swap: false
+    group: "mppt1"
+
+  - name: "MPPT2 voltage"
+    unique_id: "sg_mppt2_voltage"
+    device_address: 1
+    address: 5013
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    scale: 0.1
+    swap: false
+    group: "mppt2"
+
+  - name: "MPPT2 current"
+    unique_id: "sg_mppt2_current"
+    device_address: 1
+    address: 5014
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    scale: 0.01
+    swap: false
+    group: "mppt2"
+
+  - name: "MPPT2 power"
+    unique_id: "sg_mppt2_power"
+    device_address: 1
+    address: 5015
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    scale: 1.0
+    swap: false
+    group: "mppt2"
+
+  - name: "Grid voltage L1"
+    unique_id: "sg_grid_voltage_l1"
+    device_address: 1
+    address: 5016
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    scale: 0.1
+    swap: false
+    group: "grid_l1"
+
+  - name: "Grid current L1"
+    unique_id: "sg_grid_current_l1"
+    device_address: 1
+    address: 5017
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    scale: 0.01
+    swap: false
+    group: "grid_l1"
+
+  - name: "Grid power L1"
+    unique_id: "sg_grid_power_l1"
+    device_address: 1
+    address: 5018
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scan_interval: 10
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    scale: 1.0
+    swap: false
+    group: "grid_l1"
+
+  - name: "Grid frequency"
+    unique_id: "sg_grid_frequency"
+    device_address: 1
+    address: 5019
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 2
+    unit_of_measurement: "Hz"
+    device_class: "frequency"
+    state_class: "measurement"
+    scale: 0.01
+    swap: false
+    group: "grid"
+
+  - name: "Total active power"
+    unique_id: "sg_total_active_power"
+    device_address: 1
+    address: 5020
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scan_interval: 10
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    scale: 1.0
+    swap: false
+    group: "power_total"
+
+  - name: "Total reactive power"
+    unique_id: "sg_total_reactive_power"
+    device_address: 1
+    address: 5021
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scan_interval: 10
+    precision: 0
+    unit_of_measurement: "var"
+    device_class: "power"
+    state_class: "measurement"
+    scale: 1.0
+    swap: false
+    group: "power_total"
+
+  - name: "Power factor"
+    unique_id: "sg_power_factor"
+    device_address: 1
+    address: 5022
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scan_interval: 10
+    precision: 3
+    unit_of_measurement: ""
+    device_class: null
+    state_class: "measurement"
+    scale: 0.001
+    swap: false
+    group: "power_total"
+
+  - name: "Efficiency"
+    unique_id: "sg_efficiency"
+    device_address: 1
+    address: 5023
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 600
+    precision: 2
+    unit_of_measurement: "%"
+    device_class: null
+    state_class: "measurement"
+    scale: 0.01
+    swap: false
+    group: "system"
+
+  - name: "Operating status"
+    unique_id: "sg_operating_status"
+    device_address: 1
+    address: 5024
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    precision: 0
+    unit_of_measurement: ""
+    device_class: null
+    state_class: "measurement"
+    scale: 1.0
+    swap: false
+    group: "system" 

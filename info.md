@@ -15,11 +15,15 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 ## Features
 
 - 🔌 Support for multiple Modbus devices
-- 📊 Optimized register reading
-- 🛠 Easy configuration through UI
-- 📝 Extensive device definitions
-- 📈 Performance monitoring
-- 🔄 Automatic retry mechanisms
+- 📊 Optimized register reading with intelligent grouping
+- 🛠 Easy configuration through UI with advanced options
+- 📝 Extensive device definitions with YAML templates
+- 📈 Comprehensive performance monitoring and metrics
+- 🔄 Automatic retry mechanisms and connection management
+- 🎛️ Full entity type support (sensor, number, select, switch, binary_sensor, button, text)
+- 🔄 Real-time aggregation with live updates
+- ⚡ Advanced data processing (bit operations, enum mapping, flags)
+- 🚀 Performance optimization with configurable batch reading
 
 ## Configuration
 
