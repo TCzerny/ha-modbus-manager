@@ -28,7 +28,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             # Templates laden
             if not self._templates:
-                self._templates = {name: get_template_by_name(name) for name in get_template_names()}
+                template_names = await get_template_names()
+                self._templates = {}
+                for name in template_names:
+                    template_data = await get_template_by_name(name)
+                    self._templates[name] = template_data
                 _LOGGER.info("Templates geladen: %s", list(self._templates.keys()))
             
             if not self._templates:

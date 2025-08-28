@@ -102,13 +102,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.info("Konfigurationsdaten gespeichert: prefix=%s, template=%s", prefix, template_name)
         
         # Alle Plattformen einrichten
-        for platform in PLATFORMS:
-            try:
-                await hass.config_entries.async_forward_entry_setup(entry, platform)
-                _LOGGER.info("Plattform %s erfolgreich eingerichtet", platform)
-            except Exception as e:
-                _LOGGER.error("Fehler beim Einrichten der Plattform %s: %s", platform, str(e))
-                return False
+        try:
+            await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+            _LOGGER.info("Alle Plattformen erfolgreich eingerichtet: %s", PLATFORMS)
+        except Exception as e:
+            _LOGGER.error("Fehler beim Einrichten der Plattformen: %s", str(e))
+            return False
         
         # Performance-Monitor und Register-Optimizer initialisieren
         try:
@@ -148,12 +147,11 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.info("Unload von Modbus Manager für %s", entry.data.get("prefix", "unbekannt"))
         
         # Alle Plattformen entladen
-        for platform in PLATFORMS:
-            try:
-                await hass.config_entries.async_forward_entry_unload(entry, platform)
-                _LOGGER.info("Plattform %s erfolgreich entladen", platform)
-            except Exception as e:
-                _LOGGER.error("Fehler beim Entladen der Plattform %s: %s", platform, str(e))
+        try:
+            await hass.config_entries.async_forward_entry_unloads(entry, PLATFORMS)
+            _LOGGER.info("Alle Plattformen erfolgreich entladen: %s", PLATFORMS)
+        except Exception as e:
+            _LOGGER.error("Fehler beim Entladen der Plattformen: %s", str(e))
         
         # Modbus-Hub schließen
         if entry.entry_id in hass.data[DOMAIN]:
