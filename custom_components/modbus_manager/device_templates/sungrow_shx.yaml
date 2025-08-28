@@ -9,1298 +9,1691 @@ manufacturer: "Sungrow"
 model: "SHx Series"
 
 sensors:
-  # === IDENTIFICATION ===
-  - name: "Sungrow inverter serial"
-    unique_id: "sg_inverter_serial"
-    device_address: 1
-    address: 4989
-    input_type: "input"
-    data_type: "string"
+  - name: Sungrow inverter serial
+    unique_id: sg_inverter_serial
+    address: 4989 # reg 4990
+    input_type: input
+    data_type: string
     count: 10
     scan_interval: 600
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: null
-    scale: 1.0
-    swap: false
-    group: "identification"
 
-  - name: "Sungrow device type code"
-    unique_id: "sg_dev_code"
-    device_address: 1
-    address: 4999
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
+  - name: Sungrow device type code
+    unique_id: sg_dev_code
+    address: 4999 # reg 5000
+    input_type: input
+    data_type: uint16
     scan_interval: 600
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: null
-    scale: 1.0
-    swap: false
-    group: "identification"
 
-  - name: "Daily PV generation & battery discharge"
-    unique_id: "sg_daily_pv_gen_battery_discharge"
-    device_address: 1
-    address: 5002
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
+  - name: Daily PV generation & battery discharge
+    unique_id: sg_daily_pv_gen_battery_discharge
+    address: 5002 # reg 5003
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
     scan_interval: 600
-    precision: 1
-    unit_of_measurement: "kWh"
-    device_class: "energy"
-    state_class: "total_increasing"
-    scale: 0.1
-    swap: false
-    group: "energy_daily"
 
-  - name: "Total PV generation & battery discharge"
-    unique_id: "sg_total_pv_gen_battery_discharge"
-    device_address: 1
-    address: 5003
-    input_type: "input"
-    data_type: "uint32"
-    count: 2
+  - name: Total PV generation & battery discharge
+    unique_id: sg_total_pv_gen_battery_discharge
+
+    address: 5003 # reg 5004
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: kWh
+    precision: 1
+    device_class: energy
+    state_class: total
+    scale: 0.1
     scan_interval: 600
+
+  - name: Inverter temperature
+    unique_id: sg_inverter_temperature
+
+    address: 5007 # reg 5008
+    input_type: input
+    data_type: int16
     precision: 1
-    unit_of_measurement: "kWh"
-    device_class: "energy"
-    state_class: "total"
+    unit_of_measurement: °C
+    device_class: temperature
+    state_class: measurement
     scale: 0.1
-    swap: true
-    group: "energy_total"
-
-  - name: "Inverter temperature"
-    unique_id: "sg_inverter_temperature"
-    device_address: 1
-    address: 5007
-    input_type: "input"
-    data_type: "int16"
-    count: 1
     scan_interval: 10
+
+  - name: MPPT1 voltage
+    unique_id: sg_mppt1_voltage
+
+    address: 5010 # reg 5011
+    input_type: input
+    data_type: uint16
     precision: 1
-    unit_of_measurement: "°C"
-    device_class: "temperature"
-    state_class: "measurement"
+    unit_of_measurement: V
+    device_class: Voltage
+    state_class: measurement
     scale: 0.1
-    swap: false
-    group: "system"
-
-  - name: "MPPT1 voltage"
-    unique_id: "sg_mppt1_voltage"
-    device_address: 1
-    address: 5010
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
     scan_interval: 10
+
+  - name: MPPT1 current
+    unique_id: sg_mppt1_current
+
+    address: 5011 # reg 5012
+    input_type: input
+    data_type: uint16
     precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
+    unit_of_measurement: A
+    device_class: Current
+    state_class: measurement
     scale: 0.1
-    swap: false
-    group: "mppt1"
-
-  - name: "MPPT1 current"
-    unique_id: "sg_mppt1_current"
-    device_address: 1
-    address: 5011
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
     scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "mppt1"
 
-  - name: "MPPT1 power"
-    unique_id: "sg_mppt1_power"
-    device_address: 1
-    address: 5012
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "mppt1"
-
-  - name: "MPPT2 voltage"
-    unique_id: "sg_mppt2_voltage"
-    device_address: 1
-    address: 5013
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
+  - name: MPPT2 voltage
+    unique_id: sg_mppt2_voltage
+    address: 5012 # reg 5013
+    input_type: input
+    data_type: uint16
     precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
+    unit_of_measurement: V
+    device_class: Voltage
+    state_class: measurement
     scale: 0.1
-    swap: false
-    group: "mppt2"
-
-  - name: "MPPT2 current"
-    unique_id: "sg_mppt2_current"
-    device_address: 1
-    address: 5014
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
     scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "mppt2"
 
-  - name: "MPPT2 power"
-    unique_id: "sg_mppt2_power"
-    device_address: 1
-    address: 5015
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "mppt2"
-
-  - name: "Grid voltage L1"
-    unique_id: "sg_grid_voltage_l1"
-    device_address: 1
-    address: 5016
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
+  - name: MPPT2 current
+    unique_id: sg_mppt2_current
+    address: 5013 # reg 5014
+    input_type: input
+    data_type: uint16
     precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
+    unit_of_measurement: A
+    device_class: Current
+    state_class: measurement
     scale: 0.1
-    swap: false
-    group: "grid_l1"
-
-  - name: "Grid current L1"
-    unique_id: "sg_grid_current_l1"
-    device_address: 1
-    address: 5017
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
     scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "grid_l1"
 
-  - name: "Grid power L1"
-    unique_id: "sg_grid_power_l1"
-    device_address: 1
-    address: 5018
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
+  # only for SH*T inverters with 3 MPPTs
+  # - name: MPPT3 voltage
+  #   unique_id: sg_mppt3_voltage
+  #
+  #   address: 5014 # reg 5015
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: V
+  #   device_class: Voltage
+  #   state_class: measurement
+  #   scale: 0.1
+  #   scan_interval: 10
+
+  # only for SH*T inverters with 3 MPPTs
+  # - name: MPPT3 current
+  #   unique_id: sg_mppt3_current
+  #
+  #   address: 5015 # reg 5016
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: A
+  #   device_class: Current
+  #   state_class: measurement
+  #   scale: 0.1
+  #   scan_interval: 10
+
+  - name: Total DC power
+    unique_id: sg_total_dc_power
+
+    address: 5016 # reg 5017
+    input_type: input
+    data_type: uint32
+    swap: word
     precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "grid_l1"
-
-  - name: "Grid frequency"
-    unique_id: "sg_grid_frequency"
-    device_address: 1
-    address: 5019
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
     scan_interval: 10
-    precision: 2
-    unit_of_measurement: "Hz"
-    device_class: "frequency"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "grid"
 
-  - name: "Total active power"
-    unique_id: "sg_total_active_power"
-    device_address: 1
-    address: 5020
-    input_type: "input"
-    data_type: "int16"
-    count: 1
+  - name: Phase A voltage
+    unique_id: sg_phase_a_voltage
+    address: 5018 # reg: 5019
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: Voltage
+    state_class: measurement
+    scale: 0.1
     scan_interval: 10
+
+  - name: Phase B voltage
+    unique_id: sg_phase_b_voltage
+    address: 5019 # reg: 5020
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: Voltage
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Phase C voltage
+    unique_id: sg_phase_c_voltage
+
+    address: 5020 # reg: 5021
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: Voltage
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Reactive power
+    unique_id: sg_reactive_power
+
+    address: 5032 # reg 5033
+    input_type: input
+    data_type: int32
+    swap: word
     precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "power_total"
-
-  - name: "Total reactive power"
-    unique_id: "sg_total_reactive_power"
-    device_address: 1
-    address: 5021
-    input_type: "input"
-    data_type: "int16"
-    count: 1
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
     scan_interval: 10
-    precision: 0
-    unit_of_measurement: "var"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "power_total"
 
-  - name: "Power factor"
-    unique_id: "sg_power_factor"
-    device_address: 1
-    address: 5022
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
+  - name: Power factor
+    unique_id: sg_power_factor
+    address: 5034 # reg 5035
+    input_type: input
+    data_type: int16
     precision: 3
-    unit_of_measurement: ""
-    device_class: null
-    state_class: "measurement"
-    scale: 0.001
-    swap: false
-    group: "power_total"
-
-  - name: "Efficiency"
-    unique_id: "sg_efficiency"
-    device_address: 1
-    address: 5023
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 600
-    precision: 2
     unit_of_measurement: "%"
-    device_class: null
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "system"
-
-  - name: "Operating status"
-    unique_id: "sg_operating_status"
-    device_address: 1
-    address: 5024
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
+    device_class: power_factor
+    state_class: measurement
+    scale: 0.001
     scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "system"
 
-  # === BATTERY ===
-  - name: "Battery voltage"
-    unique_id: "sg_battery_voltage"
-    device_address: 1
-    address: 5025
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "battery"
-
-  - name: "Battery current"
-    unique_id: "sg_battery_current"
-    device_address: 1
-    address: 5026
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
+  - name: Grid frequency
+    unique_id: sg_grid_frequency
+    address: 5241 # reg 5242
+    input_type: input
+    data_type: uint16
     precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
+    unit_of_measurement: "Hz"
+    device_class: frequency
+    state_class: measurement
     scale: 0.01
-    swap: false
-    group: "battery"
-
-  - name: "Battery power"
-    unique_id: "sg_battery_power"
-    device_address: 1
-    address: 5027
-    input_type: "input"
-    data_type: "int16"
-    count: 1
     scan_interval: 10
+
+  #https://www.photovoltaikforum.com/thread/166134-daten-lesen-vom-sungrow-wechselrichtern-modbus/?pageNo=13
+  #Meter Active Power: 5601-5602 S32 W (Energiezähler Wirkleistung)
+  #Meter Phase A Active Power: 5603-5604 S32 W (Stromzähler Phase A Wirkleistung)
+  #Meter Phase B Active Power: 5605-5606 S32 W (Stromzähler Phase B Wirkleistung)
+  #Meter Phase C Active Power: 5607-5608 S32 W (Stromzähler Phase C Wirkleistung)
+  - name: Meter active power raw
+    unique_id: sg_meter_active_power_raw
+
+    address: 5600 # reg 5601
+    input_type: input
+    data_type: int32
+    swap: word
     precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "battery"
-
-  - name: "Battery SOC"
-    unique_id: "sg_battery_soc"
-    device_address: 1
-    address: 5028
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
     scan_interval: 10
+
+  - name: Meter phase A active power raw
+    unique_id: sg_meter_phase_a_active_power_raw
+
+    address: 5602 # reg 5603
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Meter phase B active power raw
+    unique_id: sg_meter_phase_b_active_power_raw
+
+    address: 5604 # reg 5605
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Meter phase C active power raw
+    unique_id: sg_meter_phase_c_active_power_raw
+
+    address: 5606 # reg 5607
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: BDC rated power
+    unique_id: sg_bdc_rated_power
+
+    address: 5627 # reg 5628
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    scale: 100
+    scan_interval: 600
+
+  - name: BMS max. charging current
+    unique_id: sg_bms_max_charging_current
+
+    address: 5634 # reg 5635
+    input_type: input
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: A
+    device_class: Current
+    state_class: measurement
+    scale: 1
+    scan_interval: 60
+
+  - name: BMS max. discharging current
+    unique_id: sg_bms_max_discharging_current
+
+    address: 5635 # reg 5636
+    input_type: input
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: A
+    device_class: Current
+    state_class: measurement
+    scale: 1
+    scan_interval: 60
+
+  - name: Battery capacity # as in TI_20240924_Communication Protocol of Residential Hybrid Inverter-V1.1.5
+    unique_id: sg_battery_capacity
+
+    address: 5638 # reg 5639
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: kWh
+    device_class: energy_storage
+    scale: 0.01
+    scan_interval: 600
+
+  #https://www.photovoltaikforum.com/thread/166134-daten-lesen-vom-sungrow-wechselrichtern-modbus/?pageNo=13
+  #Phase A Backup Power: 5723 S16 W (Backup Leistung Phase A)
+  #Phase B Backup Power: 5724 S16 W (Backup Leistung Phase B)
+  #Phase C Backup Power: 5725 S16 W (Backup Leistung Phase C)
+  - name: Backup phase A power
+    unique_id: sg_backup_phase_a_power
+
+    address: 5722 # reg 5723
+    input_type: input
+    data_type: int16
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Backup phase B power
+    unique_id: sg_backup_phase_b_power
+
+    address: 5723 # reg 5724
+    input_type: input
+    data_type: int16
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Backup phase C power
+    unique_id: sg_backup_phase_c_power
+
+    address: 5724 # reg 5725
+    input_type: input
+    data_type: int16
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Total backup power
+
+    unique_id: sg_total_backup_power
+    address: 5725 # reg 5726
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+
+  # https://www.photovoltaikforum.com/thread/166134-daten-lesen-vom-sungrow-wechselrichtern-modbus/?postID=3324464#post3324464
+  - name: Meter phase A voltage
+    unique_id: sg_meter_phase_a_voltage
+
+    address: 5740 # reg 5741
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: V
+    device_class: voltage
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Meter phase B voltage
+    unique_id: sg_meter_phase_b_voltage
+
+    address: 5741 # reg 5742
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: V
+    device_class: voltage
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Meter phase C voltage
+    unique_id: sg_meter_phase_c_voltage
+
+    address: 5742 # reg 5743
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: V
+    device_class: voltage
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Meter phase A current
+    unique_id: sg_meter_phase_a_current
+
+    address: 5743 # reg 5744
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: A
+    device_class: current
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 10
+
+  - name: Meter phase B current
+    unique_id: sg_meter_phase_b_current
+
+    address: 5744 # reg 5745
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: A
+    device_class: current
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 10
+
+  - name: Meter phase C current
+    unique_id: sg_meter_phase_c_current
+
+    address: 5745 # reg 5746
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: A
+    device_class: current
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 10
+
+
+  # following statistic sensors only work on some SH*RT inverters
+  # (only LAN attached devices)
+  # Therefore commenting them here
+  # # Start monthly PV generation
+  # - name: Monthly PV generation (01 January)
+  #   unique_id: sg_monthly_pv_generation_01_january
+  #
+  #   address: 6226 # reg 6227
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (02 February)
+  #   unique_id: sg_monthly_pv_generation_02_february
+  #
+  #   address: 6227 # reg 6228
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (03 March)
+  #   unique_id: sg_monthly_pv_generation_03_march
+  #
+  #   address: 6228 # reg 6229
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (04 April)
+  #   unique_id: sg_monthly_pv_generation_04_april
+  #
+  #   address: 6229 # reg 6230
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (05 May)
+  #   unique_id: sg_monthly_pv_generation_05_may
+  #
+  #   address: 6230 # reg 6231
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (06 June)
+  #   unique_id: sg_monthly_pv_generation_06_june
+  #
+  #   address: 6231 # reg 6232
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (07 July)
+  #   unique_id: sg_monthly_pv_generation_07_july
+  #
+  #   address: 6232 # reg 6233
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (08 August)
+  #   unique_id: sg_monthly_pv_generation_08_august
+  #
+  #   address: 6233 # reg 6234
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (09 September)
+  #   unique_id: sg_monthly_pv_generation_09_september
+  #
+  #   address: 6234 # reg 6235
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (10 October)
+  #   unique_id: sg_monthly_pv_generation_10_october
+  #
+  #   address: 6235 # reg 6236
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (11 November)
+  #   unique_id: sg_monthly_pv_generation_11_november
+  #
+  #   address: 6236 # reg 6237
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly PV generation (12 December)
+  #   unique_id: sg_monthly_pv_generation_12_december
+  #
+  #   address: 6237 # reg 6238
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+  # # End monthly PV generation
+
+  # # Start yearly pv generation
+  # - name: Yearly PV generation (2019)
+  #   unique_id: sg_yearly_pv_generation_2019
+  #
+  #   address: 6257 # reg 6258
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2020)
+  #   unique_id: sg_yearly_pv_generation_2020
+  #
+  #   address: 6259 # reg 6260
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2021)
+  #   unique_id: sg_yearly_pv_generation_2021
+  #
+  #   address: 6261 # reg 6262
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2022)
+  #   unique_id: sg_yearly_pv_generation_2022
+  #
+  #   address: 6263 # reg 6264
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2023)
+  #   unique_id: sg_yearly_pv_generation_2023
+  #
+  #   address: 6265 # reg 6266
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2024)
+  #   unique_id: sg_yearly_pv_generation_2024
+  #
+  #   address: 6267 # reg 6268
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2025)
+  #   unique_id: sg_yearly_pv_generation_2025
+  #
+  #   address: 6269 # reg 6270
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2026)
+  #   unique_id: sg_yearly_pv_generation_2026
+  #
+  #   address: 6271 # reg 6272
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2027)
+  #   unique_id: sg_yearly_pv_generation_2027
+  #
+  #   address: 6273 # reg 6274
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2028)
+  #   unique_id: sg_yearly_pv_generation_2028
+  #
+  #   address: 6275 # reg 6276
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly PV generation (2029)
+  #   unique_id: sg_yearly_pv_generation_2029
+  #
+  #   address: 6277 # reg 6278
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+  # # End yearly pv generation
+
+  # # Start monthly export
+  # - name: Monthly export (01 January)
+  #   unique_id: sg_monthly_export_01_january
+  #
+  #   address: 6595 # reg 6596
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (02 February)
+  #   unique_id: sg_monthly_export_02_february
+  #
+  #   address: 6596 # reg 6597
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (03 March)
+  #   unique_id: sg_monthly_export_03_march
+  #
+  #   address: 6597 # reg 6598
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (04 April)
+  #   unique_id: sg_monthly_export_04_april
+  #
+  #   address: 6598 # reg 6599
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (05 May)
+  #   unique_id: sg_monthly_export_05_may
+  #
+  #   address: 6599 # reg 6600
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (06 June)
+  #   unique_id: sg_monthly_export_06_june
+  #
+  #   address: 6600 # reg 6601
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (07 July)
+  #   unique_id: sg_monthly_export_07_july
+  #
+  #   address: 6601 # reg 6602
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (08 August)
+  #   unique_id: sg_monthly_export_08_august
+  #
+  #   address: 6602 # reg 6603
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (09 September)
+  #   unique_id: sg_monthly_export_09_september
+  #
+  #   address: 6603 # reg 6604
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (10 October)
+  #   unique_id: sg_monthly_export_10_october
+  #
+  #   address: 6604 # reg 6605
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (11 November)
+  #   unique_id: sg_monthly_export_11_november
+  #
+  #   address: 6605 # reg 6606
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Monthly export (12 December)
+  #   unique_id: sg_monthly_export_12_december
+  #
+  #   address: 6606 # reg 6607
+  #   input_type: input
+  #   data_type: uint16
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total_increasing
+  #   scale: 0.1
+  #   scan_interval: 600
+  # # End monthly export
+
+  # # Start yearly export energy from PV
+  # - name: Yearly Export (2019)
+  #   unique_id: sg_yearly_export_2019
+  #
+  #   address: 6615 # reg 6616
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2020)
+  #   unique_id: sg_yearly_export_2020
+  #
+  #   address: 6617 # reg 6618
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2021)
+  #   unique_id: sg_yearly_export_2021
+  #
+  #   address: 6619 # reg 6620
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2022)
+  #   unique_id: sg_yearly_export_2022
+  #
+  #   address: 6621 # reg 6622
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2023)
+  #   unique_id: sg_yearly_export_2023
+  #
+  #   address: 6623 # reg 6624
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2024)
+  #   unique_id: sg_yearly_export_2024
+  #
+  #   address: 6625 # reg 6626
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2025)
+  #   unique_id: sg_yearly_export_2025
+  #
+  #   address: 6627 # reg 6628
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2026)
+  #   unique_id: sg_yearly_export_2026
+  #
+  #   address: 6629 # reg 6630
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2027)
+  #   unique_id: sg_yearly_export_2027
+  #
+  #   address: 6631 # reg 6632
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+
+  # - name: Yearly Export (2028)
+  #   unique_id: sg_yearly_export_2028
+  #
+  #   address: 6633 # reg 6634
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   precision: 1
+  #   unit_of_measurement: kWh
+  #   device_class: energy
+  #   state_class: total
+  #   scale: 0.1
+  #   scan_interval: 600
+  # # End yearly export energy from PV
+
+  - name: System state
+    unique_id: sg_system_state
+
+    address: 12999 # reg 13000
+    input_type: input
+    data_type: uint16
+    precision: 0
+    scale: 1
+    state_class: measurement
+    scan_interval: 10
+
+  # register running state is not available for certain SH*RS inverters
+  # template sensors are used to determine the states based on other sensors
+  - name: Running state
+    unique_id: sg_running_state
+
+    address: 13000 # reg 13001
+    input_type: input
+    data_type: uint16
+    precision: 0
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Load adjustment mode selection raw
+    unique_id: sg_load_adjustment_mode_selection_raw
+
+    address: 13001 # reg 13002
+    input_type: holding
+    data_type: uint16
+    state_class: measurement
+    scan_interval: 10
+
+  - name: Daily PV generation
+    unique_id: sg_daily_pv_generation
+
+    address: 13001 # reg 13002
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Total PV generation
+    unique_id: sg_total_pv_generation
+
+    address: 13002 # reg 13003
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Daily exported energy from PV
+    unique_id: sg_daily_exported_energy_from_PV
+
+    address: 13004 # reg 13005
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Total exported energy from PV
+    unique_id: sg_total_exported_energy_from_pv
+
+    address: 13005 # reg 13006
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Load power
+    unique_id: sg_load_power
+
+    address: 13007 # reg 13008
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  # this value returns a positive value when exporting and a negative value when importing power
+  - name: Export power raw
+    unique_id: sg_battery_export_power_raw
+
+    address: 13009 # reg 13010
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Load adjustment mode ON/OFF selection raw
+    unique_id: sg_load_adjustment_mode_on_off_selection_raw
+
+    address: 13010 # reg 13011
+    input_type: holding
+    data_type: uint16
+    state_class: measurement
+    scan_interval: 10
+
+  - name: Daily battery charge from PV
+    unique_id: sg_daily_battery_charge_from_pv
+
+    address: 13011 # reg 13012
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Total battery charge from PV
+    unique_id: sg_total_battery_charge_from_pv
+
+    address: 13012 # reg 13013
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Daily direct energy consumption
+    unique_id: sg_daily_direct_energy_consumption
+
+    address: 13016 # reg 13017
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Total direct energy consumption
+    unique_id: sg_total_direct_energy_consumption
+
+    address: 13017 # reg 13018
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Battery voltage
+    unique_id: sg_battery_voltage
+
+    address: 13019 # reg 13020
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: Voltage
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  # note: datasheet states that this value is unsigned, but it is acually signed:
+  # https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant/issues/304
+  - name: Battery current
+    unique_id: sg_battery_current
+
+    address: 13020 # reg 13021
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: A
+    state_class: measurement
+    device_class: Current
+    scale: 0.1
+    scan_interval: 10
+
+  # old firmware ( before october 2024): always positive battery power
+  # use binary_sensor.battery_charging | discharging to retrieve the direction of the energy flow
+  # new firmware: positive if charging and negative if discharging
+  # with new firmware installed we could use this raw value directly as signed battery power
+  # to support both firmwares we use the template sensor "signed battery power"
+  - name: Battery power raw
+    unique_id: sg_battery_power_raw
+
+    address: 13021 # reg 13022
+    input_type: input
+    data_type: int16 #updated to signed int, see issue #406
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  # 0..100%  |  min_soc..max_soc
+  - name: Battery level
+    unique_id: sg_battery_level
+
+    address: 13022 # reg 13023
+    input_type: input
+    data_type: uint16
     precision: 1
     unit_of_measurement: "%"
-    device_class: "battery"
-    state_class: "measurement"
+    device_class: battery
+    state_class: measurement
     scale: 0.1
-    swap: false
-    group: "battery"
-
-  - name: "Battery temperature"
-    unique_id: "sg_battery_temperature"
-    device_address: 1
-    address: 5029
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 30
-    precision: 1
-    unit_of_measurement: "°C"
-    device_class: "temperature"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "battery"
-
-  # === GRID L2/L3 ===
-  - name: "Grid voltage L2"
-    unique_id: "sg_grid_voltage_l2"
-    device_address: 1
-    address: 5030
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "grid_l2"
-
-  - name: "Grid current L2"
-    unique_id: "sg_grid_current_l2"
-    device_address: 1
-    address: 5031
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "grid_l2"
-
-  - name: "Grid power L2"
-    unique_id: "sg_grid_power_l2"
-    device_address: 1
-    address: 5032
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "grid_l2"
-
-  - name: "Grid voltage L3"
-    unique_id: "sg_grid_voltage_l3"
-    device_address: 1
-    address: 5033
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "grid_l3"
-
-  - name: "Grid current L3"
-    unique_id: "sg_grid_current_l3"
-    device_address: 1
-    address: 5034
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "grid_l3"
-
-  - name: "Grid power L3"
-    unique_id: "sg_grid_power_l3"
-    device_address: 1
-    address: 5035
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "grid_l3"
-
-  # === ENERGY METERS ===
-  - name: "Energy meter 1 active power"
-    unique_id: "sg_energy_meter1_active_power"
-    device_address: 1
-    address: 5036
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "energy_meter1"
-
-  - name: "Energy meter 1 reactive power"
-    unique_id: "sg_energy_meter1_reactive_power"
-    device_address: 1
-    address: 5037
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "var"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "energy_meter1"
-
-  - name: "Energy meter 1 power factor"
-    unique_id: "sg_energy_meter1_power_factor"
-    device_address: 1
-    address: 5038
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
-    precision: 3
-    unit_of_measurement: ""
-    device_class: null
-    state_class: "measurement"
-    scale: 0.001
-    swap: false
-    group: "energy_meter1"
-
-  # === ALARMS & STATUS ===
-  - name: "Alarm code 1"
-    unique_id: "sg_alarm_code1"
-    device_address: 1
-    address: 5039
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: "problem"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "alarms"
-
-  - name: "Alarm code 2"
-    unique_id: "sg_alarm_code2"
-    device_address: 1
-    address: 5040
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: "problem"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "alarms"
-
-  - name: "Warning code 1"
-    unique_id: "sg_warning_code1"
-    device_address: 1
-    address: 5041
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: "problem"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "warnings"
-
-  - name: "Warning code 2"
-    unique_id: "sg_warning_code2"
-    device_address: 1
-    address: 5042
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: "problem"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "warnings"
-
-  # === ADDITIONAL SYSTEM INFO ===
-  - name: "Firmware version"
-    unique_id: "sg_firmware_version"
-    device_address: 1
-    address: 5043
-    input_type: "input"
-    data_type: "string"
-    count: 5
-    scan_interval: 3600
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: null
-    scale: 1.0
-    swap: false
-    group: "system_info"
-
-  - name: "Hardware version"
-    unique_id: "sg_hardware_version"
-    device_address: 1
-    address: 5048
-    input_type: "input"
-    data_type: "string"
-    count: 5
-    scan_interval: 3600
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: null
-    scale: 1.0
-    swap: false
-    group: "system_info"
-
-  - name: "Communication address"
-    unique_id: "sg_communication_address"
-    device_address: 1
-    address: 5053
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 3600
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: null
-    scale: 1.0
-    swap: false
-    group: "system_info"
-
-  # === EXPANDED MPPT INFO ===
-  - name: "MPPT3 voltage"
-    unique_id: "sg_mppt3_voltage"
-    device_address: 1
-    address: 5054
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "mppt3"
-
-  - name: "MPPT3 current"
-    unique_id: "sg_mppt3_current"
-    device_address: 1
-    address: 5055
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "mppt3"
-
-  - name: "MPPT3 power"
-    unique_id: "sg_mppt3_power"
-    device_address: 1
-    address: 5056
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "mppt3"
-
-  - name: "MPPT4 voltage"
-    unique_id: "sg_mppt4_voltage"
-    device_address: 1
-    address: 5057
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "mppt4"
-
-  - name: "MPPT4 current"
-    unique_id: "sg_mppt4_current"
-    device_address: 1
-    address: 5058
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "mppt4"
-
-  - name: "MPPT4 power"
-    unique_id: "sg_mppt4_power"
-    device_address: 1
-    address: 5059
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "mppt4"
-
-  # === EXPANDED ENERGY INFO ===
-  - name: "Daily grid feed-in"
-    unique_id: "sg_daily_grid_feed_in"
-    device_address: 1
-    address: 5060
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 600
-    precision: 1
-    unit_of_measurement: "kWh"
-    device_class: "energy"
-    state_class: "total_increasing"
-    scale: 0.1
-    swap: false
-    group: "energy_daily"
-
-  - name: "Total grid feed-in"
-    unique_id: "sg_total_grid_feed_in"
-    device_address: 1
-    address: 5061
-    input_type: "input"
-    data_type: "uint32"
-    count: 2
-    scan_interval: 600
-    precision: 1
-    unit_of_measurement: "kWh"
-    device_class: "energy"
-    state_class: "total"
-    scale: 0.1
-    swap: true
-    group: "energy_total"
-
-  - name: "Daily grid consumption"
-    unique_id: "sg_daily_grid_consumption"
-    device_address: 1
-    address: 5063
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 600
-    precision: 1
-    unit_of_measurement: "kWh"
-    device_class: "energy"
-    state_class: "total_increasing"
-    scale: 0.1
-    swap: false
-    group: "energy_daily"
-
-  - name: "Total grid consumption"
-    unique_id: "sg_total_grid_consumption"
-    device_address: 1
-    address: 5064
-    input_type: "input"
-    data_type: "uint32"
-    count: 2
-    scan_interval: 600
-    precision: 1
-    unit_of_measurement: "kWh"
-    device_class: "energy"
-    state_class: "total"
-    scale: 0.1
-    swap: true
-    group: "energy_total"
-
-  # === EXPANDED BATTERY INFO ===
-  - name: "Battery charge power"
-    unique_id: "sg_battery_charge_power"
-    device_address: 1
-    address: 5066
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "battery"
-
-  - name: "Battery discharge power"
-    unique_id: "sg_battery_discharge_power"
-    device_address: 1
-    address: 5067
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "battery"
-
-  - name: "Battery charge energy today"
-    unique_id: "sg_battery_charge_energy_today"
-    device_address: 1
-    address: 5068
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 600
-    precision: 1
-    unit_of_measurement: "kWh"
-    device_class: "energy"
-    state_class: "total_increasing"
-    scale: 0.1
-    swap: false
-    group: "energy_daily"
-
-  - name: "Battery discharge energy today"
-    unique_id: "sg_battery_discharge_energy_today"
-    device_address: 1
-    address: 5069
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 600
-    precision: 1
-    unit_of_measurement: "kWh"
-    device_class: "energy"
-    state_class: "total_increasing"
-    scale: 0.1
-    swap: false
-    group: "energy_daily"
-
-  # === EXPANDED SYSTEM STATUS ===
-  - name: "System status"
-    unique_id: "sg_system_status"
-    device_address: 1
-    address: 5070
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "system"
-
-  - name: "Grid status"
-    unique_id: "sg_grid_status"
-    device_address: 1
-    address: 5071
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "system"
-
-  - name: "Battery status"
-    unique_id: "sg_battery_status"
-    device_address: 1
-    address: 5072
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "system"
-
-  # === EXPANDED TEMPERATURE INFO ===
-  - name: "Ambient temperature"
-    unique_id: "sg_ambient_temperature"
-    device_address: 1
-    address: 5073
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 30
-    precision: 1
-    unit_of_measurement: "°C"
-    device_class: "temperature"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "environmental"
-
-  - name: "Heat sink temperature"
-    unique_id: "sg_heat_sink_temperature"
-    device_address: 1
-    address: 5074
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 30
-    precision: 1
-    unit_of_measurement: "°C"
-    device_class: "temperature"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "environmental"
-
-  # === EXPANDED POWER INFO ===
-  - name: "Apparent power"
-    unique_id: "sg_apparent_power"
-    device_address: 1
-    address: 5075
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "VA"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "power_total"
-
-  - name: "Reactive power L1"
-    unique_id: "sg_reactive_power_l1"
-    device_address: 1
-    address: 5076
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "var"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "power_l1"
-
-  - name: "Reactive power L2"
-    unique_id: "sg_reactive_power_l2"
-    device_address: 1
-    address: 5077
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "var"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "power_l2"
-
-  - name: "Reactive power L3"
-    unique_id: "sg_reactive_power_l3"
-    device_address: 1
-    address: 5078
-    input_type: "input"
-    data_type: "int16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "var"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "power_l3"
-
-  # === EXPANDED FREQUENCY INFO ===
-  - name: "Grid frequency L1"
-    unique_id: "sg_grid_frequency_l1"
-    device_address: 1
-    address: 5079
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "Hz"
-    device_class: "frequency"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "grid_l1"
-
-  - name: "Grid frequency L2"
-    unique_id: "sg_grid_frequency_l2"
-    device_address: 1
-    address: 5080
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "Hz"
-    device_class: "frequency"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "grid_l2"
-
-  - name: "Grid frequency L3"
-    unique_id: "sg_grid_frequency_l3"
-    device_address: 1
-    address: 5081
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "Hz"
-    device_class: "frequency"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "grid_l3"
-
-  # === EXPANDED VOLTAGE INFO ===
-  - name: "DC voltage 1"
-    unique_id: "sg_dc_voltage_1"
-    device_address: 1
-    address: 5082
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "dc_inputs"
-
-  - name: "DC current 1"
-    unique_id: "sg_dc_current_1"
-    device_address: 1
-    address: 5083
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "dc_inputs"
-
-  - name: "DC power 1"
-    unique_id: "sg_dc_power_1"
-    device_address: 1
-    address: 5084
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "dc_inputs"
-
-  - name: "DC voltage 2"
-    unique_id: "sg_dc_voltage_2"
-    device_address: 1
-    address: 5085
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 1
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    scale: 0.1
-    swap: false
-    group: "dc_inputs"
-
-  - name: "DC current 2"
-    unique_id: "sg_dc_current_2"
-    device_address: 1
-    address: 5086
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 2
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    scale: 0.01
-    swap: false
-    group: "dc_inputs"
-
-  - name: "DC power 2"
-    unique_id: "sg_dc_power_2"
-    device_address: 1
-    address: 5087
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "dc_inputs"
-
-  # === EXPANDED ALARM INFO ===
-  - name: "Alarm code 3"
-    unique_id: "sg_alarm_code3"
-    device_address: 1
-    address: 5088
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: "problem"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "alarms"
-
-  - name: "Alarm code 4"
-    unique_id: "sg_alarm_code4"
-    device_address: 1
-    address: 5089
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: "problem"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "alarms"
-
-  - name: "Warning code 3"
-    unique_id: "sg_warning_code3"
-    device_address: 1
-    address: 5090
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: "problem"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "warnings"
-
-  - name: "Warning code 4"
-    unique_id: "sg_warning_code4"
-    device_address: 1
-    address: 5091
-    input_type: "input"
-    data_type: "uint16"
-    count: 1
-    scan_interval: 10
-    precision: 0
-    unit_of_measurement: ""
-    device_class: "problem"
-    state_class: "measurement"
-    scale: 1.0
-    swap: false
-    group: "warnings"
-
-  # === FINAL SYSTEM INFO ===
-  - name: "System time"
-    unique_id: "sg_system_time"
-    device_address: 1
-    address: 5092
-    input_type: "input"
-    data_type: "uint32"
-    count: 2
     scan_interval: 60
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: null
-    scale: 1.0
-    swap: true
-    group: "system_info"
 
-  - name: "System date"
-    unique_id: "sg_system_date"
-    device_address: 1
-    address: 5094
-    input_type: "input"
-    data_type: "uint32"
-    count: 2
-    scan_interval: 60
-    precision: 0
-    unit_of_measurement: ""
-    device_class: null
-    state_class: null
-    scale: 1.0
-    swap: true
-    group: "system_info"
+  # 0..100% calculated internally by the BMS load balancing
+  - name: Battery state of health
+    unique_id: sg_battery_state_of_health
 
-  - name: "Total runtime"
-    unique_id: "sg_total_runtime"
-    device_address: 1
-    address: 5096
-    input_type: "input"
-    data_type: "uint32"
-    count: 2
+    address: 13023 # reg 13024
+    input_type: input
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: "%"
+    state_class: measurement
+    scale: 0.1
     scan_interval: 600
+
+  - name: Battery temperature
+    unique_id: sg_battery_temperature
+
+    address: 13024 # reg 13025
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: °C
+    device_class: temperature
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 60
+
+  - name: Daily battery discharge
+    unique_id: sg_daily_battery_discharge
+
+    address: 13025 # reg 13026
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Total battery discharge
+    unique_id: sg_total_battery_discharge
+
+    address: 13026 # reg 13027
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Phase A current
+    unique_id: sg_phase_a_current
+
+    address: 13030 # reg 13031
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: A
+    device_class: current
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Phase B current
+    unique_id: sg_phase_b_current
+
+    address: 13031 # reg 13032
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: A
+    device_class: current
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Phase C current
+    unique_id: sg_phase_c_current
+
+    address: 13032 # reg 13033
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: A
+    device_class: current
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Total active power
+    unique_id: sg_total_active_power
+
+    address: 13033 # reg 13034
+    input_type: input
+    data_type: int32
+    swap: word
     precision: 0
-    unit_of_measurement: "h"
-    device_class: "duration"
-    state_class: "total"
-    scale: 1.0
-    swap: true
-    group: "system_info" 
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Daily imported energy
+    unique_id: sg_daily_imported_energy
+
+    address: 13035 # reg 13036
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Total imported energy
+    unique_id: sg_total_imported_energy
+
+    address: 13036 # reg 13037
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Daily battery charge
+    unique_id: sg_daily_battery_charge
+
+    address: 13039 # reg 13040
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Total battery charge
+    unique_id: sg_total_battery_charge
+
+    address: 13040 # reg 13041
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Daily exported energy
+    unique_id: sg_daily_exported_energy
+
+    address: 13044 # reg 13045
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Total exported energy
+    unique_id: sg_total_exported_energy
+
+    address: 13045 # reg 13046
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: EMS mode selection raw
+    unique_id: sg_ems_mode_selection_raw
+
+    address: 13049 # reg 13050
+    input_type: holding
+    data_type: uint16
+    state_class: measurement
+    scan_interval: 10
+
+  - name: Battery forced charge discharge cmd raw
+    unique_id: sg_battery_forced_charge_discharge_cmd_raw
+
+    address: 13050 # reg 13051
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    state_class: measurement
+    scan_interval: 10
+
+  - name: Battery forced charge discharge power
+    unique_id: sg_battery_forced_charge_discharge_power
+
+    address: 13051 # reg 13052
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    # datasheet says:
+    # 0 to 5000 W for SH*K-*
+    # 0 to 100 % for SH*.0RT
+    # for my SH10RT it is set in Watt, not in %
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scan_interval: 10
+
+  - name: Max SoC
+    unique_id: sg_max_soc
+
+    address: 13057 # reg 13058
+    input_type: holding
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Min SoC
+    unique_id: sg_min_soc
+
+    address: 13058 # reg 13059
+    input_type: holding
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  # Called "Feed-in limitation value" in spec
+  - name: Export power limit
+    unique_id: sg_export_power_limit
+
+    address: 13073 # reg 13074
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  # U16, 0x55:Disable, 0xAA:Enable
+  # called "Off-grid option" in spec
+  - name: Backup mode raw
+    unique_id: sg_backup_mode_raw
+
+    address: 13074 # reg 13075
+    input_type: holding
+    data_type: uint16
+    state_class: measurement
+    scan_interval: 10
+
+  # called "Feed-in limitation" in spec
+  # reg 13087 U16 0xAA: Enable 0x55: Disable
+  - name: Export power limit mode raw
+    unique_id: sg_export_power_limit_mode_raw
+
+    address: 13086 # reg 13087
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    state_class: measurement
+    scan_interval: 10
+
+  #undocumented sensor (reverse engineered by some guys of photovoltaikforum.com and forum.iobroker.net )
+  - name: Reserved SoC for backup
+    unique_id: sg_reserved_soc_for_backup
+
+    address: 13099 # reg 13100
+    input_type: holding
+    data_type: uint16
+    unit_of_measurement: "%"
+    device_class: battery
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Global mpp scan manual raw
+    unique_id: sg_global_mpp_scan_manual_raw
+
+    address: 30229 # reg 30230
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    state_class: measurement
+    scan_interval: 10
+
+  - name: Battery max charge power
+    unique_id: sg_battery_max_charge_power
+
+    address: 33046 # reg 33047
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 10
+    scan_interval: 10
+
+  - name: Battery max discharge power
+    unique_id: sg_battery_max_discharge_power
+
+    address: 33047 # reg 33048
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 10
+    scan_interval: 10
+
+  #undocumented sensor (reverse engineered by some guys of photovoltaikforum.com and forum.iobroker.net )
+  - name: Battery charging start power
+    unique_id: sg_battery_charging_start_power
+
+    address: 33148 # reg 33149
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 10
+    scan_interval: 10
+
+  #undocumented sensor (reverse engineered by some guys of photovoltaikforum.com and forum.iobroker.net )
+  - name: Battery discharging start power
+    unique_id: sg_battery_discharging_start_power
+
+    address: 33149 # reg 33150
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: W
+    device_class: power
+    state_class: measurement
+    scale: 10
+    scan_interval: 10
+

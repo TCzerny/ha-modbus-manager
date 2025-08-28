@@ -121,6 +121,13 @@ class ModbusTemplateSensor(SensorEntity):
         self._attr_native_unit_of_measurement = self._unit
         self._attr_should_poll = True
         
+        # Für String-Sensoren device_class und state_class explizit auf None setzen
+        if self._data_type == "string":
+            self._attr_device_class = None
+            self._attr_state_class = None
+            # String-Sensoren sollten keine numerischen Werte haben
+            self._attr_native_unit_of_measurement = None
+        
         # Device-Info
         template_name = self._register.get("template", "unknown")
         self._attr_device_info = DeviceInfo(
@@ -325,6 +332,10 @@ class ModbusTemplateSensor(SensorEntity):
                 else:
                     value = str(raw_value)
                 processed_value = value
+                
+                # Für String-Sensoren sicherstellen, dass der Wert ein String ist
+                if not isinstance(processed_value, str):
+                    processed_value = str(processed_value)
                 
             elif self._data_type == "boolean":
                 if isinstance(raw_value, list) and len(raw_value) > 0:
