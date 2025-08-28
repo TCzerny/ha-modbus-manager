@@ -1,87 +1,68 @@
-"""ModbusManager Sensor Platform."""
-from __future__ import annotations
-
-import logging
-from typing import Any
-
-from homeassistant.config_entries import ConfigEntry
-from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.helpers.entity_registry import EntityRegistry, async_get
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.core import HomeAssistant
+from homeassistant.config_entries import ConfigEntry
 
 from .const import DOMAIN
-from .device_base import ModbusManagerDeviceBase
-from .entities import ModbusRegisterEntity
-from .logger import ModbusManagerLogger
-from .device_common import setup_platform_entities
 
-_LOGGER = ModbusManagerLogger(__name__)
+async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
+    prefix = entry.data["prefix"]
+    template_name = entry.data["template"]
+    registers = entry.data["registers"]
+    hub_name = f"{DOMAIN}_{prefix}"
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback) -> bool:
-    """Richte die ModbusManager Sensor Entities ein."""
-    return await setup_platform_entities(
-        hass=hass,
-        entry=entry,
-        async_add_entities=async_add_entities,
-        entity_types=[ModbusRegisterEntity, SensorEntity],
-        platform_name="Sensor"
-    )
+    entities = []
 
-async def validate_entity(entity: SensorEntity, registry: EntityRegistry, device: ModbusManagerDeviceBase) -> bool:
-    """Validiere eine Entity vor der Registrierung."""
-    try:
-        # Prüfe ob alle notwendigen Attribute vorhanden sind
-        required_attrs = ['entity_id', 'unique_id', 'name']
-        for attr in required_attrs:
-            if not hasattr(entity, attr) or getattr(entity, attr) is None:
-                _LOGGER.error(
-                    f"Entity fehlt Pflichtattribut: {attr}",
-                    extra={
-                        "device": device.name,
-                        "entity": str(entity)
-                    }
-                )
-                return False
+    for reg in registers:
+        sensor_name = f"{prefix}_{reg['name'].lower().replace(' ', '_')}"
+        entities.append(ModbusTemplateSensor(
+            name=sensor_name,
+            hub=hub_name,
+            slave_id=entry.data["slave_id"],
+            address=reg["address"],
+            unit=reg.get("unit", ""),
+            scale=reg.get("scale", 1.0),
+            group=reg.get("group", None)
+        ))
 
-        # Prüfe auf doppelte Registrierung
-        existing_entity = registry.async_get_entity_id(
-            "sensor",
-            DOMAIN,
-            entity.unique_id
-        )
-        if existing_entity:
-            _LOGGER.warning(
-                "Entity bereits registriert",
-                extra={
-                    "device": device.name,
-                    "entity_id": entity.entity_id,
-                    "existing_id": existing_entity
-                }
-            )
-            return False
+    async_add_entities(entities)
 
-        # Validiere Device-Zuordnung
-        if not entity.device_info:
-            _LOGGER.error(
-                "Entity hat keine Device-Info",
-                extra={
-                    "device": device.name,
-                    "entity_id": entity.entity_id
-                }
-            )
-            return False
 
-        return True
+class ModbusTemplateSensor(SensorEntity):
+    def __init__(self, hass, name, hub, slave_id, reg):
+        self.hass = hass
+        self._attr_name = name
+        self._hub = hub
+        self._slave_id = slave_id
+        self._address = reg["address"]
+        self._unit = reg["unit"]
+        self._scale = reg["scale"]
+        self._group = reg["group"]
+        self._device_class = reg["device_class"]
+        self._state_class = reg["state_class"]
+        self._state = None
 
-    except Exception as e:
-        _LOGGER.error(
-            "Fehler bei der Entity-Validierung",
-            extra={
-                "error": str(e),
-                "device": device.name,
-                "entity": str(entity),
-                "traceback": str(e.__traceback__)
-            }
-        )
-        return False 
+    @property
+    def native_unit_of_measurement(self):
+        return self._unit
+
+    @property
+    def device_class(self):
+        return self._device_class
+
+    @property
+    def state_class(self):
+        return self._state_class
+
+    @property
+    def state(self):
+        return self._state
+
+    async def async_update(self):
+        modbus = self.hass.data["modbus"][self._hub]
+        result = await modbus.read_input_registers(self._address, 1, unit=self._slave_id)
+        if result.isError():
+            self._state = None
+        else:
+            raw = result.registers[0]
+            self._state = raw * self._scale

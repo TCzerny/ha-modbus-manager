@@ -1,127 +1,48 @@
-"""Config flow for Modbus Manager."""
-from __future__ import annotations
-
-import logging
 import os
-from typing import Any, Dict, Optional
-import aiofiles
 import yaml
-
 import voluptuous as vol
-
 from homeassistant import config_entries
-from homeassistant.const import CONF_NAME, CONF_HOST, CONF_PORT, CONF_SLAVE
-from homeassistant.core import HomeAssistant
-from homeassistant.data_entry_flow import FlowResult
-from homeassistant.helpers import device_registry as dr
+from homeassistant.core import callback
 
-from .const import DOMAIN, DEFAULT_PORT, DEFAULT_SLAVE, CONF_DEVICE_TYPE
-from .logger import ModbusManagerLogger
+from .const import DOMAIN, TEMPLATE_DIR
 
-_LOGGER = ModbusManagerLogger(__name__)
-
-async def async_get_available_device_definitions() -> dict[str, str]:
-    """Liest die verfügbaren Gerätedefinitionen aus dem device_definitions Verzeichnis."""
-    definitions = {}
-    definition_dir = os.path.join(os.path.dirname(__file__), "device_definitions")
-    
-    try:
-        # Lese Verzeichnisinhalt
-        filenames = os.listdir(definition_dir)
-        
-        for filename in filenames:
-            if filename.endswith(".yaml"):
-                device_type = filename[:-5]  # Entferne .yaml
-                try:
-                    async with aiofiles.open(os.path.join(definition_dir, filename), mode='r', encoding='utf-8') as f:
-                        content = await f.read()
-                        device_config = yaml.safe_load(content)
-                        display_name = device_config.get("device_info", {}).get("name", device_type)
-                        definitions[device_type] = display_name
-                except Exception as e:
-                    _LOGGER.error(
-                        "Fehler beim Lesen der Gerätedefinition",
-                        extra={
-                            "file": filename,
-                            "error": str(e)
-                        }
-                    )
-                    definitions[device_type] = device_type.replace("_", " ").title()
-    except Exception as e:
-        _LOGGER.error(
-            "Fehler beim Lesen des Verzeichnisses",
-            extra={
-                "directory": definition_dir,
-                "error": str(e)
-            }
-        )
-    
-    return definitions
+def load_templates():
+    templates = {}
+    for filename in os.listdir(TEMPLATE_DIR):
+        if filename.endswith(".yaml"):
+            with open(os.path.join(TEMPLATE_DIR, filename), "r") as f:
+                data = yaml.safe_load(f)
+                templates[data["name"]] = data
+    return templates
 
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
-    """Handle a config flow for Modbus Manager."""
-
     VERSION = 1
 
-    async def async_step_user(
-        self, user_input: dict[str, Any] | None = None
-    ) -> config_entries.FlowResult:
-        """Handle the initial step."""
-        errors = {}
-
-        # Hole die verfügbaren Gerätedefinitionen
-        device_definitions = await async_get_available_device_definitions()
-        
-        if not device_definitions:
-            errors["base"] = "no_device_definitions"
-            return self.async_abort(reason="no_device_definitions")
+    async def async_step_user(self, user_input=None):
+        templates = load_templates()
+        template_names = list(templates.keys())
 
         if user_input is not None:
-            # Prüfe ob der Name bereits existiert
-            device_registry = dr.async_get(self.hass)
-            existing_devices = dr.async_entries_for_config_entry(
-                device_registry, self.context.get("entry_id", "")
+            selected_template = templates[user_input["template"]]
+            return self.async_create_entry(
+                title=f"{user_input['prefix']} ({user_input['template']})",
+                data={
+                    "template": user_input["template"],
+                    "prefix": user_input["prefix"],
+                    "host": user_input["host"],
+                    "port": user_input["port"],
+                    "slave_id": user_input["slave_id"],
+                    "registers": selected_template["registers"]
+                }
             )
-            
-            # Prüfe auch andere Config Entries für den gleichen Namen
-            for entry in self.hass.config_entries.async_entries(DOMAIN):
-                if entry.data.get(CONF_NAME) == user_input[CONF_NAME]:
-                    errors["name"] = "device_exists"
-                    break
-            
-            # Prüfe auch das Geräteregister
-            for device in existing_devices:
-                if device.name == user_input[CONF_NAME]:
-                    errors["name"] = "device_exists"
-                    break
-
-            if not errors:
-                try:
-                    # Erstelle eine eindeutige ID aus Name und Host
-                    await self.async_set_unique_id(f"{user_input[CONF_NAME]}_{user_input[CONF_HOST]}")
-                    self._abort_if_unique_id_configured()
-
-                    return self.async_create_entry(
-                        title=user_input[CONF_NAME],
-                        data=user_input,
-                    )
-                    
-                except Exception:
-                    errors["base"] = "unknown"
-
-        # Erstelle das Schema für das Formular
-        data_schema = vol.Schema(
-            {
-                vol.Required(CONF_NAME): str,
-                vol.Required(CONF_HOST): str,
-                vol.Required(CONF_PORT, default=DEFAULT_PORT): int,
-                vol.Required(CONF_SLAVE, default=DEFAULT_SLAVE): int,
-                vol.Required(CONF_DEVICE_TYPE): vol.In(device_definitions),
-            }
-        )
 
         return self.async_show_form(
             step_id="user",
-            data_schema=data_schema,
-            errors=errors,
+            data_schema=vol.Schema({
+                vol.Required("template"): vol.In(template_names),
+                vol.Required("prefix"): str,
+                vol.Required("host"): str,
+                vol.Optional("port", default=502): int,
+                vol.Optional("slave_id", default=1): int,
+            })
         )
