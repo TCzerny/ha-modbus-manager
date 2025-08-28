@@ -1,0 +1,124 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Slu\u017eba u\u017e je nakonfigurovan\u00e1",
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "invalid_auth": "Neplatn\u00e9 overenie"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "invalid_auth": "Neplatn\u00e9 overenie"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "Heslo",
+                    "username": "Pou\u017e\u00edvate\u013esk\u00e9 meno"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delivered": {
+                "name": "Doru\u010den\u00e9"
+            },
+            "expired": {
+                "name": "Vypr\u0161ala platnos\u0165"
+            },
+            "in_transit": {
+                "name": "V preprave"
+            },
+            "not_found": {
+                "name": "Nen\u00e1jden\u00e9"
+            },
+            "package": {
+                "name": "Bal\u00edk {name}"
+            },
+            "ready_to_be_picked_up": {
+                "name": "Pripraven\u00e9 na vyzdvihnutie"
+            },
+            "returned": {
+                "name": "Vr\u00e1ten\u00e9"
+            },
+            "undelivered": {
+                "name": "Nedoru\u010den\u00e9"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Zadan\u00e1 neplatn\u00e1 konfigura\u010dn\u00e1 polo\u017eka. M\u00e1m {config_entry_id}"
+        },
+        "unloaded_config_entry": {
+            "message": "Zadan\u00e1 neplatn\u00e1 konfigura\u010dn\u00e1 polo\u017eka. {config_entry_id} nie je na\u010d\u00edtan\u00e1."
+        }
+    },
+    "issues": {
+        "deprecate_sensor": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Sn\u00edma\u010de bal\u00edka 17Track s\u00fa zastaran\u00e9 a bud\u00fa odstr\u00e1nen\u00e9.\nAktualizujte svoje automatiz\u00e1cie a skripty na z\u00edskavanie \u00fadajov pomocou akcie `seventeentrack.get_packages`.",
+                        "title": "Sn\u00edma\u010de bal\u00edka 17Track s\u00fa zastaran\u00e9"
+                    }
+                }
+            },
+            "title": "Sn\u00edma\u010de bal\u00edka 17Track s\u00fa zastaran\u00e9"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "show_archived": "\u010ci sa maj\u00fa vytvori\u0165 sn\u00edma\u010de pre archivovan\u00e9 bal\u00edky",
+                    "show_delivered": "\u010ci sa maj\u00fa vytvori\u0165 sn\u00edma\u010de pre doru\u010den\u00e9 bal\u00edky"
+                },
+                "description": "Konfigur\u00e1cia v\u0161eobecn\u00fdch nastaven\u00ed"
+            }
+        }
+    },
+    "selector": {
+        "package_state": {
+            "options": {
+                "delivered": "Doru\u010den\u00e9",
+                "expired": "Vypr\u0161ala platnos\u0165",
+                "in_transit": "V preprave",
+                "not_found": "Nen\u00e1jden\u00e9",
+                "ready_to_be_picked_up": "Pripraven\u00e9 na vyzdvihnutie",
+                "returned": "Vr\u00e1ten\u00e9",
+                "undelivered": "Nedoru\u010den\u00e9"
+            }
+        }
+    },
+    "services": {
+        "archive_package": {
+            "description": "Archiv\u00e1cia bal\u00edka",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Bal\u00edk bude archivovan\u00fd pre vybran\u00fa slu\u017ebu.",
+                    "name": "Slu\u017eba 17Track"
+                },
+                "package_tracking_number": {
+                    "description": "Bal\u00edk bude archivovan\u00fd pre zadan\u00e9 sledovacie \u010d\u00edslo.",
+                    "name": "\u010c\u00edslo na sledovanie bal\u00edka"
+                }
+            },
+            "name": "Arch\u00edvny bal\u00edk"
+        },
+        "get_packages": {
+            "description": "Z\u00edskajte bal\u00ed\u010dky od 17Track",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Pre vybran\u00fa slu\u017ebu sa na\u010d\u00edtaj\u00fa bal\u00edky.",
+                    "name": "Slu\u017eba 17Track"
+                },
+                "package_state": {
+                    "description": "Vr\u00e1ti len bal\u00edky so zadan\u00fdmi stavmi. Ak nie je zadan\u00e9, vr\u00e1ti v\u0161etky bal\u00edky.",
+                    "name": "Stavy bal\u00ed\u010dkov"
+                }
+            },
+            "name": "Z\u00edska\u0165 bal\u00ed\u010dky"
+        }
+    }
+}

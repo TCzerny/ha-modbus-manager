@@ -1,0 +1,546 @@
+{
+    "common": {
+        "config_entry_name": "\u9078\u64c7\u89d2\u8272",
+        "dailies": "\u65e5\u5e38\u4efb\u52d9",
+        "todos": "\u5f85\u8fa6\u4e8b\u9805",
+        "unit_experience_points": "\u7d93\u9a57\u503c XP",
+        "unit_health_points": "\u751f\u547d\u503c HP",
+        "unit_mana_points": "\u9b54\u6cd5\u503c MP",
+        "unit_tasks": "\u4efb\u52d9"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "\u5e33\u865f\u5df2\u7d93\u8a2d\u5b9a\u5b8c\u6210"
+        },
+        "error": {
+            "cannot_connect": "\u9023\u7dda\u5931\u6557",
+            "invalid_auth": "\u8eab\u4efd\u9a57\u8b49\u7121\u6548",
+            "unknown": "\u672a\u9810\u671f\u932f\u8aa4"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "API \u6b0a\u6756",
+                    "api_user": "\u4f7f\u7528\u8005 ID",
+                    "url": "\u7db2\u5740",
+                    "verify_ssl": "\u78ba\u8a8d SSL \u8a8d\u8b49"
+                },
+                "data_description": {
+                    "api_key": "Habitica \u5e33\u865f API \u6b0a\u6756",
+                    "api_user": "Habitica \u5e33\u865f\u4f7f\u7528\u8005 ID",
+                    "url": "\u8981\u9023\u63a5\u7684 Habitica \u5b89\u88dd\u7db2\u5740\u3002\u9810\u8a2d\u70ba `{default_url}`"
+                },
+                "description": "\u53ef\u4ee5\u7531 Habitica \u6216\u60f3\u8981\u9023\u7dda\u7684\u5be6\u4f8b\u4e0a\u7684 [**\u8a2d\u5b9a -> \u7db2\u7ad9\u8cc7\u6599**] ({site_data}) \u4e2d\u53d6\u5f97`\u4f7f\u7528\u8005 ID` \u53ca `API \u6b0a\u6756`",
+                "title": "\u767b\u5165\u81f3\u5176\u4ed6\u5be6\u4f8b"
+            },
+            "login": {
+                "data": {
+                    "password": "\u5bc6\u78bc",
+                    "username": "\u96fb\u5b50\u90f5\u4ef6\u6216\u4f7f\u7528\u8005\u540d\u7a31\uff08\u8acb\u6ce8\u610f\u5927\u5c0f\u5beb\uff09"
+                },
+                "data_description": {
+                    "password": "\u7528\u65bc\u5c07 Home Assistant \u9023\u63a5\u81f3 Habitica \u7684\u5e33\u865f\u5bc6\u78bc",
+                    "username": "\u7528\u65bc\u5c07 Home Assistant \u9023\u63a5\u5230 Habitica \u5e33\u865f\u7684\u96fb\u5b50\u90f5\u4ef6\u6216\u4f7f\u7528\u8005\u540d\u7a31\uff08\u5340\u5206\u5927\u5c0f\u5beb\uff09"
+                },
+                "description": "\u8f38\u5165\u767b\u5165\u8cc7\u6599\u4ee5\u958b\u59cb\u65bc Home Assistant \u4f7f\u7528 Habitica \n\n[\u5fd8\u8a18\u5bc6\u78bc\uff1f]({forgot_password})",
+                "title": "\u767b\u5165\u81f3 Habitica"
+            },
+            "user": {
+                "description": "![Habiticans]({habiticans})\u3001\u9023\u7dda Habitica \u5e33\u865f\u4ee5\u8ffd\u8e64\u5192\u96aa\u8005\u7684\u7d71\u8a08\u6578\u64da\u3001\u9032\u5ea6\uff0c\u4e26\u7ba1\u7406\u5f85\u8fa6\u4e8b\u9805\u53ca\u65e5\u5e38\u4efb\u52d9\u3002\n\n[\u9084\u6c92\u6709 Habitica \u5e33\u865f\uff1f\u7acb\u5373\u8a3b\u518a\u3002]({signup})",
+                "menu_options": {
+                    "advanced": "\u767b\u5165\u81f3\u5176\u4ed6\u5be6\u4f8b",
+                    "login": "\u767b\u5165\u81f3 Habitica"
+                },
+                "title": "Habitica - Gamify your life"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pending_quest": {
+                "name": "\u5f85\u8655\u7406\u4efb\u52d9\u9080\u8acb"
+            }
+        },
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "\u5206\u914d\u6240\u6709\u5c6c\u6027\u9ede\u6578"
+            },
+            "brightness": {
+                "name": "\u7099\u71b1\u4eae\u5ea6"
+            },
+            "buy_health_potion": {
+                "name": "\u8cfc\u8cb7\u751f\u547d\u85e5\u6c34"
+            },
+            "defensive_stance": {
+                "name": "\u9632\u79a6\u59ff\u614b"
+            },
+            "earth": {
+                "name": "\u5730\u9707"
+            },
+            "frost": {
+                "name": "\u523a\u9aa8\u971c\u51cd"
+            },
+            "heal": {
+                "name": "\u7642\u7652\u4e4b\u5149"
+            },
+            "heal_all": {
+                "name": "\u795d\u798f"
+            },
+            "intimidate": {
+                "name": "\u6050\u5687\u51dd\u8996"
+            },
+            "mpheal": {
+                "name": "\u7a7a\u9748\u6e67\u52d5"
+            },
+            "protect_aura": {
+                "name": "\u4fdd\u8b77\u5149\u74b0"
+            },
+            "revive": {
+                "name": "\u5fa9\u6d3b"
+            },
+            "run_cron": {
+                "name": "\u958b\u59cb\u6211\u7684\u4e00\u5929"
+            },
+            "stealth": {
+                "name": "\u96b1\u8eab"
+            },
+            "tools_of_trade": {
+                "name": "\u8cbf\u6613\u5de5\u5177"
+            },
+            "valorous_presence": {
+                "name": "\u82f1\u52c7\u5b58\u5728"
+            }
+        },
+        "calendar": {
+            "daily_reminders": {
+                "name": "\u6bcf\u65e5\u63d0\u9192"
+            },
+            "dailys": {
+                "name": "\u65e5\u5e38\u4efb\u52d9",
+                "state_attributes": {
+                    "yesterdaily": {
+                        "name": "\u6628\u5929\u65e5\u5831",
+                        "state": {
+                            "false": "\u5426",
+                            "true": "\u662f"
+                        }
+                    }
+                }
+            },
+            "todo_reminders": {
+                "name": "\u5f85\u8fa6\u4e8b\u9805\u63d0\u9192"
+            },
+            "todos": {
+                "name": "\u5f85\u8fa6\u4e8b\u9805"
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "\u8077\u696d",
+                "state": {
+                    "healer": "\u6cbb\u7652\u624b",
+                    "rogue": "\u76dc\u8cca",
+                    "warrior": "\u6230\u58eb",
+                    "wizard": "\u6cd5\u5e2b"
+                }
+            },
+            "constitution": {
+                "name": "\u9ad4\u8cea",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "\u5206\u914d\u5c6c\u6027\u9ede"
+                    },
+                    "buffs": {
+                        "name": "\u589e\u76ca"
+                    },
+                    "class": {
+                        "name": "\u8077\u696d\u88dd\u5099\u52a0\u6210"
+                    },
+                    "equipment": {
+                        "name": "\u6230\u9b25\u88dd\u5099"
+                    },
+                    "level": {
+                        "name": "\u7b49\u7d1a"
+                    }
+                }
+            },
+            "dailys": {
+                "name": "\u65e5\u5e38\u4efb\u52d9",
+                "unit_of_measurement": "\u4efb\u52d9"
+            },
+            "display_name": {
+                "name": "\u986f\u793a\u540d\u7a31"
+            },
+            "experience": {
+                "name": "\u7d93\u9a57\u503c",
+                "unit_of_measurement": "\u7d93\u9a57\u503c XP"
+            },
+            "experience_max": {
+                "name": "\u4e0b\u4e00\u7d1a",
+                "unit_of_measurement": "\u7d93\u9a57\u503c XP"
+            },
+            "gems": {
+                "name": "\u5bf6\u77f3",
+                "unit_of_measurement": "\u5bf6\u77f3"
+            },
+            "gold": {
+                "name": "\u91d1\u5e63",
+                "unit_of_measurement": "\u91d1\u5e63"
+            },
+            "habits": {
+                "name": "\u7fd2\u6163",
+                "unit_of_measurement": "\u4efb\u52d9"
+            },
+            "health": {
+                "name": "\u751f\u547d\u503c",
+                "unit_of_measurement": "\u751f\u547d\u503c HP"
+            },
+            "health_max": {
+                "name": "\u6700\u9ad8\u751f\u547d\u503c",
+                "unit_of_measurement": "\u751f\u547d\u503c HP"
+            },
+            "intelligence": {
+                "name": "\u667a\u529b",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "\u5206\u914d\u5c6c\u6027\u9ede"
+                    },
+                    "buffs": {
+                        "name": "\u589e\u76ca"
+                    },
+                    "class": {
+                        "name": "\u8077\u696d\u88dd\u5099\u52a0\u6210"
+                    },
+                    "equipment": {
+                        "name": "\u6230\u9b25\u88dd\u5099"
+                    },
+                    "level": {
+                        "name": "\u7b49\u7d1a"
+                    }
+                }
+            },
+            "level": {
+                "name": "\u7b49\u7d1a"
+            },
+            "mana": {
+                "name": "\u9b54\u6cd5\u503c",
+                "unit_of_measurement": "\u9b54\u6cd5\u503c MP"
+            },
+            "mana_max": {
+                "name": "\u6700\u9ad8\u9b54\u6cd5\u503c",
+                "unit_of_measurement": "\u9b54\u6cd5\u503c MP"
+            },
+            "perception": {
+                "name": "\u611f\u77e5",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "\u5206\u914d\u5c6c\u6027\u9ede"
+                    },
+                    "buffs": {
+                        "name": "\u589e\u76ca"
+                    },
+                    "class": {
+                        "name": "\u8077\u696d\u88dd\u5099\u52a0\u6210"
+                    },
+                    "equipment": {
+                        "name": "\u6230\u9b25\u88dd\u5099"
+                    },
+                    "level": {
+                        "name": "\u7b49\u7d1a"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "\u734e\u52f5",
+                "unit_of_measurement": "\u4efb\u52d9"
+            },
+            "strength": {
+                "name": "\u529b\u91cf",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "\u5206\u914d\u5c6c\u6027\u9ede"
+                    },
+                    "buffs": {
+                        "name": "\u589e\u76ca"
+                    },
+                    "class": {
+                        "name": "\u8077\u696d\u88dd\u5099\u52a0\u6210"
+                    },
+                    "equipment": {
+                        "name": "\u6230\u9b25\u88dd\u5099"
+                    },
+                    "level": {
+                        "name": "\u7b49\u7d1a"
+                    }
+                }
+            },
+            "todos": {
+                "name": "\u5f85\u8fa6\u4e8b\u9805",
+                "unit_of_measurement": "\u4efb\u52d9"
+            },
+            "trinkets": {
+                "name": "\u795e\u79d8\u6c99\u6f0f"
+            }
+        },
+        "switch": {
+            "sleep": {
+                "name": "\u5165\u4f4f\u4f11\u606f"
+            }
+        },
+        "todo": {
+            "dailys": {
+                "name": "\u65e5\u5e38\u4efb\u52d9"
+            },
+            "todos": {
+                "name": "\u5f85\u8fa6\u4e8b\u9805"
+            }
+        }
+    },
+    "exceptions": {
+        "create_todos_item_failed": {
+            "message": "\u7121\u6cd5\u70ba Habitica \u5efa\u7acb\u65b0\u7684\u5f85\u8fa6\u4e8b\u9805 `{name}`\uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        },
+        "delete_completed_todos_failed": {
+            "message": "\u7121\u6cd5\u7531 Habitica \u5f85\u8fa6\u4e8b\u9805\u5217\u8868\u522a\u9664\u5f85\u8fa6\u4e8b\u9805\uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        },
+        "delete_todos_failed": {
+            "message": "\u7121\u6cd5\u7531 Habitica \u5f85\u8fa6\u4e8b\u9805\u5217\u8868\u522a\u9664\u9805\u76ee\uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        },
+        "entry_not_found": {
+            "message": "\u4e26\u672a\u65bc Home Assistant \u4e2d\u8a2d\u5b9a\u6216\u8f09\u5165\u6240\u9078\u64c7\u89d2\u8272\u3002"
+        },
+        "entry_not_loaded": {
+            "message": "\u4e26\u672a\u65bc Home Assistant \u4e2d\u8f09\u5165\u6216\u95dc\u9589\u6240\u9078\u64c7\u89d2\u8272\u3002"
+        },
+        "item_not_found": {
+            "message": "\u7121\u6cd5\u4f7f\u7528 {item}\u3001\u60a8\u672a\u64c1\u6709\u8a72\u7269\u54c1\u3002"
+        },
+        "move_dailys_item_failed": {
+            "message": "\u7121\u6cd5\u5c07 Habitica \u65e5\u5e38\u4efb\u52d9\u79fb\u52d5\u81f3\u4f4d\u7f6e {pos} \uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        },
+        "move_todos_item_failed": {
+            "message": "\u7121\u6cd5\u5c07 Habitica \u5f85\u8fa6\u4e8b\u9805\u79fb\u52d5\u81f3\u4f4d\u7f6e {pos} \uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        },
+        "not_enough_gold": {
+            "message": "\u7121\u6cd5\u8cfc\u8cb7\u734e\u52f5\uff0c\u91d1\u5e63\u4e0d\u8db3\u3002\u89d2\u8272\u64c1\u6709 {gold}\u3001\u4f46\u734e\u52f5\u9700\u8981\u82b1\u8cbb {cost}\u3002"
+        },
+        "not_enough_mana": {
+            "message": "\u7121\u6cd5\u65bd\u5c55\u6280\u80fd\uff0c\u6cd5\u529b\u4e0d\u8db3\u3002\u89d2\u8272\u64c1\u6709 {mana}\u3001\u4f46\u6280\u80fd\u65ed\u8981\u82b1\u8cbb {cost}\u3002"
+        },
+        "party_not_found": {
+            "message": "\u7121\u6cd5\u627e\u5230\u76ee\u6a19\u3001\u76ee\u524d\u4e0d\u5728\u968a\u4f0d\u4e2d\u3002\u53ea\u80fd\u7784\u6e96\u81ea\u5df1"
+        },
+        "quest_action_unallowed": {
+            "message": "\u4e0d\u5141\u8a31\u6b64\u64cd\u4f5c\u3002\u50c5\u6709\u4efb\u52d9\u526f\u672c\u9818\u8896\u6216\u5718\u968a\u9818\u8896\u80fd\u57f7\u884c\u6b64\u64cd\u4f5c"
+        },
+        "quest_not_found": {
+            "message": "\u7121\u6cd5\u5b8c\u6210\u64cd\u4f5c\u3001\u4efb\u52d9\u526f\u672c\u6216\u627e\u4e0d\u5230\u5718\u968a"
+        },
+        "score_dailys_item_failed": {
+            "message": "\u7121\u6cd5\u66f4\u65b0 Habitica \u65e5\u5e38\u4efb\u52d9 `{name}` \u7a4d\u5206\uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        },
+        "score_todos_item_failed": {
+            "message": "\u7121\u6cd5\u66f4\u65b0 Habitica \u5f85\u8fa6\u4e8b\u9805 `{name}` \u7a4d\u5206\uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        },
+        "service_call_exception": {
+            "message": "\u7121\u6cd5\u9023\u7dda\u81f3 Habitica\uff1a{reason}"
+        },
+        "service_call_unallowed": {
+            "message": "\u7121\u6cd5\u5b8c\u6210\u52d5\u4f5c\uff0c\u56e0\u70ba\u672a\u6eff\u8db3\u6240\u9700\u7684\u689d\u4ef6"
+        },
+        "setup_rate_limit_exception": {
+            "message": "\u8d85\u904e\u9650\u5236\u983b\u7387\u3001\u8acb\u65bc {retry_after} \u79d2\u5f8c\u518d\u8a66\u3002"
+        },
+        "skill_not_found": {
+            "message": "\u7121\u6cd5\u65bd\u5c55\u6280\u80fd\uff0c\u89d2\u8272\u4e0d\u5177\u6709\u6280\u80fd\u6216\u9b54\u6cd5 {skill}\u3002"
+        },
+        "target_not_found": {
+            "message": "\u7121\u6cd5\u5728\u60a8\u7684\u968a\u4f0d\u4e2d\u627e\u5230\u76ee\u6a19 {target}"
+        },
+        "task_not_found": {
+            "message": "\u7121\u6cd5\u5b8c\u6210\u64cd\u4f5c\uff0c\u627e\u4e0d\u5230\u4efb\u52d9 {task}\u3002"
+        },
+        "update_dailys_item_failed": {
+            "message": "\u7121\u6cd5\u66f4\u65b0 Habitica \u65e5\u5e38\u4efb\u52d9 `{name}`\uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        },
+        "update_todos_item_failed": {
+            "message": "\u7121\u6cd5\u66f4\u65b0 Habitica \u5f85\u8fa6\u4e8b\u9805 `{name}`\uff0c\u8acb\u518d\u8a66\u4e00\u6b21"
+        }
+    },
+    "issues": {
+        "deprecated_api_call": {
+            "description": "Habitica \u52d5\u4f5c `habitica.api_call` \u5df2\u4e0d\u518d\u4f7f\u7528\uff0c\u4e26\u5c07\u5728 Home Assistant 2025.5.0 \u7248\u4e2d\u9032\u884c\u79fb\u9664\u3002\n\n\u8acb\u66f4\u65b0\u81ea\u52d5\u5316\u8207\u8173\u672c\u4ee5\u4f7f\u7528\u5176\u4ed6 Habitica \u52d5\u4f5c\u548c\u5be6\u9ad4\u3002",
+            "title": "Habitica \u52d5\u4f5c habitica.api_call \u5df2\u4e0d\u518d\u4f7f\u7528"
+        },
+        "deprecated_task_entity": {
+            "description": "Habitica \u5be6\u9ad4 `{entity}` \u5df2\u4e0d\u518d\u4f7f\u7528\u4e26\u5373\u5c07\u65bc\u672a\u4f86\u7248\u672c\u4e2d\u79fb\u9664\u3002\n\u8acb\u66f4\u65b0\u81ea\u52d5\u5316\u8207\u8173\u672c\u3001\u4ee5\u53d6\u4ee3\u65b0\u589e\u81f3\u5f85\u8fa6\u4e8b\u9805\u689d\u76ee\u7684\u611f\u6e2c\u5668\u5be6\u9ad4\u3002\n\u7576\u5b8c\u6210\u9077\u79fb\u5f8c\u3001\u53ef\u4ee5\u95dc\u9589 `{entity}`\u3002",
+            "title": "Habitica {task_name} \u611f\u6e2c\u5668\u5df2\u4e0d\u518d\u4f7f\u7528"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "\u76dc\u8cca\uff1a\u6697\u7bad\u50b7\u4eba",
+                "fireball": "\u6cd5\u5e2b\uff1a\u706b\u7130\u7206\u767c",
+                "pickpocket": "\u76dc\u8cca\uff1a\u6252\u624b",
+                "smash": "\u6230\u58eb\uff1a\u6b98\u9177\u731b\u64ca"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "\u5b09\u6c34\u7bc0",
+                "shiny_seed": "\u9583\u5149\u7a2e\u5b50",
+                "snowball": "\u96ea\u7403",
+                "spooky_sparkles": "\u5e7d\u9748\u706b\u82b1"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "description": "\u7d42\u6b62\u5718\u968a\u9032\u884c\u4e2d\u7684\u4efb\u52d9\u526f\u672c\u3002\u6240\u6709\u9032\u5ea6\u5c07\u907a\u5931\u3001\u4e26\u4e14\u4efb\u52d9\u5377\u8ef8\u5c07\u9000\u56de\u64c1\u6709\u8005\u7684\u7269\u54c1\u4e2d\u3002\u53ea\u6709\u4efb\u52d9\u9818\u8896\u6216\u5718\u968a\u9818\u8896\u53ef\u4ee5\u57f7\u884c\u6b64\u64cd\u4f5c\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8981\u57f7\u884c\u64cd\u4f5c\u7684 Habitica \u89d2\u8272\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                }
+            },
+            "name": "\u7d42\u6b62\u6b63\u5728\u9032\u884c\u7684\u4efb\u52d9"
+        },
+        "accept_quest": {
+            "description": "\u63a5\u53d7\u5f85\u8655\u7406\u4efb\u52d9\u526f\u672c\u9080\u8acb\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8981\u57f7\u884c\u64cd\u4f5c\u7684 Habitica \u89d2\u8272\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                }
+            },
+            "name": "\u63a5\u53d7\u4efb\u52d9\u526f\u672c\u9080\u8acb"
+        },
+        "api_call": {
+            "description": "\u547c\u53eb Habitica API\u3002",
+            "fields": {
+                "args": {
+                    "description": "\u4efb\u4f55\u5176\u4ed6 JSON \u6216 URL \u53c3\u6578\u3002\u8acb\u53c3\u95b1\u8def\u5f91\u4e2d\u63d0\u5230\u7684 apidoc\u3002\u7bc4\u4f8b\u4f7f\u7528\u76f8\u540c\u7684 API \u7bc0\u9ede\u3002",
+                    "name": "\u53c3\u6578"
+                },
+                "name": {
+                    "description": "\u8981\u547c\u53eb\u7684 Habitica \u4f7f\u7528\u8005\u540d\u7a31\u3002",
+                    "name": "\u540d\u7a31"
+                },
+                "path": {
+                    "description": "\u4f86\u81ea API \u7db2\u5740\u9805\u76ee\u3001\u4ee5\u9644\u52a0\u5728\u7d50\u5c3e\u65b9\u5f0f\u7684\u683c\u5f0f\u9663\u5217\u3002\u8acb\u53c3\u95b1 https://habitica.com/apidoc/. Example uses https://habitica.com/apidoc/#api-Task-CreateUserTasks.",
+                    "name": "\u8def\u5f91"
+                }
+            },
+            "name": "API \u540d\u7a31"
+        },
+        "cancel_quest": {
+            "description": "\u53d6\u6d88\u5c1a\u672a\u958b\u59cb\u7684\u4efb\u52d9\u526f\u672c\u3002\u6240\u6709\u5df2\u63a5\u53d7\u53ca\u5f85\u8655\u7406\u7684\u9080\u8acb\u5c07\u53d6\u6d88\u3001\u540c\u6642\u4efb\u52d9\u526f\u672c\u5377\u8ef8\u5c07\u9000\u56de\u64c1\u6709\u8005\u7684\u7269\u54c1\u4e2d\u3002\u53ea\u6709\u4efb\u52d9\u526f\u672c\u9818\u8896\u6216\u5718\u968a\u9818\u8896\u53ef\u4ee5\u57f7\u884c\u6b64\u64cd\u4f5c\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8981\u57f7\u884c\u64cd\u4f5c\u7684 Habitica \u89d2\u8272\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                }
+            },
+            "name": "\u53d6\u6d88\u5f85\u8655\u7406\u4efb\u52d9\u526f\u672c\u3002"
+        },
+        "cast_skill": {
+            "description": "\u65bc\u7279\u5b9a\u7684\u4efb\u52d9\u4e2d\u4f7f\u7528 Habitica \u89d2\u8272\u7684\u6280\u80fd\u6216\u9b54\u6cd5\u3001\u4ee5\u5f71\u97ff\u9032\u5ea6\u6216\u72c0\u614b\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7 Habitica \u89d2\u8272\u4ee5\u65bd\u5c55\u6280\u80fd\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                },
+                "skill": {
+                    "description": "\u9078\u64c7\u8981\u65bc\u4efb\u52d9\u4e2d\u65bd\u5c55\u7684\u6280\u80fd\u6216\u9b54\u6cd5\u3002\u53ea\u80fd\u4f7f\u7528\u8207\u89d2\u8272\u8077\u696d\u5c0d\u61c9\u7684\u6280\u80fd\u3002",
+                    "name": "\u6280\u80fd"
+                },
+                "task": {
+                    "description": "\u91dd\u5c0d\u76ee\u6a19\u60f3\u4f7f\u7528\u7684\u6280\u80fd\u6216\u9b54\u6cd5\u4efb\u52d9\u540d\u7a31\uff08\u6216\u4efb\u52d9 ID\uff09\u3002",
+                    "name": "\u4efb\u52d9\u540d\u7a31"
+                }
+            },
+            "name": "\u65bd\u5c55\u6280\u80fd"
+        },
+        "leave_quest": {
+            "description": "\u9000\u51fa\u76ee\u524d\u6b63\u53c3\u8207\u7684\u4efb\u52d9\u526f\u672c\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8981\u57f7\u884c\u64cd\u4f5c\u7684 Habitica \u89d2\u8272\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                }
+            },
+            "name": "\u9000\u51fa\u4efb\u52d9\u526f\u672c"
+        },
+        "reject_quest": {
+            "description": "\u62d2\u7d55\u5f85\u8655\u7406\u4efb\u52d9\u526f\u672c\u9080\u8acb\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8981\u57f7\u884c\u64cd\u4f5c\u7684 Habitica \u89d2\u8272\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                }
+            },
+            "name": "\u56de\u7d55\u4efb\u52d9\u526f\u672c\u9080\u8acb"
+        },
+        "score_habit": {
+            "description": "\u589e\u52a0\u7fd2\u6163\u7684\u6b63\u9762\u6216\u8ca0\u9762\u8da8\u52e2\u4ee5\u8ffd\u8e64\u5176\u9032\u5c55\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8981\u8ffd\u8e64\u7fd2\u6163\u7684 Habitica \u89d2\u8272\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                },
+                "direction": {
+                    "description": "\u6240\u8981\u8ffd\u8e64\u60a8\u7684\u7fd2\u6163\u662f\u7a4d\u6975\u9084\u662f\u6d88\u6975\u7684\u9032\u6b65\u3002",
+                    "name": "\u734e\u52f5\u6216\u640d\u5931"
+                },
+                "task": {
+                    "description": "\u7fd2\u6163\u7684\u540d\u7a31\uff08\u6216\u4efb\u52d9 ID\uff09\u3002",
+                    "name": "\u7fd2\u6163\u540d\u7a31"
+                }
+            },
+            "name": "\u8ffd\u8e64\u7fd2\u6163"
+        },
+        "score_reward": {
+            "description": "\u4f7f\u7528\u5b8c\u6210\u4efb\u52d9\u6240\u8cfa\u53d6\u7684\u91d1\u5e63\u8cfc\u8cb7\u4e00\u4efd\u81ea\u8a02\u734e\u52f5\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8981\u8cfc\u8cb7\u734e\u52f5\u7684 Habitica \u89d2\u8272\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                },
+                "task": {
+                    "description": "\u81ea\u8a02\u734e\u52f5\u7684\u540d\u7a31\uff08\u6216\u4efb\u52d9 ID\uff09\u3002",
+                    "name": "\u734e\u52f5\u540d\u7a31"
+                }
+            },
+            "name": "\u8cfc\u8cb7\u734e\u52f5"
+        },
+        "start_quest": {
+            "description": "\u7acb\u5373\u958b\u59cb\u4efb\u52d9\u526f\u672c\u3001\u8df3\u904e\u4efb\u4f55\u5c1a\u672a\u63a5\u53d7\u53ca\u56de\u7d55\u7684\u5f85\u8655\u7406\u9080\u8acb\u3002\u53ea\u6709\u4efb\u52d9\u526f\u672c\u9818\u8896\u6216\u5718\u968a\u9818\u8896\u53ef\u4ee5\u57f7\u884c\u6b64\u64cd\u4f5c\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8981\u57f7\u884c\u64cd\u4f5c\u7684 Habitica \u89d2\u8272\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                }
+            },
+            "name": "\u5f37\u5236\u958b\u59cb\u5f85\u8655\u7406\u7684\u4efb\u52d9\u526f\u672c"
+        },
+        "transformation": {
+            "description": "\u65bc\u968a\u4f0d\u6210\u54e1\u6216\u81ea\u5df1\u8eab\u4e0a\u4f7f\u7528 Habitica \u89d2\u8272\u7269\u54c1\u4e2d\u7684\u8b8a\u5f62\u9053\u5177\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u9078\u64c7 Habitica \u89d2\u8272\u4ee5\u4f7f\u7528\u8b8a\u5f62\u9053\u5177\u3002",
+                    "name": "\u9078\u64c7\u89d2\u8272"
+                },
+                "item": {
+                    "description": "\u9078\u64c7\u8981\u4f7f\u7528\u7684\u8b8a\u5f62\u9053\u5177\u3002\u9053\u5177\u7269\u54c1\u5fc5\u9808\u5728\u89d2\u8272\u7684\u7269\u54c1\u4e2d\u3002",
+                    "name": "\u8b8a\u5f62\u9053\u5177"
+                },
+                "target": {
+                    "description": "\u60f3\u8981\u4f7f\u7528\u8b8a\u5f62\u9053\u5177\u7684\u89d2\u8272\u540d\u7a31\u3002\u4e5f\u53ef\u4ee5\u6307\u5b9a\u73a9\u5bb6\u7684\u7528\u6236\u540d\u7a31\u6216\u7528\u6236 ID\u3002",
+                    "name": "\u76ee\u6a19\u89d2\u8272"
+                }
+            },
+            "name": "\u4f7f\u7528\u8b8a\u5f62\u9053\u5177"
+        }
+    }
+}

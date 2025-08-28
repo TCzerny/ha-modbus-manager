@@ -1,0 +1,75 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "cannot_connect": "Det gick inte att ansluta.",
+            "no_device_id": "Den uppt\u00e4ckta Tailwind-enheten angav inte n\u00e5got enhets-ID.",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "unknown": "Ov\u00e4ntat fel",
+            "unsupported_firmware": "Den inbyggda programvaran i din Tailwind-enhet st\u00f6ds inte. Uppdatera din Tailwind-enhet till den senaste firmware-versionen med hj\u00e4lp av Tailwind-appen."
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "token": "Lokal kontrollnyckel"
+                },
+                "data_description": {
+                    "token": "F\u00f6r att hitta den lokala kontroll-token, surfa till [Tailwind webbportal]({url}), logga in med ditt Tailwind-konto och v\u00e4lj fliken [**Local Control Key**]({url}). Det 6-siffriga numret som visas \u00e4r din lokala kontroll-token."
+                },
+                "description": "\u00c5terautentisera med din Tailwind garageport\u00f6ppnare. \n \nF\u00f6r att g\u00f6ra det m\u00e5ste du skaffa din nya lokala kontrollnyckel till din Tailwind-enhet. F\u00f6r mer information, se beskrivningen under f\u00e4ltet nedan."
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "token": "Lokal kontrollnyckel"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r din Tailwind-enhet. Du kan hitta IP-adressen genom att g\u00e5 in i Tailwind-appen och v\u00e4lja Tailwind-enhetens kugghjulsikon. IP-adressen visas i avsnittet **Enhetsinfo**.",
+                    "token": "F\u00f6r att hitta den lokala kontroll-token, surfa till [Tailwind webbportal]({url}), logga in med ditt Tailwind-konto och v\u00e4lj fliken [**Local Control Key**]({url}). Det 6-siffriga numret som visas \u00e4r din lokala kontroll-token."
+                },
+                "description": "St\u00e4ll in din Tailwind garageports\u00f6ppnare s\u00e5 att den integreras med Home Assistant.\n\nF\u00f6r att g\u00f6ra det m\u00e5ste du f\u00e5 den lokala kontrollnyckeln och IP-adressen till din Tailwind-enhet. F\u00f6r mer information, se beskrivningen under f\u00e4lten nedan."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "token": "Lokal kontrollnyckel"
+                },
+                "data_description": {
+                    "token": "F\u00f6r att hitta den lokala kontroll-token, surfa till [Tailwind webbportal]({url}), logga in med ditt Tailwind-konto och v\u00e4lj fliken [**Local Control Key**]({url}). Det 6-siffriga numret som visas \u00e4r din lokala kontroll-token."
+                },
+                "description": "St\u00e4ll in din uppt\u00e4ckta Tailwind garageports\u00f6ppnare s\u00e5 att den integreras med Home Assistant.\n\nF\u00f6r att g\u00f6ra det m\u00e5ste du f\u00e5 den lokala kontrollnyckeln till din Tailwind-enhet. F\u00f6r mer information, se beskrivningen under f\u00e4ltet nedan."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "operational_problem": {
+                "name": "Driftsproblem",
+                "state": {
+                    "off": "Operativ",
+                    "on": "Utel\u00e5st"
+                }
+            }
+        },
+        "number": {
+            "brightness": {
+                "name": "Status LED-ljusstyrka"
+            }
+        }
+    },
+    "exceptions": {
+        "communication_error": {
+            "message": "Ett fel uppstod under kommunikationen med Tailwind-enheten."
+        },
+        "door_disabled": {
+            "message": "D\u00f6rren \u00e4r inaktiverad och kan inte man\u00f6vreras."
+        },
+        "door_locked_out": {
+            "message": "D\u00f6rren \u00e4r l\u00e5st och kan inte man\u00f6vreras."
+        }
+    }
+}

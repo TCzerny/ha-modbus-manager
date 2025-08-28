@@ -1,0 +1,235 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O fluxo de configura\u00e7\u00e3o j\u00e1 est\u00e1 em curso",
+            "cannot_connect": "Falhou ao ligar",
+            "reconfiguration_successful": "Reconfigurou com sucesso a integra\u00e7\u00e3o do Music Assistant.",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_server_version": "O servidor do Music Assistant n\u00e3o est\u00e1 na vers\u00e3o correta",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Pretende adicionar o Servidor Music Assistant `{url}` ao Home Assistant?",
+                "title": "Encontrado Servidor Music Assistant"
+            },
+            "init": {
+                "data": {
+                    "url": "URL do servidor do Music Assistant"
+                }
+            },
+            "manual": {
+                "data": {
+                    "url": "URL do servidor do Music Assistant"
+                },
+                "description": "Introduza o URL do seu Music Assistant Server j\u00e1 em execu\u00e7\u00e3o. Se n\u00e3o tiver o Music Assistant Server em execu\u00e7\u00e3o, deve instal\u00e1-lo primeiro.",
+                "title": "Adicionar manualmente o Servidor Music Assistant"
+            }
+        }
+    },
+    "issues": {
+        "invalid_server_version": {
+            "description": "Verifique se existem atualiza\u00e7\u00f5es dispon\u00edveis para o Servidor Music Assistant e/ou integra\u00e7\u00e3o.",
+            "title": "O servidor do Music Assistant n\u00e3o est\u00e1 na vers\u00e3o correta"
+        }
+    },
+    "selector": {
+        "album_type": {
+            "options": {
+                "album": "\u00c1lbum",
+                "compilation": "Compila\u00e7\u00e3o",
+                "ep": "EP",
+                "single": "Single",
+                "unknown": "Desconhecido"
+            }
+        },
+        "enqueue": {
+            "options": {
+                "add": "Adicionar \u00e0 fila",
+                "next": "Reproduzir o pr\u00f3ximo",
+                "play": "Reproduzir",
+                "replace": "Reproduzir agora e limpar a fila",
+                "replace_next": "Reproduzir o pr\u00f3ximo e limpar a fila"
+            }
+        },
+        "media_type": {
+            "options": {
+                "album": "\u00c1lbum",
+                "artist": "Artista",
+                "playlist": "Playlist",
+                "radio": "Radio",
+                "track": "Pista"
+            }
+        },
+        "order_by": {
+            "options": {
+                "artist_name": "Nome do artista",
+                "artist_name_desc": "Nome do artista (desc)",
+                "last_played": "\u00daltima vez que tocou",
+                "last_played_desc": "\u00daltima vez que tocou (desc)",
+                "name": "Nome",
+                "name_desc": "Nome (desc)",
+                "play_count": "N\u00famero de vezes que tocou",
+                "play_count_desc": "N\u00famero de vezes que tocou (desc)",
+                "position": "Posi\u00e7\u00e3o",
+                "position_desc": "Posi\u00e7\u00e3o (desc)",
+                "random": "Aleat\u00f3rio",
+                "random_play_count": "Aleat\u00f3rio + menos tocadas",
+                "sort_name": "Ordenar nome",
+                "sort_name_desc": "Ordenar nome (desc)",
+                "timestamp_added": "Adicionado",
+                "timestamp_added_desc": "Adicionado (desc)",
+                "year": "Ano",
+                "year_desc": "Ano (desc)"
+            }
+        }
+    },
+    "services": {
+        "get_library": {
+            "description": "Obter itens de uma biblioteca do Music Assistant.",
+            "fields": {
+                "album_artists_only": {
+                    "description": "Retornar apenas Artistas de \u00c1lbuns ao listar os itens da biblioteca de Artistas.",
+                    "name": "Ativar filtro de artistas do \u00e1lbum (apenas biblioteca de artistas)"
+                },
+                "album_type": {
+                    "description": "Filtrar \u00e1lbuns por tipo",
+                    "name": "Filtro de tipo de \u00e1lbum (apenas biblioteca de \u00e1lbuns)"
+                },
+                "config_entry_id": {
+                    "description": "Selecione a inst\u00e2ncia do Music Assistant para realizar a pesquisa.",
+                    "name": "Inst\u00e2ncia do Music Assistant"
+                },
+                "favorite": {
+                    "description": "Filtrar itens de modo a que apenas os itens favoritos sejam devolvidos.",
+                    "name": "S\u00f3 favoritos"
+                },
+                "limit": {
+                    "description": "N\u00famero m\u00e1ximo de itens a devolver.",
+                    "name": "Limite"
+                },
+                "media_type": {
+                    "description": "O tipo de media para o qual pedir os detalhes.",
+                    "name": "Tipo de media"
+                },
+                "offset": {
+                    "description": "Offset a partir do qual iniciar a lista.",
+                    "name": "Offset"
+                },
+                "order_by": {
+                    "description": "Ordenar a lista por este campo.",
+                    "name": "Ordenar por"
+                },
+                "search": {
+                    "description": "String de pesquisa opcional para procurar nesta biblioteca.",
+                    "name": "Procurar"
+                }
+            },
+            "name": "Obter itens da Biblioteca"
+        },
+        "get_queue": {
+            "description": "Obter os detalhes da fila atualmente ativa de um leitor do Music Assistant.",
+            "name": "Obter detalhes do playerQueue (avan\u00e7ado)"
+        },
+        "play_announcement": {
+            "description": "Reproduzir an\u00fancio num leitor Music Assistant com op\u00e7\u00f5es de controle mais detalhadas.",
+            "fields": {
+                "announce_volume": {
+                    "description": "Usar um n\u00edvel de volume for\u00e7ado para o an\u00fancio. Omitir para usar o padr\u00e3o do leitor.",
+                    "name": "Anunciar volume"
+                },
+                "url": {
+                    "description": "URL para o som de notifica\u00e7\u00e3o.",
+                    "name": "URL"
+                },
+                "use_pre_announce": {
+                    "description": "Usar som de pr\u00e9-an\u00fancio para o an\u00fancio. Omitir para usar o padr\u00e3o do leitor.",
+                    "name": "Usar pr\u00e9-an\u00fancio"
+                }
+            },
+            "name": "Reproduzir an\u00fancio"
+        },
+        "play_media": {
+            "description": "Reproduzir media num leitor Music Assistant com op\u00e7\u00f5es de controle mais detalhadas.",
+            "fields": {
+                "album": {
+                    "description": "Ao especificar uma faixa pelo nome no campo ID de Media, \u00e9 poss\u00edvel restringir opcionalmente os resultados por este nome de \u00e1lbum.",
+                    "name": "Nome do \u00e1lbum"
+                },
+                "artist": {
+                    "description": "Ao especificar uma faixa ou \u00e1lbum pelo nome no campo ID de Media, \u00e9 poss\u00edvel restringir opcionalmente os resultados por este nome de artista.",
+                    "name": "Nome do artista"
+                },
+                "enqueue": {
+                    "description": "Se o conte\u00fado deve ser reproduzido agora ou adicionado \u00e0 fila.",
+                    "name": "Colocar na fila"
+                },
+                "media_id": {
+                    "description": "URI ou nome do item que se deseja reproduzir. Especifique uma lista se desejar reproduzir/colocar na fila v\u00e1rios itens.",
+                    "name": "ID(s) de media"
+                },
+                "media_type": {
+                    "description": "O tipo de conte\u00fado a ser reproduzido. Como artista, \u00e1lbum, faixa ou lista de reprodu\u00e7\u00e3o. Ser\u00e1 determinado automaticamente se omitido.",
+                    "name": "Tipo de media"
+                },
+                "radio_mode": {
+                    "description": "Ativar o modo r\u00e1dio para gerar automaticamente uma lista de reprodu\u00e7\u00e3o com base na sele\u00e7\u00e3o.",
+                    "name": "Ativar modo de r\u00e1dio"
+                }
+            },
+            "name": "Reproduzir media"
+        },
+        "search": {
+            "description": "Realizar uma pesquisa global na biblioteca do Music Assistant e em todos os fornecedores.",
+            "fields": {
+                "album": {
+                    "description": "Ao especificar um nome de faixa no campo de nome, pode opcionalmente restringir os resultados por este nome de \u00e1lbum.",
+                    "name": "Nome do \u00e1lbum"
+                },
+                "artist": {
+                    "description": "Ao especificar um nome de faixa ou \u00e1lbum no campo de nome, pode opcionalmente restringir os resultados por este nome de artista.",
+                    "name": "Nome do artista"
+                },
+                "config_entry_id": {
+                    "description": "Selecione a inst\u00e2ncia do Music Assistant para realizar a pesquisa.",
+                    "name": "Inst\u00e2ncia do Music Assistant"
+                },
+                "library_only": {
+                    "description": "Incluir apenas resultados que estejam na biblioteca.",
+                    "name": "Apenas itens da biblioteca"
+                },
+                "limit": {
+                    "description": "N\u00famero m\u00e1ximo de itens a devolver (por tipo de media).",
+                    "name": "Limite"
+                },
+                "media_type": {
+                    "description": "O tipo de conte\u00fado a procurar. Como artista, \u00e1lbum, faixa, r\u00e1dio ou lista de reprodu\u00e7\u00e3o. Todos os tipos se omitidos.",
+                    "name": "Tipo de media(s)"
+                },
+                "name": {
+                    "description": "O nome/t\u00edtulo a procurar.",
+                    "name": "Procurar nome"
+                }
+            },
+            "name": "Procurar Music Assistant"
+        },
+        "transfer_queue": {
+            "description": "Transferir a fila do leitor para outro leitor.",
+            "fields": {
+                "auto_play": {
+                    "description": "Iniciar a reprodu\u00e7\u00e3o da fila no leitor de destino. Omitir para usar o comportamento padr\u00e3o.",
+                    "name": "Reprodu\u00e7\u00e3o autom\u00e1tica"
+                },
+                "source_player": {
+                    "description": "O leitor de media de origem possui a fila que deseja transferir. Quando omitido, o primeiro leitor em reprodu\u00e7\u00e3o ser\u00e1 usado.",
+                    "name": "Leitor de origem"
+                }
+            },
+            "name": "Transferir fila"
+        }
+    }
+}

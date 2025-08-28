@@ -1,0 +1,90 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El compte ja est\u00e0 configurat",
+            "authorize_url_timeout": "Temps d'espera esgotat durant la generaci\u00f3 de l'URL d'autoritzaci\u00f3.",
+            "invalid_access_token": "Token d'acc\u00e9s inv\u00e0lid",
+            "missing_configuration": "El component no est\u00e0 configurat. Mira'n la documentaci\u00f3.",
+            "missing_credentials": "La integraci\u00f3 necessita credencials d'aplicaci\u00f3.",
+            "no_url_available": "No hi ha cap URL disponible. Per a m\u00e9s informaci\u00f3 sobre aquest error, [consulta la secci\u00f3 d'ajuda]({docs_url})",
+            "oauth_error": "S'han rebut dades token inv\u00e0lides.",
+            "oauth_failed": "S'ha produ\u00eft un error en obtenir el 'token' d'acc\u00e9s.",
+            "oauth_timeout": "Temps m\u00e0xim d'espera de resoluci\u00f3 de 'token' OAuth esgotat.",
+            "oauth_unauthorized": "Error d'autoritzaci\u00f3 OAuth durant l'obtenci\u00f3 del 'token' d'acc\u00e9s.",
+            "reauth_successful": "Re-autenticaci\u00f3 realitzada correctament",
+            "unknown_authorize_url_generation": "S'ha produ\u00eft un error desconegut al generar URL d'autoritzaci\u00f3."
+        },
+        "create_entry": {
+            "default": "Autenticaci\u00f3 exitosa"
+        },
+        "error": {
+            "bad_project_id": "Introdueix un ID de projecte Cloud v\u00e0lid (consulta Cloud Console)",
+            "subscriber_error": "Error de subscriptor desconegut, consulta els registres",
+            "wrong_project_id": "Introdueix un ID de projecte Cloud v\u00e0lid (era el mateix que l'ID de projecte Device Access)"
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "ID de projecte Google Cloud"
+                },
+                "description": "Introdueix l'identificador de projecte Cloud a continuaci\u00f3, per exemple, *exemple-projecte-12345*. Consulta [Google Cloud Console]({cloud_console_url}) o la [documentaci\u00f3]({more_info_url}) per a m\u00e9s informaci\u00f3.",
+                "title": "Nest: introdueix l'identificador del projecte Cloud"
+            },
+            "create_cloud_project": {
+                "title": "Nest: crea i configura el projecte Cloud"
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "ID de projecte Device Access"
+                },
+                "title": "Nest: crea un projecte Device Access"
+            },
+            "pick_implementation": {
+                "title": "Selecciona el m\u00e8tode d'autenticaci\u00f3"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "ID de projecte Google Cloud"
+                }
+            },
+            "reauth_confirm": {
+                "description": "La integraci\u00f3 de Nest ha de tornar a autenticar-se amb el teu compte",
+                "title": "L'autenticaci\u00f3 de {name} ha caducat"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "Moviment detectat",
+            "camera_person": "Persona detectada",
+            "camera_sound": "So detectat",
+            "doorbell_chime": "Timbre premut"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "Repic",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "Repic"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "Moviment",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "Moviment",
+                            "camera_person": "Persona",
+                            "camera_sound": "So"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

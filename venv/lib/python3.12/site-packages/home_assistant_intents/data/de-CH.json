@@ -1,0 +1,1365 @@
+{
+  "language": "de-CH",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "<steu> <name> <ab_us>"
+          ],
+          "excludes_context": {
+            "domain": [
+              "light",
+              "fan",
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<steu> <Geräte> <area> <ab_us>"
+          ],
+          "excludes_context": {
+            "domain": [
+              "light",
+              "fan",
+              "cover"
+            ]
+          },
+          "response": "default_area"
+        },
+        {
+          "sentences": [
+            "(Zünd|Mach|Lösch|Schalt|Schaut) [(<Liecht> |(d'[ ]|d |de |dr |der |die |ds |s ))]<name> <ab_us>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "light"
+        },
+        {
+          "sentences": [
+            "(Zünd|Mach|Schalt|Schaut) (<Liecht>|<Liechter>) <ab_us> <area>",
+            "(Zünd|Mach|Schalt|Schaut) (<Liecht>|<Liechter>) <area> <ab_us>",
+            "(Zünd|Mach|Schalt|Schaut) <area> (<Liecht>|<Liechter>) [<ab_us>]",
+            "Lösch <area> (<Liecht>|<Liechter>) [<ab_us>]",
+            "Lösch (<Liecht>|<Liechter>) <area> [<ab_us>]",
+            "Lösch (<Liecht>|<Liechter>) [<ab_us>] <area>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<mach> <name> (zue|abe)"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<mach> <cover> <area> (zue|abe)"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_area"
+        },
+        {
+          "sentences": [
+            "<steu> <name> <ab_us>"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fan",
+          "requires_context": {
+            "domain": "fan"
+          }
+        },
+        {
+          "sentences": [
+            "<steu> (d'|d|alli|aui) Ventilatore <area> <ab_us>"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fans_area"
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "wo isch <name>"
+          ],
+          "response": "where",
+          "requires_context": {
+            "domain": "person"
+          },
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "isch [d|dr|ds] <name> [i|y|im|ir|i dr|i der] {zone:state}"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "person"
+          },
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "isch öpper [i|y|im|ir|i dr|i der] {zone:state}"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "(sy|si) (aui|alli) [i|y|im|ir|i dr|i der] {zone:state}"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "wär isch [i|y|im|ir|i dr|i der] {zone:state}"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "(wie viu (persone|mösche|lüt)|wie mängi person) (isch|sy) [i|y|im|ir|i dr|i der] {zone:state}"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "Isch <name> {lock_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "lock"
+          },
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "Isch (e|es|ei) (Tür[e]|Tor|Schloss) {lock_states:state} [<area>]",
+            "Isch [<area>] (e|es|ei) (Tür[e]|Tor|Schloss) {lock_states:state}"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "Sy aui (Türe|Tor|Schlösser) {lock_states:state} [<area>]",
+            "Sy aui (Türe|Tor|Schlösser) [<area>] {lock_states:state}",
+            "Sy [<area>] aui (Türe|Tor|Schlösser) {lock_states:state}"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "(Weles|Weli) (Tür[e]|Tor|Schloss|Schlösser) (isch|sy|si) {lock_states:state} [<area>]",
+            "(Weles|weli) (Tür[e]|Tor|Schloss|Schlösser) [<area>] (isch|sy|si) {lock_states:state}"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "Wie mäng[s|i] (Tür[e]|Tor|Schloss|Schlösser) (isch|sy|si) {lock_states:state} [<area>]",
+            "Wie mäng[s|i] (Tür[e]|Tor|Schloss|Schlösser) [<area>] (isch|sy|si) {lock_states:state}"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "Was isch der Status vo[(m|r)] <name> [<area>]"
+          ],
+          "response": "one",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "Isch [der Status] <name> {on_off_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover",
+              "lock"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "Isch (e|ei) {on_off_domains:domain} {on_off_states:state} [<area>]",
+            "Isch <area> (e|ei) {on_off_domains:domain} {on_off_states:state}"
+          ],
+          "response": "any",
+          "excludes_context": {
+            "domain": [
+              "cover",
+              "lock"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "Sy [d'[' ']|d |aui |alli ]{on_off_domains:domain} {on_off_states:state} [<area>]",
+            "Sy [d'[' ']|d |aui |alli ]{on_off_domains:domain} [<area>] {on_off_states:state}",
+            "Sy <area> [d'[' ']|d |aui |alli ]{on_off_domains:domain} {on_off_states:state}"
+          ],
+          "response": "all",
+          "excludes_context": {
+            "domain": [
+              "cover",
+              "lock"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "(Wele|Weli) {on_off_domains:domain} (isch|sy|si) {on_off_states:state} [<area>]",
+            "(Wele|Weli) {on_off_domains:domain} <area> (isch|sy|si) {on_off_states:state}"
+          ],
+          "response": "which",
+          "excludes_context": {
+            "domain": [
+              "cover",
+              "lock"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "Wie mäng[s|e|i] {on_off_domains:domain} (isch|sy|si) {on_off_states:state} [<area>]",
+            "Wie mäng[s|e|i] {on_off_domains:domain} <area> (isch|sy|si) {on_off_states:state}"
+          ],
+          "response": "how_many",
+          "excludes_context": {
+            "domain": [
+              "cover",
+              "lock"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "Was isch der Status vo[(m|r)] <name> [<area>]"
+          ],
+          "response": "one",
+          "slots": {
+            "domain": "cover"
+          },
+          "requires_context": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "Isch [der Status] <name> {cover_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "slots": {
+            "domain": "cover"
+          },
+          "requires_context": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "Isch (e|ei|es) {cover_classes:device_class} {cover_states:state} [<area>]",
+            "Isch (e|ei|es) {cover_classes:device_class} <area> {cover_states:state} ",
+            "Isch <area> (e|ei|es) {cover_classes:device_class} {cover_states:state}"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "Sy [(d'[' ']|d |alli |aui )]{cover_classes:device_class} {cover_states:state} [<area>]",
+            "Sy [(d'[' ']|d |alli |aui )]{cover_classes:device_class} <area> {cover_states:state}",
+            "Sy <area> [(d'[' ']|d |alli |aui )]{cover_classes:device_class} {cover_states:state}"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(Wele|weli) {cover_classes:device_class} (isch|sy|si) {cover_states:state} [<area>]",
+            "(Wele|weli) {cover_classes:device_class} <area> (isch|sy|si) {cover_states:state}"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "Wie mäng[s|e|i] {cover_classes:device_class} (isch|sy|si) {cover_states:state} [<area>]",
+            "Wie mäng[s|e|i] {cover_classes:device_class} <area> (isch|sy|si) {cover_states:state}"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(Stop[p]|Haut|Brich) [(d[e][r]|m(y|i)) ]<timer>[ a[a][b]]",
+            "(Stop[p]|Haut|Brich) [(d[e][r]|m(y|i)) ]<timer_start> <timer>[ a[a][b]]",
+            "(Stop[p]|Haut|Brich) [(d[e][r]|m(y|i)) ]<timer> für <timer_start>[ a[a][b]]",
+            "(Stop[p]|Haut|Brich) [(d[e][r]|m(y|i)) ]<timer> <area>[ a[a][b]]",
+            "(Stop[p]|Haut|Brich) [(d[e][r]|m(y|i)) ]<area>[-| ]<timer>[ a[a][b]]",
+            "(Stop[p]|Haut|Brich) [(d[e][r]|m(y|i)) ]{timer_name:name}[-| ]<timer>[ a[a][b]]",
+            "(Stop[p]|Haut|Brich) [(d[e][r]|m(y|i)) ]<timer> {timer_name:name}[ a[a][b]]"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "[Was isch der ]<timer>[-| ]status",
+            "[Was isch der ]<area>[-| ]<timer>[-| ]status",
+            "[Was isch der ]<timer>[-| ]status <area>",
+            "<timer_start>(-| )<timer>[-| ]status",
+            "[Was isch der ]status vo[m|r] <timer_start>(-| )<timer>",
+            "[Was isch der ]status vo[m|r] <timer> für <timer_start>"
+          ]
+        },
+        {
+          "sentences": [
+            "[Was isch der ]{timer_name:name}(-| )<timer>(-| )status",
+            "[Was isch der ]<timer>[-| ]status vo[m|r] {timer_name:name}",
+            "[Was isch der ]status vo[m|r] {timer_name:name}(-| )<timer>",
+            "Wi[e] lang (geit|het) [d[e]r ]{timer_name:name}[(-| )<timer>] no",
+            "Weli Z(y[y]|i[i])t [ver]bl(y[y]|i[i])bt no uf [em ]{timer_name:name}[(-| )<timer>]"
+          ]
+        }
+      ]
+    },
+    "HassGetWeather": {
+      "data": [
+        {
+          "sentences": [
+            "(Wie isch ds|Was isch für) W(e|ä)tter",
+            "Weles W(e|ä)tter isch"
+          ]
+        },
+        {
+          "sentences": [
+            "(Wie isch ds|Was isch für) W(e|ä)tter[ (ds|z|für|i|in) <name>]",
+            "Weles W(e|ä)tter isch[ (ds|z|für|i|in) <name>]"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          }
+        }
+      ]
+    },
+    "HassGetCurrentTime": {
+      "data": [
+        {
+          "sentences": [
+            "(<what_is>|Säg mer) d['|ie] [aktuelli ]Z(y|i)t",
+            "<what_is> für Z(y|i)t",
+            "Weli Z(y|i)t isch[ itze]"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "(Zünd|Mach|Schalt|Schaut) [(<Liecht> |(d'[ ]|d |de |dr |der |die |ds |s ))]<name> [<a_y>]"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "light"
+        },
+        {
+          "sentences": [
+            "(Zünd|Mach) (<Liecht>|<Liechter>) a <area>",
+            "(Zünd|Mach) (<Liecht>|<Liechter>) <area> [a]",
+            "(Zünd|Mach) <area> (<Liecht>|<Liechter>) a",
+            "(Schalt|Schaut) (<Liecht>|<Liechter>) <a_y> <area>",
+            "(Schalt|Schaut) (<Liecht>|<Liechter>) <area> <a_y>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<steu> <name> <a_y>"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "requires_context": {
+            "domain": "fan"
+          },
+          "response": "fan"
+        },
+        {
+          "sentences": [
+            "<steu> (d'|d|alli|aui) Ventilatore <area> <a_y>"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fans_area"
+        },
+        {
+          "sentences": [
+            "<steu> <name> <a_y>"
+          ],
+          "excludes_context": {
+            "domain": [
+              "light",
+              "fan",
+              "cover",
+              "scene",
+              "script"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<steu> <Geräte> <area> <a_y>"
+          ],
+          "excludes_context": {
+            "domain": [
+              "light",
+              "fan",
+              "cover",
+              "scene",
+              "script"
+            ]
+          },
+          "response": "default_area"
+        },
+        {
+          "sentences": [
+            "(Aktivier|Schalt|Schaut|Schteu|Stell|Mach) <name> [Szene] [<a_y>]",
+            "(Aktivier|Schalt|Schaut|Schteu|Stell|Mach) (d'[ ]|d |die )Szene <name> [<a_y>]"
+          ],
+          "requires_context": {
+            "domain": "scene"
+          },
+          "slots": {
+            "domain": "scene"
+          },
+          "response": "scene"
+        },
+        {
+          "sentences": [
+            "(Aktivier|Start|Schtart) <name> [Script]",
+            "(Aktivier|Start|Schtart) [(ds Script|dr Code)] <name>",
+            "(Füehr|Füer) [(ds Script|dr Code)] <name> (us|uus)"
+          ],
+          "requires_context": {
+            "domain": "script"
+          },
+          "slots": {
+            "domain": "script"
+          },
+          "response": "script"
+        },
+        {
+          "sentences": [
+            "<mach> <name> (uf|uuf)"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<mach> <cover> <area> (uf|uuf)"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_area"
+        }
+      ]
+    },
+    "HassMediaUnpause": {
+      "data": [
+        {
+          "sentences": [
+            "(spiu|(fahr|mach) bi[m]) <name> w(i|y)ter"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassShoppingListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "Setz <item> uf <my_list>"
+          ],
+          "response": "item_added",
+          "expansion_rules": {
+            "my_list": "[mini |d |d' |d'][(I|Ii|Y|Yy)choufs](Lys[ch]te|lys[ch]te|Lis[ch]te|Liis[ch]te)",
+            "item": "{list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassCancelAllTimers": {
+      "data": [
+        {
+          "sentences": [
+            "(Stop[p]|Haut|Brich) (d'[' ']|d |alli |aui )<timer>[ a[a][b]]"
+          ]
+        },
+        {
+          "sentences": [
+            "(Stop[p]|Haut|Brich) (d'[' ']|d |alli |aui )<timer> <area>[ a[a][b]]",
+            "(Stop[p]|Haut|Brich) (d'[' ']|d |alli |aui )<area>[-| ]<timer>[ a[a][b]]"
+          ],
+          "response": "area"
+        },
+        {
+          "sentences": [
+            "(Stop[p]|Haut|Brich) (d'[' ']|d |alli |aui )<timer> (hie|i däm (Ru[u]m|Zimmer|Bereich)) [ a[a][b]]"
+          ],
+          "response": "area",
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "Vergis[s] es",
+            "Isch guet",
+            "Fertig",
+            "[es] het sech erledig[e]t"
+          ]
+        }
+      ]
+    },
+    "HassGetCurrentDate": {
+      "data": [
+        {
+          "sentences": [
+            "(<what_is>|Säg mer) (üses|(ds|z)[ (aktuell(e|ä)|hütige)]) Datum",
+            "(<what_is>) hüt für[n] e Tag",
+            "Weles Datum hei[ ]mer[ (itze|hüt)]"
+          ]
+        }
+      ]
+    },
+    "HassIncreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(Tue|Füeg) <timer_duration> zu[m| m(i|y)m] <timer> derzue",
+            "(Tue|Füeg) <timer_duration> zu[m| m(i|y)m] <timer> <area> derzue",
+            "(Tue|Füeg) <timer_duration> zu[m| m(i|y)m] <area>[-| ]<timer> derzue",
+            "(Tue|Füeg) <timer_duration> zu[m| m(i|y)m] {timer_name:name}[-| ]<timer> derzue",
+            "(Tue|Füeg) <timer_duration> zu[m| m(i|y)m] <timer> {timer_name:name} derzue",
+            "(Tue|Füeg) <timer_duration> zu[m| m(i|y)m] <timer_start>[-| ]<timer> derzue",
+            "(Tue|Füeg) <timer_duration> zu[m| m(i|y)m] <timer> für <timer_start> derzue"
+          ]
+        },
+        {
+          "sentences": [
+            "Verlenger[e] d[e]r <timer> (um|für) <timer_duration>",
+            "Verlenger[e] d[e]r <timer> <area> (um|für) <timer_duration>",
+            "Verlenger[e] d[e]r <area>[-| ]<timer> (um|für) <timer_duration>",
+            "Verlenger[e] d[e]r <timer_start>[-| ]<timer> (um|für) <timer_duration>",
+            "Verlenger[e] d[e]r {timer_name:name}[-| ]<timer> (um|für) <timer_duration>",
+            "Verlenger[e] d[e]r <timer> {timer_name:name} (um|für) <timer_duration>"
+          ]
+        }
+      ]
+    },
+    "HassSetPosition": {
+      "data": [
+        {
+          "sentences": [
+            "<steu> <name> uf <position>",
+            "<mach> <name> uf <position> (uf|zue)"
+          ],
+          "requires_context": {
+            "domain": [
+              "cover",
+              "valve"
+            ]
+          }
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "(setz|steu|schteu|dimm|dim) [(d'|d' |d |die )(Helligkeit|Hälligkeit|Häuigkeit)][( vo| vor| vo der| vo dr| vodr)] <name> uf <brightness> [(ii|y)]"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "(setz|steu|schteu|dimm|dim) [(d'|d' |d |die )(Helligkeit|Hälligkeit|Häuigkeit)][( vo | vor | vo der | vo dr | vodr )](<Liecht>|<Liechter>) <area> uf <brightness> [(ii|y)]"
+          ],
+          "response": "brightness_area"
+        },
+        {
+          "sentences": [
+            "(setz|steu|schteu|wächsle|wächslä) [(d' |d'|d )Farb (vo|vor|vo der|vo dr|vodr)] <name> (uf|nach) {color}"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "color"
+        },
+        {
+          "sentences": [
+            "(setz|steu|schteu|wächsle|wächslä) [(d' |d'|d )Farb (vo|vor|vo de )][(<Liecht>|<Liechter>)] <area> (uf|nach) {color}"
+          ],
+          "response": "color_area"
+        }
+      ]
+    },
+    "HassMediaNext": {
+      "data": [
+        {
+          "sentences": [
+            "[S[ch]pi[e](l|u) (d[a]s|z) ]nächs[ch]t(s|e) (stück|lied) (vo|für|uf [em]) <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "[S[ch]pi[e](l|u) (d[a]s|z) ]nächs[ch]ts (stück|lied)"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "[S[ch]pi[e](l|u) (d[a]s|z) ]Nächs[ch]ts (stück|lied) <area>"
+          ]
+        }
+      ]
+    },
+    "HassPauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "Pousier (d[e]r|m(y|i)|aui) <timer>",
+            "Pousier [(d[e][r]|m(y|i)) ]<timer_start>(-| )<timer>",
+            "Pousier [(d[e][r]|m(y|i)) ]<timer> für <timer_start>",
+            "Pousier [(d[e][r]|m(y|i)) ]<timer> <area>",
+            "Pousier [(d[e][r]|m(y|i)) ]<area>[-| ]<timer>",
+            "Pousier [(d[e][r]|m(y|i)) ]{timer_name:name}[-| ]<timer>",
+            "Pousier [(d[e][r]|m(y|i)) ]<timer> {timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassDecreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "Zie[h] <timer_duration> vo[m| m(i|y)m] <timer> ab",
+            "Zie[h] <timer_duration> vo[m| m(i|y)m] <timer_start>[-| ]<timer> ab",
+            "Zie[h] <timer_duration> vo[m| m(i|y)m] <timer> für <timer_start> ab",
+            "Zie[h] <timer_duration> vo[m| m(i|y)m] <timer> <area> ab",
+            "Zie[h] <timer_duration> vo[m| m(i|y)m] <area>[-| ]<timer> ab",
+            "Zie[h] <timer_duration> vo[m| m(i|y)m] {timer_name:name}[-| ]<timer> ab",
+            "Zie[h] <timer_duration> vo[m| m(i|y)m] <timer> {timer_name:name} ab"
+          ]
+        }
+      ]
+    },
+    "HassMediaPause": {
+      "data": [
+        {
+          "sentences": [
+            "(p(a|o)usier|stop[p]) <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassUnpauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(Fahr|Mach) [(d[e][r]|m(y|i)|mit em) ]<timer> w(y|i)ter",
+            "(Fahr|Mach) [(d[e][r]|m(y|i)|mit em) ]<timer_start> <timer> w(y|i)ter",
+            "(Fahr|Mach) [(d[e][r]|m(y|i)|mit em) ]<timer> für <timer_start> w(y|i)ter",
+            "(Fahr|Mach) [(d[e][r]|m(y|i)|mit em) ]<timer> <area> w(y|i)ter",
+            "(Fahr|Mach) [(d[e][r]|m(y|i)|mit em) ]<area>[-| ]<timer> w(y|i)ter",
+            "(Fahr|Mach) [(d[e][r]|m(y|i)|mit em) ]{timer_name:name}[-| ]<timer> w(y|i)ter",
+            "(Fahr|Mach) [(d[e][r]|m(y|i)|mit em) ]<timer> {timer_name:name} w(y|i)ter"
+          ]
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "[(S[ch]teu|Setz|Mach) [(e|m(i|y)) ]]<timer> (für|uf) <timer_duration>",
+            "<timer_duration> <timer>",
+            "<timer_duration> <timer> für {timer_name:name}",
+            "(S[ch]teu|Setz|Mach) [(e|m(i|y)|d[e]r) ]{timer_name:name}[(-| )<timer>] (für|uf) <timer_duration>",
+            "(S[ch]teu|Setz|Mach) [(e|m(i|y)) ]<timer> (für|uf) <timer_duration> (für[ d[ie]]|mit [d]em Name) {timer_name:name}",
+            "(S[ch]teu|Setz|Mach) [(e|m(i|y)) ]<timer_duration>(-| )<timer> (für[ d[ie]]|mit [d]em Name) {timer_name:name}",
+            "(S[ch]teu|Setz|Mach) [(e|m(i|y)|d[e]r) ]<timer_duration>[(-| )<timer>] für [e|d[ie] ]{timer_name:name}"
+          ]
+        },
+        {
+          "sentences": [
+            "{timer_command:conversation_command} i[n] <timer_duration>",
+            "i[n] <timer_duration> {timer_command:conversation_command}"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "Weli Temperatur (het|zeigt) <name>"
+          ]
+        },
+        {
+          "sentences": [
+            "Wie (warm|chaut|chalt) (isch es|isch's|ischs|isch) <area>",
+            "Weli Temperatur (isch es|isch's|isch|het|het ds|het's) <area>",
+            "Wie (hoch|höch) isch d Temperatur <area>"
+          ],
+          "response": "temp_area"
+        }
+      ]
+    },
+    "HassVacuumReturnToBase": {
+      "data": [
+        {
+          "sentences": [
+            "<name> gang [[zrügg ]zur Basis[station]]",
+            "schick <name> [[zrügg ]zur Basis[station]]"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassVacuumStart": {
+      "data": [
+        {
+          "sentences": [
+            "start <name>"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassRespond": {
+      "data": [
+        {
+          "sentences": [
+            "(Hallo|Hi|Hey|Guete Tag) [Home Assistant]"
+          ],
+          "response": "hello"
+        },
+        {
+          "sentences": [
+            "Losisch [eigentlech ](di[e] ganzi Z(y|i)t|s[ch]tändig|immer|geng) zue",
+            "Nimmsch du [eigentlech ](di[e] ganzi Z(y|i)t|s[ch]tändig|immer|geng) [u]uf"
+          ],
+          "response": "listening"
+        },
+        {
+          "sentences": [
+            "Wo s[ch]p(i|y)cherisch [eigentlech ](mini |d[ie |'])Date[ hin]"
+          ],
+          "response": "data"
+        },
+        {
+          "sentences": [
+            "Was chan i di [eigentlech ][a(ll|u)es ]frage"
+          ],
+          "response": "commands"
+        },
+        {
+          "sentences": [
+            "Wär het di [eigentlech ](gmacht|erfunde|erschaffe)"
+          ],
+          "response": "creator"
+        }
+      ]
+    },
+    "HassMediaPrevious": {
+      "data": [
+        {
+          "sentences": [
+            "[S[ch]pi[e](l|u) (d[a]s|z) ]vorder(e|s) (stück|lied) (vo|für|uf [em]) <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "[S[ch]pi[e](l|u) (d[a]s|z) ]vorder(e|s) (stück|lied)"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "[S[ch]pi[e](l|u) (d[a]s|z) ]vorder(e|s) (stück|lied) <area>"
+          ]
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "Setz <item> uf <my_list>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "my_list": "[mini |d |d' |d']({name}[(-| )](Lys[ch]te|lys[ch]te|Lis[ch]te|Liis[ch]te)|[(Lys[ch]te|lys[ch]te|Lis[ch]te|Liis[ch]te) ]{name})",
+            "item": "{list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassSetVolume": {
+      "data": [
+        {
+          "sentences": [
+            "Setz ((d|d'|d )Luts[ch]terchi|(ds|z) Volume) (vo|vom) <name> uf <volume>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Tschuldigung, das han i nid verstande",
+      "handle_error": "Es isch en unerwartete Fähler ufträte bi der Verarbeitig vom Befäu.",
+      "no_area": "I kenne ke Bereich {{ area }}",
+      "no_domain": "I kenne ke Grätkategorie (domain) {{ domain }}",
+      "no_domain_in_area": "I kenne kes Grät vor Kategorie {{ domain }} im Bereich {{area}}",
+      "no_device_class": "I kenne ke Grätklass (device_class) {{ device_class }}",
+      "no_device_class_in_area": "I kenne kes Grät vor Klass {{ device_class }} im Bereich {{ area }}",
+      "no_entity": "I kenne ds Grät {{ entity }} nid",
+      "no_entity_in_area": "I kenne kes Grät mit em Name {{ entity }} im Bereich {{ area }}",
+      "no_entity_exposed": "I ha ke Zuegriff uf {{ entity }}, ds Grät isch äuä nid freiggäh",
+      "no_entity_in_area_exposed": "I ha ke Zuegriff uf {{ entity }} im Bereich {{ area }}, ds Grät isch äuä nid freiggäh",
+      "no_domain_exposed": "I ha ke Zuegriff uf {{ domain }}, es isch äuä kes Grät vo dere Kategorie (domain) freiggäh",
+      "no_domain_in_area_exposed": "I ha ke Zuegriff uf {{ domain }} im Bereich {{ area }}, es isch äuä kes Grät vo dere Kategorie (domain) im Bereich freiggäh",
+      "no_device_class_exposed": "I ha ke Zuegriff uf {{ device_class }}, es isch äuä kes Grät vo dere Klass (device_class) freiggäh",
+      "no_device_class_in_area_exposed": "I ha ke Zuegriff uf {{ device_class }} im Bereich {{ area }}, es isch äuä kes Grät vo dere Klass (device_class) im Bereich freiggäh",
+      "duplicate_entities": "Es git mehreri Grät mit em Name {{ entity }}",
+      "duplicate_entities_in_area": "Es git im Bereich {{ area }} mehreri Grät mit em Name  {{ entity }}"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "{{ slots.name  | capitalize }} isch {{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\nJa, d {{ slots.name  | capitalize }} isch {{ state.state_with_unit }}\n{% else %}\nNei, {{ slots.name  | capitalize }} isch {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Ja, {{ match[:3] | join(\", \") }} und {{ (match | length - 3) }} angeri\n  {%- else -%}\n    Ja,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} und {% endif -%}\n      {{ name  | capitalize }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  Nei\n{% endif %}\n",
+        "all": "{% if not query.unmatched %}\n  Ja\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    Nei, {{ no_match[:3] | join(\", \") }} u {{ (no_match | length - 3) }} angeri nid\n  {%- else -%}\n    Nei,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} u {% endif -%}\n      {{ name  | capitalize }}\n    {%- endfor %} nid\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  Keis\n{% else %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} u {{ (match | length - 3) }} angeri\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} u {% endif -%}\n      {{ name  | capitalize }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n",
+        "where": "{% if state == \"not_home\" %}\n  {{ slots.name | capitalize }} isch usswärts\n{% else %}\n  {{ slots.name | capitalize }} isch {{ state.state }}\n{% endif %}\n"
+      },
+      "HassTurnOff": {
+        "default": "Ha {{slots.name | capitalize }} abgsteut.",
+        "default_area": "Ha d {{slots.area | capitalize }}-Grät abgsteut.",
+        "light": "Ha ds Liecht {{slots.name | capitalize }} uusgschaute.",
+        "lights_area": "Ha d {{slots.area | capitalize }}-Lampe uusgschaute.",
+        "fan": "Ha der Ventilator {{slots.name | capitalize }} uusgschaute.",
+        "fans_area": "Ha d {{slots.area | capitalize }}-Ventilatore abgsteut.",
+        "cover": "Ha {{slots.name | capitalize }} zuetaa.",
+        "cover_area": "Ha aues in {{slots.area | capitalize }} zuetaa."
+      },
+      "HassStartTimer": {
+        "default": "Timer gschtartet",
+        "command": "Guet, wird i mache"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "Ha {{ slots.item }} uf d Yychoufslyschte gsetzt"
+      },
+      "HassTurnOn": {
+        "default": "Ha {{slots.name | capitalize }} yygschaute.",
+        "default_area": "Ha d {{slots.area | capitalize }}-Grät yygschaute.",
+        "light": "Ha ds Liecht {{slots.name | capitalize }} yygschaute.",
+        "lights_area": "Ha d {{slots.area | capitalize }}-Lampe yygschaute.",
+        "fan": "Ha der Ventilator {{slots.name | capitalize }} yygschaute.",
+        "fans_area": "Ha d {{slots.area | capitalize }}-Ventilatore yygschaute.",
+        "cover": "Ha {{slots.name | capitalize }} uftaa.",
+        "cover_area": "Ha aues im {{slots.area | capitalize }} uftaa.",
+        "script": "Ha ds Script {{slots.name | capitalize }} gstartet.",
+        "scene": "Ha d Szene {{slots.name | capitalize }} aktiviert."
+      },
+      "HassMediaPause": {
+        "default": "Ha {{ slots.name | capitalize }} pousiert"
+      },
+      "HassGetCurrentTime": {
+        "default": "{% set hour_str = '{0:02d}'.format(slots.time.hour) %} {% set minute_str = '{0:02d}'.format(slots.time.minute) %} Es isch {{ hour_str }}:{{ minute_str }}\n"
+      },
+      "HassPauseTimer": {
+        "default": "Timer pousiert"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  Ke Timer.\n{% elif num_active_timers == 0: %}\n  {# No active timers #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    Dr Timer isch pousiert.\n  {% else: %}\n    {{ num_paused_timers }} Timer sy pousiert.\n  {% endif %}\n{% else: %}\n  {# At least one active timer #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# Get active timer that will finish soonest #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {{ num_active_timers }} loufendi Timer.\n  {% endif %}\n\n  {% if num_paused_timers == 1: %}\n    1 pousierte Timer.\n  {% elif num_paused_timers > 0: %}\n    {{ num_paused_timers }} pousierti Timer.\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n  {# At least one active timer #}\n  Es sy no\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0): %}\n    1 Schtung und {{ next_timer.rounded_minutes_left }} Minute\n  {% elif (next_timer.rounded_hours_left == 1): %}\n    1 Schtung\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_hours_left }} Schtung und {{ next_timer.rounded_minutes_left }} Minute\n  {% elif (next_timer.rounded_hours_left > 1): %}\n    {{ next_timer.rounded_hours_left }} Schtung\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0): %}\n    1 Minute und {{ next_timer.rounded_seconds_left }} Sekunde\n  {% elif (next_timer.rounded_minutes_left == 1): %}\n    1 Minute\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} Minute und {{ next_timer.rounded_seconds_left }} Sekunde\n  {% elif (next_timer.rounded_minutes_left > 1): %}\n    {{ next_timer.rounded_minutes_left }} Minute\n  {% elif (next_timer.rounded_seconds_left == 1): %}\n    1 Sekunde\n  {% elif (next_timer.rounded_seconds_left > 1): %}\n    {{ next_timer.rounded_seconds_left }} Sekunde\n  {% endif %}\n\n  {% if num_timers > 1: %}\n    {# Give some extra information to disambiguate #}\n    vo ursprünglech\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_hours }} Schtung und {{ next_timer.start_minutes }} Minute\n    {% elif (next_timer.start_hours > 0): %}\n      {{ next_timer.start_hours }} Schtung\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_minutes }} Minute und {{ next_timer.start_seconds }} Sekunde\n    {% elif (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_minutes }} Minute\n    {% elif (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_seconds }} Sekunde\n    {% endif %}\n\n    vom Timer\n\n    {% if next_timer.name: %}\n      {{ next_timer.name }}\n    {% elif next_timer.area: %}\n      {{ next_timer.area }}\n    {% endif %}\n\n    übrig.\n  {% else: %}\n    übrig.\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "Ha {{ slots.item }} uf d Lyschte {{ slots.name | capitalize }} gsetzt"
+      },
+      "HassGetCurrentDate": {
+        "default": "{% set months = {\n   1: 'Jänner',\n   2: 'Februar',\n   3: 'März',\n   4: 'Apriu',\n   5: 'Mei',\n   6: 'Juni',\n   7: 'Juli',\n   8: 'Ouguscht',\n   9: 'Septämber',\n   10: 'Oktober',\n   11: 'Novämber',\n   12: 'Dezämber',\n} %} {% set weekday = [\n  'Mäntig',\n  'Zyschtig',\n  'Midwuch',\n  'Donnschtig',\n  'Frytig',\n  'Samschtig',\n  'Sunntig'\n] %} Es isch {{ weekday[slots.date.weekday()] }}  der {{ slots.date.day }}. {{ months[slots.date.month] }} {{ slots.date.year }}\n"
+      },
+      "HassUnpauseTimer": {
+        "default": "Timer wider gschtartet"
+      },
+      "HassMediaPrevious": {
+        "default": "Schpile ds vordere Stück"
+      },
+      "HassGetWeather": {
+        "default": "{% set weather_condition = {\n  'clear': 'u klar',\n  'clear-night': 'u e klari Nacht',\n  'cloudy': 'u bewöukt',\n  'exceptional': 'u ussergewöhnlech',\n  'fog': 'mit Näbu',\n  'hail': 'mit Hageu',\n  'lightning': 'mit Gewitter',\n  'lightning-rainy': 'mit Gewitter u Räge',\n  'partlycloudy': 'u teilweyys bewöukt',\n  'pouring': 'und strömende Räge',\n  'rainy': 'und rägnerisch',\n  'snowy': 'u verschneit',\n  'snowy-rainy': 'mit Schnee u Räge',\n  'sunny': 'u sunnig',\n  'windy': 'u windig',\n  'windy-variant': 'mit Wind u Wouke'\n} %} Es isch {{ state.attributes.get('temperature') }} {{ state.attributes.get('temperature_unit') }} {{ weather_condition.get((state.state | string).lower(), \"\") }}\n"
+      },
+      "HassLightSet": {
+        "brightness": "D Häuigkeit vo {{slots.name | capitalize }} isch uf {{slots.brightness}} gsetzt.",
+        "brightness_area": "D Häuigkeit vo de Lampe im Zimmer {{slots.area | capitalize }} isch uf {{slots.brightness}} gsetzt.",
+        "color": "D Farb vo {{slots.name | capitalize }} isch uf {{slots.color}} gänderet.",
+        "color_area": "D Farb vo de Lampe im Zimmer {{slots.area | capitalize }} isch uf {{slots.color}} gänderet."
+      },
+      "HassCancelAllTimers": {
+        "default": "{% if slots.canceled < 1: %}\n  Ke Timer abbroche.\n{% else: %}\n  {{ slots.canceled }} Timer abbroche.\n{% endif %}\n",
+        "area": "{% if slots.canceled < 1: %}\n  Ke Timer im Bereich {{ slots.area }}.\n{% else: %}\n  {{ slots.canceled }} Timer im Bereich {{ slots.area }} abbroche.\n{% endif %}\n"
+      },
+      "HassVacuumStart": {
+        "default": "Ha dr Schtoubsuger gschtartet"
+      },
+      "HassMediaUnpause": {
+        "default": "{{slots.name | capitalize }} schpiut wyter"
+      },
+      "HassSetPosition": {
+        "default": "Ha d Position gsetzt"
+      },
+      "HassMediaNext": {
+        "default": "Schpile ds nächschte Stück"
+      },
+      "HassCancelTimer": {
+        "default": "Timer abbroche"
+      },
+      "HassClimateGetTemperature": {
+        "default": "D Temparatur vo {{slots.name | capitalize }} isch {{ state_attr(state.entity_id, 'current_temperature') }} Grad.",
+        "temp_area": "In {{slots.area | capitalize }} isch es {{ state_attr(state.entity_id, 'current_temperature') }} Grad."
+      },
+      "HassSetVolume": {
+        "default": "Ha d Lutschterchi yygschteut"
+      },
+      "HassDecreaseTimer": {
+        "default": "Timer aapasst"
+      },
+      "HassIncreaseTimer": {
+        "default": "Timer aapasst"
+      },
+      "HassVacuumReturnToBase": {
+        "default": "Ha der Schtoubsuger zrügg zur Basis gschickt"
+      },
+      "HassRespond": {
+        "hello": "Hallo vom Home Assistant.",
+        "listening": "Nei, I nime nume uf, we de ds Aktivierigswort gseit hesch.",
+        "data": "Dini Date wärde zu dim Home Assistant Server gschickt.",
+        "commands": "Für usezfinde was d aues chasch frage, gang uf home-assistant.io/voice_control.",
+        "creator": "I bi vor e wunderbare Home Assistant Gmeinschaft us Programmierer u Baschtler uf der ganze Wäut gmacht worde."
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "wyss",
+          "out": "white"
+        },
+        {
+          "in": "schwarz",
+          "out": "black"
+        },
+        {
+          "in": "rot",
+          "out": "red"
+        },
+        {
+          "in": "(orange|orangsch)",
+          "out": "orange"
+        },
+        {
+          "in": "(gelb|gäub|gälb)",
+          "out": "yellow"
+        },
+        {
+          "in": "grüen",
+          "out": "green"
+        },
+        {
+          "in": "blau",
+          "out": "blue"
+        },
+        {
+          "in": "violett",
+          "out": "purple"
+        },
+        {
+          "in": "(brun|bruun)",
+          "out": "brown"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        {
+          "in": "(c|celsius)",
+          "out": "Celsius"
+        },
+        {
+          "in": "(f|fahrenheit)",
+          "out": "Fahrenheit"
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "(a|aa|an|anne)",
+          "out": "on"
+        },
+        {
+          "in": "(ab|us|uus)",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "Lamp(e|ä)",
+          "out": "light"
+        },
+        {
+          "in": "Liecht[er]",
+          "out": "light"
+        },
+        {
+          "in": "Venti[lator[e]]",
+          "out": "fan"
+        },
+        {
+          "in": "Scha(u|l)ter",
+          "out": "switch"
+        },
+        {
+          "in": "Skript",
+          "out": "script"
+        },
+        {
+          "in": "Szene",
+          "out": "szene"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "(uf|offe)",
+          "out": "open"
+        },
+        {
+          "in": "zue",
+          "out": "closed"
+        },
+        {
+          "in": "am uftue",
+          "out": "opening"
+        },
+        {
+          "in": "am zuetue",
+          "out": "closing"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "Sunnes[ch]tore",
+          "out": "awning"
+        },
+        {
+          "in": "S[ch]tore",
+          "out": "blind"
+        },
+        {
+          "in": "Vorh(a|ä)ng",
+          "out": "curtain"
+        },
+        {
+          "in": "Tü[ü]r[e]",
+          "out": "door"
+        },
+        {
+          "in": "Gara(g|sch)[e]tor",
+          "out": "garage"
+        },
+        {
+          "in": "Tor",
+          "out": "gate"
+        },
+        {
+          "in": "shade[s]",
+          "out": "shade"
+        },
+        {
+          "in": "Fäns[ch]terlade",
+          "out": "shutter"
+        },
+        {
+          "in": "Fäns[ch]ter",
+          "out": "window"
+        }
+      ]
+    },
+    "lock_states": {
+      "values": [
+        {
+          "in": "[(ab|zue[ ])](gschlosse|bschlosse)",
+          "out": "locked"
+        },
+        {
+          "in": "((uf|un|nid )(gschlosse|bschlosse)|offe)",
+          "out": "unlocked"
+        }
+      ]
+    },
+    "list_item": {
+      "wildcard": true
+    },
+    "zone": {
+      "wildcard": true
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "volume": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "[e ]haub[i]",
+          "out": 30
+        },
+        {
+          "in": "1/2",
+          "out": 30
+        },
+        {
+          "in": "0(.|,)5",
+          "out": 30
+        }
+      ]
+    },
+    "timer_quarter": {
+      "values": [
+        {
+          "in": "viertu",
+          "out": 15
+        },
+        {
+          "in": "1/4",
+          "out": 15
+        },
+        {
+          "in": "0(.|,)25",
+          "out": 15
+        }
+      ]
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "ab_us": "(ab|us|uus|uis)",
+    "area": "[(idr|i dr|im|ir|ide|idä|i dä|i de|i dr|i der) ]{area}",
+    "a_y": "(a|aa|y|yy|ii|ih)",
+    "brightness": "{brightness}[(%| %| Proz(e|ä)nt)]",
+    "cover": "[(d'[' ']|d |alli |aui )]([Sunne]s[ch]tore|Vorhang|Vorhäng|Tür[e]|Tor|Abdeckig[e]|Fänschter[l(a|ä)de])",
+    "Geräte": "([(d'[ ]|d |alli |aui )](Grät|Entitäte|Entitätä))",
+    "Liechter": "([(d'[ ]|d |alli |aui )]Liechter|[(d'[ ]|d |alli |aui )]Lampä|[(d'[ ]|d |alli |aui )]Lampe|[(d'[ ]|d |alli |aui )]Lampäne)",
+    "Liecht": "([(ds|s)] Liecht|[(d |d'[ ])]Lampe|[(d |d'[ ])]Lampä)",
+    "mach": "(mach|tue|la[s])",
+    "name": "[(d'[ ]|d |de |dr |der |die |ds |s )]{name}",
+    "position": "{position}[[ ]%| %| Proz(e|ä)nt]",
+    "steu": "(Scha(l|u)t|S[ch]te(ll|u)|Mach)",
+    "temp": "{temperature} [Grad] [{temperature_unit}]",
+    "what_is": "(was isch|wasch)",
+    "volume": "{volume:volume_level}[[ ]%| %| Proz(e|ä)nt]",
+    "timer": "(Timer|Wecker|S[ch]top[p]uhr)",
+    "timer_duration_seconds": "{timer_seconds:seconds} Sekunde",
+    "timer_duration_minutes": "(({timer_minutes:minutes} Minute[ u[nd] {timer_seconds:seconds} Sekunde])|({timer_minutes:minutes} [u[nd]][ (e|ei)] {timer_half:seconds} Minute)|([(E|Ei)] {timer_half:seconds} Minute))",
+    "timer_duration_hours": "({timer_hours:hours} S[ch]tu(nd[e]|ng)[ [u[nd] ]{timer_minutes:minutes} Minute][ [u[nd] ]{timer_seconds:seconds} Sekunde])|({timer_hours:hours} [u[nd]][ e] {timer_half:minutes} S[ch]tu(nd[e]|ng))|([(E|Ei)] {timer_half:minutes} S[ch]tu(nd[e]|ng))",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes>|<timer_duration_hours>",
+    "timer_start_seconds": "{timer_seconds:start_seconds} Sekunde",
+    "timer_start_minutes": "{timer_minutes:start_minutes} Minute[ [u[nd] ]{timer_seconds:start_seconds} Sekunde]",
+    "timer_start_hours": "{timer_hours:start_hours} S[ch]tu(nd[e]|ng)[ [u[nd] ]{timer_minutes:start_minutes} minute[s]][ [u[nd] ]{timer_seconds:start_seconds} Sekunde]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes>|<timer_start_hours>"
+  },
+  "skip_words": [
+    "bitte",
+    "chönntisch",
+    "chasch",
+    "würdsch",
+    "würdisch"
+  ]
+}

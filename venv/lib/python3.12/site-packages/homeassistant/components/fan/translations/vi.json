@@ -1,0 +1,150 @@
+{
+    "device_automation": {
+        "action_type": {
+            "toggle": "\u0110\u1ea3o b\u1eadt/t\u1eaft {entity_name}",
+            "turn_off": "T\u1eaft {entity_name}",
+            "turn_on": "B\u1eadt {entity_name}"
+        },
+        "condition_type": {
+            "is_off": "{entity_name} \u0111ang t\u1eaft",
+            "is_on": "{entity_name} \u0111ang b\u1eadt"
+        },
+        "trigger_type": {
+            "changed_states": "{entity_name} b\u1eadt ho\u1eb7c t\u1eaft",
+            "turned_off": "{entity_name} \u0111\u00e3 t\u1eaft",
+            "turned_on": "{entity_name} \u0111\u00e3 b\u1eadt"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Qu\u1ea1t",
+            "state": {
+                "off": "T\u1eaft",
+                "on": "B\u1eadt"
+            },
+            "state_attributes": {
+                "direction": {
+                    "name": "H\u01b0\u1edbng",
+                    "state": {
+                        "forward": "V\u1ec1 ph\u00eda tr\u01b0\u1edbc",
+                        "reverse": "V\u1ec1 ph\u00eda sau"
+                    }
+                },
+                "oscillating": {
+                    "name": "Xoay",
+                    "state": {
+                        "false": "Kh\u00f4ng",
+                        "true": "C\u00f3"
+                    }
+                },
+                "percentage": {
+                    "name": "T\u1ed1c \u0111\u1ed9"
+                },
+                "percentage_step": {
+                    "name": "B\u01b0\u1edbc t\u1ed1c \u0111\u1ed9"
+                },
+                "preset_mode": {
+                    "name": "Ch\u1ebf \u0111\u1ed9 c\u00e0i s\u1eb5n"
+                },
+                "preset_modes": {
+                    "name": "C\u00e1c ch\u1ebf \u0111\u1ed9 c\u00e0i s\u1eb5n c\u00f3 s\u1eb5n"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "not_valid_preset_mode": {
+            "message": "Ch\u1ebf \u0111\u1ed9 c\u00e0i \u0111\u1eb7t tr\u01b0\u1edbc {preset_mode} kh\u00f4ng h\u1ee3p l\u1ec7, c\u00e1c ch\u1ebf \u0111\u1ed9 c\u00e0i \u0111\u1eb7t tr\u01b0\u1edbc h\u1ee3p l\u1ec7 l\u00e0: {preset_modes}."
+        }
+    },
+    "selector": {
+        "direction": {
+            "options": {
+                "forward": "V\u1ec1 ph\u00eda tr\u01b0\u1edbc",
+                "reverse": "V\u1ec1 ph\u00eda sau"
+            }
+        }
+    },
+    "services": {
+        "decrease_speed": {
+            "description": "Gi\u1ea3m t\u1ed1c \u0111\u1ed9 c\u1ee7a qu\u1ea1t.",
+            "fields": {
+                "percentage_step": {
+                    "description": "B\u01b0\u1edbc ph\u1ea7n tr\u0103m m\u00e0 t\u1ed1c \u0111\u1ed9 n\u00ean \u0111\u01b0\u1ee3c gi\u1ea3m xu\u1ed1ng.",
+                    "name": "Gi\u1ea3m"
+                }
+            },
+            "name": "Gi\u1ea3m t\u1ed1c \u0111\u1ed9"
+        },
+        "increase_speed": {
+            "description": "T\u0103ng t\u1ed1c \u0111\u1ed9 c\u1ee7a qu\u1ea1t.",
+            "fields": {
+                "percentage_step": {
+                    "description": "B\u01b0\u1edbc ph\u1ea7n tr\u0103m m\u00e0 t\u1ed1c \u0111\u1ed9 n\u00ean \u0111\u01b0\u1ee3c t\u0103ng l\u00ean.",
+                    "name": "T\u0103ng"
+                }
+            },
+            "name": "T\u0103ng t\u1ed1c \u0111\u1ed9"
+        },
+        "oscillate": {
+            "description": "\u0110i\u1ec1u khi\u1ec3n xoay qu\u1ea1t.",
+            "fields": {
+                "oscillating": {
+                    "description": "B\u1eadt/t\u1eaft ch\u1ebf \u0111\u1ed9 xoay.",
+                    "name": "Xoay"
+                }
+            },
+            "name": "Xoay"
+        },
+        "set_direction": {
+            "description": "\u0110\u1eb7t h\u01b0\u1edbng quay c\u1ee7a qu\u1ea1t.",
+            "fields": {
+                "direction": {
+                    "description": "H\u01b0\u1edbng quay c\u1ee7a qu\u1ea1t.",
+                    "name": "H\u01b0\u1edbng"
+                }
+            },
+            "name": "\u0110\u1eb7t h\u01b0\u1edbng"
+        },
+        "set_percentage": {
+            "description": "\u0110\u1eb7t t\u1ed1c \u0111\u1ed9 c\u1ee7a qu\u1ea1t.",
+            "fields": {
+                "percentage": {
+                    "description": "T\u1ed1c \u0111\u1ed9 c\u1ee7a qu\u1ea1t.",
+                    "name": "Ph\u1ea7n tr\u0103m"
+                }
+            },
+            "name": "\u0110\u1eb7t t\u1ed1c \u0111\u1ed9"
+        },
+        "set_preset_mode": {
+            "fields": {
+                "preset_mode": {
+                    "name": "Ch\u1ebf \u0111\u1ed9 c\u00e0i s\u1eb5n"
+                }
+            },
+            "name": "\u0110\u1eb7t ch\u1ebf \u0111\u1ed9 c\u00e0i s\u1eb5n"
+        },
+        "toggle": {
+            "description": "\u0110\u1ea3o b\u1eadt/t\u1eaft qu\u1ea1t.",
+            "name": "\u0110\u1ea3o b\u1eadt/t\u1eaft"
+        },
+        "turn_off": {
+            "description": "T\u1eaft qu\u1ea1t.",
+            "name": "T\u1eaft"
+        },
+        "turn_on": {
+            "description": "B\u1eadt qu\u1ea1t.",
+            "fields": {
+                "percentage": {
+                    "description": "T\u1ed1c \u0111\u1ed9 c\u1ee7a qu\u1ea1t.",
+                    "name": "Ph\u1ea7n tr\u0103m"
+                },
+                "preset_mode": {
+                    "description": "Ch\u1ebf \u0111\u1ed9 c\u00e0i s\u1eb5n.",
+                    "name": "Ch\u1ebf \u0111\u1ed9 c\u00e0i s\u1eb5n"
+                }
+            },
+            "name": "B\u1eadt"
+        }
+    }
+}

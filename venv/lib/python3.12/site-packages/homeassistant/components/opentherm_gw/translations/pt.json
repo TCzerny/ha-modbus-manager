@@ -1,0 +1,553 @@
+{
+    "common": {
+        "state_not_supported": "N\u00e3o suportado",
+        "state_supported": "Suportado"
+    },
+    "config": {
+        "error": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "timeout_connect": "Excedido o tempo limite para estabelecer liga\u00e7\u00e3o"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "device": "Caminho ou URL",
+                    "id": "ID",
+                    "name": "Nome"
+                }
+            }
+        }
+    },
+    "device": {
+        "boiler_device": {
+            "name": "Caldeira OpenTherm"
+        },
+        "gateway_device": {
+            "name": "Gateway OpenTherm"
+        },
+        "thermostat_device": {
+            "name": "Term\u00f3stato OpenTherm"
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "air_pressure_fault": {
+                "name": "Falha na press\u00e3o do ar"
+            },
+            "central_heating_n": {
+                "name": "Aquecimento central {circuit_number}"
+            },
+            "control_type": {
+                "name": "Tipo de controlo"
+            },
+            "cooling": {
+                "name": "Arrefecimento"
+            },
+            "diagnostic_indication": {
+                "name": "Indica\u00e7\u00e3o de diagn\u00f3stico"
+            },
+            "fault_indication": {
+                "name": "Indica\u00e7\u00e3o de falha"
+            },
+            "flame": {
+                "name": "Chama"
+            },
+            "gas_fault": {
+                "name": "Falha no g\u00e1s"
+            },
+            "gpio_state_n": {
+                "name": "Estado do GPIO {gpio_id}"
+            },
+            "hot_water": {
+                "name": "\u00c1gua quente"
+            },
+            "hot_water_config": {
+                "name": "Tipo de sistema de \u00e1gua quente",
+                "state": {
+                    "off": "Instant\u00e2nea ou n\u00e3o especificada",
+                    "on": "Tanque de armazenamento"
+                }
+            },
+            "ignore_transitions": {
+                "name": "Ignorar transi\u00e7\u00f5es"
+            },
+            "low_water_pressure": {
+                "name": "Press\u00e3o da \u00e1gua baixa"
+            },
+            "outside_temp_correction": {
+                "name": "Corre\u00e7\u00e3o da temperatura exterior"
+            },
+            "override_high_byte": {
+                "name": "Sobrepor byte alto"
+            },
+            "override_manual_change_prio": {
+                "name": "A altera\u00e7\u00e3o manual tem prioridade sobre a sobreposi\u00e7\u00e3o"
+            },
+            "override_program_change_prio": {
+                "name": "A altera\u00e7\u00e3o programada tem prioridade sobre a sobreposi\u00e7\u00e3o"
+            },
+            "service_required": {
+                "name": "Manuten\u00e7\u00e3o necess\u00e1ria"
+            },
+            "supports_central_heating_setpoint_transfer": {
+                "name": "Suporte para transfer\u00eancia do ponto de ajuste do aquecimento central",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "supports_central_heating_setpoint_writing": {
+                "name": "Suporte para escrita do ponto de ajuste do aquecimento central",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "supports_ch_2": {
+                "name": "Suporte para aquecimento central 2",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "supports_cooling": {
+                "name": "Suporte para arrefecimento",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "supports_hot_water": {
+                "name": "Suporte para \u00e1gua quente",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "supports_hot_water_setpoint_transfer": {
+                "name": "Apoio \u00e0 transfer\u00eancia do ponto de regula\u00e7\u00e3o da \u00e1gua quente",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "supports_hot_water_setpoint_writing": {
+                "name": "Suporte de escrita do setpoint da \u00e1gua quente",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "supports_pump_control": {
+                "name": "Suporte de controlo da bomba",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "supports_remote_reset": {
+                "name": "Suporte para reinicializa\u00e7\u00e3o remota",
+                "state": {
+                    "off": "N\u00e3o suportado",
+                    "on": "Suportado"
+                }
+            },
+            "water_overtemperature": {
+                "name": "Sobreaquecimento da \u00e1gua"
+            }
+        },
+        "button": {
+            "cancel_room_setpoint_override": {
+                "name": "Cancelar a substitui\u00e7\u00e3o do ponto de ajuste da sala."
+            }
+        },
+        "select": {
+            "gpio_mode_n": {
+                "name": "Modo GPIO {gpio_id}",
+                "state": {
+                    "away": "Ausente",
+                    "dhw_block": "Bloquear \u00e1gua quente",
+                    "ds1820": "DS1820",
+                    "ground": "Terra",
+                    "home": "Casa",
+                    "input": "Entrada",
+                    "led_e": "LED E",
+                    "led_f": "LED F",
+                    "vcc": "Vcc (5V)"
+                }
+            },
+            "led_mode_n": {
+                "name": "Modo LED {led_id}",
+                "state": {
+                    "boiler_maintenance_required": "A caldeira precisa de manuten\u00e7\u00e3o",
+                    "boiler_traffic": "Tr\u00e1fego na interface da caldeira",
+                    "central_heating_on": "O aquecimento central est\u00e1 ligado",
+                    "comfort_mode_on": "O modo de conforto est\u00e1 ligado",
+                    "flame_on": "A chama da caldeira est\u00e1 ligada",
+                    "hot_water_on": "A \u00e1gua quente est\u00e1 ligada",
+                    "raised_power_mode_active": "Modo de pot\u00eancia elevada ativo",
+                    "receive_any": "A receber em qualquer interface",
+                    "setpoint_override_active": "Est\u00e1 ativa a sobreposi\u00e7\u00e3o do objetivo",
+                    "thermostat_traffic": "Tr\u00e1fego na interface do termostato",
+                    "transmit_any": "A transmitir em qualquer interface",
+                    "transmit_error_detected": "Detetado um erro de transmiss\u00e3o"
+                }
+            }
+        },
+        "sensor": {
+            "central_heating_pressure": {
+                "name": "Press\u00e3o da \u00e1gua do aquecimento central"
+            },
+            "central_heating_pump_hours": {
+                "name": "Tempo de funcionamento da bomba de aquecimento central"
+            },
+            "central_heating_pump_starts": {
+                "name": "Contagem de partidas da bomba de aquecimento central"
+            },
+            "central_heating_temperature_n": {
+                "name": "Temperatura da \u00e1gua do aquecimento central {circuit_number}"
+            },
+            "clock_speed": {
+                "name": "Velocidade do rel\u00f3gio"
+            },
+            "control_setpoint_n": {
+                "name": "Controlo do setpoint {circuit_number}"
+            },
+            "cooling_control": {
+                "name": "Sinal de controlo de arrefecimento"
+            },
+            "exhaust_temperature": {
+                "name": "Temperatura de escape"
+            },
+            "firmware_build": {
+                "name": "Compila\u00e7\u00e3o do firmware"
+            },
+            "firmware_version": {
+                "name": "Vers\u00e3o do firmware"
+            },
+            "gpio_mode_n": {
+                "name": "Modo GPIO {gpio_id}"
+            },
+            "hot_water_burner_hours": {
+                "name": "Tempo de funcionamento do queimador de \u00e1gua quente"
+            },
+            "hot_water_burner_starts": {
+                "name": "Contagem de arranque do queimador de \u00e1gua quente"
+            },
+            "hot_water_flow_rate": {
+                "name": "Caudal de \u00e1gua quente"
+            },
+            "hot_water_override_mode": {
+                "name": "Modo de substitui\u00e7\u00e3o de \u00e1gua quente"
+            },
+            "hot_water_pump_hours": {
+                "name": "Tempo de funcionamento da bomba de \u00e1gua quente"
+            },
+            "hot_water_pump_starts": {
+                "name": "Contagem de arranque da bomba de \u00e1gua quente"
+            },
+            "hot_water_setpoint": {
+                "name": "Ponto de regula\u00e7\u00e3o da \u00e1gua quente"
+            },
+            "hot_water_temperature_n": {
+                "name": "Temperatura da \u00e1gua quente {circuit_number}"
+            },
+            "led_mode_n": {
+                "name": "Modo LED {led_id}"
+            },
+            "manufacturer_id": {
+                "name": "ID do fabricante"
+            },
+            "max_capacity": {
+                "name": "Capacidade m\u00e1xima"
+            },
+            "max_central_heating_setpoint": {
+                "name": "Ponto de regula\u00e7\u00e3o m\u00e1ximo do aquecimento central"
+            },
+            "max_central_heating_setpoint_lower": {
+                "name": "Limite inferior do ponto de regula\u00e7\u00e3o m\u00e1ximo do aquecimento central"
+            },
+            "max_central_heating_setpoint_upper": {
+                "name": "Limite superior do ponto de regula\u00e7\u00e3o m\u00e1ximo do aquecimento central"
+            },
+            "max_hot_water_setpoint_lower": {
+                "name": "Limite inferior do ponto de regula\u00e7\u00e3o m\u00e1ximo da \u00e1gua quente"
+            },
+            "max_hot_water_setpoint_upper": {
+                "name": "Limite superior do ponto de regula\u00e7\u00e3o m\u00e1ximo da \u00e1gua quente"
+            },
+            "max_relative_mod_level": {
+                "name": "N\u00edvel m\u00e1ximo de modula\u00e7\u00e3o relativa"
+            },
+            "min_mod_level": {
+                "name": "N\u00edvel m\u00ednimo de modula\u00e7\u00e3o"
+            },
+            "oem_diagnostic_code": {
+                "name": "C\u00f3digo de diagn\u00f3stico espec\u00edfico do fabricante"
+            },
+            "oem_fault_code": {
+                "name": "C\u00f3digo de avaria espec\u00edfico do fabricante"
+            },
+            "opentherm_version": {
+                "name": "Vers\u00e3o do protocolo OpenTherm"
+            },
+            "operating_mode": {
+                "name": "Modo de opera\u00e7\u00e3o"
+            },
+            "outside_temperature": {
+                "name": "Temperatura exterior"
+            },
+            "product_type": {
+                "name": "Tipo de produto"
+            },
+            "product_version": {
+                "name": "Vers\u00e3o do produto"
+            },
+            "reference_voltage": {
+                "name": "Defini\u00e7\u00e3o da tens\u00e3o de refer\u00eancia"
+            },
+            "relative_mod_level": {
+                "name": "N\u00edvel de modula\u00e7\u00e3o relativa"
+            },
+            "return_water_temperature": {
+                "name": "Devolve a temperatura da \u00e1gua"
+            },
+            "room_setpoint_n": {
+                "name": "Setpoint da divis\u00e3o {setpoint_id}"
+            },
+            "room_setpoint_override": {
+                "name": "Sobreposi\u00e7\u00e3o do setpoint da divis\u00e3o"
+            },
+            "room_setpoint_override_mode": {
+                "name": "Modo de sobreposi\u00e7\u00e3o do setpoint da divis\u00e3o"
+            },
+            "room_temperature": {
+                "name": "Temperatura da divis\u00e3o"
+            },
+            "setback_temperature": {
+                "name": "Temperatura de recuo"
+            },
+            "smart_power_mode": {
+                "name": "Modo de energia inteligente"
+            },
+            "solar_collector_temperature": {
+                "name": "Temperatura do coletor solar"
+            },
+            "solar_storage_temperature": {
+                "name": "Temperatura de armazenamento solar"
+            },
+            "thermostat_detection_mode": {
+                "name": "Modo de dete\u00e7\u00e3o do term\u00f3stato"
+            },
+            "total_burner_hours": {
+                "name": "Tempo de funcionamento do queimador"
+            },
+            "total_burner_starts": {
+                "name": "Contagem de partidas do queimador."
+            }
+        },
+        "switch": {
+            "central_heating_override_n": {
+                "name": "For\u00e7ar ligar o aquecimento central {circuit_number}"
+            }
+        }
+    },
+    "issues": {
+        "deprecated_import_from_configuration_yaml": {
+            "description": "A configura\u00e7\u00e3o da integra\u00e7\u00e3o do OpenTherm Gateway atrav\u00e9s do configuration.yaml est\u00e1 obsoleta. A sua configura\u00e7\u00e3o foi migrada para entradas de configura\u00e7\u00e3o. Por favor, remova qualquer configura\u00e7\u00e3o do OpenTherm Gateway do seu configuration.yaml.",
+            "title": "Configura\u00e7\u00e3o obsoleta"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "floor_temperature": "Temperatura do Piso",
+                    "read_precision": "Ler Precis\u00e3o",
+                    "set_precision": "Definir precis\u00e3o",
+                    "temporary_override_mode": "Modo de Substitui\u00e7\u00e3o do Ponto de Ajuste Tempor\u00e1rio"
+                }
+            }
+        }
+    },
+    "services": {
+        "reset_gateway": {
+            "description": "Reinicia o OpenTherm Gateway.",
+            "fields": {
+                "gateway_id": {
+                    "name": "ID do Gateway"
+                }
+            },
+            "name": "Reiniciar o gateway"
+        },
+        "send_transparent_command": {
+            "description": "Envia comandos otgw personalizados (https://otgw.tclcode.com/firmware.html) atrav\u00e9s de uma interface transparente.",
+            "fields": {
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "transp_arg": {
+                    "description": "O argumento do comando a ser enviado para o OpenTherm Gateway.",
+                    "name": "Argumento"
+                },
+                "transp_cmd": {
+                    "description": "O comando a ser enviado para o OpenTherm Gateway.",
+                    "name": "Comando"
+                }
+            },
+            "name": "Enviar comando transparente"
+        },
+        "set_central_heating_ovrd": {
+            "description": "Define a op\u00e7\u00e3o de anula\u00e7\u00e3o do aquecimento central na porta de liga\u00e7\u00e3o. Ao substituir o ponto de regula\u00e7\u00e3o de controlo (atrav\u00e9s de uma a\u00e7\u00e3o set_control_setpoint com um valor diferente de 0), a porta de entrada ativa automaticamente a substitui\u00e7\u00e3o do aquecimento central para iniciar o aquecimento. Esta a\u00e7\u00e3o pode ent\u00e3o ser utilizada para controlar o estado de anula\u00e7\u00e3o do aquecimento central. Para devolver o controlo do aquecimento central ao term\u00f3stato, utilize a a\u00e7\u00e3o definir_ponto_de_controlo com o valor de temperatura 0. Esta a\u00e7\u00e3o s\u00f3 \u00e9 necess\u00e1ria se o utilizador estiver a escrever o seu pr\u00f3prio software de term\u00f3stato.",
+            "fields": {
+                "ch_override": {
+                    "description": "O valor booleano pretendido para a anula\u00e7\u00e3o do aquecimento central.",
+                    "name": "Comando do aquecimento central"
+                },
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                }
+            },
+            "name": "Definir o controlo do aquecimento central"
+        },
+        "set_clock": {
+            "description": "Define o rel\u00f3gio e o dia da semana no term\u00f3stato ligado.",
+            "fields": {
+                "date": {
+                    "description": "Data opcional da qual o dia da semana ser\u00e1 extra\u00eddo. O padr\u00e3o \u00e9 hoje.",
+                    "name": "Data"
+                },
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "time": {
+                    "description": "Hora opcional em formato de 24 horas que ser\u00e1 fornecida ao term\u00f3stato. A predefini\u00e7\u00e3o \u00e9 a hora atual.",
+                    "name": "Hora"
+                }
+            },
+            "name": "Acertar o rel\u00f3gio"
+        },
+        "set_control_setpoint": {
+            "description": "Define a substitui\u00e7\u00e3o do ponto de regula\u00e7\u00e3o do controlo do aquecimento central no gateway. S\u00f3 precisa disto se estiver a escrever o seu pr\u00f3prio software de term\u00f3stato.",
+            "fields": {
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "temperature": {
+                    "description": "O ponto de regula\u00e7\u00e3o do aquecimento central a definir no gateway. S\u00e3o aceites valores entre 0 e 90, mas nem todas as caldeiras suportam este intervalo. Um valor de 0 desativa a substitui\u00e7\u00e3o do ponto de regula\u00e7\u00e3o do aquecimento central.",
+                    "name": "Temperatura"
+                }
+            },
+            "name": "Definir o ponto de regula\u00e7\u00e3o do controlo"
+        },
+        "set_gpio_mode": {
+            "description": "Altera a fun\u00e7\u00e3o dos pinos GPIO do gateway.",
+            "fields": {
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "id": {
+                    "description": "A ID do pino GPIO.",
+                    "name": "ID"
+                },
+                "mode": {
+                    "description": "Modo a definir no pino GPIO. Os valores de 0 a 6 s\u00e3o aceites para ambos os GPIOs, 7 s\u00f3 \u00e9 aceite para o GPIO \"B\". Ver https://www.home-assistant.io/integrations/opentherm_gw/#gpio-modes para uma explica\u00e7\u00e3o dos valores.",
+                    "name": "Modo"
+                }
+            },
+            "name": "Definir o modo gpio"
+        },
+        "set_hot_water_ovrd": {
+            "description": "Define a op\u00e7\u00e3o de ativa\u00e7\u00e3o de \u00e1gua quente sanit\u00e1ria no gateway.",
+            "fields": {
+                "dhw_override": {
+                    "name": "Sobrepor \u00e1gua quente sanit\u00e1ria"
+                },
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                }
+            },
+            "name": "Definir a anula\u00e7\u00e3o da \u00e1gua quente"
+        },
+        "set_hot_water_setpoint": {
+            "description": "Define o ponto de regula\u00e7\u00e3o da \u00e1gua quente sanit\u00e1ria no gateway.",
+            "fields": {
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "temperature": {
+                    "name": "Temperatura"
+                }
+            },
+            "name": "Definir o ponto de regula\u00e7\u00e3o da \u00e1gua quente"
+        },
+        "set_led_mode": {
+            "description": "Altera a fun\u00e7\u00e3o dos LEDs do gateway.",
+            "fields": {
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "id": {
+                    "description": "A ID do LED.",
+                    "name": "ID"
+                },
+                "mode": {
+                    "description": "A fun\u00e7\u00e3o a atribuir ao LED. Ver https://www.home-assistant.io/integrations/opentherm_gw/#led-modes para uma explica\u00e7\u00e3o dos valores.",
+                    "name": "Modo"
+                }
+            },
+            "name": "Definir o modo LED"
+        },
+        "set_max_modulation": {
+            "description": "Substitui o n\u00edvel m\u00e1ximo de modula\u00e7\u00e3o relativa. S\u00f3 precisar\u00e1 disto se estiver a escrever o seu pr\u00f3prio term\u00f3stato de software.",
+            "fields": {
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "level": {
+                    "description": "O n\u00edvel de modula\u00e7\u00e3o a fornecer ao gateway. Fornecer um valor de -1 para anular a anula\u00e7\u00e3o e reencaminhar novamente o valor do term\u00f3stato.",
+                    "name": "N\u00edvel"
+                }
+            },
+            "name": "Definir modula\u00e7\u00e3o m\u00e1xima"
+        },
+        "set_outside_temperature": {
+            "description": "Fornece uma temperatura exterior ao term\u00f3stato. Se o term\u00f3stato n\u00e3o conseguir apresentar uma temperatura exterior e n\u00e3o suportar a OTC (Corre\u00e7\u00e3o da temperatura exterior), esta op\u00e7\u00e3o n\u00e3o tem nenhum efeito.",
+            "fields": {
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "temperature": {
+                    "description": "A temperatura a fornecer ao term\u00f3stato. Ser\u00e3o aceites valores entre -40,0 e 64,0, mas nem todos os term\u00f3statos podem apresentar a gama completa. Qualquer valor superior a 64,0 elimina um valor previamente configurado (sugest\u00e3o: 99).",
+                    "name": "Temperatura"
+                }
+            },
+            "name": "Definir a temperatura exterior"
+        },
+        "set_setback_temperature": {
+            "description": "Configura a temperatura de recuo a ser utilizada com a fun\u00e7\u00e3o de modo de aus\u00eancia GPIO.",
+            "fields": {
+                "gateway_id": {
+                    "description": "O gateway_id do Gateway OpenTherm.",
+                    "name": "ID do Gateway"
+                },
+                "temperature": {
+                    "description": "A temperatura de recuo a configurar na gateway.",
+                    "name": "Temperatura"
+                }
+            },
+            "name": "Definir a temperatura de recuo"
+        }
+    }
+}

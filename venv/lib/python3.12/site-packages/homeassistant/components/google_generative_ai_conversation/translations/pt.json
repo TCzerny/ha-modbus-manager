@@ -1,0 +1,65 @@
+{
+    "config": {
+        "abort": {
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "Erro ao ligar",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "api": {
+                "data": {
+                    "api_key": "Chave da API"
+                },
+                "description": "Obtenha a sua chave API em [aqui]({api_key_url})."
+            },
+            "reauth_confirm": {
+                "description": "A sua chave de API atual: {api_key} j\u00e1 n\u00e3o \u00e9 v\u00e1lida. Introduza uma nova chave de API v\u00e1lida.",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "chat_model": "Modelo",
+                    "dangerous_block_threshold": "Promove, facilita ou incentiva atos prejudiciais",
+                    "harassment_block_threshold": "Coment\u00e1rios negativos ou prejudiciais, visando a identidade e/ou atributos protegidos",
+                    "hate_block_threshold": "Conte\u00fado que seja rude, desrespeitoso ou profano",
+                    "llm_hass_api": "Controlar Home Assistant",
+                    "max_tokens": "M\u00e1ximo de tokens a devolver na resposta",
+                    "prompt": "Instru\u00e7\u00f5es",
+                    "recommended": "Defini\u00e7\u00f5es de modelo recomendadas",
+                    "sexual_block_threshold": "Cont\u00e9m refer\u00eancias a atos sexuais ou outros conte\u00fados obscenos",
+                    "temperature": "Temperatura",
+                    "top_k": "Top K",
+                    "top_p": "Top P"
+                },
+                "data_description": {
+                    "prompt": "Indicar como o LLM deve responder. Pode ser um modelo."
+                }
+            }
+        }
+    },
+    "services": {
+        "generate_content": {
+            "description": "Gerar conte\u00fado a partir de um prompt constitu\u00eddo por texto e, opcionalmente, imagens",
+            "fields": {
+                "image_filename": {
+                    "description": "Imagens",
+                    "example": "/config/www/image.jpg",
+                    "name": "Nome do ficheiro da imagem"
+                },
+                "prompt": {
+                    "description": "A prompt",
+                    "example": "Descreva o que v\u00ea nestas imagens",
+                    "name": "Prompt"
+                }
+            },
+            "name": "Gerar conte\u00fado"
+        }
+    }
+}

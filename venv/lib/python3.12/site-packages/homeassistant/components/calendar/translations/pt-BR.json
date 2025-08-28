@@ -1,0 +1,62 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Calend\u00e1rio",
+            "state": {
+                "off": "Desligado",
+                "on": "Ligado"
+            },
+            "state_attributes": {
+                "all_day": {
+                    "name": "Dia todo",
+                    "state": {
+                        "false": "N\u00e3o",
+                        "true": "Sim"
+                    }
+                },
+                "description": {
+                    "name": "Descri\u00e7\u00e3o"
+                },
+                "end_time": {
+                    "name": "Hora do fim"
+                },
+                "location": {
+                    "name": "Localiza\u00e7\u00e3o"
+                },
+                "message": {
+                    "name": "Mensagem"
+                },
+                "start_time": {
+                    "name": "Hora do in\u00edcio"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_calendar_list_events": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "Uso detectado do servi\u00e7o obsoleto `calendar.list_events`"
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "create_event": {
+            "fields": {
+                "description": {
+                    "name": "Descri\u00e7\u00e3o"
+                },
+                "location": {
+                    "name": "Localiza\u00e7\u00e3o"
+                },
+                "summary": {
+                    "name": "Resumo"
+                }
+            }
+        }
+    },
+    "title": "Calend\u00e1rio"
+}

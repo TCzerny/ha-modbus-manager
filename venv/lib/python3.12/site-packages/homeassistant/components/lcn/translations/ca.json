@@ -1,0 +1,322 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Reconfiguraci\u00f3 realitzada correctament"
+        },
+        "error": {
+            "already_configured": "Ja hi ha una connexi\u00f3 PCHK configurada amb la mateixa IP/port.",
+            "authentication_error": "Ha fallat l'autenticaci\u00f3. Usuari o contrasenya incorrectes.",
+            "connection_refused": "No s'ha pogut connectar a PCHK, verifica la IP i el port.",
+            "license_error": "S'ha assolit el nombre m\u00e0xim de connexions. Cal una clau de llic\u00e8ncia addicional."
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "ip_address": "Adre\u00e7a IP",
+                    "password": "Contrasenya",
+                    "port": "Port",
+                    "username": "Nom d'usuari"
+                },
+                "description": "Reconfigura la connexi\u00f3 a l'amfitri\u00f3 d'LCN.",
+                "title": "Reconfiguraci\u00f3 de l'amfitri\u00f3 d'LCN"
+            },
+            "user": {
+                "data": {
+                    "dim_mode": "Mode d'atenuaci\u00f3",
+                    "host": "Nom",
+                    "ip_address": "Adre\u00e7a IP",
+                    "password": "Contrasenya",
+                    "port": "Port",
+                    "username": "Nom d'usuari"
+                }
+            }
+        }
+    },
+    "device_automation": {
+        "extra_fields": {
+            "action": "Acci\u00f3",
+            "code": "Codi",
+            "key": "Clau",
+            "level": "Nivell"
+        },
+        "trigger_type": {
+            "codelock": "Codi de bloqueig rebut",
+            "fingerprint": "Codi d'empremta rebut",
+            "send_keys": "Claus d'enviament rebudes",
+            "transmitter": "Codi del transmissor rebut",
+            "transponder": "Codi del transponedor rebut"
+        }
+    },
+    "services": {
+        "address_to_device_id": {
+            "fields": {
+                "segment_id": {
+                    "name": "ID del segment"
+                }
+            }
+        },
+        "dyn_text": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "row": {
+                    "description": "Fila de text.",
+                    "name": "Fila"
+                },
+                "text": {
+                    "description": "Text a enviar (fins a 60 car\u00e0cters codificats en UTF-8).",
+                    "name": "Text"
+                }
+            },
+            "name": "Text din\u00e0mic"
+        },
+        "led": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "led": {
+                    "name": "LED"
+                },
+                "state": {
+                    "name": "Estat"
+                }
+            },
+            "name": "LED"
+        },
+        "lock_keys": {
+            "description": "Bloqueja les claus.",
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "state": {
+                    "name": "Estat"
+                },
+                "table": {
+                    "name": "Taula"
+                },
+                "time": {
+                    "description": "Interval de bloqueig.",
+                    "name": "Temps"
+                },
+                "time_unit": {
+                    "description": "Unitat de temps de l'interval de bloqueig.",
+                    "name": "Unitat de temps"
+                }
+            },
+            "name": "Bloqueja claus"
+        },
+        "lock_regulator": {
+            "description": "Bloqueja un valor consigna d'un regulador.",
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "setpoint": {
+                    "description": "Nom de la consigna.",
+                    "name": "Consigna"
+                },
+                "state": {
+                    "name": "Estat"
+                }
+            }
+        },
+        "output_abs": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "brightness": {
+                    "description": "Lluminositat absoluta.",
+                    "name": "Lluminositat"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "output": {
+                    "description": "Port de sortida.",
+                    "name": "Sortida"
+                },
+                "transition": {
+                    "description": "Temps de transici\u00f3.",
+                    "name": "Transici\u00f3"
+                }
+            },
+            "name": "Brillantor absoluta de sortida"
+        },
+        "output_rel": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "brightness": {
+                    "description": "Lluminositat relativa.",
+                    "name": "Lluminositat"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "output": {
+                    "description": "Port de sortida.",
+                    "name": "Sortida"
+                }
+            }
+        },
+        "output_toggle": {
+            "description": "Commuta el port de sortida.",
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "output": {
+                    "description": "Port de sortida.",
+                    "name": "Sortida"
+                },
+                "transition": {
+                    "description": "Temps de transici\u00f3.",
+                    "name": "Transici\u00f3"
+                }
+            },
+            "name": "Commuta sortida"
+        },
+        "pck": {
+            "description": "Envia una comanda PCK arbitr\u00e0ria.",
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "pck": {
+                    "description": "Comanda PCK (sense cap\u00e7alera d'adre\u00e7a).",
+                    "name": "PCK"
+                }
+            },
+            "name": "PCK"
+        },
+        "relays": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "state": {
+                    "name": "Estat"
+                }
+            }
+        },
+        "send_keys": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "keys": {
+                    "name": "Claus"
+                },
+                "state": {
+                    "name": "Estat"
+                },
+                "time": {
+                    "description": "Envia retard.",
+                    "name": "Temps"
+                },
+                "time_unit": {
+                    "description": "Unitat de temps dels retards.",
+                    "name": "Unitat de temps"
+                }
+            },
+            "name": "Enviar claus"
+        },
+        "var_abs": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "unit_of_measurement": {
+                    "name": "Unitat de mesura"
+                },
+                "value": {
+                    "description": "Valor a configurar.",
+                    "name": "Valor"
+                },
+                "variable": {
+                    "name": "Variable"
+                }
+            }
+        },
+        "var_rel": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "unit_of_measurement": {
+                    "name": "Unitat de mesura"
+                },
+                "value": {
+                    "name": "Valor"
+                },
+                "value_reference": {
+                    "name": "Valor de refer\u00e8ncia"
+                },
+                "variable": {
+                    "name": "Variable"
+                }
+            }
+        },
+        "var_reset": {
+            "fields": {
+                "address": {
+                    "description": "Adre\u00e7a del m\u00f2dul.",
+                    "name": "Adre\u00e7a"
+                },
+                "device_id": {
+                    "name": "Dispositiu"
+                },
+                "variable": {
+                    "name": "Variable"
+                }
+            }
+        }
+    }
+}

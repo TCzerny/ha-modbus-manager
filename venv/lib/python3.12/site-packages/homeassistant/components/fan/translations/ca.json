@@ -1,0 +1,125 @@
+{
+    "device_automation": {
+        "action_type": {
+            "toggle": "Commuta {entity_name}",
+            "turn_off": "Apaga {entity_name}",
+            "turn_on": "Engega {entity_name}"
+        },
+        "condition_type": {
+            "is_off": "{entity_name} est\u00e0 apagat/ada",
+            "is_on": "{entity_name} est\u00e0 engegat/ada"
+        },
+        "trigger_type": {
+            "changed_states": "{entity_name} s'engegui o s'apagui",
+            "turned_off": "{entity_name} s'apagui",
+            "turned_on": "{entity_name} s'engegui"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Ventilador",
+            "state": {
+                "off": "OFF",
+                "on": "ON"
+            },
+            "state_attributes": {
+                "direction": {
+                    "name": "Direcci\u00f3",
+                    "state": {
+                        "forward": "Endavant",
+                        "reverse": "Invers"
+                    }
+                },
+                "oscillating": {
+                    "name": "Oscil\u00b7lant",
+                    "state": {
+                        "false": "No",
+                        "true": "S\u00ed"
+                    }
+                },
+                "percentage": {
+                    "name": "Velocitat"
+                },
+                "percentage_step": {
+                    "name": "Pas de velocitat"
+                },
+                "preset_mode": {
+                    "name": "Mode preconfiguraci\u00f3"
+                },
+                "preset_modes": {
+                    "name": "Modes preconfigurats disponibles"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "not_valid_preset_mode": {
+            "message": "Mode preconfiguraci\u00f3 {preset_mode} inv\u00e0lid, els modes de preconfiguraci\u00f3 v\u00e0lids s\u00f3n: {preset_modes}."
+        }
+    },
+    "services": {
+        "increase_speed": {
+            "fields": {
+                "percentage_step": {
+                    "name": "Increment"
+                }
+            },
+            "name": "Augmenta velocitat"
+        },
+        "oscillate": {
+            "fields": {
+                "oscillating": {
+                    "name": "Oscil\u00b7lant"
+                }
+            },
+            "name": "Oscil\u00b7la"
+        },
+        "set_direction": {
+            "fields": {
+                "direction": {
+                    "name": "Direcci\u00f3"
+                }
+            },
+            "name": "Configura direcci\u00f3"
+        },
+        "set_percentage": {
+            "fields": {
+                "percentage": {
+                    "description": "Velocitat del ventilador.",
+                    "name": "Percentatge"
+                }
+            },
+            "name": "Configura velocitat"
+        },
+        "set_preset_mode": {
+            "fields": {
+                "preset_mode": {
+                    "name": "Mode preconfiguraci\u00f3"
+                }
+            },
+            "name": "Estableix mode preconfiguraci\u00f3"
+        },
+        "toggle": {
+            "name": "Commuta"
+        },
+        "turn_off": {
+            "description": "Desactiva un ventilador.",
+            "name": "Apaga"
+        },
+        "turn_on": {
+            "description": "Activa un ventilador.",
+            "fields": {
+                "percentage": {
+                    "description": "Velocitat del ventilador.",
+                    "name": "Percentatge"
+                },
+                "preset_mode": {
+                    "description": "Mode preconfiguraci\u00f3.",
+                    "name": "Mode preconfiguraci\u00f3"
+                }
+            },
+            "name": "Enc\u00e9n"
+        }
+    },
+    "title": "Ventilador"
+}

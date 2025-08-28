@@ -1,0 +1,324 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "anna_with_adam": "Tanto Anna como Adam foram detetados. Adicione o seu Adam em vez da sua Anna",
+            "not_the_same_smile": "O ID do Smile configurado n\u00e3o corresponde ao ID do Smile no endere\u00e7o IP solicitado.",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "invalid_setup": "Adicione o seu Adam em vez da sua Anna, consulte a documenta\u00e7\u00e3o",
+            "response_error": "Dados XML inv\u00e1lidos ou indica\u00e7\u00e3o de erro recebida",
+            "unknown": "Erro inesperado",
+            "unsupported": "Dispositivo com firmware n\u00e3o suportado"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "Endere\u00e7o IP",
+                    "port": "Porta"
+                },
+                "data_description": {
+                    "host": "O nome do host ou o endere\u00e7o IP do seu Smile. Pode encontr\u00e1-lo no seu router ou na aplica\u00e7\u00e3o Plugwise.",
+                    "port": "Por defeito, o seu Smile usa a porta 80, normalmente n\u00e3o \u00e9 necess\u00e1rio alter\u00e1-la."
+                },
+                "description": "Atualize a configura\u00e7\u00e3o para {title}."
+            },
+            "user": {
+                "data": {
+                    "host": "Endere\u00e7o IP",
+                    "password": "ID do sorriso",
+                    "port": "Porta",
+                    "username": "Nome de utilizador do sorriso"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou o endere\u00e7o IP do seu Smile. Pode encontr\u00e1-lo no seu router ou na aplica\u00e7\u00e3o Plugwise.",
+                    "password": "O ID do Smile impresso na etiqueta na parte de tr\u00e1s do seu Adam, Smile-T ou P1.",
+                    "port": "Por defeito, o seu Smile usa a porta 80, normalmente n\u00e3o \u00e9 necess\u00e1rio alter\u00e1-la.",
+                    "username": "O padr\u00e3o \u00e9 `smile`, ou `stretch` para o legado Stretch."
+                },
+                "description": "Introduzir",
+                "title": "Ligar ao Smile"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "compressor_state": {
+                "name": "Estado do compressor"
+            },
+            "cooling_enabled": {
+                "name": "Arrefecimento ativado"
+            },
+            "cooling_state": {
+                "name": "A arrefecer"
+            },
+            "dhw_state": {
+                "name": "Estado da AQS"
+            },
+            "flame_state": {
+                "name": "Estado da chama"
+            },
+            "heating_state": {
+                "name": "A aquecer"
+            },
+            "plugwise_notification": {
+                "name": "Notifica\u00e7\u00e3o Plugwise"
+            },
+            "secondary_boiler_state": {
+                "name": "Estado da caldeira secund\u00e1ria"
+            }
+        },
+        "button": {
+            "reboot": {
+                "name": "Reiniciar"
+            }
+        },
+        "climate": {
+            "plugwise": {
+                "state_attributes": {
+                    "available_schemas": {
+                        "name": "Esquemas dispon\u00edveis"
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "asleep": "Noite",
+                            "away": "Ausente",
+                            "home": "Casa",
+                            "no_frost": "Anti-gelo",
+                            "vacation": "F\u00e9rias"
+                        }
+                    },
+                    "selected_schema": {
+                        "name": "Esquema selecionado"
+                    }
+                }
+            }
+        },
+        "number": {
+            "max_dhw_temperature": {
+                "name": "Temperatura alvo para a \u00e1gua quente sanit\u00e1ria"
+            },
+            "maximum_boiler_temperature": {
+                "name": "Ponto de regula\u00e7\u00e3o da temperatura m\u00e1xima da caldeira"
+            },
+            "temperature_offset": {
+                "name": "Desvio de temperatura"
+            }
+        },
+        "select": {
+            "dhw_mode": {
+                "name": "Modo AQS",
+                "state": {
+                    "auto": "Autom\u00e1tico",
+                    "boost": "Turbo",
+                    "comfort": "Conforto",
+                    "off": "Desligado"
+                }
+            },
+            "gateway_mode": {
+                "name": "Modo de gateway",
+                "state": {
+                    "away": "Pausa",
+                    "full": "Normal",
+                    "vacation": "F\u00e9rias"
+                }
+            },
+            "regulation_mode": {
+                "name": "Modo de regula\u00e7\u00e3o",
+                "state": {
+                    "bleeding_cold": "A perder frio",
+                    "bleeding_hot": "A perder calor",
+                    "cooling": "A arrefecer",
+                    "heating": "A aquecer",
+                    "off": "Desligado"
+                }
+            },
+            "select_schedule": {
+                "name": "Programa do term\u00f3stato",
+                "state": {
+                    "off": "Desligado"
+                }
+            }
+        },
+        "sensor": {
+            "cooling_setpoint": {
+                "name": "Setpoint do arrefecimento"
+            },
+            "dhw_temperature": {
+                "name": "Temperatura da AQS"
+            },
+            "domestic_hot_water_setpoint": {
+                "name": "Temperatura alvo para AQS"
+            },
+            "electricity_consumed": {
+                "name": "Eletricidade consumida"
+            },
+            "electricity_consumed_interval": {
+                "name": "Intervalo de consumo de eletricidade"
+            },
+            "electricity_consumed_off_peak_cumulative": {
+                "name": "Eletricidade consumida fora do pico cumulativo"
+            },
+            "electricity_consumed_off_peak_interval": {
+                "name": "Eletricidade consumida fora do intervalo de pico"
+            },
+            "electricity_consumed_off_peak_point": {
+                "name": "Eletricidade consumida fora do hor\u00e1rio de ponta"
+            },
+            "electricity_consumed_peak_cumulative": {
+                "name": "Eletricidade consumida pico cumulativo"
+            },
+            "electricity_consumed_peak_interval": {
+                "name": "Intervalo de pico da eletricidade consumida"
+            },
+            "electricity_consumed_peak_point": {
+                "name": "Ponto de pico da eletricidade consumida"
+            },
+            "electricity_consumed_point": {
+                "name": "Ponto de consumo de eletricidade"
+            },
+            "electricity_phase_one_consumed": {
+                "name": "Eletricidade consumida na primeira fase"
+            },
+            "electricity_phase_one_produced": {
+                "name": "Produ\u00e7\u00e3o da fase um da eletricidade"
+            },
+            "electricity_phase_three_consumed": {
+                "name": "Consumo de eletricidade da fase tr\u00eas"
+            },
+            "electricity_phase_three_produced": {
+                "name": "Produ\u00e7\u00e3o da fase tr\u00eas da eletricidade"
+            },
+            "electricity_phase_two_consumed": {
+                "name": "Consumo de eletricidade na fase dois"
+            },
+            "electricity_phase_two_produced": {
+                "name": "Produ\u00e7\u00e3o da fase dois da eletricidade"
+            },
+            "electricity_produced": {
+                "name": "Eletricidade produzida"
+            },
+            "electricity_produced_interval": {
+                "name": "Intervalo de produ\u00e7\u00e3o de eletricidade"
+            },
+            "electricity_produced_off_peak_cumulative": {
+                "name": "Eletricidade produzida fora do pico cumulativo"
+            },
+            "electricity_produced_off_peak_interval": {
+                "name": "Eletricidade produzida fora do intervalo de pico"
+            },
+            "electricity_produced_off_peak_point": {
+                "name": "Eletricidade produzida fora do hor\u00e1rio de ponta"
+            },
+            "electricity_produced_peak_cumulative": {
+                "name": "Eletricidade produzida pico cumulativo"
+            },
+            "electricity_produced_peak_interval": {
+                "name": "Intervalo de pico da eletricidade produzida"
+            },
+            "electricity_produced_peak_point": {
+                "name": "Eletricidade produzida no ponto de pico"
+            },
+            "electricity_produced_point": {
+                "name": "Ponto de produ\u00e7\u00e3o de eletricidade"
+            },
+            "gas_consumed_cumulative": {
+                "name": "G\u00e1s consumido cumulativo"
+            },
+            "gas_consumed_interval": {
+                "name": "Intervalo de consumo de g\u00e1s"
+            },
+            "heating_setpoint": {
+                "name": "Ponto de regula\u00e7\u00e3o do aquecimento"
+            },
+            "intended_boiler_temperature": {
+                "name": "Temperatura prevista para a caldeira"
+            },
+            "maximum_boiler_temperature": {
+                "name": "Temperatura m\u00e1xima da caldeira"
+            },
+            "modulation_level": {
+                "name": "N\u00edvel de modula\u00e7\u00e3o"
+            },
+            "net_electricity_cumulative": {
+                "name": "Eletricidade l\u00edquida acumulada"
+            },
+            "net_electricity_point": {
+                "name": "Ponto de eletricidade l\u00edquido"
+            },
+            "outdoor_air_temperature": {
+                "name": "Temperatura do ar exterior"
+            },
+            "outdoor_temperature": {
+                "name": "Temperatura exterior"
+            },
+            "return_temperature": {
+                "name": "Temperatura de retorno"
+            },
+            "setpoint": {
+                "name": "Defini\u00e7\u00e3o"
+            },
+            "temperature_difference": {
+                "name": "Diferen\u00e7a de temperatura"
+            },
+            "valve_position": {
+                "name": "Posi\u00e7\u00e3o da v\u00e1lvula"
+            },
+            "voltage_phase_one": {
+                "name": "Tens\u00e3o fase um"
+            },
+            "voltage_phase_three": {
+                "name": "Tens\u00e3o fase tr\u00eas"
+            },
+            "voltage_phase_two": {
+                "name": "Tens\u00e3o fase dois"
+            },
+            "water_pressure": {
+                "name": "Press\u00e3o da \u00e1gua"
+            },
+            "water_temperature": {
+                "name": "Temperatura da \u00e1gua"
+            }
+        },
+        "switch": {
+            "cooling_ena_switch": {
+                "name": "A arrefecer"
+            },
+            "dhw_cm_switch": {
+                "name": "Modo de conforto para AQS"
+            },
+            "lock": {
+                "name": "Fechadura"
+            },
+            "relay": {
+                "name": "Rel\u00e9"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_failed": {
+            "message": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "data_incomplete_or_missing": {
+            "message": "Dados incompletos ou em falta."
+        },
+        "error_communicating_with_api": {
+            "message": "Erro ao comunicar com a API: {error}."
+        },
+        "failed_to_connect": {
+            "message": "A liga\u00e7\u00e3o falhou"
+        },
+        "invalid_xml_data": {
+            "message": "Dados XML inv\u00e1lidos ou indica\u00e7\u00e3o de erro recebida"
+        },
+        "unsupported_firmware": {
+            "message": "Dispositivo com firmware n\u00e3o suportado"
+        },
+        "unsupported_hvac_mode_requested": {
+            "message": "Modo {hvac_mode} n\u00e3o suportado solicitado, os modos v\u00e1lidos s\u00e3o: {hvac_modes}."
+        }
+    }
+}

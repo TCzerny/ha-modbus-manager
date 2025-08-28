@@ -1,0 +1,123 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "bad_config": "O pedido falhou devido a uma m\u00e1 configura\u00e7\u00e3o: Verificar se a [stationboard]({stationboard_url}) tem esta\u00e7\u00f5es v\u00e1lidas.",
+            "cannot_connect": "N\u00e3o \u00e9 poss\u00edvel ligar ao servidor",
+            "unknown": "Um erro desconhecido foi gerado por python-opendata-transport"
+        },
+        "error": {
+            "bad_config": "O pedido falhou devido a uma m\u00e1 configura\u00e7\u00e3o: Verificar em [stationboard]({stationboard_url}) se os nomes das esta\u00e7\u00f5es s\u00e3o v\u00e1lidos",
+            "cannot_connect": "N\u00e3o \u00e9 poss\u00edvel ligar ao servidor",
+            "too_many_via_stations": "Demasiadas esta\u00e7\u00f5es via, s\u00f3 s\u00e3o permitidas at\u00e9 5 esta\u00e7\u00f5es via por liga\u00e7\u00e3o.",
+            "unknown": "Um erro desconhecido foi gerado por python-opendata-transport"
+        },
+        "step": {
+            "time_fixed": {
+                "data": {
+                    "time_fixed": "Hora do dia"
+                },
+                "description": "Selecione a hora relevante para a liga\u00e7\u00e3o (por exemplo, 07:12:00 todas as manh\u00e3s).",
+                "title": "Transportes P\u00fablicos Su\u00ed\u00e7os"
+            },
+            "time_offset": {
+                "data": {
+                    "time_offset": "Diferimento de tempo"
+                },
+                "description": "Por favor, selecione o diferimento relevante para adicionar \u00e0 conex\u00e3o mais cedo poss\u00edvel (por exemplo, adicione um diferimento de +00:05:00, levando em considera\u00e7\u00e3o o tempo para caminhar at\u00e9 a esta\u00e7\u00e3o).",
+                "title": "Transportes P\u00fablicos Su\u00ed\u00e7os"
+            },
+            "user": {
+                "data": {
+                    "from": "Esta\u00e7\u00e3o de partida",
+                    "time_mode": "Selecione um modo de tempo",
+                    "time_station": "Selecione a esta\u00e7\u00e3o relevante",
+                    "to": "Esta\u00e7\u00e3o terminal",
+                    "via": "Atrav\u00e9s de esta\u00e7\u00f5es"
+                },
+                "data_description": {
+                    "time_mode": "O modo de tempo permite alterar o hor\u00e1rio de partida e fix\u00e1-lo a uma hora espec\u00edfica (por exemplo, 7:12:00 todas as manh\u00e3s) ou adicionar um deslocamento m\u00f3vel (por exemplo, +00:05:00 levando em considera\u00e7\u00e3o o tempo para caminhar at\u00e9 a esta\u00e7\u00e3o).",
+                    "time_station": "Normalmente, a hora de partida de uma liga\u00e7\u00e3o quando sai da esta\u00e7\u00e3o inicial \u00e9 rastreada. Alternativamente, rastreie a hora em que a liga\u00e7\u00e3o chega \u00e0 sua esta\u00e7\u00e3o final."
+                },
+                "description": "Forne\u00e7a a esta\u00e7\u00e3o de in\u00edcio e de fim da sua liga\u00e7\u00e3o,\ne, opcionalmente, at\u00e9 5 esta\u00e7\u00f5es de via.\n\nVerifique o [quadro de esta\u00e7\u00f5es]({stationboard_url}) para ver se existem esta\u00e7\u00f5es v\u00e1lidas.",
+                "title": "Transportes P\u00fablicos Su\u00ed\u00e7os"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delay": {
+                "name": "Atraso"
+            },
+            "departure0": {
+                "name": "Partida"
+            },
+            "departure1": {
+                "name": "Partida +1"
+            },
+            "departure2": {
+                "name": "Partida +2"
+            },
+            "duration": {
+                "name": "Dura\u00e7\u00e3o"
+            },
+            "line": {
+                "name": "Linha"
+            },
+            "platform": {
+                "name": "Plataforma"
+            },
+            "transfers": {
+                "name": "Transfer\u00eancias"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel ligar ao servidor.\n{error}"
+        },
+        "config_entry_not_found": {
+            "message": "Inst\u00e2ncia de integra\u00e7\u00e3o dos transportes p\u00fablicos su\u00ed\u00e7os \"{target}\" n\u00e3o encontrada."
+        },
+        "invalid_data": {
+            "message": "Falha na configura\u00e7\u00e3o da entrada {config_title} com dados inv\u00e1lidos. Verifique no [painel de esta\u00e7\u00f5es] ({stationboard_url}) se os nomes das esta\u00e7\u00f5es s\u00e3o v\u00e1lidos.\n{error}"
+        },
+        "not_loaded": {
+            "message": "{target} n\u00e3o est\u00e1 carregado."
+        },
+        "request_timeout": {
+            "message": "Tempo excedido ao ligar para a entrada {config_title}.\n{error}"
+        }
+    },
+    "selector": {
+        "time_mode": {
+            "options": {
+                "fixed": "A uma hora fixa do dia",
+                "now": "Agora",
+                "offset": "A um diferimento desde este momento"
+            }
+        },
+        "time_station": {
+            "options": {
+                "arrival": "Mostrar hora de chegada na esta\u00e7\u00e3o final",
+                "departure": "Mostrar hora de partida da esta\u00e7\u00e3o inicial"
+            }
+        }
+    },
+    "services": {
+        "fetch_connections": {
+            "description": "Obter uma lista de liga\u00e7\u00f5es dos transportes p\u00fablicos su\u00ed\u00e7os.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Inst\u00e2ncia de transporte p\u00fablico su\u00ed\u00e7o para a qual obter liga\u00e7\u00f5es.",
+                    "name": "Inst\u00e2ncia"
+                },
+                "limit": {
+                    "description": "N\u00famero de liga\u00e7\u00f5es a obter de [1-15]",
+                    "name": "Limite"
+                }
+            },
+            "name": "Obter liga\u00e7\u00f5es"
+        }
+    }
+}

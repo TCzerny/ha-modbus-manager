@@ -1,0 +1,60 @@
+{
+    "services": {
+        "clear_cache": {
+            "description": "Remove todos os ficheiros de convers\u00e3o de texto em voz da cache e limpa a mem\u00f3ria.",
+            "name": "Limpar a cache TTS"
+        },
+        "say": {
+            "description": "Diz algo utilizando a convers\u00e3o de texto em voz num leitor multim\u00e9dia.",
+            "fields": {
+                "cache": {
+                    "description": "Armazena esta mensagem localmente para que, quando o texto for solicitado novamente, a sa\u00edda possa ser produzida mais rapidamente.",
+                    "name": "Cache"
+                },
+                "entity_id": {
+                    "description": "Leitores de multim\u00e9dia para reproduzirem a mensagem.",
+                    "name": "Entidade"
+                },
+                "language": {
+                    "description": "Idioma a usar na gera\u00e7\u00e3o de falas.",
+                    "name": "Idioma"
+                },
+                "message": {
+                    "description": "O texto que deseja converter em fala para que possa ouvi-lo no seu dispositivo.",
+                    "name": "Mensagem"
+                },
+                "options": {
+                    "description": "Um dicion\u00e1rio contendo op\u00e7\u00f5es espec\u00edficas de integra\u00e7\u00e3o.",
+                    "name": "Op\u00e7\u00f5es"
+                }
+            },
+            "name": "Fala uma mensagem TTS"
+        },
+        "speak": {
+            "description": "Fala algo usando a convers\u00e3o de texto em fala num leitor de media.",
+            "fields": {
+                "cache": {
+                    "description": "Armazena esta mensagem localmente para que, quando o texto for solicitado novamente, a sa\u00edda possa ser produzida mais rapidamente.",
+                    "name": "Cache"
+                },
+                "language": {
+                    "description": "Idioma a usar na gera\u00e7\u00e3o de falas.",
+                    "name": "Idioma"
+                },
+                "media_player_entity_id": {
+                    "description": "Leitores de multim\u00e9dia para reproduzirem a mensagem.",
+                    "name": "Entidade leitora de multim\u00e9dia"
+                },
+                "message": {
+                    "description": "O texto que deseja converter em fala para que possa ouvi-lo no seu dispositivo.",
+                    "name": "Mensagem"
+                },
+                "options": {
+                    "description": "Um dicion\u00e1rio contendo op\u00e7\u00f5es espec\u00edficas de integra\u00e7\u00e3o.",
+                    "name": "Op\u00e7\u00f5es"
+                }
+            },
+            "name": "Fala"
+        }
+    }
+}

@@ -1,0 +1,61 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "Gi\u00e0 configurato. \u00c8 possibile una sola configurazione."
+        },
+        "step": {
+            "user": {
+                "description": "Ricevi chiamate Voice over IP per interagire con Assist."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "call_in_progress": {
+                "name": "Chiamata in corso"
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Assistente",
+                "state": {
+                    "preferred": "Preferito"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Rilevamento vocale terminato",
+                "state": {
+                    "aggressive": "Aggressivo",
+                    "default": "Predefinito",
+                    "relaxed": "Rilassato"
+                }
+            }
+        },
+        "switch": {
+            "allow_call": {
+                "name": "Consenti chiamate"
+            }
+        }
+    },
+    "issues": {
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "Il sensore binario in corso di {integration_name} `{entity_id}` \u00e8 deprecato. \n\nEsegui la migrazione della configurazione per utilizzare l'entit\u00e0 corrispondente `{assist_satellite_domain}` e quindi fai clic su INVIA per disabilitare il sensore binario in corso e risolvere questo problema."
+                    }
+                }
+            },
+            "title": "I sensori binari in corso di {integration_name} sono deprecati"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "sip_port": "porta SIP"
+                }
+            }
+        }
+    }
+}

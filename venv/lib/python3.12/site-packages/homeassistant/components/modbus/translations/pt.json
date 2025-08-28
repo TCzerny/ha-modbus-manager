@@ -1,0 +1,102 @@
+{
+    "issues": {
+        "deprecated_retries": {
+            "description": "Por favor, remova a chave `{config_key}` da entrada {integration} no seu ficheiro configuration.yaml e reinicie o Home Assistant para corrigir este problema.\n\nO n\u00famero m\u00e1ximo de tentativas est\u00e1 agora fixado em 3.",
+            "title": "A chave de configura\u00e7\u00e3o {config_key} est\u00e1 a ser removida"
+        },
+        "duplicate_entity_entry": {
+            "description": "Um endere\u00e7o s\u00f3 pode ser associado a uma entidade. Corrija a entrada no seu ficheiro configuration.yaml e reinicie o Home Assistant para corrigir este problema.",
+            "title": "O endere\u00e7o Modbus {sub_1} {sub_2} \u00e9 duplicado, a segunda entrada n\u00e3o foi carregada."
+        },
+        "duplicate_entity_name": {
+            "description": "O nome de uma entidade deve ser \u00fanico. Por favor, corrija a entrada no seu ficheiro configuration.yaml e reinicie o Home Assistant para corrigir este problema.",
+            "title": "Modbus {sub_1} \u00e9 duplicado, a segunda entrada n\u00e3o foi carregada."
+        },
+        "duplicate_modbus_entry": {
+            "description": "Atualize {sub_2} e/ou {sub_1} para a entrada no seu ficheiro configuration.yaml e reinicie o Home Assistant para corrigir este problema.",
+            "title": "O anfitri\u00e3o/porta Modbus {sub_2} {sub_1} \u00e9 duplicado, a segunda entrada n\u00e3o foi carregada."
+        },
+        "missing_modbus_name": {
+            "description": "Adicione a chave `{sub_1}` \u00e0 entrada {integration} com o anfitri\u00e3o `{sub_2}` no seu ficheiro configuration.yaml e reinicie o Home Assistant para resolver este problema\n\n. `{sub_1}: {sub_3}` foram adicionados.",
+            "title": "Entrada Modbus com nome do anfitri\u00e3o {sub_2} em falta"
+        },
+        "no_entities": {
+            "description": "Adicione pelo menos uma entidade ao Modbus {sub_1} no seu ficheiro configuration.yaml e reinicie o Home Assistant para resolver este problema.",
+            "title": "Modbus {sub_1} n\u00e3o cont\u00e9m entidades, entrada n\u00e3o carregada."
+        },
+        "removed_lazy_error_count": {
+            "description": "Por favor, remova a chave `{config_key}` da entrada {integration} no seu ficheiro configuration.yaml e reinicie o Home Assistant para corrigir este problema. Todos os erros ser\u00e3o reportados, uma vez que lazy_error_count \u00e9 aceite mas ignorado",
+            "title": "A chave de configura\u00e7\u00e3o {config_key} est\u00e1 a ser removida"
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "Recarrega todas as entidades modbus.",
+            "name": "Recarregar"
+        },
+        "restart": {
+            "description": "Reinicia o hub modbus (se estiver a funcionar, para e depois come\u00e7a).",
+            "fields": {
+                "hub": {
+                    "description": "Nome do hub Modbus.",
+                    "name": "Hub"
+                }
+            },
+            "name": "Reiniciar"
+        },
+        "stop": {
+            "description": "Para o hub modbus.",
+            "fields": {
+                "hub": {
+                    "description": "Nome do hub Modbus.",
+                    "name": "Hub"
+                }
+            },
+            "name": "Parar"
+        },
+        "write_coil": {
+            "description": "Escreve numa bobina modbus.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do registo onde se pretende escrever.",
+                    "name": "Endere\u00e7o"
+                },
+                "hub": {
+                    "description": "Nome do hub Modbus.",
+                    "name": "Hub"
+                },
+                "slave": {
+                    "description": "Endere\u00e7o da unidade/escravo modbus.",
+                    "name": "Escravo"
+                },
+                "state": {
+                    "description": "Estado a escrever",
+                    "name": "Estado"
+                }
+            },
+            "name": "Escrever bobina"
+        },
+        "write_register": {
+            "description": "Escreve num registo de espera modbus.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do registo de espera para onde escrever.",
+                    "name": "Endere\u00e7o"
+                },
+                "hub": {
+                    "description": "Nome do hub Modbus.",
+                    "name": "Hub"
+                },
+                "slave": {
+                    "description": "Endere\u00e7o da unidade/escravo modbus.",
+                    "name": "Escravo"
+                },
+                "value": {
+                    "description": "Valor (simples ou array) a escrever",
+                    "name": "Valor"
+                }
+            },
+            "name": "Escrever registo"
+        }
+    }
+}

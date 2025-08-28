@@ -1,0 +1,109 @@
+{
+    "config": {
+        "abort": {
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "description": "A integra\u00e7\u00e3o da Honeywell precisa reautenticar a sua conta",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "user": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Introduza as credenciais utilizadas para iniciar sess\u00e3o em mytotalconnectcomfort.com."
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "honeywell": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "away": "Ausente",
+                            "hold": "Manter",
+                            "none": "Nenhum"
+                        }
+                    }
+                }
+            }
+        },
+        "humidifier": {
+            "dehumidifier": {
+                "name": "Desumidificador"
+            },
+            "humidifier": {
+                "name": "Humidificador"
+            }
+        },
+        "sensor": {
+            "outdoor_humidity": {
+                "name": "Humidade exterior"
+            },
+            "outdoor_temperature": {
+                "name": "Temperatura exterior"
+            }
+        },
+        "switch": {
+            "emergency_heat": {
+                "name": "Aquecimento de emerg\u00eancia"
+            }
+        }
+    },
+    "exceptions": {
+        "away_mode_failed": {
+            "message": "Falha no modo ausente do aparelho Honeywell"
+        },
+        "fan_mode_failed": {
+            "message": "Honeywell n\u00e3o conseguiu definir modo de ventila\u00e7\u00e3o"
+        },
+        "set_hold_failed": {
+            "message": "Honeywell n\u00e3o conseguiu definir espera permanente"
+        },
+        "set_mode_failed": {
+            "message": "Honeywell foi devolvido um modo de sistema inv\u00e1lido {mode}"
+        },
+        "stop_hold_failed": {
+            "message": "Honeywell n\u00e3o conseguiu parar o modo de espera"
+        },
+        "switch_failed_off": {
+            "message": "A Honeywell pode desativar o modo de aquecimento de emerg\u00eancia."
+        },
+        "switch_failed_on": {
+            "message": "A Honeywell n\u00e3o conseguiu definir o modo do sistema para o modo de aquecimento de emerg\u00eancia."
+        },
+        "sys_mode_failed": {
+            "message": "Honeywell n\u00e3o conseguiu definir o modo de sistema"
+        },
+        "temp_failed": {
+            "message": "Erro ao definir a temperatura Honeywell"
+        },
+        "temp_failed_range": {
+            "message": "Erro ao definir a temperatura Honeywell: temperatura fora do intervalo. Modo: {mode}, Temperatura de aquecimento: {heat}, Temperatura de arrefecimento: {cool}"
+        },
+        "temp_failed_value": {
+            "message": "Erro ao definir a temperatura Honeywell: temperatura inv\u00e1lida {temperature}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "away_cool_temperature": "Temperatura de arrefecimento no modo Ausente",
+                    "away_heat_temperature": "Temperatura de aquecimento no modo Ausente"
+                },
+                "description": "Op\u00e7\u00f5es de configura\u00e7\u00e3o adicionais da Honeywell. As temperaturas s\u00e3o definidas em Fahrenheit."
+            }
+        }
+    }
+}

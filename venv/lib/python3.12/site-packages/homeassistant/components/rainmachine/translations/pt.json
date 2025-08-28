@@ -1,0 +1,263 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "flow_title": "{ip}",
+        "step": {
+            "user": {
+                "data": {
+                    "ip_address": "Nome servidor ou endere\u00e7o IP",
+                    "password": "Palavra-passe",
+                    "port": "Porta"
+                },
+                "title": "Preencha as suas informa\u00e7\u00f5es"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "flow_sensor": {
+                "name": "Sensor de caudal"
+            },
+            "freeze": {
+                "name": "Restri\u00e7\u00f5es de congelamento"
+            },
+            "hourly": {
+                "name": "Restri\u00e7\u00f5es hor\u00e1rias"
+            },
+            "month": {
+                "name": "Restri\u00e7\u00f5es mensais"
+            },
+            "raindelay": {
+                "name": "Restri\u00e7\u00f5es de atraso devido \u00e0 chuva"
+            },
+            "rainsensor": {
+                "name": "Restri\u00e7\u00f5es do sensor de chuva"
+            },
+            "weekday": {
+                "name": "Restri\u00e7\u00f5es durante a semana"
+            }
+        },
+        "select": {
+            "freeze_protection_temperature": {
+                "name": "Temperatura de prote\u00e7\u00e3o contra congelamento"
+            }
+        },
+        "sensor": {
+            "flow_sensor_clicks_cubic_meter": {
+                "name": "Cliques do sensor de caudal por metro c\u00fabico"
+            },
+            "flow_sensor_consumed_liters": {
+                "name": "Sensor de caudal litros consumidos"
+            },
+            "flow_sensor_leak_clicks": {
+                "name": "Cliques de fuga do sensor de fluxo"
+            },
+            "flow_sensor_leak_volume": {
+                "name": "Volume de fuga do sensor de caudal"
+            },
+            "flow_sensor_start_index": {
+                "name": "\u00cdndice de arranque do sensor de caudal"
+            },
+            "flow_sensor_watering_clicks": {
+                "name": "O sensor de caudal faz um clique"
+            },
+            "last_leak_detected": {
+                "name": "\u00daltima fuga detetada"
+            },
+            "rain_sensor_rain_start": {
+                "name": "Sensor de chuva arranque da chuva"
+            }
+        },
+        "switch": {
+            "freeze_protect_enabled": {
+                "name": "Prote\u00e7\u00e3o contra congelamento"
+            },
+            "hot_days_extra_watering": {
+                "name": "\u00c1gua extra nos dias quentes"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "allow_inactive_zones_to_run": "Permitir que as zonas desativadas sejam executadas manualmente",
+                    "use_app_run_times": "Utilizar os tempos de funcionamento da zona a partir da aplica\u00e7\u00e3o RainMachine",
+                    "zone_run_time": "Tempo de funcionamento da zona predefinida (em segundos)"
+                },
+                "title": "Configurar RainMachine"
+            }
+        }
+    },
+    "services": {
+        "pause_watering": {
+            "description": "Pausa todas as atividades de rega durante um determinado n\u00famero de segundos.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador cujas atividades de rega devem ser interrompidas.",
+                    "name": "Controlador"
+                },
+                "seconds": {
+                    "description": "O per\u00edodo de tempo (em segundos) para fazer uma pausa na rega.",
+                    "name": "Dura\u00e7\u00e3o"
+                }
+            },
+            "name": "Pausar toda a rega"
+        },
+        "push_flow_meter_data": {
+            "description": "Enviar os dados do caudal\u00edmetro para o dispositivo RainMachine.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador para o qual enviar os dados do caudal\u00edmetro.",
+                    "name": "Controlador"
+                },
+                "unit_of_measurement": {
+                    "description": "As unidades de caudal\u00edmetro a enviar.",
+                    "name": "Unidade de medida"
+                },
+                "value": {
+                    "description": "O valor do caudal\u00edmetro a enviar.",
+                    "name": "Valor"
+                }
+            },
+            "name": "Dados do caudal\u00edmetro"
+        },
+        "push_weather_data": {
+            "description": "Enviar dados meteorol\u00f3gicos do Home Assistant para o dispositivo RainMachine.\nO servi\u00e7o Local Weather Push deve ser ativado em Configura\u00e7\u00e3o > Meteorologia > separador Programador, para que o RainMachine considere os valores enviados. As unidades devem ser enviadas no sistema m\u00e9trico; n\u00e3o s\u00e3o efetuadas convers\u00f5es pela integra\u00e7\u00e3o.\nVeja os detalhes da API do RainMachine aqui: https://rainmachine.docs.apiary.io/#reference/weather-services/parserdata/post.",
+            "fields": {
+                "condition": {
+                    "description": "C\u00f3digo do estado do tempo atual (WNUM).",
+                    "name": "C\u00f3digo do estado do tempo"
+                },
+                "device_id": {
+                    "description": "O controlador para os dados meteorol\u00f3gicos a enviar.",
+                    "name": "Controlador"
+                },
+                "dewpoint": {
+                    "description": "Ponto de orvalho (\u00b0C).",
+                    "name": "Ponto de orvalho"
+                },
+                "et": {
+                    "description": "Evapotranspira\u00e7\u00e3o (mm).",
+                    "name": "Evapotranspira\u00e7\u00e3o"
+                },
+                "maxrh": {
+                    "description": "Humidade relativa m\u00e1xima (%RH).",
+                    "name": "Humidade relativa m\u00e1xima"
+                },
+                "maxtemp": {
+                    "description": "Temperatura m\u00e1xima (\u00b0C).",
+                    "name": "Temp m\u00e1x"
+                },
+                "minrh": {
+                    "description": "Humidade relativa m\u00ednima (%RH).",
+                    "name": "Humidade relativa m\u00ednima"
+                },
+                "mintemp": {
+                    "description": "Temperatura m\u00ednima (\u00b0C).",
+                    "name": "Temp m\u00edn"
+                },
+                "pressure": {
+                    "description": "Press\u00e3o barom\u00e9trica (kPa).",
+                    "name": "Press\u00e3o barom\u00e9trica"
+                },
+                "qpf": {
+                    "description": "Previs\u00e3o quantitativa da precipita\u00e7\u00e3o (mm), ou QPF. Nota: Os valores de QPF n\u00e3o devem ser enviados como valores cumulativos, mas sim como valores medidos/previstos para cada hora ou dia. O RainMachine Mixer somar\u00e1 todos os valores de QPF no dia atual para obter o QPF total do dia.",
+                    "name": "Previs\u00e3o quantitativa da precipita\u00e7\u00e3o"
+                },
+                "rain": {
+                    "description": "Precipita\u00e7\u00e3o medida (mm). Nota: Os valores de precipita\u00e7\u00e3o n\u00e3o devem ser enviados como valores cumulativos, mas sim como valores medidos/previstos para cada hora ou dia. O misturador RainMachine somar\u00e1 todos os valores de CHUVA no dia atual para obter o total de CHUVA do dia.",
+                    "name": "Precipita\u00e7\u00e3o medida"
+                },
+                "solarrad": {
+                    "description": "Radia\u00e7\u00e3o solar (MJ/m\u00b2/h).",
+                    "name": "Radia\u00e7\u00e3o solar"
+                },
+                "temperature": {
+                    "description": "Temperatura atual (\u00b0C).",
+                    "name": "Temperatura"
+                },
+                "timestamp": {
+                    "description": "UNIX Timestamp para os dados meteorol\u00f3gicos. Se for omitido, \u00e9 utilizada a hora local do dispositivo RainMachine no momento da chamada.",
+                    "name": "Selo temporal"
+                },
+                "wind": {
+                    "description": "Velocidade do vento (m/s).",
+                    "name": "Velocidade do vento"
+                }
+            },
+            "name": "Enviar dados meteorol\u00f3gicos"
+        },
+        "restrict_watering": {
+            "description": "Impede o in\u00edcio de todas as atividades de rega durante um determinado per\u00edodo de tempo.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador cujas atividades de rega devem ser restringidas.",
+                    "name": "Controlador"
+                },
+                "duration": {
+                    "description": "O per\u00edodo de tempo para restringir o in\u00edcio das atividades de rega.",
+                    "name": "Dura\u00e7\u00e3o"
+                }
+            },
+            "name": "Restringir a rega"
+        },
+        "start_program": {
+            "description": "Inicia um programa.",
+            "name": "Iniciar programa"
+        },
+        "start_zone": {
+            "description": "Inicia uma zona.",
+            "fields": {
+                "zone_run_time": {
+                    "description": "A quantidade de tempo (em segundos) para executar a zona.",
+                    "name": "Tempo de execu\u00e7\u00e3o"
+                }
+            },
+            "name": "Zona de arranque"
+        },
+        "stop_all": {
+            "description": "Interrompe todas as atividades de rega.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador cujas atividades de rega devem ser interrompidas.",
+                    "name": "Controlador"
+                }
+            },
+            "name": "Parar toda a rega"
+        },
+        "stop_program": {
+            "description": "Para um programa.",
+            "name": "Parar programa"
+        },
+        "stop_zone": {
+            "description": "P\u00e1ra uma zona.",
+            "name": "Zona de paragem"
+        },
+        "unpause_watering": {
+            "description": "Termina a pausa de todas as atividades de rega.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador cujas atividades de rega devem ser desativadas.",
+                    "name": "Controlador"
+                }
+            },
+            "name": "Desativar toda a rega"
+        },
+        "unrestrict_watering": {
+            "description": "Desbloquear todas as atividades de rega.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador cujas atividades de rega devem ser irrestritas.",
+                    "name": "Controlador"
+                }
+            },
+            "name": "Desbloquear toda a rega"
+        }
+    }
+}

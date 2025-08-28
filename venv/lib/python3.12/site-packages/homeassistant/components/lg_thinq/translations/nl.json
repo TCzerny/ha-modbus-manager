@@ -1,0 +1,666 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparaat is al geconfigureerd",
+            "already_in_progress": "De configuratie is momenteel al bezig"
+        },
+        "error": {
+            "exceeded_api_calls": "Het aantal API-aanroepen is overschreden.",
+            "exceeded_user_api_calls": "Het aantal gebruikers API-aanroepen is overschreden.",
+            "invalid_token": "Het token is niet geldig.",
+            "not_acceptable_terms": "De servicevoorwaarden zijn niet geaccepteerd.",
+            "not_allowed_api_again": "De gebruiker heeft GEEN rechten voor de API-aanroep.",
+            "not_supported_country": "Het land wordt niet ondersteund.",
+            "token_unauthorized": "Het token is ongeldig of niet geautoriseerd."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Personal Access Token",
+                    "country": "Land"
+                },
+                "description": "Voer een ThinQ [PAT(Personal Access Token)]({pat_url}) in die je hebt aangemaakt met je LG ThinQ account.",
+                "title": "Verbinding maken met ThinQ"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "eco_friendly_mode": {
+                "name": "Milieuvriendelijk"
+            },
+            "machine_clean_reminder": {
+                "name": "Machinereiniging herinnering"
+            },
+            "operation_mode": {
+                "name": "Vermogen"
+            },
+            "power_save_enabled": {
+                "name": "Energiebesparende modus"
+            },
+            "remote_control_enabled": {
+                "name": "Starten op afstand"
+            },
+            "sabbath_mode": {
+                "name": "Sabbat"
+            },
+            "signal_level": {
+                "name": "Gong geluid"
+            }
+        },
+        "climate": {
+            "climate_air_conditioner": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Hoog",
+                            "low": "Laag",
+                            "mid": "Medium",
+                            "slow": "Langzaam"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "air_clean": "Lucht zuiveren",
+                            "energy_saving": "Energiebesparing"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "error": {
+                "name": "Fout",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "child_lock_active_error": "Kinderslot",
+                            "door_close_error": "Deur gesloten fout",
+                            "door_lock_error": "Deurvergrendeling fout",
+                            "door_open_error": "Deur open",
+                            "door_sensor_error": "Deursensor fout",
+                            "drainmotor_error": "Afvoer fout",
+                            "dust_full_error": "Stofbak is vol en moet worden geleegd",
+                            "empty_water_alert_error": "Leeg water",
+                            "filter_clogging_error": "Filter fout",
+                            "high_power_supply_error": "Stroomvoorziening fout",
+                            "high_temperature_detection_error": "Hoge temperatuur fout",
+                            "inner_lid_open_error": "Klep open fout",
+                            "ir_sensor_error": "IR-sensor fout",
+                            "left_wheel_error": "Linkerwiel heeft een probleem",
+                            "mop_error": "Kan niet goed werken zonder dat de dweil is bevestigd",
+                            "motor_error": "Motorproblemen",
+                            "move_error": "De wielen raken de vloer niet",
+                            "need_water_drain": "Leeg water",
+                            "need_water_replenishment": "Water bijvullen",
+                            "no_battery_error": "De batterij van de robotstofzuiger is bijna leeg",
+                            "no_dust_bin_error": "Stofbak is niet geplaatst",
+                            "no_filter_error": "Filter fout",
+                            "out_of_balance_error": "Belasting uit balans",
+                            "power_code_connection_error": "Fout bij aansluiting netsnoer",
+                            "power_fail_error": "Stroomstoring",
+                            "suction_blocked_error": "Zuigmotor is verstopt",
+                            "temperature_sensor_error": "Thermistor fout",
+                            "time_to_run_the_tub_clean_cycle_error": "Trommelreiniging aanbevolen",
+                            "timeout_error": "Time-out fout",
+                            "turbidity_sensor_error": "Troebelheidssensor fout",
+                            "unable_to_lock_error": "Deurvergrendeling fout",
+                            "unbalanced_load_error": "Belasting uit balans",
+                            "unknown_error": "Product vereist aandacht",
+                            "vibration_sensor_error": "Trillingssensor fout",
+                            "water_drain_error": "Waterafvoer fout",
+                            "water_leakage_error": "Waterlekkage probleem",
+                            "water_leaks_error": "Waterlekkage probleem",
+                            "water_level_sensor_error": "Watersensor fout",
+                            "water_supply_error": "Watertoevoer fout"
+                        }
+                    }
+                }
+            },
+            "notification": {
+                "name": "Notificatie",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "charging_is_complete": "Het opladen is voltooid",
+                            "cleaning_is_complete": "Cyclus is afgerond",
+                            "cleaning_is_completed": "Schoonmaken is klaar",
+                            "cleaning_is_failed": "Schoonmaken is mislukt",
+                            "cooking_is_complete": "Uitgezet",
+                            "door_is_open": "De deur staat open",
+                            "drying_is_complete": "Drogen is klaar",
+                            "error_during_cleaning": "Schoonmaken gestopt vanwege een fout",
+                            "error_during_washing": "Er is een fout opgetreden in de wasmachine",
+                            "error_has_occurred": "Er is een fout opgetreden",
+                            "preheating_is_complete": "Voorverwarmen is klaar",
+                            "rinse_is_not_enough": "Voeg glansspoelmiddel toe voor betere droogprestaties",
+                            "salt_refill_is_needed": "Voeg zout toe voor betere ontharding",
+                            "scheduled_cleaning_starts": "Geplande schoonmaak begint",
+                            "time_to_change_filter": "Tijd om het filter te vervangen",
+                            "time_to_change_water_filter": "Je moet het waterfilter vervangen",
+                            "time_to_clean": "Zelfreiniging nodig",
+                            "time_to_clean_filter": "Tijd om het filter te reinigen",
+                            "timer_is_complete": "Timer is voltooid",
+                            "washing_is_complete": "Het wassen is voltooid",
+                            "water_is_full": "Water is vol",
+                            "water_leak_has_occurred": "De vaatwasser heeft een waterlek gedetecteerd"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "lamp_brightness": {
+                "name": "Licht"
+            },
+            "light_status": {
+                "name": "Licht"
+            },
+            "relative_hour_to_start": {
+                "name": "Inschakeling plannen"
+            },
+            "relative_hour_to_stop": {
+                "name": "Uitschakeling plannen"
+            },
+            "target_humidity": {
+                "name": "Doelluchtvochtigheid"
+            },
+            "target_temperature": {
+                "name": "Temperatuur"
+            },
+            "target_temperature_for_location": {
+                "name": "{location} temperatuur"
+            },
+            "wind_temperature": {
+                "name": "Windtemperatuur"
+            }
+        },
+        "select": {
+            "air_clean_operation_mode": {
+                "name": "Lucht zuiveren",
+                "state": {
+                    "start": "Starten",
+                    "stop": "Stoppen"
+                }
+            },
+            "current_job_mode": {
+                "name": "Bedrijfsmodus",
+                "state": {
+                    "air_clean": "Zuiverend",
+                    "auto": "Auto",
+                    "fast": "Turbo",
+                    "humidify": "Nevel",
+                    "humidify_and_air_clean": "Nevel & zuiverend",
+                    "humidity": "Vochtig",
+                    "silent": "Stil",
+                    "sleep": "Slaap",
+                    "turbo": "Turbo",
+                    "vacation": "Vakantie"
+                }
+            },
+            "display_light": {
+                "name": "Schermhelderheid",
+                "state": {
+                    "level_1": "Helderheid 1",
+                    "level_2": "Helderheid 2",
+                    "level_3": "Helderheid 3",
+                    "off": "Uit"
+                }
+            },
+            "fresh_air_filter": {
+                "state": {
+                    "auto": "Auto",
+                    "off": "Uit",
+                    "smart_off": "Uit",
+                    "smart_on": "Smart safe opslag",
+                    "smart_power": "Smart safe opslag"
+                }
+            },
+            "hygiene_dry_mode": {
+                "state": {
+                    "fast": "Snel",
+                    "normal": "Delicaat",
+                    "off": "Uit",
+                    "silent": "Stil"
+                }
+            },
+            "light_brightness": {
+                "name": "Licht"
+            },
+            "monitoring_enabled": {
+                "name": "Luchtkwaliteitssensor",
+                "state": {
+                    "always": "Altijd aan",
+                    "on_working": "Gaat aan met product"
+                }
+            },
+            "operation_mode": {
+                "name": "Bediening",
+                "state": {
+                    "cancel": "Annuleren",
+                    "power_off": "Uitschakelen",
+                    "preheating": "Voorverwarmen",
+                    "start": "Starten",
+                    "stop": "Stoppen"
+                }
+            },
+            "operation_mode_for_location": {
+                "name": "{location} bediening",
+                "state": {
+                    "cancel": "Annuleren",
+                    "power_off": "Uitschakelen",
+                    "preheating": "Voorverwarmen",
+                    "start": "Starten",
+                    "stop": "Stoppen"
+                }
+            },
+            "wind_angle": {
+                "name": "Rotatie",
+                "state": {
+                    "angle_140": "140\u00b0",
+                    "angle_45": "45\u00b0",
+                    "angle_60": "60\u00b0",
+                    "angle_90": "90\u00b0",
+                    "off": "Uit"
+                }
+            },
+            "wind_strength": {
+                "name": "Snelheid",
+                "state": {
+                    "auto": "Auto",
+                    "high": "Hoog",
+                    "low": "Laag",
+                    "mid": "Medium",
+                    "power": "Turbo",
+                    "slow": "Langzaam",
+                    "turbo": "Turbo",
+                    "wind_1": "Stap 1",
+                    "wind_10": "Stap 10",
+                    "wind_2": "Stap 2",
+                    "wind_3": "Stap 3",
+                    "wind_4": "Stap 4",
+                    "wind_5": "Stap 5",
+                    "wind_6": "Stap 6",
+                    "wind_7": "Stap 7",
+                    "wind_8": "Stap 8",
+                    "wind_9": "Stap 9"
+                }
+            }
+        },
+        "sensor": {
+            "absolute_to_start": {
+                "name": "Inschakeling plannen"
+            },
+            "absolute_to_stop": {
+                "name": "Uitschakeling plannen"
+            },
+            "battery_level": {
+                "name": "Batterij",
+                "state": {
+                    "high": "Vol",
+                    "low": "Laag",
+                    "mid": "Medium",
+                    "warning": "Leeg"
+                }
+            },
+            "cock_state": {
+                "state": {
+                    "cleaning": "In uitvoering",
+                    "normal": "Stand-by"
+                }
+            },
+            "current_dish_washing_course": {
+                "name": "Huidige cyclus",
+                "state": {
+                    "auto": "Auto",
+                    "delicate": "Delicaat",
+                    "download_cycle": "Download cyclus",
+                    "eco": "Eco",
+                    "express": "Express",
+                    "heavy": "Intensief",
+                    "machine_clean": "Machine reinigen",
+                    "normal": "Normaal",
+                    "quick": "Snel",
+                    "refresh": "Opfrissen",
+                    "rinse": "Spoelen",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_job_mode": {
+                "state": {
+                    "auto": "Auto",
+                    "intensive_dry": "Spot",
+                    "macro": "Aangepaste modus",
+                    "mop": "Dweilen",
+                    "normal": "Normaal",
+                    "off": "Uit",
+                    "quiet_humidity": "Stil",
+                    "rapid_humidity": "Jet",
+                    "smart_humidity": "Smart",
+                    "spot": "Spiraalspot-modus",
+                    "turbo": "Turbo",
+                    "vacation": "Vakantie",
+                    "zigzag": "Zigzag"
+                }
+            },
+            "current_job_mode_stick_cleaner": {
+                "name": "Bedrijfsmodus",
+                "state": {
+                    "auto": "Laag vermogen",
+                    "mop": "Dweilen",
+                    "normal": "Normaal",
+                    "off": "Uit",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_state": {
+                "name": "Huidige status",
+                "state": {
+                    "as_pop_up": "Product vereist aandacht",
+                    "cancel": "Annuleren",
+                    "change_condition": "Instellingen wijzigen",
+                    "charging": "Opladen",
+                    "charging_complete": "Opgeladen",
+                    "cleaning": "Schoonmaken",
+                    "cleaning_is_done": "Schoonmaken is klaar",
+                    "complete": "Klaar",
+                    "cook": "Koken",
+                    "cook_complete": "Klaar",
+                    "cooking_in_progress": "Koken",
+                    "cool_down": "Afkoelen",
+                    "cooling": "Koelen",
+                    "detecting": "Detecteren",
+                    "detergent_amount": "Informatie geven over de hoeveelheid wasmiddel",
+                    "diagnosis": "Smart diagnosis wordt uitgevoerd",
+                    "dispensing": "Automatisch doseren",
+                    "done": "Klaar",
+                    "drying": "Drogen",
+                    "end": "Afgerond",
+                    "end_cooling": "Drogen",
+                    "error": "Product vereist aandacht",
+                    "extracting_capsule": "Capsule brouwen",
+                    "extraction_mode": "Opslaan",
+                    "firmware": "Firmware bijwerken",
+                    "fota": "Bijwerken",
+                    "initial": "Stand-by",
+                    "initializing": "Stand-by",
+                    "night_dry": "Nacht droog",
+                    "oven_setting": "Kookplaat verbonden",
+                    "pause": "Gepauzeerd",
+                    "paused": "Gepauzeerd",
+                    "power_fail": "Stroomuitval",
+                    "power_off": "Uit",
+                    "power_on": "Aan",
+                    "preference": "Instelling",
+                    "preheat": "Voorverwarmen",
+                    "preheat_complete": "Voorverwarmen is klaar",
+                    "preheating": "Voorverwarmen",
+                    "preheating_is_done": "Voorverwarmen is klaar",
+                    "prepareing_fermentation": "Aan het voorbereiden",
+                    "presteam": "Klaar om te stomen",
+                    "prewash": "Voorwassen",
+                    "rinse_hold": "Wachten om te spoelen",
+                    "rinsing": "Spoelen",
+                    "running": "Draaiend",
+                    "running_end": "Klaar",
+                    "soaking": "Weken",
+                    "softening": "Verzachter",
+                    "standby": "Stand-by",
+                    "stay": "Opfrissen",
+                    "steam": "Opfrissen",
+                    "steam_softening": "Stoomontharding",
+                    "temperature_stabilization": "Temperatuur aanpassen",
+                    "working": "Schoonmaken",
+                    "wrinkle_care": "Kreukvrij"
+                }
+            },
+            "current_state_for_location": {
+                "name": "{location} huidige status",
+                "state": {
+                    "as_pop_up": "Product vereist aandacht",
+                    "cancel": "Annuleren",
+                    "change_condition": "Instellingen wijzigen",
+                    "charging": "Opladen",
+                    "charging_complete": "Opgeladen",
+                    "cleaning": "Schoonmaken",
+                    "cleaning_is_done": "Schoonmaken is klaar",
+                    "complete": "Klaar",
+                    "cook": "Koken",
+                    "cook_complete": "Klaar",
+                    "cooking_in_progress": "Koken",
+                    "cool_down": "Afkoelen",
+                    "cooling": "Koelen",
+                    "detecting": "Detecteren",
+                    "detergent_amount": "Informatie geven over de hoeveelheid wasmiddel",
+                    "diagnosis": "Smart diagnosis wordt uitgevoerd",
+                    "dispensing": "Automatisch doseren",
+                    "done": "Klaar",
+                    "drying": "Drogen",
+                    "end": "Afgerond",
+                    "end_cooling": "Drogen",
+                    "error": "Product vereist aandacht",
+                    "extracting_capsule": "Capsule brouwen",
+                    "extraction_mode": "Opslaan",
+                    "firmware": "Firmware bijwerken",
+                    "fota": "Bijwerken",
+                    "initial": "Stand-by",
+                    "initializing": "Stand-by",
+                    "night_dry": "Nacht droog",
+                    "oven_setting": "Kookplaat verbonden",
+                    "pause": "Gepauzeerd",
+                    "paused": "Gepauzeerd",
+                    "power_fail": "Stroomuitval",
+                    "power_off": "Uit",
+                    "power_on": "Aan",
+                    "preference": "Instelling",
+                    "preheat": "Voorverwarmen",
+                    "preheat_complete": "Voorverwarmen is klaar",
+                    "preheating": "Voorverwarmen",
+                    "preheating_is_done": "Voorverwarmen is klaar",
+                    "prepareing_fermentation": "Aan het voorbereiden",
+                    "presteam": "Klaar om te stomen",
+                    "prewash": "Voorwassen",
+                    "rinse_hold": "Wachten om te spoelen",
+                    "rinsing": "Spoelen",
+                    "running": "Draaiend",
+                    "running_end": "Klaar",
+                    "soaking": "Weken",
+                    "softening": "Verzachter",
+                    "standby": "Stand-by",
+                    "stay": "Opfrissen",
+                    "steam": "Opfrissen",
+                    "steam_softening": "Stoomontharding",
+                    "temperature_stabilization": "Temperatuur aanpassen",
+                    "working": "Schoonmaken",
+                    "wrinkle_care": "Kreukvrij"
+                }
+            },
+            "elapsed_day_state": {
+                "name": "Brouwperiode"
+            },
+            "elapsed_day_total": {
+                "name": "Brouwduur"
+            },
+            "filter_lifetime": {
+                "name": "Filter resterend"
+            },
+            "flavor_info": {
+                "name": "Smaak"
+            },
+            "fresh_air_filter": {
+                "state": {
+                    "auto": "Auto",
+                    "off": "Uit",
+                    "smart_off": "Uit",
+                    "smart_on": "Smart safe opslag",
+                    "smart_power": "Smart safe opslag"
+                }
+            },
+            "growth_mode": {
+                "state": {
+                    "ext_flower": "Bloemen",
+                    "ext_herb": "Kruiden",
+                    "ext_leaf": "Groenten",
+                    "standard": "Auto"
+                }
+            },
+            "growth_mode_for_location": {
+                "name": "{location} modus",
+                "state": {
+                    "ext_flower": "Bloemen",
+                    "ext_herb": "Kruiden",
+                    "ext_leaf": "Groenten",
+                    "standard": "Auto"
+                }
+            },
+            "light_start": {
+                "name": "Lichten aan-tijd"
+            },
+            "light_start_for_location": {
+                "name": "{location} lichten aan-tijd"
+            },
+            "monitoring_enabled": {
+                "name": "Luchtkwaliteitssensor",
+                "state": {
+                    "always": "Altijd aan",
+                    "on_working": "Gaat aan met product"
+                }
+            },
+            "odor_level": {
+                "name": "Geur",
+                "state": {
+                    "invalid": "Ongeldig",
+                    "normal": "Normaal",
+                    "strong": "Sterk",
+                    "very_strong": "Zeer sterk",
+                    "weak": "Zwak"
+                }
+            },
+            "personalization_mode": {
+                "name": "Persoonlijke modus"
+            },
+            "recipe_name": {
+                "name": "Thuisbrouw recept",
+                "state": {
+                    "ipa": "IPA",
+                    "my_recipe": "Mijn recept",
+                    "pale_ale": "Pale ale",
+                    "pilsner": "Pilsner",
+                    "red_ale": "Red ale",
+                    "stout": "Stout",
+                    "wheat": "Wit"
+                }
+            },
+            "relative_to_start": {
+                "name": "Inschakeling plannen"
+            },
+            "relative_to_stop": {
+                "name": "Uitschakeling plannen"
+            },
+            "remain": {
+                "name": "Resterende tijd"
+            },
+            "remain_for_location": {
+                "name": "{location} resterende tijd"
+            },
+            "rinse_level": {
+                "name": "Glansspoelmiddel niveau",
+                "state": {
+                    "rinselevel_0": "0",
+                    "rinselevel_1": "1",
+                    "rinselevel_2": "2",
+                    "rinselevel_3": "3",
+                    "rinselevel_4": "4"
+                }
+            },
+            "running": {
+                "name": "Looptijd"
+            },
+            "running_for_location": {
+                "name": "{location} looptijd"
+            },
+            "softening_level": {
+                "state": {
+                    "softeninglevel_1": "1",
+                    "softeninglevel_2": "2",
+                    "softeninglevel_3": "3",
+                    "softeninglevel_4": "4"
+                }
+            },
+            "sterilizing_state": {
+                "state": {
+                    "cancel": "Annuleren",
+                    "off": "Uit"
+                }
+            },
+            "target_temperature": {
+                "name": "Temperatuur",
+                "state": {
+                    "freezer": "Vriezer",
+                    "fridge": "Koelkast",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "Vlees/Vis",
+                    "off": "Uit",
+                    "rice_grain": "Rijst/Graan",
+                    "storage": "Opsla"
+                }
+            },
+            "target_temperature_for_location": {
+                "name": "{location} temperatuur",
+                "state": {
+                    "freezer": "Vriezer",
+                    "fridge": "Koelkast",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "Vlees/Vis",
+                    "off": "Uit",
+                    "rice_grain": "Rijst/Graan",
+                    "storage": "Opsla"
+                }
+            },
+            "temperature": {
+                "name": "Temperatuur"
+            },
+            "temperature_state": {
+                "name": "Temperatuur",
+                "state": {
+                    "high": "Hoog",
+                    "low": "Laag",
+                    "normal": "Goed"
+                }
+            },
+            "temperature_state_for_location": {
+                "name": "{location} temperatuur",
+                "state": {
+                    "high": "Hoog",
+                    "low": "Laag",
+                    "normal": "Goed"
+                }
+            },
+            "total_pollution_level": {
+                "state": {
+                    "bad": "Ongezond",
+                    "good": "Goed",
+                    "invalid": "Ongeldig",
+                    "very_bad": "Slecht"
+                }
+            },
+            "wort_info": {
+                "state": {
+                    "wheat": "Tarwe"
+                }
+            }
+        },
+        "switch": {
+            "hot_water_mode": {
+                "name": "Heet water"
+            },
+            "optimal_humidity": {
+                "name": "Ventilatie"
+            },
+            "warm_mode": {
+                "name": "Verwarmen"
+            }
+        }
+    }
+}

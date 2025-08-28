@@ -1,0 +1,210 @@
+{
+    "common": {
+        "climate_preset_heater": "Aquecedor",
+        "climate_preset_solar": "Solar",
+        "climate_preset_solar_prefered": "Solar Preferencial",
+        "service_config_entry_description": "A entrada de configura\u00e7\u00e3o a ser utilizada para esta a\u00e7\u00e3o",
+        "service_config_entry_name": "Entrada de configura\u00e7\u00e3o"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "gateway_entry": {
+                "data": {
+                    "ip_address": "Endere\u00e7o IP",
+                    "port": "Porta"
+                },
+                "description": "Introduza as informa\u00e7\u00f5es do ScreenLogic Gateway.",
+                "title": "ScreenLogic"
+            },
+            "gateway_select": {
+                "data": {
+                    "selected_gateway": "Porta de entrada"
+                },
+                "description": "Os seguintes gateways ScreenLogic foram descobertos. Selecione um para configurar ou opte por configurar manualmente um gateway ScreenLogic.",
+                "title": "ScreenLogic"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_alert": {
+                "name": "Alerta ativo"
+            },
+            "chem_high_alarm": {
+                "name": "Alarme de {chem} elevado"
+            },
+            "chem_limit": {
+                "name": "Limite de dose de {chem} atingido"
+            },
+            "chem_low_alarm": {
+                "name": "Alarme de {chem} baixo"
+            },
+            "chem_supply_alarm": {
+                "name": "Alarme de abastecimento {chem}"
+            },
+            "cleaner_delay": {
+                "name": "Diferimento da limpeza"
+            },
+            "corosive": {
+                "name": "SI corrosivo"
+            },
+            "flow_alarm": {
+                "name": "Alarme de fluxo"
+            },
+            "freeze_mode": {
+                "name": "Modo de congela\u00e7\u00e3o"
+            },
+            "ph_lockout": {
+                "name": "Bloqueio pH"
+            },
+            "pool_delay": {
+                "name": "Diferimento da piscina"
+            },
+            "probe_fault_alarm": {
+                "name": "Defeito na sonda"
+            },
+            "scaling": {
+                "name": "Escala SI"
+            },
+            "scg_state": {
+                "name": "Clorador"
+            },
+            "spa_delay": {
+                "name": "Diferimento do SPA"
+            }
+        },
+        "climate": {
+            "body_0": {
+                "name": "Aquecimento da piscina"
+            },
+            "body_1": {
+                "name": "Aquecimento do SPA"
+            }
+        },
+        "number": {
+            "calcium_hardness": {
+                "name": "Dureza do c\u00e1lcio"
+            },
+            "cya": {
+                "name": "\u00c1cido cian\u00farico"
+            },
+            "pool_setpoint": {
+                "name": "Ponto de ajuste do clorador da piscina"
+            },
+            "salt_tds_ppm": {
+                "name": "Sal/TDS"
+            },
+            "spa_setpoint": {
+                "name": "Ponto de ajuste do clorador do SPA"
+            },
+            "total_alkalinity": {
+                "name": "Alcalinidade total"
+            }
+        },
+        "sensor": {
+            "air_temperature": {
+                "name": "Temperatura do ar"
+            },
+            "calcium_hardness": {
+                "name": "Dureza do c\u00e1lcio"
+            },
+            "chem_dose_state": {
+                "name": "Estado da dosagem de {chem}"
+            },
+            "chem_last_dose_time": {
+                "name": "{chem} hora da \u00faltima dose"
+            },
+            "chem_last_dose_volume": {
+                "name": "{chem} volume da \u00faltima dose"
+            },
+            "chem_now": {
+                "name": "{chem} agora"
+            },
+            "chem_setpoint": {
+                "name": "{chem} valor definido"
+            },
+            "chem_supply_level": {
+                "name": "{chem} n\u00edvel de abastecimento"
+            },
+            "cya": {
+                "name": "\u00c1cido cian\u00farico"
+            },
+            "ph_probe_water_temp": {
+                "name": "sonda de pH temperatura da \u00e1gua"
+            },
+            "salt_ppm": {
+                "name": "Sal do clorador"
+            },
+            "salt_tds_ppm": {
+                "name": "Sal/TDS"
+            },
+            "saturation": {
+                "name": "\u00cdndice de satura\u00e7\u00e3o"
+            },
+            "super_chlor_timer": {
+                "name": "Temporizador de superclora\u00e7\u00e3o"
+            },
+            "total_alkalinity": {
+                "name": "Alcalinidade total"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Segundos entre exames"
+                },
+                "description": "Especificar defini\u00e7\u00f5es para {gateway_name}",
+                "title": "ScreenLogic"
+            }
+        }
+    },
+    "services": {
+        "set_color_mode": {
+            "description": "Define o modo de cor para todas as luzes com capacidade de cor conectadas a este gateway ScreenLogic.",
+            "fields": {
+                "color_mode": {
+                    "description": "O modo de cor do ScreenLogic a definir.",
+                    "name": "Modo de cor"
+                },
+                "config_entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o a ser utilizada para esta a\u00e7\u00e3o",
+                    "name": "Entrada de configura\u00e7\u00e3o"
+                }
+            },
+            "name": "Definir o modo de cor"
+        },
+        "start_super_chlorination": {
+            "description": "Inicia a super clora\u00e7\u00e3o, funcionando durante o per\u00edodo especificado ou 24 horas se n\u00e3o for especificado nenhum per\u00edodo.",
+            "fields": {
+                "config_entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o a ser utilizada para esta a\u00e7\u00e3o",
+                    "name": "Entrada de configura\u00e7\u00e3o"
+                },
+                "runtime": {
+                    "description": "N\u00famero de horas de funcionamento da super clora\u00e7\u00e3o.",
+                    "name": "Tempo de funcionamento"
+                }
+            },
+            "name": "Iniciar a Super Clora\u00e7\u00e3o"
+        },
+        "stop_super_chlorination": {
+            "description": "Para a super clora\u00e7\u00e3o.",
+            "fields": {
+                "config_entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o a ser utilizada para esta a\u00e7\u00e3o",
+                    "name": "Entrada de configura\u00e7\u00e3o"
+                }
+            },
+            "name": "Parar a Super Clora\u00e7\u00e3o"
+        }
+    }
+}

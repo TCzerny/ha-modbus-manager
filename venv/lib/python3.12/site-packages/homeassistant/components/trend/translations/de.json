@@ -1,0 +1,47 @@
+{
+    "config": {
+        "step": {
+            "settings": {
+                "data": {
+                    "attribute": "Attribut der Entit\u00e4t, die dieser Sensor verfolgt",
+                    "invert": "Ergebnis umkehren"
+                }
+            },
+            "user": {
+                "data": {
+                    "entity_id": "Entit\u00e4t, die dieser Sensor verfolgt",
+                    "name": "Name"
+                },
+                "description": "Der Trend-Helfer erstellt einen Sensor, der den Trend des numerischen Zustands oder Zustandsattributs einer anderen Entit\u00e4t anzeigt.",
+                "title": "Trend-Helfer erstellen"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "attribute": "Attribut der Entit\u00e4t, die dieser Sensor verfolgt",
+                    "invert": "Ergebnis umkehren",
+                    "max_samples": "Maximalzahl gespeicherter Proben",
+                    "min_gradient": "Mindestrate f\u00fcr die Wert\u00e4nderungen",
+                    "min_samples": "Mindestzahl gespeicherter Proben",
+                    "sample_duration": "Speicherdauer in Sekunden f\u00fcr die Proben"
+                },
+                "data_description": {
+                    "max_samples": "Die maximale Anzahl der zu speichernden Proben. Wenn die Anzahl der Proben diesen Wert \u00fcberschreitet, werden die \u00e4ltesten Proben verworfen.",
+                    "min_gradient": "Die minimale Rate, mit der sich der beobachtete Wert \u00e4ndern muss, damit sich dieser Sensor einschaltet. Der Gradient wird in Sensoreinheiten pro Sekunde gemessen.",
+                    "min_samples": "Die minimale Anzahl an Proben, die gesammelt werden m\u00fcssen, bevor der Gradient berechnet werden kann.min",
+                    "sample_duration": "Die Dauer in Sekunden, f\u00fcr die Proben gespeichert werden sollen. Proben, die \u00e4lter als dieser Wert sind, werden verworfen."
+                }
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "L\u00e4dt Trendsensoren aus der YAML-Konfiguration neu.",
+            "name": "Neu laden"
+        }
+    },
+    "title": "Trend"
+}

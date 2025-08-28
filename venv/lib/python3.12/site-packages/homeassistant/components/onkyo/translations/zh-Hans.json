@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u8bbe\u5907\u5df2\u914d\u7f6e",
+            "no_devices_found": "\u7f51\u7edc\u4e0a\u672a\u627e\u5230\u4efb\u4f55\u8bbe\u5907",
+            "reconfigure_successful": "\u91cd\u65b0\u914d\u7f6e\u6210\u529f",
+            "unique_id_mismatch": "\u6b64\u8bbe\u5907\u5e8f\u5217\u53f7\u4e0e\u4e4b\u524d\u7684\u5e8f\u5217\u53f7\u4e0d\u5339\u914d",
+            "unknown": "\u610f\u5916\u9519\u8bef"
+        },
+        "error": {
+            "cannot_connect": "\u8fde\u63a5\u5931\u8d25",
+            "empty_input_source_list": "\u8f93\u5165\u6e90\u5217\u8868\u4e0d\u80fd\u4e3a\u7a7a",
+            "unknown": "\u610f\u5916\u9519\u8bef"
+        },
+        "step": {
+            "configure_receiver": {
+                "data": {
+                    "input_sources": "\u8f93\u5165\u6e90",
+                    "volume_resolution": "\u97f3\u91cf\u5206\u8fa8\u7387"
+                },
+                "data_description": {
+                    "input_sources": "\u63a5\u6536\u5668\u652f\u6301\u7684\u8f93\u5165\u6e90\u5217\u8868\u3002",
+                    "volume_resolution": "\u63a5\u6536\u5668\u4ece\u6700\u4f4e\u97f3\u91cf\u8c03\u5230\u6700\u9ad8\u97f3\u91cf\u6240\u9700\u7684\u6b65\u6570\u3002"
+                },
+                "description": "\u914d\u7f6e {name}"
+            },
+            "eiscp_discovery": {
+                "data": {
+                    "device": "\u8bbe\u5907"
+                },
+                "data_description": {
+                    "device": "\u9009\u62e9\u8981\u914d\u7f6e\u7684\u63a5\u6536\u5668\u3002"
+                }
+            },
+            "manual": {
+                "data": {
+                    "host": "\u4e3b\u673a"
+                },
+                "data_description": {
+                    "host": "\u63a5\u6536\u5668\u7684\u4e3b\u673a\u540d\u6216 IP \u5730\u5740\u3002"
+                }
+            },
+            "user": {
+                "menu_options": {
+                    "eiscp_discovery": "Onkyo \u81ea\u52a8\u53d1\u73b0",
+                    "manual": "\u624b\u52a8\u8f93\u5165"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_source": {
+            "message": "\u65e0\u6cd5\u4e3a\u5b9e\u4f53 {entity_id} \u9009\u62e9\u8f93\u5165\u6e90\u201c{invalid_source}\u201d \u3002"
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "\u4f7f\u7528 YAML \u914d\u7f6e\u7684 Onkyo \u6b63\u88ab\u79fb\u9664\uff0c\u5bfc\u5165\u4e3b\u673a {host} \u7684 YAML \u914d\u7f6e\u65f6\u51fa\u73b0\u8fde\u63a5\u9519\u8bef\u3002\n\n\u8bf7\u786e\u4fdd\u4e0e\u63a5\u6536\u5668\u7684\u8fde\u63a5\u6b63\u5e38\uff0c\u7136\u540e\u91cd\u65b0\u542f\u52a8 Home Assistant \u91cd\u8bd5\uff0c\u6216\u8005\u4ece configuration.yaml \u6587\u4ef6\u4e2d\u79fb\u9664 Onkyo YAML \u914d\u7f6e\uff0c\u7136\u540e\u7ee7\u7eed\u624b\u52a8\u3010\u8bbe\u7f6e\u96c6\u6210\u3011({url}) \u3002",
+            "title": "Onkyo YAML \u914d\u7f6e\u5bfc\u5165\u5931\u8d25"
+        },
+        "deprecated_yaml_import_issue_no_discover": {
+            "description": "\u4f7f\u7528 YAML \u914d\u7f6e\u7684 Onkyo \u6b63\u88ab\u79fb\u9664\uff0c\u5bfc\u5165 YAML \u914d\u7f6e\u65f6\u672a\u53d1\u73b0\u4efb\u4f55\u63a5\u6536\u5668\u3002\n\n\u8bf7\u786e\u4fdd\u4e0e\u63a5\u6536\u5668\u7684\u8fde\u63a5\u6b63\u5e38\uff0c\u7136\u540e\u91cd\u65b0\u542f\u52a8 Home Assistant \u91cd\u8bd5\uff0c\u6216\u8005\u4ece configuration.yaml \u6587\u4ef6\u4e2d\u79fb\u9664 Onkyo YAML \u914d\u7f6e\uff0c\u7136\u540e\u7ee7\u7eed\u624b\u52a8\u3010\u8bbe\u7f6e\u96c6\u6210\u3011({url}) \u3002",
+            "title": "Onkyo YAML \u914d\u7f6e\u5bfc\u5165\u5931\u8d25"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_volume": "\u6700\u5927\u97f3\u91cf\u9650\u5236 (%)"
+                },
+                "data_description": {
+                    "max_volume": "\u6700\u5927\u97f3\u91cf\u9650\u5236\uff08\u767e\u5206\u6bd4\uff09\u3002\u8fd9\u4f1a\u5c06 Home Assistant \u7684\u6700\u5927\u97f3\u91cf\u4e0e\u63a5\u6536\u5668\u4e0a\u7684\u6b64\u503c\u5173\u8054\u8d77\u6765\uff0c\u4f8b\u5982\u60a8\u5c06\u5176\u8bbe\u7f6e\u4e3a 50% \uff0c\u5219\u5728 Home Assistant \u4e2d\u5c06\u97f3\u91cf\u8bbe\u7f6e\u4e3a 100% \u5c06\u5bfc\u81f4\u63a5\u6536\u5668\u4e0a\u7684\u97f3\u91cf\u8bbe\u7f6e\u4e3a\u5176\u6700\u5927\u503c\u7684 50% \u3002"
+                }
+            }
+        }
+    }
+}

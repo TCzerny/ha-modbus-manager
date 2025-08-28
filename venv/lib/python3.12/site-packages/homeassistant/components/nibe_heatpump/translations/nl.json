@@ -1,0 +1,49 @@
+{
+    "config": {
+        "error": {
+            "address": "Ongeldig extern adres opgegeven. Adres moet een IP-adres of een oplosbare hostnaam zijn.",
+            "address_in_use": "De geselecteerde luisterpoort is al in gebruik op dit systeem.",
+            "model": "Het geselecteerde model lijkt MODBUS40 niet te ondersteunen",
+            "read": "Fout bij leesverzoek van pomp. Controleer uw `Externe lees poort` of `Extern adres`.",
+            "unknown": "Onverwachte fout",
+            "url": "De opgegeven URL is niet goed opgegeven en wordt niet ondersteund",
+            "write": "Fout bij schrijfverzoek naar pomp. Controleer uw `Externe schrijfpoort` of `Extern adres`."
+        },
+        "step": {
+            "modbus": {
+                "data": {
+                    "modbus_unit": "Modbus apparaat identificatie",
+                    "modbus_url": "Modbus URL",
+                    "model": "Model van warmtepomp"
+                },
+                "data_description": {
+                    "modbus_unit": "Eenheids identificatie van je Warmtepomp. Kan doorgaans worden gelaten op 0.",
+                    "modbus_url": "Modbus URL die de verbinding naar je Warmtepomp of MODBUS40 eenheid beschrijft. Moet in de vorm zijn van:\n - `tcp://[HOST]:[PORT]` voor de Modbus TCP verbinding\n - `serial://[LOCAL DEVICE]` voor een lokale Modbus RTU verbinding\n - `rfc2217://[HOST]:[PORT]` voor een externe Telnet gebaseerd Modbus RTU verbinding."
+                }
+            },
+            "nibegw": {
+                "data": {
+                    "ip_address": "Extern adres",
+                    "listening_port": "Lokale luister poort",
+                    "model": "Model van warmtepomp",
+                    "remote_read_port": "Externe lees poort",
+                    "remote_write_port": "Externe schrijf poort"
+                },
+                "data_description": {
+                    "ip_address": "Het IP-adres van de NibeGW eenheid. Het apparaat zou van een statisch IP-adres moeten zijn voorzien.",
+                    "listening_port": "De lokale poort op dit systeem, waarmee de NibeGB eenheid is configureerd om data naar toe te sturen.",
+                    "remote_read_port": "De poort van de NibeGW waarop wordt geluisterd naar leesverzoeken.",
+                    "remote_write_port": "De poort van de NibeGW waarop wordt geluisterd naar schrijfverzoeken."
+                },
+                "description": "Voordat je de integratie probeert te configureren, moet je controleren of:\n - De NibeGW-unit is aangesloten op een warmtepomp.\n - Het MODBUS40-accessoire is ingeschakeld in de configuratie van de warmtepomp.\n - De pomp niet in een alarmtoestand is gegaan over ontbrekende MODBUS40-accessoire."
+            },
+            "user": {
+                "description": "Kies de aansluitmethode van je pomp. Over het algemeen hebben pompen uit de F-serie een NibeGW-accessoire nodig, terwijl een pomp uit de S-serie Modbus-ondersteuning heeft ingebouwd.",
+                "menu_options": {
+                    "modbus": "Modbus",
+                    "nibegw": "NibeGW"
+                }
+            }
+        }
+    }
+}

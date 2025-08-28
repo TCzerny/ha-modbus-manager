@@ -1,0 +1,106 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u30b5\u30fc\u30d3\u30b9\u306f\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u3059"
+        },
+        "step": {
+            "user": {
+                "description": "\u521d\u671f\u8a2d\u5b9a\u3067\u306f**\u9001\u4fe1**\u3092\u9078\u629e\u3057\u307e\u3059\u3002\u4f5c\u6210\u3055\u308c\u305f\u69cb\u6210\u30a8\u30f3\u30c8\u30ea\u3067\u3001\u9078\u629e\u3057\u305f\u30d7\u30ed\u30bb\u30b9\u306e\u30bb\u30f3\u30b5\u30fc\u3092\u8ffd\u52a0\u3059\u308b\u306b\u306f\u69cb\u6210\u3092\u9078\u629e\u3057\u307e\u3059\u3002"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "process": {
+                "name": "\u30d7\u30ed\u30bb\u30b9{process}"
+            }
+        },
+        "sensor": {
+            "disk_free": {
+                "name": "\u30c7\u30a3\u30b9\u30af\u7a7a\u304d {mount_point}"
+            },
+            "disk_use": {
+                "name": "\u30c7\u30a3\u30b9\u30af\u4f7f\u7528\u91cf{mount_point}"
+            },
+            "disk_use_percent": {
+                "name": "\u30c7\u30a3\u30b9\u30af\u4f7f\u7528\u91cf{mount_point}"
+            },
+            "ipv4_address": {
+                "name": "IPv4 \u30a2\u30c9\u30ec\u30b9{ip_address}"
+            },
+            "ipv6_address": {
+                "name": "IPv6 \u30a2\u30c9\u30ec\u30b9{ip_address}"
+            },
+            "last_boot": {
+                "name": "\u6700\u5f8c\u306e\u8d77\u52d5"
+            },
+            "load_15m": {
+                "name": "\u8ca0\u8377(15m)"
+            },
+            "load_1m": {
+                "name": "\u8ca0\u8377(1m)"
+            },
+            "load_5m": {
+                "name": "\u8ca0\u8377(5m)"
+            },
+            "memory_free": {
+                "name": "\u7a7a\u304d\u30e1\u30e2\u30ea"
+            },
+            "memory_use": {
+                "name": "\u30e1\u30e2\u30ea\u4f7f\u7528"
+            },
+            "memory_use_percent": {
+                "name": "\u30e1\u30e2\u30ea\u4f7f\u7528\u91cf"
+            },
+            "network_in": {
+                "name": "\u30cd\u30c3\u30c8\u30ef\u30fc\u30afIN {interface}"
+            },
+            "network_out": {
+                "name": "\u30cd\u30c3\u30c8\u30ef\u30fc\u30afOUT {interface}"
+            },
+            "packets_in": {
+                "name": "\u30d1\u30b1\u30c3\u30c8IN{interface}"
+            },
+            "packets_out": {
+                "name": "\u30d1\u30b1\u30c3\u30c8OUT{interface}"
+            },
+            "process": {
+                "name": "\u30d7\u30ed\u30bb\u30b9{process}"
+            },
+            "processor_temperature": {
+                "name": "\u30d7\u30ed\u30bb\u30c3\u30b5\u30fc\u6e29\u5ea6"
+            },
+            "processor_use": {
+                "name": "\u30d7\u30ed\u30bb\u30c3\u30b5\u30fc\u306e\u4f7f\u7528"
+            },
+            "swap_free": {
+                "name": "\u30b9\u30ef\u30c3\u30d7\u30d5\u30ea\u30fc"
+            },
+            "swap_use": {
+                "name": "\u30b9\u30ef\u30c3\u30d7\u4f7f\u7528"
+            },
+            "swap_use_percent": {
+                "name": "\u30b9\u30ef\u30c3\u30d7\u4f7f\u7528\u91cf"
+            },
+            "throughput_network_in": {
+                "name": "\u30cd\u30c3\u30c8\u30ef\u30fc\u30af \u30b9\u30eb\u30fc\u30d7\u30c3\u30c8IN {interface}"
+            },
+            "throughput_network_out": {
+                "name": "\u30cd\u30c3\u30c8\u30ef\u30fc\u30af \u30b9\u30eb\u30fc\u30d7\u30c3\u30c8OUT {interface}"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "process": "\u30bb\u30f3\u30b5\u30fc\u3068\u3057\u3066\u8ffd\u52a0\u3059\u308b\u30d7\u30ed\u30bb\u30b9"
+                },
+                "data_description": {
+                    "process": "\u30ea\u30b9\u30c8\u304b\u3089\u5b9f\u884c\u4e2d\u306e\u30d7\u30ed\u30bb\u30b9\u3092\u9078\u629e\u3059\u308b\u304b\u3001\u30ab\u30b9\u30bf\u30e0\u5024\u3092\u8ffd\u52a0\u3057\u307e\u3059\u3002\u8907\u6570\u306e\u9078\u629e/\u30ab\u30b9\u30bf\u30e0\u5024\u304c\u30b5\u30dd\u30fc\u30c8\u3055\u308c\u3066\u3044\u307e\u3059"
+                },
+                "description": "\u5b9f\u884c\u4e2d\u306e\u30d7\u30ed\u30bb\u30b9\u306e\u76e3\u8996\u30bb\u30f3\u30b5\u30fc\u3092\u69cb\u6210\u3059\u308b"
+            }
+        }
+    }
+}

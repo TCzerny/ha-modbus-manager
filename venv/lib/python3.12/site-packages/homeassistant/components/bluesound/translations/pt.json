@@ -1,0 +1,74 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "step": {
+            "confirm": {
+                "description": "Quer dar in\u00edcio \u00e0 configura\u00e7\u00e3o?",
+                "title": "Procurar leitor Bluesound"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "port": "Porta"
+                },
+                "data_description": {
+                    "host": "Nome do host ou endere\u00e7o IP do seu leitor Bluesound",
+                    "port": "A porta do seu leitor Bluesound. Normalmente, \u00e9 11000."
+                }
+            }
+        }
+    },
+    "services": {
+        "clear_sleep_timer": {
+            "description": "Limpar um temporizador Bluesound.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome(s) das entidades que ter\u00e3o o temporizador desativado.",
+                    "name": "Entidade"
+                }
+            },
+            "name": "Limpar o temporizador de sono"
+        },
+        "join": {
+            "description": "Agrupar leitores.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome da entidade que ir\u00e1 coordenar o agrupamento. Depende da plataforma.",
+                    "name": "Entidade"
+                },
+                "master": {
+                    "description": "ID da entidade do leitor que deve tornar-se o mestre do grupo.",
+                    "name": "Mestre"
+                }
+            },
+            "name": "Aderir"
+        },
+        "set_sleep_timer": {
+            "description": "Definir um temporizador Bluesound. Aumentar\u00e1 o temporizador em passos: 15, 30, 45, 60, 90, 0.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome(s) das entidades que ter\u00e3o um temporizador definido.",
+                    "name": "Entidade"
+                }
+            },
+            "name": "Definir o temporizador de sono"
+        },
+        "unjoin": {
+            "description": "Separar o leitor de um grupo.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome da entidade que ser\u00e1 desvinculada do seu grupo. Depende da plataforma.",
+                    "name": "Entidade"
+                }
+            },
+            "name": "Desanexar"
+        }
+    }
+}

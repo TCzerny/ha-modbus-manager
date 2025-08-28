@@ -1,0 +1,31 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Lint Code",
+      "type": "shell",
+      "command": "flake8",
+      "group": "build",
+      "presentation": {
+        "echo": true,
+        "reveal": "always",
+        "focus": false,
+        "panel": "shared"
+      }
+    },
+    {
+      "label": "Format Code",
+      "type": "shell",
+      "command": "black",
+      "args": ["."],
+      "group": "build"
+    },
+    {
+      "label": "Sort Imports",
+      "type": "shell",
+      "command": "isort",
+      "args": ["."],
+      "group": "build"
+    }
+  ]
+}

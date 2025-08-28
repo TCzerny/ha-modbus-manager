@@ -1,0 +1,124 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delivered": {
+                "name": "Entregue"
+            },
+            "expired": {
+                "name": "Expirado"
+            },
+            "in_transit": {
+                "name": "Em tr\u00e2nsito"
+            },
+            "not_found": {
+                "name": "N\u00e3o encontrado"
+            },
+            "package": {
+                "name": "Pacote {name}"
+            },
+            "ready_to_be_picked_up": {
+                "name": "Pronto para ser levantado"
+            },
+            "returned": {
+                "name": "Devolvido"
+            },
+            "undelivered": {
+                "name": "N\u00e3o entregue"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Foi fornecida uma entrada de configura\u00e7\u00e3o inv\u00e1lida. Foi recebido {config_entry_id}."
+        },
+        "unloaded_config_entry": {
+            "message": "Foi fornecida uma entrada de configura\u00e7\u00e3o inv\u00e1lida. {config_entry_id} n\u00e3o est\u00e1 carregada."
+        }
+    },
+    "issues": {
+        "deprecate_sensor": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Os sensores de pacotes do 17Track est\u00e3o obsoletos e ser\u00e3o removidos.\nAtualize suas automatiza\u00e7\u00f5es e scripts para obter dados usando a a\u00e7\u00e3o `seventeentrack.get_packages`.",
+                        "title": "Os sensores do pacote 17Track est\u00e3o a ser descontinuados"
+                    }
+                }
+            },
+            "title": "Os sensores do pacote 17Track est\u00e3o a ser descontinuados"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "show_archived": "Se devem ser criados sensores para pacotes arquivados",
+                    "show_delivered": "Se devem ser criados sensores para os pacotes entregues"
+                },
+                "description": "Configurar as defini\u00e7\u00f5es gerais"
+            }
+        }
+    },
+    "selector": {
+        "package_state": {
+            "options": {
+                "delivered": "Entregue",
+                "expired": "Expirado",
+                "in_transit": "Em tr\u00e2nsito",
+                "not_found": "N\u00e3o encontrado",
+                "ready_to_be_picked_up": "Pronto para ser levantado",
+                "returned": "Devolvido",
+                "undelivered": "N\u00e3o entregue"
+            }
+        }
+    },
+    "services": {
+        "archive_package": {
+            "description": "Arquivar pacote",
+            "fields": {
+                "config_entry_id": {
+                    "description": "O pacote ser\u00e1 arquivado para o servi\u00e7o selecionado.",
+                    "name": "Servi\u00e7o 17Track"
+                },
+                "package_tracking_number": {
+                    "description": "O pacote ser\u00e1 arquivado para o n\u00famero de rastreamento especificado.",
+                    "name": "N\u00famero de rastreamento do pacote"
+                }
+            },
+            "name": "Arquivar pacote"
+        },
+        "get_packages": {
+            "description": "Obter pacotes da 17Track",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Os pacotes ser\u00e3o recuperados para o servi\u00e7o selecionado.",
+                    "name": "Servi\u00e7o 17Track"
+                },
+                "package_state": {
+                    "description": "Devolve apenas os pacotes com os estados especificados. Devolve todos os pacotes se n\u00e3o for especificado.",
+                    "name": "Estados do pacote"
+                }
+            },
+            "name": "Obter pacotes"
+        }
+    }
+}

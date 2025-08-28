@@ -1,0 +1,141 @@
+{
+    "common": {
+        "shopping_list_items": "Artikel"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Dienst ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "unique_id_mismatch": "Die Anmeldedaten stammen von einem anderen Konto. Bitte authentifiziere dich erneut mit dem zuvor konfigurierten Konto."
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "email": "E-Mail",
+                    "password": "Passwort"
+                },
+                "description": "Die Bring!-Integration muss dein Konto erneut authentifizieren",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            },
+            "user": {
+                "data": {
+                    "email": "E-Mail",
+                    "password": "Passwort"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "convenient": {
+                "name": "Bei Gelegenheit",
+                "unit_of_measurement": "Artikel"
+            },
+            "discounted": {
+                "name": "Nur wenn im Angebot",
+                "unit_of_measurement": "Artikel"
+            },
+            "list_access": {
+                "name": "Listenzugriff",
+                "state": {
+                    "invitation": "Ausstehende Einladung",
+                    "registered": "Pers\u00f6nlich",
+                    "shared": "Geteilt"
+                }
+            },
+            "list_language": {
+                "name": "Region und Sprache",
+                "state": {
+                    "de-at": "\u00d6sterreich",
+                    "de-ch": "Schweiz (Deutsch)",
+                    "de-de": "Deutschland",
+                    "en-au": "Australien",
+                    "en-ca": "Kanada",
+                    "en-gb": "Vereinigtes K\u00f6nigreich",
+                    "en-us": "Vereinigte Staaten",
+                    "es-es": "Spanien",
+                    "fr-ch": "Schweiz (Franz\u00f6sisch)",
+                    "fr-fr": "Frankreich",
+                    "hu-hu": "Ungarn",
+                    "it-ch": "Schweiz (Italienisch)",
+                    "it-it": "Italien",
+                    "nb-no": "Norwegen",
+                    "nl-nl": "Niederlande",
+                    "pl-pl": "Polen",
+                    "pt-br": "Portugal",
+                    "ru-ru": "Russland",
+                    "sv-se": "Schweden",
+                    "tr-tr": "T\u00fcrkei"
+                }
+            },
+            "urgent": {
+                "name": "Dringend",
+                "unit_of_measurement": "Artikel"
+            }
+        }
+    },
+    "exceptions": {
+        "notify_missing_argument_item": {
+            "message": "Die Aktion {service} konnte nicht ausgef\u00fchrt werden. \u201eURGENT_MESSAGE\u201c erfordert einen Wert @ data['item']. Keiner vorhanden."
+        },
+        "notify_request_failed": {
+            "message": "Aufgrund eines Verbindungsfehlers konnte keine Push-Benachrichtigung f\u00fcr Bring! gesendet werden. Versuche es sp\u00e4ter erneut."
+        },
+        "setup_authentication_exception": {
+            "message": "Die Authentifizierung f\u00fcr {email} ist fehlgeschlagen. \u00dcberpr\u00fcfe deine E-Mail und dein Passwort."
+        },
+        "setup_parse_exception": {
+            "message": "Parsen der Serverantwort fehlgeschlagen. Versuche es sp\u00e4ter erneut."
+        },
+        "setup_request_exception": {
+            "message": "Verbindung zum Server konnte nicht hergestellt werden. Versuche es sp\u00e4ter erneut."
+        },
+        "todo_delete_item_failed": {
+            "message": "{count} Eintr\u00e4ge konnten nicht von der Bring!-Liste gel\u00f6scht werden."
+        },
+        "todo_rename_item_failed": {
+            "message": "Umbenennen des Eintrags {name} in der Bring!-Liste ist fehlgeschlagen"
+        },
+        "todo_save_item_failed": {
+            "message": "Eintrag {name} konnte nicht in der Bring!-Liste gespeichert werden"
+        },
+        "todo_update_item_failed": {
+            "message": "Aktualisierung des Eintrags {name} in der Bring!-Liste fehlgeschlagen"
+        }
+    },
+    "selector": {
+        "notification_type_selector": {
+            "options": {
+                "changed_list": "Ich habe die Liste ge\u00e4ndert! - Schau mal \u00fcber die Artikel",
+                "going_shopping": "Ich gehe einkaufen! - Letzte Chance f\u00fcr \u00c4nderungsw\u00fcnsche",
+                "shopping_done": "Der Einkauf ist erledigt! - Unser K\u00fchlschrank ist gut gef\u00fcllt",
+                "urgent_message": "Achtung! Achtung! - Wir ben\u00f6tigen noch ganz dringend: [Artikel]"
+            }
+        }
+    },
+    "services": {
+        "send_message": {
+            "description": "Sendet eine mobile Push-Benachrichtigung an Mitglieder einer geteilten Bring!-Liste.",
+            "fields": {
+                "entity_id": {
+                    "description": "Bring!-Liste, deren Mitglieder (au\u00dfer Absender) benachrichtigt werden.",
+                    "name": "Liste"
+                },
+                "item": {
+                    "description": "Namen der Artikel, die in einer Eilmeldung eingef\u00fcgt werden sollen, z. B. 'Achtung! Achtung! - Wir ben\u00f6tigen noch ganz dringend: [Artikel]'",
+                    "name": "Artikel (Erforderlich, wenn Benachrichtigungstyp 'Eilmeldung' ausgew\u00e4hlt ist)"
+                },
+                "message": {
+                    "description": "Art der Push-Benachrichtigung, die an Listenmitglieder gesendet werden soll.",
+                    "name": "Benachrichtigungstyp"
+                }
+            },
+            "name": "Benachrichtigung senden"
+        }
+    }
+}

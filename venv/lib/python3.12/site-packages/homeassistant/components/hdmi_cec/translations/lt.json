@@ -1,0 +1,70 @@
+{
+    "services": {
+        "power_on": {
+            "description": "\u012ejungia visus \u012frenginius, kurie palaiko \u0161i\u0105 funkcij\u0105.",
+            "name": "\u012ejungtas maitinimas"
+        },
+        "select_device": {
+            "description": "Pasirenkamas HDMI \u012frenginys.",
+            "fields": {
+                "device": {
+                    "description": "Norimo pasirinkti \u012frenginio adresas. Tai gali b\u016bti subjekto ID, fizinis adresas arba slapyvardis i\u0161 konfig\u016bracijos.",
+                    "name": "Prietaisas"
+                }
+            },
+            "name": "Pasirinkite prietais\u0105"
+        },
+        "send_command": {
+            "description": "Siun\u010dia CEC komand\u0105 \u012f HDMI CEC palaikant\u012f adapter\u012f.",
+            "fields": {
+                "att": {
+                    "description": "Pasirenkami parametrai.",
+                    "name": "Att"
+                },
+                "cmd": {
+                    "description": "Pati komanda. Gali b\u016bti de\u0161imtainis skai\u010dius arba eilut\u0117 su \u0161e\u0161ioliktaine \u017eyma: \"0x10\".",
+                    "name": "Komanda"
+                },
+                "dst": {
+                    "description": "Komandos paskirtis. Gali b\u016bti de\u0161imtainis skai\u010dius arba eilut\u0117 su \u0161e\u0161ioliktaine \u017eyma: \"0x10\".",
+                    "name": "Kelion\u0117s tikslas"
+                },
+                "raw": {
+                    "description": "Neapdorota CEC komanda formatu \u201e00:00:00:00\u201c, kur pirmieji du skaitmenys yra \u0161altinis ir paskirties vieta, antrasis baitas yra komanda, o kiti pasirenkami kiti baitai yra komandos parametrai. Jei nurodyta neapdorota komanda, kiti parametrai nepaisomi.",
+                    "name": "Neapdorotas"
+                },
+                "src": {
+                    "description": "Komandos \u0161altinis. Gali b\u016bti de\u0161imtainis skai\u010dius arba eilut\u0117 su \u0161e\u0161ioliktaine \u017eyma: \"0x10\".",
+                    "name": "\u0160altinis"
+                }
+            },
+            "name": "Si\u0173sti komand\u0105"
+        },
+        "standby": {
+            "description": "\u012e bud\u0117jimo re\u017eim\u0105 \u012fjungia visus \u012frenginius, kurie palaiko \u0161i\u0105 funkcij\u0105.",
+            "name": "Bud\u0117jimo re\u017eimas"
+        },
+        "update": {
+            "description": "Atnaujina prietais\u0173 b\u016bsen\u0105 i\u0161 tinklo.",
+            "name": "Atnaujinimas"
+        },
+        "volume": {
+            "description": "Padidina arba suma\u017eina sistemos garsum\u0105.",
+            "fields": {
+                "down": {
+                    "description": "Suma\u017eina garsum\u0105 x lygiai.",
+                    "name": "\u017demyn"
+                },
+                "mute": {
+                    "description": "Nutildo garso sistem\u0105.",
+                    "name": "Nutildyti"
+                },
+                "up": {
+                    "description": "Padidina garsum\u0105 x lygius.",
+                    "name": "Auk\u0161tyn"
+                }
+            },
+            "name": "Garsas"
+        }
+    }
+}

@@ -1,0 +1,143 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "A fi\u00f3k m\u00e1r konfigur\u00e1lva van",
+            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt",
+            "reconfigure_successful": "\u00dajrakonfigur\u00e1l\u00e1s sikeres volt"
+        },
+        "error": {
+            "invalid_auth": "\u00c9rv\u00e9nytelen hiteles\u00edt\u00e9s",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "step": {
+            "2fa": {
+                "data": {
+                    "2fa": "K\u00e9tfaktoros k\u00f3d"
+                },
+                "title": "K\u00e9tfaktoros hiteles\u00edt\u00e9s"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Jelsz\u00f3"
+                },
+                "description": "A Ring integr\u00e1ci\u00f3nak \u00fajra hiteles\u00edtenie kell a fi\u00f3kj\u00e1t {username}",
+                "title": "A(z) {name} hiteles\u00edt\u00e9se lej\u00e1rt"
+            },
+            "reconfigure": {
+                "data": {
+                    "password": "Jelsz\u00f3"
+                },
+                "description": "\u00daj jogosult eszk\u00f6z ker\u00fcl l\u00e9trehoz\u00e1sra a(z) {username} felhaszn\u00e1l\u00f3 sz\u00e1m\u00e1ra a ring.com-on.",
+                "title": "Ring integr\u00e1ci\u00f3 \u00fajrakonfigur\u00e1l\u00e1sa"
+            },
+            "user": {
+                "data": {
+                    "password": "Jelsz\u00f3",
+                    "username": "Felhaszn\u00e1l\u00f3n\u00e9v"
+                },
+                "title": "Bejelentkez\u00e9s a Ring fi\u00f3kkal"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "ding": {
+                "name": "Cseng\u00e9s"
+            },
+            "motion": {
+                "name": "Mozg\u00e1s"
+            }
+        },
+        "button": {
+            "open_door": {
+                "name": "Ajt\u00f3nyit\u00e1s"
+            }
+        },
+        "camera": {
+            "last_recording": {
+                "name": "Utols\u00f3 felv\u00e9tel"
+            },
+            "live_view": {
+                "name": "\u00c9l\u0151 n\u00e9zet"
+            }
+        },
+        "event": {
+            "ding": {
+                "name": "Cseng\u00e9s"
+            },
+            "intercom_unlock": {
+                "name": "Intercom felold\u00e1sa"
+            }
+        },
+        "light": {
+            "light": {
+                "name": "Vil\u00e1g\u00edt\u00e1s"
+            }
+        },
+        "number": {
+            "doorbell_volume": {
+                "name": "Ajt\u00f3cseng\u0151 hanger\u0151"
+            },
+            "mic_volume": {
+                "name": "Mikrofon hanger\u0151"
+            },
+            "voice_volume": {
+                "name": "Besz\u00e9d hanger\u0151"
+            },
+            "volume": {
+                "name": "Hanger\u0151"
+            }
+        },
+        "sensor": {
+            "doorbell_volume": {
+                "name": "Ajt\u00f3cseng\u0151 hanger\u0151"
+            },
+            "last_activity": {
+                "name": "Utols\u00f3 tev\u00e9kenys\u00e9g"
+            },
+            "last_ding": {
+                "name": "Utols\u00f3 cseng\u00e9s"
+            },
+            "last_motion": {
+                "name": "Utols\u00f3 mozg\u00e1s"
+            },
+            "mic_volume": {
+                "name": "Mikrofon hanger\u0151"
+            },
+            "voice_volume": {
+                "name": "Besz\u00e9d hanger\u0151"
+            },
+            "volume": {
+                "name": "Hanger\u0151"
+            },
+            "wifi_signal_category": {
+                "name": "Wi-Fi jel kateg\u00f3ria"
+            },
+            "wifi_signal_strength": {
+                "name": "Wi-Fi jel er\u0151ss\u00e9ge"
+            }
+        },
+        "siren": {
+            "siren": {
+                "name": "Szir\u00e9na"
+            }
+        },
+        "switch": {
+            "in_home_chime": {
+                "name": "Belt\u00e9ri cseng\u0151"
+            },
+            "motion_detection": {
+                "name": "Mozg\u00e1s\u00e9rz\u00e9kel\u00e9s"
+            },
+            "siren": {
+                "name": "Szir\u00e9na"
+            }
+        }
+    },
+    "issues": {
+        "deprecated_entity": {
+            "description": "\u00c9szlelt\u00fck, hogy a(z) `{entity}` entit\u00e1s haszn\u00e1latban van a(z) `{info}` helyen.\n\nL\u00e9trehoztunk egy \u00faj `{new_platform}` entit\u00e1st \u00e9s \u00e1t kell migr\u00e1lnia a(z) `{info}` be\u00e1ll\u00edt\u00e1st, hogy ezt az \u00faj entit\u00e1st haszn\u00e1lja.\n\nMiut\u00e1n befejezte a(z) `{info}` migr\u00e1l\u00e1s\u00e1t \u00e9s k\u00e9szen \u00e1ll arra, hogy az elavult `{entity}` entit\u00e1st elt\u00e1vol\u00edtsa, tiltsa le az entit\u00e1st, majd ind\u00edtsa \u00fajra a Home Assistantot.",
+            "title": "Elavult {platform} entit\u00e1shaszn\u00e1lat \u00e9szlelve"
+        }
+    }
+}

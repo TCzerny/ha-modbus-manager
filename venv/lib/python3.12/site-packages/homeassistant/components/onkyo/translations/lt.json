@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "no_devices_found": "Tinkle nerasta joki\u0173 prietais\u0173",
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas",
+            "unique_id_mismatch": "Prietaiso serijos numeris nesutampa su ankstesniu serijos numeriu",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "empty_input_source_list": "\u012evesties \u0161altini\u0173 s\u0105ra\u0161as negali b\u016bti tu\u0161\u010dias",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "step": {
+            "configure_receiver": {
+                "data": {
+                    "input_sources": "\u012evesties \u0161altiniai",
+                    "volume_resolution": "Garso rai\u0161ka"
+                },
+                "data_description": {
+                    "input_sources": "Imtuvo palaikom\u0173 \u012fvesties \u0161altini\u0173 s\u0105ra\u0161as.",
+                    "volume_resolution": "\u017dingsni\u0173 skai\u010dius, kurio reikia imtuvui pereiti nuo ma\u017eiausio iki did\u017eiausio \u012fmanomo garsumo."
+                },
+                "description": "Konfig\u016bruoti {name}"
+            },
+            "eiscp_discovery": {
+                "data": {
+                    "device": "Prietaisas"
+                },
+                "data_description": {
+                    "device": "Pasirinkite imtuv\u0105, kur\u012f norite konfig\u016bruoti."
+                }
+            },
+            "manual": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Imtuvo pagrindinio kompiuterio pavadinimas arba IP adresas."
+                }
+            },
+            "user": {
+                "menu_options": {
+                    "eiscp_discovery": "Onkyo atradimas",
+                    "manual": "Rankinis \u012fvedimas"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_source": {
+            "message": "Negalima pasirinkti \u012fvesties \u0161altinio \u201e {invalid_source} \u201c subjektui: {entity_id}."
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "\u201eOnkyo\u201c konfig\u016bravimas naudojant YAML pa\u0161alinamas, ta\u010diau importuojant YAML konfig\u016bracij\u0105, skirt\u0105 pagrindiniam kompiuteriui {host} \u012fvyko ry\u0161io klaida.\n\n\u012esitikinkite, kad ry\u0161ys su imtuvu veikia, ir i\u0161 naujo paleiskite \u201eHome Assistant\u201c, kad pabandytum\u0117te dar kart\u0105, arba pa\u0161alinkite Onkyo YAML konfig\u016bracij\u0105 i\u0161 failo configuration.yaml ir toliau [nustatykite integracij\u0105] ({url}) rankiniu b\u016bdu.",
+            "title": "Onkyo YAML konfig\u016bracijos importavimas nepavyko"
+        },
+        "deprecated_yaml_import_issue_no_discover": {
+            "description": "\u201eOnkyo\u201c konfig\u016bravimas naudojant YAML pa\u0161alinamas, bet importuojant YAML konfig\u016bracij\u0105 imtuv\u0173 nerasta.\n\n\u012esitikinkite, kad ry\u0161ys su imtuvu veikia, ir i\u0161 naujo paleiskite \u201eHome Assistant\u201c, kad pabandytum\u0117te dar kart\u0105, arba pa\u0161alinkite Onkyo YAML konfig\u016bracij\u0105 i\u0161 failo configuration.yaml ir toliau [nustatykite integracij\u0105] ({url}) rankiniu b\u016bdu.",
+            "title": "Onkyo YAML konfig\u016bracijos importavimas nepavyko"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_volume": "Did\u017eiausia garsumo riba (%)"
+                },
+                "data_description": {
+                    "max_volume": "Did\u017eiausia garsumo riba procentais. Tai susies \"Home Assistant\" maksimal\u0173 garsum\u0105 su \u0161ia imtuvo verte, t. Y. Jei nustatysite tai \u012f 50%, tada \"Home Assistant\" nusta\u010dius garsum\u0105 \u012f 100%, imtuvo garsumas bus nustatytas iki 50% jo maksimalios vert\u0117s."
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,58 @@
+{
+    "application_credentials": {
+        "description": "Folge den [Anweisungen]({more_info_url}) f\u00fcr den [OAuth-Zustimmungsbildschirm]({oauth_consent_url}), um Home Assistant Zugriff auf dein Google Sheets zu geben. Du musst au\u00dferdem mit deinem Konto verkn\u00fcpfte OAuth-Anmeldedaten erstellen:\n1. Gehe zu [Anmeldedaten]({oauth_creds_url}) und w\u00e4hle **Anmeldedaten erstellen**.\n1. W\u00e4hle aus der Dropdown-Liste **OAuth-Client-ID**.\n1. W\u00e4hle **Webanwendung** f\u00fcr den Anwendungstyp."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "already_in_progress": "Konfigurationsablauf wird bereits ausgef\u00fchrt",
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "create_spreadsheet_failure": "Fehler beim Erstellen der Tabelle, siehe Fehlerprotokoll f\u00fcr Details",
+            "invalid_access_token": "Ung\u00fcltiges Zugriffstoken",
+            "missing_configuration": "Die Komponente ist nicht konfiguriert. Bitte der Dokumentation folgen.",
+            "oauth_error": "Ung\u00fcltige Token-Daten empfangen.",
+            "oauth_failed": "Fehler beim Abrufen des Zugriffstokens.",
+            "oauth_timeout": "Zeit\u00fcberschreitung beim Aufl\u00f6sen des OAuth-Tokens.",
+            "oauth_unauthorized": "OAuth-Autorisierungsfehler beim Abrufen des Zugriffstokens.",
+            "open_spreadsheet_failure": "Fehler beim \u00d6ffnen der Tabelle, siehe Fehlerprotokoll f\u00fcr Details",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "timeout_connect": "Zeit\u00fcberschreitung beim Verbindungsaufbau",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "create_entry": {
+            "default": "Erfolgreich authentifiziert und Tabelle erstellt unter: {url}"
+        },
+        "step": {
+            "auth": {
+                "title": "Google-Konto verkn\u00fcpfen"
+            },
+            "pick_implementation": {
+                "title": "Authentifizierungsmethode w\u00e4hlen"
+            },
+            "reauth_confirm": {
+                "description": "Die Google Sheets-Integration muss dein Konto neu authentifizieren",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            }
+        }
+    },
+    "services": {
+        "append_sheet": {
+            "description": "H\u00e4ngt Daten an ein Tabellenblatt in Google Sheets an.",
+            "fields": {
+                "config_entry": {
+                    "description": "Die Tabelle, der Daten hinzugef\u00fcgt werden sollen.",
+                    "name": "Tabelle"
+                },
+                "data": {
+                    "description": "Daten, die an das Tabellenblatt angeh\u00e4ngt werden sollen. Die Werte werden in neue Zeilen unterhalb der passenden Spalte (Schl\u00fcssel) eingef\u00fcgt. Jeder neue Schl\u00fcssel wird oben in einer neuen Spalte platziert.",
+                    "name": "Daten"
+                },
+                "worksheet": {
+                    "description": "Name des Tabellenblatts. Standardm\u00e4\u00dfig wird das erste im Dokument verwendet.",
+                    "name": "Tabellenblatt"
+                }
+            },
+            "name": "An Tabelle anh\u00e4ngen"
+        }
+    }
+}

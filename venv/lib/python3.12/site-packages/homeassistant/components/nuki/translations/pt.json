@@ -1,0 +1,81 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "encrypt_token": "Utilizar um token encriptado para autentica\u00e7\u00e3o.",
+                    "token": "Token de Acesso"
+                },
+                "description": "A integra\u00e7\u00e3o Nuki precisa de se autenticar novamente com a sua ponte.",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "user": {
+                "data": {
+                    "encrypt_token": "Utilizar um token encriptado para autentica\u00e7\u00e3o.",
+                    "host": "Anfitri\u00e3o",
+                    "port": "Porta",
+                    "token": "Token de Acesso"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou o endere\u00e7o IP da sua ponte Nuki. Por exemplo: 192.168.1.25."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "ring_action": {
+                "name": "A\u00e7\u00e3o da campainha"
+            }
+        },
+        "lock": {
+            "nuki_lock": {
+                "state_attributes": {
+                    "battery_critical": {
+                        "state": {
+                            "off": "Normal",
+                            "on": "Baixa"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "https_webhook": {
+            "description": "A ponte Nuki n\u00e3o pode enviar eventos para um endere\u00e7o HTTPS (SSL). Por favor, configure um endere\u00e7o HTTP (local) em \"URL do Home Assistant\" nas [defini\u00e7\u00f5es de rede]({network_link}). O endere\u00e7o atual (local) \u00e9: `{base_url}`, um endere\u00e7o v\u00e1lido poderia, por exemplo, ser `http://192.168.1.10:8123` onde `192.168.1.10` \u00e9 o IP do dispositivo Home Assistant",
+            "title": "O URL do webhook Nuki utiliza HTTPS (SSL)"
+        }
+    },
+    "services": {
+        "lock_n_go": {
+            "description": "Nuki Lock 'n' Go.",
+            "fields": {
+                "unlatch": {
+                    "description": "Se deve destrancar a fechadura.",
+                    "name": "Destrancar"
+                }
+            },
+            "name": "Bloquear e avan\u00e7ar"
+        },
+        "set_continuous_mode": {
+            "description": "Ativa ou desactiva o modo cont\u00ednuo no Nuki Opener.",
+            "fields": {
+                "enable": {
+                    "description": "Se deve ativar ou desativar a funcionalidade.",
+                    "name": "Ligar"
+                }
+            },
+            "name": "Definir o modo cont\u00ednuo"
+        }
+    }
+}

@@ -1,0 +1,143 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "device_not_supported": "Dieses Ger\u00e4t wird nicht unterst\u00fctzt",
+            "invalid_discovery_parameters": "Ung\u00fcltige Erkennungsparameter",
+            "reauth_successful": "Das Aktivieren der API war erfolgreich",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich",
+            "unknown_error": "Unerwarteter Fehler",
+            "unsupported_api_version": "Nicht unterst\u00fctzte API-Version erkannt",
+            "wrong_device": "Das konfigurierte Ger\u00e4t ist nicht dasselbe, das unter dieser IP-Adresse gefunden wurde."
+        },
+        "error": {
+            "api_not_enabled": "Die lokale API ist deaktiviert. Aktiviere die API in den Ger\u00e4teeinstellungen der HomeWizard Energy App.",
+            "network_error": "Ger\u00e4t nicht erreichbar, vergewissere dich, dass du die richtige IP-Adresse eingegeben hast und dass das Ger\u00e4t in deinem Netzwerk verf\u00fcgbar ist"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "M\u00f6chtest du {product_type} ({serial}) unter {ip_address} einrichten?",
+                "title": "Best\u00e4tigen"
+            },
+            "reauth_confirm": {
+                "description": "Die lokale API ist deaktiviert. Gehe zur HomeWizard Energy App und aktiviere die API in den Ger\u00e4teeinstellungen."
+            },
+            "reconfigure": {
+                "data": {
+                    "ip_address": "IP-Adresse"
+                },
+                "data_description": {
+                    "ip_address": "Die IP-Adresse deines HomeWizard Energy Ger\u00e4ts."
+                },
+                "description": "Konfiguration f\u00fcr {title} aktualisieren."
+            },
+            "user": {
+                "data": {
+                    "ip_address": "IP-Adresse"
+                },
+                "data_description": {
+                    "ip_address": "Die IP-Adresse deines HomeWizard Energy Ger\u00e4ts."
+                },
+                "description": "Gib die IP-Adresse deines HomeWizard Energy Ger\u00e4ts ein, um es in Home Assistant zu integrieren.",
+                "title": "Ger\u00e4t konfigurieren"
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "status_light_brightness": {
+                "name": "Helligkeit der Statusleuchte"
+            }
+        },
+        "sensor": {
+            "active_apparent_power_phase_va": {
+                "name": "Scheinleistungsphase {phase}"
+            },
+            "active_current_phase_a": {
+                "name": "Stromst\u00e4rke Phase {phase}"
+            },
+            "active_liter_lpm": {
+                "name": "Wasserverbrauch"
+            },
+            "active_power_average_w": {
+                "name": "Durchschnittliche Nachfrage"
+            },
+            "active_power_factor_phase": {
+                "name": "Leistungsfaktor Phase {phase}"
+            },
+            "active_power_phase_w": {
+                "name": "Leistungsphase {phase}"
+            },
+            "active_reactive_power_phase_var": {
+                "name": "Blindleistungsphase {phase}"
+            },
+            "active_tariff": {
+                "name": "Tarif"
+            },
+            "active_voltage_phase_v": {
+                "name": "Spannungsphase {phase}"
+            },
+            "any_power_fail_count": {
+                "name": "Stromausf\u00e4lle erkannt"
+            },
+            "dsmr_version": {
+                "name": "DSMR-Version"
+            },
+            "long_power_fail_count": {
+                "name": "L\u00e4ngere Stromausf\u00e4lle erkannt"
+            },
+            "meter_model": {
+                "name": "Smart-Meter-Modell"
+            },
+            "monthly_power_peak_w": {
+                "name": "Spitzennachfrage im laufenden Monat"
+            },
+            "total_energy_export_kwh": {
+                "name": "Energieexport"
+            },
+            "total_energy_export_tariff_kwh": {
+                "name": "Energieexporttarif {tariff}"
+            },
+            "total_energy_import_kwh": {
+                "name": "Energieimport"
+            },
+            "total_energy_import_tariff_kwh": {
+                "name": "Energieimporttarif {tariff}"
+            },
+            "total_liter_m3": {
+                "name": "Wasserverbrauch insgesamt"
+            },
+            "unique_meter_id": {
+                "name": "Smart-Meter-Kennung"
+            },
+            "voltage_sag_phase_count": {
+                "name": "Spannungseinbr\u00fcche erkannt Phase {phase}"
+            },
+            "voltage_swell_phase_count": {
+                "name": "Spannungsspitzen erkannt Phase {phase}"
+            },
+            "wifi_ssid": {
+                "name": "WLAN-SSID"
+            },
+            "wifi_strength": {
+                "name": "WLAN-St\u00e4rke"
+            }
+        },
+        "switch": {
+            "cloud_connection": {
+                "name": "Cloud-Verbindung"
+            },
+            "switch_lock": {
+                "name": "Schaltersperre"
+            }
+        }
+    },
+    "exceptions": {
+        "api_disabled": {
+            "message": "Die lokale API ist deaktiviert."
+        },
+        "communication_error": {
+            "message": "Bei der Kommunikation mit dem HomeWizard-Ger\u00e4t ist ein Fehler aufgetreten"
+        }
+    }
+}

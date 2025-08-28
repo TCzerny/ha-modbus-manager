@@ -1,0 +1,125 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "L'appareil est d\u00e9j\u00e0 configur\u00e9"
+        },
+        "error": {
+            "cannot_connect": "\u00c9chec de connexion"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Voulez-vous ajouter {name} ({host}) \u00e0 Home Assistant ?"
+            },
+            "user": {
+                "data": {
+                    "host": "H\u00f4te"
+                },
+                "data_description": {
+                    "host": "Le nom d'h\u00f4te ou l'adresse IP de la CBox Palazzetti"
+                }
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "palazzetti": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "\u00c9lev\u00e9",
+                            "silent": "Silencieux"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "combustion_power": {
+                "name": "Puissance de combustion"
+            }
+        },
+        "sensor": {
+            "air_outlet_temperature": {
+                "name": "Temp\u00e9rature de la sortie d'air"
+            },
+            "pellet_level": {
+                "name": "Niveau de granules"
+            },
+            "pellet_quantity": {
+                "name": "Quantit\u00e9 de granules"
+            },
+            "return_water_temperature": {
+                "name": "Temp\u00e9rature du retour d'eau"
+            },
+            "room_temperature": {
+                "name": "Temp\u00e9rature de la pi\u00e8ce"
+            },
+            "status": {
+                "name": "Statut",
+                "state": {
+                    "burning": "En fonctionnement",
+                    "burning_mod": "En fonctionnement - Modulation",
+                    "chimney_alarm": "Alarme de chemin\u00e9e",
+                    "clean_fire": "Nettoyage du foyer",
+                    "cleaning_warning": "Avertissement de nettoyage",
+                    "cleanup": "Nettoyage final",
+                    "cool_fluid": "En attente",
+                    "cooling": "Refroidissement en cours",
+                    "door_open": "Porte ouverte",
+                    "ecomode": "Ecomode",
+                    "exhaust_temp_high": "Temp\u00e9rature des gaz d'\u00e9chappement trop \u00e9lev\u00e9e",
+                    "fire_stop": "Extinction",
+                    "firewood_finished": "Bois fini",
+                    "flue_probe_failure": "\u00c9chec de la sonde de gaz de combustion",
+                    "fuel_error": "Erreur de combustible",
+                    "fueling": "Allumage",
+                    "general_error": "Erreur g\u00e9n\u00e9rale",
+                    "grate_error": "Erreur de grille",
+                    "hatch_door_open": "Trappe d'alimentation ou porte ouverte",
+                    "heatup": "Alimentation en pellets",
+                    "ign_test": "V\u00e9rification du combustible",
+                    "main_probe_failure": "\u00c9chec de la sonde principale",
+                    "off": "\u00c9teint",
+                    "off_timer": "Extinction par programmateur",
+                    "pellet_finished": "Pellets finis ou \u00e9chec d'allumage",
+                    "pellet_water_error": "Erreur sonde de pellets ou retour d'eau",
+                    "pressure_error": "Erreur de bouton de pression de s\u00e9curit\u00e9",
+                    "t05_error": "Erreur T05 sonde d\u00e9connect\u00e9e ou d\u00e9fectueuse",
+                    "temp_too_high": "Temp\u00e9rature trop \u00e9lev\u00e9e",
+                    "test_fire": "Test d'allumage",
+                    "unknown": "Inconnu"
+                }
+            },
+            "t1_hydro": {
+                "name": "Temp\u00e9rature hydro 1"
+            },
+            "t2_hydro": {
+                "name": "Temp\u00e9rature hydro 2"
+            },
+            "tank_water_temperature": {
+                "name": "Temp\u00e9rature du r\u00e9servoir d'eau"
+            },
+            "wood_combustion_temperature": {
+                "name": "Temp\u00e9rature de combustion du bois"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Impossible de se connecter \u00e0 l'appareil."
+        },
+        "invalid_combustion_power": {
+            "message": "La puissance de combustion {value} est incorrecte."
+        },
+        "invalid_fan_mode": {
+            "message": "Le mode de ventilateur {value} est incorrect."
+        },
+        "invalid_target_temperature": {
+            "message": "La temp\u00e9rature demand\u00e9e {value} est incorrecte."
+        },
+        "on_off_not_available": {
+            "message": "L'appareil ne peut pas \u00eatre allum\u00e9 ou \u00e9teint."
+        }
+    }
+}

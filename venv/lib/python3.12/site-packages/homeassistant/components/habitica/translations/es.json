@@ -1,0 +1,546 @@
+{
+    "common": {
+        "config_entry_name": "Seleccionar personaje",
+        "dailies": "Diarias",
+        "todos": "Tareas pendientes",
+        "unit_experience_points": "EXP",
+        "unit_health_points": "PS",
+        "unit_mana_points": "PM",
+        "unit_tasks": "tareas"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "La cuenta ya est\u00e1 configurada"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_auth": "Autenticaci\u00f3n no v\u00e1lida",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "Token API",
+                    "api_user": "ID de usuario",
+                    "url": "URL",
+                    "verify_ssl": "Verificar el certificado SSL"
+                },
+                "data_description": {
+                    "api_key": "Token API de la cuenta Habitica",
+                    "api_user": "ID de usuario de tu cuenta Habitica",
+                    "url": "URL de la instalaci\u00f3n de Habitica a la que conectarse. Por defecto es `{default_url}`"
+                },
+                "description": "Puedes recuperar tu `ID de usuario` y `Token de API` desde [**Configuraci\u00f3n -> Datos del sitio**]({site_data}) en Habitica o la instancia a la que quieras conectarte",
+                "title": "Iniciar sesi\u00f3n en otras instancias"
+            },
+            "login": {
+                "data": {
+                    "password": "Contrase\u00f1a",
+                    "username": "Correo electr\u00f3nico o nombre de usuario (distingue entre may\u00fasculas y min\u00fasculas)"
+                },
+                "data_description": {
+                    "password": "Contrase\u00f1a de la cuenta para conectar Home Assistant a Habitica",
+                    "username": "Correo electr\u00f3nico o nombre de usuario (distingue may\u00fasculas de min\u00fasculas) para conectar Home Assistant a tu cuenta de Habitica"
+                },
+                "description": "Introduce tus datos de acceso para empezar a utilizar Habitica con Home Assistant\n\n[\u00bfOlvidaste tu contrase\u00f1a?]({forgot_password})",
+                "title": "Iniciar sesi\u00f3n en Habitica"
+            },
+            "user": {
+                "description": "![Habiticans]({habiticans}) Conecta tu cuenta de Habitica para realizar un seguimiento de las estad\u00edsticas y el progreso de tus aventureros, y administrar tus tareas pendientes y diarias. \n \n[\u00bfNo tienes una cuenta de Habitica? Reg\u00edstrate aqu\u00ed.]({signup})",
+                "menu_options": {
+                    "advanced": "Iniciar sesi\u00f3n en otras instancias",
+                    "login": "Iniciar sesi\u00f3n en Habitica"
+                },
+                "title": "Habitica - Gamify your life"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pending_quest": {
+                "name": "Invitaci\u00f3n de misi\u00f3n pendiente"
+            }
+        },
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "Asignar todos los puntos de estad\u00edsticas"
+            },
+            "brightness": {
+                "name": "Claridad abrasadora"
+            },
+            "buy_health_potion": {
+                "name": "Compra una poci\u00f3n de salud"
+            },
+            "defensive_stance": {
+                "name": "Postura defensiva"
+            },
+            "earth": {
+                "name": "Terremoto"
+            },
+            "frost": {
+                "name": "Fr\u00edo escalofriante"
+            },
+            "heal": {
+                "name": "Luz sanadora"
+            },
+            "heal_all": {
+                "name": "Bendici\u00f3n"
+            },
+            "intimidate": {
+                "name": "Mirada intimidante"
+            },
+            "mpheal": {
+                "name": "Corriente et\u00e9rea"
+            },
+            "protect_aura": {
+                "name": "Aura protectora"
+            },
+            "revive": {
+                "name": "Revivir de la muerte"
+            },
+            "run_cron": {
+                "name": "Empezar el d\u00eda"
+            },
+            "stealth": {
+                "name": "Sigilo"
+            },
+            "tools_of_trade": {
+                "name": "Herramientas del oficio"
+            },
+            "valorous_presence": {
+                "name": "Presencia Valerosa"
+            }
+        },
+        "calendar": {
+            "daily_reminders": {
+                "name": "Recordatorios para diarias"
+            },
+            "dailys": {
+                "name": "Diarias",
+                "state_attributes": {
+                    "yesterdaily": {
+                        "name": "Diari-Ayer",
+                        "state": {
+                            "false": "No",
+                            "true": "S\u00ed"
+                        }
+                    }
+                }
+            },
+            "todo_reminders": {
+                "name": "Recordatorios de tareas pendientes"
+            },
+            "todos": {
+                "name": "Tareas pendientes"
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "Clase",
+                "state": {
+                    "healer": "Sanador",
+                    "rogue": "P\u00edcaro",
+                    "warrior": "Guerrero",
+                    "wizard": "Mago"
+                }
+            },
+            "constitution": {
+                "name": "Constituci\u00f3n",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Puntos de atributo asignados"
+                    },
+                    "buffs": {
+                        "name": "Mejoras"
+                    },
+                    "class": {
+                        "name": "Bonificaci\u00f3n por equipamiento de clase"
+                    },
+                    "equipment": {
+                        "name": "Equipo de batalla"
+                    },
+                    "level": {
+                        "name": "Nivel"
+                    }
+                }
+            },
+            "dailys": {
+                "name": "Diarias",
+                "unit_of_measurement": "tareas"
+            },
+            "display_name": {
+                "name": "Nombre para mostrar"
+            },
+            "experience": {
+                "name": "Experiencia",
+                "unit_of_measurement": "EXP"
+            },
+            "experience_max": {
+                "name": "Siguiente nivel",
+                "unit_of_measurement": "EXP"
+            },
+            "gems": {
+                "name": "Gemas",
+                "unit_of_measurement": "gemas"
+            },
+            "gold": {
+                "name": "Oro",
+                "unit_of_measurement": "Oro"
+            },
+            "habits": {
+                "name": "H\u00e1bitos",
+                "unit_of_measurement": "tareas"
+            },
+            "health": {
+                "name": "Salud",
+                "unit_of_measurement": "PS"
+            },
+            "health_max": {
+                "name": "M\u00e1x. salud",
+                "unit_of_measurement": "PS"
+            },
+            "intelligence": {
+                "name": "Inteligencia",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Puntos de atributo asignados"
+                    },
+                    "buffs": {
+                        "name": "Mejoras"
+                    },
+                    "class": {
+                        "name": "Bonificaci\u00f3n por equipamiento de clase"
+                    },
+                    "equipment": {
+                        "name": "Equipo de batalla"
+                    },
+                    "level": {
+                        "name": "Nivel"
+                    }
+                }
+            },
+            "level": {
+                "name": "Nivel"
+            },
+            "mana": {
+                "name": "Man\u00e1",
+                "unit_of_measurement": "PM"
+            },
+            "mana_max": {
+                "name": "M\u00e1x. man\u00e1",
+                "unit_of_measurement": "PM"
+            },
+            "perception": {
+                "name": "Percepci\u00f3n",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Puntos de atributo asignados"
+                    },
+                    "buffs": {
+                        "name": "Mejoras"
+                    },
+                    "class": {
+                        "name": "Bonificaci\u00f3n por equipamiento de clase"
+                    },
+                    "equipment": {
+                        "name": "Equipo de batalla"
+                    },
+                    "level": {
+                        "name": "Nivel"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "Recompensas",
+                "unit_of_measurement": "tareas"
+            },
+            "strength": {
+                "name": "Fortaleza",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Puntos de atributo asignados"
+                    },
+                    "buffs": {
+                        "name": "Mejoras"
+                    },
+                    "class": {
+                        "name": "Bonificaci\u00f3n por equipamiento de clase"
+                    },
+                    "equipment": {
+                        "name": "Equipo de batalla"
+                    },
+                    "level": {
+                        "name": "Nivel"
+                    }
+                }
+            },
+            "todos": {
+                "name": "Tareas pendientes",
+                "unit_of_measurement": "tareas"
+            },
+            "trinkets": {
+                "name": "Relojes de arena m\u00edsticos"
+            }
+        },
+        "switch": {
+            "sleep": {
+                "name": "Descansa en la posada"
+            }
+        },
+        "todo": {
+            "dailys": {
+                "name": "Diarias"
+            },
+            "todos": {
+                "name": "Tareas pendientes"
+            }
+        }
+    },
+    "exceptions": {
+        "create_todos_item_failed": {
+            "message": "No se pudo crear una nueva tarea pendiente `{name}` para Habitica, por favor, int\u00e9ntalo de nuevo"
+        },
+        "delete_completed_todos_failed": {
+            "message": "No se pudieron eliminar los elementos de tareas pendientes completados de la lista de tareas pendientes de Habitica, por favor, int\u00e9ntalo de nuevo"
+        },
+        "delete_todos_failed": {
+            "message": "No se pudo eliminar un elemento de la lista de tareas de Habitica, por favor, int\u00e9ntalo de nuevo"
+        },
+        "entry_not_found": {
+            "message": "El personaje seleccionado no est\u00e1 configurado en Home Assistant."
+        },
+        "entry_not_loaded": {
+            "message": "El car\u00e1cter seleccionado actualmente no est\u00e1 cargado o est\u00e1 desactivado en Home Assistant."
+        },
+        "item_not_found": {
+            "message": "No se puede utilizar {item}, no eres el propietario de este elemento."
+        },
+        "move_dailys_item_failed": {
+            "message": "No se pudo mover el diario Habitica a la posici\u00f3n {pos}, por favor, int\u00e9ntalo de nuevo"
+        },
+        "move_todos_item_failed": {
+            "message": "No se pudo mover la tarea pendiente de Habitica a la posici\u00f3n {pos}, por favor, int\u00e9ntalo de nuevo"
+        },
+        "not_enough_gold": {
+            "message": "No se puede comprar la recompensa porque no hay suficiente oro. Tu personaje tiene {gold}, pero la recompensa cuesta {cost}."
+        },
+        "not_enough_mana": {
+            "message": "No se puede lanzar la habilidad, no hay suficiente man\u00e1. Tu car\u00e1cter tiene {mana}, pero la habilidad cuesta {cost}."
+        },
+        "party_not_found": {
+            "message": "No se puede encontrar el objetivo, actualmente no est\u00e1s en un grupo. Solo puedes apuntarte a ti mismo"
+        },
+        "quest_action_unallowed": {
+            "message": "Acci\u00f3n no permitida, solo el l\u00edder de la misi\u00f3n o el l\u00edder del grupo pueden realizar esta acci\u00f3n"
+        },
+        "quest_not_found": {
+            "message": "No se puede completar la acci\u00f3n, misi\u00f3n o grupo no encontrado"
+        },
+        "score_dailys_item_failed": {
+            "message": "No se pudo actualizar la puntuaci\u00f3n de tu diario Habitica `{name}`, por favor, int\u00e9ntalo de nuevo"
+        },
+        "score_todos_item_failed": {
+            "message": "No se pudo actualizar la puntuaci\u00f3n de tu tarea pendiente de Habitica `{name}`, por favor, int\u00e9ntalo de nuevo"
+        },
+        "service_call_exception": {
+            "message": "No se puede conectar a Habitica: {reason}"
+        },
+        "service_call_unallowed": {
+            "message": "No se puede completar la acci\u00f3n, no se cumplen las condiciones requeridas"
+        },
+        "setup_rate_limit_exception": {
+            "message": "L\u00edmite de velocidad superado, int\u00e9ntalo de nuevo en {retry_after} segundos"
+        },
+        "skill_not_found": {
+            "message": "No se puede lanzar la habilidad, tu car\u00e1cter no tiene la habilidad o hechizo {skill} ."
+        },
+        "target_not_found": {
+            "message": "No se puede encontrar el objetivo {target} en tu grupo"
+        },
+        "task_not_found": {
+            "message": "No se pudo completar la acci\u00f3n, no se pudo encontrar la tarea {task}"
+        },
+        "update_dailys_item_failed": {
+            "message": "No se pudo actualizar el diario Habitica `{name}`, por favor, int\u00e9ntalo de nuevo"
+        },
+        "update_todos_item_failed": {
+            "message": "No se pudo actualizar la lista de tareas de Habitica `{name}`, por favor, int\u00e9ntalo de nuevo"
+        }
+    },
+    "issues": {
+        "deprecated_api_call": {
+            "description": "La acci\u00f3n Habitica `habitica.api_call` est\u00e1 obsoleta y ser\u00e1 eliminada en Home Assistant 2025.5.0.\n\nPor favor, actualiza tus automatizaciones y scripts para utilizar otras acciones y entidades de Habitica.",
+            "title": "La acci\u00f3n Habitica habitica.api_call est\u00e1 obsoleta"
+        },
+        "deprecated_task_entity": {
+            "description": "La entidad Habitica `{entity}` est\u00e1 obsoleta y se eliminar\u00e1 en una versi\u00f3n futura.\nPor favor, actualiza tus automatizaciones y scripts para reemplazar la entidad del sensor con la entidad de tareas reci\u00e9n a\u00f1adida.\nCuando hayas terminado de migrar, puedes desactivar `{entity}`.",
+            "title": "El sensor Habitica {task_name} est\u00e1 obsoleto"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "P\u00edcaro: Pu\u00f1alada",
+                "fireball": "Mago: Estallido de llamas",
+                "pickpocket": "P\u00edcaro: Hurtar",
+                "smash": "Guerrero: Golpe brutal"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "Espuma de mar",
+                "shiny_seed": "Semilla brillante",
+                "snowball": "Bola de nieve",
+                "spooky_sparkles": "Destellos espeluznantes"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "description": "Finaliza la misi\u00f3n en curso de tu grupo. Se perder\u00e1 todo el progreso y la lista de misiones volver\u00e1 al inventario del propietario. Solo el l\u00edder de la misi\u00f3n o el l\u00edder del grupo pueden realizar esta acci\u00f3n.",
+            "fields": {
+                "config_entry": {
+                    "description": "Elige el personaje de Habitica para el que deseas realizar la acci\u00f3n.",
+                    "name": "Seleccionar personaje"
+                }
+            },
+            "name": "Abortar una misi\u00f3n activa"
+        },
+        "accept_quest": {
+            "description": "Acepta una invitaci\u00f3n pendiente a una misi\u00f3n.",
+            "fields": {
+                "config_entry": {
+                    "description": "Elige el personaje de Habitica para el que deseas realizar la acci\u00f3n.",
+                    "name": "Seleccionar personaje"
+                }
+            },
+            "name": "Aceptar una invitaci\u00f3n a una misi\u00f3n"
+        },
+        "api_call": {
+            "description": "Llama a la API de Habitica.",
+            "fields": {
+                "args": {
+                    "description": "Cualquier argumento de par\u00e1metro JSON o URL adicional. Ver apidoc mencionado para la ruta. El ejemplo utiliza el mismo extremo de la API.",
+                    "name": "Args"
+                },
+                "name": {
+                    "description": "Nombre de usuario de Habitica para llamar.",
+                    "name": "Nombre"
+                },
+                "path": {
+                    "description": "Elementos de la URL de la API en forma de matriz con un m\u00e9todo adjunto al final. Consulta https://habitica.com/apidoc/. El ejemplo utiliza https://habitica.com/apidoc/#api-Task-CreateUserTasks.",
+                    "name": "Ruta"
+                }
+            },
+            "name": "Nombre de la API"
+        },
+        "cancel_quest": {
+            "description": "Cancela una misi\u00f3n que a\u00fan no ha comenzado. Se cancelar\u00e1n todas las invitaciones aceptadas y pendientes y la lista de misiones volver\u00e1 al inventario del propietario. Solo el l\u00edder de la misi\u00f3n o el l\u00edder del grupo pueden realizar esta acci\u00f3n.",
+            "fields": {
+                "config_entry": {
+                    "description": "Elige el personaje de Habitica para el que deseas realizar la acci\u00f3n.",
+                    "name": "Seleccionar personaje"
+                }
+            },
+            "name": "Cancelar una misi\u00f3n pendiente"
+        },
+        "cast_skill": {
+            "description": "Utiliza una habilidad o hechizo de tu personaje de Habitica en una tarea espec\u00edfica para afectar a su progreso o estado.",
+            "fields": {
+                "config_entry": {
+                    "description": "Elige el car\u00e1cter de Habitica para lanzar la habilidad.",
+                    "name": "Seleccionar personaje"
+                },
+                "skill": {
+                    "description": "Selecciona la habilidad o hechizo que deseas lanzar en la tarea. S\u00f3lo se pueden utilizar las habilidades disponibles para la clase de tu car\u00e1cter.",
+                    "name": "Habilidad"
+                },
+                "task": {
+                    "description": "El nombre (o task ID) de la tarea a la que quieres dirigir la habilidad o hechizo.",
+                    "name": "Nombre de la tarea"
+                }
+            },
+            "name": "Usar una habilidad"
+        },
+        "leave_quest": {
+            "description": "Abandona la misi\u00f3n actual en la que est\u00e1s participando.",
+            "fields": {
+                "config_entry": {
+                    "description": "Elige el personaje de Habitica para el que deseas realizar la acci\u00f3n.",
+                    "name": "Seleccionar personaje"
+                }
+            },
+            "name": "Dejar una misi\u00f3n"
+        },
+        "reject_quest": {
+            "description": "Rechaza una invitaci\u00f3n pendiente a una misi\u00f3n.",
+            "fields": {
+                "config_entry": {
+                    "description": "Elige el personaje de Habitica para el que deseas realizar la acci\u00f3n.",
+                    "name": "Seleccionar personaje"
+                }
+            },
+            "name": "Rechazar una invitaci\u00f3n a una misi\u00f3n"
+        },
+        "score_habit": {
+            "description": "Aumenta la racha positiva o negativa de un h\u00e1bito para seguir su progreso.",
+            "fields": {
+                "config_entry": {
+                    "description": "Selecciona el personaje de Habitica siguiendo tu h\u00e1bito.",
+                    "name": "Seleccionar personaje"
+                },
+                "direction": {
+                    "description": "\u00bfQuieres registrar el progreso de tu h\u00e1bito de forma positiva o negativa?",
+                    "name": "Recompensa o p\u00e9rdida"
+                },
+                "task": {
+                    "description": "El nombre (o ID de tarea) del h\u00e1bito de Habitica.",
+                    "name": "Nombre del h\u00e1bito"
+                }
+            },
+            "name": "Seguimiento de un h\u00e1bito"
+        },
+        "score_reward": {
+            "description": "Compra una de tus recompensas personalizadas con el oro obtenido al completar tareas.",
+            "fields": {
+                "config_entry": {
+                    "description": "Selecciona el personaje de Habitica que compra la recompensa.",
+                    "name": "Seleccionar personaje"
+                },
+                "task": {
+                    "description": "El nombre (o ID de tarea) de la recompensa personalizada.",
+                    "name": "Nombre de la recompensa"
+                }
+            },
+            "name": "Comprar una recompensa"
+        },
+        "start_quest": {
+            "description": "Comienza la misi\u00f3n inmediatamente y pasa por alto las invitaciones pendientes que no se hayan aceptado o rechazado. Solo el l\u00edder de la misi\u00f3n o el l\u00edder del grupo pueden realizar esta acci\u00f3n.",
+            "fields": {
+                "config_entry": {
+                    "description": "Elige el personaje de Habitica para el que deseas realizar la acci\u00f3n.",
+                    "name": "Seleccionar personaje"
+                }
+            },
+            "name": "Forzar el inicio de una misi\u00f3n pendiente"
+        },
+        "transformation": {
+            "description": "Utiliza un objeto de transformaci\u00f3n del inventario de tu personaje Habitica en un miembro de tu grupo o en ti mismo.",
+            "fields": {
+                "config_entry": {
+                    "description": "Elige el personaje de Habitica para usar el elemento de transformaci\u00f3n.",
+                    "name": "Seleccionar personaje"
+                },
+                "item": {
+                    "description": "Selecciona el elemento de transformaci\u00f3n que quieras usar. El elemento debe estar en el inventario del personaje.",
+                    "name": "Elemento de transformaci\u00f3n"
+                },
+                "target": {
+                    "description": "El nombre del personaje en el que quieres usar el elemento de transformaci\u00f3n. Tambi\u00e9n puedes especificar el nombre de usuario o la identificaci\u00f3n de usuario del jugador.",
+                    "name": "Personaje objetivo"
+                }
+            },
+            "name": "Utilizar un elemento de transformaci\u00f3n"
+        }
+    }
+}

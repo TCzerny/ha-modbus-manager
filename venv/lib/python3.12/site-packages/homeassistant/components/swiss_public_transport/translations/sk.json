@@ -1,0 +1,123 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Slu\u017eba u\u017e je nakonfigurovan\u00e1",
+            "bad_config": "Po\u017eiadavka zlyhala z d\u00f4vodu zlej konfigur\u00e1cie: Skontrolujte, \u010di s\u00fa v [stationboard]({stationboard_url}) platn\u00e9 stanice.",
+            "cannot_connect": "Nemo\u017eno sa pripoji\u0165 k serveru",
+            "unknown": "Bola vyvolan\u00e1 nezn\u00e1ma chyba python-opendata-transport"
+        },
+        "error": {
+            "bad_config": "Po\u017eiadavka zlyhala z d\u00f4vodu zlej konfigur\u00e1cie: Skontrolujte na adrese [stationboard]({stationboard_url}), \u010di s\u00fa n\u00e1zvy va\u0161ich stan\u00edc platn\u00e9",
+            "cannot_connect": "Nemo\u017eno sa pripoji\u0165 k serveru",
+            "too_many_via_stations": "Pr\u00edli\u0161 ve\u013ea via stan\u00edc, na jedno pripojenie je povolen\u00fdch len 5 via stan\u00edc.",
+            "unknown": "Bola vyvolan\u00e1 nezn\u00e1ma chyba python-opendata-transport"
+        },
+        "step": {
+            "time_fixed": {
+                "data": {
+                    "time_fixed": "\u010cas d\u0148a"
+                },
+                "description": "Vyberte pr\u00edslu\u0161n\u00fd \u010das pripojenia (napr. 7:12:00 ka\u017ed\u00e9 r\u00e1no).",
+                "title": "\u0160vaj\u010diarska verejn\u00e1 doprava"
+            },
+            "time_offset": {
+                "data": {
+                    "time_offset": "\u010casov\u00fd posun"
+                },
+                "description": "Vyberte pr\u00edslu\u0161n\u00fd posun, ktor\u00fd prid\u00e1te k najskor\u0161iemu mo\u017en\u00e9mu spojeniu (napr. pridajte posun +00:05:00, pri\u010dom zoh\u013eadnite \u010das ch\u00f4dze na stanicu)",
+                "title": "\u0160vaj\u010diarska verejn\u00e1 doprava"
+            },
+            "user": {
+                "data": {
+                    "from": "\u0160tartovacia stanica",
+                    "time_mode": "V\u00fdber \u010dasov\u00e9ho re\u017eimu",
+                    "time_station": "Vyberte pr\u00edslu\u0161n\u00fa stanicu",
+                    "to": "Koncov\u00e1 stanica",
+                    "via": "Cez stanice"
+                },
+                "data_description": {
+                    "time_mode": "\u010casov\u00fd re\u017eim umo\u017e\u0148uje zmeni\u0165 \u010das odchodu a zafixova\u0165 ho na konkr\u00e9tny \u010das (napr. 7:12:00 ka\u017ed\u00e9 r\u00e1no) alebo prida\u0165 pohybliv\u00fd posun (napr. +00:05:00 s oh\u013eadom na \u010das ch\u00f4dze na stanicu).",
+                    "time_station": "Zvy\u010dajne sa sleduje \u010das odchodu spoja z v\u00fdchodiskovej stanice. Pr\u00edpadne sa sleduje \u010das, ke\u010f spoj pr\u00edde do svojej koncovej stanice."
+                },
+                "description": "Zadajte po\u010diato\u010dn\u00fa a koncov\u00fa stanicu pripojenia,\na volite\u013ene a\u017e 5 via stan\u00edc.\n\nSkontrolujte, \u010di s\u00fa v [Stationboard]({stationboard_url}) uveden\u00e9 platn\u00e9 stanice.",
+                "title": "\u0160vaj\u010diarska verejn\u00e1 doprava"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delay": {
+                "name": "Oneskorenie"
+            },
+            "departure0": {
+                "name": "Odchod"
+            },
+            "departure1": {
+                "name": "Odchod +1"
+            },
+            "departure2": {
+                "name": "Odchod +2"
+            },
+            "duration": {
+                "name": "Trvanie"
+            },
+            "line": {
+                "name": "Linka"
+            },
+            "platform": {
+                "name": "Platforma"
+            },
+            "transfers": {
+                "name": "Prevody"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Nemo\u017eno sa pripoji\u0165 k serveru.\n{error}"
+        },
+        "config_entry_not_found": {
+            "message": "In\u0161tancia integr\u00e1cie \u0161vaj\u010diarskej verejnej dopravy \"{target}\" nebola n\u00e1jden\u00e1."
+        },
+        "invalid_data": {
+            "message": "Nastavenie zlyhalo pre polo\u017eku {config_title} s neplatn\u00fdmi \u00fadajmi, skontrolujte v [stationboard]({stationboard_url}), \u010di s\u00fa n\u00e1zvy va\u0161ich stan\u00edc platn\u00e9.\n{error}"
+        },
+        "not_loaded": {
+            "message": "{target} nie je na\u010d\u00edtan\u00fd."
+        },
+        "request_timeout": {
+            "message": "\u010casov\u00fd limit pri prip\u00e1jan\u00ed pre vstup {config_title}.\n{error}"
+        }
+    },
+    "selector": {
+        "time_mode": {
+            "options": {
+                "fixed": "V stanoven\u00fa denn\u00fa dobu",
+                "now": "Teraz",
+                "offset": "S odstupom od tejto chv\u00edle"
+            }
+        },
+        "time_station": {
+            "options": {
+                "arrival": "Zobrazenie \u010dasu pr\u00edchodu do koncovej stanice",
+                "departure": "Zobrazi\u0165 \u010das odchodu zo \u0161tartovacej stanice"
+            }
+        }
+    },
+    "services": {
+        "fetch_connections": {
+            "description": "Z\u00edska zoznam spojov zo \u0161vaj\u010diarskej verejnej dopravy.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "In\u0161tancia \u0161vaj\u010diarskej verejnej dopravy na z\u00edskanie spojen\u00ed.",
+                    "name": "In\u0161tancia"
+                },
+                "limit": {
+                    "description": "Po\u010det spojen\u00ed na z\u00edskanie [1-15]",
+                    "name": "Limit"
+                }
+            },
+            "name": "Z\u00edskavanie pripojen\u00ed"
+        }
+    }
+}

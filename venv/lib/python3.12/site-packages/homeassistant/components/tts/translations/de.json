@@ -1,0 +1,60 @@
+{
+    "services": {
+        "clear_cache": {
+            "description": "Entfernt alle zwischengespeicherten Text-to-Speech-Dateien und l\u00f6scht den Speicher.",
+            "name": "TTS-Zwischenspeicher leeren"
+        },
+        "say": {
+            "description": "Sagt etwas mittels Text-zu-Sprache auf einem Mediaplayer.",
+            "fields": {
+                "cache": {
+                    "description": "Speichert diese Meldung lokal, sodass die Ausgabe schneller erzeugt werden kann, wenn der Text erneut angefordert wird.",
+                    "name": "Zwischenspeichern"
+                },
+                "entity_id": {
+                    "description": "Mediaplayer zur Wiedergabe der Meldung.",
+                    "name": "Entit\u00e4t"
+                },
+                "language": {
+                    "description": "Sprache, die zur Sprachgenerierung verwendet werden soll.",
+                    "name": "Sprache"
+                },
+                "message": {
+                    "description": "Der Text, den du in Sprache umwandeln m\u00f6chtest, damit du ihn auf deinem Ger\u00e4t anh\u00f6ren kannst.",
+                    "name": "Meldung"
+                },
+                "options": {
+                    "description": "Ein Dictionary mit integrationsabh\u00e4ngigen Optionen.",
+                    "name": "Optionen"
+                }
+            },
+            "name": "Sage eine TTS-Meldung"
+        },
+        "speak": {
+            "description": "Spricht etwas mittels Text-zu-Sprache auf einem Mediaplayer.",
+            "fields": {
+                "cache": {
+                    "description": "Speichert diese Meldung lokal, sodass die Ausgabe schneller erzeugt werden kann, wenn der Text erneut angefordert wird.",
+                    "name": "Zwischenspeichern"
+                },
+                "language": {
+                    "description": "Sprache, die zur Sprachgenerierung verwendet werden soll.",
+                    "name": "Sprache"
+                },
+                "media_player_entity_id": {
+                    "description": "Mediaplayer zur Wiedergabe der Meldung.",
+                    "name": "Mediaplayer-Entit\u00e4t"
+                },
+                "message": {
+                    "description": "Der Text, den du in Sprache umwandeln m\u00f6chtest, damit du ihn auf deinem Ger\u00e4t anh\u00f6ren kannst.",
+                    "name": "Meldung"
+                },
+                "options": {
+                    "description": "Ein Dictionary mit integrationsabh\u00e4ngigen Optionen.",
+                    "name": "Optionen"
+                }
+            },
+            "name": "Sprechen"
+        }
+    }
+}

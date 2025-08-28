@@ -1,0 +1,65 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Laite on jo m\u00e4\u00e4ritetty"
+        },
+        "error": {
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "unknown": "Odottamaton virhe"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "link": {
+                "description": "Haluatko m\u00e4\u00e4ritt\u00e4\u00e4 {name} ({host})?",
+                "title": "Logitech Harmony Hubin m\u00e4\u00e4ritt\u00e4minen"
+            },
+            "user": {
+                "data": {
+                    "host": "Palvelin",
+                    "name": "Keskittimen nimi"
+                },
+                "data_description": {
+                    "host": "Logitech Harmony Hubin is\u00e4nt\u00e4nimi tai IP-osoite."
+                },
+                "title": "Logitech Harmony Hubin m\u00e4\u00e4ritt\u00e4minen"
+            }
+        }
+    },
+    "entity": {
+        "select": {
+            "activities": {
+                "name": "Toiminta",
+                "state": {
+                    "power_off": "Virta pois"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "activity": "Oletustoiminto, joka suoritetaan, kun mit\u00e4\u00e4n ei ole m\u00e4\u00e4ritetty.",
+                    "delay_secs": "Viive komentojen l\u00e4hett\u00e4misen v\u00e4lill\u00e4."
+                },
+                "description": "S\u00e4\u00e4d\u00e4 Harmony Hubin asetuksia"
+            }
+        }
+    },
+    "services": {
+        "change_channel": {
+            "description": "L\u00e4hett\u00e4\u00e4 kanavanvaihtokomennon Harmony HUBiin.",
+            "fields": {
+                "channel": {
+                    "description": "Kanavan numero, johon vaihdetaan.",
+                    "name": "Kanava"
+                }
+            },
+            "name": "Vaihda kanavaa"
+        },
+        "sync": {
+            "description": "Synkronoi kaukos\u00e4\u00e4timen asetukset.",
+            "name": "Synkronoi"
+        }
+    }
+}

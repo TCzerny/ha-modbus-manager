@@ -1,0 +1,72 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Temporizador",
+            "state": {
+                "active": "Activo",
+                "idle": "Inactivo",
+                "paused": "En pausa"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Duraci\u00f3n"
+                },
+                "editable": {
+                    "name": "Gestionado a trav\u00e9s de la IU",
+                    "state": {
+                        "false": "No",
+                        "true": "S\u00ed"
+                    }
+                },
+                "finishes_at": {
+                    "name": "Acaba a las"
+                },
+                "remaining": {
+                    "name": "Restantes"
+                },
+                "restore": {
+                    "name": "Restaurar"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "description": "Restablece la duraci\u00f3n de un temporizador al \u00faltimo valor inicial conocido sin activar el evento de finalizaci\u00f3n del temporizador.",
+            "name": "Cancelar"
+        },
+        "change": {
+            "description": "Cambia un temporizador a\u00f1adiendo o restando una duraci\u00f3n determinada.",
+            "fields": {
+                "duration": {
+                    "description": "Duraci\u00f3n que se a\u00f1adir\u00e1 o restar\u00e1 al temporizador en ejecuci\u00f3n.",
+                    "name": "Duraci\u00f3n"
+                }
+            },
+            "name": "Cambiar"
+        },
+        "finish": {
+            "description": "Finaliza un temporizador en ejecuci\u00f3n antes de lo programado.",
+            "name": "Finalizar"
+        },
+        "pause": {
+            "description": "Pausa un temporizador en ejecuci\u00f3n, reteniendo la duraci\u00f3n restante para continuar m\u00e1s tarde.",
+            "name": "Pausar"
+        },
+        "reload": {
+            "description": "Recarga los temporizadores desde la configuraci\u00f3n YAML.",
+            "name": "Recargar"
+        },
+        "start": {
+            "description": "Inicia un temporizador o lo reinicia con una duraci\u00f3n determinada.",
+            "fields": {
+                "duration": {
+                    "description": "Duraci\u00f3n personalizada para reiniciar el temporizador.",
+                    "name": "Duraci\u00f3n"
+                }
+            },
+            "name": "Iniciar"
+        }
+    },
+    "title": "Temporizador"
+}

@@ -1,0 +1,66 @@
+{
+    "application_credentials": {
+        "description": "Siga as [instru\u00e7\u00f5es]({more_info_url}) para dar ao Home Assistant acesso \u00e0 sua conta myUplink. Tamb\u00e9m \u00e9 necess\u00e1rio criar credenciais de aplica\u00e7\u00e3o associadas \u00e0 sua conta:\n1. Aceda a [Applications at myUplink developer site]({create_creds_url}) e obtenha as credenciais de uma aplica\u00e7\u00e3o existente ou selecione **Criar Nova Aplica\u00e7\u00e3o**.\n1. Defina o nome e a descri\u00e7\u00e3o apropriados da aplica\u00e7\u00e3o\n1. Introduza `{callback_url}` como URL de retorno de chamada"
+    },
+    "config": {
+        "abort": {
+            "account_mismatch": "A conta de utilizador n\u00e3o corresponde \u00e0 conta original",
+            "already_configured": "Conta j\u00e1 configurada",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "authorize_url_timeout": "Excedido o tempo limite para gerar um URL de autoriza\u00e7\u00e3o",
+            "missing_configuration": "O componente n\u00e3o est\u00e1 configurado. Por favor, siga a documenta\u00e7\u00e3o.",
+            "no_url_available": "Nenhum URL est\u00e1 dispon\u00edvel. Para obter informa\u00e7\u00f5es sobre esse erro, [consulte a sec\u00e7\u00e3o de ajuda]({docs_url})",
+            "oauth_error": "Recebido token de autentica\u00e7\u00e3o inv\u00e1lido.",
+            "oauth_failed": "Erro ao obter o token de acesso.",
+            "oauth_timeout": "Excedido o tempo limite para o OAuth token.",
+            "oauth_unauthorized": "Erro de autoriza\u00e7\u00e3o OAuth ao obter o token de acesso.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida",
+            "user_rejected_authorize": "Vincula\u00e7\u00e3o de conta rejeitada: {error}"
+        },
+        "create_entry": {
+            "default": "Autenticado com sucesso"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Escolha o m\u00e9todo de autentica\u00e7\u00e3o"
+            },
+            "reauth_confirm": {
+                "description": "A integra\u00e7\u00e3o do myUplink precisa autenticar novamente a sua conta",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "alarm": {
+                "name": "Alarme"
+            }
+        },
+        "sensor": {
+            "status": {
+                "name": "Estado"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_auth_failed": {
+            "message": "Erro ao iniciar sess\u00e3o na API. Por favor, verifique as suas credenciais."
+        },
+        "config_entry_not_ready": {
+            "message": "Erro ao carregar a integra\u00e7\u00e3o."
+        },
+        "incorrect_oauth2_scope": {
+            "message": "As permiss\u00f5es armazenadas s\u00e3o inv\u00e1lidas. Por favor, fa\u00e7a login novamente para atualizar as permiss\u00f5es."
+        },
+        "set_number_error": {
+            "message": "Erro ao definir novo valor {value} para {point}/{entity}."
+        },
+        "set_select_error": {
+            "message": "Erro a definir nova op\u00e7\u00e3o {option} para {point}/{entity}."
+        },
+        "set_switch_error": {
+            "message": "Erro ao definir o estado de {entity}."
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "flow_title": "{serial_number}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines Elgato-Ger\u00e4ts."
+                },
+                "description": "Richte deine Elgato-Leuchte f\u00fcr die Integration mit Home Assistant ein."
+            },
+            "zeroconf_confirm": {
+                "description": "M\u00f6chtest du die Elgato-Leuchte mit der Seriennummer `{serial_number}` zu Home Assistant hinzuf\u00fcgen?",
+                "title": "Elgato-Leuchte entdeckt"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "charge_power": {
+                "name": "Ladeleistung"
+            },
+            "input_charge_current": {
+                "name": "Ladestrom"
+            },
+            "input_charge_voltage": {
+                "name": "Ladespannung"
+            },
+            "voltage": {
+                "name": "Batteriespannung"
+            }
+        },
+        "switch": {
+            "bypass": {
+                "name": "Studiomodus"
+            },
+            "energy_saving": {
+                "name": "Energie sparen"
+            }
+        }
+    },
+    "services": {
+        "identify": {
+            "description": "Identifiziert eine Elgato-Leuchte. L\u00e4sst die Leuchte blinken, was z. B. f\u00fcr eine visuelle Benachrichtigung n\u00fctzlich sein kann.",
+            "name": "Identifizieren"
+        }
+    }
+}

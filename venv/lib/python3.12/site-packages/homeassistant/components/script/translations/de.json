@@ -1,0 +1,70 @@
+{
+    "common": {
+        "validation_failed_title": "Das Skript {name} konnte nicht eingerichtet werden"
+    },
+    "entity_component": {
+        "_": {
+            "name": "Skript",
+            "state": {
+                "off": "Aus",
+                "on": "Ein"
+            },
+            "state_attributes": {
+                "current": {
+                    "name": "Laufende Automationen"
+                },
+                "last_action": {
+                    "name": "Letzte Aktion"
+                },
+                "last_triggered": {
+                    "name": "Zuletzt ausgel\u00f6st"
+                },
+                "max": {
+                    "name": "Maximal laufende Skripte"
+                },
+                "mode": {
+                    "name": "Ausf\u00fchrungsmodus",
+                    "state": {
+                        "parallel": "Parallel",
+                        "queued": "In Warteschlange",
+                        "restart": "Neu starten",
+                        "single": "Einzeln"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "validation_failed_blueprint": {
+            "description": "Die Einrichtung des per Blueprint erstellten Skripts \u201e{name}\u201c (`{entity_id}`) ist fehlgeschlagen. \n\nFehler: `{error}`.\n\nUm diesen Fehler zu beheben, [bearbeite das Skript]({edit}), um es zu korrigieren. Speichere dann die Skriptkonfiguration und lade sie erneut.",
+            "title": "Das Skript {name} konnte nicht eingerichtet werden"
+        },
+        "validation_failed_schema": {
+            "description": "Das Skript \u201e{name}\u201c (`{entity_id}`) ist nicht aktiv, da die Konfiguration Fehler aufweist. \n\nFehler: `{error}`.\n\nUm diesen Fehler zu beheben, [bearbeite das Skript]({edit}), um es zu korrigieren. Speichere dann die Skriptkonfiguration und lade sie erneut.",
+            "title": "Das Skript {name} konnte nicht eingerichtet werden"
+        },
+        "validation_failed_sequence": {
+            "description": "Das Skript \u201e{name}\u201c (`{entity_id}`) ist nicht aktiv, da sein Ablauf nicht eingerichtet werden konnte. \n\nFehler: `{error}`.\n\nUm diesen Fehler zu beheben, [bearbeite das Skript]({edit}), um es zu korrigieren. Speichere dann die Skriptkonfiguration und lade sie erneut.",
+            "title": "Das Skript {name} konnte nicht eingerichtet werden"
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "L\u00e4dt alle verf\u00fcgbaren Skripte neu.",
+            "name": "Neu laden"
+        },
+        "toggle": {
+            "description": "Startet ein Skript, wenn es nicht l\u00e4uft, stoppt es andernfalls.",
+            "name": "Umschalten"
+        },
+        "turn_off": {
+            "description": "Stoppt ein laufendes Skript.",
+            "name": "Ausschalten"
+        },
+        "turn_on": {
+            "description": "F\u00fchrt den in einem Skript definierten Ablauf von Aktionen aus.",
+            "name": "Einschalten"
+        }
+    },
+    "title": "Skript"
+}

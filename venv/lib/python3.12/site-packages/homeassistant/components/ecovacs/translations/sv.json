@@ -1,0 +1,270 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto har redan konfigurerats"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "invalid_url": "Ogiltig URL",
+            "invalid_url_schema_override_mqtt_url": "Ogiltigt MQTT URL-schema. \n URL:en b\u00f6r b\u00f6rja med `mqtt://` eller `mqtts://`.",
+            "invalid_url_schema_override_rest_url": "Ogiltigt REST URL-schema.\nURL:en ska b\u00f6rja med `http://` eller `https://`.",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "country": "Land",
+                    "override_mqtt_url": "MQTT URL",
+                    "override_rest_url": "REST URL",
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn",
+                    "verify_mqtt_certificate": "Verifiera MQTT SSL-certifikat"
+                },
+                "data_description": {
+                    "override_mqtt_url": "Ange MQTT-URL:en f\u00f6r din lokalt installerade instans, inklusive schemat (mqtt/mqtts).",
+                    "override_rest_url": "Ange REST-URL:en f\u00f6r din lokalt installerade instans, inklusive schemat (http/https)."
+                }
+            },
+            "user": {
+                "data": {
+                    "mode": "L\u00e4ge"
+                },
+                "data_description": {
+                    "mode": "V\u00e4lj det l\u00e4ge som du vill anv\u00e4nda f\u00f6r att ansluta till Ecovacs. Om du \u00e4r os\u00e4ker v\u00e4ljer du \"Cloud\".\n\nV\u00e4lj \"Sj\u00e4lvhanterad\" endast om du har en fungerande sj\u00e4lvhanterad instans."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "water_mop_attached": {
+                "name": "Moppen monterad"
+            }
+        },
+        "button": {
+            "relocate": {
+                "name": "Omlokalisera"
+            },
+            "reset_lifespan_base_station_filter": {
+                "name": "\u00c5terst\u00e4ll stationens filterlivsl\u00e4ngd"
+            },
+            "reset_lifespan_blade": {
+                "name": "\u00c5terst\u00e4ll bladets livsl\u00e4ngd"
+            },
+            "reset_lifespan_brush": {
+                "name": "\u00c5terst\u00e4ll huvudborstens livsl\u00e4ngd"
+            },
+            "reset_lifespan_filter": {
+                "name": "\u00c5terst\u00e4ll filtrets livsl\u00e4ngd"
+            },
+            "reset_lifespan_lens_brush": {
+                "name": "\u00c5terst\u00e4ll linsborstens livsl\u00e4ngd"
+            },
+            "reset_lifespan_round_mop": {
+                "name": "\u00c5terst\u00e4ll livsl\u00e4ngd f\u00f6r rund mopp"
+            },
+            "reset_lifespan_side_brush": {
+                "name": "\u00c5terst\u00e4ll sidoborstens livsl\u00e4ngd"
+            },
+            "reset_lifespan_unit_care": {
+                "name": "\u00c5terst\u00e4ll livsl\u00e4ngd f\u00f6r enhetsv\u00e5rd"
+            },
+            "station_action_empty_dustbin": {
+                "name": "Tom soptunna"
+            }
+        },
+        "event": {
+            "last_job": {
+                "name": "Senaste jobb",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "finished": "F\u00e4rdig",
+                            "finished_with_warnings": "F\u00e4rdig med varningar",
+                            "manually_stopped": "Manuellt stoppad"
+                        }
+                    }
+                }
+            }
+        },
+        "image": {
+            "map": {
+                "name": "Karta"
+            }
+        },
+        "number": {
+            "clean_count": {
+                "name": "Antal reng\u00f6ringar"
+            },
+            "cut_direction": {
+                "name": "Klippriktning"
+            },
+            "volume": {
+                "name": "Volym"
+            }
+        },
+        "select": {
+            "water_amount": {
+                "name": "Vattenfl\u00f6desniv\u00e5",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "medium": "Medium",
+                    "ultrahigh": "Ultrah\u00f6g"
+                }
+            },
+            "work_mode": {
+                "name": "Arbetsl\u00e4ge",
+                "state": {
+                    "mop": "Mopp",
+                    "mop_after_vacuum": "Moppa efter dammsugning",
+                    "vacuum": "Dammsug",
+                    "vacuum_and_mop": "Dammsug & moppa"
+                }
+            }
+        },
+        "sensor": {
+            "error": {
+                "name": "Fel",
+                "state_attributes": {
+                    "description": {
+                        "name": "Beskrivning"
+                    }
+                }
+            },
+            "lifespan_base_station_filter": {
+                "name": "Stationens filterlivsl\u00e4ngd"
+            },
+            "lifespan_blade": {
+                "name": "Bladets livsl\u00e4ngd"
+            },
+            "lifespan_brush": {
+                "name": "Huvudborstens livsl\u00e4ngd"
+            },
+            "lifespan_filter": {
+                "name": "Filtrets livsl\u00e4ngd"
+            },
+            "lifespan_lens_brush": {
+                "name": "Linsborstens livsl\u00e4ngd"
+            },
+            "lifespan_main_brush": {
+                "name": "Huvudborstens livsl\u00e4ngd"
+            },
+            "lifespan_round_mop": {
+                "name": "Livsl\u00e4ngd f\u00f6r rund mopp"
+            },
+            "lifespan_side_brush": {
+                "name": "Sidoborstens livsl\u00e4ngd"
+            },
+            "lifespan_unit_care": {
+                "name": "Livsl\u00e4ngd f\u00f6r enhetsv\u00e5rd"
+            },
+            "network_ip": {
+                "name": "IP-adress"
+            },
+            "network_rssi": {
+                "name": "Wi-Fi RSSI"
+            },
+            "network_ssid": {
+                "name": "Wi-Fi SSID"
+            },
+            "station_state": {
+                "name": "Stationens tillst\u00e5nd",
+                "state": {
+                    "emptying_dustbin": "T\u00f6mning av soptunnan",
+                    "idle": "Inaktiv"
+                }
+            },
+            "stats_area": {
+                "name": "Rengjort omr\u00e5de"
+            },
+            "stats_time": {
+                "name": "Reng\u00f6ringstid"
+            },
+            "total_stats_area": {
+                "name": "Total yta som rengjorts"
+            },
+            "total_stats_cleanings": {
+                "name": "Totalt antal reng\u00f6ringar"
+            },
+            "total_stats_time": {
+                "name": "Total reng\u00f6ringstid"
+            }
+        },
+        "switch": {
+            "advanced_mode": {
+                "name": "Avancerat l\u00e4ge"
+            },
+            "border_switch": {
+                "name": "Gr\u00e4nsbrytare"
+            },
+            "carpet_auto_fan_boost": {
+                "name": "Automatisk sugf\u00f6rst\u00e4rkning f\u00f6r mattor"
+            },
+            "child_lock": {
+                "name": "Barnl\u00e5s"
+            },
+            "clean_preference": {
+                "name": "Reng\u00f6ringspreferens"
+            },
+            "continuous_cleaning": {
+                "name": "Kontinuerlig reng\u00f6ring"
+            },
+            "cross_map_border_warning": {
+                "name": "Varning f\u00f6r korsande kartkant"
+            },
+            "move_up_warning": {
+                "name": "Varning f\u00f6r att flytta upp"
+            },
+            "safe_protect": {
+                "name": "S\u00e4kert skydd"
+            },
+            "true_detect": {
+                "name": "Sann detektering"
+            }
+        },
+        "vacuum": {
+            "vacuum": {
+                "state_attributes": {
+                    "fan_speed": {
+                        "state": {
+                            "max": "Max",
+                            "max_plus": "Max+",
+                            "normal": "Normal",
+                            "quiet": "Tyst"
+                        }
+                    },
+                    "rooms": {
+                        "name": "Rum"
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "vacuum_raw_get_positions_not_supported": {
+            "message": "Att h\u00e4mta positionerna f\u00f6r laddarna och sj\u00e4lva enheten st\u00f6ds inte"
+        },
+        "vacuum_send_command_params_dict": {
+            "message": "Params m\u00e5ste vara en dictionary ist\u00e4llet f\u00f6r lista"
+        },
+        "vacuum_send_command_params_required": {
+            "message": "Params kr\u00e4vs f\u00f6r kommandot: {command}"
+        }
+    },
+    "selector": {
+        "installation_mode": {
+            "options": {
+                "cloud": "Moln",
+                "self_hosted": "Lokal installation"
+            }
+        }
+    },
+    "services": {
+        "raw_get_positions": {
+            "description": "F\u00e5 r\u00e5svaret f\u00f6r laddarnas och sj\u00e4lva enhetens positioner.",
+            "name": "H\u00e4mta r\u00e5positioner"
+        }
+    }
+}

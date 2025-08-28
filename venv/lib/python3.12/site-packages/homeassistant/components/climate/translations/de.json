@@ -1,0 +1,309 @@
+{
+    "device_automation": {
+        "action_type": {
+            "set_hvac_mode": "\u00c4ndere die HLK-Betriebsart von {entity_name}",
+            "set_preset_mode": "\u00c4ndere die Voreinstellung von {entity_name}"
+        },
+        "condition_type": {
+            "is_hvac_mode": "Wenn {entity_name} auf eine bestimmte HLK-Betriebsart eingestellt ist",
+            "is_preset_mode": "Wenn auf {entity_name} eine bestimmte Voreinstellung aktiviert ist"
+        },
+        "extra_fields": {
+            "above": "\u00dcber",
+            "below": "Unter",
+            "for": "Dauer",
+            "hvac_mode": "HLK-Betriebsart",
+            "preset_mode": "Voreinstellung",
+            "to": "Auf"
+        },
+        "trigger_type": {
+            "current_humidity_changed": "Sobald sich der Ist-Wert der Luftfeuchtigkeit von {entity_name} \u00e4ndert",
+            "current_temperature_changed": "Sobald sich der Ist-Wert der Temperatur von {entity_name} \u00e4ndert",
+            "hvac_mode_changed": "Sobald die HLK-Betriebsart von {entity_name} ge\u00e4ndert wird"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Thermostat",
+            "state": {
+                "auto": "Auto",
+                "cool": "K\u00fchlbetrieb",
+                "dry": "Entfeuchtung",
+                "fan_only": "Nur L\u00fcftung",
+                "heat": "Heizbetrieb",
+                "heat_cool": "Heizen/K\u00fchlen",
+                "off": "Aus"
+            },
+            "state_attributes": {
+                "aux_heat": {
+                    "name": "Zusatzheizung"
+                },
+                "current_humidity": {
+                    "name": "Aktuelle Luftfeuchtigkeit"
+                },
+                "current_temperature": {
+                    "name": "Ist-Temperatur"
+                },
+                "fan_mode": {
+                    "name": "L\u00fcftermodus",
+                    "state": {
+                        "auto": "Auto",
+                        "diffuse": "Diffus",
+                        "focus": "Fokus",
+                        "high": "Hoch",
+                        "low": "Niedrig",
+                        "medium": "Mittel",
+                        "middle": "Mittig",
+                        "off": "Aus",
+                        "on": "Ein",
+                        "top": "Oben"
+                    }
+                },
+                "fan_modes": {
+                    "name": "L\u00fcfter-Betriebsarten"
+                },
+                "humidity": {
+                    "name": "Sollwert der Luftfeuchtigkeit"
+                },
+                "hvac_action": {
+                    "name": "Aktuelle Aktion",
+                    "state": {
+                        "cooling": "K\u00fchlbetrieb",
+                        "defrosting": "Enteisung",
+                        "drying": "Entfeuchtung",
+                        "fan": "L\u00fcftung",
+                        "heating": "Heizbetrieb",
+                        "idle": "Leerlauf",
+                        "off": "Aus",
+                        "preheating": "Vorheizen"
+                    }
+                },
+                "hvac_modes": {
+                    "name": "HLK-Betriebsarten"
+                },
+                "max_humidity": {
+                    "name": "Maximaler Sollwert der Luftfeuchtigkeit"
+                },
+                "max_temp": {
+                    "name": "Maximale Soll-Temperatur"
+                },
+                "min_humidity": {
+                    "name": "Minimaler Sollwert der Luftfeuchtigkeit"
+                },
+                "min_temp": {
+                    "name": "Minimale Soll-Temperatur"
+                },
+                "preset_mode": {
+                    "name": "Voreinstellung",
+                    "state": {
+                        "activity": "Aktivit\u00e4t",
+                        "away": "Abwesend",
+                        "boost": "Boost",
+                        "comfort": "Komfort",
+                        "eco": "Eco",
+                        "home": "Zuhause",
+                        "none": "Ohne",
+                        "sleep": "Schlafen"
+                    }
+                },
+                "preset_modes": {
+                    "name": "Voreinstellungen"
+                },
+                "swing_horizontal_mode": {
+                    "name": "Horizontale Oszillationsart",
+                    "state": {
+                        "off": "Aus",
+                        "on": "Ein"
+                    }
+                },
+                "swing_horizontal_modes": {
+                    "name": "Horizontale Oszillationsarten"
+                },
+                "swing_mode": {
+                    "name": "Oszillationsart",
+                    "state": {
+                        "both": "Beides",
+                        "horizontal": "Horizontal",
+                        "off": "Aus",
+                        "on": "Ein",
+                        "vertical": "Vertikal"
+                    }
+                },
+                "swing_modes": {
+                    "name": "Oszillationsarten"
+                },
+                "target_temp_high": {
+                    "name": "Obere Soll-Temperatur"
+                },
+                "target_temp_low": {
+                    "name": "Untere Soll-Temperatur"
+                },
+                "target_temp_step": {
+                    "name": "Soll-Temperatur-Schrittweite"
+                },
+                "temperature": {
+                    "name": "Soll-Temperatur"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "humidity_out_of_range": {
+            "message": "Die angegebene Luftfeuchtigkeit {humidity} ist ung\u00fcltig. Der zul\u00e4ssige Bereich liegt zwischen {min_humidity} und {max_humidity}."
+        },
+        "low_temp_higher_than_high_temp": {
+            "message": "Die untere Soll-Temperatur darf nicht h\u00f6her sein als die obere Soll-Temperatur."
+        },
+        "missing_target_temperature_entity_feature": {
+            "message": "Die Aktion \u201eTemperatur einstellen\u201c wurde mit dem Parameter \u201eSoll-Temperatur\u201c verwendet, aber die Entit\u00e4t unterst\u00fctzt diese nicht."
+        },
+        "missing_target_temperature_range_entity_feature": {
+            "message": "Die Aktion \u201eTemperatur einstellen\u201c wurde mit dem Parameter \u201eSoll-Temperatur niedrig/hoch\u201c verwendet, die Entit\u00e4t unterst\u00fctzt diese jedoch nicht."
+        },
+        "not_valid_fan_mode": {
+            "message": "Der L\u00fcftermodus {mode} ist ung\u00fcltig. G\u00fcltige L\u00fcftermodi sind: {modes}."
+        },
+        "not_valid_horizontal_swing_mode": {
+            "message": "Die horizontale Oszillationsart {mode} ist ung\u00fcltig. G\u00fcltige Oszillationsarten sind: {modes}."
+        },
+        "not_valid_preset_mode": {
+            "message": "Die Voreinstellung {mode} ist ung\u00fcltig. G\u00fcltige Voreinstellungen sind: {modes}."
+        },
+        "not_valid_swing_mode": {
+            "message": "Die Oszillationsart {mode} ist ung\u00fcltig. G\u00fcltige Oszillationsarten sind: {modes}."
+        },
+        "temp_out_of_range": {
+            "message": "Die angegebene Temperatur {check_temp} ist ung\u00fcltig. Akzeptierter Bereich ist {min_temp} bis {max_temp}"
+        }
+    },
+    "issues": {
+        "deprecated_climate_aux_no_url": {
+            "description": "Die benutzerdefinierte Integration `{platform}` implementiert die Eigenschaft `is_aux_heat` oder verwendet die Zusatzheizungsmethoden in einer Unterklasse von ClimateEntity. \n\nBitte melde es dem Autor der {platform}-Integration. \n\nSobald eine aktualisierte Version von `{platform}` verf\u00fcgbar ist, installiere sie und starte Home Assistant neu, um dieses Problem zu beheben.",
+            "title": "Die benutzerdefinierte Integration {platform} verwendet eine veraltete Klimazusatzheizung"
+        },
+        "deprecated_climate_aux_url_custom": {
+            "description": "Die benutzerdefinierte Integration `{platform}` implementiert die Eigenschaft `is_aux_heat` oder verwendet die Zusatzheizungsmethoden in einer Unterklasse von ClimateEntity. \n\nBitte erstelle einen Fehlerbericht unter {issue_tracker}. \n\nSobald eine aktualisierte Version von `{platform}` verf\u00fcgbar ist, installiere sie und starte Home Assistant neu, um dieses Problem zu beheben.",
+            "title": "Die benutzerdefinierte Integration {platform} verwendet eine veraltete Klimazusatzheizung"
+        }
+    },
+    "selector": {
+        "hvac_mode": {
+            "options": {
+                "auto": "Auto",
+                "cool": "K\u00fchlen",
+                "dry": "Entfeuchten",
+                "fan_only": "Nur L\u00fcften",
+                "heat": "Heizen",
+                "heat_cool": "Heizen/K\u00fchlen",
+                "off": "Aus"
+            }
+        }
+    },
+    "services": {
+        "set_aux_heat": {
+            "description": "Schaltet die Zusatzheizung ein oder aus.",
+            "fields": {
+                "aux_heat": {
+                    "description": "Neuer Wert f\u00fcr die Zusatzheizung.",
+                    "name": "Zusatzheizung"
+                }
+            },
+            "name": "Zusatzheizung ein-/ausschalten"
+        },
+        "set_fan_mode": {
+            "description": "Stellt die Betriebsart des L\u00fcfters ein.",
+            "fields": {
+                "fan_mode": {
+                    "description": "Betriebsart des L\u00fcfters.",
+                    "name": "L\u00fcftermodus"
+                }
+            },
+            "name": "L\u00fcftermodus einstellen"
+        },
+        "set_humidity": {
+            "description": "Legt den Sollwert der Luftfeuchtigkeit fest.",
+            "fields": {
+                "humidity": {
+                    "description": "Sollwert der Luftfeuchtigkeit.",
+                    "name": "Luftfeuchtigkeit"
+                }
+            },
+            "name": "Soll-Luftfeuchtigkeit einstellen"
+        },
+        "set_hvac_mode": {
+            "description": "Stellt die Betriebsart der Heizung/L\u00fcftung/Klimatisierung ein.",
+            "fields": {
+                "hvac_mode": {
+                    "description": "Betriebsart der Heizung/L\u00fcftung/Klimatisierung.",
+                    "name": "HLK-Betriebsart"
+                }
+            },
+            "name": "HLK-Betriebsart einstellen"
+        },
+        "set_preset_mode": {
+            "description": "Aktiviert eine voreingestellte Betriebsart.",
+            "fields": {
+                "preset_mode": {
+                    "description": "Voreingestellte Betriebsart.",
+                    "name": "Voreinstellung"
+                }
+            },
+            "name": "Voreinstellung aktivieren"
+        },
+        "set_swing_horizontal_mode": {
+            "description": "Stellt die Betriebsart der horizontalen L\u00fcfter-Oszillation ein",
+            "fields": {
+                "swing_horizontal_mode": {
+                    "description": "Betriebsart der horizontalen L\u00fcfter-Oszillation.",
+                    "name": "Horizontale Oszillationsart"
+                }
+            },
+            "name": "Horizontale Oszillationsart einstellen"
+        },
+        "set_swing_mode": {
+            "description": "Stellt die Betriebsart f\u00fcr die L\u00fcfter-Oszillation ein.",
+            "fields": {
+                "swing_mode": {
+                    "description": "Betriebsart der L\u00fcfter-Oszillation",
+                    "name": "Oszillationsart"
+                }
+            },
+            "name": "Oszillationsart einstellen"
+        },
+        "set_temperature": {
+            "description": "Legt den Sollwert f\u00fcr die Temperatur fest.",
+            "fields": {
+                "hvac_mode": {
+                    "description": "Betriebsart der Heizung/L\u00fcftung/Klimatisierung.",
+                    "name": "HLK-Betriebsart"
+                },
+                "target_temp_high": {
+                    "description": "Das Sollwert-Maximum f\u00fcr die Temperatur",
+                    "name": "Obere Soll-Temperatur"
+                },
+                "target_temp_low": {
+                    "description": "Das Sollwert-Minimum f\u00fcr die Temperatur",
+                    "name": "Untere Soll-Temperatur"
+                },
+                "temperature": {
+                    "description": "Der Sollwert f\u00fcr die Temperatur.",
+                    "name": "Soll-Temperatur"
+                }
+            },
+            "name": "Soll-Temperatur einstellen"
+        },
+        "toggle": {
+            "description": "Schaltet ein Klimager\u00e4t zwischen ein und aus um.",
+            "name": "Umschalten"
+        },
+        "turn_off": {
+            "description": "Schaltet ein Klimager\u00e4t aus.",
+            "name": "Ausschalten"
+        },
+        "turn_on": {
+            "description": "Schaltet ein Klimager\u00e4t ein.",
+            "name": "Einschalten"
+        }
+    },
+    "title": "Klima"
+}

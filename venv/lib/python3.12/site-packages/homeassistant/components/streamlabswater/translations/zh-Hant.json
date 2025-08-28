@@ -1,0 +1,52 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u88dd\u7f6e\u5df2\u7d93\u8a2d\u5b9a\u5b8c\u6210"
+        },
+        "error": {
+            "cannot_connect": "\u9023\u7dda\u5931\u6557",
+            "unknown": "\u672a\u9810\u671f\u932f\u8aa4"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API \u91d1\u9470"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "away_mode": {
+                "name": "\u96e2\u5bb6\u6a21\u5f0f"
+            }
+        },
+        "sensor": {
+            "daily_usage": {
+                "name": "\u65e5\u4f7f\u7528\u91cf"
+            },
+            "monthly_usage": {
+                "name": "\u6708\u4f7f\u7528\u91cf"
+            },
+            "yearly_usage": {
+                "name": "\u5e74\u4f7f\u7528\u91cf"
+            }
+        }
+    },
+    "services": {
+        "set_away_mode": {
+            "description": "\u8a2d\u5b9a Streamlabs \u6c34\u76e3\u63a7\u5668\u7684\u5728\u5bb6/\u96e2\u5bb6\u6a21\u5f0f\u3002",
+            "fields": {
+                "away_mode": {
+                    "description": "\u5728\u5bb6\u6216\u96e2\u5bb6\u3002",
+                    "name": "\u96e2\u5bb6\u6a21\u5f0f"
+                },
+                "location_id": {
+                    "description": "Streamlabs \u4f9b\u6c34\u76e3\u63a7\u5668\u7684\u5ea7\u6a19 ID\u3002",
+                    "name": "\u5ea7\u6a19 ID"
+                }
+            },
+            "name": "\u8a2d\u5b9a\u96e2\u5bb6\u6a21\u5f0f"
+        }
+    }
+}

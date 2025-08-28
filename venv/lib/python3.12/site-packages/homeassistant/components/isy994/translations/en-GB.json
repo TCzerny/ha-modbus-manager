@@ -1,0 +1,98 @@
+{
+    "services": {
+        "get_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "The parameter number to retrieve from the device.",
+                    "name": "Parameter"
+                }
+            },
+            "name": "Get Z-Wave Parameter"
+        },
+        "rename_node": {
+            "fields": {
+                "name": {
+                    "description": "The new name to use within the ISY.",
+                    "name": "New Name"
+                }
+            }
+        },
+        "send_node_command": {
+            "fields": {
+                "command": {
+                    "description": "The command to be sent to the device.",
+                    "name": "Command"
+                }
+            },
+            "name": "Send node command"
+        },
+        "send_program_command": {
+            "description": "Sends a command to control an ISY program or folder. Valid commands are run, run_then, run_else, stop, enable, disable, enable_run_at_startup, and disable_run_at_startup.",
+            "fields": {
+                "address": {
+                    "description": "The address of the program to control (use either address or name).",
+                    "name": "Address"
+                },
+                "command": {
+                    "description": "The ISY Program Command to be sent.",
+                    "name": "Command"
+                },
+                "isy": {
+                    "description": "If you have more than one ISY connected, provide the name of the ISY to query (as shown on the Device Registry or as the top-first node in the ISY Admin Console).  If you have the same program name or address on multiple ISYs, omitting this will run the command on them all.",
+                    "name": "ISY"
+                },
+                "name": {
+                    "description": "The name of the program to control (use either address or name)."
+                }
+            },
+            "name": "Send program command"
+        },
+        "send_raw_node_command": {
+            "fields": {
+                "command": {
+                    "name": "Command"
+                },
+                "parameters": {
+                    "description": "A dict of parameters to be sent in the query string (e.g. for controlling coloured bulbs).",
+                    "name": "Parameters"
+                },
+                "unit_of_measurement": {
+                    "name": "Unit of measurement"
+                },
+                "value": {
+                    "description": "The integer value to be sent with the command.",
+                    "name": "Value"
+                }
+            },
+            "name": "Send raw node command"
+        },
+        "set_zwave_lock_user_code": {
+            "fields": {
+                "code": {
+                    "description": "The code to set for the user.",
+                    "name": "Code"
+                },
+                "user_num": {
+                    "description": "The user slot number on the lock.",
+                    "name": "User Number"
+                }
+            }
+        },
+        "set_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "The parameter number to set on the end device.",
+                    "name": "Parameter"
+                },
+                "size": {
+                    "description": "The size of the parameter, either 1, 2, or 4 bytes.",
+                    "name": "Size"
+                },
+                "value": {
+                    "description": "The value to set for the parameter. May be an integer or byte string (e.g. \"0xFFFF\").",
+                    "name": "Value"
+                }
+            }
+        }
+    }
+}

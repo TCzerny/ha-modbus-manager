@@ -1,0 +1,231 @@
+{
+    "config": {
+        "create_entry": {
+            "default": "Vissa sensorer \u00e4r inte aktiverade som standard. Du kan aktivera dem i entitetsregistret efter integrationskonfigurationen."
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_api_key": "Ogiltig API-nyckel",
+            "requests_exceeded": "Det till\u00e5tna antalet f\u00f6rfr\u00e5gningar till Accuweather API har \u00f6verskridits. Du m\u00e5ste v\u00e4nta eller \u00e4ndra API-nyckel."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API-nyckel",
+                    "latitude": "Latitud",
+                    "longitude": "Longitud",
+                    "name": "Namn"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "air_quality": {
+                "name": "Luftkvalitet, dag {forecast_day}",
+                "state": {
+                    "good": "Bra",
+                    "hazardous": "Farlig",
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "moderate": "M\u00e5ttlig",
+                    "unhealthy": "Oh\u00e4lsosam"
+                }
+            },
+            "apparent_temperature": {
+                "name": "Upplevd temperatur"
+            },
+            "cloud_ceiling": {
+                "name": "Molntak"
+            },
+            "cloud_cover": {
+                "name": "Molnt\u00e4cke"
+            },
+            "cloud_cover_day": {
+                "name": "Molnt\u00e4cke, dag {forecast_day}"
+            },
+            "cloud_cover_night": {
+                "name": "Molnt\u00e4cke, natt {forecast_day}"
+            },
+            "condition_day": {
+                "name": "V\u00e4derf\u00f6rh\u00e5llande dag {forecast_day}"
+            },
+            "condition_night": {
+                "name": "V\u00e4derf\u00f6rh\u00e5llande natt {forecast_day}"
+            },
+            "dew_point": {
+                "name": "Daggpunkt"
+            },
+            "grass_pollen": {
+                "name": "Gr\u00e4spollen, dag {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Niv\u00e5",
+                        "state": {
+                            "good": "Bra",
+                            "hazardous": "Farlig",
+                            "high": "H\u00f6g",
+                            "low": "L\u00e5g",
+                            "moderate": "M\u00e5ttlig",
+                            "unhealthy": "Oh\u00e4lsosam"
+                        }
+                    }
+                }
+            },
+            "hours_of_sun": {
+                "name": "Soltimmar per dag {forecast_day}"
+            },
+            "mold_pollen": {
+                "name": "M\u00f6gelpollen dag {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Niv\u00e5",
+                        "state": {
+                            "good": "Bra",
+                            "hazardous": "Farlig",
+                            "high": "H\u00f6g",
+                            "low": "L\u00e5g",
+                            "moderate": "M\u00e5ttlig",
+                            "unhealthy": "Oh\u00e4lsosam"
+                        }
+                    }
+                }
+            },
+            "precipitation": {
+                "name": "Nederb\u00f6rd"
+            },
+            "pressure_tendency": {
+                "name": "Tendenser f\u00f6r lufttryck",
+                "state": {
+                    "falling": "Faller",
+                    "rising": "Stiger",
+                    "steady": "Stadigt"
+                }
+            },
+            "ragweed_pollen": {
+                "name": "Ragweed-pollen dag {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Niv\u00e5",
+                        "state": {
+                            "good": "Bra",
+                            "hazardous": "Farlig",
+                            "high": "H\u00f6g",
+                            "low": "L\u00e5g",
+                            "moderate": "M\u00e5ttlig",
+                            "unhealthy": "Oh\u00e4lsosam"
+                        }
+                    }
+                }
+            },
+            "realfeel_temperature": {
+                "name": "RealFeel temperatur"
+            },
+            "realfeel_temperature_max": {
+                "name": "RealFeel temperatur max dag {forecast_day}"
+            },
+            "realfeel_temperature_min": {
+                "name": "RealFeel temperatur min dag {forecast_day}"
+            },
+            "realfeel_temperature_shade": {
+                "name": "RealFeel temperatur skugga"
+            },
+            "realfeel_temperature_shade_max": {
+                "name": "RealFeel temperatur skugga max dag {forecast_day}"
+            },
+            "realfeel_temperature_shade_min": {
+                "name": "RealFeel temperatur skugga min dag {forecast_day}"
+            },
+            "solar_irradiance_day": {
+                "name": "Solinstr\u00e5lning, dag {forecast_day}"
+            },
+            "solar_irradiance_night": {
+                "name": "Solinstr\u00e5lning, natt {forecast_day}"
+            },
+            "thunderstorm_probability_day": {
+                "name": "Sannolikhet f\u00f6r \u00e5ska, dag {forecast_day}"
+            },
+            "thunderstorm_probability_night": {
+                "name": "Sannolikhet f\u00f6r \u00e5ska, natt {forecast_day}"
+            },
+            "tree_pollen": {
+                "name": "Tr\u00e4dpollen, dag {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Niv\u00e5",
+                        "state": {
+                            "good": "Bra",
+                            "hazardous": "Farlig",
+                            "high": "H\u00f6g",
+                            "low": "L\u00e5g",
+                            "moderate": "M\u00e5ttlig",
+                            "unhealthy": "Oh\u00e4lsosam"
+                        }
+                    }
+                }
+            },
+            "uv_index": {
+                "name": "UV-index",
+                "state_attributes": {
+                    "level": {
+                        "name": "[%key:component::accuweather::entity::sensor::grass_pollen_0d::state_attributes::level::name%]",
+                        "state": {
+                            "good": "Bra",
+                            "hazardous": "Farlig",
+                            "high": "H\u00f6g",
+                            "low": "L\u00e5g",
+                            "moderate": "M\u00e5ttlig",
+                            "unhealthy": "Oh\u00e4lsosam"
+                        }
+                    }
+                }
+            },
+            "uv_index_forecast": {
+                "name": "UV-index, dag {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Niv\u00e5",
+                        "state": {
+                            "good": "Bra",
+                            "hazardous": "Farlig",
+                            "high": "H\u00f6g",
+                            "low": "L\u00e5g",
+                            "moderate": "M\u00e5ttlig",
+                            "unhealthy": "Oh\u00e4lsosam"
+                        }
+                    }
+                }
+            },
+            "wet_bulb_temperature": {
+                "name": "V\u00e5t bulbtemperatur"
+            },
+            "wind_chill_temperature": {
+                "name": "Vindkyla temperatur"
+            },
+            "wind_gust_speed": {
+                "name": "Hastighet i vindbyar"
+            },
+            "wind_gust_speed_day": {
+                "name": "Hastighet vindbyar, dag {forecast_day}"
+            },
+            "wind_gust_speed_night": {
+                "name": "Hastighet vindbyar, natt {forecast_day}"
+            },
+            "wind_speed": {
+                "name": "Vindhastighet"
+            },
+            "wind_speed_day": {
+                "name": "Vindhastighet, dag {forecast_day}"
+            },
+            "wind_speed_night": {
+                "name": "Vindhastighet, natt {forecast_day}"
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "can_reach_server": "N\u00e5 AccuWeather-servern",
+            "remaining_requests": "\u00c5terst\u00e5ende till\u00e5tna f\u00f6rfr\u00e5gningar"
+        }
+    }
+}

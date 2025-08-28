@@ -1,0 +1,88 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Th\u00f4ng b\u00e1o"
+        }
+    },
+    "issues": {
+        "migrate_notify": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "H\u00e0nh \u0111\u1ed9ng `notify` c\u1ee7a {integration_title} \u0111\u00e3 \u0111\u01b0\u1ee3c di chuy\u1ec3n. M\u1ed9t th\u1ef1c th\u1ec3 `notify` m\u1edbi hi\u1ec7n c\u00f3 s\u1eb5n \u0111\u1ec3 thay th\u1ebf cho m\u1ed7i h\u00e0nh \u0111\u1ed9ng `notify` c\u0169. \n \nC\u1eadp nh\u1eadt m\u1ecdi ho\u1ea1t \u0111\u1ed9ng t\u1ef1 \u0111\u1ed9ng h\u00f3a \u0111\u1ec3 s\u1eed d\u1ee5ng h\u00e0nh \u0111\u1ed9ng `notify.send_message` m\u1edbi \u0111\u01b0\u1ee3c hi\u1ec3n th\u1ecb v\u1edbi th\u1ef1c th\u1ec3 m\u1edbi n\u00e0y. Khi ho\u00e0n t\u1ea5t, h\u00e3y kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y v\u00e0 kh\u1edfi \u0111\u1ed9ng l\u1ea1i Home Assistant.",
+                        "title": "Di chuy\u1ec3n h\u00e0nh \u0111\u1ed9ng th\u00f4ng b\u00e1o {integration_title} c\u0169 cho mi\u1ec1n `{domain}`"
+                    }
+                }
+            },
+            "title": "Di chuy\u1ec3n h\u00e0nh \u0111\u1ed9ng th\u00f4ng b\u00e1o {integration_title}"
+        },
+        "migrate_notify_service": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "H\u00e0nh \u0111\u1ed9ng {integration_title} `notify. {service_name}` \u0111\u00e3 \u0111\u01b0\u1ee3c di chuy\u1ec3n, nh\u01b0ng c\u00f3 v\u1ebb nh\u01b0 h\u00e0nh \u0111\u1ed9ng `notify` c\u0169 v\u1eabn \u0111ang \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng. \n \nM\u1ed9t th\u1ef1c th\u1ec3 `notify` m\u1edbi hi\u1ec7n kh\u1ea3 d\u1ee5ng \u0111\u1ec3 thay th\u1ebf cho m\u1ed7i h\u00e0nh \u0111\u1ed9ng `notify` c\u0169. \n \nC\u1eadp nh\u1eadt b\u1ea5t k\u1ef3 ho\u1ea1t \u0111\u1ed9ng t\u1ef1 \u0111\u1ed9ng h\u00f3a ho\u1eb7c t\u1eadp l\u1ec7nh n\u00e0o \u0111\u1ec3 s\u1eed d\u1ee5ng h\u00e0nh \u0111\u1ed9ng `notify.send_message` m\u1edbi \u0111\u01b0\u1ee3c hi\u1ec3n th\u1ecb v\u1edbi th\u1ef1c th\u1ec3 m\u1edbi n\u00e0y. Khi ho\u00e0n t\u1ea5t, h\u00e3y ch\u1ecdn G\u1eedi v\u00e0 kh\u1edfi \u0111\u1ed9ng l\u1ea1i Home Assistant.",
+                        "title": "Di chuy\u1ec3n h\u00e0nh \u0111\u1ed9ng th\u00f4ng b\u00e1o {integration_title} c\u0169 cho mi\u1ec1n `{domain}`"
+                    }
+                }
+            },
+            "title": "H\u00e0nh \u0111\u1ed9ng c\u0169 notify.{service_name} v\u1eabn \u0111ang \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng"
+        }
+    },
+    "services": {
+        "notify": {
+            "description": "G\u1eedi tin nh\u1eafn th\u00f4ng b\u00e1o \u0111\u1ebfn c\u00e1c m\u1ee5c ti\u00eau \u0111\u00e3 ch\u1ecdn.",
+            "fields": {
+                "data": {
+                    "description": "M\u1ed9t s\u1ed1 b\u1ed9 t\u00edch h\u1ee3p cung c\u1ea5p ch\u1ee9c n\u0103ng m\u1edf r\u1ed9ng. \u0110\u1ec3 bi\u1ebft th\u00f4ng tin v\u1ec1 c\u00e1ch s\u1eed d\u1ee5ng _d\u1eef li\u1ec7u_, h\u00e3y tham kh\u1ea3o t\u00e0i li\u1ec7u b\u1ed9 t\u00edch h\u1ee3p.",
+                    "name": "D\u1eef li\u1ec7u"
+                },
+                "message": {
+                    "description": "N\u1ed9i dung tin nh\u1eafn th\u00f4ng b\u00e1o.",
+                    "name": "Tin nh\u1eafn"
+                },
+                "target": {
+                    "description": "M\u1ed9t s\u1ed1 b\u1ed9 t\u00edch h\u1ee3p cho ph\u00e9p b\u1ea1n ch\u1ec9 \u0111\u1ecbnh c\u00e1c m\u1ee5c ti\u00eau nh\u1eadn th\u00f4ng b\u00e1o. \u0110\u1ec3 bi\u1ebft th\u00eam th\u00f4ng tin, h\u00e3y tham kh\u1ea3o t\u00e0i li\u1ec7u b\u1ed9 t\u00edch h\u1ee3p.",
+                    "name": "M\u1ee5c ti\u00eau"
+                },
+                "title": {
+                    "description": "Ti\u00eau \u0111\u1ec1 th\u00f4ng b\u00e1o c\u1ee7a b\u1ea1n.",
+                    "name": "Ti\u00eau \u0111\u1ec1"
+                }
+            },
+            "name": "G\u1eedi th\u00f4ng b\u00e1o"
+        },
+        "persistent_notification": {
+            "description": "G\u1eedi th\u00f4ng b\u00e1o hi\u1ec3n th\u1ecb tr\u00ean b\u1ea3ng th\u00f4ng b\u00e1o.",
+            "fields": {
+                "data": {
+                    "description": "M\u1ed9t s\u1ed1 b\u1ed9 t\u00edch h\u1ee3p cung c\u1ea5p ch\u1ee9c n\u0103ng m\u1edf r\u1ed9ng. \u0110\u1ec3 bi\u1ebft th\u00f4ng tin v\u1ec1 c\u00e1ch s\u1eed d\u1ee5ng _d\u1eef li\u1ec7u_, h\u00e3y tham kh\u1ea3o t\u00e0i li\u1ec7u b\u1ed9 t\u00edch h\u1ee3p.",
+                    "name": "D\u1eef li\u1ec7u"
+                },
+                "message": {
+                    "description": "N\u1ed9i dung tin nh\u1eafn th\u00f4ng b\u00e1o.",
+                    "name": "Tin nh\u1eafn"
+                },
+                "title": {
+                    "description": "Ti\u00eau \u0111\u1ec1 c\u1ee7a th\u00f4ng b\u00e1o.",
+                    "name": "Ti\u00eau \u0111\u1ec1"
+                }
+            },
+            "name": "G\u1eedi th\u00f4ng b\u00e1o li\u00ean t\u1ee5c"
+        },
+        "send_message": {
+            "description": "G\u1eedi tin nh\u1eafn th\u00f4ng b\u00e1o.",
+            "fields": {
+                "message": {
+                    "description": "Tin nh\u1eafn th\u00f4ng b\u00e1o c\u1ee7a b\u1ea1n.",
+                    "name": "Tin nh\u1eafn"
+                },
+                "title": {
+                    "description": "Ti\u00eau \u0111\u1ec1 tin nh\u1eafn th\u00f4ng b\u00e1o c\u1ee7a b\u1ea1n.",
+                    "name": "Ti\u00eau \u0111\u1ec1"
+                }
+            },
+            "name": "G\u1eedi tin nh\u1eafn th\u00f4ng b\u00e1o"
+        }
+    },
+    "title": "Th\u00f4ng b\u00e1o"
+}

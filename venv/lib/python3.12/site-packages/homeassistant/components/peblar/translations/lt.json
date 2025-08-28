@@ -1,0 +1,177 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "different_device": "\u012evesta informacija yra i\u0161 kito Peblar EV \u012fkroviklio.",
+            "no_serial_number": "Aptiktas Peblar \u012frenginys nepateik\u0117 serijos numerio.",
+            "reauth_successful": "Pakartotinis autentifikavimas buvo s\u0117kmingas",
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Slapta\u017eodis"
+                },
+                "data_description": {
+                    "password": "Tas pats slapta\u017eodis, kur\u012f naudojate prisijungdami prie Peblar EV \u012fkroviklio vietin\u0117s \u017einiatinklio s\u0105sajos."
+                },
+                "description": "I\u0161 naujo autentifikuokite naudodami Peblar EV \u012fkrovikl\u012f. \n \nNor\u0117dami tai padaryti, tur\u0117site \u012fvesti nauj\u0105 slapta\u017eod\u012f, kur\u012f naudojate prisijungdami prie Peblar EV \u012fkroviklio \u017einiatinklio s\u0105sajos."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "password": "Slapta\u017eodis"
+                },
+                "data_description": {
+                    "host": "Peblar EV \u012fkroviklio pagrindinio kompiuterio pavadinimas arba IP adresas j\u016bs\u0173 nam\u0173 tinkle.",
+                    "password": "Tas pats slapta\u017eodis, kur\u012f naudojate prisijungdami prie Peblar EV \u012fkroviklio vietin\u0117s \u017einiatinklio s\u0105sajos."
+                },
+                "description": "I\u0161 naujo sukonfig\u016bruokite Peblar EV \u012fkrovikl\u012f. \n \nTai leid\u017eia pakeisti Peblar EV \u012fkroviklio IP adres\u0105 ir slapta\u017eod\u012f, kur\u012f naudojate prisijungdami prie jo \u017einiatinklio s\u0105sajos."
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Slapta\u017eodis"
+                },
+                "data_description": {
+                    "host": "Peblar EV \u012fkroviklio pagrindinio kompiuterio pavadinimas arba IP adresas j\u016bs\u0173 nam\u0173 tinkle.",
+                    "password": "Tas pats slapta\u017eodis, kur\u012f naudojate prisijungdami prie Peblar EV \u012fkroviklio vietin\u0117s \u017einiatinklio s\u0105sajos."
+                },
+                "description": "Nustatykite savo Peblar EV \u012fkrovikl\u012f, kad jis b\u016bt\u0173 integruotas su \u201eHome Assistant\u201c \n \nNor\u0117dami tai padaryti, tur\u0117site gauti savo Peblar EV \u012fkroviklio IP adres\u0105 ir slapta\u017eod\u012f, kur\u012f naudojate prisijungdami prie jo \u017einiatinklio s\u0105sajos. \n \n\u201eHome Assistant\u201c automati\u0161kai sukonfig\u016bruos j\u016bs\u0173 \u201ePeblar EV\u201c \u012fkrovikl\u012f, kad b\u016bt\u0173 galima naudoti su \u201eHome Assistant\u201c."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "Slapta\u017eodis"
+                },
+                "data_description": {
+                    "password": "Tas pats slapta\u017eodis, kur\u012f naudojate prisijungdami prie Peblar EV \u012fkroviklio vietin\u0117s \u017einiatinklio s\u0105sajos."
+                },
+                "description": "Nustatykite savo Peblar EV \u012fkrovikl\u012f {hostname} IP adrese {host}, kad jis b\u016bt\u0173 integruotas su \u201eHome Assistant\u201c. \n \nNor\u0117dami tai padaryti, jums reik\u0117s slapta\u017eod\u017eio, kur\u012f naudojate prisijungdami prie \u201ePeblar EV\u201c \u012fkroviklio \u017einiatinklio s\u0105sajos. \n \n\u201eHome Assistant\u201c automati\u0161kai sukonfig\u016bruos j\u016bs\u0173 \u201ePeblar EV\u201c \u012fkrovikl\u012f, kad b\u016bt\u0173 galima naudoti su \u201eHome Assistant\u201c."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Aktyvios klaidos"
+            },
+            "active_warning_codes": {
+                "name": "Aktyv\u016bs \u012fsp\u0117jimai"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "\u012ekrovimo riba"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "I\u0161manusis \u012fkrovimas",
+                "state": {
+                    "default": "Numatytas",
+                    "fast_solar": "Greita saul\u0117s energija",
+                    "pure_solar": "Gryna saul\u0117s energija",
+                    "scheduled": "Suplanuota",
+                    "smart_solar": "I\u0161manioji saul\u0117s energija"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Apriboti \u0161altin\u012f",
+                "state": {
+                    "charging_cable": "\u012ekrovimo laidas",
+                    "current_limiter": "Srov\u0117s ribotuvas",
+                    "dynamic_load_balancing": "Dinaminis apkrovos balansavimas",
+                    "external_power_limit": "I\u0161orin\u0117s galios riba",
+                    "group_load_balancing": "Grupin\u0117s apkrovos balansavimas",
+                    "hardware_limitation": "Aparatin\u0117s \u012frangos apribojimas",
+                    "high_temperature": "Auk\u0161ta temperat\u016bra",
+                    "household_power_limit": "Buitin\u0117s galios riba",
+                    "installation_limit": "Montavimo riba",
+                    "local_modbus_api": "Modbus API",
+                    "local_rest_api": "REST API",
+                    "local_scheduled_charging": "Suplanuotas \u012fkrovimas",
+                    "ocpp_smart_charging": "OCPP i\u0161manusis \u012fkrovimas",
+                    "overcurrent_protection": "Apsauga nuo vir\u0161srovi\u0173",
+                    "phase_imbalance": "Fazi\u0173 disbalansas",
+                    "power_factor": "Galios koeficientas",
+                    "solar_charging": "Saul\u0117s \u012fkrovimas"
+                }
+            },
+            "cp_state": {
+                "name": "B\u016bsena",
+                "state": {
+                    "charging": "\u012ekrovimas",
+                    "error": "Klaida",
+                    "fault": "Gedimas",
+                    "invalid": "Neteisingas",
+                    "no_ev_connected": "N\u0117ra prijungtas EV",
+                    "suspended": "Sustabdytas"
+                }
+            },
+            "current_phase_1": {
+                "name": "Srov\u0117s faz\u0117 1"
+            },
+            "current_phase_2": {
+                "name": "Srov\u0117s faz\u0117 2"
+            },
+            "current_phase_3": {
+                "name": "Srov\u0117s faz\u0117 3"
+            },
+            "energy_session": {
+                "name": "Sesijos energija"
+            },
+            "energy_total": {
+                "name": "Energija vis\u0105 gyvenim\u0105"
+            },
+            "power_phase_1": {
+                "name": "Galios faz\u0117 1"
+            },
+            "power_phase_2": {
+                "name": "Galios faz\u0117 2"
+            },
+            "power_phase_3": {
+                "name": "Galios faz\u0117 3"
+            },
+            "uptime": {
+                "name": "Veiklos laikas"
+            },
+            "voltage_phase_1": {
+                "name": "\u012etampos faz\u0117 1"
+            },
+            "voltage_phase_2": {
+                "name": "\u012etampos faz\u0117 2"
+            },
+            "voltage_phase_3": {
+                "name": "\u012etampos faz\u0117 3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "Vienfaz\u0117 j\u0117ga"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "Tinkinimas"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Bendraujant su Peblar EV \u012fkrovikliu \u012fvyko autentifikavimo klaida."
+        },
+        "communication_error": {
+            "message": "Bendraujant su Peblar EV \u012fkrovikliu \u012fvyko klaida: {error}"
+        },
+        "unknown_error": {
+            "message": "Bendraujant su Peblar EV \u012fkrovikliu \u012fvyko ne\u017einoma klaida: {error}"
+        }
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparaat is al geconfigureerd"
+        },
+        "error": {
+            "already_configured": "Apparaat is al geconfigureerd",
+            "cannot_connect": "Kan geen verbinding maken"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "name": "De naam voor deze velbus-verbinding",
+                    "port": "Verbindingsreeks"
+                },
+                "title": "Definieer de velbus-verbindingstype"
+            }
+        }
+    },
+    "services": {
+        "clear_cache": {
+            "description": "Maakt de Velbus-cache leeg en start een nieuwe scan.",
+            "fields": {
+                "address": {
+                    "name": "Adres"
+                },
+                "interface": {
+                    "description": "De Velbus interface waar het commando naar toe wordt gestuurd. Dit zal de zelfde waarde worden als gebruikt tijdens de configuratie.",
+                    "name": "Interface"
+                }
+            },
+            "name": "Cache leegmaken"
+        },
+        "scan": {
+            "fields": {
+                "interface": {
+                    "description": "De Velbus interface waar het commando naar toe wordt gestuurd. Dit zal de zelfde waarde worden als gebruikt tijdens de configuratie.",
+                    "name": "Interface"
+                }
+            },
+            "name": "Scannen"
+        },
+        "set_memo_text": {
+            "fields": {
+                "address": {
+                    "name": "Adres"
+                },
+                "interface": {
+                    "description": "De Velbus interface waar het commando naar toe wordt gestuurd. Dit zal de zelfde waarde worden als gebruikt tijdens de configuratie.",
+                    "name": "Interface"
+                },
+                "memo_text": {
+                    "name": "Memo tekst"
+                }
+            },
+            "name": "Stel memo tekst in."
+        },
+        "sync_clock": {
+            "description": "Syncroniseert de Velbus modules klok met de Home Assistant klok. Dit is het zelfde als de `sync clok` van VelbusLink.",
+            "fields": {
+                "interface": {
+                    "description": "De Velbus interface waar het commando naar toe wordt gestuurd. Dit zal de zelfde waarde worden als gebruikt tijdens de configuratie.",
+                    "name": "Interface"
+                }
+            },
+            "name": "Klok synchroniseren"
+        }
+    }
+}

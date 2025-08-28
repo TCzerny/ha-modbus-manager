@@ -1,0 +1,235 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Zariadenie u\u017e je nakonfigurovan\u00e9",
+            "already_in_progress": "Konfigur\u00e1cia u\u017e prebieha",
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "reconfiguration_successful": "\u00daspe\u0161ne nakonfigurovan\u00e1 integr\u00e1cia aplik\u00e1cie Music Assistant.",
+            "reconfigure_successful": "Rekonfigur\u00e1cia bola \u00faspe\u0161n\u00e1"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "invalid_server_version": "Server Music Assistant nie je spr\u00e1vnou verziou",
+            "unknown": "Neo\u010dak\u00e1van\u00e1 chyba"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Chcete prida\u0165 server Music Assistant `{url}` do Home Assistant?",
+                "title": "Objaven\u00fd server Music Assistant"
+            },
+            "init": {
+                "data": {
+                    "url": "URL servera Music Assistant"
+                }
+            },
+            "manual": {
+                "data": {
+                    "url": "URL servera Music Assistant"
+                },
+                "description": "Zadajte adresu URL v\u00e1\u0161ho u\u017e spusten\u00e9ho servera Music Assistant. Ak nem\u00e1te spusten\u00fd server Music Assistant, mali by ste si ho najsk\u00f4r nain\u0161talova\u0165.",
+                "title": "Manu\u00e1lne pridajte Music Assistant Server"
+            }
+        }
+    },
+    "issues": {
+        "invalid_server_version": {
+            "description": "Skontrolujte, \u010di s\u00fa k dispoz\u00edcii aktualiz\u00e1cie pre server Music Assistant a/alebo integr\u00e1ciu.",
+            "title": "Server Music Assistant nie je spr\u00e1vnou verziou"
+        }
+    },
+    "selector": {
+        "album_type": {
+            "options": {
+                "album": "Album",
+                "compilation": "Kompil\u00e1cia",
+                "ep": "EP",
+                "single": "Raz",
+                "unknown": "Nezn\u00e1me"
+            }
+        },
+        "enqueue": {
+            "options": {
+                "add": "Prida\u0165 do frontu",
+                "next": "Hra\u0165 \u010fal\u0161ie",
+                "play": "Prehra\u0165",
+                "replace": "Hrajte teraz a vyma\u017ete front",
+                "replace_next": "Prehrajte \u010fal\u0161iu a vyma\u017ete front"
+            }
+        },
+        "media_type": {
+            "options": {
+                "album": "Album",
+                "artist": "Umelec",
+                "playlist": "Zoznam skladieb",
+                "radio": "R\u00e1dio",
+                "track": "Skladba"
+            }
+        },
+        "order_by": {
+            "options": {
+                "artist_name": "Meno interpreta",
+                "artist_name_desc": "Meno interpreta (zost.)",
+                "last_played": "Naposledy hran\u00e9",
+                "last_played_desc": "Naposledy hran\u00e9 (zost.)",
+                "name": "N\u00e1zov",
+                "name_desc": "N\u00e1zov (zost.)",
+                "play_count": "Po\u010det prehrat\u00ed",
+                "play_count_desc": "Po\u010det prehrat\u00ed (zost.)",
+                "position": "Poz\u00edcia",
+                "position_desc": "Poz\u00edcia (zost.)",
+                "random": "N\u00e1hodn\u00fd",
+                "random_play_count": "N\u00e1hodn\u00e9 + najmenej hran\u00e9",
+                "sort_name": "Zoradi\u0165 n\u00e1zov",
+                "sort_name_desc": "N\u00e1zov triedenia (zost.)",
+                "timestamp_added": "Pridan\u00e9",
+                "timestamp_added_desc": "Pridan\u00e9 (zost.)",
+                "year": "Rok",
+                "year_desc": "Rok (zost.)"
+            }
+        }
+    },
+    "services": {
+        "get_library": {
+            "description": "Z\u00edskajte polo\u017eky z kni\u017enice Music Assistant.",
+            "fields": {
+                "album_artists_only": {
+                    "description": "Pri v\u00fdpise polo\u017eiek kni\u017enice Umelci vr\u00e1ti\u0165 iba album Umelci.",
+                    "name": "Povolenie filtra umelcov albumov (len pre kni\u017enicu umelcov)"
+                },
+                "album_type": {
+                    "description": "Filtrujte albumy pod\u013ea typu.",
+                    "name": "Filter typu albumu (iba kni\u017enica albumov)"
+                },
+                "config_entry_id": {
+                    "description": "Ak chcete vykona\u0165 vyh\u013ead\u00e1vanie, vyberte in\u0161tanciu Music Assistant.",
+                    "name": "In\u0161tancia Music Assistant"
+                },
+                "favorite": {
+                    "description": "Filtrovanie polo\u017eiek tak, aby sa vr\u00e1tili len ob\u013e\u00faben\u00e9 polo\u017eky.",
+                    "name": "Iba ob\u013e\u00faben\u00e9"
+                },
+                "limit": {
+                    "description": "Maxim\u00e1lny po\u010det polo\u017eiek na vr\u00e1tenie.",
+                    "name": "Limit"
+                },
+                "media_type": {
+                    "description": "Typ m\u00e9dia, pre ktor\u00fd sa maj\u00fa po\u017eadova\u0165 podrobnosti.",
+                    "name": "Typ m\u00e9dia"
+                },
+                "offset": {
+                    "description": "Odsadenie, od ktor\u00e9ho sa m\u00e1 zoznam za\u010da\u0165.",
+                    "name": "Ofset"
+                },
+                "order_by": {
+                    "description": "Zora\u010fte zoznam pod\u013ea tohto po\u013ea.",
+                    "name": "Zoradi\u0165 pod\u013ea"
+                },
+                "search": {
+                    "description": "Nepovinn\u00fd vyh\u013ead\u00e1vac\u00ed re\u0165azec na vyh\u013ead\u00e1vanie v tejto kni\u017enici.",
+                    "name": "H\u013eada\u0165"
+                }
+            },
+            "name": "Z\u00edskanie polo\u017eiek kni\u017enice"
+        },
+        "get_queue": {
+            "description": "Z\u00edskajte podrobnosti o aktu\u00e1lne akt\u00edvnom rade prehr\u00e1va\u010da Music Assistant.",
+            "name": "Z\u00edska\u0165 podrobnosti o fronte playerQueue (pokro\u010dil\u00e9)"
+        },
+        "play_announcement": {
+            "description": "Prehr\u00e1vanie ozn\u00e1men\u00ed v prehr\u00e1va\u010di Music Assistant s jemnej\u0161\u00edmi mo\u017enos\u0165ami ovl\u00e1dania.",
+            "fields": {
+                "announce_volume": {
+                    "description": "Pre hl\u00e1senie pou\u017eite vyn\u00faten\u00fa \u00farove\u0148 hlasitosti. Vynechajte, ak chcete pou\u017ei\u0165 predvolen\u00e9 nastavenie prehr\u00e1va\u010da.",
+                    "name": "Hlasitos\u0165 ozn\u00e1menia"
+                },
+                "url": {
+                    "description": "URL na zvuk ozn\u00e1menia.",
+                    "name": "URL"
+                },
+                "use_pre_announce": {
+                    "description": "Pre ozn\u00e1menie pou\u017eite zvuk pred ozn\u00e1men\u00edm. Vynechajte, ak chcete pou\u017ei\u0165 predvolen\u00fd zvuk prehr\u00e1va\u010da.",
+                    "name": "Pou\u017eitie predbe\u017en\u00e9ho ozn\u00e1menia"
+                }
+            },
+            "name": "Prehra\u0165 ozn\u00e1menie"
+        },
+        "play_media": {
+            "description": "Prehr\u00e1vanie m\u00e9di\u00ed v prehr\u00e1va\u010di Music Assistant s jemnej\u0161\u00edmi mo\u017enos\u0165ami ovl\u00e1dania.",
+            "fields": {
+                "album": {
+                    "description": "Pri zad\u00e1van\u00ed skladby pod\u013ea n\u00e1zvu v poli ID m\u00e9dia m\u00f4\u017eete v\u00fdsledky volite\u013ene obmedzi\u0165 pod\u013ea n\u00e1zvu tohto albumu.",
+                    "name": "N\u00e1zov albumu"
+                },
+                "artist": {
+                    "description": "Pri zad\u00e1van\u00ed skladby alebo albumu pod\u013ea n\u00e1zvu v poli ID m\u00e9dia m\u00f4\u017eete v\u00fdsledky volite\u013ene obmedzi\u0165 pod\u013ea n\u00e1zvu tohto interpreta.",
+                    "name": "Meno interpreta"
+                },
+                "enqueue": {
+                    "description": "Ak sa m\u00e1 obsah prehra\u0165 teraz alebo prida\u0165 do frontu.",
+                    "name": "Zaradi\u0165 do fronty"
+                },
+                "media_id": {
+                    "description": "URI alebo n\u00e1zov polo\u017eky, ktor\u00fa chcete prehra\u0165. Zadajte zoznam, ak chcete prehra\u0165/vyzdvihn\u00fa\u0165 viacero polo\u017eiek.",
+                    "name": "ID m\u00e9di\u00ed"
+                },
+                "media_type": {
+                    "description": "Typ obsahu na prehr\u00e1vanie. Napr\u00edklad interpret, album, skladba alebo zoznam skladieb. Ak sa neuvedie, ur\u010d\u00ed sa automaticky.",
+                    "name": "Typ m\u00e9dia"
+                },
+                "radio_mode": {
+                    "description": "Povolen\u00edm re\u017eimu r\u00e1dia automaticky vygenerujete zoznam skladieb na z\u00e1klade v\u00fdberu.",
+                    "name": "Povoli\u0165 re\u017eim r\u00e1dia"
+                }
+            },
+            "name": "Prehra\u0165 m\u00e9dium"
+        },
+        "search": {
+            "description": "Vykonajte glob\u00e1lne vyh\u013ead\u00e1vanie v kni\u017enici Music Assistant a u v\u0161etk\u00fdch poskytovate\u013eov.",
+            "fields": {
+                "album": {
+                    "description": "Pri zad\u00e1van\u00ed n\u00e1zvu skladby do po\u013ea n\u00e1zov m\u00f4\u017eete volite\u013ene obmedzi\u0165 v\u00fdsledky pod\u013ea tohto n\u00e1zvu albumu.",
+                    "name": "N\u00e1zov albumu"
+                },
+                "artist": {
+                    "description": "Pri zad\u00e1van\u00ed n\u00e1zvu skladby alebo albumu do po\u013ea n\u00e1zov m\u00f4\u017eete volite\u013ene obmedzi\u0165 v\u00fdsledky pod\u013ea tohto n\u00e1zvu interpreta.",
+                    "name": "Meno interpreta"
+                },
+                "config_entry_id": {
+                    "description": "Ak chcete vykona\u0165 vyh\u013ead\u00e1vanie, vyberte in\u0161tanciu Music Assistant.",
+                    "name": "In\u0161tancia Music Assistant"
+                },
+                "library_only": {
+                    "description": "Zahr\u0148te len v\u00fdsledky, ktor\u00e9 s\u00fa v kni\u017enici.",
+                    "name": "Iba polo\u017eky kni\u017enice"
+                },
+                "limit": {
+                    "description": "Maxim\u00e1lny po\u010det polo\u017eiek na vr\u00e1tenie (na typ m\u00e9dia).",
+                    "name": "Limit"
+                },
+                "media_type": {
+                    "description": "Typ obsahu, ktor\u00fd sa m\u00e1 vyh\u013eada\u0165. Napr\u00edklad interpret, album, skladba, r\u00e1dio alebo zoznam skladieb. V\u0161etky typy, ak sa vynechaj\u00fa.",
+                    "name": "Typ(y) m\u00e9di\u00ed"
+                },
+                "name": {
+                    "description": "N\u00e1zov/titul, ktor\u00fd sa m\u00e1 vyh\u013eada\u0165.",
+                    "name": "H\u013eada\u0165 n\u00e1zov"
+                }
+            },
+            "name": "Vyh\u013eadajte aplik\u00e1ciu Music Assistant"
+        },
+        "transfer_queue": {
+            "description": "Pren\u00e1\u0161a prehr\u00e1vanie z jedn\u00e9ho prehr\u00e1va\u010da do druh\u00e9ho.",
+            "fields": {
+                "auto_play": {
+                    "description": "Spustite prehr\u00e1vanie fronty na cie\u013eovom prehr\u00e1va\u010di. Vynechajte, ak chcete pou\u017ei\u0165 predvolen\u00e9 spr\u00e1vanie.",
+                    "name": "Automatick\u00e9 prehr\u00e1vanie"
+                },
+                "source_player": {
+                    "description": "Zdrojov\u00fd prehr\u00e1va\u010d m\u00e9di\u00ed, v ktorom sa nach\u00e1dza fronta, ktor\u00fa chcete prenies\u0165. Ak sa vynech\u00e1, pou\u017eije sa prv\u00fd prehr\u00e1vaj\u00faci prehr\u00e1va\u010d.",
+                    "name": "Zdrojov\u00fd prehr\u00e1va\u010d m\u00e9di\u00ed"
+                }
+            },
+            "name": "Fronta na prenos"
+        }
+    }
+}

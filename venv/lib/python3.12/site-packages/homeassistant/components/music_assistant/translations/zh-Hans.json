@@ -1,0 +1,235 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u8bbe\u5907\u5df2\u914d\u7f6e",
+            "already_in_progress": "\u914d\u7f6e\u6d41\u7a0b\u5df2\u5728\u8fdb\u884c\u4e2d",
+            "cannot_connect": "\u8fde\u63a5\u5931\u8d25",
+            "reconfiguration_successful": "\u5df2\u6210\u529f\u91cd\u65b0\u914d\u7f6e Music Assistant \u96c6\u6210\u3002",
+            "reconfigure_successful": "\u91cd\u65b0\u914d\u7f6e\u6210\u529f"
+        },
+        "error": {
+            "cannot_connect": "\u8fde\u63a5\u5931\u8d25",
+            "invalid_server_version": "Music Assistant \u670d\u52a1\u5668\u7684\u7248\u672c\u4e0d\u6b63\u786e",
+            "unknown": "\u610f\u5916\u9519\u8bef"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "\u60a8\u60f3\u6dfb\u52a0 Music Assistant \u670d\u52a1\u5668\u201c{url}\u201d\u5230 Home Assistant \uff1f",
+                "title": "\u53d1\u73b0 Music Assistant \u670d\u52a1\u5668"
+            },
+            "init": {
+                "data": {
+                    "url": "Music Assistant \u670d\u52a1\u5668\u7684\u7f51\u5740"
+                }
+            },
+            "manual": {
+                "data": {
+                    "url": "Music Assistant \u670d\u52a1\u5668\u7684\u7f51\u5740"
+                },
+                "description": "\u8f93\u5165\u60a8\u5df2\u8fd0\u884c Music Assistant \u670d\u52a1\u5668\u7684\u7f51\u5740\u3002\u5982\u679c\u60a8\u6ca1\u6709 Music Assistant \u670d\u52a1\u5668\u5728\u8fd0\u884c\uff0c\u8bf7\u5148\u5b89\u88c5\u3002",
+                "title": "\u624b\u52a8\u6dfb Music Assistant \u670d\u52a1\u5668"
+            }
+        }
+    },
+    "issues": {
+        "invalid_server_version": {
+            "description": "\u68c0\u67e5 Music Assistant \u670d\u52a1\u5668\u53ca\u5176\u96c6\u6210\u662f\u5426\u6709\u53ef\u7528\u66f4\u65b0\u3002",
+            "title": "Music Assistant \u670d\u52a1\u5668\u7684\u7248\u672c\u4e0d\u6b63\u786e"
+        }
+    },
+    "selector": {
+        "album_type": {
+            "options": {
+                "album": "\u4e13\u8f91",
+                "compilation": "\u6c47\u7f16",
+                "ep": "EP",
+                "single": "\u5355\u6b21",
+                "unknown": "\u672a\u77e5"
+            }
+        },
+        "enqueue": {
+            "options": {
+                "add": "\u6dfb\u52a0\u81f3\u961f\u5217",
+                "next": "\u64ad\u653e\u4e0b\u4e00\u66f2",
+                "play": "\u64ad\u653e",
+                "replace": "\u7acb\u5373\u64ad\u653e\u5e76\u6e05\u9664\u961f\u5217",
+                "replace_next": "\u64ad\u653e\u4e0b\u4e00\u66f2\u5e76\u6e05\u9664\u961f\u5217"
+            }
+        },
+        "media_type": {
+            "options": {
+                "album": "\u4e13\u8f91",
+                "artist": "\u827a\u672f\u5bb6",
+                "playlist": "\u64ad\u653e\u5217\u8868",
+                "radio": "\u65e0\u7ebf\u7535",
+                "track": "\u97f3\u8f68"
+            }
+        },
+        "order_by": {
+            "options": {
+                "artist_name": "\u827a\u672f\u5bb6\u59d3\u540d",
+                "artist_name_desc": "\u827a\u672f\u5bb6\u59d3\u540d\uff08\u964d\u5e8f\uff09",
+                "last_played": "\u4e0a\u6b21\u64ad\u653e",
+                "last_played_desc": "\u4e0a\u6b21\u64ad\u653e\uff08\u964d\u5e8f\uff09",
+                "name": "\u540d\u79f0",
+                "name_desc": "\u540d\u79f0\uff08\u964d\u5e8f\uff09",
+                "play_count": "\u64ad\u653e\u6b21\u6570",
+                "play_count_desc": "\u64ad\u653e\u6b21\u6570\uff08\u964d\u5e8f\uff09",
+                "position": "\u4f4d\u7f6e",
+                "position_desc": "\u4f4d\u7f6e\uff08\u964d\u5e8f\uff09",
+                "random": "\u968f\u673a",
+                "random_play_count": "\u968f\u673a + \u6700\u5c11\u64ad\u653e",
+                "sort_name": "\u6392\u5e8f\u540d\u79f0",
+                "sort_name_desc": "\u6392\u5e8f\u540d\u79f0\uff08\u964d\u5e8f\uff09",
+                "timestamp_added": "\u6dfb\u52a0\u65f6\u95f4",
+                "timestamp_added_desc": "\u6dfb\u52a0\u65f6\u95f4\uff08\u964d\u5e8f\uff09",
+                "year": "\u5e74\u4efd",
+                "year_desc": "\u5e74\u4efd\uff08\u964d\u5e8f\uff09"
+            }
+        }
+    },
+    "services": {
+        "get_library": {
+            "description": "\u4ece Music Assistant \u5e93\u4e2d\u83b7\u53d6\u9879\u76ee\u3002",
+            "fields": {
+                "album_artists_only": {
+                    "description": "\u5217\u51fa\u827a\u672f\u5bb6\u5e93\u9879\u76ee\u65f6\u4ec5\u8fd4\u56de\u4e13\u8f91\u827a\u672f\u5bb6\u3002",
+                    "name": "\u542f\u7528\u4e13\u8f91\u827a\u672f\u5bb6\u8fc7\u6ee4\u5668\uff08\u4ec5\u9002\u7528\u4e8e\u827a\u672f\u5bb6\u5e93\uff09"
+                },
+                "album_type": {
+                    "description": "\u6309\u7c7b\u578b\u8fc7\u6ee4\u4e13\u8f91\u3002",
+                    "name": "\u4e13\u8f91\u7c7b\u578b\u8fc7\u6ee4\u5668\uff08\u4ec5\u9650\u4e13\u8f91\u5e93\uff09"
+                },
+                "config_entry_id": {
+                    "description": "\u9009\u62e9\u8981\u6267\u884c\u641c\u7d22\u7684 Music Assistant \u5b9e\u4f8b\u3002",
+                    "name": "Music Assistant \u5b9e\u4f8b"
+                },
+                "favorite": {
+                    "description": "\u8fc7\u6ee4\u9879\u76ee\u4ee5\u4fbf\u53ea\u8fd4\u56de\u559c\u6b22\u7684\u9879\u76ee\u3002",
+                    "name": "\u4ec5\u9650\u6536\u85cf"
+                },
+                "limit": {
+                    "description": "\u8981\u8fd4\u56de\u7684\u6700\u5927\u9879\u76ee\u6570\u3002",
+                    "name": "\u9650\u5236"
+                },
+                "media_type": {
+                    "description": "\u8bf7\u6c42\u5176\u8be6\u7ec6\u4fe1\u606f\u7684\u5a92\u4f53\u7c7b\u578b\u3002",
+                    "name": "\u5a92\u4f53\u7c7b\u578b"
+                },
+                "offset": {
+                    "description": "\u5217\u8868\u7684\u8d77\u59cb\u504f\u79fb\u91cf\u3002",
+                    "name": "\u504f\u79fb"
+                },
+                "order_by": {
+                    "description": "\u6309\u6b64\u5b57\u6bb5\u5bf9\u5217\u8868\u8fdb\u884c\u6392\u5e8f\u3002",
+                    "name": "\u6392\u5e8f\u4f9d\u636e"
+                },
+                "search": {
+                    "description": "\u53ef\u9009\u7684\u641c\u7d22\u5b57\u7b26\u4e32\uff0c\u7528\u4e8e\u641c\u7d22\u6b64\u5e93\u3002",
+                    "name": "\u641c\u7d22"
+                }
+            },
+            "name": "\u83b7\u53d6\u5e93\u9879\u76ee"
+        },
+        "get_queue": {
+            "description": "\u83b7\u53d6 Music Assistant \u64ad\u653e\u5668\u5f53\u524d\u6d3b\u52a8\u961f\u5217\u7684\u8be6\u7ec6\u4fe1\u606f\u3002",
+            "name": "\u83b7\u53d6 playerQueue \u8be6\u7ec6\u4fe1\u606f\uff08\u9ad8\u7ea7\uff09"
+        },
+        "play_announcement": {
+            "description": "\u5728\u5177\u6709\u66f4\u591a\u7ec6\u8282\u63a7\u5236\u9009\u9879\u7684\u97f3\u4e50\u52a9\u624b\u64ad\u653e\u5668\u4e0a\u64ad\u653e\u516c\u544a\u3002",
+            "fields": {
+                "announce_volume": {
+                    "description": "\u4f7f\u7528\u5f3a\u5236\u97f3\u91cf\u7ea7\u522b\u8fdb\u884c\u64ad\u62a5\u3002\u7701\u7565\u5219\u4f7f\u7528\u64ad\u653e\u5668\u9ed8\u8ba4\u97f3\u91cf\u3002",
+                    "name": "\u64ad\u62a5\u97f3\u91cf"
+                },
+                "url": {
+                    "description": "\u901a\u77e5\u58f0\u97f3\u7684\u7f51\u5740\u3002",
+                    "name": "\u7f51\u5740"
+                },
+                "use_pre_announce": {
+                    "description": "\u4f7f\u7528\u9884\u901a\u544a\u58f0\u64ad\u62a5\u901a\u544a\u3002\u7701\u7565\u5219\u4f7f\u7528\u64ad\u653e\u5668\u9ed8\u8ba4\u8bbe\u7f6e\u3002",
+                    "name": "\u4f7f\u7528\u9884\u901a\u544a"
+                }
+            },
+            "name": "\u64ad\u653e\u901a\u544a"
+        },
+        "play_media": {
+            "description": "\u4f7f\u7528\u5177\u6709\u66f4\u591a\u7ec6\u8282\u63a7\u5236\u9009\u9879\u7684\u97f3\u4e50\u52a9\u624b\u64ad\u653e\u5668\u6765\u64ad\u653e\u5a92\u4f53\u3002",
+            "fields": {
+                "album": {
+                    "description": "\u5728\u5a92\u4f53\u6807\u8bc6\u7b26\u5b57\u6bb5\u4e2d\u6309\u540d\u79f0\u6307\u5b9a\u66f2\u76ee\u65f6\uff0c\u60a8\u53ef\u4ee5\u6307\u5b9a\u4e13\u8f91\u540d\u79f0\u6765\u9650\u5236\u7ed3\u679c\u3002",
+                    "name": "\u4e13\u8f91\u540d\u79f0"
+                },
+                "artist": {
+                    "description": "\u5728\u5a92\u4f53\u6807\u8bc6\u7b26\u5b57\u6bb5\u4e2d\u6309\u540d\u79f0\u6307\u5b9a\u66f2\u76ee\u6216\u4e13\u8f91\u65f6\uff0c\u60a8\u53ef\u4ee5\u6307\u5b9a\u827a\u672f\u5bb6\u59d3\u540d\u6765\u9650\u5236\u7ed3\u679c\u3002",
+                    "name": "\u827a\u672f\u5bb6\u59d3\u540d"
+                },
+                "enqueue": {
+                    "description": "\u662f\u5426\u5e94\u7acb\u5373\u64ad\u653e\u5185\u5bb9\u6216\u5c06\u5176\u6dfb\u52a0\u5230\u961f\u5217\u4e2d\u3002",
+                    "name": "\u6392\u961f"
+                },
+                "media_id": {
+                    "description": "\u60a8\u8981\u64ad\u653e\u9879\u76ee\u7684 URI \u6216\u540d\u79f0\u3002\u5982\u679c\u60a8\u8981\u64ad\u653e/\u6392\u961f\u591a\u4e2a\u9879\u76ee\uff0c\u8bf7\u6307\u5b9a\u4e00\u4e2a\u5217\u8868\u3002",
+                    "name": "\u5a92\u4f53\u6807\u8bc6\u7b26"
+                },
+                "media_type": {
+                    "description": "\u8981\u64ad\u653e\u5185\u5bb9\u7684\u7c7b\u578b\u3002\u4f8b\u5982\u827a\u672f\u5bb6\u3001\u4e13\u8f91\u3001\u66f2\u76ee\u6216\u64ad\u653e\u5217\u8868\u3002\u5982\u679c\u7701\u7565\uff0c\u5c06\u81ea\u52a8\u786e\u5b9a\u3002",
+                    "name": "\u5a92\u4f53\u7c7b\u578b"
+                },
+                "radio_mode": {
+                    "description": "\u542f\u7528\u5e7f\u64ad\u6a21\u5f0f\u53ef\u6839\u636e\u9009\u62e9\u81ea\u52a8\u751f\u6210\u64ad\u653e\u5217\u8868\u3002",
+                    "name": "\u542f\u7528\u5e7f\u64ad\u6a21\u5f0f"
+                }
+            },
+            "name": "\u64ad\u653e\u5a92\u4f53"
+        },
+        "search": {
+            "description": "\u5bf9 Music Assistant \u5e93\u548c\u6240\u6709\u63d0\u4f9b\u5546\u6267\u884c\u5168\u5c40\u641c\u7d22\u3002",
+            "fields": {
+                "album": {
+                    "description": "\u5728\u540d\u79f0\u5b57\u6bb5\u4e2d\u6307\u5b9a\u66f2\u76ee\u540d\u79f0\u65f6\uff0c\u60a8\u53ef\u4ee5\u9009\u62e9\u6b64\u4e13\u8f91\u540d\u79f0\u6765\u9650\u5236\u7ed3\u679c\u3002",
+                    "name": "\u4e13\u8f91\u540d\u79f0"
+                },
+                "artist": {
+                    "description": "\u5728\u540d\u79f0\u5b57\u6bb5\u4e2d\u6307\u5b9a\u66f2\u76ee\u6216\u4e13\u8f91\u540d\u79f0\u65f6\uff0c\u60a8\u53ef\u4ee5\u9009\u62e9\u4ee5\u6b64\u827a\u672f\u5bb6\u59d3\u540d\u6765\u9650\u5236\u7ed3\u679c\u3002",
+                    "name": "\u827a\u672f\u5bb6\u59d3\u540d"
+                },
+                "config_entry_id": {
+                    "description": "\u9009\u62e9\u8981\u6267\u884c\u641c\u7d22\u7684 Music Assistant \u5b9e\u4f8b\u3002",
+                    "name": "Music Assistant \u5b9e\u4f8b"
+                },
+                "library_only": {
+                    "description": "\u4ec5\u5305\u542b\u5e93\u4e2d\u7684\u7ed3\u679c\u3002",
+                    "name": "\u4ec5\u9650\u5e93\u9879\u76ee"
+                },
+                "limit": {
+                    "description": "\u8981\u8fd4\u56de\u7684\u6700\u5927\u9879\u76ee\u6570\uff08\u6bcf\u79cd\u5a92\u4f53\u7c7b\u578b\uff09\u3002",
+                    "name": "\u9650\u5236"
+                },
+                "media_type": {
+                    "description": "\u8981\u641c\u7d22\u7684\u5185\u5bb9\u7c7b\u578b\u3002\u4f8b\u5982\u827a\u672f\u5bb6\u3001\u4e13\u8f91\u3001\u66f2\u76ee\u3001\u7535\u53f0\u6216\u64ad\u653e\u5217\u8868\u3002\u5982\u679c\u7701\u7565\uff0c\u5219\u8868\u793a\u6240\u6709\u7c7b\u578b\u3002",
+                    "name": "\u5a92\u4f53\u7c7b\u578b"
+                },
+                "name": {
+                    "description": "\u8981\u641c\u7d22\u7684\u540d\u79f0/\u6807\u9898\u3002",
+                    "name": "\u641c\u7d22\u540d\u79f0"
+                }
+            },
+            "name": "\u641c\u7d22 Music Assistant"
+        },
+        "transfer_queue": {
+            "description": "\u5c06\u73a9\u5bb6\u7684\u961f\u5217\u8f6c\u79fb\u7ed9\u53e6\u4e00\u4e2a\u73a9\u5bb6\u3002",
+            "fields": {
+                "auto_play": {
+                    "description": "\u5f00\u59cb\u5728\u76ee\u6807\u64ad\u653e\u5668\u4e0a\u64ad\u653e\u961f\u5217\u3002\u7701\u7565\u5219\u4f7f\u7528\u9ed8\u8ba4\u884c\u4e3a\u3002",
+                    "name": "\u81ea\u52a8\u64ad\u653e"
+                },
+                "source_player": {
+                    "description": "\u5305\u542b\u8981\u4f20\u8f93\u961f\u5217\u7684\u6e90\u5a92\u4f53\u64ad\u653e\u5668\u3002\u7701\u7565\u65f6\uff0c\u5c06\u4f7f\u7528\u7b2c\u4e00\u4e2a\u6b63\u5728\u4f7f\u7528\u7684\u64ad\u653e\u5668\u3002",
+                    "name": "\u6e90\u5a92\u4f53\u64ad\u653e\u5668"
+                }
+            },
+            "name": "\u4f20\u8f93\u961f\u5217"
+        }
+    }
+}

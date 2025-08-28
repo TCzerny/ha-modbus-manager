@@ -1,0 +1,176 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "different_device": "La informaci\u00f3n introducida procede de otro cargador EV Peblar.",
+            "no_serial_number": "El dispositivo Peblar descubierto no proporcion\u00f3 un n\u00famero de serie.",
+            "reauth_successful": "La autenticaci\u00f3n se volvi\u00f3 a realizar correctamente",
+            "reconfigure_successful": "Se volvi\u00f3 a configurar correctamente"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_auth": "Autenticaci\u00f3n no v\u00e1lida",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Contrase\u00f1a"
+                },
+                "data_description": {
+                    "password": "La misma contrase\u00f1a que utilizas para iniciar sesi\u00f3n en la interfaz web local del cargador de VE Peblar."
+                },
+                "description": "Volver a autenticarse con tu cargador de VE Peblar.\n\nPara ello, deber\u00e1s introducir la nueva contrase\u00f1a que utilizas para iniciar sesi\u00f3n en la interfaz web del cargador de VE Peblar."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "password": "Contrase\u00f1a"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP de tu cargador EV Peblar en tu red dom\u00e9stica.",
+                    "password": "La misma contrase\u00f1a que utilizas para iniciar sesi\u00f3n en la interfaz web local del cargador de VE Peblar."
+                },
+                "description": "Vuelve a configurar tu cargador de VE Peblar. \n \nEsto te permite cambiar la direcci\u00f3n IP de tu cargador de VE Peblar y la contrase\u00f1a que utilizas para iniciar sesi\u00f3n en su interfaz web."
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Contrase\u00f1a"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP de tu cargador EV Peblar en tu red dom\u00e9stica.",
+                    "password": "La misma contrase\u00f1a que utilizas para iniciar sesi\u00f3n en la interfaz web local del cargador de VE Peblar."
+                },
+                "description": "Configura tu cargador de VE Peblar para integrarlo con Home Assistant. \n \nPara hacerlo, deber\u00e1s obtener la direcci\u00f3n IP de tu cargador de VE Peblar y la contrase\u00f1a que usas para iniciar sesi\u00f3n en su interfaz web. \n \nHome Assistant configurar\u00e1 autom\u00e1ticamente tu cargador de VE Peblar para usarlo con Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "Contrase\u00f1a"
+                },
+                "data_description": {
+                    "password": "La misma contrase\u00f1a que utilizas para iniciar sesi\u00f3n en la interfaz web local del cargador de VE Peblar."
+                },
+                "description": "Configura tu cargador de VE Peblar {hostname}, en la direcci\u00f3n IP {host}, para integrarlo con Home Assistant \n \nPara hacerlo, necesitar\u00e1s la contrase\u00f1a que usas para iniciar sesi\u00f3n en la interfaz web del cargador de VE Peblar. \n \nHome Assistant configurar\u00e1 autom\u00e1ticamente tu cargador de VE Peblar para usarlo con Home Assistant."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Errores activos"
+            },
+            "active_warning_codes": {
+                "name": "Advertencias activas"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "L\u00edmite de carga"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "Carga inteligente",
+                "state": {
+                    "default": "Predeterminado",
+                    "fast_solar": "Energ\u00eda solar r\u00e1pida",
+                    "pure_solar": "Solar puro",
+                    "scheduled": "Programado",
+                    "smart_solar": "Energ\u00eda solar inteligente"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Limitar fuente",
+                "state": {
+                    "charging_cable": "Cable de carga",
+                    "current_limiter": "Limitador de corriente",
+                    "dynamic_load_balancing": "Equilibrio de carga din\u00e1mico",
+                    "external_power_limit": "L\u00edmite de potencia externa",
+                    "group_load_balancing": "Equilibrio de carga de grupo",
+                    "hardware_limitation": "Limitaci\u00f3n de hardware",
+                    "high_temperature": "Temperatura alta",
+                    "household_power_limit": "L\u00edmite de potencia del hogar",
+                    "installation_limit": "L\u00edmite de instalaci\u00f3n",
+                    "local_modbus_api": "API Modbus",
+                    "local_rest_api": "API REST",
+                    "ocpp_smart_charging": "Carga inteligente OCPP",
+                    "overcurrent_protection": "Protecci\u00f3n contra sobrecorriente",
+                    "phase_imbalance": "Desequilibrio de fases",
+                    "power_factor": "Factor de potencia",
+                    "solar_charging": "Carga solar"
+                }
+            },
+            "cp_state": {
+                "name": "Estado",
+                "state": {
+                    "charging": "Cargando",
+                    "error": "Error",
+                    "fault": "Fallo",
+                    "invalid": "No v\u00e1lido",
+                    "no_ev_connected": "Ning\u00fan VE conectado",
+                    "suspended": "Suspendido"
+                }
+            },
+            "current_phase_1": {
+                "name": "Corriente de la fase 1"
+            },
+            "current_phase_2": {
+                "name": "Corriente de la fase 2"
+            },
+            "current_phase_3": {
+                "name": "Corriente de la fase 3"
+            },
+            "energy_session": {
+                "name": "Energ\u00eda de la sesi\u00f3n"
+            },
+            "energy_total": {
+                "name": "Energ\u00eda en su vida \u00fatil"
+            },
+            "power_phase_1": {
+                "name": "Potencia de la fase 1"
+            },
+            "power_phase_2": {
+                "name": "Potencia de la fase 2"
+            },
+            "power_phase_3": {
+                "name": "Potencia de la fase 3"
+            },
+            "uptime": {
+                "name": "Tiempo de funcionamiento"
+            },
+            "voltage_phase_1": {
+                "name": "Tensi\u00f3n fase 1"
+            },
+            "voltage_phase_2": {
+                "name": "Tensi\u00f3n fase 2"
+            },
+            "voltage_phase_3": {
+                "name": "Tensi\u00f3n fase 3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "Forzar monof\u00e1sica"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "Personalizaci\u00f3n"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Se produjo un error de autenticaci\u00f3n al comunicarse con el cargador EV Peblar."
+        },
+        "communication_error": {
+            "message": "Se produjo un error al comunicarse con el cargador EV de Peblar: {error}"
+        },
+        "unknown_error": {
+            "message": "Se produjo un error desconocido al comunicarse con el cargador EV de Peblar: {error}"
+        }
+    }
+}

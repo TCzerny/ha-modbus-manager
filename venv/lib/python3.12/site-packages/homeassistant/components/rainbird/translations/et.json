@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud",
+            "reauth_successful": "Taastuvastamine \u00f5nnestus"
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus",
+            "invalid_auth": "Tuvastamine nurjus",
+            "timeout_connect": "\u00dchenduse loomise ajal\u00f5pp"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Salas\u00f5na"
+                },
+                "data_description": {
+                    "password": "Salas\u00f5na Rain Birdi seadmega autentimiseks."
+                },
+                "description": "Rain Birdi integratsioon peab seadme uuesti autentima.",
+                "title": "{name} autentimine aegus"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Salas\u00f5na"
+                },
+                "data_description": {
+                    "host": "Rain Birdi seadme hostinimi v\u00f5i IP-aadress.",
+                    "password": "Rain Birdi seadmega autentimiseks kasutatav salas\u00f5na."
+                },
+                "description": "Sisesta oma Rain Birdi seadme LNK WiFi mooduli teave.",
+                "title": "Seadista Rain Bird"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Vihmaandur"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Vihma viivitus"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "Raindelay"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Vaikimisi kastmisaeg minutites"
+                },
+                "data_description": {
+                    "duration": "Vaikekestus mille jooksul sprinkler sissel\u00fclitamisel t\u00f6\u00f6tab."
+                },
+                "title": "Seadista Rain Bird"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "M\u00e4\u00e4rab kui kauaks automaatne kastmine v\u00e4lja l\u00fclitatakse.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Seadistust reguleeritakse m\u00e4\u00e4ratud kontrolleris.",
+                    "name": "Rainbird kontrolleri s\u00e4tete kanne"
+                },
+                "duration": {
+                    "description": "Selle s\u00fcsteemi v\u00e4ljal\u00fclitamise kestus.",
+                    "name": "Kestus"
+                }
+            },
+            "name": "M\u00e4\u00e4ra vihma viivitus"
+        },
+        "start_irrigation": {
+            "description": "Alustab kastmist.",
+            "fields": {
+                "duration": {
+                    "description": "Selle kastja sissel\u00fclitamise kestus.",
+                    "name": "Kestus"
+                }
+            },
+            "name": "Alusta kastmist"
+        }
+    }
+}

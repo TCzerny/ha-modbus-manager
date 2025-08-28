@@ -1,0 +1,146 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_access_token": "Token de acesso inv\u00e1lido",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "2fa": {
+                "data": {
+                    "pin": "C\u00f3digo de dois fatores"
+                },
+                "description": "Digite o pin enviado para o seu email. Se o email n\u00e3o contiver um pin, deixe em branco",
+                "title": "Autentica\u00e7\u00e3o de dois fatores"
+            },
+            "user": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "title": "Iniciar sess\u00e3o com a conta Blink"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "camera_armed": {
+                "name": "C\u00e2mara armada"
+            }
+        },
+        "sensor": {
+            "wifi_strength": {
+                "name": "Intensidade do sinal Wi-Fi"
+            }
+        },
+        "switch": {
+            "camera_motion": {
+                "name": "Dete\u00e7\u00e3o de movimento da c\u00e2mara"
+            }
+        }
+    },
+    "exceptions": {
+        "cant_write": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel escrever no ficheiro."
+        },
+        "failed_arm": {
+            "message": "O Blink n\u00e3o conseguiu armar a c\u00e2mara."
+        },
+        "failed_arm_motion": {
+            "message": "O Blink n\u00e3o conseguiu ativar a dete\u00e7\u00e3o de movimento da c\u00e2mara."
+        },
+        "failed_clip": {
+            "message": "O Blink n\u00e3o conseguiu gravar um clip."
+        },
+        "failed_disarm": {
+            "message": "O Blink n\u00e3o conseguiu desarmar a c\u00e2mara."
+        },
+        "failed_disarm_motion": {
+            "message": "O Blink n\u00e3o conseguiu desativar a dete\u00e7\u00e3o de movimento da c\u00e2mara."
+        },
+        "failed_snap": {
+            "message": "O Blink n\u00e3o conseguiu tirar uma foto."
+        },
+        "integration_not_found": {
+            "message": "Integra\u00e7\u00e3o \"{target}\" n\u00e3o encontrada no registo."
+        },
+        "no_path": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel escrever na pasta {target}, n\u00e3o h\u00e1 acesso ao caminho!"
+        },
+        "not_loaded": {
+            "message": "{target} n\u00e3o est\u00e1 carregado."
+        }
+    },
+    "issues": {
+        "service_deprecation": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "O servi\u00e7o de atualiza\u00e7\u00e3o Blink est\u00e1 obsoleto e ser\u00e1 removido.\nAtualize as suas automatiza\u00e7\u00f5es e scripts para utilizar a `Integra\u00e7\u00e3o Home Assistant Core: Atualizar entidade\".",
+                        "title": "O servi\u00e7o de atualiza\u00e7\u00e3o do Blink est\u00e1 a ser removido"
+                    }
+                }
+            },
+            "title": "O servi\u00e7o de atualiza\u00e7\u00e3o do Blink est\u00e1 a ser removido"
+        }
+    },
+    "options": {
+        "step": {
+            "simple_options": {
+                "data": {
+                    "scan_interval": "Frequ\u00eancia de atualiza\u00e7\u00e3o (segundos)"
+                },
+                "description": "Configurar a integra\u00e7\u00e3o da Blink",
+                "title": "Op\u00e7\u00f5es Blink"
+            }
+        }
+    },
+    "services": {
+        "record": {
+            "description": "Solicita \u00e0 c\u00e2mara que grave um clip.",
+            "name": "Gravar"
+        },
+        "save_recent_clips": {
+            "description": "Guarda todos os clips de v\u00eddeo recentes no diret\u00f3rio local com o padr\u00e3o de ficheiro \"%Y%m%d_%H%M%S_[nome da c\u00e2mara].mp4\".",
+            "fields": {
+                "file_path": {
+                    "description": "Nome da pasta do caminho grav\u00e1vel (a pasta pode ter de ser inclu\u00edda em allowlist_external_dirs na configura\u00e7\u00e3o).",
+                    "name": "Pasta de sa\u00edda"
+                }
+            },
+            "name": "Guardar clips recentes"
+        },
+        "save_video": {
+            "description": "Guarda o \u00faltimo clip de v\u00eddeo gravado num ficheiro local.",
+            "fields": {
+                "filename": {
+                    "description": "Nome de ficheiro para caminho grav\u00e1vel (o diret\u00f3rio pode ter de ser inclu\u00eddo em allowlist_external_dirs na configura\u00e7\u00e3o).",
+                    "name": "Nome do ficheiro"
+                }
+            },
+            "name": "Guardar v\u00eddeo"
+        },
+        "send_pin": {
+            "description": "Envia um novo PIN para o Blink para 2FA.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "A ID de integra\u00e7\u00e3o da Blink.",
+                    "name": "ID de integra\u00e7\u00e3o"
+                },
+                "pin": {
+                    "description": "PIN recebido da Blink. Deixe em branco se apenas tiver recebido um e-mail de verifica\u00e7\u00e3o.",
+                    "name": "PIN"
+                }
+            },
+            "name": "Enviar PIN"
+        },
+        "trigger_camera": {
+            "description": "Solicita \u00e0 c\u00e2mara que tire uma nova imagem.",
+            "name": "Aciona c\u00e2mara"
+        }
+    }
+}

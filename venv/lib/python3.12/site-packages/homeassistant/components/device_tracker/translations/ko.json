@@ -1,0 +1,80 @@
+{
+    "device_automation": {
+        "condition_type": {
+            "is_home": "{entity_name}: \uc9d1\uc5d0 \uc788\uc73c\uba74",
+            "is_not_home": "{entity_name}: \uc678\ucd9c \uc911\uc774\uba74"
+        },
+        "trigger_type": {
+            "enters": "{entity_name}: \uc9c0\uc5ed\uc5d0 \ub4e4\uc5b4\uac08 \ub54c",
+            "leaves": "{entity_name}: \uc9c0\uc5ed\uc5d0\uc11c \ub098\uc62c \ub54c"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "\ub514\ubc14\uc774\uc2a4 \ucd94\uc801\uae30",
+            "state": {
+                "home": "\uc7ac\uc2e4",
+                "not_home": "\uc678\ucd9c"
+            },
+            "state_attributes": {
+                "battery": {
+                    "name": "\ubc30\ud130\ub9ac"
+                },
+                "gps_accuracy": {
+                    "name": "GPS \uc815\ud655\ub3c4"
+                },
+                "latitude": {
+                    "name": "\uc704\ub3c4"
+                },
+                "longitude": {
+                    "name": "\uacbd\ub3c4"
+                },
+                "source_type": {
+                    "name": "\uc18c\uc2a4",
+                    "state": {
+                        "bluetooth": "\ube14\ub8e8\ud22c\uc2a4",
+                        "bluetooth_le": "\ube14\ub8e8\ud22c\uc2a4 LE",
+                        "gps": "GPS",
+                        "router": "\ub77c\uc6b0\ud130"
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "see": {
+            "fields": {
+                "battery": {
+                    "description": "\uae30\uae30 \ubc30\ud130\ub9ac \uc794\ub7c9",
+                    "name": "\ubc30\ud130\ub9ac \uc794\ub7c9"
+                },
+                "dev_id": {
+                    "description": "\uae30\uae30 ID (`known_devices.yaml`\uc5d0\uc11c ID \ucc3e\uae30)",
+                    "name": "\uae30\uae30 ID"
+                },
+                "gps": {
+                    "description": "\uc704\ub3c4\uc640 \uacbd\ub3c4\ub85c \uc9c0\uc815\ub41c \uae30\uae30\uac00 \uc788\ub294 GPS \uc88c\ud45c\uc785\ub2c8\ub2e4(\uc608: [51.513845, -0.100539]).",
+                    "name": "GPS \uc88c\ud45c"
+                },
+                "gps_accuracy": {
+                    "description": "GPS \uc88c\ud45c\uc758 \uc815\ud655\ub3c4",
+                    "name": "GPS \uc815\ud655\ub3c4"
+                },
+                "host_name": {
+                    "description": "\uae30\uae30\uc758 \ud638\uc2a4\ud2b8 \uc774\ub984",
+                    "name": "\ud638\uc2a4\ud2b8 \uc774\ub984"
+                },
+                "location_name": {
+                    "description": "\uae30\uae30\uac00 \uc788\ub294 \uc704\uce58\uc758 \uc774\ub984\uc785\ub2c8\ub2e4. \uc635\uc158\uc740 `home`, `not_home` \ub610\ub294 \uc9c0\uc5ed \uc774\ub984\uc785\ub2c8\ub2e4.",
+                    "name": "\uc704\uce58"
+                },
+                "mac": {
+                    "description": "\uae30\uae30\uc758 MAC \uc8fc\uc18c",
+                    "name": "MAC \uc8fc\uc18c"
+                }
+            },
+            "name": "\ubcf4\uae30"
+        }
+    },
+    "title": "\ub514\ubc14\uc774\uc2a4 \ucd94\uc801\uae30"
+}

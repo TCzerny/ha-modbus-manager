@@ -1,0 +1,71 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Gj\u00f8rem\u00e5lsliste"
+        }
+    },
+    "exceptions": {
+        "item_not_found": {
+            "message": "Kan ikke finne gj\u00f8rem\u00e5l: {item}"
+        },
+        "update_field_not_supported": {
+            "message": "Entiteten st\u00f8tter ikke innstillingsfeltet: {service_field}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Fullf\u00f8rt",
+                "needs_action": "Ikke fullf\u00f8rt"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "fields": {
+                "description": {
+                    "description": "En mer utfyllende beskrivelse av oppgaven enn det som er gitt av gj\u00f8rem\u00e5lsnavnet.",
+                    "name": "Beskrivelse"
+                },
+                "due_date": {
+                    "description": "Datoen gj\u00f8rem\u00e5let forventes \u00e5 v\u00e6re fullf\u00f8rt.",
+                    "name": "Forfallsdato"
+                },
+                "item": {
+                    "description": "Navnet som representerer gj\u00f8rem\u00e5let.",
+                    "name": "Gj\u00f8rem\u00e5lsnavn"
+                }
+            }
+        },
+        "remove_item": {
+            "fields": {
+                "item": {
+                    "name": "Gj\u00f8rem\u00e5lsnavn"
+                }
+            }
+        },
+        "update_item": {
+            "fields": {
+                "description": {
+                    "description": "En mer utfyllende beskrivelse av oppgaven enn det som er gitt av gj\u00f8rem\u00e5lsnavnet.",
+                    "name": "Beskrivelse"
+                },
+                "due_date": {
+                    "description": "Datoen gj\u00f8rem\u00e5let forventes \u00e5 v\u00e6re fullf\u00f8rt.",
+                    "name": "Forfallsdato"
+                },
+                "item": {
+                    "name": "Gj\u00f8rem\u00e5lnavn"
+                },
+                "rename": {
+                    "name": "Gi nytt navn til gj\u00f8rem\u00e5let"
+                },
+                "status": {
+                    "description": "En status eller bekreftelse p\u00e5 gj\u00f8rem\u00e5let.",
+                    "name": "Angi status"
+                }
+            }
+        }
+    },
+    "title": "Gj\u00f8rem\u00e5lsliste"
+}

@@ -1,0 +1,76 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "success": "\u00c4ndringar sparade"
+        },
+        "flow_title": "N\u00e4rhet",
+        "step": {
+            "user": {
+                "data": {
+                    "ignored_zones": "Zoner som ska ignoreras",
+                    "tolerance": "Toleransavst\u00e5nd",
+                    "tracked_entities": "Enheter eller personer att sp\u00e5ra",
+                    "zone": "Zon att m\u00e4ta avst\u00e5nd till"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "dir_of_travel": {
+                "name": "{tracked_entity} F\u00e4rdriktning",
+                "state": {
+                    "arrived": "Anl\u00e4nde",
+                    "away_from": "Bort fr\u00e5n",
+                    "stationary": "Stilla",
+                    "towards": "P\u00e5 v\u00e4g mot"
+                }
+            },
+            "dist_to_zone": {
+                "name": "{tracked_entity} Avst\u00e5nd"
+            },
+            "nearest": {
+                "name": "N\u00e4rmaste enhet"
+            },
+            "nearest_dir_of_travel": {
+                "name": "N\u00e4rmaste f\u00e4rdriktning",
+                "state": {
+                    "arrived": "Anl\u00e4nde",
+                    "away_from": "Bort fr\u00e5n",
+                    "stationary": "Stilla",
+                    "towards": "P\u00e5 v\u00e4g mot"
+                }
+            },
+            "nearest_dist_to_zone": {
+                "name": "N\u00e4rmaste avst\u00e5nd"
+            }
+        }
+    },
+    "issues": {
+        "tracked_entity_removed": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Entiteten `{entity_id}` har tagits bort fr\u00e5n HA, men anv\u00e4nds i n\u00e4rheten av {name}. V\u00e4nligen ta bort `{entity_id}` fr\u00e5n listan \u00f6ver sp\u00e5rade entiteter. Relaterade entiteter f\u00f6r n\u00e4rhetssensorer har st\u00e4llts in som otillg\u00e4ngliga och kan tas bort.",
+                        "title": "Den sp\u00e5rade entiteten har tagits bort"
+                    }
+                }
+            },
+            "title": "Den sp\u00e5rade entiteten har tagits bort"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignored_zones": "Zoner att ignorera",
+                    "tolerance": "Tolerans avst\u00e5nd",
+                    "tracked_entities": "Enheter eller personer att sp\u00e5ra",
+                    "zone": "Zon att m\u00e4ta avst\u00e5nd till"
+                }
+            }
+        }
+    },
+    "title": "N\u00e4rhet"
+}

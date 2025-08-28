@@ -1,0 +1,546 @@
+{
+    "common": {
+        "config_entry_name": "Charakter ausw\u00e4hlen",
+        "dailies": "Tagesaufgaben",
+        "todos": "To-dos",
+        "unit_experience_points": "EP",
+        "unit_health_points": "LP",
+        "unit_mana_points": "MP",
+        "unit_tasks": "Aufgaben"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "API-Token",
+                    "api_user": "Benutzer-ID",
+                    "url": "URL",
+                    "verify_ssl": "SSL-Zertifikat \u00fcberpr\u00fcfen"
+                },
+                "data_description": {
+                    "api_key": "API-Token des Habitica-Kontos",
+                    "api_user": "Benutzer-ID deines Habitica-Kontos",
+                    "url": "URL der Habitica-Installation, mit der du dich verbinden m\u00f6chtest. Der Standardwert ist `{default_url}`"
+                },
+                "description": "Du kannst deine `Benutzer-ID` und dein `API-Token` unter [**Einstellungen -> Site-Daten**]({site_data})  auf Habitica oder der Instanz abrufen, mit der du dich verbinden m\u00f6chtest",
+                "title": "Bei anderen Instanzen anmelden"
+            },
+            "login": {
+                "data": {
+                    "password": "Passwort",
+                    "username": "E-Mail oder Benutzername (Gro\u00df-/Kleinschreibung beachten)"
+                },
+                "data_description": {
+                    "password": "Passwort f\u00fcr das Konto zum Verbinden von Home Assistant mit Habitica",
+                    "username": "E-Mail oder Benutzername (Gro\u00df-/Kleinschreibung beachten), um Home Assistant mit deinem Habitica-Konto zu verbinden"
+                },
+                "description": "Gib deine Anmeldedaten ein, um Habitica mit Home Assistant zu verwenden\n\n[Passwort vergessen?]({forgot_password})",
+                "title": "Bei Habitica anmelden"
+            },
+            "user": {
+                "description": "![Habiticans]({habiticans}) Verbinde dein Habitica-Konto, um die Statistiken und Fortschritte deines Abenteurers zu verfolgen und deine Aufgaben und t\u00e4glichen Aufgaben zu verwalten. \n \n[Du hast noch kein Habitica-Konto? Melde dich hier an.]({signup})",
+                "menu_options": {
+                    "advanced": "Bei anderen Instanzen anmelden",
+                    "login": "Bei Habitica anmelden"
+                },
+                "title": "Habitica - Gamify your life"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pending_quest": {
+                "name": "Ausstehende Quest-Einladung"
+            }
+        },
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "Alle Attributpunkte verteilen"
+            },
+            "brightness": {
+                "name": "Brennende Helle"
+            },
+            "buy_health_potion": {
+                "name": "Kaufe einen Heiltrank"
+            },
+            "defensive_stance": {
+                "name": "Verteidigungshaltung"
+            },
+            "earth": {
+                "name": "Erdbeben"
+            },
+            "frost": {
+                "name": "Klirrender Frost"
+            },
+            "heal": {
+                "name": "Heilendes Licht"
+            },
+            "heal_all": {
+                "name": "Segnung"
+            },
+            "intimidate": {
+                "name": "Einsch\u00fcchternder Blick"
+            },
+            "mpheal": {
+                "name": "\u00c4therischer Schwall"
+            },
+            "protect_aura": {
+                "name": "Schutzaura"
+            },
+            "revive": {
+                "name": "Wiederbeleben"
+            },
+            "run_cron": {
+                "name": "Beginne meinen Tag"
+            },
+            "stealth": {
+                "name": "Schleichen"
+            },
+            "tools_of_trade": {
+                "name": "Handwerkszeug"
+            },
+            "valorous_presence": {
+                "name": "Heldenhafte Pr\u00e4senz"
+            }
+        },
+        "calendar": {
+            "daily_reminders": {
+                "name": "Tagesaufgaben-Erinnerungen"
+            },
+            "dailys": {
+                "name": "Tagesaufgaben",
+                "state_attributes": {
+                    "yesterdaily": {
+                        "name": "Yester-Daily",
+                        "state": {
+                            "false": "Nein",
+                            "true": "Ja"
+                        }
+                    }
+                }
+            },
+            "todo_reminders": {
+                "name": "To-Do-Erinnerungen"
+            },
+            "todos": {
+                "name": "To-dos"
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "Klasse",
+                "state": {
+                    "healer": "Heiler",
+                    "rogue": "Schurke",
+                    "warrior": "Krieger",
+                    "wizard": "Magier"
+                }
+            },
+            "constitution": {
+                "name": "Ausdauer",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Verteilt"
+                    },
+                    "buffs": {
+                        "name": "Buffs"
+                    },
+                    "class": {
+                        "name": "Klassen-Bonus"
+                    },
+                    "equipment": {
+                        "name": "Kampfausr\u00fcstung"
+                    },
+                    "level": {
+                        "name": "Level"
+                    }
+                }
+            },
+            "dailys": {
+                "name": "Tagesaufgaben",
+                "unit_of_measurement": "Aufgaben"
+            },
+            "display_name": {
+                "name": "Anzeigename"
+            },
+            "experience": {
+                "name": "Erfahrung",
+                "unit_of_measurement": "EP"
+            },
+            "experience_max": {
+                "name": "N\u00e4chstes Level",
+                "unit_of_measurement": "EP"
+            },
+            "gems": {
+                "name": "Edelsteine",
+                "unit_of_measurement": "Edelsteine"
+            },
+            "gold": {
+                "name": "Gold",
+                "unit_of_measurement": "GP"
+            },
+            "habits": {
+                "name": "Gewohnheiten",
+                "unit_of_measurement": "Aufgaben"
+            },
+            "health": {
+                "name": "Lebenspunkte",
+                "unit_of_measurement": "LP"
+            },
+            "health_max": {
+                "name": "Max. Lebenspunkte",
+                "unit_of_measurement": "LP"
+            },
+            "intelligence": {
+                "name": "Intelligenz",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Verteilt"
+                    },
+                    "buffs": {
+                        "name": "Buffs"
+                    },
+                    "class": {
+                        "name": "Klassen-Bonus"
+                    },
+                    "equipment": {
+                        "name": "Kampfausr\u00fcstung"
+                    },
+                    "level": {
+                        "name": "Level"
+                    }
+                }
+            },
+            "level": {
+                "name": "Level"
+            },
+            "mana": {
+                "name": "Mana",
+                "unit_of_measurement": "MP"
+            },
+            "mana_max": {
+                "name": "Max. Mana",
+                "unit_of_measurement": "MP"
+            },
+            "perception": {
+                "name": "Wahrnehmung",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Verteilt"
+                    },
+                    "buffs": {
+                        "name": "Buffs"
+                    },
+                    "class": {
+                        "name": "Klassen-Bonus"
+                    },
+                    "equipment": {
+                        "name": "Kampfausr\u00fcstung"
+                    },
+                    "level": {
+                        "name": "Level"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "Belohnungen",
+                "unit_of_measurement": "Aufgaben"
+            },
+            "strength": {
+                "name": "St\u00e4rke",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Verteilt"
+                    },
+                    "buffs": {
+                        "name": "Buffs"
+                    },
+                    "class": {
+                        "name": "Klassen-Bonus"
+                    },
+                    "equipment": {
+                        "name": "Kampfausr\u00fcstung"
+                    },
+                    "level": {
+                        "name": "Level"
+                    }
+                }
+            },
+            "todos": {
+                "name": "To-dos",
+                "unit_of_measurement": "Aufgaben"
+            },
+            "trinkets": {
+                "name": "Mystische Sanduhren"
+            }
+        },
+        "switch": {
+            "sleep": {
+                "name": "In der Taverne erholen"
+            }
+        },
+        "todo": {
+            "dailys": {
+                "name": "Tagesaufgaben"
+            },
+            "todos": {
+                "name": "To-dos"
+            }
+        }
+    },
+    "exceptions": {
+        "create_todos_item_failed": {
+            "message": "Es konnte kein To-do `{name}` f\u00fcr Habitica erstellt werden. Bitte versuche es erneut."
+        },
+        "delete_completed_todos_failed": {
+            "message": "Erledigte To-dos konnten nicht aus der Habitica To-do-Liste gel\u00f6scht werden. Bitte versuche es erneut."
+        },
+        "delete_todos_failed": {
+            "message": "Element konnte nicht aus der Habitica To-do-Liste gel\u00f6scht werden. Bitte versuche es erneut."
+        },
+        "entry_not_found": {
+            "message": "Der ausgew\u00e4hlte Charakter ist momentan in Home Assistant nicht konfiguriert."
+        },
+        "entry_not_loaded": {
+            "message": "Der ausgew\u00e4hlte Charakter ist momentan in Home Assistant nicht geladen oder deaktiviert."
+        },
+        "item_not_found": {
+            "message": "{item} kann nicht verwendet werden, du besitzt diesen Gegenstand nicht."
+        },
+        "move_dailys_item_failed": {
+            "message": "Die Habitica Tagesaufgabe kann nicht auf die Position {pos} verschoben werden, bitte versuche es erneut."
+        },
+        "move_todos_item_failed": {
+            "message": "Das Habitica To-do konnte nicht an die Position {pos} verschoben werden. Bitte versuche es erneut."
+        },
+        "not_enough_gold": {
+            "message": "Belohnung kann nicht gekauft werden, nicht genug Gold. Dein Charakter hat {gold}, aber die Belohnung kostet {cost}."
+        },
+        "not_enough_mana": {
+            "message": "F\u00e4higkeit kann nicht gewirkt werden, nicht genug Mana. Dein Charakter hat {mana}, aber die F\u00e4higkeit kostet {cost}."
+        },
+        "party_not_found": {
+            "message": "Ziel nicht gefunden, du bist derzeit nicht in einer Gruppe. Du kannst nur dich selbst als Ziel w\u00e4hlen."
+        },
+        "quest_action_unallowed": {
+            "message": "Aktion nicht erlaubt, nur Questleiter oder Gruppenleiter k\u00f6nnen diese Aktion durchf\u00fchren"
+        },
+        "quest_not_found": {
+            "message": "Aktion konnte nicht abgeschlossen werden, Quest oder Gruppe nicht gefunden"
+        },
+        "score_dailys_item_failed": {
+            "message": "Der Punktestand f\u00fcr die Tagesaufgabe `{name}` von Habitica konnte nicht aktualisiert werden. Bitte versuche es erneut."
+        },
+        "score_todos_item_failed": {
+            "message": "Der Punktestand f\u00fcr dein Habitica To-do `{name}` konnte nicht aktualisiert werden. Bitte versuche es erneut."
+        },
+        "service_call_exception": {
+            "message": "Verbindung zu Habitica nicht m\u00f6glich: {reason}"
+        },
+        "service_call_unallowed": {
+            "message": "Die Aktion kann nicht abgeschlossen werden, die erforderlichen Bedingungen sind nicht erf\u00fcllt"
+        },
+        "setup_rate_limit_exception": {
+            "message": "Ratenlimit \u00fcberschritten. Versuche es in {retry_after} Sekunden erneut."
+        },
+        "skill_not_found": {
+            "message": "Die Fertigkeit kann nicht eingesetzt werden, dein Charakter verf\u00fcgt nicht \u00fcber die Fertigkeit oder den Zauber {skill}."
+        },
+        "target_not_found": {
+            "message": "Ziel {target} konnte in deiner Gruppe nicht gefunden werden"
+        },
+        "task_not_found": {
+            "message": "Aktion konnte nicht abgeschlossen werden, Aufgabe {task} wurde nicht gefunden"
+        },
+        "update_dailys_item_failed": {
+            "message": "Die Habitica Tagesaufgabe `{name}` konnte nicht aktualisiert werden, bitte versuche es erneut"
+        },
+        "update_todos_item_failed": {
+            "message": "Das Habitica To-do `{name}` konnte nicht aktualisiert werden. Bitte versuche es erneut."
+        }
+    },
+    "issues": {
+        "deprecated_api_call": {
+            "description": "Die Habitica-Aktion `habitica.api_call` ist veraltet und wird in Home Assistant 2025.5.0 entfernt.\n\nBitte aktualisiere deine Automationen und Skripte, um andere Habitica-Aktionen und -Entit\u00e4ten zu verwenden.",
+            "title": "Die Habitica-Aktion habitica.api_call ist veraltet"
+        },
+        "deprecated_task_entity": {
+            "description": "Die Habitica Entit\u00e4t `{entity}` ist veraltet und wird in einer zuk\u00fcnftigen Version entfernt.\nBitte aktualisiere deine Automationen und Skripte, um die Sensor-Entit\u00e4t durch die neu hinzugef\u00fcgte To-do-Entit\u00e4t zu ersetzen.\nSobald du mit der Migration fertig bist, kannst du `{entity}` deaktivieren.",
+            "title": "Der Habitica-Sensor {task_name} ist veraltet"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "Schurke: \u00dcberraschungsangriff",
+                "fireball": "Magier: Flammensto\u00df",
+                "pickpocket": "Schurke: Taschendiebstahl",
+                "smash": "Krieger: Gewaltschlag"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "Meeresschaum",
+                "shiny_seed": "Schimmernde Saat",
+                "snowball": "Schneeball",
+                "spooky_sparkles": "Spukglitzer"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "description": "Beendet die laufende Quest deiner Gruppe. Alle Fortschritte gehen verloren und die Quest-Rolle wird in das Inventar des Besitzers zur\u00fcckgelegt. Nur der Questleiter oder Gruppenleiter kann diese Aktion ausf\u00fchren.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, f\u00fcr den die Aktion ausgef\u00fchrt werden soll.",
+                    "name": "Charakter ausw\u00e4hlen"
+                }
+            },
+            "name": "Eine aktive Quest abbrechen"
+        },
+        "accept_quest": {
+            "description": "Akzeptiert eine ausstehende Einladung zu einer Quest.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, f\u00fcr den die Aktion ausgef\u00fchrt werden soll.",
+                    "name": "Charakter ausw\u00e4hlen"
+                }
+            },
+            "name": "Eine Questeinladung annehmen"
+        },
+        "api_call": {
+            "description": "Ruft die Habitica-API auf.",
+            "fields": {
+                "args": {
+                    "description": "Alle zus\u00e4tzlichen JSON- oder URL-Parameterargumente. Siehe im unter Pfad erw\u00e4hnten 'apidoc'. Beispiel verwendet denselben API-Endpunkt.",
+                    "name": "Argumente"
+                },
+                "name": {
+                    "description": "Der Habitica-Benutzername, der f\u00fcr die Abfrage verwendet werden soll.",
+                    "name": "Name"
+                },
+                "path": {
+                    "description": "Elemente aus der API-URL in Form eines Arrays mit angeh\u00e4ngter Methode am Ende. Konsultiere https://habitica.com/apidoc/. Beispiel verwendet https://habitica.com/apidoc/#api-Task-CreateUserTasks.",
+                    "name": "Pfad"
+                }
+            },
+            "name": "API aufrufen"
+        },
+        "cancel_quest": {
+            "description": "Bricht eine Quest ab, die noch nicht begonnen hat. Alle angenommenen und ausstehenden Einladungen werden storniert und die Quest-Rolle wird in das Inventar des Besitzers zur\u00fcckgelegt. Nur Quest- oder Gruppenleiter k\u00f6nnen diese Aktion ausf\u00fchren.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, f\u00fcr den die Aktion ausgef\u00fchrt werden soll.",
+                    "name": "Charakter ausw\u00e4hlen"
+                }
+            },
+            "name": "Eine ausstehende Quest abbrechen"
+        },
+        "cast_skill": {
+            "description": "Wendet eine F\u00e4higkeit oder einen Zauber deines Habitica Charakters auf eine bestimmte Aufgabe an, um deren Fortschritt oder Status zu beeinflussen.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica Charakter aus, der die Fertigkeit einsetzen soll.",
+                    "name": "Charakter ausw\u00e4hlen"
+                },
+                "skill": {
+                    "description": "W\u00e4hle die Fertigkeit oder den Zauber aus, den du auf die Aufgabe wirken m\u00f6chtest. Nur f\u00fcr die Klasse deines Charakters verf\u00fcgbare Fertigkeiten k\u00f6nnen verwendet werden.",
+                    "name": "F\u00e4higkeit"
+                },
+                "task": {
+                    "description": "Der Name (oder die Aufgaben-ID) der mit der F\u00e4higkeit oder dem Zauber anzuvisierenden Aufgabe.",
+                    "name": "Aufgabenname"
+                }
+            },
+            "name": "F\u00e4higkeit anwenden"
+        },
+        "leave_quest": {
+            "description": "Verl\u00e4sst die aktuelle Quest, an der du teilnimmst.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, f\u00fcr den die Aktion ausgef\u00fchrt werden soll.",
+                    "name": "Charakter ausw\u00e4hlen"
+                }
+            },
+            "name": "Eine Quest verlassen"
+        },
+        "reject_quest": {
+            "description": "Lehnt eine ausstehende Einladung zu einer Quest ab.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, f\u00fcr den die Aktion ausgef\u00fchrt werden soll.",
+                    "name": "Charakter ausw\u00e4hlen"
+                }
+            },
+            "name": "Eine Questeinladung ablehnen"
+        },
+        "score_habit": {
+            "description": "Erh\u00f6ht die positive oder negative Str\u00e4hne einer Gewohnheit, um ihren Fortschritt zu tracken.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, der deine Gewohnheiten trackt.",
+                    "name": "Charakter ausw\u00e4hlen"
+                },
+                "direction": {
+                    "description": "Ist es ein positiver oder negativer Fortschritt, den du f\u00fcr deine Gewohnheit tracken willst.",
+                    "name": "Belohnung oder Verlust"
+                },
+                "task": {
+                    "description": "Der Name (oder die Aufgaben-ID) der Habitica-Gewohnheit.",
+                    "name": "Name der Gewohnheit"
+                }
+            },
+            "name": "Eine Gewohnheit tracken"
+        },
+        "score_reward": {
+            "description": "Kauft eine deiner individuellen Belohnungen mit Gold, das du durch das Erf\u00fcllen von Aufgaben verdienst.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, der die Belohnung kauft.",
+                    "name": "Charakter ausw\u00e4hlen"
+                },
+                "task": {
+                    "description": "Der Name (oder die Aufgaben-ID) der individuellen Belohnung.",
+                    "name": "Name der Belohnung"
+                }
+            },
+            "name": "Eine Belohnung kaufen"
+        },
+        "start_quest": {
+            "description": "Beginnt die Quest sofort und \u00fcberspringt alle ausstehenden Einladungen, die weder angenommen noch abgelehnt wurden. Nur der Questleiter oder Gruppenleiter kann diese Aktion ausf\u00fchren.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, f\u00fcr den die Aktion ausgef\u00fchrt werden soll.",
+                    "name": "Charakter ausw\u00e4hlen"
+                }
+            },
+            "name": "Erzwinge den Start einer ausstehenden Quest"
+        },
+        "transformation": {
+            "description": "Verwendet ein Transformationsitem aus dem Inventar deines Habitica-Charakters f\u00fcr ein Mitglied deiner Gruppe oder f\u00fcr dich selbst.",
+            "fields": {
+                "config_entry": {
+                    "description": "W\u00e4hle den Habitica-Charakter aus, um das Transformationsitem zu verwenden.",
+                    "name": "Charakter ausw\u00e4hlen"
+                },
+                "item": {
+                    "description": "W\u00e4hle das Transformationsitem aus, das du verwenden m\u00f6chtest. Der Gegenstand muss sich im Inventar des Charakters befinden.",
+                    "name": "Transformationsitem"
+                },
+                "target": {
+                    "description": "Der Name des Charakters, f\u00fcr den du das Transformationsitem verwenden m\u00f6chtest. Du kannst auch den Benutzernamen oder die Benutzer-ID des Spielers angeben.",
+                    "name": "Zielcharakter"
+                }
+            },
+            "name": "Verwende ein Transformationsitem"
+        }
+    }
+}

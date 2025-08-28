@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enhet er allerede konfigurert"
+        },
+        "step": {
+            "user": {
+                "description": "Vil du starte oppsettet?"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Ugyldig konfigurasjonsoppf\u00f8ring er oppgitt. Fikk {config_entry}"
+        },
+        "unloaded_config_entry": {
+            "message": "Ugyldig konfigurasjonsoppf\u00f8ring er oppgitt. {config_entry} er ikke lastet inn."
+        }
+    },
+    "services": {
+        "get_energy_prices": {
+            "fields": {
+                "config_entry": {
+                    "description": "Konfigurasjonsoppf\u00f8ringen som skal brukes for denne tjenesten.",
+                    "name": "Konfigurasjonsoppf\u00f8ring"
+                },
+                "incl_vat": {
+                    "name": "Inkludert mva."
+                },
+                "start": {
+                    "description": "Spesifiserer dato og tidspunkt som brukes til \u00e5 hente priser. Bruker i dag om utelatt.",
+                    "name": "Start"
+                }
+            }
+        },
+        "get_gas_prices": {
+            "fields": {
+                "config_entry": {
+                    "name": "Konfigurasjonsoppf\u00f8ring"
+                },
+                "incl_vat": {
+                    "name": "Inkludert mva."
+                },
+                "start": {
+                    "description": "Spesifiserer dato og tidspunkt som brukes til \u00e5 hente priser. Bruker i dag om utelatt.",
+                    "name": "Start"
+                }
+            }
+        }
+    }
+}

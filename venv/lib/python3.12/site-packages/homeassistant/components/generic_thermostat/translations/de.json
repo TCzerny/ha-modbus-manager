@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "presets": {
+                "data": {
+                    "activity_temp": "Aktivit\u00e4t",
+                    "away_temp": "Abwesend",
+                    "comfort_temp": "Komfort",
+                    "eco_temp": "Eco",
+                    "home_temp": "Zuhause",
+                    "sleep_temp": "Schlafen"
+                },
+                "title": "Temperatur-Voreinstellungen"
+            },
+            "user": {
+                "data": {
+                    "ac_mode": "K\u00fchlbetrieb",
+                    "cold_tolerance": "K\u00e4ltetoleranz",
+                    "heater": "Stellschalter",
+                    "hot_tolerance": "Hitzetoleranz",
+                    "max_temp": "Maximale Soll-Temperatur",
+                    "min_cycle_duration": "Mindestzyklusdauer",
+                    "min_temp": "Minimale Soll-Temperatur",
+                    "name": "Name",
+                    "target_sensor": "Temperatursensor"
+                },
+                "data_description": {
+                    "ac_mode": "Betreibt den ausgew\u00e4hlten Stellschalter als K\u00fchlger\u00e4t statt als Heizger\u00e4t.",
+                    "cold_tolerance": "N\u00f6tige Mindestdifferenz zwischen der vom Sensor gemessenen Ist-Temperatur und der Soll-Temperatur, bevor die Heizung eingeschaltet wird. Betr\u00e4gt die Soll-Temperatur beispielsweise 25 und die Toleranz 0,5, startet der Heizvorgang, wenn der Sensor 24,5 erreicht oder unterschreitet.",
+                    "heater": "Schalter-Entit\u00e4t zum K\u00fchlen oder Heizen, je nach Klimamodus.",
+                    "hot_tolerance": "N\u00f6tige Mindestdifferenz zwischen der vom Sensor gemessenen Ist-Temperatur und der Soll-Temperatur, bevor die Heizung ausgeschaltet wird. Betr\u00e4gt die Soll-Temperatur beispielsweise 25 und die Toleranz 0,5, stoppt der Heizvorgang, wenn der Sensorwert 25,5 erreicht oder \u00fcberschreitet.",
+                    "min_cycle_duration": "Mindestzeit, die der Stellschalter in seinem aktuellen Zustand verbleiben muss, bevor er umgeschaltet wird.",
+                    "target_sensor": "Temperatursensor, der die Ist-Temperatur abbildet."
+                },
+                "description": "Erstellt eine Klima-Entit\u00e4t, die die Temperatur \u00fcber einen Stellschalter und einen Sensor regelt.",
+                "title": "Generischen Thermostat erstellen"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ac_mode": "K\u00fchlbetrieb",
+                    "cold_tolerance": "K\u00e4ltetoleranz",
+                    "heater": "Stellschalter",
+                    "hot_tolerance": "Hitzetoleranz",
+                    "max_temp": "Maximale Soll-Temperatur",
+                    "min_cycle_duration": "Mindestzyklusdauer",
+                    "min_temp": "Minimale Soll-Temperatur",
+                    "target_sensor": "Temperatursensor"
+                },
+                "data_description": {
+                    "ac_mode": "Betreibt den ausgew\u00e4hlten Stellschalter als K\u00fchlger\u00e4t statt als Heizger\u00e4t.",
+                    "cold_tolerance": "N\u00f6tige Mindestdifferenz zwischen der vom Sensor gemessenen Ist-Temperatur und der Soll-Temperatur, bevor die Heizung eingeschaltet wird. Betr\u00e4gt die Soll-Temperatur beispielsweise 25 und die Toleranz 0,5, startet der Heizvorgang, wenn der Sensor 24,5 erreicht oder unterschreitet.",
+                    "heater": "Schalter-Entit\u00e4t zum K\u00fchlen oder Heizen, je nach Klimamodus.",
+                    "hot_tolerance": "N\u00f6tige Mindestdifferenz zwischen der vom Sensor gemessenen Ist-Temperatur und der Soll-Temperatur, bevor die Heizung ausgeschaltet wird. Betr\u00e4gt die Soll-Temperatur beispielsweise 25 und die Toleranz 0,5, stoppt der Heizvorgang, wenn der Sensorwert 25,5 erreicht oder \u00fcberschreitet.",
+                    "min_cycle_duration": "Mindestzeit, die der Stellschalter in seinem aktuellen Zustand verbleiben muss, bevor er umgeschaltet wird.",
+                    "target_sensor": "Temperatursensor, der die Ist-Temperatur abbildet."
+                }
+            },
+            "presets": {
+                "data": {
+                    "activity_temp": "Aktivit\u00e4t",
+                    "away_temp": "Abwesend",
+                    "comfort_temp": "Komfort",
+                    "eco_temp": "Eco",
+                    "home_temp": "Zuhause",
+                    "sleep_temp": "Schlafen"
+                },
+                "title": "Temperatur-Voreinstellungen"
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "L\u00e4dt generische Thermostate aus der YAML-Konfiguration neu.",
+            "name": "Neu laden"
+        }
+    },
+    "title": "Generischer Thermostat"
+}

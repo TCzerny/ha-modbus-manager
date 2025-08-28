@@ -1,0 +1,142 @@
+{
+    "config": {
+        "abort": {
+            "already_configured_device": "Dispositivo j\u00e1 configurado",
+            "api_error": "Erro ao comunicar com a API SwitchBot: {error_detail}",
+            "no_devices_found": "Nenhum dispositivo SwitchBot suportado encontrado no alcance; Se o dispositivo estiver no alcance, certifique-se de que o scanner tem a digitaliza\u00e7\u00e3o ativa ativada, pois os dispositivos SwitchBot n\u00e3o podem ser descobertos com digitaliza\u00e7\u00f5es passivas. As digitaliza\u00e7\u00f5es ativas podem ser desativadas uma vez que o dispositivo esteja configurado. Se precisar de esclarecimentos sobre se o dispositivo est\u00e1 no alcance, descarregue os diagn\u00f3sticos para a integra\u00e7\u00e3o que fornece o seu adaptador Bluetooth ou proxy e verifique se o endere\u00e7o MAC do dispositivo SwitchBot est\u00e1 presente.",
+            "switchbot_unsupported_type": "Tipo de Switchbot n\u00e3o suportado.",
+            "unknown": "Erro inesperado"
+        },
+        "error": {
+            "auth_failed": "Falha na autentica\u00e7\u00e3o: {error_detail}",
+            "encryption_key_invalid": "A chave ID ou Chave de encripta\u00e7\u00e3o \u00e9 inv\u00e1lida"
+        },
+        "flow_title": "{name} ({address})",
+        "step": {
+            "confirm": {
+                "description": "Pretende configurar {name}?"
+            },
+            "encrypted_auth": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Por favor, forne\u00e7a o nome de utilizador e a palavra-passe da sua aplica\u00e7\u00e3o SwitchBot. Estes dados n\u00e3o ser\u00e3o guardados e ser\u00e3o usados apenas para recuperar a chave de encripta\u00e7\u00e3o do seu dispositivo. Os nomes de utilizador e as palavras-passe s\u00e3o sens\u00edveis a mai\u00fasculas e min\u00fasculas."
+            },
+            "encrypted_choose_method": {
+                "description": "Um dispositivo SwitchBot encriptado pode ser configurado no Home Assistant de duas maneiras.\n\nPode introduzir o ID da chave e a chave de encripta\u00e7\u00e3o manualmente, ou o  Home Assistant pode importar essas informa\u00e7\u00f5es da sua conta SwitchBot.",
+                "menu_options": {
+                    "encrypted_auth": "Conta Switchbot (recomendado)",
+                    "encrypted_key": "Introduzir a chave de encripta\u00e7\u00e3o manualmente"
+                }
+            },
+            "encrypted_key": {
+                "data": {
+                    "encryption_key": "Chave de encripta\u00e7\u00e3o",
+                    "key_id": "ID da chave"
+                },
+                "description": "O dispositivo {name} requer uma chave de encripta\u00e7\u00e3o. Detalhes sobre como obt\u00ea-la podem ser encontrados na documenta\u00e7\u00e3o."
+            },
+            "password": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "description": "O dispositivo {name} requer uma palavra-passe"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "calibration": {
+                "name": "Calibra\u00e7\u00e3o"
+            },
+            "door_auto_lock_paused": {
+                "name": "Bloqueio autom\u00e1tico em pausa"
+            },
+            "door_timeout": {
+                "name": "Tempo limite"
+            },
+            "door_unclosed_alarm": {
+                "name": "Alarme n\u00e3o fechado"
+            },
+            "door_unlocked_alarm": {
+                "name": "Alarme desbloqueado"
+            }
+        },
+        "cover": {
+            "cover": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problema",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "humidifier": {
+            "humidifier": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problema",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "lock": {
+            "lock": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problema",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "bluetooth_signal": {
+                "name": "Sinal Bluetooth"
+            },
+            "light_level": {
+                "name": "N\u00edvel de luz"
+            },
+            "wifi_signal": {
+                "name": "Sinal Wi-Fi"
+            }
+        },
+        "switch": {
+            "bot": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problema",
+                            "true": "OK"
+                        }
+                    },
+                    "switch_mode": {
+                        "state": {
+                            "false": "Moment\u00e2neo",
+                            "true": "Puxar/Retrair"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "lock_force_nightlatch": "For\u00e7ar o modo de opera\u00e7\u00e3o Nightlatch",
+                    "retry_count": "Contagem de tentativas"
+                }
+            }
+        }
+    }
+}

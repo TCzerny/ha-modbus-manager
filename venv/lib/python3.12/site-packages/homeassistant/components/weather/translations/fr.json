@@ -1,0 +1,125 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "M\u00e9t\u00e9o",
+            "state": {
+                "clear-night": "Nuit d\u00e9gag\u00e9e",
+                "cloudy": "Nuageux",
+                "exceptional": "Exceptionnel",
+                "fog": "Brouillard",
+                "hail": "Gr\u00eale",
+                "lightning": "Orage",
+                "lightning-rainy": "Orage / Pluie",
+                "partlycloudy": "\u00c9claircies",
+                "pouring": "Averses",
+                "rainy": "Pluvieux",
+                "snowy": "Neigeux",
+                "snowy-rainy": "Neigeux, pluvieux",
+                "sunny": "Ensoleill\u00e9",
+                "windy": "Venteux",
+                "windy-variant": "Venteux, nuageux"
+            },
+            "state_attributes": {
+                "apparent_temperature": {
+                    "name": "Temp\u00e9rature apparente"
+                },
+                "cloud_coverage": {
+                    "name": "Couverture nuageuse"
+                },
+                "dew_point": {
+                    "name": "Temp\u00e9rature du point de ros\u00e9e"
+                },
+                "forecast": {
+                    "name": "Pr\u00e9vision"
+                },
+                "humidity": {
+                    "name": "Humidit\u00e9"
+                },
+                "ozone": {
+                    "name": "Ozone"
+                },
+                "precipitation_unit": {
+                    "name": "Unit\u00e9 de pr\u00e9cipitation"
+                },
+                "pressure": {
+                    "name": "Pression"
+                },
+                "pressure_unit": {
+                    "name": "Unit\u00e9 de pression"
+                },
+                "temperature": {
+                    "name": "Temp\u00e9rature"
+                },
+                "temperature_unit": {
+                    "name": "Unit\u00e9 de temp\u00e9rature"
+                },
+                "uv_index": {
+                    "name": "Indice UV"
+                },
+                "visibility": {
+                    "name": "Visibilit\u00e9"
+                },
+                "visibility_unit": {
+                    "name": "Unit\u00e9 de visibilit\u00e9"
+                },
+                "wind_bearing": {
+                    "name": "Direction du vent"
+                },
+                "wind_gust_speed": {
+                    "name": "Vitesse des rafales"
+                },
+                "wind_speed": {
+                    "name": "Vitesse du vent"
+                },
+                "wind_speed_unit": {
+                    "name": "Unit\u00e9 de vitesse du vent"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_weather_get_forecast": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Utilisez plut\u00f4t `weather.get_forecasts` qui prend en charge plusieurs entit\u00e9s. \n\nVeuillez remplacer ce service, ajuster vos automatisations et vos scripts, puis s\u00e9lectionner **Valider** pour r\u00e9soudre ce probl\u00e8me.",
+                        "title": "Utilisation d\u00e9tect\u00e9e du service obsol\u00e8te weather.get_forecast"
+                    }
+                }
+            },
+            "title": "Utilisation d\u00e9tect\u00e9e du service obsol\u00e8te weather.get_forecast"
+        }
+    },
+    "selector": {
+        "forecast_type": {
+            "options": {
+                "daily": "Quotidienne",
+                "hourly": "Horaire",
+                "twice_daily": "Deux fois par jour"
+            }
+        }
+    },
+    "services": {
+        "get_forecast": {
+            "description": "Obtenez les pr\u00e9visions m\u00e9t\u00e9orologiques.",
+            "fields": {
+                "type": {
+                    "description": "Type de pr\u00e9vision\u00a0: quotidienne, horaire ou biquotidienne.",
+                    "name": "Type de pr\u00e9vision"
+                }
+            },
+            "name": "Obtenir des pr\u00e9visions"
+        },
+        "get_forecasts": {
+            "description": "Renvoie les pr\u00e9visions m\u00e9t\u00e9orologiques.",
+            "fields": {
+                "type": {
+                    "description": "Type de pr\u00e9vision\u00a0: quotidienne, horaire ou biquotidienne.",
+                    "name": "Type de pr\u00e9vision"
+                }
+            },
+            "name": "Obtenir les pr\u00e9visions"
+        }
+    },
+    "title": "M\u00e9t\u00e9o"
+}

@@ -1,0 +1,82 @@
+{
+    "config": {
+        "step": {
+            "presets": {
+                "data": {
+                    "activity_temp": "Atividade",
+                    "away_temp": "Ausente",
+                    "comfort_temp": "Conforto",
+                    "eco_temp": "Eco",
+                    "home_temp": "Casa",
+                    "sleep_temp": "Dormir"
+                },
+                "title": "Predefini\u00e7\u00f5es de temperatura"
+            },
+            "user": {
+                "data": {
+                    "ac_mode": "Modo de arrefecimento",
+                    "cold_tolerance": "Toler\u00e2ncia ao arrefecer",
+                    "heater": "Interruptor atuador",
+                    "hot_tolerance": "Toler\u00e2ncia ao aquecer",
+                    "max_temp": "Temperatura alvo m\u00e1xima",
+                    "min_cycle_duration": "Dura\u00e7\u00e3o m\u00ednima dos ciclos",
+                    "min_temp": "Temperatura alvo m\u00ednima",
+                    "name": "Nome",
+                    "target_sensor": "Sensor de temperatura"
+                },
+                "data_description": {
+                    "ac_mode": "Defina o atuador especificado para ser tratado como um dispositivo de arrefecimento em vez de um dispositivo de aquecimento.",
+                    "cold_tolerance": "Diferen\u00e7a m\u00ednima entre a temperatura lida pelo sensor de temperatura e a temperatura alvo, que deve ocorrer antes de ligar. Por exemplo, se a temperatura alvo for 25 e a toler\u00e2ncia for 0.5, o aquecedor ligar-se-\u00e1 quando o sensor atingir ou ficar abaixo de 24.5.",
+                    "heater": "Interruptor utilizado para arrefecer ou aquecer, dependendo do modo do A/C.",
+                    "hot_tolerance": "Diferen\u00e7a m\u00ednima entre a temperatura lida pelo sensor de temperatura e a temperatura alvo, que deve ocorrer antes de desligar. Por exemplo, se a temperatura alvo for 25 e a toler\u00e2ncia for 0.5, o aquecedor desligar-se-\u00e1 quando o sensor atingir ou ultrapassar 25.5.",
+                    "min_cycle_duration": "Defina um tempo m\u00ednimo que o interruptor especificado deve permanecer no seu estado atual antes de ser desligado ou ligado.",
+                    "target_sensor": "Sensor de temperatura que reflete a temperatura atual."
+                },
+                "description": "Criar uma entidade de clima que controla a temperatura atrav\u00e9s de um interruptor e de um sensor.",
+                "title": "Criar term\u00f3stato gen\u00e9rico"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ac_mode": "Modo de arrefecimento",
+                    "cold_tolerance": "Toler\u00e2ncia ao arrefecer",
+                    "heater": "Interruptor atuador",
+                    "hot_tolerance": "Toler\u00e2ncia ao aquecer",
+                    "max_temp": "Temperatura alvo m\u00e1xima",
+                    "min_cycle_duration": "Dura\u00e7\u00e3o m\u00ednima dos ciclos",
+                    "min_temp": "Temperatura alvo m\u00ednima",
+                    "target_sensor": "Sensor de temperatura"
+                },
+                "data_description": {
+                    "ac_mode": "Defina o atuador especificado para ser tratado como um dispositivo de arrefecimento em vez de um dispositivo de aquecimento.",
+                    "cold_tolerance": "Diferen\u00e7a m\u00ednima entre a temperatura lida pelo sensor de temperatura e a temperatura alvo, que deve ocorrer antes de ligar. Por exemplo, se a temperatura alvo for 25 e a toler\u00e2ncia for 0.5, o aquecedor ligar-se-\u00e1 quando o sensor atingir ou ficar abaixo de 24.5.",
+                    "heater": "Interruptor utilizado para arrefecer ou aquecer, dependendo do modo do A/C.",
+                    "hot_tolerance": "Diferen\u00e7a m\u00ednima entre a temperatura lida pelo sensor de temperatura e a temperatura alvo, que deve ocorrer antes de desligar. Por exemplo, se a temperatura alvo for 25 e a toler\u00e2ncia for 0.5, o aquecedor desligar-se-\u00e1 quando o sensor atingir ou ultrapassar 25.5.",
+                    "min_cycle_duration": "Defina um tempo m\u00ednimo que o interruptor especificado deve permanecer no seu estado atual antes de ser desligado ou ligado.",
+                    "target_sensor": "Sensor de temperatura que reflete a temperatura atual."
+                }
+            },
+            "presets": {
+                "data": {
+                    "activity_temp": "Atividade",
+                    "away_temp": "Ausente",
+                    "comfort_temp": "Conforto",
+                    "eco_temp": "Eco",
+                    "home_temp": "Casa",
+                    "sleep_temp": "Dormir"
+                },
+                "title": "Predefini\u00e7\u00f5es de temperatura"
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "Recarrega term\u00f3statos gen\u00e9ricos a partir da configura\u00e7\u00e3o YAML.",
+            "name": "Recarregar"
+        }
+    },
+    "title": "Term\u00f3stato Gen\u00e9rico"
+}

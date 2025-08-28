@@ -1,0 +1,57 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API-Code"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "Die Konfiguration von {integration_title} mit YAML wird entfernt, aber beim Importieren deiner YAML-Konfiguration ist ein Verbindungsfehler aufgetreten. \n\nStelle sicher, dass die Verbindung zu {integration_title} funktioniert, und starte Home Assistant neu, um es noch einmal zu versuchen, oder entferne die YAML-Konfiguration von {integration_title} aus deiner \u201econfiguration.yaml\u201c-Datei und fahre mit der manuellen [Einrichtung der Integration]({url}) fort.",
+            "title": "Der Import der {integration_title} YAML-Konfiguration ist fehlgeschlagen"
+        }
+    },
+    "services": {
+        "add_tracking": {
+            "description": "F\u00fcgt eine neue Trackingnummer zu Aftership hinzu.",
+            "fields": {
+                "slug": {
+                    "description": "Slug (Spediteur) der neuen Sendungsverfolgung.",
+                    "name": "Slug"
+                },
+                "title": {
+                    "description": "Ein benutzerdefinierter Titel f\u00fcr die neue Sendungsverfolgung.",
+                    "name": "Titel"
+                },
+                "tracking_number": {
+                    "description": "Trackingnummer f\u00fcr die neue Sendungsverfolgung.",
+                    "name": "Trackingnummer"
+                }
+            },
+            "name": "Sendungsverfolgung hinzuf\u00fcgen"
+        },
+        "remove_tracking": {
+            "description": "Entfernt eine Trackingnummer aus Aftership.",
+            "fields": {
+                "slug": {
+                    "description": "Slug (Spediteur) der zu entfernenden Sendungsverfolgung.",
+                    "name": "Slug"
+                },
+                "tracking_number": {
+                    "description": "Trackingnummer der zu entfernenden Sendungsverfolgung.",
+                    "name": "Trackingnummer"
+                }
+            },
+            "name": "Sendungsverfolgung entfernen"
+        }
+    }
+}

@@ -1,0 +1,77 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\uc7a5\uce58\uac00 \uc774\ubbf8 \uad6c\uc131\ub428"
+        },
+        "error": {
+            "cannot_connect": "\uc5f0\uacb0 \uc2e4\ud328",
+            "timeout_connect": "\uc5f0\uacb0 \uc124\uc815 \uc2dc\uac04 \ucd08\uacfc"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "\ud638\uc2a4\ud2b8",
+                    "password": "\uc554\ud638"
+                },
+                "data_description": {
+                    "host": "Rain Bird \uae30\uae30\uc758 \ud638\uc2a4\ud2b8 \uc774\ub984 \ub610\ub294 IP \uc8fc\uc18c"
+                },
+                "description": "Rain Bird \uc7a5\uce58\uc5d0 \ub300\ud55c LNK WiFi \ubaa8\ub4c8 \uc815\ubcf4\ub97c \uc785\ub825\ud558\uc2ed\uc2dc\uc624.",
+                "title": "Rain Bird \uad6c\uc131"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "\ube44 \uc13c\uc11c"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "\uc6b0\ucc9c \uc9c0\uc5f0"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "\uc6b0\ucc9c \uc9c0\uc5f0"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "\uae30\ubcf8 \uad00\uc218 \uc2dc\uac04(\ubd84)"
+                },
+                "title": "Rain Bird \uad6c\uc131"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "\uc790\ub3d9 \uad00\uc218\uac00 \uaebc\uc9c0\ub294 \uc2dc\uac04\uc744 \uc124\uc815\ud569\ub2c8\ub2e4.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "\uc124\uc815\uc740 \uc9c0\uc815\ub41c \ucee8\ud2b8\ub864\ub7ec\uc5d0\uc11c \uc870\uc815\ub429\ub2c8\ub2e4.",
+                    "name": "Rainbird \ucee8\ud2b8\ub864\ub7ec \uad6c\uc131 \ud56d\ubaa9"
+                },
+                "duration": {
+                    "description": "\uc774 \uc2dc\uc2a4\ud15c\uc774 \uaebc\uc9c8 \ub54c\uae4c\uc9c0\uc758 \uae30\uac04",
+                    "name": "\uc9c0\uc18d \uae30\uac04"
+                }
+            },
+            "name": "\uc6b0\ucc9c \uc9c0\uc5f0 \uc124\uc815"
+        },
+        "start_irrigation": {
+            "description": "\uad00\uac1c\ub97c \uc2dc\uc791\ud569\ub2c8\ub2e4.",
+            "fields": {
+                "duration": {
+                    "description": "\uc2a4\ud504\ub9c1\ud074\ub7ec\ub97c \ucf1c\ub294 \ub370 \uac78\ub9ac\ub294 \uc2dc\uac04",
+                    "name": "\uc9c0\uc18d \uae30\uac04"
+                }
+            },
+            "name": "\uad00\uac1c \uc2dc\uc791"
+        }
+    }
+}

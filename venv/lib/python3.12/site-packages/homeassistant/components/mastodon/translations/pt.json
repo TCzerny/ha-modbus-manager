@@ -1,0 +1,58 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado"
+        },
+        "error": {
+            "network_error": "A inst\u00e2ncia do Mastodon n\u00e3o foi encontrada.",
+            "unauthorized_error": "As credenciais s\u00e3o incorretas",
+            "unknown": "Ocorreu um erro desconhecido ao ligar-se \u00e0 inst\u00e2ncia do Mastodon."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Token de Acesso",
+                    "base_url": "URL",
+                    "client_id": "Chave do cliente",
+                    "client_secret": "Segredo do cliente"
+                },
+                "data_description": {
+                    "access_token": "O token de acesso para a aplica\u00e7\u00e3o criada na sua conta Mastodon.",
+                    "base_url": "O URL da sua inst\u00e2ncia do Mastodon, por exemplo, https://mastodon.social.",
+                    "client_id": "A chave do cliente para a aplica\u00e7\u00e3o criada na sua conta Mastodon.",
+                    "client_secret": "O segredo do cliente para a aplica\u00e7\u00e3o criada na sua conta Mastodon."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "followers": {
+                "name": "Seguidores",
+                "unit_of_measurement": "contas"
+            },
+            "following": {
+                "name": "A seguir",
+                "unit_of_measurement": "contas"
+            },
+            "posts": {
+                "name": "Publica\u00e7\u00f5es",
+                "unit_of_measurement": "publica\u00e7\u00f5es"
+            }
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_network_error": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} que usa YAML est\u00e1 a ser removida, mas nenhuma inst\u00e2ncia foi encontrada ao importar a sua configura\u00e7\u00e3o existente.\nPor favor, utilize a interface de utilizador para configurar o Mastodon. N\u00e3o se esque\u00e7a de eliminar a configura\u00e7\u00e3o YAML.",
+            "title": "A importa\u00e7\u00e3o do YAML falhou porque a inst\u00e2ncia n\u00e3o foi encontrada"
+        },
+        "deprecated_yaml_import_issue_unauthorized_error": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} que usa YAML est\u00e1 a ser removida, mas houve um erro de autentica\u00e7\u00e3o ao importar a sua configura\u00e7\u00e3o existente.\nPor favor, utilize a interface de utilizador para configurar o Mastodon. N\u00e3o se esque\u00e7a de eliminar a configura\u00e7\u00e3o YAML.",
+            "title": "A importa\u00e7\u00e3o do YAML falhou devido a um erro de autentica\u00e7\u00e3o"
+        },
+        "deprecated_yaml_import_issue_unknown": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} que usa YAML est\u00e1 a ser removida, mas houve um erro desconhecido ao importar sua configura\u00e7\u00e3o existente.\nPor favor, use a interface de utilizador para configurar o Mastodon. N\u00e3o se esque\u00e7a de excluir a configura\u00e7\u00e3o YAML.",
+            "title": "A importa\u00e7\u00e3o do YAML falhou com um erro desconhecido"
+        }
+    }
+}

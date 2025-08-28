@@ -1,0 +1,188 @@
+{
+    "config": {
+        "abort": {
+            "already_configured_account": "L'account \u00e8 gi\u00e0 configurato",
+            "reauth_successful": "La riautenticazione ha avuto successo",
+            "unknown": "Errore imprevisto"
+        },
+        "error": {
+            "cannot_connect": "Impossibile connettersi",
+            "invalid_auth": "Autenticazione non valida",
+            "invalid_host": "Nome host o indirizzo IP non valido",
+            "mfa_required": "2FA abilitato sull'account, disabilita e riprova"
+        },
+        "flow_title": "{serial}",
+        "step": {
+            "confirm": {
+                "data": {
+                    "password": "Password",
+                    "username": "Nome utente"
+                },
+                "description": "Inserisci le credenziali RTSP per la videocamera EZVIZ {serial} con IP {ip_address}",
+                "title": "Rilevata videocamera EZVIZ"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Password",
+                    "username": "Nome utente"
+                },
+                "title": "Autenticazione scaduta per {name}"
+            },
+            "user": {
+                "data": {
+                    "password": "Password",
+                    "url": "URL",
+                    "username": "Nome utente"
+                },
+                "title": "Connettiti a EZVIZ Cloud"
+            },
+            "user_custom_url": {
+                "data": {
+                    "password": "Password",
+                    "url": "URL",
+                    "username": "Nome utente"
+                },
+                "description": "Specifica manualmente l'URL dell'area geografica",
+                "title": "Connettiti all'URL EZVIZ personalizzato"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "alarm_schedules_enabled": {
+                "name": "Pianificazioni di allarme abilitate"
+            },
+            "encrypted": {
+                "name": "Crittografia"
+            }
+        },
+        "button": {
+            "ptz_down": {
+                "name": "PTZ gi\u00f9"
+            },
+            "ptz_left": {
+                "name": "PTZ sinistra"
+            },
+            "ptz_right": {
+                "name": "PTZ destra"
+            },
+            "ptz_up": {
+                "name": "PTZ su"
+            }
+        },
+        "image": {
+            "last_motion_image": {
+                "name": "Ultima immagine motion"
+            }
+        },
+        "light": {
+            "light": {
+                "name": "Luce"
+            }
+        },
+        "number": {
+            "detection_sensibility": {
+                "name": "Sensibilit\u00e0 di rilevamento"
+            }
+        },
+        "select": {
+            "alarm_sound_mode": {
+                "name": "Suono di avviso",
+                "state": {
+                    "intensive": "Intensivo",
+                    "silent": "Silenzioso",
+                    "soft": "Morbido"
+                }
+            }
+        },
+        "sensor": {
+            "alarm_sound_mod": {
+                "name": "Livello sonoro dell'allarme"
+            },
+            "last_alarm_pic": {
+                "name": "URL dell'immagine dell'ultimo allarme"
+            },
+            "last_alarm_time": {
+                "name": "Orario dell'ultimo allarme"
+            },
+            "last_alarm_type_code": {
+                "name": "Codice del tipo di ultimo allarme"
+            },
+            "last_alarm_type_name": {
+                "name": "Nome dell'ultimo tipo di allarme"
+            },
+            "local_ip": {
+                "name": "IP locale"
+            },
+            "pir_status": {
+                "name": "Stato PIR"
+            },
+            "seconds_last_trigger": {
+                "name": "Secondi dall'ultima attivazione"
+            },
+            "supported_channels": {
+                "name": "Canali supportati"
+            },
+            "wan_ip": {
+                "name": "IP WAN"
+            }
+        },
+        "siren": {
+            "siren": {
+                "name": "Sirena"
+            }
+        },
+        "switch": {
+            "all_day_video_recording": {
+                "name": "Registrazione video per tutto il giorno"
+            },
+            "audio": {
+                "name": "Audio"
+            },
+            "auto_sleep": {
+                "name": "Sospensione automatica"
+            },
+            "flicker_light_on_movement": {
+                "name": "Luce a intermittenza sul movimento"
+            },
+            "follow_movement": {
+                "name": "Segui il movimento"
+            },
+            "infrared_light": {
+                "name": "Luce infrarossa"
+            },
+            "motion_tracking": {
+                "name": "Tracciamento del movimento"
+            },
+            "pir_motion_activated_light": {
+                "name": "Luce PIR attivata dal movimento"
+            },
+            "privacy": {
+                "name": "Riservatezza"
+            },
+            "sleep": {
+                "name": "Sospensione"
+            },
+            "status_light": {
+                "name": "Luce di stato"
+            },
+            "tamper_alarm": {
+                "name": "Allarme manomissione"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ffmpeg_arguments": "Argomenti passati a ffmpeg per le fotocamere"
+                }
+            }
+        }
+    },
+    "services": {
+        "wake_device": {
+            "name": "Attiva la fotocamera"
+        }
+    }
+}

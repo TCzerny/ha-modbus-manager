@@ -1,0 +1,115 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Kamera",
+            "state": {
+                "idle": "Inaktiv",
+                "recording": "Inspelning",
+                "streaming": "Str\u00f6mmar"
+            },
+            "state_attributes": {
+                "access_token": {
+                    "name": "\u00c5tkomsttoken"
+                },
+                "brand": {
+                    "name": "M\u00e4rke"
+                },
+                "frontend_stream_type": {
+                    "name": "Str\u00f6mtyp",
+                    "state": {
+                        "hls": "HLS",
+                        "webrtc": "WebRTC"
+                    }
+                },
+                "model_name": {
+                    "name": "Modell"
+                },
+                "motion_detection": {
+                    "name": "R\u00f6relsedetektering",
+                    "state": {
+                        "false": "Inaktiverad",
+                        "true": "Aktiverad"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_filename_template": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Den f\u00f6rdefinierade mallvariabeln `entity_id` anv\u00e4ndes n\u00e4r \u00e5tg\u00e4rden `{service}` riktades mot kameraenheten `{entity_id}`. Den f\u00f6rdefinierade mallvariabeln `entity_id` tas bort fr\u00e5n parametern `filename` i `{service}`.\n\nUppdatera dina automatiseringar och skript s\u00e5 att de anv\u00e4nder en manuellt definierad variabel ist\u00e4llet och v\u00e4lj **Submit** f\u00f6r att st\u00e4nga det h\u00e4r problemet.",
+                        "title": "Identifierad anv\u00e4ndning av utfasad mallvariabel"
+                    }
+                }
+            },
+            "title": "Identifierad anv\u00e4ndning av utfasad mallvariabel"
+        },
+        "legacy_webrtc_provider": {
+            "description": "Integrationen {legacy_integration} har registrerat en \u00e4ldre WebRTC-leverant\u00f6r. Home Assistant f\u00f6redrar att anv\u00e4nda den inbyggda moderna WebRTC-leverant\u00f6ren som registrerats av {builtin_integration} -integrationen.\n\nF\u00f6rdelarna med den inbyggda integrationen \u00e4r:\n\n- Kamerastr\u00f6mmen startas snabbare.\n- Fler kameraenheter st\u00f6ds.\n\nF\u00f6r att \u00e5tg\u00e4rda problemet kan du antingen forts\u00e4tta anv\u00e4nda den inbyggda moderna WebRTC-leverant\u00f6ren och ta bort {legacy_integration} -integreringen eller ta bort {builtin_integration} -integreringen f\u00f6r att anv\u00e4nda den \u00e4ldre leverant\u00f6ren och sedan starta om Home Assistant.",
+            "title": "Uppt\u00e4ckt anv\u00e4ndning av \u00e4ldre WebRTC-leverant\u00f6r som registrerats av {legacy_integration}"
+        }
+    },
+    "services": {
+        "disable_motion_detection": {
+            "description": "Inaktiverar r\u00f6relsedetektering.",
+            "name": "Inaktivera r\u00f6relsedetektering"
+        },
+        "enable_motion_detection": {
+            "description": "Aktiverar r\u00f6relsedetektering.",
+            "name": "Aktivera r\u00f6relsedetektering"
+        },
+        "play_stream": {
+            "description": "Spelar upp kamerastr\u00f6mmen p\u00e5 en mediaspelare som st\u00f6ds.",
+            "fields": {
+                "format": {
+                    "description": "Str\u00f6mformat som st\u00f6ds av mediaspelaren.",
+                    "name": "Format"
+                },
+                "media_player": {
+                    "description": "Mediaspelare att str\u00f6mma till.",
+                    "name": "Mediaspelare"
+                }
+            },
+            "name": "Spela str\u00f6m"
+        },
+        "record": {
+            "description": "Skapar en inspelning av ett livekamerafl\u00f6de.",
+            "fields": {
+                "duration": {
+                    "description": "Planerad varaktighet f\u00f6r inspelningen. Den faktiska varaktigheten kan variera.",
+                    "name": "Varaktighet"
+                },
+                "filename": {
+                    "description": "Fullst\u00e4ndig s\u00f6kv\u00e4g till filnamnet. M\u00e5ste vara mp4.",
+                    "name": "Filnamn"
+                },
+                "lookback": {
+                    "description": "Planerad \u00e5terblicksperiod som ska inkluderas i inspelningen (ut\u00f6ver varaktigheten). Endast tillg\u00e4ngligt om det f\u00f6r n\u00e4rvarande finns en aktiv HLS-str\u00f6m. Den faktiska l\u00e4ngden p\u00e5 \u00e5terblicksperioden kan variera.",
+                    "name": "\u00c5terblick"
+                }
+            },
+            "name": "Spela in"
+        },
+        "snapshot": {
+            "description": "Tar en avbild fr\u00e5n en kamera.",
+            "fields": {
+                "filename": {
+                    "description": "Fullst\u00e4ndig s\u00f6kv\u00e4g till filnamnet.",
+                    "name": "Filnamn"
+                }
+            },
+            "name": "Tar en avbild"
+        },
+        "turn_off": {
+            "description": "St\u00e4nger av kameran.",
+            "name": "St\u00e4ng av"
+        },
+        "turn_on": {
+            "description": "Sl\u00e5r p\u00e5 kameran.",
+            "name": "Starta"
+        }
+    },
+    "title": "Kamera"
+}

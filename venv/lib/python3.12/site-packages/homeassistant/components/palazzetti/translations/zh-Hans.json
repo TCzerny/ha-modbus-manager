@@ -1,0 +1,125 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u8bbe\u5907\u5df2\u914d\u7f6e"
+        },
+        "error": {
+            "cannot_connect": "\u8fde\u63a5\u5931\u8d25"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "\u60a8\u60f3\u5c06\u201c{name}\u201d ({host}) \u6dfb\u52a0\u5230 Home Assistant \u5417 \uff1f"
+            },
+            "user": {
+                "data": {
+                    "host": "\u4e3b\u673a"
+                },
+                "data_description": {
+                    "host": "Palazzetti CBox \u7684\u4e3b\u673a\u540d\u6216 IP \u5730\u5740"
+                }
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "palazzetti": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "\u81ea\u52a8",
+                            "high": "\u9ad8\u901f",
+                            "silent": "\u9759\u9ed8"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "combustion_power": {
+                "name": "\u71c3\u70e7\u529f\u7387"
+            }
+        },
+        "sensor": {
+            "air_outlet_temperature": {
+                "name": "\u51fa\u98ce\u53e3\u6e29\u5ea6"
+            },
+            "pellet_level": {
+                "name": "\u9897\u7c92\u7ea7\u522b"
+            },
+            "pellet_quantity": {
+                "name": "\u9897\u7c92\u6570\u91cf"
+            },
+            "return_water_temperature": {
+                "name": "\u56de\u6c34\u6e29\u5ea6"
+            },
+            "room_temperature": {
+                "name": "\u5ba4\u6e29"
+            },
+            "status": {
+                "name": "\u72b6\u6001",
+                "state": {
+                    "burning": "\u64cd\u4f5c",
+                    "burning_mod": "\u64cd\u4f5c - \u8c03\u8282",
+                    "chimney_alarm": "\u70df\u56f1\u62a5\u8b66",
+                    "clean_fire": "\u70e7\u9505\u6e05\u6d01",
+                    "cleaning_warning": "\u6e05\u6d01\u8b66\u544a",
+                    "cleanup": "\u6700\u540e\u6e05\u6d01",
+                    "cool_fluid": "\u5f85\u673a",
+                    "cooling": "\u6b63\u5728\u51b7\u5374",
+                    "door_open": "\u95e8\u6253\u5f00",
+                    "ecomode": "\u73af\u4fdd\u6a21\u5f0f",
+                    "exhaust_temp_high": "\u6392\u6c14\u6e29\u5ea6\u8fc7\u9ad8",
+                    "fire_stop": "\u5f00\u5173\u5173\u95ed",
+                    "firewood_finished": "\u67f4\u706b\u5b8c\u6210",
+                    "flue_probe_failure": "\u70df\u6c14\u63a2\u5934\u6545\u969c",
+                    "fuel_error": "\u71c3\u6599\u9519\u8bef",
+                    "fueling": "\u70b9\u706b",
+                    "general_error": "\u4e00\u822c\u9519\u8bef",
+                    "grate_error": "\u8bef\u5dee",
+                    "hatch_door_open": "\u8fdb\u6599\u53e3\u6216\u95e8\u6253\u5f00",
+                    "heatup": "\u9897\u7c92\u9972\u6599",
+                    "ign_test": "\u71c3\u6cb9\u68c0\u67e5",
+                    "main_probe_failure": "\u4e3b\u63a2\u5934\u6545\u969c",
+                    "off": "\u5173\u95ed",
+                    "off_timer": "\u5b9a\u65f6\u5668\u5f00\u5173\u5173\u95ed",
+                    "pellet_finished": "\u5f39\u4e38\u8017\u5c3d\u6216\u70b9\u706b\u5931\u8d25",
+                    "pellet_water_error": "\u9897\u7c92\u63a2\u9488\u6216\u56de\u6c34\u9519\u8bef",
+                    "pressure_error": "\u5b89\u5168\u538b\u529b\u5f00\u5173\u9519\u8bef",
+                    "t05_error": "T05 \u9519\u8bef \u63a2\u5934\u65ad\u5f00\u6216\u6545\u969c",
+                    "temp_too_high": "\u6e29\u5ea6\u8fc7\u9ad8",
+                    "test_fire": "\u70b9\u706b\u6d4b\u8bd5",
+                    "unknown": "\u672a\u77e5"
+                }
+            },
+            "t1_hydro": {
+                "name": "\u6c34\u6e29 1"
+            },
+            "t2_hydro": {
+                "name": "\u6c34\u6e29 2"
+            },
+            "tank_water_temperature": {
+                "name": "\u6c34\u7bb1\u6c34\u6e29"
+            },
+            "wood_combustion_temperature": {
+                "name": "\u6728\u6750\u71c3\u70e7\u6e29\u5ea6"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "\u65e0\u6cd5\u8fde\u63a5\u5230\u8bbe\u5907\u3002"
+        },
+        "invalid_combustion_power": {
+            "message": "\u71c3\u70e7\u529f\u7387 {value} \u65e0\u6548\u3002"
+        },
+        "invalid_fan_mode": {
+            "message": "\u98ce\u6247\u6a21\u5f0f{value}\u65e0\u6548\u3002"
+        },
+        "invalid_target_temperature": {
+            "message": "\u76ee\u6807\u6e29\u5ea6 {value} \u65e0\u6548\u3002"
+        },
+        "on_off_not_available": {
+            "message": "\u7535\u5668\u65e0\u6cd5\u6253\u5f00\u6216\u5173\u95ed\u3002"
+        }
+    }
+}

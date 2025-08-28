@@ -1,0 +1,134 @@
+{
+    "common": {
+        "jid_options_description": "\u9032\u968e\u7fa4\u7d44\u9078\u9805\u3001\u76f4\u63a5\u4f7f\u7528\u88dd\u7f6e\u7684\u552f\u4e00 Beolink ID\uff08\u7a31\u70ba JID\uff09\u3002JID \u8cc7\u8a0a\u53ef\u4ee5\u65bc\u64ad\u653e\u5668\u5be6\u9ad4\u7684\u72c0\u614b\u4f7f\u8208\u4e2d\u627e\u5230\u3002",
+        "jid_options_name": "JID \u9078\u9805"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "\u88dd\u7f6e\u5df2\u7d93\u8a2d\u5b9a\u5b8c\u6210",
+            "already_in_progress": "\u8a2d\u5b9a\u5df2\u7d93\u9032\u884c\u4e2d"
+        },
+        "error": {
+            "api_exception": "\u9023\u7dda\u5931\u6557",
+            "client_connector_error": "\u9023\u7dda\u5931\u6557",
+            "invalid_ip": "IPv4 \u4f4d\u5740\u7121\u6548",
+            "timeout_error": "\u9023\u7dda\u5931\u6557"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "IP \u4f4d\u5740",
+                    "model": "\u578b\u865f"
+                },
+                "description": "\u624b\u52d5\u8a2d\u5b9a Bang & Olufsen \u88dd\u7f6e\u3002"
+            },
+            "zeroconf_confirm": {
+                "description": "\u78ba\u8a8d {model}-{serial_number} @ {host} \u8a2d\u5b9a\u3002",
+                "title": "\u8a2d\u5b9a Bang & Olufsen \u88dd\u7f6e"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_grouping_entity": {
+            "message": "\u7121\u6cd5\u5c07\u5be6\u9ad4 ID\uff1a{entity_id} \u65b0\u589e\u81f3 Beolink \u5340\u6bb5\u4e2d\u3002\u8a72\u5be6\u9ad4\u662f\u5426\u70ba Bang & Olufsen \u5a92\u9ad4\u64ad\u653e\u5668\uff1f"
+        },
+        "invalid_media_type": {
+            "message": "{invalid_media_type} \u70ba\u7121\u6548\u985e\u578b\u3002\u6709\u6548\u985e\u578b\u70ba\uff1a{valid_media_types}\u3002"
+        },
+        "invalid_sound_mode": {
+            "message": "{invalid_sound_mode} \u70ba\u7121\u6548\u7684\u97f3\u6548\u6a21\u5f0f\u3002\u6709\u6548\u6578\u503c\u70ba\uff1a{valid_sound_modes}\u3002"
+        },
+        "invalid_source": {
+            "message": "\u4f86\u6e90\u7121\u6548\uff1a{invalid_source}\u3002\u6709\u6548\u7684\u4f86\u6e90\u70ba\uff1a{valid_sources}"
+        },
+        "m3u_invalid_format": {
+            "message": "\u4e0d\u652f\u6301 .m3u \u9644\u52a0\u6a94\u540d\u7684\u5a92\u9ad4\u4f86\u6e90\u3002"
+        },
+        "play_media_error": {
+            "message": "\u5617\u8a66\u64ad\u653e{media_type}\u6642\u767c\u751f\u932f\u8aa4\uff1a{error_message}\u3002"
+        }
+    },
+    "selector": {
+        "source_ids": {
+            "options": {
+                "aux_a": "Beolink Converter NL/ML AUX_A",
+                "beoradio": "ASE Beoradio",
+                "cd": "Beolink Converter NL/ML CD",
+                "deezer": "ASE / Mozart Deezer",
+                "ph": "Beolink Converter NL/ML PH",
+                "radio": "Beolink Converter NL/ML RADIO",
+                "spotify": "ASE / Mozart Spotify",
+                "tidal": "Mozart Tidal",
+                "tp1": "Beolink Converter NL/ML TP1",
+                "tp2": "Beolink Converter NL/ML TP2"
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "\u5c07\u6240\u6709\u9023\u7dda Beolink \u88dd\u7f6e\u8a2d\u5b9a\u70ba\u5f85\u6a5f\u6a21\u5f0f\u3002",
+            "name": "Beolink \u5168\u90e8\u5f85\u6a5f"
+        },
+        "beolink_expand": {
+            "description": "\u62d3\u5c55\u76ee\u524d Beolink \u9ad4\u9a57\u3002",
+            "fields": {
+                "all_discovered": {
+                    "description": "\u5c07 Beolink \u9ad4\u9a57\u62d3\u5c55\u5230\u6240\u6709\u6240\u641c\u7d22\u5230\u7684\u88dd\u7f6e \u3002",
+                    "name": "\u6240\u6709\u5df2\u641c\u7d22"
+                },
+                "beolink_jids": {
+                    "description": "\u6307\u5b9a\u54ea\u4e9b Beolink JID \u5c07\u52a0\u5165\u76ee\u524d Beolink \u9ad4\u9a57\u3002",
+                    "name": "Beolink JID"
+                }
+            },
+            "name": "Beolink \u62d3\u5c55",
+            "sections": {
+                "jid_options": {
+                    "description": "\u9032\u968e\u7fa4\u7d44\u9078\u9805\u3001\u76f4\u63a5\u4f7f\u7528\u88dd\u7f6e\u7684\u552f\u4e00 Beolink ID\uff08\u7a31\u70ba JID\uff09\u3002JID \u8cc7\u8a0a\u53ef\u4ee5\u65bc\u64ad\u653e\u5668\u5be6\u9ad4\u7684\u72c0\u614b\u4f7f\u8208\u4e2d\u627e\u5230\u3002",
+                    "name": "JID \u9078\u9805"
+                }
+            }
+        },
+        "beolink_join": {
+            "description": "\u52a0\u5165 Beolink \u9ad4\u9a57\u3002",
+            "fields": {
+                "beolink_jid": {
+                    "description": "\u624b\u52d5\u6307\u5b9a\u6240\u8981\u52a0\u5165\u7684 Beolink JID\u3002",
+                    "name": "Beolink JID"
+                },
+                "source_id": {
+                    "description": "\u6307\u5b9a\u6240\u8981\u52a0\u5165\u7684\u4f86\u6e90\uff0c\u884c\u70ba\u56e0\u786c\u9ad4\u5e73\u53f0\u800c\u7570\u3002\u4ee5\u5e73\u53f0\u540d\u7a31\u70ba\u524d\u7db4\u7684\u4f86\u6e90\u540d\u7a31\u3001\u50c5\u80fd\u65bc\u9023\u7dda\u81f3\u8a72\u5e73\u53f0\u6642\u4f7f\u7528\u3002\u4f8b\u5982\uff0c\u201cASE Beoradio\u201d \u53ea\u80fd\u5728\u52a0\u5165 ASE \u88dd\u7f6e\u6642\u4f7f\u7528\uff0c\u800c \u201cASE / Mozart Deezer\u201d \u53ef\u4ee5\u8207 ASE \u6216 Mozart \u88dd\u7f6e\u4e00\u8d77\u4f7f\u7528\u3002\u9700\u8981\u5b9a\u7fa9 Beolink JID\u3002",
+                    "name": "\u4f86\u6e90"
+                }
+            },
+            "name": "Beolink \u52a0\u5165",
+            "sections": {
+                "jid_options": {
+                    "description": "\u9032\u968e\u7fa4\u7d44\u9078\u9805\u3001\u76f4\u63a5\u4f7f\u7528\u88dd\u7f6e\u7684\u552f\u4e00 Beolink ID\uff08\u7a31\u70ba JID\uff09\u3002JID \u8cc7\u8a0a\u53ef\u4ee5\u65bc\u64ad\u653e\u5668\u5be6\u9ad4\u7684\u72c0\u614b\u4f7f\u8208\u4e2d\u627e\u5230\u3002",
+                    "name": "JID \u9078\u9805"
+                }
+            }
+        },
+        "beolink_leave": {
+            "description": "\u9000\u51fa Beolink \u9ad4\u9a57\u3002",
+            "name": "Beolink \u96e2\u958b"
+        },
+        "beolink_unexpand": {
+            "description": "\u76ee\u524d\u7684 Beolink \u9ad4\u9a57\u53d6\u6d88\u62d3\u5c55\u3002",
+            "fields": {
+                "beolink_jids": {
+                    "description": "\u6307\u5b9a\u54ea\u4e9b Beolink JID \u5c07\u9000\u51fa\u76ee\u524d Beolink \u9ad4\u9a57\u3002",
+                    "name": "Beolink JID"
+                }
+            },
+            "name": "Beolink \u53d6\u6d88\u62d3\u5c55",
+            "sections": {
+                "jid_options": {
+                    "description": "\u9032\u968e\u7fa4\u7d44\u9078\u9805\u3001\u76f4\u63a5\u4f7f\u7528\u88dd\u7f6e\u7684\u552f\u4e00 Beolink ID\uff08\u7a31\u70ba JID\uff09\u3002JID \u8cc7\u8a0a\u53ef\u4ee5\u65bc\u64ad\u653e\u5668\u5be6\u9ad4\u7684\u72c0\u614b\u4f7f\u8208\u4e2d\u627e\u5230\u3002",
+                    "name": "JID \u9078\u9805"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,230 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il servizio \u00e8 gi\u00e0 configurato",
+            "reauth_successful": "La riautenticazione ha avuto successo",
+            "reconfigure_successful": "La riconfigurazione \u00e8 stata completata con successo",
+            "single_instance_allowed": "Gi\u00e0 configurato. \u00c8 possibile una sola configurazione."
+        },
+        "error": {
+            "bad_birth": "Argomento di nascita non valido",
+            "bad_certificate": "Il certificato CA non \u00e8 valido",
+            "bad_client_cert": "Certificato client non valido, assicurarsi che venga fornito un file codificato PEM",
+            "bad_client_cert_key": "Il certificato client e la chiave privata non sono una coppia valida",
+            "bad_client_key": "Chiave privata non valida, assicurarsi che venga fornito un file codificato PEM senza password",
+            "bad_discovery_prefix": "Prefisso di rilevamento non valido",
+            "bad_will": "Argomento testamento non valido",
+            "bad_ws_headers": "Fornisci intestazioni HTTP valide come oggetto JSON",
+            "cannot_connect": "Impossibile connettersi",
+            "invalid_auth": "Autenticazione non valida"
+        },
+        "step": {
+            "broker": {
+                "data": {
+                    "advanced_options": "Opzioni avanzate",
+                    "broker": "Broker",
+                    "certificate": "Carica il file del certificato CA personalizzato",
+                    "client_cert": "Carica il file del certificato client",
+                    "client_id": "ID client (lasciare vuoto per generarne uno casualmente)",
+                    "client_key": "Carica il file della chiave privata",
+                    "keepalive": "L'intervallo di tempo tra l'invio di messaggi di mantenimento in attivit\u00e0",
+                    "password": "Password",
+                    "port": "Porta",
+                    "protocol": "protocollo MQTT",
+                    "set_ca_cert": "Convalida del certificato del broker",
+                    "set_client_cert": "Usa un certificato client",
+                    "tls_insecure": "Ignora la convalida del certificato del broker",
+                    "transport": "Trasporto MQTT",
+                    "username": "Nome utente",
+                    "ws_headers": "Intestazioni WebSocket in formato JSON",
+                    "ws_path": "Percorso WebSocket"
+                },
+                "data_description": {
+                    "advanced_options": "Abilita e seleziona **Avanti** per impostare le opzioni avanzate.",
+                    "broker": "Il nome host o l'indirizzo IP del tuo broker MQTT.",
+                    "certificate": "Il file del certificato CA personalizzato per convalidare il certificato del tuo broker MQTT.",
+                    "set_ca_cert": "Seleziona **Auto** per la convalida CA automatica, oppure **Personalizzato** e seleziona **Avanti** per impostare un certificato CA personalizzato, per consentire la convalida del certificato dei tuoi broker MQTT.",
+                    "set_client_cert": "Abilita e seleziona **Avanti** per impostare un certificato client e una chiave privata per autenticarti con il tuo broker MQTT."
+                },
+                "description": "Inserisci le informazioni di connessione del tuo broker MQTT."
+            },
+            "hassio_confirm": {
+                "description": "Vuoi configurare Home Assistant per connettersi al broker MQTT fornito dal componente aggiuntivo: {addon}?",
+                "title": "Broker MQTT tramite il componente aggiuntivo di Home Assistant"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Password",
+                    "username": "Nome utente"
+                }
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_subtype": {
+            "button_1": "Primo pulsante",
+            "button_2": "Secondo pulsante",
+            "button_3": "Terzo pulsante",
+            "button_4": "Quarto pulsante",
+            "button_5": "Quinto pulsante",
+            "button_6": "Sesto pulsante",
+            "turn_off": "Spegni",
+            "turn_on": "Accendi"
+        },
+        "trigger_type": {
+            "button_double_press": "\"{subtype}\" cliccato due volte",
+            "button_long_press": "\"{subtype}\" premuto continuamente",
+            "button_long_release": "\"{subtype}\" rilasciato dopo una lunga pressione",
+            "button_quadruple_press": "\"{subtype}\" cliccato quattro volte",
+            "button_quintuple_press": "\"{subtype}\" cliccato cinque volte",
+            "button_short_press": "\"{subtype}\" premuto",
+            "button_short_release": "\"{subtype}\" rilasciato",
+            "button_triple_press": "\"{subtype}\" cliccato tre volte"
+        }
+    },
+    "exceptions": {
+        "addon_start_failed": {
+            "message": "Impossibile avviare correttamente il componente aggiuntivo {addon}."
+        },
+        "invalid_platform_config": {
+            "message": "Non \u00e8 riuscito il ricaricamento della configurazione YAML per l'elemento MQTT `{domain}` configurato manualmente. Consulta i registri per ulteriori dettagli."
+        },
+        "mqtt_broker_error": {
+            "message": "Errore durante la comunicazione con MQTT: {error_message}."
+        },
+        "mqtt_not_setup_cannot_unsubscribe_twice": {
+            "message": "Impossibile annullare l'iscrizione all'argomento \"{topic}\" due volte."
+        },
+        "mqtt_topic_not_a_string": {
+            "message": "L'argomento deve essere una stringa! Ottenuto: {topic}."
+        },
+        "mqtt_trigger_cannot_remove_twice": {
+            "message": "Non \u00e8 possibile rimuovere l'innesco due volte."
+        }
+    },
+    "issues": {
+        "invalid_platform_config": {
+            "description": "Home Assistant ha rilevato una configurazione non valida per un elemento configurato manualmente. \n\n Dominio della piattaforma: **{domain}**\n File di configurazione: **{config_file}**\n Vicino alla linea: **{line}**\n Configurazione trovata:\n ```yaml\n {config}\n ```\n Errore: **{error}**. \n\nAssicurati che la configurazione sia valida e [ricarica](/developer-tools/yaml) gli elementi MQTT configurati manualmente o riavvia Home Assistant per risolvere questo problema.",
+            "title": "Trovata configurazione non valida per l'elemento mqtt {domain}"
+        }
+    },
+    "options": {
+        "error": {
+            "bad_birth": "Argomento di nascita non valido",
+            "bad_certificate": "Il certificato CA non \u00e8 valido",
+            "bad_client_cert": "Certificato client non valido, assicurarsi che venga fornito un file codificato PEM",
+            "bad_client_cert_key": "Il certificato client e la chiave privata non sono una coppia valida",
+            "bad_client_key": "Chiave privata non valida, assicurarsi che venga fornito un file codificato PEM senza password",
+            "bad_discovery_prefix": "Prefisso di rilevamento non valido",
+            "bad_will": "Argomento testamento non valido",
+            "bad_ws_headers": "Fornisci intestazioni HTTP valide come oggetto JSON",
+            "cannot_connect": "Impossibile connettersi",
+            "invalid_inclusion": "Il certificato del client e la chiave privata devono essere configurati insieme"
+        },
+        "step": {
+            "broker": {
+                "data": {
+                    "advanced_options": "Opzioni avanzate",
+                    "broker": "Broker",
+                    "certificate": "Carica il file del certificato CA personalizzato",
+                    "client_cert": "Carica il file del certificato client",
+                    "client_id": "ID client (lasciare vuoto per generarne uno casualmente)",
+                    "client_key": "Carica il file della chiave privata",
+                    "keepalive": "L'intervallo di tempo tra l'invio di messaggi di mantenimento in attivit\u00e0",
+                    "password": "Password",
+                    "port": "Porta",
+                    "protocol": "protocollo MQTT",
+                    "set_ca_cert": "Convalida del certificato del broker",
+                    "set_client_cert": "Usa un certificato client",
+                    "tls_insecure": "Ignora la convalida del certificato del broker",
+                    "transport": "Trasporto MQTT",
+                    "username": "Nome utente",
+                    "ws_headers": "Intestazioni WebSocket in formato JSON",
+                    "ws_path": "Percorso WebSocket"
+                },
+                "data_description": {
+                    "advanced_options": "Abilita e seleziona **Avanti** per impostare le opzioni avanzate.",
+                    "broker": "Il nome host o l'indirizzo IP del tuo broker MQTT.",
+                    "certificate": "Il file del certificato CA personalizzato per convalidare il certificato del tuo broker MQTT.",
+                    "set_ca_cert": "Seleziona **Auto** per la convalida CA automatica, oppure **Personalizzato** e seleziona **Avanti** per impostare un certificato CA personalizzato, per consentire la convalida del certificato dei tuoi broker MQTT.",
+                    "set_client_cert": "Abilita e seleziona **Avanti** per impostare un certificato client e una chiave privata per autenticarti con il tuo broker MQTT."
+                },
+                "description": "Inserisci le informazioni di connessione del tuo broker MQTT.",
+                "title": "Opzioni del broker"
+            },
+            "options": {
+                "data": {
+                    "birth_enable": "Abilita messaggio di nascita",
+                    "birth_payload": "Payload del messaggio birth",
+                    "birth_qos": "QoS del messaggio birth",
+                    "birth_retain": "Persistenza del messaggio birth",
+                    "birth_topic": "Argomento del messaggio birth",
+                    "discovery": "Abilita il rilevamento",
+                    "discovery_prefix": "Rileva prefisso",
+                    "will_enable": "Abilita il messaggio testamento",
+                    "will_payload": "Payload del messaggio testamento",
+                    "will_qos": "QoS del messaggio testamento",
+                    "will_retain": "Persistenza del messaggio will",
+                    "will_topic": "Argomento del messaggio will"
+                },
+                "description": "Rilevamento - Se il rilevamento \u00e8 abilitato (consigliato), Home Assistant rilever\u00e0 automaticamente i dispositivi e le entit\u00e0 che pubblicano la loro configurazione sul broker MQTT. Se il rilevamento \u00e8 disabilitato, tutta la configurazione deve essere fatta manualmente.\nPrefisso di rilevamento - Il prefisso con cui deve iniziare un argomento di configurazione per il rilevamento automatico.\nMessaggio di nascita - Il messaggio di nascita viene inviato ogni volta che Home Assistant si (ri)connette al broker MQTT.\nMessaggio di testamento - Il messaggio di testamento verr\u00e0 inviato ogni volta che Home Assistant perde la connessione al broker, sia in caso di disconnessione pulita (ad esempio, Home Assistant si spegne) sia in caso di disconnessione non pulita (ad esempio, Home Assistant si blocca o perde la connessione di rete).",
+                "title": "Opzioni MQTT"
+            }
+        }
+    },
+    "selector": {
+        "set_ca_cert": {
+            "options": {
+                "auto": "Automatico",
+                "custom": "Personalizzato",
+                "off": "Spento/a"
+            }
+        }
+    },
+    "services": {
+        "dump": {
+            "description": "Scrive tutti i messaggi su un argomento specifico nel file `mqtt_dump.txt` nella cartella di configurazione.",
+            "fields": {
+                "duration": {
+                    "description": "Durata dell'ascolto dei messaggi in secondi.",
+                    "name": "Durata"
+                },
+                "topic": {
+                    "description": "Argomento da ascoltare.",
+                    "name": "Argomento"
+                }
+            },
+            "name": "Esporta"
+        },
+        "publish": {
+            "description": "Pubblica un messaggio in un argomento MQTT.",
+            "fields": {
+                "payload": {
+                    "description": "Il payload da pubblicare.",
+                    "name": "Payload"
+                },
+                "payload_template": {
+                    "description": "Modello di cui eseguire il rendering come valore di payload. Se viene fornito un payload, il modello viene ignorato.",
+                    "name": "Modello di payload"
+                },
+                "qos": {
+                    "description": "Qualit\u00e0 del servizio da utilizzare. 0: Al massimo una volta. 1: Almeno una volta. 2: Esattamente una volta.",
+                    "name": "QoS"
+                },
+                "retain": {
+                    "description": "Se il messaggio deve avere il flag di conservazione impostato. Se impostato, il broker memorizza il messaggio pi\u00f9 recente su un argomento.",
+                    "name": "Conserva"
+                },
+                "topic": {
+                    "description": "Argomento in cui pubblicare.",
+                    "name": "Argomento"
+                }
+            },
+            "name": "Pubblica"
+        },
+        "reload": {
+            "description": "Ricarica le entit\u00e0 MQTT dalla configurazione YAML.",
+            "name": "Ricarica"
+        }
+    }
+}

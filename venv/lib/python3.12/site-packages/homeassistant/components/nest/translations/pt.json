@@ -1,0 +1,112 @@
+{
+    "application_credentials": {
+        "description": "Siga as [instru\u00e7\u00f5es]({more_info_url}) para configurar o Cloud Console:\n\n1. V\u00e1 para a [tela de consentimento OAuth]({oauth_consent_url}) e configure.\n2. V\u00e1 para [Credenciais]({oauth_creds_url}) e selecione **Criar Credenciais**.\n3. Na lista suspensa, selecione **ID do cliente OAuth**.\n4. Selecione **Aplica\u00e7\u00e3o Web** para o Tipo de Aplica\u00e7\u00e3o.\n5. Adicione `{redirect_url}` em *URI de redirecionamento autorizado*."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Conta j\u00e1 configurada",
+            "authorize_url_timeout": "Excedido o tempo limite para gerar um URL de autoriza\u00e7\u00e3o",
+            "invalid_access_token": "Token de acesso inv\u00e1lido",
+            "missing_configuration": "O componente n\u00e3o est\u00e1 configurado. Por favor, siga a documenta\u00e7\u00e3o.",
+            "missing_credentials": "A integra\u00e7\u00e3o requer credenciais de aplica\u00e7\u00e3o.",
+            "no_url_available": "Nenhum URL est\u00e1 dispon\u00edvel. Para obter informa\u00e7\u00f5es sobre esse erro, [consulte a sec\u00e7\u00e3o de ajuda]({docs_url})",
+            "oauth_error": "Recebido token de autentica\u00e7\u00e3o inv\u00e1lido.",
+            "oauth_failed": "Erro ao obter o token de acesso.",
+            "oauth_timeout": "Excedido o tempo limite para o OAuth token.",
+            "oauth_unauthorized": "Erro de autoriza\u00e7\u00e3o OAuth ao obter o token de acesso.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "unknown_authorize_url_generation": "Erro desconhecido ao gerar um URL de autoriza\u00e7\u00e3o."
+        },
+        "create_entry": {
+            "default": "Autenticado com sucesso"
+        },
+        "error": {
+            "bad_project_id": "Por favor, insira um ID de Projeto Cloud v\u00e1lido (verifique o Cloud Console).",
+            "no_pubsub_topics": "N\u00e3o foram encontrados t\u00f3picos Pub/Sub eleg\u00edveis, certifique-se de que a consola de acesso ao dispositivo tem um t\u00f3pico Pub/Sub.",
+            "pubsub_api_error": "Erro desconhecido ao falar com o Cloud Pub/Sub, ver registos",
+            "subscriber_error": "Erro desconhecido de subscritor, consulte os logs",
+            "wrong_project_id": "Por favor, insira um ID de Projeto Cloud v\u00e1lido (era o mesmo que o ID de Projeto de Acesso ao Dispositivo)"
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "ID do Projeto Google Cloud"
+                },
+                "description": "Introduza o ID do Projeto na Cloud abaixo, por exemplo, *example-project-12345*. Consulte o [Google Cloud Console]({cloud_console_url}) ou a documenta\u00e7\u00e3o para [mais informa\u00e7\u00f5es]({more_info_url}).",
+                "title": "Nest: Introduza o ID do Projeto na Cloud."
+            },
+            "create_cloud_project": {
+                "description": "A integra\u00e7\u00e3o Nest permite integrar os seus termostatos, c\u00e2maras e campainhas Nest utilizando a API de Gest\u00e3o de Dispositivos Inteligentes (SDM). A API SDM **requer uma taxa de configura\u00e7\u00e3o \u00fanica de US $5**. Veja a documenta\u00e7\u00e3o para [mais informa\u00e7\u00f5es]({more_info_url}).\n\n1. V\u00e1 para o [Google Cloud Console]({cloud_console_url}).\n2. Se este for o seu primeiro projeto, selecione **Criar Projeto** e depois **Novo Projeto**.\n3. D\u00ea um nome ao seu Projeto na Cloud e depois selecione **Criar**.\n4. Guarde o ID do Projeto na Cloud, por exemplo, *example-project-12345*, pois ir\u00e1 precisar dele mais tarde.\n5. V\u00e1 para a Biblioteca de APIs para [Smart Device Management API]({sdm_api_url}) e selecione **Ativar**.\n6. V\u00e1 para a Biblioteca de APIs para [Cloud Pub/Sub API]({pubsub_api_url}) e selecione **Ativar**.\n\nProssiga quando o seu projeto na cloud estiver configurado.",
+                "title": "Nest: Criar e configurar Projeto na Cloud."
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "ID do Projeto de Acesso a Dispositivos."
+                },
+                "description": "Crie um projeto de Acesso a Dispositivos Nest, que **requer o pagamento de uma taxa de US $5** para configurar.\n1. V\u00e1 para o [Device Access Console]({device_access_console_url}) e siga o fluxo de pagamento.\n2. Selecione **Criar projeto**\n3. D\u00ea um nome ao seu projeto de Acesso a Dispositivos e selecione **Seguinte**.\n4. Introduza o seu ID de cliente OAuth\n5. Ative eventos clicando em **Ativar** e **Criar projeto**.\n\nIntroduza o seu ID do Projeto de Acesso a Dispositivos abaixo ([mais informa\u00e7\u00f5es]({more_info_url})).",
+                "title": "Nest: Criar um Projeto de Acesso a Dispositivos"
+            },
+            "pick_implementation": {
+                "title": "Escolha o m\u00e9todo de autentica\u00e7\u00e3o"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "ID do Projeto Google Cloud"
+                },
+                "title": "Configurar Google Cloud Pub/Sub"
+            },
+            "pubsub_subscription": {
+                "data": {
+                    "subscription_name": "Nome da subscri\u00e7\u00e3o Pub/Sub"
+                },
+                "description": "O Home Assistant recebe atualiza\u00e7\u00f5es de dispositivos Nest em tempo real com uma subscri\u00e7\u00e3o Cloud Pub/Sub para o t\u00f3pico `{topic}`.\n\nSelecione uma subscri\u00e7\u00e3o existente abaixo se j\u00e1 existir uma, ou o passo seguinte criar\u00e1 uma nova para si. Consulte a documenta\u00e7\u00e3o da integra\u00e7\u00e3o para [mais informa\u00e7\u00f5es]({more_info_url}).",
+                "title": "Configurar subscri\u00e7\u00e3o Cloud Pub/Sub"
+            },
+            "pubsub_topic": {
+                "data": {
+                    "topic_name": "Nome do t\u00f3pico Pub/Sub"
+                },
+                "description": "Os dispositivos Nest publicam atualiza\u00e7\u00f5es num t\u00f3pico do Cloud Pub/Sub. Selecione o t\u00f3pico Pub/Sub abaixo que seja o mesmo que a [Consola de acesso ao dispositivo]({device_access_console_url}). Consulte a documenta\u00e7\u00e3o de integra\u00e7\u00e3o para [mais informa\u00e7\u00f5es]({more_info_url}).",
+                "title": "Configurar t\u00f3pico Cloud Pub/Sub"
+            },
+            "reauth_confirm": {
+                "description": "A integra\u00e7\u00e3o do Nest precisa de autenticar novamente a sua conta",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "Movimento detectado",
+            "camera_person": "Pessoa detectada",
+            "camera_sound": "Som detectado",
+            "doorbell_chime": "Campainha pressionada"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "Campainha",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "Campainha"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "Movimento",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "Movimento",
+                            "camera_person": "Pessoa",
+                            "camera_sound": "Som"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

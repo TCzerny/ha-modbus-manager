@@ -1,0 +1,229 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Arbetsdag har redan st\u00e4llts in med vald konfiguration"
+        },
+        "error": {
+            "add_holiday_error": "Felaktigt format f\u00f6r datum (\u00c5\u00c5\u00c5\u00c5\u00c5-MM-DD)",
+            "add_holiday_range_error": "Felaktigt format p\u00e5 datumintervall (\u00c5\u00c5\u00c5\u00c5-MM-DD,\u00c5\u00c5\u00c5\u00c5-MM-DD)",
+            "remove_holiday_error": "Felaktigt format p\u00e5 datum (\u00c5\u00c5\u00c5\u00c5-MM-DD) eller helgdagsnamn hittades inte",
+            "remove_holiday_range_error": "Felaktigt format p\u00e5 datumintervall (\u00c5\u00c5\u00c5\u00c5-MM-DD,\u00c5\u00c5\u00c5\u00c5-MM-DD)"
+        },
+        "step": {
+            "options": {
+                "data": {
+                    "add_holidays": "L\u00e4gg till helgdagar",
+                    "category": "Ytterligare kategori som helgdag",
+                    "days_offset": "F\u00f6rskjutning",
+                    "excludes": "Dagar att exkludera",
+                    "language": "Spr\u00e5k f\u00f6r namngivna helgdagar",
+                    "province": "Landsdel",
+                    "remove_holidays": "Ta bort helgdagar",
+                    "workdays": "Dagar att inkludera"
+                },
+                "data_description": {
+                    "add_holidays": "L\u00e4gg till anpassade helgdagar som \u00c5\u00c5\u00c5\u00c5-MM-DD, eller som intervall med ',' som avgr\u00e4nsare",
+                    "category": "V\u00e4lj ytterligare kategorier att inkludera som helgdagar",
+                    "days_offset": "Dagars f\u00f6rskjutning fr\u00e5n aktuell dag",
+                    "excludes": "V\u00e4lj vilka veckodagar som ska exkluderas som arbetsdagar. \n\"Holidays\" l\u00e4gger till de f\u00f6r det konfigurerade landet, anpassningsbara med alla inst\u00e4llningarna nedan. L\u00e4s dokumentationen om hur du anv\u00e4nder dem p\u00e5 r\u00e4tt s\u00e4tt.",
+                    "language": "Spr\u00e5k som ska anv\u00e4ndas n\u00e4r du konfigurerar namngivna helgdagsundantag",
+                    "province": "Landsdel, landskap, l\u00e4n eller region i landet",
+                    "remove_holidays": "Ta bort helgdagar som \u00c5\u00c5\u00c5\u00c5-MM-DD eller som ett intervall med ',' som avgr\u00e4nsare eller genom att anv\u00e4nda en del av namnet",
+                    "workdays": "V\u00e4lj vilka veckodagar som ska inkluderas som m\u00f6jliga arbetsdagar."
+                },
+                "description": "St\u00e4ll in arbetsdagsalternativ f\u00f6r {name} i {country}"
+            },
+            "user": {
+                "data": {
+                    "country": "Land",
+                    "name": "Namn"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "workday": {
+                "state_attributes": {
+                    "days_offset": {
+                        "name": "F\u00f6rskjutning"
+                    },
+                    "excludes": {
+                        "name": "Dagar att exkludera"
+                    },
+                    "workdays": {
+                        "name": "Dagar att inkludera"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "bad_country": {
+            "fix_flow": {
+                "step": {
+                    "country": {
+                        "data": {
+                            "country": "Land"
+                        },
+                        "description": "V\u00e4lj ett land att anv\u00e4nda f\u00f6r din Workday-sensor.",
+                        "title": "V\u00e4lj land f\u00f6r {title}"
+                    },
+                    "province": {
+                        "data": {
+                            "province": "Landsdel"
+                        },
+                        "data_description": {
+                            "province": "Landsdel, landskap, l\u00e4n eller region i landet"
+                        },
+                        "description": "V\u00e4lj en landsdel i landet {country} att anv\u00e4nda f\u00f6r din Workday-sensor.",
+                        "title": "V\u00e4lj landsdel f\u00f6r {title}"
+                    }
+                }
+            },
+            "title": "Konfigurerat land f\u00f6r {title} finns inte"
+        },
+        "bad_date_holiday": {
+            "fix_flow": {
+                "error": {
+                    "remove_holiday_error": "Felaktigt format p\u00e5 datum (\u00c5\u00c5\u00c5\u00c5-MM-DD) eller helgdagsnamn hittades inte"
+                },
+                "step": {
+                    "fix_remove_holiday": {
+                        "data": {
+                            "remove_holidays": "Ta bort helgdagar"
+                        },
+                        "data_description": {
+                            "remove_holidays": "Ta bort helgdagar som \u00c5\u00c5\u00c5\u00c5-MM-DD eller som ett intervall med ',' som avgr\u00e4nsare eller genom att anv\u00e4nda en del av namnet"
+                        },
+                        "description": "Ta bort semesterdatumet `{remove_holidays}` eftersom det inte kan hittas i landet {country}.",
+                        "title": "Konfigurerat helgdatum {remove_holidays} f\u00f6r {title} finns inte"
+                    }
+                }
+            },
+            "title": "Konfigurerat helgdatum {remove_holidays} f\u00f6r {title} finns inte"
+        },
+        "bad_named_holiday": {
+            "fix_flow": {
+                "error": {
+                    "remove_holiday_error": "Felaktigt format p\u00e5 datum (\u00c5\u00c5\u00c5\u00c5-MM-DD) eller helgdagsnamn hittades inte"
+                },
+                "step": {
+                    "fix_remove_holiday": {
+                        "data": {
+                            "remove_holidays": "Ta bort helgdagar"
+                        },
+                        "data_description": {
+                            "remove_holidays": "Ta bort helgdagar som \u00c5\u00c5\u00c5\u00c5-MM-DD eller som ett intervall med ',' som avgr\u00e4nsare eller genom att anv\u00e4nda en del av namnet"
+                        },
+                        "description": "Ta bort namngiven helgdag `{remove_holidays}` eftersom den inte kan hittas i landet {country}.",
+                        "title": "Konfigurerad namngiven helgdag {remove_holidays} f\u00f6r {title} finns inte"
+                    }
+                }
+            },
+            "title": "Konfigurerad namngiven helgdag {remove_holidays} f\u00f6r {title} finns inte"
+        },
+        "bad_province": {
+            "fix_flow": {
+                "step": {
+                    "province": {
+                        "data": {
+                            "province": "Landsdel"
+                        },
+                        "data_description": {
+                            "province": "Landsdel, landskap, l\u00e4n eller region i landet"
+                        },
+                        "description": "V\u00e4lj en landsdel i landet {country} att anv\u00e4nda f\u00f6r din Workday-sensor.",
+                        "title": "V\u00e4lj landsdel f\u00f6r {title}"
+                    }
+                }
+            },
+            "title": "Konfigurerad landsdel i landet {country} f\u00f6r {title} finns inte"
+        }
+    },
+    "options": {
+        "error": {
+            "add_holiday_error": "Felaktigt format f\u00f6r datum (\u00c5\u00c5\u00c5\u00c5\u00c5-MM-DD)",
+            "add_holiday_range_error": "Felaktigt format p\u00e5 datumintervall (\u00c5\u00c5\u00c5\u00c5-MM-DD,\u00c5\u00c5\u00c5\u00c5-MM-DD)",
+            "already_configured": "Tj\u00e4nsten \u00e4r redan konfigurerad",
+            "remove_holiday_error": "Felaktigt format p\u00e5 datum (\u00c5\u00c5\u00c5\u00c5-MM-DD) eller helgdagsnamn hittades inte",
+            "remove_holiday_range_error": "Felaktigt format p\u00e5 datumintervall (\u00c5\u00c5\u00c5\u00c5-MM-DD,\u00c5\u00c5\u00c5\u00c5-MM-DD)"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "add_holidays": "L\u00e4gg till helgdagar",
+                    "category": "Ytterligare kategori som helgdag",
+                    "days_offset": "F\u00f6rskjutning",
+                    "excludes": "Dagar att exkludera",
+                    "language": "Spr\u00e5k f\u00f6r namngivna helgdagar",
+                    "province": "Landsdel",
+                    "remove_holidays": "Ta bort helgdagar",
+                    "workdays": "Dagar att inkludera"
+                },
+                "data_description": {
+                    "add_holidays": "L\u00e4gg till anpassade helgdagar som \u00c5\u00c5\u00c5\u00c5-MM-DD, eller som intervall med ',' som avgr\u00e4nsare",
+                    "category": "V\u00e4lj ytterligare kategorier att inkludera som helgdagar",
+                    "days_offset": "Dagars f\u00f6rskjutning fr\u00e5n aktuell dag",
+                    "excludes": "V\u00e4lj vilka veckodagar som ska exkluderas som arbetsdagar. \n\"Holidays\" l\u00e4gger till de f\u00f6r det konfigurerade landet, anpassningsbara med alla inst\u00e4llningarna nedan. L\u00e4s dokumentationen om hur du anv\u00e4nder dem p\u00e5 r\u00e4tt s\u00e4tt.",
+                    "language": "Spr\u00e5k som ska anv\u00e4ndas n\u00e4r du konfigurerar namngivna helgdagsundantag",
+                    "province": "Landsdel, landskap, l\u00e4n eller region i landet",
+                    "remove_holidays": "Ta bort helgdagar som \u00c5\u00c5\u00c5\u00c5-MM-DD eller som ett intervall med ',' som avgr\u00e4nsare eller genom att anv\u00e4nda en del av namnet",
+                    "workdays": "V\u00e4lj vilka veckodagar som ska inkluderas som m\u00f6jliga arbetsdagar."
+                },
+                "description": "\u00c4ndra ytterligare alternativ f\u00f6r {name} konfigurerat f\u00f6r land {country}"
+            }
+        }
+    },
+    "selector": {
+        "category": {
+            "options": {
+                "armed_forces": "Milit\u00e4r",
+                "bank": "Bank",
+                "catholic": "Katolik",
+                "chinese": "Kinesisk",
+                "christian": "Kristen",
+                "government": "Myndighet",
+                "half_day": "Halvdag",
+                "hebrew": "Hebreisk",
+                "hindu": "Hinduisk",
+                "islamic": "Islamisk",
+                "optional": "Valfri",
+                "public": "Offentlig",
+                "school": "Skola",
+                "unofficial": "Inofficiell",
+                "workday": "Arbetsdag"
+            }
+        },
+        "days": {
+            "options": {
+                "fri": "Fredag",
+                "holiday": "Helgdagar",
+                "mon": "M\u00e5ndag",
+                "sat": "L\u00f6rdag",
+                "sun": "S\u00f6ndag",
+                "thu": "Torsdag",
+                "tue": "Tisdag",
+                "wed": "Onsdag"
+            }
+        },
+        "province": {
+            "options": {
+                "none": "Ingen landsdel"
+            }
+        }
+    },
+    "services": {
+        "check_date": {
+            "description": "Kontrollera om datum \u00e4r arbetsdag.",
+            "fields": {
+                "check_date": {
+                    "description": "Det datum som ska kontrolleras om det \u00e4r en arbetsdag.",
+                    "name": "Datum"
+                }
+            },
+            "name": "Kontrollera datum"
+        }
+    },
+    "title": "Workday"
+}

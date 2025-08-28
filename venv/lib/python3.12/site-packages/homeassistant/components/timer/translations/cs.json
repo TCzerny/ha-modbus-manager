@@ -1,0 +1,72 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "\u010casova\u010d",
+            "state": {
+                "active": "Aktivn\u00ed",
+                "idle": "Ne\u010dinn\u00fd",
+                "paused": "Pozastaveno"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Doba trv\u00e1n\u00ed"
+                },
+                "editable": {
+                    "name": "Spravov\u00e1no p\u0159es u\u017eivatelsk\u00e9 rozhran\u00ed",
+                    "state": {
+                        "false": "Ne",
+                        "true": "Ano"
+                    }
+                },
+                "finishes_at": {
+                    "name": "Kon\u010d\u00ed v"
+                },
+                "remaining": {
+                    "name": "Zb\u00fdv\u00e1"
+                },
+                "restore": {
+                    "name": "Obnovit"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "description": "Resetuje dobu trv\u00e1n\u00ed \u010dasova\u010de na posledn\u00ed zn\u00e1mou po\u010d\u00e1te\u010dn\u00ed hodnotu, ani\u017e by se spustila ud\u00e1lost dokon\u010den\u00ed \u010dasova\u010de.",
+            "name": "Zru\u0161it"
+        },
+        "change": {
+            "description": "Zm\u011bn\u00ed \u010dasova\u010d p\u0159id\u00e1n\u00edm nebo ode\u010dten\u00edm dan\u00e9 doby trv\u00e1n\u00ed.",
+            "fields": {
+                "duration": {
+                    "description": "Doba, kter\u00e1 se m\u00e1 p\u0159idat nebo ode\u010d\u00edst od b\u011b\u017e\u00edc\u00edho \u010dasova\u010de.",
+                    "name": "Doba trv\u00e1n\u00ed"
+                }
+            },
+            "name": "Zm\u011bnit"
+        },
+        "finish": {
+            "description": "Ukon\u010d\u00ed b\u011b\u017e\u00edc\u00ed \u010dasova\u010d d\u0159\u00edve, ne\u017e je pl\u00e1nov\u00e1no.",
+            "name": "Ukon\u010dit"
+        },
+        "pause": {
+            "description": "Pozastav\u00ed b\u011b\u017e\u00edc\u00ed \u010dasova\u010d a uchov\u00e1 zb\u00fdvaj\u00edc\u00ed dobu pro pozd\u011bj\u0161\u00ed pokra\u010dov\u00e1n\u00ed.",
+            "name": "Pozastavit"
+        },
+        "reload": {
+            "description": "Znovu na\u010dte \u010dasova\u010de z nastaven\u00ed YAML.",
+            "name": "Znovu na\u010d\u00edst"
+        },
+        "start": {
+            "description": "Spust\u00ed \u010dasova\u010d nebo jej restartuje se zadanou dobou trv\u00e1n\u00ed.",
+            "fields": {
+                "duration": {
+                    "description": "Vlastn\u00ed doba pro restartov\u00e1n\u00ed \u010dasova\u010de.",
+                    "name": "Doba trv\u00e1n\u00ed"
+                }
+            },
+            "name": "Spustit"
+        }
+    },
+    "title": "\u010casova\u010d"
+}

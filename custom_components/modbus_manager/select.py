@@ -6,7 +6,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
@@ -14,7 +13,7 @@ from .logger import ModbusManagerLogger
 _LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
-    """Set up Modbus Manager selects from a config entry."""
+    """Set up Modbus Manager select entities from a config entry."""
     prefix = entry.data["prefix"]
     template_name = entry.data["template"]
     registers = entry.data.get("registers", [])
@@ -27,7 +26,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         if reg.get("control") == "select":
             # Unique_ID Format: {prefix}_{template_sensor_name}
             sensor_name = reg.get("name", "unknown")
-            unique_id = f"{prefix}_{sensor_name.lower().replace(' ', '_')}"
+            # Bereinige den Namen für den unique_id
+            clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+            unique_id = f"{prefix}_{clean_name}"
             
             entities.append(ModbusTemplateSelect(
                 hass=hass,
@@ -124,137 +125,116 @@ class ModbusTemplateSelect(SelectEntity):
                 # Erweiterte Datenverarbeitung anwenden
                 processed_value = self._apply_data_processing(raw_value)
                 
-                # Skalierung anwenden
-                scaled_value = processed_value * self._scale
-                
-                # Offset anwenden
-                final_value = scaled_value + self._offset
-                
-                # Wert in Text konvertieren
-                if final_value in self._value_to_text:
-                    self._attr_native_value = self._value_to_text[final_value]
+                # Text-Wert aus Options-Mapping ermitteln
+                if processed_value in self._value_to_text:
+                    self._attr_native_value = self._value_to_text[processed_value]
                 else:
-                    _LOGGER.warning("Unbekannter Wert %s für Select-Entity %s", final_value, self._attr_name)
-                    self._attr_native_value = None
+                    self._attr_native_value = str(processed_value)
             else:
                 self._attr_native_value = None
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Update von Select-Entity %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Fehler beim Update von Select %s: %s", self.name, str(e))
             self._attr_native_value = None
 
     async def async_select_option(self, option: str) -> None:
-        """Change the selected option."""
+        """Set the select option."""
         try:
             if self._hub_name not in self.hass.data.get(DOMAIN, {}):
                 _LOGGER.error("Hub %s nicht gefunden", self._hub_name)
                 return
 
-            # Text in Wert konvertieren
-            if option not in self._options.values():
-                _LOGGER.error("Ungültige Option %s für Select-Entity %s", option, self._attr_name)
-                return
-            
-            # Wert für diese Option finden
-            option_value = None
-            for value, text in self._options.items():
-                if text == option:
-                    option_value = value
-                    break
-            
-            if option_value is None:
-                _LOGGER.error("Wert für Option %s nicht gefunden", option)
-                return
-
             hub = self.hass.data[DOMAIN][self._hub_name]
             
-            # Wert für Modbus vorbereiten
-            # Offset abziehen
-            modbus_value = option_value - self._offset
+            # Text-Wert zu numerischem Wert konvertieren
+            numeric_value = None
+            for key, value in self._options.items():
+                if value == option:
+                    numeric_value = key
+                    break
             
-            # Skalierung rückgängig machen
-            raw_value = modbus_value / self._scale
+            if numeric_value is None:
+                _LOGGER.error("Unbekannte Option: %s", option)
+                return
             
-            # Multiplier anwenden
-            raw_value = raw_value / self._multiplier
+            # Erweiterte Datenverarbeitung rückwärts anwenden
+            final_value = self._apply_reverse_data_processing(numeric_value)
             
-            # Wert in Register schreiben
-            if self._count == 1:
-                # 16-bit Wert
-                register_value = int(raw_value)
-                result = await hub.write_register(self._address, register_value, unit=self._slave_id)
-            else:
-                # 32-bit Wert (2 Register)
-                if self._swap:
-                    high_word = int(raw_value >> 16)
-                    low_word = int(raw_value & 0xFFFF)
-                    result = await hub.write_registers(self._address, [low_word, high_word], unit=self._slave_id)
-                else:
-                    high_word = int(raw_value >> 16)
-                    low_word = int(raw_value & 0xFFFF)
-                    result = await hub.write_registers(self._address, [high_word, low_word], unit=self._slave_id)
+            # Wert in Holding Register schreiben
+            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
             
             if result.isError():
-                _LOGGER.error("Fehler beim Schreiben in Register %s: %s", self._address, result)
+                _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
             else:
-                _LOGGER.info("Option %s (Wert %s) erfolgreich in Register %s geschrieben", option, option_value, self._address)
+                _LOGGER.info("Option %s erfolgreich in Register %s geschrieben", option, self._address)
                 # Sofort aktualisieren
                 await self.async_update()
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Setzen der Option für Select-Entity %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Fehler beim Setzen der Option %s: %s", option, str(e))
 
     def _process_register_value(self, registers):
-        """Process register value based on data type and count."""
+        """Verarbeite Register-Werte basierend auf data_type."""
         try:
-            if self._count == 1:
-                raw_value = registers[0]
-            else:
-                # Für 32-bit Werte (2 Register)
-                if self._swap:
-                    raw_value = (registers[1] << 16) | registers[0]
-                else:
-                    raw_value = (registers[0] << 16) | registers[1]
-            
-            # Konvertierung basierend auf data_type
-            if self._data_type == "int16":
-                raw_value = raw_value if raw_value < 32768 else raw_value - 65536
+            if not registers:
+                return None
+                
+            if self._data_type == "uint16":
+                return registers[0]
+            elif self._data_type == "int16":
+                value = registers[0]
+                if value > 32767:
+                    value -= 65536
+                return value
+            elif self._data_type == "uint32":
+                if len(registers) >= 2:
+                    if self._swap:
+                        return (registers[1] << 16) | registers[0]
+                    else:
+                        return (registers[0] << 16) | registers[1]
             elif self._data_type == "int32":
-                raw_value = raw_value if raw_value < 2147483648 else raw_value - 4294967296
-            
-            return raw_value
-            
-        except (IndexError, ValueError) as e:
-            _LOGGER.error("Fehler bei der Verarbeitung der Register-Werte: %s", str(e))
+                if len(registers) >= 2:
+                    value = (registers[0] << 16) | registers[1]
+                    if value > 2147483647:
+                        value -= 4294967296
+                    return value
+            else:
+                return registers[0]
+                
+        except Exception as e:
+            _LOGGER.error("Fehler bei Register-Verarbeitung: %s", str(e))
             return None
 
-    def _apply_data_processing(self, raw_value):
-        """Apply data processing options."""
+    def _apply_data_processing(self, value):
+        """Wende erweiterte Datenverarbeitung an."""
         try:
-            processed_value = raw_value
-            
             # Multiplier anwenden
-            processed_value = processed_value * self._multiplier
+            if self._multiplier != 1.0:
+                value *= self._multiplier
             
-            return processed_value
+            # Offset anwenden
+            if self._offset != 0.0:
+                value += self._offset
+            
+            return value
             
         except Exception as e:
-            _LOGGER.error("Fehler bei der Datenverarbeitung: %s", str(e))
-            return raw_value
+            _LOGGER.error("Fehler bei Datenverarbeitung: %s", str(e))
+            return value
 
-    @property
-    def extra_state_attributes(self) -> dict:
-        """Return entity specific state attributes."""
-        attrs = {
-            "register_address": self._address,
-            "data_type": self._data_type,
-            "scale": self._scale,
-            "offset": self._offset,
-            "multiplier": self._multiplier,
-            "available_options": self._options
-        }
-        
-        if self._group:
-            attrs["group"] = self._group
+    def _apply_reverse_data_processing(self, value):
+        """Wende erweiterte Datenverarbeitung rückwärts an."""
+        try:
+            # Offset rückwärts anwenden
+            if self._offset != 0.0:
+                value -= self._offset
             
-        return attrs 
+            # Multiplier rückwärts anwenden
+            if self._multiplier != 1.0:
+                value /= self._multiplier
+            
+            return value
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei rückwärtiger Datenverarbeitung: %s", str(e))
+            return value 

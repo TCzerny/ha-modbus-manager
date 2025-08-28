@@ -1,0 +1,83 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Elenco delle attivit\u00e0"
+        }
+    },
+    "exceptions": {
+        "item_not_found": {
+            "message": "Impossibile trovare l'elemento nella lista delle cose da fare: {item}"
+        },
+        "update_field_not_supported": {
+            "message": "L'entit\u00e0 non supporta il campo delle impostazioni: {service_field}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Completato\\a",
+                "needs_action": "Non completato\\a"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "fields": {
+                "description": {
+                    "name": "Descrizione"
+                },
+                "due_date": {
+                    "description": "La data in cui \u00e8 previsto il completamento dell'elemento to-do.",
+                    "name": "Data di scadenza"
+                },
+                "due_datetime": {
+                    "name": "Data e ora di scadenza"
+                },
+                "item": {
+                    "description": "Nome che rappresenta l'attivit\u00e0.",
+                    "name": "Nome dell'elemento"
+                }
+            }
+        },
+        "get_items": {
+            "fields": {
+                "status": {
+                    "description": "Restituisci solo le attivit\u00e0 con gli stati specificati. Restituisce le azioni non completate per impostazione predefinita.",
+                    "name": "Stato"
+                }
+            }
+        },
+        "remove_item": {
+            "fields": {
+                "item": {
+                    "name": "Nome dell'elemento"
+                }
+            }
+        },
+        "update_item": {
+            "fields": {
+                "description": {
+                    "name": "Descrizione"
+                },
+                "due_date": {
+                    "description": "La data prevista per il completamento dell'attivit\u00e0 da fare.",
+                    "name": "Data di scadenza"
+                },
+                "due_datetime": {
+                    "name": "Data e ora di scadenza"
+                },
+                "item": {
+                    "name": "Nome dell'elemento"
+                },
+                "rename": {
+                    "name": "Rinomina elemento"
+                },
+                "status": {
+                    "description": "Uno stato o una conferma dell'attivit\u00e0.",
+                    "name": "Imposta lo stato"
+                }
+            }
+        }
+    },
+    "title": "Elenco delle attivit\u00e0"
+}

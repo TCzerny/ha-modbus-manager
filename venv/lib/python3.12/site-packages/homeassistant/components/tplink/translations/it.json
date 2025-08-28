@@ -1,0 +1,213 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il dispositivo \u00e8 gi\u00e0 configurato",
+            "cannot_connect": "Impossibile connettersi",
+            "no_devices_found": "Nessun dispositivo trovato sulla rete",
+            "reauth_successful": "La riautenticazione ha avuto successo",
+            "reconfigure_successful": "La riconfigurazione \u00e8 stata completata con successo"
+        },
+        "error": {
+            "cannot_connect": "Errore di connessione: {error}"
+        },
+        "flow_title": "{name} {model} ({host})",
+        "step": {
+            "camera_auth_confirm": {
+                "data": {
+                    "password": "Password",
+                    "username": "Nome utente"
+                }
+            },
+            "discovery_auth_confirm": {
+                "data": {
+                    "password": "Password",
+                    "username": "Nome utente"
+                }
+            },
+            "discovery_confirm": {
+                "description": "Vuoi configurare {name} {model} ({host})?"
+            },
+            "pick_device": {
+                "data": {
+                    "device": "Dispositivo"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Password",
+                    "username": "Nome utente"
+                },
+                "title": "Autenticazione scaduta per {name}"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                }
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Nome host o indirizzo IP del tuo dispositivo TP-Link."
+                },
+                "description": "Se si lascia vuoto l'host, l'individuazione sar\u00e0 utilizzata per trovare i dispositivi."
+            },
+            "user_auth_confirm": {
+                "data": {
+                    "password": "Password",
+                    "username": "Nome utente"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "is_open": {
+                "name": "Porta",
+                "state": {
+                    "off": "Chiuso/a",
+                    "on": "Aperto/a"
+                }
+            },
+            "update_available": {
+                "name": "Aggiorna",
+                "state": {
+                    "off": "Aggiornato",
+                    "on": "Aggiornamento disponibile"
+                }
+            },
+            "water_alert": {
+                "name": "Umidit\u00e0",
+                "state": {
+                    "off": "Asciutto",
+                    "on": "Bagnato"
+                }
+            }
+        },
+        "sensor": {
+            "current": {
+                "name": "Corrente"
+            },
+            "current_consumption": {
+                "name": "Consumo di corrente"
+            },
+            "humidity": {
+                "name": "Umidit\u00e0"
+            },
+            "rssi": {
+                "name": "Intensit\u00e0 del segnale"
+            },
+            "voltage": {
+                "name": "Tensione"
+            }
+        },
+        "switch": {
+            "auto_update_enabled": {
+                "name": "Aggiornamento automatico abilitato"
+            },
+            "led": {
+                "name": "LED"
+            }
+        }
+    },
+    "issues": {
+        "deprecated_entity": {
+            "title": "Rilevato utilizzo dell'entit\u00e0 {platform} deprecata"
+        }
+    },
+    "services": {
+        "random_effect": {
+            "description": "Imposta un effetto casuale.",
+            "fields": {
+                "backgrounds": {
+                    "description": "Elenco delle sequenze HSV (Max 16).",
+                    "name": "Sfondi"
+                },
+                "brightness": {
+                    "description": "Luminosit\u00e0 iniziale.",
+                    "name": "Luminosit\u00e0"
+                },
+                "brightness_range": {
+                    "description": "Intervallo di luminosit\u00e0.",
+                    "name": "Intervallo di luminosit\u00e0"
+                },
+                "duration": {
+                    "description": "Durata.",
+                    "name": "Durata"
+                },
+                "fadeoff": {
+                    "description": "Dissolvenza.",
+                    "name": "Dissolvenza"
+                },
+                "hue_range": {
+                    "description": "Intervallo di tonalit\u00e0.",
+                    "name": "Intervallo di tonalit\u00e0"
+                },
+                "init_states": {
+                    "description": "Sequenza HSV iniziale.",
+                    "name": "Stati iniziali"
+                },
+                "random_seed": {
+                    "description": "Seme casuale.",
+                    "name": "Seme casuale"
+                },
+                "saturation_range": {
+                    "description": "Intervallo di saturazione.",
+                    "name": "Intervallo di saturazione"
+                },
+                "segments": {
+                    "description": "Elenco dei segmenti (0 per tutti).",
+                    "name": "Segmenti"
+                },
+                "transition": {
+                    "description": "Transizione.",
+                    "name": "Transizione"
+                },
+                "transition_range": {
+                    "description": "Intervallo di transizione.",
+                    "name": "Intervallo di transizione"
+                }
+            },
+            "name": "Effetto casuale"
+        },
+        "sequence_effect": {
+            "description": "Imposta un effetto sequenza.",
+            "fields": {
+                "brightness": {
+                    "description": "Luminosit\u00e0 iniziale.",
+                    "name": "Luminosit\u00e0"
+                },
+                "direction": {
+                    "description": "Direzione.",
+                    "name": "Direzione"
+                },
+                "duration": {
+                    "description": "Durata.",
+                    "name": "Durata"
+                },
+                "repeat_times": {
+                    "description": "Ripetizioni (0 per continuo).",
+                    "name": "Ripetizioni"
+                },
+                "segments": {
+                    "description": "Elenco dei segmenti (0 per tutti).",
+                    "name": "Segmenti"
+                },
+                "sequence": {
+                    "description": "Elenco delle sequenze HSV (Max 16).",
+                    "name": "Sequenza"
+                },
+                "spread": {
+                    "description": "Velocit\u00e0 di diffusione.",
+                    "name": "Diffusione"
+                },
+                "transition": {
+                    "description": "Transizione.",
+                    "name": "Transizione"
+                }
+            },
+            "name": "Effetto sequenza"
+        }
+    }
+}

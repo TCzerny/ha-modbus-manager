@@ -1,0 +1,176 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "cannot_connect": "Det gick inte att ansluta."
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "device_name": "Namn",
+                    "host": "V\u00e4rd"
+                },
+                "description": "St\u00e4ll in n\u00f6dv\u00e4ndiga parametrar f\u00f6r att ansluta till din enhet"
+            },
+            "zeroconf_confirm": {
+                "description": "Vill du l\u00e4gga till Lektrico-laddaren med serienummer `{serial_number}` till Home Assistant?",
+                "title": "Uppt\u00e4ckte Lektrico Laddningsenhet"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "contactor_failure": {
+                "name": "Rel\u00e4kontakter svetsade"
+            },
+            "cp_diode_failure": {
+                "name": "Ev-diod kortslutning"
+            },
+            "critical_temp": {
+                "name": "\u00d6verhettning"
+            },
+            "meter_fault": {
+                "name": "M\u00e4tningsfel"
+            },
+            "overcurrent": {
+                "name": "\u00d6verstr\u00f6m"
+            },
+            "overtemp": {
+                "name": "\u00d6verh\u00e4ttningsskydd"
+            },
+            "overvoltage": {
+                "name": "\u00d6versp\u00e4nning"
+            },
+            "rcd_error": {
+                "name": "JFB-fel"
+            },
+            "state_e_activated": {
+                "name": "EV-fel"
+            },
+            "undervoltage": {
+                "name": "Undersp\u00e4nning"
+            }
+        },
+        "button": {
+            "charge_start": {
+                "name": "Starta laddning"
+            },
+            "charge_stop": {
+                "name": "Stoppa laddning"
+            }
+        },
+        "number": {
+            "dynamic_limit": {
+                "name": "Dynamisk gr\u00e4ns"
+            },
+            "led_max_brightness": {
+                "name": "LED ljusstyrka"
+            }
+        },
+        "select": {
+            "load_balancing_mode": {
+                "name": "Lastbalanseringsl\u00e4ge",
+                "state": {
+                    "disabled": "Inaktiverad",
+                    "green": "Gr\u00f6n",
+                    "hybrid": "Hybrid",
+                    "power": "Effekt"
+                }
+            }
+        },
+        "sensor": {
+            "breaker_current": {
+                "name": "Brytarstr\u00f6m"
+            },
+            "charging_time": {
+                "name": "Laddningstid"
+            },
+            "current_l1": {
+                "name": "Str\u00f6m L1"
+            },
+            "current_l2": {
+                "name": "Str\u00f6m L2"
+            },
+            "current_l3": {
+                "name": "Str\u00f6m L3"
+            },
+            "installation_current": {
+                "name": "Installationsstr\u00f6m"
+            },
+            "lifetime_energy": {
+                "name": "Energi under livstid"
+            },
+            "limit_reason": {
+                "name": "Orsak till begr\u00e4nsning",
+                "state": {
+                    "1p_charging_disabled": "1p-laddning avaktiverad",
+                    "dynamic_limit": "Dynamisk gr\u00e4ns",
+                    "em": "EM",
+                    "em_offline": "EM offline",
+                    "installation_current": "Installationsstr\u00f6m",
+                    "no_limit": "Ingen gr\u00e4ns",
+                    "ocpp": "OCPP",
+                    "overtemperature": "\u00d6vertemperatur",
+                    "schedule": "Schema",
+                    "switching_phases": "V\u00e4xla faser",
+                    "user_limit": "Anv\u00e4ndargr\u00e4ns"
+                }
+            },
+            "pf_l1": {
+                "name": "Effektfaktor L1"
+            },
+            "pf_l2": {
+                "name": "Effektfaktor L2"
+            },
+            "pf_l3": {
+                "name": "Effektfaktor L3"
+            },
+            "power_l1": {
+                "name": "Effekt L1"
+            },
+            "power_l2": {
+                "name": "Effekt L2"
+            },
+            "power_l3": {
+                "name": "Effekt L3"
+            },
+            "state": {
+                "name": "Tillst\u00e5nd",
+                "state": {
+                    "available": "Tillg\u00e4nglig",
+                    "charging": "Laddar",
+                    "connected": "Ansluten",
+                    "error": "Fel",
+                    "locked": "L\u00e5st",
+                    "need_auth": "V\u00e4ntar p\u00e5 autentisering",
+                    "paused": "Pausad",
+                    "paused_by_scheduler": "Pausad av schemal\u00e4ggaren",
+                    "updating_firmware": "Uppdaterar firmware"
+                }
+            },
+            "voltage_l1": {
+                "name": "Sp\u00e4nning L1"
+            },
+            "voltage_l2": {
+                "name": "Sp\u00e4nning L2"
+            },
+            "voltage_l3": {
+                "name": "Sp\u00e4nning L3"
+            }
+        },
+        "switch": {
+            "authentication": {
+                "name": "Autentisering"
+            },
+            "force_single_phase": {
+                "name": "Tvinga enfas"
+            },
+            "lock": {
+                "name": "L\u00e5s"
+            }
+        }
+    }
+}

@@ -1,0 +1,69 @@
+{
+    "services": {
+        "power_on": {
+            "description": "Bekapcsolja az \u00f6sszes olyan eszk\u00f6zt, amely t\u00e1mogatja ezt a funkci\u00f3t.",
+            "name": "Kapcsolja be"
+        },
+        "select_device": {
+            "fields": {
+                "device": {
+                    "description": "A kiv\u00e1lasztand\u00f3 eszk\u00f6z c\u00edme. Lehet entit\u00e1sazonos\u00edt\u00f3, fizikai c\u00edm vagy konfigur\u00e1ci\u00f3ban megadott alias.",
+                    "name": "Eszk\u00f6z"
+                }
+            },
+            "name": "Eszk\u00f6z kiv\u00e1laszt\u00e1sa"
+        },
+        "send_command": {
+            "description": "CEC parancsot k\u00fcld HDMI CEC-kompatibilis adapterbe.",
+            "fields": {
+                "att": {
+                    "description": "Opcion\u00e1lis param\u00e9terek.",
+                    "name": "Attrib\u00fatumok"
+                },
+                "cmd": {
+                    "description": "A parancs maga. Lehet tizedes sz\u00e1m vagy hexadecim\u00e1lis jel\u00f6l\u00e9s\u0171 sz\u00f6veg: \"0x10\".",
+                    "name": "Parancs"
+                },
+                "dst": {
+                    "description": "Parancs c\u00e9lja. Lehet tizedes sz\u00e1m vagy hexadecim\u00e1lis jel\u00f6l\u00e9s\u0171 sz\u00f6veg: \"0x10\".",
+                    "name": "C\u00e9l"
+                },
+                "raw": {
+                    "description": "Nyers CEC parancs a k\u00f6vetkez\u0151 form\u00e1tumban: \"00:00:00:00\", ahol az els\u0151 k\u00e9t sz\u00e1mjegy a forr\u00e1s \u00e9s a c\u00e9l, a m\u00e1sodik b\u00e1jt a parancs \u00e9s az opcion\u00e1lis tov\u00e1bbi b\u00e1jtok a parancs param\u00e9terei. Ha nyers parancsot ad meg, a t\u00f6bbi param\u00e9ter figyelmen k\u00edv\u00fcl marad.",
+                    "name": "Nyers parancs"
+                },
+                "src": {
+                    "description": "A parancs forr\u00e1sa. Lehet tizedes sz\u00e1m vagy hexadecim\u00e1lis jel\u00f6l\u00e9ssel rendelkez\u0151 sztring: \"0x10\".",
+                    "name": "Forr\u00e1s"
+                }
+            },
+            "name": "Parancs k\u00fcld\u00e9se"
+        },
+        "standby": {
+            "description": "K\u00e9szenl\u00e9ti \u00fczemm\u00f3dba helyezi az \u00f6sszes olyan eszk\u00f6zt, amely t\u00e1mogatja ezt a funkci\u00f3t.",
+            "name": "K\u00e9szenl\u00e9tben"
+        },
+        "update": {
+            "description": "Friss\u00edti az eszk\u00f6z\u00f6k \u00e1llapot\u00e1t a h\u00e1l\u00f3zatb\u00f3l.",
+            "name": "Friss\u00edt\u00e9s"
+        },
+        "volume": {
+            "description": "A rendszer hangerej\u00e9nek n\u00f6vel\u00e9se vagy cs\u00f6kkent\u00e9se.",
+            "fields": {
+                "down": {
+                    "description": "A hanger\u0151 cs\u00f6kkent\u00e9se x szinttel.",
+                    "name": "Cs\u00f6kkent"
+                },
+                "mute": {
+                    "description": "A hangrendszer n\u00e9m\u00edt\u00e1sa.",
+                    "name": "N\u00e9m\u00edt"
+                },
+                "up": {
+                    "description": "A hanger\u0151 n\u00f6vel\u00e9se x szinttel.",
+                    "name": "N\u00f6vel"
+                }
+            },
+            "name": "Hanger\u0151"
+        }
+    }
+}

@@ -1,0 +1,41 @@
+{
+    "config": {
+        "error": {
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "location": "Standort"
+                },
+                "data_description": {
+                    "location": "Verwende die Karte, um den Standort f\u00fcr Stookwijzer einzustellen."
+                },
+                "description": "W\u00e4hle den Standort aus, f\u00fcr den du die Stookwijzer-Informationen erhalten m\u00f6chtest."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "advice": {
+                "name": "Hinweis-Code",
+                "state": {
+                    "code_orange": "Orange",
+                    "code_red": "Rot",
+                    "code_yellow": "Gelb"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "no_data_received": {
+            "message": "Keine Daten von Stookwijzer empfangen."
+        }
+    },
+    "issues": {
+        "location_migration_failed": {
+            "description": "Die Stookwijzer-Integration konnte deinen Standort nicht automatisch in ein neues Format migrieren, das aktualisierte Integrationen verwenden. \n\nStelle sicher, dass du mit dem Internet verbunden bist, und starte Home Assistant neu, um es erneut zu versuchen. \n \nWenn der Fehler dadurch nicht behoben wird, entferne die Integration und f\u00fcge sie erneut hinzu.",
+            "title": "Migration deines Standortes fehlgeschlagen"
+        }
+    }
+}

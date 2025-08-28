@@ -1,0 +1,56 @@
+{
+    "device_automation": {
+        "action_type": {
+            "clean": "niech odkurzacz {entity_name} sprz\u0105ta",
+            "dock": "niech odkurzacz {entity_name} wr\u00f3ci do bazy"
+        },
+        "condition_type": {
+            "is_cleaning": "odkurzacz {entity_name} sprz\u0105ta",
+            "is_docked": "odkurzacz {entity_name} jest w bazie"
+        },
+        "extra_fields": {
+            "for": "Czas trwania"
+        },
+        "trigger_type": {
+            "cleaning": "odkurzacz {entity_name} zacznie sprz\u0105ta\u0107",
+            "docked": "odkurzacz {entity_name} wr\u00f3ci do bazy"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Odkurzacz",
+            "state": {
+                "cleaning": "sprz\u0105tanie",
+                "docked": "zadokowany",
+                "error": "b\u0142\u0105d",
+                "idle": "brak aktywno\u015bci",
+                "off": "wy\u0142\u0105czono",
+                "on": "w\u0142\u0105czono",
+                "paused": "wstrzymano",
+                "returning": "wraca do stacji dokuj\u0105cej"
+            }
+        }
+    },
+    "services": {
+        "pause": {
+            "name": "Wstrzymaj"
+        },
+        "start": {
+            "name": "Uruchom"
+        },
+        "stop": {
+            "name": "Zatrzymaj"
+        },
+        "toggle": {
+            "description": "W\u0142\u0105cza lub wy\u0142\u0105cza odkurzacz",
+            "name": "Prze\u0142\u0105cz"
+        },
+        "turn_off": {
+            "name": "Wy\u0142\u0105cz"
+        },
+        "turn_on": {
+            "name": "W\u0142\u0105cz"
+        }
+    },
+    "title": "Odkurzacz"
+}

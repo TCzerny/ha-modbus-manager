@@ -1,0 +1,113 @@
+{
+    "application_credentials": {
+        "description": "\u6309\u7167\u3010\u6307\u5bfc\u3011({more_info_url}) \u914d\u7f6e\u4e91\u63a7\u5236\u53f0\uff1a \n\n1. \u8f6c\u5230\u3010OAuth \u540c\u610f\u5c4f\u5e55\u3011({oauth_consent_url}) \u5e76\u5b8c\u6210\u914d\u7f6e\n1. \u8f6c\u5230\u3010\u51ed\u636e\u3011({oauth_creds_url}) \u5e76\u9009\u62e9**\u521b\u5efa\u51ed\u636e**\u3002\n1. \u5728\u4e0b\u62c9\u5217\u8868\u4e2d\u9009\u62e9 **OAuth \u5ba2\u6237\u7aef\u6807\u8bc6\u7b26**\u3002\n1. \u9009\u62e9 **Web \u5e94\u7528\u7a0b\u5e8f**\u4f5c\u4e3a\u5e94\u7528\u7a0b\u5e8f\u7c7b\u578b\u3002\n1. \u5728*\u6388\u6743\u91cd\u5b9a\u5411 URI*\u4e2d\u6dfb\u52a0 {redirect_url} \u3002"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "\u8d26\u6237\u5df2\u914d\u7f6e",
+            "authorize_url_timeout": "\u751f\u6210\u6388\u6743\u7f51\u5740\u8d85\u65f6\u3002",
+            "invalid_access_token": "\u8bbf\u95ee\u4ee4\u724c\u65e0\u6548",
+            "missing_configuration": "\u6b64\u7ec4\u4ef6\u5c1a\u672a\u914d\u7f6e\u3002\u8bf7\u53c2\u9605\u6587\u6863\u3002",
+            "missing_credentials": "\u6b64\u96c6\u6210\u9700\u8981\u5e94\u7528\u51ed\u636e\u3002",
+            "no_url_available": "\u6ca1\u6709\u53ef\u7528\u7684\u7f51\u5740\u3002\u6709\u5173\u6b64\u9519\u8bef\u7684\u4fe1\u606f\uff0c\u8bf7\u3010\u68c0\u67e5\u5e2e\u52a9\u7ae0\u8282\u3011({docs_url})",
+            "oauth_error": "\u6536\u5230\u65e0\u6548\u7684\u4ee4\u724c\u6570\u636e\u3002",
+            "oauth_failed": "\u83b7\u53d6\u8bbf\u95ee\u4ee4\u724c\u65f6\u51fa\u9519\u3002",
+            "oauth_timeout": "\u89e3\u6790 OAuth \u4ee4\u724c\u8d85\u65f6\u3002",
+            "oauth_unauthorized": "\u83b7\u53d6\u8bbf\u95ee\u4ee4\u724c\u65f6\u51fa\u73b0 OAuth \u6388\u6743\u9519\u8bef\u3002",
+            "reauth_successful": "\u91cd\u65b0\u8ba4\u8bc1\u6210\u529f",
+            "unknown_authorize_url_generation": "\u751f\u6210\u6388\u6743 URL \u65f6\u53d1\u751f\u672a\u77e5\u9519\u8bef\u3002"
+        },
+        "create_entry": {
+            "default": "\u8ba4\u8bc1\u6210\u529f"
+        },
+        "error": {
+            "bad_project_id": "\u8bf7\u8f93\u5165\u6709\u6548\u7684\u4e91\u9879\u76ee ID\uff08\u68c0\u67e5 Cloud Console\uff09",
+            "no_pubsub_topics": "\u672a\u627e\u5230\u7b26\u5408\u6761\u4ef6\u7684\u53d1\u5e03/\u8ba2\u9605\u4e3b\u9898\uff0c\u8bf7\u786e\u4fdd\u8bbe\u5907\u8bbf\u95ee\u63a7\u5236\u53f0\u5177\u6709\u53d1\u5e03/\u8ba2\u9605\u4e3b\u9898\u3002",
+            "pubsub_api_error": "\u4e0e\u4e91\u53d1\u5e03/\u8ba2\u9605\u901a\u4fe1\u65f6\u51fa\u73b0\u672a\u77e5\u9519\u8bef\uff0c\u8bf7\u53c2\u9605\u65e5\u5fd7",
+            "subscriber_error": "\u672a\u77e5\u8ba2\u9605\u8005\u9519\u8bef\uff0c\u8bf7\u53c2\u9605\u65e5\u5fd7",
+            "wrong_project_id": "\u8bf7\u8f93\u5165\u6709\u6548\u7684\u4e91\u9879\u76ee ID\uff08\u4e0e\u8bbe\u5907\u8bbf\u95ee\u9879\u76ee ID \u76f8\u540c\uff09"
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "Google Cloud \u9879\u76ee ID"
+                },
+                "description": "\u5728\u4e0b\u65b9\u8f93\u5165\u4e91\u9879\u76ee ID\uff0c\u4f8b\u5982 *example-project-12345*\u3002\u8bf7\u53c2\u9605 [Google Cloud Console]( {cloud_console_url} ) \u6216 [\u66f4\u591a\u4fe1\u606f]( {more_info_url} ) \u7684\u6587\u6863\u3002",
+                "title": "Nest\uff1a\u8f93\u5165\u4e91\u9879\u76ee ID"
+            },
+            "create_cloud_project": {
+                "description": "Nest \u96c6\u6210\u5141\u8bb8\u60a8\u4f7f\u7528\u667a\u80fd\u8bbe\u5907\u7ba1\u7406 API \u96c6\u6210\u60a8\u7684 Nest \u6052\u6e29\u5668\u3001\u6444\u50cf\u5934\u548c\u95e8\u94c3\u3002 SDM API **\u9700\u8981 5 \u7f8e\u5143**\u7684\u4e00\u6b21\u6027\u8bbe\u7f6e\u8d39\u3002\u8bf7\u53c2\u9605\u3010\u66f4\u591a\u4fe1\u606f\u3011({more_info_url}) \u7684\u6587\u6863\u3002 \n\n 1. \u8f6c\u5230\u3010Google \u4e91\u63a7\u5236\u53f0\u3011({cloud_console_url}) \u3002\n 1. \u5982\u679c\u8fd9\u662f\u60a8\u7684\u7b2c\u4e00\u4e2a\u9879\u76ee\uff0c\u8bf7\u9009\u62e9**\u521b\u5efa\u9879\u76ee**\uff0c\u7136\u540e\u9009\u62e9**\u65b0\u5efa\u9879\u76ee**\u3002\n 1. \u4e3a\u60a8\u7684\u201c\u4e91\u9879\u76ee\u201d\u547d\u540d\uff0c\u7136\u540e\u9009\u62e9**\u521b\u5efa**\u3002\n 1. \u4fdd\u5b58\u597d\u4e91\u9879\u76ee\u6807\u8bc6\u7b26\uff0c\u4f8b\u5982 *example-project-12345*\uff0c\u60a8\u7a0d\u540e\u4f1a\u7528\u5230\u5b83\n 1. \u524d\u5f80\u3010\u667a\u80fd\u8bbe\u5907\u7ba1\u7406 API\u3011({sdm_api_url}) \u7684 API \u5e93\u5e76\u9009\u62e9**\u542f\u7528**\u3002\n 1. \u8f6c\u5230\u3010\u4e91 Pub/Sub API\u3011({pubsub_api_url}) \u7684 API \u5e93\uff0c\u7136\u540e\u9009\u62e9**\u542f\u7528**\u3002 \n\n\u8bbe\u7f6e\u5b8c\u4e91\u9879\u76ee\u540e\u7ee7\u7eed\u3002",
+                "title": "Nest\uff1a\u521b\u5efa\u548c\u914d\u7f6e\u4e91\u9879\u76ee"
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "\u8bbe\u5907\u8bbf\u95ee\u9879\u76ee ID"
+                },
+                "description": "\u521b\u5efa\u4e00\u4e2a Nest Device Access \u9879\u76ee\uff0c\u9700\u8981\u8bbe\u7f6e**requires paying Google a US $5 fee** \u3002\n 1. \u8fdb\u5165\u3010\u8bbe\u5907\u8bbf\u95ee\u63a7\u5236\u53f0\u3011({device_access_console_url})\uff0c\u5b8c\u6210\u652f\u4ed8\u6d41\u7a0b\u3002\n 1. \u9009\u62e9**\u521b\u5efa\u9879\u76ee**\n 1. \u4e3a\u60a8\u7684\u8bbe\u5907\u8bbf\u95ee\u9879\u76ee\u547d\u540d\uff0c\u7136\u540e\u9009\u62e9**\u4e0b\u4e00\u6b65**\u3002\n 1. \u8f93\u5165\u60a8\u7684 OAuth \u5ba2\u6237\u7aef\u6807\u8bc6\u7b26\n 1. \u901a\u8fc7\u5355\u51fb**\u542f\u7528**\u548c**\u521b\u5efa\u9879\u76ee**\u6765\u542f\u7528\u4e8b\u4ef6\u3002\n\n\u5728\u4e0b\u9762\u8f93\u5165\u60a8\u7684\u8bbe\u5907\u8bbf\u95ee\u9879\u76ee ID\uff08\u3010\u66f4\u591a\u4fe1\u606f\u3011({more_info_url})\uff09\u3002\n",
+                "title": "Nest\uff1a\u521b\u5efa\u8bbe\u5907\u8bbf\u95ee\u9879\u76ee"
+            },
+            "pick_implementation": {
+                "title": "\u9009\u62e9\u8eab\u4efd\u9a8c\u8bc1\u65b9\u6cd5"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "Google Cloud \u9879\u76ee ID"
+                },
+                "description": "Home Assistant \u4f7f\u7528 Cloud Pub/Sub \u63a5\u6536\u5b9e\u65f6 Nest \u8bbe\u5907\u66f4\u65b0\u3002Nest \u670d\u52a1\u5668\u5c06\u66f4\u65b0\u53d1\u5e03\u5230 Pub/Sub \u4e3b\u9898\uff0cHome Assistant \u901a\u8fc7 Pub/Sub \u8ba2\u9605\u63a5\u6536\u66f4\u65b0\u3002\n\n1. \u8bbf\u95ee\u3010\u8bbe\u5907\u8bbf\u95ee\u63a7\u5236\u53f0\u3011({device_access_console_url}) \u5e76\u786e\u4fdd\u5df2\u914d\u7f6e Pub/Sub \u4e3b\u9898\u3002\n1. \u8bbf\u95ee\u3010\u4e91\u63a7\u5236\u53f0\u3011({url}) \u67e5\u627e\u60a8\u7684 Google Cloud \u9879\u76ee ID \u5e76\u5728\u4e0b\u9762\u786e\u8ba4\u5176\u6b63\u786e\u65e0\u8bef\u3002\n1. \u4e0b\u4e00\u6b65\u5c06\u5c1d\u8bd5\u81ea\u52a8\u53d1\u73b0 Pub/Sub \u4e3b\u9898\u548c\u8ba2\u9605\u3002\n\n\u6709\u5173\u3010\u66f4\u591a\u4fe1\u606f\u3011({more_info_url})\uff0c\u8bf7\u53c2\u9605\u96c6\u6210\u6587\u6863\u3002",
+                "title": "\u914d\u7f6e Google Cloud Pub/Sub"
+            },
+            "pubsub_subscription": {
+                "data": {
+                    "subscription_name": "\u53d1\u5e03/\u8ba2\u9605 \u8ba2\u9605\u540d\u79f0"
+                },
+                "description": "Home Assistant \u4f7f\u7528 Cloud Pub/Sub \u8ba2\u9605\u4e3b\u9898\u201c{topic}\u201d\u6765\u63a5\u6536\u5b9e\u65f6 Nest \u8bbe\u5907\u66f4\u65b0\u3002\n \n\u5982\u679c\u5df2\u5b58\u5728\u8ba2\u9605\uff0c\u8bf7\u9009\u62e9\u4e0b\u9762\u7684\u73b0\u6709\u8ba2\u9605\uff0c\u5426\u5219\u4e0b\u4e00\u6b65\u5c06\u4e3a\u60a8\u521b\u5efa\u4e00\u4e2a\u65b0\u7684\u8ba2\u9605\u3002\u53c2\u9605\u96c6\u6210\u6587\u6863\u53ef\u4e86\u89e3\u3010\u66f4\u591a\u4fe1\u606f\u3011({more_info_url}) \u3002",
+                "title": "\u914d\u7f6e\u4e91\u53d1\u5e03/\u8ba2\u9605\u4e3b\u9898"
+            },
+            "pubsub_topic": {
+                "data": {
+                    "topic_name": "\u53d1\u5e03/\u8ba2\u9605\u4e3b\u9898\u540d\u79f0"
+                },
+                "description": "Nest \u8bbe\u5907\u5728 Cloud Pub/Sub \u4e3b\u9898\u4e0a\u53d1\u5e03\u66f4\u65b0\u3002\u9009\u62e9\u4e0b\u9762\u4e0e\u3010\u8bbe\u5907\u8bbf\u95ee\u63a7\u5236\u53f0\u3011({device_access_console_url}) \u76f8\u540c\u7684 Pub/Sub \u4e3b\u9898\u3002\u53c2\u9605\u96c6\u6210\u6587\u6863\u53ef\u4e86\u89e3\u3010\u66f4\u591a\u4fe1\u606f\u3011({more_info_url}) \u3002",
+                "title": "\u914d\u7f6e\u4e91\u53d1\u5e03/\u8ba2\u9605\u4e3b\u9898"
+            },
+            "reauth_confirm": {
+                "description": "Nest \u96c6\u6210\u9700\u8981\u91cd\u65b0\u9a8c\u8bc1\u60a8\u7684\u8d26\u6237",
+                "title": "\u201d{name}\u201c\u7684\u8eab\u4efd\u9a8c\u8bc1\u5df2\u8fc7\u671f"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "\u68c0\u6d4b\u5230\u8fd0\u52a8",
+            "camera_person": "\u68c0\u6d4b\u5230\u4eba",
+            "camera_sound": "\u68c0\u6d4b\u5230\u58f0\u97f3",
+            "doorbell_chime": "\u6309\u4e0b\u95e8\u94c3"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "\u94c3\u58f0",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "\u94c3\u58f0"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "\u8fd0\u52a8",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "\u8fd0\u52a8",
+                            "camera_person": "\u4eba\u5458",
+                            "camera_sound": "\u58f0\u97f3"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

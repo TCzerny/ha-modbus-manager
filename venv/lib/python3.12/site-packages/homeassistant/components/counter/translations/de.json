@@ -1,0 +1,53 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Z\u00e4hler",
+            "state_attributes": {
+                "editable": {
+                    "name": "Verwaltet \u00fcber UI",
+                    "state": {
+                        "false": "Nein",
+                        "true": "Ja"
+                    }
+                },
+                "initial": {
+                    "name": "Anfangswert"
+                },
+                "maximum": {
+                    "name": "Maximum"
+                },
+                "minimum": {
+                    "name": "Minimum"
+                },
+                "step": {
+                    "name": "Schrittweite"
+                }
+            }
+        }
+    },
+    "services": {
+        "decrement": {
+            "description": "Dekrementiert einen Z\u00e4hler um seine Schrittweite.",
+            "name": "Verringern"
+        },
+        "increment": {
+            "description": "Inkrementiert einen Z\u00e4hler um seine Schrittweite.",
+            "name": "Erh\u00f6hen"
+        },
+        "reset": {
+            "description": "Setzt einen Z\u00e4hler auf seinen Anfangswert zur\u00fcck.",
+            "name": "Zur\u00fccksetzen"
+        },
+        "set_value": {
+            "description": "Setzt einen Z\u00e4hler auf einen bestimmten Wert.",
+            "fields": {
+                "value": {
+                    "description": "Der neue Z\u00e4hlerwert, auf den die Entit\u00e4t gesetzt werden soll.",
+                    "name": "Wert"
+                }
+            },
+            "name": "Festlegen"
+        }
+    },
+    "title": "Z\u00e4hler"
+}

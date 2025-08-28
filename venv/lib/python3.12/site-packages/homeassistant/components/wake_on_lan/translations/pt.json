@@ -1,0 +1,58 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "broadcast_address": "Endere\u00e7o de difus\u00e3o",
+                    "broadcast_port": "Porta de difus\u00e3o",
+                    "mac": "Endere\u00e7o MAC"
+                },
+                "data_description": {
+                    "broadcast_address": "O endere\u00e7o IP do host para enviar o pacote m\u00e1gico. O valor padr\u00e3o \u00e9 `255.255.255.255` e normalmente n\u00e3o \u00e9 alterado.",
+                    "broadcast_port": "A porta para enviar o pacote m\u00e1gico. O valor padr\u00e3o \u00e9 `9` e normalmente n\u00e3o \u00e9 alterado.",
+                    "mac": "Endere\u00e7o MAC do dispositivo a ser acordado."
+                }
+            }
+        }
+    },
+    "options": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "broadcast_address": "Endere\u00e7o de difus\u00e3o",
+                    "broadcast_port": "Porta de difus\u00e3o"
+                },
+                "data_description": {
+                    "broadcast_address": "O endere\u00e7o IP do host para enviar o pacote m\u00e1gico. O valor padr\u00e3o \u00e9 `255.255.255.255` e normalmente n\u00e3o \u00e9 alterado.",
+                    "broadcast_port": "A porta para enviar o pacote m\u00e1gico. O valor padr\u00e3o \u00e9 `9` e normalmente n\u00e3o \u00e9 alterado."
+                }
+            }
+        }
+    },
+    "services": {
+        "send_magic_packet": {
+            "description": "Envia um 'pacote m\u00e1gico' para acordar um dispositivo com capacidades 'Wake-On-LAN'.",
+            "fields": {
+                "broadcast_address": {
+                    "description": "O endere\u00e7o IP do host para enviar o pacote m\u00e1gico. O valor padr\u00e3o \u00e9 `255.255.255.255` e normalmente n\u00e3o \u00e9 alterado.",
+                    "name": "Endere\u00e7o de difus\u00e3o"
+                },
+                "broadcast_port": {
+                    "description": "A porta para enviar o pacote m\u00e1gico. O valor padr\u00e3o \u00e9 `9` e normalmente n\u00e3o \u00e9 alterado.",
+                    "name": "Porta de difus\u00e3o"
+                },
+                "mac": {
+                    "description": "Endere\u00e7o MAC do dispositivo a ser acordado.",
+                    "name": "Endere\u00e7o MAC"
+                }
+            },
+            "name": "Enviar pacote m\u00e1gico"
+        }
+    }
+}

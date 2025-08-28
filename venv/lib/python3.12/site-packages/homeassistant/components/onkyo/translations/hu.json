@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "no_devices_found": "Nem tal\u00e1lhat\u00f3 eszk\u00f6z a h\u00e1l\u00f3zaton",
+            "reconfigure_successful": "\u00dajrakonfigur\u00e1l\u00e1s sikeres volt",
+            "unique_id_mismatch": "Az eszk\u00f6z sorozatsz\u00e1ma nem egyezik meg az el\u0151z\u0151 sorozatsz\u00e1mmal",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "empty_input_source_list": "A bemeneti forr\u00e1slista nem lehet \u00fcres",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "step": {
+            "configure_receiver": {
+                "data": {
+                    "input_sources": "Bemeneti forr\u00e1sok",
+                    "volume_resolution": "Hanger\u0151 l\u00e9p\u00e9s"
+                },
+                "data_description": {
+                    "input_sources": "Az er\u0151s\u00edt\u0151 \u00e1ltal t\u00e1mogatott bemeneti forr\u00e1sok list\u00e1ja.",
+                    "volume_resolution": "Az er\u0151s\u00edt\u0151 legalacsonyabb \u00e9s legmagasabb hanger\u0151\u00e9rt\u00e9ke k\u00f6z\u00f6tti l\u00e9p\u00e9sek sz\u00e1ma."
+                },
+                "description": "{name} konfigur\u00e1l\u00e1sa"
+            },
+            "eiscp_discovery": {
+                "data": {
+                    "device": "Eszk\u00f6z"
+                },
+                "data_description": {
+                    "device": "V\u00e1lassza ki a konfigur\u00e1land\u00f3 er\u0151s\u00edt\u0151t."
+                }
+            },
+            "manual": {
+                "data": {
+                    "host": "Hoszt"
+                },
+                "data_description": {
+                    "host": "Az er\u0151s\u00edt\u0151 hosztneve vagy IP-c\u00edme."
+                }
+            },
+            "user": {
+                "menu_options": {
+                    "eiscp_discovery": "Onkyo felder\u00edt\u00e9s",
+                    "manual": "K\u00e9zi bevitel"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_source": {
+            "message": "Nem lehet kiv\u00e1lasztani a(z) \"{invalid_source}\" bemeneti forr\u00e1st a(z) {entity_id} entit\u00e1shoz."
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "Az Onkyo YAML-alap\u00fa konfigur\u00e1ci\u00f3ja megsz\u0171nik, de hiba t\u00f6rt\u00e9nt a(z) {host} c\u00edmhez tartoz\u00f3 YAML konfigur\u00e1ci\u00f3 import\u00e1l\u00e1sakor.\n\nGy\u0151z\u0151dj\u00f6n meg arr\u00f3l, hogy a vev\u0151h\u00f6z val\u00f3 kapcsolat megfelel\u0151en m\u0171k\u00f6dik, majd ind\u00edtsa \u00fajra a Home Assistant rendszert a tov\u00e1bbi pr\u00f3b\u00e1lkoz\u00e1shoz. Alternat\u00edv megold\u00e1sk\u00e9nt t\u00e1vol\u00edtsa el az Onkyo YAML konfigur\u00e1ci\u00f3t a configuration.yaml f\u00e1jlb\u00f3l, \u00e9s folytassa a [manu\u00e1lis integr\u00e1ci\u00f3 be\u00e1ll\u00edt\u00e1s\u00e1val]({url}).",
+            "title": "Az Onkyo YAML konfigur\u00e1ci\u00f3 import\u00e1l\u00e1sa sikertelen volt"
+        },
+        "deprecated_yaml_import_issue_no_discover": {
+            "description": "Az Onkyo YAML-alap\u00fa konfigur\u00e1ci\u00f3ja megsz\u0171nik, de a YAML konfigur\u00e1ci\u00f3 import\u00e1l\u00e1sakor nem siker\u00fclt vev\u0151t tal\u00e1lni.\n\nGy\u0151z\u0151dj\u00f6n meg arr\u00f3l, hogy a vev\u0151h\u00f6z val\u00f3 kapcsolat megfelel\u0151en m\u0171k\u00f6dik, majd ind\u00edtsa \u00fajra a Home Assistant rendszert a tov\u00e1bbi pr\u00f3b\u00e1lkoz\u00e1shoz vagy t\u00e1vol\u00edtsa el az Onkyo YAML konfigur\u00e1ci\u00f3t a configuration.yaml f\u00e1jlb\u00f3l \u00e9s folytassa a [manu\u00e1lis integr\u00e1ci\u00f3 be\u00e1ll\u00edt\u00e1s\u00e1val]({url}).",
+            "title": "Az Onkyo YAML konfigur\u00e1ci\u00f3 import\u00e1l\u00e1sa sikertelen volt"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_volume": "Maxim\u00e1lis hanger\u0151korl\u00e1t (%)"
+                },
+                "data_description": {
+                    "max_volume": "Maxim\u00e1lis hanger\u0151 korl\u00e1t sz\u00e1zal\u00e9kban megadva. Ez azt jelenti, hogy a Home Assistant maxim\u00e1lis hanger\u0151 be\u00e1ll\u00edt\u00e1sa ehhez az \u00e9rt\u00e9khez lesz t\u00e1rs\u00edtva az er\u0151s\u00edt\u0151n. P\u00e9ld\u00e1ul, ha ezt 50%-ra \u00e1ll\u00edtja, akkor a Home Assistantban a hanger\u0151 100%-ra \u00e1ll\u00edt\u00e1sa az er\u0151s\u00edt\u0151n annak maxim\u00e1lis \u00e9rt\u00e9k\u00e9nek 50%-\u00e1ra \u00e1ll\u00edtja a hanger\u0151t."
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,420 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Rekonfigur\u00e1cia bola \u00faspe\u0161n\u00e1"
+        },
+        "error": {
+            "already_configured": "Pripojenie PCHK s pou\u017eit\u00edm rovnakej adresy ip/portu je u\u017e nakonfigurovan\u00e9.",
+            "authentication_error": "Autentifik\u00e1cia zlyhala. Nespr\u00e1vne pou\u017e\u00edvate\u013esk\u00e9 meno alebo heslo.",
+            "connection_refused": "Nie je mo\u017en\u00e9 sa pripoji\u0165 k PCHK. Skontrolujte IP adresu a port.",
+            "license_error": "Bol dosiahnut\u00fd maxim\u00e1lny po\u010det pripojen\u00ed. Je potrebn\u00fd \u010fal\u0161\u00ed licen\u010dn\u00fd k\u013e\u00fa\u010d."
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "acknowledge": "Vy\u017eiadajte si potvrdenie od modulov",
+                    "dim_mode": "Re\u017eim stmievania",
+                    "ip_address": "IP adresa",
+                    "password": "Heslo",
+                    "port": "Port",
+                    "sk_num_tries": "Pokusy o skenovanie spojky segmentov",
+                    "username": "Pou\u017e\u00edvate\u013esk\u00e9 meno"
+                },
+                "data_description": {
+                    "acknowledge": "Ak moduly neprijm\u00fa \u017eiadnu o\u010dak\u00e1van\u00fa odpove\u010f, zopakujte odoslanie pr\u00edkazov (zv\u00fd\u0161enie prev\u00e1dzky zbernice).",
+                    "dim_mode": "Po\u010det krokov pou\u017eit\u00fdch na stmievanie v\u00fdstupov v\u0161etk\u00fdch modulov LCN."
+                },
+                "description": "Rekonfigurujte pripojenie k hostite\u013eovi LCN.",
+                "title": "Rekonfigur\u00e1cia hostite\u013ea LCN"
+            },
+            "user": {
+                "data": {
+                    "acknowledge": "Vy\u017eiadajte si potvrdenie od modulov",
+                    "dim_mode": "Re\u017eim stmievania",
+                    "host": "N\u00e1zov",
+                    "ip_address": "IP adresa",
+                    "password": "Heslo",
+                    "port": "Port",
+                    "sk_num_tries": "Pokusy o skenovanie spojky segmentov",
+                    "username": "Pou\u017e\u00edvate\u013esk\u00e9 meno"
+                },
+                "data_description": {
+                    "acknowledge": "Ak moduly neprijm\u00fa \u017eiadnu o\u010dak\u00e1van\u00fa odpove\u010f, zopakujte odoslanie pr\u00edkazov (zv\u00fd\u0161enie prev\u00e1dzky zbernice).",
+                    "dim_mode": "Po\u010det krokov pou\u017eit\u00fdch na stmievanie v\u00fdstupov v\u0161etk\u00fdch modulov LCN."
+                },
+                "description": "Nastavenie nov\u00e9ho pripojenia k hostite\u013eovi LCN.",
+                "title": "Nastavenie hostite\u013ea LCN"
+            }
+        }
+    },
+    "device_automation": {
+        "extra_fields": {
+            "action": "Akcia",
+            "code": "K\u00f3d",
+            "key": "K\u013e\u00fa\u010d",
+            "level": "\u00darove\u0148"
+        },
+        "trigger_type": {
+            "codelock": "Prijat\u00fd k\u00f3d z\u00e1mku",
+            "fingerprint": "Prijat\u00fd k\u00f3d odtla\u010dku prsta",
+            "send_keys": "Prijatie odoslan\u00fdch k\u013e\u00fa\u010dov",
+            "transmitter": "Prijat\u00fd k\u00f3d vysiela\u010da",
+            "transponder": "Prijat\u00fd k\u00f3d transpond\u00e9ra"
+        }
+    },
+    "exceptions": {
+        "invalid_address": {
+            "message": "Zariadenie LCN pre dan\u00fa adresu nebolo nakonfigurovan\u00e9."
+        },
+        "invalid_device_id": {
+            "message": "Zariadenie LCN pre dan\u00e9 ID zariadenia nebolo nakonfigurovan\u00e9."
+        },
+        "no_device_identifier": {
+            "message": "Nie je uveden\u00fd \u017eiadny identifik\u00e1tor zariadenia. Uve\u010fte identifik\u00e1tor zariadenia."
+        }
+    },
+    "issues": {
+        "deprecated_address_parameter": {
+            "description": "Parameter \"address\" vo volaniach akcie LCN je zastaran\u00fd. V bud\u00facnosti by sa mal pou\u017e\u00edva\u0165 parameter \"ID zariadenia\".\n\nUpravte svoje automatiz\u00e1cie alebo skripty tak, aby ste tento probl\u00e9m odstr\u00e1nili.",
+            "title": "Zastaran\u00fd parameter 'address'"
+        },
+        "deprecated_keylock_sensor": {
+            "description": "Entita bin\u00e1rneho senzora z\u00e1mku LCN `{entity}` sa pou\u017e\u00edva v automatiz\u00e1ci\u00e1ch alebo skript\u00e1ch. K dispoz\u00edcii je entita sp\u00edna\u010da z\u00e1mku k\u013e\u00fa\u010da, ktor\u00e1 by sa mala pou\u017e\u00edva\u0165 aj na\u010falej.\n\nUpravte svoje automatiz\u00e1cie alebo skripty tak, aby ste tento probl\u00e9m odstr\u00e1nili.",
+            "title": "Zastaran\u00fd bin\u00e1rny sn\u00edma\u010d z\u00e1mku k\u013e\u00fa\u010da LCN"
+        },
+        "deprecated_regulatorlock_sensor": {
+            "description": "Va\u0161a entita bin\u00e1rneho senzora LCN regul\u00e1tora uzamknutia `{entity}` sa pou\u017e\u00edva v automatiz\u00e1ci\u00e1ch alebo skript\u00e1ch. K dispoz\u00edcii je entita sp\u00edna\u010da z\u00e1mku regul\u00e1tora, ktor\u00e1 by sa mala pou\u017e\u00edva\u0165 aj na\u010falej.\n\nUpravte svoje automatiz\u00e1cie alebo skripty tak, aby ste tento probl\u00e9m odstr\u00e1nili.",
+            "title": "Vyraden\u00fd bin\u00e1rny sn\u00edma\u010d uzamknutia regul\u00e1tora LCN"
+        }
+    },
+    "services": {
+        "address_to_device_id": {
+            "description": "Konvertova\u0165 adresu LCN na ID zariadenia.",
+            "fields": {
+                "host": {
+                    "description": "N\u00e1zov hostite\u013ea uveden\u00fd v integra\u010dnom paneli.",
+                    "name": "N\u00e1zov hostite\u013ea"
+                },
+                "id": {
+                    "description": "ID cie\u013eov\u00e9ho modulu alebo skupiny.",
+                    "name": "ID modulu alebo skupiny"
+                },
+                "segment_id": {
+                    "description": "ID cie\u013eov\u00e9ho segmentu.",
+                    "name": "ID segmentu"
+                },
+                "type": {
+                    "description": "Typ cie\u013ea.",
+                    "name": "Typ"
+                }
+            },
+            "name": "Adresa na ID zariadenia"
+        },
+        "dyn_text": {
+            "description": "Odosiela dynamick\u00fd text na displeje LCN-GTxD.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "row": {
+                    "description": "Textov\u00fd riadok.",
+                    "name": "Riadok"
+                },
+                "text": {
+                    "description": "Text na odoslanie (maxim\u00e1lne 60 znakov zak\u00f3dovan\u00fdch ako UTF-8).",
+                    "name": "Text"
+                }
+            },
+            "name": "Dynamick\u00fd text"
+        },
+        "led": {
+            "description": "Nastav\u00ed stav LED.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "led": {
+                    "description": "LED port zariadenia.",
+                    "name": "LED"
+                },
+                "state": {
+                    "description": "Stav LED, ktor\u00fd sa m\u00e1 nastavi\u0165.",
+                    "name": "Stav"
+                }
+            },
+            "name": "LED"
+        },
+        "lock_keys": {
+            "description": "Zamkne k\u013e\u00fa\u010de.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "state": {
+                    "description": "Stavy uzamknutia kl\u00e1vesov ako re\u0165azec (1=zapnut\u00e9, 2=vypnut\u00e9, T=prep\u00edna\u010d, -=bez zmeny).",
+                    "name": "Stav"
+                },
+                "table": {
+                    "description": "Tabu\u013eka s k\u013e\u00fa\u010dmi na uzamknutie (mus\u00ed by\u0165 A pre interval).",
+                    "name": "Tabu\u013eka"
+                },
+                "time": {
+                    "description": "Interval uzamknutia.",
+                    "name": "\u010cas"
+                },
+                "time_unit": {
+                    "description": "\u010casov\u00e1 jednotka intervalu uzamknutia.",
+                    "name": "\u010casov\u00e1 jednotka"
+                }
+            },
+            "name": "Zamkne k\u013e\u00fa\u010de"
+        },
+        "lock_regulator": {
+            "description": "Zablokuje nastaven\u00fa hodnotu regul\u00e1tora.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "setpoint": {
+                    "description": "N\u00e1zov po\u017eadovanej hodnoty.",
+                    "name": "Nastaven\u00e1 hodnota"
+                },
+                "state": {
+                    "description": "Nov\u00fd stav nastavenej hodnoty.",
+                    "name": "Stav"
+                }
+            },
+            "name": "Zamkn\u00fa\u0165 regul\u00e1tor"
+        },
+        "output_abs": {
+            "description": "Nastavuje absol\u00fatny jas v\u00fdstupn\u00e9ho portu v percent\u00e1ch.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "brightness": {
+                    "description": "Absol\u00fatny jas.",
+                    "name": "Jas"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "output": {
+                    "description": "V\u00fdstupn\u00fd port.",
+                    "name": "V\u00fdstup"
+                },
+                "transition": {
+                    "description": "\u010cas zmeny.",
+                    "name": "Prechod"
+                }
+            },
+            "name": "V\u00fdstupn\u00fd absol\u00fatny jas"
+        },
+        "output_rel": {
+            "description": "Nastavuje relat\u00edvny jas v\u00fdstupn\u00e9ho portu v percent\u00e1ch.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "brightness": {
+                    "description": "Relat\u00edvny jas.",
+                    "name": "Jas"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "output": {
+                    "description": "V\u00fdstupn\u00fd port.",
+                    "name": "V\u00fdstup"
+                }
+            },
+            "name": "V\u00fdstupn\u00fd relat\u00edvny jas"
+        },
+        "output_toggle": {
+            "description": "Prep\u00edna v\u00fdstupn\u00fd port.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "output": {
+                    "description": "V\u00fdstupn\u00fd port.",
+                    "name": "V\u00fdstup"
+                },
+                "transition": {
+                    "description": "\u010cas zmeny.",
+                    "name": "Prechod"
+                }
+            },
+            "name": "Prep\u00ednanie v\u00fdstupu"
+        },
+        "pck": {
+            "description": "Odo\u0161le \u013eubovo\u013en\u00fd pr\u00edkaz PCK.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "pck": {
+                    "description": "Pr\u00edkaz PCK (bez hlavi\u010dky adresy).",
+                    "name": "PCK"
+                }
+            },
+            "name": "PCK"
+        },
+        "relays": {
+            "description": "Nastav\u00ed stav rel\u00e9.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "state": {
+                    "description": "Stavy rel\u00e9 ako re\u0165azec (1=zapnut\u00e9, 2=vypnut\u00e9, t=prep\u00edna\u010d, -=bez zmeny).",
+                    "name": "Stav"
+                }
+            },
+            "name": "Rel\u00e9"
+        },
+        "send_keys": {
+            "description": "Odosiela k\u013e\u00fa\u010de (ktor\u00e9 vykon\u00e1vaj\u00fa viazan\u00e9 pr\u00edkazy).",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "keys": {
+                    "description": "K\u013e\u00fa\u010de na odoslanie.",
+                    "name": "K\u013e\u00fa\u010de"
+                },
+                "state": {
+                    "description": "Stav k\u013e\u00fa\u010da pri odoslan\u00ed (na odlo\u017eenie sa mus\u00ed klikn\u00fa\u0165).",
+                    "name": "Stav"
+                },
+                "time": {
+                    "description": "Odosla\u0165 oneskorenie.",
+                    "name": "\u010cas"
+                },
+                "time_unit": {
+                    "description": "Jednotka \u010dasu oneskorenia odoslania.",
+                    "name": "\u010casov\u00e1 jednotka"
+                }
+            },
+            "name": "Odosla\u0165 k\u013e\u00fa\u010de"
+        },
+        "var_abs": {
+            "description": "Nastavuje absol\u00fatnu hodnotu premennej alebo \u017eiadanej hodnoty.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "unit_of_measurement": {
+                    "description": "Jednotka hodnoty.",
+                    "name": "Jednotka merania"
+                },
+                "value": {
+                    "description": "Hodnota na nastavenie.",
+                    "name": "Hodnota"
+                },
+                "variable": {
+                    "description": "N\u00e1zov premennej alebo po\u017eadovanej hodnoty.",
+                    "name": "Premenn\u00e1"
+                }
+            },
+            "name": "Nastavenie absol\u00fatnej premennej"
+        },
+        "var_rel": {
+            "description": "Posun hodnoty premennej, \u017eiadanej hodnoty alebo prahovej hodnoty.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "unit_of_measurement": {
+                    "description": "Jednotka hodnoty.",
+                    "name": "Jednotka merania"
+                },
+                "value": {
+                    "description": "Hodnota posunu.",
+                    "name": "Hodnota"
+                },
+                "value_reference": {
+                    "description": "Referen\u010dn\u00e1 hodnota pre \u017eiadan\u00fa hodnotu a prahov\u00fa hodnotu.",
+                    "name": "Referen\u010dn\u00e1 hodnota"
+                },
+                "variable": {
+                    "description": "N\u00e1zov premennej alebo po\u017eadovanej hodnoty.",
+                    "name": "Premenn\u00e1"
+                }
+            },
+            "name": "Posun premennej"
+        },
+        "var_reset": {
+            "description": "Vynuluje hodnotu premennej alebo \u017eiadanej hodnoty.",
+            "fields": {
+                "address": {
+                    "description": "Adresa modulu.",
+                    "name": "Adresa"
+                },
+                "device_id": {
+                    "description": "ID zariadenia modulu alebo skupiny LCN.",
+                    "name": "Zariadenie"
+                },
+                "variable": {
+                    "description": "N\u00e1zov premennej alebo po\u017eadovanej hodnoty.",
+                    "name": "Premenn\u00e1"
+                }
+            },
+            "name": "Vynulovanie premennej"
+        }
+    }
+}

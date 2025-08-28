@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Zariadenie u\u017e je nakonfigurovan\u00e9",
+            "reauth_successful": "Op\u00e4tovn\u00e9 overenie bolo \u00faspe\u0161n\u00e9"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "invalid_auth": "Neplatn\u00e9 overenie",
+            "timeout_connect": "\u010casov\u00fd limit na nadviazanie spojenia"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Heslo"
+                },
+                "data_description": {
+                    "password": "Heslo na overenie pomocou zariadenia Rain Bird."
+                },
+                "description": "Integr\u00e1cia Rain Bird sa mus\u00ed znovu overi\u0165 so zariaden\u00edm.",
+                "title": "Vypr\u0161ala platnos\u0165 overenia pre {name}"
+            },
+            "user": {
+                "data": {
+                    "host": "Hostite\u013e",
+                    "password": "Heslo"
+                },
+                "data_description": {
+                    "host": "N\u00e1zov hostite\u013ea alebo IP adresa zariadenia Rain Bird.",
+                    "password": "Heslo, ktor\u00e9 sa pou\u017e\u00edva na overenie so zariaden\u00edm Rain Bird."
+                },
+                "description": "Zadajte inform\u00e1cie o module WiFi LNK pre va\u0161e zariadenie Rain Bird.",
+                "title": "Konfigur\u00e1cia Rain Bird"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Da\u017e\u010fov\u00fdSn\u00edma\u010d"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Oneskorenie da\u017e\u010fa"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "OneskorenieDa\u017e\u010fa"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Predvolen\u00fd \u010das zavla\u017eovania v min\u00fatach"
+                },
+                "data_description": {
+                    "duration": "Predvolen\u00e9 trvanie, po\u010das ktor\u00e9ho bude postrekova\u010d pracova\u0165 po zapnut\u00ed."
+                },
+                "title": "Konfigur\u00e1cia Rain Bird"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "Nastavuje, ako dlho bude automatick\u00e9 zavla\u017eovanie vypnut\u00e9.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Nastavenie sa uprav\u00ed na zadanom ovl\u00e1da\u010di.",
+                    "name": "Zadanie konfigur\u00e1cie ovl\u00e1da\u010da Rainbird"
+                },
+                "duration": {
+                    "description": "Trvanie vypnutia tohto syst\u00e9mu.",
+                    "name": "Trvanie"
+                }
+            },
+            "name": "Nastavenie oneskorenia da\u017e\u010fa"
+        },
+        "start_irrigation": {
+            "description": "Spust\u00ed zavla\u017eovanie.",
+            "fields": {
+                "duration": {
+                    "description": "Trvanie zapnutia tohto zavla\u017eova\u010da.",
+                    "name": "Trvanie"
+                }
+            },
+            "name": "Spustenie zavla\u017eovania"
+        }
+    }
+}

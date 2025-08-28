@@ -1,0 +1,76 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Urz\u0105dzenie jest ju\u017c skonfigurowane",
+            "success": "Zmiany zapisane"
+        },
+        "flow_title": "Proximity",
+        "step": {
+            "user": {
+                "data": {
+                    "ignored_zones": "Ignorowane strefy",
+                    "tolerance": "Tolerancja odleg\u0142o\u015bci",
+                    "tracked_entities": "Urz\u0105dzenia lub Osoby do \u015bledzenia",
+                    "zone": "Strefa do \u015bledzenia odleg\u0142o\u015bci"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "dir_of_travel": {
+                "name": "{tracked_entity} Kierunek podr\u00f3\u017cy",
+                "state": {
+                    "arrived": "na miejscu",
+                    "away_from": "oddalanie",
+                    "stationary": "brak ruchu",
+                    "towards": "zbli\u017canie"
+                }
+            },
+            "dist_to_zone": {
+                "name": "{tracked_entity} Odleg\u0142o\u015b\u0107"
+            },
+            "nearest": {
+                "name": "Najbli\u017csze urz\u0105dzenie"
+            },
+            "nearest_dir_of_travel": {
+                "name": "Najbli\u017cszy kierunek podr\u00f3\u017cy",
+                "state": {
+                    "arrived": "na miejscu",
+                    "away_from": "oddalanie",
+                    "stationary": "brak ruchu",
+                    "towards": "zbli\u017canie"
+                }
+            },
+            "nearest_dist_to_zone": {
+                "name": "Najbli\u017csza odleg\u0142o\u015b\u0107"
+            }
+        }
+    },
+    "issues": {
+        "tracked_entity_removed": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Encja `{entity_id}` zosta\u0142a usuni\u0119ta z HA, ale jest u\u017cywana w Proximity {name}. Usu\u0144 `{entity_id}` z listy \u015bledzonych encji. Powi\u0105zane sensory Proximity zosta\u0142y ustawione jako niedost\u0119pne i mo\u017cna je usun\u0105\u0107.",
+                        "title": "\u015aledzona encja zosta\u0142a usuni\u0119ta"
+                    }
+                }
+            },
+            "title": "\u015aledzona encja zosta\u0142a usuni\u0119ta"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignored_zones": "Ignorowane strefy",
+                    "tolerance": "Tolerancja odleg\u0142o\u015bci",
+                    "tracked_entities": "Urz\u0105dzenia lub Osoby do \u015bledzenia",
+                    "zone": "Strefa do \u015bledzenia odleg\u0142o\u015bci"
+                }
+            }
+        }
+    },
+    "title": "Proximity"
+}

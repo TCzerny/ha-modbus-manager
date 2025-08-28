@@ -1,0 +1,202 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "invalid_charset": "Belirtilen karakter desteklenmiyor",
+            "invalid_folder": "Se\u00e7ilen klas\u00f6r ge\u00e7ersiz",
+            "invalid_search": "Se\u00e7ilen arama ge\u00e7ersiz",
+            "ssl_error": "Bir SSL hatas\u0131 olu\u015ftu. SSL \u015fifre listesini de\u011fi\u015ftirin ve tekrar deneyin."
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "\u015eifre"
+                },
+                "data_description": {
+                    "password": "IMAP \u015fifresini d\u00fczeltin."
+                },
+                "description": "{username} \u015fifresi ge\u00e7ersiz.",
+                "title": "{name} i\u00e7in kimlik do\u011frulaman\u0131n s\u00fcresi doldu"
+            },
+            "user": {
+                "data": {
+                    "charset": "Karakter seti",
+                    "event_message_data": "`imap_content` olay verilerine dahil edilecek mesaj verileri:",
+                    "folder": "Klas\u00f6r",
+                    "password": "\u015eifre",
+                    "port": "Port",
+                    "search": "IMAP aramas\u0131",
+                    "server": "Sunucu",
+                    "ssl_cipher_list": "SSL \u015fifre listesi (Geli\u015fmi\u015f)",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131",
+                    "verify_ssl": "SSL sertifikas\u0131n\u0131 do\u011frulay\u0131n"
+                },
+                "data_description": {
+                    "charset": "Kullan\u0131lan karakter k\u00fcmesi. Yayg\u0131n de\u011ferler `utf-8` veya `US-ASCII`'dir.",
+                    "event_message_data": "Olay\u0131n boyutunun s\u0131n\u0131rl\u0131 oldu\u011funu ve mesaj\u0131n \u00e7ok b\u00fcy\u00fck olmas\u0131 durumunda t\u00fcm mesaj metninin etkinlikle birlikte g\u00f6nderilmeyebilece\u011fini unutmay\u0131n.",
+                    "folder": "Genellikle klas\u00f6r `INBOX` olarak ayarlan\u0131r, ancak \u00f6rne\u011fin `Test` adl\u0131 bir alt klas\u00f6r olmas\u0131 durumunda bu `INBOX.Test` olmal\u0131d\u0131r.",
+                    "password": "IMAP \u015fifresi",
+                    "port": "SSL'i destekleyen IMAP portu genellikle 993't\u00fcr.",
+                    "search": "Varsay\u0131lan olarak `UnSeen UnDeleted` olan IMAP arama komutu.",
+                    "server": "IMAP sunucusu.",
+                    "ssl_cipher_list": "IMAP hizmeti yaln\u0131zca eski \u015fifrelemeyi destekliyorsa bunu de\u011fi\u015ftirmeyi deneyin.",
+                    "username": "IMAP kullan\u0131c\u0131 ad\u0131.",
+                    "verify_ssl": "Sunucu sertifikas\u0131n\u0131n ge\u00e7erli oldu\u011fundan emin olmak i\u00e7in \u00f6nerilir. Sunucu sertifikas\u0131 g\u00fcvenilir de\u011filse (\u00f6rne\u011fin kendi kendine imzalanm\u0131\u015fsa) kapat\u0131n."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "imap_mail_count": {
+                "name": "Mesajlar",
+                "unit_of_measurement": "mesajlar"
+            }
+        }
+    },
+    "exceptions": {
+        "copy_failed": {
+            "message": "\u0130letinin kopyalanmas\u0131 \" {error} \" nedeniyle ba\u015far\u0131s\u0131z oldu."
+        },
+        "delete_failed": {
+            "message": "\u0130letinin silinmek \u00fczere i\u015faretlenmesi \" {error} \" nedeniyle ba\u015far\u0131s\u0131z oldu."
+        },
+        "expunge_failed": {
+            "message": "\u0130letinin silinmesi \" {error} \" nedeniyle ba\u015far\u0131s\u0131z oldu."
+        },
+        "fetch_failed": {
+            "message": "Mesaj metninin getirilmesi \" {error} \" nedeniyle ba\u015far\u0131s\u0131z oldu."
+        },
+        "imap_server_fail": {
+            "message": "IMAP sunucusu ba\u011flanamad\u0131: {error} ."
+        },
+        "invalid_auth": {
+            "message": "Ge\u00e7ersiz kimlik do\u011frulama"
+        },
+        "invalid_entry": {
+            "message": "Ge\u00e7erli bir IMAP giri\u015fi bulunamad\u0131."
+        },
+        "invalid_folder": {
+            "message": "Se\u00e7ilen klas\u00f6r ge\u00e7ersiz"
+        },
+        "seen_failed": {
+            "message": "\u0130letinin g\u00f6r\u00fcld\u00fc\u011f\u00fc gibi i\u015faretlenmesi \" {error} \" nedeniyle ba\u015far\u0131s\u0131z oldu."
+        }
+    },
+    "options": {
+        "error": {
+            "already_configured": "Bu klas\u00f6r ve arama se\u00e7eneklerine sahip bir giri\u015f zaten var.",
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "invalid_charset": "Belirtilen karakter desteklenmiyor",
+            "invalid_folder": "Se\u00e7ilen klas\u00f6r ge\u00e7ersiz",
+            "invalid_search": "Se\u00e7ilen arama ge\u00e7ersiz"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "custom_event_data_template": "\u00d6zel etkinlik verileri olu\u015fturmak i\u00e7in \u015fablon",
+                    "enable_push": "Sunucu destekliyorsa, Push-IMAP'yi etkinle\u015ftirin. Push-IMAP g\u00fcncellemeleri g\u00fcvenilir de\u011filse kapat\u0131n.",
+                    "event_message_data": "`imap_content` olay verilerine dahil edilecek mesaj verisi.",
+                    "folder": "Klas\u00f6r",
+                    "max_message_size": "Maksimum mesaj boyutu (2048 < boyut < 30000)",
+                    "search": "IMAP aramas\u0131"
+                },
+                "data_description": {
+                    "custom_event_data_template": "Bu \u015fablon yeni bir mesaj al\u0131nd\u0131\u011f\u0131nda de\u011ferlendirilir ve sonu\u00e7 olay verilerinin `custom` niteli\u011fine eklenir.",
+                    "enable_push": "Push-IMAP kullan\u0131lmas\u0131 \u00f6nerilir. Anket yan\u0131tlama s\u00fcresini art\u0131racakt\u0131r.",
+                    "event_message_data": "Olay\u0131n boyutunun s\u0131n\u0131rl\u0131 oldu\u011funu ve mesaj\u0131n \u00e7ok b\u00fcy\u00fck olmas\u0131 durumunda t\u00fcm mesaj metninin etkinlikle birlikte g\u00f6nderilmeyebilece\u011fini unutmay\u0131n.",
+                    "folder": "Genellikle klas\u00f6r `INBOX` olarak ayarlan\u0131r, ancak \u00f6rne\u011fin `Test` adl\u0131 bir alt klas\u00f6r olmas\u0131 durumunda bu `INBOX.Test` olmal\u0131d\u0131r.",
+                    "max_message_size": "Etkinli\u011fin maksimum boyutunu s\u0131n\u0131rlay\u0131n. (T\u00fcm) metin mesaj\u0131n\u0131 ge\u00e7irmek yerine, bir \u015fablon kullanmak daha iyi bir se\u00e7enektir.",
+                    "search": "Varsay\u0131lan olarak `UnSeen UnDeleted` olan IMAP arama komutu."
+                }
+            }
+        }
+    },
+    "selector": {
+        "event_message_data": {
+            "options": {
+                "headers": "Mesaj ba\u015fl\u0131klar\u0131",
+                "text": "G\u00f6vde metni"
+            }
+        },
+        "ssl_cipher_list": {
+            "options": {
+                "intermediate": "Orta d\u00fczey \u015fifreler",
+                "modern": "Modern \u015fifreler",
+                "python_default": "Varsay\u0131lan ayarlar"
+            }
+        }
+    },
+    "services": {
+        "delete": {
+            "description": "Bir e-postay\u0131 silin.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP yap\u0131land\u0131rma giri\u015fi.",
+                    "name": "Giri\u015f"
+                },
+                "uid": {
+                    "description": "E-posta tan\u0131mlay\u0131c\u0131s\u0131 (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Mesaj\u0131 sil"
+        },
+        "fetch": {
+            "description": "Sunucudan bir e-posta mesaj\u0131 al\u0131n.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP yap\u0131land\u0131rma giri\u015fi.",
+                    "name": "Giri\u015f"
+                },
+                "uid": {
+                    "description": "E-posta tan\u0131mlay\u0131c\u0131s\u0131 (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Mesaj\u0131 getir"
+        },
+        "move": {
+            "description": "Bir e-postay\u0131 hedef klas\u00f6re ta\u015f\u0131y\u0131n.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP yap\u0131land\u0131rma giri\u015fi.",
+                    "name": "Giri\u015f"
+                },
+                "seen": {
+                    "description": "E-postay\u0131 g\u00f6r\u00fcld\u00fc\u011f\u00fc gibi i\u015faretleyin.",
+                    "name": "G\u00f6r\u00fcld\u00fc"
+                },
+                "target_folder": {
+                    "description": "E-postan\u0131n ta\u015f\u0131nmas\u0131 gereken hedef klas\u00f6r.",
+                    "name": "Hedef klas\u00f6r"
+                },
+                "uid": {
+                    "description": "E-posta tan\u0131mlay\u0131c\u0131s\u0131 (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Mesaj\u0131 ta\u015f\u0131"
+        },
+        "seen": {
+            "description": "Bir e-postay\u0131 g\u00f6r\u00fcld\u00fc\u011f\u00fc gibi i\u015faretleyin.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP yap\u0131land\u0131rma giri\u015fi.",
+                    "name": "Giri\u015f"
+                },
+                "uid": {
+                    "description": "E-posta tan\u0131mlay\u0131c\u0131s\u0131 (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Mesaj\u0131 g\u00f6r\u00fcld\u00fc\u011f\u00fc gibi i\u015faretle"
+        }
+    }
+}

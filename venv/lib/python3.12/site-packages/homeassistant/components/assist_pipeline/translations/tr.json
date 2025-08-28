@@ -1,0 +1,37 @@
+{
+    "entity": {
+        "binary_sensor": {
+            "assist_in_progress": {
+                "name": "Devam eden asistan"
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Asistan",
+                "state": {
+                    "preferred": "Tercih Edilen"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Bitmi\u015f konu\u015fma tespiti",
+                "state": {
+                    "aggressive": "Agresif",
+                    "default": "Varsay\u0131lan",
+                    "relaxed": "Rahat"
+                }
+            }
+        }
+    },
+    "issues": {
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "Devam eden ikili sens\u00f6r ` {entity_id} ` kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131ld\u0131. \n \n {integration_name} ilgili ` {assist_satellite_domain} ` varl\u0131\u011f\u0131n\u0131 kullanacak \u015fekilde ta\u015f\u0131y\u0131n ve ard\u0131ndan devam eden ikili sens\u00f6r\u00fc devre d\u0131\u015f\u0131 b\u0131rakmak ve bu sorunu d\u00fczeltmek i\u00e7in G\u00d6NDER'e t\u0131klay\u0131n."
+                    }
+                }
+            },
+            "title": "{integration_name} devam ediyor ikili sens\u00f6rler kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131ld\u0131"
+        }
+    }
+}

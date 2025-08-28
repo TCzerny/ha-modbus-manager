@@ -1,0 +1,386 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "reconfigure_successful": "Omkonfigurationen lyckades",
+            "unique_id_mismatch": "Enhetens serienummer st\u00e4mmer inte \u00f6verens med det tidigare serienumret"
+        },
+        "error": {
+            "cannot_connect": "Kunde inte ansluta: {reason}",
+            "invalid_auth": "Ogiltig autentisering: {reason}",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "flow_title": "{serial} ({host})",
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamn eller IP-adress f\u00f6r din Enphase Envoy-gateway."
+                },
+                "description": "Fr\u00e5n Firmwareversion 7.0 och senare, ange anv\u00e4ndarnamnet \"envoy\" utan l\u00f6senord. F\u00f6r \u00e4ldre modeller, ange anv\u00e4ndarnamnet `installer` utan l\u00f6senord. F\u00f6r alla andra modeller, ange ett giltigt anv\u00e4ndarnamn och l\u00f6senord."
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamn eller IP-adress f\u00f6r din Enphase Envoy-gateway."
+                },
+                "description": "Fr\u00e5n Firmwareversion 7.0 och senare, ange anv\u00e4ndarnamnet \"envoy\" utan l\u00f6senord. F\u00f6r \u00e4ldre modeller, ange anv\u00e4ndarnamnet `installer` utan l\u00f6senord. F\u00f6r alla andra modeller, ange ett giltigt anv\u00e4ndarnamn och l\u00f6senord."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "communicating": {
+                "name": "Kommunicerar"
+            },
+            "dc_switch": {
+                "name": "DC-brytare"
+            },
+            "grid_status": {
+                "name": "Status f\u00f6r eln\u00e4t"
+            }
+        },
+        "number": {
+            "cutoff_battery_level": {
+                "name": "Batteriniv\u00e5 f\u00f6r avst\u00e4ngning"
+            },
+            "reserve_soc": {
+                "name": "Reservbatteri niv\u00e5"
+            },
+            "restore_battery_level": {
+                "name": "\u00c5terst\u00e4ll batteriniv\u00e5"
+            }
+        },
+        "select": {
+            "relay_generator_action": {
+                "name": "Generator \u00e5tg\u00e4rd",
+                "state": {
+                    "none": "Ingen",
+                    "not_powered": "Ej p\u00e5slagen",
+                    "powered": "P\u00e5slagen",
+                    "schedule": "F\u00f6lj schema"
+                }
+            },
+            "relay_grid_action": {
+                "name": "\u00c5tg\u00e4rd f\u00f6r eln\u00e4t",
+                "state": {
+                    "none": "Ingen",
+                    "not_powered": "Ej p\u00e5slagen",
+                    "powered": "P\u00e5slagen",
+                    "schedule": "F\u00f6lj schema"
+                }
+            },
+            "relay_microgrid_action": {
+                "name": "\u00c5tg\u00e4rd f\u00f6r mikron\u00e4t",
+                "state": {
+                    "none": "Ingen",
+                    "not_powered": "Ej p\u00e5slagen",
+                    "powered": "P\u00e5slagen",
+                    "schedule": "F\u00f6lj schema"
+                }
+            },
+            "relay_mode": {
+                "name": "L\u00e4ge",
+                "state": {
+                    "battery": "Batteriniv\u00e5",
+                    "standard": "Standard"
+                }
+            },
+            "storage_mode": {
+                "name": "Lagringsl\u00e4ge",
+                "state": {
+                    "backup": "Fullst\u00e4ndig backup",
+                    "savings": "Sparl\u00e4ge",
+                    "self_consumption": "Egen f\u00f6rbrukning"
+                }
+            }
+        },
+        "sensor": {
+            "acb_available_energy": {
+                "name": "Tillg\u00e4nglig ACB-batterienergi"
+            },
+            "acb_battery_state": {
+                "name": "Batteristatus",
+                "state": {
+                    "charging": "Laddar",
+                    "discharging": "Urladdning",
+                    "full": "Full",
+                    "idle": "Inaktiv"
+                }
+            },
+            "acb_max_capacity": {
+                "name": "ACB Batterikapacitet"
+            },
+            "aggregated_available_energy": {
+                "name": "Aggregerad tillg\u00e4nglig batterienergi"
+            },
+            "aggregated_max_capacity": {
+                "name": "Aggregerad batterikapacitet"
+            },
+            "aggregated_soc": {
+                "name": "Aggregerad batteri soc"
+            },
+            "available_energy": {
+                "name": "Tillg\u00e4nglig energi i batteriet"
+            },
+            "balanced_net_consumption": {
+                "name": "balanserad nettostr\u00f6mf\u00f6rbrukning"
+            },
+            "balanced_net_consumption_phase": {
+                "name": "balanserad nettostr\u00f6mf\u00f6rbrukning {phase_name}"
+            },
+            "battery_discharge": {
+                "name": "Aktuell batteriurladdning"
+            },
+            "battery_discharge_phase": {
+                "name": "Aktuell batteriurladdning {phase_name}"
+            },
+            "configured_reserve_soc": {
+                "name": "Konfigurerad reservbatteriniv\u00e5"
+            },
+            "current_power_consumption": {
+                "name": "Aktuell elf\u00f6rbrukning"
+            },
+            "current_power_consumption_phase": {
+                "name": "Aktuell elf\u00f6rbrukning {phase_name}"
+            },
+            "current_power_production": {
+                "name": "Aktuell elproduktion"
+            },
+            "current_power_production_phase": {
+                "name": "Aktuell elproduktion {phase_name}"
+            },
+            "daily_consumption": {
+                "name": "Elkonsumtion idag"
+            },
+            "daily_consumption_phase": {
+                "name": "Elf\u00f6rbrukning idag {phase_name}"
+            },
+            "daily_production": {
+                "name": "Elproduktion idag"
+            },
+            "daily_production_phase": {
+                "name": "Elproduktion idag {phase_name}"
+            },
+            "last_reported": {
+                "name": "Senast rapporterad"
+            },
+            "lifetime_balanced_net_consumption": {
+                "name": "Livstid balanserad nettoenergif\u00f6rbrukning"
+            },
+            "lifetime_balanced_net_consumption_phase": {
+                "name": "Livstidsbalanserad nettoenergif\u00f6rbrukning {phase_name}"
+            },
+            "lifetime_battery_charged": {
+                "name": "Livstid batteri energi laddat"
+            },
+            "lifetime_battery_charged_phase": {
+                "name": "Livstid batteri energi laddat {phase_name}"
+            },
+            "lifetime_battery_discharged": {
+                "name": "Livstid batteri energi urladdat"
+            },
+            "lifetime_battery_discharged_phase": {
+                "name": "Livstid batteri energi urladdat {phase_name}"
+            },
+            "lifetime_consumption": {
+                "name": "Elkonsumtion total livstid"
+            },
+            "lifetime_consumption_phase": {
+                "name": "Livstid energif\u00f6rbrukning {phase_name}"
+            },
+            "lifetime_net_consumption": {
+                "name": "Livstid nettoenergif\u00f6rbrukning"
+            },
+            "lifetime_net_consumption_phase": {
+                "name": "Livstid nettoenergif\u00f6rbrukning {phase_name}"
+            },
+            "lifetime_net_production": {
+                "name": "Livstid nettoenergiproduktion"
+            },
+            "lifetime_net_production_phase": {
+                "name": "Livstid nettoenergiproduktion {phase_name}"
+            },
+            "lifetime_production": {
+                "name": "Elproduktion total livstid"
+            },
+            "lifetime_production_phase": {
+                "name": "Livstid energiproduktion {phase_name}"
+            },
+            "max_capacity": {
+                "name": "Batterikapacitet"
+            },
+            "net_consumption": {
+                "name": "Aktuell nettostr\u00f6mf\u00f6rbrukning"
+            },
+            "net_consumption_phase": {
+                "name": "Aktuell nettostr\u00f6mf\u00f6rbrukning {phase_name}"
+            },
+            "net_ct_current": {
+                "name": "Nettof\u00f6rbrukning CT-str\u00f6m"
+            },
+            "net_ct_current_phase": {
+                "name": "Nettof\u00f6rbrukning CT-str\u00f6m {phase_name}"
+            },
+            "net_ct_frequency": {
+                "name": "Frekvens nettof\u00f6rbrukning CT"
+            },
+            "net_ct_frequency_phase": {
+                "name": "Frekvens nettof\u00f6rbrukning CT {phase_name}"
+            },
+            "net_ct_metering_status": {
+                "name": "M\u00e4tstatus nettof\u00f6rbrukning CT"
+            },
+            "net_ct_metering_status_phase": {
+                "name": "M\u00e4tstatus nettof\u00f6rbrukning CT {phase_name}"
+            },
+            "net_ct_powerfactor": {
+                "name": "Powerfactor nettof\u00f6rbrukning CT"
+            },
+            "net_ct_powerfactor_phase": {
+                "name": "Powerfactor nettof\u00f6rbrukning CT {phase_name}"
+            },
+            "net_ct_status_flags": {
+                "name": "M\u00e4tstatus flaggor aktiv nettof\u00f6rbrukning CT"
+            },
+            "net_ct_status_flags_phase": {
+                "name": "M\u00e4tstatus flaggor aktiv nettof\u00f6rbrukning CT {phase_name}"
+            },
+            "net_ct_voltage": {
+                "name": "Sp\u00e4nning nettof\u00f6rbrukning CT"
+            },
+            "net_ct_voltage_phase": {
+                "name": "Sp\u00e4nning nettof\u00f6rbrukning CT {phase_name}"
+            },
+            "production_ct_current": {
+                "name": "Produktion CT-str\u00f6m"
+            },
+            "production_ct_current_phase": {
+                "name": "Produktion CT-str\u00f6m {phase_name}"
+            },
+            "production_ct_frequency": {
+                "name": "Frekvens produktion CT"
+            },
+            "production_ct_frequency_phase": {
+                "name": "Frekvens produktion CT {phase_name}"
+            },
+            "production_ct_metering_status": {
+                "name": "M\u00e4tstatus produktion CT"
+            },
+            "production_ct_metering_status_phase": {
+                "name": "M\u00e4tstatus produktion CT {phase_name}"
+            },
+            "production_ct_powerfactor": {
+                "name": "Powerfactor produktion CT"
+            },
+            "production_ct_powerfactor_phase": {
+                "name": "Powerfactor produktion CT {phase_name}"
+            },
+            "production_ct_status_flags": {
+                "name": "M\u00e4tstatus flaggor aktiv produktion CT"
+            },
+            "production_ct_status_flags_phase": {
+                "name": "M\u00e4tstatus flaggor aktiv produktion CT {phase_name}"
+            },
+            "production_ct_voltage": {
+                "name": "Sp\u00e4nning produktion CT"
+            },
+            "production_ct_voltage_phase": {
+                "name": "Sp\u00e4nning produktion CT {phase_name}"
+            },
+            "reserve_energy": {
+                "name": "Reservbatteri energi"
+            },
+            "reserve_soc": {
+                "name": "Reservbatteri niv\u00e5"
+            },
+            "seven_days_consumption": {
+                "name": "Elkonsumtion senaste sju dagarna"
+            },
+            "seven_days_consumption_phase": {
+                "name": "Energif\u00f6rbrukning senaste sju dagarna {phase_name}"
+            },
+            "seven_days_production": {
+                "name": "Elproduktion senaste sju dagarna"
+            },
+            "seven_days_production_phase": {
+                "name": "Energiproduktion senaste sju dagarna {phase_name}"
+            },
+            "storage_ct_current": {
+                "name": "Lagring CT-str\u00f6m"
+            },
+            "storage_ct_current_phase": {
+                "name": "Lagring CT-str\u00f6m {phase_name}"
+            },
+            "storage_ct_frequency": {
+                "name": "Frekvens lagring CT"
+            },
+            "storage_ct_frequency_phase": {
+                "name": "Frekvens lagring CT {phase_name}"
+            },
+            "storage_ct_metering_status": {
+                "name": "M\u00e4tstatus lagring CT"
+            },
+            "storage_ct_metering_status_phase": {
+                "name": "M\u00e4tstatus lagring CT {phase_name}"
+            },
+            "storage_ct_powerfactor": {
+                "name": "Powerfactor lagring CT"
+            },
+            "storage_ct_powerfactor_phase": {
+                "name": "Powerfactor lagring CT {phase_name}"
+            },
+            "storage_ct_status_flags": {
+                "name": "M\u00e4tstatus flaggor aktiv lagring CT"
+            },
+            "storage_ct_status_flags_phase": {
+                "name": "M\u00e4tstatus flaggor aktiv lagring CT {phase_name}"
+            },
+            "storage_ct_voltage": {
+                "name": "Sp\u00e4nning lagring CT"
+            },
+            "storage_ct_voltage_phase": {
+                "name": "Sp\u00e4nning lagring CT {phase_name}"
+            }
+        },
+        "switch": {
+            "charge_from_grid": {
+                "name": "Ladda fr\u00e5n eln\u00e4tet"
+            },
+            "grid_enabled": {
+                "name": "Eln\u00e4t aktiverat"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Fel i Envoy-autentiseringen p\u00e5 {host}: {args}"
+        },
+        "envoy_error": {
+            "message": "Fel vid kommunikation med Envoy API p\u00e5 {host}: {args}"
+        },
+        "unexpected_device": {
+            "message": "Ov\u00e4ntat Envoy serienummer hittat p\u00e5 {host}; f\u00f6rv\u00e4ntat {expected_serial}, hittat {actual_serial}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "diagnostics_include_fixtures": "Inkludera testfixturdata i diagnostikrapporten. Anv\u00e4nds p\u00e5 beg\u00e4ran f\u00f6r att tillhandah\u00e5lla testdata f\u00f6r fels\u00f6kning eller utvecklingsaktiviteter. N\u00e4r det h\u00e4r alternativet \u00e4r aktiverat kan det ta l\u00e4ngre tid att ladda ner diagnostikrapporten. N\u00e4r rapporten har skapats \u00e4r det b\u00e4st att inaktivera det h\u00e4r alternativet igen.",
+                    "disable_keep_alive": "Anv\u00e4nd alltid en ny anslutning n\u00e4r du beg\u00e4r data fr\u00e5n Envoy. Kan l\u00f6sa kommunikationsproblem med vissa Firmwares f\u00f6r Envoy."
+                },
+                "title": "Envoy {serial} {host} alternativ"
+            }
+        }
+    }
+}

@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Rekonfigur\u00e1cia bola \u00faspe\u0161n\u00e1"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "no_data": "API sa pripojilo, ale odpove\u010f bola pr\u00e1zdna"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "Oblasti",
+                    "currency": "Mena"
+                },
+                "data_description": {
+                    "areas": "Oblasti na zobrazenie cien pod\u013ea oblast\u00ed trhu Nordpool.",
+                    "currency": "Vyberte menu, v ktorej sa maj\u00fa ceny zobrazova\u0165, EUR je z\u00e1kladn\u00e1 mena."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "Oblasti",
+                    "currency": "Mena"
+                },
+                "data_description": {
+                    "areas": "Oblasti na zobrazenie cien pod\u013ea oblast\u00ed trhu Nordpool.",
+                    "currency": "Vyberte menu, v ktorej sa maj\u00fa ceny zobrazova\u0165, EUR je z\u00e1kladn\u00e1 mena."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} priemer"
+            },
+            "block_end_time": {
+                "name": "{block} \u010das, k\u00fdm"
+            },
+            "block_max": {
+                "name": "{block} najvy\u0161\u0161ia cena"
+            },
+            "block_min": {
+                "name": "{block} najni\u017e\u0161ia cena"
+            },
+            "block_start_time": {
+                "name": "{block} \u010das od"
+            },
+            "currency": {
+                "name": "Mena"
+            },
+            "current_price": {
+                "name": "Aktu\u00e1lna cena"
+            },
+            "daily_average": {
+                "name": "Denn\u00fd priemer"
+            },
+            "exchange_rate": {
+                "name": "V\u00fdmenn\u00fd kurz"
+            },
+            "highest_price": {
+                "name": "Najvy\u0161\u0161ia cena",
+                "state_attributes": {
+                    "end": {
+                        "name": "\u010cas ukon\u010denia"
+                    },
+                    "start": {
+                        "name": "Doba spustenia"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "Predch\u00e1dzaj\u00faca cena"
+            },
+            "lowest_price": {
+                "name": "Najni\u017e\u0161ia cena",
+                "state_attributes": {
+                    "end": {
+                        "name": "\u010cas ukon\u010denia"
+                    },
+                    "start": {
+                        "name": "Doba spustenia"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "\u010eal\u0161ia cena"
+            },
+            "updated_at": {
+                "name": "Posledn\u00e1 aktualiz\u00e1cia"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Do\u0161lo k chybe overovania, preto\u017ee ste sa pok\u00fa\u0161ali na\u010d\u00edta\u0165 \u00fadaje pr\u00edli\u0161 \u010faleko do minulosti."
+        },
+        "connection_error": {
+            "message": "Pri prip\u00e1jan\u00ed k rozhraniu API do\u0161lo k chybe pripojenia. Sk\u00faste to nesk\u00f4r."
+        },
+        "empty_response": {
+            "message": "Spolo\u010dnos\u0165 Nord Pool nezverejnila trhov\u00e9 ceny k uveden\u00e9mu d\u00e1tumu."
+        },
+        "entry_not_found": {
+            "message": "Integr\u00e1cia Nord Pool nie je nakonfigurovan\u00e1 v aplik\u00e1cii Home Assistant."
+        },
+        "entry_not_loaded": {
+            "message": "Integr\u00e1cia Nord Pool moment\u00e1lne nie je na\u010d\u00edtan\u00e1 alebo zak\u00e1zan\u00e1 v aplik\u00e1cii Home Assistant."
+        },
+        "initial_update_failed": {
+            "message": "Po\u010diato\u010dn\u00e1 aktualiz\u00e1cia zlyhala pri spusten\u00ed s chybou {error}"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "Z\u00edskajte ceny pre konkr\u00e9tny d\u00e1tum.",
+            "fields": {
+                "areas": {
+                    "description": "Jedna alebo viacero oblast\u00ed, pre ktor\u00e9 m\u00f4\u017eete z\u00edska\u0165 ceny. Ak zostane pr\u00e1zdna, pou\u017eije u\u017e nakonfigurovan\u00e9 oblasti.",
+                    "name": "Oblasti"
+                },
+                "config_entry": {
+                    "description": "Vyberte polo\u017eku konfigur\u00e1cie.",
+                    "name": "Vyberte polo\u017eku konfigur\u00e1cie Nord Pool"
+                },
+                "currency": {
+                    "description": "Mena, v ktorej sa daj\u00fa z\u00edska\u0165 ceny. Ak zostane pr\u00e1zdna, pou\u017eije sa u\u017e nakonfigurovan\u00e1 mena.",
+                    "name": "Mena"
+                },
+                "date": {
+                    "description": "Povolen\u00e9 s\u00fa len d\u00e1tumy dva mesiace do minulosti a jeden de\u0148 do bud\u00facnosti.",
+                    "name": "D\u00e1tum"
+                }
+            },
+            "name": "Z\u00edskajte ceny pre d\u00e1tum"
+        }
+    }
+}

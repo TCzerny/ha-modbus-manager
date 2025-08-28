@@ -1,0 +1,103 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 est\u00e1 configurado",
+            "reauth_successful": "Sucesso na Autentica\u00e7\u00e3o"
+        },
+        "error": {
+            "cannot_connect": "Erro de Liga\u00e7\u00e3o",
+            "invalid_auth": "Autentica\u00e7\u00e3o Inv\u00e1lida",
+            "no_sites_found": "N\u00e3o foram encontrados sites que o utilizador possa configurar",
+            "unknown": "Erro inesperado",
+            "unsupported_controller": "Vers\u00e3o Omada Controller n\u00e3o suportada"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Utilizador"
+                },
+                "description": "As credenciais fornecidas pararam de funcionar. Por favor, atualize-as.",
+                "title": "Atualize as credenciais TP-Link"
+            },
+            "site": {
+                "data": {
+                    "site": "Site"
+                },
+                "title": "Escolha o(s) s\u00edtio(s) a gerir"
+            },
+            "user": {
+                "data": {
+                    "host": "Servidor",
+                    "password": "Password",
+                    "username": "Utilizador",
+                    "verify_ssl": "Verificar certificado SSL "
+                },
+                "data_description": {
+                    "host": "URL da interface de gest\u00e3o do seu controlador TP-Link Omada."
+                },
+                "description": "Introduzir os detalhes da liga\u00e7\u00e3o para o controlador Omada. Os controladores da cloud  n\u00e3o s\u00e3o suportados."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "lan_status": {
+                "name": "Porta {port_name} Estado da LAN"
+            },
+            "online_detection": {
+                "name": "Porta {port_name} Dete\u00e7\u00e3o Online"
+            },
+            "poe_delivery": {
+                "name": "Porta {port_name} Entrega PoE"
+            },
+            "wan_link": {
+                "name": "Porta {port_name} Liga\u00e7\u00e3o \u00e0 Internet"
+            }
+        },
+        "sensor": {
+            "cpu_usage": {
+                "name": "Uso do CPU"
+            },
+            "device_status": {
+                "name": "Estado do dispositivo",
+                "state": {
+                    "adopt_failed": "A ado\u00e7\u00e3o falho",
+                    "connected": "Ligado",
+                    "disconnected": "Desligado",
+                    "error": "Erro",
+                    "heartbeat_missed": "Batimento card\u00edaco perdido",
+                    "isolated": "Isolado",
+                    "managed_externally": "Gerido externamente",
+                    "pending": "Pendente"
+                }
+            },
+            "mem_usage": {
+                "name": "Mem\u00f3ria em uso"
+            }
+        },
+        "switch": {
+            "poe_control": {
+                "name": "Porta {port_name} PoE"
+            },
+            "wan_connect_ipv4": {
+                "name": "Porta {port_name} Ligado \u00e0 Internet"
+            },
+            "wan_connect_ipv6": {
+                "name": "Porta {port_name} Ligado \u00e0 Internet (IPv6)"
+            }
+        }
+    },
+    "services": {
+        "reconnect_client": {
+            "description": "Tenta fazer com que o cliente sem fios se volte a ligar \u00e0 rede Omada.",
+            "fields": {
+                "mac": {
+                    "description": "Endere\u00e7o MAC do dispositivo.",
+                    "name": "Endere\u00e7o MAC"
+                }
+            },
+            "name": "Voltar a ligar o cliente sem fios"
+        }
+    }
+}

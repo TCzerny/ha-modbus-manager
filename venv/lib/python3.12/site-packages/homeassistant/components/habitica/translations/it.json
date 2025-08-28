@@ -1,0 +1,259 @@
+{
+    "common": {
+        "unit_tasks": "attivit\u00e0"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "L'account \u00e8 gi\u00e0 configurato"
+        },
+        "error": {
+            "cannot_connect": "Impossibile connettersi",
+            "invalid_auth": "Autenticazione non valida",
+            "unknown": "Errore imprevisto"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "url": "URL",
+                    "verify_ssl": "Verifica il certificato SSL"
+                }
+            },
+            "login": {
+                "data": {
+                    "password": "Password"
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "Distribuisci tutti i punti statistica"
+            },
+            "brightness": {
+                "name": "Luce Ustionante"
+            },
+            "buy_health_potion": {
+                "name": "Compra una pozione salute"
+            },
+            "defensive_stance": {
+                "name": "Posizione Difensiva"
+            },
+            "earth": {
+                "name": "Terremoto"
+            },
+            "frost": {
+                "name": "Gelido Freddo"
+            },
+            "heal": {
+                "name": "Luce Curativa"
+            },
+            "heal_all": {
+                "name": "Benedizione"
+            },
+            "intimidate": {
+                "name": "Sguardo Minaccioso"
+            },
+            "mpheal": {
+                "name": "Ondata Eterea"
+            },
+            "protect_aura": {
+                "name": "Aura Protettiva"
+            },
+            "revive": {
+                "name": "Rivivi dalla morte"
+            },
+            "run_cron": {
+                "name": "Comincia la mia giornata"
+            },
+            "stealth": {
+                "name": "Furtivit\u00e0"
+            },
+            "tools_of_trade": {
+                "name": "Attrezzi del Mestiere"
+            },
+            "valorous_presence": {
+                "name": "Presenza Valorosa"
+            }
+        },
+        "calendar": {
+            "dailys": {
+                "state_attributes": {
+                    "yesterdaily": {
+                        "state": {
+                            "false": "No",
+                            "true": "S\u00ec"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "Classe",
+                "state": {
+                    "healer": "Guaritore",
+                    "rogue": "Canaglia",
+                    "warrior": "Guerriero",
+                    "wizard": "Mago"
+                }
+            },
+            "constitution": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Livello"
+                    }
+                }
+            },
+            "dailys": {
+                "unit_of_measurement": "attivit\u00e0"
+            },
+            "display_name": {
+                "name": "Nome da visualizzare"
+            },
+            "experience": {
+                "name": "Esperienza"
+            },
+            "experience_max": {
+                "name": "Livello successivo"
+            },
+            "gems": {
+                "name": "Gemme",
+                "unit_of_measurement": "gemme"
+            },
+            "gold": {
+                "name": "Oro"
+            },
+            "habits": {
+                "name": "Abitudini",
+                "unit_of_measurement": "attivit\u00e0"
+            },
+            "health": {
+                "name": "Salute"
+            },
+            "health_max": {
+                "name": "Salute max."
+            },
+            "intelligence": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Livello"
+                    }
+                }
+            },
+            "level": {
+                "name": "Livello"
+            },
+            "perception": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Livello"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "Ricompense",
+                "unit_of_measurement": "attivit\u00e0"
+            },
+            "strength": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Livello"
+                    }
+                }
+            },
+            "todos": {
+                "unit_of_measurement": "attivit\u00e0"
+            },
+            "trinkets": {
+                "name": "Clessidre mistiche"
+            }
+        }
+    },
+    "exceptions": {
+        "not_enough_mana": {
+            "message": "Impossibile lanciare l'abilit\u00e0, non c'\u00e8 abbastanza mana. Il tuo personaggio ha {mana}, ma l'abilit\u00e0 costa {cost}."
+        },
+        "skill_not_found": {
+            "message": "Impossibile lanciare abilit\u00e0, il tuo personaggio non possiede l'abilit\u00e0 o l'incantesimo {skill}."
+        }
+    },
+    "issues": {
+        "deprecated_task_entity": {
+            "title": "Il sensore Habitica {task_name} \u00e8 deprecato"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "Assassino: Pugnalata alle spalle",
+                "fireball": "Mago: Fiammata",
+                "pickpocket": "Assassino: Borseggio",
+                "smash": "Guerriero: Attacco brutale"
+            }
+        }
+    },
+    "services": {
+        "api_call": {
+            "description": "Chiama l'API di Habitica.",
+            "fields": {
+                "args": {
+                    "description": "Eventuali argomenti del parametro URL o JSON aggiuntivi. Vedere apidoc menzionato per path. L'esempio utilizza lo stesso endpoint API.",
+                    "name": "Argomenti"
+                },
+                "name": {
+                    "description": "Il nome utente di Habitica da chiamare.",
+                    "name": "Nome"
+                },
+                "path": {
+                    "description": "Elementi dall'URL dell'API sotto forma di un array con il metodo allegato alla fine. Consulta https://habitica.com/apidoc/. L'esempio usa https://habitica.com/apidoc/#api-Task-CreateUserTasks.",
+                    "name": "Percorso"
+                }
+            },
+            "name": "Nome dell'API"
+        },
+        "cast_skill": {
+            "fields": {
+                "config_entry": {
+                    "description": "Scegli il personaggio di Habitica per lanciare l'abilit\u00e0."
+                },
+                "skill": {
+                    "description": "Seleziona l'abilit\u00e0 o l'incantesimo che vuoi lanciare sul compito. Possono essere utilizzate solo abilit\u00e0 corrispondenti alla classe del tuo personaggio.",
+                    "name": "Abilit\u00e0"
+                },
+                "task": {
+                    "description": "Il nome (o ID del compito) del compito che vuoi mirare con l'abilit\u00e0 o l'incantesimo."
+                }
+            },
+            "name": "Lancia un'abilit\u00e0"
+        },
+        "score_habit": {
+            "fields": {
+                "config_entry": {
+                    "description": "Seleziona il personaggio Habitica che tiene traccia del tuo habit."
+                },
+                "direction": {
+                    "description": "\u00c8 un progresso positivo o negativo che vuoi monitorare per il tuo habit.",
+                    "name": "Ricompensa o perdita"
+                },
+                "task": {
+                    "description": "Il nome (o ID del compito) dell'habit di Habitica.",
+                    "name": "Nome del habit"
+                }
+            },
+            "name": "Traccia un habit"
+        },
+        "score_reward": {
+            "fields": {
+                "config_entry": {
+                    "description": "Seleziona il personaggio di Habitica acquistando la ricompensa."
+                },
+                "task": {
+                    "description": "Il nome (o ID attivit\u00e0) della ricompensa personalizzata.",
+                    "name": "Nome della ricompensa"
+                }
+            },
+            "name": "Acquista una ricompensa"
+        }
+    }
+}

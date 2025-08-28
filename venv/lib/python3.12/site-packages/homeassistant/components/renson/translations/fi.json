@@ -1,0 +1,241 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "unknown": "Odottamaton virhe"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Palvelin"
+                },
+                "data_description": {
+                    "host": "Renson Endura delta -laitteen is\u00e4nt\u00e4nimi tai IP-osoite."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "air_quality_control": {
+                "name": "Ilmanlaadun valvonta"
+            },
+            "breeze": {
+                "name": "Tuuli"
+            },
+            "breeze_conditions_met": {
+                "name": "Tuuliolosuhteet t\u00e4yttyv\u00e4t"
+            },
+            "co2_control": {
+                "name": "CO2-ohjaus"
+            },
+            "frost_protection_active": {
+                "name": "Pakkassuojaus aktiivinen"
+            },
+            "humidity_control": {
+                "name": "Kosteuden s\u00e4\u00e4t\u00f6"
+            },
+            "preheater": {
+                "name": "Esil\u00e4mmitin"
+            }
+        },
+        "button": {
+            "reset_filter": {
+                "name": "Suodattimen laskurin nollaus"
+            },
+            "sync_time": {
+                "name": "Synkronoi aika laitteen kanssa"
+            }
+        },
+        "number": {
+            "filter_change": {
+                "name": "Suodatin puhdas/vaihdettu"
+            }
+        },
+        "sensor": {
+            "air_quality": {
+                "name": "Ilmanlaatu"
+            },
+            "air_quality_category": {
+                "name": "Ilmanlaatuluokka",
+                "state": {
+                    "bad": "Huono",
+                    "good": "Hyv\u00e4",
+                    "poor": "Huono"
+                }
+            },
+            "breeze_level": {
+                "name": "Tuulen taso",
+                "state": {
+                    "breeze": "Tuuli",
+                    "level1": "Taso 1",
+                    "level2": "Taso 2",
+                    "level3": "Taso 3",
+                    "level4": "Taso 4",
+                    "off": "Pois"
+                }
+            },
+            "breeze_temperature": {
+                "name": "Tuulen l\u00e4mp\u00f6tila"
+            },
+            "bypass_activation_temperature": {
+                "name": "Ohituksen aktivointil\u00e4mp\u00f6tila"
+            },
+            "bypass_level": {
+                "name": "Ohitustaso"
+            },
+            "co2_hysteresis": {
+                "name": "CO2-hystereesi"
+            },
+            "co2_quality_category": {
+                "name": "CO2-laatuluokka",
+                "state": {
+                    "bad": "Huono",
+                    "good": "Hyv\u00e4",
+                    "poor": "Huono"
+                }
+            },
+            "co2_threshold": {
+                "name": "CO2-kynnysarvo"
+            },
+            "day_pollution_level": {
+                "name": "P\u00e4iv\u00e4n saastetaso",
+                "state": {
+                    "level1": "Taso 1",
+                    "level2": "Taso 2",
+                    "level3": "Taso 3",
+                    "level4": "Taso 4"
+                }
+            },
+            "extract_air_temperature": {
+                "name": "Poistoilman l\u00e4mp\u00f6tila"
+            },
+            "filter_change": {
+                "name": "Suodattimen vaihto"
+            },
+            "manual_level": {
+                "name": "Manuaalinen taso",
+                "state": {
+                    "breeze": "Tuuli",
+                    "holiday": "Loma",
+                    "level1": "Taso 1",
+                    "level2": "Taso 2",
+                    "level3": "Taso 3",
+                    "level4": "Taso 4",
+                    "off": "Pois"
+                }
+            },
+            "night_pollution_level": {
+                "name": "Y\u00f6 saastetaso",
+                "state": {
+                    "level1": "Taso 1",
+                    "level2": "Taso 2",
+                    "level3": "Taso 3",
+                    "level4": "Taso 4"
+                }
+            },
+            "outdoor_air_temperature": {
+                "name": "Ulkoilman l\u00e4mp\u00f6tila"
+            },
+            "total_airflow_in": {
+                "name": "Kokonaisilmavirta sis\u00e4\u00e4n"
+            },
+            "total_airflow_out": {
+                "name": "Kokonaisilmavirta ulos"
+            },
+            "ventilation_level": {
+                "name": "Ilmanvaihdon taso",
+                "state": {
+                    "breeze": "Tuuli",
+                    "holiday": "Loma",
+                    "level1": "Taso 1",
+                    "level2": "Taso 2",
+                    "level3": "Taso 3",
+                    "level4": "Taso 4",
+                    "off": "Pois"
+                }
+            }
+        },
+        "switch": {
+            "breeze": {
+                "name": "Tuuli"
+            }
+        },
+        "time": {
+            "day_time": {
+                "name": "P\u00e4iv\u00e4n alkamisaika"
+            },
+            "night_time": {
+                "name": "Y\u00f6n alkamisaika"
+            }
+        }
+    },
+    "selector": {
+        "level_setting": {
+            "options": {
+                "breeze": "Tuuli",
+                "holiday": "Loma",
+                "level1": "Taso 1",
+                "level2": "Taso 2",
+                "level3": "Taso 3",
+                "level4": "Taso 4",
+                "off": "Pois"
+            }
+        }
+    },
+    "services": {
+        "set_breeze": {
+            "fields": {
+                "activate": {
+                    "name": "Aktivoi"
+                },
+                "breeze_level": {
+                    "name": "Taso"
+                },
+                "temperature": {
+                    "name": "L\u00e4mp\u00f6tila"
+                }
+            }
+        },
+        "set_pollution_settings": {
+            "fields": {
+                "airquality_control": {
+                    "description": "Ota ilmanlaadun s\u00e4\u00e4t\u00f6 k\u00e4ytt\u00f6\u00f6n tai poista se k\u00e4yt\u00f6st\u00e4",
+                    "name": "Ota ilmanlaadun valvonta k\u00e4ytt\u00f6\u00f6n"
+                },
+                "co2_control": {
+                    "description": "Aktivoi tai poista CO2-s\u00e4\u00e4t\u00f6 k\u00e4yt\u00f6st\u00e4",
+                    "name": "Ota CO2-s\u00e4\u00e4t\u00f6 k\u00e4ytt\u00f6\u00f6n"
+                },
+                "co2_hysteresis": {
+                    "name": "CO2-hystereesi"
+                },
+                "co2_threshold": {
+                    "name": "CO2-kynnysarvo"
+                },
+                "day_pollution_level": {
+                    "description": "Ilmanvaihdon taso, kun ep\u00e4puhtauksia havaitaan p\u00e4iv\u00e4ll\u00e4."
+                },
+                "humidity_control": {
+                    "description": "Aktivoi tai poista kosteudens\u00e4\u00e4t\u00f6 k\u00e4yt\u00f6st\u00e4",
+                    "name": "Ota kosteuden s\u00e4\u00e4t\u00f6 k\u00e4ytt\u00f6\u00f6n"
+                },
+                "night_pollution_level": {
+                    "description": "Ilmanvaihdon taso, kun saastuminen havaitaan y\u00f6ll\u00e4"
+                }
+            },
+            "name": "Aseta saasteasetukset"
+        },
+        "set_timer_level": {
+            "fields": {
+                "minutes": {
+                    "name": "Aika"
+                },
+                "timer_level": {
+                    "name": "Taso"
+                }
+            },
+            "name": "Aseta ajastin"
+        }
+    }
+}

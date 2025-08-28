@@ -1,0 +1,88 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "reconfigure_successful": "Omkonfigurationen lyckades",
+            "unique_id_mismatch": "Du valde en annan brygga \u00e4n den som den h\u00e4r konfigurationsposten konfigurerades med, detta \u00e4r inte till\u00e5tet."
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_api_key": "Ogiltig API-nyckel",
+            "invalid_host": "Ogiltigt v\u00e4rdnamn eller IP-adress"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "local_access_token": "Lokal \u00e5tkomsttoken"
+                },
+                "data_description": {
+                    "local_access_token": "Du hittar den i tedee-appen under \"Bridge Settings\" -> \"Local API\"."
+                },
+                "description": "Tedee beh\u00f6ver en uppdaterad \u00e5tkomstnyckel, eftersom den befintliga \u00e4r ogiltig eller kan ha g\u00e5tt ut.",
+                "title": "Uppdatering av \u00e5tkomstnyckel kr\u00e4vs"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "local_access_token": "Lokal \u00e5tkomsttoken"
+                },
+                "data_description": {
+                    "host": "IP-adressen f\u00f6r bryggan du vill ansluta till.",
+                    "local_access_token": "Du hittar den i tedee-appen under \"Bridge Settings\" -> \"Local API\"."
+                },
+                "description": "Uppdatera inst\u00e4llningarna f\u00f6r denna integration.",
+                "title": "Omkonfigurera Tedee"
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "local_access_token": "Lokal \u00e5tkomsttoken"
+                },
+                "data_description": {
+                    "host": "IP-adressen f\u00f6r bryggan du vill ansluta till.",
+                    "local_access_token": "Du hittar den i tedee-appen under \"Bridge Settings\" -> \"Local API\"."
+                },
+                "title": "St\u00e4ll in dina Tedee-l\u00e5s"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pullspring_enabled": {
+                "name": "Dragfj\u00e4der aktiverad"
+            },
+            "semi_locked": {
+                "name": "Semi-l\u00e5st"
+            },
+            "uncalibrated": {
+                "name": "L\u00e5s okalibrerat"
+            }
+        },
+        "sensor": {
+            "pullspring_duration": {
+                "name": "Dragfj\u00e4derns varaktighet"
+            }
+        }
+    },
+    "exceptions": {
+        "api_error": {
+            "message": "Fel vid kommunikation med API:et"
+        },
+        "authentication_failed": {
+            "message": "Autentiseringen misslyckades. Lokal \u00e5tkomsttoken \u00e4r ogiltig"
+        },
+        "lock_failed": {
+            "message": "Det gick inte att l\u00e5sa d\u00f6rren. L\u00e5s {lock_id}"
+        },
+        "open_failed": {
+            "message": "Det gick inte att l\u00e5sa upp d\u00f6rren. L\u00e5s {lock_id}"
+        },
+        "unlock_failed": {
+            "message": "Det gick inte att l\u00e5sa upp d\u00f6rren. L\u00e5s {lock_id}"
+        },
+        "update_failed": {
+            "message": "Fel vid uppdatering av data"
+        }
+    }
+}

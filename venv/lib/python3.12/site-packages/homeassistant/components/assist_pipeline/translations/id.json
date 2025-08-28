@@ -1,0 +1,37 @@
+{
+    "entity": {
+        "binary_sensor": {
+            "assist_in_progress": {
+                "name": "Assist sedang berlangsung"
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Assistant",
+                "state": {
+                    "preferred": "Diutamakan"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Deteksi berbicara selesai",
+                "state": {
+                    "aggressive": "Agresif",
+                    "default": "Baku",
+                    "relaxed": "Santai"
+                }
+            }
+        }
+    },
+    "issues": {
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "Sensor biner progres {integration_name} `{entity_id}` sudah tidak digunakan lagi.\n\nMigrasikan konfigurasi Anda untuk menggunakan entitas `{assist_satellite_domain}` yang sesuai, lalu pilih **Kirimkan** untuk menonaktifkan sensor biner progres dan memperbaiki masalah ini."
+                    }
+                }
+            },
+            "title": "Sensor biner progress {integration_name} tidak digunakan lagi"
+        }
+    }
+}

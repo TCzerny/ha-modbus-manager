@@ -1,0 +1,125 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "{name} ( {host} ) adl\u0131 ki\u015fiyi Home Assistant'a eklemek istiyor musunuz?"
+            },
+            "user": {
+                "data": {
+                    "host": "Sunucu"
+                },
+                "data_description": {
+                    "host": "Palazzetti CBox'\u0131n ana bilgisayar ad\u0131 veya IP adresi"
+                }
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "palazzetti": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Otomatik",
+                            "high": "Y\u00fcksek",
+                            "silent": "Sessiz"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "combustion_power": {
+                "name": "Yanma g\u00fcc\u00fc"
+            }
+        },
+        "sensor": {
+            "air_outlet_temperature": {
+                "name": "Hava \u00e7\u0131k\u0131\u015f s\u0131cakl\u0131\u011f\u0131"
+            },
+            "pellet_level": {
+                "name": "Pelet seviyesi"
+            },
+            "pellet_quantity": {
+                "name": "Pelet miktar\u0131"
+            },
+            "return_water_temperature": {
+                "name": "D\u00f6n\u00fc\u015f suyu s\u0131cakl\u0131\u011f\u0131"
+            },
+            "room_temperature": {
+                "name": "Oda s\u0131cakl\u0131\u011f\u0131"
+            },
+            "status": {
+                "name": "Durum",
+                "state": {
+                    "burning": "\u00c7al\u0131\u015f\u0131yor",
+                    "burning_mod": "\u00c7al\u0131\u015ft\u0131rma - Mod\u00fclasyonlu",
+                    "chimney_alarm": "Baca alarm\u0131",
+                    "clean_fire": "Yanma kab\u0131 temizli\u011fi",
+                    "cleaning_warning": "Temizlik uyar\u0131s\u0131",
+                    "cleanup": "Son temizlik",
+                    "cool_fluid": "Bekleme",
+                    "cooling": "So\u011futma i\u015flemi devam ediyor",
+                    "door_open": "Kap\u0131 a\u00e7\u0131k",
+                    "ecomode": "Ekomod",
+                    "exhaust_temp_high": "\u00c7ok y\u00fcksek egzoz gaz\u0131 s\u0131cakl\u0131\u011f\u0131",
+                    "fire_stop": "Kapat",
+                    "firewood_finished": "Yakacak odun bitti",
+                    "flue_probe_failure": "Baca gaz\u0131 prob ar\u0131zas\u0131",
+                    "fuel_error": "Yak\u0131t hatas\u0131",
+                    "fueling": "Ate\u015fleme",
+                    "general_error": "Genel hata",
+                    "grate_error": "Rendeleme hatas\u0131",
+                    "hatch_door_open": "Besleme kapa\u011f\u0131 veya kap\u0131 a\u00e7\u0131k",
+                    "heatup": "Pelet yem",
+                    "ign_test": "Yak\u0131t kontrol\u00fc",
+                    "main_probe_failure": "Ana prob ar\u0131zas\u0131",
+                    "off": "Kapal\u0131",
+                    "off_timer": "Zaman ayarl\u0131 kapatma",
+                    "pellet_finished": "Peletler bitti veya ate\u015fleme ba\u015far\u0131s\u0131z oldu",
+                    "pellet_water_error": "Pelet probu veya d\u00f6n\u00fc\u015f suyu hatas\u0131",
+                    "pressure_error": "Emniyet bas\u0131n\u00e7 anahtar\u0131 hatas\u0131",
+                    "t05_error": "T05 hatas\u0131 ba\u011flant\u0131s\u0131 kesilmi\u015f veya ar\u0131zal\u0131 prob",
+                    "temp_too_high": "S\u0131cakl\u0131k \u00e7ok y\u00fcksek",
+                    "test_fire": "Ate\u015fleme testi",
+                    "unknown": "Bilinmeyen"
+                }
+            },
+            "t1_hydro": {
+                "name": "Hidro s\u0131cakl\u0131k 1"
+            },
+            "t2_hydro": {
+                "name": "Hidro s\u0131cakl\u0131k 2"
+            },
+            "tank_water_temperature": {
+                "name": "Tank su s\u0131cakl\u0131\u011f\u0131"
+            },
+            "wood_combustion_temperature": {
+                "name": "Odun yanma s\u0131cakl\u0131\u011f\u0131"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Cihaza ba\u011flan\u0131lamad\u0131."
+        },
+        "invalid_combustion_power": {
+            "message": "Yanma g\u00fcc\u00fc {value} ge\u00e7ersiz."
+        },
+        "invalid_fan_mode": {
+            "message": "Fan modu {value} ge\u00e7ersiz."
+        },
+        "invalid_target_temperature": {
+            "message": "Hedef s\u0131cakl\u0131k {value} ge\u00e7ersiz."
+        },
+        "on_off_not_available": {
+            "message": "Cihaz a\u00e7\u0131l\u0131p kapat\u0131lam\u0131yor."
+        }
+    }
+}

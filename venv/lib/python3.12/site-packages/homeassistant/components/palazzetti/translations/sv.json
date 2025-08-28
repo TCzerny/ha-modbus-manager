@@ -1,0 +1,125 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta."
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Vill du l\u00e4gga till {name} ({host}) i Home Assistant?"
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r Palazzetti CBox"
+                }
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "palazzetti": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "H\u00f6g",
+                            "silent": "Tyst"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "combustion_power": {
+                "name": "F\u00f6rbr\u00e4nningskraft"
+            }
+        },
+        "sensor": {
+            "air_outlet_temperature": {
+                "name": "Luftutlopp temperatur"
+            },
+            "pellet_level": {
+                "name": "Pelletsniv\u00e5"
+            },
+            "pellet_quantity": {
+                "name": "Pelletsm\u00e4ngd"
+            },
+            "return_water_temperature": {
+                "name": "Returvatten temperatur"
+            },
+            "room_temperature": {
+                "name": "Rumstemperatur"
+            },
+            "status": {
+                "name": "Status",
+                "state": {
+                    "burning": "Drift",
+                    "burning_mod": "Drift - Modulerande",
+                    "chimney_alarm": "Skorstenslarm",
+                    "clean_fire": "Reng\u00f6ring av br\u00e4nnkammare",
+                    "cleaning_warning": "Reng\u00f6ringsvarning",
+                    "cleanup": "Slutst\u00e4dning",
+                    "cool_fluid": "Stand-by",
+                    "cooling": "Kylning p\u00e5g\u00e5r",
+                    "door_open": "D\u00f6rr \u00f6ppen",
+                    "ecomode": "Eco-l\u00e4ge",
+                    "exhaust_temp_high": "F\u00f6r h\u00f6g avgastemperatur",
+                    "fire_stop": "St\u00e4nga av",
+                    "firewood_finished": "Veden \u00e4r f\u00e4rdig",
+                    "flue_probe_failure": "Fel p\u00e5 r\u00f6kgassond",
+                    "fuel_error": "Br\u00e4nslefel",
+                    "fueling": "T\u00e4ndning",
+                    "general_error": "Allm\u00e4nt fel",
+                    "grate_error": "Gallerfel",
+                    "hatch_door_open": "Matarlucka eller d\u00f6rr \u00f6ppen",
+                    "heatup": "Inmatning av pellets",
+                    "ign_test": "Br\u00e4nslekontroll",
+                    "main_probe_failure": "Fel p\u00e5 huvudsonden",
+                    "off": "Av",
+                    "off_timer": "Timerreglerad avst\u00e4ngning",
+                    "pellet_finished": "Pellets slut eller t\u00e4ndning misslyckad",
+                    "pellet_water_error": "Fel p\u00e5 pelletssond eller returvatten",
+                    "pressure_error": "Fel p\u00e5 s\u00e4kerhetstryckbrytaren",
+                    "t05_error": "T05-fel bortkopplad eller felaktig prob",
+                    "temp_too_high": "Temperaturen \u00e4r f\u00f6r h\u00f6g",
+                    "test_fire": "T\u00e4ndningstest",
+                    "unknown": "Ok\u00e4nd"
+                }
+            },
+            "t1_hydro": {
+                "name": "Hydrotemperatur 1"
+            },
+            "t2_hydro": {
+                "name": "Hydrotemperatur 2"
+            },
+            "tank_water_temperature": {
+                "name": "Tankvatten temperatur"
+            },
+            "wood_combustion_temperature": {
+                "name": "F\u00f6rbr\u00e4nningstemperatur f\u00f6r tr\u00e4"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Det gick inte att ansluta till enheten."
+        },
+        "invalid_combustion_power": {
+            "message": "F\u00f6rbr\u00e4nningseffekt {value} \u00e4r ogiltig."
+        },
+        "invalid_fan_mode": {
+            "message": "Fl\u00e4ktl\u00e4ge {value} \u00e4r ogiltigt."
+        },
+        "invalid_target_temperature": {
+            "message": "M\u00e5ltemperaturen {value} \u00e4r ogiltig."
+        },
+        "on_off_not_available": {
+            "message": "Apparaten kan inte sl\u00e5s p\u00e5 eller av."
+        }
+    }
+}

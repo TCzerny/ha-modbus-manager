@@ -1,0 +1,95 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "already_in_progress": "Konfig\u016bracijos procesas jau vyksta",
+            "not_xiaomi_aqara": "Ne \u201eXiaomi Aqara Gateway\u201c, rastas prietaisas neatitiko \u017einom\u0173 prieigos vart\u0173"
+        },
+        "error": {
+            "discovery_error": "Nepavyko aptikti \u201eXiaomi Aqara Gateway\u201c, pabandykite kaip s\u0105saj\u0105 naudoti prietaiso, kuriame veikia \u201eHomeAssistant\u201c, IP",
+            "invalid_host": "Neteisingas pagrindinio kompiuterio pavadinimas arba IP adresas, \u017er. https://www.home-assistant.io/integrations/xiaomi_aqara/#connection-problem",
+            "invalid_interface": "Netinkama tinklo s\u0105saja",
+            "invalid_key": "Neteisingas prieigos vart\u0173 raktas",
+            "invalid_mac": "Neteisingas MAC adresas"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "select": {
+                "data": {
+                    "select_ip": "IP adresas"
+                },
+                "description": "Pasirinkite \u201eXiaomi Aqara Gateway\u201c, kur\u012f norite prijungti"
+            },
+            "settings": {
+                "data": {
+                    "key": "J\u016bs\u0173 vart\u0173 raktas",
+                    "name": "Vart\u0173 pavadinimas"
+                },
+                "description": "Rakt\u0105 (slapta\u017eod\u012f) galima gauti naudojant \u0161i\u0105 mokymo program\u0105: https://www.domoticz.com/wiki/Xiaomi_Gateway_(Aqara)#Adding_the_Xiaomi_Gateway_to_Domoticz. Jei raktas nepateiktas, bus pasiekiami tik jutikliai",
+                "title": "Pasirenkami nustatymai"
+            },
+            "user": {
+                "data": {
+                    "host": "IP adresas (neprivaloma)",
+                    "interface": "Naudojama tinklo s\u0105saja",
+                    "mac": "MAC adresas (neprivaloma)"
+                },
+                "description": "Jei IP ir MAC adresai paliekami tu\u0161ti, naudojamas automatinis aptikimas"
+            }
+        }
+    },
+    "services": {
+        "add_device": {
+            "description": "\u012egalinamas \u201eXiaomi Aqara Gateway\u201c prisijungimo leidimas 30 sekund\u017ei\u0173. V\u0117liau vien\u0105 kart\u0105 paspaudus susiejimo mygtuk\u0105 galima prid\u0117ti nauj\u0105 prietais\u0105.",
+            "fields": {
+                "gw_mac": {
+                    "description": "\u201eXiaomi Aqara Gateway\u201c MAC adresas.",
+                    "name": "Prieigos vart\u0173 MAC"
+                }
+            },
+            "name": "Prid\u0117ti prietais\u0105"
+        },
+        "play_ringtone": {
+            "description": "Groja tam tikr\u0105 skamb\u0117jimo ton\u0105. Prieigos vart\u0173 programin\u0117s-technin\u0117s \u012frangos versija turi b\u016bti bent 1.4.1_145.",
+            "fields": {
+                "gw_mac": {
+                    "description": "\u201eXiaomi Aqara Gateway\u201c MAC adresas.",
+                    "name": "Prieigos vart\u0173 MAC"
+                },
+                "ringtone_id": {
+                    "description": "Vienas i\u0161 leid\u017eiam\u0173 skamb\u0117jimo ton\u0173 ID.",
+                    "name": "Skamb\u0117jimo tono ID"
+                },
+                "ringtone_vol": {
+                    "description": "Kiekis procentais.",
+                    "name": "Skamb\u0117jimo tono garsumas"
+                }
+            },
+            "name": "Groti skamb\u0117jimo ton\u0105"
+        },
+        "remove_device": {
+            "description": "Pa\u0161alina konkret\u0173 prietais\u0105. Pa\u0161alinti reikia, jei prietaisas turi b\u016bti suporuotas su kitais prieigos vartais.",
+            "fields": {
+                "device_id": {
+                    "description": "Prietaiso, kur\u012f norite pa\u0161alinti, aparatin\u0117s \u012frangos adresas.",
+                    "name": "Prietaiso ID"
+                },
+                "gw_mac": {
+                    "description": "\u201eXiaomi Aqara Gateway\u201c MAC adresas.",
+                    "name": "Prieigos vart\u0173 MAC"
+                }
+            },
+            "name": "Pa\u0161alinkite prietais\u0105"
+        },
+        "stop_ringtone": {
+            "description": "Nedelsiant sustabdo skamb\u0117jimo ton\u0105.",
+            "fields": {
+                "gw_mac": {
+                    "description": "\u201eXiaomi Aqara Gateway\u201c MAC adresas.",
+                    "name": "Prieigos vart\u0173 MAC"
+                }
+            },
+            "name": "Sustabdyti skamb\u0117jimo ton\u0105"
+        }
+    }
+}

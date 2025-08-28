@@ -1,0 +1,52 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "unknown": "Beklenmeyen hata"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API Anahtar\u0131"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "away_mode": {
+                "name": "D\u0131\u015far\u0131da modu"
+            }
+        },
+        "sensor": {
+            "daily_usage": {
+                "name": "G\u00fcnl\u00fck kullan\u0131m"
+            },
+            "monthly_usage": {
+                "name": "Ayl\u0131k kullan\u0131m"
+            },
+            "yearly_usage": {
+                "name": "Y\u0131ll\u0131k kullan\u0131m"
+            }
+        }
+    },
+    "services": {
+        "set_away_mode": {
+            "description": "Streamlabs Su Monit\u00f6r\u00fc i\u00e7in ev/uzak modunu ayarlar.",
+            "fields": {
+                "away_mode": {
+                    "description": "Evde ya da d\u0131\u015far\u0131da.",
+                    "name": "D\u0131\u015far\u0131da modu"
+                },
+                "location_id": {
+                    "description": "Streamlabs Su Monit\u00f6r\u00fcn\u00fcn konum kimli\u011fi.",
+                    "name": "Konum Kimli\u011fi"
+                }
+            },
+            "name": "Uzakta modunu ayarla"
+        }
+    }
+}

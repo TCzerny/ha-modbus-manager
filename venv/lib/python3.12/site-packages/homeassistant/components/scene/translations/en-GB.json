@@ -1,0 +1,42 @@
+{
+    "services": {
+        "apply": {
+            "description": "Activates a scene with configuration.",
+            "fields": {
+                "entities": {
+                    "description": "List of entities and their target state.",
+                    "name": "Entities state"
+                },
+                "transition": {
+                    "description": "Time it takes the devices to transition into the states defined in the scene.",
+                    "name": "Transition"
+                }
+            },
+            "name": "Apply"
+        },
+        "create": {
+            "description": "Creates a new scene.",
+            "fields": {
+                "scene_id": {
+                    "description": "The entity ID of the new scene.",
+                    "name": "Scene entity ID"
+                }
+            },
+            "name": "Create"
+        },
+        "reload": {
+            "description": "Reloads the scenes from the YAML-configuration.",
+            "name": "Reload"
+        },
+        "turn_on": {
+            "description": "Activates a scene.",
+            "fields": {
+                "transition": {
+                    "description": "Time it takes the devices to transition into the states defined in the scene.",
+                    "name": "Transition"
+                }
+            },
+            "name": "Activate"
+        }
+    }
+}

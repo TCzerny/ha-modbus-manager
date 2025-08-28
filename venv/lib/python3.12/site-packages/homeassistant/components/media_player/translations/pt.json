@@ -1,0 +1,339 @@
+{
+    "device_automation": {
+        "condition_type": {
+            "is_buffering": "{entity_name} est\u00e1 a armazenar em buffer",
+            "is_idle": "{entity_name} est\u00e1 em espera",
+            "is_off": "{entity_name} est\u00e1 desligado",
+            "is_on": "{entity_name} est\u00e1 ligado",
+            "is_paused": "{entity_name} est\u00e1 em pausa",
+            "is_playing": "{entity_name} est\u00e1 a reproduzir"
+        },
+        "extra_fields": {
+            "for": "Dura\u00e7\u00e3o"
+        },
+        "trigger_type": {
+            "buffering": "{entity_name} inicia a coloca\u00e7\u00e3o em buffer",
+            "changed_states": "{entity_name} foi ligado ou desligado",
+            "idle": "{entity_name} fica inativo",
+            "paused": "{entity_name} est\u00e1 em pausa",
+            "playing": "{entity_name} iniciou a reprodu\u00e7\u00e3o",
+            "turned_off": "{entity_name} foi desligado",
+            "turned_on": "{entity_name} foi ligado"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Media player",
+            "state": {
+                "buffering": "A armazenar em buffer",
+                "idle": "Inativo",
+                "off": "Desligado",
+                "on": "Ligado",
+                "paused": "Pausado",
+                "playing": "A reproduzir",
+                "standby": "Standby"
+            },
+            "state_attributes": {
+                "app_id": {
+                    "name": "ID da aplica\u00e7\u00e3o"
+                },
+                "app_name": {
+                    "name": "Aplica\u00e7\u00e3o"
+                },
+                "entity_picture_local": {
+                    "name": "Imagem da entidade acess\u00edvel localmente"
+                },
+                "groups_members": {
+                    "name": "Membros do grupo"
+                },
+                "is_volume_muted": {
+                    "name": "silenciado",
+                    "state": {
+                        "false": "N\u00e3o",
+                        "true": "Sim"
+                    }
+                },
+                "media_album_artist": {
+                    "name": "\u00c1lbum do artista"
+                },
+                "media_album_name": {
+                    "name": "\u00c1lbum"
+                },
+                "media_artist": {
+                    "name": "Artista"
+                },
+                "media_channel": {
+                    "name": "Canal"
+                },
+                "media_content_id": {
+                    "name": "ID do conte\u00fado"
+                },
+                "media_content_type": {
+                    "name": "Tipo de conte\u00fado",
+                    "state": {
+                        "album": "\u00c1lbum",
+                        "app": "Aplica\u00e7\u00e3o",
+                        "artist": "Artista",
+                        "channel": "Canal",
+                        "channels": "Canais",
+                        "composer": "Compositor",
+                        "contributing_artist": "Artista contribuinte",
+                        "episode": "Epis\u00f3dio",
+                        "game": "Jogo",
+                        "genre": "G\u00e9nero",
+                        "image": "Imagem",
+                        "movie": "Filme",
+                        "music": "M\u00fasica",
+                        "playlist": "Lista de reprodu\u00e7\u00e3o",
+                        "podcast": "Podcast",
+                        "season": "Temporada",
+                        "track": "Faixa",
+                        "tvshow": "Programa de TV",
+                        "url": "URL",
+                        "video": "V\u00eddeo"
+                    }
+                },
+                "media_duration": {
+                    "name": "Dura\u00e7\u00e3o"
+                },
+                "media_episode": {
+                    "name": "Epis\u00f3dio"
+                },
+                "media_playlist": {
+                    "name": "Lista de reprodu\u00e7\u00e3o"
+                },
+                "media_position": {
+                    "name": "Posi\u00e7\u00e3o"
+                },
+                "media_position_updated_at": {
+                    "name": "Posi\u00e7\u00e3o atualizada"
+                },
+                "media_season": {
+                    "name": "Temporada"
+                },
+                "media_series_title": {
+                    "name": "S\u00e9rie"
+                },
+                "media_title": {
+                    "name": "T\u00edtulo"
+                },
+                "media_track": {
+                    "name": "Faixa"
+                },
+                "repeat": {
+                    "name": "Repetir",
+                    "state": {
+                        "all": "Tudo",
+                        "off": "Desligado",
+                        "one": "Uma vez"
+                    }
+                },
+                "shuffle": {
+                    "name": "Aleat\u00f3rio",
+                    "state": {
+                        "false": "Desligado",
+                        "true": "Ligado"
+                    }
+                },
+                "sound_mode": {
+                    "name": "Modo de som"
+                },
+                "sound_mode_list": {
+                    "name": "Modos de som dispon\u00edveis"
+                },
+                "source": {
+                    "name": "Fonte"
+                },
+                "source_list": {
+                    "name": "Fontes dispon\u00edveis"
+                },
+                "volume_level": {
+                    "name": "Volume"
+                }
+            }
+        },
+        "receiver": {
+            "name": "Recetor"
+        },
+        "speaker": {
+            "name": "Coluna"
+        },
+        "tv": {
+            "name": "TV"
+        }
+    },
+    "selector": {
+        "enqueue": {
+            "options": {
+                "add": "Adicionar \u00e0 fila",
+                "next": "Reproduzir o pr\u00f3ximo",
+                "play": "Reproduzir",
+                "replace": "Reproduzir agora e limpar a fila"
+            }
+        },
+        "repeat": {
+            "options": {
+                "all": "Repetir tudo",
+                "off": "Desligado",
+                "one": "Repetir um"
+            }
+        }
+    },
+    "services": {
+        "clear_playlist": {
+            "description": "Remove todos os itens da lista de reprodu\u00e7\u00e3o.",
+            "name": "Limpar lista de reprodu\u00e7\u00e3o"
+        },
+        "join": {
+            "description": "Agrupa leitores multim\u00e9dia para reprodu\u00e7\u00e3o s\u00edncrona. S\u00f3 funciona em sistemas de \u00e1udio multiroom suportados.",
+            "fields": {
+                "group_members": {
+                    "description": "Os leitores que ser\u00e3o sincronizados com a reprodu\u00e7\u00e3o especificada em \"Objetivos\".",
+                    "name": "Membros do grupo"
+                }
+            },
+            "name": "Juntar"
+        },
+        "media_next_track": {
+            "description": "Seleciona a faixa seguinte.",
+            "name": "Seguinte"
+        },
+        "media_pause": {
+            "description": "Faz pausa.",
+            "name": "Pausar"
+        },
+        "media_play": {
+            "description": "Come\u00e7a a tocar.",
+            "name": "Reproduzir"
+        },
+        "media_play_pause": {
+            "description": "Alterna entre reprodu\u00e7\u00e3o/pausa.",
+            "name": "Reproduzir/Pausa"
+        },
+        "media_previous_track": {
+            "description": "Seleciona a pista anterior.",
+            "name": "Anterior"
+        },
+        "media_seek": {
+            "description": "Permite ir para uma parte diferente do media que est\u00e1 a ser reproduzida atualmente.",
+            "fields": {
+                "seek_position": {
+                    "description": "Posi\u00e7\u00e3o alvo no media atualmente em reprodu\u00e7\u00e3o. O formato depende da plataforma.",
+                    "name": "Posi\u00e7\u00e3o"
+                }
+            },
+            "name": "Procura"
+        },
+        "media_stop": {
+            "description": "Para de reproduzir.",
+            "name": "Parar"
+        },
+        "play_media": {
+            "description": "Come\u00e7a a reproduzir o media especificado.",
+            "fields": {
+                "announce": {
+                    "description": "Se o media deve ser reproduzido como an\u00fancio.",
+                    "name": "Anunciar"
+                },
+                "enqueue": {
+                    "description": "Se o conte\u00fado deve ser reproduzido agora ou adicionado \u00e0 fila.",
+                    "name": "Colocar na fila"
+                },
+                "media_content_id": {
+                    "description": "A ID do conte\u00fado a reproduzir. Dependente da plataforma.",
+                    "name": "ID do conte\u00fado"
+                },
+                "media_content_type": {
+                    "description": "O tipo de conte\u00fado a ser reproduzido. Pode ser uma imagem, m\u00fasica, programa de TV, v\u00eddeo, epis\u00f3dio, canal ou lista de reprodu\u00e7\u00e3o.",
+                    "name": "Tipo de conte\u00fado"
+                }
+            },
+            "name": "Reproduzir media"
+        },
+        "repeat_set": {
+            "description": "Modo de reprodu\u00e7\u00e3o que repete o media num ciclo.",
+            "fields": {
+                "repeat": {
+                    "description": "O modo repetir est\u00e1 ativo.",
+                    "name": "Modo repetir"
+                }
+            },
+            "name": "Repetir"
+        },
+        "select_sound_mode": {
+            "description": "Seleciona um modo de som espec\u00edfico.",
+            "fields": {
+                "sound_mode": {
+                    "description": "Nome do modo de som para o qual mudar.",
+                    "name": "Modo de som"
+                }
+            },
+            "name": "Selecionar o modo de som"
+        },
+        "select_source": {
+            "description": "Envio ao leitor de media o comando para alterar a origem.",
+            "fields": {
+                "source": {
+                    "description": "Nome da origem para a qual mudar. Dependente da plataforma.",
+                    "name": "Origem"
+                }
+            },
+            "name": "Selecionar origem"
+        },
+        "shuffle_set": {
+            "description": "Modo de reprodu\u00e7\u00e3o que seleciona os suportes por ordem aleat\u00f3ria.",
+            "fields": {
+                "shuffle": {
+                    "description": "Se o modo aleat\u00f3rio est\u00e1 ou n\u00e3o ativado.",
+                    "name": "Baralhar"
+                }
+            },
+            "name": "Baralhar"
+        },
+        "toggle": {
+            "description": "Liga/desliga um leitor multim\u00e9dia.",
+            "name": "Alternar"
+        },
+        "turn_off": {
+            "description": "Desliga a alimenta\u00e7\u00e3o do leitor multim\u00e9dia.",
+            "name": "Desligar"
+        },
+        "turn_on": {
+            "description": "Liga a alimenta\u00e7\u00e3o do leitor multim\u00e9dia.",
+            "name": "Ligar"
+        },
+        "unjoin": {
+            "description": "Remove o reprodutor de um grupo. S\u00f3 funciona em plataformas que suportam grupos de reprodutores.",
+            "name": "Desanexar"
+        },
+        "volume_down": {
+            "description": "Diminui o volume.",
+            "name": "Diminuir o volume"
+        },
+        "volume_mute": {
+            "description": "Silencia ou ativa o som do leitor multim\u00e9dia.",
+            "fields": {
+                "is_volume_muted": {
+                    "description": "Define se \u00e9 ou n\u00e3o silenciado.",
+                    "name": "Silenciado"
+                }
+            },
+            "name": "Volume silenciar/ativar"
+        },
+        "volume_set": {
+            "description": "Define o n\u00edvel de volume.",
+            "fields": {
+                "volume_level": {
+                    "description": "O volume. 0 \u00e9 inaud\u00edvel, 1 \u00e9 o volume m\u00e1ximo.",
+                    "name": "N\u00edvel"
+                }
+            },
+            "name": "Definir o volume"
+        },
+        "volume_up": {
+            "description": "Aumenta o volume.",
+            "name": "Aumentar o volume"
+        }
+    },
+    "title": "Leitor multim\u00e9dia"
+}

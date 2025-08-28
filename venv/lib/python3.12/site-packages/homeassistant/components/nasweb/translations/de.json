@@ -1,0 +1,50 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "missing_internal_url": "Stelle sicher, dass Home Assistant eine g\u00fcltige interne URL hat",
+            "missing_nasweb_data": "Mit der internen Ger\u00e4tekonfiguration stimmt etwas nicht. Versuche, das Ger\u00e4t und Home Assistant neu zu starten.",
+            "missing_status": "Innerhalb des erwarteten Zeitfensters wurden keine Statusaktualisierungen empfangen. Stelle sicher, dass die interne URL von Home Assistant vom NASweb-Ger\u00e4t aus erreichbar ist.",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Passwort",
+                    "username": "Benutzername"
+                },
+                "description": "{nasweb_schema_img}NASweb kombiniert die Funktionen eines Bedienfelds mit der F\u00e4higkeit, die Geb\u00e4udeautomation zu verwalten. Das Ger\u00e4t \u00fcberwacht den Informationsfluss von Sensoren und programmierbaren Schaltern und speichert Einstellungen, Definitionen und konfigurierte Aktionen.",
+                "title": "NASweb-Ger\u00e4t hinzuf\u00fcgen"
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "switch_output": {
+                "name": "Relaisschalter {index}"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_error_internal_error": {
+            "message": "Mit der internen Ger\u00e4tekonfiguration stimmt etwas nicht. Versuche, das Ger\u00e4t und Home Assistant neu zu starten. Wenn das Problem weiterhin besteht, wende dich an den Support unter {support_email}"
+        },
+        "config_entry_error_invalid_authentication": {
+            "message": "Ung\u00fcltiger Benutzername oder ung\u00fcltiges Passwort. H\u00f6chstwahrscheinlich hat der Benutzer das Passwort ge\u00e4ndert oder er wurde entfernt. L\u00f6sche diesen Eintrag und erstelle einen neuen mit dem korrekten Benutzernamen und Passwort."
+        },
+        "config_entry_error_missing_internal_url": {
+            "message": "Stelle sicher, dass Home Assistant eine g\u00fcltige interne URL hat"
+        },
+        "config_entry_error_no_status_update": {
+            "message": "Innerhalb des erwarteten Zeitfensters wurden keine Statusaktualisierungen empfangen. Stelle sicher, dass die interne URL von Home Assistant vom NASweb-Ger\u00e4t aus erreichbar ist. Wenn das Problem weiterhin besteht, wende dich an den Support unter {support_email}"
+        },
+        "serial_mismatch": {
+            "message": "Mit einem anderen NASweb-Ger\u00e4t verbunden (Seriennummer stimmt nicht \u00fcberein)."
+        }
+    }
+}

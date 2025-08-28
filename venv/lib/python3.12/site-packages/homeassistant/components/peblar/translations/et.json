@@ -1,0 +1,176 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud",
+            "different_device": "Sisestatud teave p\u00e4rineb teisest Peblar EV laadijast.",
+            "no_serial_number": "Avastatud Peblari seade ei andnud seerianumbrit.",
+            "reauth_successful": "Taastuvastamine \u00f5nnestus",
+            "reconfigure_successful": "\u00dcmberseadistamine \u00f5nnestus"
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus",
+            "invalid_auth": "Tuvastamine nurjus",
+            "unknown": "Ootamatu t\u00f5rge"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Salas\u00f5na"
+                },
+                "data_description": {
+                    "password": "Sama salas\u00f5na mida kasutad Peblari EV laadija kohalikku veebiliidesesse sisselogimisel."
+                },
+                "description": "Autendi uuesti oma Peblar RV laadijaga. \n \n Selleks pead sisestama oma uue salas\u00f5na mida kasutad Peblari EV laadija veebiliidesesse sisselogimiseks."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "password": "Salas\u00f5na"
+                },
+                "data_description": {
+                    "host": "Peblar EV laadija hostinimi v\u00f5i IP-aadress koduv\u00f5rgus.",
+                    "password": "Sama salas\u00f5na mida kasutad Peblari EV laadija kohalikku veebiliidesesse sisselogimisel."
+                },
+                "description": "Seadista oma Peblar EV laadija uuesti.\n\nSee v\u00f5imaldab muuta oma Peblar EV laadija IP-aadressi ja salas\u00f5na, mida kasutad selle veebiliidesesse sisselogimiseks."
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Salas\u00f5na"
+                },
+                "data_description": {
+                    "host": "Peblar EV laadija hostinimi v\u00f5i IP-aadress koduv\u00f5rgus.",
+                    "password": "Sama salas\u00f5na mida kasutad Peblari EV laadija kohalikku veebiliidesesse sisselogimisel."
+                },
+                "description": "Seadista oma Peblari EV laadija Home Assistantiga sidumiseks. \n \nSelleks pead hankima oma Peblari EV laadija IP-aadressi ja salas\u00f5na, mida kasutad veebiliidesesse sisselogimiseks. \n \nHome Assistant konfigureerib Peblari EV laadija automaatselt kasutamiseks."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "Salas\u00f5na"
+                },
+                "data_description": {
+                    "password": "Sama salas\u00f5na mida kasutad Peblari EV laadija kohalikku veebiliidesesse sisselogimisel."
+                },
+                "description": "Seadista oma Peblar EV-laadija{hostname} IP aadressiga {host} sidumiseks Home Assistantiga.\n\nSelleks vajad salas\u00f5na mida kasutad Peblari EV laadija veebiliidesesse sisselogimiseks.\n\nHome Assistant konfigureeribPeblar-laadija automaatselt Home Assistantiga kasutamiseks."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Aktiivsed vead"
+            },
+            "active_warning_codes": {
+                "name": "Aktiivsed hoiatused"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "Laadimise piirang"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "Nutikas laadimine",
+                "state": {
+                    "default": "Vaikimisi",
+                    "fast_solar": "Kiirlaadimine p\u00e4ikeseenergiaga",
+                    "pure_solar": "Ainult p\u00e4ikeseenergiaga laadimine",
+                    "scheduled": "Ajastatud",
+                    "smart_solar": "Nutikas p\u00e4ikeseenergia"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Piira allikat",
+                "state": {
+                    "charging_cable": "Laadimiskaabel",
+                    "current_limiter": "Voolu piiraja",
+                    "dynamic_load_balancing": "D\u00fcnaamiline koormuse tasakaalustamine",
+                    "external_power_limit": "V\u00e4line v\u00f5imsuspiirang",
+                    "group_load_balancing": "Grupi koormuse tasakaalustamine",
+                    "hardware_limitation": "Riistvaraline piirang",
+                    "high_temperature": "K\u00f5rge temperatuur",
+                    "household_power_limit": "Kodumajapidamise v\u00f5imsuse piirm\u00e4\u00e4r",
+                    "installation_limit": "Paigaldamise piirm\u00e4\u00e4r",
+                    "local_modbus_api": "Modbus API",
+                    "local_rest_api": "REST API",
+                    "ocpp_smart_charging": "OCPP nutikas laadimine",
+                    "overcurrent_protection": "Liigvoolu kaitse",
+                    "phase_imbalance": "Faaside tasakaalustamatus",
+                    "power_factor": "V\u00f5imsustegur",
+                    "solar_charging": "P\u00e4ikesega laadimine"
+                }
+            },
+            "cp_state": {
+                "name": "Olek",
+                "state": {
+                    "charging": "Laadimine",
+                    "error": "Viga",
+                    "fault": "T\u00f5rge",
+                    "invalid": "Sobimatu",
+                    "no_ev_connected": "\u00dckski EV pole \u00fchendatud",
+                    "suspended": "Peatatud"
+                }
+            },
+            "current_phase_1": {
+                "name": "Vool faas 1"
+            },
+            "current_phase_2": {
+                "name": "Vool faas 2"
+            },
+            "current_phase_3": {
+                "name": "Vool faas 3"
+            },
+            "energy_session": {
+                "name": "Seansi energia"
+            },
+            "energy_total": {
+                "name": "Energia kokku"
+            },
+            "power_phase_1": {
+                "name": "V\u00f5imsus faasil 1"
+            },
+            "power_phase_2": {
+                "name": "V\u00f5imsus faasil 2"
+            },
+            "power_phase_3": {
+                "name": "V\u00f5imsus faasil 3"
+            },
+            "uptime": {
+                "name": "T\u00f6\u00f6aeg"
+            },
+            "voltage_phase_1": {
+                "name": "Pinge faasil 1"
+            },
+            "voltage_phase_2": {
+                "name": "Pinge faasil 2"
+            },
+            "voltage_phase_3": {
+                "name": "Pinge faasil 3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "\u00dchele faasile j\u00f5ustamine"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "Kohandamine"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Peblar EV laadijaga suhtlemisel ilmnes autentimise t\u00f5rge."
+        },
+        "communication_error": {
+            "message": "Peblar EV laadijaga suhtlemisel ilmnes t\u00f5rge: {error}"
+        },
+        "unknown_error": {
+            "message": "Peblari EV laadijaga suhtlemisel ilmnes tundmatu t\u00f5rge: {error}"
+        }
+    }
+}

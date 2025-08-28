@@ -1,0 +1,107 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "no_server_found": "LMS sunucusu bulunamad\u0131."
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "no_server_found": "Sunucu otomatik olarak ke\u015ffedilemedi.",
+            "unknown": "Beklenmeyen hata"
+        },
+        "flow_title": "{host}",
+        "step": {
+            "edit": {
+                "data": {
+                    "host": "Ana Bilgisayar",
+                    "https": "https \u00fczerinden ba\u011flan\u0131n (ters proxy gerektirir)",
+                    "password": "Parola",
+                    "port": "Port",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "title": "Ba\u011flant\u0131 bilgilerini d\u00fczenle"
+            },
+            "user": {
+                "data": {
+                    "host": "Ana Bilgisayar"
+                },
+                "data_description": {
+                    "host": "Lyrion M\u00fczik Sunucunuzun ana bilgisayar ad\u0131 veya IP adresi."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "needsrestart": {
+                "name": "Yeniden ba\u015flat\u0131lmas\u0131 gerekiyor"
+            },
+            "rescan": {
+                "name": "K\u00fct\u00fcphane yeniden taramas\u0131"
+            }
+        },
+        "sensor": {
+            "info_total_albums": {
+                "name": "Toplam alb\u00fcmler",
+                "unit_of_measurement": "alb\u00fcmler"
+            },
+            "info_total_artists": {
+                "name": "Toplam sanat\u00e7\u0131lar",
+                "unit_of_measurement": "sanat\u00e7\u0131lar"
+            },
+            "info_total_duration": {
+                "name": "Toplam s\u00fcre"
+            },
+            "info_total_genres": {
+                "name": "Toplam t\u00fcrler",
+                "unit_of_measurement": "t\u00fcrler"
+            },
+            "info_total_songs": {
+                "name": "Toplam \u015fark\u0131 say\u0131s\u0131",
+                "unit_of_measurement": "\u015fark\u0131lar"
+            },
+            "lastscan": {
+                "name": "Son tarama"
+            },
+            "other_player_count": {
+                "name": "Oyuncu say\u0131m\u0131 servis d\u0131\u015f\u0131",
+                "unit_of_measurement": "oyuncular"
+            },
+            "player_count": {
+                "name": "Oyuncu say\u0131s\u0131",
+                "unit_of_measurement": "oyuncular"
+            }
+        }
+    },
+    "services": {
+        "call_method": {
+            "description": "\u00d6zel bir Squeezebox JSONRPC API'sini \u00e7a\u011f\u0131r\u0131r.",
+            "fields": {
+                "command": {
+                    "description": "Lyrion M\u00fczik Sunucusuna ge\u00e7me komutu (CLI belgelerinde p0).",
+                    "name": "Komut"
+                },
+                "parameters": {
+                    "description": "Lyrion M\u00fczik Sunucusuna ge\u00e7irilecek ek parametreler dizisi (CLI belgelerinde p1, ..., pN).",
+                    "name": "Parametreler"
+                }
+            },
+            "name": "\u00c7a\u011fr\u0131 y\u00f6ntemi"
+        },
+        "call_query": {
+            "description": "\u00d6zel bir Squeezebox JSONRPC API'sini \u00e7a\u011f\u0131r\u0131r. Sonu\u00e7, Squeezebox varl\u0131\u011f\u0131n\u0131n 'query_result' \u00f6zniteli\u011finde saklan\u0131r.",
+            "fields": {
+                "command": {
+                    "description": "Lyrion M\u00fczik Sunucusuna ge\u00e7me komutu (CLI belgelerinde p0).",
+                    "name": "Komut"
+                },
+                "parameters": {
+                    "description": "Lyrion M\u00fczik Sunucusuna ge\u00e7irilecek ek parametreler dizisi (CLI belgelerinde p1, ..., pN).",
+                    "name": "Parametreler"
+                }
+            },
+            "name": "\u00c7a\u011fr\u0131 sorgusu"
+        }
+    }
+}

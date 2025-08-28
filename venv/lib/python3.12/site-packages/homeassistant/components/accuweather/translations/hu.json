@@ -1,0 +1,231 @@
+{
+    "config": {
+        "create_entry": {
+            "default": "N\u00e9h\u00e1ny \u00e9rz\u00e9kel\u0151 alap\u00e9rtelmez\u00e9s szerint nincs enged\u00e9lyezve. Az integr\u00e1ci\u00f3 konfigur\u00e1l\u00e1sa ut\u00e1n enged\u00e9lyezheti \u0151ket az entit\u00e1s-regisztr\u00e1ci\u00f3ban."
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "invalid_api_key": "\u00c9rv\u00e9nytelen API kulcs",
+            "requests_exceeded": "Az Accuweather API-hoz int\u00e9zett lek\u00e9r\u00e9sek sz\u00e1ma t\u00fal lett l\u00e9pve. V\u00e1rjon m\u00edg a tilt\u00e1s lej\u00e1r vagy v\u00e1ltson m\u00e1sik API-kulcsra."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API kulcs",
+                    "latitude": "Sz\u00e9less\u00e9g",
+                    "longitude": "Hossz\u00fas\u00e1g",
+                    "name": "Elnevez\u00e9s"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "air_quality": {
+                "name": "Leveg\u0151min\u0151s\u00e9g {forecast_day}. nap",
+                "state": {
+                    "good": "J\u00f3",
+                    "hazardous": "Vesz\u00e9lyes",
+                    "high": "Magas",
+                    "low": "Alacsony",
+                    "moderate": "M\u00e9rs\u00e9kelt",
+                    "unhealthy": "Eg\u00e9szs\u00e9gtelen"
+                }
+            },
+            "apparent_temperature": {
+                "name": "H\u0151\u00e9rzet"
+            },
+            "cloud_ceiling": {
+                "name": "Felh\u0151alap magass\u00e1g"
+            },
+            "cloud_cover": {
+                "name": "Felh\u0151takar\u00f3"
+            },
+            "cloud_cover_day": {
+                "name": "Felh\u0151takar\u00f3 nappal {forecast_day}. nap"
+            },
+            "cloud_cover_night": {
+                "name": "Felh\u0151takar\u00f3 \u00e9jszaka {forecast_day}. nap"
+            },
+            "condition_day": {
+                "name": "Nappali k\u00f6r\u00fclm\u00e9nyek {forecast_day}. nap"
+            },
+            "condition_night": {
+                "name": "\u00c9jszakai k\u00f6r\u00fclm\u00e9nyek {forecast_day}. nap"
+            },
+            "dew_point": {
+                "name": "Harmatpont"
+            },
+            "grass_pollen": {
+                "name": "F\u0171pollen {forecast_day}. nap",
+                "state_attributes": {
+                    "level": {
+                        "name": "Szint",
+                        "state": {
+                            "good": "J\u00f3",
+                            "hazardous": "Vesz\u00e9lyes",
+                            "high": "Magas",
+                            "low": "Alacsony",
+                            "moderate": "M\u00e9rs\u00e9kelt",
+                            "unhealthy": "Eg\u00e9szs\u00e9gtelen"
+                        }
+                    }
+                }
+            },
+            "hours_of_sun": {
+                "name": "Naps\u00fct\u00e9ses \u00f3r\u00e1k {forecast_day}. nap"
+            },
+            "mold_pollen": {
+                "name": "Pen\u00e9sz {forecast_day}. nap",
+                "state_attributes": {
+                    "level": {
+                        "name": "Szint",
+                        "state": {
+                            "good": "J\u00f3",
+                            "hazardous": "Vesz\u00e9lyes",
+                            "high": "Magas",
+                            "low": "Alacsony",
+                            "moderate": "M\u00e9rs\u00e9kelt",
+                            "unhealthy": "Eg\u00e9szs\u00e9gtelen"
+                        }
+                    }
+                }
+            },
+            "precipitation": {
+                "name": "Csapad\u00e9k"
+            },
+            "pressure_tendency": {
+                "name": "L\u00e9gnyom\u00e1s tendencia",
+                "state": {
+                    "falling": "Cs\u00f6kken\u0151",
+                    "rising": "Emelked\u0151",
+                    "steady": "\u00c1lland\u00f3"
+                }
+            },
+            "ragweed_pollen": {
+                "name": "Parlagf\u0171 {forecast_day}. nap",
+                "state_attributes": {
+                    "level": {
+                        "name": "Szint",
+                        "state": {
+                            "good": "J\u00f3",
+                            "hazardous": "Vesz\u00e9lyes",
+                            "high": "Magas",
+                            "low": "Alacsony",
+                            "moderate": "M\u00e9rs\u00e9kelt",
+                            "unhealthy": "Eg\u00e9szs\u00e9gtelen"
+                        }
+                    }
+                }
+            },
+            "realfeel_temperature": {
+                "name": "RealFeel h\u0151m\u00e9rs\u00e9klet"
+            },
+            "realfeel_temperature_max": {
+                "name": "RealFeel max. h\u0151m. {forecast_day}. nap"
+            },
+            "realfeel_temperature_min": {
+                "name": "RealFeel min. h\u0151m. {forecast_day}. nap"
+            },
+            "realfeel_temperature_shade": {
+                "name": "RealFeel h\u0151m. \u00e1rny\u00e9kban"
+            },
+            "realfeel_temperature_shade_max": {
+                "name": "RealFeel h\u0151m. max. \u00e1rny\u00e9kban {forecast_day}. nap"
+            },
+            "realfeel_temperature_shade_min": {
+                "name": "RealFeel h\u0151m. min. \u00e1rny\u00e9kban {forecast_day}. nap"
+            },
+            "solar_irradiance_day": {
+                "name": "Nap sug\u00e1rz\u00e1si energia nappal {forecast_day}. nap"
+            },
+            "solar_irradiance_night": {
+                "name": "Nap sug\u00e1rz\u00e1si energia \u00e9jszaka {forecast_day}. nap"
+            },
+            "thunderstorm_probability_day": {
+                "name": "Zivatar es\u00e9lye nappal {forecast_day}. nap"
+            },
+            "thunderstorm_probability_night": {
+                "name": "Zivatar es\u00e9lye \u00e9jszaka {forecast_day}. nap"
+            },
+            "tree_pollen": {
+                "name": "Fa pollen {forecast_day}. nap",
+                "state_attributes": {
+                    "level": {
+                        "name": "Szint",
+                        "state": {
+                            "good": "J\u00f3",
+                            "hazardous": "Vesz\u00e9lyes",
+                            "high": "Magas",
+                            "low": "Alacsony",
+                            "moderate": "M\u00e9rs\u00e9kelt",
+                            "unhealthy": "Eg\u00e9szs\u00e9gtelen"
+                        }
+                    }
+                }
+            },
+            "uv_index": {
+                "name": "UV index",
+                "state_attributes": {
+                    "level": {
+                        "name": "Szint",
+                        "state": {
+                            "good": "J\u00f3",
+                            "hazardous": "Vesz\u00e9lyes",
+                            "high": "Magas",
+                            "low": "Alacsony",
+                            "moderate": "M\u00e9rs\u00e9kelt",
+                            "unhealthy": "Eg\u00e9szs\u00e9gtelen"
+                        }
+                    }
+                }
+            },
+            "uv_index_forecast": {
+                "name": "UV index {forecast_day}. nap",
+                "state_attributes": {
+                    "level": {
+                        "name": "Szint",
+                        "state": {
+                            "good": "J\u00f3",
+                            "hazardous": "Vesz\u00e9lyes",
+                            "high": "Magas",
+                            "low": "Alacsony",
+                            "moderate": "M\u00e9rs\u00e9kelt",
+                            "unhealthy": "Eg\u00e9szs\u00e9gtelen"
+                        }
+                    }
+                }
+            },
+            "wet_bulb_temperature": {
+                "name": "Nedves h\u0151m\u00e9rs\u00e9klet"
+            },
+            "wind_chill_temperature": {
+                "name": "Sz\u00e9lh\u0171t\u00e9s h\u0151m\u00e9rs\u00e9klet"
+            },
+            "wind_gust_speed": {
+                "name": "Sz\u00e9ll\u00f6k\u00e9s sebess\u00e9ge"
+            },
+            "wind_gust_speed_day": {
+                "name": "Sz\u00e9ll\u00f6k\u00e9s sebess\u00e9g nappal {forecast_day}. nap"
+            },
+            "wind_gust_speed_night": {
+                "name": "Sz\u00e9ll\u00f6k\u00e9s sebess\u00e9g \u00e9jszaka {forecast_day}. nap"
+            },
+            "wind_speed": {
+                "name": "Sz\u00e9lsebess\u00e9g"
+            },
+            "wind_speed_day": {
+                "name": "Sz\u00e9lsebess\u00e9g nappal {forecast_day}. nap"
+            },
+            "wind_speed_night": {
+                "name": "Sz\u00e9lsebess\u00e9g \u00e9jszaka {forecast_day}. nap"
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "can_reach_server": "AccuWeather szerver el\u00e9r\u00e9se",
+            "remaining_requests": "Fennmarad\u00f3 enged\u00e9lyezett k\u00e9r\u00e9sek"
+        }
+    }
+}

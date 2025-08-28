@@ -1,0 +1,73 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "azimuth": "Azimut (360 Grad: 0 = Nord, 90 = Ost, 180 = S\u00fcd, 270 = West)",
+                    "declination": "Neigung (0 = Horizontal, 90 = Vertikal)",
+                    "latitude": "Breitengrad",
+                    "longitude": "L\u00e4ngengrad",
+                    "modules_power": "Gesamtspitzenleistung deiner PV-Module in Watt",
+                    "name": "Name"
+                },
+                "description": "Gib die Daten deiner PV-Module ein. Wenn ein Feld unklar ist, schau bitte in der Dokumentation nach."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "energy_current_hour": {
+                "name": "Gesch\u00e4tzte Energieerzeugung \u2013 diese Stunde"
+            },
+            "energy_next_hour": {
+                "name": "Gesch\u00e4tzte Energieerzeugung \u2013 n\u00e4chste Stunde"
+            },
+            "energy_production_today": {
+                "name": "Gesch\u00e4tzte Energieerzeugung \u2013 heute"
+            },
+            "energy_production_today_remaining": {
+                "name": "Gesch\u00e4tzte Energieerzeugung \u2013 Resttag heute"
+            },
+            "energy_production_tomorrow": {
+                "name": "Gesch\u00e4tzte Energieerzeugung \u2013 morgen"
+            },
+            "power_highest_peak_time_today": {
+                "name": "Spitzenleistungszeitpunkt - heute"
+            },
+            "power_highest_peak_time_tomorrow": {
+                "name": "Spitzenleistungszeitpunkt - morgen"
+            },
+            "power_production_next_12hours": {
+                "name": "Gesch\u00e4tzte Erzeugungsleistung \u2013 in 12 Stunden"
+            },
+            "power_production_next_24hours": {
+                "name": "Gesch\u00e4tzte Erzeugungsleistung \u2013 in 24 Stunden"
+            },
+            "power_production_next_hour": {
+                "name": "Gesch\u00e4tzte Erzeugungsleistung \u2013 in 1 Stunde"
+            },
+            "power_production_now": {
+                "name": "Gesch\u00e4tzte Erzeugungsleistung \u2013 jetzt"
+            }
+        }
+    },
+    "options": {
+        "error": {
+            "invalid_api_key": "Ung\u00fcltiger API-Code"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "api_key": "API-Code",
+                    "azimuth": "Azimut (360 Grad: 0 = Nord, 90 = Ost, 180 = S\u00fcd, 270 = West)",
+                    "damping_evening": "D\u00e4mpfungsfaktor: Passt die Ergebnisse am Abend an",
+                    "damping_morning": "D\u00e4mpfungsfaktor: Passt die Ergebnisse am Morgen an",
+                    "declination": "Neigung (0 = Horizontal, 90 = Vertikal)",
+                    "inverter_size": "Wechselrichtergr\u00f6\u00dfe (Watt)",
+                    "modules_power": "Gesamtspitzenleistung deiner PV-Module in Watt"
+                },
+                "description": "Mit diesen Werten kann das Ergebnis von Forecast.Solar angepasst werden. Wenn ein Feld unklar ist, lies bitte in der Dokumentation nach."
+            }
+        }
+    }
+}

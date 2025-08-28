@@ -1,0 +1,101 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_auth": "Neteisingas autentifikavimas"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "url": "URL",
+                    "username": "Naudotojo vardas",
+                    "verify_ssl": "Patikrinkite SSL sertifikat\u0105"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "active_torrents": {
+                "name": "Aktyv\u016bs torrentai",
+                "unit_of_measurement": "torrentai"
+            },
+            "all_torrents": {
+                "name": "Visi torrentai",
+                "unit_of_measurement": "torrentai"
+            },
+            "current_status": {
+                "name": "B\u016bsena",
+                "state": {
+                    "downloading": "Atsisiun\u010diama",
+                    "idle": "Nedaroma nieko",
+                    "seeding": "S\u0117jama",
+                    "up_down": "Auk\u0161tyn/\u017demyn"
+                }
+            },
+            "download_speed": {
+                "name": "Atsisiuntimo greitis"
+            },
+            "inactive_torrents": {
+                "name": "Neaktyv\u016bs torrentai",
+                "unit_of_measurement": "torrentai"
+            },
+            "paused_torrents": {
+                "name": "Pristabdyti torrentai",
+                "unit_of_measurement": "torrentai"
+            },
+            "upload_speed": {
+                "name": "\u012ek\u0117limo greitis"
+            }
+        },
+        "switch": {
+            "alternative_speed": {
+                "name": "Alternatyvus greitis"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Nepavyksta prisijungti prie QBittorrent, patikrinkite konfig\u016bracij\u0105."
+        },
+        "invalid_device": {
+            "message": "Nerastas joks prietaisas, kurio ID {device_id}"
+        },
+        "invalid_entry_id": {
+            "message": "\u012era\u0161as su ID {device_id} nerastas"
+        },
+        "login_error": {
+            "message": "\u012evyko prisijungimo klaida. Patikrinkite savo naudotojo vard\u0105 ir slapta\u017eod\u012f."
+        }
+    },
+    "services": {
+        "get_all_torrents": {
+            "description": "Gauna dabartini\u0173 torrent\u0173 s\u0105ra\u0161\u0105 i\u0161 vis\u0173 \u201eqBittorrent\u201c atvej\u0173",
+            "fields": {
+                "torrent_filter": {
+                    "description": "Kokius torrentus norite gr\u0105\u017einti, pvz., Visi arba Aktyv\u016bs.",
+                    "name": "Torrent filtras"
+                }
+            },
+            "name": "Gaukite visus torrentus"
+        },
+        "get_torrents": {
+            "description": "Gauna dabartini\u0173 torrent\u0173 s\u0105ra\u0161\u0105",
+            "fields": {
+                "device_id": {
+                    "description": "I\u0161 kokios tarnybos pasiimti s\u0105ra\u0161\u0105",
+                    "name": "Prietaisas"
+                },
+                "torrent_filter": {
+                    "description": "Kokius torrentus norite gr\u0105\u017einti, pvz., Visi arba Aktyv\u016bs.",
+                    "name": "Torrent filtras"
+                }
+            },
+            "name": "Gauti torrentus"
+        }
+    }
+}

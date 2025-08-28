@@ -1,0 +1,163 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_host": "Endere\u00e7o IP ou anfitri\u00e3o inv\u00e1lido.",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida",
+            "unknown": "Erro inesperado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_host": "Endere\u00e7o IP ou anfitri\u00e3o inv\u00e1lido.",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "Nome do host ou endere\u00e7o IP do seu dispositivo Vallox."
+                }
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "Nome do host ou endere\u00e7o IP do seu dispositivo Vallox."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "post_heater": {
+                "name": "P\u00f3s-aquecedor"
+            }
+        },
+        "date": {
+            "filter_change_date": {
+                "name": "Data de mudan\u00e7a do filtro"
+            }
+        },
+        "number": {
+            "supply_air_target_away": {
+                "name": "Temperatura do ar de alimenta\u00e7\u00e3o (Ausente)"
+            },
+            "supply_air_target_boost": {
+                "name": "Temperatura do ar de alimenta\u00e7\u00e3o (Turbo)"
+            },
+            "supply_air_target_home": {
+                "name": "Temperatura do ar de alimenta\u00e7\u00e3o (Em casa)"
+            }
+        },
+        "sensor": {
+            "cell_state": {
+                "name": "Estado da c\u00e9lula"
+            },
+            "current_profile": {
+                "name": "Perfil atual"
+            },
+            "efficiency": {
+                "name": "Efici\u00eancia"
+            },
+            "exhaust_air": {
+                "name": "Expelir ar"
+            },
+            "extract_air": {
+                "name": "Extrair ar"
+            },
+            "extract_fan_speed": {
+                "name": "Velocidade da ventoinha de extra\u00e7\u00e3o"
+            },
+            "fan_speed": {
+                "name": "Velocidade da ventoinha"
+            },
+            "optional_air": {
+                "name": "Ar opcional"
+            },
+            "outdoor_air": {
+                "name": "Ar exterior"
+            },
+            "profile_duration": {
+                "name": "Dura\u00e7\u00e3o do perfil"
+            },
+            "remaining_time_for_filter": {
+                "name": "Tempo restante para o filtro"
+            },
+            "supply_air": {
+                "name": "Ar de alimenta\u00e7\u00e3o"
+            },
+            "supply_cell_air": {
+                "name": "Ar de alimenta\u00e7\u00e3o da c\u00e9lula"
+            },
+            "supply_fan_speed": {
+                "name": "Velocidade da ventoinha de alimenta\u00e7\u00e3o"
+            }
+        },
+        "switch": {
+            "bypass_locked": {
+                "name": "Bypass bloqueado"
+            }
+        }
+    },
+    "selector": {
+        "profile": {
+            "options": {
+                "away": "Ausente",
+                "boost": "Turbo",
+                "extra": "Extra",
+                "fireplace": "Lareira",
+                "home": "Casa"
+            }
+        }
+    },
+    "services": {
+        "set_profile": {
+            "description": "Ativar um perfil e, opcionalmente, definir a dura\u00e7\u00e3o.",
+            "fields": {
+                "duration": {
+                    "description": "Dura\u00e7\u00e3o da ativa\u00e7\u00e3o, se omitida, o dispositivo usa a dura\u00e7\u00e3o armazenada. A dura\u00e7\u00e3o de 65535 ativa o perfil sem tempo limite. A dura\u00e7\u00e3o aplica-se apenas aos perfis Turbo, Lareira e Extra.",
+                    "name": "Dura\u00e7\u00e3o"
+                },
+                "profile": {
+                    "description": "Perfil a ativar",
+                    "name": "Perfil"
+                }
+            },
+            "name": "Ativar perfil por dura\u00e7\u00e3o"
+        },
+        "set_profile_fan_speed_away": {
+            "description": "Define a velocidade da ventoinha no perfil Ausente.",
+            "fields": {
+                "fan_speed": {
+                    "description": "Velocidade da ventoinha.",
+                    "name": "Velocidade da ventoinha"
+                }
+            },
+            "name": "Definir o perfil de velocidade da ventoinha Ausente"
+        },
+        "set_profile_fan_speed_boost": {
+            "description": "Define a velocidade da ventoinha no perfil Boost.",
+            "fields": {
+                "fan_speed": {
+                    "description": "Velocidade da ventoinha.",
+                    "name": "Velocidade da ventoinha"
+                }
+            },
+            "name": "Definir o perfil de velocidade da ventoinha Boost"
+        },
+        "set_profile_fan_speed_home": {
+            "description": "Define a velocidade da ventoinha no perfil Casa.",
+            "fields": {
+                "fan_speed": {
+                    "description": "Velocidade da ventoinha.",
+                    "name": "Velocidade da ventoinha"
+                }
+            },
+            "name": "Definir o perfil de velocidade da ventoinha Casa"
+        }
+    }
+}

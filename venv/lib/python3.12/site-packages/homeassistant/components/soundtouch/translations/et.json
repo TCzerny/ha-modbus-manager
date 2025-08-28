@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud"
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Bose SoundTouchi seadme hostinimi v\u00f5i IP-aadress."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Oled lisamas SoundTouchi seadet nimega `{name}` Home Assistantisse.",
+                "title": "Kinnita Bose SoundTouchi seadme lisamine"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "description": "Lisab meediam\u00e4ngijad SoundTouchi mitut ruumi h\u00f5lmavale tsoonile.",
+            "fields": {
+                "master": {
+                    "description": "Mitmetoalist tsooni koordineeriva meediam\u00e4ngija nimi. Platvormist s\u00f5ltuv.",
+                    "name": "P\u00f5hiseade"
+                },
+                "slaves": {
+                    "description": "Olemasolevasse tsooni lisatavate meediam\u00e4ngijate nimed.",
+                    "name": "Alamseade"
+                }
+            },
+            "name": "Lisa alamtsoon"
+        },
+        "create_zone": {
+            "description": "Loob SoundTouchi mitme ruumi tsooni.",
+            "fields": {
+                "master": {
+                    "description": "Meediam\u00e4ngija nimi mis koordineerib mitmetoalist tsooni. Oleneb platvormist.",
+                    "name": "P\u00f5hiseade"
+                },
+                "slaves": {
+                    "description": "Uude tsooni lisatavate meediam\u00e4ngijate nimed.",
+                    "name": "Alamseade"
+                }
+            },
+            "name": "Loo tsoon"
+        },
+        "play_everywhere": {
+            "description": "Esitab k\u00f5igis Bose SoundTouchi seadmetes.",
+            "fields": {
+                "master": {
+                    "description": "R\u00fchmitamist koordineeriva meediam\u00e4ngija nimi. Platvormist s\u00f5ltuv. See on otsetee k\u00f5igi seadmetega mitmetoalise tsooni loomiseks.",
+                    "name": "P\u00f5hiseade"
+                }
+            },
+            "name": "M\u00e4ngi k\u00f5ikjal"
+        },
+        "remove_zone_slave": {
+            "description": "Eemaldab meediam\u00e4ngijad SoundTouchi mitme ruumi tsoonist.",
+            "fields": {
+                "master": {
+                    "description": "Mitmetoalist tsooni koordineeriva meediam\u00e4ngija nimi. Platvormist s\u00f5ltuv.",
+                    "name": "P\u00f5hiseade"
+                },
+                "slaves": {
+                    "description": "Olemasolevast tsoonist eemaldatavad meediumipleieri olemid.",
+                    "name": "Alamseade"
+                }
+            },
+            "name": "Eemalda tsooni j\u00e4lgija"
+        }
+    }
+}

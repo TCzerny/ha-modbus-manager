@@ -1,0 +1,187 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "another_device": "Pakartotinis konfig\u016bravimas buvo nes\u0117kmingas, buvo naudojamas kito \u201eShelly\u201c prietaiso IP adresas/pagrindinio kompiuterio pavadinimas.",
+            "ipv6_not_supported": "IPv6 nepalaikomas.",
+            "mac_address_mismatch": "\u012erenginio MAC adresas nesutampa su konfig\u016bracijoje pateiktu, i\u0161 naujo paleiskite \u012frengin\u012f ir bandykite dar kart\u0105.",
+            "reauth_successful": "Pakartotinis autentifikavimas buvo s\u0117kmingas",
+            "reauth_unsuccessful": "Pakartotinis autentifikavimas nepavyko, pa\u0161alinkite integracij\u0105 ir nustatykite j\u012f i\u0161 naujo.",
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "custom_port_not_supported": "Gen1 prietaisas nepalaiko pasirinktinio prievado.",
+            "firmware_not_fully_provisioned": "Prietaisas n\u0117ra pilnai paskirtas. Susisiekite su \u201eShelly\u201c palaikymo komanda",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "mac_address_mismatch": "\u012erenginio MAC adresas nesutampa su konfig\u016bracijoje pateiktu, i\u0161 naujo paleiskite \u012frengin\u012f ir bandykite dar kart\u0105.",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "confirm_discovery": {
+                "description": "Ar norite nustatyti {model} {host} ? \n\n Prie\u0161 pradedant s\u0105rank\u0105, baterijomis maitinami prietaisai, apsaugoti slapta\u017eod\u017eiu, turi b\u016bti pa\u017eadinti.\n Baterija maitinami prietaisai, kurie n\u0117ra apsaugoti slapta\u017eod\u017eiu, bus prid\u0117ti, kai prietaisas atsibus, dabar galite rankiniu b\u016bdu pa\u017eadinti prietais\u0105 naudodami mygtuk\u0105 ant jo arba laukti kito duomen\u0173 atnaujinimo i\u0161 prietaiso."
+            },
+            "credentials": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas"
+                }
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "port": "Prievadas"
+                },
+                "data_description": {
+                    "host": "\u201eShelly\u201c prietaiso, prie kurio reikia prisijungti, pagrindinio kompiuterio pavadinimas arba IP adresas.",
+                    "port": "\u201eShelly\u201c prietaiso TCP prievadas, prie kurio reikia prisijungti (Gen2+)."
+                },
+                "description": "Atnaujinti {device_name} konfig\u016bracij\u0105. Prie\u0161 pradedant s\u0105rank\u0105, baterijomis maitinami prietaisai turi b\u016bti pa\u017eadinti. Dabar galite pa\u017eadinti prietais\u0105 naudodami jame esant\u012f mygtuk\u0105."
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Prievadas"
+                },
+                "data_description": {
+                    "host": "\u201eShelly\u201c prietaiso, prie kurio reikia prisijungti, pagrindinio kompiuterio pavadinimas arba IP adresas.",
+                    "port": "\u201eShelly\u201c prietaiso TCP prievadas, prie kurio reikia prisijungti (Gen2+)."
+                },
+                "description": "Prie\u0161 pradedant s\u0105rank\u0105, akumuliatoriais maitinami prietaisai turi b\u016bti pa\u017eadinti. Dabar galite pa\u017eadinti prietais\u0105 naudodami ant jo esant\u012f mygtuk\u0105."
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_subtype": {
+            "button": "Mygtukas",
+            "button1": "Pirmas mygtukas",
+            "button2": "Antras mygtukas",
+            "button3": "Tre\u010dias mygtukas",
+            "button4": "Ketvirtasis mygtukas"
+        },
+        "trigger_type": {
+            "btn_down": "{subtype} mygtukas \u017eemyn",
+            "btn_up": "{subtype} mygtukas auk\u0161tyn",
+            "double": "{subtype} du kartus spustel\u0117jo",
+            "double_push": "{subtype} dvigubas paspaudimas",
+            "long": "{subtype} ilgai spustel\u0117jo",
+            "long_push": "{subtype} ilgas paspaudimas",
+            "long_single": "{subtype} ilgai spustel\u0117jo ir tada vien\u0105 kart\u0105",
+            "single": "{subtype} vienu paspaudimu",
+            "single_long": "{subtype} spustel\u0117jo vien\u0105 kart\u0105, tada ilgai spustel\u0117jo",
+            "single_push": "{subtype} vienas paspaudimas",
+            "triple": "{subtype} trigubas paspaudimas",
+            "triple_push": "{subtype} trigubas paspaudimas"
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "gas": {
+                "state_attributes": {
+                    "detected": {
+                        "state": {
+                            "heavy": "Sunkus",
+                            "mild": "\u0160velnus",
+                            "none": "Joks",
+                            "test": "Testas",
+                            "unknown": "Ne\u017einomas"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "input": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "btn_down": "Mygtukas \u017eemyn",
+                            "btn_up": "Mygtukas auk\u0161tyn",
+                            "double": "Dvigubas paspaudimas",
+                            "double_push": "Dvigubas paspaudimas",
+                            "long": "Ilgas spaudimas",
+                            "long_push": "Ilgas paspaudimas",
+                            "long_single": "Ilgas paspaudimas ir tada trumpas paspaudimas",
+                            "single": "Vienkartinis paspaudimas",
+                            "single_long": "Trumpas paspaudimas ir tada ilgas paspaudimas",
+                            "single_push": "Vienkartinis paspaudimas",
+                            "triple": "Trigubas paspaudimas",
+                            "triple_push": "Trigubas paspaudimas"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "operation": {
+                "state": {
+                    "fault": "Gedimas",
+                    "normal": "Normalus",
+                    "unknown": "Ne\u017einomas",
+                    "warmup": "Ap\u0161ilimas"
+                },
+                "state_attributes": {
+                    "self_test": {
+                        "state": {
+                            "completed": "U\u017ebaigta",
+                            "not_completed": "Ne\u012fvykdyta",
+                            "pending": "Laukiama",
+                            "running": "Veikia"
+                        }
+                    }
+                }
+            },
+            "valve_status": {
+                "state": {
+                    "checking": "Tikrinama",
+                    "closed": "U\u017edaryta",
+                    "closing": "U\u017edaroma",
+                    "failure": "Nes\u0117km\u0117",
+                    "opened": "Atidaryta",
+                    "opening": "Atidaroma",
+                    "unknown": "Ne\u017einomas"
+                }
+            }
+        }
+    },
+    "issues": {
+        "device_not_calibrated": {
+            "description": "\u201eShelly\u201c prietais\u0105 {device_name} su IP adresu {ip_address} reikia kalibruoti. Norint kalibruoti prietais\u0105, j\u012f reikia paleisti i\u0161 naujo tinkamai sumontavus ant vo\u017etuvo. Galite i\u0161 naujo paleisti prietais\u0105 jo \u017einiatinklio skydelyje, eikite \u012f \u201eNustatymai\u201c > \u201ePrietaiso paleidimas i\u0161 naujo\u201c.",
+            "title": "\u201eShelly\u201c prietaisas {device_name} nesukalibruotas"
+        },
+        "push_update_failure": {
+            "description": "\u201eHome Assistant\u201c negauna tiesiogini\u0173 naujini\u0173 i\u0161 \u201eShelly\u201c prietaiso {device_name} , kurio IP adresas {ip_address} . Patikrinkite CoIoT konfig\u016bracij\u0105 prietaiso \u017einiatinklio skydelyje ir tinklo konfig\u016bracij\u0105.",
+            "title": "\u201eShelly\u201c prietaiso {device_name} tiesioginio naujinimo klaida"
+        },
+        "unsupported_firmware": {
+            "description": "J\u016bs\u0173 \u201eShelly\u201c prietaise {device_name} su IP adresu {ip_address} veikia nepalaikoma programin\u0117-technin\u0117 \u012franga. Atnaujinkite programin\u0119-technin\u0119 \u012frang\u0105. \n\nJei prietaisas nesi\u016blo naujinimo, patikrinkite interneto ry\u0161\u012f (prieigos vartus, DNS, laik\u0105) ir paleiskite prietais\u0105 i\u0161 naujo.",
+            "title": "Nepalaikoma prietaiso {device_name} programin\u0117-technin\u0117 \u012franga"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ble_scanner_mode": "Bluetooth skaitytuvo re\u017eimas"
+                },
+                "description": "\u201eBluetooth\u201c nuskaitymas gali b\u016bti aktyvus arba pasyvus. Esant aktyviam, Shelly pra\u0161o duomen\u0173 i\u0161 netoliese esan\u010di\u0173 prietais\u0173; su pasyviu, Shelly gauna nepageidaujamus duomenis i\u0161 netoliese esan\u010di\u0173 prietais\u0173."
+            }
+        }
+    },
+    "selector": {
+        "ble_scanner_mode": {
+            "options": {
+                "active": "aktyvus",
+                "disabled": "I\u0161jungtas",
+                "passive": "Pasyvus"
+            }
+        }
+    }
+}

@@ -1,0 +1,82 @@
+{
+    "device_automation": {
+        "action_type": {
+            "lock": "Bloquear {entity_name}",
+            "open": "Abrir {entity_name}",
+            "unlock": "Desbloquear {entity_name}"
+        },
+        "condition_type": {
+            "is_locked": "{entity_name} est\u00e1 trancada",
+            "is_open": "{entity_name} est\u00e1 aberta",
+            "is_unlocked": "{entity_name} est\u00e1 destrancado"
+        },
+        "extra_fields": {
+            "for": "Dura\u00e7\u00e3o"
+        },
+        "trigger_type": {
+            "locked": "{entity_name} fechada",
+            "open": "{entity_name} aberta",
+            "unlocked": "{entity_name} aberta"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Fechadura",
+            "state": {
+                "jammed": "Encravado",
+                "locked": "Trancada",
+                "locking": "A trancar",
+                "open": "Aberto",
+                "opening": "A abrir",
+                "unlocked": "Destrancada",
+                "unlocking": "A destrancar"
+            },
+            "state_attributes": {
+                "changed_by": {
+                    "name": "Alterado por"
+                },
+                "code_format": {
+                    "name": "Formato do C\u00f3digo"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "add_default_code": {
+            "message": "O c\u00f3digo para {entity_id} n\u00e3o corresponde ao padr\u00e3o {code_format}."
+        }
+    },
+    "services": {
+        "lock": {
+            "description": "Tranca uma fechadura.",
+            "fields": {
+                "code": {
+                    "description": "C\u00f3digo usado para trancar a fechadura.",
+                    "name": "C\u00f3digo"
+                }
+            },
+            "name": "Trancar"
+        },
+        "open": {
+            "description": "Abre uma fechadura.",
+            "fields": {
+                "code": {
+                    "description": "C\u00f3digo utilizado para abrir a fechadura.",
+                    "name": "C\u00f3digo"
+                }
+            },
+            "name": "Abrir"
+        },
+        "unlock": {
+            "description": "Destranca uma fechadura.",
+            "fields": {
+                "code": {
+                    "description": "C\u00f3digo utilizado para destrancar a fechadura.",
+                    "name": "C\u00f3digo"
+                }
+            },
+            "name": "Destrancar"
+        }
+    },
+    "title": "Fechadura"
+}

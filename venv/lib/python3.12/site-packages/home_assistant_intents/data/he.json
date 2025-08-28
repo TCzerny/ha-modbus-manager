@@ -1,0 +1,1229 @@
+{
+  "language": "he",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "כב[ה|י] [את] [ה]<name>",
+            "כיבוי [של] [ה]<name>",
+            "לכבות [את] [ה]<name>",
+            "תכב[ה|י] [את] [ה]<name>"
+          ]
+        },
+        {
+          "sentences": [
+            "(כב[ה|י]|כיבוי|לכבות|תכב[ה|י]) [של] [כל] [את] [ה](אור|אורות) ב<area>"
+          ],
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "(סגור | ס[י]גרי) [את] [ה]<name>",
+            "(תסגור | תסגרי) [את] [ה]<name>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": [
+              "garage",
+              "blind",
+              "curtain",
+              "shutter"
+            ],
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(סגור | ס[י]גרי) [את] [ה]{cover_classes:device_class} ב<area>",
+            "(תסגור | תסגרי) [את] [ה]{cover_classes:device_class} ב<area>"
+          ],
+          "response": "cover_area",
+          "slots": {
+            "device_class": [
+              "blind",
+              "curtain",
+              "shutter",
+              "garage"
+            ],
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(כב[ה|י] | כיבוי | לכבות | תכב[ה|י]) [של] [כל] [את] [ה](מאוורר|מאורר) ב<area>"
+          ],
+          "slots": {
+            "domain": "fan"
+          }
+        },
+        {
+          "sentences": [
+            "(כב[ה|י] | כיבוי | לכבות | תכב[ה|י]) [של] [כל] [את] [ה](מאווררים|מאוררים) ב<area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          }
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel> את [ה]טיימר"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "מצב הטיימר"
+          ],
+          "required_keywords": [
+            "טיימר",
+            "מצב"
+          ]
+        }
+      ]
+    },
+    "HassGetCurrentTime": {
+      "data": [
+        {
+          "sentences": [
+            "מה השעה [עכשיו|כרגע]"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "(הדלק|הדליקי|הדלקה|להדליק|תדליק[י]) [של] [כל] [את] [ה](אור|אורות) ב<area>"
+          ],
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "(הדלק|הדליקי|הדלקה|להדליק|תדליק[י]) [של] [כל] [את] [ה](מאוורר|מאורר) ב<area>"
+          ],
+          "slots": {
+            "domain": "fan"
+          }
+        },
+        {
+          "sentences": [
+            "(הדלק|הדליקי|הדלקה|להדליק|תדליק[י]) [של] [כל] [את] [ה](מאווררים|מאוררים) ב<area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          }
+        },
+        {
+          "sentences": [
+            "(הדלק | הדליקי) [את] [ה]<name>",
+            "הדלקה [של] [ה]<name>",
+            "להדליק [את] [ה]<name>",
+            "תדליק[י] [את] [ה]<name>"
+          ]
+        },
+        {
+          "sentences": [
+            "פתח[י] [את] [ה]<name>",
+            "תפתח[י] [את] [ה]<name>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": [
+              "garage",
+              "blind",
+              "curtain",
+              "shutter"
+            ],
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "פתח[י] [את] [ה]{cover_classes:device_class} ב<area>",
+            "תפתח[י] [את] [ה]{cover_classes:device_class} ב<area>"
+          ],
+          "response": "cover_area",
+          "slots": {
+            "device_class": [
+              "blind",
+              "curtain",
+              "shutter",
+              "garage"
+            ],
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "לא משנה",
+            "ביטול",
+            "עצור|עצרי",
+            "בטל[י]"
+          ]
+        }
+      ]
+    },
+    "HassGetCurrentDate": {
+      "data": [
+        {
+          "sentences": [
+            "(<what_is>) התאריך [היום]"
+          ]
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "קבע[י] [את] [ה]בהירות ה<name> ל<brightness>",
+            "שנ[ה|י] [את] [ה]בהירות ה<name> ל<brightness>",
+            "(הגדר|הגדירי) [את] [ה]בהירות ה<name> ל<brightness>"
+          ],
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "קבע[י] [את] [ה]בהירות ה<name> ל<brightness> ב<area>",
+            "שנ[ה|י] [את] [ה]בהירות ה<name> ל<brightness> ב<area>",
+            "(הגדר|הגדירי) [את] [ה]בהירות ה<name> ל<brightness> ב<area>"
+          ],
+          "response": "brightness_area"
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "קבע טיימר ל<timer_duration> דקות",
+            "קבע טיימר ל<timer_duration> שעות"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "<what_is> [ה]<temp>",
+            "כמה (חם|קר|חמים|קריר) ב<area>",
+            "<what_is> [ה]<temp> ב<area>"
+          ]
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "מה[ו] [הססטוס של] [ה]<name> [ב<area>]"
+          ],
+          "response": "one"
+        },
+        {
+          "sentences": [
+            "[האם] [הססטוס של] [ה]<name> [[ש]ב<area>] [הוא] [היא] {on_off_states:state}[ים] [ב<area>]"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "[האם] [כל] ה{on_off_domains:domain}[ים] [[ש]ב<area>] [הם] [הן] {on_off_states:state}[ים] [ב<area>]"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "[האם] ה{on_off_domains:domain}[ים] [[ש]ב<area>] [הוא] [היא] {on_off_states:state}[ים] [ב<area>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "(איזה|אילו|יש) [מה]{on_off_domains:domain}[ים] [[ש]ב<area>] [הם] [הן] {on_off_states:state}[ים] [ב<area>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "כמה {on_off_domains:domain}[ים] [[ש]ב<area>] [הם] [הן] {on_off_states:state}[ים] [ב<area>]"
+          ],
+          "response": "how_many"
+        },
+        {
+          "sentences": [
+            "[האם] [ה][{cover_classes:device_class}] [<name>] [שב<area>] {cover_states:state} [ב<area>]"
+          ],
+          "response": "one_yesno",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "[האם] [יש|ישנם|ישנן] {cover_classes:device_class} [כלשהי|כלשהיא|כלשהוא|כלשהו|כלשהם|כלשהן] [ב<area>] [ש]{cover_states:state} [ב<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "[האם] כל ה{cover_classes:device_class} [[ש]ב<area>] [הם|הן] {cover_states:state} [ב<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(איזה|אילו) {cover_classes:device_class} [[ש]ב<area>] [במצב|נמצאים במצב|הם|הן] [ש]{cover_states:state} [ב<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "כמה {cover_classes:device_class} [[ש]ב<area>] [במצב|נמצאים במצב|הם|הן] [ש]{cover_states:state} [ב<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassRespond": {
+      "data": [
+        {
+          "sentences": [
+            "(שלום|היי) [הום אסיסטנט]"
+          ],
+          "response": "hello"
+        },
+        {
+          "sentences": [
+            "מה אני יכול (לומר|לשאול)"
+          ],
+          "response": "commands"
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "הוסף <item> ל<my_list>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "my_list": "[רשימה|רשימת] {name} [ה|שלי]",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "מצטער, לא הצלחתי להבין את הבקשה",
+      "handle_error": "אירעה שגיאה בלתי צפויה",
+      "no_area": "מצטער, אני לא מודע לאזור שנקרא {{ area }}",
+      "no_floor": "מצטער, אני לא מודע לקומה שנקראת {{ floor }}",
+      "no_domain": "מצטער, אני לא מודע ל{{ domain }}",
+      "no_domain_in_area": "מצטער, אני לא מודע ל{{ domain }} באזור {{ area }}",
+      "no_domain_in_floor": "מצטער, אני לא מודע ל{{ domain }} בקומה {{ floor }}",
+      "no_device_class": "מצטער, אני לא מודע לסוג מכשיר {{ device_class }}",
+      "no_device_class_in_area": "מצטער, אני לא מודע לסוג מכשיר {{ device_class }} באזור {{ area }}",
+      "no_device_class_in_floor": "מצטער, אני לא מודע לסוג מכשיר {{ device_class }} בקומה {{ floor }}",
+      "no_entity": "מצטער, אני לא מודע למכשיר שנקרא {{ entity }}",
+      "no_entity_in_area": "מצטער, אני לא מודע למכשיר שנקרא {{ entity }} באזור {{ area }}",
+      "no_entity_in_floor": "מצטער, אני לא מודע למכשיר שנקרא {{ entity }} בקומה {{ floor }}",
+      "entity_wrong_state": "מצטער, אין מכשיר שנמצא במצב {{ state | lower }}",
+      "feature_not_supported": "מצטער, אין מכשיר שתומך בתכונות הנדרשות",
+      "no_entity_exposed": "מצטער, {{ entity }} אינו נחשף",
+      "no_entity_in_area_exposed": "מצטער, {{ entity }} באזור {{ area }} אינו נחשף",
+      "no_entity_in_floor_exposed": "מצטער, {{ entity }} בקומה {{ floor }} אינו נחשף",
+      "no_domain_exposed": "מצטער, אף {{ domain }} אינו נחשף",
+      "no_domain_in_area_exposed": "מצטער, אף {{ domain }} באזור {{ area }} אינו נחשף",
+      "no_domain_in_floor_exposed": "מצטער, אף {{ domain }} בקומה {{ floor }} אינו נחשף",
+      "no_device_class_exposed": "מצטער, אף סוג מכשיר {{ device_class }} אינו נחשף",
+      "no_device_class_in_area_exposed": "מצטער, אף סוג מכשיר {{ device_class }} באזור {{ area }} אינו נחשף",
+      "no_device_class_in_floor_exposed": "מצטער, אף סוג מכשיר {{ device_class }} בקומה {{ floor }} אינו נחשף",
+      "duplicate_entities": "מצטער, קיימים מספר מכשירים שנקראים {{ entity }}",
+      "duplicate_entities_in_area": "מצטער, קיימים מספר מכשירים שנקראים {{ entity }} באזור {{ area }}",
+      "duplicate_entities_in_floor": "מצטער, קיימים מספר מכשירים שנקראים {{ entity }} בקומה {{ floor }}",
+      "timer_not_found": "מצטער, לא הצלחתי למצוא את הטיימר",
+      "multiple_timers_matched": "מצטער, איני יכול להתייחס למספר טיימרים בו זמנית",
+      "no_timer_support": "מצטער, הטיימרים אינם נתמכים במכשיר זה"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "{{ slots.name | capitalize }} כרגע {{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\n  כן\n{% else %}\n  לא, הוא כרגע {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    כן, {{ match[:3] | join(\", \") }} ועוד {{ (match | length - 3) }}\n  {%- else -%}\n    כן,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} ו{% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  לא\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  כן\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    לא, {{ no_match[:3] | join(\", \") }} ועוד {{ (no_match | length - 3) }} גם לא\n  {%- else -%}\n    לא,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} וגם {% endif -%}\n      {{ name }}\n    {%- endfor %} לא\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  לא נמצאו\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} ועוד {{ (match | length - 3) }}\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} ו{% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n"
+      },
+      "HassTurnOff": {
+        "default": "{{ slots.name }} כובה",
+        "lights_area": "האורות ב{{ slots.area }} כובו",
+        "fans_area": "המאווררים ב{{ slots.area }} כובו",
+        "cover": "סוגר {{ slots.name }}",
+        "cover_area": "{{ slots.area }} נסגר",
+        "cover_device_class": "{{ slots.device_class }} נסגר"
+      },
+      "HassStartTimer": {
+        "default": "{% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %} {% set h_text = h ~ (' שעה'  if h in [ \"1\", 'one'] else ' שעות') if h else '' %} {% set m_text = (30 if m in ['half', '1/2'] else m) ~ (' דקה' if m in [ \"1\", 'one'] else ' דקות') if m else '' %} {% set s_text = (30 if s in ['half', '1/2'] else s) ~ (' שנייה' if s in [ \"1\", 'one'] else ' שניות') if s else '' %} {% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list[:-1] | join(', ') ~ ' ו' ~ text_list[-1] if text_list | count > 2 else text_list | join(' ו') %} {% set name = (' בשם ' ~ slots.name | trim) if slots.name is defined else '' %} טיימר מוגדר ל{{ text }}{{ name }}\n",
+        "command": "{% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %} {% set h_text = h ~ (' שעה'  if h in [ \"1\", 'one'] else ' שעות') if h else '' %} {% set m_text = (30 if m in ['half', '1/2'] else m) ~ (' דקה' if m in [ \"1\", 'one'] else ' דקות') if m else '' %} {% set s_text = (30 if s in ['half', '1/2'] else s) ~ (' שנייה' if s in [ \"1\", 'one'] else ' שניות') if s else '' %} {% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list[:-1] | join(', ') ~ ' ו' ~ text_list[-1] if text_list | count > 2 else text_list | join(' ו') %} הפקודה תתבצע בעוד {{ text }}\n"
+      },
+      "HassTurnOn": {
+        "default": "{{ slots.name }} הופעל",
+        "lights_area": "האורות ב{{ slots.area }} הודלקו",
+        "fans_area": "המאווררים ב{{ slots.area }} הופעלו",
+        "cover": "פותח {{ slots.name }}",
+        "cover_area": "{{ slots.area }} נפתח",
+        "cover_device_class": "{{ slots.device_class }} נפתח"
+      },
+      "HassGetCurrentTime": {
+        "default": "{% set minute_str = '{0:02d}'.format(slots.time.minute) %}\n{% if slots.time.hour <= 12: %} {{ slots.time.hour }}:{{ minute_str }} לפנות בוקר {% else: %} {{ slots.time.hour - 12 }}:{{ minute_str }} אחרי הצהריים {% endif %}\n"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  אין טיימרים.\n{% elif num_active_timers == 0: %}\n  {# אין טיימרים פעילים #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    טיימר מושהה.\n  {% else: %}\n    {{ num_paused_timers }} טיימרים מושהים.\n  {% endif %}\n{% else: %}\n  {# לפחות טיימר פעיל אחד #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# קבלת הטיימר הפעיל שיסתיים בקרוב ביותר #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {{ num_active_timers }} טיימרים פעילים.\n  {% endif %}\n\n  {% if num_paused_timers == 1: %}\n    1 טיימר מושהה.\n  {% elif num_paused_timers > 0: %}\n    {{ num_paused_timers }} טיימרים מושהים.\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n  {# לפחות טיימר פעיל אחד #}\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0): %}\n    שעה אחת ו{{ next_timer.rounded_minutes_left }} דקות\n  {% elif (next_timer.rounded_hours_left == 1): %}\n    שעה אחת\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_hours_left }} שעות ו{{ next_timer.rounded_minutes_left }} דקות\n  {% elif (next_timer.rounded_hours_left > 1): %}\n    {{ next_timer.rounded_hours_left }} שעות\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0): %}\n    דקה אחת ו{{ next_timer.rounded_seconds_left }} שניות\n  {% elif (next_timer.rounded_minutes_left == 1): %}\n    דקה אחת\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} דקות ו{{ next_timer.rounded_seconds_left }} שניות\n  {% elif (next_timer.rounded_minutes_left > 1): %}\n    {{ next_timer.rounded_minutes_left }} דקות\n  {% elif (next_timer.rounded_seconds_left == 1): %}\n    שנייה אחת\n  {% elif (next_timer.rounded_seconds_left > 1): %}\n    {{ next_timer.rounded_seconds_left }} שניות\n  {% endif %}\n\n  {% if num_timers > 1: %}\n    {# מידע נוסף להבחנה בין טיימרים #}\n    נשאר\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_hours }} שעה ו{{ next_timer.start_minutes }} דקה\n    {% elif (next_timer.start_hours > 0): %}\n      {{ next_timer.start_hours }} שעה\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_minutes }} דקה ו{{ next_timer.start_seconds }} שנייה\n    {% elif (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_minutes }} דקה\n    {% elif (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_seconds }} שנייה\n    {% endif %}\n\n    {% if next_timer.name: %}\n      {{ next_timer.name }}\n    {% elif next_timer.area: %}\n      {{ next_timer.area }}\n    {% endif %}\n\n    טיימר.\n  {% else: %}\n    נשאר.\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "נוסף {{ slots.item }}"
+      },
+      "HassGetCurrentDate": {
+        "default": "{% set months = {\n   1: 'ינואר',\n   2: 'פברואר',\n   3: 'מרץ',\n   4: 'אפריל',\n   5: 'מאי',\n   6: 'יוני',\n   7: 'יולי',\n   8: 'אוגוסט',\n   9: 'ספטמבר',\n   10: 'אוקטובר',\n   11: 'נובמבר',\n   12: 'דצמבר',\n} %} {% set ordinal = {\n   1: '1',\n   2: '2',\n   3: '3',\n   4: '4',\n   5: '5',\n   6: '6',\n   7: '7',\n   8: '8',\n   9: '9',\n   10: '10',\n   11: '11',\n   12: '12',\n   13: '13',\n   14: '14',\n   15: '15',\n   16: '16',\n   17: '17',\n   18: '18',\n   19: '19',\n   20: '20',\n   21: '21',\n   22: '22',\n   23: '23',\n   24: '24',\n   25: '25',\n   26: '26',\n   27: '27',\n   28: '28',\n   29: '29',\n   30: '30',\n   31: '31',\n } %}\n{{ ordinal[slots.date.day] }} ב{{ months[slots.date.month] }} {{ slots.date.year }}\n"
+      },
+      "HassLightSet": {
+        "brightness": "{{ slots.name }} בהירות שונתה ל-{{ slots.brightness }}",
+        "brightness_area": "הבהירות ב{{ slots.area }} שונתה ל-{{ slots.brightness }}",
+        "color": "{{ slots.name }} הצבע שונה ל-{{ slots.color }}",
+        "color_area": "הצבע ב{{ slots.area }} שונה ל-{{ slots.color }}"
+      },
+      "HassCancelTimer": {
+        "default": "הטיימר בוטל"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{% set temperature = state_attr(state.entity_id, 'current_temperature') %} {% if slots.area: %} ב{{ slots.area }} {{ state_attr(state.entity_id, 'current_temperature') }} מעלות {% else: %} הטמפרטורה היא {{ state_attr(state.entity_id, 'current_temperature') }} מעלות {% endif %}\n"
+      },
+      "HassRespond": {
+        "hello": "שלום מהום אסיסטנט.",
+        "listening": "לא, אני מקשיבה רק כשאתה אומר את מילת ההפעלה.",
+        "data": "המידע שלך נשלח לשרת הום אסיסטנט שלך.",
+        "commands": "למידע על הפקודות שניתן לבקש, בקר באתר H.A. דוט I.O. סלש Voice.",
+        "creator": "נוצרתי על ידי קהילת הום אסיסטנט הנפלאה, המורכבת מחובבים מרחבי העולם."
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "לבן",
+          "out": "white"
+        },
+        {
+          "in": "שחור",
+          "out": "black"
+        },
+        {
+          "in": "אדום",
+          "out": "red"
+        },
+        {
+          "in": "כתום",
+          "out": "orange"
+        },
+        {
+          "in": "צהוב",
+          "out": "yellow"
+        },
+        {
+          "in": "ירוק",
+          "out": "green"
+        },
+        {
+          "in": "כחול",
+          "out": "blue"
+        },
+        {
+          "in": "סגול",
+          "out": "purple"
+        },
+        {
+          "in": "חום",
+          "out": "brown"
+        },
+        {
+          "in": "ורוד",
+          "out": "pink"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        {
+          "in": "מעלות",
+          "out": "celsius"
+        }
+      ]
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "(מקס | מקסימום | הגבוה | הגבוה ביותר | הגבוהה ביותר | מקסימלי | הכי גבוה | עד הסוף | מרבי | מירבי | למקסימום)",
+          "out": 100
+        },
+        {
+          "in": "(מינ | מינימום | הנמוך | הנמוך ביותר | הנמוכה ביותר | מינימלי | הכי נמוך | למינימום)",
+          "out": 1
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "דולק",
+          "out": "on"
+        },
+        {
+          "in": "דולקים",
+          "out": "on"
+        },
+        {
+          "in": "פועלים",
+          "out": "on"
+        },
+        {
+          "in": "מופעלים",
+          "out": "on"
+        },
+        {
+          "in": "דולקות",
+          "out": "on"
+        },
+        {
+          "in": "פועלות",
+          "out": "on"
+        },
+        {
+          "in": "מופעלות",
+          "out": "on"
+        },
+        {
+          "in": "כבוי",
+          "out": "off"
+        },
+        {
+          "in": "כבוים",
+          "out": "off"
+        },
+        {
+          "in": "כבויים",
+          "out": "off"
+        },
+        {
+          "in": "מכובים",
+          "out": "off"
+        },
+        {
+          "in": "כבויות",
+          "out": "off"
+        },
+        {
+          "in": "מכובות",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "אור[ות]",
+          "out": "light"
+        },
+        {
+          "in": "מאוורר[ים]",
+          "out": "fan"
+        },
+        {
+          "in": "מתג[ים]",
+          "out": "switch"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "פתוח",
+          "out": "open"
+        },
+        {
+          "in": "פתוחה",
+          "out": "open"
+        },
+        {
+          "in": "פתוחים",
+          "out": "open"
+        },
+        {
+          "in": "פתוחות",
+          "out": "open"
+        },
+        {
+          "in": "סגור",
+          "out": "closed"
+        },
+        {
+          "in": "סגורה",
+          "out": "closed"
+        },
+        {
+          "in": "סגורים",
+          "out": "closed"
+        },
+        {
+          "in": "סגורות",
+          "out": "closed"
+        },
+        {
+          "in": "פותח",
+          "out": "opening"
+        },
+        {
+          "in": "נפתח",
+          "out": "opening"
+        },
+        {
+          "in": "נפתחת",
+          "out": "opening"
+        },
+        {
+          "in": "סוגר",
+          "out": "closing"
+        },
+        {
+          "in": "נסגר",
+          "out": "closing"
+        },
+        {
+          "in": "נסגרת",
+          "out": "closing"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "סוכך",
+          "out": "awning"
+        },
+        {
+          "in": "סככה",
+          "out": "awning"
+        },
+        {
+          "in": "סוככים",
+          "out": "awning"
+        },
+        {
+          "in": "סככות",
+          "out": "awning"
+        },
+        {
+          "in": "תריס",
+          "out": "blind"
+        },
+        {
+          "in": "תריסים",
+          "out": "blind"
+        },
+        {
+          "in": "וילון",
+          "out": "curtain"
+        },
+        {
+          "in": "וילונות",
+          "out": "curtain"
+        },
+        {
+          "in": "דלתות",
+          "out": "door"
+        },
+        {
+          "in": "דלת",
+          "out": "door"
+        },
+        {
+          "in": "דלת חניה",
+          "out": "garage"
+        },
+        {
+          "in": "דלתות [ה]חניה",
+          "out": "garage"
+        },
+        {
+          "in": "שער[ים]",
+          "out": "gate"
+        },
+        {
+          "in": "צילייה",
+          "out": "shade"
+        },
+        {
+          "in": "ציליה",
+          "out": "shade"
+        },
+        {
+          "in": "תריס הצללה",
+          "out": "shutter"
+        },
+        {
+          "in": "תריסי [ה]הצללה",
+          "out": "shutter"
+        },
+        {
+          "in": "חלון",
+          "out": "window"
+        },
+        {
+          "in": "חלונות",
+          "out": "window"
+        }
+      ]
+    },
+    "lock_states": {
+      "values": [
+        {
+          "in": "[נעול] היטב",
+          "out": "נעול"
+        },
+        {
+          "in": "לא נעול",
+          "out": "לא נעול"
+        }
+      ]
+    },
+    "bs_battery_states": {
+      "values": [
+        {
+          "in": "נמוך",
+          "out": "פועל"
+        },
+        {
+          "in": "(רגיל|טעון)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_battery_charging_states": {
+      "values": [
+        {
+          "in": "בטעינה",
+          "out": "פועל"
+        },
+        {
+          "in": "לא בטעינה",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_carbon_monoxide_states": {
+      "values": [
+        {
+          "in": "(מזוהה|מופעל|פועל)",
+          "out": "פועל"
+        },
+        {
+          "in": "נקה",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_cold_states": {
+      "values": [
+        {
+          "in": "קר",
+          "out": "פועל"
+        },
+        {
+          "in": "רגיל",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_connectivity_states": {
+      "values": [
+        {
+          "in": "מחובר",
+          "out": "פועל"
+        },
+        {
+          "in": "מנותק",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_door_states": {
+      "values": [
+        {
+          "in": "פתוח",
+          "out": "פועל"
+        },
+        {
+          "in": "(סגור|נעול)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_garage_door_states": {
+      "values": [
+        {
+          "in": "פתוח",
+          "out": "פועל"
+        },
+        {
+          "in": "(סגור|נעול)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_gas_states": {
+      "values": [
+        {
+          "in": "(מזוהה|מופעל|פועל)",
+          "out": "פועל"
+        },
+        {
+          "in": "נקה",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_heat_states": {
+      "values": [
+        {
+          "in": "חם",
+          "out": "פועל"
+        },
+        {
+          "in": "רגיל",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_light_states": {
+      "values": [
+        {
+          "in": "מזוהה",
+          "out": "פועל"
+        },
+        {
+          "in": "אין אור",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_lock_states": {
+      "values": [
+        {
+          "in": "לא נעול",
+          "out": "פועל"
+        },
+        {
+          "in": "נעול",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_moisture_states": {
+      "values": [
+        {
+          "in": "רטוב",
+          "out": "פועל"
+        },
+        {
+          "in": "יבש",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_motion_states": {
+      "values": [
+        {
+          "in": "(מזוהה|מופעל|פועל)",
+          "out": "פועל"
+        },
+        {
+          "in": "נקה",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_occupancy_states": {
+      "values": [
+        {
+          "in": "(מזוהה|מופעל|פועל)",
+          "out": "פועל"
+        },
+        {
+          "in": "נקה",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_opening_states": {
+      "values": [
+        {
+          "in": "פתוח",
+          "out": "פועל"
+        },
+        {
+          "in": "(סגור|נעול)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_plug_states": {
+      "values": [
+        {
+          "in": "מחובר לחשמל",
+          "out": "פועל"
+        },
+        {
+          "in": "מנותק",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_power_states": {
+      "values": [
+        {
+          "in": "(מופעל|יש זרם חשמל)",
+          "out": "פועל"
+        },
+        {
+          "in": "(כבוי|אין זרם חשמל)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_presence_states": {
+      "values": [
+        {
+          "in": "(בבית|נמצא)",
+          "out": "פועל"
+        },
+        {
+          "in": "(לא בבית|לא נמצא|הרחק)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_problem_states": {
+      "values": [
+        {
+          "in": "מזוהה",
+          "out": "פועל"
+        },
+        {
+          "in": "תקין",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_running_states": {
+      "values": [
+        {
+          "in": "פועל",
+          "out": "פועל"
+        },
+        {
+          "in": "לא פועל",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_safety_states": {
+      "values": [
+        {
+          "in": "לא בטוח",
+          "out": "פועל"
+        },
+        {
+          "in": "בטוח",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_smoke_states": {
+      "values": [
+        {
+          "in": "(מזוהה|מופעל|פועל)",
+          "out": "פועל"
+        },
+        {
+          "in": "נקה",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_sound_states": {
+      "values": [
+        {
+          "in": "(מזוהה|מופעל|פועל)",
+          "out": "פועל"
+        },
+        {
+          "in": "נקה",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_tamper_states": {
+      "values": [
+        {
+          "in": "(מזוהה|ניסיון חבלה)",
+          "out": "פועל"
+        },
+        {
+          "in": "נקה",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_update_states": {
+      "values": [
+        {
+          "in": "עדכון זמין",
+          "out": "פועל"
+        },
+        {
+          "in": "(מעודכן|הכל מעודכן)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_vibration_states": {
+      "values": [
+        {
+          "in": "(מזוהה|רוטט)",
+          "out": "פועל"
+        },
+        {
+          "in": "(נקה|לא רוטט)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "bs_window_states": {
+      "values": [
+        {
+          "in": "פתוח",
+          "out": "פועל"
+        },
+        {
+          "in": "(סגור|נעול)",
+          "out": "כבוי"
+        }
+      ]
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    },
+    "zone": {
+      "wildcard": true
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "volume": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "timer_words_seconds": {
+      "values": [
+        {
+          "in": "אחד|אחת",
+          "out": 1
+        }
+      ]
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_words_minutes": {
+      "values": [
+        {
+          "in": "אחד|אחת",
+          "out": 1
+        }
+      ]
+    },
+    "timer_words_hours": {
+      "values": [
+        {
+          "in": "אחד|אחת",
+          "out": 1
+        }
+      ]
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "חצי",
+          "out": 30
+        },
+        {
+          "in": "1/2",
+          "out": 30
+        }
+      ]
+    },
+    "timer_start": {
+      "values": [
+        "התתחל",
+        "הפעל"
+      ]
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "name": "[ה]{name}",
+    "area": "[ה]{area}",
+    "floor": "[ה]{floor}[ קומה]",
+    "area_floor": "(<area>|<floor>)",
+    "in_area_floor": "[<ב>] <area_floor>",
+    "what_is": "(מהו|מה זה|תגיד לי|מה)[ ה]",
+    "lockable": "[(ה|שלי) ](מנעול|דלת|חלון|שער|דלת מוסך|תריס)[ים]",
+    "where_is": "(איפה|היכן נמצא)",
+    "which": "(איזה|מה)[ מתוך ה]",
+    "is": "(האם|יש[ (ה|ב)])",
+    "are": "<is>",
+    "any": "(משהו|כלשהו|כל)[ מתוך ה]",
+    "are_any": "[<are> ]<any>",
+    "how_many": "כמה[ מתוך ה]",
+    "brightness": "{brightness}[[ ]%| אחוז]",
+    "light": "[ה]אור[ות]|מנורה[ות]",
+    "turn": "(הפעל|כבה|שנה)",
+    "temp": "(טמפ|טמפרטורה)",
+    "temperature": "{temperature}[[ ]°[ ]{temperature_unit}]|( מעלות[ {temperature_unit}])",
+    "open": "(פתח|הרם|העלה)[ למעלה]",
+    "close": "(סגור|הורד|הנמך)[ (למעלה|למטה)]",
+    "set": "(קבע|הגדר|שנה|שנה)",
+    "numeric_value_set": "(קבע|שנה|העלה|הורד|הגדל|הקטן|עשה)",
+    "in": "(ב|על|של|בתוך)",
+    "position": "{position}[[ ]%| אחוז]",
+    "volume": "{volume:רמת_ווליום}[[ ]%| אחוז]",
+    "currently": "(כרגע|עכשיו|נכון לעכשיו|ברגע זה)",
+    "state": "[(מצב|סטטוס) ](נוכחי|עדכני)",
+    "all": "(הכל|כל[ [של] ה]|כל אחד)",
+    "are_all": "[<are> ]<all>",
+    "home": "(בית|דירה|בניין|מקום מגורים)",
+    "everywhere": "(בכל מקום|בכל חדר[ים]|בכל אחד מהחדרים|בבית)",
+    "here": "(כאן|פה|בחדר הזה|בחדר)",
+    "what_is_the_class_of_name": "(<what_is> הסוג (של|ב|שמוצג על ידי) <name> [ב<area>]|<what_is> הסוג של <name> [ב<area>]|<what_is> הסוג של <name> ב<area>)",
+    "timer_set": "(התחל|קבע|צור)",
+    "timer_cancel": "(בטל|עצור|הפסק)",
+    "nb_seconds": "({timer_seconds:seconds}|{timer_words_seconds:seconds})",
+    "nb_minutes": "({timer_minutes:minutes}|{timer_words_minutes:minutes})",
+    "nb_hours": "({timer_hours:hours}|{timer_words_hours:hours})",
+    "nb_start_seconds": "({timer_seconds:nb_start_seconds}|{timer_words_seconds:nb_start_seconds})",
+    "nb_start_minutes": "({timer_minutes:nb_start_minutes}|{timer_words_minutes:nb_start_minutes})",
+    "nb_start_hours": "({timer_hours:nb_start_hours}|{timer_words_hours:nb_start_hours})",
+    "timer_duration_seconds": "{timer_seconds:seconds} שניות",
+    "timer_duration_minutes": "{timer_minutes:minutes} [דקה|דקות]",
+    "timer_duration_hours": "(<nb_hours> שעה[ות][[,] [ו]<timer_duration_minutes>]|(<nb_hours> שעה[ות] ו {timer_half:minutes}[[,] ו (<timer_duration_seconds>|{timer_half:seconds} דקה)])|({timer_half:minutes} שעה[[,] ו (<timer_duration_seconds>|{timer_half:seconds} דקה)]))",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes>|<timer_duration_hours>",
+    "timer_start_seconds": "{timer_seconds:seconds} שניות",
+    "timer_start_minutes": "({timer_minutes:minutes} דקה[ות])",
+    "timer_start_hours": "[ה|הם]<nb_start_hours> שעה[ות][[,] [ו]<nb_start_minutes> דקה[ות]][[,] [ו]<nb_start_seconds> שנייה[ות]]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes>|<timer_start_hours>"
+  },
+  "skip_words": [
+    "אנא",
+    "נא",
+    "בבקשה",
+    "את[ה] יכול[ה]",
+    "תוכל[י]",
+    "אפשר"
+  ]
+}

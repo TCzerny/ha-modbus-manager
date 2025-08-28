@@ -1,0 +1,52 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "Clave API"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "away_mode": {
+                "name": "Modo ausente"
+            }
+        },
+        "sensor": {
+            "daily_usage": {
+                "name": "Uso diario"
+            },
+            "monthly_usage": {
+                "name": "Uso mensual"
+            },
+            "yearly_usage": {
+                "name": "Uso anual"
+            }
+        }
+    },
+    "services": {
+        "set_away_mode": {
+            "description": "Establece el modo en casa/ausente para un monitor de agua Streamlabs.",
+            "fields": {
+                "away_mode": {
+                    "description": "En casa o ausente.",
+                    "name": "Modo ausente"
+                },
+                "location_id": {
+                    "description": "El ID de ubicaci\u00f3n del Streamlabs Water Monitor.",
+                    "name": "ID de ubicaci\u00f3n"
+                }
+            },
+            "name": "Establecer modo ausente"
+        }
+    }
+}

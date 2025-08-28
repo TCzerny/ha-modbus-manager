@@ -1,0 +1,123 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL",
+                    "username": "Nome de Utilizador",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou endere\u00e7o IP do dispositivo que executa a sua inst\u00e2ncia do pyLoad.",
+                    "port": "O pyLoad usa a porta 8000 por defeito."
+                }
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL",
+                    "username": "Nome de Utilizador",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou endere\u00e7o IP do dispositivo que executa a sua inst\u00e2ncia do pyLoad.",
+                    "port": "O pyLoad usa a porta 8000 por defeito."
+                }
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "abort_downloads": {
+                "name": "Abortar todos os downloads em curso"
+            },
+            "delete_finished": {
+                "name": "Eliminar ficheiros/pacotes conclu\u00eddos"
+            },
+            "restart": {
+                "name": "Reiniciar o n\u00facleo do pyload"
+            },
+            "restart_failed": {
+                "name": "Reiniciar todos os ficheiros que falharam"
+            }
+        },
+        "sensor": {
+            "active": {
+                "name": "Downloads ativos"
+            },
+            "free_space": {
+                "name": "Espa\u00e7o livre"
+            },
+            "queue": {
+                "name": "Downloads em fila de espera"
+            },
+            "speed": {
+                "name": "Velocidade"
+            },
+            "total": {
+                "name": "Total de downloads"
+            }
+        },
+        "switch": {
+            "download": {
+                "name": "Pausa/Retomar a fila"
+            },
+            "reconnect": {
+                "name": "Auto-Religar"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_auth_exception": {
+            "message": "N\u00e3o foi poss\u00edvel enviar o comando para pyLoad devido a um erro de autentica\u00e7\u00e3o, tente mais tarde"
+        },
+        "service_call_exception": {
+            "message": "N\u00e3o foi poss\u00edvel enviar o comando para pyLoad devido a um erro de liga\u00e7\u00e3o, tente mais tarde"
+        },
+        "setup_authentication_exception": {
+            "message": "A autentica\u00e7\u00e3o falhou para {username}, verifique as suas credenciais de in\u00edcio de sess\u00e3o"
+        },
+        "setup_parse_exception": {
+            "message": "N\u00e3o foi poss\u00edvel analisar os dados da API pyLoad, tente mais tarde"
+        },
+        "setup_request_exception": {
+            "message": "N\u00e3o foi poss\u00edvel ligar e obter dados da API pyLoad, tente mais tarde"
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "A configura\u00e7\u00e3o do pyLoad via YAML est\u00e1 a ser removida, mas houve um erro de liga\u00e7\u00e3o ao tentar importar a configura\u00e7\u00e3o YAML.\n\nVerifique se tem uma liga\u00e7\u00e3o est\u00e1vel \u00e0 Internet e reinicie o Home Assistant para tentar novamente ou remova a configura\u00e7\u00e3o YAML do pyLoad do seu ficheiro configuration.yaml e continue a [configurar a integra\u00e7\u00e3o]({url}) manualmente.",
+            "title": "A importa\u00e7\u00e3o da configura\u00e7\u00e3o YAML do pyLoad falhou"
+        },
+        "deprecated_yaml_import_issue_invalid_auth": {
+            "description": "A configura\u00e7\u00e3o do pyLoad via YAML est\u00e1 a ser removida, mas houve um erro de autentica\u00e7\u00e3o ao tentar importar a configura\u00e7\u00e3o YAML.\n\nCorrija a configura\u00e7\u00e3o YAML e reinicie o Home Assistant para tentar novamente ou remova a configura\u00e7\u00e3o YAML do pyLoad do seu ficheiro configuration.yaml e continue a [configurar a integra\u00e7\u00e3o]({url}) manualmente.",
+            "title": "A importa\u00e7\u00e3o da configura\u00e7\u00e3o YAML do pyLoad falhou"
+        },
+        "deprecated_yaml_import_issue_unknown": {
+            "description": "A configura\u00e7\u00e3o do pyLoad via YAML est\u00e1 a ser removida, mas houve um erro desconhecido ao tentar importar a configura\u00e7\u00e3o YAML.\n\nCertifique-se de que a configura\u00e7\u00e3o YAML est\u00e1 correta e reinicie o Home Assistant para tentar novamente ou remova a configura\u00e7\u00e3o YAML do pyLoad do seu ficheiro configuration.yaml e continue a [configurar a integra\u00e7\u00e3o]({url}) manualmente.",
+            "title": "A importa\u00e7\u00e3o da configura\u00e7\u00e3o YAML do pyLoad falhou"
+        }
+    }
+}

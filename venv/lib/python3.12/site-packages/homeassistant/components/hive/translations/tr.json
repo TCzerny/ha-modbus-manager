@@ -1,0 +1,122 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Hesap zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu",
+            "unknown_entry": "Mevcut giri\u015f bulunamad\u0131."
+        },
+        "error": {
+            "invalid_code": "Hive'da oturum a\u00e7\u0131lamad\u0131. \u0130ki fakt\u00f6rl\u00fc kimlik do\u011frulama kodunuz yanl\u0131\u015ft\u0131.",
+            "invalid_password": "Hive'a giri\u015f yap\u0131lamad\u0131. Yanl\u0131\u015f \u015fifre, l\u00fctfen tekrar deneyin.",
+            "invalid_username": "Hive'da oturum a\u00e7\u0131lamad\u0131. E-posta adresiniz tan\u0131nm\u0131yor.",
+            "no_internet_available": "Hive'a ba\u011flanmak i\u00e7in internet ba\u011flant\u0131s\u0131 gereklidir.",
+            "unknown": "Beklenmeyen hata"
+        },
+        "step": {
+            "2fa": {
+                "data": {
+                    "2fa": "\u0130ki ad\u0131ml\u0131 kimlik do\u011frulama kodu"
+                },
+                "description": "Hive kimlik do\u011frulama kodunuzu girin. \n\n Ba\u015fka bir kod istemek i\u00e7in l\u00fctfen 0000 kodunu girin.",
+                "title": "Hive \u0130ki Fakt\u00f6rl\u00fc Kimlik Do\u011frulama."
+            },
+            "configuration": {
+                "data": {
+                    "device_name": "Cihaz ad\u0131"
+                },
+                "description": "Hive yap\u0131land\u0131rman\u0131z\u0131 girin",
+                "title": "Hive Yap\u0131land\u0131rmas\u0131."
+            },
+            "reauth": {
+                "data": {
+                    "password": "\u015eifre",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "description": "Hive giri\u015f bilgilerinizi tekrar girin.",
+                "title": "Hive Giri\u015f yap"
+            },
+            "user": {
+                "data": {
+                    "password": "\u015eifre",
+                    "scan_interval": "Tarama Aral\u0131\u011f\u0131 (saniye)",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "description": "Hive giri\u015f bilgilerinizi girin.",
+                "title": "Hive Giri\u015f yap"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "heating": {
+                "state": {
+                    "manual": "Manuel",
+                    "off": "Kapal\u0131",
+                    "schedule": "Zamanlama"
+                }
+            },
+            "hot_water": {
+                "state": {
+                    "off": "Kapal\u0131",
+                    "on": "A\u00e7\u0131k",
+                    "schedule": "Zamanlama"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "user": {
+                "data": {
+                    "scan_interval": "Tarama aral\u0131\u011f\u0131 (saniye)"
+                },
+                "description": "Verileri daha s\u0131k kontrol etmek i\u00e7in tarama aral\u0131\u011f\u0131n\u0131 g\u00fcncelleyin.",
+                "title": "Hive i\u00e7in Se\u00e7enekler"
+            }
+        }
+    },
+    "services": {
+        "boost_heating_off": {
+            "description": "H\u0131zland\u0131rma modunu KAPALI olarak ayarlar.",
+            "fields": {
+                "entity_id": {
+                    "description": "Boost'u kapatmak i\u00e7in varl\u0131k kimli\u011fi.",
+                    "name": "Varl\u0131k Kimli\u011fi"
+                }
+            },
+            "name": "H\u0131zl\u0131 \u0131s\u0131tma kapal\u0131"
+        },
+        "boost_heating_on": {
+            "description": "Y\u00fckseltme modunu A\u00c7IK konuma getirir, y\u00fckseltme i\u00e7in zaman aral\u0131\u011f\u0131n\u0131 ve istenen hedef s\u0131cakl\u0131\u011f\u0131 tan\u0131mlar.",
+            "fields": {
+                "temperature": {
+                    "description": "Boost periyodu i\u00e7in hedef s\u0131cakl\u0131k.",
+                    "name": "S\u0131cakl\u0131k"
+                },
+                "time_period": {
+                    "description": "Artt\u0131rman\u0131n zaman aral\u0131\u011f\u0131.",
+                    "name": "Zaman aral\u0131\u011f\u0131"
+                }
+            },
+            "name": "H\u0131zl\u0131 \u0131s\u0131tma a\u00e7\u0131k"
+        },
+        "boost_hot_water": {
+            "description": "G\u00fc\u00e7lendirme modunu A\u00c7IK veya KAPALI olarak ayarlar ve g\u00fc\u00e7lendirmenin s\u00fcresini belirler.",
+            "fields": {
+                "entity_id": {
+                    "description": "G\u00fc\u00e7lendirilecek varl\u0131k kimli\u011fi.",
+                    "name": "Varl\u0131k Kimli\u011fi"
+                },
+                "on_off": {
+                    "description": "Y\u00fckseltme i\u015flevini a\u00e7\u0131k veya kapal\u0131 olarak ayarlay\u0131n.",
+                    "name": "Mod"
+                },
+                "time_period": {
+                    "description": "Artt\u0131rman\u0131n zaman aral\u0131\u011f\u0131.",
+                    "name": "Zaman aral\u0131\u011f\u0131"
+                }
+            },
+            "name": "S\u0131cak suyu art\u0131r\u0131n"
+        }
+    }
+}

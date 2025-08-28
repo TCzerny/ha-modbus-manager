@@ -1,0 +1,231 @@
+{
+    "config": {
+        "create_entry": {
+            "default": "Kai kurie jutikliai ne\u012fjungti pagal numatytuosius nustatymus. Galite juos \u012fjungti subjekt\u0173 registre po integracijos konfig\u016bracijos."
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_api_key": "Neteisingas API raktas",
+            "requests_exceeded": "Vir\u0161ytas leistinas Accuweather API u\u017eklaus\u0173 skai\u010dius. Turite palaukti arba pakeisti API rakt\u0105."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API raktas",
+                    "latitude": "Platuma",
+                    "longitude": "Ilguma",
+                    "name": "Vardas"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "air_quality": {
+                "name": "Oro kokyb\u0117s diena {forecast_day}",
+                "state": {
+                    "good": "Geras",
+                    "hazardous": "Pavojingas",
+                    "high": "Auk\u0161tas",
+                    "low": "\u017demas",
+                    "moderate": "Vidutinis",
+                    "unhealthy": "Nesveika"
+                }
+            },
+            "apparent_temperature": {
+                "name": "Jutimin\u0117 temperat\u016bra"
+            },
+            "cloud_ceiling": {
+                "name": "Debes\u0173 lubos"
+            },
+            "cloud_cover": {
+                "name": "Debes\u0173 danga"
+            },
+            "cloud_cover_day": {
+                "name": "Debesuotumo diena {forecast_day}"
+            },
+            "cloud_cover_night": {
+                "name": "Debesuotumas nakt\u012f {forecast_day}"
+            },
+            "condition_day": {
+                "name": "S\u0105lygos diena {forecast_day}"
+            },
+            "condition_night": {
+                "name": "B\u016bkl\u0117 nakt\u012f {forecast_day}"
+            },
+            "dew_point": {
+                "name": "Rasos ta\u0161kas"
+            },
+            "grass_pollen": {
+                "name": "\u017dol\u0117s \u017eiedadulki\u0173 diena {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Lygis",
+                        "state": {
+                            "good": "Geras",
+                            "hazardous": "Pavojingas",
+                            "high": "Auk\u0161tas",
+                            "low": "\u017demas",
+                            "moderate": "Vidutinis",
+                            "unhealthy": "Nesveika"
+                        }
+                    }
+                }
+            },
+            "hours_of_sun": {
+                "name": "{forecast_day} saul\u0117tos valandos"
+            },
+            "mold_pollen": {
+                "name": "Pel\u0117sio \u017eiedadulki\u0173 diena {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Lygis",
+                        "state": {
+                            "good": "Geras",
+                            "hazardous": "Pavojingas",
+                            "high": "Auk\u0161tas",
+                            "low": "\u017demas",
+                            "moderate": "Vidutinis",
+                            "unhealthy": "Nesveika"
+                        }
+                    }
+                }
+            },
+            "precipitation": {
+                "name": "Krituliai"
+            },
+            "pressure_tendency": {
+                "name": "Sl\u0117gio tendencija",
+                "state": {
+                    "falling": "Kritimas",
+                    "rising": "Kyla",
+                    "steady": "Pastovus"
+                }
+            },
+            "ragweed_pollen": {
+                "name": "Ambrozijos \u017eiedadulki\u0173 diena {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Lygis",
+                        "state": {
+                            "good": "Geras",
+                            "hazardous": "Pavojingas",
+                            "high": "Auk\u0161tas",
+                            "low": "\u017demas",
+                            "moderate": "Vidutinis",
+                            "unhealthy": "Nesveika"
+                        }
+                    }
+                }
+            },
+            "realfeel_temperature": {
+                "name": "RealFeel temperat\u016bra"
+            },
+            "realfeel_temperature_max": {
+                "name": "\u201eRealFeel\u201c maksimali temperat\u016bra dien\u0105 {forecast_day}"
+            },
+            "realfeel_temperature_min": {
+                "name": "RealFeel temperat\u016bra min. diena {forecast_day}"
+            },
+            "realfeel_temperature_shade": {
+                "name": "RealFeel temperat\u016bros \u0161e\u0161\u0117lis"
+            },
+            "realfeel_temperature_shade_max": {
+                "name": "RealFeel temperat\u016bros \u0161e\u0161\u0117lis maks. diena {forecast_day}"
+            },
+            "realfeel_temperature_shade_min": {
+                "name": "RealFeel temperat\u016bra \u0161e\u0161\u0117lyje min diena {forecast_day}"
+            },
+            "solar_irradiance_day": {
+                "name": "Saul\u0117s spinduliavimo diena {forecast_day}"
+            },
+            "solar_irradiance_night": {
+                "name": "Saul\u0117s spinduliavimas nakt\u012f {forecast_day}"
+            },
+            "thunderstorm_probability_day": {
+                "name": "Perk\u016bnijos tikimyb\u0117 {forecast_day} diena"
+            },
+            "thunderstorm_probability_night": {
+                "name": "Perk\u016bnijos tikimyb\u0117 nakt\u012f {forecast_day}"
+            },
+            "tree_pollen": {
+                "name": "Med\u017ei\u0173 \u017eiedadulki\u0173 diena {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Lygis",
+                        "state": {
+                            "good": "Geras",
+                            "hazardous": "Pavojingas",
+                            "high": "Auk\u0161tas",
+                            "low": "\u017demas",
+                            "moderate": "Vidutinis",
+                            "unhealthy": "Nesveika"
+                        }
+                    }
+                }
+            },
+            "uv_index": {
+                "name": "UV indeksas",
+                "state_attributes": {
+                    "level": {
+                        "name": "Lygis",
+                        "state": {
+                            "good": "Geras",
+                            "hazardous": "Pavojingas",
+                            "high": "Auk\u0161tas",
+                            "low": "\u017demas",
+                            "moderate": "Vidutinis",
+                            "unhealthy": "Nesveika"
+                        }
+                    }
+                }
+            },
+            "uv_index_forecast": {
+                "name": "UV indekso diena {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Lygis",
+                        "state": {
+                            "good": "Geras",
+                            "hazardous": "Pavojingas",
+                            "high": "Auk\u0161tas",
+                            "low": "\u017demas",
+                            "moderate": "Vidutinis",
+                            "unhealthy": "Nesveika"
+                        }
+                    }
+                }
+            },
+            "wet_bulb_temperature": {
+                "name": "Dr\u0117gnojo termometro temperat\u016bra"
+            },
+            "wind_chill_temperature": {
+                "name": "V\u0117jo \u0161al\u010dio temperat\u016bra"
+            },
+            "wind_gust_speed": {
+                "name": "V\u0117jo g\u016bsi\u0173 greitis"
+            },
+            "wind_gust_speed_day": {
+                "name": "V\u0117jo g\u016bsi\u0173 greitis {forecast_day} dien\u0105"
+            },
+            "wind_gust_speed_night": {
+                "name": "V\u0117jo g\u016bsi\u0173 greitis nakt\u012f {forecast_day}"
+            },
+            "wind_speed": {
+                "name": "V\u0117jo greitis"
+            },
+            "wind_speed_day": {
+                "name": "V\u0117jo grei\u010dio diena {forecast_day}"
+            },
+            "wind_speed_night": {
+                "name": "V\u0117jo greitis nakt\u012f {forecast_day}"
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "can_reach_server": "Pasiekite AccuWeather server\u012f",
+            "remaining_requests": "Likusios leid\u017eiamos u\u017eklausos"
+        }
+    }
+}

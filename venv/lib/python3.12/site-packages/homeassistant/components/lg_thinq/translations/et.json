@@ -1,0 +1,997 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud",
+            "already_in_progress": "Seadistamine on juba k\u00e4imas"
+        },
+        "error": {
+            "exceeded_api_calls": "API-kutsete arv on \u00fcletatud.",
+            "exceeded_user_api_calls": "Kasutaja API-kutsete arv on \u00fcletatud.",
+            "invalid_token": "M\u00e4rgis ei ole kehtiv.",
+            "not_acceptable_terms": "Teenuse tingimustega ei n\u00f5ustuta.",
+            "not_allowed_api_again": "Kasutajal EI OLE API kasutusluba.",
+            "not_supported_country": "Riik ei ole toetatud.",
+            "token_unauthorized": "Luba on kehtetu v\u00f5i volitamata."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Isiklik juurdep\u00e4\u00e4suluba",
+                    "country": "Riik"
+                },
+                "description": "Sisesta oma LG ThinQ kontoga loodud ThinQ [PAT(Personal Access Token)]( {pat_url} ).",
+                "title": "\u00dchenda ThinQ-ga"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clean_light_reminder": {
+                "name": "Puhastamise m\u00e4rgutuli"
+            },
+            "eco_friendly_mode": {
+                "name": "Keskkonnas\u00f5bralik"
+            },
+            "machine_clean_reminder": {
+                "name": "Masina puhastamise meeldetuletus"
+            },
+            "one_touch_filter": {
+                "name": "V\u00e4rske \u00f5hu filter"
+            },
+            "operation_mode": {
+                "name": "V\u00f5imsus"
+            },
+            "power_save_enabled": {
+                "name": "Energias\u00e4\u00e4sture\u017eiim"
+            },
+            "remote_control_enabled": {
+                "name": "Kaugk\u00e4ivitus"
+            },
+            "remote_control_enabled_for_location": {
+                "name": "{location} kaugk\u00e4ivitus"
+            },
+            "rinse_refill": {
+                "name": "Vajalik loputusvahendi t\u00e4itmine"
+            },
+            "sabbath_mode": {
+                "name": "Sabbath"
+            },
+            "signal_level": {
+                "name": "Helisignaal"
+            }
+        },
+        "climate": {
+            "climate_air_conditioner": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "K\u00f5rge",
+                            "low": "Madal",
+                            "mid": "Keskmine",
+                            "power": "V\u00f5imsus",
+                            "slow": "Aeglane"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "air_clean": "\u00d5hu puhastamine",
+                            "aroma": "Aroom",
+                            "energy_saving": "Energias\u00e4\u00e4st"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "error": {
+                "name": "T\u00f5rge",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "block_error": "Puhastamine on peatunud. Kontrolli takistusi",
+                            "brush_error": "Liikuval harjal on probleem",
+                            "bubble_error": "Mullitamise viga",
+                            "child_lock_active_error": "Lapselukk",
+                            "cliff_error": "Kukkumise v\u00e4ltimise anduril on t\u00f5rge",
+                            "clutch_error": "Siduri viga",
+                            "compressor_error": "Kompressori viga",
+                            "dispensing_error": "Dosaatori viga",
+                            "door_close_error": "Uks on suletud viga",
+                            "door_lock_error": "Ukse lukustuse viga",
+                            "door_open_error": "Uks on avatud",
+                            "door_sensor_error": "Ukseanduri viga",
+                            "drainmotor_error": "T\u00fchjendusviga",
+                            "dust_full_error": "Tolmukast on t\u00e4is ja vajab t\u00fchjendamist",
+                            "empty_water_alert_error": "T\u00fchjenda veepaak",
+                            "fan_motor_error": "Ventilaatori lukustuse viga",
+                            "filter_clogging_error": "Filtri viga",
+                            "frozen_error": "K\u00fclmumise tuvastamise viga",
+                            "heater_circuit_error": "K\u00fctteahela rike",
+                            "high_power_supply_error": "Toiteallika viga",
+                            "high_temperature_detection_error": "K\u00f5rge temperatuuri viga",
+                            "inner_lid_open_error": "Kaan avatud viga",
+                            "ir_sensor_error": "IR anduri viga",
+                            "le2_error": "LE2 viga",
+                            "le_error": "LE viga",
+                            "left_wheel_error": "Vasakul rattal on probleem",
+                            "locked_motor_error": "Juhtmootori viga",
+                            "mop_error": "Ilma mopita ei saa korralikult t\u00f6\u00f6tada",
+                            "motor_error": "Mootori h\u00e4ired",
+                            "motor_lock_error": "Mootori lukustusviga",
+                            "move_error": "Rattad ei puuduta p\u00f5randat",
+                            "need_water_drain": "T\u00fchjenda veepaak",
+                            "need_water_replenishment": "T\u00e4ida veega",
+                            "no_battery_error": "Robotipuhasti aku on t\u00fchi",
+                            "no_dust_bin_error": "Tolmukonteiner ei ole paigaldatud",
+                            "no_filter_error": "Filtri viga",
+                            "out_of_balance_error": "Tasakaalustamata koormus",
+                            "overfill_error": "\u00dclet\u00e4itmise viga",
+                            "part_malfunction_error": "AIE viga",
+                            "power_code_connection_error": "Toitejuhtme \u00fchendamise viga",
+                            "power_fail_error": "Elektrikatkestus",
+                            "right_wheel_error": "Paremal rattal on probleem",
+                            "stack_error": "Virnastamise viga",
+                            "steam_heat_error": "Auru k\u00fcttekeha viga",
+                            "suction_blocked_error": "Imemismootor on ummistunud",
+                            "temperature_sensor_error": "Termistori viga",
+                            "time_to_run_the_tub_clean_cycle_error": "Vanni puhastamise soovitus",
+                            "timeout_error": "Ajal\u00f5pu viga",
+                            "turbidity_sensor_error": "H\u00e4gususanduri viga",
+                            "unable_to_lock_error": "Ukse lukustuse viga",
+                            "unbalanced_load_error": "Tasakaalustamata koormus",
+                            "unknown_error": "Toode n\u00f5uab t\u00e4helepanu",
+                            "vibration_sensor_error": "Vibratsioonianduri viga",
+                            "water_drain_error": "Vee \u00e4ravoolu viga",
+                            "water_leakage_error": "Veelekke probleem",
+                            "water_leaks_error": "Veelekke probleem",
+                            "water_level_sensor_error": "Veeanduri viga",
+                            "water_supply_error": "Veevarustuse viga"
+                        }
+                    }
+                }
+            },
+            "notification": {
+                "name": "Teavitus",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "charging_is_complete": "Laadimine on l\u00f5ppenud",
+                            "cleaning_is_complete": "Ts\u00fckkel on l\u00f5ppenud",
+                            "cleaning_is_completed": "Puhastamine on l\u00f5petatud",
+                            "cleaning_is_failed": "Puhastamine nurjus",
+                            "cooking_is_complete": "V\u00e4lja l\u00fclitatud",
+                            "door_is_open": "Uks on avatud",
+                            "drying_failed": "Kuivatis ilmnes t\u00f5rge",
+                            "drying_is_complete": "Kuivatamine on l\u00f5ppenud",
+                            "error_during_cleaning": "Puhastamine l\u00f5petati vea t\u00f5ttu",
+                            "error_during_washing": "Pesumasinas ilmnes t\u00f5rge",
+                            "error_has_occurred": "Ilmnes t\u00f5rge",
+                            "frozen_is_complete": "Ice plus on tehtud",
+                            "homeguard_is_stopped": "Koduvalve on peatunud",
+                            "lack_of_water": "Veepaagis ei ole vett",
+                            "motion_is_detected": "Foto saadetakse kui koduvalve ajal tuvastatakse liikumine",
+                            "need_to_check_location": "Asukoha kontroll on n\u00f5utav",
+                            "pollution_is_high": "\u00d5hu seisund muutub kiiresti halvemaks",
+                            "preheating_is_complete": "Eelsoojendus on tehtud",
+                            "rinse_is_not_enough": "Parema kuivatustulemuse saavutamiseks lisa loputusvahendit",
+                            "salt_refill_is_needed": "Parema pehmenduse saavutamiseks lisa soola",
+                            "scheduled_cleaning_starts": "Algab plaaniline puhastus",
+                            "styling_is_complete": "Stiilimine on l\u00f5petatud",
+                            "time_to_change_filter": "On aeg filter v\u00e4lja vahetada",
+                            "time_to_change_water_filter": "Pead veefiltri v\u00e4lja vahetama",
+                            "time_to_clean": "Vajadus enesepuhastuse j\u00e4rele",
+                            "time_to_clean_filter": "On aeg filtrit puhastada",
+                            "timer_is_complete": "Taimer on l\u00f5petatud",
+                            "washing_is_complete": "Pesemine on l\u00f5petatud",
+                            "water_is_full": "Veepaak on t\u00e4is",
+                            "water_leak_has_occurred": "N\u00f5udepesumasin on tuvastanud veelekke"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "fan_speed": {
+                "name": "Ventilaator"
+            },
+            "lamp_brightness": {
+                "name": "Valgus"
+            },
+            "light_status": {
+                "name": "Valgus"
+            },
+            "relative_hour_to_start": {
+                "name": "Sissel\u00fclitamise ajastamine"
+            },
+            "relative_hour_to_start_for_location": {
+                "name": "{location} sissel\u00fclitamise ajastamine"
+            },
+            "relative_hour_to_start_wm": {
+                "name": "Viivitus algab"
+            },
+            "relative_hour_to_start_wm_for_location": {
+                "name": "{location} viivitus algab"
+            },
+            "relative_hour_to_stop": {
+                "name": "V\u00e4ljal\u00fclitamise ajastamine"
+            },
+            "relative_hour_to_stop_for_location": {
+                "name": "{location} v\u00e4ljal\u00fclitamise ajastamine"
+            },
+            "relative_hour_to_stop_wm": {
+                "name": "Viivitus l\u00f5peb"
+            },
+            "relative_hour_to_stop_wm_for_location": {
+                "name": "Viivitus {location} l\u00f5peb"
+            },
+            "sleep_timer_relative_hour_to_stop": {
+                "name": "Unetaimer"
+            },
+            "sleep_timer_relative_hour_to_stop_for_location": {
+                "name": "{location} unetaimer"
+            },
+            "target_humidity": {
+                "name": "Soovitud niiskusem\u00e4\u00e4r"
+            },
+            "target_temperature": {
+                "name": "Temperatuur"
+            },
+            "target_temperature_for_location": {
+                "name": "{location} temperatuur"
+            },
+            "wind_temperature": {
+                "name": "Tuule temperatuur"
+            }
+        },
+        "select": {
+            "air_clean_operation_mode": {
+                "name": "\u00d5hu puhastamine",
+                "state": {
+                    "start": "K\u00e4ivita",
+                    "stop": "Peata"
+                }
+            },
+            "cook_mode": {
+                "name": "Toiduvalmistamise re\u017eiim",
+                "state": {
+                    "bake": "K\u00fcpsetamine",
+                    "convection_bake": "P\u00f6\u00f6rd\u00f5huga k\u00fcpsetamine",
+                    "convection_roast": "P\u00f6\u00f6rd\u00f5huga praadimine",
+                    "crisp_convection": "Kr\u00f5be p\u00f6\u00f6rd\u00f5hk",
+                    "roast": "R\u00f6stimine"
+                }
+            },
+            "cook_mode_for_location": {
+                "name": "{location} toiduvalmistamisre\u017eiim",
+                "state": {
+                    "bake": "K\u00fcpsetamine",
+                    "convection_bake": "P\u00f6\u00f6rd\u00f5huga k\u00fcpsetamine",
+                    "convection_roast": "P\u00f6\u00f6rd\u00f5huga praadimine",
+                    "crisp_convection": "Kr\u00f5be p\u00f6\u00f6rd\u00f5hk",
+                    "roast": "R\u00f6stimine"
+                }
+            },
+            "current_job_mode": {
+                "name": "T\u00f6\u00f6re\u017eiim",
+                "state": {
+                    "air_clean": "Puhastamine",
+                    "auto": "Auto",
+                    "baby_care": "J\u00e4lgimisre\u017eiim",
+                    "circulator": "Booster",
+                    "clean": "\u00dchekordne",
+                    "direct_clean": "Otsene re\u017eiim",
+                    "dual_clean": "Kahekordne",
+                    "fast": "Turbo",
+                    "heat_pump": "Soojuspump",
+                    "humidify": "Udu",
+                    "humidify_and_air_clean": "Udu ja puhastamine",
+                    "humidity": "Niiske",
+                    "nature_clean": "Loomulik re\u017eiim",
+                    "pet_clean": "Lemmiklooma re\u017eiim",
+                    "silent": "Vaikne",
+                    "sleep": "Unere\u017eiim",
+                    "smart": "Nutikas re\u017eiim",
+                    "space_clean": "Hajutamisre\u017eiim",
+                    "spot_clean": "Lai re\u017eiim",
+                    "turbo": "Turbo",
+                    "up_feature": "T\u00e4iendav re\u017eiim",
+                    "vacation": "Puhkus"
+                }
+            },
+            "display_light": {
+                "name": "Ekraani heledus",
+                "state": {
+                    "level_1": "Heledus 1",
+                    "level_2": "Heledus 2",
+                    "level_3": "Heledus 3",
+                    "off": "V\u00e4ljas"
+                }
+            },
+            "fresh_air_filter": {
+                "name": "V\u00e4rske \u00f5hu filter",
+                "state": {
+                    "auto": "Auto",
+                    "off": "V\u00e4ljas",
+                    "power": "V\u00f5imsus",
+                    "replace": "Vaheta filter",
+                    "smart_off": "V\u00e4ljas",
+                    "smart_on": "Nutikas turvaline hoiustamine",
+                    "smart_power": "Nutikas turvaline hoiustamine"
+                }
+            },
+            "hygiene_dry_mode": {
+                "name": "Kuivatusre\u017eiim",
+                "state": {
+                    "fast": "Kiire",
+                    "normal": "\u00d5rn",
+                    "off": "V\u00e4ljas",
+                    "silent": "Vaikne"
+                }
+            },
+            "light_brightness": {
+                "name": "Valgus"
+            },
+            "monitoring_enabled": {
+                "name": "\u00d5hukvaliteedi andur",
+                "state": {
+                    "always": "Alati sisse l\u00fclitatud",
+                    "on_working": "L\u00fclitub sisse koos tootega"
+                }
+            },
+            "operation_mode": {
+                "name": "T\u00f6\u00f6re\u017eiim",
+                "state": {
+                    "cancel": "Loobu",
+                    "power_off": "Toide v\u00e4lja l\u00fclitatud",
+                    "preheating": "Eelsoojendus",
+                    "start": "K\u00e4ivita",
+                    "stop": "Peata",
+                    "wake_up": "Puhkere\u017eiim on v\u00e4lja l\u00fclitatud"
+                }
+            },
+            "operation_mode_for_location": {
+                "name": "{location} toiming",
+                "state": {
+                    "cancel": "Loobu",
+                    "power_off": "Toide v\u00e4lja l\u00fclitatud",
+                    "preheating": "Eelsoojendus",
+                    "start": "K\u00e4ivita",
+                    "stop": "Peata",
+                    "wake_up": "Puhkere\u017eiim on v\u00e4lja l\u00fclitatud"
+                }
+            },
+            "wind_angle": {
+                "name": "P\u00f6\u00f6ramine",
+                "state": {
+                    "angle_140": "140\u00b0",
+                    "angle_45": "45\u00b0",
+                    "angle_60": "60\u00b0",
+                    "angle_90": "90\u00b0",
+                    "off": "V\u00e4ljas"
+                }
+            },
+            "wind_strength": {
+                "name": "Kiirus",
+                "state": {
+                    "auto": "Auto",
+                    "high": "K\u00f5rge",
+                    "low": "Madal",
+                    "mid": "Keskmine",
+                    "power": "Turbo",
+                    "slow": "Aeglane",
+                    "turbo": "Turbo",
+                    "wind_1": "1. samm",
+                    "wind_10": "10. samm",
+                    "wind_2": "2. samm",
+                    "wind_3": "3. samm",
+                    "wind_4": "4. samm",
+                    "wind_5": "5. samm",
+                    "wind_6": "6. samm",
+                    "wind_7": "7. samm",
+                    "wind_8": "8. samm",
+                    "wind_9": "9. samm"
+                }
+            }
+        },
+        "sensor": {
+            "absolute_to_start": {
+                "name": "Sissel\u00fclitamise ajastamine"
+            },
+            "absolute_to_start_for_location": {
+                "name": "{location} sissel\u00fclitamise ajastamine"
+            },
+            "absolute_to_stop": {
+                "name": "V\u00e4ljal\u00fclitamise ajastamine"
+            },
+            "absolute_to_stop_for_location": {
+                "name": "{location} v\u00e4ljal\u00fclitamise ajastamine"
+            },
+            "battery_level": {
+                "name": "Aku",
+                "state": {
+                    "high": "T\u00e4is",
+                    "low": "Madal",
+                    "mid": "Keskmine",
+                    "warning": "T\u00fchi"
+                }
+            },
+            "beer_remain": {
+                "name": "Retsepti edenemine"
+            },
+            "brightness": {
+                "name": "Valgustuse intensiivsus"
+            },
+            "brightness_for_location": {
+                "name": "{location} valgustuse intensiivsus"
+            },
+            "cock_state": {
+                "name": "UVnano",
+                "state": {
+                    "cleaning": "K\u00e4imas",
+                    "normal": "Unere\u017eiimil"
+                }
+            },
+            "current_dish_washing_course": {
+                "name": "Praegune ts\u00fckkel",
+                "state": {
+                    "auto": "Auto",
+                    "delicate": "\u00d5rn",
+                    "download_cycle": "Allalaadimise ts\u00fckkel",
+                    "eco": "\u00d6ko",
+                    "express": "Ekspress",
+                    "heavy": "Intensiivne",
+                    "machine_clean": "Masinaga puhastamine",
+                    "normal": "Tavaline",
+                    "quick": "Kiire",
+                    "refresh": "V\u00e4rskenda",
+                    "rinse": "Loputa",
+                    "short_mode": "L\u00fchike re\u017eiim",
+                    "spray": "Pihusta",
+                    "steam": "Auruhooldus",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_job_mode": {
+                "name": "T\u00f6\u00f6re\u017eiim",
+                "state": {
+                    "air_clean": "Puhasta",
+                    "auto": "Auto",
+                    "clothes_dry": "Pesu",
+                    "edge": "Servade puhastamine",
+                    "heat_pump": "Soojuspump",
+                    "high": "V\u00f5imsus",
+                    "intensive_dry": "Koht",
+                    "macro": "Kohandatud re\u017eiim",
+                    "mop": "Pese",
+                    "normal": "Tavaline",
+                    "off": "V\u00e4ljas",
+                    "quiet_humidity": "Vaikne",
+                    "rapid_humidity": "Jet",
+                    "sector_base": "Rakkude kaupa",
+                    "select": "Minu ruum",
+                    "smart_humidity": "Nutikas",
+                    "spot": "Spiraalpunkti re\u017eiim",
+                    "turbo": "Turbo",
+                    "vacation": "Puhkus",
+                    "zigzag": "Siksak"
+                }
+            },
+            "current_job_mode_stick_cleaner": {
+                "name": "T\u00f6\u00f6re\u017eiim",
+                "state": {
+                    "auto": "V\u00e4ike v\u00f5imsus",
+                    "high": "V\u00f5imsus",
+                    "mop": "Pese",
+                    "normal": "Tavaline",
+                    "off": "V\u00e4ljas",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_state": {
+                "name": "Praegune olek",
+                "state": {
+                    "add_drain": "T\u00e4itmine",
+                    "as_pop_up": "Toode n\u00f5uab t\u00e4helepanu",
+                    "cancel": "Loobu",
+                    "carbonation": "Karboniseerimine",
+                    "change_condition": "Seadete muutmine",
+                    "charging": "Laadimine",
+                    "charging_complete": "Laadimine on l\u00f5petatud",
+                    "checking_turbidity": "Mulla taseme tuvastamine",
+                    "cleaning": "Puhastamine",
+                    "cleaning_is_done": "Puhastamine on tehtud",
+                    "complete": "Valmis",
+                    "cook": "Toiduvalmistamine",
+                    "cook_complete": "Valmis",
+                    "cooking_in_progress": "Toiduvalmistamine",
+                    "cool_down": "Jahuta maha",
+                    "cooling": "Jahutamine",
+                    "detecting": "Tuvastamine",
+                    "detergent_amount": "Teabe pakkumine pesuaine koguse kohta",
+                    "diagnosis": "Arukas diagnostika on pooleli",
+                    "dispensing": "Automaatne v\u00e4ljastamine",
+                    "display_loadsize": "Koormuse suurus",
+                    "done": "Valmis",
+                    "drying": "Kuivatamine",
+                    "during_aging": "Vananemine",
+                    "during_fermentation": "K\u00e4\u00e4ritamine",
+                    "end": "L\u00f5petanud",
+                    "end_cooling": "Kuivatamine",
+                    "error": "Toode n\u00f5uab t\u00e4helepanu",
+                    "extracting_capsule": "Kapsli pruulimine",
+                    "extraction_mode": "S\u00e4ilitamine",
+                    "firmware": "P\u00fcsivara v\u00e4rskendamine",
+                    "fota": "Ajakohastamine",
+                    "frozen_prevent_initial": "K\u00fclmumiskaitse ootere\u017eiim",
+                    "frozen_prevent_pause": "K\u00fclmumiskaitse peatatud",
+                    "frozen_prevent_running": "K\u00fclmumiskaitse on k\u00e4imas",
+                    "homing": "Liigub",
+                    "initial": "Unere\u017eiimil",
+                    "initializing": "Unere\u017eiimil",
+                    "lock": "Juhtpuldi lukk",
+                    "macrosector": "Kaugjuhtimispult on kasutusel",
+                    "melting": "Virre lahustub",
+                    "monitoring_detecting": "HomeGuard on aktiivne",
+                    "monitoring_moving": "L\u00e4htepunkti minek",
+                    "monitoring_positioning": "Koduvalve alguspunkti m\u00e4\u00e4ramine",
+                    "night_dry": "\u00d6ine kuivatus",
+                    "oven_setting": "Pliit on \u00fchendatud",
+                    "pause": "Peatatud",
+                    "paused": "Peatatud",
+                    "power_fail": "Toitekatkestus",
+                    "power_off": "V\u00e4ljas",
+                    "power_on": "Sees",
+                    "preference": "S\u00e4te",
+                    "preheat": "Eelsoojendus",
+                    "preheat_complete": "Eelsoojendus on tehtud",
+                    "preheating": "Eelsoojendus",
+                    "preheating_is_done": "Eelsoojendus on tehtud",
+                    "prepareing_fermentation": "Ettevalmistus praegu",
+                    "presteam": "Valmis aurutamiseks",
+                    "prewash": "Eelpesu",
+                    "proofing": "Kinnistamine",
+                    "refreshing": "V\u00e4rskendamine",
+                    "reservation": "Kaugjuhtimispult on kasutusel",
+                    "reserved": "Viivitus seatud",
+                    "rinse_hold": "Ootab loputamist",
+                    "rinsing": "Loputamine",
+                    "running": "T\u00f6\u00f6tab",
+                    "running_end": "L\u00f5petatud",
+                    "setdate": "Kaugjuhtimispult on kasutusel",
+                    "shoes_module": "Kingade kuivatamine",
+                    "sleep": "Puhkeolekus",
+                    "smart_grid_run": "Nutiv\u00f5rgu k\u00e4itamine",
+                    "soaking": "Leotamine",
+                    "softening": "Pehmendaja",
+                    "spinning": "Keerutamine",
+                    "standby": "Unere\u017eiimil",
+                    "stay": "V\u00e4rskenda",
+                    "steam": "V\u00e4rskenda",
+                    "steam_softening": "Auruga pehmendamine",
+                    "sterilize": "Steriliseeri",
+                    "temperature_stabilization": "Temperatuuri reguleerimine",
+                    "working": "Puhastamine",
+                    "wrinkle_care": "Kortsude hooldus"
+                }
+            },
+            "current_state_for_location": {
+                "name": "{location} praegune olek",
+                "state": {
+                    "add_drain": "T\u00e4itmine",
+                    "as_pop_up": "Toode n\u00f5uab t\u00e4helepanu",
+                    "cancel": "Loobu",
+                    "carbonation": "Karboniseerimine",
+                    "change_condition": "Seadete muutmine",
+                    "charging": "Laadimine",
+                    "charging_complete": "Laadimine on l\u00f5petatud",
+                    "checking_turbidity": "Mulla taseme tuvastamine",
+                    "cleaning": "Puhastamine",
+                    "cleaning_is_done": "Puhastamine on tehtud",
+                    "complete": "Valmis",
+                    "cook": "Toiduvalmistamine",
+                    "cook_complete": "Valmis",
+                    "cooking_in_progress": "Toiduvalmistamine",
+                    "cool_down": "Jahuta maha",
+                    "cooling": "Jahutamine",
+                    "detecting": "Tuvastamine",
+                    "detergent_amount": "Teabe pakkumine pesuaine koguse kohta",
+                    "diagnosis": "Arukas diagnostika on pooleli",
+                    "dispensing": "Automaatne v\u00e4ljastamine",
+                    "display_loadsize": "Koormuse suurus",
+                    "done": "Valmis",
+                    "drying": "Kuivatamine",
+                    "during_aging": "Vananemine",
+                    "during_fermentation": "K\u00e4\u00e4ritamine",
+                    "end": "L\u00f5petanud",
+                    "end_cooling": "Kuivatamine",
+                    "error": "Toode n\u00f5uab t\u00e4helepanu",
+                    "extracting_capsule": "Kapsli pruulimine",
+                    "extraction_mode": "S\u00e4ilitamine",
+                    "firmware": "P\u00fcsivara v\u00e4rskendamine",
+                    "fota": "Ajakohastamine",
+                    "frozen_prevent_initial": "K\u00fclmumiskaitse ootere\u017eiim",
+                    "frozen_prevent_pause": "K\u00fclmumiskaitse peatatud",
+                    "frozen_prevent_running": "K\u00fclmumiskaitse on k\u00e4imas",
+                    "homing": "Liigub",
+                    "initial": "Unere\u017eiimil",
+                    "initializing": "Unere\u017eiimil",
+                    "lock": "Juhtpuldi lukk",
+                    "macrosector": "Kaugjuhtimispult on kasutusel",
+                    "melting": "Virre lahustub",
+                    "monitoring_detecting": "HomeGuard on aktiivne",
+                    "monitoring_moving": "L\u00e4htepunkti minek",
+                    "monitoring_positioning": "Koduvalve alguspunkti m\u00e4\u00e4ramine",
+                    "night_dry": "\u00d6ine kuivatus",
+                    "oven_setting": "Pliit on \u00fchendatud",
+                    "pause": "Peatatud",
+                    "paused": "Peatatud",
+                    "power_fail": "Toitekatkestus",
+                    "power_off": "V\u00e4ljas",
+                    "power_on": "Sees",
+                    "preference": "S\u00e4te",
+                    "preheat": "Eelsoojendus",
+                    "preheat_complete": "Eelsoojendus on tehtud",
+                    "preheating": "Eelsoojendus",
+                    "preheating_is_done": "Eelsoojendus on tehtud",
+                    "prepareing_fermentation": "Ettevalmistus praegu",
+                    "presteam": "Valmis aurutamiseks",
+                    "prewash": "Eelpesu",
+                    "proofing": "Kinnistamine",
+                    "refreshing": "V\u00e4rskendamine",
+                    "reservation": "Kaugjuhtimispult on kasutusel",
+                    "reserved": "Viivitus seatud",
+                    "rinse_hold": "Ootab loputamist",
+                    "rinsing": "Loputamine",
+                    "running": "T\u00f6\u00f6tab",
+                    "running_end": "L\u00f5petatud",
+                    "setdate": "Kaugjuhtimispult on kasutusel",
+                    "shoes_module": "Kingade kuivatamine",
+                    "sleep": "Puhkeolekus",
+                    "smart_grid_run": "Nutiv\u00f5rgu k\u00e4itamine",
+                    "soaking": "Leotamine",
+                    "softening": "Pehmendaja",
+                    "spinning": "Keerutamine",
+                    "standby": "Unere\u017eiimil",
+                    "stay": "V\u00e4rskenda",
+                    "steam": "V\u00e4rskenda",
+                    "steam_softening": "Auruga pehmendamine",
+                    "sterilize": "Steriliseeri",
+                    "temperature_stabilization": "Temperatuuri reguleerimine",
+                    "working": "Puhastamine",
+                    "wrinkle_care": "Kortsude hooldus"
+                }
+            },
+            "current_temperature": {
+                "name": "Praegune temperatuur"
+            },
+            "day_target_temperature": {
+                "name": "P\u00e4evane kasvutemperatuur"
+            },
+            "day_target_temperature_for_location": {
+                "name": "{location} p\u00e4evane kasvutemperatuur"
+            },
+            "duration": {
+                "name": "Valgustuse kestus"
+            },
+            "duration_for_location": {
+                "name": "{location} valgustuse kestus"
+            },
+            "elapsed_day_state": {
+                "name": "Pruulimise periood"
+            },
+            "elapsed_day_total": {
+                "name": "Pruulimise kestus"
+            },
+            "filter_lifetime": {
+                "name": "Filtri j\u00e4relej\u00e4\u00e4nud aeg"
+            },
+            "flavor_info": {
+                "name": "Maitse"
+            },
+            "fresh_air_filter": {
+                "name": "V\u00e4rske \u00f5hu filter",
+                "state": {
+                    "auto": "Auto",
+                    "off": "V\u00e4ljas",
+                    "power": "V\u00f5imsus",
+                    "replace": "Vaheta filter",
+                    "smart_off": "V\u00e4ljas",
+                    "smart_on": "Nutikas turvaline hoiustamine",
+                    "smart_power": "Nutikas turvaline hoiustamine"
+                }
+            },
+            "growth_mode": {
+                "name": "Re\u017eiim",
+                "state": {
+                    "ext_expert": "Kohandatud kasvure\u017eiim",
+                    "ext_flower": "Lilled",
+                    "ext_herb": "Maitsetaimed",
+                    "ext_leaf": "K\u00f6\u00f6giviljad",
+                    "standard": "Auto"
+                }
+            },
+            "growth_mode_for_location": {
+                "name": "{location} re\u017eiim",
+                "state": {
+                    "ext_expert": "Kohandatud kasvure\u017eiim",
+                    "ext_flower": "Lilled",
+                    "ext_herb": "Maitsetaimed",
+                    "ext_leaf": "K\u00f6\u00f6giviljad",
+                    "standard": "Auto"
+                }
+            },
+            "hop_oil_info": {
+                "name": "Humal"
+            },
+            "light_start": {
+                "name": "Tuled \u00f5igel ajal"
+            },
+            "light_start_for_location": {
+                "name": "{location} s\u00fcttib \u00f5igel ajal"
+            },
+            "monitoring_enabled": {
+                "name": "\u00d5hukvaliteedi andur",
+                "state": {
+                    "always": "Alati sisse l\u00fclitatud",
+                    "on_working": "L\u00fclitub sisse koos tootega"
+                }
+            },
+            "night_target_temperature": {
+                "name": "\u00d6ine kasvutemperatuur"
+            },
+            "night_target_temperature_for_location": {
+                "name": "{location} \u00f6ine kasvutemperatuur"
+            },
+            "odor_level": {
+                "name": "L\u00f5hn",
+                "state": {
+                    "invalid": "Sobimatu",
+                    "normal": "Tavaline",
+                    "strong": "Tugev",
+                    "very_strong": "V\u00e4ga tugev",
+                    "weak": "N\u00f5rk"
+                }
+            },
+            "personalization_mode": {
+                "name": "Isiklik re\u017eiim",
+                "state": {
+                    "auto_inside": "Automaatre\u017eiim",
+                    "auto_outside": "Blokeerimisre\u017eiim",
+                    "baby": "J\u00e4lgimisre\u017eiim",
+                    "cooking": "Toiduvalmistamise re\u017eiim",
+                    "exercise": "Treeningu re\u017eiim",
+                    "others": "Muud",
+                    "pet": "Lemmiklooma re\u017eiim",
+                    "sick_house": "Uus kodure\u017eiim",
+                    "sleep": "Puhkere\u017eiim",
+                    "smoke": "Suitsure\u017eiim"
+                }
+            },
+            "power_level": {
+                "name": "V\u00f5imsuse tase"
+            },
+            "power_level_for_location": {
+                "name": "{location} v\u00f5imsuse tase"
+            },
+            "recipe_name": {
+                "name": "Kodu\u00f5lle retsept",
+                "state": {
+                    "ipa": "IPA",
+                    "my_recipe": "Minu retsept",
+                    "pale_ale": "Pale ale",
+                    "pilsner": "Pilsner",
+                    "red_ale": "Punane ale",
+                    "stout": "Stout",
+                    "wheat": "Nisu"
+                }
+            },
+            "relative_to_start": {
+                "name": "Sissel\u00fclitamise ajastamine"
+            },
+            "relative_to_start_for_location": {
+                "name": "{location} sissel\u00fclitamise ajastamine"
+            },
+            "relative_to_start_wm": {
+                "name": "Viivitus algab"
+            },
+            "relative_to_start_wm_for_location": {
+                "name": "{location} viivitus algab"
+            },
+            "relative_to_stop": {
+                "name": "V\u00e4ljal\u00fclitamise ajastamine"
+            },
+            "relative_to_stop_for_location": {
+                "name": "{location} v\u00e4ljal\u00fclitamise ajastamine"
+            },
+            "relative_to_stop_wm": {
+                "name": "Viivitus l\u00f5peb"
+            },
+            "relative_to_stop_wm_for_location": {
+                "name": "Viivitus {location} l\u00f5peb"
+            },
+            "remain": {
+                "name": "J\u00e4relej\u00e4\u00e4nud aeg"
+            },
+            "remain_for_location": {
+                "name": "{location} j\u00e4relej\u00e4\u00e4nud aeg"
+            },
+            "rinse_level": {
+                "name": "Loputusvahendi dosaatori tase",
+                "state": {
+                    "rinselevel_0": "0",
+                    "rinselevel_1": "1",
+                    "rinselevel_2": "2",
+                    "rinselevel_3": "3",
+                    "rinselevel_4": "4"
+                }
+            },
+            "running": {
+                "name": "Kestus"
+            },
+            "running_for_location": {
+                "name": "{location} kestus"
+            },
+            "sleep_timer_relative_to_stop": {
+                "name": "Unetaimer"
+            },
+            "sleep_timer_relative_to_stop_for_location": {
+                "name": "{location} unetaimer"
+            },
+            "softening_level": {
+                "name": "Pehmenemise tase",
+                "state": {
+                    "softeninglevel_1": "1",
+                    "softeninglevel_2": "2",
+                    "softeninglevel_3": "3",
+                    "softeninglevel_4": "4"
+                }
+            },
+            "sterilizing_state": {
+                "name": "K\u00f5rgtemperatuuriline steriliseerimine",
+                "state": {
+                    "cancel": "Loobu",
+                    "off": "V\u00e4ljas",
+                    "on": "Steriliseerimine"
+                }
+            },
+            "target": {
+                "name": "K\u00fcpsetusaeg"
+            },
+            "target_for_location": {
+                "name": "{location} k\u00fcpsetusaeg"
+            },
+            "target_temperature": {
+                "name": "Temperatuur",
+                "state": {
+                    "freezer": "S\u00fcgavk\u00fclmik",
+                    "fridge": "K\u00fclmik",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "Liha/kala",
+                    "off": "V\u00e4ljas",
+                    "rice_grain": "Riis/teravili",
+                    "storage": "Ladustamine",
+                    "temperature_number": "Number",
+                    "vegetable_fruit": "K\u00f6\u00f6givili/puuvili"
+                }
+            },
+            "target_temperature_for_location": {
+                "name": "{location} temperatuur",
+                "state": {
+                    "freezer": "S\u00fcgavk\u00fclmik",
+                    "fridge": "K\u00fclmik",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "Liha/kala",
+                    "off": "V\u00e4ljas",
+                    "rice_grain": "Riis/teravili",
+                    "storage": "Ladustamine",
+                    "temperature_number": "Number",
+                    "vegetable_fruit": "K\u00f6\u00f6givili/puuvili"
+                }
+            },
+            "temperature": {
+                "name": "Temperatuur"
+            },
+            "temperature_state": {
+                "name": "Temperatuur",
+                "state": {
+                    "high": "K\u00f5rge",
+                    "low": "Madal",
+                    "normal": "Hea"
+                }
+            },
+            "temperature_state_for_location": {
+                "name": "{location} temperatuur",
+                "state": {
+                    "high": "K\u00f5rge",
+                    "low": "Madal",
+                    "normal": "Hea"
+                }
+            },
+            "total": {
+                "name": "T\u00f6\u00f6aeg kokku"
+            },
+            "total_for_location": {
+                "name": "{location} koguaeg"
+            },
+            "total_pollution_level": {
+                "name": "\u00dcldine \u00f5hukvaliteet",
+                "state": {
+                    "bad": "Ebatervislik",
+                    "good": "Hea",
+                    "invalid": "Sobimatu",
+                    "normal": "M\u00f5\u00f5dukas",
+                    "very_bad": "Vilets"
+                }
+            },
+            "used_time": {
+                "name": "Veefiltri seisukord"
+            },
+            "water_type": {
+                "name": "T\u00fc\u00fcp"
+            },
+            "wind_volume_for_location": {
+                "name": "{location} tuule kiirus"
+            },
+            "wort_info": {
+                "name": "Virre",
+                "state": {
+                    "dark": "Tume",
+                    "deep_gold": "DeepGold",
+                    "hoppy": "Sigur",
+                    "wheat": "Nisu"
+                }
+            },
+            "yeast_info": {
+                "name": "P\u00e4rm",
+                "state": {
+                    "american_ale": "Ameerika ale",
+                    "english_ale": "Inglise ale",
+                    "lager": "Laager\u00f5lu",
+                    "weizen": "Nisu\u00f5lu"
+                }
+            }
+        },
+        "switch": {
+            "auto_mode": {
+                "name": "Automaatre\u017eiim"
+            },
+            "express_mode": {
+                "name": "J\u00e4\u00e4 pluss"
+            },
+            "hot_water_mode": {
+                "name": "Kuum vesi"
+            },
+            "humidity_warm_mode": {
+                "name": "Soe udu"
+            },
+            "hygiene_dry_mode": {
+                "name": "Kuivatusre\u017eiim"
+            },
+            "mood_lamp_state": {
+                "name": "Meeleoluvalgus"
+            },
+            "operation_power": {
+                "name": "V\u00f5imsus"
+            },
+            "optimal_humidity": {
+                "name": "Ventilatsioon"
+            },
+            "power_save_enabled": {
+                "name": "Energias\u00e4\u00e4st"
+            },
+            "rapid_freeze": {
+                "name": "Kiirk\u00fclmutamine"
+            },
+            "sleep_mode": {
+                "name": "Puhkere\u017eiim"
+            },
+            "uv_nano": {
+                "name": "UVnano"
+            },
+            "warm_mode": {
+                "name": "K\u00fcte"
+            }
+        }
+    }
+}

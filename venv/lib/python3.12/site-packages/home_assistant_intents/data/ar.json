@@ -1,0 +1,1410 @@
+{
+  "language": "ar",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "<turn_off> [<light> | <switch>] <name>"
+          ],
+          "excludes_context": {
+            "domain": [
+              "binary_sensor",
+              "cover",
+              "lock",
+              "scene",
+              "script",
+              "sensor",
+              "valve",
+              "vacuum"
+            ]
+          },
+          "response": "default"
+        },
+        {
+          "sentences": [
+            "[<turn_off>] (<in> <area> [<light>] <name>|[<light>] <name> [in <area>])"
+          ],
+          "expansion_rules": {
+            "all_lights": "([<all>] <light>|<light> [<all>])"
+          },
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<turn_off> <all_lights> [<in>] <area>",
+            "<turn_off> [<in>] <area> <all_lights>"
+          ],
+          "expansion_rules": {
+            "all_lights": "([<all>] <light>|<light> [<all>])"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<turn_off> <all_lights>",
+            "<turn_off> [<all>] <light> <everywhere>",
+            "<turn_off> <everywhere> [<all>] <light>"
+          ],
+          "expansion_rules": {
+            "all_lights": "(<all> <light>|<light> <all>)"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "response": "light_all"
+        },
+        {
+          "sentences": [
+            "<turn_off> <all_lights> [<here>]",
+            "<turn_off> [<here>] <all_lights>"
+          ],
+          "expansion_rules": {
+            "all_lights": "([<all>] <light>|<light> [<all>])",
+            "here": "(هنا|هون|هينا)"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<turn_off> <all_lights> [<in>] <floor>",
+            "<turn_off> [<in>] <floor> <all_lights>"
+          ],
+          "expansion_rules": {
+            "all_lights": "([<all>] <light>|<light> [<all>])"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_floor"
+        },
+        {
+          "sentences": [
+            "<close> <name> [<in> <area>]"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<close> باب الجراج"
+          ],
+          "slots": {
+            "domain": "cover",
+            "device_class": "garage"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<close> {cover_classes:device_class} [<in>] <area>"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<turn_off> [<all>] <fan> [<in>] <area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_area"
+        },
+        {
+          "sentences": [
+            "<turn_off> [<all>] <fan>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fan_all"
+        },
+        {
+          "sentences": [
+            "<open> <name> [<in> <area>]"
+          ],
+          "requires_context": {
+            "domain": "lock"
+          },
+          "response": "unlock"
+        },
+        {
+          "sentences": [
+            "<open> [<all>] [ال](اقفال|قفل) [<in>] <area>"
+          ],
+          "slots": {
+            "domain": "lock",
+            "name": "all"
+          },
+          "response": "unlock"
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel> <timer>",
+            "<timer_cancel> <timer> <timer_start>",
+            "<timer_cancel> <timer> [<in>] <area>",
+            "<timer_cancel> <timer> [<called>] [ال]{timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "[<what_is>] حالة <timer>",
+            "[<what_is>] حالة <timer> [<duration>] <timer_start>",
+            "[<what_is>] حالة <timer> [<in>] <area>",
+            "[<what_is>] حالة <timer> [<called>] [ال]{timer_name:name}"
+          ],
+          "required_keywords": [
+            "<timer>",
+            "حالة"
+          ]
+        },
+        {
+          "sentences": [
+            "<what_is> [الوقت|الزمن] [<remains>] [[من] الوقت|الزمن] (<to>|<in> )<timer>",
+            "<what_is> [الوقت|الزمن] [<remains>] [[من] الوقت|الزمن] (<to>|<in> )<timer> [<duration>] <timer_start>",
+            "<what_is> [الوقت|الزمن] [<remains>] [[من] الوقت|الزمن] (<to>|<in> )<timer> [<in>] <area>",
+            "<what_is> [الوقت|الزمن] [<remains>] [[من] الوقت|الزمن] (<to>|<in> )<timer> [<called>] [ال]{timer_name:name}"
+          ],
+          "required_keywords": [
+            "<timer>",
+            "البقي",
+            "الباقي",
+            "التبقى",
+            "المتبقي",
+            "باقي",
+            "تبقى",
+            "متبقي",
+            "بقى",
+            "لسه"
+          ]
+        }
+      ]
+    },
+    "HassGetWeather": {
+      "data": [
+        {
+          "sentences": [
+            "<what_is> <weather>"
+          ]
+        },
+        {
+          "sentences": [
+            "<what_is> <weather> <in> <name>"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          }
+        }
+      ]
+    },
+    "HassGetCurrentTime": {
+      "data": [
+        {
+          "sentences": [
+            "(<what_is>|<tell_me>) <time> [هلق|حاليا]",
+            "(<what_is>|<tell_me>) [هلق|حاليا] <time>",
+            "<time> [هلق|حاليا] (<what_is>|<tell_me>)"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "[<turn_on>] (<in> <area> [<light>] <name>|[<light>] <name> [in <area>])"
+          ],
+          "expansion_rules": {
+            "all_lights": "([<all>] <light>|<light> [<all>])"
+          },
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<turn_on> <all_lights> [<in>] <area>",
+            "<turn_on> [<in>] <area> <all_lights>"
+          ],
+          "expansion_rules": {
+            "all_lights": "([<all>] <light>|<light> [<all>])"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<turn_on> <all_lights>",
+            "<turn_on> [<all>] <light> <everywhere>",
+            "<turn_on> <everywhere> [<all>] <light>"
+          ],
+          "expansion_rules": {
+            "all_lights": "(<all> <light>|<light> <all>)"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "response": "light_all"
+        },
+        {
+          "sentences": [
+            "<turn_on> <all_lights> [<here>]",
+            "<turn_on> [<here>] <all_lights>"
+          ],
+          "expansion_rules": {
+            "all_lights": "([<all>] <light>|<light> [<all>])",
+            "here": "(هنا|هون|هينا)"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<turn_on> <all_lights> [<in>] <floor>",
+            "<turn_on> [<in>] <floor> <all_lights>"
+          ],
+          "expansion_rules": {
+            "all_lights": "([<all>] <light>|<light> [<all>])"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_floor"
+        },
+        {
+          "sentences": [
+            "<turn_on> [<all>] <fan> [<in>] <area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_area"
+        },
+        {
+          "sentences": [
+            "[<turn_on>] [<script>] <name>",
+            "[<script>] <name> <turn_on>"
+          ],
+          "requires_context": {
+            "domain": "script"
+          },
+          "slots": {
+            "domain": "script"
+          },
+          "response": "script"
+        },
+        {
+          "sentences": [
+            "[<turn_on>] [<scene>] <name>"
+          ],
+          "requires_context": {
+            "domain": "scene"
+          },
+          "slots": {
+            "domain": "scene"
+          },
+          "response": "scene"
+        },
+        {
+          "sentences": [
+            "<close> <name> [<in> <area>]"
+          ],
+          "requires_context": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "<close> [<all>] [ال](اقفال|قفل) [<in>] <area>"
+          ],
+          "slots": {
+            "domain": "lock",
+            "name": "all"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "<turn_on> [<light> | <switch>] <name>"
+          ],
+          "excludes_context": {
+            "domain": [
+              "binary_sensor",
+              "cover",
+              "lock",
+              "scene",
+              "script",
+              "sensor",
+              "valve",
+              "vacuum"
+            ]
+          },
+          "response": "default"
+        },
+        {
+          "sentences": [
+            "<open> <name> [<in>] [<area>]"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<open> باب الجراج"
+          ],
+          "slots": {
+            "domain": "cover",
+            "device_class": "garage"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<open> {cover_classes:device_class} <in> <area>"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_device_class"
+        }
+      ]
+    },
+    "HassShoppingListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "<add> <item> (<to>|<in> )<my_list>"
+          ],
+          "response": "item_added",
+          "expansion_rules": {
+            "my_list": "[ال](قائمة|قائمتي|لائحة|لائحتي|قائمة الخاصة بي) [(ال|لل)تسوق]",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "(لا|ما) تهتم",
+            "(لا|ما) يهم",
+            "(لا|ما) بهم",
+            "(لا|ما) بأس",
+            "(لا|ما) تقلق",
+            "إنسى",
+            "إنساها",
+            "إنسى ذلك"
+          ]
+        }
+      ]
+    },
+    "HassSetPosition": {
+      "data": [
+        {
+          "sentences": [
+            "<numeric_value_set> <name> <to><position>"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          }
+        },
+        {
+          "sentences": [
+            "<numeric_value_set> [(ارتفاع|علو)] <name> <to><position>"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<numeric_value_set> {cover_classes:device_class} <to><position> <in> <area>",
+            "<numeric_value_set> [(ارتفاع|علو)] {cover_classes:device_class} <area> <to><position>"
+          ],
+          "slots": {
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassGetCurrentDate": {
+      "data": [
+        {
+          "sentences": [
+            "(<what_is>|<tell_me>) [ال]تاريخ اليوم",
+            "(<what_is>|<tell_me>) اليوم التاريخ",
+            "[ال]تاريخ اليوم <what_is>"
+          ]
+        }
+      ]
+    },
+    "HassIncreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<increase> <timer_duration> <to><timer>",
+            "<increase> <timer_duration> <to><timer> <timer_start>",
+            "<increase> <timer_duration> <to><timer> <area>",
+            "<increase> <timer_duration> <to><timer> <in> <area>",
+            "<increase> <timer_duration> <to><timer> [<called>] [ال]{timer_name:name}"
+          ]
+        },
+        {
+          "sentences": [
+            "<increase> <timer> <by><timer_duration>",
+            "<increase> <timer> <timer_start> <by><timer_duration>",
+            "<increase> <timer> [<in>] <area> <by><timer_duration>",
+            "<increase> <timer> <called> [ال]{timer_name:name} <by><timer_duration>"
+          ],
+          "expansion_rules": {
+            "by": "(بمقدار|ب)[ ]"
+          }
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "[<turn>] <intensity> <name> [الى] <brightness>",
+            "[<turn>] <name> [الى] <intensity> <brightness>"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<turn>] <intensity> <all> <light> [الى] <brightness> [<in>] <area>",
+            "[<turn>] <intensity> <all> <light> [<in>] <area> [الى] <brightness>",
+            "[<turn>] <all> <light> [الى] <intensity> <brightness> [<in>] <area>",
+            "[<turn>] <all> <light> [<in>] <area> [الى] <intensity> <brightness>"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<turn>] <intensity> <all> <light> [الى] <brightness>",
+            "[<turn>] <all> <light> [الى] <intensity> <brightness>"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<turn>] <intensity> <name> [الى] {brightness_level:brightness}",
+            "[<turn>] <name> [الى] <intensity> {brightness_level:brightness}"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<turn>] <intensity> <all> <light> [الى] {brightness_level:brightness} [<in>] <area>",
+            "[<turn>] <intensity> <all> <light> [<in>] <area> [الى] {brightness_level:brightness}",
+            "[<turn>] <all> <light> [الى] <intensity> {brightness_level:brightness} [<in>] <area>",
+            "[<turn>] <all> <light> [<in>] <area> [الى] <intensity> {brightness_level:brightness}"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<turn>] <intensity> <all> <light> [الى] {brightness_level:brightness}",
+            "[<turn>] <all> <light> [الى] <intensity> {brightness_level:brightness}"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<turn>] <color> <name> [الى] <colors>",
+            "[<turn>] <name> [الى] <color> <colors>"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "color"
+        },
+        {
+          "sentences": [
+            "[<turn>] <color> <all> <light> [الى] <colors> [<in>] <area>",
+            "[<turn>] <color> <all> <light> [<in>] <area> [الى] <colors>",
+            "[<turn>] <all> <light> [الى] <color> <colors> [<in>] <area>",
+            "[<turn>] <all> <light> [<in>] <area> [الى] <color> <colors>"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "color"
+        },
+        {
+          "sentences": [
+            "[<turn>] <color> <all> <light> [الى] <colors>",
+            "[<turn>] <all> <light> [الى] <color> <colors>"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "color"
+        }
+      ]
+    },
+    "HassMediaNext": {
+      "data": [
+        {
+          "sentences": [
+            "[المسار|العنصر] <next> [على|لـ] <name>",
+            "تخطي [<this>|إلى] [المسار|الأغنية] [<this>|<next>];[على] <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "[المسار|العنصر] <next>",
+            "تخطي [<this>|إلى] [المسار|الأغنية] [<this>|<next>]"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "[المسار|العنصر] <next> [في] <area>",
+            "تخطي [<this>|إلى] [المسار|الأغنية] [<this>|<next>];[<in>] <area>"
+          ]
+        }
+      ]
+    },
+    "HassPauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_pause> <timer>",
+            "<timer_pause> <timer> <timer_start>",
+            "<timer_pause> <timer> [<in>] <area>",
+            "<timer_pause> <timer> [<called>] [ال]{timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassDecreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<decrease> <timer_duration> من <timer>",
+            "<decrease> <timer_duration> من <timer> <timer_start>",
+            "<decrease> <timer_duration> من <timer> <area>",
+            "<decrease> <timer_duration> من <timer> <in> <area>",
+            "<decrease> <timer_duration> من <timer> [<called>] [ال]{timer_name:name}"
+          ]
+        },
+        {
+          "sentences": [
+            "<decrease> <timer> <by><timer_duration>",
+            "<decrease> <timer> <timer_start> <by><timer_duration>",
+            "<decrease> <timer> [<in>] <area> <by><timer_duration>",
+            "<decrease> <timer> <called> [ال]{timer_name:name} <by><timer_duration>"
+          ],
+          "expansion_rules": {
+            "by": "(بمقدار|ب)[ ]"
+          }
+        }
+      ]
+    },
+    "HassMediaPause": {
+      "data": [
+        {
+          "sentences": [
+            "(<pause>;<name>)",
+            "(<pause> [ل|لل]<name>)"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "<pause> [ل|لل|ال](مسار|أغنية|موسيقى|(عرض|عرضي|عروض) [التلفاز]|[مشغل|مشغلات] الوسائط);[<in>] <area>"
+          ]
+        }
+      ]
+    },
+    "HassUnpauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_resume> <timer>",
+            "<timer_resume> <timer> <timer_start>",
+            "<timer_resume> <timer> [<in>] <area>",
+            "<timer_resume> <timer> [<called>] [ال]{timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_duration> <timer>",
+            "<timer> [<duration>] <timer_duration>",
+            "<timer> [<duration>] <timer_duration> <called> {timer_name:name}",
+            "<timer> [<duration>] <timer_duration> (ل|لل){timer_name:name}",
+            "<timer_set> <timer> [<duration>] <timer_duration>",
+            "<timer_set> <timer> [<duration>] <timer_duration> <called> [ال]{timer_name:name}",
+            "<timer_set> <timer> <called> [ال]{timer_name:name} [<duration>] <timer_duration>"
+          ]
+        },
+        {
+          "sentences": [
+            "{timer_command:conversation_command} (<in>|بعد) <timer_duration>",
+            "(<in>|بعد) <timer_duration> {timer_command:conversation_command}"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "<what_is> <temp> [<in> <area>]",
+            "<what_is> (حارة | باردة | دافئة | لطيفة) [<temp>] [[<in>] <area>]",
+            "<what_is> <temp> <area>",
+            "<temp> <area>"
+          ]
+        }
+      ]
+    },
+    "HassVacuumReturnToBase": {
+      "data": [
+        {
+          "sentences": [
+            "(<turn_off>|<go>|ارجع|عد|اعد) [ايتها|يا] <name> [<to> (القاعدة|الشاحن)]"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "<what_is> [حالة] <name> [<in> <area>]"
+          ],
+          "excludes_context": {
+            "domain": [
+              "scene",
+              "script"
+            ]
+          },
+          "response": "one"
+        },
+        {
+          "sentences": [
+            "<is_it> <name> [<in> <area>] {on_off_states:state}"
+          ],
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          },
+          "response": "one_yesno"
+        },
+        {
+          "sentences": [
+            "<is_it> <any> {on_off_domains:domain} {on_off_states:state} [<in> <area>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "<is_it> <all> {on_off_domains:domain} {on_off_states:state} [<in> <area>]"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "<what_is> {on_off_domains:domain} [التي] {on_off_states:state} [<in> <area>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "<how_many> {on_off_domains:domain} [التي] {on_off_states:state} [<in> <area>]"
+          ],
+          "response": "how_many"
+        },
+        {
+          "sentences": [
+            "هل <name> {cover_states:state} [<in> <area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "cover"
+          },
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "هل هناك {cover_classes:device_class} {cover_states:state} [<in> <area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "هل جميع {cover_classes:device_class} {cover_states:state} [<in> <area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "اي {cover_classes:device_class} {cover_states:state} [<in> <area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(كم|ما|ماهو|ماذا) [عدد] {cover_classes:device_class} [اللتي] {cover_states:state} [<in> <area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassVacuumStart": {
+      "data": [
+        {
+          "sentences": [
+            "<turn_on> <name>"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassRespond": {
+      "data": [
+        {
+          "sentences": [
+            "<hello> [<home_assistant>]"
+          ],
+          "response": "hello"
+        },
+        {
+          "sentences": [
+            "هل انت دائما ([ت]تسمع|تسجل)"
+          ],
+          "response": "listening"
+        },
+        {
+          "sentences": [
+            "<where> <go> (بياناتي|معلوماتي) [الخاصه]"
+          ],
+          "response": "data"
+        },
+        {
+          "sentences": [
+            "<what_is> <can> (اسال|اقول)"
+          ],
+          "response": "commands"
+        },
+        {
+          "sentences": [
+            "من [الذي[ن]] (صنع[و]ك|صمم[و]ك)"
+          ],
+          "response": "creator"
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "<add> <item> (<to>|<in> )<my_list>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "my_list": "[ال](قائمة|قائمتي|لائحة|لائحتي) {name} [الخاصة بي]",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "عذرًا، لم أفهم ذلك",
+      "handle_error": "حدث خطأ أثناء معالجة النص",
+      "no_area": "عذرًا، لم أتمكن من العثور على منطقة بالإسم {{ area }}",
+      "no_domain": "{% set translations = {\n  \"button\": \"زر\",\n  \"camera\": \"كاميرا\",\n  \"input_button\": \"زر\",\n  \"alarm_control_panel\": \"إنذار\",\n  \"automation\": \"التشغيل الآلي\",\n  \"fan\": \"مروحة\",\n  \"climate\": \"منظم الحرارة\",\n  \"humidifier\": \"مزيل الرطوبة\",\n  \"input_boolean\": \"مفتاح كهربائي\",\n  \"siren\": \"صفارة الإنذار\",\n  \"water_heater\": \"غلاية\",\n  \"light\": \"ضوء\",\n  \"switch\": \"مفتاح كهربائي\",\n  \"script\": \"نص\",\n  \"remote\": \"جهاز التحكم عن بعد\",\n  \"lock\": \"قفل\",\n  \"vacuum\": \"مكنسة كهربائية\",\n  \"scene\": \"مشهد\",\n  \"media_player\": \"مشغل الوسائط\",\n  \"lawn_mower\": \"جزازة العشب\",\n  \"valve\": \"صمام\"\n  } %}\n{% if domain in translations -%}\n  \"عذرًا، لم أتمكن من العثور على أي {{ translations[domain] }}\"\n{%- else -%}\n  \"عذرًا، لم أتمكن من العثور على جهاز من هذا النوع\"\n{%- endif %}\n",
+      "no_domain_in_area": "{% set translations = {\n  \"button\": \"زر\",\n  \"camera\": \"كاميرا\",\n  \"input_button\": \"زر\",\n  \"alarm_control_panel\": \"إنذار\",\n  \"automation\": \"التشغيل الآلي\",\n  \"fan\": \"مروحة\",\n  \"climate\": \"منظم الحرارة\",\n  \"humidifier\": \"مزيل الرطوبة\",\n  \"input_boolean\": \"مفتاح كهربائي\",\n  \"siren\": \"صفارة الإنذار\",\n  \"water_heater\": \"غلاية\",\n  \"light\": \"ضوء\",\n  \"switch\": \"مفتاح كهربائي\",\n  \"script\": \"نص\",\n  \"remote\": \"جهاز التحكم عن بعد\",\n  \"lock\": \"قفل\",\n  \"vacuum\": \"مكنسة كهربائية\",\n  \"scene\": \"مشهد\",\n  \"media_player\": \"مشغل الوسائط\",\n  \"lawn_mower\": \"جزازة العشب\",\n  \"valve\": \"صمام\"\n  } %}\n{% if domain in translations -%}\n  \"عذرًا، لم أتمكن من العثور على {{ translations[domain] }} في {{ area }}\"\n{%- else -%}\n  \"عذرًا، لم أتمكن من العثور على جهاز من هذا النوع في {{ area }}\"\n{%- endif %}\n",
+      "no_device_class": "{% set translations = {\n  \"awning\": \"مظلة\",\n  \"blind\": \"ستارة\",\n  \"curtain\": \"ستارة\",\n  \"door\": \"باب\",\n  \"garage\": \"بوابة الجراج\",\n  \"gate\": \"بوابة\",\n  \"shade\": \"ستارة\",\n  \"shutter\": \"ستارة\",\n  \"window\": \"نافذة\"\n  } %}\n{% if device_class in translations -%}\n  \"عذرًا، لم أتمكن من العثور على أي {{ translations[device_class] }}\"\n{%- else -%}\n  \"عذرًا، لم أتمكن من العثور على جهاز من هذا النوع\"\n{%- endif %}\n",
+      "no_device_class_in_area": "{% set translations = {\n  \"awning\": \"مظلة\",\n  \"blind\": \"ستارة\",\n  \"curtain\": \"ستارة\",\n  \"door\": \"باب\",\n  \"garage\": \"بوابة الجراج\",\n  \"gate\": \"بوابة\",\n  \"shade\": \"ستارة\",\n  \"shutter\": \"ستارة\",\n  \"window\": \"نافذة\"\n  } %}\n{% if device_class in translations -%}\n  \"عذرًا، لم أتمكن من العثور على {{ translations[device_class] }} في {{ area }}\"\n{%- else -%}\n  \"عذرًا، لم أتمكن من العثور على جهاز من هذا النوع في {{ area }}\"\n{%- endif %}\n",
+      "no_entity": "عذرًا، لم أتمكن من العثور على جهاز بالإسم {{ entity }}",
+      "no_entity_in_area": "عذرًا، لم أتمكن من العثور على جهاز بالإسم {{ entity }} في {{ area }}",
+      "no_floor": "عذرًا، لم أتمكن من العثور على طابق بالإسم {{ floor }}",
+      "no_domain_in_floor": "{% set translations = {\n  \"button\": \"زر\",\n  \"camera\": \"كاميرا\",\n  \"input_button\": \"زر\",\n  \"alarm_control_panel\": \"إنذار\",\n  \"automation\": \"التشغيل الآلي\",\n  \"fan\": \"مروحة\",\n  \"climate\": \"منظم الحرارة\",\n  \"humidifier\": \"مزيل الرطوبة\",\n  \"input_boolean\": \"مفتاح كهربائي\",\n  \"siren\": \"صفارة الإنذار\",\n  \"water_heater\": \"غلاية\",\n  \"light\": \"ضوء\",\n  \"switch\": \"مفتاح كهربائي\",\n  \"script\": \"نص\",\n  \"remote\": \"جهاز التحكم عن بعد\",\n  \"lock\": \"قفل\",\n  \"vacuum\": \"مكنسة كهربائية\",\n  \"scene\": \"مشهد\",\n  \"media_player\": \"مشغل الوسائط\",\n  \"lawn_mower\": \"جزازة العشب\",\n  \"valve\": \"صمام\"\n  } %}\n{% if domain in translations -%}\n \" عذرًا، لم أتمكن من العثور على {{ translations[domain] }} في {{ floor }}\"\n{%- else -%}\n  \"عذرًا، لم أتمكن من العثور على جهاز من هذا النوع في {{ floor }}\"\n{%- endif %}\n",
+      "no_device_class_in_floor": "{% set translations = {\n  \"awning\": \"مظلة\",\n  \"blind\": \"ستارة\",\n  \"curtain\": \"ستارة\",\n  \"door\": \"باب\",\n  \"garage\": \"بوابة الجراج\",\n  \"gate\": \"بوابة\",\n  \"shade\": \"ستارة\",\n  \"shutter\": \"ستارة\",\n  \"window\": \"نافذة\"\n  } %}\n{% if device_class in translations -%}\n  \"عذرًا، لم أتمكن من العثور على {{ translations[device_class] }} في {{ floor }}\"\n{%- else -%}\n  \"عذرًا، لم أتمكن من العثور على جهاز من هذا النوع في {{ floor }}\"\n{%- endif %}\n",
+      "no_entity_in_floor": "عذرًا، لم أتمكن من العثور على جهاز بالإسم {{ entity }} في {{ floor }}",
+      "entity_wrong_state": "عذرًا، لم أتمكن من العثور على جهاز بالحالة {{ state }}",
+      "feature_not_supported": "عذرًا، لا يوجد جهاز يدعم هذا.",
+      "no_entity_exposed": "عذرًا، لم يتم الكشف عن {{ entity }}",
+      "no_entity_in_area_exposed": "عذرًا، لم يتم الكشف عن {{ entity }} في {{ area }}",
+      "no_domain_exposed": "{% set translations = {\n  \"button\": \"زر\",\n  \"camera\": \"كاميرا\",\n  \"input_button\": \"زر\",\n  \"alarm_control_panel\": \"إنذار\",\n  \"automation\": \"التشغيل الآلي\",\n  \"fan\": \"مروحة\",\n  \"climate\": \"منظم الحرارة\",\n  \"humidifier\": \"مزيل الرطوبة\",\n  \"input_boolean\": \"مفتاح كهربائي\",\n  \"siren\": \"صفارة الإنذار\",\n  \"water_heater\": \"غلاية\",\n  \"light\": \"ضوء\",\n  \"switch\": \"مفتاح كهربائي\",\n  \"script\": \"نص\",\n  \"remote\": \"جهاز التحكم عن بعد\",\n  \"lock\": \"قفل\",\n  \"vacuum\": \"مكنسة كهربائية\",\n  \"scene\": \"مشهد\",\n  \"media_player\": \"مشغل الوسائط\",\n  \"lawn_mower\": \"جزازة العشب\",\n  \"valve\": \"صمام\"\n  } %}\n{% if domain in translations -%}\n  \"عذراً، لم يتم الكشف عن {{ domain }}\"\n{%- else -%}\n  \"عذرًا، لم يتم الكشف عن أي جهاز من هذا النوع\"\n{%- endif %}\n",
+      "no_domain_in_area_exposed": "{% set translations = {\n  \"button\": \"زر\",\n  \"camera\": \"كاميرا\",\n  \"input_button\": \"زر\",\n  \"alarm_control_panel\": \"إنذار\",\n  \"automation\": \"التشغيل الآلي\",\n  \"fan\": \"مروحة\",\n  \"climate\": \"منظم الحرارة\",\n  \"humidifier\": \"مزيل الرطوبة\",\n  \"input_boolean\": \"مفتاح كهربائي\",\n  \"siren\": \"صفارة الإنذار\",\n  \"water_heater\": \"غلاية\",\n  \"light\": \"ضوء\",\n  \"switch\": \"مفتاح كهربائي\",\n  \"script\": \"نص\",\n  \"remote\": \"جهاز التحكم عن بعد\",\n  \"lock\": \"قفل\",\n  \"vacuum\": \"مكنسة كهربائية\",\n  \"scene\": \"مشهد\",\n  \"media_player\": \"مشغل الوسائط\",\n  \"lawn_mower\": \"جزازة العشب\",\n  \"valve\": \"صمام\"\n  } %}\n{% if domain in translations -%}\n  \"عذراً، لم يتم الكشف عن {{ translations[domain] }} في {{ area }}\"\n{%- else -%}\n  \"عذرًا، لم يتم الكشف عن أي جهاز من هذا النوع في {{ area }}\"\n{%- endif %}\n",
+      "no_device_class_exposed": "{% set translations = {\n  \"awning\": \"مظلة\",\n  \"blind\": \"ستارة\",\n  \"curtain\": \"ستارة\",\n  \"door\": \"باب\",\n  \"garage\": \"بوابة الجراج\",\n  \"gate\": \"بوابة\",\n  \"shade\": \"ستارة\",\n  \"shutter\": \"ستارة\",\n  \"window\": \"نافذة\"\n  } %}\n{% if device_class in translations -%}\n  \"عذراً، لم يتم الكشف عن {{ translations[device_class] }}\"\n{%- else -%}\n  \"عذرًا، لم يتم الكشف عن أي جهاز من هذا النوع\"\n{%- endif %}\n",
+      "no_device_class_in_area_exposed": "{% set translations = {\n  \"awning\": \"مظلة\",\n  \"blind\": \"ستارة\",\n  \"curtain\": \"ستارة\",\n  \"door\": \"باب\",\n  \"garage\": \"بوابة الجراج\",\n  \"gate\": \"بوابة\",\n  \"shade\": \"ستارة\",\n  \"shutter\": \"ستارة\",\n  \"window\": \"نافذة\"\n  } %}\n{% if device_class in translations -%}\n  \"عذراً، لم يتم الكشف عن {{ translations[device_class] }} في {{ area }}\"\n{%- else -%}\n  \"عذرًا، لم يتم الكشف عن أي جهاز من هذا النوع في {{ area }}\"\n{%- endif %}\n",
+      "no_entity_in_floor_exposed": "عذراً، لم يتم الكشف عن {{ entity }} في {{ floor }}",
+      "no_domain_in_floor_exposed": "{% set translations = {\n  \"button\": \"زر\",\n  \"camera\": \"كاميرا\",\n  \"input_button\": \"زر\",\n  \"alarm_control_panel\": \"إنذار\",\n  \"automation\": \"التشغيل الآلي\",\n  \"fan\": \"مروحة\",\n  \"climate\": \"منظم الحرارة\",\n  \"humidifier\": \"مزيل الرطوبة\",\n  \"input_boolean\": \"مفتاح كهربائي\",\n  \"siren\": \"صفارة الإنذار\",\n  \"water_heater\": \"غلاية\",\n  \"light\": \"ضوء\",\n  \"switch\": \"مفتاح كهربائي\",\n  \"script\": \"نص\",\n  \"remote\": \"جهاز التحكم عن بعد\",\n  \"lock\": \"قفل\",\n  \"vacuum\": \"مكنسة كهربائية\",\n  \"scene\": \"مشهد\",\n  \"media_player\": \"مشغل الوسائط\",\n  \"lawn_mower\": \"جزازة العشب\",\n  \"valve\": \"صمام\"\n  } %}\n{% if domain in translations -%}\n  \"عذراً، لم يتم الكشف عن {{ translations[domain] }} في {{ floor }}\"\n{%- else -%}\n  \"عذرًا، لم يتم الكشف عن أي جهاز من هذا النوع في {{ floor }}\"\n{%- endif %}\n",
+      "no_device_class_in_floor_exposed": "{% set translations = {\n  \"awning\": \"مظلة\",\n  \"blind\": \"ستارة\",\n  \"curtain\": \"ستارة\",\n  \"door\": \"باب\",\n  \"garage\": \"بوابة الجراج\",\n  \"gate\": \"بوابة\",\n  \"shade\": \"ستارة\",\n  \"shutter\": \"ستارة\",\n  \"window\": \"نافذة\"\n  } %}\n{% if device_class in translations -%}\n  \"عذراً، لم يتم الكشف عن {{ translations[device_class] }} في {{ floor }}\"\n{%- else -%}\n  \"عذرًا، لم يتم الكشف عن أي جهاز من هذا النوع في {{ floor }}\"\n{%- endif %}\n",
+      "duplicate_entities": "عذرًا، هناك أجهزة متعددة باسم {{ entity }}",
+      "duplicate_entities_in_area": "عذرًا، هناك أجهزة متعددة باسم {{ entity }} في {{ area }}",
+      "duplicate_entities_in_floor": "عذرًا، هناك أجهزة متعددة باسم {{ entity }} في {{ floor }}",
+      "timer_not_found": "عذرًا، لم يتم العثور على هذا الموقّت",
+      "multiple_timers_matched": "عذرًا، لا يمكنني استهداف مؤقتات متعددة",
+      "no_timer_support": "عذرًا، لا يتم دعم المؤقتات على هذا الجهاز"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "حالة {{ slots.name }} هي {{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\n  اجل\n{% else %}\n  لا, {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    اجل, {{ match[:3] | join(\", \") }} و {{ (match | length - 3) }} ايضا\n  {%- else -%}\n    اجل,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} و {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  لا\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  اجل\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    لا, {{ no_match[:3] | join(\", \") }} و {{ (no_match | length - 3) }} ايضا\n  {%- else -%}\n    لا,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} و {% endif -%}\n      {{ name }}\n    {%- endfor %} ليست\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  لا يوجد\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} و {{ (match | length - 3) }} ايضا\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} و {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n"
+      },
+      "HassTurnOff": {
+        "default": "{% set translations = {\n  \"button\": \"الزر\",\n  \"camera\": \"الكاميرا\",\n  \"input_button\": \"الزر\",\n  \"alarm_control_panel\": \"الإنذار\",\n  \"automation\": \"التشغيل الآلي\",\n  \"fan\": \"المروحة\",\n  \"climate\": \"منظم الحرارة\",\n  \"humidifier\": \"مزيل الرطوبة\",\n  \"input_boolean\": \"المفتاح الكهربائي\",\n  \"siren\": \"صفارة الإنذار\",\n  \"water_heater\": \"الغلاية\",\n  \"light\": \"الضوء\",\n  \"switch\": \"المفتاح الكهربائي\",\n  \"script\": \"النص\",\n  \"remote\": \"جهاز التحكم عن بعد\",\n  \"lock\": \"القفل\",\n  \"vacuum\": \"المكنسة الكهربائية\",\n  \"scene\": \"المشهد\",\n  \"media_player\": \"مشغل الوسائط\",\n  \"lawn_mower\": \"جزازة العشب\",\n  \"valve\": \"الصمام\"\n} %} تم إطفاء {{ translations.get(state.domain) }}",
+        "light_all": "تم إطفاء جميع الأضواء",
+        "lights_floor": "تم إطفاء الأضواء",
+        "lights_area": "تم إطفاء الأضواء",
+        "fan_all": "تم إطفاء جميع المراوح",
+        "fans_floor": "تم إطفاء المراوح",
+        "fans_area": "تم إطفاء المراوح",
+        "cover": "تم الاغلاق",
+        "cover_device_class": "تم اغلاق {{ slots.device_class }}",
+        "unlock": "تم الفتح",
+        "valve": "تم الفتح"
+      },
+      "HassStartTimer": {
+        "default": "{% set timeShortNames = ['ربع', 'نصف', 'ثلاثة أرباع', '15', '30', '45'] %} {% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %}\n{% set h_text = (' ساعة' if h in ['1', 'ساعة'] else ' ساعاتين' if h in ['2', 'ساعاتين'] else h ~ ' ساعات' if h | int <= 10 else h ~ ' ساعة') if h else '' %}\n{% set m_text = ('ربع' if m in ['15', 'ربع'] else 'نصف' if m in ['30', 'نصف'] else 'ثلاثة أرباع' if m in ['45', 'ثلاثة أرباع'] else m) ~\n  (' ساعة' if (m in timeShortNames and h is none) else (' دقائق' if m | int <= 10 else ' دقيقة') if m not in timeShortNames)\n  if m else '' %}\n\n{% set s_text = ('ربع' if s in ['15', 'ربع'] else 'نصف' if s in ['30', 'نصف'] else 'ثلاثة أرباع' if s in ['45', 'ثلاثة أرباع'] else s) ~\n  (' دقيقة' if (s in timeShortNames and (m is none and h is none or m and h or m is none and h)) else (' ثواني' if s | int <= 10 else ' ثانية') if s not in timeShortNames)\n  if s else '' %}\n\n{% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list[:-1] | join(' و ') ~ ' و ' ~ text_list[-1] if text_list | count > 2 else text_list | join(' و ') %} {% set name = (' بالاسم ' ~ slots.name | trim) if slots.name is defined else '' %} تم ضبط المؤقت لمدة {{ text }}{{ name }}\n",
+        "command": "{% set timeShortNames = ['ربع', 'نصف', 'ثلاثة أرباع', '15', '30', '45'] %} {% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %}\n{% set h_text = (' ساعة' if h in ['1', 'ساعة'] else ' ساعاتين' if h in ['2', 'ساعاتين'] else h ~ ' ساعات' if h | int <= 10 else h ~ ' ساعة') if h else '' %}\n{% set m_text = ('ربع' if m in ['15', 'ربع'] else 'نصف' if m in ['30', 'نصف'] else 'ثلاثة أرباع' if m in ['45', 'ثلاثة أرباع'] else m) ~\n  (' ساعة' if (m in timeShortNames and h is none) else (' دقائق' if m | int <= 10 else ' دقيقة') if m not in timeShortNames)\n  if m else '' %}\n\n{% set s_text = ('ربع' if s in ['15', 'ربع'] else 'نصف' if s in ['30', 'نصف'] else 'ثلاثة أرباع' if s in ['45', 'ثلاثة أرباع'] else s) ~\n  (' دقيقة' if (s in timeShortNames and (m is none and h is none or m and h or m is none and h)) else (' ثواني' if s | int <= 10 else ' ثانية') if s not in timeShortNames)\n  if s else '' %}\n\n{% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list[:-1] | join(' و ') ~ ' و ' ~ text_list[-1] if text_list | count > 2 else text_list | join(' و ') %} {% set name = (' بالاسم ' ~ slots.name | trim) if slots.name is defined else '' %} سيتم تنفيذ الأمر في {{ text }}\n"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "تم إضافة {{ slots.item }}"
+      },
+      "HassTurnOn": {
+        "default": "{% set translations = {\n  \"button\": \"الزر\",\n  \"camera\": \"الكاميرا\",\n  \"input_button\": \"الزر\",\n  \"alarm_control_panel\": \"الإنذار\",\n  \"automation\": \"التشغيل الآلي\",\n  \"fan\": \"المروحة\",\n  \"climate\": \"منظم الحرارة\",\n  \"humidifier\": \"مزيل الرطوبة\",\n  \"input_boolean\": \"المفتاح الكهربائي\",\n  \"siren\": \"صفارة الإنذار\",\n  \"water_heater\": \"الغلاية\",\n  \"light\": \"الضوء\",\n  \"switch\": \"المفتاح الكهربائي\",\n  \"script\": \"النص\",\n  \"remote\": \"جهاز التحكم عن بعد\",\n  \"lock\": \"القفل\",\n  \"vacuum\": \"المكنسة الكهربائية\",\n  \"scene\": \"المشهد\",\n  \"media_player\": \"مشغل الوسائط\",\n  \"lawn_mower\": \"جزازة العشب\",\n  \"valve\": \"الصمام\"\n} %} تم تشغيل {{ translations.get(state.domain) }}",
+        "light_all": "تم تشغيل جميع الأضواء",
+        "lights_floor": "تم تشغيل الأضواء",
+        "lights_area": "تم تشغيل الأضواء",
+        "fan_all": "تم تشغيل جميع المراوح",
+        "fans_floor": "تم تشغيل المراوح",
+        "fans_area": "تم تشغيل المراوح",
+        "cover": "تم الفتح",
+        "cover_device_class": "تم فتح {{ slots.device_class }}",
+        "scene": "تم التفعيل",
+        "script": "تم البدء",
+        "lock": "تم القفل",
+        "valve": "تم الفتح"
+      },
+      "HassMediaPause": {
+        "default": "تم الإيقاف مؤقتًا"
+      },
+      "HassGetCurrentTime": {
+        "default": "{% set minute_str = '{0:02d}'.format(slots.time.minute) %}\n{% if slots.time.hour <= 12: %} {{ slots.time.hour }}:{{ minute_str }} صباحا {% else: %} {{ slots.time.hour - 12 }}:{{ minute_str }} مساءا {% endif %}\n"
+      },
+      "HassPauseTimer": {
+        "default": "تم إيقاف المؤقت"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0 %}\n  لا يوجد مؤقتات.\n{% elif num_active_timers == 0 %}\n  {# No active timers #}\n  {% if num_paused_timers == 1 %}\n    {% set next_timer = paused_timers[0] %}\n    المؤقت متوقف مؤقتاً.\n  {% else %}\n    يوجد {{ num_paused_timers }} مؤقتات متوقفة.\n  {% endif %}\n{% else %}\n  {# At least one active timer #}\n  {% if num_active_timers == 1 %}\n    {% set next_timer = active_timers[0] %}\n  {% else %}\n    {# Get active timer that will finish soonest #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    يوجد {{ num_active_timers }} مؤقتات نشطة.\n  {% endif %}\n\n  {% if num_paused_timers == 1 %}\n    و1 مؤقت متوقف.\n  {% elif num_paused_timers > 0 %}\n    و{{ num_paused_timers }} مؤقتات متوقفة.\n  {% endif %}\n{% endif %}\n\n{% if next_timer %}\n  {# At least one active timer #}\n  {% set minute_name = 'دقيقة' if next_timer.rounded_minutes_left | int > 10 else 'دقائق' %}\n  {% set second_name = 'ثانية' if next_timer.rounded_seconds_left | int > 10 else 'ثواني' %}\n\n  تبقى\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0) %}\n    ساعة و{{ next_timer.rounded_minutes_left }} {{minute_name}}\n  {% elif (next_timer.rounded_hours_left == 1) %}\n    ساعة\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0) %}\n    {{ next_timer.rounded_hours_left }} ساعات و{{ next_timer.rounded_minutes_left }} {{minute_name}}\n  {% elif (next_timer.rounded_hours_left > 1) %}\n    {{ next_timer.rounded_hours_left }} ساعات\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0) %}\n    دقيقة و{{ next_timer.rounded_seconds_left }} {{second_name}}\n  {% elif (next_timer.rounded_minutes_left == 1) %}\n    دقيقة\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0) %}\n    {{ next_timer.rounded_minutes_left }} {{minute_name}} و{{ next_timer.rounded_seconds_left }} {{second_name}}\n  {% elif (next_timer.rounded_minutes_left > 1) %}\n    {{ next_timer.rounded_minutes_left }} {{minute_name}}\n  {% elif (next_timer.rounded_seconds_left == 1) %}\n    ثانية واحدة\n  {% elif (next_timer.rounded_seconds_left > 1) %}\n    {{ next_timer.rounded_seconds_left }} ثوانٍ\n  {% endif %}\n\n  {% if num_timers > 1 %}\n    {# Give some extra information to disambiguate #}\n    على مؤقت طوله\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0) %}\n      {{ next_timer.start_hours }} ساعة و{{ next_timer.start_minutes }} {{minute_name}}\n    {% elif (next_timer.start_hours > 0) %}\n      {{ next_timer.start_hours }} ساعة\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0) %}\n      {{ next_timer.start_minutes }} {{minute_name}} و{{ next_timer.start_seconds }} {{second_name}}\n    {% elif (next_timer.start_minutes > 0) %}\n      {{ next_timer.start_minutes }} {{minute_name}}\n    {% elif (next_timer.start_seconds > 0) %}\n      {{ next_timer.start_seconds }} {{second_name}}\n    {% endif %}\n\n    {% if next_timer.name %}\n      اسم المؤقت: {{ next_timer.name }}.\n    {% elif next_timer.area %}\n      في {{ next_timer.area }}.\n    {% endif %}\n\n  {% else %}\n    .\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "تم إضافة {{ slots.item }}"
+      },
+      "HassGetCurrentDate": {
+        "default": "{% set months = {\n  1: 'يناير',\n  2: 'فبراير',\n  3: 'مارس',\n  4: 'أبريل',\n  5: 'مايو',\n  6: 'يونيو',\n  7: 'يوليو',\n  8: 'أغسطس',\n  9: 'سبتمبر',\n  10: 'أكتوبر',\n  11: 'نوفمبر',\n  12: 'ديسمبر'\n} %} {% set ordinal = {\n  1: 'الأول',\n  2: 'الثاني',\n  3: 'الثالث',\n  4: 'الرابع',\n  5: 'الخامس',\n  6: 'السادس',\n  7: 'السابع',\n  8: 'الثامن',\n  9: 'التاسع',\n  10: 'العاشر',\n  11: 'الحادي عشر',\n  12: 'الثاني عشر',\n  13: 'الثالث عشر',\n  14: 'الرابع عشر',\n  15: 'الخامس عشر',\n  16: 'السادس عشر',\n  17: 'السابع عشر',\n  18: 'الثامن عشر',\n  19: 'التاسع عشر',\n  20: 'العشرون',\n  21: 'الواحد والعشرون',\n  22: 'الثاني والعشرون',\n  23: 'الثالث والعشرون',\n  24: 'الرابع والعشرون',\n  25: 'الخامس والعشرون',\n  26: 'السادس والعشرون',\n  27: 'السابع والعشرون',\n  28: 'الثامن والعشرون',\n  29: 'التاسع والعشرون',\n  30: 'الثلاثون',\n  31: 'الواحد والثلاثون'\n } %}\n{{ ordinal[slots.date.day] }} من {{ months[slots.date.month] }} {{ slots.date.year }}\n"
+      },
+      "HassUnpauseTimer": {
+        "default": "تم استئناف المؤقت"
+      },
+      "HassGetWeather": {
+        "default": "{% set weather_condition = {\n  'clear': \"وصافٍ\",\n  'clear-night': \"وصافٍ ليلًا\",\n  'cloudy': \"وغائم\",\n  'exceptional': \"واستثنائي\",\n  'fog': \"مع ضباب\",\n  'hail': \"مع بَرَد\",\n  'lightning': \"مع برق\",\n  'lightning-rainy': \"مع برق وأمطار\",\n  'partlycloudy': \"وغائم جزئيًا\",\n  'pouring': \"وأمطار غزيرة\",\n  'rainy': \"وتمطر\",\n  'snowy': \"وتثلج\",\n  'snowy-rainy': \"مع ثلج وأمطار\",\n  'sunny': \"ومشمس\",\n  'windy': \"وعاصف\",\n  'windy-variant': \"مع رياح وسحب\"\n} %} {{ state.attributes.get('temperature') }} {{ state.attributes.get('temperature_unit') }} {{ weather_condition.get((state.state | string).lower(), \"\") }}\n"
+      },
+      "HassLightSet": {
+        "brightness": "تم ضبط السطوع إلى {{slots.brightness}}",
+        "color": "تم ضبط اللون إلى {{slots.color}}"
+      },
+      "HassVacuumStart": {
+        "default": "تم التفعيل"
+      },
+      "HassSetPosition": {
+        "default": "تم التحريك"
+      },
+      "HassMediaNext": {
+        "default": "تشغيل التالي"
+      },
+      "HassCancelTimer": {
+        "default": "تم إلغاء المؤقت"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{{ state_attr(state.entity_id, 'current_temperature') }}"
+      },
+      "HassDecreaseTimer": {
+        "default": "تم تحديث المؤقت"
+      },
+      "HassIncreaseTimer": {
+        "default": "تم تحديث المؤقت"
+      },
+      "HassVacuumReturnToBase": {
+        "default": "يتم العودة"
+      },
+      "HassRespond": {
+        "hello": "مرحبًا",
+        "listening": "لا، فقط في حال قلت كلمة التنشيط",
+        "data": "بياناتك الخاصة يتم إرسالها فقط إلى خادم البيت الذكي الخاص بك",
+        "commands": "لمعرفة ما يمكنك السؤال عنه، قم بزيارة موقعنا الإلكتروني",
+        "creator": "لقد تم إنشائي من قبل المجتمع الرائع للبيت الذكي، والذي يتكون من عباقرة في جميع أنحاء العالم"
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "(ابيض|أبيض)",
+          "out": "white"
+        },
+        {
+          "in": "(اسود|أسود)",
+          "out": "black"
+        },
+        {
+          "in": "(احمر|أحمر)",
+          "out": "red"
+        },
+        {
+          "in": "برتقالي",
+          "out": "orange"
+        },
+        {
+          "in": "(اصفر|أصفر)",
+          "out": "yellow"
+        },
+        {
+          "in": "(اخضر|أخضر)",
+          "out": "green"
+        },
+        {
+          "in": "(ازرق|أزرق)",
+          "out": "blue"
+        },
+        {
+          "in": "بنفسجي",
+          "out": "purple"
+        },
+        {
+          "in": "بني",
+          "out": "brown"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "(عالي|قصوى)",
+          "out": 100
+        },
+        {
+          "in": "منخفض",
+          "out": 1
+        }
+      ]
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        "مئوية",
+        {
+          "in": "°c",
+          "out": "celsius"
+        },
+        "فهرنهايت",
+        {
+          "in": "f",
+          "out": "fahrenheit"
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "(شغال|[ت|ي]عمل|[ي|ت]وجد|[ي|ت]شحن)",
+          "out": "on"
+        },
+        {
+          "in": "(مطفي|لا [ت|ي]عمل|لا [ي|ت]وجد|لا [ي|ت]شحن)",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "<light>",
+          "out": "light"
+        },
+        {
+          "in": "<fan>",
+          "out": "fan"
+        },
+        {
+          "in": "<switch>",
+          "out": "switch"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "مفتوح",
+          "out": "open"
+        },
+        {
+          "in": "(مغلق|مقفول)",
+          "out": "closed"
+        },
+        {
+          "in": "يفتح",
+          "out": "opening"
+        },
+        {
+          "in": "يغلق",
+          "out": "closing"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "<awning>",
+          "out": "awning"
+        },
+        {
+          "in": "<curtain>",
+          "out": "curtain"
+        },
+        {
+          "in": "<door>",
+          "out": "door"
+        },
+        {
+          "in": "<garage>",
+          "out": "garage"
+        },
+        {
+          "in": "<gate>",
+          "out": "gate"
+        },
+        {
+          "in": "<window>",
+          "out": "window"
+        }
+      ]
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_three_quarters": {
+      "values": [
+        {
+          "in": "ثلاثة أرباع",
+          "out": 45
+        },
+        {
+          "in": "3/4",
+          "out": 45
+        }
+      ]
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "نصف",
+          "out": 30
+        },
+        {
+          "in": "1/2",
+          "out": 30
+        }
+      ]
+    },
+    "timer_quarter": {
+      "values": [
+        {
+          "in": "ربع",
+          "out": 15
+        },
+        {
+          "in": "1/4",
+          "out": 15
+        }
+      ]
+    },
+    "timer_hour": {
+      "values": [
+        {
+          "in": "ساعة",
+          "out": 1
+        },
+        {
+          "in": "ساعاتين",
+          "out": 2
+        }
+      ]
+    },
+    "timer_minute": {
+      "values": [
+        {
+          "in": "دقيقة",
+          "out": 1
+        },
+        {
+          "in": "دقيقتان",
+          "out": 2
+        }
+      ]
+    },
+    "timer_second": {
+      "values": [
+        {
+          "in": "ثانية",
+          "out": 1
+        },
+        {
+          "in": "ثانيتين",
+          "out": 2
+        }
+      ]
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "name": "[ال]{name}",
+    "area": "[ال]{area}",
+    "floor": "[الطابق] {floor}",
+    "colors": "[ال]{color}",
+    "a": "(ا|أ|إ|آ)",
+    "script": "[ال](برنامج|برامج|مسار|مسارات|سيناريو)",
+    "scene": "[ال](مشهد|مشاهد|اعدادات)",
+    "hello": "(مرحبا|<a>هلين|[<a>]هلا)",
+    "home_assistant": "[ال]بيت [(الذكي|المساعد)]",
+    "tell_me": "(قل لي|[<a>]خبرني)",
+    "what_is": "((شو|ما|ماذا|كيف|كم|شقد|قديش)[ ][هو|هي|بكون|يكون|تكون])",
+    "is_it": "(هل[ ][هو|هي|هناك])",
+    "how_many": "كم عدد",
+    "where": "[(ل|<to> )](وين|فين|<a>ين)",
+    "go": "[ب|ا][(ت|ي)](ذهب|روح|تجه)[ي]",
+    "can": "(ممكن|يمكن)[ني]",
+    "remains": "[ال](تبقى|متبقي|بقى|بقي|باقي|لسه)",
+    "this": "(هذا|هذه)",
+    "skip": "(تخطي|طف)",
+    "in": "[[ال]موجود ](في|بي|داخل)",
+    "all": "(كل[ها]|جميع[ها])",
+    "to": "(على |لل|ل|<a>لى )",
+    "any": "(<a>ي)",
+    "everywhere": "<in> ((<any>|<all>) (مكان|الأماكن|منطقة|المناطق|غرفة|الغرف)|<all> (البيت|الدار|المنزل))",
+    "procent": "(بالمائة|بالمئة)",
+    "brightness": "{brightness}[[ ]%| <procent>]",
+    "temperature": "{temperature}[°| درجة] [{temperature_unit}]",
+    "position": "{position}[[ ]%| <procent>]",
+    "turn": "([ت]غير|تعيين|[<a>]ضبط)",
+    "turn_on": "(فعل|تفعيل|تشغيل|[<a>]بدء|<a>بدأ|[<a>]شعل|[<a>]شغل|[<a>]فتح)",
+    "turn_off": "([<a>]طفي|[<a>]طفئ|[<a>]غلق)",
+    "turn_up": "(علي|[<a>]رفع)",
+    "turn_down": "(تخفيض|[<a>]نزل|[<a>]خفض)",
+    "increase": "(زيادة|زود|كتر|كثر|<turn_up>|<add>)",
+    "decrease": "(تقليل|قلل|تنقيص|نقص|وطي|شيل|<a>زالة|<a>مسح|<turn_down>)",
+    "unlock": "([<a>]فتح)",
+    "lock": "([<a>]قفل)",
+    "open": "(<unlock>|<turn_up>)",
+    "close": "(سكر|<a>غلق|<lock>|<turn_down>)",
+    "add": "(ضيف|ضع|حط|زيد|[<a>]ضف)",
+    "create": "(ساوي|<a>صنع|<a>نشاء|[<a>]عميل)",
+    "next": "ال(تالي|قادم)[ة]",
+    "pause": "(توقف|هدي|إيقاف|<a>وقف شوي|<a>وقف[ة]) [مؤقت[ا]]",
+    "temp": "(باردة|دافئة|لطيفة|حارة|درجة [ال]حرارة)",
+    "intensity": "[ال](قوة|شدة|[درجة|شدة] [ال](صطوع|سطوع))",
+    "color": "[ال](لون|<a>لوان)",
+    "numeric_value_set": "(<turn>|<open>|<close>|)",
+    "awning": "[ال](مظلة|مظلات)",
+    "curtain": "[ال](ستائر|ستارة|ستارات)",
+    "door": "[ال](باب|[<a>]بواب)",
+    "garage": "[ال](باب|بوابة|بوابات|[<a>]بواب) [ال]جراج",
+    "gate": "[ال](بوابة|بوابات)",
+    "window": "[ال](نافذة|نوافذ|نافذات|شباك|شبابيك)",
+    "light": "[ال](ضوء|مصابيح|مصباح|نور|لمبة|لمبات|<a>ضوية|<a>نوار|<a>ضواء|<a>ضاءة)",
+    "switch": "[ال](مفتاح|مفاتيح)",
+    "fan": "[ال](مروحة|مراوح|مروحات)",
+    "weather": "[ال](طقس|طقوس|جو|<a>جواء)",
+    "time": "[ال](وقت|ساعة)",
+    "timer": "[ال](مؤقتي|مؤقت|منبه|منبهي|مؤقتات|منبهات|منبهاتي|مؤقتاتي|عداد)",
+    "called": "(يسمى|تدعى|يدعى|باسم|اسمه|[ال]مسمى)",
+    "duration": "(ل|لمدة|لفترة|بطول|يطول|طوله|<a>لى)",
+    "timer_set": "(<turn_on>|<turn>|<create>)",
+    "timer_cancel": "(<a>لغاء|[<a>]حذف|[<a>]مسح|<a>لغي)",
+    "timer_pause": "<pause>",
+    "timer_resume": "(متابعة|تكملة|<a>ستمر|<a>كمل|<a>ستئنف|<a>ستئناف|<a>عادة (تنشيط|تفعيل))",
+    "timer_seconds_short": "({timer_three_quarters:seconds}|{timer_half:seconds}|{timer_quarter:seconds})",
+    "timer_minutes_short": "({timer_three_quarters:minutes}|{timer_half:minutes}|{timer_quarter:minutes})",
+    "timer_duration_seconds": "([ال]{timer_second:seconds}|[ال]{timer_seconds:seconds} <second>|[ال]<timer_seconds_short> [<minute>])",
+    "timer_duration_minutes": "([ال]{timer_minute:minutes}|[ال]{timer_minutes:minutes} <minute>|[ال]<timer_minutes_short> [<hour>])",
+    "timer_duration_hours": "([ال]{timer_hour:hours}|[ال]{timer_hours:hours} <hour>)",
+    "timer_duration_minutes_seconds": "<timer_duration_minutes>[ [و ]<timer_duration_seconds>]",
+    "timer_duration_hours_minutes_seconds": "<timer_duration_hours>[ [و ]<timer_duration_minutes>][ [و ]<timer_duration_seconds>]",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes_seconds>|<timer_duration_hours_minutes_seconds>",
+    "timer_start_seconds_short": "({timer_three_quarters:start_seconds}|{timer_half:start_seconds}|{timer_quarter:start_seconds})",
+    "timer_start_minutes_short": "({timer_three_quarters:start_minutes}|{timer_half:start_minutes}|{timer_quarter:start_minutes})",
+    "timer_start_seconds": "([ال]{timer_second:start_seconds}|[ال]{timer_seconds:start_seconds} <second>|[ال]<timer_start_seconds_short> [<minute>])",
+    "timer_start_minutes": "([ال]{timer_minute:start_minutes}|[ال]{timer_minutes:start_minutes} <minute>|[ال]<timer_start_minutes_short> [<hour>])",
+    "timer_start_hours": "([ال]{timer_hour:start_hours}|[ال]{timer_hours:start_hours} <hour>)",
+    "timer_start_minutes_seconds": "<timer_start_minutes>[ [و ]<timer_start_seconds>]",
+    "timer_start_hours_minutes_seconds": "<timer_start_hours>[ [و ]<timer_start_minutes>][ [و ]<timer_start_seconds>]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes_seconds>|<timer_start_hours_minutes_seconds>",
+    "second": "(ثانية|ثواني)",
+    "minute": "(دقيقة|دقائق)",
+    "hour": "(ساعة|ساعات)"
+  },
+  "skip_words": [
+    "(من فضلك|لو سمحت)",
+    "(هل يمكنك|تقدر)"
+  ]
+}

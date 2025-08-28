@@ -1,0 +1,52 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API-Code"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "away_mode": {
+                "name": "Abwesendmodus"
+            }
+        },
+        "sensor": {
+            "daily_usage": {
+                "name": "T\u00e4glicher Verbrauch"
+            },
+            "monthly_usage": {
+                "name": "Monatlicher Verbrauch"
+            },
+            "yearly_usage": {
+                "name": "J\u00e4hrlicher Verbrauch"
+            }
+        }
+    },
+    "services": {
+        "set_away_mode": {
+            "description": "Legt den Zuhause-/Abwesendmodus f\u00fcr einen Streamlabs Water Monitor fest.",
+            "fields": {
+                "away_mode": {
+                    "description": "Zuhause oder abwesend.",
+                    "name": "Abwesendmodus"
+                },
+                "location_id": {
+                    "description": "Die Standort-ID des Streamlabs Water Monitor.",
+                    "name": "Standort-ID"
+                }
+            },
+            "name": "Abwesendmodus einstellen"
+        }
+    }
+}

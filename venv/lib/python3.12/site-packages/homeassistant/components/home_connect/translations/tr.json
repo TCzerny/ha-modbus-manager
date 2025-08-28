@@ -1,0 +1,822 @@
+{
+    "common": {
+        "confirmed": "Onayland\u0131",
+        "present": "Mevcut"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "Bile\u015fen yap\u0131land\u0131r\u0131lmam\u0131\u015f. L\u00fctfen belgeleri takip edin.",
+            "no_url_available": "Kullan\u0131labilir URL yok. Bu hata hakk\u0131nda bilgi i\u00e7in [yard\u0131m b\u00f6l\u00fcm\u00fcne bak\u0131n]({docs_url})",
+            "oauth_error": "Ge\u00e7ersiz anahtar verileri al\u0131nd\u0131.",
+            "oauth_failed": "Eri\u015fim anahtar\u0131 al\u0131n\u0131rken hata olu\u015ftu.",
+            "oauth_timeout": "OAuth anahtar\u0131n\u0131 \u00e7\u00f6zme zaman a\u015f\u0131m\u0131.",
+            "oauth_unauthorized": "Eri\u015fim anahtar\u0131 al\u0131n\u0131rken OAuth yetkilendirme hatas\u0131."
+        },
+        "create_entry": {
+            "default": "Ba\u015far\u0131yla do\u011fruland\u0131"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Kimlik do\u011frulama y\u00f6ntemini se\u00e7"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "Pil \u015farj durumu"
+            },
+            "charging_connection": {
+                "name": "\u015earj ba\u011flant\u0131s\u0131"
+            },
+            "chiller_door": {
+                "name": "So\u011futucu kap\u0131s\u0131"
+            },
+            "dust_box_inserted": {
+                "name": "Toz kutusu",
+                "state": {
+                    "off": "Eklenmemi\u015f",
+                    "on": "Eklendi"
+                }
+            },
+            "freezer_door": {
+                "name": "Dondurucu kap\u0131s\u0131"
+            },
+            "lifted": {
+                "name": "Kald\u0131r\u0131ld\u0131"
+            },
+            "local_control": {
+                "name": "Yerel kontrol"
+            },
+            "lost": {
+                "name": "Kay\u0131p"
+            },
+            "refrigerator_door": {
+                "name": "Buzdolab\u0131 kap\u0131s\u0131"
+            },
+            "remote_control": {
+                "name": "Uzaktan kumanda"
+            },
+            "remote_start": {
+                "name": "Uzaktan ba\u015flatma"
+            }
+        },
+        "light": {
+            "ambient_light": {
+                "name": "Ortam \u0131\u015f\u0131\u011f\u0131"
+            },
+            "cooking_lighting": {
+                "name": "Fonksiyonel \u0131\u015f\u0131k"
+            },
+            "external_light": {
+                "name": "D\u0131\u015f \u0131\u015f\u0131k"
+            },
+            "internal_light": {
+                "name": "\u0130\u00e7 ayd\u0131nlatma"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "\u015ei\u015fe so\u011futucu s\u0131cakl\u0131\u011f\u0131"
+            },
+            "chiller_left_setpoint_temperature": {
+                "name": "So\u011futucu sol s\u0131cakl\u0131\u011f\u0131"
+            },
+            "chiller_right_setpoint_temperature": {
+                "name": "So\u011futucu do\u011fru s\u0131cakl\u0131k"
+            },
+            "chiller_setpoint_temperature": {
+                "name": "So\u011futucu s\u0131cakl\u0131\u011f\u0131"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "Dondurucu s\u0131cakl\u0131\u011f\u0131"
+            },
+            "refrigerator_setpoint_temperature": {
+                "name": "Buzdolab\u0131 s\u0131cakl\u0131\u011f\u0131"
+            },
+            "wine_compartment_2_setpoint_temperature": {
+                "name": "\u015earap b\u00f6lmesi 2 s\u0131cakl\u0131k"
+            },
+            "wine_compartment_3_setpoint_temperature": {
+                "name": "\u015earap b\u00f6lmesi 3 s\u0131cakl\u0131k"
+            },
+            "wine_compartment_setpoint_temperature": {
+                "name": "\u015earap b\u00f6lmesi s\u0131cakl\u0131\u011f\u0131"
+            }
+        },
+        "select": {
+            "active_program": {
+                "name": "Aktif program",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "Eve git",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "T\u00fcm\u00fcn\u00fc temizle",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "Temiz harita",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caffe grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caffe latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Kahve",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso doppio",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "S\u0131cak su",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "S\u00fct k\u00f6p\u00fc\u011f\u00fc",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "S\u0131cak s\u00fct",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL kahve",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Siyah g\u00f6z",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Cafe au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "S\u00fctl\u00fc kahve",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Kafe cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "K\u0131sa mesafe",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "\u00d6l\u00fc g\u00f6z",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "\u00c7ift",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "D\u00fcz beyaz",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Gala",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Daha b\u00fcy\u00fck brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "K\u00fc\u00e7\u00fck g\u00f6\u011f\u00fcsl\u00fc",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Kahve sat\u0131ld\u0131",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "K\u0131rm\u0131z\u0131 g\u00f6z",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verlaengerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verlaengerter sar\u0131",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Viyana kar\u0131\u015f\u0131m\u0131",
+                    "cooking_common_program_hood_automatic": "Otomatik",
+                    "cooking_common_program_hood_delayed_shut_off": "Gecikmeli kapanma",
+                    "cooking_common_program_hood_venting": "Havaland\u0131rma",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Alt \u0131s\u0131tma",
+                    "cooking_oven_program_heating_mode_defrost": "Buz \u00e7\u00f6zme",
+                    "cooking_oven_program_heating_mode_desiccation": "Kuruma",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Dondurulmu\u015f \u00fcr\u00fcnler i\u00e7in \u00f6zel Heat-Up",
+                    "cooking_oven_program_heating_mode_hot_air": "S\u0131cak hava",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "S\u0131cak hava + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "S\u0131cak hava + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "S\u0131cak hava + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "S\u0131cak hava + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "S\u0131cak hava eko",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "S\u0131cak hava \u0131zgaras\u0131",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Yo\u011fun \u0131s\u0131",
+                    "cooking_oven_program_heating_mode_keep_warm": "S\u0131cak tutun",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pizza ayar\u0131",
+                    "cooking_oven_program_heating_mode_pre_heating": "\u00d6n \u0131s\u0131tma",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "F\u0131r\u0131n kab\u0131n\u0131 \u00f6nceden \u0131s\u0131t\u0131n",
+                    "cooking_oven_program_heating_mode_proof": "Kan\u0131t",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "\u015eabat program\u0131",
+                    "cooking_oven_program_heating_mode_slow_cook": "Yava\u015f pi\u015firme",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u00dcst alt \u0131s\u0131tma",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u00dcst alt \u0131s\u0131tma eko",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Is\u0131tma \u00e7ekmecesi",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watt",
+                    "cooking_oven_program_microwave_max": "Maksimum",
+                    "dishcare_dishwasher_program_auto_1": "Otomatik 1",
+                    "dishcare_dishwasher_program_auto_2": "Otomatik 2",
+                    "dishcare_dishwasher_program_auto_3": "Otomatik 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Otomatik yar\u0131m y\u00fck",
+                    "dishcare_dishwasher_program_eco_50": "Eko 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Ekspres \u0131\u015f\u0131lt\u0131 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Cam 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Cam bak\u0131m\u0131",
+                    "dishcare_dishwasher_program_intensiv_45": "Yo\u011fun 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Yo\u011fun 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Yo\u011fun g\u00fc\u00e7",
+                    "dishcare_dishwasher_program_kurz_60": "Kurz 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Makine bak\u0131m\u0131",
+                    "dishcare_dishwasher_program_magic_daily": "G\u00fcnl\u00fck sihir",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maksimum temizlik",
+                    "dishcare_dishwasher_program_mixed_load": "Kar\u0131\u015f\u0131k y\u00fck",
+                    "dishcare_dishwasher_program_night_wash": "Gece y\u0131kama",
+                    "dishcare_dishwasher_program_normal_45": "Normal 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Normal 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "\u00d6n durulama",
+                    "dishcare_dishwasher_program_quick_45": "H\u0131zl\u0131 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "H\u0131zl\u0131 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Taze buhar",
+                    "dishcare_dishwasher_program_super_60": "S\u00fcper 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "B\u00fcz\u00fclme \u00f6nleyici",
+                    "laundry_care_dryer_program_blankets": "Battaniyeler",
+                    "laundry_care_dryer_program_business_shirts": "\u0130\u015f g\u00f6mlekleri",
+                    "laundry_care_dryer_program_cotton": "Pamuk",
+                    "laundry_care_dryer_program_delicates": "Hassaslar",
+                    "laundry_care_dryer_program_dessous": "\u0130\u00e7 \u00e7ama\u015f\u0131r\u0131",
+                    "laundry_care_dryer_program_down_feathers": "Ku\u015f t\u00fcy\u00fc",
+                    "laundry_care_dryer_program_hygiene": "Hijyen",
+                    "laundry_care_dryer_program_in_basket": "Sepette",
+                    "laundry_care_dryer_program_jeans": "Kot",
+                    "laundry_care_dryer_program_mix": "Kar\u0131\u015f\u0131k",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Kuruma s\u00fcrem",
+                    "laundry_care_dryer_program_outdoor": "D\u0131\u015f mekan elbisesi",
+                    "laundry_care_dryer_program_pillow": "Yast\u0131k",
+                    "laundry_care_dryer_program_shirts_15": "G\u00f6mlekler 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "S\u00fcper 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "Sentetik",
+                    "laundry_care_dryer_program_synthetic_refresh": "Sentetik yenileme",
+                    "laundry_care_dryer_program_time_cold": "So\u011fuk (de\u011fi\u015fken zaman)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "So\u011fuk (20 dakika)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "So\u011fuk (30 dakika)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "So\u011fuk (60 dakika)",
+                    "laundry_care_dryer_program_time_warm": "S\u0131cak (de\u011fi\u015fken zaman)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "S\u0131cak (30 dakika)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "S\u0131cak (40 dakika)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "S\u0131cak (60 dakika)",
+                    "laundry_care_dryer_program_towels": "Havlular",
+                    "laundry_care_washer_dryer_program_cotton": "Pamuk",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Pamuk eko 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Kolay bak\u0131m",
+                    "laundry_care_washer_dryer_program_mix": "Kar\u0131\u015f\u0131k",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Y\u0131kama ve kurulama (60 dakika)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Y\u0131kama ve kurulama (90 dakika)",
+                    "laundry_care_washer_program_auto_30": "Otomatik 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Otomatik 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Otomatik 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "\u015eifon",
+                    "laundry_care_washer_program_cotton": "Pamuk",
+                    "laundry_care_washer_program_cotton_colour": "Pamuk rengi",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Pamuk eko",
+                    "laundry_care_washer_program_cotton_eco_4060": "Pamuklu eko 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Perdeler",
+                    "laundry_care_washer_program_dark_wash": "Koyu y\u0131kama",
+                    "laundry_care_washer_program_delicates_silk": "Narin ipek",
+                    "laundry_care_washer_program_dessous": "\u0130\u00e7 \u00e7ama\u015f\u0131r\u0131",
+                    "laundry_care_washer_program_down_duvet_duvet": "Ku\u015f t\u00fcy\u00fc yorgan",
+                    "laundry_care_washer_program_drum_clean": "Tambur temizli\u011fi",
+                    "laundry_care_washer_program_easy_care": "Kolay bak\u0131m",
+                    "laundry_care_washer_program_mix": "Kar\u0131\u015f\u0131k",
+                    "laundry_care_washer_program_mix_night_wash": "Gece y\u0131kama program\u0131",
+                    "laundry_care_washer_program_monsoon": "Muson",
+                    "laundry_care_washer_program_outdoor": "D\u0131\u015f mekan elbisesi",
+                    "laundry_care_washer_program_plush_toy": "Pelu\u015f oyuncak",
+                    "laundry_care_washer_program_power_speed_59": "G\u00fc\u00e7 h\u0131z\u0131 <60 dak",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Durulama s\u0131kma tahliyesi",
+                    "laundry_care_washer_program_sensitive": "Hassas",
+                    "laundry_care_washer_program_shirts_blouses": "G\u00f6mlekler bluzlar",
+                    "laundry_care_washer_program_sport_fitness": "Spor fitness",
+                    "laundry_care_washer_program_super_153045_super_15": "S\u00fcper 15 dakika",
+                    "laundry_care_washer_program_super_153045_super_1530": "S\u00fcper 15/30 dakika",
+                    "laundry_care_washer_program_towels": "Havlular",
+                    "laundry_care_washer_program_water_proof": "Su ge\u00e7irmez",
+                    "laundry_care_washer_program_wool": "Y\u00fcn"
+                }
+            },
+            "selected_program": {
+                "name": "Se\u00e7ilmi\u015f program",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "Eve git",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "T\u00fcm\u00fcn\u00fc temizle",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "Temiz harita",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caffe grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caffe latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Kahve",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso doppio",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "S\u0131cak su",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "S\u00fct k\u00f6p\u00fc\u011f\u00fc",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "S\u0131cak s\u00fct",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL kahve",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Siyah g\u00f6z",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Cafe au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "S\u00fctl\u00fc kahve",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Kafe cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "K\u0131sa mesafe",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "\u00d6l\u00fc g\u00f6z",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "\u00c7ift",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "D\u00fcz beyaz",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Gala",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Daha b\u00fcy\u00fck brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "K\u00fc\u00e7\u00fck g\u00f6\u011f\u00fcsl\u00fc",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Kahve sat\u0131ld\u0131",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "K\u0131rm\u0131z\u0131 g\u00f6z",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verlaengerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verlaengerter sar\u0131",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Viyana kar\u0131\u015f\u0131m\u0131",
+                    "cooking_common_program_hood_automatic": "Otomatik",
+                    "cooking_common_program_hood_delayed_shut_off": "Gecikmeli kapanma",
+                    "cooking_common_program_hood_venting": "Havaland\u0131rma",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Alt \u0131s\u0131tma",
+                    "cooking_oven_program_heating_mode_defrost": "Buz \u00e7\u00f6zme",
+                    "cooking_oven_program_heating_mode_desiccation": "Kuruma",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Dondurulmu\u015f \u00fcr\u00fcnler i\u00e7in \u00f6zel Heat-Up",
+                    "cooking_oven_program_heating_mode_hot_air": "S\u0131cak hava",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "S\u0131cak hava + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "S\u0131cak hava + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "S\u0131cak hava + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "S\u0131cak hava + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "S\u0131cak hava eko",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "S\u0131cak hava \u0131zgaras\u0131",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Yo\u011fun \u0131s\u0131",
+                    "cooking_oven_program_heating_mode_keep_warm": "S\u0131cak tutun",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pizza ayar\u0131",
+                    "cooking_oven_program_heating_mode_pre_heating": "\u00d6n \u0131s\u0131tma",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "F\u0131r\u0131n kab\u0131n\u0131 \u00f6nceden \u0131s\u0131t\u0131n",
+                    "cooking_oven_program_heating_mode_proof": "Kan\u0131t",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "\u015eabat program\u0131",
+                    "cooking_oven_program_heating_mode_slow_cook": "Yava\u015f pi\u015firme",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u00dcst alt \u0131s\u0131tma",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u00dcst alt \u0131s\u0131tma eko",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Is\u0131tma \u00e7ekmecesi",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watt",
+                    "cooking_oven_program_microwave_max": "Maksimum",
+                    "dishcare_dishwasher_program_auto_1": "Otomatik 1",
+                    "dishcare_dishwasher_program_auto_2": "Otomatik 2",
+                    "dishcare_dishwasher_program_auto_3": "Otomatik 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Otomatik yar\u0131m y\u00fck",
+                    "dishcare_dishwasher_program_eco_50": "Eko 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Ekspres \u0131\u015f\u0131lt\u0131 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Cam 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Cam bak\u0131m\u0131",
+                    "dishcare_dishwasher_program_intensiv_45": "Yo\u011fun 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Yo\u011fun 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Yo\u011fun g\u00fc\u00e7",
+                    "dishcare_dishwasher_program_kurz_60": "Kurz 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Makine bak\u0131m\u0131",
+                    "dishcare_dishwasher_program_magic_daily": "G\u00fcnl\u00fck sihir",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maksimum temizlik",
+                    "dishcare_dishwasher_program_mixed_load": "Kar\u0131\u015f\u0131k y\u00fck",
+                    "dishcare_dishwasher_program_night_wash": "Gece y\u0131kama",
+                    "dishcare_dishwasher_program_normal_45": "Normal 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Normal 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "\u00d6n durulama",
+                    "dishcare_dishwasher_program_quick_45": "H\u0131zl\u0131 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "H\u0131zl\u0131 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Taze buhar",
+                    "dishcare_dishwasher_program_super_60": "S\u00fcper 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "B\u00fcz\u00fclme \u00f6nleyici",
+                    "laundry_care_dryer_program_blankets": "Battaniyeler",
+                    "laundry_care_dryer_program_business_shirts": "\u0130\u015f g\u00f6mlekleri",
+                    "laundry_care_dryer_program_cotton": "Pamuk",
+                    "laundry_care_dryer_program_delicates": "Hassaslar",
+                    "laundry_care_dryer_program_dessous": "\u0130\u00e7 \u00e7ama\u015f\u0131r\u0131",
+                    "laundry_care_dryer_program_down_feathers": "Ku\u015f t\u00fcy\u00fc",
+                    "laundry_care_dryer_program_hygiene": "Hijyen",
+                    "laundry_care_dryer_program_in_basket": "Sepette",
+                    "laundry_care_dryer_program_jeans": "Kot",
+                    "laundry_care_dryer_program_mix": "Kar\u0131\u015f\u0131k",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Kuruma s\u00fcrem",
+                    "laundry_care_dryer_program_outdoor": "D\u0131\u015f mekan elbisesi",
+                    "laundry_care_dryer_program_pillow": "Yast\u0131k",
+                    "laundry_care_dryer_program_shirts_15": "G\u00f6mlekler 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "S\u00fcper 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "Sentetik",
+                    "laundry_care_dryer_program_synthetic_refresh": "Sentetik yenileme",
+                    "laundry_care_dryer_program_time_cold": "So\u011fuk (de\u011fi\u015fken zaman)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "So\u011fuk (20 dakika)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "So\u011fuk (30 dakika)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "So\u011fuk (60 dakika)",
+                    "laundry_care_dryer_program_time_warm": "S\u0131cak (de\u011fi\u015fken zaman)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "S\u0131cak (30 dakika)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "S\u0131cak (40 dakika)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "S\u0131cak (60 dakika)",
+                    "laundry_care_dryer_program_towels": "Havlular",
+                    "laundry_care_washer_dryer_program_cotton": "Pamuk",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Pamuk eko 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Kolay bak\u0131m",
+                    "laundry_care_washer_dryer_program_mix": "Kar\u0131\u015f\u0131k",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Y\u0131kama ve kurulama (60 dakika)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Y\u0131kama ve kurulama (90 dakika)",
+                    "laundry_care_washer_program_auto_30": "Otomatik 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Otomatik 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Otomatik 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "\u015eifon",
+                    "laundry_care_washer_program_cotton": "Pamuk",
+                    "laundry_care_washer_program_cotton_colour": "Pamuk rengi",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Pamuk eko",
+                    "laundry_care_washer_program_cotton_eco_4060": "Pamuklu eko 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Perdeler",
+                    "laundry_care_washer_program_dark_wash": "Koyu y\u0131kama",
+                    "laundry_care_washer_program_delicates_silk": "Narin ipek",
+                    "laundry_care_washer_program_dessous": "\u0130\u00e7 \u00e7ama\u015f\u0131r\u0131",
+                    "laundry_care_washer_program_down_duvet_duvet": "Ku\u015f t\u00fcy\u00fc yorgan",
+                    "laundry_care_washer_program_drum_clean": "Tambur temizli\u011fi",
+                    "laundry_care_washer_program_easy_care": "Kolay bak\u0131m",
+                    "laundry_care_washer_program_mix": "Kar\u0131\u015f\u0131k",
+                    "laundry_care_washer_program_mix_night_wash": "Gece y\u0131kama program\u0131",
+                    "laundry_care_washer_program_monsoon": "Muson",
+                    "laundry_care_washer_program_outdoor": "D\u0131\u015f mekan elbisesi",
+                    "laundry_care_washer_program_plush_toy": "Pelu\u015f oyuncak",
+                    "laundry_care_washer_program_power_speed_59": "G\u00fc\u00e7 h\u0131z\u0131 <60 dak",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Durulama s\u0131kma tahliyesi",
+                    "laundry_care_washer_program_sensitive": "Hassas",
+                    "laundry_care_washer_program_shirts_blouses": "G\u00f6mlekler bluzlar",
+                    "laundry_care_washer_program_sport_fitness": "Spor fitness",
+                    "laundry_care_washer_program_super_153045_super_15": "S\u00fcper 15 dakika",
+                    "laundry_care_washer_program_super_153045_super_1530": "S\u00fcper 15/30 dakika",
+                    "laundry_care_washer_program_towels": "Havlular",
+                    "laundry_care_washer_program_water_proof": "Su ge\u00e7irmez",
+                    "laundry_care_washer_program_wool": "Y\u00fcn"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "Pil seviyesi"
+            },
+            "bean_container_empty": {
+                "name": "Fasulye kab\u0131 bo\u015f",
+                "state": {
+                    "confirmed": "Onayland\u0131",
+                    "off": "Kapal\u0131",
+                    "present": "Mevcut"
+                }
+            },
+            "camera_state": {
+                "name": "Kamera durumu",
+                "state": {
+                    "disabled": "Devre d\u0131\u015f\u0131",
+                    "error": "Hata",
+                    "ready": "Haz\u0131r",
+                    "sleeping": "Uyuyor",
+                    "streamingcloud": "Bulut ak\u0131\u015f\u0131",
+                    "streaminglocal": "Yerel yay\u0131n ak\u0131\u015f\u0131",
+                    "streaminglocal_and_cloud": "Yerel ve bulut ak\u0131\u015f\u0131"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "Kahve ve s\u00fct fincanlar\u0131"
+            },
+            "coffee_counter": {
+                "name": "Kahveler"
+            },
+            "door": {
+                "name": "Kap\u0131",
+                "state": {
+                    "closed": "Kapal\u0131",
+                    "locked": "Kilitli",
+                    "open": "A\u00e7\u0131k"
+                }
+            },
+            "drip_tray_full": {
+                "name": "Damlama tepsisi dolu",
+                "state": {
+                    "confirmed": "Onayland\u0131",
+                    "off": "Kapal\u0131",
+                    "present": "Mevcut"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "Dondurucu kap\u0131 alarm\u0131",
+                "state": {
+                    "confirmed": "Onayland\u0131",
+                    "present": "Mevcut"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "Dondurucu s\u0131cakl\u0131k alarm\u0131",
+                "state": {
+                    "confirmed": "Onayland\u0131",
+                    "off": "Kapal\u0131",
+                    "present": "Mevcut"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "K\u00f6p\u00fckl\u00fc s\u00fct bardaklar\u0131"
+            },
+            "hot_milk_counter": {
+                "name": "S\u0131cak s\u00fct bardaklar\u0131"
+            },
+            "hot_water_counter": {
+                "name": "S\u0131cak su"
+            },
+            "hot_water_cups_counter": {
+                "name": "S\u0131cak su bardaklar\u0131"
+            },
+            "last_selected_map": {
+                "name": "Son se\u00e7ilen harita",
+                "state": {
+                    "map1": "Harita 1",
+                    "map2": "Harita 2",
+                    "map3": "Harita 3",
+                    "tempmap": "Ge\u00e7ici harita"
+                }
+            },
+            "milk_counter": {
+                "name": "S\u00fct bardaklar\u0131"
+            },
+            "operation_state": {
+                "name": "\u00c7al\u0131\u015fma durumu",
+                "state": {
+                    "aborting": "\u0130ptal ediliyor",
+                    "actionrequired": "Eylem gerekli",
+                    "delayedstart": "Gecikmeli ba\u015flat",
+                    "error": "Hata",
+                    "finished": "Bitti",
+                    "inactive": "Etkin de\u011fil",
+                    "pause": "Durduruldu",
+                    "ready": "Haz\u0131r",
+                    "run": "\u00c7al\u0131\u015ft\u0131r"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "Toz kahveler"
+            },
+            "program_finish_time": {
+                "name": "Program biti\u015f zaman\u0131"
+            },
+            "program_progress": {
+                "name": "Program ilerlemesi"
+            },
+            "refrigerator_door_alarm": {
+                "name": "Buzdolab\u0131 kap\u0131 alarm\u0131",
+                "state": {
+                    "confirmed": "Onayland\u0131",
+                    "off": "Kapal\u0131",
+                    "present": "Mevcut"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "name": "Parlat\u0131c\u0131 neredeyse bo\u015f",
+                "state": {
+                    "confirmed": "Onayland\u0131",
+                    "off": "Kapal\u0131",
+                    "present": "Mevcut"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "Ristretto espresso fincanlar\u0131"
+            },
+            "salt_nearly_empty": {
+                "name": "Tuz neredeyse bo\u015f",
+                "state": {
+                    "confirmed": "Onayland\u0131",
+                    "off": "Kapal\u0131",
+                    "present": "Mevcut"
+                }
+            },
+            "water_tank_empty": {
+                "name": "Su deposu bo\u015f",
+                "state": {
+                    "confirmed": "Onayland\u0131",
+                    "off": "Kapal\u0131",
+                    "present": "Mevcut"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "\u00c7ocuk kilidi"
+            },
+            "cup_warmer": {
+                "name": "Bardak \u0131s\u0131t\u0131c\u0131s\u0131"
+            },
+            "dispenser_enabled": {
+                "name": "Da\u011f\u0131t\u0131c\u0131",
+                "state": {
+                    "off": "Devre d\u0131\u015f\u0131",
+                    "on": "Etkin"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "Dondurucu kap\u0131 asistan\u0131"
+            },
+            "door_assistant_fridge": {
+                "name": "Buzdolab\u0131 kap\u0131 asistan\u0131"
+            },
+            "eco_mode": {
+                "name": "Eko modu"
+            },
+            "freezer_super_mode": {
+                "name": "Dondurucu s\u00fcper modu"
+            },
+            "fresh_mode": {
+                "name": "Taze mod"
+            },
+            "power": {
+                "name": "G\u00fc\u00e7"
+            },
+            "refrigerator_super_mode": {
+                "name": "Buzdolab\u0131 s\u00fcper modu"
+            },
+            "sabbath_mode": {
+                "name": "\u015eabat modu"
+            },
+            "vacation_mode": {
+                "name": "Tatil modu"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "\u00c7alar saat"
+            }
+        }
+    },
+    "exceptions": {
+        "appliance_not_found": {
+            "message": "{device_id} cihaz kimli\u011fi i\u00e7in cihaz bulunamad\u0131"
+        },
+        "execute_command": {
+            "message": "{command} komutu y\u00fcr\u00fct\u00fcl\u00fcrken hata olu\u015ftu: {description}"
+        },
+        "pause_program": {
+            "message": "Program duraklat\u0131l\u0131rken hata olu\u015ftu: {description}"
+        },
+        "power_off": {
+            "message": "{appliance_name} de\u011ferini \" {value} \" ile kapat\u0131rken hata olu\u015ftu: {description}"
+        },
+        "power_on": {
+            "message": "{appliance_name} a\u00e7\u0131l\u0131rken hata olu\u015ftu: {description}"
+        },
+        "select_light_custom_color": {
+            "message": "{entity_id} i\u00e7in \u00f6zel renk se\u00e7erken hata olu\u015ftu: {description}"
+        },
+        "select_program": {
+            "message": "{program} program\u0131n\u0131 se\u00e7erken hata olu\u015ftu: {description}"
+        },
+        "set_light_brightness": {
+            "message": "{entity_id} : {description} parlakl\u0131\u011f\u0131n\u0131 ayarlarken hata olu\u015ftu"
+        },
+        "set_light_color": {
+            "message": "{entity_id} renginin ayarlanmas\u0131nda hata olu\u015ftu: {description}"
+        },
+        "set_options_active_program": {
+            "message": "Etkin program i\u00e7in hata ayar se\u00e7enekleri: {description}"
+        },
+        "set_options_selected_program": {
+            "message": "Se\u00e7ili program i\u00e7in hata ayar se\u00e7enekleri: {description}"
+        },
+        "set_setting": {
+            "message": "\" {value} \" de\u011ferini \" {key} \" ayar\u0131na atama hatas\u0131: {description}"
+        },
+        "set_setting_entity": {
+            "message": "{entity_id} i\u00e7in \"{key}\" ayar\u0131na \"{value}\" de\u011feri atan\u0131rken hata olu\u015ftu: {description}"
+        },
+        "start_program": {
+            "message": "{program} program\u0131 ba\u015flat\u0131l\u0131rken hata olu\u015ftu: {description}"
+        },
+        "stop_program": {
+            "message": "Program durdurulurken hata olu\u015ftu: {description}"
+        },
+        "turn_off": {
+            "message": "{entity_id} ( {key} ) kapat\u0131l\u0131rken hata olu\u015ftu: {description}"
+        },
+        "turn_off_light": {
+            "message": "{entity_id} : {description} kapat\u0131l\u0131rken hata olu\u015ftu"
+        },
+        "turn_off_not_supported": {
+            "message": "{appliance_name} cihaz\u0131n\u0131n kapat\u0131lmas\u0131 veya bekleme moduna al\u0131nmas\u0131 desteklenmiyor."
+        },
+        "turn_on": {
+            "message": "{entity_id} ( {key} ) a\u00e7\u0131l\u0131rken hata olu\u015ftu: {description}"
+        },
+        "turn_on_light": {
+            "message": "{entity_id} : {description} a\u00e7\u0131l\u0131rken hata olu\u015ftu"
+        },
+        "unable_to_retrieve_turn_off": {
+            "message": "{appliance_name} cihaz\u0131n\u0131n kapat\u0131lmas\u0131 m\u00fcmk\u00fcn de\u011fil \u00e7\u00fcnk\u00fc cihaz\u0131n kapat\u0131lmas\u0131 veya bekleme moduna al\u0131nmas\u0131 i\u00e7in deste\u011fi belirlenemedi."
+        }
+    },
+    "issues": {
+        "deprecated_binary_common_door_sensor": {
+            "description": "Kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131lan ikili kap\u0131 sens\u00f6r\u00fc ` {entity} `, a\u015fa\u011f\u0131daki otomasyonlarda veya betiklerde kullan\u0131lmaktad\u0131r: \n {items} \n \n Ek olas\u0131 durumlara sahip bir sens\u00f6r varl\u0131\u011f\u0131 mevcuttur ve bundan sonra kullan\u0131lmal\u0131d\u0131r; L\u00fctfen bu sorunu d\u00fczeltmek i\u00e7in yukar\u0131daki otomasyonlarda veya betiklerde bunu kullan\u0131n.",
+            "title": "Baz\u0131 otomasyonlarda veya betiklerde kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131lm\u0131\u015f ikili kap\u0131 sens\u00f6r\u00fc alg\u0131land\u0131"
+        },
+        "deprecated_program_switch": {
+            "description": "Program anahtarlar\u0131 kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131ld\u0131 ve {entity_id} a\u015fa\u011f\u0131daki otomasyonlarda veya betiklerde kullan\u0131l\u0131yor: \n {items} \n \n Bu sorunu d\u00fczeltmek i\u00e7in, program\u0131 herhangi bir ek se\u00e7ene\u011fe gerek kalmadan \u00e7al\u0131\u015ft\u0131rmak ve yukar\u0131daki otomasyonlarda veya betiklerde \u00e7al\u0131\u015fan mevcut program\u0131 almak i\u00e7in etkin program se\u00e7me varl\u0131\u011f\u0131n\u0131 kullanabilirsiniz.",
+            "title": "Baz\u0131 otomasyonlarda veya betiklerde kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131lm\u0131\u015f program anahtar\u0131 alg\u0131land\u0131"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "Bir ayar\u0131 de\u011fi\u015ftirir.",
+            "fields": {
+                "device_id": {
+                    "description": "Cihaz\u0131n kimli\u011fi.",
+                    "name": "Ayg\u0131t Kimli\u011fi"
+                },
+                "key": {
+                    "description": "Ortam\u0131n anahtar\u0131.",
+                    "name": "Anahtar"
+                },
+                "value": {
+                    "description": "Ayar\u0131n de\u011feri.",
+                    "name": "De\u011fer"
+                }
+            },
+            "name": "Ayar\u0131 de\u011fi\u015ftir"
+        },
+        "pause_program": {
+            "description": "\u00c7al\u0131\u015fmakta olan program\u0131 duraklat\u0131r.",
+            "fields": {
+                "device_id": {
+                    "description": "Cihaz\u0131n kimli\u011fi.",
+                    "name": "Ayg\u0131t Kimli\u011fi"
+                }
+            },
+            "name": "Program\u0131 duraklat"
+        },
+        "resume_program": {
+            "description": "Duraklat\u0131lm\u0131\u015f bir program\u0131 devam ettirir.",
+            "fields": {
+                "device_id": {
+                    "description": "Cihaz\u0131n kimli\u011fi.",
+                    "name": "Ayg\u0131t Kimli\u011fi"
+                }
+            },
+            "name": "Program\u0131 devam ettir"
+        },
+        "select_program": {
+            "description": "Bir program\u0131 ba\u015flatmadan se\u00e7er.",
+            "fields": {
+                "device_id": {
+                    "description": "Cihaz\u0131n kimli\u011fi.",
+                    "name": "Ayg\u0131t Kimli\u011fi"
+                },
+                "key": {
+                    "description": "Se\u00e7ene\u011fin anahtar\u0131.",
+                    "name": "Se\u00e7enek tu\u015fu"
+                },
+                "program": {
+                    "description": "Se\u00e7ilecek program.",
+                    "name": "Program"
+                },
+                "unit": {
+                    "description": "Se\u00e7enek i\u00e7in birim.",
+                    "name": "Se\u00e7enek birimi"
+                },
+                "value": {
+                    "description": "Se\u00e7ene\u011fin de\u011feri.",
+                    "name": "Opsiyon de\u011feri"
+                }
+            },
+            "name": "Program se\u00e7in"
+        },
+        "set_option_active": {
+            "description": "Etkin program i\u00e7in bir se\u00e7enek belirler.",
+            "fields": {
+                "device_id": {
+                    "description": "Cihaz\u0131n kimli\u011fi.",
+                    "name": "Cihaz Kimli\u011fi"
+                },
+                "key": {
+                    "description": "Se\u00e7ene\u011fin anahtar\u0131.",
+                    "name": "Anahtar"
+                },
+                "value": {
+                    "description": "Se\u00e7ene\u011fin de\u011feri.",
+                    "name": "De\u011fer"
+                }
+            },
+            "name": "Etkin program se\u00e7ene\u011fini ayarla"
+        },
+        "set_option_selected": {
+            "description": "Se\u00e7ilen program i\u00e7in bir se\u00e7enek belirler.",
+            "fields": {
+                "device_id": {
+                    "description": "Cihaz\u0131n kimli\u011fi.",
+                    "name": "Cihaz Kimli\u011fi"
+                },
+                "key": {
+                    "description": "Se\u00e7ene\u011fin anahtar\u0131.",
+                    "name": "Anahtar"
+                },
+                "value": {
+                    "description": "Se\u00e7ene\u011fin de\u011feri.",
+                    "name": "De\u011fer"
+                }
+            },
+            "name": "Se\u00e7ilen program se\u00e7ene\u011fini ayarla"
+        },
+        "start_program": {
+            "description": "Bir program se\u00e7er ve ba\u015flat\u0131r.",
+            "fields": {
+                "device_id": {
+                    "description": "Cihaz\u0131n kimli\u011fi.",
+                    "name": "Ayg\u0131t Kimli\u011fi"
+                },
+                "key": {
+                    "description": "Se\u00e7ene\u011fin anahtar\u0131.",
+                    "name": "Se\u00e7enek tu\u015fu"
+                },
+                "program": {
+                    "description": "Se\u00e7ilecek program.",
+                    "name": "Program"
+                },
+                "unit": {
+                    "description": "Se\u00e7enek i\u00e7in birim.",
+                    "name": "Se\u00e7enek birimi"
+                },
+                "value": {
+                    "description": "Se\u00e7ene\u011fin de\u011feri.",
+                    "name": "Opsiyon de\u011feri"
+                }
+            },
+            "name": "Program\u0131 ba\u015flat"
+        }
+    }
+}

@@ -1,0 +1,61 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "Redan konfigurerad. Endast en konfiguration m\u00f6jlig."
+        },
+        "step": {
+            "user": {
+                "description": "Ta emot r\u00f6st \u00f6ver IP-samtal f\u00f6r att interagera med Assist."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "call_in_progress": {
+                "name": "Samtal p\u00e5g\u00e5r"
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Assistent",
+                "state": {
+                    "preferred": "F\u00f6redragen"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Slutdetektering av r\u00f6stkommando",
+                "state": {
+                    "aggressive": "Aggressiv",
+                    "default": "Standard",
+                    "relaxed": "Avslappnad"
+                }
+            }
+        },
+        "switch": {
+            "allow_call": {
+                "name": "Till\u00e5t samtal"
+            }
+        }
+    },
+    "issues": {
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "Den p\u00e5g\u00e5ende bin\u00e4ra sensorn {integration_name} ` {entity_id} ` \u00e4r utfasad. Migrera din konfiguration f\u00f6r att anv\u00e4nda motsvarande entitet ` {assist_satellite_domain} ` och klicka sedan p\u00e5 SKICKA f\u00f6r att inaktivera den p\u00e5g\u00e5ende bin\u00e4ra sensorn och \u00e5tg\u00e4rda det h\u00e4r problemet."
+                    }
+                }
+            },
+            "title": "{integration_name} p\u00e5g\u00e5ende bin\u00e4ra sensorer \u00e4r utfasade"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "sip_port": "SIP-port"
+                }
+            }
+        }
+    }
+}

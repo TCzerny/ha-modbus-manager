@@ -1,0 +1,67 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparaat is al geconfigureerd",
+            "reauth_successful": "Herauthenticatie geslaagd",
+            "reconfigure_successful": "Herconfiguratie was succesvol"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "invalid_auth": "Ongeldige authenticatie",
+            "unknown": "Onverwachte fout"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Wachtwoord",
+                    "username": "Gebruikersnaam"
+                },
+                "title": "Authenticatie is verlopen voor {name}"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "password": "Wachtwoord",
+                    "port": "Poort",
+                    "ssl": "Maakt gebruik van een SSL-certificaat",
+                    "username": "Gebruikersnaam",
+                    "verify_ssl": "SSL-certificaat verifi\u00ebren"
+                },
+                "data_description": {
+                    "port": "pyLoad gebruikt standaard poort 8000."
+                }
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Wachtwoord",
+                    "port": "Poort",
+                    "ssl": "Maakt gebruik van een SSL-certificaat",
+                    "username": "Gebruikersnaam",
+                    "verify_ssl": "SSL-certificaat verifi\u00ebren"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "speed": {
+                "name": "Snelheid"
+            },
+            "total": {
+                "name": "Totaal aantal downloads"
+            }
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "Het configureren van pyLoad met behulp van YAML wordt verwijderd, maar er was een verbindingsfout opgetreden tijdens het importeren van de bestaande configuratie.\n\nControleer of je een stabiele internetverbinding hebt en start Home Assistant opnieuw op om het opnieuw te proberen of verwijder de pyLoad YAML-configuratie uit uw configuration.yaml bestand en [stel de integratie handmatig in]({url})."
+        },
+        "deprecated_yaml_import_issue_invalid_auth": {
+            "description": "Het configureren van pyLoad met behulp van YAML wordt verwijderd, maar er was een authenticatiefout opgetreden tijdens het importeren van de bestaande configuratie.\n\nCorrigeer de YAML-configuratie en start Home Assistant opnieuw op om het opnieuw te proberen of verwijder de pyLoad YAML-configuratie uit uw configuration.yaml bestand en [stel de integratie handmatig in]({url})."
+        },
+        "deprecated_yaml_import_issue_unknown": {
+            "description": "Het configureren van pyLoad met behulp van YAML wordt verwijderd, maar er was een onbekende fout opgetreden tijdens het importeren van de bestaande configuratie.\n\nZorg ervoor dat de YAML-configuratie correct is en start Home Assistant opnieuw op om het opnieuw te proberen of verwijder de pyLoad YAML-configuratie uit uw configuration.yaml bestand en [stel de integratie handmatig in]({url})."
+        }
+    }
+}

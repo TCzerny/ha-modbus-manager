@@ -1,0 +1,75 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "email": "E-post",
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "email": "Ange den e-postadress som \u00e4r kopplad till ditt ista EcoTrend-konto",
+                    "password": "Ange l\u00f6senordet f\u00f6r ditt ista EcoTrend-konto"
+                },
+                "description": "Ange ditt l\u00f6senord p\u00e5 nytt f\u00f6r `{email}` f\u00f6r att \u00e5teransluta ditt ista EcoTrend-konto till Home Assistant.",
+                "title": "Autentiseringen har upph\u00f6rt att g\u00e4lla f\u00f6r {name}"
+            },
+            "user": {
+                "data": {
+                    "email": "E-post",
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "email": "Ange den e-postadress som \u00e4r kopplad till ditt ista EcoTrend-konto",
+                    "password": "Ange l\u00f6senordet f\u00f6r ditt ista EcoTrend-konto"
+                },
+                "description": "Anslut ditt **ista EcoTrend**-konto till Home Assistant f\u00f6r att f\u00e5 tillg\u00e5ng till dina m\u00e5natliga uppgifter om v\u00e4rme- och vattenanv\u00e4ndning."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "heating": {
+                "name": "V\u00e4rmer",
+                "unit_of_measurement": "enheter"
+            },
+            "heating_cost": {
+                "name": "Uppv\u00e4rmningskostnad"
+            },
+            "heating_energy": {
+                "name": "Uppv\u00e4rmningsenergi"
+            },
+            "hot_water": {
+                "name": "Varmvatten"
+            },
+            "hot_water_cost": {
+                "name": "Varmvatten kostnad"
+            },
+            "hot_water_energy": {
+                "name": "Varmvatten energi"
+            },
+            "water": {
+                "name": "Vatten"
+            },
+            "water_cost": {
+                "name": "Vattenkostnad"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_exception": {
+            "message": "Autentisering misslyckades f\u00f6r {email}, kontrollera dina inloggningsuppgifter"
+        },
+        "connection_exception": {
+            "message": "Det g\u00e5r inte att ansluta och h\u00e4mta data fr\u00e5n ista EcoTrend, f\u00f6rs\u00f6k igen senare"
+        }
+    }
+}

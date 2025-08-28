@@ -1,0 +1,68 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "unknown": "Beklenmeyen hata"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API Anahtar\u0131"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Ge\u00e7ersiz yap\u0131land\u0131rma giri\u015fi sa\u011fland\u0131. {config_entry} ald\u0131m"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "chat_model": "Model",
+                    "llm_hass_api": "Home Assistant'\u0131 kontrol et",
+                    "max_tokens": "Yan\u0131t olarak d\u00f6nd\u00fcr\u00fclecek maksimum anahtar say\u0131s\u0131",
+                    "prompt": "Talimatlar",
+                    "recommended": "\u00d6nerilen model ayarlar\u0131",
+                    "temperature": "S\u0131cakl\u0131k",
+                    "top_p": "Yukar\u0131"
+                },
+                "data_description": {
+                    "prompt": "LLM'nin nas\u0131l yan\u0131t vermesi gerekti\u011fini \u00f6\u011fretin. Bu bir \u015fablon olabilir."
+                }
+            }
+        }
+    },
+    "services": {
+        "generate_image": {
+            "description": "Bir istemi g\u00f6r\u00fcnt\u00fcye d\u00f6n\u00fc\u015ft\u00fcr\u00fcn",
+            "fields": {
+                "config_entry": {
+                    "description": "Bu eylem i\u00e7in kullan\u0131lacak yap\u0131land\u0131rma giri\u015fi",
+                    "name": "Yap\u0131land\u0131rma Giri\u015fi"
+                },
+                "prompt": {
+                    "description": "G\u00f6r\u00fcnt\u00fcye d\u00f6n\u00fc\u015ft\u00fcr\u00fclecek metin",
+                    "example": "Bir k\u00f6pe\u011fin foto\u011fraf\u0131",
+                    "name": "\u0130stem"
+                },
+                "quality": {
+                    "description": "Olu\u015fturulacak g\u00f6r\u00fcnt\u00fcn\u00fcn kalitesi",
+                    "name": "Kalite"
+                },
+                "size": {
+                    "description": "Olu\u015fturulacak g\u00f6r\u00fcnt\u00fcn\u00fcn boyutu",
+                    "name": "Boyut"
+                },
+                "style": {
+                    "description": "Olu\u015fturulan g\u00f6r\u00fcnt\u00fcn\u00fcn stili",
+                    "name": "Stil"
+                }
+            },
+            "name": "G\u00f6r\u00fcnt\u00fc olu\u015ftur"
+        }
+    }
+}

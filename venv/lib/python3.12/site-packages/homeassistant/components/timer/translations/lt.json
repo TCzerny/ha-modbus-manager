@@ -1,0 +1,72 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Laikmatis",
+            "state": {
+                "active": "aktyvus",
+                "idle": "Nedaroma nieko",
+                "paused": "Pristabdyta"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Trukm\u0117"
+                },
+                "editable": {
+                    "name": "Tvarkoma per naudotojo s\u0105saj\u0105",
+                    "state": {
+                        "false": "Ne",
+                        "true": "Taip"
+                    }
+                },
+                "finishes_at": {
+                    "name": "Baigiasi"
+                },
+                "remaining": {
+                    "name": "Lik\u0119s"
+                },
+                "restore": {
+                    "name": "Atkurti"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "description": "I\u0161 naujo nustato laikma\u010dio trukm\u0119 iki paskutin\u0117s \u017einomos pradin\u0117s vert\u0117s, ne\u012fjungdamas laikma\u010dio pabaigos \u012fvykio.",
+            "name": "At\u0161aukti"
+        },
+        "change": {
+            "description": "Kei\u010dia laikmat\u012f prid\u0117damas arba atimdamas nurodyt\u0105 trukm\u0119.",
+            "fields": {
+                "duration": {
+                    "description": "Trukm\u0117, kuri\u0105 reikia prid\u0117ti prie veikimo laikma\u010dio arba atimti i\u0161 jo.",
+                    "name": "Trukm\u0117"
+                }
+            },
+            "name": "Keisti"
+        },
+        "finish": {
+            "description": "Paleid\u017eia laikmat\u012f anks\u010diau nei numatyta.",
+            "name": "Baigti"
+        },
+        "pause": {
+            "description": "Pristabdo veikiant\u012f laikmat\u012f, i\u0161saugodamas likus\u012f laik\u0105, kad b\u016bt\u0173 galima t\u0119sti.",
+            "name": "Pauz\u0117"
+        },
+        "reload": {
+            "description": "I\u0161 naujo \u012fkelia laikma\u010dius i\u0161 YAML konfig\u016bracijos.",
+            "name": "\u012ekelti i\u0161 naujo"
+        },
+        "start": {
+            "description": "Paleid\u017eia laikmat\u012f arba paleid\u017eia j\u012f i\u0161 naujo tam tikr\u0105 laik\u0105.",
+            "fields": {
+                "duration": {
+                    "description": "Pasirinktin\u0117 trukm\u0117, per kuri\u0105 i\u0161 naujo paleid\u017eiamas laikmatis.",
+                    "name": "Trukm\u0117"
+                }
+            },
+            "name": "Prad\u0117ti"
+        }
+    },
+    "title": "Laikmatis"
+}

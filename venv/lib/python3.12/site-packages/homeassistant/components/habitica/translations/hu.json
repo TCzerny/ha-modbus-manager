@@ -1,0 +1,540 @@
+{
+    "common": {
+        "config_entry_name": "Karakter kiv\u00e1laszt\u00e1sa",
+        "dailies": "Napilapok",
+        "todos": "Teend\u0151k",
+        "unit_experience_points": "XP",
+        "unit_health_points": "HP",
+        "unit_mana_points": "mana",
+        "unit_tasks": "feladat"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "A fi\u00f3k m\u00e1r konfigur\u00e1lva van"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "invalid_auth": "\u00c9rv\u00e9nytelen hiteles\u00edt\u00e9s",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "API Token",
+                    "api_user": "Felhaszn\u00e1l\u00f3i azonos\u00edt\u00f3",
+                    "url": "URL",
+                    "verify_ssl": "SSL-tan\u00fas\u00edtv\u00e1ny ellen\u0151rz\u00e9se"
+                },
+                "data_description": {
+                    "api_key": "A Habitica fi\u00f3k API-tokenje.",
+                    "api_user": "A Habitica fi\u00f3kj\u00e1nak felhaszn\u00e1l\u00f3i azonos\u00edt\u00f3ja.",
+                    "url": "A Habitica telep\u00edt\u00e9s URL-c\u00edme, amelyhez csatlakozni k\u00edv\u00e1n. Alap\u00e9rtelmez\u00e9s szerint: `{default_url}`"
+                },
+                "description": "A `Felhaszn\u00e1l\u00f3i azonos\u00edt\u00f3j\u00e1t` \u00e9s az `API tokenj\u00e9t` a Habitica [**Be\u00e1ll\u00edt\u00e1sok -> Webhelyadatok**]({site_data}) men\u00fcpontj\u00e1b\u00f3l vagy a csatlakoztatni k\u00edv\u00e1nt p\u00e9ld\u00e1nyb\u00f3l szerezheti be.",
+                "title": "Bejelentkez\u00e9s m\u00e1s p\u00e9ld\u00e1nyokba"
+            },
+            "login": {
+                "data": {
+                    "password": "Jelsz\u00f3",
+                    "username": "Email vagy felhaszn\u00e1l\u00f3n\u00e9v (kis- \u00e9s nagybet\u0171 \u00e9rz\u00e9keny)"
+                },
+                "data_description": {
+                    "password": "A fi\u00f3khoz tartoz\u00f3 jelsz\u00f3, amellyel a Home Assistantot \u00f6sszekapcsolhatja a Habitica-val.",
+                    "username": "E-mail c\u00edm vagy felhaszn\u00e1l\u00f3n\u00e9v (kis- \u00e9s nagybet\u0171k megk\u00fcl\u00f6nb\u00f6ztet\u00e9s\u00e9vel), amellyel a Home Assistantot \u00f6sszekapcsolhatja a Habitica fi\u00f3kj\u00e1val."
+                },
+                "description": "Adja meg bejelentkez\u00e9si adatait, hogy elkezdhesse haszn\u00e1lni a Habitica-t a Home Assistanttal.\n\n[Elfelejtette a jelszav\u00e1t?]({forgot_password})",
+                "title": "Bejelentkez\u00e9s a Habitic\u00e1ba"
+            },
+            "user": {
+                "description": "![Habiticans]({habiticans}) Csatlakoztassa Habitica fi\u00f3kj\u00e1t, hogy nyomon k\u00f6vethesse kalandor\u00e1nak statisztik\u00e1it, el\u0151rehalad\u00e1s\u00e1t, valamint kezelhesse teend\u0151it \u00e9s napi feladatait.\n\n[Nincs m\u00e9g Habitica fi\u00f3kja? Regisztr\u00e1ljon itt!]({signup})",
+                "menu_options": {
+                    "advanced": "Bejelentkez\u00e9s m\u00e1s p\u00e9ld\u00e1nyokba",
+                    "login": "Bejelentkez\u00e9s a Habitic\u00e1ba"
+                },
+                "title": "Habitica - J\u00e1t\u00e9kos\u00edtsa az \u00e9let\u00e9t"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pending_quest": {
+                "name": "F\u00fcgg\u0151ben l\u00e9v\u0151 k\u00fcldet\u00e9smegh\u00edv\u00e1s"
+            }
+        },
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "Minden statisztikai pont kioszt\u00e1sa"
+            },
+            "brightness": {
+                "name": "Vak\u00edt\u00f3 f\u00e9nyer\u0151"
+            },
+            "buy_health_potion": {
+                "name": "V\u00e1s\u00e1roljon gy\u00f3gyitalt"
+            },
+            "defensive_stance": {
+                "name": "V\u00e9dekez\u0151 \u00e1ll\u00e1s"
+            },
+            "earth": {
+                "name": "F\u00f6ldreng\u00e9s"
+            },
+            "frost": {
+                "name": "Dermeszt\u0151 hideg"
+            },
+            "heal": {
+                "name": "Gy\u00f3gy\u00edt\u00f3 f\u00e9ny"
+            },
+            "heal_all": {
+                "name": "\u00c1ld\u00e1s"
+            },
+            "intimidate": {
+                "name": "Fenyeget\u0151 tekintet"
+            },
+            "mpheal": {
+                "name": "\u00c9teri hull\u00e1m"
+            },
+            "protect_aura": {
+                "name": "V\u00e9delmez\u0151 aura"
+            },
+            "revive": {
+                "name": "Felt\u00e1mad\u00e1s"
+            },
+            "run_cron": {
+                "name": "A napom ind\u00edt\u00e1sa"
+            },
+            "stealth": {
+                "name": "Lopakod\u00e1s"
+            },
+            "tools_of_trade": {
+                "name": "A mesters\u00e9g eszk\u00f6zei"
+            },
+            "valorous_presence": {
+                "name": "B\u00e1tor\u00edt\u00f3 jelenl\u00e9t"
+            }
+        },
+        "calendar": {
+            "daily_reminders": {
+                "name": "Napi eml\u00e9keztet\u0151k"
+            },
+            "dailys": {
+                "name": "Napilapok",
+                "state_attributes": {
+                    "yesterdaily": {
+                        "name": "Tegnapi napi feladat",
+                        "state": {
+                            "false": "Nem",
+                            "true": "Igen"
+                        }
+                    }
+                }
+            },
+            "todo_reminders": {
+                "name": "Teend\u0151 eml\u00e9keztet\u0151k"
+            },
+            "todos": {
+                "name": "Teend\u0151k"
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "Oszt\u00e1ly",
+                "state": {
+                    "healer": "Gy\u00f3gy\u00edt\u00f3",
+                    "rogue": "Tolvaj",
+                    "warrior": "Harcos",
+                    "wizard": "M\u00e1gus"
+                }
+            },
+            "constitution": {
+                "name": "Alkalmass\u00e1g",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Elosztott tulajdons\u00e1gpontok"
+                    },
+                    "buffs": {
+                        "name": "Er\u0151s\u00edt\u00e9sek"
+                    },
+                    "class": {
+                        "name": "Oszt\u00e1ly felszerel\u00e9si b\u00f3nusz"
+                    },
+                    "equipment": {
+                        "name": "Harcifelszerel\u00e9s"
+                    },
+                    "level": {
+                        "name": "Szint"
+                    }
+                }
+            },
+            "dailys": {
+                "name": "Napilapok",
+                "unit_of_measurement": "feladat"
+            },
+            "display_name": {
+                "name": "Megjelen\u00edtend\u0151 n\u00e9v"
+            },
+            "experience": {
+                "name": "Tapasztalat",
+                "unit_of_measurement": "XP"
+            },
+            "experience_max": {
+                "name": "K\u00f6vetkez\u0151 szint",
+                "unit_of_measurement": "XP"
+            },
+            "gems": {
+                "name": "Dr\u00e1gak\u00f6vek",
+                "unit_of_measurement": "dr\u00e1gak\u0151"
+            },
+            "gold": {
+                "name": "Arany",
+                "unit_of_measurement": "arany"
+            },
+            "habits": {
+                "name": "Szok\u00e1sok",
+                "unit_of_measurement": "feladat"
+            },
+            "health": {
+                "name": "\u00c9let",
+                "unit_of_measurement": "HP"
+            },
+            "health_max": {
+                "name": "Max. \u00e9let",
+                "unit_of_measurement": "HP"
+            },
+            "intelligence": {
+                "name": "Intelligencia",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Elosztott tulajdons\u00e1gpontok"
+                    },
+                    "buffs": {
+                        "name": "Er\u0151s\u00edt\u00e9sek"
+                    },
+                    "class": {
+                        "name": "Oszt\u00e1ly felszerel\u00e9si b\u00f3nusz"
+                    },
+                    "equipment": {
+                        "name": "Harcifelszerel\u00e9s"
+                    },
+                    "level": {
+                        "name": "Szint"
+                    }
+                }
+            },
+            "level": {
+                "name": "Szint"
+            },
+            "mana": {
+                "name": "Mana",
+                "unit_of_measurement": "mana"
+            },
+            "mana_max": {
+                "name": "Max. mana",
+                "unit_of_measurement": "mana"
+            },
+            "perception": {
+                "name": "\u00c9szlel\u00e9s",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Elosztott tulajdons\u00e1gpontok"
+                    },
+                    "buffs": {
+                        "name": "Er\u0151s\u00edt\u00e9sek"
+                    },
+                    "class": {
+                        "name": "Oszt\u00e1ly felszerel\u00e9si b\u00f3nusz"
+                    },
+                    "equipment": {
+                        "name": "Harcifelszerel\u00e9s"
+                    },
+                    "level": {
+                        "name": "Szint"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "Jutalmak",
+                "unit_of_measurement": "feladat"
+            },
+            "strength": {
+                "name": "Er\u0151",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Elosztott tulajdons\u00e1gpontok"
+                    },
+                    "buffs": {
+                        "name": "Er\u0151s\u00edt\u00e9sek"
+                    },
+                    "class": {
+                        "name": "Oszt\u00e1ly felszerel\u00e9si b\u00f3nusz"
+                    },
+                    "equipment": {
+                        "name": "Harcifelszerel\u00e9s"
+                    },
+                    "level": {
+                        "name": "Szint"
+                    }
+                }
+            },
+            "todos": {
+                "name": "Teend\u0151k",
+                "unit_of_measurement": "feladat"
+            },
+            "trinkets": {
+                "name": "Misztikus homok\u00f3r\u00e1k"
+            }
+        },
+        "switch": {
+            "sleep": {
+                "name": "Pihen\u00e9s a fogad\u00f3ban"
+            }
+        },
+        "todo": {
+            "dailys": {
+                "name": "Napilapok"
+            },
+            "todos": {
+                "name": "Teend\u0151k"
+            }
+        }
+    },
+    "exceptions": {
+        "create_todos_item_failed": {
+            "message": "Nem siker\u00fclt l\u00e9trehozni az \u00faj Habitica teend\u0151t: `{name}`, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra"
+        },
+        "delete_completed_todos_failed": {
+            "message": "Nem siker\u00fclt t\u00f6r\u00f6lni a befejezett teend\u0151ket a Habitica teend\u0151list\u00e1j\u00e1r\u00f3l, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra."
+        },
+        "delete_todos_failed": {
+            "message": "Nem siker\u00fclt t\u00f6r\u00f6lni az elemet a Habitica teend\u0151list\u00e1j\u00e1r\u00f3l, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra."
+        },
+        "entry_not_found": {
+            "message": "A kiv\u00e1lasztott karakter nincs konfigur\u00e1lva a Home Assistantban."
+        },
+        "entry_not_loaded": {
+            "message": "A kiv\u00e1lasztott karakter jelenleg nincs bet\u00f6ltve vagy le van tiltva a Home Assistantban."
+        },
+        "item_not_found": {
+            "message": "Nem haszn\u00e1lhat\u00f3 a(z) {item}, ez az elem nem az \u00d6n tulajdona."
+        },
+        "move_dailys_item_failed": {
+            "message": "Nem siker\u00fclt \u00e1thelyezni a Habitica napi feladatot a(z) {pos} poz\u00edci\u00f3ba, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra"
+        },
+        "move_todos_item_failed": {
+            "message": "Nem siker\u00fclt \u00e1thelyezni a Habitica teend\u0151t a(z) {pos} poz\u00edci\u00f3ba, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra"
+        },
+        "not_enough_gold": {
+            "message": "A jutalom megv\u00e1s\u00e1rl\u00e1sa nem siker\u00fclt, nincs elegend\u0151 arany. A karakter\u00e9nek {gold} aranya van, de a jutalom {cost} aranyba ker\u00fcl."
+        },
+        "not_enough_mana": {
+            "message": "Nem siker\u00fclt a k\u00e9pess\u00e9g aktiv\u00e1l\u00e1sa, nincs el\u00e9g mana. A karakter\u00e9nek {mana} van, de a k\u00e9pess\u00e9g {cost}-ba ker\u00fcl."
+        },
+        "party_not_found": {
+            "message": "A c\u00e9lpont nem tal\u00e1lhat\u00f3, jelenleg nem tartozik egyetlen csapathoz sem. Csak saj\u00e1t mag\u00e1t c\u00e9lozhatja meg."
+        },
+        "quest_action_unallowed": {
+            "message": "A m\u0171velet nem enged\u00e9lyezett, csak a k\u00fcldet\u00e9s vezet\u0151je vagy a csoport vezet\u0151je hajthatja v\u00e9gre."
+        },
+        "quest_not_found": {
+            "message": "A m\u0171velet nem hajthat\u00f3 v\u00e9gre, a k\u00fcldet\u00e9s vagy a csoport nem tal\u00e1lhat\u00f3."
+        },
+        "score_dailys_item_failed": {
+            "message": "Nem siker\u00fclt friss\u00edteni a Habitica napi feladat `{name}` pontsz\u00e1m\u00e1t, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra"
+        },
+        "score_todos_item_failed": {
+            "message": "Nem siker\u00fclt friss\u00edteni a Habitica teend\u0151 `{name}` pontsz\u00e1m\u00e1t, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra"
+        },
+        "service_call_unallowed": {
+            "message": "Nem siker\u00fclt v\u00e9grehajtani a m\u0171veletet, mivel a sz\u00fcks\u00e9ges felt\u00e9telek nem teljes\u00fclnek"
+        },
+        "skill_not_found": {
+            "message": "Nem siker\u00fclt a k\u00e9pess\u00e9g aktiv\u00e1l\u00e1sa, a karakter\u00e9nek nincs ilyen k\u00e9pess\u00e9ge vagy var\u00e1zslata: {skill}."
+        },
+        "target_not_found": {
+            "message": "Nem tal\u00e1lhat\u00f3 a(z) {target} a csapat\u00e1ban."
+        },
+        "task_not_found": {
+            "message": "A m\u0171velet nem hajthat\u00f3 v\u00e9gre, a(z) {task} feladat nem tal\u00e1lhat\u00f3."
+        },
+        "update_dailys_item_failed": {
+            "message": "Nem siker\u00fclt friss\u00edteni a Habitica napi feladatot: `{name}`, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra"
+        },
+        "update_todos_item_failed": {
+            "message": "Nem siker\u00fclt friss\u00edteni a Habitica teend\u0151t: `{name}`, k\u00e9rj\u00fck, pr\u00f3b\u00e1lja meg \u00fajra"
+        }
+    },
+    "issues": {
+        "deprecated_api_call": {
+            "description": "A Habitica `habitica.api_call` m\u0171velete elavult \u00e9s a Home Assistant 2025.5.0 verzi\u00f3j\u00e1ban el lesz t\u00e1vol\u00edtva.\n\nK\u00e9rj\u00fck, friss\u00edtse az automatiz\u00e1l\u00e1sokat \u00e9s szkripteket, hogy m\u00e1s Habitica m\u0171veleteket \u00e9s entit\u00e1sokat haszn\u00e1ljanak.",
+            "title": "A Habitica \"habitica.api_call\" m\u0171velet elavult"
+        },
+        "deprecated_task_entity": {
+            "description": "A Habitica entit\u00e1s `{entity}` elavult \u00e9s a j\u00f6v\u0151beli kiad\u00e1sban el lesz t\u00e1vol\u00edtva. K\u00e9rj\u00fck, friss\u00edtse az automatiz\u00e1l\u00e1sokat \u00e9s szkripteket \u00fagy, hogy a szenzor entit\u00e1st lecser\u00e9li az \u00fajonnan hozz\u00e1adott teend\u0151 entit\u00e1sra. Miut\u00e1n befejezte a migr\u00e1ci\u00f3t, letilthatja a(z) `{entity}`-t.",
+            "title": "A Habitica {task_name} szenzor elavult"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "Tolvaj: H\u00e1tbasz\u00far\u00e1s",
+                "fireball": "M\u00e1gus: L\u00e1ngkit\u00f6r\u00e9s",
+                "pickpocket": "Tolvaj: Zsebmetsz\u00e9s",
+                "smash": "Harcos: Brut\u00e1lis z\u00faz\u00e1s"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "Tengeri hab",
+                "shiny_seed": "Csillog\u00f3 mag",
+                "snowball": "H\u00f3goly\u00f3",
+                "spooky_sparkles": "K\u00eds\u00e9rteties csill\u00e1mok"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "description": "Megszak\u00edtja a csoport folyamatban l\u00e9v\u0151 k\u00fcldet\u00e9s\u00e9t. Minden el\u0151rehalad\u00e1s elv\u00e9sz, \u00e9s a k\u00fcldet\u00e9si tekercs visszaker\u00fcl a tulajdonos k\u00e9szlet\u00e9be. Ezt a m\u0171veletet csak a k\u00fcldet\u00e9s vezet\u0151je vagy a csoport vezet\u0151je hajthatja v\u00e9gre.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amelyre a m\u0171veletet v\u00e9gre k\u00edv\u00e1nja hajtani.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                }
+            },
+            "name": "Folyamatban l\u00e9v\u0151 k\u00fcldet\u00e9s megszak\u00edt\u00e1sa"
+        },
+        "accept_quest": {
+            "description": "Fogadjon el egy f\u00fcgg\u0151ben l\u00e9v\u0151 megh\u00edv\u00e1st egy k\u00fcldet\u00e9sre.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amelyre a m\u0171veletet v\u00e9gre k\u00edv\u00e1nja hajtani.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                }
+            },
+            "name": "K\u00fcldet\u00e9smegh\u00edv\u00e1s elfogad\u00e1sa"
+        },
+        "api_call": {
+            "description": "Megh\u00edvja a Habitica API-t.",
+            "fields": {
+                "args": {
+                    "description": "B\u00e1rmilyen tov\u00e1bbi JSON vagy URL param\u00e9ter argumentum. L\u00e1sd az eml\u00edtett apidoc-ot az \u00fatvonalhoz. A p\u00e9lda ugyanazt az API v\u00e9gpontot haszn\u00e1lja.",
+                    "name": "Argumentumok"
+                },
+                "name": {
+                    "description": "Habitica felhaszn\u00e1l\u00f3n\u00e9v az API h\u00edv\u00e1s\u00e1hoz.",
+                    "name": "Elnevez\u00e9s"
+                },
+                "path": {
+                    "description": "Az API URL-c\u00edmb\u0151l sz\u00e1rmaz\u00f3 elemek t\u00f6mb form\u00e1j\u00e1ban, a v\u00e9g\u00e9n csatolt met\u00f3dussal. Keresse fel a https://habitica.com/apidoc/ weboldalt. P\u00e9lda a haszn\u00e1latra: https://habitica.com/apidoc/#api-Task-CreateUserTasks",
+                    "name": "\u00datvonal"
+                }
+            },
+            "name": "API neve"
+        },
+        "cancel_quest": {
+            "description": "M\u00e9g el nem kezdett k\u00fcldet\u00e9s t\u00f6rl\u00e9se. Minden elfogadott \u00e9s f\u00fcgg\u0151ben l\u00e9v\u0151 megh\u00edv\u00e1s t\u00f6rl\u00e9sre ker\u00fcl \u00e9s a k\u00fcldet\u00e9si tekercs visszaker\u00fcl a tulajdonos k\u00e9szlet\u00e9be. Ezt a m\u0171veletet csak a k\u00fcldet\u00e9s vezet\u0151je vagy a csoport vezet\u0151je hajthatja v\u00e9gre.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amelyre a m\u0171veletet v\u00e9gre k\u00edv\u00e1nja hajtani.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                }
+            },
+            "name": "F\u00fcgg\u0151ben l\u00e9v\u0151 k\u00fcldet\u00e9s t\u00f6rl\u00e9se"
+        },
+        "cast_skill": {
+            "description": "Haszn\u00e1lja Habitica karakter\u00e9nek egy k\u00e9pess\u00e9g\u00e9t vagy var\u00e1zslat\u00e1t egy adott feladaton, hogy befoly\u00e1solja annak el\u0151rehalad\u00e1s\u00e1t vagy \u00e1llapot\u00e1t.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki a Habitica karaktert a k\u00e9pess\u00e9g aktiv\u00e1l\u00e1s\u00e1hoz.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                },
+                "skill": {
+                    "description": "V\u00e1lassza ki a k\u00e9pess\u00e9get vagy var\u00e1zslatot, amelyet a feladatra szeretne haszn\u00e1lni. Csak a karaktere oszt\u00e1ly\u00e1hoz tartoz\u00f3 k\u00e9pess\u00e9gek haszn\u00e1lhat\u00f3k.",
+                    "name": "K\u00e9pess\u00e9g"
+                },
+                "task": {
+                    "description": "Annak a feladatnak a neve (vagy azonos\u00edt\u00f3ja), amelyet a k\u00e9pess\u00e9ggel vagy var\u00e1zslattal szeretne megc\u00e9lozni.",
+                    "name": "Feladat neve"
+                }
+            },
+            "name": "K\u00e9pess\u00e9g aktiv\u00e1l\u00e1sa"
+        },
+        "leave_quest": {
+            "description": "L\u00e9pjen ki a jelenleg folyamatban l\u00e9v\u0151 k\u00fcldet\u00e9sb\u0151l, amelyen r\u00e9szt vesz.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amelyre a m\u0171veletet v\u00e9gre k\u00edv\u00e1nja hajtani.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                }
+            },
+            "name": "Kil\u00e9p\u00e9s egy k\u00fcldet\u00e9sb\u0151l"
+        },
+        "reject_quest": {
+            "description": "Utas\u00edtson vissza egy f\u00fcgg\u0151ben l\u00e9v\u0151 k\u00fcldet\u00e9smegh\u00edv\u00e1st.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amelyre a m\u0171veletet v\u00e9gre k\u00edv\u00e1nja hajtani.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                }
+            },
+            "name": "K\u00fcldet\u00e9smegh\u00edv\u00e1s visszautas\u00edt\u00e1sa"
+        },
+        "score_habit": {
+            "description": "N\u00f6velje egy szok\u00e1s pozit\u00edv vagy negat\u00edv sorozat\u00e1t a halad\u00e1s nyomon k\u00f6vet\u00e9s\u00e9hez.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amely a szok\u00e1s\u00e1t k\u00f6veti.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                },
+                "direction": {
+                    "description": "Pozit\u00edv vagy negat\u00edv halad\u00e1st k\u00edv\u00e1n k\u00f6vetni a szok\u00e1s\u00e1n\u00e1l?",
+                    "name": "Jutalom vagy vesztes\u00e9g"
+                },
+                "task": {
+                    "description": "A Habitica szok\u00e1s neve (vagy feladatazonos\u00edt\u00f3ja).",
+                    "name": "Szok\u00e1s neve"
+                }
+            },
+            "name": "Szok\u00e1s nyomon k\u00f6vet\u00e9se"
+        },
+        "score_reward": {
+            "description": "Egy egyedi jutalom megv\u00e1s\u00e1rl\u00e1sa az elv\u00e9gzett feladatokkal szerzett arany\u00e9rt.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amelyik megv\u00e1s\u00e1rolja a jutalmat.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                },
+                "task": {
+                    "description": "Az egy\u00e9ni jutalom neve (vagy feladatazonos\u00edt\u00f3ja).",
+                    "name": "Jutalom neve"
+                }
+            },
+            "name": "Jutalom v\u00e1s\u00e1rl\u00e1sa"
+        },
+        "start_quest": {
+            "description": "Kezdje el a k\u00fcldet\u00e9st azonnal, figyelmen k\u00edv\u00fcl hagyva minden f\u00fcgg\u0151ben l\u00e9v\u0151 megh\u00edv\u00e1st, amelyet m\u00e9g nem fogadtak el vagy utas\u00edtottak vissza. Ezt a m\u0171veletet csak a k\u00fcldet\u00e9s vezet\u0151je vagy a csoport vezet\u0151je hajthatja v\u00e9gre.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amelyre a m\u0171veletet v\u00e9gre k\u00edv\u00e1nja hajtani.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                }
+            },
+            "name": "F\u00fcgg\u0151ben l\u00e9v\u0151 k\u00fcldet\u00e9s k\u00e9nyszerind\u00edt\u00e1sa"
+        },
+        "transformation": {
+            "description": "Haszn\u00e1ljon egy \u00e1talak\u00edt\u00f3 elemet Habitica karakter\u00e9nek k\u00e9szlet\u00e9b\u0151l valamelyik csapattagj\u00e1ra vagy saj\u00e1t mag\u00e1ra.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e1lassza ki azt a Habitica karaktert, amelyik az \u00e1talak\u00edt\u00f3 elemet haszn\u00e1lja.",
+                    "name": "Karakter kiv\u00e1laszt\u00e1sa"
+                },
+                "item": {
+                    "description": "V\u00e1lassza ki a haszn\u00e1lni k\u00edv\u00e1nt \u00e1talak\u00edt\u00f3 elemet. Az elemnek a karakter k\u00e9szlet\u00e9ben kell lennie.",
+                    "name": "\u00c1talak\u00edt\u00f3 elem"
+                },
+                "target": {
+                    "description": "Annak a karakternek a neve, amelyen az \u00e1talak\u00edt\u00f3 elemet haszn\u00e1lni szeretn\u00e9. Megadhatja a j\u00e1t\u00e9kos felhaszn\u00e1l\u00f3nev\u00e9t vagy felhaszn\u00e1l\u00f3i azonos\u00edt\u00f3j\u00e1t is.",
+                    "name": "C\u00e9lzott karakter"
+                }
+            },
+            "name": "\u00c1talak\u00edt\u00f3 elem haszn\u00e1lata"
+        }
+    }
+}

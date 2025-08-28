@@ -1,0 +1,822 @@
+{
+    "common": {
+        "confirmed": "Potvrden\u00e9",
+        "present": "Pr\u00edtomn\u00fd"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "Komponent nie je nakonfigurovan\u00fd. Postupujte pod\u013ea dokument\u00e1cie.",
+            "no_url_available": "Nie je k dispoz\u00edcii \u017eiadna adresa URL. Inform\u00e1cie o tejto chybe n\u00e1jdete [pozrite si sekciu pomocn\u00edka]({docs_url})",
+            "oauth_error": "Prijat\u00e9 neplatn\u00e9 \u00fadaje tokenu.",
+            "oauth_failed": "Chyba pri z\u00edskavan\u00ed pr\u00edstupov\u00e9ho tokenu.",
+            "oauth_timeout": "\u010casov\u00fd limit na vyrie\u0161enie tokenu OAuth.",
+            "oauth_unauthorized": "Chyba autoriz\u00e1cie OAuth pri z\u00edskavan\u00ed pr\u00edstupov\u00e9ho tokenu."
+        },
+        "create_entry": {
+            "default": "\u00daspe\u0161ne overen\u00e9"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Vyberte met\u00f3du overenia"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "Stav nab\u00edjania bat\u00e9rie"
+            },
+            "charging_connection": {
+                "name": "Pripojenie nab\u00edjania"
+            },
+            "chiller_door": {
+                "name": "Chladiace dvere"
+            },
+            "dust_box_inserted": {
+                "name": "N\u00e1doba na prach",
+                "state": {
+                    "off": "Nie je vlo\u017een\u00fd",
+                    "on": "Vlo\u017een\u00fd"
+                }
+            },
+            "freezer_door": {
+                "name": "Dvere mrazni\u010dky"
+            },
+            "lifted": {
+                "name": "Zdvihnut\u00fd"
+            },
+            "local_control": {
+                "name": "Miestne ovl\u00e1danie"
+            },
+            "lost": {
+                "name": "Straten\u00e9"
+            },
+            "refrigerator_door": {
+                "name": "Dvere chladni\u010dky"
+            },
+            "remote_control": {
+                "name": "Dia\u013ekov\u00e9 ovl\u00e1danie"
+            },
+            "remote_start": {
+                "name": "Dia\u013ekov\u00e9 \u0161tartovanie"
+            }
+        },
+        "light": {
+            "ambient_light": {
+                "name": "Okolit\u00e9 svetlo"
+            },
+            "cooking_lighting": {
+                "name": "Funk\u010dn\u00e9 svetlo"
+            },
+            "external_light": {
+                "name": "Vonkaj\u0161ie svetlo"
+            },
+            "internal_light": {
+                "name": "Vn\u00fatorn\u00e9 svetlo"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "Teplota chladi\u010da f\u013ea\u0161e"
+            },
+            "chiller_left_setpoint_temperature": {
+                "name": "Chladi\u010d \u013eav\u00e1 teplota"
+            },
+            "chiller_right_setpoint_temperature": {
+                "name": "Chladi\u010d prav\u00e1 teplota"
+            },
+            "chiller_setpoint_temperature": {
+                "name": "Teplota chladi\u010da"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "Teplota mrazni\u010dky"
+            },
+            "refrigerator_setpoint_temperature": {
+                "name": "Teplota chladni\u010dky"
+            },
+            "wine_compartment_2_setpoint_temperature": {
+                "name": "Teplota priehradky na v\u00edno 2"
+            },
+            "wine_compartment_3_setpoint_temperature": {
+                "name": "Teplota priehradky na v\u00edno 3"
+            },
+            "wine_compartment_setpoint_temperature": {
+                "name": "Teplota v priehradke na v\u00edno"
+            }
+        },
+        "select": {
+            "active_program": {
+                "name": "Akt\u00edvny program",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "\u00cds\u0165 domov",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "Vy\u010distite v\u0161etko",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "\u010cist\u00e1 mapa",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caffe grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caffe latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "K\u00e1va",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso doppio",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Hor\u00faca voda",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Mlie\u010dna pena",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Tepl\u00e9 mlieko",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL k\u00e1va",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Cafe au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Cafe con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Cafe cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doppio",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat white",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Galao",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Grosser brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kleiner brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verlaengerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verlaengerter braun",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener melange",
+                    "cooking_common_program_hood_automatic": "Automatick\u00e1",
+                    "cooking_common_program_hood_delayed_shut_off": "Oneskoren\u00e9 vypnutie",
+                    "cooking_common_program_hood_venting": "Odvzdu\u0161nenie",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Spodn\u00fd ohrev",
+                    "cooking_oven_program_heating_mode_defrost": "Odmrazovanie",
+                    "cooking_oven_program_heating_mode_desiccation": "Vys\u00fa\u0161anie",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "\u0160peci\u00e1lny ohrev pre mrazen\u00e9 v\u00fdrobky",
+                    "cooking_oven_program_heating_mode_hot_air": "Hor\u00faci vzduch",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Hor\u00faci vzduch + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Hor\u00faci vzduch + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Hor\u00faci vzduch + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Hor\u00faci vzduch + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Hor\u00faci vzduch eco",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Hor\u00faco vzdu\u0161n\u00e9 grilovanie",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intenz\u00edvne teplo",
+                    "cooking_oven_program_heating_mode_keep_warm": "Udr\u017eujte teplo",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Nastavenie pizze",
+                    "cooking_oven_program_heating_mode_pre_heating": "Predhrievanie",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Predhriatie r\u00fary na pe\u010denie",
+                    "cooking_oven_program_heating_mode_proof": "D\u00f4kaz",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Sobotn\u00fd program",
+                    "cooking_oven_program_heating_mode_slow_cook": "Pomal\u00e9 varenie",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "Horn\u00fd spodn\u00fd ohrev",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "Horn\u00fd spodn\u00fd ohrev eco",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Ohrievacia z\u00e1suvka",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watt",
+                    "cooking_oven_program_microwave_max": "Max",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Automatick\u00e1 polovi\u010dn\u00e1 n\u00e1pl\u0148",
+                    "dishcare_dishwasher_program_eco_50": "Eco 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Expresn\u00fd lesk 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Sklo 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Starostlivos\u0165 o sklo",
+                    "dishcare_dishwasher_program_intensiv_45": "Intenz\u00edvne 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intenz\u00edvne 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intenz\u00edvny v\u00fdkon",
+                    "dishcare_dishwasher_program_kurz_60": "Kr\u00e1tky 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Starostlivos\u0165 o stroj",
+                    "dishcare_dishwasher_program_magic_daily": "Denne magic",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maxim\u00e1lne \u010distenie",
+                    "dishcare_dishwasher_program_mixed_load": "Zmie\u0161an\u00e1 z\u00e1\u0165a\u017e",
+                    "dishcare_dishwasher_program_night_wash": "No\u010dn\u00e9 um\u00fdvanie",
+                    "dishcare_dishwasher_program_normal_45": "Norm\u00e1lne 45 \u00b0 C",
+                    "dishcare_dishwasher_program_normal_65": "Norm\u00e1lne 65 \u00b0 C",
+                    "dishcare_dishwasher_program_pre_rinse": "Pre_oplach",
+                    "dishcare_dishwasher_program_quick_45": "R\u00fdchle 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "R\u00fdchly 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "\u010cerstv\u00e1 para",
+                    "dishcare_dishwasher_program_super_60": "Super 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Proti zmr\u0161\u0165ovaniu",
+                    "laundry_care_dryer_program_blankets": "Prikr\u00fdvky",
+                    "laundry_care_dryer_program_business_shirts": "Obchodn\u00e9 ko\u0161ele",
+                    "laundry_care_dryer_program_cotton": "Bavlna",
+                    "laundry_care_dryer_program_delicates": "Jemn\u00e9",
+                    "laundry_care_dryer_program_dessous": "Dessous",
+                    "laundry_care_dryer_program_down_feathers": "P\u00e1perov\u00e9 perie",
+                    "laundry_care_dryer_program_hygiene": "Hygiena",
+                    "laundry_care_dryer_program_in_basket": "V ko\u0161i",
+                    "laundry_care_dryer_program_jeans": "D\u017e\u00ednsy",
+                    "laundry_care_dryer_program_mix": "Mix",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "M\u00f4j \u010das su\u0161enia",
+                    "laundry_care_dryer_program_outdoor": "Outdoor",
+                    "laundry_care_dryer_program_pillow": "Vank\u00fa\u0161",
+                    "laundry_care_dryer_program_shirts_15": "Ko\u0161ele 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "Syntetick\u00e9",
+                    "laundry_care_dryer_program_synthetic_refresh": "Obnova syntetiky",
+                    "laundry_care_dryer_program_time_cold": "Studen\u00e9 (premenliv\u00fd \u010das)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Studen\u00e9 (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Studen\u00e9 (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Studen\u00e1 (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Tepl\u00e9 (variabiln\u00fd \u010das)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Tepl\u00e9 (30 min.)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Tepl\u00e9 (40 min.)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Tepl\u00e9 (60 min)",
+                    "laundry_care_dryer_program_towels": "Uter\u00e1ky",
+                    "laundry_care_washer_dryer_program_cotton": "Bavlna",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Bavlna eco 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Jednoduch\u00e1 starostlivos\u0165",
+                    "laundry_care_washer_dryer_program_mix": "Mix",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Pranie a su\u0161enie (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Pranie a su\u0161enie (90 min)",
+                    "laundry_care_washer_program_auto_30": "Auto 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Auto 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Auto 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "\u0160if\u00f3n",
+                    "laundry_care_washer_program_cotton": "Bavlna",
+                    "laundry_care_washer_program_cotton_colour": "Farba bavlna",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Bavlna eko",
+                    "laundry_care_washer_program_cotton_eco_4060": "Bavlna eko 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Z\u00e1clony",
+                    "laundry_care_washer_program_dark_wash": "Tmav\u00e9 pranie",
+                    "laundry_care_washer_program_delicates_silk": "Jemn\u00fd hodv\u00e1b",
+                    "laundry_care_washer_program_dessous": "Dessous",
+                    "laundry_care_washer_program_down_duvet_duvet": "P\u00e1perov\u00e1 papl\u00f3n",
+                    "laundry_care_washer_program_drum_clean": "\u010cistenie bubna",
+                    "laundry_care_washer_program_easy_care": "Jednoduch\u00e1 starostlivos\u0165",
+                    "laundry_care_washer_program_mix": "Mix",
+                    "laundry_care_washer_program_mix_night_wash": "Mix no\u010dn\u00e9 pranie",
+                    "laundry_care_washer_program_monsoon": "Monz\u00fan",
+                    "laundry_care_washer_program_outdoor": "Outdoor",
+                    "laundry_care_washer_program_plush_toy": "Ply\u0161ov\u00e1 hra\u010dka",
+                    "laundry_care_washer_program_power_speed_59": "R\u00fdchlos\u0165 v\u00fdkonu <60 min",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Opl\u00e1chnite odtok odstre\u010fovania",
+                    "laundry_care_washer_program_sensitive": "Citliv\u00e9",
+                    "laundry_care_washer_program_shirts_blouses": "Ko\u0161e\u013eov\u00e9 bl\u00fazky",
+                    "laundry_care_washer_program_sport_fitness": "Fitnes \u0161port",
+                    "laundry_care_washer_program_super_153045_super_15": "Super 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "Super 15/30 min",
+                    "laundry_care_washer_program_towels": "Uter\u00e1ky",
+                    "laundry_care_washer_program_water_proof": "Vodotesn\u00fd",
+                    "laundry_care_washer_program_wool": "Vlna"
+                }
+            },
+            "selected_program": {
+                "name": "Vybran\u00fd program",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "\u00cds\u0165 domov",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "Vy\u010distite v\u0161etko",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "\u010cist\u00e1 mapa",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caffe grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caffe latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "K\u00e1va",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso doppio",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Hor\u00faca voda",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Mlie\u010dna pena",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Tepl\u00e9 mlieko",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL k\u00e1va",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Cafe au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Cafe con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Cafe cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doppio",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat white",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Galao",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Grosser brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kleiner brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verlaengerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verlaengerter braun",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener melange",
+                    "cooking_common_program_hood_automatic": "Automatick\u00e1",
+                    "cooking_common_program_hood_delayed_shut_off": "Oneskoren\u00e9 vypnutie",
+                    "cooking_common_program_hood_venting": "Odvzdu\u0161nenie",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Spodn\u00fd ohrev",
+                    "cooking_oven_program_heating_mode_defrost": "Odmrazovanie",
+                    "cooking_oven_program_heating_mode_desiccation": "Vys\u00fa\u0161anie",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "\u0160peci\u00e1lny ohrev pre mrazen\u00e9 v\u00fdrobky",
+                    "cooking_oven_program_heating_mode_hot_air": "Hor\u00faci vzduch",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Hor\u00faci vzduch + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Hor\u00faci vzduch + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Hor\u00faci vzduch + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Hor\u00faci vzduch + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Hor\u00faci vzduch eco",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Hor\u00faco vzdu\u0161n\u00e9 grilovanie",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intenz\u00edvne teplo",
+                    "cooking_oven_program_heating_mode_keep_warm": "Udr\u017eujte teplo",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Nastavenie pizze",
+                    "cooking_oven_program_heating_mode_pre_heating": "Predhrievanie",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Predhriatie r\u00fary na pe\u010denie",
+                    "cooking_oven_program_heating_mode_proof": "D\u00f4kaz",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Sobotn\u00fd program",
+                    "cooking_oven_program_heating_mode_slow_cook": "Pomal\u00e9 varenie",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "Horn\u00fd spodn\u00fd ohrev",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "Horn\u00fd spodn\u00fd ohrev eco",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Ohrievacia z\u00e1suvka",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watt",
+                    "cooking_oven_program_microwave_max": "Max",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Automatick\u00e1 polovi\u010dn\u00e1 n\u00e1pl\u0148",
+                    "dishcare_dishwasher_program_eco_50": "Eco 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Expresn\u00fd lesk 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Sklo 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Starostlivos\u0165 o sklo",
+                    "dishcare_dishwasher_program_intensiv_45": "Intenz\u00edvne 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intenz\u00edvne 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intenz\u00edvny v\u00fdkon",
+                    "dishcare_dishwasher_program_kurz_60": "Kr\u00e1tky 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Starostlivos\u0165 o stroj",
+                    "dishcare_dishwasher_program_magic_daily": "Denne magic",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maxim\u00e1lne \u010distenie",
+                    "dishcare_dishwasher_program_mixed_load": "Zmie\u0161an\u00e1 z\u00e1\u0165a\u017e",
+                    "dishcare_dishwasher_program_night_wash": "No\u010dn\u00e9 um\u00fdvanie",
+                    "dishcare_dishwasher_program_normal_45": "Norm\u00e1lne 45 \u00b0 C",
+                    "dishcare_dishwasher_program_normal_65": "Norm\u00e1lne 65 \u00b0 C",
+                    "dishcare_dishwasher_program_pre_rinse": "Pre_oplach",
+                    "dishcare_dishwasher_program_quick_45": "R\u00fdchle 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "R\u00fdchly 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "\u010cerstv\u00e1 para",
+                    "dishcare_dishwasher_program_super_60": "Super 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Proti zmr\u0161\u0165ovaniu",
+                    "laundry_care_dryer_program_blankets": "Prikr\u00fdvky",
+                    "laundry_care_dryer_program_business_shirts": "Obchodn\u00e9 ko\u0161ele",
+                    "laundry_care_dryer_program_cotton": "Bavlna",
+                    "laundry_care_dryer_program_delicates": "Jemn\u00e9",
+                    "laundry_care_dryer_program_dessous": "Dessous",
+                    "laundry_care_dryer_program_down_feathers": "P\u00e1perov\u00e9 perie",
+                    "laundry_care_dryer_program_hygiene": "Hygiena",
+                    "laundry_care_dryer_program_in_basket": "V ko\u0161i",
+                    "laundry_care_dryer_program_jeans": "D\u017e\u00ednsy",
+                    "laundry_care_dryer_program_mix": "Mix",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "M\u00f4j \u010das su\u0161enia",
+                    "laundry_care_dryer_program_outdoor": "Outdoor",
+                    "laundry_care_dryer_program_pillow": "Vank\u00fa\u0161",
+                    "laundry_care_dryer_program_shirts_15": "Ko\u0161ele 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "Syntetick\u00e9",
+                    "laundry_care_dryer_program_synthetic_refresh": "Obnova syntetiky",
+                    "laundry_care_dryer_program_time_cold": "Studen\u00e9 (premenliv\u00fd \u010das)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Studen\u00e9 (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Studen\u00e9 (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Studen\u00e1 (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Tepl\u00e9 (variabiln\u00fd \u010das)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Tepl\u00e9 (30 min.)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Tepl\u00e9 (40 min.)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Tepl\u00e9 (60 min)",
+                    "laundry_care_dryer_program_towels": "Uter\u00e1ky",
+                    "laundry_care_washer_dryer_program_cotton": "Bavlna",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Bavlna eco 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Jednoduch\u00e1 starostlivos\u0165",
+                    "laundry_care_washer_dryer_program_mix": "Mix",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Pranie a su\u0161enie (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Pranie a su\u0161enie (90 min)",
+                    "laundry_care_washer_program_auto_30": "Auto 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Auto 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Auto 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "\u0160if\u00f3n",
+                    "laundry_care_washer_program_cotton": "Bavlna",
+                    "laundry_care_washer_program_cotton_colour": "Farba bavlna",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Bavlna eko",
+                    "laundry_care_washer_program_cotton_eco_4060": "Bavlna eko 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Z\u00e1clony",
+                    "laundry_care_washer_program_dark_wash": "Tmav\u00e9 pranie",
+                    "laundry_care_washer_program_delicates_silk": "Jemn\u00fd hodv\u00e1b",
+                    "laundry_care_washer_program_dessous": "Dessous",
+                    "laundry_care_washer_program_down_duvet_duvet": "P\u00e1perov\u00e1 papl\u00f3n",
+                    "laundry_care_washer_program_drum_clean": "\u010cistenie bubna",
+                    "laundry_care_washer_program_easy_care": "Jednoduch\u00e1 starostlivos\u0165",
+                    "laundry_care_washer_program_mix": "Mix",
+                    "laundry_care_washer_program_mix_night_wash": "Mix no\u010dn\u00e9 pranie",
+                    "laundry_care_washer_program_monsoon": "Monz\u00fan",
+                    "laundry_care_washer_program_outdoor": "Outdoor",
+                    "laundry_care_washer_program_plush_toy": "Ply\u0161ov\u00e1 hra\u010dka",
+                    "laundry_care_washer_program_power_speed_59": "R\u00fdchlos\u0165 v\u00fdkonu <60 min",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Opl\u00e1chnite odtok odstre\u010fovania",
+                    "laundry_care_washer_program_sensitive": "Citliv\u00e9",
+                    "laundry_care_washer_program_shirts_blouses": "Ko\u0161e\u013eov\u00e9 bl\u00fazky",
+                    "laundry_care_washer_program_sport_fitness": "Fitnes \u0161port",
+                    "laundry_care_washer_program_super_153045_super_15": "Super 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "Super 15/30 min",
+                    "laundry_care_washer_program_towels": "Uter\u00e1ky",
+                    "laundry_care_washer_program_water_proof": "Vodotesn\u00fd",
+                    "laundry_care_washer_program_wool": "Vlna"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "\u00darove\u0148 bat\u00e9rie"
+            },
+            "bean_container_empty": {
+                "name": "N\u00e1doba na fazu\u013eu pr\u00e1zdna",
+                "state": {
+                    "confirmed": "Potvrden\u00e9",
+                    "off": "Neakt\u00edvny",
+                    "present": "Pr\u00edtomn\u00fd"
+                }
+            },
+            "camera_state": {
+                "name": "Stav kamery",
+                "state": {
+                    "disabled": "Zak\u00e1zan\u00e9",
+                    "error": "Chyba",
+                    "ready": "Pripraven\u00e9",
+                    "sleeping": "\u00dasporn\u00fd re\u017eim",
+                    "streamingcloud": "Streamovac\u00ed cloud",
+                    "streaminglocal": "Miestne streamovanie",
+                    "streaminglocal_and_cloud": "Lok\u00e1lne a cloudov\u00e9 streamovanie"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "\u0160\u00e1lky na k\u00e1vu a mlieko"
+            },
+            "coffee_counter": {
+                "name": "K\u00e1vy"
+            },
+            "door": {
+                "name": "Dvere",
+                "state": {
+                    "closed": "Zatvoren\u00e9",
+                    "locked": "Zamknut\u00fd",
+                    "open": "Otvoren\u00e9"
+                }
+            },
+            "drip_tray_full": {
+                "name": "Pln\u00e1 odkvapk\u00e1vacia miska",
+                "state": {
+                    "confirmed": "Potvrden\u00e9",
+                    "off": "Neakt\u00edvny",
+                    "present": "Pr\u00edtomn\u00fd"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "Alarm dver\u00ed mrazni\u010dky",
+                "state": {
+                    "confirmed": "Potvrden\u00e9",
+                    "present": "Pr\u00edtomn\u00fd"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "Alarm teploty mrazni\u010dky",
+                "state": {
+                    "confirmed": "Potvrden\u00e9",
+                    "off": "Neakt\u00edvny",
+                    "present": "Pr\u00edtomn\u00fd"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "\u0160\u00e1lky s napenen\u00fdm mliekom"
+            },
+            "hot_milk_counter": {
+                "name": "\u0160\u00e1lky na hor\u00face mlieko"
+            },
+            "hot_water_counter": {
+                "name": "Tepl\u00e1 voda"
+            },
+            "hot_water_cups_counter": {
+                "name": "\u0160\u00e1lky na hor\u00facu vodu"
+            },
+            "last_selected_map": {
+                "name": "Posledn\u00e1 vybran\u00e1 mapa",
+                "state": {
+                    "map1": "Mapa 1",
+                    "map2": "Mapa 2",
+                    "map3": "Mapa 3",
+                    "tempmap": "Do\u010dasn\u00e1 mapa"
+                }
+            },
+            "milk_counter": {
+                "name": "\u0160\u00e1lky na mlieko"
+            },
+            "operation_state": {
+                "name": "Prev\u00e1dzkov\u00fd stav",
+                "state": {
+                    "aborting": "Preru\u0161enie",
+                    "actionrequired": "Vy\u017eaduje sa akcia",
+                    "delayedstart": "Oneskoren\u00fd \u0161tart",
+                    "error": "Chyba",
+                    "finished": "Dokon\u010den\u00e9",
+                    "inactive": "Neakt\u00edvne",
+                    "pause": "Pozastaven\u00fd",
+                    "ready": "Pripraven\u00e9",
+                    "run": "Spusti\u0165"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "Pr\u00e1\u0161kov\u00e9 k\u00e1vy"
+            },
+            "program_finish_time": {
+                "name": "\u010cas ukon\u010denia programu"
+            },
+            "program_progress": {
+                "name": "Priebeh programu"
+            },
+            "refrigerator_door_alarm": {
+                "name": "Alarm dver\u00ed chladni\u010dky",
+                "state": {
+                    "confirmed": "Potvrden\u00e9",
+                    "off": "Neakt\u00edvny",
+                    "present": "Pr\u00edtomn\u00fd"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "name": "Le\u0161tidlo takmer pr\u00e1zdne",
+                "state": {
+                    "confirmed": "Potvrden\u00e9",
+                    "off": "Neakt\u00edvny",
+                    "present": "Pr\u00edtomn\u00fd"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "\u0160\u00e1lky na espresso Ristretto"
+            },
+            "salt_nearly_empty": {
+                "name": "So\u013e takmer pr\u00e1zdna",
+                "state": {
+                    "confirmed": "Potvrden\u00e9",
+                    "off": "Neakt\u00edvny",
+                    "present": "Pr\u00edtomn\u00fd"
+                }
+            },
+            "water_tank_empty": {
+                "name": "N\u00e1dr\u017e na vodu je pr\u00e1zdna",
+                "state": {
+                    "confirmed": "Potvrden\u00e9",
+                    "off": "Neakt\u00edvny",
+                    "present": "Pr\u00edtomn\u00fd"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "Detsk\u00fd z\u00e1mok"
+            },
+            "cup_warmer": {
+                "name": "Ohrieva\u010d \u0161\u00e1lok"
+            },
+            "dispenser_enabled": {
+                "name": "D\u00e1vkova\u010d",
+                "state": {
+                    "off": "Zak\u00e1zan\u00e9",
+                    "on": "Povolen\u00e9"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "Asistent dver\u00ed mrazni\u010dky"
+            },
+            "door_assistant_fridge": {
+                "name": "Asistent dver\u00ed chladni\u010dky"
+            },
+            "eco_mode": {
+                "name": "Re\u017eim eco"
+            },
+            "freezer_super_mode": {
+                "name": "Super re\u017eim mrazni\u010dky"
+            },
+            "fresh_mode": {
+                "name": "\u010cerstv\u00fd re\u017eim"
+            },
+            "power": {
+                "name": "V\u00fdkon"
+            },
+            "refrigerator_super_mode": {
+                "name": "Super re\u017eim chladni\u010dky"
+            },
+            "sabbath_mode": {
+                "name": "Re\u017eim sabatu"
+            },
+            "vacation_mode": {
+                "name": "Re\u017eim dovolenky"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "Bud\u00edk"
+            }
+        }
+    },
+    "exceptions": {
+        "appliance_not_found": {
+            "message": "Zariadenie pre ID zariadenia {device_id} sa nena\u0161lo"
+        },
+        "execute_command": {
+            "message": "Chyba pri vykon\u00e1van\u00ed pr\u00edkazu {command}: {description}"
+        },
+        "pause_program": {
+            "message": "Chyba pri pozastaven\u00ed programu: {description}"
+        },
+        "power_off": {
+            "message": "Chyba pri vyp\u00ednan\u00ed {appliance_name} s hodnotou \"{value}\": {description}"
+        },
+        "power_on": {
+            "message": "Chyba pri zap\u00ednan\u00ed {appliance_name} : {description}"
+        },
+        "select_light_custom_color": {
+            "message": "Chyba pri v\u00fdbere vlastnej farby {entity_id}: {description}"
+        },
+        "select_program": {
+            "message": "Chyba pri v\u00fdbere programu {program}: {description}"
+        },
+        "set_light_brightness": {
+            "message": "Chybn\u00e9 nastavenie jasu {entity_id}: {description}"
+        },
+        "set_light_color": {
+            "message": "Chyba nastavenia farby {entity_id}: {description}"
+        },
+        "set_options_active_program": {
+            "message": "Chyba nastavenia mo\u017enost\u00ed pre akt\u00edvny program: {description}"
+        },
+        "set_options_selected_program": {
+            "message": "Chyba nastavenia mo\u017enost\u00ed pre vybrat\u00fd program: {description}"
+        },
+        "set_setting": {
+            "message": "Chyba pri prira\u010fovan\u00ed hodnoty \"{value}\" k nastaveniu \"{key}\": {description}"
+        },
+        "set_setting_entity": {
+            "message": "Chyba priradenia hodnoty \"{value}\" k nastaveniu \"{key}\" pre {entity_id}: {description}"
+        },
+        "start_program": {
+            "message": "Chyba pri pokuse o spustenie programu {program}: {description}"
+        },
+        "stop_program": {
+            "message": "Chyba pri zastaven\u00ed programu: {description}"
+        },
+        "turn_off": {
+            "message": "Chyba pri vyp\u00ednan\u00ed {entity_id} ({key}): {description}"
+        },
+        "turn_off_light": {
+            "message": "Chyba pri vyp\u00ednan\u00ed str\u00e1nky {entity_id}: {description}"
+        },
+        "turn_off_not_supported": {
+            "message": "{appliance_name} nepodporuje vypnutie alebo prechod do pohotovostn\u00e9ho re\u017eimu."
+        },
+        "turn_on": {
+            "message": "Chyba pri zap\u00ednan\u00ed {entity_id} ({key}): {description}"
+        },
+        "turn_on_light": {
+            "message": "Chyba pri zapnut\u00ed str\u00e1nky {entity_id}: {description}"
+        },
+        "unable_to_retrieve_turn_off": {
+            "message": "Nie je mo\u017en\u00e9 vypn\u00fa\u0165 str\u00e1nku {appliance_name}, preto\u017ee sa nepodarilo zisti\u0165 jej podporu pre vypnutie alebo prechod do pohotovostn\u00e9ho re\u017eimu."
+        }
+    },
+    "issues": {
+        "deprecated_binary_common_door_sensor": {
+            "description": "Bin\u00e1rny dverov\u00fd sn\u00edma\u010d `{entity}`, ktor\u00fd je zastaran\u00fd, sa pou\u017e\u00edva v nasleduj\u00facich automatiz\u00e1ci\u00e1ch alebo skript\u00e1ch:\n{items}\n\nNa odstr\u00e1nenie tohto probl\u00e9mu je k dispoz\u00edcii entita sn\u00edma\u010da s \u010fal\u0161\u00edmi mo\u017en\u00fdmi stavmi, ktor\u00e1 by sa mala pou\u017e\u00edva\u0165 aj na\u010falej; Pou\u017eite ju, pros\u00edm, vo vy\u0161\u0161ie uveden\u00fdch automatiz\u00e1ci\u00e1ch alebo skript\u00e1ch.",
+            "title": "Zastaran\u00fd bin\u00e1rny sn\u00edma\u010d dver\u00ed zisten\u00fd v niektor\u00fdch automatiz\u00e1ci\u00e1ch alebo skriptov"
+        },
+        "deprecated_program_switch": {
+            "description": "Prep\u00edna\u010d programov je zastaran\u00fd a {entity_id} sa pou\u017e\u00edva v nasleduj\u00facich automatiz\u00e1ci\u00e1ch alebo skript\u00e1ch:\n{items}\n\nNa odstr\u00e1nenie tohto probl\u00e9mu m\u00f4\u017eete pou\u017ei\u0165 entitu v\u00fdberu akt\u00edvneho programu na spustenie programu bez \u010fal\u0161ej vo\u013eby a z\u00edska\u0165 aktu\u00e1lny spusten\u00fd program vo vy\u0161\u0161ie uveden\u00fdch automatiz\u00e1ci\u00e1ch alebo skript\u00e1ch.",
+            "title": "Zistenie zastaran\u00e9ho prep\u00edna\u010da programu v niektor\u00fdch automatiz\u00e1ci\u00e1ch alebo skriptov"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "Zmen\u00ed nastavenie.",
+            "fields": {
+                "device_id": {
+                    "description": "ID zariadenia.",
+                    "name": "ID zariadenia"
+                },
+                "key": {
+                    "description": "K\u013e\u00fa\u010d nastavenia.",
+                    "name": "K\u013e\u00fa\u010d"
+                },
+                "value": {
+                    "description": "Hodnota nastavenia.",
+                    "name": "Hodnota"
+                }
+            },
+            "name": "Zmena nastavenia"
+        },
+        "pause_program": {
+            "description": "Pozastav\u00ed aktu\u00e1lne spusten\u00fd program.",
+            "fields": {
+                "device_id": {
+                    "description": "ID zariadenia.",
+                    "name": "ID zariadenia"
+                }
+            },
+            "name": "Pozastavenie programu"
+        },
+        "resume_program": {
+            "description": "Obnov\u00ed pozastaven\u00fd program.",
+            "fields": {
+                "device_id": {
+                    "description": "ID zariadenia.",
+                    "name": "ID zariadenia"
+                }
+            },
+            "name": "Obnovi\u0165 program"
+        },
+        "select_program": {
+            "description": "Vyberie program bez jeho spustenia.",
+            "fields": {
+                "device_id": {
+                    "description": "ID zariadenia.",
+                    "name": "ID zariadenia"
+                },
+                "key": {
+                    "description": "K\u013e\u00fa\u010d mo\u017enosti.",
+                    "name": "K\u013e\u00fa\u010d vo\u013eby"
+                },
+                "program": {
+                    "description": "Program na v\u00fdber.",
+                    "name": "Program"
+                },
+                "unit": {
+                    "description": "Jednotka pre t\u00fato mo\u017enos\u0165.",
+                    "name": "Volite\u013en\u00e1 jednotka"
+                },
+                "value": {
+                    "description": "Hodnota mo\u017enosti.",
+                    "name": "Hodnota mo\u017enosti"
+                }
+            },
+            "name": "Vyberte program"
+        },
+        "set_option_active": {
+            "description": "Nastav\u00ed mo\u017enos\u0165 pre akt\u00edvny program.",
+            "fields": {
+                "device_id": {
+                    "description": "ID zariadenia.",
+                    "name": "ID zariadenia"
+                },
+                "key": {
+                    "description": "K\u013e\u00fa\u010d mo\u017enosti.",
+                    "name": "K\u013e\u00fa\u010d"
+                },
+                "value": {
+                    "description": "Hodnota mo\u017enosti.",
+                    "name": "Hodnota"
+                }
+            },
+            "name": "Nastavenie mo\u017enosti akt\u00edvneho programu"
+        },
+        "set_option_selected": {
+            "description": "Nastav\u00ed mo\u017enos\u0165 pre vybran\u00fd program.",
+            "fields": {
+                "device_id": {
+                    "description": "ID zariadenia.",
+                    "name": "ID zariadenia"
+                },
+                "key": {
+                    "description": "K\u013e\u00fa\u010d mo\u017enosti.",
+                    "name": "K\u013e\u00fa\u010d"
+                },
+                "value": {
+                    "description": "Hodnota mo\u017enosti.",
+                    "name": "Hodnota"
+                }
+            },
+            "name": "Nastavenie vybranej mo\u017enosti programu"
+        },
+        "start_program": {
+            "description": "Vyberie program a spust\u00ed ho.",
+            "fields": {
+                "device_id": {
+                    "description": "ID zariadenia.",
+                    "name": "ID zariadenia"
+                },
+                "key": {
+                    "description": "K\u013e\u00fa\u010d mo\u017enosti.",
+                    "name": "K\u013e\u00fa\u010d vo\u013eby"
+                },
+                "program": {
+                    "description": "Program na v\u00fdber.",
+                    "name": "Program"
+                },
+                "unit": {
+                    "description": "Jednotka pre t\u00fato mo\u017enos\u0165.",
+                    "name": "Volite\u013en\u00e1 jednotka"
+                },
+                "value": {
+                    "description": "Hodnota mo\u017enosti.",
+                    "name": "Hodnota mo\u017enosti"
+                }
+            },
+            "name": "Spustenie programu"
+        }
+    }
+}

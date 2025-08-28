@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Laite on jo m\u00e4\u00e4ritetty"
+        },
+        "error": {
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Palvelin"
+                },
+                "data_description": {
+                    "host": "Bose SoundTouch -laitteen is\u00e4nt\u00e4nimi tai IP-osoite."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Olet lis\u00e4\u00e4m\u00e4ss\u00e4 SoundTouch -laitetta nimelt\u00e4 `{name}` Home Assistantiin.",
+                "title": "Vahvista Bose SoundTouch -laitteen lis\u00e4\u00e4minen"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "fields": {
+                "slaves": {
+                    "name": "Orjat"
+                }
+            }
+        },
+        "create_zone": {
+            "description": "Luo SoundTouchin monihuonealueen.",
+            "name": "Luo alue"
+        },
+        "play_everywhere": {
+            "description": "Toistaa kaikissa Bose SoundTouch -laitteissa.",
+            "name": "Soita kaikkialla"
+        },
+        "remove_zone_slave": {
+            "fields": {
+                "master": {
+                    "description": "Monihuonealuetta koordinoivan p\u00e4\u00e4yksik\u00f6n nimi. Alustariippuvainen."
+                },
+                "slaves": {
+                    "name": "Orjat"
+                }
+            }
+        }
+    }
+}

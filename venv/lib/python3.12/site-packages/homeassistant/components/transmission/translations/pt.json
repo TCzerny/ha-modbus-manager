@@ -1,0 +1,156 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "description": "A palavra-passe para {username} \u00e9 inv\u00e1lida.",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "path": "Caminho",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "path": "O caminho de destino do pedido RPC. Por exemplo, `/transmission/rpc`"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "active_torrents": {
+                "name": "Torrents ativas",
+                "unit_of_measurement": "torrents"
+            },
+            "completed_torrents": {
+                "name": "Torrents conclu\u00eddas",
+                "unit_of_measurement": "torrents"
+            },
+            "download_speed": {
+                "name": "Velocidade de download"
+            },
+            "paused_torrents": {
+                "name": "Torrents em pausa",
+                "unit_of_measurement": "torrents"
+            },
+            "started_torrents": {
+                "name": "Torrents iniciadas",
+                "unit_of_measurement": "torrents"
+            },
+            "total_torrents": {
+                "name": "Total de torrents",
+                "unit_of_measurement": "torrents"
+            },
+            "transmission_status": {
+                "name": "Estado",
+                "state": {
+                    "downloading": "A descarregar",
+                    "idle": "Inativo",
+                    "seeding": "A semear",
+                    "up_down": "Subir/Descer"
+                }
+            },
+            "upload_speed": {
+                "name": "Velocidade de upload"
+            }
+        },
+        "switch": {
+            "on_off": {
+                "name": "Interruptor"
+            },
+            "turtle_mode": {
+                "name": "Modo tartaruga"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "limit": "Limite",
+                    "order": "Ordem"
+                }
+            }
+        }
+    },
+    "services": {
+        "add_torrent": {
+            "description": "Adiciona uma nova torrent para download (URL, link magn\u00e9tico ou codificado em Base64).",
+            "fields": {
+                "download_path": {
+                    "description": "Caminho opcional para especificar onde o deve ser feito o download do torrent. Se n\u00e3o for especificado, ser\u00e1 usada a diretoria de download padr\u00e3o.",
+                    "name": "Caminho para download"
+                },
+                "entry_id": {
+                    "name": "Entrada de transmiss\u00e3o"
+                },
+                "torrent": {
+                    "description": "URL, liga\u00e7\u00e3o magn\u00e9tica ou ficheiro codificado em Base64.",
+                    "name": "Torrent"
+                }
+            },
+            "name": "Adicionar torrent"
+        },
+        "remove_torrent": {
+            "description": "Remove um torrent.",
+            "fields": {
+                "delete_data": {
+                    "description": "Apagar dados de torrents.",
+                    "name": "Apagar dados"
+                },
+                "entry_id": {
+                    "description": "ID da entrada de configura\u00e7\u00e3o.",
+                    "name": "Entrada de transmiss\u00e3o"
+                },
+                "id": {
+                    "description": "ID de um torrent",
+                    "name": "ID"
+                }
+            },
+            "name": "Remover torrent"
+        },
+        "start_torrent": {
+            "description": "Inicia um torrent.",
+            "fields": {
+                "entry_id": {
+                    "description": "ID da entrada de configura\u00e7\u00e3o.",
+                    "name": "Entrada de transmiss\u00e3o"
+                },
+                "id": {
+                    "description": "ID de um torrent",
+                    "name": "ID"
+                }
+            },
+            "name": "Iniciar torrent"
+        },
+        "stop_torrent": {
+            "description": "Para um torrent.",
+            "fields": {
+                "entry_id": {
+                    "description": "ID da entrada de configura\u00e7\u00e3o.",
+                    "name": "Entrada de transmiss\u00e3o"
+                },
+                "id": {
+                    "description": "ID de um torrent",
+                    "name": "ID"
+                }
+            },
+            "name": "Parar a torrente"
+        }
+    }
+}

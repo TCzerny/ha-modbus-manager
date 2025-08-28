@@ -1,0 +1,30 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Assist-Satellit",
+            "state": {
+                "idle": "Leerlauf",
+                "listening": "Zuh\u00f6ren",
+                "processing": "Verarbeiten",
+                "responding": "Antworten"
+            }
+        }
+    },
+    "services": {
+        "announce": {
+            "description": "L\u00e4sst den Satelliten eine Nachricht verk\u00fcnden.",
+            "fields": {
+                "media_id": {
+                    "description": "Die Medien-ID, die als Durchsage wiedergegeben werden soll, anstatt Text-zu-Sprache zu nutzen.",
+                    "name": "Medien-ID"
+                },
+                "message": {
+                    "description": "Die Nachricht, die als Durchsage wiedergegeben werden soll.",
+                    "name": "Nachricht"
+                }
+            },
+            "name": "Durchsage"
+        }
+    },
+    "title": "Assist-Satellit"
+}

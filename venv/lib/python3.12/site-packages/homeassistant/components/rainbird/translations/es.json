@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "reauth_successful": "La autenticaci\u00f3n se volvi\u00f3 a realizar correctamente"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_auth": "Autenticaci\u00f3n no v\u00e1lida",
+            "timeout_connect": "Tiempo de espera agotado mientras se establec\u00eda la conexi\u00f3n"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Contrase\u00f1a"
+                },
+                "data_description": {
+                    "password": "La contrase\u00f1a para autenticarse con tu dispositivo Rain Bird."
+                },
+                "description": "La integraci\u00f3n de Rain Bird necesita volver a autenticarse con el dispositivo.",
+                "title": "Autenticaci\u00f3n caducada para {name}"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Contrase\u00f1a"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP de tu dispositivo Rain Bird.",
+                    "password": "La contrase\u00f1a utilizada para autenticarse con el dispositivo Rain Bird."
+                },
+                "description": "Por favor, introduce la informaci\u00f3n del m\u00f3dulo LNK WiFi para tu dispositivo Rain Bird.",
+                "title": "Configurar Rain Bird"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Sensor de lluvia"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Retardo por lluvia"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "Retardo por la lluvia"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Tiempo de riego predeterminado en minutos"
+                },
+                "data_description": {
+                    "duration": "La duraci\u00f3n predeterminada que funcionar\u00e1 el aspersor cuando se encienda."
+                },
+                "title": "Configurar Rain Bird"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "Establece durante cu\u00e1nto tiempo se desactiva el riego autom\u00e1tico.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "La configuraci\u00f3n se ajustar\u00e1 en el programador especificado.",
+                    "name": "Entrada de configuraci\u00f3n del programador Rainbird"
+                },
+                "duration": {
+                    "description": "Duraci\u00f3n para que este sistema se apague.",
+                    "name": "Duraci\u00f3n"
+                }
+            },
+            "name": "Ajustar retraso por lluvia"
+        },
+        "start_irrigation": {
+            "description": "Inicia el riego.",
+            "fields": {
+                "duration": {
+                    "description": "Duraci\u00f3n de la activaci\u00f3n de este aspersor.",
+                    "name": "Duraci\u00f3n"
+                }
+            },
+            "name": "Iniciar el riego"
+        }
+    }
+}

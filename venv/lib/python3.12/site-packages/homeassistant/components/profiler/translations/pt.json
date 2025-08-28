@@ -1,0 +1,99 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "Quer dar in\u00edcio \u00e0 configura\u00e7\u00e3o?"
+            }
+        }
+    },
+    "services": {
+        "dump_log_objects": {
+            "description": "Despeja a repeti\u00e7\u00e3o de todos os objetos correspondentes no registo.",
+            "fields": {
+                "type": {
+                    "description": "O tipo de objetos a descarregar no registo.",
+                    "name": "Tipo"
+                }
+            },
+            "name": "Despejar objetos de registo"
+        },
+        "log_current_tasks": {
+            "description": "Regista todas as tarefas asyncio atuais.",
+            "name": "Registar as tarefas asyncio atuais"
+        },
+        "log_event_loop_scheduled": {
+            "description": "Regista o que est\u00e1 programado no ciclo de eventos.",
+            "name": "Ciclo de eventos de registo programado"
+        },
+        "log_thread_frames": {
+            "description": "Regista as molduras actuais de todas as threads.",
+            "name": "Molduras de fios de toros"
+        },
+        "lru_stats": {
+            "description": "Regista as estat\u00edsticas de todas as caches LRU.",
+            "name": "Registar as estat\u00edsticas LRU"
+        },
+        "memory": {
+            "description": "Inicia o perfilador de mem\u00f3ria.",
+            "fields": {
+                "seconds": {
+                    "description": "O n\u00famero de segundos para executar o criador de perfil de mem\u00f3ria.",
+                    "name": "Segundos"
+                }
+            },
+            "name": "Mem\u00f3ria"
+        },
+        "set_asyncio_debug": {
+            "description": "Ativar ou desativar a depura\u00e7\u00e3o asyncio.",
+            "fields": {
+                "enabled": {
+                    "description": "Para ativar ou desativar a depura\u00e7\u00e3o asyncio.",
+                    "name": "Ativo"
+                }
+            },
+            "name": "Definir depura\u00e7\u00e3o asyncio"
+        },
+        "start": {
+            "description": "Inicia o Profiler.",
+            "fields": {
+                "seconds": {
+                    "description": "O n\u00famero de segundos para executar o criador de perfil.",
+                    "name": "Segundos"
+                }
+            },
+            "name": "Iniciar"
+        },
+        "start_log_object_sources": {
+            "description": "Inicia o registo de fontes de novos objetos na mem\u00f3ria.",
+            "fields": {
+                "max_objects": {
+                    "description": "O n\u00famero m\u00e1ximo de objetos a registar.",
+                    "name": "M\u00e1ximo de objetos"
+                },
+                "scan_interval": {
+                    "description": "O n\u00famero de segundos entre objetos de registo.",
+                    "name": "Intervalo de digitaliza\u00e7\u00e3o"
+                }
+            },
+            "name": "Iniciar o registo de fontes de objetos"
+        },
+        "start_log_objects": {
+            "description": "Inicia o registo do crescimento de objetos na mem\u00f3ria.",
+            "fields": {
+                "scan_interval": {
+                    "description": "O n\u00famero de segundos entre objetos de registo.",
+                    "name": "Intervalo de varrimento"
+                }
+            },
+            "name": "Iniciar o registo de objetos"
+        },
+        "stop_log_object_sources": {
+            "description": "Interrompe o registo de fontes de novos objetos na mem\u00f3ria.",
+            "name": "Parar de registar fontes de objetos"
+        },
+        "stop_log_objects": {
+            "description": "Interrompe o crescimento do registo de objetos na mem\u00f3ria.",
+            "name": "Parar de registar objetos"
+        }
+    }
+}

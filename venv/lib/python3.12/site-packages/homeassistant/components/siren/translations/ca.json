@@ -1,0 +1,40 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Sirena",
+            "state": {
+                "off": "OFF",
+                "on": "ON"
+            },
+            "state_attributes": {
+                "available_tones": {
+                    "name": "Tons disponibles"
+                }
+            }
+        }
+    },
+    "services": {
+        "toggle": {
+            "name": "Commuta"
+        },
+        "turn_off": {
+            "name": "Apaga"
+        },
+        "turn_on": {
+            "fields": {
+                "duration": {
+                    "name": "Durada"
+                },
+                "tone": {
+                    "name": "To"
+                },
+                "volume_level": {
+                    "description": "Volum. 0: inaudible, 1: volum m\u00e0xim. La integraci\u00f3 ha de ser compatible.",
+                    "name": "Volum"
+                }
+            },
+            "name": "Enc\u00e9n"
+        }
+    },
+    "title": "Sirena"
+}

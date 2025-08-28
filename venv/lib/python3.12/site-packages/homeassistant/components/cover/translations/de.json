@@ -1,0 +1,140 @@
+{
+    "device_automation": {
+        "action_type": {
+            "close": "Schlie\u00dfe {entity_name}",
+            "close_tilt": "Schlie\u00dfe Kippstellung von {entity_name}",
+            "open": "\u00d6ffne {entity_name}",
+            "open_tilt": "\u00d6ffne Kippstellung von {entity_name}",
+            "set_position": "Stelle Position von {entity_name} ein",
+            "set_tilt_position": "Stelle Kippstellung von {entity_name} ein",
+            "stop": "Stoppe {entity_name}"
+        },
+        "condition_type": {
+            "is_closed": "Wenn {entity_name} geschlossen ist",
+            "is_closing": "Wenn {entity_name} geschlossen wird",
+            "is_open": "Wenn {entity_name} ge\u00f6ffnet ist",
+            "is_opening": "Wenn {entity_name} ge\u00f6ffnet wird",
+            "is_position": "Aktuelle Position von {entity_name}",
+            "is_tilt_position": "Aktuelle Kippstellung von {entity_name}"
+        },
+        "extra_fields": {
+            "above": "\u00dcber",
+            "below": "Unter",
+            "for": "Dauer",
+            "position": "Position"
+        },
+        "trigger_type": {
+            "closed": "Sobald {entity_name} geschlossen ist",
+            "closing": "Sobald {entity_name} geschlossen wird",
+            "opened": "Sobald {entity_name} ge\u00f6ffnet ist",
+            "opening": "Sobald {entity_name} ge\u00f6ffnet wird",
+            "position": "Sobald sich die Position von {entity_name} \u00e4ndert",
+            "tilt_position": "Sobald sich die Kippstellung von {entity_name} \u00e4ndert"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Abdeckung",
+            "state": {
+                "closed": "Geschlossen",
+                "closing": "Wird geschlossen",
+                "open": "Ge\u00f6ffnet",
+                "opening": "Wird ge\u00f6ffnet",
+                "stopped": "Angehalten"
+            },
+            "state_attributes": {
+                "current_position": {
+                    "name": "Position"
+                },
+                "current_tilt_position": {
+                    "name": "Kippstellung"
+                }
+            }
+        },
+        "awning": {
+            "name": "Markise"
+        },
+        "blind": {
+            "name": "Jalousie"
+        },
+        "curtain": {
+            "name": "Vorhang"
+        },
+        "damper": {
+            "name": "D\u00e4mpfer"
+        },
+        "door": {
+            "name": "T\u00fcr"
+        },
+        "garage": {
+            "name": "Garage"
+        },
+        "gate": {
+            "name": "Tor"
+        },
+        "shade": {
+            "name": "Rollo"
+        },
+        "shutter": {
+            "name": "Rollladen"
+        },
+        "window": {
+            "name": "Fenster"
+        }
+    },
+    "services": {
+        "close_cover": {
+            "description": "Schlie\u00dft eine Abdeckung.",
+            "name": "Schlie\u00dfen"
+        },
+        "close_cover_tilt": {
+            "description": "Kippt eine Abdeckung, um sie zu schlie\u00dfen.",
+            "name": "Kippstellung schlie\u00dfen"
+        },
+        "open_cover": {
+            "description": "\u00d6ffnet eine Abdeckung.",
+            "name": "\u00d6ffnen"
+        },
+        "open_cover_tilt": {
+            "description": "Kippt eine Abdeckung, um sie zu \u00f6ffnen.",
+            "name": "Kippstellung \u00f6ffnen"
+        },
+        "set_cover_position": {
+            "description": "Bewegt eine Abdeckung an eine bestimmte Position.",
+            "fields": {
+                "position": {
+                    "description": "Zielposition.",
+                    "name": "Position"
+                }
+            },
+            "name": "Position festlegen"
+        },
+        "set_cover_tilt_position": {
+            "description": "Bewegt die Kippstellung auf eine bestimmte Position.",
+            "fields": {
+                "tilt_position": {
+                    "description": "Zielposition der Kippstellung.",
+                    "name": "Kippstellung"
+                }
+            },
+            "name": "Kippstellung einstellen"
+        },
+        "stop_cover": {
+            "description": "Stoppt die Bewegung einer Abdeckung.",
+            "name": "Stoppen"
+        },
+        "stop_cover_tilt": {
+            "description": "Stoppt die Kippbewegung einer Abdeckung.",
+            "name": "Kippbewegung stoppen"
+        },
+        "toggle": {
+            "description": "\u00d6ffnet oder schlie\u00dft eine Abdeckung.",
+            "name": "Umschalten"
+        },
+        "toggle_cover_tilt": {
+            "description": "\u00d6ffnet oder schlie\u00dft die Kippstellung.",
+            "name": "Kippstellung umschalten"
+        }
+    },
+    "title": "Abdeckung"
+}

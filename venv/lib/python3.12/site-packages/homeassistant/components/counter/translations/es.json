@@ -1,0 +1,53 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Contador",
+            "state_attributes": {
+                "editable": {
+                    "name": "Gestionado a trav\u00e9s de la IU",
+                    "state": {
+                        "false": "No",
+                        "true": "S\u00ed"
+                    }
+                },
+                "initial": {
+                    "name": "Valor inicial"
+                },
+                "maximum": {
+                    "name": "M\u00e1ximo"
+                },
+                "minimum": {
+                    "name": "M\u00ednimo"
+                },
+                "step": {
+                    "name": "Paso"
+                }
+            }
+        }
+    },
+    "services": {
+        "decrement": {
+            "description": "Disminuye un contador por su tama\u00f1o de paso.",
+            "name": "Decrementar"
+        },
+        "increment": {
+            "description": "Incrementa un contador por su tama\u00f1o de paso.",
+            "name": "Incrementar"
+        },
+        "reset": {
+            "description": "Restablece un contador a su valor inicial.",
+            "name": "Restablecer"
+        },
+        "set_value": {
+            "description": "Establece el contador a un valor espec\u00edfico.",
+            "fields": {
+                "value": {
+                    "description": "El nuevo valor del contador al que debe ajustarse la entidad.",
+                    "name": "Valor"
+                }
+            },
+            "name": "Establecer"
+        }
+    },
+    "title": "Contador"
+}

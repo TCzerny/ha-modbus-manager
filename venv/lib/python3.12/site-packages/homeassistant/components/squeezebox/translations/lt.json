@@ -1,0 +1,107 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "no_server_found": "LMS serveris nerastas."
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "no_server_found": "Nepavyko automati\u0161kai aptikti serverio.",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "flow_title": "{host}",
+        "step": {
+            "edit": {
+                "data": {
+                    "host": "Host",
+                    "https": "Prisijunkite per https (reikia atvirk\u0161tinio tarpinio serverio)",
+                    "password": "Slapta\u017eodis",
+                    "port": "Prievadas",
+                    "username": "Naudotojo vardas"
+                },
+                "title": "Redaguoti ry\u0161io informacij\u0105"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "J\u016bs\u0173 Lyrion muzikos serverio pagrindinio kompiuterio pavadinimas arba IP adresas."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "needsrestart": {
+                "name": "Reikia paleisti i\u0161 naujo"
+            },
+            "rescan": {
+                "name": "Bibliotekos pakartotinis nuskaitymas"
+            }
+        },
+        "sensor": {
+            "info_total_albums": {
+                "name": "I\u0161 viso album\u0173",
+                "unit_of_measurement": "albumai"
+            },
+            "info_total_artists": {
+                "name": "I\u0161 viso meninink\u0173",
+                "unit_of_measurement": "menininkai"
+            },
+            "info_total_duration": {
+                "name": "Bendra trukm\u0117"
+            },
+            "info_total_genres": {
+                "name": "I\u0161 viso \u017eanr\u0173",
+                "unit_of_measurement": "\u017eanrai"
+            },
+            "info_total_songs": {
+                "name": "Viso dain\u0173",
+                "unit_of_measurement": "dainos"
+            },
+            "lastscan": {
+                "name": "Paskutinis nuskaitymas"
+            },
+            "other_player_count": {
+                "name": "Grotuvo atskaitos paslauga",
+                "unit_of_measurement": "grotuvai"
+            },
+            "player_count": {
+                "name": "Grotuv\u0173 skai\u010dius",
+                "unit_of_measurement": "grotuvai"
+            }
+        }
+    },
+    "services": {
+        "call_method": {
+            "description": "I\u0161kvie\u010dia tinkint\u0105 Squeezebox JSONRPC API.",
+            "fields": {
+                "command": {
+                    "description": "Komanda perduoti \u012f Lyrion Music Server (p0 CLI dokumentacijoje).",
+                    "name": "Komanda"
+                },
+                "parameters": {
+                    "description": "Papildom\u0173 parametr\u0173, kuriuos reikia perduoti \u012f Lyrion Music Server, masyvas (p1, ..., pN CLI dokumentacijoje).",
+                    "name": "Parametrai"
+                }
+            },
+            "name": "Skambinimo metodas"
+        },
+        "call_query": {
+            "description": "I\u0161kvie\u010dia tinkint\u0105 Squeezebox JSONRPC API. Rezultatas bus saugomas subjekto \u201eSqueezebox\u201c atribute \u201equery_result\u201c.",
+            "fields": {
+                "command": {
+                    "description": "Komanda perduoti \u012f Lyrion Music Server (p0 CLI dokumentacijoje).",
+                    "name": "Komanda"
+                },
+                "parameters": {
+                    "description": "Papildom\u0173 parametr\u0173, kuriuos reikia perduoti \u012f Lyrion Music Server, masyvas (p1, ..., pN CLI dokumentacijoje).",
+                    "name": "Parametrai"
+                }
+            },
+            "name": "Skambinimo u\u017eklausa"
+        }
+    }
+}

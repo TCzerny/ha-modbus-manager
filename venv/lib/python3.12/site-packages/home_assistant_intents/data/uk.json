@@ -1,0 +1,1384 @@
+{
+  "language": "uk",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "<вимкни> (<area> <name>|<name> [<area>])"
+          ],
+          "excludes_context": {
+            "domain": [
+              "binary_sensor",
+              "cover",
+              "lock",
+              "scene",
+              "script",
+              "sensor",
+              "valve"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<вимкни> [все] світло <area>",
+            "<вимкни> <area> [все] світло"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<вимкни> [все] світло <floor>",
+            "<вимкни> <floor> [все] світло"
+          ],
+          "response": "lights_floor",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<закрий> [двері] [у|в] гараж[а|у|і]",
+            "<закрий> гаражні двері"
+          ],
+          "slots": {
+            "device_class": "garage",
+            "domain": "cover"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<закрий> [всі] (вікн(о|а) | жалюзі | штор(у|и)) <area>",
+            "<закрий> <area> [всі] (вікн(о|а) | жалюзі | штор(у|и))"
+          ],
+          "slots": {
+            "device_class": [
+              "blind",
+              "curtain",
+              "shutter",
+              "window"
+            ],
+            "domain": "cover"
+          },
+          "response": "cover_area"
+        },
+        {
+          "sentences": [
+            "<вимкни> [всі] вентилятор[и] <area>",
+            "<вимкни> <area> [всі] вентилятор[и]",
+            "<вимкни> вентиляцію <area>",
+            "<вимкни> <area> вентиляцію"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_area"
+        },
+        {
+          "sentences": [
+            "<закрий> <name>"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          },
+          "response": "valve"
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel> таймер",
+            "<timer_cancel> таймер на <timer_start>",
+            "<timer_cancel> таймер [в|у|на] {area}",
+            "<timer_cancel> таймер [з назвою|під назвою] {timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "[який|в якому] (статус[і]|стан[і]) таймер[а|ів] [на|в|у] {area}",
+            "[який|в якому] (статус[і]|стан[і]) таймер[а|ів] <timer_start>",
+            "[який|в якому] (статус[і]|стан[і]) таймер[а|ів]"
+          ],
+          "required_keywords": [
+            "таймер",
+            "таймером",
+            "таймерами",
+            "таймера",
+            "таймерів",
+            "статус",
+            "статусі",
+            "стан",
+            "стані"
+          ]
+        },
+        {
+          "sentences": [
+            "скільки [ще] [часу] [за]лишилось на таймер(і|ах)",
+            "як (довго|багато) [часу] [за]лишилось на таймер(і|ах)",
+            "скільки [ще] [часу] [за]лишилось на таймері <timer_start>",
+            "як (довго|багато) [часу] [за]лишилось на таймері <timer_start>",
+            "скільки [ще] [часу] [за]лишилось на таймері [на|в|у] {area}",
+            "як (довго|багато) [часу] [за]лишилось на таймері [на|в|у] {area}"
+          ],
+          "required_keywords": [
+            "таймері",
+            "таймерах"
+          ]
+        },
+        {
+          "sentences": [
+            "[який] (статус|стан) таймера [під нвзвою|з назвою] {timer_name:name}",
+            "[в якому] (статусі|стані) таймер [під нвзвою|з назвою] {timer_name:name}",
+            "скільки [ще] [часу] [за]лишилось на таймері [під нвзвою|з назвою] {timer_name:name}",
+            "що з таймером [під нвзвою|з назвою] {timer_name:name}",
+            "як (довго|багато) [часу] [за]лишилось на таймері [під нвзвою|з назвою] {timer_name:name}"
+          ],
+          "required_keywords": [
+            "таймер",
+            "таймера",
+            "таймері",
+            "таймером"
+          ]
+        }
+      ]
+    },
+    "HassGetWeather": {
+      "data": [
+        {
+          "sentences": [
+            "[яка|що з] погод(а|ою)"
+          ]
+        },
+        {
+          "sentences": [
+            "[яка|що з] погод(а|ою) [в|у|на] <name>"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          }
+        }
+      ]
+    },
+    "HassGetCurrentTime": {
+      "data": [
+        {
+          "sentences": [
+            "котра година",
+            "який час",
+            "скільки часу"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "<ввімкни> [все] світло <area>",
+            "<ввімкни> <area> [все] світло"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<ввімкни> [все] світло <floor>",
+            "<ввімкни> <floor> [все] світло"
+          ],
+          "response": "lights_floor",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<ввімкни> [всі] вентилятор[и] <area>",
+            "<ввімкни> <area> [всі] вентилятор[и]",
+            "<ввімкни> вентиляцію <area>",
+            "<ввімкни> <area> вентиляцію"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_area"
+        },
+        {
+          "sentences": [
+            "[запусти|почни|стартуй|активуй] <name> [скрипт]",
+            "[запусти|почни|стартуй|активуй] скрипт <name> "
+          ],
+          "requires_context": {
+            "domain": "script"
+          },
+          "slots": {
+            "domain": "script"
+          },
+          "response": "script"
+        },
+        {
+          "sentences": [
+            "<відкрий> <name>"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          },
+          "response": "valve"
+        },
+        {
+          "sentences": [
+            "<ввімкни> (<area> <name>|<name> [<area>])"
+          ],
+          "excludes_context": {
+            "domain": [
+              "binary_sensor",
+              "cover",
+              "lock",
+              "scene",
+              "script",
+              "sensor",
+              "valve"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<відкрий> [двері] [у|в] гараж[а|у|і]",
+            "<відкрий> гаражні двері"
+          ],
+          "slots": {
+            "device_class": "garage",
+            "domain": "cover"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<відкрий> [всі] (вікн(о|а) | жалюзі | штор(у|и)) <area>",
+            "<відкрий> <area> [всі] (вікн(о|а) | жалюзі | штор(у|и))"
+          ],
+          "slots": {
+            "device_class": [
+              "blind",
+              "curtain",
+              "shutter",
+              "window"
+            ],
+            "domain": "cover"
+          },
+          "response": "cover_area"
+        }
+      ]
+    },
+    "HassMediaUnpause": {
+      "data": [
+        {
+          "sentences": [
+            "(зніми з паузи|продовж[и|уй]) <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassShoppingListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "додай <item> (до|в) <my_list>",
+            "додай <item> в покупки"
+          ],
+          "response": "item_added",
+          "expansion_rules": {
+            "my_list": "[мій] (списку|список) покупок",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "не зважай",
+            "не важливо",
+            "не звертай уваги",
+            "скасу(й|вати)"
+          ]
+        }
+      ]
+    },
+    "HassGetCurrentDate": {
+      "data": [
+        {
+          "sentences": [
+            "(яка|що за) дата",
+            "(який|що за) день",
+            "яке число"
+          ]
+        }
+      ]
+    },
+    "HassSetPosition": {
+      "data": [
+        {
+          "sentences": [
+            "<зміни> [позицію] <name> [на] <position>"
+          ],
+          "requires_context": {
+            "domain": [
+              "cover",
+              "valve"
+            ]
+          }
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "<зміни> [яскравість] <name> на <brightness>",
+            "<зміни> <name> на <brightness> [яскравості]"
+          ],
+          "response": "brightness",
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<зміни> яскравість [світла] <area> [на] <brightness>",
+            "<зміни> світло <area> на <brightness> [яскравості]"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness_area"
+        },
+        {
+          "sentences": [
+            "<зміни> колір <name> на {color}",
+            "<зміни> <name> [на] {color} [колір]",
+            "<зміни> [на] {color} колір <name>"
+          ],
+          "response": "color",
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<зміни> [колір] світл(а|о) <area> на {color}"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "color_area"
+        }
+      ]
+    },
+    "HassMediaNext": {
+      "data": [
+        {
+          "sentences": [
+            "наступн(а|ий) [пісня|трек] [на] <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassMediaPause": {
+      "data": [
+        {
+          "sentences": [
+            "(постав на паузу|[при]зупини) <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "таймер [на] <timer_duration>",
+            "<timer_duration> таймер",
+            "<timer_set> таймер [на] <timer_duration>",
+            "<timer_set> таймер {timer_name:name} на <timer_duration>",
+            "<timer_set> [a|the|my] <timer_duration> timer (named|called|for) {timer_name:name}",
+            "<timer_set> таймер (під|з) назвою {timer_name:name} на <timer_duration>",
+            "<timer_set> таймер {timer_name:name} на <timer_duration> "
+          ]
+        },
+        {
+          "sentences": [
+            "{timer_command:conversation_command} через <timer_duration>",
+            "через <timer_duration> {timer_command:conversation_command}"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "Яка температура [<area>]",
+            "Як (холодно | тепло | жарко) [<area>]",
+            "Скільки градусів [<area>]"
+          ]
+        }
+      ]
+    },
+    "HassVacuumReturnToBase": {
+      "data": [
+        {
+          "sentences": [
+            "[по]вер(ни|тай) <name> [на базу|додому]"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "що з <name> [<area>]",
+            "який стан <name> [<area>]",
+            "в якому стані <name> [<area>]"
+          ],
+          "response": "one"
+        },
+        {
+          "sentences": [
+            "чи {on_off_states:state} <name> [<area>]"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "чи є {on_off_states:state} {on_off_domains:domain} [<area>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "чи вс[і|е] {on_off_domains:domain} {on_off_states:state} [<area>]"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "(які|котрі) {on_off_domains:domain} {on_off_states:state} [<area>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "(скільки|яка кількість) {on_off_domains:domain} [<area>] {on_off_states:state}",
+            "(скільки [є]|яка кількість) {on_off_states:state} {on_off_domains:domain} [<area>]"
+          ],
+          "response": "how_many"
+        },
+        {
+          "sentences": [
+            "чи {cover_states:state} <name> [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "cover"
+          },
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "чи є {cover_states:state} {cover_classes:device_class} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "чи всі {cover_classes:device_class} {cover_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(які|котрі) {cover_classes:device_class} {cover_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(скільки|яка кількість) {cover_classes:device_class} {cover_states:state} [<area>]",
+            "(скільки [є]|яка кількість) {cover_states:state} {cover_classes:device_class} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassVacuumStart": {
+      "data": [
+        {
+          "sentences": [
+            "(запусти|активуй) <name>"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassRespond": {
+      "data": [
+        {
+          "sentences": [
+            "(привіт|вітаю) [home assistant]"
+          ],
+          "response": "hello"
+        },
+        {
+          "sentences": [
+            "ти завжди (слухаєш|записуєш) [мене]"
+          ],
+          "response": "listening"
+        },
+        {
+          "sentences": [
+            "куди (надсилаються|відправляються) [мої] дані"
+          ],
+          "response": "data"
+        },
+        {
+          "sentences": [
+            "що я можу (сказати|спитати) [в тебе]"
+          ],
+          "response": "commands"
+        },
+        {
+          "sentences": [
+            "хто (розробив|створив) тебе"
+          ],
+          "response": "creator"
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "додай <item> (в|до)<my_list>",
+            "добав <item> (в|до)<my_list>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "my_list": "[ мій| мої| мого][ список| списку] {name}",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassSetVolume": {
+      "data": [
+        {
+          "sentences": [
+            "<зміни> [гучність] <name> на <volume>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Вибачте, я цього не розумію",
+      "handle_error": "Вибачте, під час виконання запиту виникла неочікувана помилка",
+      "no_area": "Вибачте, мені не відоме приміщення з назвою {{ area }}",
+      "no_floor": "Вибачте, мені не відомий поверх з назвою {{ area }}",
+      "no_domain": "Вибачте, мені не відомо жодного {{ domain }}",
+      "no_domain_in_area": "Вибачте, мені не відомо жодного {{ domain }} в приміщенні {{ area }}",
+      "no_domain_in_floor": "Вибачте, мені не відомо жодного {{ domain }} на {{ floor }} поверсі",
+      "no_device_class": "Вибачте, мені не відомо жодного {{ device_class }}",
+      "no_device_class_in_area": "Вибачте, мені не відомо жодного {{ device_class }} в приміщенні {{ area }}",
+      "no_device_class_in_floor": "Вибачте, мені не відомо жодного {{ device_class }} на {{ floor }} поверсі",
+      "no_entity": "Вибачте, мені не відомо пристрою з назвою {{ entity }}",
+      "no_entity_in_area": "Вибачте, мені не відомо пристрою з назвою {{ entity }} в приміщенні {{ area }}",
+      "no_entity_in_floor": "Вибачте, мені не відомо пристрою з назвою {{ entity }} на {{ floor }} поверсі",
+      "no_entity_exposed": "Вибачте, {{ entity }} не є доступним",
+      "no_entity_in_area_exposed": "Вибачте, {{ entity }} в приміщенні {{ area }} не є доступним",
+      "no_entity_in_floor_exposed": "Вибачте, {{ entity }} на {{ floor }} поверсі не є доступним",
+      "no_domain_exposed": "Вибачте, немає жодного доступного {{ domain }}",
+      "no_domain_in_area_exposed": "Вибачте, немає жодного доступного {{ domain }} в приміщенні {{ area }}",
+      "no_domain_in_floor_exposed": "Вибачте, немає жодного доступного {{ domain }} на {{ floor }} поверсі",
+      "no_device_class_exposed": "Вибачте, немає жодного доступного {{ device_class }}",
+      "no_device_class_in_area_exposed": "Вибачте, немає жодного доступного {{ device_class }} в приміщенні {{ area }}",
+      "no_device_class_in_floor_exposed": "Вибачте, немає жодного доступного {{ device_class }} на {{ floor }} поверсі",
+      "duplicate_entities": "Вибачте, є декілька пристроїв з назвою {{ entity }}",
+      "duplicate_entities_in_area": "Вибачте, є декілька пристроїв з назвою {{ entity }} в приміщенні {{ area }}",
+      "duplicate_entities_in_floor": "Вибачте, є декілька пристроїв з назвою {{ entity }} на {{ floor }} поверсі"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "{{ slots.name | capitalize }} {{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\n  Так\n{% else %}\n  Ні, {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Так, {{ match[:3] | join(\", \") }} і ще {{ (match | length - 3) }}\n  {%- else -%}\n    Так,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} and {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  Ні\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  Так\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    Ні, {{ no_match[:3] | join(\", \") }} і ще {{ (no_match | length - 3) }} ні\n  {%- else -%}\n    Ні,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} and {% endif -%}\n      {{ name }}\n    {%- endfor %} ні\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  таких немає\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} і ще {{ (match | length - 3) }}\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} і {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n"
+      },
+      "HassTurnOff": {
+        "default": "{{ slots.name }} вимкнено",
+        "lights_area": "Світло в {{ slots.area }} вимкнено",
+        "lights_floor": "Світло вимкнено",
+        "fans_area": "Вентилятори в {{ slots.area }} вимкнено",
+        "cover": "{{ slots.name }} закрито",
+        "cover_area": "{{ slots.area }} відкрито",
+        "cover_device_class": "{{ slots.device_class }} закрито",
+        "valve": "Закрито"
+      },
+      "HassStartTimer": {
+        "default": "{% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %} {% set h_text = h ~ (' годину' if h | int % 10 == 1 and h != \"11\" else (' години' if h | int % 10 in [2, 3, 4] and h not in [\"12\", \"13\", \"14\"] else ' годин')) if h else '' %} {% set m_text = (90 if m in ['півтори', '1.5'] else (30 if m in ['пів', '1/2', 'половиною'] else m)) ~\n    (' хвилину' if m | int % 10 == 1 and m != \"11\" else\n    (' хвилини' if m | int % 10 in [2, 3, 4] and m not in [\"12\", \"13\", \"14\"] else\n      ' хвилин')) if m else '' %}\n{% set s_text = (90 if s in ['півтори', '1.5'] else (30 if s in ['пів', '1/2', 'половиною'] else s)) ~\n    (' секунду' if s | int % 10 == 1 and s != \"11\" else\n    (' секунди' if s | int % 10 in [2, 3, 4] and s not in [\"12\", \"13\", \"14\"] else\n      ' секунд')) if s else '' %}\n{% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list[:-1] | join(', ') ~ ' та ' ~ text_list[-1] if text_list | count > 2 else text_list | join(' та ') %} {% set name = (' з назвою ' ~ slots.name | trim) if slots.name is defined else '' %} Встановлено таймер на {{ text }}{{ name }}\n",
+        "command": "{% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %} {% set h_text = h ~ (' годину' if h | int % 10 == 1 and h != \"11\" else (' години' if h | int % 10 in [2, 3, 4] and h not in [\"12\", \"13\", \"14\"] else ' годин')) if h else '' %} {% set m_text = (90 if m in ['півтори', '1.5'] else (30 if m in ['пів', '1/2', 'половиною'] else m)) ~\n    (' хвилину' if m | int % 10 == 1 and m != \"11\" else\n    (' хвилини' if m | int % 10 in [2, 3, 4] and m not in [\"12\", \"13\", \"14\"] else\n      ' хвилин')) if m else '' %}\n{% set s_text = (90 if s in ['півтори', '1.5'] else (30 if s in ['пів', '1/2', 'половиною'] else s)) ~\n    (' секунду' if s | int % 10 == 1 and s != \"11\" else\n    (' секунди' if s | int % 10 in [2, 3, 4] and s not in [\"12\", \"13\", \"14\"] else\n      ' секунд')) if s else '' %}\n{% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list[:-1] | join(', ') ~ ' та ' ~ text_list[-1] if text_list | count > 2 else text_list | join(' та ') %} Команду буде виконано через {{ text }}\n"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "{{ slots.item }} додано"
+      },
+      "HassTurnOn": {
+        "default": "{{ slots.name }} ввімкнено",
+        "lights_area": "Світло в {{ slots.area }} ввімкнено",
+        "lights_floor": "Світло ввімкнено",
+        "fans_area": "Вентилятори в {{ slots.area }} ввімкнено",
+        "cover": "{{ slots.name }} відкрито",
+        "cover_area": "{{ slots.area }} відкрито",
+        "cover_device_class": "{{ slots.device_class }} відкрито",
+        "script": "Розпочато",
+        "valve": "Відкрито"
+      },
+      "HassMediaPause": {
+        "default": "Пауза"
+      },
+      "HassGetCurrentTime": {
+        "default": "{% set minute_str = '{0:02d}'.format(slots.time.minute) %} {{ slots.time.hour}}:{{ minute_str }}\n"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  Таймерів немає.\n{% elif num_active_timers == 0: %}\n  {# No active timers #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    Таймер на паузі.\n  {% else: %}\n  {% if num_paused_timers % 10 == 1 and num_paused_timers % 100 != 11: %}\n    {{ num_paused_timers }} таймер на паузі.\n  {% elif num_paused_timers % 10 in [2, 3, 4] and not (num_paused_timers % 100 in [12, 13, 14]): %}\n    {{ num_paused_timers }} таймери на паузі.\n  {% else: %}\n    {{ num_paused_timers }} таймерів на паузі.\n  {% endif %}\n  {% endif %}\n{% else: %}\n  {# At least one active timer #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# Get active timer that will finish soonest #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {% if num_active_timers % 10 == 1 and num_active_timers % 100 != 11: %}\n      {{ num_active_timers }} активний таймер.\n    {% elif num_active_timers % 10 in [2, 3, 4] and not (num_active_timers % 100 in [12, 13, 14]): %}\n      {{ num_active_timers }} активні таймери.\n    {% else: %}\n      {{ num_active_timers }} активних таймерів.\n    {% endif %}\n  {% endif %}\n\n  {% if num_paused_timers > 0: %}\n    {% if num_paused_timers % 10 == 1 and num_paused_timers % 100 != 11: %}\n      {{ num_paused_timers }} таймер на паузі.\n    {% elif num_paused_timers % 10 in [2, 3, 4] and not (num_paused_timers % 100 in [12, 13, 14]): %}\n      {{ num_paused_timers }} таймери на паузі.\n    {% else: %}\n      {{ num_paused_timers }} таймерів на паузі.\n    {% endif %}\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n  {# At least one active timer #}\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0): %}\n    1 година та {{ next_timer.rounded_minutes_left }} хвилин\n  {% elif (next_timer.rounded_hours_left == 1): %}\n    1 година\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_hours_left }} годин та {{ next_timer.rounded_minutes_left }} хвилин\n  {% elif (next_timer.rounded_hours_left > 1): %}\n    {% if next_timer.rounded_hours_left % 10 == 1 and next_timer.rounded_hours_left % 100 != 11: %}\n      {{ next_timer.rounded_hours_left }} година\n    {% elif next_timer.rounded_hours_left % 10 in [2, 3, 4] and not (next_timer.rounded_hours_left % 100 in [12, 13, 14]): %}\n      {{ next_timer.rounded_hours_left }} години\n    {% else: %}\n      {{ next_timer.rounded_hours_left }} годин\n    {% endif %}\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0): %}\n    1 хвилина {{ next_timer.rounded_seconds_left }} секунд\n  {% elif (next_timer.rounded_minutes_left == 1): %}\n    1 хвилина\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} хвилин та {{ next_timer.rounded_seconds_left }} сеунд\n  {% elif (next_timer.rounded_minutes_left > 1): %}\n    {% if next_timer.rounded_minutes_left % 10 == 1 and next_timer.rounded_minutes_left % 100 != 11: %}\n      {{ next_timer.rounded_minutes_left }} хвилина\n    {% elif next_timer.rounded_minutes_left % 10 in [2, 3, 4] and not (next_timer.rounded_minutes_left % 100 in [12, 13, 14]): %}\n      {{ next_timer.rounded_minutes_left }} хвилини\n    {% else: %}\n      {{ next_timer.rounded_minutes_left }} хвилин\n    {% endif %}\n  {% elif (next_timer.rounded_seconds_left == 1): %}\n    1 секунда\n  {% elif (next_timer.rounded_seconds_left > 1): %}\n    {% if next_timer.rounded_seconds_left % 10 == 1 and next_timer.rounded_seconds_left % 100 != 11: %}\n      {{ next_timer.rounded_seconds_left }} секунда\n    {% elif next_timer.rounded_seconds_left % 10 in [2, 3, 4] and not (next_timer.rounded_seconds_left % 100 in [12, 13, 14]): %}\n      {{ next_timer.rounded_seconds_left }} секунди\n    {% else: %}\n      {{ next_timer.rounded_seconds_left }} секунд\n    {% endif %}\n  {% endif %}\n\n  {% if num_timers > 1: %}\n    {# Give some extra information to disambiguate #}\n    залишилось на таймері\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_hours }} годин та {{ next_timer.start_minutes }} хвилин\n    {% elif (next_timer.start_hours > 0): %}\n      {% if next_timer.start_hours % 10 == 1 and next_timer.start_hours % 100 != 11: %}\n        {{ next_timer.start_hours }} година\n      {% elif next_timer.start_hours % 10 in [2, 3, 4] and not (next_timer.start_hours % 100 in [12, 13, 14]): %}\n        {{ next_timer.start_hours }} години\n      {% else: %}\n        {{ next_timer.start_hours }} годин\n      {% endif %}\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_minutes }} хвилин та {{ next_timer.start_seconds }} секунд\n    {% elif (next_timer.start_minutes > 0): %}\n      {% if next_timer.start_minutes % 10 == 1 and next_timer.start_minutes % 100 != 11: %}\n        {{ next_timer.start_minutes }} хвилина\n      {% elif next_timer.start_minutes % 10 in [2, 3, 4] and not (next_timer.start_minutes % 100 in [12, 13, 14]): %}\n        {{ next_timer.start_minutes }} хвилини\n      {% else: %}\n        {{ next_timer.start_minutes }} хвилин\n      {% endif %}\n    {% elif (next_timer.start_seconds > 0): %}\n      {% if next_timer.start_seconds % 10 == 1 and next_timer.start_seconds % 100 != 11: %}\n        {{ next_timer.start_seconds }} секунда\n      {% elif next_timer.start_seconds % 10 in [2, 3, 4] and not (next_timer.start_seconds % 100 in [12, 13, 14]): %}\n        {{ next_timer.start_seconds }} секунди\n      {% else: %}\n        {{ next_timer.start_seconds }} секунд\n      {% endif %}\n    {% endif %}\n\n    {% if next_timer.name: %}\n      {{ next_timer.name }}\n    {% elif next_timer.area: %}\n      в приміщенні {{ next_timer.area }}\n    {% endif %}\n\n  {% else: %}\n    залишилось.\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "{{ slots.item }} додано"
+      },
+      "HassGetCurrentDate": {
+        "default": "{% set months = {\n   1: 'січня',\n   2: 'лютого',\n   3: 'березня',\n   4: 'квітня',\n   5: 'травня',\n   6: 'червня',\n   7: 'липня',\n   8: 'серпня',\n   9: 'вересня',\n   10: 'жовтня',\n   11: 'листопада',\n   12: 'грудня',\n} %} {% set ordinal = {\n   1: 'Перше',\n   2: 'Друге',\n   3: 'Третє',\n   4: 'Четверте',\n   5: 'П’яте',\n   6: 'Шосте',\n   7: 'Сьоме',\n   8: 'Восьме',\n   9: 'Дев’яте',\n   10: 'Десяте',\n   11: 'Одинадцяте',\n   12: 'Дванадцяте',\n   13: 'Тринадцяте',\n   14: 'Чотирнадцяте',\n   15: 'П’ятнадцяте',\n   16: 'Шістнадцяте',\n   17: 'Сімнадцяте',\n   18: 'Вісімнадцяте',\n   19: 'Дев’ятнадцяте',\n   20: 'Двадцяте',\n   21: 'Двадцять перше',\n   22: 'Двадцять друге',\n   23: 'Двадцять третє',\n   24: 'Двадцять четверте',\n   25: 'Двадцять п’яте',\n   26: 'Двадцять шосте',\n   27: 'Двадцять сьоме',\n   28: 'Двадцять восьме',\n   29: 'Двадцять дев’яте',\n   30: 'Тридцяте',\n   31: 'Тридцять перше',\n } %}\n{% set weekday = [ 'понеділок', 'вівторок', 'середа', 'четвер', 'п’ятниця', 'субота', 'неділя' ] %}\n{{ ordinal[slots.date.day] }} {{ months[slots.date.month] }}, {{ weekday[slots.date.weekday()] }}\n"
+      },
+      "HassGetWeather": {
+        "default": "{% set weather_condition = {\n  'clear': 'ясно',\n  'clear-night': 'ясно',\n  'cloudy': 'хмарно',\n  'exceptional': 'виняткові погодні умови',\n  'fog': 'туман',\n  'hail': 'град',\n  'lightning': 'блискавка',\n  'lightning-rainy': 'дощ з блискавкою',\n  'partlycloudy': 'хмарно з проясненням',\n  'pouring': 'злива',\n  'rainy': 'дощ',\n  'snowy': 'сніг',\n  'snowy-rainy': 'сніг з дощем',\n  'sunny': 'сонячно',\n  'windy': 'вітряно',\n  'windy-variant': 'хмарно і вітряно'\n} %} Температура повітря {{ state.attributes.get('temperature') }}{{ state.attributes.get('temperature_unit') }}, {{ weather_condition.get((state.state | string).lower(), \"\") }}\n"
+      },
+      "HassLightSet": {
+        "brightness": "Яскравість {{ slots.name }} змінено на {{ slots.brightness }}",
+        "brightness_area": "Яскравість світла в {{ slots.area }} змінено на {{ slots.brightness }}",
+        "color": "Колір {{ slots.name }} змінено на {{ slots.color }}",
+        "color_area": "Колір світла в {{ slots.area }} змінено на {{ slots.color }}"
+      },
+      "HassVacuumStart": {
+        "default": "{{ slots.name }} активовано"
+      },
+      "HassMediaUnpause": {
+        "default": "Відтворення"
+      },
+      "HassSetPosition": {
+        "default": "Позицію встановлено"
+      },
+      "HassMediaNext": {
+        "default": "Граю наступне"
+      },
+      "HassCancelTimer": {
+        "default": "Таймер скасовано"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{{ state.state }} градусів"
+      },
+      "HassSetVolume": {
+        "default": "Гучність встановлено"
+      },
+      "HassVacuumReturnToBase": {
+        "default": "{{ slots.name }} повертається"
+      },
+      "HassRespond": {
+        "hello": "Вітаю з Home Assistant.",
+        "listening": "Ні, я записую лише після того, як ви говорите ключове слово.",
+        "data": "Ваші дані надсилаються на сервер Home Assistant.",
+        "commands": "Щоб дізнатися, що можна запитати, відвідайте H.A. крапка I.O. слеш voice.",
+        "creator": "Мене створила чудова спільнота Home Assistant, яка складається з ентузіастів з усього світу."
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "білий | біл(им|ою|ого)",
+          "out": "white"
+        },
+        {
+          "in": "чорний | чорн(им|ою|ого)",
+          "out": "black"
+        },
+        {
+          "in": "червоний | червон(им|ою|ого)",
+          "out": "red"
+        },
+        {
+          "in": "помаранчевий | помаранчев(им|ою|ого)",
+          "out": "orange"
+        },
+        {
+          "in": "жовтий | жовт(им|ою|ого)",
+          "out": "yellow"
+        },
+        {
+          "in": "зелений | зелен(им|ою|ого)",
+          "out": "green"
+        },
+        {
+          "in": "синій | син(ім|ьою|ього)",
+          "out": "blue"
+        },
+        {
+          "in": "фіолетовий | фіолетов(им|ою|ого)",
+          "out": "purple"
+        },
+        {
+          "in": "коричневий | коричнев(им|ою|ого)",
+          "out": "brown"
+        },
+        {
+          "in": "рожевий | рожев(им|ою|ого)",
+          "out": "pink"
+        },
+        {
+          "in": "бірюзовий | бірюзов(им|ою|ого)",
+          "out": "turquoise"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        {
+          "in": "c | цельсію | за цельсієм",
+          "out": "celsius"
+        },
+        {
+          "in": "f | фаренгейту | за фаренгейтом",
+          "out": "fahrenheit"
+        }
+      ]
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "максим(альна|ий) | максимум | [як] найяскравіше | [дуже|над] яскрав(о|ий)",
+          "out": 100
+        },
+        {
+          "in": "три чверті",
+          "out": 75
+        },
+        {
+          "in": "середн(ій|я|ю) | (на|в|у) половин(а|у) | [у|в] півсили",
+          "out": 50
+        },
+        {
+          "in": "(на) чверть",
+          "out": 25
+        },
+        {
+          "in": "мінімум | мінімальний| тускл(ий|о) | найтускліший | приглуш(ений|но)",
+          "out": 1
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "(в|у)вімкнен(ий|на|і|их|о) | (в|у)вімкнут(ий|а|і|их|о)",
+          "out": "on"
+        },
+        {
+          "in": "вимкнен(ий|на|і|их|о) | вимкнут(ий|а|і|их|о)",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "світло|світильник[и|ів]|ламп[и]",
+          "out": "light"
+        },
+        {
+          "in": "вентилятор[а|и|ів]",
+          "out": "fan"
+        },
+        {
+          "in": "вмикач[а|і|ів] | вимикач[а|і|ів]",
+          "out": "switch"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "відкрит(ий|а|і|их|о) | піднят(ий|а|і|их|о)",
+          "out": "open"
+        },
+        {
+          "in": "закрит(ий|а|і|их|о) | опуще(ий|а|і|их|о)",
+          "out": "closed"
+        },
+        {
+          "in": "відкрива(є|ю)ться | підніма(є|ю)ться",
+          "out": "opening"
+        },
+        {
+          "in": "закрива(є|ю)ться | опуска(є|ю)ться",
+          "out": "closing"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "тент[и]",
+          "out": "awning"
+        },
+        {
+          "in": "жалюзі",
+          "out": "blind"
+        },
+        {
+          "in": "штор[а|и]",
+          "out": "curtain"
+        },
+        {
+          "in": "двері | дверей",
+          "out": "door"
+        },
+        {
+          "in": "двер[і|ей] [в] гараж[а|у|і]",
+          "out": "garage"
+        },
+        {
+          "in": "брам[а|и] | вор(о|і)т[а]",
+          "out": "gate"
+        },
+        {
+          "in": "ролет[и] | заслінк(а|и)",
+          "out": "shade"
+        },
+        {
+          "in": "ставні | ставень",
+          "out": "shutter"
+        },
+        {
+          "in": "вікн(о|а) | вікон",
+          "out": "window"
+        }
+      ]
+    },
+    "lock_states": {
+      "values": [
+        {
+          "in": "закрит(о|ий|а) | замкнен(о|ий|а) | зачинен(о|ий|а)",
+          "out": "locked"
+        },
+        {
+          "in": "відкрит(о|ий|а) | відімкнен(о|ий|а) | відчинен(о|ий|а)",
+          "out": "unlocked"
+        }
+      ]
+    },
+    "bs_battery_states": {
+      "values": [
+        {
+          "in": "низький",
+          "out": "on"
+        },
+        {
+          "in": "нормальний",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_battery_charging_states": {
+      "values": [
+        {
+          "in": "заряджається",
+          "out": "on"
+        },
+        {
+          "in": "не заряджається",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_carbon_monoxide_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "чисто",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_cold_states": {
+      "values": [
+        {
+          "in": "холодно",
+          "out": "on"
+        },
+        {
+          "in": "нормально",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_connectivity_states": {
+      "values": [
+        {
+          "in": "підключено",
+          "out": "on"
+        },
+        {
+          "in": "відключено",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_door_states": {
+      "values": [
+        {
+          "in": "відкриті",
+          "out": "on"
+        },
+        {
+          "in": "закриті",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_garage_door_states": {
+      "values": [
+        {
+          "in": "відкриті",
+          "out": "on"
+        },
+        {
+          "in": "закриті",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_gas_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "чисто",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_heat_states": {
+      "values": [
+        {
+          "in": "гаряче",
+          "out": "on"
+        },
+        {
+          "in": "нормально",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_light_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "не виявлено",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_lock_states": {
+      "values": [
+        {
+          "in": "відкрито",
+          "out": "on"
+        },
+        {
+          "in": "закрито",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_moisture_states": {
+      "values": [
+        {
+          "in": "волого",
+          "out": "on"
+        },
+        {
+          "in": "сухо",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_motion_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "чисто",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_occupancy_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "чисто",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_opening_states": {
+      "values": [
+        {
+          "in": "відкрито",
+          "out": "on"
+        },
+        {
+          "in": "закрито",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_plug_states": {
+      "values": [
+        {
+          "in": "під'єднано",
+          "out": "on"
+        },
+        {
+          "in": "від'єднано",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_power_states": {
+      "values": [
+        {
+          "in": "(увімкнено|виявлено)",
+          "out": "on"
+        },
+        {
+          "in": "(вимкнено|не виявлено)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_presence_states": {
+      "values": [
+        {
+          "in": "(вдома|виявлено)",
+          "out": "on"
+        },
+        {
+          "in": "(не вдома|не виявлено)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_problem_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "все добре",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_running_states": {
+      "values": [
+        {
+          "in": "запущено",
+          "out": "on"
+        },
+        {
+          "in": "не запущено",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_safety_states": {
+      "values": [
+        {
+          "in": "небезпечно",
+          "out": "on"
+        },
+        {
+          "in": "безпечно",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_smoke_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "чисто",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_sound_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "чисто",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_tamper_states": {
+      "values": [
+        {
+          "in": "виявлено",
+          "out": "on"
+        },
+        {
+          "in": "чисто",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_update_states": {
+      "values": [
+        {
+          "in": "має оновлення",
+          "out": "on"
+        },
+        {
+          "in": "(оновлено|остання версія)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_vibration_states": {
+      "values": [
+        {
+          "in": "(виявлено|вібрує|вібрація)",
+          "out": "on"
+        },
+        {
+          "in": "(чисто|не вібрує|нема вібрації)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_window_states": {
+      "values": [
+        {
+          "in": "відкрито",
+          "out": "on"
+        },
+        {
+          "in": "закрито",
+          "out": "closed"
+        }
+      ]
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "volume": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "пів",
+          "out": 30
+        },
+        {
+          "in": "1/2",
+          "out": 30
+        },
+        {
+          "in": "половиною",
+          "out": 30
+        }
+      ]
+    },
+    "timer_one_and_half": {
+      "values": [
+        {
+          "in": "півтори",
+          "out": 90
+        }
+      ]
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "name": "{name}",
+    "area": "[в|у|на] {area}",
+    "floor": "[в|у|на] {floor}",
+    "ввімкни": "(в|у)вімкни | включи",
+    "вимкни": "вимкни | виключи",
+    "зміни": "зміни | встанови | зроби",
+    "brightness": "{brightness}[%| відсотк(ів|а|и)]",
+    "temperature": "{temperature} [градус(ів|и|а)] [{temperature_unit}]",
+    "position": "{position}[[ ]%| відсотк(ів|а|и)]",
+    "volume": "{volume:volume_level}[[ ]%| відсотк(ів|а|и)]",
+    "відкрий": "відкрий | розкрий | підніми | відчини",
+    "закрий": "закрий | опусти | зачини",
+    "timer_set": "(запусти|встанови|ввімкни|розпочни|створи)",
+    "timer_cancel": "(скасуй|вимкни|зупини)",
+    "timer_duration_seconds": "{timer_seconds:seconds} секунд[у|и]",
+    "timer_duration_minutes": "({timer_minutes:minutes} хвилин[у|и][ [і |та ]{timer_seconds:seconds} секунд[у|и]])|({timer_minutes:minutes} з {timer_half:seconds} хвилин[у|и])|({timer_half:seconds} хвилини)|({timer_one_and_half:seconds} хвилини)",
+    "timer_duration_hours": "({timer_hours:hours} годин[у|и] [[і |та ]{timer_minutes:minutes} хвилин[у|и]][ [і |та ]{timer_seconds:seconds} секунд[у|и]])|({timer_hours:hours} з {timer_half:minutes} години)|({timer_half:minutes} години)|({timer_one_and_half:minutes} години)",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes>|<timer_duration_hours>",
+    "timer_start_seconds": "{timer_seconds:start_seconds} секунд[а|и]",
+    "timer_start_minutes": "{timer_minutes:start_minutes} хвилин[а|и][ [і |та ]{timer_seconds:start_seconds} секунд[а|и]]",
+    "timer_start_hours": "{timer_hours:start_hours} годин[а|и][ [і |та ]{timer_minutes:start_minutes} хвилин[а|и]][ [і |та ]{timer_seconds:start_seconds} секунд[а|и]]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes>|<timer_start_hours>"
+  },
+  "skip_words": [
+    "будь ласка",
+    "зараз",
+    "сьогодні"
+  ]
+}

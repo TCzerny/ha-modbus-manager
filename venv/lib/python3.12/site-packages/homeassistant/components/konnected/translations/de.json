@@ -1,0 +1,109 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "already_in_progress": "Konfigurationsablauf wird bereits ausgef\u00fchrt",
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "not_konn_panel": "Kein anerkanntes Konnected.io-Ger\u00e4t",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "step": {
+            "confirm": {
+                "description": "Modell: {model}\nID: {id}\nHost: {host}\nPort: {port}\n\nDu kannst das E/A- und Panel-Verhalten in den Einstellungen der verbundenen Alarmzentrale konfigurieren.",
+                "title": "Konnected-Ger\u00e4t bereit"
+            },
+            "import_confirm": {
+                "description": "Eine Konnected-Alarmzentrale mit der ID {id} wurde in configuration.yaml entdeckt. Mit diesem Ablauf kannst du sie in einen Konfigurationseintrag importieren.",
+                "title": "Konnected-Ger\u00e4t importieren"
+            },
+            "user": {
+                "data": {
+                    "host": "IP-Adresse",
+                    "port": "Port"
+                },
+                "description": "Bitte gib die Hostinformationen f\u00fcr deine Konnected-Alarmzentrale ein."
+            }
+        }
+    },
+    "options": {
+        "abort": {
+            "not_konn_panel": "Kein anerkanntes Konnected.io-Ger\u00e4t"
+        },
+        "error": {
+            "bad_host": "Ung\u00fcltige Host-URL f\u00fcr Override-API"
+        },
+        "step": {
+            "options_binary": {
+                "data": {
+                    "inverse": "Ge\u00f6ffnet-/Geschlossen-Zustand invertieren",
+                    "name": "Name",
+                    "type": "Bin\u00e4rsensor-Typ"
+                },
+                "description": "Bitte w\u00e4hle die Optionen f\u00fcr den an {zone} angeschlossenen Bin\u00e4rsensor",
+                "title": "Bin\u00e4rsensor konfigurieren"
+            },
+            "options_digital": {
+                "data": {
+                    "name": "Name",
+                    "poll_interval": "Abfrageintervall (Minuten)",
+                    "type": "Sensortyp"
+                },
+                "description": "Bitte w\u00e4hle die Optionen f\u00fcr den an {zone} angeschlossenen Bin\u00e4rsensor",
+                "title": "Konfiguriere den digitalen Sensor"
+            },
+            "options_io": {
+                "data": {
+                    "1": "Zone 1",
+                    "2": "Zone 2",
+                    "3": "Zone 3",
+                    "4": "Zone 4",
+                    "5": "Zone 5",
+                    "6": "Zone 6",
+                    "7": "Zone 7",
+                    "out": "OUT"
+                },
+                "description": "Es wurde ein {model} bei {host} entdeckt. W\u00e4hle unten die Basiskonfiguration der einzelnen E/A aus. Je nach E/A k\u00f6nnen Bin\u00e4rsensoren (\u00d6ffner-/Schlie\u00dfer-Kontakte), digitale Sensoren (dht und ds18b20) oder schaltbare Ausg\u00e4nge verwendet werden. In den n\u00e4chsten Schritten kannst du detaillierte Optionen konfigurieren.",
+                "title": "E/A konfigurieren"
+            },
+            "options_io_ext": {
+                "data": {
+                    "10": "Zone 10",
+                    "11": "Zone 11",
+                    "12": "Zone 12",
+                    "8": "Zone 8",
+                    "9": "Zone 9",
+                    "alarm1": "ALARM1",
+                    "alarm2_out2": "OUT2/ALARM2",
+                    "out1": "OUT1"
+                },
+                "description": "W\u00e4hle unten die Konfiguration der verbleibenden E/A. In den n\u00e4chsten Schritten kannst du detaillierte Optionen konfigurieren.",
+                "title": "Erweiterte E/A konfigurieren"
+            },
+            "options_misc": {
+                "data": {
+                    "api_host": "API-Host-URL \u00fcberschreiben",
+                    "blink": "Panel-LED beim Senden von Zustands\u00e4nderungen blinken lassen",
+                    "discovery": "Auf Suchanfragen in deinem Netzwerk reagieren",
+                    "override_api_host": "Die Standard-Host-Panel-URL der Home Assistant-API \u00fcberschreiben"
+                },
+                "description": "Bitte w\u00e4hle das gew\u00fcnschte Verhalten f\u00fcr dein Panel",
+                "title": "Sonstiges konfigurieren"
+            },
+            "options_switch": {
+                "data": {
+                    "activation": "Ausgabe, wenn eingeschaltet",
+                    "momentary": "Impulsdauer (ms)",
+                    "more_states": "Zus\u00e4tzliche Zust\u00e4nde f\u00fcr diese Zone konfigurieren",
+                    "name": "Name",
+                    "pause": "Pause zwischen Impulsen (ms)",
+                    "repeat": "Wiederholungen (-1 = unendlich)"
+                },
+                "description": "Optionen f\u00fcr {zone}: Zustand {state}",
+                "title": "Schaltbaren Ausgang konfigurieren"
+            }
+        }
+    }
+}

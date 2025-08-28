@@ -1,0 +1,135 @@
+{
+    "application_credentials": {
+        "description": "Folge den [Anweisungen]({more_info_url}) f\u00fcr den [OAuth-Zustimmungsbildschirm]({oauth_consent_url}), um Home Assistant Zugriff auf deine Google Kalender zu geben. Du musst au\u00dferdem mit deinem Konto verkn\u00fcpfte OAuth-Anmeldedaten erstellen:\n1. Gehe zu [Anmeldedaten]({oauth_creds_url}) und w\u00e4hle **Anmeldedaten erstellen**.\n1. W\u00e4hle in der Dropdown-Liste **OAuth-Client-ID**.\n1. W\u00e4hle **Webanwendung** f\u00fcr den Anwendungstyp."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "already_in_progress": "Konfigurationsablauf wird bereits ausgef\u00fchrt",
+            "api_disabled": "Du musst die Google Kalender-API in der Google Cloud Console aktivieren",
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "code_expired": "Der Authentifizierungscode ist abgelaufen oder die Anmeldedaten sind ung\u00fcltig, bitte versuche es erneut.",
+            "invalid_access_token": "Ung\u00fcltiges Zugriffstoken",
+            "missing_configuration": "Die Komponente ist nicht konfiguriert. Bitte der Dokumentation folgen.",
+            "missing_credentials": "F\u00fcr die Integration sind OAuth-Anmeldedaten erforderlich.",
+            "oauth_error": "Ung\u00fcltige Token-Daten empfangen.",
+            "oauth_failed": "Fehler beim Abrufen des Zugriffstokens.",
+            "oauth_timeout": "Zeit\u00fcberschreitung beim Aufl\u00f6sen des OAuth-Tokens.",
+            "oauth_unauthorized": "OAuth-Autorisierungsfehler beim Abrufen des Zugriffstokens.",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "timeout_connect": "Zeit\u00fcberschreitung beim Verbindungsaufbau"
+        },
+        "create_entry": {
+            "default": "Erfolgreich authentifiziert"
+        },
+        "progress": {
+            "exchange": "Um dein Google-Konto zu verkn\u00fcpfen, besuche [{url}]({url}) und gib folgenden Code ein:\n\n{user_code}"
+        },
+        "step": {
+            "auth": {
+                "title": "Google-Konto verkn\u00fcpfen"
+            },
+            "pick_implementation": {
+                "title": "Authentifizierungsmethode w\u00e4hlen"
+            },
+            "reauth_confirm": {
+                "description": "Die Google Kalender-Integration muss dein Konto erneut authentifizieren",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            }
+        }
+    },
+    "entity": {
+        "calendar": {
+            "working_location": {
+                "name": "Arbeitsort"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "calendar_access": "Home Assistant-Zugriff auf Google Kalender"
+                }
+            }
+        }
+    },
+    "services": {
+        "add_event": {
+            "description": "F\u00fcgt einen neuen Kalendereintrag hinzu.",
+            "fields": {
+                "calendar_id": {
+                    "description": "Die ID des gew\u00fcnschten Kalenders.",
+                    "name": "Kalender-ID"
+                },
+                "description": {
+                    "description": "Die Beschreibung des Termins. Optional.",
+                    "name": "Beschreibung"
+                },
+                "end_date": {
+                    "description": "Das Datum, an dem der ganzt\u00e4gige Termin enden soll.",
+                    "name": "Enddatum"
+                },
+                "end_date_time": {
+                    "description": "Datum und Uhrzeit, zu denen der Termin enden soll.",
+                    "name": "Enduhrzeit"
+                },
+                "in": {
+                    "description": "Tage oder Wochen, in denen du den Termin erstellen m\u00f6chtest.",
+                    "name": "In"
+                },
+                "start_date": {
+                    "description": "Das Datum, an dem der ganzt\u00e4gige Termin beginnen soll.",
+                    "name": "Startdatum"
+                },
+                "start_date_time": {
+                    "description": "Datum und Uhrzeit, zu denen der Termin beginnen soll.",
+                    "name": "Startuhrzeit"
+                },
+                "summary": {
+                    "description": "Dient als Titel des Termins.",
+                    "name": "Zusammenfassung"
+                }
+            },
+            "name": "Termin hinzuf\u00fcgen"
+        },
+        "create_event": {
+            "description": "F\u00fcgt einen neuen Kalendereintrag hinzu.",
+            "fields": {
+                "description": {
+                    "description": "Die Beschreibung des Termins. Optional.",
+                    "name": "Beschreibung"
+                },
+                "end_date": {
+                    "description": "Das Datum, an dem der ganzt\u00e4gige Termin enden soll.",
+                    "name": "Enddatum"
+                },
+                "end_date_time": {
+                    "description": "Das Datum und die Uhrzeit, zu der der Termin enden soll.",
+                    "name": "Enduhrzeit"
+                },
+                "in": {
+                    "description": "Tage oder Wochen, in denen du den Termin erstellen m\u00f6chtest.",
+                    "name": "In"
+                },
+                "location": {
+                    "description": "Der Ort des Termins. Optional.",
+                    "name": "Ort"
+                },
+                "start_date": {
+                    "description": "Das Datum, an dem der ganzt\u00e4gige Termin beginnen soll.",
+                    "name": "Startdatum"
+                },
+                "start_date_time": {
+                    "description": "Datum und Uhrzeit, zu der der Termin beginnen soll.",
+                    "name": "Startuhrzeit"
+                },
+                "summary": {
+                    "description": "Dient als Titel des Termins.",
+                    "name": "Zusammenfassung"
+                }
+            },
+            "name": "Termin anlegen"
+        }
+    }
+}

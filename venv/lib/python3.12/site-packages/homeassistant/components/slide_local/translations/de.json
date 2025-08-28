@@ -1,0 +1,80 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "discovery_connection_failed": "Die Einrichtung des erkannten Ger\u00e4ts ist mit folgendem Fehler fehlgeschlagen: {error}. Bitte versuche es manuell einzurichten.",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich",
+            "unique_id_mismatch": "Die MAC-Adresse des Ger\u00e4ts ({mac}) stimmt nicht mit der vorherigen MAC-Adresse \u00fcberein."
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines lokalen Slide",
+                    "password": "Der Ger\u00e4tecode deines Slide (innerhalb des Slide oder in der Box, L\u00e4nge 8 Zeichen). Wenn dein Slide mit der Firmware-Version 2 l\u00e4uft, ist dies optional, da es von der lokalen API nicht verwendet wird."
+                },
+                "description": "Konfiguriere die Informationen f\u00fcr dein Slide-Ger\u00e4t neu"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines lokalen Slide",
+                    "password": "Der Ger\u00e4tecode deines Slide (innerhalb des Slide oder in der Box, L\u00e4nge 8 Zeichen). Wenn dein Slide mit der Firmware-Version 2 l\u00e4uft, ist dies optional, da es von der lokalen API nicht verwendet wird."
+                },
+                "description": "Gib die Daten zur Verbindung mit dem Slide-Ger\u00e4t an"
+            },
+            "zeroconf_confirm": {
+                "description": "M\u00f6chtest du {host} einrichten?",
+                "title": "Einrichtung f\u00fcr Slide best\u00e4tigen"
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "calibrate": {
+                "name": "Kalibrieren"
+            }
+        },
+        "switch": {
+            "touchgo": {
+                "name": "TouchGo"
+            }
+        }
+    },
+    "exceptions": {
+        "calibration_error": {
+            "message": "Fehler beim Senden der Kalibrierungsanforderung an das Ger\u00e4t."
+        },
+        "touchgo_error": {
+            "message": "Fehler beim Senden der Anforderung zum Setzen von Touch&Go auf {state} an das Ger\u00e4t."
+        },
+        "update_error": {
+            "message": "Fehler beim Aktualisieren der Daten aus der API."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "invert_position": "Position umkehren"
+                },
+                "data_description": {
+                    "invert_position": "Kehrt die Position deiner Slide-Abdeckung um."
+                },
+                "description": "Konfiguriert das Slide-Ger\u00e4t neu",
+                "title": "Slide konfigurieren"
+            }
+        }
+    }
+}

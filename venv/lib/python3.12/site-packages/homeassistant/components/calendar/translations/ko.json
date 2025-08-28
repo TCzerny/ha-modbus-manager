@@ -1,0 +1,102 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "\uce98\ub9b0\ub354",
+            "state": {
+                "off": "\uaebc\uc9d0",
+                "on": "\ucf1c\uc9d0"
+            },
+            "state_attributes": {
+                "all_day": {
+                    "name": "\ud558\ub8e8 \uc885\uc77c",
+                    "state": {
+                        "false": "\uc544\ub2c8\uc694",
+                        "true": "\ub124"
+                    }
+                },
+                "description": {
+                    "name": "\uc124\uba85"
+                },
+                "end_time": {
+                    "name": "\uc885\ub8cc \uc2dc\uac04"
+                },
+                "location": {
+                    "name": "\uc704\uce58"
+                },
+                "message": {
+                    "name": "\uba54\uc2dc\uc9c0"
+                },
+                "start_time": {
+                    "name": "\uc2dc\uc791 \uc2dc\uac04"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_calendar_list_events": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "\ub354 \uc774\uc0c1 \uc0ac\uc6a9\ub418\uc9c0 \uc54a\ub294 `calendar.list_events` \uc11c\ube44\uc2a4\uc758 \uc0ac\uc6a9\uc774 \uac10\uc9c0\ub418\uc5c8\uc2b5\ub2c8\ub2e4."
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "create_event": {
+            "description": "\uc0c8 \uce98\ub9b0\ub354 \uc774\ubca4\ud2b8\ub97c \ucd94\uac00\ud569\ub2c8\ub2e4.",
+            "fields": {
+                "description": {
+                    "description": "\uc694\uc57d\uc5d0\uc11c \uc81c\uacf5\ud558\ub294 \uac83\ubcf4\ub2e4 \uc774\ubca4\ud2b8\uc5d0 \ub300\ud55c \uc790\uc138\ud55c \uc124\uba85\uc785\ub2c8\ub2e4.",
+                    "name": "\uc124\uba85"
+                },
+                "end_date": {
+                    "description": "\ud558\ub8e8 \uc885\uc77c \uc774\ubca4\ud2b8\uac00 \uc885\ub8cc\ub418\uc5b4\uc57c \ud558\ub294 \ub0a0\uc9dc\uc785\ub2c8\ub2e4(\ub2e8\ub3c5)",
+                    "name": "\uc885\ub8cc \ub0a0\uc9dc"
+                },
+                "end_date_time": {
+                    "description": "\uc774\ubca4\ud2b8\uac00 \uc885\ub8cc\ub418\uc5b4\uc57c \ud558\ub294 \ub0a0\uc9dc\uc640 \uc2dc\uac04\uc785\ub2c8\ub2e4.",
+                    "name": "\uc885\ub8cc \uc2dc\uac04"
+                },
+                "in": {
+                    "description": "\uc77c\uc815\ub97c \ub9cc\ub4e4 \ub0a0\uc9dc \ub610\ub294 \uc8fc",
+                    "name": "\uc548\uc5d0"
+                },
+                "location": {
+                    "description": "\uc77c\uc815\uc758 \uc704\uce58",
+                    "name": "\uc704\uce58"
+                },
+                "start_date": {
+                    "description": "\ud558\ub8e8 \uc885\uc77c \uc774\ubca4\ud2b8\uac00 \uc2dc\uc791\ub418\ub294 \ub0a0\uc9dc",
+                    "name": "\uc2dc\uc791 \ub0a0\uc9dc"
+                },
+                "start_date_time": {
+                    "description": "\uc77c\uc815\uc774 \uc2dc\uc791\ub418\uc5b4\uc57c \ud558\ub294 \ub0a0\uc9dc \ubc0f \uc2dc\uac04",
+                    "name": "\uc2dc\uc791 \uc2dc\uac04"
+                },
+                "summary": {
+                    "description": "\uc77c\uc815\uc5d0 \ub300\ud55c \uac04\ub2e8\ud55c \uc694\uc57d \ub610\ub294 \uc8fc\uc81c\ub97c \uc815\uc758\ud569\ub2c8\ub2e4.",
+                    "name": "\uc694\uc57d"
+                }
+            },
+            "name": "\uc77c\uc815 \ub9cc\ub4e4\uae30"
+        },
+        "get_events": {
+            "description": "\uc77c\uc815 \ubc94\uc704 \ub0b4\uc758 \uce98\ub9b0\ub354\uc5d0\uc11c \uc774\ubca4\ud2b8\ub97c \uac00\uc838\uc635\ub2c8\ub2e4.",
+            "fields": {
+                "duration": {
+                    "name": "\uc9c0\uc18d \uae30\uac04"
+                },
+                "end_date_time": {
+                    "name": "\uc885\ub8cc \uc2dc\uac04"
+                },
+                "start_date_time": {
+                    "description": "\uc774 \uc2dc\uac04 \uc774\ud6c4\uc758 \ud65c\uc131 \uc77c\uc815\ub97c \ubc18\ud658\ud569\ub2c8\ub2e4(\uc81c\uc678). \uc124\uc815\ud558\uc9c0 \uc54a\uc73c\uba74 \uae30\ubcf8\uac12\uc740 '\uc9c0\uae08'\uc785\ub2c8\ub2e4.",
+                    "name": "\uc2dc\uc791 \uc2dc\uac04"
+                }
+            }
+        }
+    },
+    "title": "\uce98\ub9b0\ub354"
+}

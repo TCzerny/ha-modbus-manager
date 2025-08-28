@@ -1,0 +1,61 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "invalid_response": "Netinkamas atsakymas i\u0161 prietaiso",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Slapta\u017eodis",
+                    "port": "Prievadas",
+                    "rtsp_port": "RTSP prievadas",
+                    "stream": "Srautas",
+                    "username": "Naudotojo vardas"
+                },
+                "data_description": {
+                    "host": "Foscam kameros pagrindinio kompiuterio pavadinimas arba IP adresas."
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "sleep_switch": {
+                "name": "Miegas"
+            }
+        }
+    },
+    "services": {
+        "ptz": {
+            "description": "\u201eFoscam\u201c kameros pakreipimo veiksmas.",
+            "fields": {
+                "movement": {
+                    "description": "Jud\u0117jimo kryptis.",
+                    "name": "Jud\u0117jimas"
+                },
+                "travel_time": {
+                    "description": "Kelion\u0117s laikas sekund\u0117mis.",
+                    "name": "Kelion\u0117s laikas"
+                }
+            },
+            "name": "PTZ"
+        },
+        "ptz_preset": {
+            "description": "PTZ i\u0161 anksto nustatytas veiksmas Foscam kamerai.",
+            "fields": {
+                "preset_name": {
+                    "description": "I\u0161ankstinio nustatymo, \u012f kur\u012f norite perkelti, pavadinimas. I\u0161ankstinius nustatymus galima sukurti oficialiose \u201eFoscam\u201c programose.",
+                    "name": "I\u0161 anksto nustatytas pavadinimas"
+                }
+            },
+            "name": "PTZ i\u0161ankstinis nustatymas"
+        }
+    }
+}

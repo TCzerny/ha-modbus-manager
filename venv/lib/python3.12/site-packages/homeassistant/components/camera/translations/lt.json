@@ -1,0 +1,115 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Kamera",
+            "state": {
+                "idle": "Nedaroma nieko",
+                "recording": "\u012era\u0161oma",
+                "streaming": "Transliuojama"
+            },
+            "state_attributes": {
+                "access_token": {
+                    "name": "Prieigos raktas"
+                },
+                "brand": {
+                    "name": "Prek\u0117s \u017eenklas"
+                },
+                "frontend_stream_type": {
+                    "name": "Srauto tipas",
+                    "state": {
+                        "hls": "HLS",
+                        "webrtc": "WebRTC"
+                    }
+                },
+                "model_name": {
+                    "name": "Modelis"
+                },
+                "motion_detection": {
+                    "name": "Judesio aptikimas",
+                    "state": {
+                        "false": "I\u0161jungtas",
+                        "true": "\u012ejungtas"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_filename_template": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "I\u0161 anksto nustatytas \u0161ablono kintamasis \u201eentity_id\u201c buvo naudojamas atliekant veiksm\u0105 \u201e{service}\u201c taikant fotoaparato subjekt\u0105 \u201e{entity_id}\u201c. I\u0161 anksto nustatytas \u0161ablono kintamasis \u201eentity_id\u201c pa\u0161alinamas i\u0161 \u201e{service}\u201c parametro \u201efilename\u201c. Atnaujinkite savo automatizavim\u0105 ir scenarijus, kad vietoj j\u0173 b\u016bt\u0173 naudojamas rankiniu b\u016bdu apibr\u0117\u017etas kintamasis, ir pasirinkite **Pateikti**, kad u\u017ebaigtum\u0117te \u0161i\u0105 problem\u0105.",
+                        "title": "Aptiktas nebenaudojamo \u0161ablono kintamojo naudojimas"
+                    }
+                }
+            },
+            "title": "Aptiktas nebenaudojamo \u0161ablono kintamojo naudojimas"
+        },
+        "legacy_webrtc_provider": {
+            "description": "{legacy_integration} integracija u\u017eregistravo senovin\u012f \u201eWebRTC\u201c teik\u0117j\u0105. \u201eHome Assistant\u201c nori naudoti \u012fmontuot\u0105 modern\u0173 \u201eWebRTC\u201c teik\u0117j\u0105, kur\u012f u\u017eregistravo {builtin_integration} integracija.\n\nIntegruotos integracijos prana\u0161umai yra \u0161ie:\n\n- Kameros srautas paleid\u017eiamas grei\u010diau.\n- Palaikoma daugiau kamer\u0173 prietais\u0173.\n\nNor\u0117dami i\u0161spr\u0119sti \u0161i\u0105 problem\u0105, galite toliau naudoti integruot\u0105 modern\u0173 \u201eWebRTC\u201c teik\u0117j\u0105 ir pa\u0161alinti {legacy_integration} integracij\u0105 arba pa\u0161alinti {builtin_integration} integracij\u0105, kad gal\u0117tum\u0117te naudoti senovin\u012f teik\u0117j\u0105, o tada i\u0161 naujo paleiskite \u201eHome Assistant\u201c.",
+            "title": "Aptiktas senojo WebRTC teik\u0117jo, u\u017eregistruoto {legacy_integration} naudojimas"
+        }
+    },
+    "services": {
+        "disable_motion_detection": {
+            "description": "I\u0161jungia judesio aptikim\u0105.",
+            "name": "I\u0161jungti judesio aptikim\u0105"
+        },
+        "enable_motion_detection": {
+            "description": "\u012ejungia judesio aptikim\u0105.",
+            "name": "\u012ejungti judesio aptikim\u0105"
+        },
+        "play_stream": {
+            "description": "Leid\u017eia kameros sraut\u0105 palaikomame medijos leistuve.",
+            "fields": {
+                "format": {
+                    "description": "Medijos grotuvo palaikomas srauto formatas.",
+                    "name": "Formatas"
+                },
+                "media_player": {
+                    "description": "Medijos grotuvai, \u012f kuriuos galima transliuoti.",
+                    "name": "Medijos leistuvas"
+                }
+            },
+            "name": "Paleisti sraut\u0105"
+        },
+        "record": {
+            "description": "Sukuria tiesioginio kameros tiekimo \u012fra\u0161\u0105.",
+            "fields": {
+                "duration": {
+                    "description": "Planuojama \u012fra\u0161o trukm\u0117. Tikroji trukm\u0117 gali skirtis.",
+                    "name": "Trukm\u0117"
+                },
+                "filename": {
+                    "description": "Visas kelias \u012f failo pavadinim\u0105. Turi b\u016bti mp4.",
+                    "name": "Failo pavadinimas"
+                },
+                "lookback": {
+                    "description": "Suplanuotas per\u017ei\u016bros laikotarpis, kur\u012f reikia \u012ftraukti \u012f \u012fra\u0161\u0105 (be trukm\u0117s). Galima tik tuo atveju, jei \u0161iuo metu yra aktyvus HLS srautas. Tikroji per\u017ei\u016bros laikotarpio trukm\u0117 gali skirtis.",
+                    "name": "Pa\u017ei\u016br\u0117k atgal"
+                }
+            },
+            "name": "\u012era\u0161as"
+        },
+        "snapshot": {
+            "description": "Daro momentin\u0119 nuotrauk\u0105 i\u0161 fotoaparato.",
+            "fields": {
+                "filename": {
+                    "description": "Visas kelias \u012f failo pavadinim\u0105.",
+                    "name": "Failo pavadinimas"
+                }
+            },
+            "name": "Padarykite momentin\u0119 nuotrauk\u0105"
+        },
+        "turn_off": {
+            "description": "I\u0161jungia fotoaparat\u0105.",
+            "name": "I\u0161jungti"
+        },
+        "turn_on": {
+            "description": "\u012ejungia fotoaparat\u0105.",
+            "name": "\u012ejungti"
+        }
+    },
+    "title": "Kamera"
+}

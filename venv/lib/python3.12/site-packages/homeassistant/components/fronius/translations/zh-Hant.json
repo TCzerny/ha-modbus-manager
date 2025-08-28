@@ -1,0 +1,395 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u88dd\u7f6e\u5df2\u7d93\u8a2d\u5b9a\u5b8c\u6210",
+            "invalid_host": "\u7121\u6548\u4e3b\u6a5f\u540d\u7a31\u6216 IP \u4f4d\u5740",
+            "reconfigure_successful": "\u91cd\u65b0\u8a2d\u5b9a\u6210\u529f",
+            "unique_id_mismatch": "\u8b58\u5225\u78bc\u8207\u5148\u524d\u8b58\u5225\u78bc\u4e0d\u7b26"
+        },
+        "error": {
+            "cannot_connect": "\u9023\u7dda\u5931\u6557",
+            "unknown": "\u672a\u9810\u671f\u932f\u8aa4"
+        },
+        "flow_title": "{device}",
+        "step": {
+            "confirm_discovery": {
+                "description": "\u662f\u5426\u8981\u5c07 {device}  \u65b0\u589e\u81f3 Home Assistant\uff1f"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "\u4e3b\u6a5f\u7aef"
+                },
+                "data_description": {
+                    "host": "Fronius \u88dd\u7f6e\u4e4b\u4e3b\u6a5f\u540d\u7a31\u6216 IP \u4f4d\u5740\u3002"
+                },
+                "description": "\u66f4\u65b0 {device} \u8a2d\u5b9a\u8cc7\u8a0a\u3002"
+            },
+            "user": {
+                "data": {
+                    "host": "\u4e3b\u6a5f\u7aef"
+                },
+                "data_description": {
+                    "host": "Fronius \u88dd\u7f6e\u4e4b\u4e3b\u6a5f\u540d\u7a31\u6216 IP \u4f4d\u5740\u3002"
+                },
+                "description": "\u8a2d\u5b9a Fronius SolarAPI \u88dd\u7f6e\u3002"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "capacity_designed": {
+                "name": "\u8a2d\u8a08\u5bb9\u91cf"
+            },
+            "capacity_maximum": {
+                "name": "\u6700\u5927\u5bb9\u91cf"
+            },
+            "cash_factor": {
+                "name": "\u96fb\u7db2\u8f38\u51fa\u8cc7\u8cbb"
+            },
+            "co2_factor": {
+                "name": "\u4e8c\u6c27\u5316\u78b3\u56e0\u7d20"
+            },
+            "current_ac": {
+                "name": "\u4ea4\u6d41\u96fb\u6d41"
+            },
+            "current_ac_phase_1": {
+                "name": "\u96fb\u6d41\u76f8\u4f4d 1"
+            },
+            "current_ac_phase_2": {
+                "name": "\u96fb\u6d41\u76f8\u4f4d 2"
+            },
+            "current_ac_phase_3": {
+                "name": "\u96fb\u6d41\u76f8\u4f4d 3"
+            },
+            "current_dc": {
+                "name": "\u76f4\u6d41\u96fb\u6d41"
+            },
+            "current_dc_2": {
+                "name": "\u76f4\u6d41\u96fb\u6d41 2"
+            },
+            "delivery_factor": {
+                "name": "\u96fb\u7db2\u8f38\u5165\u8cc7\u8cbb"
+            },
+            "energy_day": {
+                "name": "\u65e5\u80fd\u6e90"
+            },
+            "energy_reactive_ac_consumed": {
+                "name": "\u7121\u6548\u96fb\u80fd\u8017\u80fd"
+            },
+            "energy_reactive_ac_produced": {
+                "name": "\u7121\u6548\u96fb\u80fd\u7522\u80fd"
+            },
+            "energy_real_ac_consumed": {
+                "name": "\u6d88\u8017\u80fd\u6e90"
+            },
+            "energy_real_ac_minus": {
+                "name": "\u6709\u6548\u96fb\u80fd\u6e1b"
+            },
+            "energy_real_ac_plus": {
+                "name": "\u6709\u6548\u96fb\u80fd\u52a0"
+            },
+            "energy_real_consumed": {
+                "name": "\u6709\u6548\u96fb\u80fd\u8017\u80fd"
+            },
+            "energy_real_produced": {
+                "name": "\u6709\u6548\u96fb\u80fd\u7522\u80fd"
+            },
+            "energy_total": {
+                "name": "\u7e3d\u80fd\u6e90"
+            },
+            "energy_year": {
+                "name": "\u5e74\u80fd\u6e90"
+            },
+            "error_code": {
+                "name": "\u932f\u8aa4\u4ee3\u78bc"
+            },
+            "error_message": {
+                "name": "\u932f\u8aa4\u8a0a\u606f",
+                "state": {
+                    "ac_current_sensor_error": "\u4ea4\u6d41\u96fb\u6d41\u611f\u6e2c\u5668\u932f\u8aa4",
+                    "ac_frequency_too_high": "\u4ea4\u6d41\u983b\u7387\u592a\u9ad8",
+                    "ac_frequency_too_low": "\u4ea4\u6d41\u983b\u7387\u592a\u4f4e",
+                    "ac_grid_outside_permissible_limits": "\u4ea4\u6d41\u96fb\u7db2\u8d85\u51fa\u5141\u8a31\u7bc4\u570d",
+                    "ac_module_over_temperature": "\u4ea4\u6d41\u6a21\u7d44\u904e\u71b1",
+                    "ac_module_temperature_sensor_faulty_l1": "\u4ea4\u6d41\u6a21\u7d44\u6eab\u5ea6\u611f\u6e2c\u5668\u6545\u969c\uff08L1\uff09",
+                    "ac_module_temperature_sensor_faulty_l2": "\u4ea4\u6d41\u6a21\u7d44\u6eab\u5ea6\u611f\u6e2c\u5668\u6545\u969c\uff08L2\uff09",
+                    "ac_module_temperature_sensor_faulty_l3": "\u4ea4\u6d41\u6a21\u7d44\u6eab\u5ea6\u611f\u6e2c\u5668\u6545\u969c\uff08L3\uff09",
+                    "ac_voltage_too_high": "\u4ea4\u6d41\u96fb\u58d3\u904e\u9ad8",
+                    "ac_voltage_too_low": "\u4ea4\u6d41\u96fb\u58d3\u904e\u4f4e",
+                    "arc_detection_triggered": "\u96fb\u5f27\u6aa2\u6e2c\u5df2\u89f8\u767c",
+                    "arc_detector_switched_off": "\u96fb\u5f27\u6aa2\u6e2c\u5668\u95dc\u9589\uff08\u4f8b\u5982\u65bc\u5916\u90e8\u96fb\u5f27\u76e3\u6e2c\u671f\u9593\uff09",
+                    "can_bus_full": "CAN \u532f\u6d41\u6392\u5df2\u6eff",
+                    "communication": "\u901a\u8a0a\u932f\u8aa4",
+                    "compatibility_error_invalid_power_stage_configuration": "\u76f8\u5bb9\u6027\u932f\u8aa4\uff08\u4f8b\u5982\u7531\u65bc\u66f4\u63db PC \u677f\uff09- \u529f\u7387\u968e\u6bb5\u7d44\u7121\u6548",
+                    "current_sensor_calibration_timeout": "\u96fb\u6d41\u611f\u6e2c\u5668\u6821\u6b63\u903e\u6642",
+                    "dc_component_measured_in_grid_too_high": "\u96fb\u7db2\u4e2d\u7684\u76f4\u6d41\u5143\u4ef6\u6e2c\u91cf\u904e\u9ad8",
+                    "dc_connection_inverter_battery_interrupted": "\u9006\u8b8a\u5668\u548c\u96fb\u6c60\u9593\u7684\u76f4\u6d41\u9023\u7dda\u4e2d\u65b7",
+                    "dc_input_voltage_mppt_1_too_high": "\u76f4\u6d41\u8f38\u5165\u96fb\u58d3 MPPT 1 \u904e\u9ad8",
+                    "dc_input_voltage_mppt_2_too_high": "\u76f4\u6d41\u8f38\u5165\u96fb\u58d3 MPPT 2 \u904e\u9ad8",
+                    "dc_low_string_1": "\u76f4\u6d41\u4f4e\u4e32 1",
+                    "dc_low_string_2": "\u76f4\u6d41\u4f4e\u4e32 2",
+                    "dc_module_over_temperature": "\u76f4\u6d41\u6a21\u7d44\u904e\u71b1",
+                    "dc_module_temperature_sensor_faulty": "\u76f4\u6d41\u6a21\u7d44\u6eab\u5ea6\u611f\u6e2c\u5668\u6545\u969c",
+                    "derating_caused_by_over_frequency": "\u8d85\u983b\u964d\u984d",
+                    "different_power_limitation_in_hardware_modules": "\u786c\u9ad4\u6a21\u7d44\u4e2d\u7684\u4e0d\u540c\u529f\u7387\u9650\u5236",
+                    "eeprom_reinitialised": "EEPROM \u5df2\u91cd\u65b0\u521d\u59cb\u5316",
+                    "emergency_power_derating_activated": "\u7dca\u6025\u529f\u7387\u964d\u984d\u555f\u52d5",
+                    "error_during_logging_data_recording": "\u8a18\u9304\u65e5\u8a8c\u8cc7\u6599\u6642\u51fa\u932f",
+                    "error_during_update_process": "\u66f4\u65b0\u904e\u7a0b\u4e2d\u767c\u751f\u932f\u8aa4",
+                    "fan_1_error": "\u98a8\u6247 1 \u932f\u8aa4",
+                    "fan_2_error": "\u98a8\u6247 2 \u932f\u8aa4",
+                    "file_could_not_be_opened": "\u6a94\u6848\u7121\u6cd5\u958b\u555f",
+                    "fixed_voltage_mode_out_of_range": "\u5df2\u9078\u64c7\u56fa\u5b9a\u96fb\u58d3\u6a21\u5f0f\u800c\u975e MPP \u96fb\u58d3\u6a21\u5f0f\uff0c\u4e14\u56fa\u5b9a\u96fb\u58d3\u8a2d\u5b9a\u5f97\u904e\u4f4e\u6216\u904e\u9ad8",
+                    "functional_incompatibility_between_pc_boards": "\u529f\u80fd\u4e0d\u76f8\u5bb9\uff08\u9006\u8b8a\u5668\u4e2d\u7684\u4e00\u500b\u6216\u591a\u500b\u96fb\u8def\u677f\u5f7c\u6b64\u4e0d\u76f8\u5bb9\uff0c\u4f8b\u5982\u66f4\u63db\u96fb\u8def\u677f\u5f8c\uff09",
+                    "grid_frequency_exceeded_limit_reconnecting": "\u96fb\u7db2\u983b\u7387\u5728\u91cd\u65b0\u9023\u63a5\u6642\u5df2\u8d85\u904e\u9650\u5236\u503c",
+                    "grid_voltage_dependent_power_reduction_active": "\u96fb\u7db2\u96fb\u58d3\u76f8\u95dc\u529f\u7387\u964d\u4f4e\u5df2\u555f\u52d5",
+                    "guard_cannot_be_found": "\u627e\u4e0d\u5230\u9632\u8b77",
+                    "hardware_id_problem": "\u786c\u9ad4 ID \u554f\u984c",
+                    "hid_range_error": "HID \u7bc4\u570d\u932f\u8aa4",
+                    "initialisation_error_file_system_error_on_usb": "USB \u96a8\u8eab\u789f\u4e0a\u7684\u6a94\u6848\u7cfb\u7d71\u521d\u59cb\u5316\u932f\u8aa4",
+                    "initialisation_error_usb_flash_drive_not_supported": "\u521d\u59cb\u5316\u932f\u8aa4 \u2013 \u4e0d\u652f\u63f4 USB \u96a8\u8eab\u789f",
+                    "initialisation_error_usb_stick_over_current": "\u521d\u59cb\u5316\u932f\u8aa4 \u2013 USB \u96a8\u8eab\u789f\u96fb\u6d41\u904e\u5927",
+                    "insulation_error_on_solar_panels": "\u592a\u967d\u80fd\u96fb\u6c60\u677f\u7d55\u7de3\u932f\u8aa4",
+                    "insulation_fault": "\u7d55\u7de3\u6545\u969c",
+                    "insulation_measurement_triggered": "\u7d55\u7de3\u6e2c\u91cf\u5df2\u89f8\u767c",
+                    "intermediate_circuit_voltage_too_high": "\u4e2d\u9593\u96fb\u8def\u96fb\u58d3\u904e\u9ad8",
+                    "intermediate_circuit_voltage_too_low_or_asymmetric": "\u4e2d\u9593\u96fb\u8def\u96fb\u58d3\u904e\u4f4e\u6216\u4e0d\u5c0d\u7a31",
+                    "internal_dsp_malfunction": "\u5167\u90e8 DSP \u6545\u969c",
+                    "internal_hardware_error": "\u5167\u90e8\u786c\u9ad4\u932f\u8aa4",
+                    "internal_processor_status": "\u6709\u95dc\u5167\u90e8\u8655\u7406\u5668\u72c0\u614b\u7684\u8b66\u544a\u3002\u8acb\u53c3\u95b1\u72c0\u614b\u4ee3\u78bc\u4ee5\u7372\u53d6\u66f4\u8a73\u7d30\u8a0a\u606f",
+                    "interrupt_check_fail": "\u4e2d\u65b7\u6aa2\u67e5\u5931\u6557",
+                    "invalid_device_type": "\u88dd\u7f6e\u985e\u578b\u7121\u6548",
+                    "inverter_required_setup_values_not_received": "\u7121\u6cd5\u63a5\u6536\u9006\u8b8a\u5668\u6240\u9700\u7684\u8a2d\u5b9a\u503c",
+                    "inverter_settings_changed_restart_required": "\u9006\u8b8a\u5668\u8a2d\u5b9a\u5df2\u66f4\u6539\uff0c\u9700\u8981\u91cd\u65b0\u555f\u52d5\u9006\u8b8a\u5668",
+                    "log_file_cannot_be_saved": "\u65e5\u8a8c\u6a94\u6848\u7121\u6cd5\u5132\u5b58\uff08\u4f8b\u5982\u96a8\u8eab\u789f\u5beb\u5165\u4fdd\u8b77\u6216\u5df2\u6eff\uff09",
+                    "low_pv_voltage_dc_input_voltage_too_low": "\u5149\u4f0f\u96fb\u58d3\u4f4e - \u76f4\u6d41\u8f38\u5165\u96fb\u58d3\u904e\u4f4e\uff0c\u7121\u6cd5\u5c07\u80fd\u91cf\u8f38\u9001\u81f3\u96fb\u7db2",
+                    "mains_voltage_dependent_power_reduction": "\u4e3b\u96fb\u58d3\u76f8\u95dc\u7684\u529f\u7387\u964d\u4f4e",
+                    "memory_error_detected": "\u5075\u6e2c\u5230\u8a18\u61b6\u9ad4\u932f\u8aa4",
+                    "neutral_conductor_not_connected": "\u4e2d\u6027\u5c0e\u9ad4\u672a\u9023\u63a5",
+                    "no_communication_between_power_stage_and_control_system": "\u529f\u7387\u968e\u6bb5\u7d44\u548c\u63a7\u5236\u7cfb\u7d71\u4e4b\u9593\u7121\u6cd5\u9032\u884c\u901a\u8a0a",
+                    "no_communication_with_filter": "\u7121\u6cd5\u8207\u904e\u6ffe\u5668\u9032\u884c\u901a\u8a0a",
+                    "no_communication_with_hybrid_manager": "\u7121\u6cd5\u8207\u6df7\u5408\u7ba1\u7406\u5668\u9032\u884c\u901a\u8a0a",
+                    "no_communication_with_power_stage_set": "\u7121\u6cd5\u8207\u529f\u7387\u968e\u6bb5\u7d44\u9032\u884c\u901a\u8a0a",
+                    "no_communication_with_storage_unit": "\u7121\u6cd5\u8207\u5b58\u5132\u8a2d\u5099\u9032\u884c\u901a\u8a0a",
+                    "no_energy_fed_by_mppt1_past_24_hours": "\u904e\u53bb24\u5c0f\u6642\u5167\uff0cMPPT1 \u672a\u5411\u96fb\u7db2\u8f38\u9001\u80fd\u6e90",
+                    "no_energy_fed_into_grid_past_24_hours": "\u904e\u53bb 24 \u5c0f\u6642\u5167\u6c92\u6709\u80fd\u6e90\u8f38\u9001\u96fb\u7db2",
+                    "no_error": "\u6c92\u6709\u932f\u8aa4",
+                    "no_power_fed_in_despite_closed_relay": "\u5118\u7ba1\u7e7c\u96fb\u5668\u5df2\u95dc\u9589\uff0c\u4f46\u4ecd\u6c92\u6709\u4f9b\u96fb",
+                    "no_usb_flash_drive_connected": "\u672a\u9023\u63a5 USB \u96a8\u8eab\u789f",
+                    "overcurrent_ac": "\u904e\u96fb\u6d41\uff08\u4ea4\u6d41\uff09",
+                    "overcurrent_dc": "\u904e\u96fb\u6d41\uff08\u76f4\u6d41\uff09",
+                    "overtemperature_in_connection_area": "\u9023\u63a5\u5340\u57df\u904e\u71b1",
+                    "pmc_power_stage_set_not_available": "PMC \u529f\u7387\u968e\u6bb5\u7d44\u7121\u6cd5\u4f7f\u7528",
+                    "polarity_of_dc_strings_reversed": "\u76f4\u6d41\u96fb\u4e32\u7684\u6975\u6027\u53cd\u8f49",
+                    "possible_hardware_fault": "\u53ef\u80fd\u6027\u786c\u9ad4\u6545\u969c",
+                    "power_derating_due_to_high_temperature": "\u6eab\u5ea6\u904e\u9ad8\u5c0e\u81f4\u529f\u7387\u964d\u984d",
+                    "power_stage_set_problem": "\u529f\u7387\u968e\u6bb5\u7d44\u554f\u984c",
+                    "pv_output_too_low_for_feeding_energy_into_the_grid": "\u5149\u4f0f\u8f38\u51fa\u592a\u4f4e\uff0c\u7121\u6cd5\u5c07\u80fd\u91cf\u8f38\u9001\u5230\u96fb\u7db2",
+                    "rcmu_error": "RCMU \u932f\u8aa4",
+                    "real_time_clock_communication_error": "\u5373\u6642\u6642\u9418\u6a21\u7d44\u901a\u8a0a\u932f\u8aa4",
+                    "real_time_clock_hardware_error": "\u5373\u6642\u6642\u9418\u6a21\u7d44\u786c\u9ad4\u932f\u8aa4",
+                    "real_time_clock_in_emergency_mode": "\u5167\u90e8\u932f\u8aa4\uff1a\u5373\u6642\u6642\u9418\u6a21\u7d44\u8655\u65bc\u7dca\u6025\u6a21\u5f0f",
+                    "safety_cut_out_triggered": "\u900f\u904e\u9078\u9805\u5361\u6216 RECERBO \u5df2\u89f8\u767c\u5b89\u5168\u5207\u65b7",
+                    "software_problem": "\u8edf\u9ad4\u554f\u984c",
+                    "software_update_invalid_country_setup": "\u8edf\u9ad4\u66f4\u65b0\u7fa4\u7d44 0\uff08\u570b\u5bb6\u8a2d\u5b9a\u7121\u6548\uff09",
+                    "stand_alone_operation_detected": "\u6aa2\u6e2c\u5230\u7368\u7acb\u64cd\u4f5c",
+                    "storage_unit_not_available": "\u5132\u5b58\u8a2d\u5099\u4e0d\u53ef\u7528",
+                    "time_lost": "\u640d\u5931\u6642\u9593",
+                    "too_little_dc_power_for_feed_in_operation": "\u7528\u65bc\u4f9b\u96fb\u64cd\u4f5c\u7684\u76f4\u6d41\u96fb\u6e90\u904e\u4f4e",
+                    "unique_id_conflict": "\u55ae\u4e00 ID \u885d\u7a81",
+                    "update_file_corrupt": "\u66f4\u65b0\u6a94\u6848\u640d\u58de",
+                    "update_file_does_not_match_device": "\u66f4\u65b0\u6a94\u6848\u8207\u88dd\u7f6e\u4e0d\u7b26\uff0c\u66f4\u65b0\u6a94\u6848\u904e\u820a",
+                    "update_file_not_recognised_or_missing": "\u66f4\u65b0\u6a94\u6848\u7121\u6cd5\u8fa8\u8b58\u6216\u4e0d\u5b58\u5728",
+                    "wired_shut_down_triggered": "\u6709\u7dda\u95dc\u9589\u5df2\u89f8\u767c",
+                    "write_or_read_error_occurred": "\u767c\u751f\u5beb\u5165\u6216\u8b80\u53d6\u932f\u8aa4"
+                }
+            },
+            "frequency_phase_average": {
+                "name": "\u983b\u7387\u76f8\u4f4d\u5e73\u5747"
+            },
+            "inverter_state": {
+                "name": "\u53cd\u5411\u5668\u72c0\u614b"
+            },
+            "led_color": {
+                "name": "LED \u984f\u8272"
+            },
+            "led_state": {
+                "name": "LED \u72c0\u614b"
+            },
+            "meter_location": {
+                "name": "\u5100\u5668\u5ea7\u6a19"
+            },
+            "meter_location_description": {
+                "name": "\u5100\u5668\u5ea7\u6a19\u8aaa\u660e",
+                "state": {
+                    "consumption_path": "\u6d88\u8017\u8def\u5f91",
+                    "external_battery": "\u5916\u90e8\u96fb\u6c60",
+                    "external_generator": "\u5916\u90e8\u767c\u96fb\u6a5f",
+                    "feed_in": "\u96fb\u7db2\u4ecb\u63a5\u9ede",
+                    "subload": "\u90e8\u5206\u8ca0\u8377"
+                }
+            },
+            "meter_mode": {
+                "name": "\u5100\u5668\u6a21\u5f0f"
+            },
+            "power_ac": {
+                "name": "\u4ea4\u6d41\u96fb"
+            },
+            "power_apparent_phase_1": {
+                "name": "\u8996\u5728\u529f\u7387\u76f8\u4f4d 1"
+            },
+            "power_apparent_phase_2": {
+                "name": "\u8996\u5728\u529f\u7387\u76f8\u4f4d 2"
+            },
+            "power_apparent_phase_3": {
+                "name": "\u8996\u5728\u529f\u7387\u76f8\u4f4d 3"
+            },
+            "power_battery": {
+                "name": "\u529f\u7387\u96fb\u6c60"
+            },
+            "power_battery_charge": {
+                "name": "\u96fb\u6e90\u96fb\u6c60\u5145\u96fb"
+            },
+            "power_battery_discharge": {
+                "name": "\u96fb\u6e90\u96fb\u6c60\u653e\u96fb"
+            },
+            "power_factor_phase_1": {
+                "name": "\u529f\u7387\u56e0\u6578\u76f8\u4f4d 1"
+            },
+            "power_factor_phase_2": {
+                "name": "\u529f\u7387\u56e0\u6578\u76f8\u4f4d 2"
+            },
+            "power_factor_phase_3": {
+                "name": "\u529f\u7387\u56e0\u6578\u76f8\u4f4d 3"
+            },
+            "power_grid": {
+                "name": "\u96fb\u7db2"
+            },
+            "power_grid_export": {
+                "name": "\u96fb\u7db2\u8f38\u51fa"
+            },
+            "power_grid_import": {
+                "name": "\u96fb\u7db2\u8f38\u5165"
+            },
+            "power_load": {
+                "name": "\u96fb\u529b\u8ca0\u8f09"
+            },
+            "power_load_consumed": {
+                "name": "\u6d88\u8017\u7684\u96fb\u529b\u8ca0\u8f09"
+            },
+            "power_load_generated": {
+                "name": "\u7522\u751f\u7684\u96fb\u529b\u8ca0\u8f09"
+            },
+            "power_photovoltaics": {
+                "name": "\u7535\u529b\u5149\u4f0f"
+            },
+            "power_reactive": {
+                "name": "\u7121\u529f\u6548\u7387"
+            },
+            "power_reactive_phase_1": {
+                "name": "\u7121\u529f\u6548\u7387\u76f8\u4f4d 1"
+            },
+            "power_reactive_phase_2": {
+                "name": "\u7121\u529f\u6548\u7387\u76f8\u4f4d 2"
+            },
+            "power_reactive_phase_3": {
+                "name": "\u7121\u529f\u6548\u7387\u76f8\u4f4d 3"
+            },
+            "power_real": {
+                "name": "\u6709\u6548\u529f\u7387"
+            },
+            "power_real_phase_1": {
+                "name": "\u6709\u6548\u529f\u7387\u76f8\u4f4d 1"
+            },
+            "power_real_phase_2": {
+                "name": "\u6709\u6548\u529f\u7387\u76f8\u4f4d 2"
+            },
+            "power_real_phase_3": {
+                "name": "\u6709\u6548\u529f\u7387\u76f8\u4f4d 3"
+            },
+            "relative_autonomy": {
+                "name": "\u76f8\u5c0d\u81ea\u4e3b\u6027"
+            },
+            "relative_self_consumption": {
+                "name": "\u76f8\u5c0d\u81ea\u8017\u80fd"
+            },
+            "state_code": {
+                "name": "\u72c0\u614b\u4ee3\u78bc"
+            },
+            "state_message": {
+                "name": "\u72c0\u614b\u8a0a\u606f",
+                "state": {
+                    "boost_mode": "\u5168\u901f\u6a21\u5f0f",
+                    "critical_fault": "\u56b4\u91cd\u6545\u969c",
+                    "fault": "\u6545\u969c",
+                    "keep_minimum_temperature": "\u4fdd\u6301\u6700\u4f4e\u6eab\u5ea6",
+                    "legionella_protection": "\u9000\u4f0d\u8ecd\u4eba\u687f\u83cc\u4fdd\u8b77",
+                    "up_and_running": "\u555f\u52d5\u4e26\u904b\u4f5c\u4e2d"
+                }
+            },
+            "state_of_charge": {
+                "name": "\u5145\u96fb\u72c0\u614b"
+            },
+            "status_code": {
+                "name": "\u72c0\u614b\u78bc"
+            },
+            "status_message": {
+                "name": "\u72c0\u614b\u8a0a\u606f",
+                "state": {
+                    "bootloading": "\u958b\u6a5f\u5f15\u5c0e",
+                    "error": "\u932f\u8aa4",
+                    "idle": "\u9592\u7f6e",
+                    "ready": "\u5c31\u7dd2",
+                    "running": "\u57f7\u884c\u4e2d",
+                    "sleeping": "\u4f11\u7720\u4e2d",
+                    "standby": "\u5f85\u547d",
+                    "startup": "\u555f\u52d5"
+                }
+            },
+            "temperature_cell": {
+                "name": "\u6eab\u5ea6"
+            },
+            "voltage_ac": {
+                "name": "\u4ea4\u6d41\u96fb\u58d3"
+            },
+            "voltage_ac_phase_1": {
+                "name": "\u96fb\u58d3\u76f8\u4f4d 1"
+            },
+            "voltage_ac_phase_2": {
+                "name": "\u96fb\u58d3\u76f8\u4f4d 2"
+            },
+            "voltage_ac_phase_3": {
+                "name": "\u96fb\u58d3\u76f8\u4f4d 3"
+            },
+            "voltage_ac_phase_to_phase_12": {
+                "name": "\u96fb\u58d3\u76f8\u4f4d 1-2"
+            },
+            "voltage_ac_phase_to_phase_23": {
+                "name": "\u96fb\u58d3\u76f8\u4f4d 2-3"
+            },
+            "voltage_ac_phase_to_phase_31": {
+                "name": "\u96fb\u58d3\u76f8\u4f4d 3-1"
+            },
+            "voltage_dc": {
+                "name": "\u4ea4\u6d41\u96fb\u58d3"
+            },
+            "voltage_dc_2": {
+                "name": "\u4ea4\u6d41\u96fb\u58d3 2"
+            },
+            "voltage_dc_maximum_cell": {
+                "name": "\u6700\u5927\u96fb\u6c60\u96fb\u58d3"
+            },
+            "voltage_dc_minimum_cell": {
+                "name": "\u6700\u5c0f\u96fb\u6c60\u96fb\u58d3"
+            }
+        }
+    },
+    "exceptions": {
+        "entry_cannot_connect": {
+            "message": "\u9023\u7dda\u81f3\u4f4d\u65bc {host} \u7684 Fronius \u88dd\u7f6e\u5931\u6557\uff1a{fronius_error}"
+        },
+        "update_failed": {
+            "message": "\u65bc\u8a66\u5716\u53d6\u5f97\u8cc7\u6599\u6642\u767c\u751f\u932f\u8aa4\uff1a{fronius_error}"
+        }
+    }
+}

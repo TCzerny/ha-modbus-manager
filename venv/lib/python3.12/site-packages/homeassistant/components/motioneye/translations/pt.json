@@ -1,0 +1,105 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "invalid_url": "URL inv\u00e1lido",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "hassio_confirm": {
+                "description": "Pretende configurar o Home Assistant para se ligar ao servi\u00e7o motionEye fornecido pelo suplemento: {addon}?",
+                "title": "motionEye atrav\u00e9s do suplemento do Home Assistant"
+            },
+            "user": {
+                "data": {
+                    "admin_password": "Palavra-passe de administrador",
+                    "admin_username": "Nome de utilizador do administrador",
+                    "surveillance_password": "Palavra-passe de vigil\u00e2ncia",
+                    "surveillance_username": "Nome de utilizador de vigil\u00e2ncia",
+                    "url": "URL"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "actions": {
+                "name": "A\u00e7\u00f5es"
+            }
+        },
+        "switch": {
+            "motion_detection": {
+                "name": "Dete\u00e7\u00e3o de movimento"
+            },
+            "movies": {
+                "name": "Filmes"
+            },
+            "still_images": {
+                "name": "Imagens est\u00e1ticas"
+            },
+            "text_overlay": {
+                "name": "Sobreposi\u00e7\u00e3o de texto"
+            },
+            "upload_enabled": {
+                "name": "Upload ativado"
+            },
+            "video_streaming": {
+                "name": "Transmiss\u00e3o de v\u00eddeo"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "stream_url_template": "Modelo de URL de fluxo",
+                    "webhook_set": "Configurar webhooks do motionEye para comunicar eventos ao Home Assistant",
+                    "webhook_set_overwrite": "Substituir webhooks n\u00e3o reconhecidos"
+                }
+            }
+        }
+    },
+    "services": {
+        "action": {
+            "description": "Desencadeia uma a\u00e7\u00e3o motionEye.",
+            "fields": {
+                "action": {
+                    "description": "A\u00e7\u00e3o a desencadear.",
+                    "name": "A\u00e7\u00e3o"
+                }
+            },
+            "name": "A\u00e7\u00e3o"
+        },
+        "set_text_overlay": {
+            "description": "Define a sobreposi\u00e7\u00e3o de texto para uma c\u00e2mara.",
+            "fields": {
+                "custom_left_text": {
+                    "description": "Texto personalizado a apresentar \u00e0 esquerda.",
+                    "name": "Texto personalizado \u00e0 esquerda"
+                },
+                "custom_right_text": {
+                    "description": "Texto personalizado a apresentar \u00e0 direita.",
+                    "name": "Texto personalizado direito"
+                },
+                "left_text": {
+                    "description": "Texto a apresentar \u00e0 esquerda.",
+                    "name": "Sobreposi\u00e7\u00e3o de texto \u00e0 esquerda"
+                },
+                "right_text": {
+                    "description": "Texto a apresentar \u00e0 direita.",
+                    "name": "Sobreposi\u00e7\u00e3o de texto \u00e0 direita"
+                }
+            },
+            "name": "Definir sobreposi\u00e7\u00e3o de texto"
+        },
+        "snapshot": {
+            "description": "Desencadeia um instant\u00e2neo de imagem fixa motionEye.",
+            "name": "Snapshot"
+        }
+    }
+}

@@ -1,0 +1,98 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "unique_id_exists": "Ein anderer Konfigurationseintrag mit diesem Benutzernamen ist bereits vorhanden"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Passwort"
+                }
+            },
+            "reconfigure": {
+                "data": {
+                    "area_id": "Bereichs-ID",
+                    "password": "Passwort",
+                    "username": "Benutzername"
+                }
+            },
+            "user": {
+                "data": {
+                    "area_id": "Bereichs-ID",
+                    "name": "Name",
+                    "password": "Passwort",
+                    "username": "Benutzername"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery": {
+                "name": "Batterie"
+            },
+            "jam": {
+                "name": "St\u00f6rung"
+            },
+            "power_loss": {
+                "name": "Leistungsverlust"
+            },
+            "tamper": {
+                "name": "Manipulation"
+            }
+        },
+        "button": {
+            "panic": {
+                "name": "Panik-Taster"
+            }
+        },
+        "select": {
+            "volume": {
+                "name": "Lautst\u00e4rke",
+                "state": {
+                    "high": "Hoch",
+                    "low": "Niedrig",
+                    "off": "Aus"
+                }
+            }
+        },
+        "switch": {
+            "autolock": {
+                "name": "Automatische Sperre"
+            }
+        }
+    },
+    "exceptions": {
+        "could_not_change_alarm": {
+            "message": "Der Alarm konnte nicht ge\u00e4ndert werden. \u00dcberpr\u00fcfe, ob das System zum Scharfschalten bereit ist"
+        },
+        "could_not_change_lock": {
+            "message": "Die Sperre konnte nicht aktiviert werden. \u00dcberpr\u00fcfe, ob das System f\u00fcr die Sperre bereit ist"
+        },
+        "could_not_trigger_panic": {
+            "message": "Panikknopf f\u00fcr Entit\u00e4ts-ID {entity_id} konnte nicht ausgel\u00f6st werden: {error}"
+        },
+        "set_alarm": {
+            "message": "Alarm f\u00fcr {name} konnte nicht eingestellt werden: {error}"
+        },
+        "set_lock": {
+            "message": "Die Sperre f\u00fcr {name} konnte nicht festgelegt werden: {error}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "lock_code_digits": "Anzahl der Ziffern im PIN-Code f\u00fcr Schl\u00f6sser"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,176 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "different_device": "Girilen bilgiler farkl\u0131 bir Peblar EV \u015farj cihaz\u0131na aittir.",
+            "no_serial_number": "Ke\u015ffedilen Peblar cihaz\u0131n\u0131n seri numaras\u0131 bulunmuyor.",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu",
+            "reconfigure_successful": "Yeniden yap\u0131land\u0131rma ba\u015far\u0131l\u0131 oldu"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "unknown": "Beklenmeyen hata"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "\u015eifre"
+                },
+                "data_description": {
+                    "password": "Peblar EV \u015farj cihaz\u0131n\u0131n yerel web aray\u00fcz\u00fcne giri\u015f yapmak i\u00e7in kulland\u0131\u011f\u0131n\u0131z \u015fifrenin ayn\u0131s\u0131."
+                },
+                "description": "Peblar EV \u015farj cihaz\u0131n\u0131zla yeniden kimlik do\u011frulamas\u0131 yap\u0131n. \n \n Bunu yapmak i\u00e7in, Peblar EV \u015farj cihaz\u0131n\u0131n web aray\u00fcz\u00fcnde oturum a\u00e7mak i\u00e7in kulland\u0131\u011f\u0131n\u0131z yeni parolan\u0131z\u0131 girmeniz gerekecektir."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Sunucu",
+                    "password": "\u015eifre"
+                },
+                "data_description": {
+                    "host": "Ev a\u011f\u0131n\u0131zdaki Peblar EV \u015farj cihaz\u0131n\u0131z\u0131n ana bilgisayar ad\u0131 veya IP adresi.",
+                    "password": "Peblar EV \u015farj cihaz\u0131n\u0131n yerel web aray\u00fcz\u00fcne giri\u015f yapmak i\u00e7in kulland\u0131\u011f\u0131n\u0131z \u015fifrenin ayn\u0131s\u0131."
+                },
+                "description": "Peblar EV \u015farj cihaz\u0131n\u0131z\u0131 yeniden yap\u0131land\u0131r\u0131n. \n \n Bu, Peblar EV \u015farj cihaz\u0131n\u0131z\u0131n IP adresini ve web aray\u00fcz\u00fcne giri\u015f yapmak i\u00e7in kulland\u0131\u011f\u0131n\u0131z \u015fifreyi de\u011fi\u015ftirmenize olanak tan\u0131r."
+            },
+            "user": {
+                "data": {
+                    "host": "Sunucu",
+                    "password": "\u015eifre"
+                },
+                "data_description": {
+                    "host": "Ev a\u011f\u0131n\u0131zdaki Peblar EV \u015farj cihaz\u0131n\u0131z\u0131n ana bilgisayar ad\u0131 veya IP adresi.",
+                    "password": "Peblar EV \u015farj cihaz\u0131n\u0131n yerel web aray\u00fcz\u00fcne giri\u015f yapmak i\u00e7in kulland\u0131\u011f\u0131n\u0131z \u015fifrenin ayn\u0131s\u0131."
+                },
+                "description": "Peblar EV \u015farj cihaz\u0131n\u0131z\u0131 Home Assistant ile entegre olacak \u015fekilde ayarlay\u0131n. \n \n Bunu yapmak i\u00e7in, Peblar EV \u015farj cihaz\u0131n\u0131z\u0131n IP adresini ve web aray\u00fcz\u00fcnde oturum a\u00e7mak i\u00e7in kulland\u0131\u011f\u0131n\u0131z parolay\u0131 alman\u0131z gerekecektir. \n \n Home Assistant, Peblar EV \u015farj cihaz\u0131n\u0131z\u0131 Home Assistant ile birlikte kullan\u0131lmak \u00fczere otomatik olarak yap\u0131land\u0131racakt\u0131r."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "\u015eifre"
+                },
+                "data_description": {
+                    "password": "Peblar EV \u015farj cihaz\u0131n\u0131n yerel web aray\u00fcz\u00fcne giri\u015f yapmak i\u00e7in kulland\u0131\u011f\u0131n\u0131z \u015fifrenin ayn\u0131s\u0131."
+                },
+                "description": "{hostname} Peblar EV \u015farj cihaz\u0131n\u0131z\u0131, {host} IP adresinde Home Assistant ile entegre olacak \u015fekilde ayarlay\u0131n \n \n Bunu yapmak i\u00e7in, Peblar EV \u015farj cihaz\u0131n\u0131n web aray\u00fcz\u00fcnde oturum a\u00e7mak i\u00e7in kulland\u0131\u011f\u0131n\u0131z parolaya ihtiyac\u0131n\u0131z olacak. \n \n Home Assistant, Peblar EV \u015farj cihaz\u0131n\u0131z\u0131 Home Assistant ile birlikte kullan\u0131lmak \u00fczere otomatik olarak yap\u0131land\u0131racakt\u0131r."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Aktif hatalar"
+            },
+            "active_warning_codes": {
+                "name": "Aktif uyar\u0131lar"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "\u015earj limiti"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "Ak\u0131ll\u0131 \u015farj",
+                "state": {
+                    "default": "Varsay\u0131lan",
+                    "fast_solar": "H\u0131zl\u0131 g\u00fcne\u015f enerjisi",
+                    "pure_solar": "Saf g\u00fcne\u015f enerjisi",
+                    "scheduled": "Planlanm\u0131\u015f",
+                    "smart_solar": "Ak\u0131ll\u0131 g\u00fcne\u015f enerjisi"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Kaynak s\u0131n\u0131rlamas\u0131",
+                "state": {
+                    "charging_cable": "\u015earj kablosu",
+                    "current_limiter": "Ak\u0131m s\u0131n\u0131rlay\u0131c\u0131",
+                    "dynamic_load_balancing": "Dinamik y\u00fck dengeleme",
+                    "external_power_limit": "Harici g\u00fc\u00e7 s\u0131n\u0131r\u0131",
+                    "group_load_balancing": "Grup y\u00fck dengeleme",
+                    "hardware_limitation": "Donan\u0131m s\u0131n\u0131rlamalar\u0131",
+                    "high_temperature": "Y\u00fcksek s\u0131cakl\u0131k",
+                    "household_power_limit": "Ev i\u00e7i g\u00fc\u00e7 s\u0131n\u0131r\u0131",
+                    "installation_limit": "Kurulum s\u0131n\u0131r\u0131",
+                    "local_modbus_api": "Modbus API",
+                    "local_rest_api": "REST API",
+                    "ocpp_smart_charging": "OCPP ak\u0131ll\u0131 \u015farj",
+                    "overcurrent_protection": "A\u015f\u0131r\u0131 ak\u0131m korumas\u0131",
+                    "phase_imbalance": "Faz dengesizli\u011fi",
+                    "power_factor": "G\u00fc\u00e7 fakt\u00f6r\u00fc",
+                    "solar_charging": "G\u00fcne\u015f enerjisiyle \u015farj"
+                }
+            },
+            "cp_state": {
+                "name": "Durum",
+                "state": {
+                    "charging": "\u015earj oluyor",
+                    "error": "Hata",
+                    "fault": "Hata",
+                    "invalid": "Ge\u00e7ersiz",
+                    "no_ev_connected": "Hi\u00e7bir EV ba\u011fl\u0131 de\u011fil",
+                    "suspended": "Ask\u0131ya al\u0131nm\u0131\u015f"
+                }
+            },
+            "current_phase_1": {
+                "name": "Mevcut a\u015fama 1"
+            },
+            "current_phase_2": {
+                "name": "Mevcut a\u015fama 2"
+            },
+            "current_phase_3": {
+                "name": "Mevcut a\u015fama 3"
+            },
+            "energy_session": {
+                "name": "Oturum enerjisi"
+            },
+            "energy_total": {
+                "name": "\u00d6m\u00fcr boyu enerji"
+            },
+            "power_phase_1": {
+                "name": "G\u00fc\u00e7 faz\u0131 1"
+            },
+            "power_phase_2": {
+                "name": "G\u00fc\u00e7 faz\u0131 2"
+            },
+            "power_phase_3": {
+                "name": "G\u00fc\u00e7 faz\u0131 3"
+            },
+            "uptime": {
+                "name": "\u00c7al\u0131\u015fma s\u00fcresi"
+            },
+            "voltage_phase_1": {
+                "name": "Gerilim faz\u0131 1"
+            },
+            "voltage_phase_2": {
+                "name": "Gerilim faz\u0131 2"
+            },
+            "voltage_phase_3": {
+                "name": "Gerilim faz\u0131 3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "Tek fazl\u0131 kuvvet"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "\u00d6zelle\u015ftirme"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Peblar EV \u015farj cihaz\u0131yla ileti\u015fim s\u0131ras\u0131nda bir kimlik do\u011frulama hatas\u0131 olu\u015ftu."
+        },
+        "communication_error": {
+            "message": "Peblar EV \u015farj cihaz\u0131yla ileti\u015fim kurulurken bir hata olu\u015ftu: {error}"
+        },
+        "unknown_error": {
+            "message": "Peblar EV \u015farj cihaz\u0131yla ileti\u015fim kurulurken bilinmeyen bir hata olu\u015ftu: {error}"
+        }
+    }
+}

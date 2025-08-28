@@ -1,0 +1,822 @@
+{
+    "common": {
+        "confirmed": "\u78ba\u8a8d",
+        "present": "\u51fa\u73fe"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "\u5143\u4ef6\u5c1a\u672a\u8a2d\u7f6e\uff0c\u8acb\u53c3\u95b1\u6587\u4ef6\u8aaa\u660e\u3002",
+            "no_url_available": "\u6c92\u6709\u53ef\u7528\u7684\u7db2\u5740\u3002\u95dc\u65bc\u6b64\u932f\u8aa4\u66f4\u8a73\u7d30\u8a0a\u606f\uff0c[\u9ede\u9078\u5354\u52a9\u7ae0\u7bc0]({docs_url})",
+            "oauth_error": "\u6536\u5230\u7121\u6548\u7684\u6b0a\u6756\u8cc7\u6599\u3002",
+            "oauth_failed": "\u53d6\u5f97\u5b58\u53d6\u6b0a\u6756\u6642\u51fa\u73fe\u932f\u8aa4\u3002",
+            "oauth_timeout": "\u89e3\u6790 OAuth \u6b0a\u6756\u903e\u6642\u3002",
+            "oauth_unauthorized": "\u53d6\u5f97\u5b58\u53d6\u6b0a\u6756\u6642 OAuth \u6388\u6b0a\u932f\u8aa4\u3002"
+        },
+        "create_entry": {
+            "default": "\u5df2\u6210\u529f\u8a8d\u8b49"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "\u9078\u64c7\u9a57\u8b49\u6a21\u5f0f"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "\u96fb\u6c60\u5145\u96fb\u72c0\u614b"
+            },
+            "charging_connection": {
+                "name": "\u5145\u96fb\u9023\u7dda"
+            },
+            "chiller_door": {
+                "name": "\u51b0\u6c34\u6a5f\u9580"
+            },
+            "dust_box_inserted": {
+                "name": "\u96c6\u5875\u76d2",
+                "state": {
+                    "off": "\u672a\u63d2\u5165",
+                    "on": "\u5df2\u63d2\u5165"
+                }
+            },
+            "freezer_door": {
+                "name": "\u51b7\u51cd\u5ba4\u9580"
+            },
+            "lifted": {
+                "name": "\u89e3\u9664"
+            },
+            "local_control": {
+                "name": "\u672c\u5730\u63a7\u5236"
+            },
+            "lost": {
+                "name": "\u907a\u5931"
+            },
+            "refrigerator_door": {
+                "name": "\u51b0\u7bb1\u9580"
+            },
+            "remote_control": {
+                "name": "\u9060\u7aef\u63a7\u5236"
+            },
+            "remote_start": {
+                "name": "\u9060\u7aef\u555f\u52d5"
+            }
+        },
+        "light": {
+            "ambient_light": {
+                "name": "\u74b0\u5883\u5149"
+            },
+            "cooking_lighting": {
+                "name": "\u529f\u80fd\u71c8\u5149"
+            },
+            "external_light": {
+                "name": "\u5916\u90e8\u71c8\u5149"
+            },
+            "internal_light": {
+                "name": "\u5167\u90e8\u71c8\u5149"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "\u74f6\u8eab\u51b7\u537b\u5668\u6eab\u5ea6"
+            },
+            "chiller_left_setpoint_temperature": {
+                "name": "\u51b7\u537b\u5668\u5de6\u5074\u6eab\u5ea6"
+            },
+            "chiller_right_setpoint_temperature": {
+                "name": "\u51b7\u537b\u5668\u53f3\u5074\u6eab\u5ea6"
+            },
+            "chiller_setpoint_temperature": {
+                "name": "\u51b7\u537b\u5668\u6eab\u5ea6"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "\u51b7\u51cd\u5ba4\u6eab\u5ea6"
+            },
+            "refrigerator_setpoint_temperature": {
+                "name": "\u51b0\u7bb1\u6eab\u5ea6"
+            },
+            "wine_compartment_2_setpoint_temperature": {
+                "name": "\u9152\u5ba4 2 \u6eab\u5ea6"
+            },
+            "wine_compartment_3_setpoint_temperature": {
+                "name": "\u9152\u5ba4 3 \u6eab\u5ea6"
+            },
+            "wine_compartment_setpoint_temperature": {
+                "name": "\u9152\u5ba4\u6eab\u5ea6"
+            }
+        },
+        "select": {
+            "active_program": {
+                "name": "\u555f\u7528\u7a0b\u5f0f",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "\u8fd4\u56de\u57fa\u5730\u53f0",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "\u5168\u90e8\u6e05\u6383",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "\u6e05\u6383\u5730\u5716",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "\u5927\u676f\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "\u62ff\u9435\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "\u5361\u5e03\u5947\u8afe",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "\u96d9\u4efd\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "\u746a\u5947\u6735\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "\u71b1\u6c34",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "\u62ff\u9435\u746a\u5947\u6735",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "\u5976\u6ce1",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "\u77ed\u8403\u53d6\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "\u6eab\u725b\u5976",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "\u7279\u5927\u676f\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "\u7f8e\u5f0f\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "\u9ed1\u773c\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "\u5496\u5561\u6b50\u857e",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "\u897f\u73ed\u7259\u725b\u5976\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "\u544a\u723e\u591a\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "\u544a\u723e\u591a",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "\u6b7b\u773c\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "\u7fa9\u5927\u5229\u96d9\u4efd\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "\u99a5\u5217\u767d\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "\u8461\u8404\u7259\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "\u8461\u8404\u7259\u725b\u5976\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "\u7dad\u4e5f\u7d0d\u5927\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "\u560e\u903c",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "\u7dad\u4e5f\u7d0d\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "\u8377\u862d\u62ff\u9435",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "\u7d05\u773c\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "\u7dad\u4e5f\u7d0d\u6de1\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "\u7dad\u4e5f\u7d0d\u767e\u9748\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "\u7dad\u4e5f\u7d0d\u5496\u5561",
+                    "cooking_common_program_hood_automatic": "\u81ea\u52d5",
+                    "cooking_common_program_hood_delayed_shut_off": "\u5ef6\u9072\u95dc\u9589",
+                    "cooking_common_program_hood_venting": "\u6392\u7159",
+                    "cooking_oven_program_heating_mode_bottom_heating": "\u5e95\u90e8\u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_defrost": "\u9664\u971c",
+                    "cooking_oven_program_heating_mode_desiccation": "\u4e7e\u71e5",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "\u51b7\u51cd\u7522\u54c1\u7279\u6b8a\u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_hot_air": "\u71b1\u98a8",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "\u71b1\u98a8 + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "\u71b1\u98a8 + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "\u71b1\u98a8 + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "\u71b1\u98a8 + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "\u71b1\u98a8\u7bc0\u80fd",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "\u71b1\u98a8\u71d2\u70e4",
+                    "cooking_oven_program_heating_mode_intensive_heat": "\u5bc6\u96c6\u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_keep_warm": "\u4fdd\u6eab",
+                    "cooking_oven_program_heating_mode_pizza_setting": "\u62ab\u85a9\u8a2d\u5b9a",
+                    "cooking_oven_program_heating_mode_pre_heating": "\u9810\u71b1",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "\u9810\u71b1\u70e4\u7bb1\u5668\u5177",
+                    "cooking_oven_program_heating_mode_proof": "Proof \u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "\u5b89\u606f\u65e5\u7bc0\u76ee",
+                    "cooking_oven_program_heating_mode_slow_cook": "\u6162\u716e",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u4e0a\u4e0b\u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u4e0a\u4e0b\u52a0\u71b1\u7bc0\u80fd",
+                    "cooking_oven_program_heating_mode_warming_drawer": "\u6eab\u6c34\u62bd\u5c5c",
+                    "cooking_oven_program_microwave_1000_watt": "1000 \u74e6",
+                    "cooking_oven_program_microwave_180_watt": "180 \u74e6",
+                    "cooking_oven_program_microwave_360_watt": "360 \u74e6",
+                    "cooking_oven_program_microwave_600_watt": "600 \u74e6",
+                    "cooking_oven_program_microwave_900_watt": "900 \u74e6",
+                    "cooking_oven_program_microwave_90_watt": "90 \u74e6",
+                    "cooking_oven_program_microwave_max": "\u6700\u9ad8",
+                    "dishcare_dishwasher_program_auto_1": "\u81ea\u52d5 1",
+                    "dishcare_dishwasher_program_auto_2": "\u81ea\u52d5 2",
+                    "dishcare_dishwasher_program_auto_3": "\u81ea\u52d5 3",
+                    "dishcare_dishwasher_program_auto_half_load": "\u81ea\u52d5\u534a\u91cf",
+                    "dishcare_dishwasher_program_eco_50": "\u7bc0\u80fd 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "\u5feb\u901f\u6c96\u6d17 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "\u73bb\u7483 40\u2103",
+                    "dishcare_dishwasher_program_glass_care": "\u73bb\u7483\u8b77\u7406",
+                    "dishcare_dishwasher_program_intensiv_45": "\u5f37\u529b 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "\u5f37\u529b 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "\u5f37\u529b",
+                    "dishcare_dishwasher_program_kurz_60": "Kurz 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "\u6a5f\u5668\u4fdd\u990a",
+                    "dishcare_dishwasher_program_magic_daily": "\u795e\u5947\u65e5\u6d17",
+                    "dishcare_dishwasher_program_maximum_cleaning": "\u6700\u5f37\u6e05\u6d17",
+                    "dishcare_dishwasher_program_mixed_load": "\u6df7\u5408\u8ca0\u8f09",
+                    "dishcare_dishwasher_program_night_wash": "\u591c\u9593\u6e05\u6d17",
+                    "dishcare_dishwasher_program_normal_45": "\u6b63\u5e38 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "\u6b63\u5e38 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "\u9810\u6d17",
+                    "dishcare_dishwasher_program_quick_45": "\u5feb\u901f 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "\u5feb\u901f 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "\u84b8\u6c7d\u6e05\u65b0",
+                    "dishcare_dishwasher_program_super_60": "\u8d85\u7d1a 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "\u9632\u7e2e\u6c34",
+                    "laundry_care_dryer_program_blankets": "\u6bef\u5b50",
+                    "laundry_care_dryer_program_business_shirts": "\u5546\u52d9\u896f\u886b",
+                    "laundry_care_dryer_program_cotton": "\u68c9\u8cea",
+                    "laundry_care_dryer_program_delicates": "\u7cbe\u7dfb\u8863\u7269",
+                    "laundry_care_dryer_program_dessous": "\u5167\u8863",
+                    "laundry_care_dryer_program_down_feathers": "\u7fbd\u7d68\u7fbd\u6bdb",
+                    "laundry_care_dryer_program_hygiene": "\u6de8\u8863\u9664\u83cc",
+                    "laundry_care_dryer_program_in_basket": "\u65bc\u7c43\u5b50\u5167",
+                    "laundry_care_dryer_program_jeans": "\u725b\u4ed4\u8932",
+                    "laundry_care_dryer_program_mix": "\u6df7\u5408",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "\u6211\u7684\u70d8\u8863\u6642\u9593",
+                    "laundry_care_dryer_program_outdoor": "\u6236\u5916",
+                    "laundry_care_dryer_program_pillow": "\u6795\u982d",
+                    "laundry_care_dryer_program_shirts_15": "\u896f\u886b 15\u00b0C",
+                    "laundry_care_dryer_program_super_40": "\u8d85\u904e 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "\u5408\u6210",
+                    "laundry_care_dryer_program_synthetic_refresh": "\u5408\u6210\u6e05\u65b0",
+                    "laundry_care_dryer_program_time_cold": "\u51b7\u98a8\uff08\u53ef\u8b8a\u6642\u9593\uff09",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "\u51b7\u98a8 (20 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "\u51b7\u98a8 (30 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "\u51b7\u98a8 (60 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_warm": "\u6696\u98a8\uff08\u53ef\u8b8a\u6642\u9593\uff09",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "\u6696\u98a8 (30 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "\u6696\u98a8 (40 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "\u6696\u98a8 (60 \u5206\u9418)",
+                    "laundry_care_dryer_program_towels": "\u6bdb\u5dfe",
+                    "laundry_care_washer_dryer_program_cotton": "\u68c9\u8cea",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "\u68c9\u8cea\u7bc0\u80fd 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "\u8f15\u9b06\u8b77\u7406",
+                    "laundry_care_washer_dryer_program_mix": "\u6df7\u5408",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "\u6d17\u70d8 (60 \u5206\u9418)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "\u6d17\u70d8 (90 \u5206\u9418)",
+                    "laundry_care_washer_program_auto_30": "\u81ea\u52d5 30\u2103",
+                    "laundry_care_washer_program_auto_40": "\u81ea\u52d5 40\u2103",
+                    "laundry_care_washer_program_auto_60": "\u81ea\u52d5 60\u2103",
+                    "laundry_care_washer_program_chiffon": "\u7d21\u7d17",
+                    "laundry_care_washer_program_cotton": "\u68c9\u8cea",
+                    "laundry_care_washer_program_cotton_colour": "\u5f69\u8272\u68c9\u8cea",
+                    "laundry_care_washer_program_cotton_cotton_eco": "\u68c9\u8cea\u7bc0\u80fd",
+                    "laundry_care_washer_program_cotton_eco_4060": "\u68c9\u8cea\u7bc0\u80fd 40/60 \u00baC",
+                    "laundry_care_washer_program_curtains": "\u7a97\u7c3e",
+                    "laundry_care_washer_program_dark_wash": "\u6df1\u8272\u8863\u7269",
+                    "laundry_care_washer_program_delicates_silk": "\u7cbe\u7dfb\u7d72\u7da2",
+                    "laundry_care_washer_program_dessous": "\u5167\u8863",
+                    "laundry_care_washer_program_down_duvet_duvet": "\u7fbd\u7d68\u88ab",
+                    "laundry_care_washer_program_drum_clean": "\u6efe\u7b52\u6e05\u6f54",
+                    "laundry_care_washer_program_easy_care": "\u8f15\u9b06\u8b77\u7406",
+                    "laundry_care_washer_program_mix": "\u6df7\u5408",
+                    "laundry_care_washer_program_mix_night_wash": "\u6df7\u5408\u591c\u9593\u6e05\u6d17",
+                    "laundry_care_washer_program_monsoon": "Monsoon",
+                    "laundry_care_washer_program_outdoor": "\u6236\u5916",
+                    "laundry_care_washer_program_plush_toy": "\u7d68\u6bdb\u73a9\u5177",
+                    "laundry_care_washer_program_power_speed_59": "\u5f37\u901f <60 \u5206\u9418",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "\u6e05\u6d17 \u812b\u6c34 \u6392\u6c34",
+                    "laundry_care_washer_program_sensitive": "\u654f\u611f\u8863\u7269",
+                    "laundry_care_washer_program_shirts_blouses": "\u896f\u886b\u548c\u896f\u8863",
+                    "laundry_care_washer_program_sport_fitness": "\u904b\u52d5\u6a5f\u80fd",
+                    "laundry_care_washer_program_super_153045_super_15": "\u8d85\u7d1a 15 \u5206\u9418",
+                    "laundry_care_washer_program_super_153045_super_1530": "\u8d85\u7d1a 15/30 \u5206\u9418",
+                    "laundry_care_washer_program_towels": "\u6bdb\u5dfe",
+                    "laundry_care_washer_program_water_proof": "\u9632\u6c34\u5e03\u6599",
+                    "laundry_care_washer_program_wool": "\u7f8a\u6bdb"
+                }
+            },
+            "selected_program": {
+                "name": "\u9078\u64c7\u7a0b\u5f0f",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "\u8fd4\u56de\u57fa\u5730\u53f0",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "\u5168\u90e8\u6e05\u6383",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "\u6e05\u6383\u5730\u5716",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "\u5927\u676f\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "\u62ff\u9435\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "\u5361\u5e03\u5947\u8afe",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "\u96d9\u4efd\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "\u746a\u5947\u6735\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "\u71b1\u6c34",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "\u62ff\u9435\u746a\u5947\u6735",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "\u5976\u6ce1",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "\u77ed\u8403\u53d6\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "\u6eab\u725b\u5976",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "\u7279\u5927\u676f\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "\u7f8e\u5f0f\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "\u9ed1\u773c\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "\u5496\u5561\u6b50\u857e",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "\u897f\u73ed\u7259\u725b\u5976\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "\u544a\u723e\u591a\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "\u544a\u723e\u591a",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "\u6b7b\u773c\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "\u7fa9\u5927\u5229\u96d9\u4efd\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "\u99a5\u5217\u767d\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "\u8461\u8404\u7259\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "\u8461\u8404\u7259\u725b\u5976\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "\u7dad\u4e5f\u7d0d\u5927\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "\u560e\u903c",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "\u7dad\u4e5f\u7d0d\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "\u8377\u862d\u62ff\u9435",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "\u7d05\u773c\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "\u7dad\u4e5f\u7d0d\u6de1\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "\u7dad\u4e5f\u7d0d\u767e\u9748\u6fc3\u7e2e\u5496\u5561",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "\u7dad\u4e5f\u7d0d\u5496\u5561",
+                    "cooking_common_program_hood_automatic": "\u81ea\u52d5",
+                    "cooking_common_program_hood_delayed_shut_off": "\u5ef6\u9072\u95dc\u9589",
+                    "cooking_common_program_hood_venting": "\u6392\u7159",
+                    "cooking_oven_program_heating_mode_bottom_heating": "\u5e95\u90e8\u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_defrost": "\u9664\u971c",
+                    "cooking_oven_program_heating_mode_desiccation": "\u4e7e\u71e5",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "\u51b7\u51cd\u7522\u54c1\u7279\u6b8a\u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_hot_air": "\u71b1\u98a8",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "\u71b1\u98a8 + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "\u71b1\u98a8 + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "\u71b1\u98a8 + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "\u71b1\u98a8 + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "\u71b1\u98a8\u7bc0\u80fd",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "\u71b1\u98a8\u71d2\u70e4",
+                    "cooking_oven_program_heating_mode_intensive_heat": "\u5bc6\u96c6\u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_keep_warm": "\u4fdd\u6eab",
+                    "cooking_oven_program_heating_mode_pizza_setting": "\u62ab\u85a9\u8a2d\u5b9a",
+                    "cooking_oven_program_heating_mode_pre_heating": "\u9810\u71b1",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "\u9810\u71b1\u70e4\u7bb1\u5668\u5177",
+                    "cooking_oven_program_heating_mode_proof": "Proof \u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "\u5b89\u606f\u65e5\u7bc0\u76ee",
+                    "cooking_oven_program_heating_mode_slow_cook": "\u6162\u716e",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u4e0a\u4e0b\u52a0\u71b1",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u4e0a\u4e0b\u52a0\u71b1\u7bc0\u80fd",
+                    "cooking_oven_program_heating_mode_warming_drawer": "\u6eab\u6c34\u62bd\u5c5c",
+                    "cooking_oven_program_microwave_1000_watt": "1000 \u74e6",
+                    "cooking_oven_program_microwave_180_watt": "180 \u74e6",
+                    "cooking_oven_program_microwave_360_watt": "360 \u74e6",
+                    "cooking_oven_program_microwave_600_watt": "600 \u74e6",
+                    "cooking_oven_program_microwave_900_watt": "900 \u74e6",
+                    "cooking_oven_program_microwave_90_watt": "90 \u74e6",
+                    "cooking_oven_program_microwave_max": "\u6700\u9ad8",
+                    "dishcare_dishwasher_program_auto_1": "\u81ea\u52d5 1",
+                    "dishcare_dishwasher_program_auto_2": "\u81ea\u52d5 2",
+                    "dishcare_dishwasher_program_auto_3": "\u81ea\u52d5 3",
+                    "dishcare_dishwasher_program_auto_half_load": "\u81ea\u52d5\u534a\u91cf",
+                    "dishcare_dishwasher_program_eco_50": "\u7bc0\u80fd 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "\u5feb\u901f\u6c96\u6d17 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "\u73bb\u7483 40\u2103",
+                    "dishcare_dishwasher_program_glass_care": "\u73bb\u7483\u8b77\u7406",
+                    "dishcare_dishwasher_program_intensiv_45": "\u5f37\u529b 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "\u5f37\u529b 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "\u5f37\u529b",
+                    "dishcare_dishwasher_program_kurz_60": "Kurz 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "\u6a5f\u5668\u4fdd\u990a",
+                    "dishcare_dishwasher_program_magic_daily": "\u795e\u5947\u65e5\u6d17",
+                    "dishcare_dishwasher_program_maximum_cleaning": "\u6700\u5f37\u6e05\u6d17",
+                    "dishcare_dishwasher_program_mixed_load": "\u6df7\u5408\u8ca0\u8f09",
+                    "dishcare_dishwasher_program_night_wash": "\u591c\u9593\u6e05\u6d17",
+                    "dishcare_dishwasher_program_normal_45": "\u6b63\u5e38 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "\u6b63\u5e38 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "\u9810\u6d17",
+                    "dishcare_dishwasher_program_quick_45": "\u5feb\u901f 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "\u5feb\u901f 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "\u84b8\u6c7d\u6e05\u65b0",
+                    "dishcare_dishwasher_program_super_60": "\u8d85\u7d1a 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "\u9632\u7e2e\u6c34",
+                    "laundry_care_dryer_program_blankets": "\u6bef\u5b50",
+                    "laundry_care_dryer_program_business_shirts": "\u5546\u52d9\u896f\u886b",
+                    "laundry_care_dryer_program_cotton": "\u68c9\u8cea",
+                    "laundry_care_dryer_program_delicates": "\u7cbe\u7dfb\u8863\u7269",
+                    "laundry_care_dryer_program_dessous": "\u5167\u8863",
+                    "laundry_care_dryer_program_down_feathers": "\u7fbd\u7d68\u7fbd\u6bdb",
+                    "laundry_care_dryer_program_hygiene": "\u6de8\u8863\u9664\u83cc",
+                    "laundry_care_dryer_program_in_basket": "\u65bc\u7c43\u5b50\u5167",
+                    "laundry_care_dryer_program_jeans": "\u725b\u4ed4\u8932",
+                    "laundry_care_dryer_program_mix": "\u6df7\u5408",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "\u6211\u7684\u70d8\u8863\u6642\u9593",
+                    "laundry_care_dryer_program_outdoor": "\u6236\u5916",
+                    "laundry_care_dryer_program_pillow": "\u6795\u982d",
+                    "laundry_care_dryer_program_shirts_15": "\u896f\u886b 15\u00b0C",
+                    "laundry_care_dryer_program_super_40": "\u8d85\u904e 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "\u5408\u6210",
+                    "laundry_care_dryer_program_synthetic_refresh": "\u5408\u6210\u6e05\u65b0",
+                    "laundry_care_dryer_program_time_cold": "\u51b7\u98a8\uff08\u53ef\u8b8a\u6642\u9593\uff09",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "\u51b7\u98a8 (20 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "\u51b7\u98a8 (30 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "\u51b7\u98a8 (60 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_warm": "\u6696\u98a8\uff08\u53ef\u8b8a\u6642\u9593\uff09",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "\u6696\u98a8 (30 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "\u6696\u98a8 (40 \u5206\u9418)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "\u6696\u98a8 (60 \u5206\u9418)",
+                    "laundry_care_dryer_program_towels": "\u6bdb\u5dfe",
+                    "laundry_care_washer_dryer_program_cotton": "\u68c9\u8cea",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "\u68c9\u8cea\u7bc0\u80fd 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "\u8f15\u9b06\u8b77\u7406",
+                    "laundry_care_washer_dryer_program_mix": "\u6df7\u5408",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "\u6d17\u70d8 (60 \u5206\u9418)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "\u6d17\u70d8 (90 \u5206\u9418)",
+                    "laundry_care_washer_program_auto_30": "\u81ea\u52d5 30\u2103",
+                    "laundry_care_washer_program_auto_40": "\u81ea\u52d5 40\u2103",
+                    "laundry_care_washer_program_auto_60": "\u81ea\u52d5 60\u2103",
+                    "laundry_care_washer_program_chiffon": "\u7d21\u7d17",
+                    "laundry_care_washer_program_cotton": "\u68c9\u8cea",
+                    "laundry_care_washer_program_cotton_colour": "\u5f69\u8272\u68c9\u8cea",
+                    "laundry_care_washer_program_cotton_cotton_eco": "\u68c9\u8cea\u7bc0\u80fd",
+                    "laundry_care_washer_program_cotton_eco_4060": "\u68c9\u8cea\u7bc0\u80fd 40/60 \u00baC",
+                    "laundry_care_washer_program_curtains": "\u7a97\u7c3e",
+                    "laundry_care_washer_program_dark_wash": "\u6df1\u8272\u8863\u7269",
+                    "laundry_care_washer_program_delicates_silk": "\u7cbe\u7dfb\u7d72\u7da2",
+                    "laundry_care_washer_program_dessous": "\u5167\u8863",
+                    "laundry_care_washer_program_down_duvet_duvet": "\u7fbd\u7d68\u88ab",
+                    "laundry_care_washer_program_drum_clean": "\u6efe\u7b52\u6e05\u6f54",
+                    "laundry_care_washer_program_easy_care": "\u8f15\u9b06\u8b77\u7406",
+                    "laundry_care_washer_program_mix": "\u6df7\u5408",
+                    "laundry_care_washer_program_mix_night_wash": "\u6df7\u5408\u591c\u9593\u6e05\u6d17",
+                    "laundry_care_washer_program_monsoon": "Monsoon",
+                    "laundry_care_washer_program_outdoor": "\u6236\u5916",
+                    "laundry_care_washer_program_plush_toy": "\u7d68\u6bdb\u73a9\u5177",
+                    "laundry_care_washer_program_power_speed_59": "\u5f37\u901f <60 \u5206\u9418",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "\u6e05\u6d17 \u812b\u6c34 \u6392\u6c34",
+                    "laundry_care_washer_program_sensitive": "\u654f\u611f\u8863\u7269",
+                    "laundry_care_washer_program_shirts_blouses": "\u896f\u886b\u548c\u896f\u8863",
+                    "laundry_care_washer_program_sport_fitness": "\u904b\u52d5\u6a5f\u80fd",
+                    "laundry_care_washer_program_super_153045_super_15": "\u8d85\u7d1a 15 \u5206\u9418",
+                    "laundry_care_washer_program_super_153045_super_1530": "\u8d85\u7d1a 15/30 \u5206\u9418",
+                    "laundry_care_washer_program_towels": "\u6bdb\u5dfe",
+                    "laundry_care_washer_program_water_proof": "\u9632\u6c34\u5e03\u6599",
+                    "laundry_care_washer_program_wool": "\u7f8a\u6bdb"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "\u96fb\u91cf"
+            },
+            "bean_container_empty": {
+                "name": "\u5496\u5561\u8c46\u7f50\u5df2\u7a7a",
+                "state": {
+                    "confirmed": "\u78ba\u8a8d",
+                    "off": "\u95dc\u9589",
+                    "present": "\u51fa\u73fe"
+                }
+            },
+            "camera_state": {
+                "name": "\u651d\u5f71\u6a5f\u72c0\u614b",
+                "state": {
+                    "disabled": "\u5df2\u95dc\u9589",
+                    "error": "\u932f\u8aa4",
+                    "ready": "\u5c31\u7dd2",
+                    "sleeping": "\u4f11\u7720\u4e2d",
+                    "streamingcloud": "\u96f2\u7aef\u4e32\u6d41",
+                    "streaminglocal": "\u672c\u5730\u7aef\u4e32\u6d41",
+                    "streaminglocal_and_cloud": "\u672c\u5730\u7aef\u8207\u96f2\u7aef\u4e32\u6d41"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "\u5496\u5561\u8207\u725b\u5976\u676f"
+            },
+            "coffee_counter": {
+                "name": "\u5496\u5561"
+            },
+            "door": {
+                "name": "\u9580",
+                "state": {
+                    "closed": "\u95dc\u9589",
+                    "locked": "\u5df2\u4e0a\u9396",
+                    "open": "\u958b\u555f"
+                }
+            },
+            "drip_tray_full": {
+                "name": "\u6ef4\u6c34\u76e4\u5df2\u6eff",
+                "state": {
+                    "confirmed": "\u78ba\u8a8d",
+                    "off": "\u95dc\u9589",
+                    "present": "\u51fa\u73fe"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "\u51b7\u51cd\u5ba4\u9580\u8b66\u5831",
+                "state": {
+                    "confirmed": "\u78ba\u8a8d",
+                    "present": "\u51fa\u73fe"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "\u51b7\u51cd\u5ba4\u6eab\u5ea6\u8b66\u5831",
+                "state": {
+                    "confirmed": "\u78ba\u8a8d",
+                    "off": "\u95dc\u9589",
+                    "present": "\u51fa\u73fe"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "\u5976\u6ce1\u676f"
+            },
+            "hot_milk_counter": {
+                "name": "\u71b1\u725b\u5976\u676f"
+            },
+            "hot_water_counter": {
+                "name": "\u71b1\u6c34"
+            },
+            "hot_water_cups_counter": {
+                "name": "\u71b1\u6c34\u676f"
+            },
+            "last_selected_map": {
+                "name": "\u4e0a\u6b21\u6240\u9078\u5730\u5716",
+                "state": {
+                    "map1": "\u5730\u5716 1",
+                    "map2": "\u5730\u5716 2",
+                    "map3": "\u5730\u5716 3",
+                    "tempmap": "\u81e8\u6642\u5730\u5716"
+                }
+            },
+            "milk_counter": {
+                "name": "\u725b\u5976\u676f"
+            },
+            "operation_state": {
+                "name": "\u904b\u4f5c\u72c0\u614b",
+                "state": {
+                    "aborting": "\u4e2d\u6b62",
+                    "actionrequired": "\u9700\u8981\u63a1\u53d6\u52d5\u4f5c",
+                    "delayedstart": "\u5ef6\u9072\u555f\u52d5",
+                    "error": "\u932f\u8aa4",
+                    "finished": "\u5b8c\u6210",
+                    "inactive": "\u672a\u555f\u52d5",
+                    "pause": "\u5df2\u66ab\u505c",
+                    "ready": "\u5c31\u7dd2",
+                    "run": "\u57f7\u884c"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "\u5496\u5561\u7c89"
+            },
+            "program_finish_time": {
+                "name": "\u7a0b\u5f0f\u5b8c\u6210\u6642\u9593"
+            },
+            "program_progress": {
+                "name": "\u7a0b\u5f0f\u9032\u5ea6"
+            },
+            "refrigerator_door_alarm": {
+                "name": "\u51b0\u7bb1\u9580\u8b66\u5831",
+                "state": {
+                    "confirmed": "\u78ba\u8a8d",
+                    "off": "\u95dc\u9589",
+                    "present": "\u51fa\u73fe"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "name": "\u5feb\u4e7e\u5291\u5feb\u7528\u76e1",
+                "state": {
+                    "confirmed": "\u78ba\u8a8d",
+                    "off": "\u95dc\u9589",
+                    "present": "\u51fa\u73fe"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "Ristretto \u6fc3\u7e2e\u5496\u5561\u676f"
+            },
+            "salt_nearly_empty": {
+                "name": "\u8edf\u5316\u9e7d\u5feb\u7528\u76e1",
+                "state": {
+                    "confirmed": "\u78ba\u8a8d",
+                    "off": "\u95dc\u9589",
+                    "present": "\u51fa\u73fe"
+                }
+            },
+            "water_tank_empty": {
+                "name": "\u6c34\u69fd\u5df2\u4e7e",
+                "state": {
+                    "confirmed": "\u78ba\u8a8d",
+                    "off": "\u95dc\u9589",
+                    "present": "\u51fa\u73fe"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "\u5152\u7ae5\u9396"
+            },
+            "cup_warmer": {
+                "name": "\u6696\u676f\u5668"
+            },
+            "dispenser_enabled": {
+                "name": "\u5206\u914d\u5668",
+                "state": {
+                    "off": "\u5df2\u95dc\u9589",
+                    "on": "\u5df2\u555f\u7528"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "\u51b7\u51cd\u5ba4\u9580\u52a9\u624b"
+            },
+            "door_assistant_fridge": {
+                "name": "\u51b0\u7bb1\u9580\u52a9\u624b"
+            },
+            "eco_mode": {
+                "name": "\u7bc0\u80fd\u6a21\u5f0f"
+            },
+            "freezer_super_mode": {
+                "name": "\u51b7\u51cd\u8d85\u7d1a\u6a21\u5f0f"
+            },
+            "fresh_mode": {
+                "name": "\u65b0\u9bae\u6a21\u5f0f"
+            },
+            "power": {
+                "name": "\u96fb\u6e90"
+            },
+            "refrigerator_super_mode": {
+                "name": "\u51b0\u7bb1\u8d85\u7d1a\u6a21\u5f0f"
+            },
+            "sabbath_mode": {
+                "name": "\u5b89\u606f\u65e5\u6a21\u5f0f"
+            },
+            "vacation_mode": {
+                "name": "\u5ea6\u5047\u6a21\u5f0f"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "\u9b27\u9418"
+            }
+        }
+    },
+    "exceptions": {
+        "appliance_not_found": {
+            "message": "\u627e\u4e0d\u5230\u88dd\u7f6e ID \u70ba {device_id} \u7684\u88dd\u7f6e"
+        },
+        "execute_command": {
+            "message": "\u57f7\u884c\u547d\u4ee4 {command} \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "pause_program": {
+            "message": "\u66ab\u505c\u7a0b\u5f0f\u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "power_off": {
+            "message": "\u4ee5 \"{value}\" \u95dc\u9589 {appliance_name} \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "power_on": {
+            "message": "\u958b\u555f {appliance_name} \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "select_light_custom_color": {
+            "message": "\u8a2d\u5b9a {entity_id} \u81ea\u8a02\u984f\u8272\u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "select_program": {
+            "message": "\u9078\u64c7\u7a0b\u5f0f {program} \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "set_light_brightness": {
+            "message": "\u8a2d\u5b9a {entity_id} \u4eae\u5ea6\u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "set_light_color": {
+            "message": "\u8a2d\u5b9a {entity_id} \u984f\u8272\u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "set_options_active_program": {
+            "message": "\u8a2d\u5b9a\u555f\u7528\u7a0b\u5f0f\u9078\u9805\u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "set_options_selected_program": {
+            "message": "\u8a2d\u5b9a\u6240\u9078\u7a0b\u5f0f\u9078\u9805\u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "set_setting": {
+            "message": "\u5c07\u6578\u503c \"{value}\" \u6307\u5b9a\u81f3\u8a2d\u5b9a \"{key}\" \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "set_setting_entity": {
+            "message": "\u5c07\u6578\u503c \"{value}\" \u6307\u5b9a\u81f3  {entity_id} \u7684\u8a2d\u5b9a \"{key}\" \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "start_program": {
+            "message": "\u958b\u59cb\u7a0b\u5f0f {program} \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "stop_program": {
+            "message": "\u8a66\u505c\u6b62\u7a0b\u5f0f\u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "turn_off": {
+            "message": "\u95dc\u9589 {entity_id} ({key}) \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "turn_off_light": {
+            "message": "\u95dc\u9589 {entity_id} \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "turn_off_not_supported": {
+            "message": "{appliance_name} \u4e0d\u652f\u6301\u95dc\u9589\u6216\u9032\u5165\u5f85\u6a5f\u6a21\u5f0f\u3002"
+        },
+        "turn_on": {
+            "message": "\u958b\u555f {entity_id} ({key}) \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "turn_on_light": {
+            "message": "\u958b\u555f {entity_id} \u6642\u767c\u751f\u932f\u8aa4\uff1a{description}"
+        },
+        "unable_to_retrieve_turn_off": {
+            "message": "\u7531\u65bc\u7121\u6cd5\u78ba\u5b9a\u5176\u662f\u5426\u652f\u63f4\u95dc\u9589\u6216\u9032\u5165\u5f85\u6a5f\u6a21\u5f0f\u3001\u7121\u6cd5\u95dc\u9589 {appliance_name}\u3002"
+        }
+    },
+    "issues": {
+        "deprecated_binary_common_door_sensor": {
+            "description": "\u4ee5\u4e0b\u81ea\u52d5\u5316\u6216\u8173\u672c\u4f7f\u7528\u4e86\u4e0d\u518d\u4f7f\u7528\u7684\u4e8c\u9032\u4f4d\u9580\u5bb6\u611f\u6e2c\u5668 `{entity}`\uff1a\n{items}\n\n\u5177\u6709\u5176\u4ed6\u53ef\u80fd\u72c0\u614b\u7684\u611f\u6e2c\u5668\u5be6\u9ad4\u53ef\u7528\u3001\u61c9\u7e7c\u7e8c\u4f7f\u7528\uff1b\u8acb\u5728\u4e0a\u8ff0\u81ea\u52d5\u5316\u6216\u8173\u672c\u4e2d\u4f7f\u7528\u9019\u4e9b\u5be6\u9ad4\u4ee5\u89e3\u6c7a\u6b64\u554f\u984c\u3002",
+            "title": "\u5728\u90e8\u5206\u81ea\u52d5\u5316\u6216\u8173\u672c\u5167\u5075\u6e2c\u5230\u4f7f\u7528\u5df2\u4e0d\u518d\u4f7f\u7528\u7684\u4e8c\u9032\u4f4d\u9580\u7a97\u611f\u6e2c\u5668"
+        },
+        "deprecated_program_switch": {
+            "description": "\u7a0b\u5f0f\u958b\u95dc\u5df2\u4e0d\u518d\u4f7f\u7528\uff0c\u5df2\u65bc\u4ee5\u4e0b\u81ea\u52d5\u5316\u6216\u8173\u672c\u4e2d\u4f7f\u7528 {entity_id}\uff1a\n{items}\n\n\u60a8\u53ef\u4ee5\u4f7f\u7528\u555f\u7528\u7a0b\u5f0f\u9078\u64c7\u5be6\u9ad4\u4ee5\u57f7\u884c\u7a0b\u5f0f\u3001\u7121\u9700\u4efb\u4f55\u5176\u4ed6\u9078\u9805\uff0c\u4e26\u5728\u4e0a\u8ff0\u81ea\u52d5\u5316\u6216\u8173\u672c\u4e2d\u7372\u5f97\u76ee\u524d\u57f7\u884c\u7684\u7a0b\u5f0f\u4ee5\u4fee\u6b63\u6b64\u554f\u984c\u3002",
+            "title": "\u5728\u90e8\u5206\u81ea\u52d5\u5316\u6216\u8173\u672c\u5167\u5075\u6e2c\u5230\u4f7f\u7528\u5df2\u4e0d\u518d\u4f7f\u7528\u7684\u7a0b\u5f0f\u958b\u95dc"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "\u8b8a\u66f4\u8a2d\u5b9a\u3002",
+            "fields": {
+                "device_id": {
+                    "description": "\u8a2d\u5099 ID\u3002",
+                    "name": "\u88dd\u7f6e ID"
+                },
+                "key": {
+                    "description": "\u8a2d\u5b9a\u6309\u9375\u3002",
+                    "name": "\u6309\u9375"
+                },
+                "value": {
+                    "description": "\u8a2d\u5b9a\u6578\u503c\u3002",
+                    "name": "\u6578\u503c"
+                }
+            },
+            "name": "\u8b8a\u66f4\u8a2d\u5b9a"
+        },
+        "pause_program": {
+            "description": "\u66ab\u505c\u76ee\u524d\u6b63\u5728\u57f7\u884c\u7684\u7a0b\u5f0f\u3002",
+            "fields": {
+                "device_id": {
+                    "description": "\u8a2d\u5099 ID\u3002",
+                    "name": "\u88dd\u7f6e ID"
+                }
+            },
+            "name": "\u66ab\u505c\u7a0b\u5f0f"
+        },
+        "resume_program": {
+            "description": "\u6062\u5fa9\u66ab\u505c\u7684\u7a0b\u5f0f\u3002",
+            "fields": {
+                "device_id": {
+                    "description": "\u8a2d\u5099 ID\u3002",
+                    "name": "\u88dd\u7f6e ID"
+                }
+            },
+            "name": "\u6062\u5fa9\u7a0b\u5f0f"
+        },
+        "select_program": {
+            "description": "\u9078\u64c7\u7a0b\u5f0f\u4f46\u4e0d\u555f\u52d5\u3002",
+            "fields": {
+                "device_id": {
+                    "description": "\u8a2d\u5099 ID\u3002",
+                    "name": "\u88dd\u7f6e ID"
+                },
+                "key": {
+                    "description": "\u9078\u9805\u5bc6\u9470\u3002",
+                    "name": "\u9078\u9805\u5bc6\u9470"
+                },
+                "program": {
+                    "description": "\u9078\u64c7\u7a0b\u5f0f\u3002",
+                    "name": "\u7a0b\u5f0f"
+                },
+                "unit": {
+                    "description": "\u9078\u9805\u55ae\u4f4d\u3002",
+                    "name": "\u9078\u9805\u55ae\u4f4d"
+                },
+                "value": {
+                    "description": "\u9078\u9805\u8a2d\u5b9a\u503c\u3002",
+                    "name": "\u9078\u9805\u503c"
+                }
+            },
+            "name": "\u9078\u64c7\u7a0b\u5f0f"
+        },
+        "set_option_active": {
+            "description": "\u8a2d\u5b9a\u555f\u7528\u7a0b\u5f0f\u4e4b\u9078\u9805\u3002",
+            "fields": {
+                "device_id": {
+                    "description": "\u8a2d\u5099 ID\u3002",
+                    "name": "\u88dd\u7f6e ID"
+                },
+                "key": {
+                    "description": "\u9078\u9805\u5bc6\u9470\u3002",
+                    "name": "\u5bc6\u9470"
+                },
+                "value": {
+                    "description": "\u9078\u9805\u8a2d\u5b9a\u503c\u3002",
+                    "name": "\u6578\u503c"
+                }
+            },
+            "name": "\u8a2d\u5b9a\u555f\u7528\u7a0b\u5f0f\u9078\u9805"
+        },
+        "set_option_selected": {
+            "description": "\u8a2d\u5b9a\u6240\u9078\u7a0b\u5f0f\u4e4b\u9078\u9805\u3002",
+            "fields": {
+                "device_id": {
+                    "description": "\u8a2d\u5099 ID\u3002",
+                    "name": "\u88dd\u7f6e ID"
+                },
+                "key": {
+                    "description": "\u9078\u9805\u5bc6\u9470\u3002",
+                    "name": "\u5bc6\u9470"
+                },
+                "value": {
+                    "description": "\u9078\u9805\u8a2d\u5b9a\u503c\u3002",
+                    "name": "\u6578\u503c"
+                }
+            },
+            "name": "\u8a2d\u5b9a\u6240\u9078\u7a0b\u5f0f\u9078\u9805"
+        },
+        "start_program": {
+            "description": "\u9078\u64c7\u7a0b\u5f0f\u4e26\u52a0\u4ee5\u555f\u52d5\u3002",
+            "fields": {
+                "device_id": {
+                    "description": "\u8a2d\u5099 ID\u3002",
+                    "name": "\u88dd\u7f6e ID"
+                },
+                "key": {
+                    "description": "\u9078\u9805\u5bc6\u9470\u3002",
+                    "name": "\u9078\u9805\u5bc6\u9470"
+                },
+                "program": {
+                    "description": "\u9078\u64c7\u7a0b\u5f0f\u3002",
+                    "name": "\u7a0b\u5f0f"
+                },
+                "unit": {
+                    "description": "\u9078\u9805\u55ae\u4f4d\u3002",
+                    "name": "\u9078\u9805\u55ae\u4f4d"
+                },
+                "value": {
+                    "description": "\u9078\u9805\u8a2d\u5b9a\u503c\u3002",
+                    "name": "\u9078\u9805\u503c"
+                }
+            },
+            "name": "\u958b\u59cb\u7a0b\u5f0f"
+        }
+    }
+}

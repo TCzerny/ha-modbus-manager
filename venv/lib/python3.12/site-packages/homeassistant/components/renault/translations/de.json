@@ -1,0 +1,237 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "kamereon_no_account": "Kamereon-Konto kann nicht gefunden werden.",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_credentials": "Ung\u00fcltige Authentifizierung",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "kamereon": {
+                "data": {
+                    "kamereon_account_id": "Konto-ID"
+                },
+                "data_description": {
+                    "kamereon_account_id": "Die mit deinem Fahrzeug verkn\u00fcpfte Kamereon Konto-ID"
+                },
+                "description": "Du hast mehrere Kamereon-Konten, die mit dieser E-Mail-Adresse verbunden sind, bitte w\u00e4hle eines aus",
+                "title": "Kamereon Konto-ID"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "password": "Dein Passwort f\u00fcr die MyRenault Telefon-App"
+                },
+                "description": "Bitte \u00e4ndere Dein Passwort f\u00fcr {username}",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            },
+            "user": {
+                "data": {
+                    "locale": "Gebietsschema",
+                    "password": "Passwort",
+                    "username": "E-Mail"
+                },
+                "data_description": {
+                    "locale": "Dein L\u00e4ndercode",
+                    "password": "Dein Passwort f\u00fcr die MyRenault Telefon-App",
+                    "username": "Deine E-Mail-Adresse f\u00fcr die MyRenault Telefon-App"
+                },
+                "title": "Renault-Anmeldedaten festlegen"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "driver_door_status": {
+                "name": "Fahrert\u00fcr"
+            },
+            "hatch_status": {
+                "name": "Luke"
+            },
+            "hvac_status": {
+                "name": "HLK"
+            },
+            "passenger_door_status": {
+                "name": "Beifahrert\u00fcr"
+            },
+            "rear_left_door_status": {
+                "name": "T\u00fcr hinten links"
+            },
+            "rear_right_door_status": {
+                "name": "T\u00fcr hinten rechts"
+            }
+        },
+        "button": {
+            "start_air_conditioner": {
+                "name": "Klimaanlage einschalten"
+            },
+            "start_charge": {
+                "name": "Ladevorgang starten"
+            },
+            "stop_charge": {
+                "name": "Ladung stoppen"
+            }
+        },
+        "device_tracker": {
+            "location": {
+                "name": "Standort"
+            }
+        },
+        "select": {
+            "charge_mode": {
+                "name": "Lademodus",
+                "state": {
+                    "always": "Immer",
+                    "always_charging": "Immer aufladen",
+                    "schedule_mode": "Zeitplan-Modus",
+                    "scheduled": "Geplant"
+                }
+            }
+        },
+        "sensor": {
+            "admissible_charging_power": {
+                "name": "Zul\u00e4ssige Ladeleistung"
+            },
+            "battery_autonomy": {
+                "name": "Batterieautonomie"
+            },
+            "battery_available_energy": {
+                "name": "Verf\u00fcgbare Energie der Batterie"
+            },
+            "battery_last_activity": {
+                "name": "Letzte Batterieaktivit\u00e4t"
+            },
+            "battery_temperature": {
+                "name": "Batterietemperatur"
+            },
+            "charge_state": {
+                "name": "Ladezustand",
+                "state": {
+                    "charge_ended": "Ladung beendet",
+                    "charge_error": "Nicht aufgeladen oder eingesteckt",
+                    "charge_in_progress": "L\u00e4dt",
+                    "energy_flap_opened": "Ladeklappe ge\u00f6ffnet",
+                    "not_in_charge": "L\u00e4dt nicht",
+                    "unavailable": "Nicht verf\u00fcgbar",
+                    "waiting_for_a_planned_charge": "Warten auf geplante Ladung",
+                    "waiting_for_current_charge": "Warten auf aktuelle Ladung"
+                }
+            },
+            "charging_power": {
+                "name": "Ladeleistung"
+            },
+            "charging_remaining_time": {
+                "name": "Verbleibende Ladezeit"
+            },
+            "fuel_autonomy": {
+                "name": "Kraftstoffautonomie"
+            },
+            "fuel_quantity": {
+                "name": "Kraftstoffmenge"
+            },
+            "hvac_last_activity": {
+                "name": "Letzte HLK-Aktivit\u00e4t"
+            },
+            "hvac_soc_threshold": {
+                "name": "HLK-SoC-Schwellenwert"
+            },
+            "location_last_activity": {
+                "name": "Letzte Standortaktivit\u00e4t"
+            },
+            "mileage": {
+                "name": "Kilometerstand"
+            },
+            "outside_temperature": {
+                "name": "Au\u00dfentemperatur"
+            },
+            "plug_state": {
+                "name": "Steckerzustand",
+                "state": {
+                    "plug_error": "Stecker-Fehler",
+                    "plug_unknown": "Stecker unbekannt",
+                    "plugged": "Eingesteckt",
+                    "plugged_waiting_for_charge": "Eingesteckt, warte auf Aufladung",
+                    "unplugged": "Ausgesteckt"
+                }
+            },
+            "res_state": {
+                "name": "Motor-Fernstart"
+            },
+            "res_state_code": {
+                "name": "Motor-Fernstartcode"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_device_id": {
+            "message": "Es wurde kein Ger\u00e4t mit der ID {device_id} gefunden"
+        },
+        "no_config_entry_for_device": {
+            "message": "F\u00fcr das Ger\u00e4t mit der ID {device_id} wurde kein geladener Konfigurationseintrag gefunden."
+        }
+    },
+    "services": {
+        "ac_cancel": {
+            "description": "Stoppt die Klimaanlage des Fahrzeugs.",
+            "fields": {
+                "vehicle": {
+                    "description": "Das Fahrzeug, an das der Befehl gesendet werden soll.",
+                    "name": "Fahrzeug"
+                }
+            },
+            "name": "Klimaanlage stoppen"
+        },
+        "ac_set_schedules": {
+            "description": "Aktualisiert den Zeitplan f\u00fcr die Klimaanlage des Fahrzeugs.",
+            "fields": {
+                "schedules": {
+                    "description": "Details zum Zeitplan.",
+                    "name": "Zeitpl\u00e4ne"
+                },
+                "vehicle": {
+                    "description": "Das Fahrzeug, an das der Befehl gesendet werden soll.",
+                    "name": "Fahrzeug"
+                }
+            },
+            "name": "Klimaplan aktualisieren"
+        },
+        "ac_start": {
+            "description": "Startet die Klimaanlage des Fahrzeugs.",
+            "fields": {
+                "temperature": {
+                    "description": "Soll-Temperatur der Klimaanlage in \u00b0C.",
+                    "name": "Temperatur"
+                },
+                "vehicle": {
+                    "description": "Das Fahrzeug, an das der Befehl gesendet werden soll.",
+                    "name": "Fahrzeug"
+                },
+                "when": {
+                    "description": "Zeitstempel f\u00fcr den Start der Klimaanlage (optional \u2013 Standardeinstellung ist \u201eJetzt\u201c).",
+                    "name": "Wann"
+                }
+            },
+            "name": "Klimaanlage starten"
+        },
+        "charge_set_schedules": {
+            "description": "Aktualisiert den Zeitplan f\u00fcr das Laden des Fahrzeugs.",
+            "fields": {
+                "schedules": {
+                    "description": "Details zum Zeitplan.",
+                    "name": "Zeitpl\u00e4ne"
+                },
+                "vehicle": {
+                    "description": "Das Fahrzeug, an das der Befehl gesendet werden soll.",
+                    "name": "Fahrzeug"
+                }
+            },
+            "name": "Ladeplan aktualisieren"
+        }
+    }
+}

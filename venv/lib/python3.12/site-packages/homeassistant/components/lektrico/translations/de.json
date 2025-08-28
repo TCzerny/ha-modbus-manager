@@ -1,0 +1,176 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "device_name": "Name",
+                    "host": "Host"
+                },
+                "description": "Lege die erforderlichen Parameter f\u00fcr die Verbindung mit deinem Ger\u00e4t fest"
+            },
+            "zeroconf_confirm": {
+                "description": "M\u00f6chtest du das Lektrico-Ladeger\u00e4t mit der Seriennummer `{serial_number}` zu Home Assistant hinzuf\u00fcgen?",
+                "title": "Lektrico-Ladeger\u00e4t entdeckt"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "contactor_failure": {
+                "name": "Relaiskontakte verschwei\u00dft"
+            },
+            "cp_diode_failure": {
+                "name": "Kurzschluss der EV-Diode"
+            },
+            "critical_temp": {
+                "name": "\u00dcberhitzung"
+            },
+            "meter_fault": {
+                "name": "Fehler der Messeinrichtung"
+            },
+            "overcurrent": {
+                "name": "\u00dcberstrom"
+            },
+            "overtemp": {
+                "name": "Thermische Drosselung"
+            },
+            "overvoltage": {
+                "name": "\u00dcberspannung"
+            },
+            "rcd_error": {
+                "name": "RCD-Fehler"
+            },
+            "state_e_activated": {
+                "name": "EV-Fehler"
+            },
+            "undervoltage": {
+                "name": "Unterspannung"
+            }
+        },
+        "button": {
+            "charge_start": {
+                "name": "Ladebeginn"
+            },
+            "charge_stop": {
+                "name": "Ladestopp"
+            }
+        },
+        "number": {
+            "dynamic_limit": {
+                "name": "Dynamische Grenze"
+            },
+            "led_max_brightness": {
+                "name": "LED-Helligkeit"
+            }
+        },
+        "select": {
+            "load_balancing_mode": {
+                "name": "Lastausgleichsmodus",
+                "state": {
+                    "disabled": "Deaktiviert",
+                    "green": "Gr\u00fcn",
+                    "hybrid": "Hybrid",
+                    "power": "Power"
+                }
+            }
+        },
+        "sensor": {
+            "breaker_current": {
+                "name": "LS-Strom"
+            },
+            "charging_time": {
+                "name": "Ladezeit"
+            },
+            "current_l1": {
+                "name": "Stromst\u00e4rke L1"
+            },
+            "current_l2": {
+                "name": "Stromst\u00e4rke L2"
+            },
+            "current_l3": {
+                "name": "Stromst\u00e4rke L3"
+            },
+            "installation_current": {
+                "name": "Installationsstrom"
+            },
+            "lifetime_energy": {
+                "name": "Lebenslange Energie"
+            },
+            "limit_reason": {
+                "name": "Begrenzungsgrund",
+                "state": {
+                    "1p_charging_disabled": "1P-Laden deaktiviert",
+                    "dynamic_limit": "Dynamische Grenze",
+                    "em": "Z\u00e4hler",
+                    "em_offline": "Z\u00e4hler offline",
+                    "installation_current": "Installationsstrom",
+                    "no_limit": "Keine Begrenzung",
+                    "ocpp": "OCPP",
+                    "overtemperature": "\u00dcbertemperatur",
+                    "schedule": "Zeitplan",
+                    "switching_phases": "Phasenumschaltung",
+                    "user_limit": "Benutzerlimit"
+                }
+            },
+            "pf_l1": {
+                "name": "Leistungsfaktor L1"
+            },
+            "pf_l2": {
+                "name": "Leistungsfaktor L2"
+            },
+            "pf_l3": {
+                "name": "Leistungsfaktor L3"
+            },
+            "power_l1": {
+                "name": "Leistung L1"
+            },
+            "power_l2": {
+                "name": "Leistung L2"
+            },
+            "power_l3": {
+                "name": "Leistung L3"
+            },
+            "state": {
+                "name": "Zustand",
+                "state": {
+                    "available": "Verf\u00fcgbar",
+                    "charging": "L\u00e4dt",
+                    "connected": "Verbunden",
+                    "error": "Fehler",
+                    "locked": "Gesperrt",
+                    "need_auth": "Warten auf Authentifizierung",
+                    "paused": "Pausiert",
+                    "paused_by_scheduler": "Durch Zeitplan angehalten",
+                    "updating_firmware": "Firmware wird aktualisiert"
+                }
+            },
+            "voltage_l1": {
+                "name": "Spannung L1"
+            },
+            "voltage_l2": {
+                "name": "Spannung L2"
+            },
+            "voltage_l3": {
+                "name": "Spannung L3"
+            }
+        },
+        "switch": {
+            "authentication": {
+                "name": "Authentifizierung"
+            },
+            "force_single_phase": {
+                "name": "Einphasig erzwingen"
+            },
+            "lock": {
+                "name": "Sperren"
+            }
+        }
+    }
+}

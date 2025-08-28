@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Sunucu"
+                },
+                "data_description": {
+                    "host": "Bose SoundTouch cihaz\u0131n\u0131z\u0131n ana bilgisayar ad\u0131 veya IP adresi."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "` {name} ` adl\u0131 SoundTouch cihaz\u0131n\u0131 Home Assistant'a eklemek \u00fczeresiniz.",
+                "title": "Bose SoundTouch cihaz\u0131 eklemeyi onaylay\u0131n"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "fields": {
+                "slaves": {
+                    "name": "Ba\u011f\u0131ml\u0131lar"
+                }
+            }
+        },
+        "create_zone": {
+            "description": "SoundTouch \u00e7ok odal\u0131 bir b\u00f6lge olu\u015fturur.",
+            "name": "B\u00f6lge olu\u015ftur"
+        },
+        "play_everywhere": {
+            "description": "T\u00fcm Bose SoundTouch cihazlar\u0131nda \u00e7alar.",
+            "name": "Her yerde oynat\u0131n"
+        },
+        "remove_zone_slave": {
+            "fields": {
+                "master": {
+                    "description": "\u00c7ok odal\u0131 b\u00f6lgeyi koordine eden ana varl\u0131\u011f\u0131n ad\u0131. Platforma ba\u011fl\u0131d\u0131r."
+                },
+                "slaves": {
+                    "name": "Ba\u011f\u0131ml\u0131lar"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,62 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "invalid_identifier": "Den angivna regionidentifieraren / enhetssp\u00e5raren \u00e4r ogiltig."
+        },
+        "error": {
+            "ambiguous_identifier": "Regionidentifieraren och enhetssp\u00e5raren kan inte specificeras tillsammans.",
+            "attribute_not_found": "Det obligatoriska attributet \"latitud\" eller \"longitud\" hittades inte i den angivna enhetssp\u00e5raren.",
+            "entity_not_found": "Det gick inte att hitta den angivna entiteten f\u00f6r enhetssp\u00e5rare.",
+            "invalid_identifier": "Den angivna regionidentifieraren / enhetssp\u00e5raren \u00e4r ogiltig.",
+            "no_identifier": "Antingen regionidentifierare eller enhetssp\u00e5rare kr\u00e4vs."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "region_device_tracker": "Entitet f\u00f6r enhetssp\u00e5rare",
+                    "region_identifier": "Warncell ID eller namn"
+                },
+                "description": "F\u00f6r att identifiera den \u00f6nskade regionen kr\u00e4vs antingen warncell-ID/namn eller enhetssp\u00e5rare. Den tillhandah\u00e5llna enhetssp\u00e5raren m\u00e5ste inneh\u00e5lla attributen \"latitude\" och \"longitude\"."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "advance_warning_level": {
+                "name": "Framtida varningsniv\u00e5",
+                "state_attributes": {
+                    "last_update": {
+                        "name": "Senast uppdaterad"
+                    },
+                    "region_id": {
+                        "name": "Region-ID"
+                    },
+                    "region_name": {
+                        "name": "Regionens namn"
+                    },
+                    "warning_count": {
+                        "name": "Antal varningar"
+                    }
+                }
+            },
+            "current_warning_level": {
+                "name": "Aktuell varningsniv\u00e5",
+                "state_attributes": {
+                    "last_update": {
+                        "name": "Senast uppdaterad"
+                    },
+                    "region_id": {
+                        "name": "Region-ID"
+                    },
+                    "region_name": {
+                        "name": "Regionens namn"
+                    },
+                    "warning_count": {
+                        "name": "Antal varningar"
+                    }
+                }
+            }
+        }
+    }
+}

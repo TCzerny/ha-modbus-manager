@@ -1,0 +1,81 @@
+{
+    "device_automation": {
+        "action_type": {
+            "lock": "Kh\u00f3a {entity_name}",
+            "open": "M\u1edf {entity_name}",
+            "unlock": "M\u1edf kh\u00f3a {entity_name}"
+        },
+        "condition_type": {
+            "is_locked": "{entity_name} b\u1ecb kh\u00f3a",
+            "is_open": "{entity_name} \u0111ang m\u1edf",
+            "is_unlocked": "{entity_name} \u0111\u01b0\u1ee3c m\u1edf kh\u00f3a"
+        },
+        "extra_fields": {
+            "for": "Trong v\u00f2ng"
+        },
+        "trigger_type": {
+            "locked": "{entity_name} \u0111\u00e3 kh\u00f3a",
+            "open": "{entity_name} \u0111\u00e3 m\u1edf",
+            "unlocked": "{entity_name} \u0111\u00e3 m\u1edf kh\u00f3a"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Kh\u00f3a",
+            "state": {
+                "jammed": "B\u1ecb k\u1eb9t",
+                "locked": "\u0110\u00e3 kh\u00f3a",
+                "locking": "\u0110ang kh\u00f3a",
+                "open": "M\u1edf",
+                "opening": "\u0110ang m\u1edf",
+                "unlocked": "\u0110\u00e3 m\u1edf kh\u00f3a",
+                "unlocking": "\u0110ang m\u1edf kh\u00f3a"
+            },
+            "state_attributes": {
+                "changed_by": {
+                    "name": "Thay \u0111\u1ed5i b\u1edfi"
+                },
+                "code_format": {
+                    "name": "\u0110\u1ecbnh d\u1ea1ng m\u00e3"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "add_default_code": {
+            "message": "M\u00e3 cho {entity_id} kh\u00f4ng kh\u1edbp v\u1edbi m\u1eabu {code_format}."
+        }
+    },
+    "services": {
+        "lock": {
+            "description": "Kh\u00f3a \u1ed5 kh\u00f3a.",
+            "fields": {
+                "code": {
+                    "description": "M\u00e3 d\u00f9ng \u0111\u1ec3 kh\u00f3a \u1ed5 kh\u00f3a.",
+                    "name": "M\u00e3"
+                }
+            },
+            "name": "Kh\u00f3a"
+        },
+        "open": {
+            "description": "M\u1edf \u1ed5 kh\u00f3a.",
+            "fields": {
+                "code": {
+                    "description": "M\u00e3 d\u00f9ng \u0111\u1ec3 m\u1edf \u1ed5 kh\u00f3a.",
+                    "name": "M\u00e3"
+                }
+            },
+            "name": "M\u1edf"
+        },
+        "unlock": {
+            "description": "M\u1edf kh\u00f3a \u1ed5 kh\u00f3a.",
+            "fields": {
+                "code": {
+                    "description": "M\u00e3 d\u00f9ng \u0111\u1ec3 m\u1edf kh\u00f3a \u1ed5 kh\u00f3a.",
+                    "name": "M\u00e3"
+                }
+            },
+            "name": "M\u1edf kh\u00f3a"
+        }
+    }
+}

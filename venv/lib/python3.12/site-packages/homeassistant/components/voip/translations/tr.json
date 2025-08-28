@@ -1,0 +1,61 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "Zaten yap\u0131land\u0131r\u0131lm\u0131\u015f. Yaln\u0131zca tek bir konfig\u00fcrasyon m\u00fcmk\u00fcnd\u00fcr."
+        },
+        "step": {
+            "user": {
+                "description": "Assist ile etkile\u015fim kurmak i\u00e7in IP \u00fczerinden Ses aramalar\u0131 al\u0131n."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "call_in_progress": {
+                "name": "\u00c7a\u011fr\u0131 devam ediyor"
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Asistan",
+                "state": {
+                    "preferred": "Tercih Edilen"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Bitmi\u015f konu\u015fma tespiti",
+                "state": {
+                    "aggressive": "Agresif",
+                    "default": "Varsay\u0131lan",
+                    "relaxed": "Rahat"
+                }
+            }
+        },
+        "switch": {
+            "allow_call": {
+                "name": "Aramalara izin ver"
+            }
+        }
+    },
+    "issues": {
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "Devam eden ikili sens\u00f6r ` {entity_id} ` kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131ld\u0131. \n \n {integration_name} ilgili ` {assist_satellite_domain} ` varl\u0131\u011f\u0131n\u0131 kullanacak \u015fekilde ta\u015f\u0131y\u0131n ve ard\u0131ndan devam eden ikili sens\u00f6r\u00fc devre d\u0131\u015f\u0131 b\u0131rakmak ve bu sorunu d\u00fczeltmek i\u00e7in G\u00d6NDER'e t\u0131klay\u0131n."
+                    }
+                }
+            },
+            "title": "{integration_name} devam ediyor ikili sens\u00f6rler kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131ld\u0131"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "sip_port": "SIP ba\u011flant\u0131 noktas\u0131"
+                }
+            }
+        }
+    }
+}

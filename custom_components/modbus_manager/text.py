@@ -6,7 +6,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
@@ -23,11 +22,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     entities = []
 
     for reg in registers:
-        # Text-Entities aus Registern mit control: "text" erstellen
-        if reg.get("control") == "text":
+        # Nur Text-Entities aus Registern mit data_type: "string" oder control: "text" erstellen
+        if reg.get("data_type") == "string" or reg.get("control") == "text":
             # Unique_ID Format: {prefix}_{template_sensor_name}
             sensor_name = reg.get("name", "unknown")
-            unique_id = f"{prefix}_{sensor_name.lower().replace(' ', '_')}"
+            # Bereinige den Namen für den unique_id
+            clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+            unique_id = f"{prefix}_{clean_name}"
             
             entities.append(ModbusTemplateText(
                 hass=hass,
@@ -68,8 +69,7 @@ class ModbusTemplateText(TextEntity):
         self._address = register_data.get("address", 0)
         self._data_type = register_data.get("data_type", "string")
         self._input_type = register_data.get("input_type", "holding")
-        self._count = register_data.get("count", 10)  # Standard: 10 Register für String
-        self._scale = register_data.get("scale", 1.0)
+        self._count = register_data.get("count", 1)
         self._swap = register_data.get("swap", False)
         
         # Text-Entity properties
@@ -77,11 +77,11 @@ class ModbusTemplateText(TextEntity):
         self._attr_device_class = register_data.get("device_class")
         self._attr_state_class = register_data.get("state_class")
         
-        # Text-spezifische Eigenschaften
-        self._attr_native_max = register_data.get("max_length", 20)  # Maximale Zeichenlänge
-        self._attr_native_min = register_data.get("min_length", 0)   # Minimale Zeichenlänge
-        self._attr_pattern = register_data.get("pattern", None)      # Regex-Pattern für Validierung
-        self._attr_mode = register_data.get("mode", "text")          # text, password, url, email
+        # Text-Validierung
+        self._attr_native_min_value = register_data.get("min_length", 0)
+        self._attr_native_max_value = register_data.get("max_length", 255)
+        self._attr_pattern = register_data.get("pattern", None)
+        self._attr_mode = register_data.get("text_mode", "text")
         
         # Group for aggregations
         self._group = register_data.get("group")
@@ -104,16 +104,19 @@ class ModbusTemplateText(TextEntity):
 
             hub = self.hass.data[DOMAIN][self._hub_name]
             
-            # Holding Register lesen (read/write)
-            result = await hub.read_holding_registers(self._address, self._count, unit=self._slave_id)
+            # Register lesen basierend auf input_type
+            if self._input_type == "input":
+                result = await hub.read_input_registers(self._address, self._count, unit=self._slave_id)
+            else:
+                result = await hub.read_holding_registers(self._address, self._count, unit=self._slave_id)
             
             if result.isError():
-                _LOGGER.warning("Fehler beim Lesen von Holding Register %s: %s", self._address, result)
+                _LOGGER.warning("Fehler beim Lesen von Register %s: %s", self._address, result)
                 self._attr_native_value = ""
                 return
             
-            # String aus Registern extrahieren
-            string_value = self._registers_to_string(result.registers)
+            # String-Wert aus Registern extrahieren
+            string_value = self._process_string_value(result.registers)
             
             if string_value is not None:
                 self._attr_native_value = string_value
@@ -121,127 +124,84 @@ class ModbusTemplateText(TextEntity):
                 self._attr_native_value = ""
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Update von Text-Entity %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Fehler beim Update von Text %s: %s", self.name, str(e))
             self._attr_native_value = ""
 
     async def async_set_value(self, value: str) -> None:
-        """Set the value of the entity."""
+        """Set the text value."""
         try:
             if self._hub_name not in self.hass.data.get(DOMAIN, {}):
                 _LOGGER.error("Hub %s nicht gefunden", self._hub_name)
                 return
 
-            # Validierung
-            if len(value) > self._attr_native_max:
-                _LOGGER.error("Text zu lang: %d Zeichen (Maximum: %d)", len(value), self._attr_native_max)
-                return
-                
-            if len(value) < self._attr_native_min:
-                _LOGGER.error("Text zu kurz: %d Zeichen (Minimum: %d)", len(value), self._attr_native_min)
-                return
-
             hub = self.hass.data[DOMAIN][self._hub_name]
             
-            # String in Register konvertieren
-            registers = self._string_to_registers(value)
+            # String in Register-Werte konvertieren
+            register_values = self._string_to_registers(value)
             
-            if registers:
-                # Register schreiben
-                result = await hub.write_registers(self._address, registers, unit=self._slave_id)
-                
-                if result.isError():
-                    _LOGGER.error("Fehler beim Schreiben in Register %s: %s", self._address, result)
-                else:
-                    _LOGGER.info("Text '%s' erfolgreich in Register %s geschrieben", value, self._address)
-                    # Sofort aktualisieren
-                    await self.async_update()
+            # Werte in Holding Register schreiben
+            if len(register_values) == 1:
+                result = await hub.write_register(self._address, register_values[0], unit=self._slave_id)
             else:
-                _LOGGER.error("Fehler bei der String-zu-Register-Konvertierung")
+                result = await hub.write_registers(self._address, register_values, unit=self._slave_id)
+            
+            if result.isError():
+                _LOGGER.error("Fehler beim Schreiben in Register %s: %s", self._address, result)
+            else:
+                _LOGGER.info("Text %s erfolgreich in Register %s geschrieben", value, self._address)
+                self._attr_native_value = value
+                self.async_write_ha_state()
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Setzen des Text-Wertes für Text-Entity %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Fehler beim Setzen des Textes %s: %s", value, str(e))
 
-    def _registers_to_string(self, registers):
-        """Convert registers to string."""
+    def _process_string_value(self, registers):
+        """Verarbeite Register-Werte zu String."""
         try:
             if not registers:
                 return None
             
-            # Bytes aus Registern extrahieren
-            bytes_list = []
-            for register in registers:
-                # Jedes Register in 2 Bytes aufteilen
-                high_byte = (register >> 8) & 0xFF
-                low_byte = register & 0xFF
-                bytes_list.extend([high_byte, low_byte])
+            # Register-Werte zu Bytes konvertieren
+            bytes_data = []
+            for reg in registers:
+                # 16-bit Register in 2 Bytes aufteilen
+                bytes_data.append((reg >> 8) & 0xFF)  # High byte
+                bytes_data.append(reg & 0xFF)          # Low byte
             
-            # Null-Terminator finden und String extrahieren
-            string_bytes = bytearray()
-            for i in range(0, len(bytes_list), 2):
-                if i + 1 < len(bytes_list):
-                    char_code = (bytes_list[i] << 8) | bytes_list[i + 1]
-                    if char_code == 0:  # Null-Terminator
-                        break
-                    string_bytes.extend(char_code.to_bytes(2, 'big'))
+            # UTF-16 BE String dekodieren
+            string_value = bytes(bytes_data).decode('utf-16-be', errors='ignore')
             
-            # String dekodieren (UTF-16 BE)
-            try:
-                return string_bytes.decode('utf-16-be').rstrip('\x00')
-            except UnicodeDecodeError:
-                # Fallback: ASCII
-                return string_bytes.decode('ascii', errors='ignore').rstrip('\x00')
-                
+            # Null-Terminator entfernen
+            string_value = string_value.rstrip('\x00')
+            
+            return string_value
+            
         except Exception as e:
-            _LOGGER.error("Fehler bei String-Konvertierung: %s", str(e))
+            _LOGGER.error("Fehler bei String-Verarbeitung: %s", str(e))
             return None
 
-    def _string_to_registers(self, text: str):
-        """Convert string to registers."""
+    def _string_to_registers(self, text_value):
+        """Konvertiere String zu Register-Werten."""
         try:
-            if not text:
-                return [0] * self._count
+            # String zu UTF-16 BE Bytes konvertieren
+            bytes_data = text_value.encode('utf-16-be')
             
-            # String in UTF-16 BE Bytes konvertieren
-            text_bytes = text.encode('utf-16-be')
-            
-            # Bytes in Register konvertieren
+            # Bytes zu 16-bit Registern konvertieren
             registers = []
-            for i in range(0, len(text_bytes), 2):
-                if i + 1 < len(text_bytes):
-                    char_code = (text_bytes[i] << 8) | text_bytes[i + 1]
-                    registers.append(char_code)
+            for i in range(0, len(bytes_data), 2):
+                if i + 1 < len(bytes_data):
+                    # Zwei Bytes zu einem 16-bit Register kombinieren
+                    high_byte = bytes_data[i]
+                    low_byte = bytes_data[i + 1]
+                    register_value = (high_byte << 8) | low_byte
+                    registers.append(register_value)
                 else:
-                    # Ungerade Anzahl Bytes
-                    registers.append(text_bytes[i] << 8)
+                    # Letztes Byte mit Null auffüllen
+                    register_value = (bytes_data[i] << 8) | 0
+                    registers.append(register_value)
             
-            # Mit Null-Terminator auffüllen
-            while len(registers) < self._count:
-                registers.append(0)
-            
-            # Auf maximale Länge beschränken
-            return registers[:self._count]
+            return registers
             
         except Exception as e:
-            _LOGGER.error("Fehler bei Register-zu-String-Konvertierung: %s", str(e))
-            return None
-
-    @property
-    def extra_state_attributes(self) -> dict:
-        """Return entity specific state attributes."""
-        attrs = {
-            "register_address": self._address,
-            "data_type": self._data_type,
-            "input_type": self._input_type,
-            "count": self._count,
-            "max_length": self._attr_native_max,
-            "min_length": self._attr_native_min,
-            "mode": self._attr_mode
-        }
-        
-        if self._attr_pattern:
-            attrs["pattern"] = self._attr_pattern
-            
-        if self._group:
-            attrs["group"] = self._group
-            
-        return attrs 
+            _LOGGER.error("Fehler bei String-zu-Register-Konvertierung: %s", str(e))
+            return [0] 

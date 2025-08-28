@@ -1,0 +1,100 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "Nome do anfitri\u00e3o ou endere\u00e7o IP da sua esta\u00e7\u00e3o TechnoVE."
+                },
+                "description": "Configure a sua esta\u00e7\u00e3o TechnoVE para se integrar com o Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "description": "Pretende adicionar a esta\u00e7\u00e3o TechnoVE denominada `{name}` ao Home Assistant?",
+                "title": "Descoberta da esta\u00e7\u00e3o TechnoVE"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "conflict_in_sharing_config": {
+                "name": "Conflito com o modo de partilha de energia"
+            },
+            "in_sharing_mode": {
+                "name": "Modo de partilha de energia"
+            },
+            "is_battery_protected": {
+                "name": "Protegido por bateria"
+            },
+            "is_static_ip": {
+                "name": "IP est\u00e1tico"
+            }
+        },
+        "number": {
+            "max_current": {
+                "name": "Corrente m\u00e1xima"
+            }
+        },
+        "sensor": {
+            "energy_session": {
+                "name": "Utiliza\u00e7\u00e3o de energia na \u00faltima sess\u00e3o"
+            },
+            "energy_total": {
+                "name": "Consumo total de energia"
+            },
+            "max_station_current": {
+                "name": "Corrente m\u00e1xima da esta\u00e7\u00e3o"
+            },
+            "ssid": {
+                "name": "Nome da rede Wi-Fi"
+            },
+            "status": {
+                "name": "Estado",
+                "state": {
+                    "high_charge_period": "Per\u00edodo de carga elevada",
+                    "out_of_activation_period": "Fora do per\u00edodo de ativa\u00e7\u00e3o",
+                    "plugged_charging": "Ligado, a carregar",
+                    "plugged_waiting": "Ligado, \u00e0 espera",
+                    "unplugged": "Desligado"
+                }
+            },
+            "voltage_in": {
+                "name": "Tens\u00e3o de entrada"
+            },
+            "voltage_out": {
+                "name": "Tens\u00e3o de sa\u00edda"
+            }
+        },
+        "switch": {
+            "auto_charge": {
+                "name": "Carregamento autom\u00e1tico"
+            },
+            "session_active": {
+                "name": "Carregamento ativado"
+            }
+        }
+    },
+    "exceptions": {
+        "max_current_in_sharing_mode": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel definir a corrente m\u00e1xima quando o modo de partilha de energia est\u00e1 ativado."
+        },
+        "set_charging_enabled_on_auto_charge": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel ativar ou desativar o carregamento quando o carregamento autom\u00e1tico est\u00e1 ativado. Tente desativar primeiro o carregamento autom\u00e1tico."
+        }
+    },
+    "issues": {
+        "deprecated_entity_is_session_active": {
+            "description": "`{entity}` est\u00e1 obsoleta.\nAtualize as suas automatiza\u00e7\u00f5es e scripts para substituir a entidade sensor bin\u00e1rio pela entidade interruptor rec\u00e9m-adicionada.\nQuando terminar a migra\u00e7\u00e3o, pode desativar `{entity}`.",
+            "title": "O sensor bin\u00e1rio TechnoVE {sensor_name} est\u00e1 obsoleto"
+        }
+    }
+}

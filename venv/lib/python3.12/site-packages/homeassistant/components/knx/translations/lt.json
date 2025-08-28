@@ -1,0 +1,467 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_backbone_key": "Neteisingas pagrindinio tinklo raktas. Tikimasi 32 \u0161e\u0161ioliktaini\u0173 skai\u010di\u0173.",
+            "invalid_individual_address": "Reik\u0161m\u0117 neatitinka KNX individualaus adreso \u0161ablono.\n \u201earea.line.device\u201c",
+            "invalid_ip_address": "Netinkamas IPv4 adresas.",
+            "keyfile_invalid_signature": "Slapta\u017eodis i\u0161\u0161ifruoti fail\u0105 \u201e.knxkeys\u201c yra neteisingas.",
+            "keyfile_no_backbone_key": "Faile \u201e.knxkeys\u201c n\u0117ra pagrindinio rakto, skirto saugaus mar\u0161ruto parinkimui.",
+            "keyfile_no_tunnel_for_host": "\u201e.knxkeys\u201c faile n\u0117ra pagrindinio kompiuterio \u201e{host}\u201c kredencial\u0173.",
+            "keyfile_not_found": "Nurodytas `.knxkeys` failas nerastas kelyje config/.storage/knx/",
+            "no_router_discovered": "Tinkle nebuvo aptiktas KNXnet/IP mar\u0161rutizatorius.",
+            "no_tunnel_discovered": "Nepavyko rasti KNX tunelinio serverio j\u016bs\u0173 tinkle.",
+            "unsupported_tunnel_type": "Pasirinkto tuneliavimo tipo prieigos vartai nepalaiko."
+        },
+        "step": {
+            "connection_type": {
+                "data": {
+                    "connection_type": "KNX jungties tipas"
+                },
+                "data_description": {
+                    "connection_type": "Pasirinkite ry\u0161io tip\u0105, kur\u012f norite naudoti savo KNX ry\u0161iui."
+                },
+                "description": "\u201eAutomatinis\u201c paleid\u017eiant atlieka \u0161liuzo nuskaitym\u0105, kad surast\u0173 KNX IP s\u0105saj\u0105. Jis jungsis tuneliu. (Nepasiekiama, jei \u0161liuzo nuskaitymas nebuvo s\u0117kmingas.) \n \n \u201eTuneliavimas\u201c prisijungs prie konkre\u010dios KNX IP s\u0105sajos per tunel\u012f. \n \n \u201eMar\u0161rutizavimas\u201c naudos daugialyp\u0117s terp\u0117s siuntim\u0105 ry\u0161iui su KNX IP mar\u0161rutizatoriais.",
+                "title": "KNX jungtis"
+            },
+            "knxkeys_tunnel_select": {
+                "data": {
+                    "tunnel_endpoint_ia": "Pasirinkite tunelio galin\u012f ta\u0161k\u0105, naudojam\u0105 ry\u0161iui."
+                },
+                "data_description": {
+                    "tunnel_endpoint_ia": "\u201eAutomatinis\u201c pasirenka jums nemokam\u0105 tunelio galin\u012f ta\u0161k\u0105 jungiantis. Jei nesate tikri, tai geriausias pasirinkimas."
+                },
+                "title": "Tunelio galinis ta\u0161kas"
+            },
+            "manual_tunnel": {
+                "data": {
+                    "host": "Host",
+                    "local_ip": "Vietin\u0117 IP s\u0105saja",
+                    "port": "Prievadas",
+                    "route_back": "Mar\u0161rutas atgal / NAT re\u017eimas",
+                    "tunneling_type": "KNX tuneliavimo tipas"
+                },
+                "data_description": {
+                    "host": "KNX/IP tuneliavimo prietaiso IP adresas arba pagrindinio kompiuterio pavadinimas.",
+                    "local_ip": "Vietinis IP arba s\u0105sajos pavadinimas, naudojamas ry\u0161iui i\u0161 \u201eHome Assistant\u201c. Jei norite naudoti automatin\u012f atradim\u0105, palikite tu\u0161\u010di\u0105.",
+                    "port": "KNX/IP tuneliavimo \u012frenginio naudojamas prievadas.",
+                    "route_back": "\u012ejunkite, jei j\u016bs\u0173 KNXnet / IP tuneliavimo serveris yra u\u017e NAT. Taikoma tik UDP ry\u0161iams.",
+                    "tunneling_type": "Pasirinkite savo KNX/IP tuneliavimo \u012frenginio tuneliavimo tip\u0105. Senesn\u0117s s\u0105sajos gali palaikyti tik \u201eUDP\u201c."
+                },
+                "description": "\u012eveskite tuneliavimo prietaiso ry\u0161io informacij\u0105.",
+                "title": "Tunelio nustatymai"
+            },
+            "routing": {
+                "data": {
+                    "individual_address": "Asmeninis adresas",
+                    "local_ip": "Vietin\u0117 IP s\u0105saja",
+                    "multicast_group": "Multicast grup\u0117",
+                    "multicast_port": "Multicast prievadas",
+                    "routing_secure": "KNX IP saugus mar\u0161ruto parinkimas"
+                },
+                "data_description": {
+                    "individual_address": "KNX adresas, kur\u012f naudos \u201eHome Assistant\u201c, pvz., \u201e0.0.4\u201c.",
+                    "local_ip": "Vietinis IP arba s\u0105sajos pavadinimas, naudojamas ry\u0161iui i\u0161 \u201eHome Assistant\u201c. Jei norite naudoti automatin\u012f atradim\u0105, palikite tu\u0161\u010di\u0105.",
+                    "multicast_group": "\u012erenginio naudojama daugialyp\u0117s siuntos grup\u0117. Numatytoji vert\u0117 yra \u201e224.0.23.12\u201c.",
+                    "multicast_port": "\u012erenginio naudojamas daugialyp\u0117s siuntimo prievadas. Numatytoji vert\u0117 yra \u201e3671\u201c.",
+                    "routing_secure": "Pasirinkite, ar j\u016bs\u0173 \u012frenginys naudoja \u0161ifruot\u0105 ry\u0161\u012f pagal KNX IP Secure standart\u0105. \u0160iam nustatymui reikalingi suderinami \u012frenginiai ir konfig\u016bracija. Kitame veiksme b\u016bsite paraginti \u012fvesti kredencialus."
+                },
+                "description": "Sukonfig\u016bruokite mar\u0161ruto parinktis.",
+                "title": "Mar\u0161rutas"
+            },
+            "secure_key_source_menu_routing": {
+                "description": "Kaip norite sukonfig\u016bruoti KNX/IP Secure?",
+                "menu_options": {
+                    "secure_knxkeys": "Naudokite .knxkeys fail\u0105, kuriame pateikiami IP saug\u016bs raktai",
+                    "secure_routing_manual": "Sukonfig\u016bruokite IP Secure magistral\u0117s rakt\u0105 rankiniu b\u016bdu"
+                },
+                "title": "KNX IP Secure"
+            },
+            "secure_key_source_menu_tunnel": {
+                "description": "Kaip norite sukonfig\u016bruoti KNX/IP Secure?",
+                "menu_options": {
+                    "secure_knxkeys": "Naudokite .knxkeys fail\u0105, kuriame pateikiami IP saug\u016bs raktai",
+                    "secure_tunnel_manual": "Sukonfig\u016bruokite IP Secure kredencialus rankiniu b\u016bdu"
+                },
+                "title": "KNX IP Secure"
+            },
+            "secure_knxkeys": {
+                "data": {
+                    "knxkeys_file": "Rakt\u0173 pakabuko failas",
+                    "knxkeys_password": "Rakt\u0173 pakabuko slapta\u017eodis"
+                },
+                "data_description": {
+                    "knxkeys_file": "Pasirinkite .knxkeys fail\u0105. Tai galima eksportuoti i\u0161 ETS.",
+                    "knxkeys_password": "Eksportuojant buvo nustatytas slapta\u017eodis .knxkeys failo atidarymui."
+                },
+                "description": "Rakt\u0173 pakabukas naudojamas KNX IP Secure ry\u0161iui u\u017e\u0161ifruoti ir i\u0161\u0161ifruoti.",
+                "title": "Importuoti KNX rakt\u0105"
+            },
+            "secure_routing_manual": {
+                "data": {
+                    "backbone_key": "Pagrindinis raktas",
+                    "sync_latency_tolerance": "Tinklo delsos tolerancija"
+                },
+                "data_description": {
+                    "backbone_key": "J\u012f galima pamatyti j\u016bs\u0173 ETS projekto \u201eSaugumo\u201c ataskaitoje. Pvz. \"00112233445566778899AABBCCDDEEFF\"",
+                    "sync_latency_tolerance": "Tur\u0117t\u0173 b\u016bti lygus j\u016bs\u0173 ETS projekto pagrindinei konfig\u016bracijai. Numatytoji vert\u0117 yra \u201e1000\u201c."
+                },
+                "description": "\u012eveskite savo IP Secure informacij\u0105.",
+                "title": "Saugus mar\u0161ruto parinkimas"
+            },
+            "secure_tunnel_manual": {
+                "data": {
+                    "device_authentication": "Prietaiso autentifikavimo slapta\u017eodis",
+                    "user_id": "Naudotojo ID",
+                    "user_password": "Naudotojo slapta\u017eodis"
+                },
+                "data_description": {
+                    "device_authentication": "Tai nustatyta ETS s\u0105sajos skydelyje \u201eIP\u201c.",
+                    "user_id": "Paprastai tai yra tunelio numeris +1. Taigi pirmasis ETS s\u0105ra\u0161e esantis tunelis tur\u0117t\u0173 vartotojo ID \u201e2\u201c.",
+                    "user_password": "ETS tunelio skydelyje \u201eYpatyb\u0117s\u201c nustatytas konkretaus tunelio ry\u0161io slapta\u017eodis."
+                },
+                "description": "\u012eveskite savo IP Secure informacij\u0105.",
+                "title": "Saugus tunelis"
+            },
+            "tcp_tunnel_endpoint": {
+                "data": {
+                    "tunnel_endpoint_ia": "Pasirinkite tunelio galin\u012f ta\u0161k\u0105, naudojam\u0105 ry\u0161iui."
+                },
+                "data_description": {
+                    "tunnel_endpoint_ia": "\u201eAutomatinis\u201c pasirenka jums nemokam\u0105 tunelio galin\u012f ta\u0161k\u0105 jungiantis. Jei nesate tikri, tai geriausias pasirinkimas."
+                },
+                "title": "Tunelio galinis ta\u0161kas"
+            },
+            "tunnel": {
+                "data": {
+                    "gateway": "I\u0161 s\u0105ra\u0161o pasirinkite \u0161liuz\u0105."
+                },
+                "data_description": {
+                    "gateway": "Pasirinkite KNX tuneliavimo s\u0105saj\u0105, kuri\u0105 norite naudoti ry\u0161iui."
+                },
+                "title": "Tunelis"
+            }
+        }
+    },
+    "device_automation": {
+        "extra_fields": {
+            "destination": "Grupi\u0173 adresai",
+            "group_value_read": "GroupValueRead",
+            "group_value_response": "GroupValueResponse",
+            "group_value_write": "GroupValueWrite",
+            "incoming": "\u012eeinantys",
+            "outgoing": "I\u0161einantis"
+        },
+        "extra_fields_descriptions": {
+            "destination": "Trigeris klausys telegram\u0173, i\u0161si\u0173st\u0173 arba gaut\u0173 \u0161iais grup\u0117s adresais. Jei nepasirinktas joks adresas, aktyviklis suaktyvins kiekvien\u0105 grup\u0117s adres\u0105.",
+            "group_value_read": "Klausykit\u0117s \u201eGroupValueRead\u201c telegram\u0173.",
+            "group_value_response": "Klausykite gaunam\u0173 telegram\u0173.",
+            "group_value_write": "Klausykit\u0117s \u201eGroupValueWrite\u201c telegram\u0173.",
+            "incoming": "Klausykite gaunam\u0173 telegram\u0173.",
+            "outgoing": "Klausykite siun\u010diam\u0173 telegram\u0173."
+        },
+        "trigger_type": {
+            "telegram": "Telegrama"
+        }
+    },
+    "entity": {
+        "climate": {
+            "knx_climate": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "name": "I\u0161ankstinis nustatymas",
+                        "state": {
+                            "auto": "Automatinis",
+                            "building_protection": "Pastat\u0173 apsauga",
+                            "comfort": "Komfortas",
+                            "economy": "Eko",
+                            "standby": "Bud\u0117jimo re\u017eimas"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "connected_since": {
+                "name": "Ry\u0161ys u\u017emegztas"
+            },
+            "connection_type": {
+                "name": "Ry\u0161io tipas"
+            },
+            "individual_address": {
+                "name": "Asmeninis adresas"
+            },
+            "telegram_count": {
+                "name": "Telegramos",
+                "unit_of_measurement": "telegramos"
+            },
+            "telegrams_incoming": {
+                "name": "Gaunamos telegramos",
+                "unit_of_measurement": "telegramos"
+            },
+            "telegrams_incoming_error": {
+                "name": "Gaunamos telegramos klaidos",
+                "unit_of_measurement": "klaidos"
+            },
+            "telegrams_outgoing": {
+                "name": "Siun\u010diamos telegramos",
+                "unit_of_measurement": "telegramos"
+            },
+            "telegrams_outgoing_error": {
+                "name": "Siun\u010diamos telegramos klaidos",
+                "unit_of_measurement": "klaidos"
+            }
+        }
+    },
+    "options": {
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_backbone_key": "Neteisingas pagrindinio tinklo raktas. Tikimasi 32 \u0161e\u0161ioliktaini\u0173 skai\u010di\u0173.",
+            "invalid_individual_address": "Reik\u0161m\u0117 neatitinka KNX individualaus adreso \u0161ablono.\n \u201earea.line.device\u201c",
+            "invalid_ip_address": "Netinkamas IPv4 adresas.",
+            "keyfile_invalid_signature": "Slapta\u017eodis i\u0161\u0161ifruoti fail\u0105 \u201e.knxkeys\u201c yra neteisingas.",
+            "keyfile_no_backbone_key": "Faile \u201e.knxkeys\u201c n\u0117ra pagrindinio rakto, skirto saugaus mar\u0161ruto parinkimui.",
+            "keyfile_no_tunnel_for_host": "\u201e.knxkeys\u201c faile n\u0117ra pagrindinio kompiuterio \u201e{host}\u201c kredencial\u0173.",
+            "keyfile_not_found": "Nurodytas `.knxkeys` failas nerastas kelyje config/.storage/knx/",
+            "no_router_discovered": "Tinkle nebuvo aptiktas KNXnet/IP mar\u0161rutizatorius.",
+            "no_tunnel_discovered": "Nepavyko rasti KNX tunelinio serverio j\u016bs\u0173 tinkle.",
+            "unsupported_tunnel_type": "Pasirinkto tuneliavimo tipo prieigos vartai nepalaiko."
+        },
+        "step": {
+            "communication_settings": {
+                "data": {
+                    "rate_limit": "Kainos riba",
+                    "state_updater": "B\u016bsenos atnaujintojas",
+                    "telegram_log_size": "\"Telegram\" istorijos riba"
+                },
+                "data_description": {
+                    "rate_limit": "Maksimalus siun\u010diam\u0173 telegram\u0173 skai\u010dius per sekund\u0119. \n \u201e0\u201c, kad i\u0161jungtum\u0117te apribojim\u0105. Rekomenduojama: \u201e0\u201c arba tarp \u201e20\u201c ir \u201e40\u201c.",
+                    "state_updater": "Nustato numatyt\u0105j\u012f b\u016bsenos adres\u0173 nuskaitymo i\u0161 KNX magistral\u0117s elges\u012f. \n Kai \u012fjungta, nam\u0173 asistentas steb\u0117s kiekvien\u0105 grup\u0117s adres\u0105 ir nuskaitys j\u012f i\u0161 magistral\u0117s, jei vien\u0105 valand\u0105 negausite jokios reik\u0161m\u0117s. \n Kai i\u0161jungta, b\u016bsenos adresai bus nuskaitomi tik vien\u0105 kart\u0105 po to, kai bus sukurtas magistral\u0117s ry\u0161ys. \n \u0160i\u0105 atskir\u0173 objekt\u0173 elgsen\u0105 galima nepaisyti naudojant parinkt\u012f 'sync_state'.",
+                    "telegram_log_size": "KNX skyd\u0173 grup\u0117s monitoriaus atmintyje saugomos telegramos. Maksimalus: {telegram_log_size_max}"
+                },
+                "title": "Ry\u0161io nustatymai"
+            },
+            "connection_type": {
+                "data": {
+                    "connection_type": "KNX jungties tipas"
+                },
+                "data_description": {
+                    "connection_type": "Pasirinkite ry\u0161io tip\u0105, kur\u012f norite naudoti savo KNX ry\u0161iui."
+                },
+                "description": "\u201eAutomatinis\u201c paleid\u017eiant atlieka \u0161liuzo nuskaitym\u0105, kad surast\u0173 KNX IP s\u0105saj\u0105. Jis jungsis tuneliu. (Nepasiekiama, jei \u0161liuzo nuskaitymas nebuvo s\u0117kmingas.) \n \n \u201eTuneliavimas\u201c prisijungs prie konkre\u010dios KNX IP s\u0105sajos per tunel\u012f. \n \n \u201eMar\u0161rutizavimas\u201c naudos daugialyp\u0117s terp\u0117s siuntim\u0105 ry\u0161iui su KNX IP mar\u0161rutizatoriais.",
+                "title": "KNX jungtis"
+            },
+            "init": {
+                "menu_options": {
+                    "communication_settings": "Ry\u0161io nustatymai",
+                    "connection_type": "Konfig\u016bruokite KNX s\u0105saj\u0105",
+                    "secure_knxkeys": "Importuokite `.knxkeys` fail\u0105"
+                },
+                "title": "KNX nustatymai"
+            },
+            "knxkeys_tunnel_select": {
+                "data": {
+                    "tunnel_endpoint_ia": "Pasirinkite tunelio galin\u012f ta\u0161k\u0105, naudojam\u0105 ry\u0161iui."
+                },
+                "data_description": {
+                    "tunnel_endpoint_ia": "\u201eAutomatinis\u201c pasirenka jums nemokam\u0105 tunelio galin\u012f ta\u0161k\u0105 jungiantis. Jei nesate tikri, tai geriausias pasirinkimas."
+                },
+                "title": "Tunelio galinis ta\u0161kas"
+            },
+            "manual_tunnel": {
+                "data": {
+                    "host": "Host",
+                    "local_ip": "Vietin\u0117 IP s\u0105saja",
+                    "port": "Prievadas",
+                    "route_back": "Mar\u0161rutas atgal / NAT re\u017eimas",
+                    "tunneling_type": "KNX tuneliavimo tipas"
+                },
+                "data_description": {
+                    "host": "KNX/IP tuneliavimo prietaiso IP adresas arba pagrindinio kompiuterio pavadinimas.",
+                    "local_ip": "Vietinis IP arba s\u0105sajos pavadinimas, naudojamas ry\u0161iui i\u0161 \u201eHome Assistant\u201c. Jei norite naudoti automatin\u012f atradim\u0105, palikite tu\u0161\u010di\u0105.",
+                    "port": "KNX/IP tuneliavimo \u012frenginio naudojamas prievadas.",
+                    "route_back": "\u012ejunkite, jei j\u016bs\u0173 KNXnet / IP tuneliavimo serveris yra u\u017e NAT. Taikoma tik UDP ry\u0161iams.",
+                    "tunneling_type": "Pasirinkite savo KNX/IP tuneliavimo \u012frenginio tuneliavimo tip\u0105. Senesn\u0117s s\u0105sajos gali palaikyti tik \u201eUDP\u201c."
+                },
+                "description": "\u012eveskite tuneliavimo prietaiso ry\u0161io informacij\u0105.",
+                "title": "Tunelio nustatymai"
+            },
+            "routing": {
+                "data": {
+                    "individual_address": "Asmeninis adresas",
+                    "local_ip": "Vietin\u0117 IP s\u0105saja",
+                    "multicast_group": "Multicast grup\u0117",
+                    "multicast_port": "Multicast prievadas",
+                    "routing_secure": "KNX IP saugus mar\u0161ruto parinkimas"
+                },
+                "data_description": {
+                    "individual_address": "KNX adresas, kur\u012f naudos \u201eHome Assistant\u201c, pvz., \u201e0.0.4\u201c.",
+                    "local_ip": "Vietinis IP arba s\u0105sajos pavadinimas, naudojamas ry\u0161iui i\u0161 \u201eHome Assistant\u201c. Jei norite naudoti automatin\u012f atradim\u0105, palikite tu\u0161\u010di\u0105.",
+                    "multicast_group": "\u012erenginio naudojama daugialyp\u0117s siuntos grup\u0117. Numatytoji vert\u0117 yra \u201e224.0.23.12\u201c.",
+                    "multicast_port": "\u012erenginio naudojamas daugialyp\u0117s siuntimo prievadas. Numatytoji vert\u0117 yra \u201e3671\u201c.",
+                    "routing_secure": "Pasirinkite, ar j\u016bs\u0173 \u012frenginys naudoja \u0161ifruot\u0105 ry\u0161\u012f pagal KNX IP Secure standart\u0105. \u0160iam nustatymui reikalingi suderinami \u012frenginiai ir konfig\u016bracija. Kitame veiksme b\u016bsite paraginti \u012fvesti kredencialus."
+                },
+                "description": "Sukonfig\u016bruokite mar\u0161ruto parinktis.",
+                "title": "Mar\u0161rutas"
+            },
+            "secure_key_source_menu_routing": {
+                "description": "Kaip norite sukonfig\u016bruoti KNX/IP Secure?",
+                "menu_options": {
+                    "secure_knxkeys": "Naudokite .knxkeys fail\u0105, kuriame pateikiami IP saug\u016bs raktai",
+                    "secure_routing_manual": "Sukonfig\u016bruokite IP Secure magistral\u0117s rakt\u0105 rankiniu b\u016bdu"
+                },
+                "title": "KNX IP Secure"
+            },
+            "secure_key_source_menu_tunnel": {
+                "description": "Kaip norite sukonfig\u016bruoti KNX/IP Secure?",
+                "menu_options": {
+                    "secure_knxkeys": "Naudokite .knxkeys fail\u0105, kuriame pateikiami IP saug\u016bs raktai",
+                    "secure_tunnel_manual": "Sukonfig\u016bruokite IP Secure kredencialus rankiniu b\u016bdu"
+                },
+                "title": "KNX IP Secure"
+            },
+            "secure_knxkeys": {
+                "data": {
+                    "knxkeys_file": "Rakt\u0173 pakabuko failas",
+                    "knxkeys_password": "Rakt\u0173 pakabuko slapta\u017eodis"
+                },
+                "data_description": {
+                    "knxkeys_file": "Pasirinkite .knxkeys fail\u0105. Tai galima eksportuoti i\u0161 ETS.",
+                    "knxkeys_password": "Eksportuojant buvo nustatytas slapta\u017eodis .knxkeys failo atidarymui."
+                },
+                "description": "Rakt\u0173 pakabukas naudojamas KNX IP Secure ry\u0161iui u\u017e\u0161ifruoti ir i\u0161\u0161ifruoti.",
+                "title": "Importuoti KNX rakt\u0105"
+            },
+            "secure_routing_manual": {
+                "data": {
+                    "backbone_key": "Pagrindinis raktas",
+                    "sync_latency_tolerance": "Tinklo delsos tolerancija"
+                },
+                "data_description": {
+                    "backbone_key": "J\u012f galima pamatyti j\u016bs\u0173 ETS projekto \u201eSaugumo\u201c ataskaitoje. Pvz. \"00112233445566778899AABBCCDDEEFF\"",
+                    "sync_latency_tolerance": "Tur\u0117t\u0173 b\u016bti lygus j\u016bs\u0173 ETS projekto pagrindinei konfig\u016bracijai. Numatytoji vert\u0117 yra \u201e1000\u201c."
+                },
+                "description": "\u012eveskite savo IP Secure informacij\u0105.",
+                "title": "Saugus mar\u0161ruto parinkimas"
+            },
+            "secure_tunnel_manual": {
+                "data": {
+                    "device_authentication": "Prietaiso autentifikavimo slapta\u017eodis",
+                    "user_id": "Naudotojo ID",
+                    "user_password": "Naudotojo slapta\u017eodis"
+                },
+                "data_description": {
+                    "device_authentication": "Tai nustatyta ETS s\u0105sajos skydelyje \u201eIP\u201c.",
+                    "user_id": "Paprastai tai yra tunelio numeris +1. Taigi pirmasis ETS s\u0105ra\u0161e esantis tunelis tur\u0117t\u0173 vartotojo ID \u201e2\u201c.",
+                    "user_password": "ETS tunelio skydelyje \u201eYpatyb\u0117s\u201c nustatytas konkretaus tunelio ry\u0161io slapta\u017eodis."
+                },
+                "description": "\u012eveskite savo IP Secure informacij\u0105.",
+                "title": "Saugus tunelis"
+            },
+            "tcp_tunnel_endpoint": {
+                "data": {
+                    "tunnel_endpoint_ia": "Pasirinkite tunelio galin\u012f ta\u0161k\u0105, naudojam\u0105 ry\u0161iui."
+                },
+                "data_description": {
+                    "tunnel_endpoint_ia": "\u201eAutomatinis\u201c pasirenka jums nemokam\u0105 tunelio galin\u012f ta\u0161k\u0105 jungiantis. Jei nesate tikri, tai geriausias pasirinkimas."
+                },
+                "title": "Tunelio galinis ta\u0161kas"
+            },
+            "tunnel": {
+                "data": {
+                    "gateway": "I\u0161 s\u0105ra\u0161o pasirinkite \u0161liuz\u0105."
+                },
+                "data_description": {
+                    "gateway": "Pasirinkite KNX tuneliavimo s\u0105saj\u0105, kuri\u0105 norite naudoti ry\u0161iui."
+                },
+                "title": "Tunelis"
+            }
+        }
+    },
+    "services": {
+        "event_register": {
+            "description": "Prideda arba pa\u0161alina grupi\u0173 adresus \u012f knx_event filtr\u0105, kad suaktyvint\u0173 `knx_event`s. Galima pa\u0161alinti tik \u0161iuo veiksmu prid\u0117tus adresus.",
+            "fields": {
+                "address": {
+                    "description": "Grup\u0117s adresas (-ai), kuris (-i) turi b\u016bti prid\u0117tas (-i) arba pa\u0161alintas. Leid\u017eiami s\u0105ra\u0161ai.",
+                    "name": "Grup\u0117s adresas"
+                },
+                "remove": {
+                    "description": "Jei \u201eTiesa\u201c, grup\u0117s adresas (-ai) bus pa\u0161alintas (-i).",
+                    "name": "Pa\u0161alinti renginio registracij\u0105"
+                },
+                "type": {
+                    "description": "Jei nustatyta, naudingoji apkrova bus i\u0161\u0161ifruota kaip nurodyta DPT \u012fvykio duomen\u0173 \u201evert\u0117s\u201c rakte. KNX jutikli\u0173 tipai yra galiojan\u010dios vert\u0117s (\u017er. https://www.home-assistant.io/integrations/knx/#value-types).",
+                    "name": "Vert\u0117s tipas"
+                }
+            },
+            "name": "Registruokis knx_event"
+        },
+        "exposure_register": {
+            "description": "Prideda arba pa\u0161alina KNX magistral\u0117s ekspozicijas. Galima pa\u0161alinti tik su \u0161iuo veiksmu prid\u0117tas ekspozicijas.",
+            "fields": {
+                "address": {
+                    "description": "Grup\u0117s adreso b\u016bsenos arba atributo atnaujinimai bus siun\u010diami \u012f. \u012e GroupValueRead u\u017eklausas bus atsakyta. Vienu adresu galima u\u017eregistruoti tik vien\u0105 ekspozicij\u0105.",
+                    "name": "Grup\u0117s adresas"
+                },
+                "attribute": {
+                    "description": "Subjekto, kuris turi b\u016bti siun\u010diamas \u012f KNX magistral\u0119, atributas. Jei nenustatyta, b\u016bsena bus i\u0161si\u0173sta. Pvz. \u0161viesai b\u016bsena yra arba \"\u012fjungta\" arba \"i\u0161jungta\" - su atributu galite atskleisti jos \"ry\u0161kum\u0105\".",
+                    "name": "Subjekto atributas"
+                },
+                "default": {
+                    "description": "Numatytoji reik\u0161m\u0117, siun\u010diama \u012f magistral\u0119, jei b\u016bsenos arba atributo reik\u0161m\u0117 yra N\u0117ra. Pvz. lemput\u0117, kurios b\u016bsena \u201ei\u0161jungta\u201c, neturi ry\u0161kumo atributo, tod\u0117l galima naudoti numatyt\u0105j\u0105 reik\u0161m\u0119 0. Jei nenustatyta (arba None), jokia reik\u0161m\u0117 nebus siun\u010diama \u012f magistral\u0119, o GroupReadRequest adresu gr\u0105\u017eint\u0173 paskutin\u0119 \u017einom\u0105 reik\u0161m\u0119.",
+                    "name": "Numatytoji reik\u0161m\u0117"
+                },
+                "entity_id": {
+                    "description": "Objekto ID, kurio b\u016bsena arba atributas turi b\u016bti atskleistas.",
+                    "name": "Subjektas"
+                },
+                "remove": {
+                    "description": "Jei \u201eTiesa\u201c, ekspozicija bus pa\u0161alinta. Norint pa\u0161alinti, reikia nurodyti tik \u201eadres\u0105\u201c.",
+                    "name": "Pa\u0161alinkite ekspozicij\u0105"
+                },
+                "type": {
+                    "description": "Telegramos bus u\u017ekoduotos kaip nurodyta DPT. \u201edvejetain\u0117\u201c ir visi KNX jutikli\u0173 tipai yra galiojan\u010dios vert\u0117s (\u017er. https://www.home-assistant.io/integrations/knx/#value-types).",
+                    "name": "Vert\u0117s tipas"
+                }
+            },
+            "name": "Si\u0173sti \u012f KNX magistral\u0119"
+        },
+        "read": {
+            "description": "Siun\u010dia GroupValueRead u\u017eklausas \u012f KNX magistral\u0119. Atsakymas gali b\u016bti naudojamas i\u0161 \u201eknx_event\u201c ir bus apdorojamas KNX objektuose.",
+            "fields": {
+                "address": {
+                    "description": "Grup\u0117s adresas (-iai), \u012f kur\u012f (-iais) si\u0173sti u\u017eklaus\u0105 skaityti. S\u0105ra\u0161ai nuskaitys kelis grupi\u0173 adresus.",
+                    "name": "Grup\u0117s adresas"
+                }
+            },
+            "name": "Skaitymas i\u0161 KNX magistral\u0117s"
+        },
+        "reload": {
+            "description": "I\u0161 naujo \u012fkelia KNX integracij\u0105.",
+            "name": "\u012ekelti i\u0161 naujo"
+        },
+        "send": {
+            "description": "Siun\u010dia savavali\u0161kus duomenis tiesiai \u012f KNX magistral\u0119.",
+            "fields": {
+                "address": {
+                    "description": "Grup\u0117s adresas (-ai), kuriuo (-iais) ra\u0161yti. S\u0105ra\u0161ai bus siun\u010diami i\u0161 eil\u0117s \u012f kelis grupi\u0173 adresus.",
+                    "name": "Grup\u0117s adresas"
+                },
+                "payload": {
+                    "description": "Naudingoji apkrova, siun\u010diama \u012f magistral\u0119. Integriniai skai\u010diai laikomi DPT 1/2/3 naudinguoju kroviniu. Jei DPT > 6 bitai, si\u0173skite s\u0105ra\u0161\u0105. Kiekviena reik\u0161m\u0117 yra 1 oktetas (0-255). DPT baito ilg\u012f papildykite 0.",
+                    "name": "Naudinga apkrova"
+                },
+                "response": {
+                    "description": "Jei nustatyta \u012f \u201eTrue\u201c, telegrama bus siun\u010diama kaip \u201eGroupValueResponse\u201c, o ne kaip \u201eGroupValueWrite\u201c.",
+                    "name": "Si\u0173sti kaip atsakym\u0105"
+                },
+                "type": {
+                    "description": "Jei nustatyta, naudingoji apkrova nebus siun\u010diama kaip neapdoroti baitai, o u\u017ekoduota kaip nurodyta DPT. KNX jutikli\u0173 tipai yra galiojan\u010dios vert\u0117s (\u017er. https://www.home-assistant.io/integrations/knx/#value-types).",
+                    "name": "Vert\u0117s tipas"
+                }
+            },
+            "name": "Si\u0173sti \u012f KNX magistral\u0119"
+        }
+    }
+}

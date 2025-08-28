@@ -1,0 +1,263 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert"
+        },
+        "error": {
+            "invalid_auth": "Ung\u00fcltige Authentifizierung"
+        },
+        "flow_title": "{ip}",
+        "step": {
+            "user": {
+                "data": {
+                    "ip_address": "Hostname oder IP-Adresse",
+                    "password": "Passwort",
+                    "port": "Port"
+                },
+                "title": "Informationen eingeben"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "flow_sensor": {
+                "name": "Durchflusssensor"
+            },
+            "freeze": {
+                "name": "Einschr\u00e4nkungen beim Einfrieren"
+            },
+            "hourly": {
+                "name": "St\u00fcndliche Einschr\u00e4nkungen"
+            },
+            "month": {
+                "name": "Monatliche Einschr\u00e4nkungen"
+            },
+            "raindelay": {
+                "name": "Einschr\u00e4nkungen bei Regenverz\u00f6gerungen"
+            },
+            "rainsensor": {
+                "name": "Einschr\u00e4nkungen f\u00fcr Regensensoren"
+            },
+            "weekday": {
+                "name": "Einschr\u00e4nkungen an Wochentagen"
+            }
+        },
+        "select": {
+            "freeze_protection_temperature": {
+                "name": "Frostschutztemperatur"
+            }
+        },
+        "sensor": {
+            "flow_sensor_clicks_cubic_meter": {
+                "name": "Durchflusssensor-Klicks pro Kubikmeter"
+            },
+            "flow_sensor_consumed_liters": {
+                "name": "Durchflusssensor verbrauchte Liter"
+            },
+            "flow_sensor_leak_clicks": {
+                "name": "Leckklicks des Durchflusssensors"
+            },
+            "flow_sensor_leak_volume": {
+                "name": "Leckvolumen des Durchflusssensors"
+            },
+            "flow_sensor_start_index": {
+                "name": "Startindex des Durchflusssensors"
+            },
+            "flow_sensor_watering_clicks": {
+                "name": "Durchflusssensor Klicks"
+            },
+            "last_leak_detected": {
+                "name": "Letztes entdecktes Leck"
+            },
+            "rain_sensor_rain_start": {
+                "name": "Regensensor Regenstart"
+            }
+        },
+        "switch": {
+            "freeze_protect_enabled": {
+                "name": "Frostschutz"
+            },
+            "hot_days_extra_watering": {
+                "name": "Extra Wasser an hei\u00dfen Tagen"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "allow_inactive_zones_to_run": "Manuelles Ausf\u00fchren deaktivierter Zonen zulassen",
+                    "use_app_run_times": "Zonenlaufzeiten aus der RainMachine App verwenden",
+                    "zone_run_time": "Standard-Zonenlaufzeit (in Sekunden)"
+                },
+                "title": "RainMachine konfigurieren"
+            }
+        }
+    },
+    "services": {
+        "pause_watering": {
+            "description": "Unterbricht alle Bew\u00e4sserungsaktivit\u00e4ten f\u00fcr einige Sekunden.",
+            "fields": {
+                "device_id": {
+                    "description": "Der Controller, dessen Bew\u00e4sserungsaktivit\u00e4ten angehalten werden sollen.",
+                    "name": "Controller"
+                },
+                "seconds": {
+                    "description": "Die Zeitraum (in Sekunden), die die Bew\u00e4sserung unterbrochen wird.",
+                    "name": "Dauer"
+                }
+            },
+            "name": "Gesamte Bew\u00e4sserung pausieren"
+        },
+        "push_flow_meter_data": {
+            "description": "\u00dcbert\u00e4gt die Daten des Durchflussmessers an das RainMachine-Ger\u00e4t.",
+            "fields": {
+                "device_id": {
+                    "description": "Der Controller, an den Durchflussmesserdaten gesendet werden sollen.",
+                    "name": "Controller"
+                },
+                "unit_of_measurement": {
+                    "description": "Die zu sendenden Durchflussmessereinheiten.",
+                    "name": "Ma\u00dfeinheit"
+                },
+                "value": {
+                    "description": "Der zu sendende Durchflussmesserwert.",
+                    "name": "Wert"
+                }
+            },
+            "name": "Daten des Durchflussmessers \u00fcbertragen"
+        },
+        "push_weather_data": {
+            "description": "\u00dcbertr\u00e4gt Wetterdaten von Home Assistant an das RainMachine-Ger\u00e4t.\nDer lokale Wetter-Push-Dienst sollte \u00fcber den Tab \u201eEinstellungen \u2192 Wetter \u2192 Entwickler\u201c aktiviert werden, damit RainMachine die gesendeten Werte ber\u00fccksichtigt. Einheiten m\u00fcssen in metrischen Ma\u00dfeinheiten gesendet werden; es werden keine Konvertierungen durch die Integration durchgef\u00fchrt.\nEinzelheiten zur RainMachine-API findest du hier: https://rainmachine.docs.apiary.io/#reference/weather-services/parserdata/post",
+            "fields": {
+                "condition": {
+                    "description": "Aktueller Wetterzustandscode (WNUM).",
+                    "name": "Wetterzustandscode"
+                },
+                "device_id": {
+                    "description": "Der Controller f\u00fcr die zu \u00fcbertragenden Wetterdaten.",
+                    "name": "Controller"
+                },
+                "dewpoint": {
+                    "description": "Taupunkt (\u00b0C).",
+                    "name": "Taupunkt"
+                },
+                "et": {
+                    "description": "Evapotranspiration (mm).",
+                    "name": "Evapotranspiration"
+                },
+                "maxrh": {
+                    "description": "Maximale relative Luftfeuchtigkeit (%).",
+                    "name": "Max. rel. Luftfeuchtigkeit"
+                },
+                "maxtemp": {
+                    "description": "H\u00f6chsttemperatur (\u00b0C).",
+                    "name": "Max. Temp."
+                },
+                "minrh": {
+                    "description": "Minimale relative Luftfeuchtigkeit (%).",
+                    "name": "Min. rel. Luftfeuchtigkeit"
+                },
+                "mintemp": {
+                    "description": "Minimalttemperatur (\u00b0C).",
+                    "name": "Min. Temp."
+                },
+                "pressure": {
+                    "description": "Luftdruck (kPa).",
+                    "name": "Luftdruck"
+                },
+                "qpf": {
+                    "description": "Quantitative Niederschlagsprognose (mm) oder Quantitative Precipitation Forecast (QPF). Hinweis: QPF-Werte sollten nicht als kumulative Werte gesendet werden, sondern als gemessene oder prognostizierte Werte f\u00fcr jede Stunde oder jeden Tag. Der RainMachine Mixer summiert alle QPF-Werte des aktuellen Tages, um den Gesamt-QPF des Tages zu erhalten.",
+                    "name": "Quantitative Niederschlagsprognose"
+                },
+                "rain": {
+                    "description": "Gemessener Niederschlag (mm). Hinweis: Niederschlagswerte sollten nicht als kumulative Werte gesendet werden, sondern als gemessene oder prognostizierte Werte f\u00fcr jede Stunde oder jeden Tag. Der RainMachine Mixer summiert alle Niederschlagswerte des aktuellen Tages, um den Gesamtniederschlag des Tages zu ermitteln.",
+                    "name": "Gemessener Niederschlag"
+                },
+                "solarrad": {
+                    "description": "Sonneneinstrahlung (MJ/m\u00b2/h).",
+                    "name": "Sonneneinstrahlung"
+                },
+                "temperature": {
+                    "description": "Aktuelle Temperatur (\u00b0C).",
+                    "name": "Temperatur"
+                },
+                "timestamp": {
+                    "description": "UNIX-Zeitstempel f\u00fcr die Wetterdaten. Wenn weggelassen, wird die Ortszeit des RainMachine-Ger\u00e4ts zum Zeitpunkt des Aufrufs verwendet.",
+                    "name": "Zeitstempel"
+                },
+                "wind": {
+                    "description": "Windgeschwindigkeit (m/s).",
+                    "name": "Windgeschwindigkeit"
+                }
+            },
+            "name": "Wetterdaten \u00fcbertragen"
+        },
+        "restrict_watering": {
+            "description": "Verhindert den Beginn aller Bew\u00e4sserungsaktivit\u00e4ten f\u00fcr einen bestimmten Zeitraum.",
+            "fields": {
+                "device_id": {
+                    "description": "Der Controller, dessen Bew\u00e4sserungsaktivit\u00e4ten eingeschr\u00e4nkt werden sollen.",
+                    "name": "Controller"
+                },
+                "duration": {
+                    "description": "Der Zeitraum, in dem die Bew\u00e4sserungsaktivit\u00e4ten nicht beginnen d\u00fcrfen.",
+                    "name": "Dauer"
+                }
+            },
+            "name": "Bew\u00e4sserung einschr\u00e4nken"
+        },
+        "start_program": {
+            "description": "Startet ein Programm.",
+            "name": "Programm starten"
+        },
+        "start_zone": {
+            "description": "Startet eine Zone.",
+            "fields": {
+                "zone_run_time": {
+                    "description": "Die Zeit (in Sekunden), die zum Ausf\u00fchren der Zone ben\u00f6tigt wird.",
+                    "name": "Laufzeit"
+                }
+            },
+            "name": "Zone starten"
+        },
+        "stop_all": {
+            "description": "Stoppt alle Bew\u00e4sserungsaktivit\u00e4ten.",
+            "fields": {
+                "device_id": {
+                    "description": "Der Controller, dessen Bew\u00e4sserungsaktivit\u00e4ten gestoppt werden sollen.",
+                    "name": "Controller"
+                }
+            },
+            "name": "Gesamte Bew\u00e4sserung stoppen"
+        },
+        "stop_program": {
+            "description": "Stoppt ein Programm.",
+            "name": "Programm stoppen"
+        },
+        "stop_zone": {
+            "description": "Stoppt eine Zone.",
+            "name": "Zone stoppen"
+        },
+        "unpause_watering": {
+            "description": "Setzt alle pausierten Bew\u00e4sserungsaktivit\u00e4ten fort.",
+            "fields": {
+                "device_id": {
+                    "description": "Der Controller, dessen Bew\u00e4sserungsaktivit\u00e4ten fortgesetzt werden sollen.",
+                    "name": "Controller"
+                }
+            },
+            "name": "Gesamte Bew\u00e4sserung fortsetzen"
+        },
+        "unrestrict_watering": {
+            "description": "Hebt die Einschr\u00e4nkung aller Bew\u00e4sserungsaktivit\u00e4ten auf.",
+            "fields": {
+                "device_id": {
+                    "description": "Der Controller, dessen Bew\u00e4sserungsaktivit\u00e4ten uneingeschr\u00e4nkt sein sollten.",
+                    "name": "Controller"
+                }
+            },
+            "name": "Bew\u00e4sserung nicht mehr einschr\u00e4nken"
+        }
+    }
+}

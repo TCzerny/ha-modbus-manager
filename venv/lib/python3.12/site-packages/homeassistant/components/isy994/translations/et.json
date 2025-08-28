@@ -1,0 +1,163 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud",
+            "reauth_successful": "Taastuvastamine \u00f5nnestus"
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus",
+            "invalid_auth": "Tuvastamine nurjus",
+            "invalid_host": "Hostikirje ei olnud sobivas URL-vormingus, nt http://192.168.10.100:80",
+            "reauth_successful": "Taastuvastamine \u00f5nnestus",
+            "unknown": "Tundmatu viga"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Salas\u00f5na",
+                    "username": "Kasutajanimi"
+                },
+                "description": "Kasutaja {host} mandaat ei kehti enam.",
+                "title": "Taastuvasta ISY"
+            },
+            "user": {
+                "data": {
+                    "host": "",
+                    "password": "Salas\u00f5na",
+                    "tls": "ISY kontrolleri TLS-versioon.",
+                    "username": "Kasutajanimi"
+                },
+                "description": "Hostikirje peab olema t\u00e4ielikus URL-vormingus, nt http://192.168.10.100:80",
+                "title": "\u00dchendu oma ISY-ga"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignore_string": "Eira stringi",
+                    "restore_light_state": "Taasta valguse heledus",
+                    "sensor_string": "S\u00f5lme anduri string",
+                    "variable_sensor_string": "Muutuja sensori string"
+                },
+                "title": "ISY valikud"
+            }
+        }
+    },
+    "services": {
+        "delete_zwave_lock_user_code": {
+            "fields": {
+                "user_num": {
+                    "description": "Kasutajapesa number lukus.",
+                    "name": "Kasutaja number"
+                }
+            }
+        },
+        "get_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "Seadmest hangitav parameetri number.",
+                    "name": "Parameeter"
+                }
+            },
+            "name": "Hangi Z-Wave'i parameeter"
+        },
+        "rename_node": {
+            "fields": {
+                "name": {
+                    "description": "ISY-s kasutatav uus nimi.",
+                    "name": "Uus nimi"
+                }
+            }
+        },
+        "send_node_command": {
+            "fields": {
+                "command": {
+                    "description": "Seadmele saadetav k\u00e4sk.",
+                    "name": "K\u00e4sk"
+                }
+            },
+            "name": "Saada s\u00f5lme k\u00e4sk"
+        },
+        "send_program_command": {
+            "description": "Saadab k\u00e4su ISY programmi v\u00f5i kausta juhtimiseks. Kehtivad k\u00e4sud on run, run_then, run_else, stop, enable, disable, enable_run_at_startup ja disable_run_at_startup.",
+            "fields": {
+                "address": {
+                    "description": "Kontrollitava programmi aadress (kasuta kas aadressi v\u00f5i nime).",
+                    "name": "Aadress"
+                },
+                "command": {
+                    "description": "Saadetav ISY programmi k\u00e4sk.",
+                    "name": "K\u00e4sk"
+                },
+                "isy": {
+                    "description": "Kui on \u00fchendatud rohkem kui \u00fcks ISY, sisesta selle ISY nimi, mille kohta soovid p\u00e4ringu teha (nagu on n\u00e4idatud seadmeregistris v\u00f5i ISY halduskonsoolis esimese \u00fclemise s\u00f5lmena).  Kui on sama programmi nimi v\u00f5i aadress mitmel ISY-l, k\u00e4ivitatakse k\u00e4sk selle vahele j\u00e4tmise korral k\u00f5igis ISY-des.",
+                    "name": "ISY"
+                },
+                "name": {
+                    "description": "Kontrollitava programmi nimi (kasuta kas aadressi v\u00f5i nime).",
+                    "name": "Nimi"
+                }
+            },
+            "name": "Saada programmi k\u00e4sk"
+        },
+        "send_raw_node_command": {
+            "description": "Isy isidumisei suvandite m\u00e4\u00e4ramine: \n \u2022 S\u00f5lme sensor string: iga seade v\u00f5i kaust, mis sisaldab nimes \"Node Sensor String\" k\u00e4sitletakse sensorina v\u00f5i binaarandurina. \n \u2022 Ignoreeri stringi: iga seadet, mille nimes on \"Ignore String\", ignoreeritakse. \n \u2022 Muutuv sensorstring: andurina lisatakse k\u00f5ik muutujad, mis sisaldavad \"Variable Sensor String\". \n \u2022 Valguse heleduse taastamine: kui see on lubatud, taastatakse eelmine heledus, kui l\u00fclitate sisse seadme sisseehitatud taseme asemel valguse.",
+            "fields": {
+                "command": {
+                    "name": "K\u00e4sk"
+                },
+                "parameters": {
+                    "description": "P\u00e4ringustringis saadetavate parameetrite kogum (nt v\u00e4rviliste pirnide juhtimiseks).",
+                    "name": "Parameetrid"
+                },
+                "unit_of_measurement": {
+                    "name": "M\u00f5\u00f5t\u00fchik"
+                },
+                "value": {
+                    "description": "K\u00e4suga saadetav t\u00e4isarvuline v\u00e4\u00e4rtus.",
+                    "name": "V\u00e4\u00e4rtus"
+                }
+            },
+            "name": "Saada t\u00f6\u00f6tlemata s\u00f5lme k\u00e4sk"
+        },
+        "set_zwave_lock_user_code": {
+            "fields": {
+                "code": {
+                    "description": "Kasutajale m\u00e4\u00e4ratav kood.",
+                    "name": "Kood"
+                },
+                "user_num": {
+                    "description": "Kasutajapesa number lukus.",
+                    "name": "Kasutaja number"
+                }
+            }
+        },
+        "set_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "L\u00f5ppseadmes seadistatav parameetri number.",
+                    "name": "Parameeter"
+                },
+                "size": {
+                    "description": "Parameetri suurus, kas 1, 2 v\u00f5i 4 baiti.",
+                    "name": "Suurus"
+                },
+                "value": {
+                    "description": "Parameetrile m\u00e4\u00e4ratav v\u00e4\u00e4rtus. V\u00f5ib olla t\u00e4isarv v\u00f5i baidistring (nt \"0xFFFF\").",
+                    "name": "V\u00e4\u00e4rtus"
+                }
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "device_connected": "ISY on \u00fchendatud",
+            "host_reachable": "Host on saadaval",
+            "last_heartbeat": "Viimatise suhtluse aeg",
+            "websocket_status": "S\u00fcndmuse sokli olek"
+        }
+    }
+}

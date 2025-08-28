@@ -1,0 +1,997 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "already_in_progress": "A konfigur\u00e1l\u00e1s m\u00e1r folyamatban van"
+        },
+        "error": {
+            "exceeded_api_calls": "Az API-h\u00edv\u00e1sok sz\u00e1ma t\u00fall\u00e9pte a megengedett hat\u00e1rt.",
+            "exceeded_user_api_calls": "A felhaszn\u00e1l\u00f3i API-h\u00edv\u00e1sok sz\u00e1ma t\u00fall\u00e9pte a megengedett hat\u00e1rt.",
+            "invalid_token": "A token \u00e9rv\u00e9nytelen.",
+            "not_acceptable_terms": "A szolg\u00e1ltat\u00e1si felt\u00e9telek nincsenek elfogadva.",
+            "not_allowed_api_again": "A felhaszn\u00e1l\u00f3nak NINCS enged\u00e9lye az API-h\u00edv\u00e1s v\u00e9grehajt\u00e1s\u00e1ra.",
+            "not_supported_country": "Az orsz\u00e1g nem t\u00e1mogatott.",
+            "token_unauthorized": "A token \u00e9rv\u00e9nytelen vagy nem enged\u00e9lyezett."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Szem\u00e9lyes hozz\u00e1f\u00e9r\u00e9si token",
+                    "country": "Orsz\u00e1g"
+                },
+                "description": "K\u00e9rj\u00fck, adja meg a ThinQ [Szem\u00e9lyes hozz\u00e1f\u00e9r\u00e9si tokent (PAT)]({pat_url}), amelyet az LG ThinQ fi\u00f3kj\u00e1val hozott l\u00e9tre.",
+                "title": "Csatlakoz\u00e1s a ThinQ-hoz"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clean_light_reminder": {
+                "name": "Tiszt\u00edt\u00e1si jelz\u0151f\u00e9ny"
+            },
+            "eco_friendly_mode": {
+                "name": "K\u00f6rnyezetbar\u00e1t m\u00f3d"
+            },
+            "machine_clean_reminder": {
+                "name": "G\u00e9ptiszt\u00edt\u00e1si eml\u00e9keztet\u0151"
+            },
+            "one_touch_filter": {
+                "name": "Friss leveg\u0151 sz\u0171r\u0151"
+            },
+            "operation_mode": {
+                "name": "Bekapcsolva"
+            },
+            "power_save_enabled": {
+                "name": "Energiatakar\u00e9kos m\u00f3d"
+            },
+            "remote_control_enabled": {
+                "name": "T\u00e1vind\u00edt\u00e1s"
+            },
+            "remote_control_enabled_for_location": {
+                "name": "{location} t\u00e1vind\u00edt\u00e1s"
+            },
+            "rinse_refill": {
+                "name": "\u00d6bl\u00edt\u0151 ut\u00e1nt\u00f6lt\u00e9se sz\u00fcks\u00e9ges"
+            },
+            "sabbath_mode": {
+                "name": "Sabbath m\u00f3d"
+            },
+            "signal_level": {
+                "name": "Cseng\u0151hang"
+            }
+        },
+        "climate": {
+            "climate_air_conditioner": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Automatikus",
+                            "high": "Magas",
+                            "low": "Alacsony",
+                            "mid": "K\u00f6zepes",
+                            "power": "Er\u0151s",
+                            "slow": "Lass\u00fa"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "air_clean": "L\u00e9gtiszt\u00edt\u00e1s",
+                            "aroma": "Aroma",
+                            "energy_saving": "Energiatakar\u00e9kos"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "error": {
+                "name": "Hiba",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "block_error": "A tiszt\u00edt\u00e1s le\u00e1llt. Ellen\u0151rizze az akad\u00e1lyokat",
+                            "brush_error": "A mozg\u00f3 kefe hib\u00e1san m\u0171k\u00f6dik",
+                            "bubble_error": "Bubor\u00e9k hiba",
+                            "child_lock_active_error": "Gyerekz\u00e1r",
+                            "cliff_error": "Az es\u00e9smegel\u0151z\u0151 szenzor hib\u00e1san m\u0171k\u00f6dik",
+                            "clutch_error": "Kuplung hiba",
+                            "compressor_error": "Kompresszor hiba",
+                            "dispensing_error": "Adagol\u00f3 hiba",
+                            "door_close_error": "Ajt\u00f3z\u00e1r\u00e1si hiba",
+                            "door_lock_error": "Ajt\u00f3retesz hiba",
+                            "door_open_error": "Ajt\u00f3 nyitva",
+                            "door_sensor_error": "Ajt\u00f3\u00e9rz\u00e9kel\u0151 hiba",
+                            "drainmotor_error": "Leereszt\u00e9si hiba",
+                            "dust_full_error": "A portart\u00e1ly tele van, \u00fcr\u00edt\u00e9se sz\u00fcks\u00e9ges",
+                            "empty_water_alert_error": "Nincs v\u00edz",
+                            "fan_motor_error": "Ventil\u00e1torz\u00e1r hiba",
+                            "filter_clogging_error": "Sz\u0171r\u0151 hiba",
+                            "frozen_error": "Fagy\u00e1s\u00e9rz\u00e9kel\u00e9si hiba",
+                            "heater_circuit_error": "F\u0171t\u0151k\u00f6r meghib\u00e1sod\u00e1s",
+                            "high_power_supply_error": "T\u00e1pell\u00e1t\u00e1si hiba",
+                            "high_temperature_detection_error": "Magas h\u0151m\u00e9rs\u00e9klet hiba",
+                            "inner_lid_open_error": "Fed\u00e9l nyitva hiba",
+                            "ir_sensor_error": "IR \u00e9rz\u00e9kel\u0151 hiba",
+                            "le2_error": "LE2 hiba",
+                            "le_error": "LE hiba",
+                            "left_wheel_error": "A bal ker\u00e9k hib\u00e1san m\u0171k\u00f6dik",
+                            "locked_motor_error": "Meghajt\u00f3motor hiba",
+                            "mop_error": "Nem m\u0171k\u00f6dik megfelel\u0151en a felmos\u00f3 felt\u00e9t n\u00e9lk\u00fcl",
+                            "motor_error": "Motorhiba",
+                            "motor_lock_error": "Motorz\u00e1r hiba",
+                            "move_error": "A kerekek nem \u00e9rnek a padl\u00f3hoz",
+                            "need_water_drain": "Nincs v\u00edz",
+                            "need_water_replenishment": "T\u00f6ltse fel a vizet",
+                            "no_battery_error": "A robotporsz\u00edv\u00f3 akkumul\u00e1tora alacsony",
+                            "no_dust_bin_error": "A portart\u00e1ly nincs behelyezve",
+                            "no_filter_error": "Sz\u0171r\u0151 hiba",
+                            "out_of_balance_error": "Kiegyens\u00falyozatlan t\u00f6ltet",
+                            "overfill_error": "T\u00falt\u00f6lt\u00e9si hiba",
+                            "part_malfunction_error": "AIE hiba",
+                            "power_code_connection_error": "H\u00e1l\u00f3zati k\u00e1bel csatlakoz\u00e1si hiba",
+                            "power_fail_error": "\u00c1ramkimarad\u00e1s",
+                            "right_wheel_error": "A jobb ker\u00e9kkel probl\u00e9ma van",
+                            "stack_error": "Rakod\u00e1si hiba",
+                            "steam_heat_error": "G\u0151zf\u0171t\u00e9s hiba",
+                            "suction_blocked_error": "A sz\u00edv\u00f3motor elt\u00f6m\u0151d\u00f6tt",
+                            "temperature_sensor_error": "Termisztor hiba",
+                            "time_to_run_the_tub_clean_cycle_error": "Dobtiszt\u00edt\u00e1s aj\u00e1nlott",
+                            "timeout_error": "Id\u0151t\u00fall\u00e9p\u00e9si hiba",
+                            "turbidity_sensor_error": "Zavaross\u00e1g\u00e9rz\u00e9kel\u0151 hiba",
+                            "unable_to_lock_error": "Ajt\u00f3z\u00e1r hiba",
+                            "unbalanced_load_error": "Kiegyens\u00falyozatlan t\u00f6ltet",
+                            "unknown_error": "A k\u00e9sz\u00fcl\u00e9k figyelmet ig\u00e9nyel",
+                            "vibration_sensor_error": "Rezg\u00e9s\u00e9rz\u00e9kel\u0151 hiba",
+                            "water_drain_error": "V\u00edzleereszt\u00e9si hiba",
+                            "water_leakage_error": "V\u00edzsziv\u00e1rg\u00e1si probl\u00e9ma",
+                            "water_leaks_error": "V\u00edzsziv\u00e1rg\u00e1si probl\u00e9ma",
+                            "water_level_sensor_error": "V\u00edz\u00e9rz\u00e9kel\u0151 hiba",
+                            "water_supply_error": "V\u00edzell\u00e1t\u00e1si hiba"
+                        }
+                    }
+                }
+            },
+            "notification": {
+                "name": "\u00c9rtes\u00edt\u00e9s",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "charging_is_complete": "A t\u00f6lt\u00e9s befejez\u0151d\u00f6tt",
+                            "cleaning_is_complete": "A ciklus befejez\u0151d\u00f6tt",
+                            "cleaning_is_completed": "A takar\u00edt\u00e1s befejez\u0151d\u00f6tt",
+                            "cleaning_is_failed": "A takar\u00edt\u00e1s sikertelen",
+                            "cooking_is_complete": "Kikapcsolva",
+                            "door_is_open": "Az ajt\u00f3 nyitva van",
+                            "drying_failed": "Hiba t\u00f6rt\u00e9nt a sz\u00e1r\u00edt\u00f3g\u00e9pben",
+                            "drying_is_complete": "A sz\u00e1r\u00edt\u00e1s befejez\u0151d\u00f6tt",
+                            "error_during_cleaning": "A tiszt\u00edt\u00e1s hiba miatt le\u00e1llt",
+                            "error_during_washing": "Hiba t\u00f6rt\u00e9nt a mos\u00f3g\u00e9pben",
+                            "error_has_occurred": "Hiba t\u00f6rt\u00e9nt",
+                            "frozen_is_complete": "Az extra j\u00e9gk\u00e9sz\u00edt\u00e9s befejez\u0151d\u00f6tt",
+                            "homeguard_is_stopped": "A Home Guard le\u00e1llt",
+                            "lack_of_water": "Nincs v\u00edz a tart\u00e1lyban",
+                            "motion_is_detected": "Mozg\u00e1s \u00e9szlelve a Home Guard \u00e1ltal; f\u00e9nyk\u00e9p k\u00e9sz\u00fclt \u00e9s elk\u00fcldve",
+                            "need_to_check_location": "Helyellen\u0151rz\u00e9s sz\u00fcks\u00e9ges",
+                            "pollution_is_high": "A leveg\u0151 min\u0151s\u00e9ge gyorsan romlik",
+                            "preheating_is_complete": "Az el\u0151meleg\u00edt\u00e9s befejez\u0151d\u00f6tt",
+                            "rinse_is_not_enough": "Adjon hozz\u00e1 \u00f6bl\u00edt\u0151szert a jobb sz\u00e1r\u00edt\u00e1si teljes\u00edtm\u00e9ny \u00e9rdek\u00e9ben",
+                            "salt_refill_is_needed": "Adjon hozz\u00e1 s\u00f3t a jobb v\u00edzl\u00e1gy\u00edt\u00e1si teljes\u00edtm\u00e9ny \u00e9rdek\u00e9ben",
+                            "scheduled_cleaning_starts": "Az \u00fctemezett tiszt\u00edt\u00e1s megkezd\u0151dik",
+                            "styling_is_complete": "A form\u00e1z\u00e1s befejez\u0151d\u00f6tt",
+                            "time_to_change_filter": "Ideje kicser\u00e9lni a sz\u0171r\u0151t",
+                            "time_to_change_water_filter": "Cser\u00e9lje ki a v\u00edzsz\u0171r\u0151t",
+                            "time_to_clean": "\u00d6ntiszt\u00edt\u00e1s sz\u00fcks\u00e9ges",
+                            "time_to_clean_filter": "Ideje megtiszt\u00edtani a sz\u0171r\u0151t",
+                            "timer_is_complete": "Az id\u0151z\u00edt\u0151 befejez\u0151d\u00f6tt",
+                            "washing_is_complete": "A mos\u00e1s befejez\u0151d\u00f6tt",
+                            "water_is_full": "A v\u00edztart\u00e1ly tele van",
+                            "water_leak_has_occurred": "A mosogat\u00f3g\u00e9p v\u00edzsziv\u00e1rg\u00e1st \u00e9szlelt"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "fan_speed": {
+                "name": "Ventil\u00e1tor"
+            },
+            "lamp_brightness": {
+                "name": "F\u00e9ny"
+            },
+            "light_status": {
+                "name": "F\u00e9ny"
+            },
+            "relative_hour_to_start": {
+                "name": "\u00dctemezett bekapcsol\u00e1s"
+            },
+            "relative_hour_to_start_for_location": {
+                "name": "\u00dctemezett bekapcsol\u00e1s ({location})"
+            },
+            "relative_hour_to_start_wm": {
+                "name": "K\u00e9sleltet\u00e9s kezdete ennyi id\u0151 m\u00falva"
+            },
+            "relative_hour_to_start_wm_for_location": {
+                "name": "K\u00e9sleltet\u00e9s kezdete ennyi id\u0151 m\u00falva ({location})"
+            },
+            "relative_hour_to_stop": {
+                "name": "\u00dctemezett kikapcsol\u00e1s"
+            },
+            "relative_hour_to_stop_for_location": {
+                "name": "\u00dctemezett kikapcsol\u00e1s ({location})"
+            },
+            "relative_hour_to_stop_wm": {
+                "name": "K\u00e9sleltet\u00e9s v\u00e9ge ennyi id\u0151 m\u00falva"
+            },
+            "relative_hour_to_stop_wm_for_location": {
+                "name": "K\u00e9sleltet\u00e9s v\u00e9ge ennyi id\u0151 m\u00falva ({location})"
+            },
+            "sleep_timer_relative_hour_to_stop": {
+                "name": "Elalv\u00e1s id\u0151z\u00edt\u0151"
+            },
+            "sleep_timer_relative_hour_to_stop_for_location": {
+                "name": "Elalv\u00e1s id\u0151z\u00edt\u0151 ({location})"
+            },
+            "target_humidity": {
+                "name": "C\u00e9l p\u00e1ratartalom"
+            },
+            "target_temperature": {
+                "name": "H\u0151m\u00e9rs\u00e9klet"
+            },
+            "target_temperature_for_location": {
+                "name": "{location} h\u0151m\u00e9rs\u00e9klet"
+            },
+            "wind_temperature": {
+                "name": "L\u00e9g\u00e1ram h\u0151m\u00e9rs\u00e9klet"
+            }
+        },
+        "select": {
+            "air_clean_operation_mode": {
+                "name": "L\u00e9gtiszt\u00edt\u00e1s",
+                "state": {
+                    "start": "Ind\u00edt\u00e1s",
+                    "stop": "Le\u00e1ll\u00edt\u00e1s"
+                }
+            },
+            "cook_mode": {
+                "name": "F\u0151z\u00e9si m\u00f3d",
+                "state": {
+                    "bake": "S\u00fct\u00e9s",
+                    "convection_bake": "L\u00e9gkever\u00e9ses s\u00fct\u00e9s",
+                    "convection_roast": "L\u00e9gkever\u00e9ses pir\u00edt\u00e1s",
+                    "crisp_convection": "Ropog\u00f3s l\u00e9gkever\u00e9s",
+                    "roast": "Pir\u00edt\u00e1s"
+                }
+            },
+            "cook_mode_for_location": {
+                "name": "{location} f\u0151z\u00e9si m\u00f3d",
+                "state": {
+                    "bake": "S\u00fct\u00e9s",
+                    "convection_bake": "L\u00e9gkever\u00e9ses s\u00fct\u00e9s",
+                    "convection_roast": "L\u00e9gkever\u00e9ses pir\u00edt\u00e1s",
+                    "crisp_convection": "Ropog\u00f3s l\u00e9gkever\u00e9s",
+                    "roast": "Pir\u00edt\u00e1s"
+                }
+            },
+            "current_job_mode": {
+                "name": "M\u0171k\u00f6d\u00e9si m\u00f3d",
+                "state": {
+                    "air_clean": "Tiszt\u00edt\u00e1s",
+                    "auto": "Automatikus",
+                    "baby_care": "Baba\u00e1pol\u00e1si m\u00f3d",
+                    "circulator": "Turb\u00f3 fokozat",
+                    "clean": "Egyszeri",
+                    "direct_clean": "K\u00f6zvetlen m\u00f3d",
+                    "dual_clean": "Dupla",
+                    "fast": "Turb\u00f3",
+                    "heat_pump": "H\u0151szivatty\u00fa",
+                    "humidify": "P\u00e1r\u00e1s\u00edt\u00e1s",
+                    "humidify_and_air_clean": "P\u00e1r\u00e1s\u00edt\u00e1s \u00e9s tiszt\u00edt\u00e1s",
+                    "humidity": "P\u00e1r\u00e1s",
+                    "nature_clean": "Term\u00e9szetes m\u00f3d",
+                    "pet_clean": "H\u00e1zi\u00e1llat m\u00f3d",
+                    "silent": "Csendes",
+                    "sleep": "Alv\u00e1s",
+                    "smart": "Intelligens m\u00f3d",
+                    "space_clean": "Diff\u00fazi\u00f3s m\u00f3d",
+                    "spot_clean": "Sz\u00e9les m\u00f3d",
+                    "turbo": "Turb\u00f3",
+                    "up_feature": "Kieg\u00e9sz\u00edt\u0151 m\u00f3d",
+                    "vacation": "Vak\u00e1ci\u00f3"
+                }
+            },
+            "display_light": {
+                "name": "Kijelz\u0151 f\u00e9nyer\u0151",
+                "state": {
+                    "level_1": "F\u00e9nyer\u0151 1",
+                    "level_2": "F\u00e9nyer\u0151 2",
+                    "level_3": "F\u00e9nyer\u0151 3",
+                    "off": "Ki"
+                }
+            },
+            "fresh_air_filter": {
+                "name": "Friss leveg\u0151 sz\u0171r\u0151",
+                "state": {
+                    "auto": "Automatikus",
+                    "off": "Ki",
+                    "power": "Er\u0151s",
+                    "replace": "Sz\u0171r\u0151 cser\u00e9je",
+                    "smart_off": "Ki",
+                    "smart_on": "Intelligens biztons\u00e1gos t\u00e1rol\u00e1s",
+                    "smart_power": "Intelligens biztons\u00e1gos t\u00e1rol\u00e1s"
+                }
+            },
+            "hygiene_dry_mode": {
+                "name": "Sz\u00e1r\u00edt\u00e1si m\u00f3d",
+                "state": {
+                    "fast": "Gyors",
+                    "normal": "K\u00edm\u00e9l\u0151",
+                    "off": "Ki",
+                    "silent": "Csendes"
+                }
+            },
+            "light_brightness": {
+                "name": "F\u00e9ny"
+            },
+            "monitoring_enabled": {
+                "name": "Leveg\u0151min\u0151s\u00e9g \u00e9rz\u00e9kel\u0151",
+                "state": {
+                    "always": "Mindig bekapcsolva",
+                    "on_working": "A k\u00e9sz\u00fcl\u00e9kkel egy\u00fctt bekapcsol"
+                }
+            },
+            "operation_mode": {
+                "name": "M\u0171k\u00f6d\u00e9si m\u00f3d",
+                "state": {
+                    "cancel": "Megszak\u00edt\u00e1s",
+                    "power_off": "Kikapcsolva",
+                    "preheating": "El\u0151meleg\u00edt\u00e9s",
+                    "start": "Ind\u00edt\u00e1s",
+                    "stop": "Le\u00e1ll\u00edt\u00e1s",
+                    "wake_up": "Alv\u00f3 m\u00f3d kikapcsolva"
+                }
+            },
+            "operation_mode_for_location": {
+                "name": "{location} m\u0171k\u00f6d\u00e9si m\u00f3d",
+                "state": {
+                    "cancel": "Megszak\u00edt\u00e1s",
+                    "power_off": "Kikapcsolva",
+                    "preheating": "El\u0151meleg\u00edt\u00e9s",
+                    "start": "Ind\u00edt\u00e1s",
+                    "stop": "Le\u00e1ll\u00edt\u00e1s",
+                    "wake_up": "Alv\u00f3 m\u00f3d kikapcsolva"
+                }
+            },
+            "wind_angle": {
+                "name": "Forgat\u00e1s",
+                "state": {
+                    "angle_140": "140\u00b0",
+                    "angle_45": "45\u00b0",
+                    "angle_60": "60\u00b0",
+                    "angle_90": "90\u00b0",
+                    "off": "Ki"
+                }
+            },
+            "wind_strength": {
+                "name": "Sebess\u00e9g",
+                "state": {
+                    "auto": "Automatikus",
+                    "high": "Magas",
+                    "low": "Alacsony",
+                    "mid": "K\u00f6zepes",
+                    "power": "Turb\u00f3",
+                    "slow": "Lass\u00fa",
+                    "turbo": "Turb\u00f3",
+                    "wind_1": "1. l\u00e9p\u00e9s",
+                    "wind_10": "10. l\u00e9p\u00e9s",
+                    "wind_2": "2. l\u00e9p\u00e9s",
+                    "wind_3": "3. l\u00e9p\u00e9s",
+                    "wind_4": "4. l\u00e9p\u00e9s",
+                    "wind_5": "5. l\u00e9p\u00e9s",
+                    "wind_6": "6. l\u00e9p\u00e9s",
+                    "wind_7": "7. l\u00e9p\u00e9s",
+                    "wind_8": "8. l\u00e9p\u00e9s",
+                    "wind_9": "9. l\u00e9p\u00e9s"
+                }
+            }
+        },
+        "sensor": {
+            "absolute_to_start": {
+                "name": "\u00dctemezett bekapcsol\u00e1s"
+            },
+            "absolute_to_start_for_location": {
+                "name": "\u00dctemezett bekapcsol\u00e1s ({location})"
+            },
+            "absolute_to_stop": {
+                "name": "\u00dctemezett kikapcsol\u00e1s"
+            },
+            "absolute_to_stop_for_location": {
+                "name": "\u00dctemezett kikapcsol\u00e1s ({location})"
+            },
+            "battery_level": {
+                "name": "Akkumul\u00e1tor",
+                "state": {
+                    "high": "Tele",
+                    "low": "Alacsony",
+                    "mid": "K\u00f6zepes",
+                    "warning": "\u00dcres"
+                }
+            },
+            "beer_remain": {
+                "name": "Recept el\u0151rehalad\u00e1sa"
+            },
+            "brightness": {
+                "name": "Megvil\u00e1g\u00edt\u00e1s intenzit\u00e1sa"
+            },
+            "brightness_for_location": {
+                "name": "{location} megvil\u00e1g\u00edt\u00e1s intenzit\u00e1sa"
+            },
+            "cock_state": {
+                "name": "UVnano",
+                "state": {
+                    "cleaning": "Folyamatban",
+                    "normal": "K\u00e9szenl\u00e9tben"
+                }
+            },
+            "current_dish_washing_course": {
+                "name": "Jelenlegi ciklus",
+                "state": {
+                    "auto": "Automatikus",
+                    "delicate": "K\u00edm\u00e9l\u0151",
+                    "download_cycle": "Let\u00f6lt\u00f6tt ciklus",
+                    "eco": "Takar\u00e9kos",
+                    "express": "Expressz",
+                    "heavy": "Intenz\u00edv",
+                    "machine_clean": "G\u00e9ptiszt\u00edt\u00e1s",
+                    "normal": "Norm\u00e1l",
+                    "quick": "Gyors",
+                    "refresh": "Friss\u00edt\u00e9s",
+                    "rinse": "\u00d6bl\u00edt\u00e9s",
+                    "short_mode": "R\u00f6vid m\u00f3d",
+                    "spray": "Permetez\u00e9s",
+                    "steam": "G\u0151zkezel\u00e9s",
+                    "turbo": "Turb\u00f3"
+                }
+            },
+            "current_job_mode": {
+                "name": "M\u0171k\u00f6d\u00e9si m\u00f3d",
+                "state": {
+                    "air_clean": "Tiszt\u00edt\u00e1s",
+                    "auto": "Automatikus",
+                    "clothes_dry": "Ruhasz\u00e1r\u00edt\u00e1s",
+                    "edge": "Sz\u00e9lek tiszt\u00edt\u00e1sa",
+                    "heat_pump": "H\u0151szivatty\u00fa",
+                    "high": "Er\u0151s",
+                    "intensive_dry": "Intenz\u00edv sz\u00e1r\u00edt\u00e1s",
+                    "macro": "Egy\u00e9ni m\u00f3d",
+                    "mop": "Felmos\u00e1s",
+                    "normal": "Norm\u00e1l",
+                    "off": "Ki",
+                    "quiet_humidity": "Csendes",
+                    "rapid_humidity": "Gyors p\u00e1r\u00e1s\u00edt\u00e1s",
+                    "sector_base": "Cell\u00e1nk\u00e9nti",
+                    "select": "Saj\u00e1t ter\u00fclet",
+                    "smart_humidity": "Intelligens",
+                    "spot": "Spir\u00e1lis tiszt\u00edt\u00e1si m\u00f3d",
+                    "turbo": "Turb\u00f3",
+                    "vacation": "Vak\u00e1ci\u00f3",
+                    "zigzag": "Cikk-cakk"
+                }
+            },
+            "current_job_mode_stick_cleaner": {
+                "name": "M\u0171k\u00f6d\u00e9si m\u00f3d",
+                "state": {
+                    "auto": "Alacsony teljes\u00edtm\u00e9ny",
+                    "high": "Er\u0151s",
+                    "mop": "Felmos\u00e1s",
+                    "normal": "Norm\u00e1l",
+                    "off": "Ki",
+                    "turbo": "Turb\u00f3"
+                }
+            },
+            "current_state": {
+                "name": "Jelenlegi \u00e1llapot",
+                "state": {
+                    "add_drain": "T\u00f6lt\u00e9s",
+                    "as_pop_up": "A k\u00e9sz\u00fcl\u00e9k figyelmet ig\u00e9nyel",
+                    "cancel": "Megszak\u00edt\u00e1s",
+                    "carbonation": "Sz\u00e9nsavas\u00edt\u00e1s",
+                    "change_condition": "Be\u00e1ll\u00edt\u00e1sok m\u00f3dos\u00edt\u00e1sa",
+                    "charging": "T\u00f6lt\u00e9s",
+                    "charging_complete": "T\u00f6lt\u00e9s befejezve",
+                    "checking_turbidity": "Szennyezetts\u00e9gi szint \u00e9rz\u00e9kel\u00e9se",
+                    "cleaning": "Takar\u00edt\u00e1s",
+                    "cleaning_is_done": "A takar\u00edt\u00e1s k\u00e9sz",
+                    "complete": "K\u00e9sz",
+                    "cook": "F\u0151z\u00e9s",
+                    "cook_complete": "K\u00e9sz",
+                    "cooking_in_progress": "F\u0151z\u00e9s",
+                    "cool_down": "Leh\u0171t\u00e9s",
+                    "cooling": "H\u0171t\u00e9s",
+                    "detecting": "\u00c9szlel\u00e9s",
+                    "detergent_amount": "Mos\u00f3szer mennyis\u00e9g\u00e9re vonatkoz\u00f3 inform\u00e1ci\u00f3 biztos\u00edt\u00e1sa",
+                    "diagnosis": "Intelligens diagnosztika folyamatban",
+                    "dispensing": "Automatikus adagol\u00e1s",
+                    "display_loadsize": "T\u00f6ltet m\u00e9rete",
+                    "done": "K\u00e9sz",
+                    "drying": "Sz\u00e1r\u00edt\u00e1s",
+                    "during_aging": "\u00c9rlel\u00e9s",
+                    "during_fermentation": "Erjeszt\u00e9s",
+                    "end": "Befejezve",
+                    "end_cooling": "Sz\u00e1r\u00edt\u00e1s",
+                    "error": "A k\u00e9sz\u00fcl\u00e9k figyelmet ig\u00e9nyel",
+                    "extracting_capsule": "Kapszula f\u0151z\u00e9se",
+                    "extraction_mode": "T\u00e1rol\u00e1s",
+                    "firmware": "Firmware friss\u00edt\u00e9s",
+                    "fota": "Friss\u00edt\u00e9s",
+                    "frozen_prevent_initial": "Fagyv\u00e9delm k\u00e9szenl\u00e9tben",
+                    "frozen_prevent_pause": "Fagy\u00e1sv\u00e9delem sz\u00fcnetel",
+                    "frozen_prevent_running": "Fagyv\u00e9delem folyamatban",
+                    "homing": "Mozg\u00e1s",
+                    "initial": "K\u00e9szenl\u00e9tben",
+                    "initializing": "K\u00e9szenl\u00e9tben",
+                    "lock": "Vez\u00e9rl\u0151z\u00e1r",
+                    "macrosector": "A t\u00e1vir\u00e1ny\u00edt\u00f3 haszn\u00e1latban van",
+                    "melting": "Cefre felold\u00e1sa",
+                    "monitoring_detecting": "A HomeGuard akt\u00edv",
+                    "monitoring_moving": "Visszat\u00e9r\u00e9s a kiindul\u00f3 ponthoz",
+                    "monitoring_positioning": "A Home Guard kiindul\u00f3pontj\u00e1nak be\u00e1ll\u00edt\u00e1sa",
+                    "night_dry": "\u00c9jszakai sz\u00e1r\u00edt\u00e1s",
+                    "oven_setting": "F\u0151z\u0151lap csatlakoztatva",
+                    "pause": "Sz\u00fcnetel",
+                    "paused": "Sz\u00fcnetel",
+                    "power_fail": "T\u00e1pell\u00e1t\u00e1s meghib\u00e1sod\u00e1sa",
+                    "power_off": "Ki",
+                    "power_on": "Be",
+                    "preference": "Be\u00e1ll\u00edt\u00e1s",
+                    "preheat": "El\u0151meleg\u00edt\u00e9s",
+                    "preheat_complete": "Az el\u0151meleg\u00edt\u00e9s befejez\u0151d\u00f6tt",
+                    "preheating": "El\u0151meleg\u00edt\u00e9s",
+                    "preheating_is_done": "Az el\u0151meleg\u00edt\u00e9s befejez\u0151d\u00f6tt",
+                    "prepareing_fermentation": "El\u0151k\u00e9sz\u00edt\u00e9s folyamatban",
+                    "presteam": "G\u0151z\u00f6l\u00e9sre k\u00e9sz",
+                    "prewash": "El\u0151mos\u00e1s",
+                    "proofing": "Keleszt\u00e9s",
+                    "refreshing": "Friss\u00edt\u00e9s",
+                    "reservation": "A t\u00e1vir\u00e1ny\u00edt\u00f3 haszn\u00e1latban van",
+                    "reserved": "K\u00e9sleltet\u00e9s be\u00e1ll\u00edtva",
+                    "rinse_hold": "\u00d6bl\u00edt\u00e9sre v\u00e1r",
+                    "rinsing": "\u00d6bl\u00edt\u00e9s",
+                    "running": "M\u0171k\u00f6d\u00e9sben",
+                    "running_end": "K\u00e9sz",
+                    "setdate": "A t\u00e1vir\u00e1ny\u00edt\u00f3 haszn\u00e1latban van",
+                    "shoes_module": "Cip\u0151sz\u00e1r\u00edt\u00e1s",
+                    "sleep": "Alv\u00f3 \u00fczemm\u00f3dban",
+                    "smart_grid_run": "Intelligens h\u00e1l\u00f3zat m\u0171k\u00f6dtet\u00e9se",
+                    "soaking": "\u00c1ztat\u00e1s",
+                    "softening": "L\u00e1gy\u00edt\u00f3",
+                    "spinning": "Centrifug\u00e1l\u00e1s",
+                    "standby": "K\u00e9szenl\u00e9tben",
+                    "stay": "Friss\u00edt\u00e9s",
+                    "steam": "Friss\u00edt\u00e9s",
+                    "steam_softening": "G\u0151zl\u00e1gy\u00edt\u00e1s",
+                    "sterilize": "Steriliz\u00e1l",
+                    "temperature_stabilization": "H\u0151m\u00e9rs\u00e9klet be\u00e1ll\u00edt\u00e1sa",
+                    "working": "Takar\u00edt\u00e1s",
+                    "wrinkle_care": "Gy\u0171r\u0151d\u00e9sg\u00e1tl\u00e1s"
+                }
+            },
+            "current_state_for_location": {
+                "name": "{location} jelenlegi \u00e1llapota",
+                "state": {
+                    "add_drain": "T\u00f6lt\u00e9s",
+                    "as_pop_up": "A k\u00e9sz\u00fcl\u00e9k figyelmet ig\u00e9nyel",
+                    "cancel": "Megszak\u00edt\u00e1s",
+                    "carbonation": "Sz\u00e9nsavas\u00edt\u00e1s",
+                    "change_condition": "Be\u00e1ll\u00edt\u00e1sok m\u00f3dos\u00edt\u00e1sa",
+                    "charging": "T\u00f6lt\u00e9s",
+                    "charging_complete": "T\u00f6lt\u00e9s befejezve",
+                    "checking_turbidity": "Szennyezetts\u00e9gi szint \u00e9rz\u00e9kel\u00e9se",
+                    "cleaning": "Takar\u00edt\u00e1s",
+                    "cleaning_is_done": "A takar\u00edt\u00e1s k\u00e9sz",
+                    "complete": "K\u00e9sz",
+                    "cook": "F\u0151z\u00e9s",
+                    "cook_complete": "K\u00e9sz",
+                    "cooking_in_progress": "F\u0151z\u00e9s",
+                    "cool_down": "Leh\u0171t\u00e9s",
+                    "cooling": "H\u0171t\u00e9s",
+                    "detecting": "\u00c9szlel\u00e9s",
+                    "detergent_amount": "Mos\u00f3szer mennyis\u00e9g\u00e9re vonatkoz\u00f3 inform\u00e1ci\u00f3 biztos\u00edt\u00e1sa",
+                    "diagnosis": "Intelligens diagnosztika folyamatban",
+                    "dispensing": "Automatikus adagol\u00e1s",
+                    "display_loadsize": "T\u00f6ltet m\u00e9rete",
+                    "done": "K\u00e9sz",
+                    "drying": "Sz\u00e1r\u00edt\u00e1s",
+                    "during_aging": "\u00c9rlel\u00e9s",
+                    "during_fermentation": "Erjeszt\u00e9s",
+                    "end": "Befejezve",
+                    "end_cooling": "Sz\u00e1r\u00edt\u00e1s",
+                    "error": "A k\u00e9sz\u00fcl\u00e9k figyelmet ig\u00e9nyel",
+                    "extracting_capsule": "Kapszula f\u0151z\u00e9se",
+                    "extraction_mode": "T\u00e1rol\u00e1s",
+                    "firmware": "Firmware friss\u00edt\u00e9s",
+                    "fota": "Friss\u00edt\u00e9s",
+                    "frozen_prevent_initial": "Fagyv\u00e9delm k\u00e9szenl\u00e9tben",
+                    "frozen_prevent_pause": "Fagy\u00e1sv\u00e9delem sz\u00fcnetel",
+                    "frozen_prevent_running": "Fagyv\u00e9delem folyamatban",
+                    "homing": "Mozg\u00e1s",
+                    "initial": "K\u00e9szenl\u00e9tben",
+                    "initializing": "K\u00e9szenl\u00e9tben",
+                    "lock": "Vez\u00e9rl\u0151z\u00e1r",
+                    "macrosector": "A t\u00e1vir\u00e1ny\u00edt\u00f3 haszn\u00e1latban van",
+                    "melting": "Cefre felold\u00e1sa",
+                    "monitoring_detecting": "A HomeGuard akt\u00edv",
+                    "monitoring_moving": "Visszat\u00e9r\u00e9s a kiindul\u00f3 ponthoz",
+                    "monitoring_positioning": "A Home Guard kiindul\u00f3pontj\u00e1nak be\u00e1ll\u00edt\u00e1sa",
+                    "night_dry": "\u00c9jszakai sz\u00e1r\u00edt\u00e1s",
+                    "oven_setting": "F\u0151z\u0151lap csatlakoztatva",
+                    "pause": "Sz\u00fcnetel",
+                    "paused": "Sz\u00fcnetel",
+                    "power_fail": "T\u00e1pell\u00e1t\u00e1s meghib\u00e1sod\u00e1sa",
+                    "power_off": "Ki",
+                    "power_on": "Be",
+                    "preference": "Be\u00e1ll\u00edt\u00e1s",
+                    "preheat": "El\u0151meleg\u00edt\u00e9s",
+                    "preheat_complete": "Az el\u0151meleg\u00edt\u00e9s befejez\u0151d\u00f6tt",
+                    "preheating": "El\u0151meleg\u00edt\u00e9s",
+                    "preheating_is_done": "Az el\u0151meleg\u00edt\u00e9s befejez\u0151d\u00f6tt",
+                    "prepareing_fermentation": "El\u0151k\u00e9sz\u00edt\u00e9s folyamatban",
+                    "presteam": "G\u0151z\u00f6l\u00e9sre k\u00e9sz",
+                    "prewash": "El\u0151mos\u00e1s",
+                    "proofing": "Keleszt\u00e9s",
+                    "refreshing": "Friss\u00edt\u00e9s",
+                    "reservation": "A t\u00e1vir\u00e1ny\u00edt\u00f3 haszn\u00e1latban van",
+                    "reserved": "K\u00e9sleltet\u00e9s be\u00e1ll\u00edtva",
+                    "rinse_hold": "\u00d6bl\u00edt\u00e9sre v\u00e1r",
+                    "rinsing": "\u00d6bl\u00edt\u00e9s",
+                    "running": "M\u0171k\u00f6d\u00e9sben",
+                    "running_end": "K\u00e9sz",
+                    "setdate": "A t\u00e1vir\u00e1ny\u00edt\u00f3 haszn\u00e1latban van",
+                    "shoes_module": "Cip\u0151sz\u00e1r\u00edt\u00e1s",
+                    "sleep": "Alv\u00f3 \u00fczemm\u00f3dban",
+                    "smart_grid_run": "Intelligens h\u00e1l\u00f3zat m\u0171k\u00f6dtet\u00e9se",
+                    "soaking": "\u00c1ztat\u00e1s",
+                    "softening": "L\u00e1gy\u00edt\u00f3",
+                    "spinning": "Centrifug\u00e1l\u00e1s",
+                    "standby": "K\u00e9szenl\u00e9tben",
+                    "stay": "Friss\u00edt\u00e9s",
+                    "steam": "Friss\u00edt\u00e9s",
+                    "steam_softening": "G\u0151zl\u00e1gy\u00edt\u00e1s",
+                    "sterilize": "Steriliz\u00e1l",
+                    "temperature_stabilization": "H\u0151m\u00e9rs\u00e9klet be\u00e1ll\u00edt\u00e1sa",
+                    "working": "Takar\u00edt\u00e1s",
+                    "wrinkle_care": "Gy\u0171r\u0151d\u00e9sg\u00e1tl\u00e1s"
+                }
+            },
+            "current_temperature": {
+                "name": "Jelenlegi h\u0151m\u00e9rs\u00e9klet"
+            },
+            "day_target_temperature": {
+                "name": "Nappali n\u00f6veked\u00e9si h\u0151m\u00e9rs\u00e9klet"
+            },
+            "day_target_temperature_for_location": {
+                "name": "{location} nappali n\u00f6veked\u00e9si h\u0151m\u00e9rs\u00e9klet"
+            },
+            "duration": {
+                "name": "Megvil\u00e1g\u00edt\u00e1s id\u0151tartama"
+            },
+            "duration_for_location": {
+                "name": "{location} megvil\u00e1g\u00edt\u00e1s id\u0151tartama"
+            },
+            "elapsed_day_state": {
+                "name": "Erjed\u00e9si id\u0151szak"
+            },
+            "elapsed_day_total": {
+                "name": "Erjed\u00e9si id\u0151tartam"
+            },
+            "filter_lifetime": {
+                "name": "H\u00e1tral\u00e9v\u0151 sz\u0171r\u0151\u00e9lettartam"
+            },
+            "flavor_info": {
+                "name": "\u00cdz"
+            },
+            "fresh_air_filter": {
+                "name": "Friss leveg\u0151 sz\u0171r\u0151",
+                "state": {
+                    "auto": "Automatikus",
+                    "off": "Ki",
+                    "power": "Er\u0151s",
+                    "replace": "Sz\u0171r\u0151 cser\u00e9je",
+                    "smart_off": "Ki",
+                    "smart_on": "Intelligens biztons\u00e1gos t\u00e1rol\u00e1s",
+                    "smart_power": "Intelligens biztons\u00e1gos t\u00e1rol\u00e1s"
+                }
+            },
+            "growth_mode": {
+                "name": "M\u00f3d",
+                "state": {
+                    "ext_expert": "Egy\u00e9ni n\u00f6veked\u00e9si m\u00f3d",
+                    "ext_flower": "Vir\u00e1gok",
+                    "ext_herb": "F\u0171szern\u00f6v\u00e9nyek",
+                    "ext_leaf": "Z\u00f6lds\u00e9gek",
+                    "standard": "Automatikus"
+                }
+            },
+            "growth_mode_for_location": {
+                "name": "{location} m\u00f3d",
+                "state": {
+                    "ext_expert": "Egy\u00e9ni n\u00f6veked\u00e9si m\u00f3d",
+                    "ext_flower": "Vir\u00e1gok",
+                    "ext_herb": "F\u0171szern\u00f6v\u00e9nyek",
+                    "ext_leaf": "Z\u00f6lds\u00e9gek",
+                    "standard": "Automatikus"
+                }
+            },
+            "hop_oil_info": {
+                "name": "Koml\u00f3"
+            },
+            "light_start": {
+                "name": "Vil\u00e1g\u00edt\u00e1s bekapcsol\u00e1si ideje"
+            },
+            "light_start_for_location": {
+                "name": "{location} vil\u00e1g\u00edt\u00e1s bekapcsol\u00e1si ideje"
+            },
+            "monitoring_enabled": {
+                "name": "Leveg\u0151min\u0151s\u00e9g \u00e9rz\u00e9kel\u0151",
+                "state": {
+                    "always": "Mindig bekapcsolva",
+                    "on_working": "A k\u00e9sz\u00fcl\u00e9kkel egy\u00fctt bekapcsol"
+                }
+            },
+            "night_target_temperature": {
+                "name": "\u00c9jszakai n\u00f6veked\u00e9si h\u0151m\u00e9rs\u00e9klet"
+            },
+            "night_target_temperature_for_location": {
+                "name": "{location} \u00e9jszakai n\u00f6veked\u00e9si h\u0151m\u00e9rs\u00e9klet"
+            },
+            "odor_level": {
+                "name": "Szag",
+                "state": {
+                    "invalid": "\u00c9rv\u00e9nytelen",
+                    "normal": "Norm\u00e1l",
+                    "strong": "Er\u0151s",
+                    "very_strong": "Nagyon er\u0151s",
+                    "weak": "Gyenge"
+                }
+            },
+            "personalization_mode": {
+                "name": "Szem\u00e9lyes m\u00f3d",
+                "state": {
+                    "auto_inside": "Automatikus m\u00f3d",
+                    "auto_outside": "Kapcsol\u00f3d\u00f3 m\u00f3d",
+                    "baby": "Baba\u00e1pol\u00e1si m\u00f3d",
+                    "cooking": "F\u0151z\u00e9s m\u00f3d",
+                    "exercise": "Edz\u00e9s m\u00f3d",
+                    "others": "Egy\u00e9b",
+                    "pet": "H\u00e1zi\u00e1llat m\u00f3d",
+                    "sick_house": "\u00daj otthon m\u00f3d",
+                    "sleep": "Alv\u00f3 m\u00f3d",
+                    "smoke": "F\u00fcst\u00f6l\u00e9s m\u00f3d"
+                }
+            },
+            "power_level": {
+                "name": "Teljes\u00edtm\u00e9nyszint"
+            },
+            "power_level_for_location": {
+                "name": "{location} teljes\u00edtm\u00e9nyszint"
+            },
+            "recipe_name": {
+                "name": "H\u00e1zi s\u00f6r recept",
+                "state": {
+                    "ipa": "IPA",
+                    "my_recipe": "Az \u00e9n receptem",
+                    "pale_ale": "Pale ale",
+                    "pilsner": "Pilsner",
+                    "red_ale": "Red ale",
+                    "stout": "Stout",
+                    "wheat": "B\u00faza"
+                }
+            },
+            "relative_to_start": {
+                "name": "\u00dctemezett bekapcsol\u00e1s"
+            },
+            "relative_to_start_for_location": {
+                "name": "\u00dctemezett bekapcsol\u00e1s ({location})"
+            },
+            "relative_to_start_wm": {
+                "name": "K\u00e9sleltet\u00e9s kezdete ennyi id\u0151 m\u00falva"
+            },
+            "relative_to_start_wm_for_location": {
+                "name": "K\u00e9sleltet\u00e9s kezdete ennyi id\u0151 m\u00falva ({location})"
+            },
+            "relative_to_stop": {
+                "name": "\u00dctemezett kikapcsol\u00e1s"
+            },
+            "relative_to_stop_for_location": {
+                "name": "\u00dctemezett kikapcsol\u00e1s ({location})"
+            },
+            "relative_to_stop_wm": {
+                "name": "K\u00e9sleltet\u00e9s v\u00e9ge ennyi id\u0151 m\u00falva"
+            },
+            "relative_to_stop_wm_for_location": {
+                "name": "K\u00e9sleltet\u00e9s v\u00e9ge ennyi id\u0151 m\u00falva ({location})"
+            },
+            "remain": {
+                "name": "H\u00e1tral\u00e9v\u0151 id\u0151"
+            },
+            "remain_for_location": {
+                "name": "{location} h\u00e1tral\u00e9v\u0151 id\u0151"
+            },
+            "rinse_level": {
+                "name": "\u00d6bl\u00edt\u0151szer adagol\u00f3 szintje",
+                "state": {
+                    "rinselevel_0": "0",
+                    "rinselevel_1": "1",
+                    "rinselevel_2": "2",
+                    "rinselevel_3": "3",
+                    "rinselevel_4": "4"
+                }
+            },
+            "running": {
+                "name": "Fut\u00e1si id\u0151"
+            },
+            "running_for_location": {
+                "name": "{location} fut\u00e1si id\u0151"
+            },
+            "sleep_timer_relative_to_stop": {
+                "name": "Elalv\u00e1s id\u0151z\u00edt\u0151"
+            },
+            "sleep_timer_relative_to_stop_for_location": {
+                "name": "Elalv\u00e1s id\u0151z\u00edt\u0151 ({location})"
+            },
+            "softening_level": {
+                "name": "L\u00e1gy\u00edt\u00e1si szint",
+                "state": {
+                    "softeninglevel_1": "1",
+                    "softeninglevel_2": "2",
+                    "softeninglevel_3": "3",
+                    "softeninglevel_4": "4"
+                }
+            },
+            "sterilizing_state": {
+                "name": "Magas h\u0151m\u00e9rs\u00e9klet\u0171 steriliz\u00e1l\u00e1s",
+                "state": {
+                    "cancel": "Megszak\u00edt\u00e1s",
+                    "off": "Ki",
+                    "on": "Steriliz\u00e1l\u00e1s"
+                }
+            },
+            "target": {
+                "name": "F\u0151z\u00e9si id\u0151"
+            },
+            "target_for_location": {
+                "name": "{location} f\u0151z\u00e9si id\u0151"
+            },
+            "target_temperature": {
+                "name": "H\u0151m\u00e9rs\u00e9klet",
+                "state": {
+                    "freezer": "Fagyaszt\u00f3",
+                    "fridge": "H\u0171t\u0151szekr\u00e9ny",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "H\u00fas/hal",
+                    "off": "Ki",
+                    "rice_grain": "Rizs/gabona",
+                    "storage": "T\u00e1rol\u00e1s",
+                    "temperature_number": "Sz\u00e1m",
+                    "vegetable_fruit": "Z\u00f6lds\u00e9g/gy\u00fcm\u00f6lcs"
+                }
+            },
+            "target_temperature_for_location": {
+                "name": "{location} h\u0151m\u00e9rs\u00e9klet",
+                "state": {
+                    "freezer": "Fagyaszt\u00f3",
+                    "fridge": "H\u0171t\u0151szekr\u00e9ny",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "H\u00fas/hal",
+                    "off": "Ki",
+                    "rice_grain": "Rizs/gabona",
+                    "storage": "T\u00e1rol\u00e1s",
+                    "temperature_number": "Sz\u00e1m",
+                    "vegetable_fruit": "Z\u00f6lds\u00e9g/gy\u00fcm\u00f6lcs"
+                }
+            },
+            "temperature": {
+                "name": "H\u0151m\u00e9rs\u00e9klet"
+            },
+            "temperature_state": {
+                "name": "H\u0151m\u00e9rs\u00e9klet",
+                "state": {
+                    "high": "Magas",
+                    "low": "Alacsony",
+                    "normal": "J\u00f3"
+                }
+            },
+            "temperature_state_for_location": {
+                "name": "{location} h\u0151m\u00e9rs\u00e9klet",
+                "state": {
+                    "high": "Magas",
+                    "low": "Alacsony",
+                    "normal": "J\u00f3"
+                }
+            },
+            "total": {
+                "name": "Teljes id\u0151"
+            },
+            "total_for_location": {
+                "name": "{location} teljes id\u0151"
+            },
+            "total_pollution_level": {
+                "name": "\u00c1ltal\u00e1nos leveg\u0151min\u0151s\u00e9g",
+                "state": {
+                    "bad": "Eg\u00e9szs\u00e9gtelen",
+                    "good": "J\u00f3",
+                    "invalid": "\u00c9rv\u00e9nytelen",
+                    "normal": "M\u00e9rs\u00e9kelt",
+                    "very_bad": "Rossz"
+                }
+            },
+            "used_time": {
+                "name": "V\u00edzsz\u0171r\u0151 haszn\u00e1lat"
+            },
+            "water_type": {
+                "name": "T\u00edpus"
+            },
+            "wind_volume_for_location": {
+                "name": "{location} sz\u00e9lsebess\u00e9g"
+            },
+            "wort_info": {
+                "name": "Wort",
+                "state": {
+                    "dark": "S\u00f6t\u00e9t",
+                    "deep_gold": "DeepGold",
+                    "hoppy": "Koml\u00f3s",
+                    "wheat": "B\u00faza"
+                }
+            },
+            "yeast_info": {
+                "name": "\u00c9leszt\u0151",
+                "state": {
+                    "american_ale": "Amerikai s\u00f6r",
+                    "english_ale": "Angol s\u00f6r",
+                    "lager": "Vil\u00e1gos s\u00f6r",
+                    "weizen": "Weizen"
+                }
+            }
+        },
+        "switch": {
+            "auto_mode": {
+                "name": "Automatikus m\u00f3d"
+            },
+            "express_mode": {
+                "name": "Extra j\u00e9gk\u00e9sz\u00edt\u00e9s"
+            },
+            "hot_water_mode": {
+                "name": "Melegv\u00edz"
+            },
+            "humidity_warm_mode": {
+                "name": "Meleg p\u00e1r\u00e1s\u00edt\u00e1s"
+            },
+            "hygiene_dry_mode": {
+                "name": "Sz\u00e1r\u00edt\u00e1si m\u00f3d"
+            },
+            "mood_lamp_state": {
+                "name": "Hangulatf\u00e9ny"
+            },
+            "operation_power": {
+                "name": "Er\u0151s"
+            },
+            "optimal_humidity": {
+                "name": "Szell\u0151z\u00e9s"
+            },
+            "power_save_enabled": {
+                "name": "Energiatakar\u00e9kos"
+            },
+            "rapid_freeze": {
+                "name": "Gyors fagyaszt\u00e1s"
+            },
+            "sleep_mode": {
+                "name": "Alv\u00f3 m\u00f3d"
+            },
+            "uv_nano": {
+                "name": "UVnano"
+            },
+            "warm_mode": {
+                "name": "F\u0171t\u00e9s"
+            }
+        }
+    }
+}

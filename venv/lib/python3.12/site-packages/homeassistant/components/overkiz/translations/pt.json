@@ -1,0 +1,177 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Conta j\u00e1 configurada",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reauth_wrong_account": "S\u00f3 \u00e9 poss\u00edvel reautenticar esta entrada com a mesma conta Overkiz e hub"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "certificate_verify_failed": "N\u00e3o \u00e9 poss\u00edvel ligar ao anfitri\u00e3o, a verifica\u00e7\u00e3o do certificado falhou.",
+            "developer_mode_disabled": "Modo de Programador desativado. Ative primeiro o Modo de Programador da sua TaHoma box Somfy.",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "no_such_token": "N\u00e3o \u00e9 poss\u00edvel criar um token para este gateway. Confirme se a conta est\u00e1 associada a este gateway.",
+            "server_in_maintenance": "O servidor est\u00e1 em baixo para manuten\u00e7\u00e3o",
+            "too_many_attempts": "Demasiadas tentativas com um token inv\u00e1lido, temporariamente banido",
+            "too_many_requests": "Demasiados pedidos, tente novamente mais tarde",
+            "unknown": "Erro inesperado",
+            "unsupported_hardware": "O seu hardware {unsupported_device} n\u00e3o \u00e9 suportado por esta integra\u00e7\u00e3o."
+        },
+        "flow_title": "Gateway: {gateway_id}",
+        "step": {
+            "cloud": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "password": "O palavra-passe da sua conta na nuvem (app).",
+                    "username": "O nome de utilizador da sua conta na nuvem (app)."
+                },
+                "description": "Introduza as suas credenciais da aplica\u00e7\u00e3o."
+            },
+            "local": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "data_description": {
+                    "host": "O nome do host ou endere\u00e7o IP do seu hub Overkiz.",
+                    "password": "O palavra-passe da sua conta na nuvem (app).",
+                    "username": "O nome de utilizador da sua conta na nuvem (app).",
+                    "verify_ssl": "Verifique o certificado SSL. Selecione esta op\u00e7\u00e3o apenas se estiver a ligar-se-se atrav\u00e9s do nome do anfitri\u00e3o."
+                },
+                "description": "Ao ativar o [Modo de programador da sua TaHoma box] (https://github.com/Somfy-Developer/Somfy-TaHoma-Developer-Mode#getting-started), pode autorizar software de terceiros (como o Home Assistant) a ligar-se \u00e0 mesma atrav\u00e9s da sua rede local.\n\nAp\u00f3s a ativa\u00e7\u00e3o, introduza as suas credenciais de aplica\u00e7\u00e3o e altere o anfitri\u00e3o para incluir o seu PIN Gateway ou introduza o endere\u00e7o IP do seu gateway."
+            },
+            "local_or_cloud": {
+                "data": {
+                    "api_type": "Tipo de API"
+                },
+                "data_description": {
+                    "api_type": "A API local \u00e9 suportada apenas pelo TaHoma Connexoon, TaHoma v2 e TaHoma Switch. Dispositivos de climatiza\u00e7\u00e3o e cen\u00e1rios **n\u00e3o** est\u00e3o dispon\u00edveis atrav\u00e9s da API local."
+                },
+                "description": "Escolha como pretende ligar ao seu gateway."
+            },
+            "user": {
+                "data": {
+                    "hub": "Servidor"
+                },
+                "data_description": {
+                    "hub": "Selecione a aplica\u00e7\u00e3o m\u00f3vel que utiliza para controlar os seus dispositivos"
+                },
+                "description": "Selecione o seu servidor. A plataforma Overkiz \u00e9 utilizada por v\u00e1rios fornecedores como Somfy (Connexoon / TaHoma), Hitachi (Hi Kumo) e Atlantic (Cozytouch)."
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "overkiz": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "away": "Ausente",
+                            "bypass_boost": "Impulso de desvio",
+                            "home_boost": "Impulso dom\u00e9stico",
+                            "kitchen_boost": "Impulso na cozinha"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "auto": "Autom\u00e1tico",
+                            "comfort-1": "Conforto 1",
+                            "comfort-2": "Conforto 2",
+                            "drying": "Secagem",
+                            "external": "Externo",
+                            "freeze": "Congelar",
+                            "frost_protection": "Prote\u00e7\u00e3o contra a geada",
+                            "manual": "Manual",
+                            "night": "Noite",
+                            "prog": "Programa"
+                        }
+                    }
+                }
+            }
+        },
+        "select": {
+            "memorized_simple_volume": {
+                "state": {
+                    "highest": "Mais alto",
+                    "standard": "Padr\u00e3o"
+                }
+            },
+            "open_closed_partial": {
+                "state": {
+                    "closed": "Fechada",
+                    "open": "Aberto",
+                    "partial": "Parcial"
+                }
+            },
+            "open_closed_pedestrian": {
+                "state": {
+                    "closed": "Fechada",
+                    "open": "Aberto",
+                    "pedestrian": "Pedestre"
+                }
+            }
+        },
+        "sensor": {
+            "battery": {
+                "state": {
+                    "full": "Completa",
+                    "low": "Fraca",
+                    "medium": "M\u00e9dio",
+                    "normal": "Normal",
+                    "verylow": "Muito fraca"
+                }
+            },
+            "discrete_rssi_level": {
+                "state": {
+                    "good": "Bom",
+                    "low": "Baixo",
+                    "normal": "Normal",
+                    "verylow": "Muito baixo"
+                }
+            },
+            "priority_lock_originator": {
+                "state": {
+                    "external_gateway": "Gateway externo",
+                    "local_user": "Utilizador local",
+                    "lsc": "LSC",
+                    "myself": "Eu",
+                    "rain": "Chuva",
+                    "saac": "SAAC",
+                    "security": "Seguran\u00e7a",
+                    "sfc": "SFC",
+                    "temperature": "Temperatura",
+                    "timer": "Temporizador",
+                    "ups": "UPS",
+                    "user": "Utilizador",
+                    "wind": "Vento"
+                }
+            },
+            "sensor_defect": {
+                "state": {
+                    "dead": "Morto",
+                    "low_battery": "Bateria fraca",
+                    "maintenance_required": "Manuten\u00e7\u00e3o necess\u00e1ria",
+                    "no_defect": "Sem defeitos"
+                }
+            },
+            "sensor_room": {
+                "state": {
+                    "clean": "Limpo",
+                    "dirty": "Sujo"
+                }
+            },
+            "three_way_handle_direction": {
+                "state": {
+                    "closed": "Fechada",
+                    "open": "Aberto",
+                    "tilt": "Inclina\u00e7\u00e3o"
+                }
+            }
+        }
+    }
+}

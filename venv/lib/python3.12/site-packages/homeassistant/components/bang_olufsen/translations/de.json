@@ -1,0 +1,134 @@
+{
+    "common": {
+        "jid_options_description": "Erweiterte Gruppierungsoptionen, bei denen die eindeutigen Beolink-IDs (JIDs genannt) der Ger\u00e4te direkt verwendet werden. JIDs finden sich in den Zustandsattributen der Mediaplayer-Entit\u00e4t.",
+        "jid_options_name": "JID-Optionen"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "already_in_progress": "Konfigurationsablauf wird bereits ausgef\u00fchrt"
+        },
+        "error": {
+            "api_exception": "Verbindung fehlgeschlagen",
+            "client_connector_error": "Verbindung fehlgeschlagen",
+            "invalid_ip": "Ung\u00fcltige IPv4-Adresse",
+            "timeout_error": "Verbindung fehlgeschlagen"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "IP-Adresse",
+                    "model": "Modell"
+                },
+                "description": "Bang & Olufsen Ger\u00e4t manuell konfigurieren."
+            },
+            "zeroconf_confirm": {
+                "description": "Best\u00e4tige die Konfiguration von {model} \u2013 {serial_number} @ {host}.",
+                "title": "Bang & Olufsen Ger\u00e4t einrichten"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_grouping_entity": {
+            "message": "Entit\u00e4t mit ID: {entity_id} kann nicht zur Beolink-Sitzung hinzugef\u00fcgt werden. Ist die Entit\u00e4t ein Bang & Olufsen Mediaplayer?"
+        },
+        "invalid_media_type": {
+            "message": "{invalid_media_type} ist ein ung\u00fcltiger Typ. G\u00fcltige Werte sind: {valid_media_types}."
+        },
+        "invalid_sound_mode": {
+            "message": "{invalid_sound_mode} ist ein ung\u00fcltiger Soundmodus. G\u00fcltige Werte sind: {valid_sound_modes}."
+        },
+        "invalid_source": {
+            "message": "Ung\u00fcltige Quelle: {invalid_source}. G\u00fcltige Quellen sind: {valid_sources}"
+        },
+        "m3u_invalid_format": {
+            "message": "Medienquellen mit der Erweiterung .m3u werden nicht unterst\u00fctzt."
+        },
+        "play_media_error": {
+            "message": "Beim Versuch, {media_type} abzuspielen, ist ein Fehler aufgetreten: {error_message}."
+        }
+    },
+    "selector": {
+        "source_ids": {
+            "options": {
+                "aux_a": "Beolink Konverter NL/ML AUX_A",
+                "beoradio": "ASE Beoradio",
+                "cd": "Beolink Konverter NL/ML CD",
+                "deezer": "ASE / Mozart Deezer",
+                "ph": "Beolink Konverter NL/ML PH",
+                "radio": "Beolink Konverter NL/ML RADIO",
+                "spotify": "ASE / Mozart Spotify",
+                "tidal": "Mozart Tidal",
+                "tp1": "Beolink Konverter NL/ML TP1",
+                "tp2": "Beolink Konverter NL/ML TP2"
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "Versetzt alle angeschlossenen Beolink-Ger\u00e4te in den Standby-Modus.",
+            "name": "Alle Beolink in Standby"
+        },
+        "beolink_expand": {
+            "description": "Erweitert die aktuelle Beolink-Wiedergabe.",
+            "fields": {
+                "all_discovered": {
+                    "description": "Die Beolink-Wiedergabe auf alle erkannten Ger\u00e4te erweitern.",
+                    "name": "Alle erkannten"
+                },
+                "beolink_jids": {
+                    "description": "Ausw\u00e4hlen, welche Beolink-JIDs der aktuellen Beolink-Wiedergabe hinzugef\u00fcgt werden sollen.",
+                    "name": "Beolink JIDs"
+                }
+            },
+            "name": "Beolink erweitern",
+            "sections": {
+                "jid_options": {
+                    "description": "Erweiterte Gruppierungsoptionen, bei denen die eindeutigen Beolink-IDs (JIDs genannt) der Ger\u00e4te direkt verwendet werden. JIDs finden sich in den Zustandsattributen der Mediaplayer-Entit\u00e4t.",
+                    "name": "JID-Optionen"
+                }
+            }
+        },
+        "beolink_join": {
+            "description": "Tritt einer Beolink-Wiedergabe bei.",
+            "fields": {
+                "beolink_jid": {
+                    "description": "Die Beolink JID f\u00fcr den Beitritt manuell angeben.",
+                    "name": "Beolink JID"
+                },
+                "source_id": {
+                    "description": "Gib an, welcher Quelle du beitreten m\u00f6chtest. Das Verhalten variiert je nach Hardwareplattform. Quellennamen, denen ein Plattformname vorangestellt ist, k\u00f6nnen nur bei der Verbindung mit dieser Plattform verwendet werden. Beispielsweise kann \u201eASE Beoradio\u201c nur bei der Verbindung mit einem ASE-Ger\u00e4t verwendet werden, w\u00e4hrend \u201eASE / Mozart Deezer\u201c mit ASE- oder Mozart-Ger\u00e4ten verwendet werden kann. Eine definierte Beolink-JID ist erforderlich.",
+                    "name": "Quelle"
+                }
+            },
+            "name": "Beolink beitreten",
+            "sections": {
+                "jid_options": {
+                    "description": "Erweiterte Gruppierungsoptionen, bei denen die eindeutigen Beolink-IDs (JIDs genannt) der Ger\u00e4te direkt verwendet werden. JIDs finden sich in den Zustandsattributen der Mediaplayer-Entit\u00e4t.",
+                    "name": "JID-Optionen"
+                }
+            }
+        },
+        "beolink_leave": {
+            "description": "Verl\u00e4sst eine Beolink-Wiedergabe.",
+            "name": "Beolink verlassen"
+        },
+        "beolink_unexpand": {
+            "description": "Reduziert die aktuelle Beolink-Wiedergabe.",
+            "fields": {
+                "beolink_jids": {
+                    "description": "Ausw\u00e4hlen, welche Beolink-JIDs aus der aktuellen Beolink-Wiedergabe entfernt werden.",
+                    "name": "Beolink JIDs"
+                }
+            },
+            "name": "Beolink reduzieren",
+            "sections": {
+                "jid_options": {
+                    "description": "Erweiterte Gruppierungsoptionen, bei denen die eindeutigen Beolink-IDs (JIDs genannt) der Ger\u00e4te direkt verwendet werden. JIDs finden sich in den Zustandsattributen der Mediaplayer-Entit\u00e4t.",
+                    "name": "JID-Optionen"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,163 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Za\u0159\u00edzen\u00ed je ji\u017e nastaveno",
+            "reauth_successful": "Op\u011btovn\u00e9 ov\u011b\u0159en\u00ed bylo \u00fasp\u011b\u0161n\u00e9"
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "invalid_auth": "Neplatn\u00e9 ov\u011b\u0159en\u00ed",
+            "invalid_host": "Z\u00e1znam hostitele nebyl v \u00fapln\u00e9m form\u00e1tu URL, nap\u0159. http://192.168.10.100:80",
+            "reauth_successful": "Op\u011btovn\u00e9 ov\u011b\u0159en\u00ed bylo \u00fasp\u011b\u0161n\u00e9",
+            "unknown": "Neo\u010dek\u00e1van\u00e1 chyba"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Heslo",
+                    "username": "U\u017eivatelsk\u00e9 jm\u00e9no"
+                },
+                "description": "P\u0159ihla\u0161ovac\u00ed \u00fadaje pro {host} ji\u017e nejsou platn\u00e9.",
+                "title": "Znovu ov\u011b\u0159it ISY"
+            },
+            "user": {
+                "data": {
+                    "host": "URL",
+                    "password": "Heslo",
+                    "tls": "Verze TLS ovlada\u010de ISY.",
+                    "username": "U\u017eivatelsk\u00e9 jm\u00e9no"
+                },
+                "description": "Polo\u017eka hostitele mus\u00ed b\u00fdt v \u00fapln\u00e9m form\u00e1tu URL, nap\u0159 http://192.168.10.100:80.",
+                "title": "P\u0159ipojit k ISY"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignore_string": "Ignorovat \u0159et\u011bzec",
+                    "restore_light_state": "Obnovit jas sv\u011btla",
+                    "sensor_string": "\u0158et\u011bzec senzoru uzlu",
+                    "variable_sensor_string": "\u0158et\u011bzec prom\u011bnn\u00e9 senzoru"
+                },
+                "title": "Volby ISY"
+            }
+        }
+    },
+    "services": {
+        "delete_zwave_lock_user_code": {
+            "fields": {
+                "user_num": {
+                    "description": "\u010c\u00edslo slotu u\u017eivatele na z\u00e1mku.",
+                    "name": "\u010c\u00edslo u\u017eivatele"
+                }
+            }
+        },
+        "get_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "\u010c\u00edslo parametru, kter\u00e9 se m\u00e1 na\u010d\u00edst ze za\u0159\u00edzen\u00ed.",
+                    "name": "Parametr"
+                }
+            },
+            "name": "Z\u00edskat parametr Z-Wave"
+        },
+        "rename_node": {
+            "fields": {
+                "name": {
+                    "description": "Nov\u00fd n\u00e1zev pro pou\u017eit\u00ed v r\u00e1mci ISY.",
+                    "name": "Nov\u00fd n\u00e1zev"
+                }
+            }
+        },
+        "send_node_command": {
+            "fields": {
+                "command": {
+                    "description": "P\u0159\u00edkaz, kter\u00fd m\u00e1 b\u00fdt odesl\u00e1n do za\u0159\u00edzen\u00ed.",
+                    "name": "P\u0159\u00edkaz"
+                }
+            },
+            "name": "Odeslat p\u0159\u00edkaz uzlu"
+        },
+        "send_program_command": {
+            "description": "Ode\u0161le p\u0159\u00edkaz k ovl\u00e1d\u00e1n\u00ed programu nebo slo\u017eky ISY. Platn\u00e9 p\u0159\u00edkazy jsou run, run_then, run_else, stop, enable, disable, enable_run_at_startup a disable_run_at_startup.",
+            "fields": {
+                "address": {
+                    "description": "Adresa programu, kter\u00fd se m\u00e1 ovl\u00e1dat (pou\u017eijte adresu nebo n\u00e1zev).",
+                    "name": "Adresa"
+                },
+                "command": {
+                    "description": "P\u0159\u00edkaz programu ISY, kter\u00fd m\u00e1 b\u00fdt odesl\u00e1n.",
+                    "name": "P\u0159\u00edkaz"
+                },
+                "isy": {
+                    "description": "Pokud m\u00e1te p\u0159ipojeno v\u00edce ne\u017e jeden ISY, zadejte n\u00e1zev ISY pro dotaz (jak je zobrazeno v registru za\u0159\u00edzen\u00ed nebo jako prvn\u00ed uzel v ISY Admin Console). Pokud m\u00e1te stejn\u00fd n\u00e1zev programu nebo adresu na v\u00edce ISY, vynech\u00e1te-li toto, spust\u00ed se p\u0159\u00edkaz na v\u0161ech.",
+                    "name": "ISY"
+                },
+                "name": {
+                    "description": "N\u00e1zev programu, kter\u00fd chcete ovl\u00e1dat (pou\u017eijte adresu nebo n\u00e1zev).",
+                    "name": "N\u00e1zev"
+                }
+            },
+            "name": "Odeslat p\u0159\u00edkaz programu"
+        },
+        "send_raw_node_command": {
+            "description": "Nastavte volby pro integraci ISY:\n\u2022 \u0158et\u011bzec pro senzory uzl\u016f: S ka\u017ed\u00fdm za\u0159\u00edzen\u00edm nebo slo\u017ekou, jeji\u017e n\u00e1zev obsahuje tento \u0159et\u011bzec, bude zach\u00e1zeno jako se senzorem nebo bin\u00e1rn\u00edm senzorem.\n\u2022 Ignorovat \u0159et\u011bzec: Ka\u017ed\u00e9 za\u0159\u00edzen\u00ed, jeho\u017e jm\u00e9no obsahuje tento \u0159et\u011bzec, bude ignorov\u00e1no.\n\u2022 \u0158et\u011bzec prom\u011bnn\u00e9 senzoru: Jak\u00e1koli prom\u011bnn\u00e1, kter\u00e1 obsahuje \"\u0158et\u011bzec prom\u011bnn\u00e9 senzoru\", bude p\u0159id\u00e1na jako senzor.\n\u2022 Obnovit jas sv\u011btla: Pokud je povoleno, obnov\u00ed se p\u0159edchoz\u00ed jas p\u0159i zapnut\u00ed sv\u011btla nam\u00edsto vestav\u011bn\u00e9ho On-Level za\u0159\u00edzen\u00ed.",
+            "fields": {
+                "command": {
+                    "name": "P\u0159\u00edkaz"
+                },
+                "parameters": {
+                    "description": "Slovn\u00edk parametr\u016f, kter\u00e9 se maj\u00ed odeslat v \u0159et\u011bzci dotazu (nap\u0159. pro ovl\u00e1d\u00e1n\u00ed barevn\u00fdch \u017e\u00e1rovek).",
+                    "name": "Parametry"
+                },
+                "unit_of_measurement": {
+                    "name": "Jednotka m\u011b\u0159en\u00ed"
+                },
+                "value": {
+                    "description": "Celo\u010d\u00edseln\u00e1 hodnota, kter\u00e1 m\u00e1 b\u00fdt odesl\u00e1na s p\u0159\u00edkazem.",
+                    "name": "Hodnota"
+                }
+            },
+            "name": "Odeslat raw p\u0159\u00edkaz uzlu"
+        },
+        "set_zwave_lock_user_code": {
+            "fields": {
+                "code": {
+                    "description": "K\u00f3d, kter\u00fd m\u00e1 u\u017eivatel nastavit.",
+                    "name": "K\u00f3d"
+                },
+                "user_num": {
+                    "description": "\u010c\u00edslo slotu u\u017eivatele na z\u00e1mku.",
+                    "name": "\u010c\u00edslo u\u017eivatele"
+                }
+            }
+        },
+        "set_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "\u010c\u00edslo parametru, kter\u00e9 se m\u00e1 nastavit na koncov\u00e9m za\u0159\u00edzen\u00ed.",
+                    "name": "Parametr"
+                },
+                "size": {
+                    "description": "Velikost parametru, bu\u010f 1, 2 nebo 4 bajty.",
+                    "name": "Velikost"
+                },
+                "value": {
+                    "description": "Hodnota, kter\u00e1 m\u00e1 b\u00fdt nastavena pro parametr. M\u016f\u017ee to b\u00fdt cel\u00e9 \u010d\u00edslo nebo bajtov\u00fd \u0159et\u011bzec (nap\u0159. \"0xFFFF\").",
+                    "name": "Hodnota"
+                }
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "device_connected": "ISY p\u0159ipojeno",
+            "host_reachable": "Hostitel je dosa\u017eiteln\u00fd",
+            "last_heartbeat": "Posledn\u00ed heartbeat",
+            "websocket_status": "Stav z\u00e1suvky ud\u00e1losti"
+        }
+    }
+}

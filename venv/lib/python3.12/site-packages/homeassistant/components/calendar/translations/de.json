@@ -1,0 +1,107 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Kalender",
+            "state": {
+                "off": "Aus",
+                "on": "Ein"
+            },
+            "state_attributes": {
+                "all_day": {
+                    "name": "Ganzt\u00e4gig",
+                    "state": {
+                        "false": "Nein",
+                        "true": "Ja"
+                    }
+                },
+                "description": {
+                    "name": "Beschreibung"
+                },
+                "end_time": {
+                    "name": "Ende"
+                },
+                "location": {
+                    "name": "Ort"
+                },
+                "message": {
+                    "name": "Nachricht"
+                },
+                "start_time": {
+                    "name": "Beginn"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_calendar_list_events": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Verwende stattdessen `calendar.get_events`, das mehrere Entit\u00e4ten unterst\u00fctzt. \n\nBitte ersetze diese Aktion, passe deine Automationen und Skripte an und w\u00e4hle **OK**, um dieses Problem zu schlie\u00dfen.",
+                        "title": "Verwendung der veralteten Aktion calendar.list_events erkannt"
+                    }
+                }
+            },
+            "title": "Verwendung der veralteten Aktion calendar.list_events erkannt"
+        }
+    },
+    "services": {
+        "create_event": {
+            "description": "F\u00fcgt einen neuen Kalendereintrag hinzu.",
+            "fields": {
+                "description": {
+                    "description": "Eine umfassendere Beschreibung des Termins als in der Zusammenfassung angegeben.",
+                    "name": "Beschreibung"
+                },
+                "end_date": {
+                    "description": "Das Datum, an dem der ganzt\u00e4gige Termin enden soll (exklusiv).",
+                    "name": "Enddatum"
+                },
+                "end_date_time": {
+                    "description": "Datum und Uhrzeit, zu denen der Termin enden soll.",
+                    "name": "Enduhrzeit"
+                },
+                "in": {
+                    "description": "Tage oder Wochen, in denen du den Termin erstellen m\u00f6chtest.",
+                    "name": "In"
+                },
+                "location": {
+                    "description": "Der Ort des Termins.",
+                    "name": "Ort"
+                },
+                "start_date": {
+                    "description": "Das Datum, an dem der ganzt\u00e4gige Termin beginnen soll.",
+                    "name": "Startdatum"
+                },
+                "start_date_time": {
+                    "description": "Datum und Uhrzeit, zu denen der Termin beginnen soll.",
+                    "name": "Startuhrzeit"
+                },
+                "summary": {
+                    "description": "Legt die kurze Zusammenfassung oder das Thema f\u00fcr den Termin fest.",
+                    "name": "Zusammenfassung"
+                }
+            },
+            "name": "Termin erstellen"
+        },
+        "get_events": {
+            "description": "Ruft von Kalendern die Eintr\u00e4ge innerhalb eines Zeitraums ab.",
+            "fields": {
+                "duration": {
+                    "description": "Liefert aktive Termine f\u00fcr den angegebenen Zeitraum ab Startzeitpunkt.",
+                    "name": "Zeitraum"
+                },
+                "end_date_time": {
+                    "description": "Gibt aktive Termine vor diesem Zeitpunkt zur\u00fcck. Kann nicht zusammen mit Zeitraum verwendet werden.",
+                    "name": "Endzeitpunkt"
+                },
+                "start_date_time": {
+                    "description": "Gibt aktive Termine nach diesem Zeitpunkt zur\u00fcck. Wenn nicht festgelegt, ist der Standardwert jetzt.",
+                    "name": "Startzeitpunkt"
+                }
+            },
+            "name": "Termine abrufen"
+        }
+    },
+    "title": "Kalender"
+}

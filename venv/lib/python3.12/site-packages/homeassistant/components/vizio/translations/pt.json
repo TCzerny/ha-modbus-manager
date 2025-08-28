@@ -1,0 +1,74 @@
+{
+    "config": {
+        "abort": {
+            "already_configured_device": "Dispositivo j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "updated_entry": "Esta entrada j\u00e1 foi configurada, mas o nome, as aplica\u00e7\u00f5es e/ou as op\u00e7\u00f5es definidas na configura\u00e7\u00e3o n\u00e3o correspondem \u00e0 configura\u00e7\u00e3o importada anteriormente, pelo que a entrada de configura\u00e7\u00e3o foi atualizada em conformidade."
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "complete_pairing_failed": "N\u00e3o foi poss\u00edvel concluir o emparelhamento. Certifique-se de que o PIN fornecido est\u00e1 correto e que a TV ainda est\u00e1 ligada \u00e0 rede antes de voltar a enviar.",
+            "existing_config_entry_found": "Uma entrada de configura\u00e7\u00e3o de dispositivo VIZIO SmartCast existente com o mesmo n\u00famero de s\u00e9rie j\u00e1 foi configurada. Tem de eliminar a entrada existente para poder configurar esta."
+        },
+        "step": {
+            "pair_tv": {
+                "data": {
+                    "pin": "C\u00f3digo PIN"
+                },
+                "description": "A sua TV deve apresentar um c\u00f3digo. Introduza esse c\u00f3digo no formul\u00e1rio e avance para o passo seguinte para concluir o emparelhamento.",
+                "title": "Processo completo de emparelhamento"
+            },
+            "pairing_complete": {
+                "description": "O seu dispositivo VIZIO SmartCast est\u00e1 agora conectado ao Home Assistant.",
+                "title": "Emparelhamento Completo"
+            },
+            "pairing_complete_import": {
+                "description": "O seu dispositivo VIZIO SmartCast est\u00e1 agora ligado ao Home Assistant.\n\nO seu token de acesso \u00e9 '**{access_token}**'.",
+                "title": "Emparelhamento Completo"
+            },
+            "user": {
+                "data": {
+                    "access_token": "Token de Acesso",
+                    "device_class": "Tipo de dispositivo",
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "Nome de anfitri\u00e3o ou endere\u00e7o IP do seu dispositivo VIZIO SmartCast."
+                },
+                "description": "S\u00f3 \u00e9 necess\u00e1rio um token de acesso para as TVs. Se estiver a configurar uma TV e ainda n\u00e3o tiver um token de acesso, deixe-o em branco para passar por um processo de emparelhamento."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "apps_to_include_or_exclude": "Aplica\u00e7\u00f5es a incluir ou excluir",
+                    "include_or_exclude": "Incluir ou excluir aplica\u00e7\u00f5es?",
+                    "volume_step": "Volume valor por passo"
+                },
+                "description": "Se tiver uma Smart TV, pode opcionalmente filtrar a sua lista de origens escolhendo as aplica\u00e7\u00f5es a incluir ou a excluir na sua lista de origens."
+            }
+        }
+    },
+    "services": {
+        "update_setting": {
+            "description": "Atualiza o valor de uma defini\u00e7\u00e3o num dispositivo Vizio media player.",
+            "fields": {
+                "new_value": {
+                    "description": "O novo valor para a defini\u00e7\u00e3o.",
+                    "name": "Novo valor"
+                },
+                "setting_name": {
+                    "description": "O nome da defini\u00e7\u00e3o a ser alterada. As defini\u00e7\u00f5es dispon\u00edveis para um determinado setting_type s\u00e3o listadas na propriedade '[setting_type]_settings'.",
+                    "name": "Nome da defini\u00e7\u00e3o"
+                },
+                "setting_type": {
+                    "description": "O tipo de defini\u00e7\u00e3o a alterar. Os tipos dispon\u00edveis est\u00e3o listados na propriedade 'setting_types'.",
+                    "name": "Tipo de defini\u00e7\u00e3o"
+                }
+            },
+            "name": "Atualizar defini\u00e7\u00e3o"
+        }
+    }
+}

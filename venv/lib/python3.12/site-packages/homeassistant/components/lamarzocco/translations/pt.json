@@ -1,0 +1,245 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "machine_not_found": "M\u00e1quina descoberta n\u00e3o encontrada na conta indicada",
+            "no_machines": "N\u00e3o foram encontradas m\u00e1quinas na conta"
+        },
+        "step": {
+            "bluetooth_selection": {
+                "data": {
+                    "mac": "Dispositivo"
+                },
+                "data_description": {
+                    "mac": "Selecione o dispositivo Bluetooth que \u00e9 a sua m\u00e1quina"
+                },
+                "description": "Selecione o seu dispositivo entre os dispositivos Bluetooth dispon\u00edveis."
+            },
+            "machine_selection": {
+                "data": {
+                    "host": "Endere\u00e7o IP",
+                    "machine": "M\u00e1quina"
+                },
+                "data_description": {
+                    "host": "Endere\u00e7o IP local da m\u00e1quina",
+                    "machine": "Selecione a m\u00e1quina que deseja integrar"
+                },
+                "description": "Selecione a m\u00e1quina que pretende integrar. Defina o \"IP\" para ter acesso aos sensores relacionados com o tempo de disparo."
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "password": "A sua palavra-passe da aplica\u00e7\u00e3o La Marzocco"
+                },
+                "description": "\u00c9 necess\u00e1ria uma nova autentica\u00e7\u00e3o. Por favor, introduza novamente a sua palavra-passe."
+            },
+            "reconfigure": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "password": "A sua palavra-passe da aplica\u00e7\u00e3o La Marzocco",
+                    "username": "O seu nome de utilizador da aplica\u00e7\u00e3o La Marzocco."
+                }
+            },
+            "user": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "password": "A sua palavra-passe da aplica\u00e7\u00e3o La Marzocco",
+                    "username": "O seu nome de utilizador da aplica\u00e7\u00e3o La Marzocco."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "backflush_enabled": {
+                "name": "Retrolavagem ativa"
+            },
+            "brew_active": {
+                "name": "Fermenta\u00e7\u00e3o em curso"
+            },
+            "water_tank": {
+                "name": "Dep\u00f3sito de \u00e1gua vazio"
+            }
+        },
+        "button": {
+            "start_backflush": {
+                "name": "Iniciar a retrolavagem"
+            }
+        },
+        "calendar": {
+            "auto_on_off_schedule": {
+                "name": "Agendamento de auto ligar/desligar ({id})"
+            }
+        },
+        "number": {
+            "coffee_temp": {
+                "name": "Temperatura alvo do caf\u00e9"
+            },
+            "dose_key": {
+                "name": "Dose Chave {key}"
+            },
+            "prebrew_off": {
+                "name": "Hora de fim da pr\u00e9-prepara\u00e7\u00e3o"
+            },
+            "prebrew_off_key": {
+                "name": "Hora de fim da pr\u00e9-prepara\u00e7\u00e3o Chave {key}"
+            },
+            "prebrew_on": {
+                "name": "Hora de in\u00edcio da pr\u00e9-prepara\u00e7\u00e3o"
+            },
+            "prebrew_on_key": {
+                "name": "Hora de in\u00edcio da pr\u00e9-prepara\u00e7\u00e3o Chave {key}"
+            },
+            "preinfusion_off": {
+                "name": "Tempo de pr\u00e9-infus\u00e3o"
+            },
+            "preinfusion_off_key": {
+                "name": "Tecla {key} do tempo de pr\u00e9-infus\u00e3o"
+            },
+            "scale_target_key": {
+                "name": "Alvo de preparo por peso {key}."
+            },
+            "smart_standby_time": {
+                "name": "Tempo de espera inteligente"
+            },
+            "steam_temp": {
+                "name": "Temperatura alvo do vapor"
+            },
+            "tea_water_duration": {
+                "name": "Dura\u00e7\u00e3o da \u00e1gua do ch\u00e1"
+            }
+        },
+        "select": {
+            "active_bbw": {
+                "name": "Ativar receita de preparo por peso.",
+                "state": {
+                    "a": "Receita A",
+                    "b": "Receita B"
+                }
+            },
+            "prebrew_infusion_select": {
+                "name": "Modo de pr\u00e9-fermenta\u00e7\u00e3o/infus\u00e3o",
+                "state": {
+                    "disabled": "Desativado",
+                    "prebrew": "Pr\u00e9-fermenta\u00e7\u00e3o",
+                    "preinfusion": "Pr\u00e9-infus\u00e3o"
+                }
+            },
+            "smart_standby_mode": {
+                "name": "Modo de espera inteligente",
+                "state": {
+                    "last_brewing": "\u00daltima fermenta\u00e7\u00e3o",
+                    "power_on": "Ligado"
+                }
+            },
+            "steam_temp_select": {
+                "name": "N\u00edvel de vapor",
+                "state": {
+                    "1": "1",
+                    "2": "2",
+                    "3": "3"
+                }
+            }
+        },
+        "sensor": {
+            "current_temp_coffee": {
+                "name": "Temperatura atual do caf\u00e9"
+            },
+            "current_temp_steam": {
+                "name": "Temperatura atual do vapor"
+            },
+            "drink_stats_coffee": {
+                "name": "Total de caf\u00e9s feitos"
+            },
+            "drink_stats_flushing": {
+                "name": "Total de descargas efetuadas"
+            },
+            "shot_timer": {
+                "name": "Temporizador de disparo"
+            }
+        },
+        "switch": {
+            "auto_on_off": {
+                "name": "Ligar/desligar auto ({id})"
+            },
+            "smart_standby_enabled": {
+                "name": "Modo de espera inteligente ativado"
+            },
+            "steam_boiler": {
+                "name": "Caldeira a vapor"
+            }
+        },
+        "update": {
+            "gateway_firmware": {
+                "name": "Firmware do gateway"
+            },
+            "machine_firmware": {
+                "name": "Firmware da m\u00e1quina"
+            }
+        }
+    },
+    "exceptions": {
+        "api_error": {
+            "message": "Erro ao comunicar com a API"
+        },
+        "authentication_failed": {
+            "message": "A autentica\u00e7\u00e3o falhou"
+        },
+        "auto_on_off_error": {
+            "message": "Erro ao definir o modo autom\u00e1tico ligado/desligado para {state} em {id}"
+        },
+        "button_error": {
+            "message": "Erro ao executar o bot\u00e3o {key}"
+        },
+        "number_exception": {
+            "message": "Erro ao definir o valor {value} para o n\u00famero {key}"
+        },
+        "number_exception_key": {
+            "message": "Erro ao definir o valor {value} para o n\u00famero {key}, chave {physical_key}"
+        },
+        "select_option_error": {
+            "message": "Erro ao definir a op\u00e7\u00e3o selecionada {option} para {key}"
+        },
+        "switch_off_error": {
+            "message": "Erro ao desligar interruptor {key}"
+        },
+        "switch_on_error": {
+            "message": "Erro ao ligar interruptor {key}"
+        },
+        "update_failed": {
+            "message": "Erro ao atualizar {key}"
+        }
+    },
+    "issues": {
+        "unsupported_gateway_firmware": {
+            "description": "O firmware da gateway {gateway_version} j\u00e1 n\u00e3o \u00e9 suportado por esta integra\u00e7\u00e3o, por favor atualize.",
+            "title": "Firmware de gateway n\u00e3o suportado"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "use_bluetooth": "Usar Bluetooth"
+                },
+                "data_description": {
+                    "use_bluetooth": "A integra\u00e7\u00e3o deve tentar usar Bluetooth para controlar a m\u00e1quina?"
+                }
+            }
+        }
+    }
+}

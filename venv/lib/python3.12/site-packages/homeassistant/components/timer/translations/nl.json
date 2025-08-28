@@ -1,0 +1,65 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Timer",
+            "state": {
+                "active": "Actief",
+                "idle": "Inactief",
+                "paused": "Gepauzeerd"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Duur"
+                },
+                "editable": {
+                    "name": "Beheerd via UI",
+                    "state": {
+                        "false": "Nee",
+                        "true": "Ja"
+                    }
+                },
+                "finishes_at": {
+                    "name": "Eindigt om"
+                },
+                "remaining": {
+                    "name": "Resterend"
+                },
+                "restore": {
+                    "name": "Herstellen"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "name": "Annuleren"
+        },
+        "change": {
+            "fields": {
+                "duration": {
+                    "name": "Duur"
+                }
+            },
+            "name": "Wijzig"
+        },
+        "finish": {
+            "name": "Voltooien"
+        },
+        "pause": {
+            "name": "Pauzeren"
+        },
+        "reload": {
+            "description": "Herlaadt timers vanaf de YAML-configuratie.",
+            "name": "Herladen"
+        },
+        "start": {
+            "fields": {
+                "duration": {
+                    "name": "Duur"
+                }
+            },
+            "name": "Starten"
+        }
+    },
+    "title": "Timer"
+}

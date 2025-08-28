@@ -1,0 +1,415 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "already_configured": "A conex\u00e3o PCHK usando o mesmo endere\u00e7o IP/porta j\u00e1 est\u00e1 configurada.",
+            "authentication_error": "A autentica\u00e7\u00e3o falhou. Nome de utilizador ou palavra-passe errados.",
+            "connection_refused": "N\u00e3o foi poss\u00edvel conectar ao PCHK. Verifique o IP e a porta.",
+            "license_error": "O n\u00famero m\u00e1ximo de conex\u00f5es foi atingido. \u00c9 necess\u00e1ria uma chave de licen\u00e7a adicional."
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "acknowledge": "Solicitar confirma\u00e7\u00e3o dos m\u00f3dulos",
+                    "dim_mode": "Modo dimmer",
+                    "ip_address": "Endere\u00e7o IP",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "sk_num_tries": "Tentativas de varredura do acoplador de segmento",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "acknowledge": "Repetir o envio de comandos se n\u00e3o for recebida uma resposta (aumenta o tr\u00e1fego do barramento).",
+                    "dim_mode": "O n\u00famero de passos usados para dimerizar sa\u00eddas."
+                },
+                "description": "Reconfigurar liga\u00e7\u00e3o ao anfitri\u00e3o LCN",
+                "title": "Reconfigurar o anfitri\u00e3o LCN"
+            },
+            "user": {
+                "data": {
+                    "acknowledge": "Solicitar confirma\u00e7\u00e3o dos m\u00f3dulos",
+                    "dim_mode": "Modo dimmer",
+                    "host": "Nome",
+                    "ip_address": "Endere\u00e7o IP",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "sk_num_tries": "Tentativas de varredura do acoplador de segmento",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Estabelecer uma nova liga\u00e7\u00e3o ao anfitri\u00e3o LCN."
+            }
+        }
+    },
+    "device_automation": {
+        "extra_fields": {
+            "action": "A\u00e7\u00e3o",
+            "code": "C\u00f3digo",
+            "key": "Chave",
+            "level": "N\u00edvel"
+        },
+        "trigger_type": {
+            "codelock": "C\u00f3digo de bloqueio recebido",
+            "fingerprint": "C\u00f3digo de impress\u00e3o digital recebido",
+            "send_keys": "Enviar chaves recebidas",
+            "transmitter": "C\u00f3digo do transmissor recebido",
+            "transponder": "C\u00f3digo do transponder recebido"
+        }
+    },
+    "exceptions": {
+        "invalid_address": {
+            "message": "O dispositivo LCN para o endere\u00e7o fornecido n\u00e3o foi configurado."
+        },
+        "invalid_device_id": {
+            "message": "O dispositivo LCN para o ID de dispositivo fornecido n\u00e3o foi configurado."
+        },
+        "no_device_identifier": {
+            "message": "Nenhum identificador de dispositivo fornecido. Por favor forne\u00e7a o ID do dispositivo."
+        }
+    },
+    "issues": {
+        "deprecated_address_parameter": {
+            "description": "O par\u00e2metro 'address' nas chamadas de a\u00e7\u00e3o LCN est\u00e1 obsoleto. O par\u00e2metro 'device_id' deve ser utilizado daqui em diante.\n\nPor favor, ajuste as suas automatiza\u00e7\u00f5es ou scripts para corrigir este problema.",
+            "title": "Par\u00e2metro 'address' descontinuado"
+        },
+        "deprecated_keylock_sensor": {
+            "description": "A sua entidade de sensor bin\u00e1rio de bloqueio de chave LCN `{entity}` est\u00e1 a ser utilizada em automatiza\u00e7\u00f5es ou scripts. Uma entidade de interruptor de bloqueio de chave est\u00e1 dispon\u00edvel e deve ser utilizada daqui em diante.\n\nPor favor, ajuste as suas automatiza\u00e7\u00f5es ou scripts para corrigir este problema.",
+            "title": "Sensor bin\u00e1rio de bloqueio de chave LCN obsoleto"
+        },
+        "deprecated_regulatorlock_sensor": {
+            "description": "A sua entidade de sensor bin\u00e1rio de bloqueio do regulador LCN `{entity}` est\u00e1 a ser utilizada em automatiza\u00e7\u00f5es ou scripts. Est\u00e1 dispon\u00edvel uma entidade de comutador de bloqueio do regulador, que deve ser utilizada no futuro.\n\nAjuste as suas automatiza\u00e7\u00f5es ou scripts para corrigir este problema.",
+            "title": "Sensor bin\u00e1rio de bloqueio do regulador LCN obsoleto"
+        }
+    },
+    "services": {
+        "address_to_device_id": {
+            "description": "Converter endere\u00e7o LCN em ID de dispositivo.",
+            "fields": {
+                "host": {
+                    "description": "Nome do anfitri\u00e3o tal como consta no painel de integra\u00e7\u00e3o.",
+                    "name": "Nome do anfitri\u00e3o"
+                },
+                "id": {
+                    "description": "M\u00f3dulo alvo ou ID do grupo.",
+                    "name": "M\u00f3dulo ou ID do grupo"
+                },
+                "segment_id": {
+                    "description": "ID do segmento alvo.",
+                    "name": "ID do segmento"
+                },
+                "type": {
+                    "description": "Tipo alvo.",
+                    "name": "Tipo"
+                }
+            },
+            "name": "Endere\u00e7o para ID do dispositivo"
+        },
+        "dyn_text": {
+            "description": "Envia texto din\u00e2mico para os ecr\u00e3s LCN-GTxD.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "row": {
+                    "description": "Linha de texto.",
+                    "name": "Linha"
+                },
+                "text": {
+                    "description": "Texto a enviar (at\u00e9 60 caracteres codificados em UTF-8).",
+                    "name": "Texto"
+                }
+            },
+            "name": "Texto din\u00e2mico"
+        },
+        "led": {
+            "description": "Define o estado do LED.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "led": {
+                    "description": "A porta LED do dispositivo.",
+                    "name": "LED"
+                },
+                "state": {
+                    "description": "O estado do LED a ser definido.",
+                    "name": "Estado"
+                }
+            },
+            "name": "LED"
+        },
+        "lock_keys": {
+            "description": "Chaves de bloqueio.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "state": {
+                    "description": "Estados do bloqueio de teclas como cadeia (1=ligado, 2=desligado, T=alternar, -=n\u00e3o mudar).",
+                    "name": "Estado"
+                },
+                "table": {
+                    "description": "Mesa com chaves para fechar (deve ser A para o intervalo).",
+                    "name": "Tabela"
+                },
+                "time": {
+                    "description": "Intervalo de bloqueio.",
+                    "name": "Hora"
+                },
+                "time_unit": {
+                    "description": "Unidade de tempo do intervalo de bloqueio.",
+                    "name": "Unidade de tempo"
+                }
+            },
+            "name": "Chaves de bloqueio"
+        },
+        "lock_regulator": {
+            "description": "Bloqueia um ponto de regula\u00e7\u00e3o do regulador.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "setpoint": {
+                    "description": "Nome do ponto de regula\u00e7\u00e3o.",
+                    "name": "Defini\u00e7\u00e3o"
+                },
+                "state": {
+                    "description": "Novo estado do ponto de regula\u00e7\u00e3o.",
+                    "name": "Estado"
+                }
+            },
+            "name": "Regulador de bloqueio"
+        },
+        "output_abs": {
+            "description": "Define o brilho absoluto da porta de sa\u00edda em percentagem.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "brightness": {
+                    "description": "Brilho absoluto.",
+                    "name": "Brilho"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "output": {
+                    "description": "Porta de sa\u00edda.",
+                    "name": "Sa\u00edda"
+                },
+                "transition": {
+                    "description": "Tempo de transi\u00e7\u00e3o.",
+                    "name": "Transi\u00e7\u00e3o"
+                }
+            },
+            "name": "Brilho absoluto de sa\u00edda"
+        },
+        "output_rel": {
+            "description": "Define a luminosidade relativa da porta de sa\u00edda em percentagem.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "brightness": {
+                    "description": "Brilho relativo.",
+                    "name": "Brilho"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "output": {
+                    "description": "Porta de sa\u00edda.",
+                    "name": "Sa\u00edda"
+                }
+            },
+            "name": "Brilho relativo de sa\u00edda"
+        },
+        "output_toggle": {
+            "description": "Alterna a porta de sa\u00edda.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "output": {
+                    "description": "Porta de sa\u00edda.",
+                    "name": "Sa\u00edda"
+                },
+                "transition": {
+                    "description": "Tempo de transi\u00e7\u00e3o.",
+                    "name": "Transi\u00e7\u00e3o"
+                }
+            },
+            "name": "Sa\u00edda de altern\u00e2ncia"
+        },
+        "pck": {
+            "description": "Envia comando PCK arbitr\u00e1rio.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "pck": {
+                    "description": "Comando PCK (sem cabe\u00e7alho de endere\u00e7o).",
+                    "name": "PCK"
+                }
+            },
+            "name": "PCK"
+        },
+        "relays": {
+            "description": "Define o estado dos rel\u00e9s.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "state": {
+                    "description": "Os estados dos rel\u00e9s s\u00e3o apresentados em cadeia (1=ligado, 2=desligado, t=alternar, -=sem altera\u00e7\u00e3o).",
+                    "name": "Estado"
+                }
+            },
+            "name": "Rel\u00e9s"
+        },
+        "send_keys": {
+            "description": "Envia chaves (que executam comandos vinculados).",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "keys": {
+                    "description": "Teclas a enviar.",
+                    "name": "Teclas"
+                },
+                "state": {
+                    "description": "Estado da tecla aquando do envio (deve ser atingido para ser diferido).",
+                    "name": "Estado"
+                },
+                "time": {
+                    "description": "Enviar atraso.",
+                    "name": "Tempo"
+                },
+                "time_unit": {
+                    "description": "Unidade de tempo do atraso de envio.",
+                    "name": "Unidade de tempo"
+                }
+            },
+            "name": "Enviar teclas"
+        },
+        "var_abs": {
+            "description": "Define o valor absoluto de uma vari\u00e1vel ou ponto de regula\u00e7\u00e3o.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "unit_of_measurement": {
+                    "description": "Unidade de valor.",
+                    "name": "Unidade de medida"
+                },
+                "value": {
+                    "description": "Valor a definir.",
+                    "name": "Valor"
+                },
+                "variable": {
+                    "description": "Nome da vari\u00e1vel ou do ponto de regula\u00e7\u00e3o.",
+                    "name": "Vari\u00e1vel"
+                }
+            },
+            "name": "Definir vari\u00e1vel absoluta"
+        },
+        "var_rel": {
+            "description": "Valor de desloca\u00e7\u00e3o de uma vari\u00e1vel, ponto de regula\u00e7\u00e3o ou limiar.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "unit_of_measurement": {
+                    "description": "Unidade de valor.",
+                    "name": "Unidade de medida"
+                },
+                "value": {
+                    "description": "Valor de desloca\u00e7\u00e3o.",
+                    "name": "Valor"
+                },
+                "value_reference": {
+                    "description": "Valor de refer\u00eancia para o ponto de regula\u00e7\u00e3o e o limiar.",
+                    "name": "Valor de refer\u00eancia"
+                },
+                "variable": {
+                    "description": "Nome da vari\u00e1vel ou do ponto de regula\u00e7\u00e3o.",
+                    "name": "Vari\u00e1vel"
+                }
+            },
+            "name": "Vari\u00e1vel de desloca\u00e7\u00e3o"
+        },
+        "var_reset": {
+            "description": "Rep\u00f5e o valor da vari\u00e1vel ou do ponto de regula\u00e7\u00e3o.",
+            "fields": {
+                "address": {
+                    "description": "Endere\u00e7o do m\u00f3dulo.",
+                    "name": "Endere\u00e7o"
+                },
+                "device_id": {
+                    "description": "O ID do dispositivo do m\u00f3dulo ou grupo LCN.",
+                    "name": "Dispositivo"
+                },
+                "variable": {
+                    "description": "Nome da vari\u00e1vel ou do ponto de regula\u00e7\u00e3o.",
+                    "name": "Vari\u00e1vel"
+                }
+            },
+            "name": "Redefinir vari\u00e1vel"
+        }
+    }
+}

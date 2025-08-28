@@ -1,0 +1,76 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u88dd\u7f6e\u5df2\u7d93\u8a2d\u5b9a\u5b8c\u6210",
+            "success": "\u8b8a\u66f4\u5df2\u5132\u5b58"
+        },
+        "flow_title": "\u8ddd\u96e2",
+        "step": {
+            "user": {
+                "data": {
+                    "ignored_zones": "\u5ffd\u7565\u5206\u5340",
+                    "tolerance": "\u5bb9\u5fcd\u8ddd\u96e2",
+                    "tracked_entities": "\u8ffd\u8e64\u7684\u88dd\u7f6e\u6216\u4eba\u54e1",
+                    "zone": "\u8ffd\u8e64\u8ddd\u96e2\u7684\u5206\u5340"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "dir_of_travel": {
+                "name": "{tracked_entity} \u884c\u7a0b\u65b9\u5411",
+                "state": {
+                    "arrived": "\u62b5\u9054",
+                    "away_from": "\u96e2\u958b",
+                    "stationary": "\u505c\u6b62\u4e0d\u52d5",
+                    "towards": "\u671d\u5411"
+                }
+            },
+            "dist_to_zone": {
+                "name": "{tracked_entity} \u8ddd\u96e2"
+            },
+            "nearest": {
+                "name": "\u6700\u8fd1\u7684\u88dd\u7f6e"
+            },
+            "nearest_dir_of_travel": {
+                "name": "\u6700\u8fd1\u7684\u884c\u9032\u65b9\u5411",
+                "state": {
+                    "arrived": "\u62b5\u9054",
+                    "away_from": "\u96e2\u958b",
+                    "stationary": "\u505c\u6b62\u4e0d\u52d5",
+                    "towards": "\u671d\u5411"
+                }
+            },
+            "nearest_dist_to_zone": {
+                "name": "\u6700\u8fd1\u8ddd\u96e2"
+            }
+        }
+    },
+    "issues": {
+        "tracked_entity_removed": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "\u5be6\u9ad4 `{entity_id}` \u5df2\u5f9e HA \u4e2d\u79fb\u9664\uff0c\u4f46\u5728\u8ddd\u96e2{name}\u4e2d\u4ecd\u5728\u4f7f\u7528\u3002\u8acb\u7531\u8ffd\u8e64\u5be6\u9ad4\u5217\u8868\u4e2d\u79fb\u9664 `{entity_id}`\u3002\u76f8\u95dc\u7684\u8ddd\u96e2\u611f\u6e2c\u5668\u5be6\u9ad4\u5df2\u8a2d\u70ba\u4e0d\u53ef\u7528\uff0c\u4e26\u53ef\u9032\u884c\u79fb\u9664\u3002",
+                        "title": "\u5df2\u79fb\u9664\u7684\u8ffd\u8e64\u5be6\u9ad4"
+                    }
+                }
+            },
+            "title": "\u5df2\u79fb\u9664\u7684\u8ffd\u8e64\u5be6\u9ad4"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignored_zones": "\u5ffd\u7565\u5206\u5340",
+                    "tolerance": "\u5bb9\u5fcd\u8ddd\u96e2",
+                    "tracked_entities": "\u8ffd\u8e64\u7684\u88dd\u7f6e\u6216\u4eba\u54e1",
+                    "zone": "\u8ffd\u8e64\u8ddd\u96e2\u7684\u5206\u5340"
+                }
+            }
+        }
+    },
+    "title": "\u8ddd\u96e2"
+}

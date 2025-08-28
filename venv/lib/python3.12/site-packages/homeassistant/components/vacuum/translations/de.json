@@ -1,0 +1,101 @@
+{
+    "device_automation": {
+        "action_type": {
+            "clean": "Lass {entity_name} reinigen",
+            "dock": "Lass {entity_name} zum Dock zur\u00fcckkehren"
+        },
+        "condition_type": {
+            "is_cleaning": "Wenn {entity_name} reinigt",
+            "is_docked": "Wenn {entity_name} angedockt ist"
+        },
+        "extra_fields": {
+            "for": "Dauer"
+        },
+        "trigger_type": {
+            "cleaning": "Sobald {entity_name} mit der Reinigung begonnen hat",
+            "docked": "Sobald {entity_name} angedockt hat"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Staubsauger",
+            "state": {
+                "cleaning": "Reinigt",
+                "docked": "Angedockt",
+                "error": "Fehler",
+                "idle": "Leerlauf",
+                "off": "Aus",
+                "on": "Ein",
+                "paused": "Pause",
+                "returning": "R\u00fcckkehr zur Dockingstation"
+            }
+        }
+    },
+    "services": {
+        "clean_spot": {
+            "description": "Weist den Staubsauger an, eine Fleckentfernung durchzuf\u00fchren.",
+            "name": "Fleck reinigen"
+        },
+        "locate": {
+            "description": "Ortet den Staubsaugerroboter.",
+            "name": "Lokalisieren"
+        },
+        "pause": {
+            "description": "Unterbricht den Reinigungsvorgang.",
+            "name": "Pausieren"
+        },
+        "return_to_base": {
+            "description": "Weist den Staubsauger an, zu seiner Dockingstation zur\u00fcckzukehren.",
+            "name": "Zur\u00fcck zur Dockingstation"
+        },
+        "send_command": {
+            "description": "Sendet einen Befehl an den Staubsauger.",
+            "fields": {
+                "command": {
+                    "description": "Auszuf\u00fchrender Befehl. Die Befehle sind integrationsabh\u00e4ngig.",
+                    "name": "Befehl"
+                },
+                "params": {
+                    "description": "Parameter f\u00fcr den Befehl. Die Parameter sind integrationsabh\u00e4ngig.",
+                    "name": "Parameter"
+                }
+            },
+            "name": "Befehl senden"
+        },
+        "set_fan_speed": {
+            "description": "Legt die Saugkraft des Staubsaugers fest.",
+            "fields": {
+                "fan_speed": {
+                    "description": "Saugkraft. Der Wert h\u00e4ngt von der Integration ab. Einige Integrationen haben Geschwindigkeitsstufen, wie z. B. \u201emittel\u201c. Einige verwenden einen Prozentsatz zwischen 0 und 100.",
+                    "name": "Saugkraft"
+                }
+            },
+            "name": "Saugkraft einstellen"
+        },
+        "start": {
+            "description": "Startet oder setzt den Reinigungsvorgang fort.",
+            "name": "Starten"
+        },
+        "start_pause": {
+            "description": "Startet, pausiert oder setzt den Reinigungsvorgang fort.",
+            "name": "Start/Pause"
+        },
+        "stop": {
+            "description": "Stoppt den aktuellen Reinigungsvorgang.",
+            "name": "Stoppen"
+        },
+        "toggle": {
+            "description": "Schaltet den Staubsauger zwischen ein und aus um.",
+            "name": "Umschalten"
+        },
+        "turn_off": {
+            "description": "Beendet den aktuellen Reinigungsvorgang und kehrt zur Dockingstation zur\u00fcck.",
+            "name": "Ausschalten"
+        },
+        "turn_on": {
+            "description": "Startet einen neuen Reinigungsvorgang.",
+            "name": "Einschalten"
+        }
+    },
+    "title": "Staubsauger"
+}

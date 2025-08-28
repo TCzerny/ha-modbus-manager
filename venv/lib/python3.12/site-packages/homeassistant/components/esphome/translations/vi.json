@@ -1,0 +1,131 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Thi\u1ebft b\u1ecb \u0111\u00e3 \u0111\u01b0\u1ee3c c\u1ea5u h\u00ecnh",
+            "already_in_progress": "Lu\u1ed3ng c\u1ea5u h\u00ecnh \u0111ang \u0111\u01b0\u1ee3c ti\u1ebfn h\u00e0nh",
+            "mdns_missing_mac": "Thi\u1ebfu \u0111\u1ecba ch\u1ec9 MAC trong thu\u1ed9c t\u00ednh MDNS.",
+            "mqtt_missing_api": "Thi\u1ebfu c\u1ed5ng API trong thu\u1ed9c t\u00ednh MQTT.",
+            "mqtt_missing_ip": "Thi\u1ebfu \u0111\u1ecba ch\u1ec9 IP trong thu\u1ed9c t\u00ednh MQTT.",
+            "mqtt_missing_mac": "Thi\u1ebfu \u0111\u1ecba ch\u1ec9 MAC trong thu\u1ed9c t\u00ednh MQTT.",
+            "mqtt_missing_payload": "Thi\u1ebfu t\u1ea3i tr\u1ecdng MQTT.",
+            "reauth_successful": "X\u00e1c th\u1ef1c l\u1ea1i th\u00e0nh c\u00f4ng",
+            "service_received": "H\u00e0nh \u0111\u1ed9ng \u0111\u00e3 nh\u1eadn"
+        },
+        "error": {
+            "connection_error": "Kh\u00f4ng th\u1ec3 k\u1ebft n\u1ed1i v\u1edbi ESP. Vui l\u00f2ng \u0111\u1ea3m b\u1ea3o t\u1eadp tin YAML c\u1ee7a b\u1ea1n ch\u1ee9a d\u00f2ng 'api:'.",
+            "invalid_auth": "X\u00e1c th\u1ef1c kh\u00f4ng h\u1ee3p l\u1ec7",
+            "invalid_psk": "Kh\u00f3a m\u00e3 h\u00f3a v\u1eadn chuy\u1ec3n kh\u00f4ng h\u1ee3p l\u1ec7. Vui l\u00f2ng \u0111\u1ea3m b\u1ea3o n\u00f3 kh\u1edbp v\u1edbi nh\u1eefng g\u00ec b\u1ea1n c\u00f3 trong c\u1ea5u h\u00ecnh c\u1ee7a m\u00ecnh",
+            "resolve_error": "Kh\u00f4ng th\u1ec3 ph\u00e2n gi\u1ea3i \u0111\u1ecba ch\u1ec9 c\u1ee7a ESP. N\u1ebfu l\u1ed7i n\u00e0y v\u1eabn ti\u1ebfp di\u1ec5n, vui l\u00f2ng \u0111\u1eb7t \u0111\u1ecba ch\u1ec9 IP t\u0129nh"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "authenticate": {
+                "data": {
+                    "password": "M\u1eadt kh\u1ea9u"
+                },
+                "description": "Vui l\u00f2ng nh\u1eadp m\u1eadt kh\u1ea9u b\u1ea1n \u0111\u00e3 \u0111\u1eb7t trong c\u1ea5u h\u00ecnh cho {name}."
+            },
+            "discovery_confirm": {
+                "description": "B\u1ea1n c\u00f3 mu\u1ed1n th\u00eam n\u00fat ESPHome `{name}` v\u00e0o Home Assistant kh\u00f4ng?",
+                "title": "\u0110\u00e3 ph\u00e1t hi\u1ec7n n\u00fat ESPHome"
+            },
+            "encryption_key": {
+                "data": {
+                    "noise_psk": "Kh\u00f3a m\u00e3 h\u00f3a"
+                },
+                "description": "Vui l\u00f2ng nh\u1eadp kh\u00f3a m\u00e3 h\u00f3a cho {name}. B\u1ea1n c\u00f3 th\u1ec3 t\u00ecm th\u1ea5y kh\u00f3a n\u00e0y trong ESPHome Dashboard ho\u1eb7c trong c\u1ea5u h\u00ecnh thi\u1ebft b\u1ecb c\u1ee7a b\u1ea1n."
+            },
+            "reauth_confirm": {
+                "data": {
+                    "noise_psk": "Kh\u00f3a m\u00e3 h\u00f3a"
+                },
+                "description": "Thi\u1ebft b\u1ecb ESPHome {name} \u0111\u00e3 b\u1eadt m\u00e3 h\u00f3a truy\u1ec1n t\u1ea3i ho\u1eb7c thay \u0111\u1ed5i kh\u00f3a m\u00e3 h\u00f3a. Vui l\u00f2ng nh\u1eadp kh\u00f3a \u0111\u00e3 c\u1eadp nh\u1eadt. B\u1ea1n c\u00f3 th\u1ec3 t\u00ecm th\u1ea5y kh\u00f3a n\u00e0y trong B\u1ea3ng \u0111i\u1ec1u khi\u1ec3n ESPHome ho\u1eb7c trong c\u1ea5u h\u00ecnh thi\u1ebft b\u1ecb c\u1ee7a b\u1ea1n."
+            },
+            "user": {
+                "data": {
+                    "host": "M\u00e1y ch\u1ee7",
+                    "port": "C\u1ed5ng"
+                },
+                "description": "Vui l\u00f2ng nh\u1eadp c\u00e0i \u0111\u1eb7t k\u1ebft n\u1ed1i c\u1ee7a n\u00fat [ESPHome]({esphome_url}) c\u1ee7a b\u1ea1n."
+            }
+        }
+    },
+    "entity": {
+        "assist_satellite": {
+            "assist_satellite": {
+                "name": "V\u1ec7 tinh Assist"
+            }
+        },
+        "binary_sensor": {
+            "assist_in_progress": {
+                "name": "Assist \u0111ang ti\u1ebfn h\u00e0nh"
+            }
+        },
+        "climate": {
+            "climate": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "quiet": "Im l\u1eb7ng"
+                        }
+                    }
+                }
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Tr\u1ee3 l\u00fd",
+                "state": {
+                    "preferred": "\u01afa th\u00edch"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Ph\u00e1t hi\u1ec7n xong l\u1eddi n\u00f3i",
+                "state": {
+                    "aggressive": "Hung d\u1eef",
+                    "default": "M\u1eb7c \u0111\u1ecbnh",
+                    "relaxed": "Th\u01b0 gi\u00e3n"
+                }
+            },
+            "wake_word": {
+                "name": "T\u1eeb \u0111\u00e1nh th\u1ee9c",
+                "state": {
+                    "okay_nabu": "Okay Nabu"
+                }
+            }
+        }
+    },
+    "issues": {
+        "api_password_deprecated": {
+            "description": "M\u1eadt kh\u1ea9u API cho ESPHome \u0111\u00e3 l\u1ed7i th\u1eddi v\u00e0 thay v\u00e0o \u0111\u00f3, ch\u00fang t\u00f4i khuy\u00ean b\u1ea1n n\u00ean s\u1eed d\u1ee5ng kh\u00f3a m\u00e3 h\u00f3a API. \n \nX\u00f3a m\u1eadt kh\u1ea9u API v\u00e0 th\u00eam kh\u00f3a m\u00e3 h\u00f3a v\u00e0o thi\u1ebft b\u1ecb ESPHome c\u1ee7a b\u1ea1n \u0111\u1ec3 gi\u1ea3i quy\u1ebft s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "M\u1eadt kh\u1ea9u API \u0111\u00e3 b\u1ecb lo\u1ea1i b\u1ecf t\u1ea1i {name}"
+        },
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "C\u1ea3m bi\u1ebfn nh\u1ecb ph\u00e2n \u0111ang ti\u1ebfn h\u00e0nh `{entity_id}` {integration_name} \u0111\u00e3 l\u1ed7i th\u1eddi. \n \nDi chuy\u1ec3n c\u1ea5u h\u00ecnh c\u1ee7a b\u1ea1n \u0111\u1ec3 s\u1eed d\u1ee5ng th\u1ef1c th\u1ec3 `{assist_satellite_domain}` t\u01b0\u01a1ng \u1ee9ng, sau \u0111\u00f3 nh\u1ea5p v\u00e0o G\u1eecI \u0111\u1ec3 t\u1eaft c\u1ea3m bi\u1ebfn nh\u1ecb ph\u00e2n \u0111ang ti\u1ebfn h\u00e0nh v\u00e0 kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y."
+                    }
+                }
+            },
+            "title": "{integration_name} trong c\u00e1c c\u1ea3m bi\u1ebfn nh\u1ecb ph\u00e2n \u0111ang ti\u1ebfn h\u00e0nh \u0111\u00e3 l\u1ed7i th\u1eddi"
+        },
+        "ble_firmware_outdated": {
+            "description": "\u0110\u1ec3 c\u1ea3i thi\u1ec7n \u0111\u1ed9 tin c\u1eady v\u00e0 hi\u1ec7u su\u1ea5t c\u1ee7a Bluetooth, ch\u00fang t\u00f4i \u0111\u1eb7c bi\u1ec7t khuy\u00ean b\u1ea1n n\u00ean c\u1eadp nh\u1eadt {name} b\u1eb1ng ESPHome {version} ho\u1eb7c m\u1edbi h\u01a1n. Khi c\u1eadp nh\u1eadt thi\u1ebft b\u1ecb t\u1eeb ESPHome tr\u01b0\u1edbc 2022.12.0, b\u1ea1n n\u00ean s\u1eed d\u1ee5ng c\u00e1p n\u1ed1i ti\u1ebfp thay v\u00ec c\u1eadp nh\u1eadt qua m\u1ea1ng \u0111\u1ec3 t\u1eadn d\u1ee5ng l\u01b0\u1ee3c \u0111\u1ed3 ph\u00e2n v\u00f9ng m\u1edbi.",
+            "title": "C\u1eadp nh\u1eadt {name} v\u1edbi ESPHome {version} ho\u1eb7c m\u1edbi h\u01a1n"
+        },
+        "service_calls_not_allowed": {
+            "description": "Thi\u1ebft b\u1ecb ESPHome \u0111\u00e3 c\u1ed1 g\u1eafng th\u1ef1c hi\u1ec7n m\u1ed9t h\u00e0nh \u0111\u1ed9ng Home Assistant, nh\u01b0ng ch\u1ee9c n\u0103ng n\u00e0y kh\u00f4ng \u0111\u01b0\u1ee3c b\u1eadt. \n \nN\u1ebfu b\u1ea1n tin t\u01b0\u1edfng thi\u1ebft b\u1ecb n\u00e0y v\u00e0 mu\u1ed1n cho ph\u00e9p n\u00f3 th\u1ef1c hi\u1ec7n h\u00e0nh \u0111\u1ed9ng Home Assistant, b\u1ea1n c\u00f3 th\u1ec3 b\u1eadt ch\u1ee9c n\u0103ng n\u00e0y trong lu\u1ed3ng t\u00f9y ch\u1ecdn.",
+            "title": "{name} kh\u00f4ng \u0111\u01b0\u1ee3c ph\u00e9p th\u1ef1c hi\u1ec7n c\u00e1c h\u00e0nh \u0111\u1ed9ng c\u1ee7a Home Assistant"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "allow_service_calls": "Cho ph\u00e9p thi\u1ebft b\u1ecb th\u1ef1c hi\u1ec7n c\u00e1c h\u00e0nh \u0111\u1ed9ng c\u1ee7a Home Assistant."
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Szir\u00e9na",
+            "state": {
+                "off": "Ki",
+                "on": "Be"
+            },
+            "state_attributes": {
+                "available_tones": {
+                    "name": "El\u00e9rhet\u0151 hangok"
+                }
+            }
+        }
+    },
+    "services": {
+        "toggle": {
+            "description": "Ki/be kapcsolja a szir\u00e9n\u00e1t.",
+            "name": "Kapcsol\u00e1s"
+        },
+        "turn_off": {
+            "description": "Kikapcsolja a szir\u00e9n\u00e1t.",
+            "name": "Kikapcsol\u00e1s"
+        },
+        "turn_on": {
+            "description": "Bekapcsolja a szir\u00e9n\u00e1t.",
+            "fields": {
+                "duration": {
+                    "description": "A hang lej\u00e1tsz\u00e1s\u00e1nak m\u00e1sodperceinek sz\u00e1ma. Az integr\u00e1ci\u00f3nak t\u00e1mogatnia kell.",
+                    "name": "Id\u0151tartam"
+                },
+                "tone": {
+                    "description": "A kibocs\u00e1tand\u00f3 hang. Ha az \"available_tones\" tulajdons\u00e1g egy lista, akkor a kulcs vagy az \u00e9rt\u00e9k haszn\u00e1lhat\u00f3. Az integr\u00e1ci\u00f3nak t\u00e1mogatnia kell.",
+                    "name": "Hang"
+                },
+                "volume_level": {
+                    "description": "A hanger\u0151. A 0 nem hallhat\u00f3, az 1 a maxim\u00e1lis hanger\u0151. Az integr\u00e1ci\u00f3nak t\u00e1mogatnia kell.",
+                    "name": "Hanger\u0151"
+                }
+            },
+            "name": "Bekapcsol\u00e1s"
+        }
+    },
+    "title": "Szir\u00e9na"
+}

@@ -1,0 +1,69 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il dispositivo \u00e8 gi\u00e0 configurato"
+        },
+        "error": {
+            "already_configured": "Il dispositivo \u00e8 gi\u00e0 configurato",
+            "cannot_connect": "Impossibile connettersi"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "name": "Il nome per questa connessione Velbus",
+                    "port": "Stringa di connessione"
+                },
+                "title": "Definire il tipo di connessione Velbus"
+            }
+        }
+    },
+    "services": {
+        "clear_cache": {
+            "description": "Cancella la velbuscache e quindi avvia una nuova scansione.",
+            "fields": {
+                "address": {
+                    "name": "Indirizzo"
+                },
+                "interface": {
+                    "description": "L'interfaccia velbus a cui inviare il comando; sar\u00e0 lo stesso valore utilizzato durante la configurazione.",
+                    "name": "Interfaccia"
+                }
+            },
+            "name": "Svuota cache"
+        },
+        "scan": {
+            "fields": {
+                "interface": {
+                    "description": "L'interfaccia velbus a cui inviare il comando; sar\u00e0 lo stesso valore utilizzato durante la configurazione.",
+                    "name": "Interfaccia"
+                }
+            },
+            "name": "Scansiona"
+        },
+        "set_memo_text": {
+            "fields": {
+                "address": {
+                    "name": "Indirizzo"
+                },
+                "interface": {
+                    "description": "L'interfaccia velbus a cui inviare il comando; sar\u00e0 lo stesso valore utilizzato durante la configurazione.",
+                    "name": "Interfaccia"
+                },
+                "memo_text": {
+                    "name": "Testo del promemoria"
+                }
+            },
+            "name": "Imposta il testo del promemoria"
+        },
+        "sync_clock": {
+            "description": "Sincronizza l'orologio dei moduli velbus con l'orologio di Home Assistant, questo \u00e8 lo stesso di 'sincronizza l'orologio' da VelbusLink.",
+            "fields": {
+                "interface": {
+                    "description": "L'interfaccia velbus a cui inviare il comando; sar\u00e0 lo stesso valore utilizzato durante la configurazione.",
+                    "name": "Interfaccia"
+                }
+            },
+            "name": "Sincronizza l'orologio"
+        }
+    }
+}

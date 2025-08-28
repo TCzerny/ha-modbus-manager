@@ -1,0 +1,120 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "O dispositivo j\u00e1 se encontra configurado"
+        },
+        "step": {
+            "user": {
+                "description": "Iniciar setup?"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "average_price": {
+                "name": "M\u00e9dia - hoje"
+            },
+            "current_hour_price": {
+                "name": "Hora atual"
+            },
+            "highest_price_time": {
+                "name": "Hora do pre\u00e7o mais elevado - hoje"
+            },
+            "hours_priced_equal_or_higher": {
+                "name": "Horas com pre\u00e7o igual ou superior ao atual - hoje"
+            },
+            "hours_priced_equal_or_lower": {
+                "name": "Horas com pre\u00e7o igual ou inferior ao atual - hoje"
+            },
+            "lowest_price_time": {
+                "name": "Hora do pre\u00e7o mais baixo - hoje"
+            },
+            "max_price": {
+                "name": "Pre\u00e7o mais alto - hoje"
+            },
+            "min_price": {
+                "name": "Pre\u00e7o mais baixo - hoje"
+            },
+            "next_hour_price": {
+                "name": "Pr\u00f3xima hora"
+            },
+            "percentage_of_max": {
+                "name": "Percentagem atual do pre\u00e7o mais elevado - hoje"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Entrada de configura\u00e7\u00e3o inv\u00e1lida fornecida. Recebido {config_entry}."
+        },
+        "invalid_date": {
+            "message": "Data inv\u00e1lida fornecida. Obtido {date}"
+        },
+        "unloaded_config_entry": {
+            "message": "Fornecida uma entrada de configura\u00e7\u00e3o inv\u00e1lida. {config_entry} n\u00e3o est\u00e1 carregado."
+        }
+    },
+    "services": {
+        "get_energy_return_prices": {
+            "description": "Solicita o retorno dos pre\u00e7os da energia da easyEnergy.",
+            "fields": {
+                "config_entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o a utilizar para este servi\u00e7o.",
+                    "name": "Entrada de configura\u00e7\u00e3o"
+                },
+                "end": {
+                    "description": "Especifica a data e a hora at\u00e9 \u00e0s quais se pretende obter os pre\u00e7os. Se omitido, por defeito \u00e9 hoje.",
+                    "name": "Fim"
+                },
+                "start": {
+                    "description": "Especifica a data e a hora a partir das quais os pre\u00e7os ser\u00e3o recuperados. Se omitido, por defeito \u00e9 hoje.",
+                    "name": "In\u00edcio"
+                }
+            },
+            "name": "Obter pre\u00e7os de retorno de energia"
+        },
+        "get_energy_usage_prices": {
+            "description": "Solicita os pre\u00e7os de utiliza\u00e7\u00e3o da energia \u00e0 easyEnergy.",
+            "fields": {
+                "config_entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o a utilizar para este servi\u00e7o.",
+                    "name": "Entrada de configura\u00e7\u00e3o"
+                },
+                "end": {
+                    "description": "Especifica a data e a hora at\u00e9 \u00e0s quais se pretende obter os pre\u00e7os. Se omitido, por defeito \u00e9 hoje.",
+                    "name": "Fim"
+                },
+                "incl_vat": {
+                    "description": "Incluir ou excluir o IVA nos pre\u00e7os; por defeito inclui.",
+                    "name": "IVA inclu\u00eddo"
+                },
+                "start": {
+                    "description": "Especifica a data e a hora a partir das quais os pre\u00e7os ser\u00e3o recuperados. Se omitido, por defeito \u00e9 hoje.",
+                    "name": "In\u00edcio"
+                }
+            },
+            "name": "Obter pre\u00e7os de utiliza\u00e7\u00e3o de energia"
+        },
+        "get_gas_prices": {
+            "description": "Solicita os pre\u00e7os do g\u00e1s \u00e0 easyEnergy.",
+            "fields": {
+                "config_entry": {
+                    "name": "Entrada de configura\u00e7\u00e3o"
+                },
+                "end": {
+                    "description": "Especifica a data e a hora at\u00e9 \u00e0s quais se pretende obter os pre\u00e7os. Se omitido, por defeito \u00e9 hoje.",
+                    "name": "Fim"
+                },
+                "incl_vat": {
+                    "description": "Incluir ou excluir o IVA nos pre\u00e7os; por defeito inclui.",
+                    "name": "IVA inclu\u00eddo"
+                },
+                "start": {
+                    "description": "Especifica a data e a hora a partir das quais os pre\u00e7os ser\u00e3o recuperados. Se omitido, por defeito \u00e9 hoje.",
+                    "name": "In\u00edcio"
+                }
+            },
+            "name": "Obter pre\u00e7os do g\u00e1s"
+        }
+    }
+}

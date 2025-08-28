@@ -1,0 +1,88 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich",
+            "unique_id_mismatch": "Du hast eine andere Bridge gew\u00e4hlt als die, mit der dieser Konfigurationseintrag erstellt wurde. Dies ist nicht zul\u00e4ssig."
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_api_key": "Ung\u00fcltiger API-Code",
+            "invalid_host": "Ung\u00fcltiger Hostname oder IP-Adresse"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "local_access_token": "Lokales Zugriffstoken"
+                },
+                "data_description": {
+                    "local_access_token": "Du findest es in der tedee-App unter \u201eBridge-Einstellungen\u201c \u2192 \u201eLokale API\u201c."
+                },
+                "description": "Tedee ben\u00f6tigt einen aktualisierten Zugriffscode, da der vorhandene ung\u00fcltig oder m\u00f6glicherweise abgelaufen ist.",
+                "title": "Aktualisierung des Zugriffscodes erforderlich"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "local_access_token": "Lokales Zugriffstoken"
+                },
+                "data_description": {
+                    "host": "Die IP-Adresse der Bridge, mit der du eine Verbindung herstellen m\u00f6chtest.",
+                    "local_access_token": "Du findest es in der tedee-App unter \u201eBridge-Einstellungen\u201c \u2192 \u201eLokale API\u201c."
+                },
+                "description": "Die Einstellungen dieser Integration aktualisieren.",
+                "title": "Tedee neu konfigurieren"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "local_access_token": "Lokales Zugriffstoken"
+                },
+                "data_description": {
+                    "host": "Die IP-Adresse der Bridge, mit der du eine Verbindung herstellen m\u00f6chtest.",
+                    "local_access_token": "Du findest es in der tedee-App unter \u201eBridge-Einstellungen\u201c \u2192 \u201eLokale API\u201c."
+                },
+                "title": "Deine tedee-Schl\u00f6sser einrichten"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pullspring_enabled": {
+                "name": "Zugfeder aktiviert"
+            },
+            "semi_locked": {
+                "name": "Halb verschlossen"
+            },
+            "uncalibrated": {
+                "name": "Schloss unkalibriert"
+            }
+        },
+        "sensor": {
+            "pullspring_duration": {
+                "name": "Dauer der Zugfeder"
+            }
+        }
+    },
+    "exceptions": {
+        "api_error": {
+            "message": "Fehler bei der Kommunikation mit der API"
+        },
+        "authentication_failed": {
+            "message": "Authentifizierung fehlgeschlagen. Lokales Zugriffstoken ist ung\u00fcltig"
+        },
+        "lock_failed": {
+            "message": "T\u00fcr konnte nicht verriegelt werden. Schloss {lock_id}"
+        },
+        "open_failed": {
+            "message": "T\u00fcr konnte nicht ge\u00f6ffnet werden. Schloss {lock_id}"
+        },
+        "unlock_failed": {
+            "message": "T\u00fcr konnte nicht entriegelt werden. Schloss {lock_id}"
+        },
+        "update_failed": {
+            "message": "Fehler beim Aktualisieren der Daten"
+        }
+    }
+}

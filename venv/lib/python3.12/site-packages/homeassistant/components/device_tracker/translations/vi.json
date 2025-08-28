@@ -1,0 +1,84 @@
+{
+    "device_automation": {
+        "condition_type": {
+            "is_home": "{entity_name} c\u00f3 nh\u00e0",
+            "is_not_home": "{entity_name} kh\u00f4ng c\u00f3 nh\u00e0"
+        },
+        "extra_fields": {
+            "zone": "V\u00f9ng"
+        },
+        "trigger_type": {
+            "enters": "{entity_name} \u0111i v\u00e0o m\u1ed9t v\u00f9ng",
+            "leaves": "{entity_name} r\u1eddi kh\u1ecfi m\u1ed9t v\u00f9ng"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "B\u1ed9 theo d\u00f5i thi\u1ebft b\u1ecb",
+            "state": {
+                "home": "\u1ede nh\u00e0",
+                "not_home": "\u0110i v\u1eafng"
+            },
+            "state_attributes": {
+                "battery": {
+                    "name": "Pin"
+                },
+                "gps_accuracy": {
+                    "name": "\u0110\u1ed9 ch\u00ednh x\u00e1c c\u1ee7a GPS"
+                },
+                "latitude": {
+                    "name": "V\u0129 \u0111\u1ed9"
+                },
+                "longitude": {
+                    "name": "Kinh \u0111\u1ed9"
+                },
+                "source_type": {
+                    "name": "Ngu\u1ed3n",
+                    "state": {
+                        "bluetooth": "Bluetooth",
+                        "bluetooth_le": "Bluetooth LE",
+                        "gps": "GPS",
+                        "router": "B\u1ed9 \u0111\u1ecbnh tuy\u1ebfn"
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "see": {
+            "description": "C\u1eadp nh\u1eadt th\u1ee7 c\u00f4ng c\u00e1c b\u1ea3n ghi c\u1ee7a tr\u00ecnh theo d\u00f5i thi\u1ebft b\u1ecb c\u0169 \u0111\u00e3 th\u1ea5y trong t\u1eadp tin known_devices.yaml.",
+            "fields": {
+                "battery": {
+                    "description": "M\u1ee9c pin c\u1ee7a thi\u1ebft b\u1ecb.",
+                    "name": "M\u1ee9c pin"
+                },
+                "dev_id": {
+                    "description": "ID c\u1ee7a thi\u1ebft b\u1ecb (t\u00ecm ID trong `known_devices.yaml`).",
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "gps": {
+                    "description": "T\u1ecda \u0111\u1ed9 GPS n\u01a1i thi\u1ebft b\u1ecb \u0111\u01b0\u1ee3c \u0111\u1ecbnh v\u1ecb, \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh theo v\u0129 \u0111\u1ed9 v\u00e0 kinh \u0111\u1ed9 (v\u00ed d\u1ee5: [51.513845, -0.100539]).",
+                    "name": "T\u1ecda \u0111\u1ed9 GPS"
+                },
+                "gps_accuracy": {
+                    "description": "\u0110\u1ed9 ch\u00ednh x\u00e1c c\u1ee7a t\u1ecda \u0111\u1ed9 GPS.",
+                    "name": "\u0110\u1ed9 ch\u00ednh x\u00e1c c\u1ee7a GPS"
+                },
+                "host_name": {
+                    "description": "T\u00ean m\u00e1y ch\u1ee7 c\u1ee7a thi\u1ebft b\u1ecb.",
+                    "name": "T\u00ean m\u00e1y ch\u1ee7"
+                },
+                "location_name": {
+                    "description": "T\u00ean c\u1ee7a v\u1ecb tr\u00ed thi\u1ebft b\u1ecb \u0111\u01b0\u1ee3c \u0111\u1eb7t. C\u00e1c t\u00f9y ch\u1ecdn l\u00e0: `home`, `not_home` ho\u1eb7c t\u00ean c\u1ee7a v\u00f9ng.",
+                    "name": "V\u1ecb tr\u00ed"
+                },
+                "mac": {
+                    "description": "\u0110\u1ecba ch\u1ec9 MAC c\u1ee7a thi\u1ebft b\u1ecb.",
+                    "name": "\u0110\u1ecba ch\u1ec9 MAC"
+                }
+            },
+            "name": "Nh\u00ecn th\u1ea5y"
+        }
+    },
+    "title": "B\u1ed9 theo d\u00f5i thi\u1ebft b\u1ecb"
+}

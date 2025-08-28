@@ -1,0 +1,106 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Tj\u00e4nsten \u00e4r redan konfigurerad"
+        },
+        "step": {
+            "user": {
+                "description": "Tryck p\u00e5 skicka f\u00f6r initial installation. I den skapade konfigurationsposten trycker du p\u00e5 Konfigurera f\u00f6r att l\u00e4gga till sensorer f\u00f6r valda processer"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "process": {
+                "name": "Process {process}"
+            }
+        },
+        "sensor": {
+            "disk_free": {
+                "name": "Ledigt diskutrymme {mount_point}"
+            },
+            "disk_use": {
+                "name": "Anv\u00e4nt diskutrymme {mount_point}"
+            },
+            "disk_use_percent": {
+                "name": "Diskanv\u00e4ndning {mount_point}"
+            },
+            "ipv4_address": {
+                "name": "IPv4-adress {ip_address}"
+            },
+            "ipv6_address": {
+                "name": "IPv6-adress {ip_address}"
+            },
+            "last_boot": {
+                "name": "Senaste uppstart"
+            },
+            "load_15m": {
+                "name": "Belastning (15m)"
+            },
+            "load_1m": {
+                "name": "Belastning (1m)"
+            },
+            "load_5m": {
+                "name": "Belastning (5m)"
+            },
+            "memory_free": {
+                "name": "Ledigt minne"
+            },
+            "memory_use": {
+                "name": "Anv\u00e4nt minne"
+            },
+            "memory_use_percent": {
+                "name": "Minnesanv\u00e4ndning"
+            },
+            "network_in": {
+                "name": "N\u00e4tverk in {interface}"
+            },
+            "network_out": {
+                "name": "N\u00e4tverk ut {interface}"
+            },
+            "packets_in": {
+                "name": "Paket in {interface}"
+            },
+            "packets_out": {
+                "name": "Paket ut {interface}"
+            },
+            "process": {
+                "name": "Process {process}"
+            },
+            "processor_temperature": {
+                "name": "Processortemperatur"
+            },
+            "processor_use": {
+                "name": "Processoranv\u00e4ndning"
+            },
+            "swap_free": {
+                "name": "Swap ledigt"
+            },
+            "swap_use": {
+                "name": "Swap anv\u00e4nds"
+            },
+            "swap_use_percent": {
+                "name": "Swap anv\u00e4nds (procent)"
+            },
+            "throughput_network_in": {
+                "name": "N\u00e4tverksgenomstr\u00f6mning in {interface}"
+            },
+            "throughput_network_out": {
+                "name": "N\u00e4tverksgenomstr\u00f6mning ut {interface}"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "process": "Processer att l\u00e4gga till som sensor(er)"
+                },
+                "data_description": {
+                    "process": "V\u00e4lj en p\u00e5g\u00e5ende process fr\u00e5n listan eller l\u00e4gg till ett eget v\u00e4rde. Flera val/egna v\u00e4rden st\u00f6ds"
+                },
+                "description": "Konfigurera en \u00f6vervakningssensor f\u00f6r en p\u00e5g\u00e5ende process"
+            }
+        }
+    }
+}

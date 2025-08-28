@@ -1,0 +1,198 @@
+{
+    "config": {
+        "abort": {
+            "no_devices_found": "Nenhum dispositivo encontrado na rede",
+            "not_sonos_device": "O dispositivo descoberto n\u00e3o \u00e9 um dispositivo Sonos",
+            "single_instance_allowed": "J\u00e1 configurado. S\u00f3 pode existir uma configura\u00e7\u00e3o."
+        },
+        "step": {
+            "confirm": {
+                "description": "Deseja configurar o Sonos?"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "microphone": {
+                "name": "Microfone"
+            }
+        },
+        "number": {
+            "audio_delay": {
+                "name": "Atraso de \u00e1udio"
+            },
+            "balance": {
+                "name": "Equil\u00edbrio"
+            },
+            "bass": {
+                "name": "Baixo"
+            },
+            "music_surround_level": {
+                "name": "N\u00edvel de surround da m\u00fasica"
+            },
+            "sub_crossover": {
+                "name": "Frequ\u00eancia de sub-crossover"
+            },
+            "sub_gain": {
+                "name": "Ganho sub"
+            },
+            "surround_level": {
+                "name": "N\u00edvel surround"
+            },
+            "treble": {
+                "name": "Agudos"
+            }
+        },
+        "sensor": {
+            "audio_input_format": {
+                "name": "Formato de entrada de \u00e1udio"
+            }
+        },
+        "switch": {
+            "buttons_enabled": {
+                "name": "Controlos t\u00e1cteis"
+            },
+            "cross_fade": {
+                "name": "Atenua\u00e7\u00e3o cruzada"
+            },
+            "dialog_level": {
+                "name": "Melhoria da fala"
+            },
+            "loudness": {
+                "name": "Intensidade sonora"
+            },
+            "night_mode": {
+                "name": "Som noturno"
+            },
+            "status_light": {
+                "name": "Luz de estado"
+            },
+            "sub_enabled": {
+                "name": "Subwoofer ativado"
+            },
+            "surround_enabled": {
+                "name": "Surround ativado"
+            },
+            "surround_mode": {
+                "name": "M\u00fasica surround no volume m\u00e1ximo"
+            }
+        }
+    },
+    "exceptions": {
+        "announce_media_error": {
+            "message": "An\u00fancio do clip {media_id} falhou {response}"
+        },
+        "invalid_content_type": {
+            "message": "A Sonos n\u00e3o suporta o tipo de conte\u00fado multim\u00e9dia: {media_type}"
+        },
+        "invalid_favorite": {
+            "message": "N\u00e3o foi poss\u00edvel encontrar um favorito do Sonos: {name}"
+        },
+        "invalid_media": {
+            "message": "N\u00e3o foi poss\u00edvel encontrar o suporte na biblioteca: {media_id}"
+        },
+        "invalid_sonos_playlist": {
+            "message": "N\u00e3o foi poss\u00edvel encontrar a playlist Sonos: {name}"
+        }
+    },
+    "issues": {
+        "subscriptions_failed": {
+            "description": "Se voltar a utilizar a sondagem, a funcionalidade pode ser limitada.\n\nO dispositivo Sonos em {device_ip} n\u00e3o consegue contactar o Home Assistant em {listener_address}.\n\nConsulte a nossa [documenta\u00e7\u00e3o]({sub_fail_url}) para obter mais informa\u00e7\u00f5es sobre como resolver este problema.",
+            "title": "Erro de rede: as subscri\u00e7\u00f5es falharam"
+        }
+    },
+    "services": {
+        "clear_sleep_timer": {
+            "description": "Limpa um temporizador Sonos.",
+            "name": "Limpar temporizador"
+        },
+        "get_queue": {
+            "description": "Retorna o conte\u00fado da fila.",
+            "name": "Obter fila"
+        },
+        "play_queue": {
+            "description": "Come\u00e7a a reproduzir a fila a partir do primeiro item.",
+            "fields": {
+                "queue_position": {
+                    "description": "Posi\u00e7\u00e3o da m\u00fasica na fila a partir da qual deve come\u00e7ar a tocar.",
+                    "name": "Posi\u00e7\u00e3o na fila"
+                }
+            },
+            "name": "Reproduzir fila"
+        },
+        "remove_from_queue": {
+            "description": "Remove um item da fila.",
+            "fields": {
+                "queue_position": {
+                    "description": "Posi\u00e7\u00e3o na fila de espera para remo\u00e7\u00e3o.",
+                    "name": "Posi\u00e7\u00e3o na fila"
+                }
+            },
+            "name": "Remover da fila"
+        },
+        "restore": {
+            "description": "Restaura um instant\u00e2neo do leitor multim\u00e9dia.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome da entidade que ser\u00e1 restaurada.",
+                    "name": "Entidade"
+                },
+                "with_group": {
+                    "description": "Verdadeiro ou falso. Tamb\u00e9m restaura o layout do grupo.",
+                    "name": "Com o grupo"
+                }
+            },
+            "name": "Restaurar"
+        },
+        "set_sleep_timer": {
+            "description": "Define um temporizador Sonos.",
+            "fields": {
+                "sleep_time": {
+                    "description": "N\u00famero de segundos para definir o temporizador.",
+                    "name": "Hora de dormir"
+                }
+            },
+            "name": "Definir temporizador"
+        },
+        "snapshot": {
+            "description": "Tira um instant\u00e2neo do leitor multim\u00e9dia.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome da entidade que ser\u00e1 objeto do instant\u00e2neo.",
+                    "name": "Entidade"
+                },
+                "with_group": {
+                    "description": "Verdadeiro ou falso. Tamb\u00e9m instant\u00e2neo do layout do grupo.",
+                    "name": "Com o grupo"
+                }
+            },
+            "name": "Snapshot"
+        },
+        "update_alarm": {
+            "description": "Atualiza um alarme com novas defini\u00e7\u00f5es de hora e volume.",
+            "fields": {
+                "alarm_id": {
+                    "description": "ID do alarme a atualizar.",
+                    "name": "ID do alarme"
+                },
+                "enabled": {
+                    "description": "Ativar ou desativar o alarme.",
+                    "name": "Alarme ativado"
+                },
+                "include_linked_zones": {
+                    "description": "Ativar ou desativar a inclus\u00e3o de salas agrupadas.",
+                    "name": "Incluir zonas ligadas"
+                },
+                "time": {
+                    "description": "Definir a hora do alarme.",
+                    "name": "Hora"
+                },
+                "volume": {
+                    "description": "Definir o n\u00edvel de volume do alarme.",
+                    "name": "Volume"
+                }
+            },
+            "name": "Atualizar o alarme"
+        }
+    }
+}

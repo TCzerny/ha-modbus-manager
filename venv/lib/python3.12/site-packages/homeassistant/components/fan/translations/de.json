@@ -1,0 +1,153 @@
+{
+    "device_automation": {
+        "action_type": {
+            "toggle": "Schalte {entity_name} um",
+            "turn_off": "Schalte {entity_name} aus",
+            "turn_on": "Schalte {entity_name} ein"
+        },
+        "condition_type": {
+            "is_off": "Wenn {entity_name} ausgeschaltet ist",
+            "is_on": "Wenn {entity_name} eingeschaltet ist"
+        },
+        "trigger_type": {
+            "changed_states": "Sobald {entity_name} ein- oder ausgeschaltet wird",
+            "turned_off": "Sobald {entity_name} ausgeschaltet wird",
+            "turned_on": "Sobald {entity_name} eingeschaltet wird"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Ventilator",
+            "state": {
+                "off": "Aus",
+                "on": "Ein"
+            },
+            "state_attributes": {
+                "direction": {
+                    "name": "Richtung",
+                    "state": {
+                        "forward": "Vorw\u00e4rts",
+                        "reverse": "R\u00fcckw\u00e4rts"
+                    }
+                },
+                "oscillating": {
+                    "name": "Oszillierend",
+                    "state": {
+                        "false": "Nein",
+                        "true": "Ja"
+                    }
+                },
+                "percentage": {
+                    "name": "Geschwindigkeit"
+                },
+                "percentage_step": {
+                    "name": "Geschwindigkeitsstufe"
+                },
+                "preset_mode": {
+                    "name": "Voreinstellung"
+                },
+                "preset_modes": {
+                    "name": "Verf\u00fcgbare Voreinstellungen"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "not_valid_preset_mode": {
+            "message": "Die Voreinstellung {preset_mode} ist ung\u00fcltig. G\u00fcltige Voreinstellungen sind: {preset_modes}."
+        }
+    },
+    "selector": {
+        "direction": {
+            "options": {
+                "forward": "Vorw\u00e4rts",
+                "reverse": "R\u00fcckw\u00e4rts"
+            }
+        }
+    },
+    "services": {
+        "decrease_speed": {
+            "description": "Verringert die Geschwindigkeit eines Ventilators.",
+            "fields": {
+                "percentage_step": {
+                    "description": "Prozentstufe, um die die Geschwindigkeit verringert werden soll.",
+                    "name": "Verringerung"
+                }
+            },
+            "name": "Geschwindigkeit verringern"
+        },
+        "increase_speed": {
+            "description": "Erh\u00f6ht die Geschwindigkeit eines Ventilators.",
+            "fields": {
+                "percentage_step": {
+                    "description": "Prozentstufe, um die die Geschwindigkeit erh\u00f6ht werden soll.",
+                    "name": "Erh\u00f6hung"
+                }
+            },
+            "name": "Geschwindigkeit erh\u00f6hen"
+        },
+        "oscillate": {
+            "description": "Steuert die Oszillation eines Ventilators.",
+            "fields": {
+                "oscillating": {
+                    "description": "Schaltet die Oszillation ein oder aus.",
+                    "name": "Oszillierend"
+                }
+            },
+            "name": "Oszillieren"
+        },
+        "set_direction": {
+            "description": "Legt die Drehrichtung eines Ventilators fest.",
+            "fields": {
+                "direction": {
+                    "description": "Drehrichtung des Ventilators.",
+                    "name": "Richtung"
+                }
+            },
+            "name": "Richtung einstellen"
+        },
+        "set_percentage": {
+            "description": "Legt die Geschwindigkeit eines Ventilators fest.",
+            "fields": {
+                "percentage": {
+                    "description": "Geschwindigkeit des Ventilators.",
+                    "name": "Prozentsatz"
+                }
+            },
+            "name": "Geschwindigkeit einstellen"
+        },
+        "set_preset_mode": {
+            "description": "Aktiviert einen voreingestellten Ventilatormodus.",
+            "fields": {
+                "preset_mode": {
+                    "description": "Voreingestellter Ventilatormodus.",
+                    "name": "Voreinstellung"
+                }
+            },
+            "name": "Voreinstellung aktivieren"
+        },
+        "toggle": {
+            "description": "Schaltet einen Ventilator zwischen ein und aus um.",
+            "name": "Umschalten"
+        },
+        "turn_off": {
+            "description": "Schaltet einen Ventilator aus.",
+            "name": "Ausschalten"
+        },
+        "turn_on": {
+            "description": "Schaltet einen Ventilator ein.",
+            "fields": {
+                "percentage": {
+                    "description": "Geschwindigkeit des Ventilators.",
+                    "name": "Prozentsatz"
+                },
+                "preset_mode": {
+                    "description": "Voreingestellter Ventilatormodus.",
+                    "name": "Voreinstellung"
+                }
+            },
+            "name": "Einschalten"
+        }
+    },
+    "title": "Ventilator"
+}

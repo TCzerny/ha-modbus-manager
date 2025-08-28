@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Yeniden yap\u0131land\u0131rma ba\u015far\u0131l\u0131 oldu"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "no_data": "API ba\u011fland\u0131 ancak yan\u0131t bo\u015ftu"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "Alanlar",
+                    "currency": "Para Birimi"
+                },
+                "data_description": {
+                    "areas": "Nordpool pazar alanlar\u0131na g\u00f6re fiyatlar\u0131n g\u00f6r\u00fcnt\u00fclenece\u011fi alanlar.",
+                    "currency": "Fiyatlar\u0131n g\u00f6r\u00fcnt\u00fclenece\u011fi para birimini se\u00e7in, EUR temel para birimidir."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "Alanlar",
+                    "currency": "Para Birimi"
+                },
+                "data_description": {
+                    "areas": "Nordpool pazar alanlar\u0131na g\u00f6re fiyatlar\u0131n g\u00f6r\u00fcnt\u00fclenece\u011fi alanlar.",
+                    "currency": "Fiyatlar\u0131n g\u00f6r\u00fcnt\u00fclenece\u011fi para birimini se\u00e7in, EUR temel para birimidir."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} ortalama"
+            },
+            "block_end_time": {
+                "name": "{block} zamana kadar"
+            },
+            "block_max": {
+                "name": "{block} en y\u00fcksek fiyat"
+            },
+            "block_min": {
+                "name": "{block} en d\u00fc\u015f\u00fck fiyat"
+            },
+            "block_start_time": {
+                "name": "{block} zamandan itibaren"
+            },
+            "currency": {
+                "name": "Para birimi"
+            },
+            "current_price": {
+                "name": "G\u00fcncel fiyat"
+            },
+            "daily_average": {
+                "name": "G\u00fcnl\u00fck ortalama"
+            },
+            "exchange_rate": {
+                "name": "D\u00f6viz kuru"
+            },
+            "highest_price": {
+                "name": "En y\u00fcksek fiyat",
+                "state_attributes": {
+                    "end": {
+                        "name": "Biti\u015f zaman\u0131"
+                    },
+                    "start": {
+                        "name": "Ba\u015flang\u0131\u00e7 zaman\u0131"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "\u00d6nceki fiyat"
+            },
+            "lowest_price": {
+                "name": "En d\u00fc\u015f\u00fck fiyat",
+                "state_attributes": {
+                    "end": {
+                        "name": "Biti\u015f zaman\u0131"
+                    },
+                    "start": {
+                        "name": "Ba\u015flang\u0131\u00e7 zaman\u0131"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "Sonraki fiyat"
+            },
+            "updated_at": {
+                "name": "Son g\u00fcncelleme"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "\u00c7ok eski bir zamandan veri almaya \u00e7al\u0131\u015ft\u0131\u011f\u0131n\u0131zda kimlik do\u011frulama hatas\u0131 olu\u015ftu."
+        },
+        "connection_error": {
+            "message": "API'ye ba\u011flan\u0131rken bir ba\u011flant\u0131 hatas\u0131 olu\u015ftu. Daha sonra tekrar deneyin."
+        },
+        "empty_response": {
+            "message": "Nord Pool belirtilen tarih i\u00e7in piyasa fiyatlar\u0131n\u0131 yay\u0131nlamad\u0131."
+        },
+        "entry_not_found": {
+            "message": "Nord Pool entegrasyonu Home Assistant'ta yap\u0131land\u0131r\u0131lmam\u0131\u015ft\u0131r."
+        },
+        "entry_not_loaded": {
+            "message": "Nord Pool entegrasyonu \u015fu anda Home Assistant'ta y\u00fckl\u00fc de\u011fil veya devre d\u0131\u015f\u0131."
+        },
+        "initial_update_failed": {
+            "message": "\u0130lk g\u00fcncelleme ba\u015flang\u0131\u00e7ta {error} hatas\u0131yla ba\u015far\u0131s\u0131z oldu"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "Belirli bir tarihe ait fiyatlar\u0131 al\u0131n.",
+            "fields": {
+                "areas": {
+                    "description": "Fiyat almak i\u00e7in bir veya birden fazla alan. Bo\u015f b\u0131rak\u0131l\u0131rsa \u00f6nceden yap\u0131land\u0131r\u0131lm\u0131\u015f alanlar kullan\u0131lacakt\u0131r.",
+                    "name": "Alanlar"
+                },
+                "config_entry": {
+                    "description": "Yap\u0131land\u0131rma giri\u015fini se\u00e7in.",
+                    "name": "Nord Havuzu yap\u0131land\u0131rma giri\u015fini se\u00e7in"
+                },
+                "currency": {
+                    "description": "Fiyatlar\u0131 almak i\u00e7in para birimi. Bo\u015f b\u0131rak\u0131l\u0131rsa \u00f6nceden yap\u0131land\u0131r\u0131lm\u0131\u015f para birimi kullan\u0131lacakt\u0131r.",
+                    "name": "Para Birimi"
+                },
+                "date": {
+                    "description": "Sadece iki ay \u00f6nceki ve bir g\u00fcn sonraki tarihlere izin verilmektedir.",
+                    "name": "Tarih"
+                }
+            },
+            "name": "Tarih i\u00e7in fiyat al\u0131n"
+        }
+    }
+}

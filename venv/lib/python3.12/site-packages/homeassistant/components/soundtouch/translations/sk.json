@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Zariadenie u\u017e je nakonfigurovan\u00e9"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Hostite\u013e"
+                },
+                "data_description": {
+                    "host": "N\u00e1zov hostite\u013ea alebo IP adresa zariadenia Bose SoundTouch."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Chyst\u00e1te sa prida\u0165 zariadenie SoundTouch s n\u00e1zvom `{name}` do Home Assistant.",
+                "title": "Potvr\u010fte pridanie zariadenia Bose SoundTouch"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "description": "Prid\u00e1va prehr\u00e1va\u010de m\u00e9di\u00ed do z\u00f3ny viacer\u00fdch miestnost\u00ed SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "Entita prehr\u00e1va\u010da m\u00e9di\u00ed, ktor\u00e1 koordinuje z\u00f3nu viacer\u00fdch miestnost\u00ed. Z\u00e1vis\u00ed od platformy.",
+                    "name": "Leader"
+                },
+                "slaves": {
+                    "description": "Entity prehr\u00e1va\u010da m\u00e9di\u00ed, ktor\u00e9 sa maj\u00fa prida\u0165 do existuj\u00facej z\u00f3ny.",
+                    "name": "Nasledovn\u00edk"
+                }
+            },
+            "name": "Pridanie sledovacej z\u00f3ny"
+        },
+        "create_zone": {
+            "description": "Vytvor\u00ed z\u00f3nu s viacer\u00fdmi miestnos\u0165ami SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "Entita prehr\u00e1va\u010da m\u00e9di\u00ed, ktor\u00e1 bude koordinova\u0165 z\u00f3nu viacer\u00fdch miestnost\u00ed. Z\u00e1vis\u00ed od platformy.",
+                    "name": "Leader"
+                },
+                "slaves": {
+                    "description": "Entity prehr\u00e1va\u010da m\u00e9di\u00ed, ktor\u00e9 sa maj\u00fa prida\u0165 do novej z\u00f3ny.",
+                    "name": "Nasledovn\u00edk"
+                }
+            },
+            "name": "Vytvorenie z\u00f3ny"
+        },
+        "play_everywhere": {
+            "description": "Prehr\u00e1va sa na v\u0161etk\u00fdch zariadeniach Bose SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "Entita prehr\u00e1va\u010da m\u00e9di\u00ed, ktor\u00e1 bude koordinova\u0165 zoskupenie. Z\u00e1vis\u00ed od platformy. Je to skratka na vytvorenie z\u00f3ny viacer\u00fdch miestnost\u00ed so v\u0161etk\u00fdmi zariadeniami.",
+                    "name": "Leader"
+                }
+            },
+            "name": "Hra\u0165 kdeko\u013evek"
+        },
+        "remove_zone_slave": {
+            "description": "Odstr\u00e1ni prehr\u00e1va\u010de m\u00e9di\u00ed zo z\u00f3ny s viacer\u00fdmi miestnos\u0165ami SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "Entita prehr\u00e1va\u010da m\u00e9di\u00ed, ktor\u00e1 koordinuje z\u00f3nu viacer\u00fdch miestnost\u00ed. Z\u00e1vis\u00ed od platformy.",
+                    "name": "Leader"
+                },
+                "slaves": {
+                    "description": "Entity prehr\u00e1va\u010da m\u00e9di\u00ed, ktor\u00e9 sa maj\u00fa odstr\u00e1ni\u0165 z existuj\u00facej z\u00f3ny.",
+                    "name": "Nasledovn\u00edk"
+                }
+            },
+            "name": "Odstr\u00e1nenie sledova\u010da z\u00f3ny"
+        }
+    }
+}

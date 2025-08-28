@@ -4,7 +4,6 @@ from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT
-import voluptuous as vol
 
 from .const import DOMAIN
 from .template_loader import get_template_names, get_template_by_name
@@ -30,6 +29,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Templates laden
             if not self._templates:
                 self._templates = {name: get_template_by_name(name) for name in get_template_names()}
+                _LOGGER.info("Templates geladen: %s", list(self._templates.keys()))
             
             if not self._templates:
                 return self.async_abort(
@@ -56,7 +56,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required("template"): vol.In(template_names),
                 }),
                 description_placeholders={
-                    "template_count": str(len(template_names))
+                    "template_count": str(len(template_names)),
+                    "template_list": ", ".join(template_names)
                 }
             )
 
@@ -96,6 +97,18 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             # Template-Daten abrufen
             template_registers = self._templates[self._selected_template]
+            _LOGGER.info("Template %s geladen mit %d Registern", self._selected_template, len(template_registers) if template_registers else 0)
+            
+            # Template-Daten validieren
+            if not template_registers:
+                _LOGGER.error("Template %s hat keine Register", self._selected_template)
+                return self.async_abort(
+                    reason="no_registers",
+                    description_placeholders={"error": f"Template {self._selected_template} hat keine Register"}
+                )
+            
+            # Debug: Template-Struktur anzeigen
+            _LOGGER.debug("Template-Struktur: %s", template_registers[:2] if template_registers else "Keine Register")
             
             # Konfiguration validieren
             if not self._validate_config(user_input):

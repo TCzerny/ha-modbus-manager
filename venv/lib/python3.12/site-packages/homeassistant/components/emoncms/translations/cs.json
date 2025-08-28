@@ -1,0 +1,99 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Tento server je ji\u017e nastaven"
+        },
+        "error": {
+            "api_error": "V API pyemoncms do\u0161lo k chyb\u011b: {details}"
+        },
+        "step": {
+            "choose_feeds": {
+                "data": {
+                    "include_only_feed_id": "Vyberte zdroje, kter\u00e9 chcete zahrnout"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "Kl\u00ed\u010d API",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "V\u00e1\u0161 32 bitov\u00fd kl\u00ed\u010d API",
+                    "url": "Adresa URL serveru za\u010d\u00ednaj\u00edc\u00ed protokolem (http nebo https)."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "apparent_power": {
+                "name": "Zd\u00e1nliv\u00fd v\u00fdkon {emoncms_details}"
+            },
+            "concentration": {
+                "name": "Koncentrace {emoncms_details}"
+            },
+            "current": {
+                "name": "Proud {emoncms_details}"
+            },
+            "decibel": {
+                "name": "Decibely {emoncms_details}"
+            },
+            "energy": {
+                "name": "Energie {emoncms_details}"
+            },
+            "flow": {
+                "name": "Pr\u016ftok {emoncms_details}"
+            },
+            "frequency": {
+                "name": "Frekvence {emoncms_details}"
+            },
+            "percent": {
+                "name": "Procento {emoncms_details}"
+            },
+            "power": {
+                "name": "V\u00fdkon {emoncms_details}"
+            },
+            "pressure": {
+                "name": "Tlak {emoncms_details}"
+            },
+            "speed": {
+                "name": "Rychlost {emoncms_details}"
+            },
+            "temperature": {
+                "name": "Teplota {emoncms_details}"
+            },
+            "voltage": {
+                "name": "Nap\u011bt\u00ed {emoncms_details}"
+            },
+            "volume": {
+                "name": "Hlasitost {emoncms_details}"
+            }
+        }
+    },
+    "issues": {
+        "migrate_database": {
+            "description": "V\u00e1\u0161 [emoncms]({url}) nezas\u00edl\u00e1 jedine\u010dn\u00fd identifik\u00e1tor.\n\nAktualizujte alespo\u0148 na verzi 11.5.7 a migrujte svou datab\u00e1zi emoncms.\n\nDal\u0161\u00ed informace v [dokumentaci emoncms]({doc_url}).",
+            "title": "Aktualizovat verzi emoncms"
+        },
+        "missing_include_only_feed_id": {
+            "description": "Nastaven\u00ed {domain} pomoc\u00ed YAML se odeb\u00edr\u00e1. P\u0159idejte kan\u00e1ly, kter\u00e9 chcete synchronizovat, ru\u010dn\u011b pomoc\u00ed tla\u010d\u00edtka \"Nastavit\" v integraci.",
+            "title": "\u017d\u00e1dn\u00fd zdroj nen\u00ed synchronizov\u00e1n se senzorem {domain}"
+        },
+        "remove_value_template": {
+            "description": "Nastaven\u00ed {domain} pomoc\u00ed YAML se odeb\u00edr\u00e1 a parametr \"{parameter}\" nelze importovat.\n\nOdeberte \"{parameter}\" z nastaven\u00ed \"{domain}\" yaml a restartujte Home Assistanta.\n\nP\u0159\u00edpadn\u011b m\u016f\u017eete \u00fapln\u011b odebrat nastaven\u00ed \"{domain}\" z configuration.yaml, restartovat Home Assistanta a p\u0159idat integraci {domain} ru\u010dn\u011b.",
+            "title": "Integraci {domain} nelze spustit"
+        }
+    },
+    "options": {
+        "error": {
+            "api_error": "V API pyemoncms do\u0161lo k chyb\u011b: {details}"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "include_only_feed_id": "Vyberte zdroje, kter\u00e9 chcete zahrnout"
+                }
+            }
+        }
+    }
+}

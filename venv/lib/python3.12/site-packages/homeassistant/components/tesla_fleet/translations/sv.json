@@ -1,0 +1,526 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konfiguration uppdaterad f\u00f6r profil.",
+            "authorize_url_timeout": "Timeout vid generering av en auktoriserings-URL.",
+            "missing_configuration": "Komponenten har inte konfigurerats. F\u00f6lj dokumentationen.",
+            "no_url_available": "Ingen webbadress tillg\u00e4nglig. F\u00f6r information om detta fel, [kolla hj\u00e4lpavsnittet]({docs_url})",
+            "oauth_error": "Mottog ogiltiga tokendata.",
+            "oauth_failed": "Fel vid h\u00e4mtning av \u00e5tkomsttoken.",
+            "oauth_timeout": "Timeout vid h\u00e4mtning av OAuth-token.",
+            "oauth_unauthorized": "OAuth-auktoriseringsfel vid h\u00e4mtning av \u00e5tkomsttoken.",
+            "reauth_account_mismatch": "Kontot f\u00f6r omautentisering st\u00e4mmer inte \u00f6verens med det ursprungliga kontot",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "create_entry": {
+            "default": "Autentiserad med Tesla."
+        },
+        "error": {
+            "already_configured": "Konto har redan konfigurerats"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "V\u00e4lj autentiseringsmetod"
+            },
+            "reauth_confirm": {
+                "description": "Withings-integrationen beh\u00f6ver autentisera ditt konto p\u00e5 nytt",
+                "title": "Autentiseringen har upph\u00f6rt att g\u00e4lla f\u00f6r {name}"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "backup_capable": {
+                "name": "Kan s\u00e4kerhetskopieras"
+            },
+            "charge_state_battery_heater_on": {
+                "name": "Batteriv\u00e4rmare"
+            },
+            "charge_state_charger_phases": {
+                "name": "Laddaren har flera faser"
+            },
+            "charge_state_conn_charge_cable": {
+                "name": "Laddningskabel"
+            },
+            "charge_state_preconditioning_enabled": {
+                "name": "F\u00f6rkonditionering aktiverad"
+            },
+            "charge_state_scheduled_charging_pending": {
+                "name": "Schemalagd laddning v\u00e4ntar"
+            },
+            "charge_state_trip_charging": {
+                "name": "Reseladdning"
+            },
+            "climate_state_cabin_overheat_protection_actively_cooling": {
+                "name": "Skydd mot \u00f6verhettning i kup\u00e9n aktiv och kyler"
+            },
+            "climate_state_is_preconditioning": {
+                "name": "F\u00f6rkonditionering"
+            },
+            "components_grid_services_enabled": {
+                "name": "Grid-tj\u00e4nster aktiverade"
+            },
+            "grid_services_active": {
+                "name": "Eln\u00e4tstj\u00e4nster aktiva"
+            },
+            "state": {
+                "name": "Status"
+            },
+            "storm_mode_active": {
+                "name": "Stormvarning aktiv"
+            },
+            "vehicle_state_dashcam_state": {
+                "name": "Dashcam"
+            },
+            "vehicle_state_df": {
+                "name": "F\u00f6rard\u00f6rr"
+            },
+            "vehicle_state_dr": {
+                "name": "V\u00e4nster bakd\u00f6rr"
+            },
+            "vehicle_state_fd_window": {
+                "name": "Sidoruta v\u00e4nster fram"
+            },
+            "vehicle_state_fp_window": {
+                "name": "Sidoruta h\u00f6ger fram"
+            },
+            "vehicle_state_is_user_present": {
+                "name": "N\u00e4rvarande anv\u00e4ndare"
+            },
+            "vehicle_state_pf": {
+                "name": "H\u00f6ger framd\u00f6rr"
+            },
+            "vehicle_state_pr": {
+                "name": "Bakre passagerard\u00f6rr"
+            },
+            "vehicle_state_rd_window": {
+                "name": "Sidoruta v\u00e4nster bak"
+            },
+            "vehicle_state_rp_window": {
+                "name": "Sidoruta h\u00f6ger bak"
+            },
+            "vehicle_state_tpms_soft_warning_fl": {
+                "name": "D\u00e4cktrycksvarning v\u00e4nster fram"
+            },
+            "vehicle_state_tpms_soft_warning_fr": {
+                "name": "D\u00e4cktrycksvarning h\u00f6ger fram"
+            },
+            "vehicle_state_tpms_soft_warning_rl": {
+                "name": "D\u00e4cktrycksvarning v\u00e4nster bak"
+            },
+            "vehicle_state_tpms_soft_warning_rr": {
+                "name": "D\u00e4cktrycksvarning h\u00f6ger bak"
+            }
+        },
+        "button": {
+            "boombox": {
+                "name": "Spela prutt"
+            },
+            "enable_keyless_driving": {
+                "name": "Nyckell\u00f6s k\u00f6rning"
+            },
+            "flash_lights": {
+                "name": "Blinka med belysning"
+            },
+            "homelink": {
+                "name": "Homelink"
+            },
+            "honk": {
+                "name": "Tuta"
+            },
+            "wake": {
+                "name": "V\u00e4ck"
+            }
+        },
+        "climate": {
+            "climate_state_cabin_overheat_protection": {
+                "name": "Skydd mot \u00f6verhettning av kup\u00e9n"
+            },
+            "driver_temp": {
+                "name": "Klimat",
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "camp": "Campingl\u00e4ge",
+                            "dog": "Hundl\u00e4ge",
+                            "keep": "Beh\u00e5ll l\u00e4ge",
+                            "off": "Normal"
+                        }
+                    }
+                }
+            }
+        },
+        "cover": {
+            "charge_state_charge_port_door_open": {
+                "name": "Lucka till laddkontakt"
+            },
+            "vehicle_state_ft": {
+                "name": "Frunk (motorhuv)"
+            },
+            "vehicle_state_rt": {
+                "name": "Bagage"
+            },
+            "vehicle_state_sun_roof_state": {
+                "name": "Taklucka"
+            },
+            "windows": {
+                "name": "F\u00f6nster"
+            }
+        },
+        "device_tracker": {
+            "location": {
+                "name": "Plats"
+            },
+            "route": {
+                "name": "Rutt"
+            }
+        },
+        "lock": {
+            "charge_state_charge_port_latch": {
+                "name": "L\u00e5s f\u00f6r laddningskabel"
+            },
+            "vehicle_state_locked": {
+                "name": "L\u00e5s"
+            }
+        },
+        "media_player": {
+            "media": {
+                "name": "Mediaspelare"
+            }
+        },
+        "number": {
+            "backup_reserve_percent": {
+                "name": "Backup reserv"
+            },
+            "charge_state_charge_current_request": {
+                "name": "Laddstr\u00f6m"
+            },
+            "charge_state_charge_limit_soc": {
+                "name": "Gr\u00e4ns f\u00f6r laddning"
+            },
+            "off_grid_vehicle_charging_reserve_percent": {
+                "name": "Off grid reserv"
+            }
+        },
+        "select": {
+            "climate_state_seat_heater_left": {
+                "name": "S\u00e4tesv\u00e4rme v\u00e4nster fram",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "medium": "Medium",
+                    "off": "Av"
+                }
+            },
+            "climate_state_seat_heater_rear_center": {
+                "name": "Seat heater rear center",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "medium": "Medium",
+                    "off": "Av"
+                }
+            },
+            "climate_state_seat_heater_rear_left": {
+                "name": "Stolsv\u00e4rmare v\u00e4nster bak",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "medium": "Medium",
+                    "off": "Av"
+                }
+            },
+            "climate_state_seat_heater_rear_right": {
+                "name": "Stolsv\u00e4rmare h\u00f6ger bak",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "medium": "Medium",
+                    "off": "Av"
+                }
+            },
+            "climate_state_seat_heater_right": {
+                "name": "S\u00e4tesv\u00e4rmare h\u00f6ger fram",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "medium": "Medium",
+                    "off": "Av"
+                }
+            },
+            "climate_state_seat_heater_third_row_left": {
+                "name": "Stolsv\u00e4rmare tredje raden v\u00e4nster",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "medium": "Medium",
+                    "off": "Av"
+                }
+            },
+            "climate_state_seat_heater_third_row_right": {
+                "name": "Stolsv\u00e4rmare tredje raden h\u00f6ger",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "medium": "Medium",
+                    "off": "Av"
+                }
+            },
+            "climate_state_steering_wheel_heat_level": {
+                "name": "Rattv\u00e4rmare",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "off": "Av"
+                }
+            },
+            "components_customer_preferred_export_rule": {
+                "name": "Till\u00e5t export",
+                "state": {
+                    "battery_ok": "Batteri",
+                    "never": "Aldrig",
+                    "pv_only": "Endast solenergi"
+                }
+            },
+            "default_real_mode": {
+                "name": "Driftl\u00e4ge",
+                "state": {
+                    "autonomous": "Autonom",
+                    "backup": "S\u00e4kerhetskopia",
+                    "self_consumption": "Egen konsumtion"
+                }
+            }
+        },
+        "sensor": {
+            "battery_power": {
+                "name": "Batterikraft"
+            },
+            "charge_state_battery_level": {
+                "name": "Batteriniv\u00e5"
+            },
+            "charge_state_battery_range": {
+                "name": "Batterir\u00e4ckvidd"
+            },
+            "charge_state_charge_energy_added": {
+                "name": "Tillf\u00f6rd laddningsenergi"
+            },
+            "charge_state_charge_rate": {
+                "name": "Laddningshastighet"
+            },
+            "charge_state_charger_actual_current": {
+                "name": "Laddarens str\u00f6m"
+            },
+            "charge_state_charger_power": {
+                "name": "Laddarens effekt"
+            },
+            "charge_state_charger_voltage": {
+                "name": "Laddarens sp\u00e4nning"
+            },
+            "charge_state_charging_state": {
+                "name": "Laddar",
+                "state": {
+                    "charging": "Laddar",
+                    "complete": "F\u00e4rdig",
+                    "disconnected": "Fr\u00e5nkopplad",
+                    "no_power": "Ingen str\u00f6m",
+                    "starting": "Startar",
+                    "stopped": "Stoppad"
+                }
+            },
+            "charge_state_conn_charge_cable": {
+                "name": "Laddningskabel"
+            },
+            "charge_state_est_battery_range": {
+                "name": "Uppskatta batteriets r\u00e4ckvidd"
+            },
+            "charge_state_fast_charger_type": {
+                "name": "Typ av snabbladdare"
+            },
+            "charge_state_ideal_battery_range": {
+                "name": "Idealisk batterir\u00e4ckvidd"
+            },
+            "charge_state_minutes_to_full_charge": {
+                "name": "Tid till full laddning"
+            },
+            "charge_state_usable_battery_level": {
+                "name": "Anv\u00e4ndbar batteriniv\u00e5"
+            },
+            "climate_state_driver_temp_setting": {
+                "name": "Inst\u00e4llning av f\u00f6rartemperatur"
+            },
+            "climate_state_inside_temp": {
+                "name": "Innetemperatur"
+            },
+            "climate_state_outside_temp": {
+                "name": "Utetemperatur"
+            },
+            "climate_state_passenger_temp_setting": {
+                "name": "Inst\u00e4llning av passagerartemperatur"
+            },
+            "drive_state_active_route_destination": {
+                "name": "Destination"
+            },
+            "drive_state_active_route_energy_at_arrival": {
+                "name": "Laddningsstatus vid ankomst"
+            },
+            "drive_state_active_route_miles_to_arrival": {
+                "name": "Distans till ankomst"
+            },
+            "drive_state_active_route_minutes_to_arrival": {
+                "name": "Ankomsttid"
+            },
+            "drive_state_active_route_traffic_minutes_delay": {
+                "name": "F\u00f6rseningar i trafiken"
+            },
+            "drive_state_power": {
+                "name": "Effekt"
+            },
+            "drive_state_shift_state": {
+                "name": "V\u00e4xell\u00e4ge",
+                "state": {
+                    "d": "Drive",
+                    "n": "Neutral",
+                    "p": "Parkering",
+                    "r": "Back"
+                }
+            },
+            "drive_state_speed": {
+                "name": "Hastighet"
+            },
+            "energy_left": {
+                "name": "Energi kvar"
+            },
+            "generator_power": {
+                "name": "Generatorkraft"
+            },
+            "grid_power": {
+                "name": "Eln\u00e4tets effekt"
+            },
+            "grid_services_power": {
+                "name": "Eln\u00e4tstj\u00e4nster effekt"
+            },
+            "island_status": {
+                "name": "Eln\u00e4tsstatus",
+                "state": {
+                    "island_status_unknown": "Ok\u00e4nt",
+                    "off_grid": "Fr\u00e5nkopplad",
+                    "off_grid_intentional": "Avsiktligt fr\u00e5nkopplad",
+                    "off_grid_unintentional": "Oavsiktligt fr\u00e5nkopplad",
+                    "on_grid": "Ansluten"
+                }
+            },
+            "load_power": {
+                "name": "Last effekt"
+            },
+            "percentage_charged": {
+                "name": "Procent laddat"
+            },
+            "solar_power": {
+                "name": "Solenergi"
+            },
+            "total_pack_energy": {
+                "name": "Total energi i batteri"
+            },
+            "vehicle_state_odometer": {
+                "name": "M\u00e4tarst\u00e4llning"
+            },
+            "vehicle_state_tpms_pressure_fl": {
+                "name": "D\u00e4cktryck v\u00e4nster fram"
+            },
+            "vehicle_state_tpms_pressure_fr": {
+                "name": "D\u00e4cktryck h\u00f6ger fram"
+            },
+            "vehicle_state_tpms_pressure_rl": {
+                "name": "D\u00e4cktryck v\u00e4nster bak"
+            },
+            "vehicle_state_tpms_pressure_rr": {
+                "name": "D\u00e4cktryck h\u00f6ger bak"
+            },
+            "version": {
+                "name": "version"
+            },
+            "vin": {
+                "name": "Fordon"
+            },
+            "vpp_backup_reserve_percent": {
+                "name": "VPP backup reserv"
+            },
+            "wall_connector_fault_state": {
+                "name": "Felkod"
+            },
+            "wall_connector_power": {
+                "name": "Effekt"
+            },
+            "wall_connector_state": {
+                "name": "Tillst\u00e5ndskod"
+            }
+        },
+        "switch": {
+            "charge_state_user_charge_enable_request": {
+                "name": "Ladda"
+            },
+            "climate_state_auto_seat_climate_left": {
+                "name": "Automatisk s\u00e4tesklimat v\u00e4nster"
+            },
+            "climate_state_auto_seat_climate_right": {
+                "name": "Automatisk s\u00e4tesklimat h\u00f6ger"
+            },
+            "climate_state_auto_steering_wheel_heat": {
+                "name": "Automatisk rattv\u00e4rmare"
+            },
+            "climate_state_defrost_mode": {
+                "name": "Avfrostning"
+            },
+            "components_disallow_charge_from_grid_with_solar_installed": {
+                "name": "Till\u00e5t laddning fr\u00e5n eln\u00e4tet"
+            },
+            "user_settings_storm_mode_enabled": {
+                "name": "Stormvakt"
+            },
+            "vehicle_state_sentry_mode": {
+                "name": "Vaktl\u00e4ge"
+            },
+            "vehicle_state_valet_mode": {
+                "name": "L\u00e4ge f\u00f6r betj\u00e4nt"
+            }
+        }
+    },
+    "exceptions": {
+        "command_error": {
+            "message": "Kommandot returnerade ett fel: {error}"
+        },
+        "command_failed": {
+            "message": "Kommandot misslyckades: {message}"
+        },
+        "command_no_reason": {
+            "message": "Kommandot misslyckades men gav ingen f\u00f6rklaring till varf\u00f6r."
+        },
+        "command_reason": {
+            "message": "Kommandot misslyckades: {reason}"
+        },
+        "invalid_cop_temp": {
+            "message": "\u00d6verhettningsskyddet i kup\u00e9n klarar inte den temperaturen."
+        },
+        "invalid_hvac_mode": {
+            "message": "Klimatl\u00e4ge {hvac_mode} st\u00f6ds inte."
+        },
+        "missing_scope_energy_cmds": {
+            "message": "Omfattning saknas f\u00f6r energikommandon."
+        },
+        "missing_scope_vehicle_charging_cmds": {
+            "message": "Omfattning saknas f\u00f6r fordonsladdningskommandon."
+        },
+        "missing_scope_vehicle_cmds": {
+            "message": "Omfattning f\u00f6r fordonskommandon saknas."
+        },
+        "missing_temperature": {
+            "message": "Temperatur kr\u00e4vs f\u00f6r denna \u00e5tg\u00e4rd."
+        },
+        "no_cable": {
+            "message": "Laddningskabeln l\u00e5ses automatiskt n\u00e4r den \u00e4r ansluten"
+        },
+        "update_failed": {
+            "message": "{endpoint} dataf\u00f6rfr\u00e5gan misslyckades: {message}"
+        }
+    }
+}

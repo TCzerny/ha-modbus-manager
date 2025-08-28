@@ -1,0 +1,420 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "already_configured": "Eine PCHK-Verbindung mit derselben IP-Adresse/demselben Port ist bereits konfiguriert.",
+            "authentication_error": "Authentifizierung fehlgeschlagen. Falscher Benutzername oder falsches Passwort.",
+            "connection_refused": "Verbindung zu PCHK nicht m\u00f6glich. IP und Port pr\u00fcfen.",
+            "license_error": "Die maximale Anzahl an Verbindungen wurde erreicht. Ein zus\u00e4tzlicher Lizenzschl\u00fcssel ist erforderlich."
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "acknowledge": "Best\u00e4tigung von Modulen anfordern",
+                    "dim_mode": "Dimm-Modus",
+                    "ip_address": "IP-Adresse",
+                    "password": "Passwort",
+                    "port": "Port",
+                    "sk_num_tries": "Segmentkoppler-Scanversuche",
+                    "username": "Benutzername"
+                },
+                "data_description": {
+                    "acknowledge": "Wenn keine erwartete Antwort von Modulen eingeht, versuche erneut, Befehle zu senden (erh\u00f6ht den Busverkehr).",
+                    "dim_mode": "Die Anzahl der Schritte zum Dimmen der Ausg\u00e4nge aller LCN-Module."
+                },
+                "description": "Verbindung zum LCN-Host neu konfigurieren.",
+                "title": "LCN-Host neu konfigurieren"
+            },
+            "user": {
+                "data": {
+                    "acknowledge": "Best\u00e4tigung von Modulen anfordern",
+                    "dim_mode": "Dimm-Modus",
+                    "host": "Name",
+                    "ip_address": "IP-Adresse",
+                    "password": "Passwort",
+                    "port": "Port",
+                    "sk_num_tries": "Segmentkoppler-Scanversuche",
+                    "username": "Benutzername"
+                },
+                "data_description": {
+                    "acknowledge": "Wenn keine erwartete Antwort von Modulen eingeht, versuche erneut, Befehle zu senden (erh\u00f6ht den Busverkehr).",
+                    "dim_mode": "Die Anzahl der Schritte zum Dimmen der Ausg\u00e4nge aller LCN-Module."
+                },
+                "description": "Richte eine neue Verbindung zum LCN-Host ein.",
+                "title": "LCN-Host einrichten"
+            }
+        }
+    },
+    "device_automation": {
+        "extra_fields": {
+            "action": "Aktion",
+            "code": "Code",
+            "key": "Taste",
+            "level": "Level"
+        },
+        "trigger_type": {
+            "codelock": "Sobald ein Codeschloss-Code empfangen wird",
+            "fingerprint": "Sobald ein Fingerabdruckcode empfangen wird",
+            "send_keys": "Sobald 'send keys' empfangen wird",
+            "transmitter": "Sobald ein Sendercode empfangen wird",
+            "transponder": "Sobald ein Transpondercode empfangen wird"
+        }
+    },
+    "exceptions": {
+        "invalid_address": {
+            "message": "Das LCN-Ger\u00e4t f\u00fcr die angegebene Adresse wurde nicht konfiguriert."
+        },
+        "invalid_device_id": {
+            "message": "Das LCN-Ger\u00e4t f\u00fcr die angegebene Ger\u00e4te-ID wurde nicht konfiguriert."
+        },
+        "no_device_identifier": {
+            "message": "Keine Ger\u00e4tekennung angegeben. Bitte gib die Ger\u00e4te-ID an."
+        }
+    },
+    "issues": {
+        "deprecated_address_parameter": {
+            "description": "Der Parameter 'Adresse' in den LCN-Aktionsaufrufen ist veraltet. In Zukunft sollte der Parameter 'Ger\u00e4te-ID' verwendet werden.\n\nBitte passe deine Automationen oder Skripte an, um dieses Problem zu beheben.",
+            "title": "Veralteter 'address'-Parameter"
+        },
+        "deprecated_keylock_sensor": {
+            "description": "Die LCN Bin\u00e4rsensor-Entit\u00e4t `{entity}` f\u00fcr eine Tastensperre wird in Automationen oder Skripten verwendet. Eine Schalterentit\u00e4t f\u00fcr Tastensperren ist verf\u00fcgbar und sollte k\u00fcnftig verwendet werden.\n\nBitte passe deine Automationen oder Skripte an, um dieses Problem zu beheben.",
+            "title": "Veralteter LCN Schl\u00fcsselsperre-Bin\u00e4rsensor"
+        },
+        "deprecated_regulatorlock_sensor": {
+            "description": "Die LCN Bin\u00e4rsensor-Entit\u00e4t `{entity}` f\u00fcr eine Reglersperre wird in Automationen oder Skripten verwendet. Eine Schalterentit\u00e4t f\u00fcr Reglersperren ist verf\u00fcgbar und sollte k\u00fcnftig verwendet werden.\n\nBitte passe deine Automationen oder Skripte an, um dieses Problem zu beheben.",
+            "title": "Veralteter LCN Reglersperre-Bin\u00e4rsensor"
+        }
+    },
+    "services": {
+        "address_to_device_id": {
+            "description": "Konvertiert eine LCN-Adresse in eine Ger\u00e4te-ID.",
+            "fields": {
+                "host": {
+                    "description": "Hostname wie im Integrationspanel angegeben.",
+                    "name": "Hostname"
+                },
+                "id": {
+                    "description": "ID des Moduls oder der Gruppe.",
+                    "name": "Modul- oder Gruppen-ID"
+                },
+                "segment_id": {
+                    "description": "Segment-ID des Ziels.",
+                    "name": "Segment-ID"
+                },
+                "type": {
+                    "description": "Typ des Ziels.",
+                    "name": "Typ"
+                }
+            },
+            "name": "Adresse zu Ger\u00e4te-ID"
+        },
+        "dyn_text": {
+            "description": "Sendet dynamischen Text an LCN-GTxD-Displays.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "row": {
+                    "description": "Textzeile.",
+                    "name": "Zeile"
+                },
+                "text": {
+                    "description": "Zu sendender Text (bis zu 60 Zeichen, kodiert als UTF-8).",
+                    "name": "Text"
+                }
+            },
+            "name": "Dynamischer Text"
+        },
+        "led": {
+            "description": "Stellt den LED-Zustand ein.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "led": {
+                    "description": "Der LED-Anschluss des Ger\u00e4ts.",
+                    "name": "LED"
+                },
+                "state": {
+                    "description": "Der einzustellende LED-Zustand.",
+                    "name": "Zustand"
+                }
+            },
+            "name": "LED"
+        },
+        "lock_keys": {
+            "description": "Sperrt Tasten.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "state": {
+                    "description": "Tastensperrzust\u00e4nde als String (1=ein, 2=aus, T=umschalten, -=keine \u00c4nderung).",
+                    "name": "Zustand"
+                },
+                "table": {
+                    "description": "Tabelle mit Tasten zum Sperren (muss A f\u00fcr Intervall sein).",
+                    "name": "Tabelle"
+                },
+                "time": {
+                    "description": "Sperrintervall.",
+                    "name": "Zeit"
+                },
+                "time_unit": {
+                    "description": "Zeiteinheit des Sperrintervalls.",
+                    "name": "Zeiteinheit"
+                }
+            },
+            "name": "Tasten sperren"
+        },
+        "lock_regulator": {
+            "description": "Sperrt einen Reglersollwert.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "setpoint": {
+                    "description": "Sollwertname.",
+                    "name": "Sollwert"
+                },
+                "state": {
+                    "description": "Neuer Sollzustand.",
+                    "name": "Zustand"
+                }
+            },
+            "name": "Regler sperren"
+        },
+        "output_abs": {
+            "description": "Legt die absolute Helligkeit des Ausgangsports in Prozent fest.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "brightness": {
+                    "description": "Absolute Helligkeit.",
+                    "name": "Helligkeit"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "output": {
+                    "description": "Ausgangs-Port.",
+                    "name": "Ausgang"
+                },
+                "transition": {
+                    "description": "\u00dcbergangszeit.",
+                    "name": "\u00dcbergang"
+                }
+            },
+            "name": "Absolute Helligkeit ausgeben"
+        },
+        "output_rel": {
+            "description": "Legt die relative Helligkeit des Ausgangsports in Prozent fest.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "brightness": {
+                    "description": "Relative Helligkeit.",
+                    "name": "Helligkeit"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "output": {
+                    "description": "Ausgangs-Port.",
+                    "name": "Ausgang"
+                }
+            },
+            "name": "Relative Helligkeit ausgeben"
+        },
+        "output_toggle": {
+            "description": "Schaltet den Ausgabeport um.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "output": {
+                    "description": "Ausgangs-Port.",
+                    "name": "Ausgang"
+                },
+                "transition": {
+                    "description": "\u00dcbergangszeit.",
+                    "name": "\u00dcbergang"
+                }
+            },
+            "name": "Ausgabe umschalten"
+        },
+        "pck": {
+            "description": "Sendet einen beliebigen PCK-Befehl.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "pck": {
+                    "description": "PCK-Befehl (ohne Adresskopf).",
+                    "name": "PCK"
+                }
+            },
+            "name": "PCK"
+        },
+        "relays": {
+            "description": "Legt den Relaiszustand fest.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "state": {
+                    "description": "Relaiszust\u00e4nde als String (1=ein, 2=aus, t=umschalten, -=keine \u00c4nderung).",
+                    "name": "Zustand"
+                }
+            },
+            "name": "Relais"
+        },
+        "send_keys": {
+            "description": "Sendet Tasten (die programmierte Befehle ausf\u00fchren).",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "keys": {
+                    "description": "Zu sendende Tasten.",
+                    "name": "Tasten"
+                },
+                "state": {
+                    "description": "Tastenstatus beim Senden (muss zum Zur\u00fcckstellen angeklickt werden).",
+                    "name": "Zustand"
+                },
+                "time": {
+                    "description": "Sendeverz\u00f6gerung.",
+                    "name": "Zeit"
+                },
+                "time_unit": {
+                    "description": "Zeiteinheit der Sendeverz\u00f6gerung.",
+                    "name": "Zeiteinheit"
+                }
+            },
+            "name": "Tasten senden"
+        },
+        "var_abs": {
+            "description": "Legt den absoluten Wert einer Variablen oder eines Sollwerts fest.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "unit_of_measurement": {
+                    "description": "Einheit des Wertes.",
+                    "name": "Ma\u00dfeinheit"
+                },
+                "value": {
+                    "description": "Einzustellender Wert.",
+                    "name": "Wert"
+                },
+                "variable": {
+                    "description": "Variablen- oder Sollwertname.",
+                    "name": "Variable"
+                }
+            },
+            "name": "Absolute Variable setzen"
+        },
+        "var_rel": {
+            "description": "Verschiebt den Wert einer Variablen, eines Sollwerts oder eines Schwellenwerts.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "unit_of_measurement": {
+                    "description": "Einheit des Wertes.",
+                    "name": "Ma\u00dfeinheit"
+                },
+                "value": {
+                    "description": "Wert der Verschiebung.",
+                    "name": "Wert"
+                },
+                "value_reference": {
+                    "description": "Referenzwert f\u00fcr Soll- und Schwellenwert.",
+                    "name": "Referenzwert"
+                },
+                "variable": {
+                    "description": "Variablen- oder Sollwertname.",
+                    "name": "Variable"
+                }
+            },
+            "name": "Variable verschieben"
+        },
+        "var_reset": {
+            "description": "Setzt den Wert einer Variablen oder eines Sollwerts zur\u00fcck.",
+            "fields": {
+                "address": {
+                    "description": "Adresse des Moduls.",
+                    "name": "Adresse"
+                },
+                "device_id": {
+                    "description": "Die Ger\u00e4te-ID des LCN-Moduls oder der LCN-Gruppe.",
+                    "name": "Ger\u00e4t"
+                },
+                "variable": {
+                    "description": "Variablen- oder Sollwertname.",
+                    "name": "Variable"
+                }
+            },
+            "name": "Variable zur\u00fccksetzen"
+        }
+    }
+}

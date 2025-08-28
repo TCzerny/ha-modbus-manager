@@ -1,0 +1,47 @@
+{
+    "config": {
+        "abort": {
+            "invalid_webhook_url": "Home Assistant \u00e4r inte korrekt konfigurerad f\u00f6r att ta emot uppdateringar fr\u00e5n SmartThings. Webhook-adressen \u00e4r ogiltig:\n > {webhook_url} \n\n Uppdatera din konfiguration enligt [instruktionerna]( {component_url} ), starta om Home Assistant och f\u00f6rs\u00f6k igen.",
+            "no_available_locations": "Det finns inga tillg\u00e4ngliga SmartThings-platser att st\u00e4lla in i Home Assistant.",
+            "reauth_successful": "Home Assistant har framg\u00e5ngsrikt auktoriserats med SmartThings."
+        },
+        "error": {
+            "app_setup_error": "Det gick inte att installera SmartThings SmartApp. V\u00e4nligen f\u00f6rs\u00f6k igen.",
+            "token_forbidden": "Token har inte det som kr\u00e4vs inom omf\u00e5ng f\u00f6r OAuth.",
+            "token_invalid_format": "Token m\u00e5ste vara i UID/GUID-format",
+            "token_unauthorized": "Denna token \u00e4r ogiltig eller inte l\u00e4ngre auktoriserad.",
+            "webhook_error": "SmartThings kunde inte validera endpoint konfigurerad i \" base_url`. V\u00e4nligen granska kraven f\u00f6r komponenten."
+        },
+        "step": {
+            "authorize": {
+                "title": "Auktorisera Home Assistant"
+            },
+            "pat": {
+                "data": {
+                    "access_token": "\u00c5tkomstnyckel"
+                },
+                "description": "V\u00e4nligen ange en [personlig \u00e5tkomsttoken]({token_url}) f\u00f6r SmartThings som har skapats enligt [instruktionerna]({component_url}). Denna kommer att anv\u00e4ndas f\u00f6r att skapa Home Assistant-integrationen i ditt SmartThings-konto.\n\n** Observera att alla personliga \u00e5tkomsttoken som skapats efter den 30 december 2024 endast \u00e4r giltiga i 24 timmar, varefter integrationen slutar fungera. Vi arbetar p\u00e5 en l\u00f6sning.**",
+                "title": "Ange personlig \u00e5tkomsttoken"
+            },
+            "reauth_confirm": {
+                "description": "Du \u00e4r p\u00e5 v\u00e4g att auktorisera Home Assistant p\u00e5 nytt med SmartThings. Detta kr\u00e4ver att du loggar in och auktoriserar integrationen igen.",
+                "title": "\u00c5terauktorisera Home Assistant"
+            },
+            "select_location": {
+                "data": {
+                    "location_id": "Plats"
+                },
+                "description": "V\u00e4lj den SmartThings-plats du vill l\u00e4gga till i Home Assistant. Vi \u00f6ppnar sedan ett nytt f\u00f6nster och ber dig att logga in och godk\u00e4nna installationen av Home Assistant-integrationen p\u00e5 den valda platsen.",
+                "title": "V\u00e4lj plats"
+            },
+            "update_confirm": {
+                "description": "Du har n\u00e4stan framg\u00e5ngsrikt auktoriserat Home Assistant med SmartThings. V\u00e4nligen tryck p\u00e5 knappen nedan f\u00f6r att avsluta processen.",
+                "title": "Slutf\u00f6r omautentiseringen"
+            },
+            "user": {
+                "description": "SmartThings kommer st\u00e4llas in att skicka uppdateringar till Home Assistant p\u00e5:\n> {webhook_url}\n\nUppdatera detta om det inte st\u00e4mmer, starta om Home Assistant och f\u00f6rs\u00f6k igen.",
+                "title": "Ange personlig \u00e5tkomsttoken"
+            }
+        }
+    }
+}

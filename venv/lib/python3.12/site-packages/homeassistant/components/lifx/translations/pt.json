@@ -1,0 +1,258 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "no_devices_found": "Nenhum dispositivo encontrado na rede"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "flow_title": "{label} ({group})",
+        "step": {
+            "discovery_confirm": {
+                "description": "Deseja configurar {label} ({group})?"
+            },
+            "pick_device": {
+                "data": {
+                    "device": "Dispositivo"
+                }
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou o endere\u00e7o IP do seu dispositivo LIFX."
+                },
+                "description": "Se deixar o host vazio, a descoberta ser\u00e1 usada para localizar dispositivos."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clean_cycle": {
+                "name": "Ciclo de limpeza"
+            }
+        },
+        "select": {
+            "infrared_brightness": {
+                "name": "Brilho dos infravermelhos"
+            },
+            "theme": {
+                "name": "Tema"
+            }
+        },
+        "sensor": {
+            "rssi": {
+                "name": "RSSI"
+            }
+        }
+    },
+    "services": {
+        "effect_colorloop": {
+            "description": "Executa um efeito com cores em loop.",
+            "fields": {
+                "brightness": {
+                    "description": "N\u00famero que indica o brilho do ciclo de cor, em que 1 \u00e9 o brilho m\u00ednimo e 255 \u00e9 o brilho m\u00e1ximo suportado pela luz.",
+                    "name": "Valor do brilho"
+                },
+                "brightness_pct": {
+                    "description": "Percentagem que indica o brilho do loop de cor, em que 1 \u00e9 o brilho m\u00ednimo e 100 \u00e9 o brilho m\u00e1ximo suportado pela luz.",
+                    "name": "Brilho"
+                },
+                "change": {
+                    "description": "Movimento da tonalidade por per\u00edodo, em graus numa roda de cores.",
+                    "name": "Alterar"
+                },
+                "period": {
+                    "description": "Dura\u00e7\u00e3o entre mudan\u00e7as de cor.",
+                    "name": "Per\u00edodo"
+                },
+                "power_on": {
+                    "description": "As luzes desligadas s\u00e3o temporariamente ligadas durante o efeito.",
+                    "name": "Ligar"
+                },
+                "saturation_max": {
+                    "description": "Percentagem que indica a satura\u00e7\u00e3o m\u00e1xima das cores no ciclo.",
+                    "name": "Satura\u00e7\u00e3o m\u00e1xima"
+                },
+                "saturation_min": {
+                    "description": "Percentagem que indica a satura\u00e7\u00e3o m\u00ednima das cores no ciclo.",
+                    "name": "Satura\u00e7\u00e3o m\u00ednima"
+                },
+                "spread": {
+                    "description": "Diferen\u00e7a m\u00e1xima de tonalidade entre as luzes participantes, em graus numa roda de cores.",
+                    "name": "Dispers\u00e3o"
+                }
+            },
+            "name": "Efeito de loop de cores"
+        },
+        "effect_flame": {
+            "description": "Inicia o efeito de chama baseado em firmware nos mosaicos ou velas LIFX.",
+            "fields": {
+                "power_on": {
+                    "description": "As luzes desligadas ser\u00e3o ligadas antes de iniciar o efeito.",
+                    "name": "Ligar"
+                },
+                "speed": {
+                    "description": "A rapidez com que as chamas se v\u00e3o mover.",
+                    "name": "Velocidade"
+                }
+            },
+            "name": "Efeito de chama"
+        },
+        "effect_morph": {
+            "description": "Inicia o efeito Morph baseado em firmware no LIFX Tiles on Candle.",
+            "fields": {
+                "palette": {
+                    "name": "Paleta"
+                },
+                "power_on": {
+                    "description": "As luzes desligadas ser\u00e3o ligadas antes de iniciar o efeito.",
+                    "name": "Ligar"
+                },
+                "speed": {
+                    "description": "A velocidade a que as cores se v\u00e3o mover.",
+                    "name": "Velocidade"
+                },
+                "theme": {
+                    "description": "Tema de cor predefinido a utilizar para o efeito. Substitu\u00eddo pelo atributo palette.",
+                    "name": "Tema"
+                }
+            },
+            "name": "Efeito morph"
+        },
+        "effect_move": {
+            "description": "Inicia o efeito Move baseado em firmware num LIFX Z, Lightstrip ou Beam.",
+            "fields": {
+                "direction": {
+                    "description": "Dire\u00e7\u00e3o em que o efeito se deslocar\u00e1 atrav\u00e9s do dispositivo.",
+                    "name": "Dire\u00e7\u00e3o"
+                },
+                "power_on": {
+                    "description": "As luzes desligadas ser\u00e3o ligadas antes de iniciar o efeito.",
+                    "name": "Ligar"
+                },
+                "speed": {
+                    "description": "Quanto tempo, em segundos, demora o efeito a deslocar-se ao longo do comprimento da luz.",
+                    "name": "Velocidade"
+                },
+                "theme": {
+                    "description": "(Opcional) definir um dos temas predefinidos no dispositivo antes de iniciar o efeito.",
+                    "name": "Tema"
+                }
+            },
+            "name": "Efeito de desloca\u00e7\u00e3o"
+        },
+        "effect_pulse": {
+            "description": "Executa um efeito de flash mudando para uma cor e vice-versa.",
+            "fields": {
+                "brightness": {
+                    "description": "N\u00famero que indica o brilho da cor tempor\u00e1ria, em que 1 \u00e9 o brilho m\u00ednimo e 255 \u00e9 o brilho m\u00e1ximo suportado pela luz.",
+                    "name": "Valor do brilho"
+                },
+                "brightness_pct": {
+                    "description": "Percentagem que indica o brilho da cor tempor\u00e1ria, em que 1 \u00e9 o brilho m\u00ednimo e 100 \u00e9 o brilho m\u00e1ximo suportado pela luz.",
+                    "name": "Brilho"
+                },
+                "color_name": {
+                    "description": "Um nome intelig\u00edvel para o nome da cor.",
+                    "name": "Nome da cor"
+                },
+                "cycles": {
+                    "description": "N\u00famero de vezes que o efeito deve ser executado.",
+                    "name": "Ciclos"
+                },
+                "mode": {
+                    "description": "Decide como as cores s\u00e3o alteradas.",
+                    "name": "Modo"
+                },
+                "period": {
+                    "description": "Dura\u00e7\u00e3o do efeito.",
+                    "name": "Per\u00edodo"
+                },
+                "power_on": {
+                    "description": "As luzes desligadas s\u00e3o temporariamente ligadas durante o efeito.",
+                    "name": "Ligar"
+                },
+                "rgb_color": {
+                    "description": "A cor tempor\u00e1ria em formato RGB.",
+                    "name": "Cor RGB"
+                }
+            },
+            "name": "Efeito de impulso"
+        },
+        "effect_sky": {
+            "description": "Inicia o efeito C\u00e9u baseado em firmware no LIFX Teto.",
+            "fields": {
+                "cloud_saturation_max": {
+                    "description": "Satura\u00e7\u00e3o m\u00e1xima das nuvens.",
+                    "name": "Satura\u00e7\u00e3o m\u00e1xima das nuvens"
+                },
+                "cloud_saturation_min": {
+                    "description": "Satura\u00e7\u00e3o m\u00ednima das nuvens.",
+                    "name": "Satura\u00e7\u00e3o das nuvens M\u00ednimo"
+                },
+                "palette": {
+                    "description": "Lista de 1 a 6 cores como matiz (0-360), satura\u00e7\u00e3o (0-100), brilho (0-100) e kelvin (1500-9000) a utilizar para este efeito.",
+                    "name": "Paleta"
+                },
+                "power_on": {
+                    "description": "As luzes desligadas ser\u00e3o ligadas antes de iniciar o efeito.",
+                    "name": "Ligar"
+                },
+                "sky_type": {
+                    "description": "O estilo de c\u00e9u que ser\u00e1 animado pelo efeito.",
+                    "name": "Tipo de c\u00e9u"
+                },
+                "speed": {
+                    "description": "Quanto tempo os tipos de c\u00e9u Nascer do Sol e P\u00f4r do Sol levar\u00e3o para serem conclu\u00eddos. Para o tipo de c\u00e9u Nuvem, \u00e9 a velocidade das nuvens atrav\u00e9s do dispositivo.",
+                    "name": "Velocidade"
+                }
+            },
+            "name": "Efeito c\u00e9u"
+        },
+        "effect_stop": {
+            "description": "Interrompe um efeito em curso.",
+            "name": "Efeito de paragem"
+        },
+        "set_hev_cycle_state": {
+            "description": "Controla os LEDs HEV numa l\u00e2mpada LIFX Clean.",
+            "fields": {
+                "duration": {
+                    "description": "Durante quanto tempo os LEDs do HEV permanecer\u00e3o acesos. Utiliza a dura\u00e7\u00e3o predefinida configurada se n\u00e3o for especificada.",
+                    "name": "Dura\u00e7\u00e3o"
+                },
+                "power": {
+                    "description": "Iniciar ou parar um ciclo de limpeza.",
+                    "name": "Ligar"
+                }
+            },
+            "name": "Definir o estado do ciclo HEV"
+        },
+        "set_state": {
+            "description": "Define uma cor/brilho e, eventualmente, liga/desliga a luz.",
+            "fields": {
+                "infrared": {
+                    "description": "N\u00edvel autom\u00e1tico de infravermelhos quando o brilho da luz \u00e9 baixo.",
+                    "name": "Infravermelho"
+                },
+                "power": {
+                    "description": "Ligar ou desligar a luz. Deixar em branco para manter a energia como est\u00e1.",
+                    "name": "Pot\u00eancia"
+                },
+                "transition": {
+                    "description": "Dura\u00e7\u00e3o necess\u00e1ria para chegar ao estado final.",
+                    "name": "Transi\u00e7\u00e3o"
+                },
+                "zones": {
+                    "description": "Lista de n\u00fameros de zona a afetar (8 por LIFX Z, come\u00e7a em 0).",
+                    "name": "Zonas"
+                }
+            },
+            "name": "Definir Estado"
+        }
+    }
+}

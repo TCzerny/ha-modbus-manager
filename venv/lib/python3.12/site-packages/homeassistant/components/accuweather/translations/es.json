@@ -1,0 +1,231 @@
+{
+    "config": {
+        "create_entry": {
+            "default": "Algunos sensores no est\u00e1n habilitados de forma predeterminada. Puedes habilitarlos en el registro de la entidad despu\u00e9s de la configuraci\u00f3n de la integraci\u00f3n."
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_api_key": "Clave API no v\u00e1lida",
+            "requests_exceeded": "Se ha excedido el n\u00famero permitido de solicitudes a la API de Accuweather. Tienes que esperar o cambiar la Clave API."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "Clave API",
+                    "latitude": "Latitud",
+                    "longitude": "Longitud",
+                    "name": "Nombre"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "air_quality": {
+                "name": "Calidad del aire d\u00eda {forecast_day}",
+                "state": {
+                    "good": "Bueno",
+                    "hazardous": "Peligroso",
+                    "high": "Alto",
+                    "low": "Bajo",
+                    "moderate": "Moderado",
+                    "unhealthy": "Poco saludable"
+                }
+            },
+            "apparent_temperature": {
+                "name": "Temperatura aparente"
+            },
+            "cloud_ceiling": {
+                "name": "Techo de nubes"
+            },
+            "cloud_cover": {
+                "name": "Nubosidad"
+            },
+            "cloud_cover_day": {
+                "name": "Nubosidad d\u00eda {forecast_day}"
+            },
+            "cloud_cover_night": {
+                "name": "Nubosidad noche {forecast_day}"
+            },
+            "condition_day": {
+                "name": "Condici\u00f3n d\u00eda {forecast_day}"
+            },
+            "condition_night": {
+                "name": "Condici\u00f3n noche {forecast_day}"
+            },
+            "dew_point": {
+                "name": "Punto de roc\u00edo"
+            },
+            "grass_pollen": {
+                "name": "Polen de gram\u00edneas d\u00eda {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Nivel",
+                        "state": {
+                            "good": "Bueno",
+                            "hazardous": "Peligroso",
+                            "high": "Alto",
+                            "low": "Bajo",
+                            "moderate": "Moderado",
+                            "unhealthy": "Poco saludable"
+                        }
+                    }
+                }
+            },
+            "hours_of_sun": {
+                "name": "Horas de sol d\u00eda {forecast_day}"
+            },
+            "mold_pollen": {
+                "name": "Polen de moho d\u00eda {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Nivel",
+                        "state": {
+                            "good": "Bueno",
+                            "hazardous": "Peligroso",
+                            "high": "Alto",
+                            "low": "Bajo",
+                            "moderate": "Moderado",
+                            "unhealthy": "Poco saludable"
+                        }
+                    }
+                }
+            },
+            "precipitation": {
+                "name": "Precipitaci\u00f3n"
+            },
+            "pressure_tendency": {
+                "name": "Tendencia de presi\u00f3n",
+                "state": {
+                    "falling": "Descendente",
+                    "rising": "Creciente",
+                    "steady": "Estable"
+                }
+            },
+            "ragweed_pollen": {
+                "name": "Polen de ambros\u00eda d\u00eda {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Nivel",
+                        "state": {
+                            "good": "Bueno",
+                            "hazardous": "Peligroso",
+                            "high": "Alto",
+                            "low": "Bajo",
+                            "moderate": "Moderado",
+                            "unhealthy": "Poco saludable"
+                        }
+                    }
+                }
+            },
+            "realfeel_temperature": {
+                "name": "Sensaci\u00f3n real de temperatura"
+            },
+            "realfeel_temperature_max": {
+                "name": "M\u00e1xima sensaci\u00f3n real de temperatura d\u00eda {forecast_day}"
+            },
+            "realfeel_temperature_min": {
+                "name": "M\u00ednima sensaci\u00f3n real de temperatura d\u00eda {forecast_day}"
+            },
+            "realfeel_temperature_shade": {
+                "name": "Sensaci\u00f3n real de temperatura en la sombra"
+            },
+            "realfeel_temperature_shade_max": {
+                "name": "M\u00e1xima sensaci\u00f3n real de temperatura en la sombra d\u00eda {forecast_day}"
+            },
+            "realfeel_temperature_shade_min": {
+                "name": "M\u00ednima sensaci\u00f3n real de temperatura en la sombra d\u00eda {forecast_day}"
+            },
+            "solar_irradiance_day": {
+                "name": "Irradiaci\u00f3n solar d\u00eda {forecast_day}"
+            },
+            "solar_irradiance_night": {
+                "name": "Irradiaci\u00f3n solar noche {forecast_day}"
+            },
+            "thunderstorm_probability_day": {
+                "name": "Probabilidad de tormenta d\u00eda {forecast_day}"
+            },
+            "thunderstorm_probability_night": {
+                "name": "Probabilidad de tormenta noche {forecast_day}"
+            },
+            "tree_pollen": {
+                "name": "Polen de los \u00e1rboles d\u00eda {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Nivel",
+                        "state": {
+                            "good": "Bueno",
+                            "hazardous": "Peligroso",
+                            "high": "Alto",
+                            "low": "Bajo",
+                            "moderate": "Moderado",
+                            "unhealthy": "Poco saludable"
+                        }
+                    }
+                }
+            },
+            "uv_index": {
+                "name": "\u00cdndice UV",
+                "state_attributes": {
+                    "level": {
+                        "name": "Nivel",
+                        "state": {
+                            "good": "Bueno",
+                            "hazardous": "Peligroso",
+                            "high": "Alto",
+                            "low": "Bajo",
+                            "moderate": "Moderado",
+                            "unhealthy": "Poco saludable"
+                        }
+                    }
+                }
+            },
+            "uv_index_forecast": {
+                "name": "\u00cdndice UV d\u00eda {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "Nivel",
+                        "state": {
+                            "good": "Bueno",
+                            "hazardous": "Peligroso",
+                            "high": "Alto",
+                            "low": "Bajo",
+                            "moderate": "Moderado",
+                            "unhealthy": "Poco saludable"
+                        }
+                    }
+                }
+            },
+            "wet_bulb_temperature": {
+                "name": "Temperatura del bulbo h\u00famedo"
+            },
+            "wind_chill_temperature": {
+                "name": "Temperatura de sensaci\u00f3n t\u00e9rmica"
+            },
+            "wind_gust_speed": {
+                "name": "Velocidad de r\u00e1fagas de viento"
+            },
+            "wind_gust_speed_day": {
+                "name": "Velocidad de las r\u00e1fagas de viento d\u00eda {forecast_day}"
+            },
+            "wind_gust_speed_night": {
+                "name": "Velocidad de las r\u00e1fagas de viento noche {forecast_day}"
+            },
+            "wind_speed": {
+                "name": "Velocidad del viento"
+            },
+            "wind_speed_day": {
+                "name": "Velocidad del viento d\u00eda {forecast_day}"
+            },
+            "wind_speed_night": {
+                "name": "Velocidad del viento noche {forecast_day}"
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "can_reach_server": "Se puede llegar al servidor AccuWeather",
+            "remaining_requests": "Solicitudes permitidas restantes"
+        }
+    }
+}

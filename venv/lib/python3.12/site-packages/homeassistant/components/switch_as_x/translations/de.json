@@ -1,0 +1,42 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "entity_id": "Schalter",
+                    "invert": "Zustand umkehren",
+                    "target_domain": "Neuer Typ"
+                },
+                "data_description": {
+                    "invert": "Zustand umkehren, nur f\u00fcr Abdeckung, Schloss und Ventil unterst\u00fctzt."
+                },
+                "description": "W\u00e4hle einen Schalter, der in Home Assistant als Leuchte, Abdeckung oder sonstiges angezeigt werden soll. Der urspr\u00fcngliche Schalter wird versteckt."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "invert": "Zustand umkehren"
+                },
+                "data_description": {
+                    "invert": "Zustand umkehren, nur f\u00fcr Abdeckung, Schloss und Ventil unterst\u00fctzt."
+                }
+            }
+        }
+    },
+    "selector": {
+        "target_domain": {
+            "options": {
+                "cover": "Abdeckung",
+                "fan": "Ventilator",
+                "light": "Leuchte",
+                "lock": "Schloss",
+                "siren": "Sirene",
+                "valve": "Ventil"
+            }
+        }
+    },
+    "title": "Ger\u00e4tetyp-Anpassung f\u00fcr Schalter"
+}

@@ -1,0 +1,141 @@
+{
+    "device_automation": {
+        "action_type": {
+            "toggle": "Nyala/matikan {entity_name}",
+            "turn_off": "Matikan {entity_name}",
+            "turn_on": "Nyalakan {entity_name}"
+        },
+        "condition_type": {
+            "is_off": "{entity_name} mati",
+            "is_on": "{entity_name} nyala"
+        },
+        "trigger_type": {
+            "changed_states": "{entity_name} dinyalakan atau dimatikan",
+            "turned_off": "{entity_name} dimatikan",
+            "turned_on": "{entity_name} dinyalakan"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Kipas Angin",
+            "state": {
+                "off": "Mati",
+                "on": "Nyala"
+            },
+            "state_attributes": {
+                "direction": {
+                    "name": "Arah",
+                    "state": {
+                        "forward": "Maju",
+                        "reverse": "Berlawanan"
+                    }
+                },
+                "oscillating": {
+                    "name": "Berosilasi",
+                    "state": {
+                        "false": "Tidak",
+                        "true": "Ya"
+                    }
+                },
+                "percentage": {
+                    "name": "Kecepatan"
+                },
+                "percentage_step": {
+                    "name": "Langkah kecepatan"
+                },
+                "preset_mode": {
+                    "name": "Mode prasetel"
+                },
+                "preset_modes": {
+                    "name": "Mode prasetel tersedia"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "not_valid_preset_mode": {
+            "message": "Mode prasetel {preset_mode} tidak valid, mode prasetel yang valid adalah: {preset_modes}."
+        }
+    },
+    "selector": {
+        "direction": {
+            "options": {
+                "forward": "Maju",
+                "reverse": "Mundur"
+            }
+        }
+    },
+    "services": {
+        "decrease_speed": {
+            "fields": {
+                "percentage_step": {
+                    "name": "Kurangi"
+                }
+            },
+            "name": "Mengurangi kecepatan"
+        },
+        "increase_speed": {
+            "fields": {
+                "percentage_step": {
+                    "name": "Naikkan"
+                }
+            },
+            "name": "Meningkatkan kecepatan"
+        },
+        "oscillate": {
+            "fields": {
+                "oscillating": {
+                    "name": "Berosilasi"
+                }
+            },
+            "name": "Berayun"
+        },
+        "set_direction": {
+            "fields": {
+                "direction": {
+                    "name": "Arah"
+                }
+            },
+            "name": "Menetapkan arah"
+        },
+        "set_percentage": {
+            "fields": {
+                "percentage": {
+                    "description": "Kecepatan kipas.",
+                    "name": "Persentase"
+                }
+            },
+            "name": "Tetapkan kecepatan"
+        },
+        "set_preset_mode": {
+            "fields": {
+                "preset_mode": {
+                    "name": "Mode prasetel"
+                }
+            },
+            "name": "Menyetel mode prasetel"
+        },
+        "toggle": {
+            "name": "Alihkan"
+        },
+        "turn_off": {
+            "description": "Mematikan kipas angin.",
+            "name": "Matikan"
+        },
+        "turn_on": {
+            "description": "Menyalakan kipas angin.",
+            "fields": {
+                "percentage": {
+                    "description": "Kecepatan kipas.",
+                    "name": "Persentase"
+                },
+                "preset_mode": {
+                    "description": "Mode prasetel",
+                    "name": "Mode prasetel"
+                }
+            },
+            "name": "Nyalakan"
+        }
+    },
+    "title": "Kipas Angin"
+}

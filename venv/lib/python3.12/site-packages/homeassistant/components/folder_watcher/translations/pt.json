@@ -1,0 +1,75 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado"
+        },
+        "error": {
+            "not_allowed_dir": "O caminho configurado n\u00e3o est\u00e1 na lista de permiss\u00f5es",
+            "not_dir": "O caminho configurado n\u00e3o \u00e9 uma pasta",
+            "not_readable_dir": "O caminho configurado n\u00e3o \u00e9 leg\u00edvel"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "folder": "Caminho para a pasta vigiada",
+                    "patterns": "Padr\u00e3o(\u00f5es) a monitorizar"
+                },
+                "data_description": {
+                    "folder": "O caminho tem de ser a partir da raiz, como por exemplo `/config`",
+                    "patterns": "Exemplo: `*.yaml` para ver apenas ficheiros yaml"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "folder_watcher": {
+                "state_attributes": {
+                    "dest_file": {
+                        "name": "Ficheiro de destino"
+                    },
+                    "dest_folder": {
+                        "name": "Pasta de destino"
+                    },
+                    "dest_path": {
+                        "name": "Caminho de destino"
+                    },
+                    "event_type": {
+                        "name": "Tipo de evento"
+                    },
+                    "file": {
+                        "name": "Ficheiro"
+                    },
+                    "folder": {
+                        "name": "Pasta"
+                    },
+                    "path": {
+                        "name": "Caminho"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "import_failed_not_allowed_path": {
+            "description": "A configura\u00e7\u00e3o do Folder Watcher via YAML est\u00e1 a ser removida, mas a sua configura\u00e7\u00e3o n\u00e3o p\u00f4de ser importada porque a pasta {path} n\u00e3o est\u00e1 na lista de permiss\u00f5es configurada.\n\nAdicione-a a `{config_variable}` em config.yaml e reinicie o Home Assistant para import\u00e1-la e corrigir esse problema.",
+            "title": "A configura\u00e7\u00e3o YAML do Observador de pastas n\u00e3o p\u00f4de ser importada"
+        },
+        "setup_not_allowed_path": {
+            "description": "O caminho {path} n\u00e3o est\u00e1 acess\u00edvel ou n\u00e3o pode ser acedido.\n\nVerifique se o caminho est\u00e1 acess\u00edvel e adicione-o a `{config_variable}` em config.yaml e reinicie o Home Assistant para corrigir este problema.",
+            "title": "N\u00e3o foi poss\u00edvel iniciar a configura\u00e7\u00e3o do Folder Watcher para {path}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "patterns": "Padr\u00e3o(\u00f5es) a monitorizar"
+                },
+                "data_description": {
+                    "patterns": "Exemplo: `*.yaml` para ver apenas ficheiros yaml"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,256 @@
+{
+    "config": {
+        "abort": {
+            "authorize_url_timeout": "Zeit\u00fcberschreitung beim Erstellen der Autorisierungs-URL.",
+            "missing_configuration": "Die Komponente ist nicht konfiguriert. Bitte der Dokumentation folgen.",
+            "no_url_available": "Keine URL verf\u00fcgbar. Informationen zu diesem Fehler [findest du im Hilfebereich]({docs_url}).",
+            "oauth_error": "Ung\u00fcltige Token-Daten empfangen.",
+            "oauth_failed": "Fehler beim Abrufen des Zugriffstokens.",
+            "oauth_timeout": "Zeit\u00fcberschreitung beim Aufl\u00f6sen des OAuth-Tokens.",
+            "oauth_unauthorized": "OAuth-Autorisierungsfehler beim Abrufen des Zugriffstokens.",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "single_instance_allowed": "Bereits konfiguriert. Nur eine einzige Konfiguration m\u00f6glich."
+        },
+        "create_entry": {
+            "default": "Erfolgreich authentifiziert"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Authentifizierungsmethode w\u00e4hlen"
+            },
+            "reauth_confirm": {
+                "description": "Die Netatmo-Integration muss dein Konto erneut authentifizieren",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_subtype": {
+            "away": "Abwesend",
+            "hg": "Frostw\u00e4chter",
+            "schedule": "Zeitplan"
+        },
+        "trigger_type": {
+            "alarm_started": "Sobald {entity_name} einen Alarm erkannt hat",
+            "animal": "Sobald {entity_name} ein Tier erkannt hat",
+            "cancel_set_point": "Sobald {entity_name} seinen Zeitplan wieder aufgenommen hat",
+            "human": "Sobald {entity_name} einen Menschen erkannt hat",
+            "movement": "Sobald {entity_name} eine Bewegung erkannt hat",
+            "outdoor": "Sobald {entity_name} ein Ereignis im Freien erkennt",
+            "person": "Sobald {entity_name} eine Person erkannt hat",
+            "person_away": "Sobald {entity_name} erkannt hat, dass eine Person gegangen ist",
+            "set_point": "Sobald die Soll-Temperatur {entity_name} manuell eingestellt wird",
+            "therm_mode": "Sobald {entity_name} zu \u201e{subtype}\u201c wechselt",
+            "turned_off": "Sobald {entity_name} ausgeschaltet wird",
+            "turned_on": "Sobald {entity_name} eingeschaltet wird",
+            "vehicle": "Sobald {entity_name} ein Fahrzeug erkennt"
+        }
+    },
+    "entity": {
+        "climate": {
+            "thermostat": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "frost_guard": "Frostschutz",
+                            "manual": "Manuell",
+                            "schedule": "Zeitplan"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "gust_angle": {
+                "name": "B\u00f6enwinkel"
+            },
+            "gust_direction": {
+                "name": "B\u00f6enrichtung",
+                "state": {
+                    "e": "Ost",
+                    "n": "Nord",
+                    "ne": "Nordost",
+                    "nw": "Nordwest",
+                    "s": "S\u00fcd",
+                    "se": "S\u00fcdost",
+                    "sw": "S\u00fcdwest",
+                    "w": "West"
+                }
+            },
+            "gust_strength": {
+                "name": "B\u00f6enst\u00e4rke"
+            },
+            "health_idx": {
+                "name": "Gesundheitsindex",
+                "state": {
+                    "fair": "M\u00e4\u00dfig",
+                    "fine": "Gut",
+                    "healthy": "Gesund",
+                    "poor": "Schlecht",
+                    "unhealthy": "Ungesund"
+                }
+            },
+            "noise": {
+                "name": "L\u00e4rm"
+            },
+            "pressure_trend": {
+                "name": "Drucktrend"
+            },
+            "reachable": {
+                "name": "Erreichbarkeit"
+            },
+            "rf_strength": {
+                "name": "Radio"
+            },
+            "sum_rain_1": {
+                "name": "Niederschlagsmenge letzte Stunde"
+            },
+            "sum_rain_24": {
+                "name": "Niederschlagsmenge heute"
+            },
+            "temp_trend": {
+                "name": "Temperatur-Trend"
+            },
+            "wifi_strength": {
+                "name": "WLAN"
+            },
+            "wind_angle": {
+                "name": "Windwinkel"
+            },
+            "wind_direction": {
+                "name": "Windrichtung",
+                "state": {
+                    "e": "Ost",
+                    "n": "Nord",
+                    "ne": "Nordost",
+                    "nw": "Nordwest",
+                    "s": "S\u00fcd",
+                    "se": "S\u00fcdost",
+                    "sw": "S\u00fcdwest",
+                    "w": "West"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "public_weather": {
+                "data": {
+                    "area_name": "Name des Gebiets",
+                    "lat_ne": "Breitengrad der nord\u00f6stlichen Ecke",
+                    "lat_sw": "Breitengrad der s\u00fcdwestlichen Ecke",
+                    "lon_ne": "L\u00e4ngengrad der nord\u00f6stlichen Ecke",
+                    "lon_sw": "L\u00e4ngengrad der s\u00fcdwestlichen Ecke",
+                    "mode": "Berechnung",
+                    "show_on_map": "Auf Karte anzeigen"
+                },
+                "description": "Einen \u00f6ffentlichen Wettersensor f\u00fcr ein Gebiet konfigurieren.",
+                "title": "\u00d6ffentlicher Netatmo Wettersensor"
+            },
+            "public_weather_areas": {
+                "data": {
+                    "new_area": "Name des Gebiets",
+                    "weather_areas": "Wettergebiete"
+                },
+                "description": "\u00d6ffentliche Wettersensoren konfigurieren.",
+                "title": "\u00d6ffentlicher Netatmo Wettersensor"
+            }
+        }
+    },
+    "services": {
+        "clear_temperature_setting": {
+            "description": "L\u00f6scht alle Temperatureinstellungen f\u00fcr ein Netatmo-Klimager\u00e4t und setzt es auf die aktuelle Voreinstellung oder den aktuellen Zeitplan zur\u00fcck.",
+            "name": "Temperatureinstellung l\u00f6schen"
+        },
+        "register_webhook": {
+            "description": "Registriert den Webhook beim Netatmo-Backend.",
+            "name": "Webhook registrieren"
+        },
+        "set_camera_light": {
+            "description": "Legt den Beleuchtungsmodus f\u00fcr eine Netatmo Au\u00dfenkamera-Leuchte fest.",
+            "fields": {
+                "camera_light_mode": {
+                    "description": "Beleuchtungsmodus der Au\u00dfenkamera.",
+                    "name": "Kameralicht-Modus"
+                }
+            },
+            "name": "Kameralicht-Modus einstellen"
+        },
+        "set_person_away": {
+            "description": "Legt eine Person als abwesend fest. Wenn keine Person eingestellt ist, wird das Haus als leer markiert. Der Name der Person muss mit einem Namen \u00fcbereinstimmen, der der Netatmo Indoor (Welcome) Camera bekannt ist.",
+            "fields": {
+                "person": {
+                    "description": "Name der Person.",
+                    "name": "Person"
+                }
+            },
+            "name": "Person als abwesend festlegen"
+        },
+        "set_persons_home": {
+            "description": "Legt eine Liste von Personen als zuhause fest. Der Name der Person muss mit einem Namen \u00fcbereinstimmen, der der Netatmo Indoor (Welcome) Camera bekannt ist.",
+            "fields": {
+                "persons": {
+                    "description": "Liste der Namen.",
+                    "name": "Personen"
+                }
+            },
+            "name": "Personen als zuhause festlegen"
+        },
+        "set_preset_mode_with_end_datetime": {
+            "description": "Aktiviert eine Voreinstellung f\u00fcr ein Netatmo-Klimager\u00e4t. Die Voreinstellung muss mit einem bei Netatmo konfigurierten voreingestellten Betriebsmodus \u00fcbereinstimmen.",
+            "fields": {
+                "end_datetime": {
+                    "description": "Zeitpunkt, bis zu dem die Voreinstellung aktiv bleibt.",
+                    "name": "Enddatum und -uhrzeit"
+                },
+                "preset_mode": {
+                    "description": "Voreingestellter Modus f\u00fcr die Klimatisierung wie Zeitplan, Abwesenheit oder Frostschutz.",
+                    "name": "Voreinstellung"
+                }
+            },
+            "name": "Voreinstellung bis Enddatum aktivieren"
+        },
+        "set_schedule": {
+            "description": "Legt den Heizplan f\u00fcr das Netatmo Klimager\u00e4t fest. Der Name des Zeitplans muss mit einem bei Netatmo konfigurierten Zeitplan \u00fcbereinstimmen.",
+            "fields": {
+                "schedule_name": {
+                    "description": "Name des Zeitplans.",
+                    "name": "Zeitplan"
+                }
+            },
+            "name": "Heizplan einstellen"
+        },
+        "set_temperature_with_end_datetime": {
+            "description": "Legt die Soll-Temperatur f\u00fcr ein Netatmo-Klimager\u00e4t mit Enddatum und -uhrzeit fest.",
+            "fields": {
+                "end_datetime": {
+                    "description": "Datum und Uhrzeit, bis zu der die Soll-Temperatur aktiv bleibt.",
+                    "name": "Enddatum und -uhrzeit"
+                },
+                "target_temperature": {
+                    "description": "Die Soll-Temperatur f\u00fcr das Ger\u00e4t.",
+                    "name": "Soll-Temperatur"
+                }
+            },
+            "name": "Temperatur bis Enddatum einstellen"
+        },
+        "set_temperature_with_time_period": {
+            "description": "Legt die Soll-Temperatur eines Netatmo-Klimager\u00e4ts f\u00fcr einen Zeitraum fest.",
+            "fields": {
+                "target_temperature": {
+                    "description": "Die Soll-Temperatur f\u00fcr das Ger\u00e4t.",
+                    "name": "Soll-Temperatur"
+                },
+                "time_period": {
+                    "description": "Der Zeitraum, f\u00fcr den die Temperatureinstellung aktiv sein wird.",
+                    "name": "Zeitraum"
+                }
+            },
+            "name": "Temperatur f\u00fcr Zeitraum einstellen"
+        },
+        "unregister_webhook": {
+            "description": "Hebt die Registrierung des Webhooks im Netatmo-Backend auf.",
+            "name": "Webhook abmelden"
+        }
+    }
+}

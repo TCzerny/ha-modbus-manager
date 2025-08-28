@@ -1,0 +1,248 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Conta j\u00e1 configurada",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "missing_captcha": "Falta a valida\u00e7\u00e3o captcha"
+        },
+        "step": {
+            "captcha": {
+                "data": {
+                    "captcha_token": "Token Captcha"
+                },
+                "data_description": {
+                    "captcha_token": "Token \u00fanico recuperado do desafio captcha."
+                },
+                "description": "\u00c9 necess\u00e1rio um captcha para o login da BMW. Visite o site externo para completar o desafio e enviar o formul\u00e1rio. Copie o token resultante para o campo abaixo.\n\n{captcha_url}\n\nNenhum dado ser\u00e1 exposto fora da sua inst\u00e2ncia do Home Assistant.",
+                "title": "\u00c9 um robot?"
+            },
+            "change_password": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "password": "A palavra-passe da sua conta MyBMW/MINI Connected."
+                },
+                "description": "Atualize a palavra-passe da sua conta MyBMW/MINI Connected para a conta `{username}` na regi\u00e3o `{region}`."
+            },
+            "user": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "region": "Regi\u00e3o do ConnectedDrive",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "password": "A palavra-passe da sua conta MyBMW/MINI Connected.",
+                    "region": "A regi\u00e3o da sua conta MyBMW/MINI Connected.",
+                    "username": "O endere\u00e7o de email da sua conta MyBMW/MINI Connected."
+                },
+                "description": "Conecte-se \u00e0 sua conta MyBMW/MINI Connected para recuperar os dados do ve\u00edculo."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "charging_status": {
+                "name": "Estado do carregamento"
+            },
+            "check_control_messages": {
+                "name": "Verificar mensagens de controlo"
+            },
+            "condition_based_services": {
+                "name": "Servi\u00e7os baseados em condi\u00e7\u00f5es"
+            },
+            "connection_status": {
+                "name": "Estado da liga\u00e7\u00e3o"
+            },
+            "door_lock_state": {
+                "name": "Estado da fechadura da porta"
+            },
+            "is_pre_entry_climatization_enabled": {
+                "name": "Pr\u00e9-climatiza\u00e7\u00e3o de entrada"
+            },
+            "lids": {
+                "name": "Cortinas"
+            },
+            "windows": {
+                "name": "Janelas"
+            }
+        },
+        "button": {
+            "activate_air_conditioning": {
+                "name": "Ativar ar condicionado"
+            },
+            "deactivate_air_conditioning": {
+                "name": "Desativar ar condicionado"
+            },
+            "find_vehicle": {
+                "name": "Encontrar ve\u00edculo"
+            },
+            "light_flash": {
+                "name": "Piscar as luzes"
+            },
+            "sound_horn": {
+                "name": "Acionar buzina"
+            }
+        },
+        "lock": {
+            "lock": {
+                "name": "Fechadura"
+            }
+        },
+        "number": {
+            "target_soc": {
+                "name": "Alvo de SoC"
+            }
+        },
+        "select": {
+            "ac_limit": {
+                "name": "Limite de carregamento AC"
+            },
+            "charging_mode": {
+                "name": "Modo de carregamento",
+                "state": {
+                    "delayed_charging": "Carregamento diferido",
+                    "immediate_charging": "Carregamento imediato",
+                    "no_action": "Nenhuma a\u00e7\u00e3o"
+                }
+            }
+        },
+        "sensor": {
+            "ac_current_limit": {
+                "name": "Limite de corrente AC"
+            },
+            "charging_end_time": {
+                "name": "Hora de fim do carregamento"
+            },
+            "charging_start_time": {
+                "name": "Hora de in\u00edcio do carregamento"
+            },
+            "charging_status": {
+                "name": "Estado do carregamento",
+                "state": {
+                    "charging": "A carregar",
+                    "complete": "Completa",
+                    "default": "Por defeito",
+                    "error": "Erro",
+                    "finished_fully_charged": "Terminado, totalmente carregada",
+                    "finished_not_full": "Terminado, n\u00e3o completa",
+                    "fully_charged": "Totalmente carregada",
+                    "invalid": "Inv\u00e1lido",
+                    "not_charging": "N\u00e3o est\u00e1 a carregar",
+                    "plugged_in": "Ligado",
+                    "target_reached": "Objetivo alcan\u00e7ado.",
+                    "waiting_for_charging": "A aguardar carregamento"
+                }
+            },
+            "charging_target": {
+                "name": "Objetivo de carregamento"
+            },
+            "climate_status": {
+                "name": "Estado clim\u00e1tico",
+                "state": {
+                    "cooling": "Arrefecimento",
+                    "heating": "Aquecimento",
+                    "inactive": "Inativo",
+                    "standby": "Em espera",
+                    "ventilation": "Ventila\u00e7\u00e3o"
+                }
+            },
+            "front_left_current_pressure": {
+                "name": "Press\u00e3o do pneu dianteiro esquerdo"
+            },
+            "front_left_target_pressure": {
+                "name": "Press\u00e3o alvo do pneu dianteiro esquerdo"
+            },
+            "front_right_current_pressure": {
+                "name": "Press\u00e3o do pneu dianteiro direito"
+            },
+            "front_right_target_pressure": {
+                "name": "Press\u00e3o alvo do pneu dianteiro direito"
+            },
+            "mileage": {
+                "name": "Quilometragem"
+            },
+            "rear_left_current_pressure": {
+                "name": "Press\u00e3o do pneu traseiro esquerdo"
+            },
+            "rear_left_target_pressure": {
+                "name": "Press\u00e3o alvo do pneu traseiro esquerdo"
+            },
+            "rear_right_current_pressure": {
+                "name": "Press\u00e3o do pneu traseiro direito"
+            },
+            "rear_right_target_pressure": {
+                "name": "Press\u00e3o alvo do pneu traseiro direito"
+            },
+            "remaining_battery_percent": {
+                "name": "Percentagem de bateria restante"
+            },
+            "remaining_fuel": {
+                "name": "Combust\u00edvel restante"
+            },
+            "remaining_fuel_percent": {
+                "name": "Percentagem de combust\u00edvel restante"
+            },
+            "remaining_range_electric": {
+                "name": "Autonomia restante el\u00e9trica"
+            },
+            "remaining_range_fuel": {
+                "name": "Autonomia restante de combust\u00edvel"
+            },
+            "remaining_range_total": {
+                "name": "Autonomia total restante"
+            }
+        },
+        "switch": {
+            "charging": {
+                "name": "A carregar"
+            },
+            "climate": {
+                "name": "Climatiza\u00e7\u00e3o"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_auth": {
+            "message": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "invalid_poi": {
+            "message": "Dados inv\u00e1lidos para ponto de interesse: {poi_exception}"
+        },
+        "missing_captcha": {
+            "message": "O login requer valida\u00e7\u00e3o captcha"
+        },
+        "remote_service_error": {
+            "message": "Erro ao executar o servi\u00e7o remoto no ve\u00edculo. {exception}"
+        },
+        "update_failed": {
+            "message": "Erro ao atualizar os dados do ve\u00edculo. {exception}"
+        }
+    },
+    "options": {
+        "step": {
+            "account_options": {
+                "data": {
+                    "read_only": "Modo s\u00f3 de leitura"
+                },
+                "data_description": {
+                    "read_only": "Apenas recupere valores e envie dados de POI, mas n\u00e3o ofere\u00e7a servi\u00e7os que possam alterar o estado do ve\u00edculo."
+                }
+            }
+        }
+    },
+    "selector": {
+        "regions": {
+            "options": {
+                "china": "China",
+                "north_america": "Am\u00e9rica do Norte",
+                "rest_of_world": "Resto do mundo"
+            }
+        }
+    }
+}

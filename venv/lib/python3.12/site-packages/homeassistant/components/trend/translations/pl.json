@@ -1,0 +1,46 @@
+{
+    "config": {
+        "step": {
+            "settings": {
+                "data": {
+                    "attribute": "Atrybut encji, kt\u00f3ry jest \u015bledzony przez ten czujnik",
+                    "invert": "Odwr\u00f3\u0107 wynik"
+                }
+            },
+            "user": {
+                "data": {
+                    "entity_id": "Encja, kt\u00f3ra jest \u015bledzona przez ten czujnik",
+                    "name": "Nazwa"
+                },
+                "description": "Pomocnik trend\u00f3w pozwala na utworzenie czujnika, kt\u00f3ry pokazuje trend warto\u015bci numerycznej lub atrybutu stanu z innej encji.",
+                "title": "Pomocnik trend\u00f3w"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "attribute": "Atrybut encji, kt\u00f3ry jest \u015bledzony przez ten czujnik",
+                    "invert": "Odwr\u00f3\u0107 wynik",
+                    "max_samples": "Maksymalna ilo\u015b\u0107 przechowywanych pr\u00f3bek",
+                    "min_gradient": "Minimalne tempo, z jak\u0105 warto\u015b\u0107 musi si\u0119 zmienia\u0107",
+                    "min_samples": "Minimalna liczba przechowywanych pr\u00f3bek",
+                    "sample_duration": "Czas przechowywania pr\u00f3bek w sekundach"
+                },
+                "data_description": {
+                    "max_samples": "Maksymalna liczba pr\u00f3bek do przechowywania. Je\u015bli liczba pr\u00f3bek przekroczy t\u0119 warto\u015b\u0107, najstarsze pr\u00f3bki zostan\u0105 odrzucone.",
+                    "min_gradient": "Minimalne tempo, z jak\u0105 obserwowana warto\u015b\u0107 musi si\u0119 zmienia\u0107, aby ten czujnik si\u0119 w\u0142\u0105czy\u0142. Gradient jest mierzony w jednostkach czujnika na sekund\u0119.",
+                    "min_samples": "Minimalna liczba pr\u00f3bek, kt\u00f3re musz\u0105 zosta\u0107 zebrane, zanim gradient b\u0119dzie m\u00f3g\u0142 zosta\u0107 obliczony.",
+                    "sample_duration": "Czas przechowywania pr\u00f3bek w sekundach. Pr\u00f3bki starsze ni\u017c ta warto\u015b\u0107 zostan\u0105 odrzucone."
+                }
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "Prze\u0142adowuje czujniki trend\u00f3w z konfiguracji YAML.",
+            "name": "Wczytaj ponownie"
+        }
+    }
+}

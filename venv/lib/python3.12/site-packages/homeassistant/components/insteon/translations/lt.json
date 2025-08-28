@@ -1,0 +1,226 @@
+{
+    "config": {
+        "abort": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "not_insteon_device": "Aptiktas prietaisas, o ne \u201eInsteon\u201c prietaisas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "confirm_usb": {
+                "description": "Ar norite nustatyti {name} ?"
+            },
+            "hubv1": {
+                "data": {
+                    "host": "IP adresas",
+                    "port": "Prievadas"
+                },
+                "description": "Sukonfig\u016bruokite \u201eInsteon Hub\u201c 1 versij\u0105 (iki 2014 m.).",
+                "title": "Insteon Hub 1 versija"
+            },
+            "hubv2": {
+                "data": {
+                    "host": "IP adresas",
+                    "password": "Slapta\u017eodis",
+                    "port": "Prievadas",
+                    "username": "Naudotojo vardas"
+                },
+                "description": "Konfig\u016bruokite \u201eInsteon Hub\u201c 2 versij\u0105.",
+                "title": "Insteon Hub 2 versija"
+            },
+            "plm": {
+                "data": {
+                    "device": "USB prietaiso kelias"
+                },
+                "description": "Konfig\u016bruokite Insteon PowerLink modem\u0105 (PLM).",
+                "title": "Insteon PLM"
+            },
+            "user": {
+                "description": "Pasirinkite Insteon modemo tip\u0105.",
+                "menu_options": {
+                    "hubv1": "Hub versija 1 (iki 2014 m.)",
+                    "hubv2": "Hub versija 2",
+                    "plm": "\u201ePowerLink\u201c modemas (PLM)"
+                }
+            }
+        }
+    },
+    "options": {
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "input_error": "Netinkami \u012fra\u0161ai, patikrinkite savo vertes."
+        },
+        "step": {
+            "add_override": {
+                "data": {
+                    "address": "Prietaiso adresas (ty 1a2b3c)",
+                    "cat": "Prietaiso kategorija (ty 0x10)",
+                    "subcat": "Prietaiso subkategorija (ty 0x0a)"
+                },
+                "description": "Prid\u0117ti prietaiso nepaisym\u0105."
+            },
+            "add_x10": {
+                "data": {
+                    "housecode": "Namo kodas (a\u2013p)",
+                    "platform": "Platforma",
+                    "steps": "Pritemdymo pakopos (tik \u0161viesiems prietaisams, numatytoji 22)",
+                    "unitcode": "Vieneto kodas (1\u201316)"
+                },
+                "description": "Pakeiskite \u201eInsteon Hub\u201c slapta\u017eod\u012f."
+            },
+            "change_hub_config": {
+                "data": {
+                    "host": "IP adresas",
+                    "password": "Slapta\u017eodis",
+                    "port": "Prievadas",
+                    "username": "Naudotojo vardas"
+                },
+                "description": "Pakeiskite \u201eInsteon Hub\u201c ry\u0161io informacij\u0105."
+            },
+            "change_plm_config": {
+                "data": {
+                    "device": "USB prietaiso kelias"
+                },
+                "description": "Pakeiskite Insteon PLM ry\u0161io informacij\u0105."
+            },
+            "init": {
+                "menu_options": {
+                    "add_override": "Prid\u0117ti prietaiso nepaisym\u0105.",
+                    "add_x10": "Prid\u0117kite X10 prietais\u0105.",
+                    "change_hub_config": "Pakeiskite koncentratoriaus konfig\u016bracij\u0105.",
+                    "change_plm_config": "Pakeiskite PLM konfig\u016bracij\u0105.",
+                    "remove_override": "Pa\u0161alinkite prietaiso nepaisym\u0105.",
+                    "remove_x10": "Pa\u0161alinkite X10 prietais\u0105."
+                }
+            },
+            "remove_override": {
+                "data": {
+                    "address": "Pasirinkite prietaiso adres\u0105, kur\u012f norite pa\u0161alinti"
+                },
+                "description": "Pa\u0161alinkite prietaiso nepaisym\u0105"
+            },
+            "remove_x10": {
+                "data": {
+                    "address": "Pasirinkite prietaiso adres\u0105, kur\u012f norite pa\u0161alinti"
+                },
+                "description": "Pa\u0161alinkite X10 prietais\u0105"
+            }
+        }
+    },
+    "services": {
+        "add_all_link": {
+            "description": "Nurodo, kad \u201eInsteon\u201c modemas (IM) paleid\u017eiamas \u201eAll-Linking\u201c re\u017eimas. Kai IM veikia All-Linking re\u017eimu, paspauskite \u012frenginio susiejimo mygtuk\u0105, kad u\u017ebaigtum\u0117te vis\u0105 susiejim\u0105.",
+            "fields": {
+                "group": {
+                    "description": "All-Link grup\u0117s numeris.",
+                    "name": "Grup\u0117"
+                },
+                "mode": {
+                    "description": "Susiejimo re\u017eimo valdiklis \u2013 IM yra valdiklio atsakiklis \u2013 IM yra atsakiklis.",
+                    "name": "Re\u017eimas"
+                }
+            },
+            "name": "Prid\u0117ti visas nuorodas"
+        },
+        "add_default_links": {
+            "description": "Prideda numatytuosius ry\u0161ius tarp prietaiso ir Insteon modemo (IM).",
+            "fields": {
+                "entity_id": {
+                    "description": "\u012ekeliamo prietaiso pavadinimas. Nor\u0117dami \u012fkelti vis\u0173 prietais\u0173 duomen\u0173 baz\u0119, naudokite \"visi\".",
+                    "name": "Subjektas"
+                }
+            },
+            "name": "Prid\u0117ti numatyt\u0105sias nuorodas"
+        },
+        "delete_all_link": {
+            "description": "Nurodo \"Insteon\" modemui (IM) pa\u0161alinti \"All-Link\" \u012fra\u0161\u0105 i\u0161 IM ir prietaiso \"All-Link\" duomen\u0173 baz\u0117s. Nustat\u0119, kad IM pa\u0161alint\u0173 nuorod\u0105, paspauskite nuorod\u0173 mygtuk\u0105 atitinkamame prietaise, kad procesas b\u016bt\u0173 baigtas.",
+            "fields": {
+                "group": {
+                    "description": "All-Link grup\u0117s numeris.",
+                    "name": "Grup\u0117"
+                }
+            },
+            "name": "I\u0161trinti visas nuorodas"
+        },
+        "load_all_link_database": {
+            "description": "\u012ekelkite prietaiso All-Link duomen\u0173 baz\u0119. \u012eSP\u0116JIMAS \u2013 Prietaiso \u201eAll-LINK\u201c duomen\u0173 baz\u0117s \u012fk\u0117limas u\u017eima daug laiko ir yra nenuoseklus. Tai gali u\u017etrukti ILGAI ir gali tekti pakartoti, kad b\u016bt\u0173 gauti visi \u012fra\u0161ai.",
+            "fields": {
+                "entity_id": {
+                    "description": "\u012ekeliamo prietaiso pavadinimas. Nor\u0117dami \u012fkelti vis\u0173 prietais\u0173 duomen\u0173 baz\u0119, naudokite \"visi\".",
+                    "name": "Subjektas"
+                },
+                "reload": {
+                    "description": "I\u0161 naujo \u012fkelia visus \u012fra\u0161us. Jei tiesa, dabartiniai \u012fra\u0161ai i\u0161valomi i\u0161 atminties (neveikia prietaiso) ir \u012fra\u0161ai \u012fkeliami i\u0161 naujo. Jei klaidinga, esami \u012fra\u0161ai paliekami vietoje ir pridedami tik tr\u016bkstami \u012fra\u0161ai. Numatytasis yra klaidingas.",
+                    "name": "\u012ekelti i\u0161 naujo"
+                }
+            },
+            "name": "\u012ekelti vis\u0105 nuorod\u0173 duomen\u0173 baz\u0119"
+        },
+        "print_all_link_database": {
+            "description": "Spausdina prietaiso All-Link duomen\u0173 baz\u0119. Reikia, kad \u201eAll-Link\u201c duomen\u0173 baz\u0117 b\u016bt\u0173 \u012fkelta \u012f atmint\u012f.",
+            "fields": {
+                "entity_id": {
+                    "description": "Spausdintino prietaiso pavadinimas.",
+                    "name": "Subjektas"
+                }
+            },
+            "name": "Spausdinti vis\u0105 nuorod\u0173 duomen\u0173 baz\u0119"
+        },
+        "print_im_all_link_database": {
+            "description": "Spausdina \u201eAll-Link\u201c duomen\u0173 baz\u0119, skirt\u0105 INSTEON modemui (IM).",
+            "name": "Spausdinti IM vis\u0173 nuorod\u0173 duomen\u0173 baz\u0119"
+        },
+        "scene_off": {
+            "description": "Suaktyvina INSTEON scen\u0105, kad i\u0161sijungt\u0173.",
+            "fields": {
+                "group": {
+                    "description": "INSTEON grup\u0117s arba scenos numeris.",
+                    "name": "Grup\u0117"
+                }
+            },
+            "name": "Scena i\u0161jungta"
+        },
+        "scene_on": {
+            "description": "Suaktyvina INSTEON scen\u0105, kad b\u016bt\u0173 \u012fjungta.",
+            "fields": {
+                "group": {
+                    "description": "INSTEON grup\u0117s arba scenos numeris.",
+                    "name": "Grup\u0117"
+                }
+            },
+            "name": "Scena \u012fjungta"
+        },
+        "x10_all_lights_off": {
+            "description": "Siun\u010dia X10 komand\u0105 'Visi \u017eibintai i\u0161jungti'.",
+            "fields": {
+                "housecode": {
+                    "description": "X10 namo kodas.",
+                    "name": "Nam\u0173 kodas"
+                }
+            },
+            "name": "X10 visos lemput\u0117s i\u0161jungtos"
+        },
+        "x10_all_lights_on": {
+            "description": "Siun\u010dia X10 komand\u0105 'Visi \u017eibintai \u012fjungti'.",
+            "fields": {
+                "housecode": {
+                    "description": "X10 namo kodas.",
+                    "name": "Nam\u0173 kodas"
+                }
+            },
+            "name": "X10 visos lemput\u0117s dega"
+        },
+        "x10_all_units_off": {
+            "description": "Siun\u010dia X10 komand\u0105 'Visi \u012frenginiai i\u0161jungti'.",
+            "fields": {
+                "housecode": {
+                    "description": "X10 namo kodas.",
+                    "name": "Nam\u0173 kodas"
+                }
+            },
+            "name": "X10 visi prietaisai i\u0161jungti"
+        }
+    }
+}

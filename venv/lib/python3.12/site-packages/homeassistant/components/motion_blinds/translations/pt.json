@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "connection_error": "A liga\u00e7\u00e3o falhou",
+            "not_motionblinds": "O dispositivo descoberto n\u00e3o \u00e9 um Motion Gateway"
+        },
+        "error": {
+            "discovery_error": "Falha ao descobrir um Motion Gateway"
+        },
+        "flow_title": "{short_mac} ({ip_address})",
+        "step": {
+            "connect": {
+                "data": {
+                    "api_key": "Chave da API"
+                },
+                "description": "Necessitar\u00e1 da chave API de 16 carateres, consulte https://www.home-assistant.io/integrations/motion_blinds/#retrieving-the-key para obter instru\u00e7\u00f5es"
+            },
+            "select": {
+                "data": {
+                    "select_ip": "Endere\u00e7o IP"
+                },
+                "description": "Execute a configura\u00e7\u00e3o novamente se desejar conectar Motion Gateways adicionais",
+                "title": "Selecione o Motion Gateway que pretende ligar"
+            },
+            "user": {
+                "data": {
+                    "host": "Endere\u00e7o IP"
+                },
+                "description": "Ligar ao seu Motion Gateway; se o endere\u00e7o IP n\u00e3o estiver definido, \u00e9 utilizada a auto-descoberta"
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "go_favorite": {
+                "name": "Ir para a posi\u00e7\u00e3o favorita"
+            },
+            "set_favorite": {
+                "name": "Definir a posi\u00e7\u00e3o atual como favorita"
+            }
+        },
+        "cover": {
+            "bottom": {
+                "name": "Fundo"
+            },
+            "combined": {
+                "name": "Combinado"
+            },
+            "top": {
+                "name": "Topo"
+            }
+        },
+        "sensor": {
+            "bottom_battery": {
+                "name": "Bateria inferior"
+            },
+            "top_battery": {
+                "name": "Bateria superior"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "wait_for_push": "Esperar pelo envio multicast na atualiza\u00e7\u00e3o"
+                }
+            }
+        }
+    },
+    "services": {
+        "set_absolute_position": {
+            "description": "Define a posi\u00e7\u00e3o absoluta da tampa.",
+            "fields": {
+                "absolute_position": {
+                    "description": "Posi\u00e7\u00e3o absoluta para onde se deve deslocar.",
+                    "name": "Posi\u00e7\u00e3o absoluta"
+                },
+                "tilt_position": {
+                    "description": "Posi\u00e7\u00e3o de inclina\u00e7\u00e3o para onde se deslocar.",
+                    "name": "Posi\u00e7\u00e3o de Inclina\u00e7\u00e3o"
+                },
+                "width": {
+                    "description": "Especificar a largura que \u00e9 coberta, apenas para entidades combinadas TDBU.",
+                    "name": "Largura"
+                }
+            },
+            "name": "Definir posi\u00e7\u00e3o absoluta"
+        }
+    }
+}

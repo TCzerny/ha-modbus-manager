@@ -1,0 +1,808 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "reconfigure_successful": "Omkonfigurationen lyckades",
+            "unique_id_mismatch": "Enhetens MAC-adress matchar inte den tidigare MAC-adressen"
+        },
+        "error": {
+            "api_error": "API-fel uppstod",
+            "cannot_connect": "Kunde inte ansluta. Kontrollera kamerans IP-adress",
+            "invalid_auth": "Ogiltig autentisering",
+            "not_admin": "Anv\u00e4ndaren m\u00e5ste vara administrat\u00f6r, anv\u00e4ndaren '' {username} '' har beh\u00f6righetsniv\u00e5 '' {userlevel} ''",
+            "password_incompatible": "L\u00f6senordet inneh\u00e5ller inkompatibla specialtecken, endast dessa tecken \u00e4r till\u00e5tna: a-z, A-Z, 0-9 och {special_chars}",
+            "unknown": "Ov\u00e4ntat fel",
+            "update_needed": "Det gick inte att logga in p\u00e5 grund av f\u00f6r\u00e5ldrad firmware, uppdatera firmware till version {needed_firmware} med hj\u00e4lp av Reolink Download Center: {download_center_url}, f\u00f6r n\u00e4rvarande \u00e4r version {current_firmware} installerad",
+            "webhook_exception": "Home Assistant URL \u00e4r inte tillg\u00e4nglig, g\u00e5 till Inst\u00e4llningar > System > N\u00e4tverk > Home Assistant URL och korrigera webbadresserna, se {more_info}"
+        },
+        "flow_title": "{hostname} ({ip_address})",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord",
+                    "port": "Port",
+                    "use_https": "Aktivera HTTPS",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamn eller IP-adress f\u00f6r din Reolink-enhet. Till exempel: \"192.168.1.25\".",
+                    "password": "L\u00f6senord f\u00f6r att logga in p\u00e5 sj\u00e4lva Reolink-enheten (inte Reolink-molnkontot).",
+                    "port": "Port f\u00f6r att ansluta till Reolink-enheten. F\u00f6r HTTP normalt: '80', f\u00f6r HTTPS normalt '443'.",
+                    "use_https": "Anv\u00e4nd en HTTPS (SSL)-anslutning till Reolink-enheten.",
+                    "username": "Anv\u00e4ndarnamn f\u00f6r att logga in p\u00e5 sj\u00e4lva Reolink-enheten (inte Reolink-molnkontot)."
+                },
+                "description": "Se [fels\u00f6kningssteg]({troubleshooting_link}) om du st\u00f6ter p\u00e5 problem. {error}"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "animal": {
+                "name": "Djur",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "animal_lens_0": {
+                "name": "Djur lins 0",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "animal_lens_1": {
+                "name": "Djur lins 1",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "face": {
+                "name": "Ansikte",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "face_lens_0": {
+                "name": "Ansikte lins 0",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "face_lens_1": {
+                "name": "Ansikte lins 1",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "motion_lens_0": {
+                "name": "R\u00f6relse lins 0",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "motion_lens_1": {
+                "name": "R\u00f6relse lins 1",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "package": {
+                "name": "Paket",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "package_lens_0": {
+                "name": "Paket lins 0",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "package_lens_1": {
+                "name": "Paket lins 1",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "person": {
+                "name": "Person",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "person_lens_0": {
+                "name": "Person lins 0",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "person_lens_1": {
+                "name": "Person lins 1",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "pet": {
+                "name": "Husdjur",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "pet_lens_0": {
+                "name": "Husdjur lins 0",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "pet_lens_1": {
+                "name": "Husdjur lins 1",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "sleep": {
+                "name": "S\u00f6mnstatus",
+                "state": {
+                    "off": "Vaken",
+                    "on": "Sover"
+                }
+            },
+            "vehicle": {
+                "name": "Fordon",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "vehicle_lens_0": {
+                "name": "Fordon lins 0",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "vehicle_lens_1": {
+                "name": "Fordon lins 1",
+                "state": {
+                    "off": "Tom",
+                    "on": "Detekterad"
+                }
+            },
+            "visitor": {
+                "name": "Bes\u00f6kare"
+            },
+            "visitor_lens_0": {
+                "name": "Bes\u00f6kare lins 0"
+            },
+            "visitor_lens_1": {
+                "name": "Bes\u00f6kare lins 1"
+            }
+        },
+        "button": {
+            "guard_go_to": {
+                "name": "\u00c5terg\u00e5 till skyddspunkt"
+            },
+            "guard_set": {
+                "name": "\u00c5terst\u00e4ll skyddspunkt"
+            },
+            "ptz_calibrate": {
+                "name": "PTZ kalibrering"
+            },
+            "ptz_down": {
+                "name": "PTZ ned\u00e5t"
+            },
+            "ptz_left": {
+                "name": "PTZ v\u00e4nster"
+            },
+            "ptz_right": {
+                "name": "PTZ h\u00f6ger"
+            },
+            "ptz_stop": {
+                "name": "PTZ stopp"
+            },
+            "ptz_up": {
+                "name": "PTZ upp"
+            },
+            "ptz_zoom_in": {
+                "name": "PTZ zooma in"
+            },
+            "ptz_zoom_out": {
+                "name": "PTZ zooma ut"
+            }
+        },
+        "camera": {
+            "autotrack_snapshots_main": {
+                "name": "Sp\u00e5rning \u00f6gonblicksbilder h\u00f6g klarhet"
+            },
+            "autotrack_snapshots_sub": {
+                "name": "Sp\u00e5rning \u00f6gonblicksbilder l\u00e5g klarhet"
+            },
+            "autotrack_sub": {
+                "name": "Sp\u00e5rning l\u00e5g klarhet"
+            },
+            "ext": {
+                "name": "Balanserad"
+            },
+            "ext_lens_0": {
+                "name": "Balanserad lins 0"
+            },
+            "ext_lens_1": {
+                "name": "Balanserad lins 1"
+            },
+            "main": {
+                "name": "H\u00f6g klarhet"
+            },
+            "main_lens_0": {
+                "name": "H\u00f6g klarhet lins 0"
+            },
+            "main_lens_1": {
+                "name": "H\u00f6g klarhet lins 1"
+            },
+            "snapshots_main": {
+                "name": "\u00d6gonblicksbilder h\u00f6g klarhet"
+            },
+            "snapshots_main_lens_0": {
+                "name": "\u00d6gonblicksbilder h\u00f6g klarhet lins 0"
+            },
+            "snapshots_main_lens_1": {
+                "name": "\u00d6gonblicksbilder h\u00f6g klarhet lins 1"
+            },
+            "snapshots_sub": {
+                "name": "\u00d6gonblicksbilder l\u00e5g klarhet"
+            },
+            "snapshots_sub_lens_0": {
+                "name": "\u00d6gonblicksbilder l\u00e5g klarhet lins 0"
+            },
+            "snapshots_sub_lens_1": {
+                "name": "\u00d6gonblicksbilder l\u00e5g klarhet lins 1"
+            },
+            "sub": {
+                "name": "L\u00e5g klarhet"
+            },
+            "sub_lens_0": {
+                "name": "L\u00e5g klarhet lins 0"
+            },
+            "sub_lens_1": {
+                "name": "L\u00e5g klarhet lins 1"
+            }
+        },
+        "light": {
+            "floodlight": {
+                "name": "Str\u00e5lkastare"
+            },
+            "status_led": {
+                "name": "Status-LED"
+            }
+        },
+        "number": {
+            "ai_animal_delay": {
+                "name": "AI djur f\u00f6rdr\u00f6jning"
+            },
+            "ai_animal_sensitivity": {
+                "name": "AI djur k\u00e4nslighet"
+            },
+            "ai_face_delay": {
+                "name": "AI ansikte f\u00f6rdr\u00f6jning"
+            },
+            "ai_face_sensitivity": {
+                "name": "AI ansikte k\u00e4nslighet"
+            },
+            "ai_package_delay": {
+                "name": "AI paket f\u00f6rdr\u00f6jning"
+            },
+            "ai_package_sensitivity": {
+                "name": "AI paket k\u00e4nslighet"
+            },
+            "ai_person_delay": {
+                "name": "AI person f\u00f6rdr\u00f6jning"
+            },
+            "ai_person_sensitivity": {
+                "name": "AI person k\u00e4nslighet"
+            },
+            "ai_pet_delay": {
+                "name": "AI husdjur f\u00f6rdr\u00f6jning"
+            },
+            "ai_pet_sensitivity": {
+                "name": "AI husdjur k\u00e4nslighet"
+            },
+            "ai_vehicle_delay": {
+                "name": "AI fordon f\u00f6rdr\u00f6jning"
+            },
+            "ai_vehicle_sensitivity": {
+                "name": "AI fordon k\u00e4nslighet"
+            },
+            "alarm_volume": {
+                "name": "Alarmvolym"
+            },
+            "auto_quick_reply_time": {
+                "name": "Auto-snabbsvar tid"
+            },
+            "auto_track_disappear_time": {
+                "name": "F\u00f6rsvinnande-tid f\u00f6r automatisk sp\u00e5rning"
+            },
+            "auto_track_limit_left": {
+                "name": "Automatisk sp\u00e5rning gr\u00e4ns v\u00e4nster"
+            },
+            "auto_track_limit_right": {
+                "name": "Automatisk sp\u00e5rning gr\u00e4ns h\u00f6ger"
+            },
+            "auto_track_stop_time": {
+                "name": "Stopptid f\u00f6r automatisk sp\u00e5rning"
+            },
+            "day_night_switch_threshold": {
+                "name": "Tr\u00f6skelv\u00e4rde f\u00f6r dag/natt-v\u00e4xling"
+            },
+            "floodlight_brightness": {
+                "name": "Str\u00e5lkastare ljusstyrka"
+            },
+            "focus": {
+                "name": "Fokus"
+            },
+            "guard_return_time": {
+                "name": "Skyddspunkt returtid"
+            },
+            "image_brightness": {
+                "name": "Bildljusstyrka"
+            },
+            "image_contrast": {
+                "name": "Bildkontrast"
+            },
+            "image_hue": {
+                "name": "Bildnyans"
+            },
+            "image_saturation": {
+                "name": "Bildm\u00e4ttnad"
+            },
+            "image_sharpness": {
+                "name": "Bildsk\u00e4rpa"
+            },
+            "message_volume": {
+                "name": "Meddelandevolym"
+            },
+            "motion_sensitivity": {
+                "name": "R\u00f6relsek\u00e4nslighet"
+            },
+            "pir_sensitivity": {
+                "name": "PIR-k\u00e4nslighet"
+            },
+            "volume": {
+                "name": "Volym"
+            },
+            "zoom": {
+                "name": "Zoom"
+            }
+        },
+        "select": {
+            "auto_quick_reply_message": {
+                "name": "Auto-snabbsvarsmeddelande",
+                "state": {
+                    "off": "Av"
+                }
+            },
+            "auto_track_method": {
+                "name": "Metod f\u00f6r automatisk sp\u00e5rning",
+                "state": {
+                    "digital": "Digitalt",
+                    "digitalfirst": "Digitalt f\u00f6rst",
+                    "pantiltfirst": "Pan/tilt f\u00f6rst"
+                }
+            },
+            "binning_mode": {
+                "name": "Binning-l\u00e4ge",
+                "state": {
+                    "auto": "Auto",
+                    "off": "Av",
+                    "on": "P\u00e5"
+                }
+            },
+            "day_night_mode": {
+                "name": "Dag/natt-l\u00e4ge",
+                "state": {
+                    "auto": "Auto",
+                    "blackwhite": "Svartvit",
+                    "color": "F\u00e4rg"
+                }
+            },
+            "doorbell_led": {
+                "name": "D\u00f6rrklocka LED",
+                "state": {
+                    "always": "Alltid p\u00e5",
+                    "alwayson": "Alltid p\u00e5",
+                    "alwaysonatnight": "Auto och alltid p\u00e5 om natten",
+                    "auto": "Auto",
+                    "stayoff": "H\u00e5ll avst\u00e4ngd"
+                }
+            },
+            "floodlight_mode": {
+                "name": "L\u00e4ge f\u00f6r str\u00e5lkastare",
+                "state": {
+                    "adaptive": "Anpassningsbar",
+                    "auto": "Auto",
+                    "autoadaptive": "Automatiskt anpassningsbar",
+                    "off": "Av",
+                    "onatnight": "P\u00e5 nattetid",
+                    "schedule": "Schema"
+                }
+            },
+            "hdr": {
+                "name": "HDR",
+                "state": {
+                    "auto": "Auto",
+                    "off": "Av",
+                    "on": "P\u00e5"
+                }
+            },
+            "hub_alarm_ringtone": {
+                "name": "Hub-ringsignal vid alarm",
+                "state": {
+                    "alarm": "Larm",
+                    "attraction": "Attraktion",
+                    "citybird": "Stadsf\u00e5gel",
+                    "goodday": "Goddag",
+                    "hophop": "Hopp-hopp",
+                    "loop": "Loop",
+                    "moonlight": "M\u00e5nsken",
+                    "operetta": "Operett",
+                    "originaltune": "Originalmelodi",
+                    "pianokey": "Pianotangent",
+                    "waybackhome": "V\u00e4gen tillbaka hem"
+                }
+            },
+            "hub_visitor_ringtone": {
+                "name": "Hub-ringsignal vid bes\u00f6kare",
+                "state": {
+                    "alarm": "Larm",
+                    "attraction": "Attraktion",
+                    "citybird": "Stadsf\u00e5gel",
+                    "goodday": "Goddag",
+                    "hophop": "Hopp-hopp",
+                    "loop": "Loop",
+                    "moonlight": "M\u00e5nsken",
+                    "operetta": "Operett",
+                    "originaltune": "Originalmelodi",
+                    "pianokey": "Pianotangent",
+                    "waybackhome": "V\u00e4gen tillbaka hem"
+                }
+            },
+            "main_bit_rate": {
+                "name": "H\u00f6g klarhet-bithastighet"
+            },
+            "main_frame_rate": {
+                "name": "H\u00f6g klarhet-bildhastighet"
+            },
+            "motion_tone": {
+                "name": "Ringsignal f\u00f6r r\u00f6relse",
+                "state": {
+                    "attraction": "Attraktion",
+                    "citybird": "Stadsf\u00e5gel",
+                    "goodday": "Goddag",
+                    "hophop": "Hopp-hopp",
+                    "loop": "Loop",
+                    "moonlight": "M\u00e5nsken",
+                    "off": "Av",
+                    "operetta": "Operett",
+                    "originaltune": "Originalmelodi",
+                    "pianokey": "Pianotangent",
+                    "waybackhome": "V\u00e4gen tillbaka hem"
+                }
+            },
+            "package_tone": {
+                "name": "Hub-ringsignal vid paket",
+                "state": {
+                    "attraction": "Attraktion",
+                    "citybird": "Stadsf\u00e5gel",
+                    "goodday": "Goddag",
+                    "hophop": "Hopp-hopp",
+                    "loop": "Loop",
+                    "moonlight": "M\u00e5nsken",
+                    "off": "Av",
+                    "operetta": "Operett",
+                    "originaltune": "Originalmelodi",
+                    "pianokey": "Pianotangent",
+                    "waybackhome": "V\u00e4gen tillbaka hem"
+                }
+            },
+            "people_tone": {
+                "name": "Ringsignal f\u00f6r person",
+                "state": {
+                    "attraction": "Attraktion",
+                    "citybird": "Stadsf\u00e5gel",
+                    "goodday": "Goddag",
+                    "hophop": "Hopp-hopp",
+                    "loop": "Loop",
+                    "moonlight": "M\u00e5nsken",
+                    "off": "Av",
+                    "operetta": "Operett",
+                    "originaltune": "Originalmelodi",
+                    "pianokey": "Pianotangent",
+                    "waybackhome": "V\u00e4gen tillbaka hem"
+                }
+            },
+            "play_quick_reply_message": {
+                "name": "Spela upp snabbsvarsmeddelande"
+            },
+            "ptz_preset": {
+                "name": "PTZ-f\u00f6rinst\u00e4llning"
+            },
+            "sub_bit_rate": {
+                "name": "L\u00e5g klarhet-bithastighet"
+            },
+            "sub_frame_rate": {
+                "name": "L\u00e5g klarhet-bildhastighet"
+            },
+            "vehicle_tone": {
+                "name": "Ringsignal f\u00f6r fordon",
+                "state": {
+                    "attraction": "Attraktion",
+                    "citybird": "Stadsf\u00e5gel",
+                    "goodday": "Goddag",
+                    "hophop": "Hopp-hopp",
+                    "loop": "Loop",
+                    "moonlight": "M\u00e5nsken",
+                    "off": "Av",
+                    "operetta": "Operett",
+                    "originaltune": "Originalmelodi",
+                    "pianokey": "Pianotangent",
+                    "waybackhome": "V\u00e4gen tillbaka hem"
+                }
+            },
+            "visitor_tone": {
+                "name": "Ringsignal f\u00f6r bes\u00f6kare",
+                "state": {
+                    "attraction": "Attraktion",
+                    "citybird": "Stadsf\u00e5gel",
+                    "goodday": "Goddag",
+                    "hophop": "Hopp-hopp",
+                    "loop": "Loop",
+                    "moonlight": "M\u00e5nsken",
+                    "off": "Av",
+                    "operetta": "Operett",
+                    "originaltune": "Originalmelodi",
+                    "pianokey": "Pianotangent",
+                    "waybackhome": "V\u00e4gen tillbaka hem"
+                }
+            }
+        },
+        "sensor": {
+            "battery_state": {
+                "name": "Batteril\u00e4ge",
+                "state": {
+                    "chargecomplete": "Laddning f\u00e4rdig",
+                    "charging": "Laddar",
+                    "discharging": "Urladdning"
+                }
+            },
+            "battery_temperature": {
+                "name": "Batteritemperatur"
+            },
+            "cpu_usage": {
+                "name": "Processoranv\u00e4ndning"
+            },
+            "hdd_storage": {
+                "name": "HDD {hdd_index} lagring"
+            },
+            "ptz_pan_position": {
+                "name": "PTZ panoreringsl\u00e4ge"
+            },
+            "ptz_tilt_position": {
+                "name": "PTZ tiltposition"
+            },
+            "sd_storage": {
+                "name": "SD {hdd_index} lagring"
+            },
+            "wifi_signal": {
+                "name": "WiFi-signal"
+            }
+        },
+        "siren": {
+            "siren": {
+                "name": "Siren"
+            }
+        },
+        "switch": {
+            "auto_focus": {
+                "name": "Autofokus"
+            },
+            "auto_tracking": {
+                "name": "Automatisk sp\u00e5rning"
+            },
+            "doorbell_button_sound": {
+                "name": "Ljud p\u00e5 d\u00f6rrklockan"
+            },
+            "email": {
+                "name": "E-post vid h\u00e4ndelse"
+            },
+            "ftp_upload": {
+                "name": "FTP-uppladdning"
+            },
+            "guard_return": {
+                "name": "\u00c5terg\u00e5 till skyddspunkt"
+            },
+            "hdr": {
+                "name": "HDR"
+            },
+            "hub_ringtone_on_event": {
+                "name": "Hub-ringsignal vid h\u00e4ndelse"
+            },
+            "ir_lights": {
+                "name": "Infrar\u00f6d belysning i nattl\u00e4ge"
+            },
+            "led": {
+                "name": "LED"
+            },
+            "manual_record": {
+                "name": "Manuell inspelning"
+            },
+            "pir_enabled": {
+                "name": "PIR aktiverad"
+            },
+            "pir_reduce_alarm": {
+                "name": "PIR minska falsklarm"
+            },
+            "ptz_patrol": {
+                "name": "PTZ patrullering"
+            },
+            "push_notifications": {
+                "name": "Push-notiser"
+            },
+            "record": {
+                "name": "Spela in"
+            },
+            "record_audio": {
+                "name": "Spela in ljud"
+            },
+            "siren_on_event": {
+                "name": "Siren vid h\u00e4ndelse"
+            }
+        }
+    },
+    "exceptions": {
+        "api_error": {
+            "message": "Enheten svarade med ett fel: {err}"
+        },
+        "config_entry_not_ready": {
+            "message": "Fel vid f\u00f6rs\u00f6k att konfigurera {host}: {err}"
+        },
+        "connection_error": {
+            "message": "Kunde inte ansluta till enheten: {err}"
+        },
+        "firmware_install_error": {
+            "message": "Fel vid f\u00f6rs\u00f6k att uppdatera Reolinks firmware: {err}"
+        },
+        "invalid_content_type": {
+            "message": "Fick en annan inneh\u00e5llstyp \u00e4n f\u00f6rv\u00e4ntat: {err}"
+        },
+        "invalid_credentials": {
+            "message": "Ogiltiga anv\u00e4ndaruppgifter: {err}"
+        },
+        "invalid_parameter": {
+            "message": "Ogiltig inmatningsparameter: {err}"
+        },
+        "login_error": {
+            "message": "Fel vid inloggningsf\u00f6rs\u00f6k: {err}"
+        },
+        "no_data": {
+            "message": "Enheten returnerade ingen data: {err}"
+        },
+        "not_supported": {
+            "message": "Funktionen st\u00f6ds inte av den h\u00e4r enheten: {err}"
+        },
+        "service_entry_ex": {
+            "message": "Reolink {service_name}-fel: konfigurationsposten hittades inte eller laddades inte"
+        },
+        "service_not_chime": {
+            "message": "Reolink play_chime-fel: {device_name} \u00e4r inte en Reolink Chime"
+        },
+        "subscription_error": {
+            "message": "Fel under ONVIF-lyssning: {err}"
+        },
+        "timeout": {
+            "message": "Tidsgr\u00e4ns f\u00f6r v\u00e4ntan p\u00e5 svar: {err}"
+        },
+        "unexpected_data": {
+            "message": "Enheten returnerade ov\u00e4ntade data: {err}"
+        }
+    },
+    "issues": {
+        "enable_port": {
+            "description": "Det gick inte att automatiskt aktivera {ports}port(ar) p\u00e5 {name}. Anv\u00e4nd [Reolink-klienten]({info_link}) f\u00f6r att manuellt st\u00e4lla den till ON",
+            "title": "Port f\u00f6r Reolink \u00e4r inte aktiverad"
+        },
+        "firmware_update": {
+            "description": "\"{name}\" med modell \"{model}\" och h\u00e5rdvaruversion \"{hw_version}\" k\u00f6r en gammal firmwareversion \"{current_firmware}\", medan minst firmwareversion \"{required_firmware}\" kr\u00e4vs f\u00f6r att Reolink-integrationen ska fungera korrekt. Firmware kan uppdateras genom att trycka p\u00e5 \"installera\" i dialogrutan f\u00f6r mer information i uppdateringsenheten p\u00e5 \"{name}\" i Home Assistant. Alternativt kan den senaste firmwareversionen laddas ner fr\u00e5n [Reolink download center]({download_link}).",
+            "title": "Reolink firmware-uppdatering kr\u00e4vs"
+        },
+        "hdr_switch_deprecated": {
+            "description": "Reolink HDR switch-enheten \u00e4r utfasad och kommer att tas bort i HA 2025.2.0. Den har ersatts av en HDR select-enhet som erbjuder alternativen `on`, `off` och `auto`. F\u00f6r att ta bort detta problem, v\u00e4nligen justera automatiseringar i enlighet med detta och inaktivera HDR-switch-enheten.",
+            "title": "Reolink HDR-switch utfasad"
+        },
+        "https_webhook": {
+            "description": "Reolink-produkter kan inte skicka r\u00f6relseh\u00e4ndelser till en HTTPS-adress (SSL), konfigurera en (lokal) HTTP-adress under \"Home Assistant URL\" i [n\u00e4tverksinst\u00e4llningar]({network_link}). Den aktuella (lokala) adressen \u00e4r: `{base_url}`, en giltig adress kan till exempel vara `http://192.168.1.10:8123` d\u00e4r `192.168.1.10` \u00e4r IP-adressen f\u00f6r Home Assistant-enheten",
+            "title": "Reolink webhook-URL anv\u00e4nder HTTPS (SSL)"
+        },
+        "hub_switch_deprecated": {
+            "description": "De \u00f6verfl\u00f6diga brytarna \"Record\", \"Email on event\", \"FTP upload\", \"Push notifications\" och \"Buzzer on event\" p\u00e5 Reolink Home Hub \u00e4r borttagna eftersom den nya firmware inte l\u00e4ngre st\u00f6der dem. Anv\u00e4nd ist\u00e4llet de likadant namngivna omkopplarna under varje kameraenhet som \u00e4r ansluten till Home Hub. F\u00f6r att ta bort detta problem, v\u00e4nligen justera automatiseringar i enlighet med detta och inaktivera de n\u00e4mnda switch-enheterna.",
+            "title": "Reolink Home Hub-switchar har fasats ut"
+        },
+        "ssl": {
+            "description": "Globalt SSL-certifikat konfigurerat i [configuration.yaml under http]({ssl_link}) medan en lokal HTTP-adress `{base_url}` \u00e4r konfigurerad under \"Home Assistant URL\" i [n\u00e4tverksinst\u00e4llningar]({network_link}). D\u00e4rf\u00f6r kan Reolink-enheten inte n\u00e5 Home Assistant f\u00f6r att skicka sina r\u00f6relse-/AI-h\u00e4ndelser. Se till att den lokala HTTP-adressen inte anv\u00e4nder sig av SSL-certifikatet, till exempel genom att anv\u00e4nda [NGINX add-on]({nginx_link}) ist\u00e4llet f\u00f6r ett globalt SSL-certifikat.",
+            "title": "Reolink \u00e4r inkompatibelt med globalt SSL-certifikat"
+        },
+        "webhook_url": {
+            "description": "Tog inte emot initialt ONVIF-tillst\u00e5nd fr\u00e5n {name}. Troligtvis kan Reolink-kameran inte n\u00e5 den aktuella (lokala) Home Assistant URL `{base_url}`, v\u00e4nligen konfigurera en (lokal) HTTP-adress under \"Home Assistant URL\" i [n\u00e4tverksinst\u00e4llningar]({network_link}) som pekar p\u00e5 Home Assistant. Till exempel `http://192.168.1.10:8123` d\u00e4r `192.168.1.10` \u00e4r IP-adressen f\u00f6r Home Assistant-enheten. Se ocks\u00e5 till att Reolink-kameran kan n\u00e5 den webbadressen. Anv\u00e4nder snabbr\u00f6relse/AI-tillst\u00e5ndsavfr\u00e5gning tills den f\u00f6rsta ONVIF-pushmeddelandet tas emot.",
+            "title": "Reolink webhook-URL kan inte n\u00e5s"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "protocol": "Protokoll"
+                },
+                "data_description": {
+                    "protocol": "Str\u00f6mningsprotokoll att anv\u00e4nda f\u00f6r kameraenheterna. RTSP st\u00f6der 4K-str\u00f6mmar (h265-kodning) medan RTMP och FLV inte g\u00f6r det. FLV \u00e4r minst kr\u00e4vande f\u00f6r kameran."
+                }
+            }
+        }
+    },
+    "selector": {
+        "ringtone": {
+            "options": {
+                "attraction": "Attraktion",
+                "citybird": "Stadsf\u00e5gel",
+                "goodday": "Goddag",
+                "hophop": "Hopp-hopp",
+                "loop": "Loop",
+                "moonlight": "M\u00e5nsken",
+                "operetta": "Operett",
+                "originaltune": "Originalmelodi",
+                "pianokey": "Pianotangent",
+                "waybackhome": "V\u00e4gen tillbaka hem"
+            }
+        }
+    },
+    "services": {
+        "play_chime": {
+            "description": "Spela en ringsignal p\u00e5 en Reolink Chime.",
+            "fields": {
+                "device_id": {
+                    "description": "Reolink Chime-enheten som ringsignalen ska spelas upp p\u00e5.",
+                    "name": "M\u00e5lenhet"
+                },
+                "ringtone": {
+                    "description": "Ringsignal att spela.",
+                    "name": "Ringsignal"
+                }
+            },
+            "name": "Spela klockljud"
+        },
+        "ptz_move": {
+            "description": "Vrider kameran med en specificerad hastighet.",
+            "fields": {
+                "speed": {
+                    "description": "PTZ r\u00f6relsehastighet.",
+                    "name": "Hastighet"
+                }
+            },
+            "name": "PTZ r\u00f6relse"
+        }
+    }
+}

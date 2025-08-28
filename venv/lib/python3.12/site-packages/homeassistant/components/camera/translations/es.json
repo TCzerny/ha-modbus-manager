@@ -1,0 +1,115 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "C\u00e1mara",
+            "state": {
+                "idle": "Inactivo",
+                "recording": "Grabando",
+                "streaming": "Transmitiendo"
+            },
+            "state_attributes": {
+                "access_token": {
+                    "name": "Token de acceso"
+                },
+                "brand": {
+                    "name": "Marca"
+                },
+                "frontend_stream_type": {
+                    "name": "Tipo de transmisi\u00f3n",
+                    "state": {
+                        "hls": "HLS",
+                        "webrtc": "WebRTC"
+                    }
+                },
+                "model_name": {
+                    "name": "Modelo"
+                },
+                "motion_detection": {
+                    "name": "Detecci\u00f3n de movimiento",
+                    "state": {
+                        "false": "Deshabilitado",
+                        "true": "Habilitado"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_filename_template": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "La variable de plantilla predefinida `entity_id` se utiliz\u00f3 al ejecutar la acci\u00f3n `{service}` dirigida a la entidad de c\u00e1mara `{entity_id}`. La variable de plantilla predefinida `entity_id` se va a eliminar del par\u00e1metro `filename` de `{service}`.\n\nPor favor, actualiza tus automatizaciones y scripts para utilizar una variable definida manualmente en su lugar y selecciona **Enviar** para cerrar este problema.",
+                        "title": "Se detect\u00f3 el uso de una variable de plantilla obsoleta"
+                    }
+                }
+            },
+            "title": "Se detect\u00f3 el uso de una variable de plantilla obsoleta"
+        },
+        "legacy_webrtc_provider": {
+            "description": "La integraci\u00f3n {legacy_integration} ha registrado un proveedor WebRTC heredado. Home Assistant prefiere usar el proveedor WebRTC moderno integrado registrado por la integraci\u00f3n {builtin_integration}.\n\nLos beneficios de la integraci\u00f3n integrada son:\n\n- La transmisi\u00f3n de la c\u00e1mara se inicia m\u00e1s r\u00e1pido.\n- Se admiten m\u00e1s dispositivos de c\u00e1mara.\n\nPara solucionar este problema, puedes seguir usando el proveedor WebRTC moderno integrado y eliminar la integraci\u00f3n {legacy_integration} o eliminar la integraci\u00f3n {builtin_integration} para usar el proveedor heredado y luego reiniciar Home Assistant.",
+            "title": "Detectado el uso de proveedor WebRTC heredado registrado por {legacy_integration}"
+        }
+    },
+    "services": {
+        "disable_motion_detection": {
+            "description": "Deshabilita la detecci\u00f3n de movimiento.",
+            "name": "Deshabilitar la detecci\u00f3n de movimiento"
+        },
+        "enable_motion_detection": {
+            "description": "Habilita la detecci\u00f3n de movimiento.",
+            "name": "Habilitar detecci\u00f3n de movimiento"
+        },
+        "play_stream": {
+            "description": "Reproduce la transmisi\u00f3n de la c\u00e1mara en un reproductor multimedia compatible.",
+            "fields": {
+                "format": {
+                    "description": "Formato de transmisi\u00f3n compatible con el reproductor multimedia.",
+                    "name": "Formato"
+                },
+                "media_player": {
+                    "description": "Reproductores multimedia en los que transmitir.",
+                    "name": "Reproductor multimedia"
+                }
+            },
+            "name": "Reproducir transmisi\u00f3n"
+        },
+        "record": {
+            "description": "Crea una grabaci\u00f3n de una transmisi\u00f3n de c\u00e1mara en vivo.",
+            "fields": {
+                "duration": {
+                    "description": "Duraci\u00f3n prevista de la grabaci\u00f3n. La duraci\u00f3n real puede variar.",
+                    "name": "Duraci\u00f3n"
+                },
+                "filename": {
+                    "description": "Ruta completa al nombre del archivo. Debe ser mp4.",
+                    "name": "Nombre de archivo"
+                },
+                "lookback": {
+                    "description": "Per\u00edodo retrospectivo planificado para incluir en la grabaci\u00f3n (adem\u00e1s de la duraci\u00f3n). Solo disponible si actualmente hay una transmisi\u00f3n HLS activa. La duraci\u00f3n real del per\u00edodo retrospectivo puede variar.",
+                    "name": "Mirar atr\u00e1s"
+                }
+            },
+            "name": "Grabar"
+        },
+        "snapshot": {
+            "description": "Toma una instant\u00e1nea de una c\u00e1mara.",
+            "fields": {
+                "filename": {
+                    "description": "Ruta completa al nombre del archivo.",
+                    "name": "Nombre de archivo"
+                }
+            },
+            "name": "Tomar instant\u00e1nea"
+        },
+        "turn_off": {
+            "description": "Apaga la c\u00e1mara.",
+            "name": "Apagar"
+        },
+        "turn_on": {
+            "description": "Enciende la c\u00e1mara.",
+            "name": "Encender"
+        }
+    },
+    "title": "C\u00e1mara"
+}

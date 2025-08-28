@@ -1,0 +1,115 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Kamera",
+            "state": {
+                "idle": "Ne\u010dinn\u00e1",
+                "recording": "Z\u00e1znam",
+                "streaming": "Streamovanie"
+            },
+            "state_attributes": {
+                "access_token": {
+                    "name": "Pr\u00edstupov\u00fd token"
+                },
+                "brand": {
+                    "name": "Zna\u010dka"
+                },
+                "frontend_stream_type": {
+                    "name": "Typ streamu",
+                    "state": {
+                        "hls": "HLS",
+                        "webrtc": "WebRTC"
+                    }
+                },
+                "model_name": {
+                    "name": "Model"
+                },
+                "motion_detection": {
+                    "name": "Detekcia pohybu",
+                    "state": {
+                        "false": "Zak\u00e1zan\u00e9",
+                        "true": "Povolen\u00e9"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_filename_template": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Pri vykon\u00e1van\u00ed akcie `{service}` zameranej na entitu kamery `{entity_id}` bola pou\u017eit\u00e1 preddefinovan\u00e1 premenn\u00e1 \u0161abl\u00f3ny `entity_id`. Preddefinovan\u00e1 premenn\u00e1 \u0161abl\u00f3ny `entity_id` sa odstra\u0148uje z parametra `filename` oper\u00e1cie `{service}`.\n\nAktualizujte svoje automatiky a skripty tak, aby namiesto toho pou\u017e\u00edvali ru\u010dne definovan\u00fa premenn\u00fa, a v\u00fdberom mo\u017enosti **Odosla\u0165** tento probl\u00e9m uzavrite.",
+                        "title": "Zistilo sa pou\u017eitie zastaranej premennej \u0161abl\u00f3ny"
+                    }
+                }
+            },
+            "title": "Zistilo sa pou\u017eitie zastaranej premennej \u0161abl\u00f3ny"
+        },
+        "legacy_webrtc_provider": {
+            "description": "Integr\u00e1cia {legacy_integration} zaregistrovala star\u0161ieho poskytovate\u013ea WebRTC. Home Assistant uprednost\u0148uje pou\u017e\u00edvanie vstavan\u00e9ho modern\u00e9ho poskytovate\u013ea WebRTC registrovan\u00e9ho integr\u00e1ciou {builtin_integration}.\n\nV\u00fdhody vstavanej integr\u00e1cie s\u00fa:\n\n- Stream z kamery sa sp\u00fa\u0161\u0165a r\u00fdchlej\u0161ie.\n\u2013 Podporovan\u00fdch je viac zariaden\u00ed s fotoapar\u00e1tom.\n\nAk chcete tento probl\u00e9m vyrie\u0161i\u0165, m\u00f4\u017eete bu\u010f na\u010falej pou\u017e\u00edva\u0165 vstavan\u00e9ho modern\u00e9ho poskytovate\u013ea WebRTC a odstr\u00e1ni\u0165 integr\u00e1ciu {legacy_integration}, alebo odstr\u00e1ni\u0165 integr\u00e1ciu {builtin_integration} aby ste mohli pou\u017e\u00edva\u0165 star\u0161ieho poskytovate\u013ea, a potom re\u0161tartova\u0165 Home Assistant.",
+            "title": "Zistilo sa pou\u017eitie star\u0161ieho poskytovate\u013ea WebRTC registrovan\u00e9ho dom\u00e9nou {legacy_integration}"
+        }
+    },
+    "services": {
+        "disable_motion_detection": {
+            "description": "Vypne detekciu pohybu.",
+            "name": "Zak\u00e1zanie detekcie pohybu"
+        },
+        "enable_motion_detection": {
+            "description": "Zapne detekciu pohybu.",
+            "name": "Povolenie detekcie pohybu"
+        },
+        "play_stream": {
+            "description": "Prehr\u00e1va pr\u00fad z kamery v podporovanom prehr\u00e1va\u010di m\u00e9di\u00ed.",
+            "fields": {
+                "format": {
+                    "description": "Form\u00e1t streamu podporovan\u00fd prehr\u00e1va\u010dom m\u00e9di\u00ed.",
+                    "name": "Form\u00e1t"
+                },
+                "media_player": {
+                    "description": "Prehr\u00e1va\u010de m\u00e9di\u00ed na streamovanie.",
+                    "name": "Prehr\u00e1va\u010d m\u00e9di\u00ed"
+                }
+            },
+            "name": "Prehra\u0165 stream"
+        },
+        "record": {
+            "description": "Vytvor\u00ed z\u00e1znam \u017eiv\u00e9ho prenosu z kamery.",
+            "fields": {
+                "duration": {
+                    "description": "Pl\u00e1novan\u00e9 trvanie z\u00e1znamu. Skuto\u010dn\u00e9 trvanie sa m\u00f4\u017ee l\u00ed\u0161i\u0165.",
+                    "name": "Trvanie"
+                },
+                "filename": {
+                    "description": "\u00dapln\u00e1 cesta k n\u00e1zvu s\u00faboru. Mus\u00ed to by\u0165 mp4.",
+                    "name": "N\u00e1zov s\u00faboru"
+                },
+                "lookback": {
+                    "description": "Pl\u00e1novan\u00e9 obdobie sp\u00e4tn\u00e9ho sledovania, ktor\u00e9 sa m\u00e1 zahrn\u00fa\u0165 do z\u00e1znamu (okrem trvania). K dispoz\u00edcii len vtedy, ak je v s\u00fa\u010dasnosti akt\u00edvny pr\u00fad HLS. Skuto\u010dn\u00e1 d\u013a\u017eka obdobia sp\u00e4tn\u00e9ho sledovania sa m\u00f4\u017ee l\u00ed\u0161i\u0165.",
+                    "name": "Sp\u00e4tn\u00e9 vyh\u013ead\u00e1vanie"
+                }
+            },
+            "name": "Z\u00e1znam"
+        },
+        "snapshot": {
+            "description": "Nasn\u00edma sn\u00edmku z kamery.",
+            "fields": {
+                "filename": {
+                    "description": "\u00dapln\u00e1 cesta k n\u00e1zvu s\u00faboru.",
+                    "name": "N\u00e1zov s\u00faboru"
+                }
+            },
+            "name": "Vytvorenie sn\u00edmky"
+        },
+        "turn_off": {
+            "description": "Vypne kameru.",
+            "name": "Vypn\u00fa\u0165"
+        },
+        "turn_on": {
+            "description": "Zapne kameru.",
+            "name": "Zapn\u00fa\u0165"
+        }
+    },
+    "title": "Kamera"
+}

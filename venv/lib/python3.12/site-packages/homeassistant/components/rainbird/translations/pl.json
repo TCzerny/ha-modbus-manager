@@ -1,0 +1,60 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Urz\u0105dzenie jest ju\u017c skonfigurowane"
+        },
+        "error": {
+            "cannot_connect": "Nie mo\u017cna nawi\u0105za\u0107 po\u0142\u0105czenia",
+            "timeout_connect": "Limit czasu na nawi\u0105zanie po\u0142\u0105czenia"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Has\u0142o"
+                },
+                "data_description": {
+                    "host": "Nazwa hosta lub adres IP urz\u0105dzenia Rain Bird."
+                },
+                "description": "Wprowad\u017a informacje o module LNK Wi-Fi dla swojego urz\u0105dzenia Rain Bird.",
+                "title": "Konfiguracja Rain Bird"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Czujnik deszczu"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Domy\u015blny czas nawadniania w minutach"
+                },
+                "title": "Konfiguracja Rain Bird"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "fields": {
+                "duration": {
+                    "name": "Czas trwania"
+                }
+            }
+        },
+        "start_irrigation": {
+            "description": "Rozpoczyna nawadnianie.",
+            "fields": {
+                "duration": {
+                    "description": "Czas w\u0142\u0105czenia tego zraszacza.",
+                    "name": "Czas trwania"
+                }
+            },
+            "name": "Rozpocznij nawadnianie"
+        }
+    }
+}

@@ -1,0 +1,420 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Omkonfigurationen lyckades"
+        },
+        "error": {
+            "already_configured": "PCHK-anslutning som anv\u00e4nder samma ip-adress/port \u00e4r redan konfigurerad.",
+            "authentication_error": "Autentiseringen misslyckades. Fel anv\u00e4ndarnamn eller l\u00f6senord.",
+            "connection_refused": "Det g\u00e5r inte att ansluta till PCHK. Kontrollera IP och port.",
+            "license_error": "Maximalt antal anslutningar har uppn\u00e5tts. En ytterligare licensnyckel kr\u00e4vs."
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "acknowledge": "Beg\u00e4r bekr\u00e4ftelse fr\u00e5n moduler",
+                    "dim_mode": "Dimningsl\u00e4ge",
+                    "ip_address": "IP-adress",
+                    "password": "L\u00f6senord",
+                    "port": "Port",
+                    "sk_num_tries": "Skanningsf\u00f6rs\u00f6k f\u00f6r segmentkopplare",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "data_description": {
+                    "acknowledge": "F\u00f6rs\u00f6k att skicka kommandon igen om inget f\u00f6rv\u00e4ntat svar erh\u00e5lls fr\u00e5n modulerna (\u00f6kar busstrafiken).",
+                    "dim_mode": "Det antal steg som anv\u00e4nds f\u00f6r dimmerutg\u00e5ngar f\u00f6r alla LCN-moduler."
+                },
+                "description": "Konfigurera om anslutningen till LCN-v\u00e4rden.",
+                "title": "Konfigurera om LCN-v\u00e4rd"
+            },
+            "user": {
+                "data": {
+                    "acknowledge": "Beg\u00e4r bekr\u00e4ftelse fr\u00e5n moduler",
+                    "dim_mode": "Dimningsl\u00e4ge",
+                    "host": "Namn",
+                    "ip_address": "IP-adress",
+                    "password": "L\u00f6senord",
+                    "port": "Port",
+                    "sk_num_tries": "Skanningsf\u00f6rs\u00f6k f\u00f6r segmentkopplare",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "data_description": {
+                    "acknowledge": "F\u00f6rs\u00f6k att skicka kommandon igen om inget f\u00f6rv\u00e4ntat svar erh\u00e5lls fr\u00e5n modulerna (\u00f6kar busstrafiken).",
+                    "dim_mode": "Det antal steg som anv\u00e4nds f\u00f6r dimmerutg\u00e5ngar f\u00f6r alla LCN-moduler."
+                },
+                "description": "Uppr\u00e4tta ny anslutning till LCN-v\u00e4rd.",
+                "title": "Konfigurera LCN-v\u00e4rd"
+            }
+        }
+    },
+    "device_automation": {
+        "extra_fields": {
+            "action": "\u00c5tg\u00e4rd",
+            "code": "Kod",
+            "key": "Nyckel",
+            "level": "Niv\u00e5"
+        },
+        "trigger_type": {
+            "codelock": "L\u00e5skod mottagen",
+            "fingerprint": "Kod f\u00f6r fingeravtryck mottagen",
+            "send_keys": "Skicka nycklar mottagen",
+            "transmitter": "S\u00e4ndarkod mottagen",
+            "transponder": "Transponderkod mottagen"
+        }
+    },
+    "exceptions": {
+        "invalid_address": {
+            "message": "LCN-enhet f\u00f6r angiven adress har inte konfigurerats."
+        },
+        "invalid_device_id": {
+            "message": "LCN-enheten f\u00f6r angivet enhets-ID har inte konfigurerats."
+        },
+        "no_device_identifier": {
+            "message": "Ingen enhet angiven. V\u00e4nligen ange enhetens ID."
+        }
+    },
+    "issues": {
+        "deprecated_address_parameter": {
+            "description": "Parametern 'address' i LCN-tj\u00e4nstanropen \u00e4r utfasad. Parametern 'devide ID' b\u00f6r anv\u00e4ndas fram\u00f6ver. \n \n Justera dina automatiseringar eller skript f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "\"Adress\"-parameter utfasad"
+        },
+        "deprecated_keylock_sensor": {
+            "description": "Din LCN-nyckell\u00e5s bin\u00e4ra sensorenhet `{entity}` anv\u00e4nds i automatiseringar eller skript. En nyckell\u00e5sbrytarenhet \u00e4r tillg\u00e4nglig och b\u00f6r anv\u00e4ndas fram\u00f6ver.\n\nJustera dina automatiseringar eller skript f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "Utfasad bin\u00e4r sensor f\u00f6r LCN-nyckell\u00e5s"
+        },
+        "deprecated_regulatorlock_sensor": {
+            "description": "Din bin\u00e4ra sensorenhet f\u00f6r LCN-regulatorl\u00e5s `{entity}` anv\u00e4nds i automatiseringar eller skript. En regulatorl\u00e5sbrytarenhet \u00e4r tillg\u00e4nglig och b\u00f6r anv\u00e4ndas fram\u00f6ver.\n\nJustera dina automatiseringar eller skript f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "Utfasad bin\u00e4r sensor f\u00f6r LCN-regulatorl\u00e5s"
+        }
+    },
+    "services": {
+        "address_to_device_id": {
+            "description": "Konvertera LCN-adress till enhets-ID.",
+            "fields": {
+                "host": {
+                    "description": "V\u00e4rdnamn som anges i integrationspanelen.",
+                    "name": "V\u00e4rdnamn"
+                },
+                "id": {
+                    "description": "M\u00e5lmodul eller grupp-ID.",
+                    "name": "Modul eller grupp-ID"
+                },
+                "segment_id": {
+                    "description": "M\u00e5l segment-ID.",
+                    "name": "Segment-ID"
+                },
+                "type": {
+                    "description": "M\u00e5ltyp.",
+                    "name": "Typ"
+                }
+            },
+            "name": "Adress till enhetens ID"
+        },
+        "dyn_text": {
+            "description": "Skickar dynamisk text till LCN-GTxD-sk\u00e4rmar.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "row": {
+                    "description": "Textrad.",
+                    "name": "Rad"
+                },
+                "text": {
+                    "description": "Text att skicka (upp till 60 tecken kodade som UTF-8).",
+                    "name": "Text"
+                }
+            },
+            "name": "Dynamisk text"
+        },
+        "led": {
+            "description": "St\u00e4ller in LED-tillst\u00e5ndet.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "led": {
+                    "description": "Enhetens LED-port.",
+                    "name": "LED"
+                },
+                "state": {
+                    "description": "LED-tillst\u00e5ndet som ska st\u00e4llas in.",
+                    "name": "Tillst\u00e5nd"
+                }
+            },
+            "name": "LED"
+        },
+        "lock_keys": {
+            "description": "L\u00e5ser nycklar.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "state": {
+                    "description": "Status f\u00f6r nyckell\u00e5s som str\u00e4ng (1=p\u00e5, 2=av, T=v\u00e4xla, -=ingen f\u00f6r\u00e4ndring).",
+                    "name": "Tillst\u00e5nd"
+                },
+                "table": {
+                    "description": "Tabell med nycklar att l\u00e5sa (m\u00e5ste vara A f\u00f6r intervall).",
+                    "name": "Tabell"
+                },
+                "time": {
+                    "description": "L\u00e5sintervall.",
+                    "name": "Tid"
+                },
+                "time_unit": {
+                    "description": "Tidsenhet f\u00f6r l\u00e5sintervall.",
+                    "name": "Tidsenhet"
+                }
+            },
+            "name": "L\u00e5s nycklar"
+        },
+        "lock_regulator": {
+            "description": "L\u00e5ser en termostats b\u00f6rv\u00e4rde",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "setpoint": {
+                    "description": "B\u00f6rv\u00e4rde namn",
+                    "name": "B\u00f6rv\u00e4rde"
+                },
+                "state": {
+                    "description": "Nytt b\u00f6rv\u00e4rde tillst\u00e5nd.",
+                    "name": "Tillst\u00e5nd"
+                }
+            },
+            "name": "L\u00e5s termostat"
+        },
+        "output_abs": {
+            "description": "St\u00e4ller in absolut ljusstyrka f\u00f6r utg\u00e5ngsporten i procent.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "brightness": {
+                    "description": "Absolut ljusstyrka.",
+                    "name": "Ljusstyrka"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "output": {
+                    "description": "Utg\u00e5ngsport.",
+                    "name": "Utg\u00e5ng"
+                },
+                "transition": {
+                    "description": "\u00d6verg\u00e5ngstid.",
+                    "name": "\u00d6verg\u00e5ng"
+                }
+            },
+            "name": "Utg\u00e5ngsport absolut ljusstyrka"
+        },
+        "output_rel": {
+            "description": "St\u00e4ller in relativ ljusstyrka f\u00f6r utg\u00e5ngsporten i procent.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "brightness": {
+                    "description": "Relativ ljusstyrka.",
+                    "name": "Ljusstyrka"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "output": {
+                    "description": "Utg\u00e5ngsport.",
+                    "name": "Utg\u00e5ng"
+                }
+            },
+            "name": "Utg\u00e5ngsport relativ ljusstyrka"
+        },
+        "output_toggle": {
+            "description": "V\u00e4xlar utg\u00e5ngsport.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "output": {
+                    "description": "Utg\u00e5ngsport.",
+                    "name": "Utg\u00e5ng"
+                },
+                "transition": {
+                    "description": "\u00d6verg\u00e5ngstid.",
+                    "name": "\u00d6verg\u00e5ng"
+                }
+            },
+            "name": "V\u00e4xla utg\u00e5ngsport"
+        },
+        "pck": {
+            "description": "Skickar godtyckligt PCK-kommando.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "pck": {
+                    "description": "PCK-kommando (utan adresshuvud).",
+                    "name": "PCK"
+                }
+            },
+            "name": "PCK"
+        },
+        "relays": {
+            "description": "St\u00e4ller in rel\u00e4status.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "state": {
+                    "description": "Rel\u00e4ets tillst\u00e5nd som str\u00e4ng (1=p\u00e5, 2=av, t=v\u00e4xla, -=ingen f\u00f6r\u00e4ndring).",
+                    "name": "Tillst\u00e5nd"
+                }
+            },
+            "name": "Rel\u00e4er"
+        },
+        "send_keys": {
+            "description": "Skickar nycklar (som utf\u00f6r bundna kommandon).",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "keys": {
+                    "description": "Nycklar att skicka.",
+                    "name": "Nycklar"
+                },
+                "state": {
+                    "description": "Nyckelns tillst\u00e5nd vid s\u00e4ndning (m\u00e5ste tr\u00e4ffas f\u00f6r att skickas).",
+                    "name": "Tillst\u00e5nd"
+                },
+                "time": {
+                    "description": "Skicka f\u00f6rdr\u00f6jning.",
+                    "name": "Tid"
+                },
+                "time_unit": {
+                    "description": "Tidsenhet f\u00f6r s\u00e4ndningsf\u00f6rdr\u00f6jning.",
+                    "name": "Tidsenhet"
+                }
+            },
+            "name": "Skicka nycklar"
+        },
+        "var_abs": {
+            "description": "St\u00e4ller in absolut v\u00e4rde f\u00f6r en variabel eller ett b\u00f6rv\u00e4rde.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "unit_of_measurement": {
+                    "description": "V\u00e4rdeenhet.",
+                    "name": "M\u00e5ttenhet"
+                },
+                "value": {
+                    "description": "V\u00e4rde att st\u00e4lla in.",
+                    "name": "V\u00e4rde"
+                },
+                "variable": {
+                    "description": "Namn p\u00e5 variabel eller b\u00f6rv\u00e4rde.",
+                    "name": "Variabel"
+                }
+            },
+            "name": "St\u00e4ll in absolut variabel"
+        },
+        "var_rel": {
+            "description": "\u00c4ndra v\u00e4rde f\u00f6r en variabel, ett b\u00f6rv\u00e4rde eller ett tr\u00f6skelv\u00e4rde.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "unit_of_measurement": {
+                    "description": "V\u00e4rdeenhet.",
+                    "name": "M\u00e5ttenhet"
+                },
+                "value": {
+                    "description": "\u00c4ndra v\u00e4rde",
+                    "name": "V\u00e4rde"
+                },
+                "value_reference": {
+                    "description": "Referensv\u00e4rde f\u00f6r b\u00f6rv\u00e4rde och tr\u00f6skelv\u00e4rde.",
+                    "name": "Referensv\u00e4rde"
+                },
+                "variable": {
+                    "description": "Namn p\u00e5 variabel eller b\u00f6rv\u00e4rde.",
+                    "name": "Variabel"
+                }
+            },
+            "name": "\u00c4ndra variabel"
+        },
+        "var_reset": {
+            "description": "\u00c5terst\u00e4ller v\u00e4rde p\u00e5 variabel eller b\u00f6rv\u00e4rde.",
+            "fields": {
+                "address": {
+                    "description": "Modulens adress.",
+                    "name": "Adress"
+                },
+                "device_id": {
+                    "description": "Enhets-ID f\u00f6r LCN-modulen eller gruppen.",
+                    "name": "Enhet"
+                },
+                "variable": {
+                    "description": "Namn p\u00e5 variabel eller b\u00f6rv\u00e4rde.",
+                    "name": "Variabel"
+                }
+            },
+            "name": "\u00c5terst\u00e4ll variabel"
+        }
+    }
+}

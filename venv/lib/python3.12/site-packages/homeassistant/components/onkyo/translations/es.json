@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "no_devices_found": "No se encontraron dispositivos en la red",
+            "reconfigure_successful": "Se volvi\u00f3 a configurar correctamente",
+            "unique_id_mismatch": "El n\u00famero de serie del dispositivo no coincide con el n\u00famero de serie anterior",
+            "unknown": "Error inesperado"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "empty_input_source_list": "La lista de fuentes de entrada no puede estar vac\u00eda",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "configure_receiver": {
+                "data": {
+                    "input_sources": "Fuentes de entrada",
+                    "volume_resolution": "Resoluci\u00f3n de volumen"
+                },
+                "data_description": {
+                    "input_sources": "Lista de fuentes de entrada admitidas por el receptor.",
+                    "volume_resolution": "N\u00famero de pasos que necesita el receptor para pasar del volumen m\u00e1s bajo al m\u00e1s alto posible."
+                },
+                "description": "Configurar {name}"
+            },
+            "eiscp_discovery": {
+                "data": {
+                    "device": "Dispositivo"
+                },
+                "data_description": {
+                    "device": "Selecciona el receptor que quieres configurar."
+                }
+            },
+            "manual": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Nombre de host o direcci\u00f3n IP del receptor."
+                }
+            },
+            "user": {
+                "menu_options": {
+                    "eiscp_discovery": "Descubrimiento de Onkyo",
+                    "manual": "Entrada manual"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_source": {
+            "message": "No se puede seleccionar la fuente de entrada \"{invalid_source}\" para la entidad: {entity_id}."
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "Se va a eliminar la configuraci\u00f3n de Onkyo mediante YAML, pero hubo un error de conexi\u00f3n al importar tu configuraci\u00f3n YAML para el host {host}.\n\nAseg\u00farate de que la conexi\u00f3n con el receptor funcione y reinicia Home Assistant para volver a intentarlo o elimina la configuraci\u00f3n YAML de Onkyo de tu archivo configuration.yaml y contin\u00faa [configurando la integraci\u00f3n]({url}) manualmente.",
+            "title": "Error al importar la configuraci\u00f3n YAML de Onkyo"
+        },
+        "deprecated_yaml_import_issue_no_discover": {
+            "description": "Se va a eliminar la configuraci\u00f3n de Onkyo mediante YAML pero no se han descubierto receptores al importar tu configuraci\u00f3n YAML.\n\nAseg\u00farate de que la conexi\u00f3n con el receptor funciona y reinicia Home Assistant para volver a intentarlo o elimina la configuraci\u00f3n YAML de Onkyo de tu archivo configuration.yaml y contin\u00faa [configurando la integraci\u00f3n]({url}) manualmente.",
+            "title": "Error al importar la configuraci\u00f3n YAML de Onkyo"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_volume": "L\u00edmite m\u00e1ximo de volumen (%)"
+                },
+                "data_description": {
+                    "max_volume": "L\u00edmite m\u00e1ximo de volumen en forma de porcentaje. Esto asociar\u00e1 el volumen m\u00e1ximo de Home Assistant a este valor en el receptor, es decir, si lo configuras al 50 %, al configurar el volumen al 100 % en Home Assistant, el volumen en el receptor se configurar\u00e1 al 50 % de su valor m\u00e1ximo."
+                }
+            }
+        }
+    }
+}

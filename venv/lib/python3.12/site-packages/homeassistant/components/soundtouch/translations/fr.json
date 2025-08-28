@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "L'appareil est d\u00e9j\u00e0 configur\u00e9"
+        },
+        "error": {
+            "cannot_connect": "\u00c9chec de connexion"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "H\u00f4te"
+                },
+                "data_description": {
+                    "host": "Le nom d'h\u00f4te ou l'adresse IP de votre appareil Bose SoundTouch."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Vous \u00eates sur le point d'ajouter l'appareil SoundTouch nomm\u00e9 `{name}` \u00e0 Home Assistant.",
+                "title": "Confirmer l'ajout de l'appareil Bose SoundTouch"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "description": "Ajoute des lecteurs multim\u00e9dias \u00e0 une zone multi-pi\u00e8ces SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "L'entit\u00e9 lecteur multim\u00e9dia qui coordonne la zone multi-pi\u00e8ces. D\u00e9pend de la plateforme.",
+                    "name": "Chef"
+                },
+                "slaves": {
+                    "description": "Les entit\u00e9s lecteur multim\u00e9dia \u00e0 ajouter \u00e0 la zone existante.",
+                    "name": "Suiveur"
+                }
+            },
+            "name": "Ajouter un suiveur \u00e0 la zone"
+        },
+        "create_zone": {
+            "description": "Cr\u00e9e une zone multi-pi\u00e8ces SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "L'entit\u00e9 lecteur multim\u00e9dia qui coordonnera la zone multi-pi\u00e8ces. D\u00e9pend de la plateforme.",
+                    "name": "Chef"
+                },
+                "slaves": {
+                    "description": "Les entit\u00e9s lecteur multim\u00e9dia \u00e0 ajouter \u00e0 la nouvelle zone.",
+                    "name": "Suiveur"
+                }
+            },
+            "name": "Cr\u00e9er une zone"
+        },
+        "play_everywhere": {
+            "description": "Joue sur tous les appareils Bose SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "L'entit\u00e9 lecteur multim\u00e9dia qui coordonnera le regroupement. D\u00e9pend de la plateforme. Il s'agit d'un raccourci pour cr\u00e9er une zone multi-pi\u00e8ces avec tous les appareils.",
+                    "name": "Chef"
+                }
+            },
+            "name": "Jouer partout"
+        },
+        "remove_zone_slave": {
+            "description": "Supprime les lecteurs multim\u00e9dias d'une zone multiroom SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "L'entit\u00e9 lecteur multim\u00e9dia qui coordonne la zone multi-pi\u00e8ces. D\u00e9pend de la plateforme.",
+                    "name": "Chef"
+                },
+                "slaves": {
+                    "description": "Les entit\u00e9s lecteur multim\u00e9dia \u00e0 supprimer de la zone existante.",
+                    "name": "Suiveur"
+                }
+            },
+            "name": "Supprimer le suiveur de zone"
+        }
+    }
+}

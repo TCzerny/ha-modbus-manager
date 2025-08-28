@@ -1,0 +1,89 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Palvelu on jo m\u00e4\u00e4ritetty",
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "invalid_auth": "Virheellinen todennus"
+        },
+        "error": {
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "invalid_auth": "Virheellinen todennus"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "Salasana",
+                    "username": "K\u00e4ytt\u00e4j\u00e4tunnus"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delivered": {
+                "name": "Toimitettu"
+            },
+            "expired": {
+                "name": "Vanhentunut"
+            },
+            "in_transit": {
+                "name": "Matkalla"
+            },
+            "not_found": {
+                "name": "Ei l\u00f6ydy"
+            },
+            "package": {
+                "name": "Paketti {name}"
+            },
+            "ready_to_be_picked_up": {
+                "name": "Valmis noudettavaksi"
+            },
+            "returned": {
+                "name": "Palautettu"
+            },
+            "undelivered": {
+                "name": "Toimittamatta"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "show_archived": "Pit\u00e4isik\u00f6 arkistoituja paketteja varten luoda antureita",
+                    "show_delivered": "Pit\u00e4isik\u00f6 toimitetuille paketeille luoda anturit"
+                },
+                "description": "M\u00e4\u00e4rit\u00e4 yleiset asetukset"
+            }
+        }
+    },
+    "selector": {
+        "package_state": {
+            "options": {
+                "delivered": "Toimitettu",
+                "expired": "Vanhentunut",
+                "in_transit": "Matkalla",
+                "not_found": "Ei l\u00f6ydy",
+                "ready_to_be_picked_up": "Valmis noudettavaksi",
+                "returned": "Palautettu",
+                "undelivered": "Toimittamatta"
+            }
+        }
+    },
+    "services": {
+        "get_packages": {
+            "description": "Hanki paketteja 17Trackilta",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Paketit haetaan valitun palvelun osalta.",
+                    "name": "17Track-palvelu"
+                },
+                "package_state": {
+                    "description": "Palauttaa vain paketit, joilla on m\u00e4\u00e4ritetyt tilat. Palauttaa kaikki paketit, jos niit\u00e4 ei ole m\u00e4\u00e4ritetty.",
+                    "name": "Pakkauksen tilat"
+                }
+            },
+            "name": "Hanki paketteja"
+        }
+    }
+}

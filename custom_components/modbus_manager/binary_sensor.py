@@ -6,7 +6,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
@@ -27,7 +26,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         if reg.get("data_type") == "boolean" or reg.get("control") == "switch":
             # Unique_ID Format: {prefix}_{template_sensor_name}
             sensor_name = reg.get("name", "unknown")
-            unique_id = f"{prefix}_{sensor_name.lower().replace(' ', '_')}"
+            # Bereinige den Namen für den unique_id
+            clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+            unique_id = f"{prefix}_{clean_name}"
             
             entities.append(ModbusTemplateBinarySensor(
                 hass=hass,
@@ -121,119 +122,106 @@ class ModbusTemplateBinarySensor(BinarySensorEntity):
             elif self._input_type == "discrete":
                 result = await hub.read_discrete_inputs(self._address, self._count, unit=self._slave_id)
             else:
-                _LOGGER.error("Unbekannter input_type: %s", self._input_type)
+                _LOGGER.warning("Unbekannter input_type: %s", self._input_type)
                 return
             
             if result.isError():
                 _LOGGER.warning("Fehler beim Lesen von Register %s: %s", self._address, result)
+                self._attr_is_on = False
                 return
             
             # Wert verarbeiten
-            if self._input_type in ["coil", "discrete"]:
-                # Direkte Boolean-Werte
-                raw_value = result.bits[0] if result.bits else False
-                self._attr_is_on = bool(raw_value)
-            else:
-                # Register-Werte verarbeiten
-                raw_value = self._process_register_value(result.registers)
+            raw_value = self._process_register_value(result.registers)
+            
+            if raw_value is not None:
+                # Erweiterte Datenverarbeitung anwenden
+                processed_value = self._apply_data_processing(raw_value)
                 
-                if raw_value is not None:
-                    # Erweiterte Datenverarbeitung anwenden
-                    processed_value = self._apply_data_processing(raw_value)
-                    
-                    # Skalierung anwenden
-                    scaled_value = processed_value * self._scale
-                    
-                    # Offset anwenden
-                    final_value = scaled_value + self._offset
-                    
-                    # Boolean-Status bestimmen
-                    if self._bits is not None:
-                        # Bit-Mask anwenden
-                        masked_value = final_value & ((1 << self._bits) - 1)
-                        if self._bit_position >= 0:
-                            # Spezifisches Bit prüfen
-                            self._attr_is_on = bool(masked_value & (1 << self._bit_position))
-                        else:
-                            # Wert direkt als Boolean interpretieren
-                            self._attr_is_on = bool(masked_value)
-                    else:
-                        # Direkter Wert-Vergleich
-                        if abs(final_value - self._true_value) < 0.001:  # Float-Vergleich
-                            self._attr_is_on = True
-                        elif abs(final_value - self._false_value) < 0.001:  # Float-Vergleich
-                            self._attr_is_on = False
-                        else:
-                            # Fallback: Nicht-Null als True
-                            self._attr_is_on = bool(final_value)
+                # Boolean-Wert bestimmen
+                if self._bits:
+                    # Bit-spezifische Auswertung
+                    bit_value = (processed_value >> self._bit_position) & 1
+                    self._attr_is_on = bit_value == 1
                 else:
-                    self._attr_is_on = False
+                    # Standard Boolean-Auswertung
+                    self._attr_is_on = processed_value == self._true_value
+            else:
+                self._attr_is_on = False
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Update von Binary-Sensor %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Fehler beim Update von Binary Sensor %s: %s", self.name, str(e))
+            self._attr_is_on = False
 
     def _process_register_value(self, registers):
-        """Process register value based on data type and count."""
+        """Verarbeite Register-Werte basierend auf data_type."""
         try:
-            if self._count == 1:
-                raw_value = registers[0]
+            if not registers:
+                return None
+                
+            if self._data_type == "boolean":
+                # Boolean-Wert aus Register extrahieren
+                value = registers[0]
+                if self._swap and len(registers) > 1:
+                    # Byte-Swap für 32-bit Werte
+                    value = (registers[1] << 16) | registers[0]
+                return value
             else:
-                # Für 32-bit Werte (2 Register)
-                if self._swap:
-                    raw_value = (registers[1] << 16) | registers[0]
-                else:
-                    raw_value = (registers[0] << 16) | registers[1]
-            
-            # Konvertierung basierend auf data_type
-            if self._data_type == "int16":
-                raw_value = raw_value if raw_value < 32768 else raw_value - 65536
-            elif self._data_type == "int32":
-                raw_value = raw_value if raw_value < 2147483648 else raw_value - 4294967296
-            
-            return raw_value
-            
-        except (IndexError, ValueError) as e:
-            _LOGGER.error("Fehler bei der Verarbeitung der Register-Werte: %s", str(e))
+                # Standard-Register-Verarbeitung
+                return self._process_standard_register(registers)
+                
+        except Exception as e:
+            _LOGGER.error("Fehler bei Register-Verarbeitung: %s", str(e))
             return None
 
-    def _apply_data_processing(self, raw_value):
-        """Apply data processing options."""
+    def _process_standard_register(self, registers):
+        """Standard-Register-Verarbeitung."""
         try:
-            processed_value = raw_value
-            
-            # Bit-Shift anwenden
-            if self._shift_bits > 0 and isinstance(processed_value, int):
-                processed_value = processed_value >> self._shift_bits
-            
+            if self._data_type == "uint16":
+                return registers[0]
+            elif self._data_type == "int16":
+                value = registers[0]
+                if value > 32767:
+                    value -= 65536
+                return value
+            elif self._data_type == "uint32":
+                if len(registers) >= 2:
+                    if self._swap:
+                        return (registers[1] << 16) | registers[0]
+                    else:
+                        return (registers[0] << 16) | registers[1]
+            elif self._data_type == "int32":
+                if len(registers) >= 2:
+                    value = (registers[0] << 16) | registers[1]
+                    if value > 2147483647:
+                        value -= 4294967296
+                    return value
+            else:
+                return registers[0]
+                
+        except Exception as e:
+            _LOGGER.error("Fehler bei Standard-Register-Verarbeitung: %s", str(e))
+            return None
+
+    def _apply_data_processing(self, value):
+        """Wende erweiterte Datenverarbeitung an."""
+        try:
             # Multiplier anwenden
-            processed_value = processed_value * self._multiplier
+            if self._multiplier != 1.0:
+                value *= self._multiplier
             
-            return processed_value
+            # Offset anwenden
+            if self._offset != 0.0:
+                value += self._offset
+            
+            # Bit-Shifting
+            if self._shift_bits != 0:
+                if self._shift_bits > 0:
+                    value >>= self._shift_bits
+                else:
+                    value <<= abs(self._shift_bits)
+            
+            return value
             
         except Exception as e:
-            _LOGGER.error("Fehler bei der Datenverarbeitung: %s", str(e))
-            return raw_value
-
-    @property
-    def extra_state_attributes(self) -> dict:
-        """Return entity specific state attributes."""
-        attrs = {
-            "register_address": self._address,
-            "data_type": self._data_type,
-            "input_type": self._input_type,
-            "scale": self._scale,
-            "offset": self._offset,
-            "multiplier": self._multiplier,
-            "shift_bits": self._shift_bits,
-            "true_value": self._true_value,
-            "false_value": self._false_value
-        }
-        
-        if self._bits is not None:
-            attrs["bits"] = self._bits
-            attrs["bit_position"] = self._bit_position
-            
-        if self._group:
-            attrs["group"] = self._group
-            
-        return attrs 
+            _LOGGER.error("Fehler bei Datenverarbeitung: %s", str(e))
+            return value 

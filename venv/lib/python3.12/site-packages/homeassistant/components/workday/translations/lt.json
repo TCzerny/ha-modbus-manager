@@ -1,0 +1,229 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Darbo diena jau nustatyta su pasirinkta konfig\u016bracija"
+        },
+        "error": {
+            "add_holiday_error": "Neteisingas datos formatas (YYYY-MM-DD)",
+            "add_holiday_range_error": "Neteisingas datos intervalo formatas (YYYYY-MM-DD,YYYYY-MM-DD)",
+            "remove_holiday_error": "Netinkamas datos formatas (MMMM-MM-DD) arba \u0161vent\u0117s pavadinimas nerastas",
+            "remove_holiday_range_error": "Neteisingas datos intervalo formatas (YYYYY-MM-DD,YYYYY-MM-DD)"
+        },
+        "step": {
+            "options": {
+                "data": {
+                    "add_holidays": "Prid\u0117ti atostogas",
+                    "category": "Papildoma kategorija kaip atostogos",
+                    "days_offset": "U\u017eskaita",
+                    "excludes": "Dienos, kurias reikia i\u0161skirti",
+                    "language": "Vardini\u0173 \u0161ven\u010di\u0173 kalba",
+                    "province": "\u0160alies suskirstymas",
+                    "remove_holidays": "Pa\u0161alinti atostogas",
+                    "workdays": "Dienos, kurias reikia \u012ftraukti"
+                },
+                "data_description": {
+                    "add_holidays": "Prid\u0117kite tinkintas \u0161ventes kaip YYYY-MM-DD arba kaip diapazon\u0105 naudodami skirtuk\u0105 \u201e,\u201c.",
+                    "category": "Pasirinkite papildomas kategorijas, kurias norite \u012ftraukti kaip \u0161ventes",
+                    "days_offset": "Dien\u0173 nuokrypis nuo dabartin\u0117s dienos",
+                    "excludes": "Pasirinkite, kurias darbo dienas ne\u012ftraukti \u012f darbo dienas. \n Klavi\u0161as \u201eatostogos\u201c prideda sukonfig\u016bruotos \u0161alies atostogas, kurias galima tinkinti pagal visus toliau nurodytus nustatymus. Perskaitykite dokumentacij\u0105, kaip teisingai juos naudoti.",
+                    "language": "Kalba, naudojama konfig\u016bruojant \u012fvardintus atostog\u0173 i\u0161skyrimus",
+                    "province": "Valstyb\u0117, teritorija, provincija arba \u0161alies regionas",
+                    "remove_holidays": "Pa\u0161alinkite \u0161ventes kaip YYYY-MM-DD, kaip diapazon\u0105 naudodami \",\" kaip skyrikl\u012f arba naudodami pavadinimo dal\u012f",
+                    "workdays": "Pasirinkite, kurias darbo dienas \u012ftraukti kaip galimas darbo dienas."
+                },
+                "description": "Nustatykite papildomas parinktis {name} sukonfig\u016bruot\u0105 \u0161aliai {country}"
+            },
+            "user": {
+                "data": {
+                    "country": "\u0160alis",
+                    "name": "Vardas"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "workday": {
+                "state_attributes": {
+                    "days_offset": {
+                        "name": "U\u017eskaita"
+                    },
+                    "excludes": {
+                        "name": "Dienos, kurias reikia i\u0161skirti"
+                    },
+                    "workdays": {
+                        "name": "Dienos, kurias reikia \u012ftraukti"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "bad_country": {
+            "fix_flow": {
+                "step": {
+                    "country": {
+                        "data": {
+                            "country": "\u0160alis"
+                        },
+                        "description": "Pasirinkite \u0161al\u012f, kuri\u0105 naudosite darbo dienos jutikliui.",
+                        "title": "Pasirinkite \u0161al\u012f {title}"
+                    },
+                    "province": {
+                        "data": {
+                            "province": "\u0160alies suskirstymas"
+                        },
+                        "data_description": {
+                            "province": "Valstyb\u0117, teritorija, provincija, \u0161alies regionas"
+                        },
+                        "description": "Pasirinkite provincij\u0105 \u0161alyje {country} kuri\u0105 norite naudoti darbo dienos jutikliui.",
+                        "title": "Pasirinkite provincij\u0105 {title}"
+                    }
+                }
+            },
+            "title": "Sukonfig\u016bruota \u0161alis, skirta {title} neegzistuoja"
+        },
+        "bad_date_holiday": {
+            "fix_flow": {
+                "error": {
+                    "remove_holiday_error": "Netinkamas datos formatas (MMMM-MM-DD) arba \u0161vent\u0117s pavadinimas nerastas"
+                },
+                "step": {
+                    "fix_remove_holiday": {
+                        "data": {
+                            "remove_holidays": "Pa\u0161alinti atostogas"
+                        },
+                        "data_description": {
+                            "remove_holidays": "Pa\u0161alinkite \u0161ventes kaip YYYY-MM-DD, kaip diapazon\u0105 naudodami \",\" kaip skyrikl\u012f arba naudodami pavadinimo dal\u012f"
+                        },
+                        "description": "Pa\u0161alinkite atostog\u0173 dat\u0105 \u201e{remove_holidays}\u201c, nes jos negalima rasti \u0161alyje {country} .",
+                        "title": "Sukonfig\u016bruota {title}  atostog\u0173 data {remove_holidays} neegzistuoja"
+                    }
+                }
+            },
+            "title": "Sukonfig\u016bruota {title}  atostog\u0173 data {remove_holidays} neegzistuoja"
+        },
+        "bad_named_holiday": {
+            "fix_flow": {
+                "error": {
+                    "remove_holiday_error": "Netinkamas datos formatas (MMMM-MM-DD) arba \u0161vent\u0117s pavadinimas nerastas"
+                },
+                "step": {
+                    "fix_remove_holiday": {
+                        "data": {
+                            "remove_holidays": "Pa\u0161alinti atostogas"
+                        },
+                        "data_description": {
+                            "remove_holidays": "Pa\u0161alinkite \u0161ventes kaip YYYY-MM-DD, kaip diapazon\u0105 naudodami \",\" kaip skyrikl\u012f arba naudodami pavadinimo dal\u012f"
+                        },
+                        "description": "Pa\u0161alinkite pavadint\u0105 \u0161vent\u0119 \u201e{remove_holidays}\u201c, nes jos negalima rasti \u0161alyje {country} .",
+                        "title": "Sukonfig\u016bruota \u0161vent\u0117, pavadinta {remove_holidays} skirta {title} neegzistuoja"
+                    }
+                }
+            },
+            "title": "Sukonfig\u016bruota \u0161vent\u0117, pavadinta {remove_holidays} skirta {title} neegzistuoja"
+        },
+        "bad_province": {
+            "fix_flow": {
+                "step": {
+                    "province": {
+                        "data": {
+                            "province": "\u0160alies suskirstymas"
+                        },
+                        "data_description": {
+                            "province": "Valstyb\u0117, teritorija, provincija, \u0161alies regionas"
+                        },
+                        "description": "Pasirinkite provincij\u0105 \u0161alyje {country} kuri\u0105 norite naudoti darbo dienos jutikliui.",
+                        "title": "Pasirinkite provincij\u0105 {title}"
+                    }
+                }
+            },
+            "title": "Sukonfig\u016bruota provincija \u0161alyje {country} skirta {title} neegzistuoja"
+        }
+    },
+    "options": {
+        "error": {
+            "add_holiday_error": "Neteisingas datos formatas (YYYY-MM-DD)",
+            "add_holiday_range_error": "Neteisingas datos intervalo formatas (YYYYY-MM-DD,YYYYY-MM-DD)",
+            "already_configured": "Paslauga su tokia konfig\u016bracija jau yra",
+            "remove_holiday_error": "Netinkamas datos formatas (MMMM-MM-DD) arba \u0161vent\u0117s pavadinimas nerastas",
+            "remove_holiday_range_error": "Neteisingas datos intervalo formatas (YYYYY-MM-DD,YYYYY-MM-DD)"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "add_holidays": "Prid\u0117ti atostogas",
+                    "category": "Papildoma kategorija kaip atostogos",
+                    "days_offset": "U\u017eskaita",
+                    "excludes": "Dienos, kurias reikia i\u0161skirti",
+                    "language": "Vardini\u0173 \u0161ven\u010di\u0173 kalba",
+                    "province": "\u0160alies suskirstymas",
+                    "remove_holidays": "Pa\u0161alinti atostogas",
+                    "workdays": "Dienos, kurias reikia \u012ftraukti"
+                },
+                "data_description": {
+                    "add_holidays": "Prid\u0117kite tinkintas \u0161ventes kaip YYYY-MM-DD arba kaip diapazon\u0105 naudodami skirtuk\u0105 \u201e,\u201c.",
+                    "category": "Pasirinkite papildomas kategorijas, kurias norite \u012ftraukti kaip \u0161ventes",
+                    "days_offset": "Dien\u0173 nuokrypis nuo dabartin\u0117s dienos",
+                    "excludes": "Pasirinkite, kurias darbo dienas ne\u012ftraukti \u012f darbo dienas. \n Klavi\u0161as \u201eatostogos\u201c prideda sukonfig\u016bruotos \u0161alies atostogas, kurias galima tinkinti pagal visus toliau nurodytus nustatymus. Perskaitykite dokumentacij\u0105, kaip teisingai juos naudoti.",
+                    "language": "Kalba, naudojama konfig\u016bruojant \u012fvardintus atostog\u0173 i\u0161skyrimus",
+                    "province": "Valstyb\u0117, teritorija, provincija arba \u0161alies regionas",
+                    "remove_holidays": "Pa\u0161alinkite \u0161ventes kaip YYYY-MM-DD, kaip diapazon\u0105 naudodami \",\" kaip skyrikl\u012f arba naudodami pavadinimo dal\u012f",
+                    "workdays": "Pasirinkite, kurias darbo dienas \u012ftraukti kaip galimas darbo dienas."
+                },
+                "description": "Pakeiskite papildomas {name} parinktis, sukonfig\u016bruotas \u0161aliai {country}"
+            }
+        }
+    },
+    "selector": {
+        "category": {
+            "options": {
+                "armed_forces": "Ginkluotosios paj\u0117gos",
+                "bank": "Bankas",
+                "catholic": "Katalik\u0173",
+                "chinese": "Kin\u0173",
+                "christian": "Krik\u0161\u010dionis",
+                "government": "Vyriausyb\u0117",
+                "half_day": "Pus\u0117 dienos",
+                "hebrew": "Hebraj\u0173",
+                "hindu": "Hindu",
+                "islamic": "islami\u0161kas",
+                "optional": "Neprivaloma",
+                "public": "Vie\u0161as",
+                "school": "Mokykla",
+                "unofficial": "Neoficialus",
+                "workday": "Darbo diena"
+            }
+        },
+        "days": {
+            "options": {
+                "fri": "Penktadienis",
+                "holiday": "Atostogos",
+                "mon": "Pirmadienis",
+                "sat": "\u0160e\u0161tadienis",
+                "sun": "Sekmadienis",
+                "thu": "Ketvirtadienis",
+                "tue": "Antradienis",
+                "wed": "Tre\u010diadienis"
+            }
+        },
+        "province": {
+            "options": {
+                "none": "N\u0117ra padalijimo"
+            }
+        }
+    },
+    "services": {
+        "check_date": {
+            "description": "Patikrinkite, ar data yra darbo diena.",
+            "fields": {
+                "check_date": {
+                    "description": "Data patikrinti, ar darbo diena.",
+                    "name": "Data"
+                }
+            },
+            "name": "Patikrinimo data"
+        }
+    },
+    "title": "Darbo diena"
+}

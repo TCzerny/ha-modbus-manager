@@ -1,0 +1,87 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida",
+            "unique_id_mismatch": "Selecionou uma bridge diferente daquela com que esta entrada de configura\u00e7\u00e3o foi configurada, o que n\u00e3o \u00e9 permitido."
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_api_key": "Chave de API inv\u00e1lida",
+            "invalid_host": "Endere\u00e7o IP ou anfitri\u00e3o inv\u00e1lido."
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "local_access_token": "Token de acesso local"
+                },
+                "data_description": {
+                    "local_access_token": "Pode encontr\u00e1-la na app tedee em \"Defini\u00e7\u00f5es da Ponte\" -> \"API local\"."
+                },
+                "title": "\u00c9 necess\u00e1rio atualizar a chave de acesso"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "local_access_token": "Token de acesso local"
+                },
+                "data_description": {
+                    "host": "O endere\u00e7o IP da ponte \u00e0 qual se quer ligar.",
+                    "local_access_token": "Pode encontr\u00e1-la na app tedee em \"Defini\u00e7\u00f5es da Ponte\" -> \"API local\"."
+                },
+                "description": "Atualizar as defini\u00e7\u00f5es desta integra\u00e7\u00e3o.",
+                "title": "Reconfigurar Tedee"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "local_access_token": "Token de acesso local"
+                },
+                "data_description": {
+                    "host": "O endere\u00e7o IP da ponte \u00e0 qual se quer ligar.",
+                    "local_access_token": "Pode encontr\u00e1-la na app tedee em \"Defini\u00e7\u00f5es da Ponte\" -> \"API local\"."
+                },
+                "title": "Configurar as suas fechaduras tedee"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pullspring_enabled": {
+                "name": "Mola de tra\u00e7\u00e3o ativada"
+            },
+            "semi_locked": {
+                "name": "Semi bloqueado"
+            },
+            "uncalibrated": {
+                "name": "Fechadura n\u00e3o calibrada"
+            }
+        },
+        "sensor": {
+            "pullspring_duration": {
+                "name": "Dura\u00e7\u00e3o da mola de tra\u00e7\u00e3o"
+            }
+        }
+    },
+    "exceptions": {
+        "api_error": {
+            "message": "Erro ao comunicar com a API"
+        },
+        "authentication_failed": {
+            "message": "A autentica\u00e7\u00e3o falhou. O token de acesso local \u00e9 inv\u00e1lido."
+        },
+        "lock_failed": {
+            "message": "Falha ao trancar a porta. Fechadura {lock_id}."
+        },
+        "open_failed": {
+            "message": "Falha ao destrancar a porta. Fechadura {lock_id}"
+        },
+        "unlock_failed": {
+            "message": "Falha ao destrancar a porta. Fechadura {lock_id}"
+        },
+        "update_failed": {
+            "message": "Erro ao atualizar dados"
+        }
+    }
+}

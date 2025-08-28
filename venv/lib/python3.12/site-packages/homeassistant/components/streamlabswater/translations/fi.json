@@ -1,0 +1,52 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Laite on jo m\u00e4\u00e4ritetty"
+        },
+        "error": {
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "unknown": "Odottamaton virhe"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API-avain"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "away_mode": {
+                "name": "Poissa-tila"
+            }
+        },
+        "sensor": {
+            "daily_usage": {
+                "name": "P\u00e4ivitt\u00e4inen k\u00e4ytt\u00f6"
+            },
+            "monthly_usage": {
+                "name": "Kuukausittainen k\u00e4ytt\u00f6"
+            },
+            "yearly_usage": {
+                "name": "Vuosittainen k\u00e4ytt\u00f6"
+            }
+        }
+    },
+    "services": {
+        "set_away_mode": {
+            "description": "Asettaa Streamlabs Water Monitorin koti/poissa-tilan.",
+            "fields": {
+                "away_mode": {
+                    "description": "Kotona tai Poissa.",
+                    "name": "Poissa-tila"
+                },
+                "location_id": {
+                    "description": "Streamlabs Water Monitorin sijaintitunnus.",
+                    "name": "Sijainnin tunnus"
+                }
+            },
+            "name": "Aseta Poissa-tila"
+        }
+    }
+}

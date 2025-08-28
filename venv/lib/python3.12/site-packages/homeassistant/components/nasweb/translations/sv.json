@@ -1,0 +1,50 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "missing_internal_url": "Kontrollera att Home Assistant har en giltig intern webbadress",
+            "missing_nasweb_data": "Det \u00e4r n\u00e5got som inte st\u00e4mmer med enhetens interna konfiguration. F\u00f6rs\u00f6k att starta om enheten och Home Assistant.",
+            "missing_status": "Fick inte n\u00e5gra statusuppdateringar inom det f\u00f6rv\u00e4ntade tidsf\u00f6nstret. Kontrollera att Home Assistants interna URL \u00e4r n\u00e5bar fr\u00e5n NASweb-enheten.",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "description": "{nasweb_schema_img}NASweb kombinerar funktionerna hos en kontrollpanel med m\u00f6jligheten att hantera fastighetsautomation. Enheten \u00f6vervakar informationsfl\u00f6det fr\u00e5n sensorer och programmerbara omkopplare och lagrar inst\u00e4llningar, definitioner och konfigurerade \u00e5tg\u00e4rder.",
+                "title": "L\u00e4gg till NASweb-enhet"
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "switch_output": {
+                "name": "Rel\u00e4brytare {index}"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_error_internal_error": {
+            "message": "Det \u00e4r n\u00e5got som inte st\u00e4mmer med enhetens interna konfiguration. F\u00f6rs\u00f6k att starta om enheten och Home Assistant. Om problemet kvarst\u00e5r, kontakta support p\u00e5 {support_email}"
+        },
+        "config_entry_error_invalid_authentication": {
+            "message": "Ogiltigt anv\u00e4ndarnamn/l\u00f6senord. Troligen har anv\u00e4ndaren bytt l\u00f6senord eller tagits bort. Ta bort den h\u00e4r posten och skapa en ny med korrekt anv\u00e4ndarnamn/l\u00f6senord."
+        },
+        "config_entry_error_missing_internal_url": {
+            "message": "Kontrollera att Home Assistant har en giltig intern webbadress"
+        },
+        "config_entry_error_no_status_update": {
+            "message": "Fick inte n\u00e5gra statusuppdateringar inom det f\u00f6rv\u00e4ntade tidsf\u00f6nstret. Kontrollera att Home Assistants interna URL \u00e4r n\u00e5bar fr\u00e5n NASweb-enheten. Om problemet kvarst\u00e5r, kontakta support p\u00e5 {support_email}"
+        },
+        "serial_mismatch": {
+            "message": "Ansluten till en annan NASweb-enhet (serienumret st\u00e4mmer inte \u00f6verens)."
+        }
+    }
+}

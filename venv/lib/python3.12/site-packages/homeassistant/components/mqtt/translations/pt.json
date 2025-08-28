@@ -1,0 +1,320 @@
+{
+    "config": {
+        "abort": {
+            "addon_connection_failed": "Falha ao conectar ao add-on {addon}. Verifique o status do add-on e tente novamente mais tarde.",
+            "addon_info_failed": "Falha ao obter informa\u00e7\u00f5es para o add-on {addon}.",
+            "addon_install_failed": "Falha ao instalar o add-on {addon}.",
+            "addon_start_failed": "Falha ao iniciar o add-on {addon}.",
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida",
+            "single_instance_allowed": "J\u00e1 configurado. S\u00f3 pode existir uma configura\u00e7\u00e3o."
+        },
+        "error": {
+            "bad_birth": "T\u00f3pico de nascimento inv\u00e1lido",
+            "bad_certificate": "O certificado CA \u00e9 inv\u00e1lido",
+            "bad_client_cert": "Certificado de cliente inv\u00e1lido, garantir que \u00e9 fornecido um ficheiro codificado PEM",
+            "bad_client_cert_key": "O certificado do cliente e a chave privada n\u00e3o s\u00e3o um par v\u00e1lido",
+            "bad_client_key": "Chave privada inv\u00e1lida, garantir que \u00e9 fornecido um ficheiro codificado PEM sem palavra-passe",
+            "bad_discovery_prefix": "Prefixo de descoberta inv\u00e1lido",
+            "bad_will": "T\u00f3pico de testamento inv\u00e1lido",
+            "bad_ws_headers": "Forne\u00e7a cabe\u00e7alhos HTTP v\u00e1lidos como um objeto JSON",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "invalid_inclusion": "O certificado do cliente e a chave privada devem ser configurados em conjunto"
+        },
+        "step": {
+            "broker": {
+                "data": {
+                    "advanced_options": "Op\u00e7\u00f5es avan\u00e7adas",
+                    "broker": "Broker",
+                    "certificate": "Carregar ficheiro de certificado CA personalizado",
+                    "client_cert": "Carregar ficheiro de certificado de cliente",
+                    "client_id": "ID do cliente (deixar em branco para um gerado aleatoriamente)",
+                    "client_key": "Carregar ficheiro de chave privada",
+                    "keepalive": "Tempo entre o envio de mensagens 'keep alive'",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "protocol": "Protocolo MQTT",
+                    "set_ca_cert": "Valida\u00e7\u00e3o do certificado do broker",
+                    "set_client_cert": "Usar um certificado de cliente",
+                    "tls_insecure": "Ignorar a valida\u00e7\u00e3o do certificado do broker",
+                    "transport": "Transporte MQTT",
+                    "username": "Nome de Utilizador",
+                    "ws_headers": "Cabe\u00e7alhos WebSocket em formato JSON",
+                    "ws_path": "Caminho do WebSocket"
+                },
+                "data_description": {
+                    "broker": "O nome do anfitri\u00e3o ou o endere\u00e7o IP do seu corretor MQTT.",
+                    "certificate": "O ficheiro de certificado CA personalizado para validar o certificado dos corretores MQTT.",
+                    "client_cert": "O certificado de cliente para autenticar contra o seu corretor MQTT.",
+                    "client_id": "O ID \u00fanico para identificar a API MQTT do Assistente Dom\u00e9stico como cliente MQTT. Recomenda-se que esta op\u00e7\u00e3o seja deixada em branco.",
+                    "client_key": "O ficheiro de chave privada que pertence ao seu certificado de cliente.",
+                    "keepalive": "\u00c9 aconselh\u00e1vel um valor inferior a 90 segundos.",
+                    "password": "A palavra-passe para iniciar sess\u00e3o no seu corretor MQTT.",
+                    "port": "A porta a que o seu corretor MQTT escuta. Por exemplo, 1883.",
+                    "protocol": "O protocolo MQTT em que o seu corretor funciona. Por exemplo, 3.1.1.",
+                    "tls_insecure": "Op\u00e7\u00e3o para ignorar a valida\u00e7\u00e3o do certificado do seu broker MQTT.",
+                    "transport": "O transporte a ser utilizado para a liga\u00e7\u00e3o ao seu corretor MQTT.",
+                    "username": "O nome de utilizador para iniciar sess\u00e3o no seu corretor MQTT.",
+                    "ws_headers": "Os cabe\u00e7alhos WebSocket para passar atrav\u00e9s da liga\u00e7\u00e3o baseada em WebSocket ao seu corretor MQTT.",
+                    "ws_path": "O caminho WebSocket a ser utilizado para a liga\u00e7\u00e3o ao seu corretor MQTT."
+                },
+                "description": "Por favor, insira os detalhes de liga\u00e7\u00e3o ao seu broker MQTT."
+            },
+            "hassio_confirm": {
+                "description": "Deseja configurar o Home Assistant para se ligar ao broker MQTT fornecido pelo suplemento de Supervisor {addon}?",
+                "title": "MQTT Broker atrav\u00e9s do suplemento de Supervisor"
+            },
+            "install_addon": {
+                "title": "A instalar add-on"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "password": "A palavra-passe para iniciar sess\u00e3o no seu corretor MQTT.",
+                    "username": "O nome de utilizador para iniciar sess\u00e3o no seu corretor MQTT."
+                },
+                "description": "O broker MQTT relatou um erro de autentica\u00e7\u00e3o. Por favor, confirme o nome de utilizador e a palavra-passe corretos do broker.",
+                "title": "Reautentica\u00e7\u00e3o necess\u00e1ria com o broker MQTT."
+            },
+            "start_addon": {
+                "title": "A iniciar add-on"
+            },
+            "user": {
+                "description": "Por favor, escolha como deseja conectar-se ao broker MQTT:",
+                "menu_options": {
+                    "addon": "Use o add-on oficial {addon}.",
+                    "broker": "Insira manualmente os detalhes de conex\u00e3o do broker MQTT."
+                }
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_subtype": {
+            "button_1": "Primeiro bot\u00e3o",
+            "button_2": "Segundo bot\u00e3o",
+            "button_3": "Terceiro bot\u00e3o",
+            "button_4": "Quarto bot\u00e3o",
+            "button_5": "Quinto bot\u00e3o",
+            "button_6": "Sexto bot\u00e3o",
+            "turn_off": "Desligar",
+            "turn_on": "Ligar"
+        },
+        "trigger_type": {
+            "button_double_press": "\"{subtype}\" com clique duplo",
+            "button_long_press": "\"{subtype}\" premido continuamente",
+            "button_long_release": "\"{subtype}\" libertado ap\u00f3s press\u00e3o longa",
+            "button_quadruple_press": "\"{subtype}\" com clique qu\u00e1druplo",
+            "button_quintuple_press": "\"{subtype}\" com clique qu\u00edntuplo",
+            "button_short_press": "\"{subtype}\" premido",
+            "button_short_release": "\"{subtype}\" libertado",
+            "button_triple_press": "\"{subtype}\" com clique triplo"
+        }
+    },
+    "exceptions": {
+        "addon_start_failed": {
+            "message": "Falha ao iniciar corretamente o add-on {addon}."
+        },
+        "command_template_error": {
+            "message": "A an\u00e1lise do modelo `{command_template}` para a entidade `{entity_id}` falhou com erro: {error}."
+        },
+        "invalid_platform_config": {
+            "message": "Falha ao recarregar a configura\u00e7\u00e3o YAML para o item MQTT `{domain}` configurado manualmente. Consulte os logs para mais detalhes."
+        },
+        "invalid_publish_topic": {
+            "message": "N\u00e3o foi poss\u00edvel publicar: o modelo de t\u00f3pico `{topic_template}` produziu um t\u00f3pico `{topic}` inv\u00e1lido ap\u00f3s a renderiza\u00e7\u00e3o ({error})"
+        },
+        "mqtt_broker_error": {
+            "message": "Erro ao comunicar com o MQTT: {error_message}."
+        },
+        "mqtt_not_setup_cannot_publish": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel publicar no t\u00f3pico \"{topic}\", certifique-se de que o MQTT est\u00e1 configurado corretamente."
+        },
+        "mqtt_not_setup_cannot_subscribe": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel subscrever ao t\u00f3pico \"{topic}\", certifique-se de que o MQTT est\u00e1 configurado corretamente."
+        },
+        "mqtt_not_setup_cannot_unsubscribe_twice": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel cancelar a subscri\u00e7\u00e3o do t\u00f3pico \"{topic}\" duas vezes."
+        },
+        "mqtt_topic_not_a_string": {
+            "message": "O t\u00f3pico precisa ser uma string! Obtido: {topic}."
+        },
+        "mqtt_trigger_cannot_remove_twice": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel remover o gatilho duas vezes."
+        }
+    },
+    "issues": {
+        "deprecated_color_handling": {
+            "description": "Uma configura\u00e7\u00e3o de luz MQTT (com esquema `json`) encontrada em `configuration.yaml` usa flags de manuseio de cores obsoletas.\n\nConfigura\u00e7\u00e3o encontrada:\n```yaml\n{config}\n```\nFlags obsoletas: **{deprecated_flags}**.\n\nUse a op\u00e7\u00e3o `supported_color_modes` em vez disso e [recarregue](/developer-tools/yaml) os itens MQTT configurados manualmente ou reinicie o Home Assistant para resolver este problema.",
+            "title": "O manuseio de cores est\u00e1 obsoleto para a configura\u00e7\u00e3o do MQTT light. Em vez disso, deve ser usada a op\u00e7\u00e3o `supported_color_modes`."
+        },
+        "deprecated_color_mode_flag": {
+            "description": "Uma configura\u00e7\u00e3o de luz MQTT (com esquema `json`) encontrada em `configuration.yaml` usa uma flag `color_mode` obsoleta.\n\nConfigura\u00e7\u00e3o encontrada:\n```yaml\n{config}\n```\n\nRemova a op\u00e7\u00e3o da sua configura\u00e7\u00e3o e [recarregue](/developer-tools/yaml) os itens MQTT configurados manualmente ou reinicie o Home Assistant para resolver este problema.",
+            "title": "A op\u00e7\u00e3o `color_mode` est\u00e1 obsoleta e n\u00e3o \u00e9 mais utilizada na configura\u00e7\u00e3o do MQTT JSON light. Em vez disso, deve ser usada a op\u00e7\u00e3o `supported_color_modes`."
+        },
+        "invalid_platform_config": {
+            "description": "O Home Assistant detetou uma configura\u00e7\u00e3o inv\u00e1lida para um item configurado manualmente.\n\nDom\u00ednio da plataforma: **{domain}**\nFicheiro de configura\u00e7\u00e3o: **{config_file}**\nPerto da linha: **{line}**\nConfigura\u00e7\u00e3o encontrada:\n```yaml\n{config}\n```\nErro: **{error}**.\n\nCertifique-se de que a configura\u00e7\u00e3o \u00e9 v\u00e1lida e [recarregue](/developer-tools/yaml) os itens MQTT configurados manualmente ou reinicie o Home Assistant para resolver este problema.",
+            "title": "Configura\u00e7\u00e3o inv\u00e1lida encontrada para o item MQTT `{domain}`."
+        },
+        "payload_template_deprecation": {
+            "description": "Op\u00e7\u00e3o obsoleta `payload_template` usada na chamada de a\u00e7\u00e3o de publica\u00e7\u00e3o MQTT para o t\u00f3pico `{topic}` a partir do modelo de carga \u00fatil `{payload_template}`. Use a op\u00e7\u00e3o `payload` em vez disso. Em automatiza\u00e7\u00f5es, os modelos s\u00e3o suportados nativamente. Atualize a automatiza\u00e7\u00e3o ou script para usar a op\u00e7\u00e3o `payload` e reinicie o Home Assistant para resolver este problema.",
+            "title": "Op\u00e7\u00e3o obsoleta usada na chamada de a\u00e7\u00e3o de publica\u00e7\u00e3o MQTT."
+        },
+        "topic_template_deprecation": {
+            "description": "Op\u00e7\u00e3o obsoleta `topic_template` usada na chamada de a\u00e7\u00e3o de publica\u00e7\u00e3o MQTT para o t\u00f3pico `{topic}` a partir do modelo de t\u00f3pico `{topic_template}`. Use a op\u00e7\u00e3o `topic` em vez disso. Em automatiza\u00e7\u00f5es, os modelos s\u00e3o suportados nativamente. Atualize a automatiza\u00e7\u00e3o ou script para usar a op\u00e7\u00e3o `topic` e reinicie o Home Assistant para resolver este problema.",
+            "title": "Op\u00e7\u00e3o obsoleta usada na chamada de a\u00e7\u00e3o de publica\u00e7\u00e3o MQTT."
+        }
+    },
+    "options": {
+        "error": {
+            "bad_birth": "T\u00f3pico de nascimento inv\u00e1lido",
+            "bad_certificate": "O certificado CA \u00e9 inv\u00e1lido",
+            "bad_client_cert": "Certificado de cliente inv\u00e1lido, garantir que \u00e9 fornecido um ficheiro codificado PEM",
+            "bad_client_cert_key": "O certificado do cliente e a chave privada n\u00e3o s\u00e3o um par v\u00e1lido",
+            "bad_client_key": "Chave privada inv\u00e1lida, garantir que \u00e9 fornecido um ficheiro codificado PEM sem palavra-passe",
+            "bad_discovery_prefix": "Prefixo de descoberta inv\u00e1lido",
+            "bad_will": "T\u00f3pico de testamento inv\u00e1lido",
+            "bad_ws_headers": "Forne\u00e7a cabe\u00e7alhos HTTP v\u00e1lidos como um objeto JSON",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_inclusion": "O certificado do cliente e a chave privada devem ser configurados em conjunto"
+        },
+        "step": {
+            "broker": {
+                "data": {
+                    "advanced_options": "Op\u00e7\u00f5es avan\u00e7adas",
+                    "broker": "Broker",
+                    "certificate": "Carregar ficheiro de certificado CA personalizado",
+                    "client_cert": "Carregar ficheiro de certificado de cliente",
+                    "client_id": "ID do cliente (deixar em branco para um gerado aleatoriamente)",
+                    "client_key": "Carregar ficheiro de chave privada",
+                    "keepalive": "Tempo entre o envio de mensagens 'keep alive'",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "protocol": "Protocolo MQTT",
+                    "set_ca_cert": "Valida\u00e7\u00e3o do certificado do broker",
+                    "set_client_cert": "Usar um certificado de cliente",
+                    "tls_insecure": "Ignorar a valida\u00e7\u00e3o do certificado do broker",
+                    "transport": "Transporte MQTT",
+                    "username": "Nome de Utilizador",
+                    "ws_headers": "Cabe\u00e7alhos WebSocket em formato JSON",
+                    "ws_path": "Caminho do WebSocket"
+                },
+                "data_description": {
+                    "advanced_options": "Ativar e clicar em `pr\u00f3ximo` para definir op\u00e7\u00f5es avan\u00e7adas.",
+                    "broker": "O nome do anfitri\u00e3o ou o endere\u00e7o IP do seu corretor MQTT.",
+                    "certificate": "O ficheiro de certificado CA personalizado para validar o certificado dos corretores MQTT.",
+                    "client_cert": "O certificado de cliente para autenticar contra o seu corretor MQTT.",
+                    "client_id": "O ID \u00fanico para identificar a API MQTT do Assistente Dom\u00e9stico como cliente MQTT. Recomenda-se que esta op\u00e7\u00e3o seja deixada em branco.",
+                    "client_key": "O ficheiro de chave privada que pertence ao seu certificado de cliente.",
+                    "keepalive": "\u00c9 aconselh\u00e1vel um valor inferior a 90 segundos.",
+                    "password": "A palavra-passe para iniciar sess\u00e3o no seu corretor MQTT.",
+                    "port": "A porta a que o seu corretor MQTT escuta. Por exemplo, 1883.",
+                    "protocol": "O protocolo MQTT em que o seu corretor funciona. Por exemplo, 3.1.1.",
+                    "set_ca_cert": "Seleccione `Auto` para valida\u00e7\u00e3o autom\u00e1tica da CA, ou 'Personalizado` e clique em `pr\u00f3ximo` para definir um certificado CA personalizado, para permitir a valida\u00e7\u00e3o do seu certificado de corretores MQTT.",
+                    "set_client_cert": "Ativar e clicar em `pr\u00f3ximo` para definir um certificado de cliente e uma chave privada para autenticar contra o seu broker MQTT.",
+                    "tls_insecure": "Op\u00e7\u00e3o para ignorar a valida\u00e7\u00e3o do certificado do seu broker MQTT.",
+                    "transport": "O transporte a ser utilizado para a liga\u00e7\u00e3o ao seu corretor MQTT.",
+                    "username": "O nome de utilizador para iniciar sess\u00e3o no seu corretor MQTT.",
+                    "ws_headers": "Os cabe\u00e7alhos WebSocket para passar atrav\u00e9s da liga\u00e7\u00e3o baseada em WebSocket ao seu corretor MQTT.",
+                    "ws_path": "O caminho WebSocket a ser utilizado para a liga\u00e7\u00e3o ao seu corretor MQTT."
+                },
+                "description": "Por favor, insira os detalhes de liga\u00e7\u00e3o ao seu broker MQTT.",
+                "title": "Op\u00e7\u00f5es do broker"
+            },
+            "options": {
+                "data": {
+                    "birth_enable": "Ativar mensagem de nascimento.",
+                    "birth_payload": "Mensagem de nascimento payload",
+                    "birth_qos": "Mensagem de nascimento QoS",
+                    "birth_retain": "Mensagem de nascimento reter",
+                    "birth_topic": "T\u00f3pico da mensagem birth",
+                    "discovery": "Ativar descoberta",
+                    "discovery_prefix": "Prefixo de descoberta",
+                    "will_enable": "Ativar a mensagem de testamento",
+                    "will_payload": "Payload da mensagem will",
+                    "will_qos": "QoS da mensagem will",
+                    "will_retain": "Reter mensagem testamental",
+                    "will_topic": "T\u00f3pico da mensagem testamental"
+                },
+                "data_description": {
+                    "birth_enable": "Quando configurado, o Home Assistant publicar\u00e1 uma mensagem online para o seu broker MQTT quando o MQTT estiver pronto.",
+                    "birth_payload": "A mensagem `birth` que \u00e9 publicada quando o MQTT est\u00e1 pronto e conectado.",
+                    "birth_qos": "A qualidade do servi\u00e7o da mensagem `birth` que \u00e9 publicada quando o MQTT est\u00e1 pronto e conectado.",
+                    "birth_retain": "Quando configurado, o Home Assistant reter\u00e1 a mensagem `birth` publicada no seu broker MQTT.",
+                    "birth_topic": "O t\u00f3pico MQTT onde o Home Assistant publicar\u00e1 uma mensagem `birth`.",
+                    "discovery": "Op\u00e7\u00e3o para ativar a descoberta autom\u00e1tica do MQTT.",
+                    "discovery_prefix": "O prefixo dos t\u00f3picos de configura\u00e7\u00e3o aos quais a integra\u00e7\u00e3o MQTT se inscrever\u00e1.",
+                    "will_payload": "A mensagem que o seu broker MQTT `will` publicar\u00e1 quando a integra\u00e7\u00e3o MQTT for interrompida ou quando a conex\u00e3o for perdida.",
+                    "will_qos": "A qualidade do servi\u00e7o da mensagem `will` que \u00e9 publicada pelo seu broker MQTT.",
+                    "will_retain": "Quando configurado, o seu broker MQTT reter\u00e1 a mensagem `will`.",
+                    "will_topic": "O t\u00f3pico MQTT para o qual o seu broker MQTT publicar\u00e1 uma mensagem `will`."
+                },
+                "description": "Descoberta - Se a descoberta estiver ativada (recomendado), o Home Assistant descobrir\u00e1 automaticamente dispositivos e entidades que publicam a sua configura\u00e7\u00e3o no corretor MQTT. Se a descoberta estiver desativada, toda a configura\u00e7\u00e3o tem de ser feita manualmente.\nPrefixo de descoberta - O prefixo com que um t\u00f3pico de configura\u00e7\u00e3o para descoberta autom\u00e1tica deve come\u00e7ar.\nMensagem de nascimento - A mensagem de nascimento ser\u00e1 enviada sempre que o Assistente Dom\u00e9stico se (re)ligar ao broker MQTT.\nMensagem de vontade - A mensagem de vontade ser\u00e1 enviada sempre que o Home Assistant perder a sua liga\u00e7\u00e3o ao broker, tanto no caso de uma desconex\u00e3o limpa (e.g., o Home Assistant desliga-se) como no caso de uma desconex\u00e3o n\u00e3o limpa (por exemplo, o Home Assistant falha ou perde a sua liga\u00e7\u00e3o de rede).",
+                "title": "Op\u00e7\u00f5es MQTT"
+            }
+        }
+    },
+    "selector": {
+        "set_ca_cert": {
+            "options": {
+                "auto": "Autom\u00e1tico",
+                "custom": "Personalizado",
+                "off": "Desligado"
+            }
+        }
+    },
+    "services": {
+        "dump": {
+            "description": "Escreve todas as mensagens sobre um t\u00f3pico espec\u00edfico no ficheiro `mqtt_dump.txt` na sua pasta de configura\u00e7\u00e3o.",
+            "fields": {
+                "duration": {
+                    "description": "Por quanto tempo devemos ouvir mensagens, em segundos.",
+                    "name": "Dura\u00e7\u00e3o"
+                },
+                "topic": {
+                    "description": "T\u00f3pico a subscrever",
+                    "name": "T\u00f3pico"
+                }
+            },
+            "name": "Exportar"
+        },
+        "publish": {
+            "description": "Publica uma mensagem num t\u00f3pico MQTT.",
+            "fields": {
+                "evaluate_payload": {
+                    "description": "Quando `payload` \u00e9 um literal de bytes Python, avalie o literal de bytes e publique os dados brutos.",
+                    "name": "Avaliar carga."
+                },
+                "payload": {
+                    "description": "O payload a ser publicado.",
+                    "name": "Payload"
+                },
+                "payload_template": {
+                    "description": "Template para renderizar como valor de payload. Se uma carga \u00fatil for fornecida, o modelo ser\u00e1 ignorado.",
+                    "name": "Template de Payload"
+                },
+                "qos": {
+                    "description": "Qualidade do servi\u00e7o a utilizar. 0: No m\u00e1ximo uma vez. 1: Pelo menos uma vez. 2: Exatamente uma vez.",
+                    "name": "QoS"
+                },
+                "retain": {
+                    "description": "Se a mensagem deve ter o sinalizador de reten\u00e7\u00e3o definido. Se estiver definido, o corretor armazena a mensagem mais recente num t\u00f3pico.",
+                    "name": "Reter"
+                },
+                "topic": {
+                    "description": "T\u00f3pico para publicar.",
+                    "name": "T\u00f3pico"
+                }
+            },
+            "name": "Publicar"
+        },
+        "reload": {
+            "description": "Recarrega as entidades MQTT a partir da configura\u00e7\u00e3o YAML.",
+            "name": "Recarregar"
+        }
+    }
+}

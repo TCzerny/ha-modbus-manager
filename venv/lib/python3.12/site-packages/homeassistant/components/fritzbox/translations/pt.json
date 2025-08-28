@@ -1,0 +1,113 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "ignore_ip6_link_local": "O endere\u00e7o local de liga\u00e7\u00e3o IPv6 n\u00e3o \u00e9 suportado.",
+            "no_devices_found": "Nenhum dispositivo encontrado na rede",
+            "not_supported": "Ligado ao AVM FRITZ!Box mas n\u00e3o consegue controlar os dispositivos Smart Home.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "no_devices_found": "Nenhum dispositivo encontrado na rede"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Deseja configurar {name}?"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Atualize as suas informa\u00e7\u00f5es de in\u00edcio de sess\u00e3o para {name}."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "O nome do host ou endere\u00e7o IP do seu router FRITZ!Box."
+                },
+                "description": "Atualize as suas informa\u00e7\u00f5es de configura\u00e7\u00e3o para {name}."
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "host": "Nome de anfitri\u00e3o ou endere\u00e7o IP do seu router FRITZ!Box."
+                },
+                "description": "Introduza as suas informa\u00e7\u00f5es AVM FRITZ!Box."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "alarm": {
+                "name": "Alarme"
+            },
+            "device_lock": {
+                "name": "Bloqueio de bot\u00f5es atrav\u00e9s da IU"
+            },
+            "lock": {
+                "name": "Bloqueio de bot\u00f5es no dispositivo"
+            }
+        },
+        "climate": {
+            "thermostat": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "name": "Pr\u00e9-definido",
+                        "state": {
+                            "comfort": "Conforto",
+                            "eco": "Eco",
+                            "holiday": "Feriado",
+                            "summer": "Ver\u00e3o"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "comfort_temperature": {
+                "name": "Temperatura confort\u00e1vel"
+            },
+            "eco_temperature": {
+                "name": "Temperatura Eco"
+            },
+            "nextchange_preset": {
+                "name": "Pr\u00f3xima predefini\u00e7\u00e3o programada"
+            },
+            "nextchange_temperature": {
+                "name": "Pr\u00f3xima temperatura prevista"
+            },
+            "nextchange_time": {
+                "name": "Pr\u00f3xima hora de modifica\u00e7\u00e3o programada"
+            },
+            "scheduled_preset": {
+                "name": "Predefini\u00e7\u00e3o programada atual"
+            }
+        }
+    },
+    "exceptions": {
+        "change_hvac_while_active_mode": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel alterar o modo HVAC enquanto o modo de f\u00e9rias ou ver\u00e3o est\u00e1 ativo no dispositivo."
+        },
+        "change_preset_while_active_mode": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel alterar o predefinido enquanto o modo de f\u00e9rias ou ver\u00e3o est\u00e1 ativo no dispositivo."
+        },
+        "manual_switching_disabled": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel alternar o interrutor enquanto a comuta\u00e7\u00e3o manual estiver desativada para o dispositivo."
+        }
+    }
+}

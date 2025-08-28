@@ -1,0 +1,395 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas paruo\u0161tas naudojimui",
+            "invalid_host": "Neteisingas pagrindinio kompiuterio pavadinimas arba IP adresas",
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas",
+            "unique_id_mismatch": "Identifikatorius nesutampa su ankstesniu identifikatoriumi"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "flow_title": "{device}",
+        "step": {
+            "confirm_discovery": {
+                "description": "Ar norite prid\u0117ti {device} prie \u201eHome Assistant\u201c?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "J\u016bs\u0173 Fronius \u012frenginio IP adresas arba pagrindinio kompiuterio pavadinimas."
+                },
+                "description": "Atnaujinkite {device} konfig\u016bracijos informacij\u0105."
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "J\u016bs\u0173 Fronius \u012frenginio IP adresas arba pagrindinio kompiuterio pavadinimas."
+                },
+                "description": "Konfig\u016bruokite savo Fronius SolarAPI prietais\u0105."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "capacity_designed": {
+                "name": "Suprojektuota talpa"
+            },
+            "capacity_maximum": {
+                "name": "Did\u017eiausia talpa"
+            },
+            "cash_factor": {
+                "name": "Tinklo eksporto tarifas"
+            },
+            "co2_factor": {
+                "name": "CO\u2082 faktorius"
+            },
+            "current_ac": {
+                "name": "Kintamoji srov\u0117"
+            },
+            "current_ac_phase_1": {
+                "name": "Srov\u0117 1 faz\u0117s"
+            },
+            "current_ac_phase_2": {
+                "name": "Srov\u0117 2 faz\u0117s"
+            },
+            "current_ac_phase_3": {
+                "name": "Srov\u0117 3 faz\u0117s"
+            },
+            "current_dc": {
+                "name": "Nuolatin\u0117 srov\u0117"
+            },
+            "current_dc_2": {
+                "name": "Nuolatin\u0117 srov\u0117 2"
+            },
+            "delivery_factor": {
+                "name": "Tinklo importo tarifas"
+            },
+            "energy_day": {
+                "name": "Energijos diena"
+            },
+            "energy_reactive_ac_consumed": {
+                "name": "Sunaudota reaktyvioji energija"
+            },
+            "energy_reactive_ac_produced": {
+                "name": "Gaminama reaktyvioji energija"
+            },
+            "energy_real_ac_consumed": {
+                "name": "Sunaudota energija"
+            },
+            "energy_real_ac_minus": {
+                "name": "Aktyviosios energijos minusas"
+            },
+            "energy_real_ac_plus": {
+                "name": "Aktyviosios energijos pliusas"
+            },
+            "energy_real_consumed": {
+                "name": "Suvartota aktyvioji energija"
+            },
+            "energy_real_produced": {
+                "name": "Pagaminta aktyvioji energija"
+            },
+            "energy_total": {
+                "name": "Bendra energija"
+            },
+            "energy_year": {
+                "name": "Energijos metai"
+            },
+            "error_code": {
+                "name": "Klaidos kodas"
+            },
+            "error_message": {
+                "name": "Klaidos prane\u0161imas",
+                "state": {
+                    "ac_current_sensor_error": "Kintamosios srov\u0117s jutiklio klaida",
+                    "ac_frequency_too_high": "Per didelis kintamosios srov\u0117s da\u017enis",
+                    "ac_frequency_too_low": "Per \u017eemas kintamosios srov\u0117s da\u017enis",
+                    "ac_grid_outside_permissible_limits": "Kintamosios srov\u0117s tinklas u\u017e leistin\u0173 rib\u0173",
+                    "ac_module_over_temperature": "Kintamosios srov\u0117s modulio perkaitimas",
+                    "ac_module_temperature_sensor_faulty_l1": "Suged\u0119s kintamosios srov\u0117s modulio temperat\u016bros jutiklis (L1)",
+                    "ac_module_temperature_sensor_faulty_l2": "Suged\u0119s kintamosios srov\u0117s modulio temperat\u016bros jutiklis (L2)",
+                    "ac_module_temperature_sensor_faulty_l3": "Suged\u0119s kintamosios srov\u0117s modulio temperat\u016bros jutiklis (L3)",
+                    "ac_voltage_too_high": "Per auk\u0161ta kintamosios srov\u0117s \u012ftampa",
+                    "ac_voltage_too_low": "Per \u017eema kintamosios srov\u0117s \u012ftampa",
+                    "arc_detection_triggered": "Suaktyvintas lanko aptikimas",
+                    "arc_detector_switched_off": "I\u0161jungtas lanko detektorius (pvz., atliekant i\u0161orin\u012f lanko steb\u0117jim\u0105)",
+                    "can_bus_full": "CAN magistral\u0117 u\u017epildyta",
+                    "communication": "Ry\u0161io klaida",
+                    "compatibility_error_invalid_power_stage_configuration": "Suderinamumo klaida (pvz., d\u0117l kompiuterio plok\u0161t\u0117s pakeitimo) \u2013 netinkama galios pakopos komplekto konfig\u016bracija",
+                    "current_sensor_calibration_timeout": "Dabartinis jutiklio kalibravimo laikas",
+                    "dc_component_measured_in_grid_too_high": "DC komponentas, i\u0161matuotas tinkle, per didelis",
+                    "dc_connection_inverter_battery_interrupted": "Nutr\u016bko nuolatin\u0117s srov\u0117s jungtis tarp keitiklio ir akumuliatoriaus",
+                    "dc_input_voltage_mppt_1_too_high": "DC \u012fvesties \u012ftampa MPPT 1 per auk\u0161ta",
+                    "dc_input_voltage_mppt_2_too_high": "DC \u012fvesties \u012ftampa MPPT 2 per auk\u0161ta",
+                    "dc_low_string_1": "\u017dema nuolatin\u0117s srov\u0117s eilut\u0117 1",
+                    "dc_low_string_2": "\u017dema nuolatin\u0117s srov\u0117s eilut\u0117 2",
+                    "dc_module_over_temperature": "Nuolatin\u0117s srov\u0117s modulio perkaitimas",
+                    "dc_module_temperature_sensor_faulty": "Suged\u0119s nuolatin\u0117s srov\u0117s modulio temperat\u016bros jutiklis",
+                    "derating_caused_by_over_frequency": "Suma\u017e\u0117jimas d\u0117l per didelio da\u017enio",
+                    "different_power_limitation_in_hardware_modules": "Skirtingi galios apribojimai aparat\u016bros moduliuose",
+                    "eeprom_reinitialised": "EEPROM buvo i\u0161 naujo inicijuotas",
+                    "emergency_power_derating_activated": "\u012ejungtas avarinis galios i\u0161jungimas",
+                    "error_during_logging_data_recording": "Klaida \u012fra\u0161ant registravimo duomenis",
+                    "error_during_update_process": "Atnaujinimo proceso metu \u012fvyko klaida",
+                    "fan_1_error": "Ventiliatoriaus 1 klaida",
+                    "fan_2_error": "Ventiliatoriaus 2 klaida",
+                    "file_could_not_be_opened": "Failo atidaryti nepavyko",
+                    "fixed_voltage_mode_out_of_range": "Vietoj MPP \u012ftampos re\u017eimo pasirinktas fiksuotos \u012ftampos re\u017eimas, o fiksuota \u012ftampa buvo nustatyta \u012f per ma\u017e\u0105 arba per didel\u0119 reik\u0161m\u0119",
+                    "functional_incompatibility_between_pc_boards": "Funkcinis nesuderinamumas (viena ar daugiau keitiklio PC plok\u0161\u010di\u0173 nesuderinamos viena su kita, pvz., pakeitus PC plok\u0161t\u0119)",
+                    "grid_frequency_exceeded_limit_reconnecting": "Jungiant i\u0161 naujo tinklo da\u017enis vir\u0161ijo ribin\u0119 vert\u0119",
+                    "grid_voltage_dependent_power_reduction_active": "\u012ejungtas nuo tinklo \u012ftampos priklausomas galios ma\u017einimas",
+                    "guard_cannot_be_found": "Apsaugos nepavyko rasti",
+                    "hardware_id_problem": "Aparatin\u0117s \u012frangos ID problema",
+                    "hid_range_error": "HID diapazono klaida",
+                    "initialisation_error_file_system_error_on_usb": "USB atmintin\u0117s fail\u0173 sistemos inicijavimo klaida",
+                    "initialisation_error_usb_flash_drive_not_supported": "Inicijavimo klaida \u2013 USB atmintin\u0117 nepalaikoma",
+                    "initialisation_error_usb_stick_over_current": "Inicijavimo klaida \u2013 per didel\u0117 srov\u0117 USB atmintin\u0117je",
+                    "insulation_error_on_solar_panels": "Saul\u0117s kolektori\u0173 izoliacijos klaida",
+                    "insulation_fault": "Izoliacijos gedimas",
+                    "insulation_measurement_triggered": "Suaktyvintas izoliacijos matavimas",
+                    "intermediate_circuit_voltage_too_high": "Per auk\u0161ta tarpin\u0117s grandin\u0117s \u012ftampa",
+                    "intermediate_circuit_voltage_too_low_or_asymmetric": "Per ma\u017ea arba asimetri\u0161ka tarpin\u0117s grandin\u0117s \u012ftampa",
+                    "internal_dsp_malfunction": "Vidinis DSP gedimas",
+                    "internal_hardware_error": "Vidin\u0117 aparatin\u0117s \u012frangos klaida",
+                    "internal_processor_status": "\u012esp\u0117jimas apie vidinio procesoriaus b\u016bsen\u0105. Nor\u0117dami gauti daugiau informacijos, \u017er. b\u016bsenos kod\u0105",
+                    "interrupt_check_fail": "Pertraukimo patikrinimas nepavyko",
+                    "invalid_device_type": "Netinkamas \u012frenginio tipas",
+                    "inverter_required_setup_values_not_received": "Nepavyko gauti keitiklio reikaling\u0173 s\u0105rankos ver\u010di\u0173",
+                    "inverter_settings_changed_restart_required": "Pakeisti keitiklio nustatymai, reikia i\u0161 naujo paleisti keitikl\u012f",
+                    "log_file_cannot_be_saved": "\u017durnalo failo i\u0161saugoti negalima (pvz., USB atmintin\u0117 apsaugota nuo \u012fra\u0161ymo arba pilna)",
+                    "low_pv_voltage_dc_input_voltage_too_low": "\u017dema PV \u012ftampa \u2013 nuolatin\u0117s srov\u0117s \u012f\u0117jimo \u012ftampa per ma\u017ea, kad b\u016bt\u0173 galima tiekti energij\u0105 \u012f tinkl\u0105",
+                    "mains_voltage_dependent_power_reduction": "Nuo tinklo \u012ftampos priklausomas galios suma\u017einimas",
+                    "memory_error_detected": "Aptikta atminties klaida",
+                    "neutral_conductor_not_connected": "Neutralus laidininkas neprijungtas",
+                    "no_communication_between_power_stage_and_control_system": "N\u0117ra ry\u0161io tarp galios pakopos rinkinio ir valdymo sistemos",
+                    "no_communication_with_filter": "N\u0117ra ry\u0161io su filtru",
+                    "no_communication_with_hybrid_manager": "Negalima bendrauti su hibridiniu valdytoju",
+                    "no_communication_with_power_stage_set": "Ne\u012fmanomas ry\u0161ys su galios pakopos rinkiniu",
+                    "no_communication_with_storage_unit": "Ne\u012fmanomas ry\u0161ys su saugykla",
+                    "no_energy_fed_by_mppt1_past_24_hours": "Per pastar\u0105sias 24 valandas \u012f tinkl\u0105 MPPT1 nepateik\u0117 jokios energijos",
+                    "no_energy_fed_into_grid_past_24_hours": "Per pastar\u0105sias 24 valandas \u012f tinkl\u0105 nebuvo tiekiama energija",
+                    "no_error": "Klaid\u0173 n\u0117ra",
+                    "no_power_fed_in_despite_closed_relay": "Nepaisant u\u017edarytos rel\u0117s, maitinimas n\u0117ra tiekiamas",
+                    "no_usb_flash_drive_connected": "USB atmintin\u0117 neprijungta",
+                    "overcurrent_ac": "Vir\u0161\u012ftampio srov\u0117 (kintamoji srov\u0117)",
+                    "overcurrent_dc": "Vir\u0161\u012ftampio srov\u0117 (nuolatin\u0117 srov\u0117)",
+                    "overtemperature_in_connection_area": "Vir\u0161utin\u0117 temperat\u016bra jungties srityje",
+                    "pmc_power_stage_set_not_available": "PMC galios pakopos rinkinio n\u0117ra",
+                    "polarity_of_dc_strings_reversed": "Nuolatin\u0117s srov\u0117s styg\u0173 poli\u0161kumas pakeistas",
+                    "possible_hardware_fault": "Galimas aparat\u016bros gedimas",
+                    "power_derating_due_to_high_temperature": "Galios suma\u017einimas d\u0117l per auk\u0161tos temperat\u016bros",
+                    "power_stage_set_problem": "Maitinimo pakopos nustatymo problema",
+                    "pv_output_too_low_for_feeding_energy_into_the_grid": "PV galia per ma\u017ea, kad b\u016bt\u0173 galima tiekti energij\u0105 \u012f tinkl\u0105",
+                    "rcmu_error": "RCMU klaida",
+                    "real_time_clock_communication_error": "Realiojo laiko laikrod\u017eio modulio ry\u0161io klaida",
+                    "real_time_clock_hardware_error": "Realiojo laiko laikrod\u017eio modulio aparatin\u0117s \u012frangos klaida",
+                    "real_time_clock_in_emergency_mode": "Vidin\u0117 klaida: Realiojo laiko laikrod\u017eio modulis veikia avariniu re\u017eimu",
+                    "safety_cut_out_triggered": "Apsaugos i\u0161jungimas per papildom\u0105 kortel\u0119 arba suveik\u0117 RECERBO",
+                    "software_problem": "Programin\u0117s \u012frangos problema",
+                    "software_update_invalid_country_setup": "Programin\u0117s \u012frangos naujinimo grup\u0117 0 (netinkama \u0161alies s\u0105ranka)",
+                    "stand_alone_operation_detected": "Aptiktas savaranki\u0161kas veikimas",
+                    "storage_unit_not_available": "Sand\u0117liavimo bloko n\u0117ra",
+                    "time_lost": "Prarastas laikas",
+                    "too_little_dc_power_for_feed_in_operation": "Per ma\u017ea nuolatin\u0117s srov\u0117s galia tiekimui",
+                    "unique_id_conflict": "Unikalus ID konfliktas",
+                    "update_file_corrupt": "Sugadintas failo atnaujinimas",
+                    "update_file_does_not_match_device": "Atnaujinimo failas neatitinka \u012frenginio, atnaujinimo failas per senas",
+                    "update_file_not_recognised_or_missing": "Atnaujinimo failas neatpa\u017eintas arba jo n\u0117ra",
+                    "wired_shut_down_triggered": "Suveik\u0117 laidinis i\u0161jungimas",
+                    "write_or_read_error_occurred": "\u012evyko ra\u0161ymo arba skaitymo klaida"
+                }
+            },
+            "frequency_phase_average": {
+                "name": "Da\u017enio faz\u0117s vidurkis"
+            },
+            "inverter_state": {
+                "name": "Inverterio b\u016bsena"
+            },
+            "led_color": {
+                "name": "LED spalva"
+            },
+            "led_state": {
+                "name": "LED b\u016bsena"
+            },
+            "meter_location": {
+                "name": "Skaitiklio vieta"
+            },
+            "meter_location_description": {
+                "name": "Skaitiklio vietos apra\u0161ymas",
+                "state": {
+                    "consumption_path": "Vartojimo kelias",
+                    "external_battery": "I\u0161orin\u0117 baterija",
+                    "external_generator": "I\u0161orinis generatorius",
+                    "feed_in": "Tinklo sujungimo ta\u0161kas",
+                    "subload": "Perkrauti"
+                }
+            },
+            "meter_mode": {
+                "name": "Skaitiklio re\u017eimas"
+            },
+            "power_ac": {
+                "name": "Kintamosios srov\u0117s maitinimas"
+            },
+            "power_apparent_phase_1": {
+                "name": "Reaktyvioji galia 1 faz\u0117"
+            },
+            "power_apparent_phase_2": {
+                "name": "Reaktyvioji galia 2 faz\u0117"
+            },
+            "power_apparent_phase_3": {
+                "name": "Reaktyvioji galia 3 faz\u0117"
+            },
+            "power_battery": {
+                "name": "Maitinimo baterija"
+            },
+            "power_battery_charge": {
+                "name": "Maitinimo akumuliatoriaus \u012fkrovimas"
+            },
+            "power_battery_discharge": {
+                "name": "Maitinimo akumuliatoriaus i\u0161sikrovimas"
+            },
+            "power_factor_phase_1": {
+                "name": "Galios koeficientas 1 faz\u0117"
+            },
+            "power_factor_phase_2": {
+                "name": "Galios koeficientas 2 faz\u0117"
+            },
+            "power_factor_phase_3": {
+                "name": "Galios koeficientas 3 faz\u0117"
+            },
+            "power_grid": {
+                "name": "Elektros tinklas"
+            },
+            "power_grid_export": {
+                "name": "Elektros tinklo eksportas"
+            },
+            "power_grid_import": {
+                "name": "Elektros tinklo importas"
+            },
+            "power_load": {
+                "name": "Galios apkrova"
+            },
+            "power_load_consumed": {
+                "name": "Sunaudota galios apkrova"
+            },
+            "power_load_generated": {
+                "name": "Sukurta galios apkrova"
+            },
+            "power_photovoltaics": {
+                "name": "Galios fotovoltin\u0117 energija"
+            },
+            "power_reactive": {
+                "name": "Reaktyvioji galia"
+            },
+            "power_reactive_phase_1": {
+                "name": "Reaktyviosios galios 1 faz\u0117"
+            },
+            "power_reactive_phase_2": {
+                "name": "Reaktyviosios galios 2 faz\u0117"
+            },
+            "power_reactive_phase_3": {
+                "name": "Reaktyviosios galios 3 faz\u0117"
+            },
+            "power_real": {
+                "name": "Aktyvioji galia"
+            },
+            "power_real_phase_1": {
+                "name": "Aktyviosios galios 1 faz\u0117"
+            },
+            "power_real_phase_2": {
+                "name": "Aktyviosios galios 2 faz\u0117"
+            },
+            "power_real_phase_3": {
+                "name": "Aktyviosios galios 3 faz\u0117"
+            },
+            "relative_autonomy": {
+                "name": "Santykinis savaranki\u0161kumas"
+            },
+            "relative_self_consumption": {
+                "name": "Santykinis savaranki\u0161kas vartojimas"
+            },
+            "state_code": {
+                "name": "B\u016bsenos kodas"
+            },
+            "state_message": {
+                "name": "B\u016bsenos \u017einut\u0117",
+                "state": {
+                    "boost_mode": "Padidinimo re\u017eimas",
+                    "critical_fault": "Kritin\u0117 klaida",
+                    "fault": "Gedimas",
+                    "keep_minimum_temperature": "Laikykit\u0117s minimalios temperat\u016bros",
+                    "legionella_protection": "Apsauga nuo legioneli\u0173",
+                    "up_and_running": "Paruo\u0161ta ir veikia"
+                }
+            },
+            "state_of_charge": {
+                "name": "\u012ekrovimo b\u016bsena"
+            },
+            "status_code": {
+                "name": "B\u016bsenos kodas"
+            },
+            "status_message": {
+                "name": "B\u016bsenos prane\u0161imas",
+                "state": {
+                    "bootloading": "\u012ekrovimas",
+                    "error": "Klaida",
+                    "idle": "Nedaroma nieko",
+                    "ready": "Paruo\u0161ta",
+                    "running": "Veikia",
+                    "sleeping": "Miega",
+                    "standby": "Bud\u0117jimo re\u017eimas",
+                    "startup": "Prad\u0117ti"
+                }
+            },
+            "temperature_cell": {
+                "name": "Temperat\u016bra"
+            },
+            "voltage_ac": {
+                "name": "Kintamoji \u012ftampa"
+            },
+            "voltage_ac_phase_1": {
+                "name": "1 \u012ftampos faz\u0117"
+            },
+            "voltage_ac_phase_2": {
+                "name": "2 \u012ftampos faz\u0117"
+            },
+            "voltage_ac_phase_3": {
+                "name": "3 \u012ftampos faz\u0117"
+            },
+            "voltage_ac_phase_to_phase_12": {
+                "name": "\u012etampos faz\u0117 1-2"
+            },
+            "voltage_ac_phase_to_phase_23": {
+                "name": "\u012etampos faz\u0117 2-3"
+            },
+            "voltage_ac_phase_to_phase_31": {
+                "name": "\u012etampos faz\u0117 3-1"
+            },
+            "voltage_dc": {
+                "name": "Nuolatin\u0117 \u012ftampa"
+            },
+            "voltage_dc_2": {
+                "name": "Nuolatin\u0117 \u012ftampa 2"
+            },
+            "voltage_dc_maximum_cell": {
+                "name": "Did\u017eiausia elemento \u012ftampa"
+            },
+            "voltage_dc_minimum_cell": {
+                "name": "Minimali elemento \u012ftampa"
+            }
+        }
+    },
+    "exceptions": {
+        "entry_cannot_connect": {
+            "message": "Nepavyko prisijungti prie \u201eFronius\u201c \u012frenginio adresu {host} : {fronius_error}"
+        },
+        "update_failed": {
+            "message": "Bandant gauti duomenis \u012fvyko klaida: {fronius_error}"
+        }
+    }
+}

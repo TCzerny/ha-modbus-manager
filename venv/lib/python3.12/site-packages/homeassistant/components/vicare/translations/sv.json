@@ -1,0 +1,468 @@
+{
+    "config": {
+        "abort": {
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "single_instance_allowed": "Redan konfigurerad. Endast en konfiguration m\u00f6jlig.",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "error": {
+            "invalid_auth": "Ogiltig autentisering"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "client_id": "Klient-ID",
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "client_id": "ID f\u00f6r den API-klient som skapats i Viessmanns utvecklarportal.",
+                    "password": "L\u00f6senordet f\u00f6r att logga in p\u00e5 ditt ViCare-konto."
+                },
+                "description": "V\u00e4nligen verifiera dina anv\u00e4ndaruppgifter."
+            },
+            "user": {
+                "data": {
+                    "client_id": "Klient-ID",
+                    "heating_type": "V\u00e4rmel\u00e4ge",
+                    "password": "L\u00f6senord",
+                    "username": "E-post"
+                },
+                "data_description": {
+                    "client_id": "ID f\u00f6r den API-klient som skapats i Viessmanns utvecklarportal.",
+                    "heating_type": "G\u00f6r det m\u00f6jligt att \u00e5sidos\u00e4tta enhetens automatiska detektering.",
+                    "password": "L\u00f6senordet f\u00f6r att logga in p\u00e5 ditt ViCare-konto.",
+                    "username": "E-postadressen f\u00f6r att logga in p\u00e5 ditt ViCare-konto."
+                },
+                "description": "Konfigurera ViCare-integration. F\u00f6r att generera klient-ID g\u00e5 till https://app.developer.viessmann.com"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "burner": {
+                "name": "Br\u00e4nnare"
+            },
+            "circulation_pump": {
+                "name": "Cirkulationspump"
+            },
+            "compressor": {
+                "name": "Kompressor"
+            },
+            "domestic_hot_water_charging": {
+                "name": "Varmvatten laddning"
+            },
+            "domestic_hot_water_circulation_pump": {
+                "name": "Varmvatten cirkulationspump"
+            },
+            "domestic_hot_water_pump": {
+                "name": "Varmvatten pump"
+            },
+            "frost_protection": {
+                "name": "Frostskydd"
+            },
+            "solar_pump": {
+                "name": "Solpump"
+            }
+        },
+        "button": {
+            "activate_onetimecharge": {
+                "name": "Aktivera eng\u00e5ngsladdning"
+            }
+        },
+        "climate": {
+            "heating": {
+                "name": "V\u00e4rmer"
+            }
+        },
+        "fan": {
+            "ventilation": {
+                "name": "Ventilation",
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "permanent": "permanent",
+                            "sensor_driven": "sensor",
+                            "sensor_override": "schema med sensor\u00f6verstyrning",
+                            "ventilation": "schema"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "comfort_cooling_temperature": {
+                "name": "Komforttemperatur kyla"
+            },
+            "comfort_heating_temperature": {
+                "name": "Komforttemperatur v\u00e4rme"
+            },
+            "comfort_temperature": {
+                "name": "Komforttemperatur"
+            },
+            "dhw_hysteresis_switch_off": {
+                "name": "Varmvatten hysteres avst\u00e4ngning"
+            },
+            "dhw_hysteresis_switch_on": {
+                "name": "Varmvatten hysteres p\u00e5slagning"
+            },
+            "dhw_secondary_temperature": {
+                "name": "Varmvatten sekund\u00e4r temperatur"
+            },
+            "dhw_temperature": {
+                "name": "Varmvatten temperatur"
+            },
+            "heating_curve_shift": {
+                "name": "V\u00e4rmekurvans f\u00f6rskjutning"
+            },
+            "heating_curve_slope": {
+                "name": "V\u00e4rmekurvans lutning"
+            },
+            "normal_cooling_temperature": {
+                "name": "Normaltemperatur kyla"
+            },
+            "normal_heating_temperature": {
+                "name": "Normaltemperatur v\u00e4rme"
+            },
+            "normal_temperature": {
+                "name": "Normaltemperatur"
+            },
+            "reduced_cooling_temperature": {
+                "name": "Reducerad temperatur kyla"
+            },
+            "reduced_heating_temperature": {
+                "name": "Reducerad temperatur v\u00e4rme"
+            },
+            "reduced_temperature": {
+                "name": "S\u00e4nkt temperatur"
+            }
+        },
+        "sensor": {
+            "boiler_supply_temperature": {
+                "name": "Pannans framledningstemperatur"
+            },
+            "boiler_temperature": {
+                "name": "Pannans temperatur"
+            },
+            "buffer_main_temperature": {
+                "name": "Buffert huvudtemperatur"
+            },
+            "buffer_top_temperature": {
+                "name": "Buffert topptemperatur"
+            },
+            "burner_hours": {
+                "name": "Br\u00e4nnare timmar"
+            },
+            "burner_modulation": {
+                "name": "Br\u00e4nnare modulering"
+            },
+            "burner_starts": {
+                "name": "Br\u00e4nnare starter"
+            },
+            "collector_temperature": {
+                "name": "Solf\u00e5ngarens temperatur"
+            },
+            "compressor_hours": {
+                "name": "Kompressortimmar"
+            },
+            "compressor_hours_loadclass1": {
+                "name": "Kompressortimmars belastningsklass 1"
+            },
+            "compressor_hours_loadclass2": {
+                "name": "Kompressortimmars belastningsklass 2"
+            },
+            "compressor_hours_loadclass3": {
+                "name": "Kompressortimmars belastningsklass 3"
+            },
+            "compressor_hours_loadclass4": {
+                "name": "Kompressortimmars belastningsklass 4"
+            },
+            "compressor_hours_loadclass5": {
+                "name": "Kompressortimmars belastningsklass 5"
+            },
+            "compressor_phase": {
+                "name": "Kompressorfas"
+            },
+            "compressor_starts": {
+                "name": "Kompressor starter"
+            },
+            "dhw_storage_bottom_temperature": {
+                "name": "VVB bottentemperatur"
+            },
+            "dhw_storage_temperature": {
+                "name": "VVB temperatur"
+            },
+            "dhw_storage_top_temperature": {
+                "name": "VVB topptemperatur"
+            },
+            "energy_consumption_cooling_this_month": {
+                "name": "Elf\u00f6rbrukning f\u00f6r kylning denna m\u00e5nad"
+            },
+            "energy_consumption_cooling_this_year": {
+                "name": "Elf\u00f6rbrukning f\u00f6r kylning i \u00e5r"
+            },
+            "energy_consumption_cooling_today": {
+                "name": "Elf\u00f6rbrukning f\u00f6r kylning idag"
+            },
+            "energy_dhw_summary_consumption_heating_currentday": {
+                "name": "Varmvatten elf\u00f6rbrukning idag"
+            },
+            "energy_dhw_summary_consumption_heating_currentmonth": {
+                "name": "Varmvatten elf\u00f6rbrukning denna m\u00e5nad"
+            },
+            "energy_dhw_summary_consumption_heating_currentyear": {
+                "name": "Varmvatten elf\u00f6rbrukning i \u00e5r"
+            },
+            "energy_summary_consumption_heating_currentday": {
+                "name": "Elf\u00f6rbrukning f\u00f6r v\u00e4rme idag"
+            },
+            "energy_summary_consumption_heating_currentmonth": {
+                "name": "Elf\u00f6rbrukning f\u00f6r v\u00e4rme denna m\u00e5nad"
+            },
+            "energy_summary_consumption_heating_currentyear": {
+                "name": "Elf\u00f6rbrukning f\u00f6r v\u00e4rme i \u00e5r"
+            },
+            "energy_summary_consumption_heating_lastsevendays": {
+                "name": "Elf\u00f6rbrukning f\u00f6r v\u00e4rme senaste sju dagarna"
+            },
+            "energy_summary_dhw_consumption_heating_lastsevendays": {
+                "name": "Varmvatten elf\u00f6rbrukning senaste sju dagarna"
+            },
+            "ess_discharge_this_month": {
+                "name": "Batteriurladdning denna m\u00e5nad"
+            },
+            "ess_discharge_this_week": {
+                "name": "Batteriurladdning denna vecka"
+            },
+            "ess_discharge_this_year": {
+                "name": "Batteriurladdning i \u00e5r"
+            },
+            "ess_discharge_today": {
+                "name": "Batteriurladdning idag"
+            },
+            "ess_discharge_total": {
+                "name": "Batteriurladdning totalt"
+            },
+            "ess_power_current": {
+                "name": "Batterikraft"
+            },
+            "ess_state": {
+                "name": "Batteristatus",
+                "state": {
+                    "charge": "Laddar",
+                    "discharge": "Urladdning",
+                    "standby": "Standby"
+                }
+            },
+            "gas_consumption_fuelcell_this_month": {
+                "name": "Br\u00e4nsleceller gasf\u00f6rbrukning denna m\u00e5nad"
+            },
+            "gas_consumption_fuelcell_this_week": {
+                "name": "Br\u00e4nsleceller gasf\u00f6rbrukning denna vecka"
+            },
+            "gas_consumption_fuelcell_this_year": {
+                "name": "Br\u00e4nsleceller gasf\u00f6rbrukning i \u00e5r"
+            },
+            "gas_consumption_fuelcell_today": {
+                "name": "Br\u00e4nsleceller gasf\u00f6rbrukning idag"
+            },
+            "gas_consumption_heating_this_month": {
+                "name": "V\u00e4rme gasf\u00f6rbrukning denna m\u00e5nad"
+            },
+            "gas_consumption_heating_this_week": {
+                "name": "V\u00e4rme gasf\u00f6rbrukning denna vecka"
+            },
+            "gas_consumption_heating_this_year": {
+                "name": "V\u00e4rme gasf\u00f6rbrukning i \u00e5r"
+            },
+            "gas_consumption_heating_today": {
+                "name": "V\u00e4rme gasf\u00f6rbrukning idag"
+            },
+            "gas_consumption_total_this_month": {
+                "name": "Gasf\u00f6rbrukning denna m\u00e5nad"
+            },
+            "gas_consumption_total_this_week": {
+                "name": "Gasf\u00f6rbrukning denna vecka"
+            },
+            "gas_consumption_total_this_year": {
+                "name": "Gasf\u00f6rbrukning i \u00e5r"
+            },
+            "gas_consumption_total_today": {
+                "name": "Gasf\u00f6rbrukning idag"
+            },
+            "gas_summary_consumption_heating_currentday": {
+                "name": "V\u00e4rme gasf\u00f6rbrukning idag"
+            },
+            "gas_summary_consumption_heating_currentmonth": {
+                "name": "V\u00e4rme gasf\u00f6rbrukning denna m\u00e5nad"
+            },
+            "gas_summary_consumption_heating_currentyear": {
+                "name": "V\u00e4rme gasf\u00f6rbrukning i \u00e5r"
+            },
+            "gas_summary_consumption_heating_lastsevendays": {
+                "name": "V\u00e4rme gasf\u00f6rbrukning senaste sju dagarna"
+            },
+            "hotwater_gas_consumption_heating_this_month": {
+                "name": "Varmvatten gasf\u00f6rbrukning denna m\u00e5nad"
+            },
+            "hotwater_gas_consumption_heating_this_week": {
+                "name": "Varmvatten gasf\u00f6rbrukning denna vecka"
+            },
+            "hotwater_gas_consumption_heating_this_year": {
+                "name": "Varmvatten gasf\u00f6rbrukning i \u00e5r"
+            },
+            "hotwater_gas_consumption_today": {
+                "name": "Varmvatten gasf\u00f6rbrukning idag"
+            },
+            "hotwater_gas_summary_consumption_heating_currentday": {
+                "name": "Varmvatten gasf\u00f6rbrukning idag"
+            },
+            "hotwater_gas_summary_consumption_heating_currentmonth": {
+                "name": "Varmvatten gasf\u00f6rbrukning denna m\u00e5nad"
+            },
+            "hotwater_gas_summary_consumption_heating_currentyear": {
+                "name": "Varmvatten gasf\u00f6rbrukning i \u00e5r"
+            },
+            "hotwater_gas_summary_consumption_heating_lastsevendays": {
+                "name": "Varmvatten gasf\u00f6rbrukning senaste sju dagarna"
+            },
+            "hotwater_max_temperature": {
+                "name": "Varmvatten max temperatur"
+            },
+            "hotwater_min_temperature": {
+                "name": "Varmvatten min temperatur"
+            },
+            "hotwater_out_temperature": {
+                "name": "Varmvatten uttemperatur"
+            },
+            "outside_temperature": {
+                "name": "Utetemperatur"
+            },
+            "pcc_energy_consumption": {
+                "name": "Energiimport fr\u00e5n eln\u00e4t"
+            },
+            "pcc_energy_feed_in": {
+                "name": "Energiexport till eln\u00e4t"
+            },
+            "pcc_transfer_power_exchange": {
+                "name": "Effektutbyte med eln\u00e4t"
+            },
+            "photovoltaic_energy_production_this_month": {
+                "name": "Solenergiproduktion denna m\u00e5nad"
+            },
+            "photovoltaic_energy_production_this_week": {
+                "name": "Solenergiproduktion denna vecka"
+            },
+            "photovoltaic_energy_production_this_year": {
+                "name": "Solenergiproduktion i \u00e5r"
+            },
+            "photovoltaic_energy_production_today": {
+                "name": "Solenergiproduktion idag"
+            },
+            "photovoltaic_energy_production_total": {
+                "name": "Solenergiproduktion totalt"
+            },
+            "photovoltaic_power_production_current": {
+                "name": "Solenergi"
+            },
+            "photovoltaic_status": {
+                "name": "Solens tillst\u00e5nd",
+                "state": {
+                    "production": "Producerar",
+                    "ready": "Standby"
+                }
+            },
+            "power_consumption_this_month": {
+                "name": "Elf\u00f6rbrukning denna m\u00e5nad"
+            },
+            "power_consumption_this_week": {
+                "name": "Elf\u00f6rbrukning denna vecka"
+            },
+            "power_consumption_this_year": {
+                "name": "Elf\u00f6rbrukning i \u00e5r"
+            },
+            "power_consumption_today": {
+                "name": "Elf\u00f6rbrukning idag"
+            },
+            "power_production_current": {
+                "name": "Str\u00f6m f\u00f6r elproduktion"
+            },
+            "power_production_this_month": {
+                "name": "Energiproduktion denna m\u00e5nad"
+            },
+            "power_production_this_week": {
+                "name": "Energiproduktion denna vecka"
+            },
+            "power_production_this_year": {
+                "name": "Energiproduktion i \u00e5r"
+            },
+            "power_production_today": {
+                "name": "Energiproduktion idag"
+            },
+            "primary_circuit_return_temperature": {
+                "name": "Prim\u00e4rkrets returtemperatur"
+            },
+            "primary_circuit_supply_temperature": {
+                "name": "Prim\u00e4rkrets framledningstemperatur"
+            },
+            "return_temperature": {
+                "name": "Returtemperatur"
+            },
+            "secondary_circuit_return_temperature": {
+                "name": "Sekund\u00e4rkrets returtemperatur"
+            },
+            "secondary_circuit_supply_temperature": {
+                "name": "Sekund\u00e4rkrets framledningstemperatur"
+            },
+            "solar_power_production_this_month": {
+                "name": "Solenergiproduktion denna m\u00e5nad"
+            },
+            "solar_power_production_this_week": {
+                "name": "Solenergiproduktion denna vecka"
+            },
+            "solar_power_production_this_year": {
+                "name": "Solenergiproduktion i \u00e5r"
+            },
+            "solar_power_production_today": {
+                "name": "Solenergiproduktion idag"
+            },
+            "solar_storage_temperature": {
+                "name": "Solenergilagring temperatur"
+            },
+            "supply_temperature": {
+                "name": "Framledningstemperatur"
+            },
+            "volumetric_flow": {
+                "name": "Volymetriskt fl\u00f6de"
+            }
+        },
+        "water_heater": {
+            "domestic_hot_water": {
+                "name": "Varmvatten f\u00f6r hush\u00e5llsbruk"
+            }
+        }
+    },
+    "exceptions": {
+        "program_not_activated": {
+            "message": "Det g\u00e5r inte att aktivera ViCare-programmet {program}"
+        },
+        "program_not_deactivated": {
+            "message": "Det g\u00e5r inte att avaktivera ViCare-programmet {program}"
+        },
+        "program_unknown": {
+            "message": "Det g\u00e5r inte att \u00f6vers\u00e4tta f\u00f6rinst\u00e4llda {preset} till ett giltigt ViCare-program"
+        }
+    },
+    "services": {
+        "set_vicare_mode": {
+            "description": "St\u00e4ll in ett ViCare-l\u00e4ge.",
+            "fields": {
+                "vicare_mode": {
+                    "description": "ViCare-l\u00e4ge.",
+                    "name": "ViCare-l\u00e4ge"
+                }
+            },
+            "name": "St\u00e4ll in ViCare-l\u00e4ge"
+        }
+    }
+}

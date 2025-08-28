@@ -1,0 +1,100 @@
+{
+    "device_automation": {
+        "action_type": {
+            "clean": "Laat {entity_name} schoonmaken",
+            "dock": "Laat {entity_name} terugkeren naar het basisstation"
+        },
+        "condition_type": {
+            "is_cleaning": "{entity_name} is aan het schoonmaken",
+            "is_docked": "{entity_name} is bij basisstation"
+        },
+        "extra_fields": {
+            "for": "Duur"
+        },
+        "trigger_type": {
+            "cleaning": "{entity_name} begon met schoonmaken",
+            "docked": "{entity_name} is bij basisstation"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Stofzuiger",
+            "state": {
+                "cleaning": "Schoonmaken",
+                "docked": "Gedockt",
+                "error": "Fout",
+                "idle": "Inactief",
+                "off": "Uit",
+                "on": "Aan",
+                "paused": "Gepauzeerd",
+                "returning": "Terugkeren naar dock"
+            }
+        }
+    },
+    "services": {
+        "clean_spot": {
+            "description": "Vertelt de stofzuiger om een plek schoon te maken.",
+            "name": "Maak plek schoon"
+        },
+        "locate": {
+            "description": "Lokaliseert de robotstofzuiger.",
+            "name": "Lokaliseer"
+        },
+        "pause": {
+            "description": "Pauzeert de reinigingstaak.",
+            "name": "Pauzeren"
+        },
+        "return_to_base": {
+            "description": "Vertelt de stofzuiger om terug te keren naar zijn dock.",
+            "name": "Keer terug naar dock"
+        },
+        "send_command": {
+            "description": "Stuurt een ruwe opdracht naar de stofzuiger.",
+            "fields": {
+                "command": {
+                    "description": "Opdracht om uit te voeren. De opdrachten zijn integratiespecifiek.",
+                    "name": "Opdracht"
+                },
+                "params": {
+                    "description": "Parameters voor de opdracht. De parameters zijn integratiespecifiek.",
+                    "name": "Parameters"
+                }
+            },
+            "name": "Opdracht verzenden"
+        },
+        "set_fan_speed": {
+            "description": "Stelt de ventilatorsnelheid van de stofzuiger in.",
+            "fields": {
+                "fan_speed": {
+                    "description": "Ventilatorsnelheid. De waarde hangt af van de integratie. Sommige integraties hebben snelheidsstappen, zoals 'medium'. Sommige gebruiken een percentage, tussen 0 en 100.",
+                    "name": "Ventilatorsnelheid"
+                }
+            },
+            "name": "Ventilatorsnelheid instellen"
+        },
+        "start": {
+            "description": "Start of hervat de reinigingstaak.",
+            "name": "Starten"
+        },
+        "start_pause": {
+            "description": "Start, pauzeert of hervat de schoonmaaktaak.",
+            "name": "Starten/pauzeren"
+        },
+        "stop": {
+            "description": "Stopt de huidige schoonmaaktaak.",
+            "name": "Stoppen"
+        },
+        "toggle": {
+            "name": "Omschakelen"
+        },
+        "turn_off": {
+            "description": "Stopt de huidige schoonmaaktaak en keert terug naar zijn dock.",
+            "name": "Uitzetten"
+        },
+        "turn_on": {
+            "description": "Start een nieuwe schoonmaaktaak.",
+            "name": "Aanzetten"
+        }
+    },
+    "title": "Stofzuiger"
+}

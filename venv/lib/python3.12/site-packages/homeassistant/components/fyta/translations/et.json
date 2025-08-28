@@ -1,0 +1,117 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Kasutaja on juba seadistatud",
+            "already_in_progress": "Seadistamine on juba k\u00e4imas",
+            "reauth_successful": "Taastuvastamine \u00f5nnestus"
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus",
+            "invalid_auth": "Tuvastamine nurjus",
+            "password_error": "Sobimatu salas\u00f5na",
+            "unknown": "Ootamatu t\u00f5rge"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Salas\u00f5na",
+                    "username": "Kasutajanimi"
+                },
+                "data_description": {
+                    "password": "Salas\u00f5na FYTA kontole sisselogimiseks.",
+                    "username": "E-posti aadress FYTA kontole sisselogimiseks."
+                },
+                "description": "Uuenda oma FYTA API volitusi"
+            },
+            "user": {
+                "data": {
+                    "password": "Salas\u00f5na",
+                    "username": "E-posti aadress"
+                },
+                "data_description": {
+                    "password": "Salas\u00f5na FYTA kontole sisselogimiseks.",
+                    "username": "E-posti aadress FYTA kontole sisselogimiseks."
+                },
+                "description": "Sisesta FYTA serveriga \u00fchenduse loomiseks e-kirja aadress ja salas\u00f5na",
+                "title": "FYTA API volitused"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "light": {
+                "name": "Valgus"
+            },
+            "light_status": {
+                "name": "Valguse olek",
+                "state": {
+                    "high": "[%key:component::fyta::entity::sensor::plant_status::state::high%]",
+                    "low": "[%key:component::fyta::entity::sensor::plant_status::state::low%]",
+                    "no_data": "Andmeid pole",
+                    "perfect": "[%key:component::fyta::entity::sensor::plant_status::state::perfect%]",
+                    "too_high": "[%key:component::fyta::entity::sensor::plant_status::state::too_high%]",
+                    "too_low": "[%key:component::fyta::entity::sensor::plant_status::state::too_low%]"
+                }
+            },
+            "moisture_status": {
+                "name": "Niiskuse olek",
+                "state": {
+                    "high": "[%key:component::fyta::entity::sensor::plant_status::state::high%]",
+                    "low": "[%key:component::fyta::entity::sensor::plant_status::state::low%]",
+                    "no_data": "Andmeid pole",
+                    "perfect": "[%key:component::fyta::entity::sensor::plant_status::state::perfect%]",
+                    "too_high": "[%key:component::fyta::entity::sensor::plant_status::state::too_high%]",
+                    "too_low": "[%key:component::fyta::entity::sensor::plant_status::state::too_low%]"
+                }
+            },
+            "plant_status": {
+                "name": "Taime seisund",
+                "state": {
+                    "deleted": "Kustutatud",
+                    "doing_great": "L\u00e4heb h\u00e4sti",
+                    "need_attention": "Vajab t\u00e4helepanu",
+                    "no_sensor": "Andur puudub"
+                }
+            },
+            "salinity": {
+                "name": "Soolsus"
+            },
+            "salinity_status": {
+                "name": "Soolsuse olek",
+                "state": {
+                    "high": "[%key:component::fyta::entity::sensor::plant_status::state::high%]",
+                    "low": "[%key:component::fyta::entity::sensor::plant_status::state::low%]",
+                    "no_data": "Andmeid pole",
+                    "perfect": "[%key:component::fyta::entity::sensor::plant_status::state::perfect%]",
+                    "too_high": "[%key:component::fyta::entity::sensor::plant_status::state::too_high%]",
+                    "too_low": "[%key:component::fyta::entity::sensor::plant_status::state::too_low%]"
+                }
+            },
+            "scientific_name": {
+                "name": "Teaduslik nimetus"
+            },
+            "temperature_status": {
+                "name": "Temperatuuri olek",
+                "state": {
+                    "high": "K\u00f5rge",
+                    "low": "Madal",
+                    "no_data": "Andmeid pole",
+                    "perfect": "T\u00e4iuslik",
+                    "too_high": "Liiga k\u00f5rge",
+                    "too_low": "Liiga madal"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "auth_failed": {
+            "message": "Viga API-sse sisselogimisel."
+        },
+        "config_entry_not_ready": {
+            "message": "Viga konfiguratsioonikirje laadimisel."
+        },
+        "update_error": {
+            "message": "Viga API andmete v\u00e4rskendamisel."
+        }
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "missing_internal_url": "Certifique-se de que o Home Assistant tem um URL interno v\u00e1lido",
+            "missing_nasweb_data": "Algo n\u00e3o est\u00e1 certo com a configura\u00e7\u00e3o interna do dispositivo. Tente reiniciar o dispositivo e o Home Assistant.",
+            "missing_status": "N\u00e3o recebeu nenhuma atualiza\u00e7\u00e3o de status dentro do tempo esperado. Certifique-se de que o URL interno do Home Assistant \u00e9 acess\u00edvel a partir do dispositivo NASweb.",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "{nasweb_schema_img}O NASweb combina as fun\u00e7\u00f5es de um painel de controlo e a capacidade de gerir a automatiza\u00e7\u00e3o de edif\u00edcios. O dispositivo monitoriza o fluxo de informa\u00e7\u00f5es de sensores e interruptores program\u00e1veis e armazena defini\u00e7\u00f5es, configura\u00e7\u00f5es e a\u00e7\u00f5es configuradas.",
+                "title": "Adicionar dispositivo NASWeb"
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "switch_output": {
+                "name": "Interruptor de rel\u00e9 {index}"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_error_internal_error": {
+            "message": "Algo n\u00e3o est\u00e1 certo com a configura\u00e7\u00e3o interna do dispositivo. Tente reiniciar o dispositivo e o Home Assistant. Se o problema persistir, entre em contacto com o suporte em {support_email}"
+        },
+        "config_entry_error_invalid_authentication": {
+            "message": "Nome de utilizador/palavra-passe inv\u00e1lidos. Provavelmente o utilizador alterou a palavra-passe ou foi removido. Elimine esta entrada e crie uma nova com o nome de utilizador/palavra-passe corretos."
+        },
+        "config_entry_error_missing_internal_url": {
+            "message": "Certifique-se de que o Home Assistant tem um URL interno v\u00e1lido"
+        },
+        "config_entry_error_no_status_update": {
+            "message": "N\u00e3o recebeu nenhuma atualiza\u00e7\u00e3o de status dentro do tempo esperado. Certifique-se de que o URL interno do Home Assistant \u00e9 acess\u00edvel a partir do dispositivo NASweb. Se o problema persistir, entre em contacto com o suporte em {support_email}"
+        },
+        "serial_mismatch": {
+            "message": "Ligado a um dispositivo NASWeb diferente (o n\u00famero de s\u00e9rie n\u00e3o corresponde)"
+        }
+    }
+}

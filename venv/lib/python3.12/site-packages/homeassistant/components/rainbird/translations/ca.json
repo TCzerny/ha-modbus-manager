@@ -1,0 +1,76 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositiu ja est\u00e0 configurat",
+            "reauth_successful": "Re-autenticaci\u00f3 realitzada correctament"
+        },
+        "error": {
+            "cannot_connect": "Ha fallat la connexi\u00f3",
+            "invalid_auth": "Autenticaci\u00f3 inv\u00e0lida",
+            "timeout_connect": "S'ha esgotat el temps m\u00e0xim d'espera per establir connexi\u00f3"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Contrasenya"
+                },
+                "title": "L'autenticaci\u00f3 de {name} ha caducat"
+            },
+            "user": {
+                "data": {
+                    "host": "Amfitri\u00f3",
+                    "password": "Contrasenya"
+                },
+                "description": "Introdueix la informaci\u00f3 del m\u00f2dul Wi-Fi LNK del teu dispositiu Rain Bird.",
+                "title": "Configuraci\u00f3 de Rain Bird"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Sensor de pluja ('rainsensor')"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Retard de pluja"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "Retard de pluja ('raindelay')"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Temps de reg predeterminat en minuts"
+                },
+                "title": "Configuraci\u00f3 de Rain Bird"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "fields": {
+                "duration": {
+                    "description": "Durada de l'apagada del sistema.",
+                    "name": "Durada"
+                }
+            }
+        },
+        "start_irrigation": {
+            "description": "Inicia el reg",
+            "fields": {
+                "duration": {
+                    "description": "Durada de l'encesa de l'aspersor.",
+                    "name": "Durada"
+                }
+            },
+            "name": "Inicia el reg"
+        }
+    }
+}

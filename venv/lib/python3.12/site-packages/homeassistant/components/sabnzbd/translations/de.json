@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dienst ist bereits konfiguriert",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_api_key": "Ung\u00fcltiger API-Code"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API-Code",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "Der API-Code des SABnzbd-Servers. Dieser befindet sich in der SABnzbd-Weboberfl\u00e4che unter Konfigurationszahnrad (oben rechts) > Allgemein > Sicherheit.",
+                    "url": "Die vollst\u00e4ndige URL des SABnzbd-Servers, einschlie\u00dflich Port. Beispiel: `http://localhost:8080` oder `http://a02368d7-sabnzbd:8080`, wenn du das Add-on verwendest."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "warnings": {
+                "name": "Warnhinweise"
+            }
+        },
+        "button": {
+            "pause": {
+                "name": "Pausieren"
+            },
+            "resume": {
+                "name": "Fortsetzen"
+            }
+        },
+        "number": {
+            "speedlimit": {
+                "name": "Geschwindigkeitsbegrenzung"
+            }
+        },
+        "sensor": {
+            "daily_total": {
+                "name": "T\u00e4glich insgesamt"
+            },
+            "free_disk_space": {
+                "name": "Freier Speicherplatz"
+            },
+            "left": {
+                "name": "Zum Herunterladen \u00fcbrig"
+            },
+            "monthly_total": {
+                "name": "Monatlich insgesamt"
+            },
+            "overall_total": {
+                "name": "Gesamtsumme"
+            },
+            "queue": {
+                "name": "Warteschlange"
+            },
+            "queue_count": {
+                "name": "Anzahl der Warteschlangen"
+            },
+            "speed": {
+                "name": "Geschwindigkeit"
+            },
+            "status": {
+                "name": "Status"
+            },
+            "total_disk_space": {
+                "name": "Festplattenplatz insgesamt"
+            },
+            "weekly_total": {
+                "name": "W\u00f6chentlich insgesamt"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_exception": {
+            "message": "Aufgrund eines Verbindungsfehlers konnte der Befehl nicht an SABnzbd gesendet werden. Versuche es sp\u00e4ter erneut."
+        }
+    },
+    "issues": {
+        "pause_action_deprecated": {
+            "description": "Die \u201ePausieren\u201c-Aktion ist veraltet und wird in einer zuk\u00fcnftigen Version entfernt. Bitte verwende stattdessen die \u201ePausieren\u201c-Taste. Um dieses Problem zu beheben, passe die Automationen entsprechend an und starte Home Assistant neu.",
+            "title": "SABnzbd \u201ePausieren\u201c-Aktion veraltet"
+        },
+        "resume_action_deprecated": {
+            "description": "Die \u201eFortsetzen\u201c-Aktion ist veraltet und wird in einer zuk\u00fcnftigen Version entfernt. Bitte verwende stattdessen die \u201eFortsetzen\u201c-Taste. Um dieses Problem zu beheben, passe die Automationen entsprechend an und starte Home Assistant neu.",
+            "title": "SABnzbd \u201eFortsetzen\u201c-Aktion veraltet"
+        },
+        "set_speed_action_deprecated": {
+            "description": "Die Aktion \u201eGeschwindigkeit einstellen\u201c ist veraltet und wird in einer zuk\u00fcnftigen Version entfernt. Verwende stattdessen die Zahl-Entit\u00e4t \u201eGeschwindigkeitsbegrenzung\u201c. Um dieses Problem zu beheben, passe die Automationen entsprechend an und starte Home Assistant neu.",
+            "title": "SABnzbd `set_speed`-Aktion veraltet"
+        }
+    },
+    "services": {
+        "pause": {
+            "description": "H\u00e4lt Downloads an.",
+            "fields": {
+                "api_key": {
+                    "description": "Der SABnzbd-API-Code zum Anhalten von Downloads.",
+                    "name": "SABnzbd-API-Code"
+                }
+            },
+            "name": "Pausieren"
+        },
+        "resume": {
+            "description": "Setzt Downloads fort.",
+            "fields": {
+                "api_key": {
+                    "description": "Der SABnzbd-API-Code zum Fortsetzen von Downloads.",
+                    "name": "SABnzbd-API-Code"
+                }
+            },
+            "name": "Fortsetzen"
+        },
+        "set_speed": {
+            "description": "Legt das Download-Geschwindigkeitslimit fest.",
+            "fields": {
+                "api_key": {
+                    "description": "Der SABnzbd-API-Code zum Festlegen der Geschwindigkeitsbegrenzung.",
+                    "name": "SABnzbd-API-Code"
+                },
+                "speed": {
+                    "description": "Erlaubte H\u00f6chstgeschwindigkeit. Wenn die Angabe als Zahl ohne Einheiten erfolgt, wird sie als Prozentwert interpretiert. Wenn Einheiten angegeben werden (z. B. 500K), werden sie absolut interpretiert.",
+                    "name": "Geschwindigkeit"
+                }
+            },
+            "name": "Geschwindigkeit einstellen"
+        }
+    }
+}

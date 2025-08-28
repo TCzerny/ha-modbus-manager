@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "\u00dcmberseadistamine \u00f5nnestus"
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus",
+            "no_data": "API on \u00fchendatud kuid vastus oli t\u00fchi"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "Piirkonnad",
+                    "currency": "Raha\u00fchik"
+                },
+                "data_description": {
+                    "areas": "Piirkonnad mille hinnad kuvatakse vastavalt Nordpooli turupiirkondadele.",
+                    "currency": "Vali hindade kuvamiseks valuuta, p\u00f5hivaluutaks on EUR."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "Piirkonnad",
+                    "currency": "Raha\u00fchik"
+                },
+                "data_description": {
+                    "areas": "Piirkonnad mille hinnad kuvatakse vastavalt Nordpooli turupiirkondadele.",
+                    "currency": "Vali hindade kuvamiseks valuuta, p\u00f5hivaluutaks on EUR."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} keskmine"
+            },
+            "block_end_time": {
+                "name": "{block} aeg kuni"
+            },
+            "block_max": {
+                "name": "{block} k\u00f5rgeim hind"
+            },
+            "block_min": {
+                "name": "{block} madalaim hind"
+            },
+            "block_start_time": {
+                "name": "{block} aeg alates"
+            },
+            "currency": {
+                "name": "Raha\u00fchik"
+            },
+            "current_price": {
+                "name": "Praegune hind"
+            },
+            "daily_average": {
+                "name": "P\u00e4eva keskmine"
+            },
+            "exchange_rate": {
+                "name": "Vahetuskurss"
+            },
+            "highest_price": {
+                "name": "K\u00f5rgeim hind",
+                "state_attributes": {
+                    "end": {
+                        "name": "L\u00f5puaeg"
+                    },
+                    "start": {
+                        "name": "Algusaeg"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "Eelmine hind"
+            },
+            "lowest_price": {
+                "name": "Madalaim hind",
+                "state_attributes": {
+                    "end": {
+                        "name": "L\u00f5puaeg"
+                    },
+                    "start": {
+                        "name": "Algusaeg"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "J\u00e4rgmine hind"
+            },
+            "updated_at": {
+                "name": "Viimati uuendatud"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Tekkis tuvastusviga kuna proovisid liiga vanu andmeid hankida."
+        },
+        "connection_error": {
+            "message": "API-ga \u00fchenduse loomisel esines t\u00f5rge. Proovi hiljem uuesti."
+        },
+        "empty_response": {
+            "message": "Nord Pool ei ole antud kuup\u00e4eva turuhindu avaldanud."
+        },
+        "entry_not_found": {
+            "message": "Nord Pooli sidumine ei ole Home Assistantis seadistatud."
+        },
+        "entry_not_loaded": {
+            "message": "Nord Pooli sidumine pole praegu Home Assistantis laaditud ega keelatud."
+        },
+        "initial_update_failed": {
+            "message": "Algne v\u00e4rskendamine nurjus k\u00e4ivitamisel veaga {error}"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "Hangi kindla kuup\u00e4eva hinnad.",
+            "fields": {
+                "areas": {
+                    "description": "\u00dcks v\u00f5i mitu piirkonda, mille jaoks hindu saada. Kui see j\u00e4etakse t\u00fchjaks, kasutab see juba konfigureeritud piirkondi.",
+                    "name": "Piirkonnad"
+                },
+                "config_entry": {
+                    "description": "Vali seadekirje.",
+                    "name": "Vali Nord Pooli seadekirje"
+                },
+                "currency": {
+                    "description": "Raha\u00fchik milles saab hindu esitada. Kui see j\u00e4etakse t\u00fchjaks, kasutatakse juba seadistatud raha\u00fchikut.",
+                    "name": "Raha\u00fchik"
+                },
+                "date": {
+                    "description": "Lubatud on kuup\u00e4evad kaks kuud minevikus ja \u00fcks p\u00e4ev tulevikus.",
+                    "name": "Kuup\u00e4ev"
+                }
+            },
+            "name": "Kuup\u00e4eva hindade hankimine"
+        }
+    }
+}

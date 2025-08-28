@@ -1,0 +1,997 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "already_in_progress": "El flujo de configuraci\u00f3n ya est\u00e1 en curso"
+        },
+        "error": {
+            "exceeded_api_calls": "Se ha superado el n\u00famero de llamadas a la API.",
+            "exceeded_user_api_calls": "Se ha superado el n\u00famero de llamadas a la API de usuario.",
+            "invalid_token": "El token no es v\u00e1lido.",
+            "not_acceptable_terms": "No se han aceptado los t\u00e9rminos del servicio.",
+            "not_allowed_api_again": "El usuario NO tiene permiso en la llamada API.",
+            "not_supported_country": "El pa\u00eds no es compatible.",
+            "token_unauthorized": "El token no es v\u00e1lido o no est\u00e1 autorizado."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Token de acceso personal",
+                    "country": "Pa\u00eds"
+                },
+                "description": "Por favor, introduce un ThinQ [PAT(Personal Access Token)]({pat_url}) creado con tu cuenta LG ThinQ.",
+                "title": "Conectar con ThinQ"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clean_light_reminder": {
+                "name": "Indicador luminoso de limpieza"
+            },
+            "eco_friendly_mode": {
+                "name": "Respetuoso con el medio ambiente"
+            },
+            "machine_clean_reminder": {
+                "name": "Recordatorio de limpieza de la m\u00e1quina"
+            },
+            "one_touch_filter": {
+                "name": "Filtro de aire fresco"
+            },
+            "operation_mode": {
+                "name": "Energ\u00eda"
+            },
+            "power_save_enabled": {
+                "name": "Modo de ahorro de energ\u00eda"
+            },
+            "remote_control_enabled": {
+                "name": "Inicio remoto"
+            },
+            "remote_control_enabled_for_location": {
+                "name": "Inicio remoto de {location}"
+            },
+            "rinse_refill": {
+                "name": "Es necesario rellenar el enjuague"
+            },
+            "sabbath_mode": {
+                "name": "Sabbath"
+            },
+            "signal_level": {
+                "name": "Sonido del timbre"
+            }
+        },
+        "climate": {
+            "climate_air_conditioner": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Alto",
+                            "low": "Bajo",
+                            "mid": "Medio",
+                            "power": "Potencia",
+                            "slow": "Lento"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "air_clean": "Purificar el aire",
+                            "aroma": "Aroma",
+                            "energy_saving": "Ahorro de energ\u00eda"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "error": {
+                "name": "Error",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "block_error": "La limpieza se ha detenido. Comprueba si hay obst\u00e1culos.",
+                            "brush_error": "El cepillo m\u00f3vil tiene un problema",
+                            "bubble_error": "Error de burbuja",
+                            "child_lock_active_error": "Bloqueo infantil",
+                            "cliff_error": "El sensor de prevenci\u00f3n de ca\u00eddas tiene un error",
+                            "clutch_error": "Error de embrague",
+                            "compressor_error": "Error del compresor",
+                            "dispensing_error": "Error del dispensador",
+                            "door_close_error": "Error de puerta cerrada",
+                            "door_lock_error": "Error de bloqueo de la puerta",
+                            "door_open_error": "Puerta abierta",
+                            "door_sensor_error": "Error del sensor de la puerta",
+                            "drainmotor_error": "Error de drenaje",
+                            "dust_full_error": "El cubo del polvo est\u00e1 lleno y hay que vaciarlo",
+                            "empty_water_alert_error": "Agua vac\u00eda",
+                            "fan_motor_error": "Error de bloqueo del ventilador",
+                            "filter_clogging_error": "Error de filtro",
+                            "frozen_error": "Error de detecci\u00f3n de congelaci\u00f3n",
+                            "heater_circuit_error": "Falla del circuito del calentador",
+                            "high_power_supply_error": "Error de fuente de alimentaci\u00f3n",
+                            "high_temperature_detection_error": "Error de alta temperatura",
+                            "inner_lid_open_error": "Error de tapa abierta",
+                            "ir_sensor_error": "Error del sensor IR",
+                            "le2_error": "Error LE2",
+                            "le_error": "Error LE",
+                            "left_wheel_error": "La rueda izquierda tiene un problema.",
+                            "locked_motor_error": "Error del motor del controlador",
+                            "mop_error": "No puede funcionar correctamente sin la mopa conectada",
+                            "motor_error": "Problema con el motor",
+                            "motor_lock_error": "Error de bloqueo del motor",
+                            "move_error": "Las ruedas no tocan el suelo.",
+                            "need_water_drain": "Agua vac\u00eda",
+                            "need_water_replenishment": "Llenar agua",
+                            "no_battery_error": "La bater\u00eda del robot aspirador est\u00e1 baja",
+                            "no_dust_bin_error": "El dep\u00f3sito de polvo no est\u00e1 instalado",
+                            "no_filter_error": "Error de filtro",
+                            "out_of_balance_error": "Carga desequilibrada",
+                            "overfill_error": "Error de sobrellenado",
+                            "part_malfunction_error": "Error de AIE",
+                            "power_code_connection_error": "Error de conexi\u00f3n del cable de alimentaci\u00f3n",
+                            "power_fail_error": "Fallo de alimentaci\u00f3n",
+                            "right_wheel_error": "La rueda derecha tiene un problema.",
+                            "stack_error": "Error de apilamiento",
+                            "steam_heat_error": "Error del calentador de vapor",
+                            "suction_blocked_error": "El motor de succi\u00f3n est\u00e1 obstruido",
+                            "temperature_sensor_error": "Error del termistor",
+                            "time_to_run_the_tub_clean_cycle_error": "Recomendaci\u00f3n de limpieza de la ba\u00f1era",
+                            "timeout_error": "Error de tiempo de espera",
+                            "turbidity_sensor_error": "Error del sensor de turbidez",
+                            "unable_to_lock_error": "Error de bloqueo de la puerta",
+                            "unbalanced_load_error": "Carga desequilibrada",
+                            "unknown_error": "El producto requiere atenci\u00f3n",
+                            "vibration_sensor_error": "Error del sensor de vibraci\u00f3n",
+                            "water_drain_error": "Error de drenaje de agua",
+                            "water_leakage_error": "Problema de fuga de agua",
+                            "water_leaks_error": "Problema de fuga de agua",
+                            "water_level_sensor_error": "Error del sensor de agua",
+                            "water_supply_error": "Error en el suministro de agua"
+                        }
+                    }
+                }
+            },
+            "notification": {
+                "name": "Notificaci\u00f3n",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "charging_is_complete": "Se ha completado la carga",
+                            "cleaning_is_complete": "El ciclo ha finalizado",
+                            "cleaning_is_completed": "Se ha completado la limpieza",
+                            "cleaning_is_failed": "La limpieza ha fallado",
+                            "cooking_is_complete": "Apagado",
+                            "door_is_open": "La puerta est\u00e1 abierta",
+                            "drying_failed": "Se ha producido un error en la secadora.",
+                            "drying_is_complete": "Se ha completado el secado",
+                            "error_during_cleaning": "La limpieza se detuvo debido a un error",
+                            "error_during_washing": "Se ha producido un error en la lavadora.",
+                            "error_has_occurred": "Se ha producido un error",
+                            "frozen_is_complete": "Ice plus est\u00e1 listo",
+                            "homeguard_is_stopped": "La guardia de la casa se ha detenido",
+                            "lack_of_water": "No hay agua en el dep\u00f3sito de agua",
+                            "motion_is_detected": "Se env\u00eda una fotograf\u00eda cuando se detecta movimiento durante la vigilancia de casa.",
+                            "need_to_check_location": "Se requiere verificaci\u00f3n de la ubicaci\u00f3n",
+                            "pollution_is_high": "El estado del aire empeora r\u00e1pidamente",
+                            "preheating_is_complete": "El precalentamiento ha finalizado",
+                            "rinse_is_not_enough": "A\u00f1ade abrillantador para mejorar el secado",
+                            "salt_refill_is_needed": "A\u00f1ade sal para mejorar el ablandamiento",
+                            "scheduled_cleaning_starts": "Inicio programado de la limpieza",
+                            "styling_is_complete": "El estilismo se ha completado",
+                            "time_to_change_filter": "Es hora de sustituir el filtro",
+                            "time_to_change_water_filter": "Es necesario sustituir el filtro de agua",
+                            "time_to_clean": "Necesidad de autolimpieza",
+                            "time_to_clean_filter": "Es hora de limpiar el filtro",
+                            "timer_is_complete": "El temporizador se ha completado",
+                            "washing_is_complete": "El lavado ha finalizado",
+                            "water_is_full": "El agua esta llena",
+                            "water_leak_has_occurred": "El lavavajillas ha detectado una fuga de agua"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "fan_speed": {
+                "name": "Ventilador"
+            },
+            "lamp_brightness": {
+                "name": "Luz"
+            },
+            "light_status": {
+                "name": "Luz"
+            },
+            "relative_hour_to_start": {
+                "name": "Programar encendido"
+            },
+            "relative_hour_to_start_for_location": {
+                "name": "Programar encendido en {location}"
+            },
+            "relative_hour_to_start_wm": {
+                "name": "Retardo de inicio en"
+            },
+            "relative_hour_to_start_wm_for_location": {
+                "name": "Retardo de inicio en {location}"
+            },
+            "relative_hour_to_stop": {
+                "name": "Programar apagado"
+            },
+            "relative_hour_to_stop_for_location": {
+                "name": "programar apagado en {location}"
+            },
+            "relative_hour_to_stop_wm": {
+                "name": "El retardo termina en"
+            },
+            "relative_hour_to_stop_wm_for_location": {
+                "name": "El retardo en {location} termina en"
+            },
+            "sleep_timer_relative_hour_to_stop": {
+                "name": "Temporizador"
+            },
+            "sleep_timer_relative_hour_to_stop_for_location": {
+                "name": "Temporizador de apagado autom\u00e1tico en {location}"
+            },
+            "target_humidity": {
+                "name": "Humedad deseada"
+            },
+            "target_temperature": {
+                "name": "Temperatura"
+            },
+            "target_temperature_for_location": {
+                "name": "temperatura en {location}"
+            },
+            "wind_temperature": {
+                "name": "Temperatura del viento"
+            }
+        },
+        "select": {
+            "air_clean_operation_mode": {
+                "name": "Purificar el aire",
+                "state": {
+                    "start": "Iniciar",
+                    "stop": "Detener"
+                }
+            },
+            "cook_mode": {
+                "name": "Modo de cocci\u00f3n",
+                "state": {
+                    "bake": "Hornear",
+                    "convection_bake": "Horneado por convecci\u00f3n",
+                    "convection_roast": "Asado por convecci\u00f3n",
+                    "crisp_convection": "Convecci\u00f3n crujiente",
+                    "roast": "Asar"
+                }
+            },
+            "cook_mode_for_location": {
+                "name": "Modo de cocci\u00f3n en {location}",
+                "state": {
+                    "bake": "Hornear",
+                    "convection_bake": "Horneado por convecci\u00f3n",
+                    "convection_roast": "Asado por convecci\u00f3n",
+                    "crisp_convection": "Convecci\u00f3n crujiente",
+                    "roast": "Asar"
+                }
+            },
+            "current_job_mode": {
+                "name": "Modo de funcionamiento",
+                "state": {
+                    "air_clean": "Purificaci\u00f3n",
+                    "auto": "Auto",
+                    "baby_care": "Modo de cuidado del beb\u00e9",
+                    "circulator": "Refuerzo",
+                    "clean": "\u00danico",
+                    "direct_clean": "Modo directo",
+                    "dual_clean": "Dual",
+                    "fast": "Turbo",
+                    "heat_pump": "Calefacci\u00f3n",
+                    "humidify": "Niebla",
+                    "humidify_and_air_clean": "Bruma y purificante",
+                    "humidity": "H\u00famedo",
+                    "nature_clean": "Modo natural",
+                    "pet_clean": "Modo mascota",
+                    "silent": "Silencioso",
+                    "sleep": "Reposo",
+                    "smart": "Modo inteligente",
+                    "space_clean": "Modo de difusi\u00f3n",
+                    "spot_clean": "Modo ancho",
+                    "turbo": "Turbo",
+                    "up_feature": "Modo adicional",
+                    "vacation": "Vacaciones"
+                }
+            },
+            "display_light": {
+                "name": "Brillo de la pantalla",
+                "state": {
+                    "level_1": "Brillo 1",
+                    "level_2": "Brillo 2",
+                    "level_3": "Brillo 3",
+                    "off": "Apagado"
+                }
+            },
+            "fresh_air_filter": {
+                "name": "Filtro de aire fresco",
+                "state": {
+                    "auto": "Auto",
+                    "off": "Apagado",
+                    "power": "Potencia",
+                    "replace": "Sustituir el filtro",
+                    "smart_off": "Apagado",
+                    "smart_on": "Almacenamiento seguro inteligente",
+                    "smart_power": "Almacenamiento seguro inteligente"
+                }
+            },
+            "hygiene_dry_mode": {
+                "name": "Modo de secado",
+                "state": {
+                    "fast": "R\u00e1pido",
+                    "normal": "Delicado",
+                    "off": "Apagado",
+                    "silent": "Silencioso"
+                }
+            },
+            "light_brightness": {
+                "name": "Claro"
+            },
+            "monitoring_enabled": {
+                "name": "Sensor de calidad del aire",
+                "state": {
+                    "always": "Siempre encendido",
+                    "on_working": "Se enciende con el producto"
+                }
+            },
+            "operation_mode": {
+                "name": "Operaci\u00f3n",
+                "state": {
+                    "cancel": "Cancelar",
+                    "power_off": "Apagado",
+                    "preheating": "Precalentamiento",
+                    "start": "Iniciar",
+                    "stop": "Detener",
+                    "wake_up": "Modo reposo desactivado"
+                }
+            },
+            "operation_mode_for_location": {
+                "name": "operaci\u00f3n en {location}",
+                "state": {
+                    "cancel": "Cancelar",
+                    "power_off": "Apagado",
+                    "preheating": "Precalentamiento",
+                    "start": "Iniciar",
+                    "stop": "Detener",
+                    "wake_up": "Modo reposo desactivado"
+                }
+            },
+            "wind_angle": {
+                "name": "Rotaci\u00f3n",
+                "state": {
+                    "angle_140": "140\u00b0",
+                    "angle_45": "45\u00b0",
+                    "angle_60": "60\u00b0",
+                    "angle_90": "90\u00b0",
+                    "off": "Apagado"
+                }
+            },
+            "wind_strength": {
+                "name": "Velocidad",
+                "state": {
+                    "auto": "Auto",
+                    "high": "Alta",
+                    "low": "Baja",
+                    "mid": "Media",
+                    "power": "Turbo",
+                    "slow": "Lento",
+                    "turbo": "Turbo",
+                    "wind_1": "Paso 1",
+                    "wind_10": "Paso 10",
+                    "wind_2": "Paso 2",
+                    "wind_3": "Paso 3",
+                    "wind_4": "Paso 4",
+                    "wind_5": "Paso 5",
+                    "wind_6": "Paso 6",
+                    "wind_7": "Paso 7",
+                    "wind_8": "Paso 8",
+                    "wind_9": "Paso 9"
+                }
+            }
+        },
+        "sensor": {
+            "absolute_to_start": {
+                "name": "Programar encendido"
+            },
+            "absolute_to_start_for_location": {
+                "name": "Programar encendido en {location}"
+            },
+            "absolute_to_stop": {
+                "name": "Programar apagado"
+            },
+            "absolute_to_stop_for_location": {
+                "name": "programar apagado en {location}"
+            },
+            "battery_level": {
+                "name": "Bater\u00eda",
+                "state": {
+                    "high": "Completa",
+                    "low": "Baja",
+                    "mid": "Media",
+                    "warning": "Vac\u00eda"
+                }
+            },
+            "beer_remain": {
+                "name": "Progreso de la receta"
+            },
+            "brightness": {
+                "name": "Intensidad de la iluminaci\u00f3n"
+            },
+            "brightness_for_location": {
+                "name": "Intensidad de iluminaci\u00f3n en {location}"
+            },
+            "cock_state": {
+                "name": "UVnano",
+                "state": {
+                    "cleaning": "En curso",
+                    "normal": "En espera"
+                }
+            },
+            "current_dish_washing_course": {
+                "name": "Ciclo actual",
+                "state": {
+                    "auto": "Auto",
+                    "delicate": "Delicado",
+                    "download_cycle": "Ciclo de descarga",
+                    "eco": "Eco",
+                    "express": "Express",
+                    "heavy": "Intensivo",
+                    "machine_clean": "Limpieza de m\u00e1quina",
+                    "normal": "Normal",
+                    "quick": "R\u00e1pido",
+                    "refresh": "Refrescar",
+                    "rinse": "Enjuagar",
+                    "short_mode": "Modo corto",
+                    "spray": "Pulverizador",
+                    "steam": "Cuidado al vapor",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_job_mode": {
+                "name": "Modo de funcionamiento",
+                "state": {
+                    "air_clean": "Purificar",
+                    "auto": "Auto",
+                    "clothes_dry": "Lavander\u00eda",
+                    "edge": "Limpieza de bordes",
+                    "heat_pump": "Calefacci\u00f3n",
+                    "high": "Potencia",
+                    "intensive_dry": "Lugar",
+                    "macro": "Modo personalizado",
+                    "mop": "Fregar",
+                    "normal": "Normal",
+                    "off": "Apagado",
+                    "quiet_humidity": "Silencioso",
+                    "rapid_humidity": "Chorro",
+                    "sector_base": "C\u00e9lula a c\u00e9lula",
+                    "select": "Mi espacio",
+                    "smart_humidity": "Inteligente",
+                    "spot": "Modo puntual en espiral",
+                    "turbo": "Turbo",
+                    "vacation": "Vacaciones",
+                    "zigzag": "Zigzag"
+                }
+            },
+            "current_job_mode_stick_cleaner": {
+                "name": "Modo de funcionamiento",
+                "state": {
+                    "auto": "Bajo consumo",
+                    "high": "Potencia",
+                    "mop": "Fregar",
+                    "normal": "Normal",
+                    "off": "Apagado",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_state": {
+                "name": "Estado actual",
+                "state": {
+                    "add_drain": "Relleno",
+                    "as_pop_up": "El producto requiere atenci\u00f3n",
+                    "cancel": "Cancelar",
+                    "carbonation": "Carbonataci\u00f3n",
+                    "change_condition": "Cambio de ajustes",
+                    "charging": "Cargando",
+                    "charging_complete": "Carga completada",
+                    "checking_turbidity": "Detecci\u00f3n del nivel del suelo",
+                    "cleaning": "Limpiando",
+                    "cleaning_is_done": "La limpieza est\u00e1 hecha",
+                    "complete": "Hecho",
+                    "cook": "Cocinando",
+                    "cook_complete": "Hecho",
+                    "cooking_in_progress": "Cocinando",
+                    "cool_down": "Enfriamiento",
+                    "cooling": "Enfriando",
+                    "detecting": "Detectando",
+                    "detergent_amount": "Proporcionar informaci\u00f3n sobre la cantidad de detergente.",
+                    "diagnosis": "El diagn\u00f3stico inteligente est\u00e1 en marcha",
+                    "dispensing": "Dispensaci\u00f3n autom\u00e1tica",
+                    "display_loadsize": "Tama\u00f1o de la carga",
+                    "done": "Hecho",
+                    "drying": "Secando",
+                    "during_aging": "Envejecimiento",
+                    "during_fermentation": "Fermentaci\u00f3n",
+                    "end": "Finalizado",
+                    "end_cooling": "Secando",
+                    "error": "El producto requiere atenci\u00f3n",
+                    "extracting_capsule": "Elaboraci\u00f3n de c\u00e1psulas",
+                    "extraction_mode": "Almacenamiento",
+                    "firmware": "Actualizando el firmware",
+                    "fota": "Actualizando",
+                    "frozen_prevent_initial": "Protecci\u00f3n contra congelaci\u00f3n en espera",
+                    "frozen_prevent_pause": "Protecci\u00f3n contra congelaci\u00f3n en pausa",
+                    "frozen_prevent_running": "Protecci\u00f3n contra congelaci\u00f3n en curso",
+                    "homing": "En movimiento",
+                    "initial": "En espera",
+                    "initializing": "En espera",
+                    "lock": "Bloqueo de control",
+                    "macrosector": "El control remoto est\u00e1 en uso",
+                    "melting": "Disoluci\u00f3n del mosto",
+                    "monitoring_detecting": "HomeGuard est\u00e1 activo",
+                    "monitoring_moving": "Yendo al punto de partida",
+                    "monitoring_positioning": "Establecer el punto de inicio de Homeguard",
+                    "night_dry": "Secado nocturno",
+                    "oven_setting": "Placa de cocci\u00f3n conectada",
+                    "pause": "En pausa",
+                    "paused": "En pausa",
+                    "power_fail": "Fallo de alimentaci\u00f3n",
+                    "power_off": "Apagado",
+                    "power_on": "Encendido",
+                    "preference": "Ajuste",
+                    "preheat": "Precalentamiento",
+                    "preheat_complete": "El precalentamiento ha finalizado",
+                    "preheating": "Precalentamiento",
+                    "preheating_is_done": "El precalentamiento ha finalizado",
+                    "prepareing_fermentation": "Prepar\u00e1ndose ahora",
+                    "presteam": "Listo para cocinar al vapor",
+                    "prewash": "Prelavado",
+                    "proofing": "Prueba",
+                    "refreshing": "Actualizando",
+                    "reservation": "El control remoto est\u00e1 en uso",
+                    "reserved": "Retardo fijado",
+                    "rinse_hold": "Esperando para aclarar",
+                    "rinsing": "Aclarado",
+                    "running": "En ejecuci\u00f3n",
+                    "running_end": "Completa",
+                    "setdate": "El control remoto est\u00e1 en uso",
+                    "shoes_module": "Secado de zapatos",
+                    "sleep": "En modo reposo",
+                    "smart_grid_run": "Ejecuci\u00f3n de redes inteligentes",
+                    "soaking": "Remojo",
+                    "softening": "Suavizante",
+                    "spinning": "Girando",
+                    "standby": "En espera",
+                    "stay": "Actualizar",
+                    "steam": "Actualizar",
+                    "steam_softening": "Ablandamiento por vapor",
+                    "sterilize": "Esterilizar",
+                    "temperature_stabilization": "Ajuste de la temperatura",
+                    "working": "Limpiando",
+                    "wrinkle_care": "Cuidado de las arrugas"
+                }
+            },
+            "current_state_for_location": {
+                "name": "estado actual en {location}",
+                "state": {
+                    "add_drain": "Relleno",
+                    "as_pop_up": "El producto requiere atenci\u00f3n",
+                    "cancel": "Cancelar",
+                    "carbonation": "Carbonataci\u00f3n",
+                    "change_condition": "Cambio de ajustes",
+                    "charging": "Cargando",
+                    "charging_complete": "Carga completada",
+                    "checking_turbidity": "Detecci\u00f3n del nivel del suelo",
+                    "cleaning": "Limpiando",
+                    "cleaning_is_done": "La limpieza est\u00e1 hecha",
+                    "complete": "Hecho",
+                    "cook": "Cocinando",
+                    "cook_complete": "Hecho",
+                    "cooking_in_progress": "Cocinando",
+                    "cool_down": "Enfriamiento",
+                    "cooling": "Enfriando",
+                    "detecting": "Detectando",
+                    "detergent_amount": "Proporcionar informaci\u00f3n sobre la cantidad de detergente.",
+                    "diagnosis": "El diagn\u00f3stico inteligente est\u00e1 en marcha",
+                    "dispensing": "Dispensaci\u00f3n autom\u00e1tica",
+                    "display_loadsize": "Tama\u00f1o de la carga",
+                    "done": "Hecho",
+                    "drying": "Secando",
+                    "during_aging": "Envejecimiento",
+                    "during_fermentation": "Fermentaci\u00f3n",
+                    "end": "Finalizado",
+                    "end_cooling": "Secando",
+                    "error": "El producto requiere atenci\u00f3n",
+                    "extracting_capsule": "Elaboraci\u00f3n de c\u00e1psulas",
+                    "extraction_mode": "Almacenamiento",
+                    "firmware": "Actualizando el firmware",
+                    "fota": "Actualizando",
+                    "frozen_prevent_initial": "Protecci\u00f3n contra congelaci\u00f3n en espera",
+                    "frozen_prevent_pause": "Protecci\u00f3n contra congelaci\u00f3n en pausa",
+                    "frozen_prevent_running": "Protecci\u00f3n contra congelaci\u00f3n en curso",
+                    "homing": "En movimiento",
+                    "initial": "En espera",
+                    "initializing": "En espera",
+                    "lock": "Bloqueo de control",
+                    "macrosector": "El control remoto est\u00e1 en uso",
+                    "melting": "Disoluci\u00f3n del mosto",
+                    "monitoring_detecting": "HomeGuard est\u00e1 activo",
+                    "monitoring_moving": "Yendo al punto de partida",
+                    "monitoring_positioning": "Establecer el punto de inicio de Homeguard",
+                    "night_dry": "Secado nocturno",
+                    "oven_setting": "Placa de cocci\u00f3n conectada",
+                    "pause": "En pausa",
+                    "paused": "En pausa",
+                    "power_fail": "Fallo de alimentaci\u00f3n",
+                    "power_off": "Apagado",
+                    "power_on": "Encendido",
+                    "preference": "Ajuste",
+                    "preheat": "Precalentamiento",
+                    "preheat_complete": "El precalentamiento ha finalizado",
+                    "preheating": "Precalentamiento",
+                    "preheating_is_done": "El precalentamiento ha finalizado",
+                    "prepareing_fermentation": "Prepar\u00e1ndose ahora",
+                    "presteam": "Listo para cocinar al vapor",
+                    "prewash": "Prelavado",
+                    "proofing": "Prueba",
+                    "refreshing": "Actualizando",
+                    "reservation": "El control remoto est\u00e1 en uso",
+                    "reserved": "Retardo fijado",
+                    "rinse_hold": "Esperando para aclarar",
+                    "rinsing": "Aclarado",
+                    "running": "En ejecuci\u00f3n",
+                    "running_end": "Completa",
+                    "setdate": "El control remoto est\u00e1 en uso",
+                    "shoes_module": "Secado de zapatos",
+                    "sleep": "En modo reposo",
+                    "smart_grid_run": "Ejecuci\u00f3n de redes inteligentes",
+                    "soaking": "Remojo",
+                    "softening": "Suavizante",
+                    "spinning": "Girando",
+                    "standby": "En espera",
+                    "stay": "Actualizar",
+                    "steam": "Actualizar",
+                    "steam_softening": "Ablandamiento por vapor",
+                    "sterilize": "Esterilizar",
+                    "temperature_stabilization": "Ajuste de la temperatura",
+                    "working": "Limpiando",
+                    "wrinkle_care": "Cuidado de las arrugas"
+                }
+            },
+            "current_temperature": {
+                "name": "Temperatura actual"
+            },
+            "day_target_temperature": {
+                "name": "Temperatura de crecimiento diurno"
+            },
+            "day_target_temperature_for_location": {
+                "name": "temperatura de crecimiento diurno en {location}"
+            },
+            "duration": {
+                "name": "Duraci\u00f3n de la iluminaci\u00f3n"
+            },
+            "duration_for_location": {
+                "name": "duraci\u00f3n de la iluminaci\u00f3n en {location}"
+            },
+            "elapsed_day_state": {
+                "name": "Per\u00edodo de elaboraci\u00f3n"
+            },
+            "elapsed_day_total": {
+                "name": "Duraci\u00f3n de la elaboraci\u00f3n"
+            },
+            "filter_lifetime": {
+                "name": "Filtro restante"
+            },
+            "flavor_info": {
+                "name": "Sabor"
+            },
+            "fresh_air_filter": {
+                "name": "Filtro de aire fresco",
+                "state": {
+                    "auto": "Auto",
+                    "off": "Apagado",
+                    "power": "Potencia",
+                    "replace": "Sustituir el filtro",
+                    "smart_off": "Apagado",
+                    "smart_on": "Almacenamiento seguro inteligente",
+                    "smart_power": "Almacenamiento seguro inteligente"
+                }
+            },
+            "growth_mode": {
+                "name": "Modo",
+                "state": {
+                    "ext_expert": "Modo de cultivo personalizado",
+                    "ext_flower": "Flores",
+                    "ext_herb": "Hierbas",
+                    "ext_leaf": "Verduras",
+                    "standard": "Auto"
+                }
+            },
+            "growth_mode_for_location": {
+                "name": "modo en {location}",
+                "state": {
+                    "ext_expert": "Modo de cultivo personalizado",
+                    "ext_flower": "Flores",
+                    "ext_herb": "Hierbas",
+                    "ext_leaf": "Verduras",
+                    "standard": "Auto"
+                }
+            },
+            "hop_oil_info": {
+                "name": "L\u00fapulo"
+            },
+            "light_start": {
+                "name": "Luces a tiempo"
+            },
+            "light_start_for_location": {
+                "name": "luces a tiempo en {location}"
+            },
+            "monitoring_enabled": {
+                "name": "Sensor de calidad del aire",
+                "state": {
+                    "always": "Siempre encendido",
+                    "on_working": "Se enciende con el producto"
+                }
+            },
+            "night_target_temperature": {
+                "name": "Temperatura de cultivo nocturno"
+            },
+            "night_target_temperature_for_location": {
+                "name": "temperatura de cultivo nocturno en {location}"
+            },
+            "odor_level": {
+                "name": "Olor",
+                "state": {
+                    "invalid": "No v\u00e1lido",
+                    "normal": "Normal",
+                    "strong": "Fuerte",
+                    "very_strong": "Muy fuerte",
+                    "weak": "D\u00e9bil"
+                }
+            },
+            "personalization_mode": {
+                "name": "Modo personal",
+                "state": {
+                    "auto_inside": "Modo autom\u00e1tico",
+                    "auto_outside": "Modo de enclavamiento",
+                    "baby": "Modo de cuidado del beb\u00e9",
+                    "cooking": "Modo de cocci\u00f3n",
+                    "exercise": "Modo de ejercicio",
+                    "others": "Otros",
+                    "pet": "Modo mascota",
+                    "sick_house": "Nuevo modo Casa",
+                    "sleep": "Modo de reposo",
+                    "smoke": "Modo humo"
+                }
+            },
+            "power_level": {
+                "name": "Nivel de potencia"
+            },
+            "power_level_for_location": {
+                "name": "nivel de potencia en {location}"
+            },
+            "recipe_name": {
+                "name": "Receta de cerveza casera",
+                "state": {
+                    "ipa": "IPA",
+                    "my_recipe": "Mi receta",
+                    "pale_ale": "Cerveza p\u00e1lida",
+                    "pilsner": "Cerveza pilsner",
+                    "red_ale": "Cerveza roja",
+                    "stout": "Cerveza negra",
+                    "wheat": "Trigo"
+                }
+            },
+            "relative_to_start": {
+                "name": "Programar encendido"
+            },
+            "relative_to_start_for_location": {
+                "name": "Programar encendido en {location}"
+            },
+            "relative_to_start_wm": {
+                "name": "Retardo de inicio en"
+            },
+            "relative_to_start_wm_for_location": {
+                "name": "Retardo de inicio en {location}"
+            },
+            "relative_to_stop": {
+                "name": "Programar apagado"
+            },
+            "relative_to_stop_for_location": {
+                "name": "programar apagado en {location}"
+            },
+            "relative_to_stop_wm": {
+                "name": "El retardo termina en"
+            },
+            "relative_to_stop_wm_for_location": {
+                "name": "El retardo en {location} termina en"
+            },
+            "remain": {
+                "name": "Tiempo restante"
+            },
+            "remain_for_location": {
+                "name": "tiempo restante en {location}"
+            },
+            "rinse_level": {
+                "name": "Nivel del dispensador de abrillantador",
+                "state": {
+                    "rinselevel_0": "0",
+                    "rinselevel_1": "1",
+                    "rinselevel_2": "2",
+                    "rinselevel_3": "3",
+                    "rinselevel_4": "4"
+                }
+            },
+            "running": {
+                "name": "Tiempo de funcionamiento"
+            },
+            "running_for_location": {
+                "name": "tiempo de funcionamiento en {location}"
+            },
+            "sleep_timer_relative_to_stop": {
+                "name": "Temporizador"
+            },
+            "sleep_timer_relative_to_stop_for_location": {
+                "name": "Temporizador de apagado autom\u00e1tico en {location}"
+            },
+            "softening_level": {
+                "name": "Nivel de ablandamiento",
+                "state": {
+                    "softeninglevel_1": "1",
+                    "softeninglevel_2": "2",
+                    "softeninglevel_3": "3",
+                    "softeninglevel_4": "4"
+                }
+            },
+            "sterilizing_state": {
+                "name": "Esterilizaci\u00f3n a alta temperatura",
+                "state": {
+                    "cancel": "Cancelar",
+                    "off": "Apagado",
+                    "on": "Esterilizaci\u00f3n"
+                }
+            },
+            "target": {
+                "name": "Tiempo de cocci\u00f3n"
+            },
+            "target_for_location": {
+                "name": "tiempo de cocci\u00f3n en {location}"
+            },
+            "target_temperature": {
+                "name": "Temperatura",
+                "state": {
+                    "freezer": "Congelador",
+                    "fridge": "Frigor\u00edfico",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "Carne/Pescado",
+                    "off": "Apagado",
+                    "rice_grain": "Arroz/Cereales",
+                    "storage": "Almacenamiento",
+                    "temperature_number": "N\u00famero",
+                    "vegetable_fruit": "Verdura/Fruta"
+                }
+            },
+            "target_temperature_for_location": {
+                "name": "temperatura en {location}",
+                "state": {
+                    "freezer": "Congelador",
+                    "fridge": "Frigor\u00edfico",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "Carne/Pescado",
+                    "off": "Apagado",
+                    "rice_grain": "Arroz/Cereales",
+                    "storage": "Almacenamiento",
+                    "temperature_number": "N\u00famero",
+                    "vegetable_fruit": "Verdura/Fruta"
+                }
+            },
+            "temperature": {
+                "name": "Temperatura"
+            },
+            "temperature_state": {
+                "name": "Temperatura",
+                "state": {
+                    "high": "Alta",
+                    "low": "Baja",
+                    "normal": "Buena"
+                }
+            },
+            "temperature_state_for_location": {
+                "name": "temperatura en {location}",
+                "state": {
+                    "high": "Alta",
+                    "low": "Baja",
+                    "normal": "Buena"
+                }
+            },
+            "total": {
+                "name": "Tiempo total"
+            },
+            "total_for_location": {
+                "name": "tiempo total en {location}"
+            },
+            "total_pollution_level": {
+                "name": "Calidad general del aire",
+                "state": {
+                    "bad": "Poco saludable",
+                    "good": "Bueno",
+                    "invalid": "No v\u00e1lido",
+                    "normal": "Moderado",
+                    "very_bad": "Pobre"
+                }
+            },
+            "used_time": {
+                "name": "Filtro de agua utilizado"
+            },
+            "water_type": {
+                "name": "Tipo"
+            },
+            "wind_volume_for_location": {
+                "name": "velocidad del viento en {location}"
+            },
+            "wort_info": {
+                "name": "Mosto",
+                "state": {
+                    "dark": "Oscuro",
+                    "deep_gold": "Oro profundo",
+                    "hoppy": "L\u00fapulo",
+                    "wheat": "Trigo"
+                }
+            },
+            "yeast_info": {
+                "name": "Levadura",
+                "state": {
+                    "american_ale": "Cerveza americana",
+                    "english_ale": "Cerveza inglesa",
+                    "lager": "Lager",
+                    "weizen": "Weizen"
+                }
+            }
+        },
+        "switch": {
+            "auto_mode": {
+                "name": "Modo autom\u00e1tico"
+            },
+            "express_mode": {
+                "name": "Hielo plus"
+            },
+            "hot_water_mode": {
+                "name": "Agua caliente"
+            },
+            "humidity_warm_mode": {
+                "name": "Niebla c\u00e1lida"
+            },
+            "hygiene_dry_mode": {
+                "name": "Modo de secado"
+            },
+            "mood_lamp_state": {
+                "name": "Luz de ambiente"
+            },
+            "operation_power": {
+                "name": "Potencia"
+            },
+            "optimal_humidity": {
+                "name": "Ventilaci\u00f3n"
+            },
+            "power_save_enabled": {
+                "name": "Ahorro de energ\u00eda"
+            },
+            "rapid_freeze": {
+                "name": "Congelaci\u00f3n r\u00e1pida"
+            },
+            "sleep_mode": {
+                "name": "Modo de reposo"
+            },
+            "uv_nano": {
+                "name": "UVnano"
+            },
+            "warm_mode": {
+                "name": "Calefacci\u00f3n"
+            }
+        }
+    }
+}

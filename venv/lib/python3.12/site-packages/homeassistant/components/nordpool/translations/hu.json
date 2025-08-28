@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "\u00dajrakonfigur\u00e1l\u00e1s sikeres volt"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "no_data": "Az API csatlakozott, de a v\u00e1lasz \u00fcres volt."
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "Ter\u00fcletek",
+                    "currency": "P\u00e9nznem"
+                },
+                "data_description": {
+                    "areas": "Ter\u00fcletek, amelyekhez az \u00e1rakat a Nordpool piaci ter\u00fcletei alapj\u00e1n jelen\u00edt meg.",
+                    "currency": "V\u00e1lassza ki a megjelen\u00edteni k\u00edv\u00e1nt \u00e1rak p\u00e9nznem\u00e9t, az alap\u00e9rtelmezett p\u00e9nznem az EUR."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "Ter\u00fcletek",
+                    "currency": "P\u00e9nznem"
+                },
+                "data_description": {
+                    "areas": "Ter\u00fcletek, amelyekhez az \u00e1rakat a Nordpool piaci ter\u00fcletei alapj\u00e1n jelen\u00edt meg.",
+                    "currency": "V\u00e1lassza ki a megjelen\u00edteni k\u00edv\u00e1nt \u00e1rak p\u00e9nznem\u00e9t, az alap\u00e9rtelmezett p\u00e9nznem az EUR."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} \u00e1tlag"
+            },
+            "block_end_time": {
+                "name": "{block} h\u00e1tral\u00e9v\u0151 id\u0151"
+            },
+            "block_max": {
+                "name": "{block} legmagasabb \u00e1r"
+            },
+            "block_min": {
+                "name": "{block} legalacsonyabb \u00e1r"
+            },
+            "block_start_time": {
+                "name": "{block} kezd\u00e9si id\u0151"
+            },
+            "currency": {
+                "name": "P\u00e9nznem"
+            },
+            "current_price": {
+                "name": "Jelenlegi \u00e1r"
+            },
+            "daily_average": {
+                "name": "Napi \u00e1tlag"
+            },
+            "exchange_rate": {
+                "name": "\u00c1rfolyam"
+            },
+            "highest_price": {
+                "name": "Legmagasabb \u00e1r",
+                "state_attributes": {
+                    "end": {
+                        "name": "Befejez\u00e9si id\u0151"
+                    },
+                    "start": {
+                        "name": "Kezd\u00e9si id\u0151"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "El\u0151z\u0151 \u00e1r"
+            },
+            "lowest_price": {
+                "name": "Legalacsonyabb \u00e1r",
+                "state_attributes": {
+                    "end": {
+                        "name": "Befejez\u00e9si id\u0151"
+                    },
+                    "start": {
+                        "name": "Kezd\u00e9si id\u0151"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "K\u00f6vetkez\u0151 \u00e1r"
+            },
+            "updated_at": {
+                "name": "Utolj\u00e1ra friss\u00edtve"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Hiteles\u00edt\u00e9si hiba t\u00f6rt\u00e9nt, mert t\u00fal r\u00e9gi adatokat pr\u00f3b\u00e1lt lek\u00e9rni."
+        },
+        "connection_error": {
+            "message": "Kapcsol\u00f3d\u00e1si hiba t\u00f6rt\u00e9nt az API-hoz. Pr\u00f3b\u00e1lja meg k\u00e9s\u0151bb \u00fajra!"
+        },
+        "empty_response": {
+            "message": "A Nord Pool nem tett k\u00f6zz\u00e9 piaci \u00e1rakat a megadott d\u00e1tumra."
+        },
+        "entry_not_found": {
+            "message": "A Nord Pool integr\u00e1ci\u00f3 nincs konfigur\u00e1lva a Home Assistant rendszerben."
+        },
+        "entry_not_loaded": {
+            "message": "A Nord Pool integr\u00e1ci\u00f3 jelenleg nincs bet\u00f6ltve vagy le van tiltva a Home Assistant rendszerben."
+        },
+        "initial_update_failed": {
+            "message": "Az indul\u00e1skor az els\u0151 friss\u00edt\u00e9s sikertelen volt a k\u00f6vetkez\u0151 hib\u00e1val: {error}"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "Adatok lek\u00e9r\u00e9se egy adott d\u00e1tumhoz tartoz\u00f3 \u00e1rakr\u00f3l.",
+            "fields": {
+                "areas": {
+                    "description": "Egy vagy t\u00f6bb ter\u00fclet, amelyekhez \u00e1rakat szeretne lek\u00e9rni. Ha \u00fcresen hagyja, a m\u00e1r be\u00e1ll\u00edtott ter\u00fcleteket haszn\u00e1lja.",
+                    "name": "Ter\u00fcletek"
+                },
+                "config_entry": {
+                    "description": "V\u00e1lassza ki a konfigur\u00e1ci\u00f3s bejegyz\u00e9st.",
+                    "name": "Nord Pool konfigur\u00e1ci\u00f3s bejegyz\u00e9s kiv\u00e1laszt\u00e1sa"
+                },
+                "currency": {
+                    "description": "A p\u00e9nznem, amelyben az \u00e1rakat szeretn\u00e9 lek\u00e9rni. Ha \u00fcresen hagyja, a m\u00e1r be\u00e1ll\u00edtott p\u00e9nznemet haszn\u00e1lja.",
+                    "name": "P\u00e9nznem"
+                },
+                "date": {
+                    "description": "Csak k\u00e9t h\u00f3napn\u00e1l r\u00e9gebbi \u00e9s egy nappal el\u0151bbi d\u00e1tumok megad\u00e1sa enged\u00e9lyezett.",
+                    "name": "D\u00e1tum"
+                }
+            },
+            "name": "\u00c1rak lek\u00e9r\u00e9se adott d\u00e1tumra"
+        }
+    }
+}

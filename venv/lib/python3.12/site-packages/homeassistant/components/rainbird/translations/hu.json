@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "invalid_auth": "\u00c9rv\u00e9nytelen hiteles\u00edt\u00e9s",
+            "timeout_connect": "Id\u0151t\u00fall\u00e9p\u00e9s a kapcsolat l\u00e9trehoz\u00e1sa sor\u00e1n"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Jelsz\u00f3"
+                },
+                "data_description": {
+                    "password": "A jelsz\u00f3, amely a Rain Bird eszk\u00f6z\u00e9vel t\u00f6rt\u00e9n\u0151 hiteles\u00edt\u00e9shez sz\u00fcks\u00e9ges."
+                },
+                "description": "A Rain Bird integr\u00e1ci\u00f3nak \u00fajra kell hiteles\u00edtenie az eszk\u00f6zzel.",
+                "title": "A(z) {name} hiteles\u00edt\u00e9se lej\u00e1rt"
+            },
+            "user": {
+                "data": {
+                    "host": "Hoszt",
+                    "password": "Jelsz\u00f3"
+                },
+                "data_description": {
+                    "host": "A Rain Bird eszk\u00f6z g\u00e9pneve vagy IP-c\u00edme.",
+                    "password": "A Rain Bird eszk\u00f6zzel val\u00f3 hiteles\u00edt\u00e9shez haszn\u00e1lt jelsz\u00f3."
+                },
+                "description": "K\u00e9rem, adja meg a Rain Bird k\u00e9sz\u00fcl\u00e9k\u00e9hez tartoz\u00f3 LNK WiFi modul adatait.",
+                "title": "Rain Bird konfigur\u00e1l\u00e1sa"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Es\u0151\u00e9rz\u00e9kel\u0151"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Es\u0151z\u00e9si k\u00e9sleltet\u00e9s"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "Es\u0151z\u00e9si k\u00e9sleltet\u00e9s"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Alap\u00e9rtelmezett \u00f6nt\u00f6z\u00e9si id\u0151, percben"
+                },
+                "data_description": {
+                    "duration": "Az alap\u00e9rtelmezett id\u0151tartam, ameddig az \u00f6nt\u00f6z\u0151 m\u0171k\u00f6dni fog bekapcsol\u00e1s ut\u00e1n."
+                },
+                "title": "Rain Bird konfigur\u00e1l\u00e1sa"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "Be\u00e1ll\u00edtja, hogy mennyi ideig van kikapcsolva az automatikus \u00f6nt\u00f6z\u00e9s.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "A be\u00e1ll\u00edt\u00e1s a megadott vez\u00e9rl\u0151n lesz be\u00e1ll\u00edtva.",
+                    "name": "Rainbird vez\u00e9rl\u0151 konfigur\u00e1ci\u00f3s bejegyz\u00e9s"
+                },
+                "duration": {
+                    "description": "Ennek a rendszernek a kikapcsol\u00e1s\u00e1nak id\u0151tartama.",
+                    "name": "Id\u0151tartam"
+                }
+            },
+            "name": "Es\u0151z\u00e9si k\u00e9sleltet\u00e9s be\u00e1ll\u00edt\u00e1sa"
+        },
+        "start_irrigation": {
+            "description": "Elind\u00edtja az \u00f6nt\u00f6z\u00e9st.",
+            "fields": {
+                "duration": {
+                    "description": "Ennek a sz\u00f3r\u00f3fejnek a bekapcsol\u00e1s\u00e1nak id\u0151tartama.",
+                    "name": "Id\u0151tartam"
+                }
+            },
+            "name": "\u00d6nt\u00f6z\u00e9s ind\u00edt\u00e1sa"
+        }
+    }
+}

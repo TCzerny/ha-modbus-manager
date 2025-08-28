@@ -1,0 +1,88 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Notifica\u00e7\u00f5es"
+        }
+    },
+    "issues": {
+        "migrate_notify": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "A a\u00e7\u00e3o de notifica\u00e7\u00e3o {integration_title} foi migrada. Uma nova entidade `notify` est\u00e1 agora dispon\u00edvel para substituir cada a\u00e7\u00e3o obsoleta `notify`.\n\nAtualize todas as automatiza\u00e7\u00f5es para utilizar a nova a\u00e7\u00e3o `notify.send_message` exposta com esta nova entidade. Quando isto estiver feito, corrija este problema e reinicie o Home Assistant.",
+                        "title": "Migrar a a\u00e7\u00e3o de notifica\u00e7\u00e3o obsoleta {integration_title} para o dom\u00ednio `{domain}`."
+                    }
+                }
+            },
+            "title": "Migra\u00e7\u00e3o da a\u00e7\u00e3o de notifica\u00e7\u00e3o {integration_title}"
+        },
+        "migrate_notify_service": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "A a\u00e7\u00e3o de notifica\u00e7\u00e3o obsoleta {integration_title} `notify.{service_name}` foi migrada, mas parece que a antiga a\u00e7\u00e3o `notify` ainda est\u00e1 a ser utilizada.\n\nUma nova entidade `notify` est\u00e1 agora dispon\u00edvel para substituir cada a\u00e7\u00e3o obsoleta `notify`.\n\nAtualize todas as automatiza\u00e7\u00f5es ou scripts para utilizar a nova a\u00e7\u00e3o `notify.send_message` exposta com esta nova entidade. Quando isto estiver feito, selecione Submeter e reinicie o Home Assistant.",
+                        "title": "Migrar a a\u00e7\u00e3o de notifica\u00e7\u00e3o obsoleta {integration_title} para o dom\u00ednio `{domain}`."
+                    }
+                }
+            },
+            "title": "A a\u00e7\u00e3o obsoleta notify.{service_name} ainda est\u00e1 a ser usada"
+        }
+    },
+    "services": {
+        "notify": {
+            "description": "Envia a mensagem de notifica\u00e7\u00e3o para os alvos selecionados.",
+            "fields": {
+                "data": {
+                    "description": "Algumas integra\u00e7\u00f5es fornecem funcionalidades estendidas. Para obter informa\u00e7\u00f5es sobre como usar _data_, consulte a documenta\u00e7\u00e3o da integra\u00e7\u00e3o.",
+                    "name": "Dados"
+                },
+                "message": {
+                    "description": "Corpo da mensagem da notifica\u00e7\u00e3o.",
+                    "name": "Mensagem"
+                },
+                "target": {
+                    "description": "Algumas integra\u00e7\u00f5es permitem especificar os alvos que recebem a notifica\u00e7\u00e3o. Para mais informa\u00e7\u00f5es, consulte a documenta\u00e7\u00e3o da integra\u00e7\u00e3o.",
+                    "name": "Alvo"
+                },
+                "title": {
+                    "description": "T\u00edtulo para a sua notifica\u00e7\u00e3o.",
+                    "name": "T\u00edtulo"
+                }
+            },
+            "name": "Envia uma notifica\u00e7\u00e3o"
+        },
+        "persistent_notification": {
+            "description": "Envia uma notifica\u00e7\u00e3o que \u00e9 vis\u00edvel no painel das notifica\u00e7\u00f5es.",
+            "fields": {
+                "data": {
+                    "description": "Algumas integra\u00e7\u00f5es fornecem funcionalidades estendidas. Para obter informa\u00e7\u00f5es sobre como usar _data_, consulte a documenta\u00e7\u00e3o da integra\u00e7\u00e3o.",
+                    "name": "Dados"
+                },
+                "message": {
+                    "description": "Corpo da mensagem da notifica\u00e7\u00e3o",
+                    "name": "Mensagem"
+                },
+                "title": {
+                    "description": "T\u00edtulo da notifica\u00e7\u00e3o",
+                    "name": "T\u00edtulo"
+                }
+            },
+            "name": "Envia uma notifica\u00e7\u00e3o persistente"
+        },
+        "send_message": {
+            "description": "Envia uma mensagem de notifica\u00e7\u00e3o.",
+            "fields": {
+                "message": {
+                    "description": "A sua mensagem de notifica\u00e7\u00e3o.",
+                    "name": "Mensagem"
+                },
+                "title": {
+                    "description": "T\u00edtulo para a sua mensagem de notifica\u00e7\u00e3o.",
+                    "name": "T\u00edtulo"
+                }
+            },
+            "name": "Enviar uma mensagem de notifica\u00e7\u00e3o"
+        }
+    },
+    "title": "Notifica\u00e7\u00f5es"
+}

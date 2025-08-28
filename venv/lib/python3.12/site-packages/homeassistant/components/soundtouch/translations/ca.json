@@ -1,0 +1,48 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositiu ja est\u00e0 configurat"
+        },
+        "error": {
+            "cannot_connect": "Ha fallat la connexi\u00f3"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Amfitri\u00f3"
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Est\u00e0s a punt d'afegir el dispositiu SoundTouch amb nom `{name}` a Home Assistant.",
+                "title": "Confirma l'addici\u00f3 del dispositiu Bose SoundTouch"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "fields": {
+                "slaves": {
+                    "name": "Esclaus"
+                }
+            }
+        },
+        "create_zone": {
+            "description": "Crea una zona multi-sala SoundTouch.",
+            "name": "Crea zona"
+        },
+        "play_everywhere": {
+            "description": "Reprodueix a tots els dispositius Bose SoundTouch.",
+            "name": "Reprodueix a tot arreu"
+        },
+        "remove_zone_slave": {
+            "fields": {
+                "master": {
+                    "description": "Nom de l'entitat mestra que coordina la zona multi-sala. Dep\u00e8n de la plataforma."
+                },
+                "slaves": {
+                    "name": "Esclaus"
+                }
+            }
+        }
+    }
+}

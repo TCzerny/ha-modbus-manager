@@ -1,0 +1,213 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "M\u00e1r konfigur\u00e1lva van. Csak egy konfigur\u00e1ci\u00f3 lehets\u00e9ges."
+        },
+        "error": {
+            "pin_request_failed": "Hiba t\u00f6rt\u00e9nt a PIN-k\u00f3d ecobee-t\u0151l t\u00f6rt\u00e9n\u0151 k\u00e9r\u00e9sekor; ellen\u0151rizze, hogy az API-kulcs helyes-e.",
+            "token_request_failed": "Hiba t\u00f6rt\u00e9nt a tokenek ecobee-t\u0151l t\u00f6rt\u00e9n\u0151 ig\u00e9nyl\u00e9se k\u00f6zben; pr\u00f3b\u00e1lkozzon \u00fajra."
+        },
+        "step": {
+            "authorize": {
+                "description": "K\u00e9rem, enged\u00e9lyezze ezt az alkalmaz\u00e1st a https://www.ecobee.com/consumerportal/index.html c\u00edmen a k\u00f6vetkez\u0151 PIN-k\u00f3ddal: \n\n{pin} \n \nEzut\u00e1n nyomja meg a **Mehet** gombot."
+            },
+            "user": {
+                "data": {
+                    "api_key": "API kulcs"
+                },
+                "description": "Adja meg az ecobee.com webhelyr\u0151l beszerzett API-kulcsot."
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "ecobee": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "away_indefinitely": "T\u00e1vol hat\u00e1rozatlan id\u0151re"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "compressor_protection_min_temp": {
+                "name": "Kompresszor minim\u00e1lis h\u0151m\u00e9rs\u00e9klete"
+            },
+            "ventilator_min_type_away": {
+                "name": "Ventil\u00e1tor minimum id\u0151 t\u00e1vol m\u00f3dban"
+            },
+            "ventilator_min_type_home": {
+                "name": "Ventil\u00e1tor minimum id\u0151 otthon m\u00f3dban"
+            }
+        },
+        "switch": {
+            "aux_heat_only": {
+                "name": "Csak kieg\u00e9sz\u00edt\u0151 f\u0171t\u00e9s"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_preset": {
+            "message": "\u00c9rv\u00e9nytelen kl\u00edman\u00e9v, az el\u00e9rhet\u0151 lehet\u0151s\u00e9gek: {options}"
+        },
+        "invalid_sensor": {
+            "message": "\u00c9rv\u00e9nytelen \u00e9rz\u00e9kel\u0151 a termoszt\u00e1thoz, az el\u00e9rhet\u0151 lehet\u0151s\u00e9gek: {options}"
+        },
+        "sensor_lookup_failed": {
+            "message": "Hiba t\u00f6rt\u00e9nt az \u00e9rz\u00e9kel\u0151azonos\u00edt\u00f3k lek\u00e9r\u00e9sekor az \u00e9rz\u00e9kel\u0151nevek alapj\u00e1n. Pr\u00f3b\u00e1lja meg \u00fajrat\u00f6lteni az Ecobee integr\u00e1ci\u00f3t."
+        }
+    },
+    "issues": {
+        "migrate_aux_heat": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Az Ecobee `set_aux_heat` m\u0171veletet m\u00f3dos\u00edtva lett. Egy \u00faj `aux_heat_only` kapcsol\u00f3 entit\u00e1s \u00e9rhet\u0151 el minden olyan termoszt\u00e1thoz, amely t\u00e1mogatja a h\u0151szivatty\u00fat.\n\nFriss\u00edtse az automatiz\u00e1l\u00e1sokat, hogy az \u00faj `aux_heat_only` kapcsol\u00f3 entit\u00e1st haszn\u00e1lj\u00e1k. Amikor ez megt\u00f6rt\u00e9nt, jav\u00edtsa ki ezt a probl\u00e9m\u00e1t \u00e9s ind\u00edtsa \u00fajra a Home Assistantot.",
+                        "title": "Az elavult Ecobee set_aux_heat m\u0171velet letilt\u00e1sa"
+                    }
+                }
+            },
+            "title": "Az Ecobee set_aux_heat m\u0171velet migr\u00e1ci\u00f3ja"
+        }
+    },
+    "services": {
+        "create_vacation": {
+            "description": "L\u00e9trehoz egy vak\u00e1ci\u00f3t a kiv\u00e1lasztott termoszt\u00e1ton. Megjegyz\u00e9s: a kezd\u00e9si / befejez\u00e9si d\u00e1tumot \u00e9s id\u0151t egy\u00fctt kell megadni, hogy ezek a param\u00e9terek hat\u00e1ssal legyenek. Ha a kezd\u00e9si / befejez\u00e9si d\u00e1tumot \u00e9s id\u0151t nem adj\u00e1k meg, a vak\u00e1ci\u00f3 azonnal kezd\u0151dik \u00e9s 14 napig tart (hacsak kor\u00e1bban nem t\u00f6rlik).",
+            "fields": {
+                "cool_temp": {
+                    "description": "Ny\u00e1ri h\u0151m\u00e9rs\u00e9klet a vak\u00e1ci\u00f3 alatt.",
+                    "name": "H\u0171t\u00e9si h\u0151m\u00e9rs\u00e9klet"
+                },
+                "end_date": {
+                    "name": "Befejez\u00e9s d\u00e1tuma"
+                },
+                "end_time": {
+                    "description": "A vak\u00e1ci\u00f3 v\u00e9ge a termoszt\u00e1t helyi idej\u00e9ben, 24 \u00f3r\u00e1s form\u00e1tumban \"HH:MM:SS\".",
+                    "name": "Befejez\u00e9s ideje"
+                },
+                "entity_id": {
+                    "description": "Ecobee termoszt\u00e1t, amelyen a vak\u00e1ci\u00f3t l\u00e9trehozza.",
+                    "name": "Entit\u00e1s"
+                },
+                "fan_min_on_time": {
+                    "description": "A ventil\u00e1tor \u00f3r\u00e1nk\u00e9nti futtat\u00e1s\u00e1nak minim\u00e1lis perc\u00e9rt\u00e9ke (0-t\u00f3l 60-ig) a vak\u00e1ci\u00f3 alatt.",
+                    "name": "Ventil\u00e1tor minim\u00e1lis bekapcsol\u00e1si ideje"
+                },
+                "fan_mode": {
+                    "description": "A termoszt\u00e1t ventil\u00e1tor m\u00f3dja a vak\u00e1ci\u00f3 alatt.",
+                    "name": "Ventil\u00e1tor m\u00f3d"
+                },
+                "heat_temp": {
+                    "description": "F\u0171t\u00e9si h\u0151m\u00e9rs\u00e9klet a vak\u00e1ci\u00f3 alatt.",
+                    "name": "F\u0171t\u00e9si h\u00f6m\u00e9rs\u00e9klet"
+                },
+                "start_date": {
+                    "name": "Kezd\u00e9s d\u00e1tuma"
+                },
+                "start_time": {
+                    "description": "A vak\u00e1ci\u00f3 kezdete a termoszt\u00e1t helyi idej\u00e9ben, 24 \u00f3r\u00e1s form\u00e1tumban \"HH:MM:SS\".",
+                    "name": "Kezd\u00e9s ideje"
+                },
+                "vacation_name": {
+                    "description": "A l\u00e9trehozand\u00f3 vak\u00e1ci\u00f3 neve; egyedinek kell lennie a termoszt\u00e1ton.",
+                    "name": "Vak\u00e1ci\u00f3 neve"
+                }
+            },
+            "name": "Vak\u00e1ci\u00f3 l\u00e9trehoz\u00e1sa"
+        },
+        "delete_vacation": {
+            "description": "T\u00f6rli a kiv\u00e1lasztott termoszt\u00e1ton be\u00e1ll\u00edtott vak\u00e1ci\u00f3t.",
+            "fields": {
+                "entity_id": {
+                    "description": "Ecobee termoszt\u00e1t, amelyr\u0151l t\u00f6r\u00f6lni kell a vak\u00e1ci\u00f3t.",
+                    "name": "Entit\u00e1s"
+                },
+                "vacation_name": {
+                    "description": "T\u00f6rlend\u0151 vak\u00e1ci\u00f3 neve.",
+                    "name": "Vak\u00e1ci\u00f3 neve"
+                }
+            },
+            "name": "Vak\u00e1ci\u00f3 t\u00f6rl\u00e9se"
+        },
+        "resume_program": {
+            "description": "Folytatja a programozott \u00fctemez\u00e9st.",
+            "fields": {
+                "entity_id": {
+                    "description": "A m\u00f3dos\u00edtand\u00f3 entit\u00e1sok neve.",
+                    "name": "Entit\u00e1s"
+                },
+                "resume_all": {
+                    "description": "Folytassa az \u00f6sszes esem\u00e9nyt \u00e9s t\u00e9rjen vissza az \u00fctemezett programhoz.",
+                    "name": "Minden folytat\u00e1sa"
+                }
+            },
+            "name": "Program folytat\u00e1sa"
+        },
+        "set_dst_mode": {
+            "description": "Enged\u00e9lyezi/letiltja az automatikus ny\u00e1ri id\u0151sz\u00e1m\u00edt\u00e1st.",
+            "fields": {
+                "dst_enabled": {
+                    "description": "Kapcsolja be az automatikus ny\u00e1ri id\u0151sz\u00e1m\u00edt\u00e1st.",
+                    "name": "Ny\u00e1ri id\u0151sz\u00e1m\u00edt\u00e1s enged\u00e9lyezve"
+                }
+            },
+            "name": "\u00c1ll\u00edtsa be a ny\u00e1ri id\u0151sz\u00e1m\u00edt\u00e1s m\u00f3dot"
+        },
+        "set_fan_min_on_time": {
+            "description": "Be\u00e1ll\u00edtja a ventil\u00e1tor minim\u00e1lis bekapcsol\u00e1si idej\u00e9t.",
+            "fields": {
+                "entity_id": {
+                    "description": "A m\u00f3dos\u00edtand\u00f3 entit\u00e1sok neve.",
+                    "name": "Entit\u00e1s"
+                },
+                "fan_min_on_time": {
+                    "description": "A ventil\u00e1tor minim\u00e1lis bekapcsol\u00e1si idej\u00e9nek \u00faj \u00e9rt\u00e9ke.",
+                    "name": "Ventil\u00e1tor minim\u00e1lis bekapcsol\u00e1si ideje"
+                }
+            },
+            "name": "A ventil\u00e1tor minim\u00e1lis bekapcsol\u00e1si idej\u00e9nek be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_mic_mode": {
+            "fields": {
+                "mic_enabled": {
+                    "name": "Mikrofon enged\u00e9lyezve"
+                }
+            },
+            "name": "Mikrofon m\u00f3d be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_occupancy_modes": {
+            "description": "Enged\u00e9lyezi/letiltja az intelligens otthon/t\u00e1voll\u00e9t valamint a k\u00f6vess engem m\u00f3dot.",
+            "fields": {
+                "auto_away": {
+                    "description": "Enged\u00e9lyezze az intelligens otthon/t\u00e1voll\u00e9t m\u00f3dot.",
+                    "name": "Automata t\u00e1voll\u00e9t"
+                },
+                "follow_me": {
+                    "description": "Enged\u00e9lyezze a k\u00f6vess engem (Follow Me) m\u00f3dot.",
+                    "name": "K\u00f6vess engem"
+                }
+            },
+            "name": "Foglalts\u00e1gi m\u00f3dok be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_sensors_used_in_climate": {
+            "description": "Be\u00e1ll\u00edtja a r\u00e9sztvev\u0151 \u00e9rz\u00e9kel\u0151ket egy kl\u00edmaprogramhoz.",
+            "fields": {
+                "device_ids": {
+                    "description": "Azok az \u00e9rz\u00e9kel\u0151k, amelyeket r\u00e9sztvev\u0151 \u00e9rz\u00e9kel\u0151kk\u00e9nt kell be\u00e1ll\u00edtani.",
+                    "name": "\u00c9rz\u00e9kel\u0151k"
+                },
+                "entity_id": {
+                    "description": "Az az Ecobee termoszt\u00e1t, amelyen az akt\u00edv \u00e9rz\u00e9kel\u0151ket be kell \u00e1ll\u00edtani.",
+                    "name": "Entit\u00e1s"
+                },
+                "preset_mode": {
+                    "description": "A kl\u00edmaprogramnak a neve, amelyhez az \u00e9rz\u00e9kel\u0151k aktiv\u00e1l\u00e1sa t\u00f6rt\u00e9nik.\nAlap\u00e9rtelmezetten az \u00e9ppen akt\u00edv program ker\u00fcl kiv\u00e1laszt\u00e1sra.",
+                    "name": "Kl\u00edma neve"
+                }
+            },
+            "name": "Haszn\u00e1land\u00f3 \u00e9rz\u00e9kel\u0151k be\u00e1ll\u00edt\u00e1sa a kl\u00edmavez\u00e9rl\u00e9shez"
+        }
+    }
+}

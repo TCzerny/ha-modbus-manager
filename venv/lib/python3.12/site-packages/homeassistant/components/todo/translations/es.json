@@ -1,0 +1,102 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Lista de tareas pendientes"
+        }
+    },
+    "exceptions": {
+        "item_not_found": {
+            "message": "No se pudo encontrar el elemento de la lista de tareas pendientes: {item}"
+        },
+        "update_field_not_supported": {
+            "message": "La entidad no admite la configuraci\u00f3n del campo {service_field}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Completado",
+                "needs_action": "Sin completar"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "description": "A\u00f1ade un nuevo elemento a la lista de tareas pendientes.",
+            "fields": {
+                "description": {
+                    "description": "Una descripci\u00f3n m\u00e1s completa de la tarea pendiente que la proporcionada por el nombre del art\u00edculo.",
+                    "name": "Descripci\u00f3n"
+                },
+                "due_date": {
+                    "description": "La fecha en la que se espera que se complete la tarea pendiente.",
+                    "name": "Fecha de vencimiento"
+                },
+                "due_datetime": {
+                    "description": "La fecha y hora en que se espera que se complete la tarea pendiente.",
+                    "name": "Fecha y hora de vencimiento"
+                },
+                "item": {
+                    "description": "El nombre que representa la tarea pendiente.",
+                    "name": "Nombre del elemento"
+                }
+            },
+            "name": "A\u00f1adir elemento"
+        },
+        "get_items": {
+            "description": "Obtiene elementos de una lista de tareas pendientes.",
+            "fields": {
+                "status": {
+                    "description": "Devuelve s\u00f3lo los elementos pendientes con los estados especificados. Devuelve acciones no completadas por defecto.",
+                    "name": "Estado"
+                }
+            },
+            "name": "Obtener elementos"
+        },
+        "remove_completed_items": {
+            "description": "Elimina todos los elementos de la lista de tareas pendientes que se han completado.",
+            "name": "Eliminar elementos completados"
+        },
+        "remove_item": {
+            "description": "Elimina un elemento de la lista de tareas pendientes existente por su nombre.",
+            "fields": {
+                "item": {
+                    "description": "El nombre del elemento de la lista de tareas pendientes.",
+                    "name": "Nombre del elemento"
+                }
+            },
+            "name": "Eliminar elemento"
+        },
+        "update_item": {
+            "description": "Actualiza un elemento de la lista de tareas pendientes existente seg\u00fan su nombre.",
+            "fields": {
+                "description": {
+                    "description": "Una descripci\u00f3n m\u00e1s completa de la tarea pendiente que la proporcionada por el nombre del art\u00edculo.",
+                    "name": "Descripci\u00f3n"
+                },
+                "due_date": {
+                    "description": "La fecha en la que se espera que se complete la tarea pendiente.",
+                    "name": "Fecha de vencimiento"
+                },
+                "due_datetime": {
+                    "description": "La fecha y hora en que se espera que se complete la tarea pendiente.",
+                    "name": "Fecha y hora de vencimiento"
+                },
+                "item": {
+                    "description": "El nombre actual del elemento pendiente.",
+                    "name": "Nombre del elemento"
+                },
+                "rename": {
+                    "description": "El nuevo nombre para el elemento pendiente",
+                    "name": "Renombrar elemento"
+                },
+                "status": {
+                    "description": "Un estado o confirmaci\u00f3n de la tarea pendiente.",
+                    "name": "Establecer estado"
+                }
+            },
+            "name": "Actualizar elemento"
+        }
+    },
+    "title": "Lista de tareas pendientes"
+}

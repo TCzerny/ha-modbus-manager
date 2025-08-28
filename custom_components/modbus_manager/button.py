@@ -6,7 +6,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT
+import asyncio
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
@@ -14,7 +14,7 @@ from .logger import ModbusManagerLogger
 _LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
-    """Set up Modbus Manager buttons from a config entry."""
+    """Set up Modbus Manager button entities from a config entry."""
     prefix = entry.data["prefix"]
     template_name = entry.data["template"]
     registers = entry.data.get("registers", [])
@@ -23,11 +23,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     entities = []
 
     for reg in registers:
-        # Button-Entities aus Registern mit control: "button" erstellen
+        # Nur Button-Entities aus Registern mit control: "button" erstellen
         if reg.get("control") == "button":
             # Unique_ID Format: {prefix}_{template_sensor_name}
             sensor_name = reg.get("name", "unknown")
-            unique_id = f"{prefix}_{sensor_name.lower().replace(' ', '_')}"
+            # Bereinige den Namen für den unique_id
+            clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+            unique_id = f"{prefix}_{clean_name}"
             
             entities.append(ModbusTemplateButton(
                 hass=hass,
@@ -69,23 +71,15 @@ class ModbusTemplateButton(ButtonEntity):
         self._data_type = register_data.get("data_type", "uint16")
         self._input_type = register_data.get("input_type", "holding")
         self._count = register_data.get("count", 1)
-        self._scale = register_data.get("scale", 1.0)
-        self._swap = register_data.get("swap", False)
         
         # Button-Konfiguration
-        button_config = register_data.get("button", {})
-        self._press_value = button_config.get("press", 1)
-        self._reset_value = button_config.get("reset", 0)
-        self._press_duration = button_config.get("duration", 0)  # in Sekunden
+        self._press_value = register_data.get("press_value", 1)
+        self._reset_value = register_data.get("reset_value", 0)
+        self._duration = register_data.get("duration", 0)  # in Sekunden
         
         # Neue Datenverarbeitungsoptionen
         self._offset = register_data.get("offset", 0.0)
         self._multiplier = register_data.get("multiplier", 1.0)
-        
-        # Button-Entity properties
-        self._attr_native_unit_of_measurement = register_data.get("unit_of_measurement", "")
-        self._attr_device_class = register_data.get("device_class")
-        self._attr_state_class = register_data.get("state_class")
         
         # Group for aggregations
         self._group = register_data.get("group")
@@ -101,75 +95,61 @@ class ModbusTemplateButton(ButtonEntity):
 
             hub = self.hass.data[DOMAIN][self._hub_name]
             
-            # Press-Wert in Register schreiben
-            await self._write_button_value(self._press_value)
+            # Erweiterte Datenverarbeitung rückwärts anwenden
+            final_value = self._apply_reverse_data_processing(self._press_value)
             
-            # Wenn eine Dauer definiert ist, nach der Zeit den Reset-Wert schreiben
-            if self._press_duration > 0:
-                import asyncio
-                await asyncio.sleep(self._press_duration)
-                await self._write_button_value(self._reset_value)
-                
-            _LOGGER.info("Button %s erfolgreich gedrückt", self._attr_name)
-                
-        except Exception as e:
-            _LOGGER.error("Fehler beim Drücken des Buttons %s: %s", self._attr_name, str(e))
-
-    async def _write_button_value(self, value: int) -> None:
-        """Write a value to the button register."""
-        try:
-            hub = self.hass.data[DOMAIN][self._hub_name]
-            
-            # Wert für Modbus vorbereiten
-            # Offset abziehen
-            modbus_value = value - self._offset
-            
-            # Skalierung rückgängig machen
-            raw_value = modbus_value / self._scale
-            
-            # Multiplier anwenden
-            raw_value = raw_value / self._multiplier
-            
-            # Wert in Register schreiben
-            if self._count == 1:
-                # 16-bit Wert
-                register_value = int(raw_value)
-                result = await hub.write_register(self._address, register_value, unit=self._slave_id)
-            else:
-                # 32-bit Wert (2 Register)
-                if self._swap:
-                    high_word = int(raw_value >> 16)
-                    low_word = int(raw_value & 0xFFFF)
-                    result = await hub.write_registers(self._address, [low_word, high_word], unit=self._slave_id)
-                else:
-                    high_word = int(raw_value >> 16)
-                    low_word = int(raw_value & 0xFFFF)
-                    result = await hub.write_registers(self._address, [high_word, low_word], unit=self._slave_id)
+            # Press-Wert in Holding Register schreiben
+            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
             
             if result.isError():
-                _LOGGER.error("Fehler beim Schreiben in Button-Register %s: %s", self._address, result)
+                _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
             else:
-                _LOGGER.debug("Button-Wert %s erfolgreich in Register %s geschrieben", value, self._address)
+                _LOGGER.info("Button %s erfolgreich gedrückt", self.name)
+                
+                # Optional: Nach duration Sekunden zurücksetzen
+                if self._duration > 0:
+                    asyncio.create_task(self._reset_after_duration())
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Schreiben des Button-Wertes: %s", str(e))
+            _LOGGER.error("Fehler beim Drücken von Button %s: %s", self.name, str(e))
 
-    @property
-    def extra_state_attributes(self) -> dict:
-        """Return entity specific state attributes."""
-        attrs = {
-            "register_address": self._address,
-            "data_type": self._data_type,
-            "input_type": self._input_type,
-            "scale": self._scale,
-            "offset": self._offset,
-            "multiplier": self._multiplier,
-            "press_value": self._press_value,
-            "reset_value": self._reset_value,
-            "press_duration": self._press_duration
-        }
-        
-        if self._group:
-            attrs["group"] = self._group
+    async def _reset_after_duration(self):
+        """Reset the button value after the specified duration."""
+        try:
+            await asyncio.sleep(self._duration)
             
-        return attrs 
+            if self._hub_name not in self.hass.data.get(DOMAIN, {}):
+                return
+
+            hub = self.hass.data[DOMAIN][self._hub_name]
+            
+            # Erweiterte Datenverarbeitung rückwärts anwenden
+            final_value = self._apply_reverse_data_processing(self._reset_value)
+            
+            # Reset-Wert in Holding Register schreiben
+            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
+            
+            if result.isError():
+                _LOGGER.error("Fehler beim Zurücksetzen von Button %s: %s", self.name, result)
+            else:
+                _LOGGER.info("Button %s erfolgreich zurückgesetzt", self.name)
+                
+        except Exception as e:
+            _LOGGER.error("Fehler beim Zurücksetzen von Button %s: %s", self.name, str(e))
+
+    def _apply_reverse_data_processing(self, value):
+        """Wende erweiterte Datenverarbeitung rückwärts an."""
+        try:
+            # Offset rückwärts anwenden
+            if self._offset != 0.0:
+                value -= self._offset
+            
+            # Multiplier rückwärts anwenden
+            if self._multiplier != 1.0:
+                value /= self._multiplier
+            
+            return value
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei rückwärtiger Datenverarbeitung: %s", str(e))
+            return value 

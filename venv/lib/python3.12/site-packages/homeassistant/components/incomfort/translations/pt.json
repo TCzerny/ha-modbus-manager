@@ -1,0 +1,124 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "auth_error": "Credenciais inv\u00e1lidas.",
+            "no_heaters": "N\u00e3o foram encontrados aquecedores.",
+            "not_found": "N\u00e3o foi encontrado nenhum gateway Lan2RF.",
+            "timeout_error": "Tempo limite excedido ao ligar ao gateway Lan2RF.",
+            "unknown": "Erro desconhecido na liga\u00e7\u00e3o ao gateway Lan2RF."
+        },
+        "error": {
+            "no_heaters": "N\u00e3o foram encontrados aquecedores.",
+            "not_found": "N\u00e3o foi encontrado nenhum gateway Lan2RF.",
+            "timeout_error": "Tempo limite da liga\u00e7\u00e3o ao gateway Lan2RF.",
+            "unknown": "Erro desconhecido na liga\u00e7\u00e3o ao gateway Lan2RF."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "host": "Nome do anfitri\u00e3o ou endere\u00e7o IP do Gateway InComfort Lan2RF da Intergas.",
+                    "password": "A palavra-passe para entrar no gateway est\u00e1 impressa na parte inferior do Lan2RF Gateway ou \u00e9 `intergas` para alguns dispositivos mais antigos.",
+                    "username": "O nome de utilizador para entrar no gateway. Na maioria dos casos \u00e9 `admin`."
+                },
+                "description": "Configurar o novo Intergas InComfort Lan2RF Gateway. Alguns sistemas mais antigos podem n\u00e3o necessitar de credenciais para serem configurados. Para dispositivos mais recentes, a autentica\u00e7\u00e3o \u00e9 necess\u00e1ria."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "fault": {
+                "name": "Falha",
+                "state_attributes": {
+                    "fault_code": {
+                        "state": {
+                            "none": "Nenhum"
+                        }
+                    }
+                }
+            },
+            "is_burning": {
+                "name": "Queimador"
+            },
+            "is_pumping": {
+                "name": "Bomba"
+            },
+            "is_tapping": {
+                "name": "Torneira de \u00e1gua quente"
+            }
+        },
+        "sensor": {
+            "tap_temperature": {
+                "name": "Temperatura da torneira"
+            }
+        },
+        "water_heater": {
+            "boiler": {
+                "state": {
+                    "boiler_ext": "Caldeira externo",
+                    "boiler_int": "Caldeira interna",
+                    "buffer": "Buffer",
+                    "central_heating": "Aquecimento central",
+                    "central_heating_rf": "Aquecimento central rf",
+                    "cv_temperature_too_high_e1": "Temperatura demasiado alta",
+                    "flame_detection_fault_e6": "Falha na dete\u00e7\u00e3o de chama",
+                    "frost": "Prote\u00e7\u00e3o anti gelo",
+                    "gas_valve_relay_faulty_e29": "Rel\u00e9 da v\u00e1lvula de g\u00e1s defeituoso",
+                    "gas_valve_relay_faulty_e30": "Rel\u00e9 da v\u00e1lvula de g\u00e1s defeituoso",
+                    "incorrect_fan_speed_e8": "Velocidade incorreta da ventoinha",
+                    "no_flame_signal_e4": "Sem sinal de chama",
+                    "opentherm": "OpenTherm",
+                    "poor_flame_signal_e5": "Sinal de chama fraco",
+                    "postrun_boyler": "Caldeira p\u00f3s-funcionamento",
+                    "postrun_ch": "Aquecimento central p\u00f3s-funcionamento",
+                    "s1_and_s2_interchanged_e2": "S1 e S2 trocados",
+                    "sensor_fault_after_self_check_e0": "Falha do sensor ap\u00f3s auto-verifica\u00e7\u00e3o",
+                    "sensor_fault_s1_e10": "Falha do sensor S1",
+                    "sensor_fault_s1_e11": "Falha do sensor S1",
+                    "sensor_fault_s1_e12": "Falha do sensor S1",
+                    "sensor_fault_s1_e13": "Falha do sensor S1",
+                    "sensor_fault_s1_e14": "Falha do sensor S1",
+                    "sensor_fault_s2_e20": "Falha do sensor S2",
+                    "sensor_fault_s2_e21": "Falha do sensor S2",
+                    "sensor_fault_s2_e22": "Falha do sensor S2",
+                    "sensor_fault_s2_e23": "Falha do sensor S2",
+                    "sensor_fault_s2_e24": "Falha do sensor S2",
+                    "sensor_test": "Teste de sensor",
+                    "service": "Servi\u00e7o",
+                    "shortcut_outside_sensor_temperature_e27": "Atalho para a temperatura do sensor externo",
+                    "standby": "Em espera",
+                    "tapwater": "\u00c1gua da torneira",
+                    "tapwater_int": "\u00c1gua da torneira interna",
+                    "unknown": "Desconhecido"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_auth_error": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} via YAML est\u00e1 a ser removida, mas ocorreu um erro de autentica\u00e7\u00e3o ao importar a sua configura\u00e7\u00e3o existente.\nA configura\u00e7\u00e3o n\u00e3o ir\u00e1 prosseguir.\n\nVerifique se o seu {integration_title} est\u00e1 a funcionar corretamente e reinicie o Home Assistant para tentar a importa\u00e7\u00e3o novamente.\n\nAlternativamente, pode remover a configura\u00e7\u00e3o `{domain}` do seu configuration.yaml completamente, reiniciar o Home Assistant e adicionar manualmente a integra\u00e7\u00e3o {integration_title}.",
+            "title": "A importa\u00e7\u00e3o do YAML falhou devido a um erro de autentica\u00e7\u00e3o"
+        },
+        "deprecated_yaml_import_issue_no_heaters": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} via YAML est\u00e1 a ser removida, mas n\u00e3o foi encontrado nenhum aquecedor ao importar a sua configura\u00e7\u00e3o existente.\nA configura\u00e7\u00e3o n\u00e3o ir\u00e1 prosseguir.\n\nVerifique se o seu {integration_title} est\u00e1 a funcionar corretamente e reinicie o Home Assistant para tentar a importa\u00e7\u00e3o novamente.\n\nAlternativamente, pode remover a configura\u00e7\u00e3o `{domain}` do seu configuration.yaml completamente, reiniciar o Home Assistant e adicionar manualmente a integra\u00e7\u00e3o {integration_title}.",
+            "title": "A importa\u00e7\u00e3o do YAML falhou porque n\u00e3o foi encontrado nenhum aquecedor"
+        },
+        "deprecated_yaml_import_issue_not_found": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} via YAML est\u00e1 a ser removida, mas n\u00e3o foi encontrado nenhum gateway Lan2RF ao importar a sua configura\u00e7\u00e3o existente.\nA configura\u00e7\u00e3o n\u00e3o ir\u00e1 prosseguir.\n\nVerifique se o seu {integration_title} est\u00e1 a funcionar corretamente e reinicie o Home Assistant para tentar a importa\u00e7\u00e3o novamente.\n\nAlternativamente, pode remover a configura\u00e7\u00e3o `{domain}` do seu configuration.yaml completamente, reiniciar o Home Assistant e adicionar manualmente a integra\u00e7\u00e3o {integration_title}.",
+            "title": "A importa\u00e7\u00e3o do YAML falhou porque nenhum gateway foi encontrado"
+        },
+        "deprecated_yaml_import_issue_timeout_error": {
+            "description": "A configura\u00e7\u00e3o do {integration_title} via YAML est\u00e1 a ser removida, mas ocorreu um erro de tempo excedido ao ligar \u00e0 sua {integration_title} ao importar a sua configura\u00e7\u00e3o existente.\nA configura\u00e7\u00e3o n\u00e3o prosseguir\u00e1.\n\nVerifique se o seu {integration_title} est\u00e1 a funcionar corretamente e reinicie o Home Assistant para tentar a importa\u00e7\u00e3o novamente.\n\nAlternativamente, pode remover a configura\u00e7\u00e3o `{domain}` do seu configuration.yaml completamente, reiniciar o Home Assistant e adicionar manualmente a integra\u00e7\u00e3o {integration_title}.",
+            "title": "A importa\u00e7\u00e3o de YAML falhou devido a problemas de tempo limite"
+        },
+        "deprecated_yaml_import_issue_unknown": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} via YAML est\u00e1 a ser removida, mas ocorreu um erro de desconhecido ao importar a sua configura\u00e7\u00e3o existente.\nA configura\u00e7\u00e3o n\u00e3o ir\u00e1 prosseguir.\n\nVerifique se o seu {integration_title} est\u00e1 a funcionar corretamente e reinicie o Home Assistant para tentar a importa\u00e7\u00e3o novamente.\n\nAlternativamente, pode remover a configura\u00e7\u00e3o `{domain}` do seu configuration.yaml completamente, reiniciar o Home Assistant e adicionar manualmente a integra\u00e7\u00e3o {integration_title}.",
+            "title": "A importa\u00e7\u00e3o do YAML falhou com um erro desconhecido"
+        }
+    }
+}

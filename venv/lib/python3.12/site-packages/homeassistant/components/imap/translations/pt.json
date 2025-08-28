@@ -1,0 +1,202 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "invalid_charset": "O conjunto de caracteres especificado n\u00e3o \u00e9 suportado",
+            "invalid_folder": "A pasta selecionada \u00e9 inv\u00e1lida",
+            "invalid_search": "A pesquisa selecionada \u00e9 inv\u00e1lida",
+            "ssl_error": "Ocorreu um erro de SSL. Altere a lista de cifras SSL e tente novamente"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Senha"
+                },
+                "data_description": {
+                    "password": "Corrija a palavra-passe do IMAP."
+                },
+                "description": "A senha para {username} \u00e9 inv\u00e1lida.",
+                "title": "Reautenticar Integra\u00e7\u00e3o"
+            },
+            "user": {
+                "data": {
+                    "charset": "Conjunto de caracteres",
+                    "event_message_data": "Dados da mensagem a serem inclu\u00eddos nos dados do evento `imap_content`:",
+                    "folder": "Pasta",
+                    "password": "Senha",
+                    "port": "Porta",
+                    "search": "Pesquisa IMAP",
+                    "server": "Servidor",
+                    "ssl_cipher_list": "Lista de cifras SSL (Avan\u00e7ado)",
+                    "username": "Nome Utilizador",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "data_description": {
+                    "charset": "O conjunto de caracteres utilizado. Valores comuns s\u00e3o `utf-8` ou `US-ASCII`.",
+                    "event_message_data": "Observe que o tamanho do evento \u00e9 limitado e nem todo o texto da mensagem pode ser enviado com o evento se a mensagem for muito grande.",
+                    "folder": "Geralmente, a pasta \u00e9 definida como `INBOX`, mas, por exemplo, no caso de uma subpasta chamada `Test`, deve ser `INBOX.Test`.",
+                    "password": "A palavra-passe IMAP",
+                    "port": "A porta IMAP que suporta SSL \u00e9, geralmente, a 993.",
+                    "search": "O comando de pesquisa IMAP que \u00e9 `UnSeen UnDeleted` por defeito.",
+                    "server": "O servidor IMAP.",
+                    "ssl_cipher_list": "Se o servi\u00e7o IMAP s\u00f3 suportar encripta\u00e7\u00e3o obsoleta, tente alterar isso.",
+                    "username": "O nome de utilizador IMAP.",
+                    "verify_ssl": "Recomendado, para garantir que o certificado do servidor \u00e9 v\u00e1lido. Desative, se o certificado do servidor n\u00e3o for confi\u00e1vel (por exemplo, autoassinado)."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "imap_mail_count": {
+                "name": "Mensagens",
+                "unit_of_measurement": "mensagens"
+            }
+        }
+    },
+    "exceptions": {
+        "copy_failed": {
+            "message": "Copiar a mensagem falhou com \"{error}\"."
+        },
+        "delete_failed": {
+            "message": "Marcar a mensagem para apagar falhou com \"{error}\"."
+        },
+        "expunge_failed": {
+            "message": "A exclus\u00e3o da mensagem falhou com \"{error}\"."
+        },
+        "fetch_failed": {
+            "message": "A obten\u00e7\u00e3o do texto da mensagem falhou com \"{error}\"."
+        },
+        "imap_server_fail": {
+            "message": "O servidor IMAP falhou ao ligar: {error}."
+        },
+        "invalid_auth": {
+            "message": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "invalid_entry": {
+            "message": "N\u00e3o foi encontrada uma entrada IMAP v\u00e1lida."
+        },
+        "invalid_folder": {
+            "message": "A pasta selecionada \u00e9 inv\u00e1lida"
+        },
+        "seen_failed": {
+            "message": "Marcar a mensagem como lida falhou com \"{error}\"."
+        }
+    },
+    "options": {
+        "error": {
+            "already_configured": "J\u00e1 existe um registo com essas pastas e op\u00e7\u00f5es de pesquisa",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "invalid_charset": "O conjunto de caracteres especificado n\u00e3o \u00e9 suportado",
+            "invalid_folder": "A pasta selecionada \u00e9 inv\u00e1lida",
+            "invalid_search": "A pesquisa selecionada \u00e9 inv\u00e1lida"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "custom_event_data_template": "Modelo para criar dados de evento personalizados",
+                    "enable_push": "Ative o Push-IMAP se o servidor o suportar. Desative se as atualiza\u00e7\u00f5es Push-IMAP forem pouco confi\u00e1veis.",
+                    "event_message_data": "Dados da mensagem a serem inclu\u00eddos nos dados do evento `imap_content`.",
+                    "folder": "Pasta",
+                    "max_message_size": "Tam. m\u00e1ximo de mensagem (2048 < tam. < 30000)",
+                    "search": "Pesquisa IMAP"
+                },
+                "data_description": {
+                    "custom_event_data_template": "Este template \u00e9 avaliado quando uma nova mensagem \u00e9 recebida e o resultado \u00e9 adicionado ao atributo `custom` dos dados do evento.",
+                    "enable_push": "Recomenda-se o uso do Push-IMAP. A sondagem aumentar\u00e1 o tempo de resposta.",
+                    "event_message_data": "Observe que o tamanho do evento \u00e9 limitado e nem todo o texto da mensagem pode ser enviado com o evento se a mensagem for muito grande.",
+                    "folder": "Geralmente, a pasta \u00e9 definida como `INBOX`, mas, por exemplo, no caso de uma subpasta chamada `Test`, deve ser `INBOX.Test`.",
+                    "max_message_size": "Limite o tamanho m\u00e1ximo do evento. Em vez de passar a mensagem de texto (inteira), usar um modelo \u00e9 uma op\u00e7\u00e3o melhor.",
+                    "search": "O comando de pesquisa IMAP que \u00e9 `UnSeen UnDeleted` por defeito."
+                }
+            }
+        }
+    },
+    "selector": {
+        "event_message_data": {
+            "options": {
+                "headers": "Cabe\u00e7alhos das mensagens",
+                "text": "Corpo do texto"
+            }
+        },
+        "ssl_cipher_list": {
+            "options": {
+                "intermediate": "Cifras interm\u00e9dias",
+                "modern": "Cifras modernas",
+                "python_default": "Defini\u00e7\u00f5es por defeito"
+            }
+        }
+    },
+    "services": {
+        "delete": {
+            "description": "Apagar um email.",
+            "fields": {
+                "entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o do IMAP.",
+                    "name": "Entrada"
+                },
+                "uid": {
+                    "description": "O identificador de email (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Apagar mensagem"
+        },
+        "fetch": {
+            "description": "Obter uma mensagem de email do servidor.",
+            "fields": {
+                "entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o do IMAP.",
+                    "name": "Entrada"
+                },
+                "uid": {
+                    "description": "O identificador de email (UID)",
+                    "name": "UID"
+                }
+            },
+            "name": "Obter mensagem"
+        },
+        "move": {
+            "description": "Move um email para uma pasta alvo.",
+            "fields": {
+                "entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o do IMAP.",
+                    "name": "Entrada"
+                },
+                "seen": {
+                    "description": "Marcar o email como visto",
+                    "name": "Visto"
+                },
+                "target_folder": {
+                    "description": "A pasta alvo para a qual o e-mail deve ser movido.",
+                    "name": "Pasta alvo"
+                },
+                "uid": {
+                    "description": "O identificador de email (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Mover mensagem"
+        },
+        "seen": {
+            "description": "Marcar um email como visto.",
+            "fields": {
+                "entry": {
+                    "description": "A entrada de configura\u00e7\u00e3o do IMAP.",
+                    "name": "Entrada"
+                },
+                "uid": {
+                    "description": "O identificador de email (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Marcar mensagem como vista"
+        }
+    }
+}

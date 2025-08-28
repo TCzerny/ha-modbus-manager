@@ -1,0 +1,998 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "already_in_progress": "Yap\u0131land\u0131rma ak\u0131\u015f\u0131 zaten devam ediyor"
+        },
+        "error": {
+            "exceeded_api_calls": "API \u00e7a\u011fr\u0131lar\u0131n\u0131n say\u0131s\u0131 a\u015f\u0131ld\u0131.",
+            "exceeded_user_api_calls": "Kullan\u0131c\u0131 API \u00e7a\u011fr\u0131lar\u0131n\u0131n say\u0131s\u0131 a\u015f\u0131ld\u0131.",
+            "invalid_token": "Anahtar ge\u00e7erli de\u011fil.",
+            "not_acceptable_terms": "Hizmet \u015fartlar\u0131 kabul edilmedi.",
+            "not_allowed_api_again": "Kullan\u0131c\u0131n\u0131n API \u00e7a\u011fr\u0131s\u0131nda yetkisi YOK.",
+            "not_supported_country": "\u00dclke desteklenmiyor.",
+            "token_unauthorized": "Anahtar ge\u00e7ersiz veya yetkisiz."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Ki\u015fisel Eri\u015fim Anahtar\u0131",
+                    "country": "\u00dclke"
+                },
+                "description": "L\u00fctfen LG ThinQ hesab\u0131n\u0131zla olu\u015fturulan bir ThinQ [PAT(Ki\u015fisel Eri\u015fim Simgesi)]( {pat_url} ) girin.",
+                "title": "ThinQ'ya ba\u011flan\u0131n"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clean_light_reminder": {
+                "name": "Temizlik g\u00f6sterge \u0131\u015f\u0131\u011f\u0131"
+            },
+            "eco_friendly_mode": {
+                "name": "\u00c7evre dostu"
+            },
+            "machine_clean_reminder": {
+                "name": "Makine temizli\u011fi hat\u0131rlat\u0131c\u0131s\u0131"
+            },
+            "one_touch_filter": {
+                "name": "Temiz hava filtresi"
+            },
+            "operation_mode": {
+                "name": "G\u00fc\u00e7"
+            },
+            "power_save_enabled": {
+                "name": "G\u00fc\u00e7 tasarrufu modu"
+            },
+            "remote_control_enabled": {
+                "name": "Uzaktan ba\u015flat"
+            },
+            "remote_control_enabled_for_location": {
+                "name": "{location} uzaktan ba\u015flatma"
+            },
+            "rinse_refill": {
+                "name": "Durulama yeniden doldurulmas\u0131 gerekiyor"
+            },
+            "sabbath_mode": {
+                "name": "\u015eabat"
+            },
+            "signal_level": {
+                "name": "Zil sesi"
+            }
+        },
+        "climate": {
+            "climate_air_conditioner": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Otomatik",
+                            "high": "Y\u00fcksek",
+                            "low": "D\u00fc\u015f\u00fck",
+                            "mid": "Orta",
+                            "power": "G\u00fc\u00e7",
+                            "slow": "Yava\u015f"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "air_clean": "Hava temizleme",
+                            "aroma": "Aroma",
+                            "energy_saving": "Enerji tasarrufu"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "error": {
+                "name": "Hata",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "block_error": "Temizlik durduruldu. Engelleri kontrol edin",
+                            "brush_error": "Hareketli f\u0131r\u00e7ada sorun var",
+                            "bubble_error": "Kabarc\u0131k hatas\u0131",
+                            "child_lock_active_error": "\u00c7ocuk kilidi",
+                            "cliff_error": "D\u00fc\u015fme \u00f6nleme sens\u00f6r\u00fcnde hata var",
+                            "clutch_error": "Debriyaj hatas\u0131",
+                            "compressor_error": "Kompres\u00f6r hatas\u0131",
+                            "dispensing_error": "Dispenser hatas\u0131",
+                            "door_close_error": "Kap\u0131 kapal\u0131 hatas\u0131",
+                            "door_lock_error": "Kap\u0131 kilidi hatas\u0131",
+                            "door_open_error": "Kap\u0131 a\u00e7\u0131k",
+                            "door_sensor_error": "Kap\u0131 sens\u00f6r\u00fc hatas\u0131",
+                            "drainmotor_error": "Bo\u015faltma hatas\u0131",
+                            "dust_full_error": "Toz kutusu dolu ve bo\u015falt\u0131lmas\u0131 gerekiyor",
+                            "empty_water_alert_error": "Bo\u015f su",
+                            "fan_motor_error": "Fan kilidi hatas\u0131",
+                            "filter_clogging_error": "Filtre hatas\u0131",
+                            "frozen_error": "Donma alg\u0131lama hatas\u0131",
+                            "heater_circuit_error": "Is\u0131t\u0131c\u0131 devre ar\u0131zas\u0131",
+                            "high_power_supply_error": "G\u00fc\u00e7 kayna\u011f\u0131 hatas\u0131",
+                            "high_temperature_detection_error": "Y\u00fcksek s\u0131cakl\u0131k hatas\u0131",
+                            "inner_lid_open_error": "Kapak a\u00e7\u0131k hatas\u0131",
+                            "ir_sensor_error": "IR sens\u00f6r hatas\u0131",
+                            "le2_error": "LE2 hatas\u0131",
+                            "le_error": "LE hatas\u0131",
+                            "left_wheel_error": "Sol tekerlekte sorun var",
+                            "locked_motor_error": "S\u00fcr\u00fcc\u00fc motor hatas\u0131",
+                            "mop_error": "Paspas tak\u0131l\u0131 olmadan d\u00fczg\u00fcn bir \u015fekilde \u00e7al\u0131\u015ft\u0131r\u0131lamaz",
+                            "motor_error": "Motor ar\u0131zas\u0131",
+                            "motor_lock_error": "Motor kilidi hatas\u0131",
+                            "move_error": "Tekerlekler zemine de\u011fmiyor",
+                            "need_water_drain": "Bo\u015f su",
+                            "need_water_replenishment": "Su doldurun",
+                            "no_battery_error": "Robot temizleyicinin pili zay\u0131f",
+                            "no_dust_bin_error": "Toz haznesi tak\u0131l\u0131 de\u011fil",
+                            "no_filter_error": "Filtre hatas\u0131",
+                            "out_of_balance_error": "Dengesiz y\u00fck",
+                            "overfill_error": "A\u015f\u0131r\u0131 doldurma hatas\u0131",
+                            "part_malfunction_error": "AIE hatas\u0131",
+                            "power_code_connection_error": "G\u00fc\u00e7 kablosu ba\u011flant\u0131 hatas\u0131",
+                            "power_fail_error": "Elektrik kesintisi",
+                            "right_wheel_error": "Sa\u011f tekerlekte sorun var",
+                            "stack_error": "Y\u0131\u011f\u0131nlama hatas\u0131",
+                            "steam_heat_error": "Buhar \u0131s\u0131t\u0131c\u0131s\u0131 hatas\u0131",
+                            "suction_blocked_error": "Emi\u015f motoru t\u0131kal\u0131",
+                            "temperature_sensor_error": "Termist\u00f6r hatas\u0131",
+                            "time_to_run_the_tub_clean_cycle_error": "K\u00fcvet temizleme \u00f6nerisi",
+                            "timeout_error": "Zaman a\u015f\u0131m\u0131 hatas\u0131",
+                            "turbidity_sensor_error": "Bulan\u0131kl\u0131k sens\u00f6r\u00fc hatas\u0131",
+                            "unable_to_lock_error": "Kap\u0131 kilidi hatas\u0131",
+                            "unbalanced_load_error": "Dengesiz y\u00fck",
+                            "unknown_error": "\u00dcr\u00fcn dikkat gerektiriyor",
+                            "vibration_sensor_error": "Titre\u015fim sens\u00f6r\u00fc hatas\u0131",
+                            "water_drain_error": "Su tahliye hatas\u0131",
+                            "water_leakage_error": "Su s\u0131z\u0131nt\u0131s\u0131 sorunu",
+                            "water_leaks_error": "Su s\u0131z\u0131nt\u0131s\u0131 sorunu",
+                            "water_level_sensor_error": "Su sens\u00f6r\u00fc hatas\u0131",
+                            "water_supply_error": "Su temini hatas\u0131"
+                        }
+                    }
+                }
+            },
+            "notification": {
+                "name": "Bildirim",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "charging_is_complete": "\u015earj i\u015flemi tamamland\u0131",
+                            "cleaning_is_complete": "D\u00f6ng\u00fc tamamland\u0131",
+                            "cleaning_is_completed": "Temizlik tamamland\u0131",
+                            "cleaning_is_failed": "Temizlik ba\u015far\u0131s\u0131z oldu",
+                            "cooking_is_complete": "Kapat\u0131ld\u0131",
+                            "door_is_open": "Kap\u0131 a\u00e7\u0131k",
+                            "drying_failed": "Kurutma makinesinde bir hata olu\u015ftu",
+                            "drying_is_complete": "Kurutma tamamland\u0131",
+                            "error_during_cleaning": "Bir hata nedeniyle temizlik durduruldu",
+                            "error_during_washing": "\u00c7ama\u015f\u0131r makinesinde bir hata olu\u015ftu",
+                            "error_has_occurred": "Bir hata olu\u015ftu",
+                            "frozen_is_complete": "Buz art\u0131 tamamland\u0131",
+                            "homeguard_is_stopped": "Home Guard durdu",
+                            "lack_of_water": "Su tank\u0131nda su yok",
+                            "motion_is_detected": "Ev koruma s\u0131ras\u0131nda hareket alg\u0131land\u0131\u011f\u0131nda foto\u011fraf g\u00f6nderilir",
+                            "need_to_check_location": "Konum kontrol\u00fc gereklidir",
+                            "pollution_is_high": "Hava durumu h\u0131zla k\u00f6t\u00fcle\u015fiyor",
+                            "preheating_is_complete": "\u00d6n \u0131s\u0131tma yap\u0131ld\u0131",
+                            "rinse_is_not_enough": "Daha iyi kurutma performans\u0131 i\u00e7in durulama yard\u0131mc\u0131s\u0131 ekleyin",
+                            "salt_refill_is_needed": "Daha iyi yumu\u015fatma performans\u0131 i\u00e7in tuz ekleyin",
+                            "scheduled_cleaning_starts": "Planlanan temizlik ba\u015fl\u0131yor",
+                            "styling_is_complete": "\u015eekillendirme tamamland\u0131",
+                            "time_to_change_filter": "Filtreyi de\u011fi\u015ftirme zaman\u0131 geldi",
+                            "time_to_change_water_filter": "Su filtresini de\u011fi\u015ftirmeniz gerekiyor",
+                            "time_to_clean": "Kendi kendini temizlemeye ihtiya\u00e7 var",
+                            "time_to_clean_filter": "Filtreyi temizleme zaman\u0131 geldi",
+                            "timer_is_complete": "Zamanlay\u0131c\u0131 tamamland\u0131",
+                            "washing_is_complete": "Y\u0131kama tamamland\u0131",
+                            "water_is_full": "Su dolu",
+                            "water_leak_has_occurred": "Bula\u015f\u0131k makinesi su ka\u00e7a\u011f\u0131 tespit etti"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "fan_speed": {
+                "name": "Fan"
+            },
+            "lamp_brightness": {
+                "name": "Ayd\u0131nl\u0131k"
+            },
+            "light_status": {
+                "name": "Ayd\u0131nl\u0131k"
+            },
+            "relative_hour_to_start": {
+                "name": "A\u00e7\u0131l\u0131\u015f\u0131 planlay\u0131n"
+            },
+            "relative_hour_to_start_for_location": {
+                "name": "{location} zamanlama a\u00e7\u0131l\u0131\u015f\u0131"
+            },
+            "relative_hour_to_start_wm": {
+                "name": "Gecikme ba\u015flar"
+            },
+            "relative_hour_to_start_wm_for_location": {
+                "name": "{location} gecikme ba\u015flar"
+            },
+            "relative_hour_to_stop": {
+                "name": "Program kapatma"
+            },
+            "relative_hour_to_stop_for_location": {
+                "name": "{location} zamanlama kapatma"
+            },
+            "relative_hour_to_stop_wm": {
+                "name": "Gecikme \u015fu \u015fekilde biter"
+            },
+            "relative_hour_to_stop_wm_for_location": {
+                "name": "{location} gecikme ile biter"
+            },
+            "sleep_timer_relative_hour_to_stop": {
+                "name": "Uyku zamanlay\u0131c\u0131s\u0131"
+            },
+            "sleep_timer_relative_hour_to_stop_for_location": {
+                "name": "{location} uyku zamanlay\u0131c\u0131s\u0131"
+            },
+            "target_humidity": {
+                "name": "Hedef nem"
+            },
+            "target_temperature": {
+                "name": "S\u0131cakl\u0131k"
+            },
+            "target_temperature_for_location": {
+                "name": "{location} s\u0131cakl\u0131\u011f\u0131"
+            },
+            "wind_temperature": {
+                "name": "R\u00fczgar s\u0131cakl\u0131\u011f\u0131"
+            }
+        },
+        "select": {
+            "air_clean_operation_mode": {
+                "name": "Hava temizleme",
+                "state": {
+                    "start": "Ba\u015flat",
+                    "stop": "Durdur"
+                }
+            },
+            "cook_mode": {
+                "name": "Pi\u015firme modu",
+                "state": {
+                    "bake": "Pi\u015fir",
+                    "convection_bake": "Konveksiyonlu pi\u015firme",
+                    "convection_roast": "Konveksiyonlu kavurma",
+                    "crisp_convection": "Net konveksiyon",
+                    "roast": "K\u0131zart"
+                }
+            },
+            "cook_mode_for_location": {
+                "name": "{location} pi\u015firme modu",
+                "state": {
+                    "bake": "Pi\u015fir",
+                    "convection_bake": "Konveksiyonlu pi\u015firme",
+                    "convection_roast": "Konveksiyonlu kavurma",
+                    "crisp_convection": "Net konveksiyon",
+                    "roast": "K\u0131zart"
+                }
+            },
+            "current_job_mode": {
+                "name": "\u00c7al\u0131\u015fma modu",
+                "state": {
+                    "air_clean": "Ar\u0131nd\u0131l\u0131yor",
+                    "auto": "Otomatik",
+                    "baby_care": "Bebek bak\u0131m modu",
+                    "circulator": "G\u00fc\u00e7lendirici",
+                    "clean": "Tek",
+                    "direct_clean": "Do\u011frudan mod",
+                    "dual_clean": "\u00c7ift",
+                    "fast": "Turbo",
+                    "heat_pump": "Is\u0131 pompas\u0131",
+                    "humidify": "Sis",
+                    "humidify_and_air_clean": "Sis ve ar\u0131nd\u0131r\u0131c\u0131",
+                    "humidity": "Nemli",
+                    "nature_clean": "Do\u011fal mod",
+                    "pet_clean": "Evcil hayvan modu",
+                    "silent": "Sessiz",
+                    "sleep": "Uyku",
+                    "smart": "Ak\u0131ll\u0131 mod",
+                    "space_clean": "Dif\u00fczyon modu",
+                    "spot_clean": "Geni\u015f mod",
+                    "turbo": "Turbo",
+                    "up_feature": "Ek mod",
+                    "vacation": "Tatil"
+                }
+            },
+            "display_light": {
+                "name": "Ekran parlakl\u0131\u011f\u0131",
+                "state": {
+                    "level_1": "Parlakl\u0131k 1",
+                    "level_2": "Parlakl\u0131k 2",
+                    "level_3": "Parlakl\u0131k 3",
+                    "off": "Kapal\u0131"
+                }
+            },
+            "fresh_air_filter": {
+                "name": "Temiz hava filtresi",
+                "state": {
+                    "auto": "Otomatik",
+                    "off": "Kapal\u0131",
+                    "power": "G\u00fc\u00e7",
+                    "replace": "Filtreyi de\u011fi\u015ftir",
+                    "smart_off": "Kapal\u0131",
+                    "smart_on": "Ak\u0131ll\u0131 g\u00fcvenli depolama",
+                    "smart_power": "Ak\u0131ll\u0131 g\u00fcvenli depolama"
+                }
+            },
+            "hygiene_dry_mode": {
+                "name": "Kurutma modu",
+                "state": {
+                    "fast": "H\u0131zl\u0131",
+                    "normal": "Narin",
+                    "off": "Kapal\u0131",
+                    "silent": "Sessiz"
+                }
+            },
+            "light_brightness": {
+                "name": "Ayd\u0131nl\u0131k"
+            },
+            "monitoring_enabled": {
+                "name": "Hava kalite sens\u00f6r\u00fc",
+                "state": {
+                    "always": "Her zaman a\u00e7\u0131k",
+                    "on_working": "\u00dcr\u00fcnle birlikte a\u00e7\u0131l\u0131r"
+                }
+            },
+            "operation_mode": {
+                "name": "\u0130\u015flem",
+                "state": {
+                    "cancel": "\u0130ptal",
+                    "power_off": "G\u00fc\u00e7 kapal\u0131",
+                    "preheating": "\u00d6n \u0131s\u0131tma",
+                    "start": "Ba\u015flat",
+                    "stop": "Durdur",
+                    "wake_up": "Uyku modu kapal\u0131"
+                }
+            },
+            "operation_mode_for_location": {
+                "name": "{location} i\u015flemi",
+                "state": {
+                    "cancel": "\u0130ptal",
+                    "power_off": "G\u00fc\u00e7 kapal\u0131",
+                    "preheating": "\u00d6n \u0131s\u0131tma",
+                    "start": "Ba\u015flat",
+                    "stop": "Durdur",
+                    "wake_up": "Uyku modu kapal\u0131"
+                }
+            },
+            "wind_angle": {
+                "name": "D\u00f6nd\u00fcrme",
+                "state": {
+                    "angle_140": "140\u00b0",
+                    "angle_45": "45\u00b0",
+                    "angle_60": "60\u00b0",
+                    "angle_90": "90\u00b0",
+                    "off": "Kapal\u0131"
+                }
+            },
+            "wind_strength": {
+                "name": "H\u0131z",
+                "state": {
+                    "auto": "Otomatik",
+                    "high": "Y\u00fcksek",
+                    "low": "D\u00fc\u015f\u00fck",
+                    "mid": "Orta",
+                    "power": "Turbo",
+                    "slow": "Yava\u015f",
+                    "turbo": "Turbo",
+                    "wind_1": "Ad\u0131m 1",
+                    "wind_10": "Ad\u0131m 10",
+                    "wind_2": "Ad\u0131m 2",
+                    "wind_3": "Ad\u0131m 3",
+                    "wind_4": "Ad\u0131m 4",
+                    "wind_5": "Ad\u0131m 5",
+                    "wind_6": "Ad\u0131m 6",
+                    "wind_7": "Ad\u0131m 7",
+                    "wind_8": "Ad\u0131m 8",
+                    "wind_9": "Ad\u0131m 9"
+                }
+            }
+        },
+        "sensor": {
+            "absolute_to_start": {
+                "name": "A\u00e7\u0131l\u0131\u015f\u0131 planlay\u0131n"
+            },
+            "absolute_to_start_for_location": {
+                "name": "{location} zamanlama a\u00e7\u0131l\u0131\u015f\u0131"
+            },
+            "absolute_to_stop": {
+                "name": "Program kapatma"
+            },
+            "absolute_to_stop_for_location": {
+                "name": "{location} zamanlama kapatma"
+            },
+            "battery_level": {
+                "name": "Pil",
+                "state": {
+                    "high": "Tam",
+                    "low": "D\u00fc\u015f\u00fck",
+                    "mid": "Orta",
+                    "warning": "Bo\u015f"
+                }
+            },
+            "beer_remain": {
+                "name": "Tarif ilerlemesi"
+            },
+            "brightness": {
+                "name": "Ayd\u0131nlatma yo\u011funlu\u011fu"
+            },
+            "brightness_for_location": {
+                "name": "{location} ayd\u0131nlatma yo\u011funlu\u011fu"
+            },
+            "cock_state": {
+                "name": "UV nano",
+                "state": {
+                    "cleaning": "Devam ediyor",
+                    "normal": "Bekleme modu"
+                }
+            },
+            "current_dish_washing_course": {
+                "name": "Mevcut d\u00f6ng\u00fc",
+                "state": {
+                    "auto": "Otomatik",
+                    "delicate": "Narin",
+                    "download_cycle": "D\u00f6ng\u00fcy\u00fc indir",
+                    "eco": "Eko",
+                    "express": "H\u0131zl\u0131",
+                    "heavy": "Yo\u011fun",
+                    "machine_clean": "Makine temizli\u011fi",
+                    "normal": "Normal",
+                    "quick": "H\u0131zl\u0131",
+                    "refresh": "Yenile",
+                    "rinse": "Durulama",
+                    "short_mode": "K\u0131sa mod",
+                    "spray": "Sprey",
+                    "steam": "Buhar bak\u0131m\u0131",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_job_mode": {
+                "name": "\u00c7al\u0131\u015fma modu",
+                "state": {
+                    "air_clean": "Ar\u0131nd\u0131r\u0131l\u0131yor",
+                    "auto": "Otomatik",
+                    "clothes_dry": "\u00c7ama\u015f\u0131rhane",
+                    "edge": "Kenar temizli\u011fi",
+                    "heat_pump": "Is\u0131 pompas\u0131",
+                    "high": "G\u00fc\u00e7",
+                    "intensive_dry": "Spot",
+                    "macro": "\u00d6zel mod",
+                    "mop": "Paspas",
+                    "normal": "Normal",
+                    "off": "Kapal\u0131",
+                    "quiet_humidity": "Sessiz",
+                    "rapid_humidity": "Jet",
+                    "sector_base": "H\u00fccre h\u00fccre",
+                    "select": "Benim alan\u0131m",
+                    "smart_humidity": "Ak\u0131ll\u0131",
+                    "spot": "Spiral nokta modu",
+                    "turbo": "Turbo",
+                    "vacation": "Tatil",
+                    "zigzag": "Zikzakl\u0131"
+                }
+            },
+            "current_job_mode_stick_cleaner": {
+                "name": "\u00c7al\u0131\u015fma modu",
+                "state": {
+                    "auto": "D\u00fc\u015f\u00fck g\u00fc\u00e7",
+                    "high": "G\u00fc\u00e7",
+                    "mop": "Paspas",
+                    "normal": "Normal",
+                    "off": "Kapal\u0131",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_state": {
+                "name": "Mevcut durum",
+                "state": {
+                    "add_drain": "Doldurma",
+                    "as_pop_up": "\u00dcr\u00fcn dikkat gerektiriyor",
+                    "cancel": "\u0130ptal",
+                    "carbonation": "Karbonasyon",
+                    "change_condition": "Ayarlar De\u011fi\u015fikli\u011fi",
+                    "charging": "\u015earj oluyor",
+                    "charging_complete": "\u015earj tamamland\u0131",
+                    "checking_turbidity": "Toprak seviyesinin tespiti",
+                    "cleaning": "Temizleniyor",
+                    "cleaning_is_done": "Temizlik yap\u0131ld\u0131",
+                    "complete": "Bitti",
+                    "cook": "Pi\u015fiyor",
+                    "cook_complete": "Bitti",
+                    "cooking_in_progress": "Pi\u015fiyor",
+                    "cool_down": "Sakin ol",
+                    "cooling": "So\u011futuluyor",
+                    "detecting": "Alg\u0131lan\u0131yor",
+                    "detergent_amount": "Deterjan miktar\u0131 hakk\u0131nda bilgi verilmesi",
+                    "diagnosis": "Ak\u0131ll\u0131 tan\u0131lama devam ediyor",
+                    "dispensing": "Otomatik da\u011f\u0131t\u0131m",
+                    "display_loadsize": "Y\u00fck boyutu",
+                    "done": "Bitti",
+                    "drying": "Kurutuluyor",
+                    "during_aging": "Ya\u015fland\u0131r\u0131l\u0131yor",
+                    "during_fermentation": "Fermantasyon",
+                    "end": "Bitti",
+                    "end_cooling": "Kurutuluyor",
+                    "error": "\u00dcr\u00fcn dikkat gerektiriyor",
+                    "extracting_capsule": "Kaps\u00fcl demleme",
+                    "extraction_mode": "Depolama",
+                    "firmware": "\u00dcr\u00fcn yaz\u0131l\u0131m\u0131 g\u00fcncelleniyor",
+                    "fota": "G\u00fcncelleniyor",
+                    "frozen_prevent_initial": "Donma korumas\u0131 beklemede",
+                    "frozen_prevent_pause": "Donma korumas\u0131 duraklat\u0131ld\u0131",
+                    "frozen_prevent_running": "Donma korumas\u0131 devam ediyor",
+                    "homing": "Ta\u015f\u0131n\u0131yor",
+                    "initial": "Bekleme modu",
+                    "initializing": "Bekleme modu",
+                    "lock": "Kontrol kilidi",
+                    "macrosector": "Uzaktan kumanda kullan\u0131mda",
+                    "melting": "\u015e\u0131ra \u00e7\u00f6zme",
+                    "monitoring_detecting": "HomeGuard aktif",
+                    "monitoring_moving": "Ba\u015flang\u0131\u00e7 noktas\u0131na gitme",
+                    "monitoring_positioning": "Homeguard ba\u015flang\u0131\u00e7 noktas\u0131n\u0131n ayarlanmas\u0131",
+                    "night_dry": "Gece kuru",
+                    "oven_setting": "Ocak ba\u011fland\u0131",
+                    "pause": "Durduruldu",
+                    "paused": "Durduruldu",
+                    "power_fail": "G\u00fc\u00e7 kesintisi",
+                    "power_off": "Kapal\u0131",
+                    "power_on": "A\u00e7\u0131k",
+                    "preference": "Ayarlar",
+                    "preheat": "\u00d6n \u0131s\u0131tma",
+                    "preheat_complete": "\u00d6n \u0131s\u0131tma yap\u0131ld\u0131",
+                    "preheating": "\u00d6n \u0131s\u0131tma",
+                    "preheating_is_done": "\u00d6n \u0131s\u0131tma yap\u0131ld\u0131",
+                    "prepareing_fermentation": "\u015eimdi haz\u0131rlan\u0131yor",
+                    "presteam": "Buharlamaya haz\u0131r",
+                    "prewash": "\u00d6n y\u0131kama",
+                    "proofing": "D\u00fczeltme",
+                    "refreshing": "Canland\u0131r\u0131c\u0131",
+                    "reservation": "Uzaktan kumanda kullan\u0131mda",
+                    "reserved": "Gecikme ayar\u0131",
+                    "rinse_hold": "Durulamay\u0131 bekliyorum",
+                    "rinsing": "Durulan\u0131yor",
+                    "running": "\u00c7al\u0131\u015f\u0131yor",
+                    "running_end": "Tamamland\u0131",
+                    "setdate": "Uzaktan kumanda kullan\u0131mda",
+                    "shoes_module": "Ayakkab\u0131 kurutma",
+                    "sleep": "Uyku modunda",
+                    "smart_grid_run": "Ak\u0131ll\u0131 \u015febekeyi \u00e7al\u0131\u015ft\u0131r",
+                    "soaking": "Islat\u0131l\u0131yor",
+                    "softening": "Yumu\u015fat\u0131c\u0131",
+                    "spinning": "D\u00f6nd\u00fcrme",
+                    "standby": "Bekleme modu",
+                    "stay": "Yenile",
+                    "steam": "Yenile",
+                    "steam_softening": "Buhar yumu\u015fatma",
+                    "sterilize": "Sterilize",
+                    "temperature_stabilization": "S\u0131cakl\u0131k ayar\u0131",
+                    "working": "Temizleniyor",
+                    "wrinkle_care": "K\u0131r\u0131\u015f\u0131kl\u0131k bak\u0131m\u0131"
+                }
+            },
+            "current_state_for_location": {
+                "name": "{location} mevcut durumu",
+                "state": {
+                    "add_drain": "Doldurma",
+                    "as_pop_up": "\u00dcr\u00fcn dikkat gerektiriyor",
+                    "cancel": "\u0130ptal",
+                    "carbonation": "Karbonasyon",
+                    "change_condition": "Ayarlar De\u011fi\u015fikli\u011fi",
+                    "charging": "\u015earj oluyor",
+                    "charging_complete": "\u015earj tamamland\u0131",
+                    "checking_turbidity": "Toprak seviyesinin tespiti",
+                    "cleaning": "Temizleniyor",
+                    "cleaning_is_done": "Temizlik yap\u0131ld\u0131",
+                    "complete": "Bitti",
+                    "cook": "Pi\u015fiyor",
+                    "cook_complete": "Bitti",
+                    "cooking_in_progress": "Pi\u015fiyor",
+                    "cool_down": "Sakin ol",
+                    "cooling": "So\u011futuluyor",
+                    "detecting": "Alg\u0131lan\u0131yor",
+                    "detergent_amount": "Deterjan miktar\u0131 hakk\u0131nda bilgi verilmesi",
+                    "diagnosis": "Ak\u0131ll\u0131 tan\u0131lama devam ediyor",
+                    "dispensing": "Otomatik da\u011f\u0131t\u0131m",
+                    "display_loadsize": "Y\u00fck boyutu",
+                    "done": "Bitti",
+                    "drying": "Kurutuluyor",
+                    "during_aging": "Ya\u015fland\u0131r\u0131l\u0131yor",
+                    "during_fermentation": "Fermantasyon",
+                    "end": "Bitti",
+                    "end_cooling": "Kurutuluyor",
+                    "error": "\u00dcr\u00fcn dikkat gerektiriyor",
+                    "extracting_capsule": "Kaps\u00fcl demleme",
+                    "extraction_mode": "Depolama",
+                    "firmware": "\u00dcr\u00fcn yaz\u0131l\u0131m\u0131 g\u00fcncelleniyor",
+                    "fota": "G\u00fcncelleniyor",
+                    "frozen_prevent_initial": "Donma korumas\u0131 beklemede",
+                    "frozen_prevent_pause": "Donma korumas\u0131 duraklat\u0131ld\u0131",
+                    "frozen_prevent_running": "Donma korumas\u0131 devam ediyor",
+                    "homing": "Ta\u015f\u0131n\u0131yor",
+                    "initial": "Bekleme modu",
+                    "initializing": "Bekleme modu",
+                    "lock": "Kontrol kilidi",
+                    "macrosector": "Uzaktan kumanda kullan\u0131mda",
+                    "melting": "\u015e\u0131ra \u00e7\u00f6zme",
+                    "monitoring_detecting": "HomeGuard aktif",
+                    "monitoring_moving": "Ba\u015flang\u0131\u00e7 noktas\u0131na gitme",
+                    "monitoring_positioning": "Homeguard ba\u015flang\u0131\u00e7 noktas\u0131n\u0131n ayarlanmas\u0131",
+                    "night_dry": "Gece kuru",
+                    "oven_setting": "Ocak ba\u011fland\u0131",
+                    "pause": "Durduruldu",
+                    "paused": "Durduruldu",
+                    "power_fail": "G\u00fc\u00e7 kesintisi",
+                    "power_off": "Kapal\u0131",
+                    "power_on": "A\u00e7\u0131k",
+                    "preference": "Ayarlar",
+                    "preheat": "\u00d6n \u0131s\u0131tma",
+                    "preheat_complete": "\u00d6n \u0131s\u0131tma yap\u0131ld\u0131",
+                    "preheating": "\u00d6n \u0131s\u0131tma",
+                    "preheating_is_done": "\u00d6n \u0131s\u0131tma yap\u0131ld\u0131",
+                    "prepareing_fermentation": "\u015eimdi haz\u0131rlan\u0131yor",
+                    "presteam": "Buharlamaya haz\u0131r",
+                    "prewash": "\u00d6n y\u0131kama",
+                    "proofing": "D\u00fczeltme",
+                    "refreshing": "Canland\u0131r\u0131c\u0131",
+                    "reservation": "Uzaktan kumanda kullan\u0131mda",
+                    "reserved": "Gecikme ayar\u0131",
+                    "rinse_hold": "Durulamay\u0131 bekliyorum",
+                    "rinsing": "Durulan\u0131yor",
+                    "running": "\u00c7al\u0131\u015f\u0131yor",
+                    "running_end": "Tamamland\u0131",
+                    "setdate": "Uzaktan kumanda kullan\u0131mda",
+                    "shoes_module": "Ayakkab\u0131 kurutma",
+                    "sleep": "Uyku modunda",
+                    "smart_grid_run": "Ak\u0131ll\u0131 \u015febekeyi \u00e7al\u0131\u015ft\u0131r",
+                    "soaking": "Islat\u0131l\u0131yor",
+                    "softening": "Yumu\u015fat\u0131c\u0131",
+                    "spinning": "D\u00f6nd\u00fcrme",
+                    "standby": "Bekleme modu",
+                    "stay": "Yenile",
+                    "steam": "Yenile",
+                    "steam_softening": "Buhar yumu\u015fatma",
+                    "sterilize": "Sterilize",
+                    "temperature_stabilization": "S\u0131cakl\u0131k ayar\u0131",
+                    "working": "Temizleniyor",
+                    "wrinkle_care": "K\u0131r\u0131\u015f\u0131kl\u0131k bak\u0131m\u0131"
+                }
+            },
+            "current_temperature": {
+                "name": "Mevcut s\u0131cakl\u0131k"
+            },
+            "day_target_temperature": {
+                "name": "G\u00fcnl\u00fck b\u00fcy\u00fcme s\u0131cakl\u0131\u011f\u0131"
+            },
+            "day_target_temperature_for_location": {
+                "name": "{location} g\u00fcnl\u00fck b\u00fcy\u00fcme s\u0131cakl\u0131\u011f\u0131"
+            },
+            "duration": {
+                "name": "Ayd\u0131nlatma s\u00fcresi"
+            },
+            "duration_for_location": {
+                "name": "{location} ayd\u0131nlatma s\u00fcresi"
+            },
+            "elapsed_day_state": {
+                "name": "Demleme periyodu"
+            },
+            "elapsed_day_total": {
+                "name": "Demleme s\u00fcresi"
+            },
+            "filter_lifetime": {
+                "name": "Kalan filtre"
+            },
+            "flavor_info": {
+                "name": "Lezzet"
+            },
+            "fresh_air_filter": {
+                "name": "Temiz hava filtresi",
+                "state": {
+                    "auto": "Otomatik",
+                    "off": "Kapal\u0131",
+                    "power": "G\u00fc\u00e7",
+                    "replace": "Filtreyi de\u011fi\u015ftir",
+                    "smart_off": "Kapal\u0131",
+                    "smart_on": "Ak\u0131ll\u0131 g\u00fcvenli depolama",
+                    "smart_power": "Ak\u0131ll\u0131 g\u00fcvenli depolama"
+                }
+            },
+            "growth_mode": {
+                "name": "Mod",
+                "state": {
+                    "ext_expert": "\u00d6zel yeti\u015ftirme modu",
+                    "ext_flower": "\u00c7i\u00e7ekler",
+                    "ext_herb": "Otlar",
+                    "ext_leaf": "Sebzeler",
+                    "standard": "Otomatik"
+                }
+            },
+            "growth_mode_for_location": {
+                "name": "{location} modu",
+                "state": {
+                    "ext_expert": "\u00d6zel yeti\u015ftirme modu",
+                    "ext_flower": "\u00c7i\u00e7ekler",
+                    "ext_herb": "Otlar",
+                    "ext_leaf": "Sebzeler",
+                    "standard": "Otomatik"
+                }
+            },
+            "hop_oil_info": {
+                "name": "\u015eerbet\u00e7iotu"
+            },
+            "light_start": {
+                "name": "I\u015f\u0131klar zaman\u0131nda yan\u0131yor"
+            },
+            "light_start_for_location": {
+                "name": "{location} \u0131\u015f\u0131klar zaman\u0131nda a\u00e7\u0131l\u0131yor"
+            },
+            "monitoring_enabled": {
+                "name": "Hava kalite sens\u00f6r\u00fc",
+                "state": {
+                    "always": "Her zaman a\u00e7\u0131k",
+                    "on_working": "\u00dcr\u00fcnle birlikte a\u00e7\u0131l\u0131r"
+                }
+            },
+            "night_target_temperature": {
+                "name": "Gece b\u00fcy\u00fcme s\u0131cakl\u0131\u011f\u0131"
+            },
+            "night_target_temperature_for_location": {
+                "name": "{location} gece b\u00fcy\u00fcme s\u0131cakl\u0131\u011f\u0131"
+            },
+            "odor_level": {
+                "name": "Koku",
+                "state": {
+                    "invalid": "Ge\u00e7ersiz",
+                    "normal": "Normal",
+                    "strong": "G\u00fc\u00e7l\u00fc",
+                    "very_strong": "\u00c7ok g\u00fc\u00e7l\u00fc",
+                    "weak": "Zay\u0131f"
+                }
+            },
+            "personalization_mode": {
+                "name": "Ki\u015fisel mod",
+                "state": {
+                    "auto_inside": "Otomatik mod",
+                    "auto_outside": "Kilitleme modu",
+                    "baby": "Bebek bak\u0131m modu",
+                    "cooking": "Pi\u015firme modu",
+                    "exercise": "Egzersiz modu",
+                    "others": "Di\u011ferleri",
+                    "pet": "Evcil hayvan modu",
+                    "sick_house": "Yeni Ev modu",
+                    "sleep": "Uyku modu",
+                    "smoke": "Duman modu"
+                }
+            },
+            "power_level": {
+                "name": "G\u00fc\u00e7 seviyesi"
+            },
+            "power_level_for_location": {
+                "name": "{location} g\u00fc\u00e7 seviyesi"
+            },
+            "recipe_name": {
+                "name": "Ev yap\u0131m\u0131 bira tarifi",
+                "state": {
+                    "ipa": "IPA",
+                    "my_recipe": "Benim tarifim",
+                    "pale_ale": "Soluk bira",
+                    "pilsner": "Pilsen",
+                    "red_ale": "K\u0131rm\u0131z\u0131 bira",
+                    "stout": "Kal\u0131n",
+                    "wheat": "Bu\u011fday"
+                }
+            },
+            "relative_to_start": {
+                "name": "A\u00e7\u0131l\u0131\u015f\u0131 planlay\u0131n"
+            },
+            "relative_to_start_for_location": {
+                "name": "{location} zamanlama a\u00e7\u0131l\u0131\u015f\u0131"
+            },
+            "relative_to_start_wm": {
+                "name": "Gecikme ba\u015flar"
+            },
+            "relative_to_start_wm_for_location": {
+                "name": "{location} gecikme ba\u015flar"
+            },
+            "relative_to_stop": {
+                "name": "Program kapatma"
+            },
+            "relative_to_stop_for_location": {
+                "name": "{location} zamanlama kapatma"
+            },
+            "relative_to_stop_wm": {
+                "name": "Gecikme \u015fu \u015fekilde biter"
+            },
+            "relative_to_stop_wm_for_location": {
+                "name": "{location} gecikme ile biter"
+            },
+            "remain": {
+                "name": "Kalan s\u00fcre"
+            },
+            "remain_for_location": {
+                "name": "{location} kalan s\u00fcre"
+            },
+            "rinse_level": {
+                "name": "Parlat\u0131c\u0131 da\u011f\u0131t\u0131c\u0131 seviyesi",
+                "state": {
+                    "rinselevel_0": "0",
+                    "rinselevel_1": "1",
+                    "rinselevel_2": "2",
+                    "rinselevel_3": "3",
+                    "rinselevel_4": "4"
+                }
+            },
+            "running": {
+                "name": "\u00c7al\u0131\u015fma s\u00fcresi"
+            },
+            "running_for_location": {
+                "name": "{location} \u00e7al\u0131\u015fma s\u00fcresi"
+            },
+            "sleep_timer_relative_to_stop": {
+                "name": "Uyku zamanlay\u0131c\u0131s\u0131"
+            },
+            "sleep_timer_relative_to_stop_for_location": {
+                "name": "{location} uyku zamanlay\u0131c\u0131s\u0131"
+            },
+            "softening_level": {
+                "name": "Yumu\u015fama seviyesi",
+                "state": {
+                    "softeninglevel_0": "0",
+                    "softeninglevel_1": "1",
+                    "softeninglevel_2": "2",
+                    "softeninglevel_3": "3",
+                    "softeninglevel_4": "4"
+                }
+            },
+            "sterilizing_state": {
+                "name": "Y\u00fcksek s\u0131cakl\u0131kta sterilizasyon",
+                "state": {
+                    "cancel": "\u0130ptal",
+                    "off": "Kapal\u0131",
+                    "on": "Sterilizasyon"
+                }
+            },
+            "target": {
+                "name": "Pi\u015firme s\u00fcresi"
+            },
+            "target_for_location": {
+                "name": "{location} pi\u015firme s\u00fcresi"
+            },
+            "target_temperature": {
+                "name": "S\u0131cakl\u0131k",
+                "state": {
+                    "freezer": "Dondurucu",
+                    "fridge": "Buzdolab\u0131",
+                    "kimchi": "Kim\u00e7i",
+                    "meat_fish": "Et/Bal\u0131k",
+                    "off": "Kapal\u0131",
+                    "rice_grain": "Pirin\u00e7/Tah\u0131l",
+                    "storage": "Depolama",
+                    "temperature_number": "Say\u0131",
+                    "vegetable_fruit": "Sebze/Meyve"
+                }
+            },
+            "target_temperature_for_location": {
+                "name": "{location} s\u0131cakl\u0131\u011f\u0131",
+                "state": {
+                    "freezer": "Dondurucu",
+                    "fridge": "Buzdolab\u0131",
+                    "kimchi": "Kim\u00e7i",
+                    "meat_fish": "Et/Bal\u0131k",
+                    "off": "Kapal\u0131",
+                    "rice_grain": "Pirin\u00e7/Tah\u0131l",
+                    "storage": "Depolama",
+                    "temperature_number": "Say\u0131",
+                    "vegetable_fruit": "Sebze/Meyve"
+                }
+            },
+            "temperature": {
+                "name": "S\u0131cakl\u0131k"
+            },
+            "temperature_state": {
+                "name": "S\u0131cakl\u0131k",
+                "state": {
+                    "high": "Y\u00fcksek",
+                    "low": "D\u00fc\u015f\u00fck",
+                    "normal": "\u0130yi"
+                }
+            },
+            "temperature_state_for_location": {
+                "name": "{location} s\u0131cakl\u0131\u011f\u0131",
+                "state": {
+                    "high": "Y\u00fcksek",
+                    "low": "D\u00fc\u015f\u00fck",
+                    "normal": "\u0130yi"
+                }
+            },
+            "total": {
+                "name": "Toplam s\u00fcre"
+            },
+            "total_for_location": {
+                "name": "{location} toplam s\u00fcre"
+            },
+            "total_pollution_level": {
+                "name": "Genel hava kalitesi",
+                "state": {
+                    "bad": "Sa\u011fl\u0131ks\u0131z",
+                    "good": "\u0130yi",
+                    "invalid": "Ge\u00e7ersiz",
+                    "normal": "Orta d\u00fczeyde",
+                    "very_bad": "Zay\u0131f"
+                }
+            },
+            "used_time": {
+                "name": "Kullan\u0131lan su filtresi"
+            },
+            "water_type": {
+                "name": "Tip"
+            },
+            "wind_volume_for_location": {
+                "name": "{location} r\u00fczgar h\u0131z\u0131"
+            },
+            "wort_info": {
+                "name": "\u015e\u0131ra",
+                "state": {
+                    "dark": "Koyu",
+                    "deep_gold": "Derin Alt\u0131n",
+                    "hoppy": "Z\u0131pz\u0131p",
+                    "wheat": "Bu\u011fday"
+                }
+            },
+            "yeast_info": {
+                "name": "Maya",
+                "state": {
+                    "american_ale": "Amerikan biras\u0131",
+                    "english_ale": "\u0130ngiliz biras\u0131",
+                    "lager": "Bira",
+                    "weizen": "Weizen"
+                }
+            }
+        },
+        "switch": {
+            "auto_mode": {
+                "name": "Otomatik mod"
+            },
+            "express_mode": {
+                "name": "Buz art\u0131"
+            },
+            "hot_water_mode": {
+                "name": "S\u0131cak su"
+            },
+            "humidity_warm_mode": {
+                "name": "S\u0131cak sis"
+            },
+            "hygiene_dry_mode": {
+                "name": "Kurutma modu"
+            },
+            "mood_lamp_state": {
+                "name": "Ruh hali \u0131\u015f\u0131\u011f\u0131"
+            },
+            "operation_power": {
+                "name": "G\u00fc\u00e7"
+            },
+            "optimal_humidity": {
+                "name": "Havaland\u0131rma"
+            },
+            "power_save_enabled": {
+                "name": "Enerji tasarrufu"
+            },
+            "rapid_freeze": {
+                "name": "H\u0131zl\u0131 dondurma"
+            },
+            "sleep_mode": {
+                "name": "Uyku modu"
+            },
+            "uv_nano": {
+                "name": "UV nano"
+            },
+            "warm_mode": {
+                "name": "Is\u0131tma"
+            }
+        }
+    }
+}

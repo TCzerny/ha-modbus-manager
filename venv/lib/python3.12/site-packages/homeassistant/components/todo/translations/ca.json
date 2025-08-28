@@ -1,0 +1,84 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Llista de tasques"
+        }
+    },
+    "exceptions": {
+        "update_field_not_supported": {
+            "message": "L'entitat no admet el camp de configuraci\u00f3: {service_field}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Completat",
+                "needs_action": "No completat"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "fields": {
+                "description": {
+                    "description": "Descripci\u00f3 de l'element de tasca m\u00e9s completa que la del nom d'element.",
+                    "name": "Descripci\u00f3"
+                },
+                "due_date": {
+                    "description": "Data en que s'espera que s'hagi completat l'element de tasca.",
+                    "name": "Data de venciment"
+                },
+                "due_datetime": {
+                    "description": "Data i l'hora en que s'espera que s'hagi completat l'element de tasca.",
+                    "name": "Data i hora de venciment"
+                },
+                "item": {
+                    "description": "Nom que representa l'element de la llista de tasques.",
+                    "name": "Nom de l'element"
+                }
+            }
+        },
+        "get_items": {
+            "fields": {
+                "status": {
+                    "description": "Nom\u00e9s retrona elements pendents amb estats espec\u00edfics. De manera predeterminada, retorna les accions no completades.",
+                    "name": "Estat"
+                }
+            }
+        },
+        "remove_item": {
+            "fields": {
+                "item": {
+                    "name": "Nom de l'element"
+                }
+            }
+        },
+        "update_item": {
+            "fields": {
+                "description": {
+                    "description": "Descripci\u00f3 de l'element de tasca m\u00e9s completa que la del nom d'element.",
+                    "name": "Descripci\u00f3"
+                },
+                "due_date": {
+                    "description": "Data en que s'espera que s'hagi completat l'element de tasca.",
+                    "name": "Data de venciment"
+                },
+                "due_datetime": {
+                    "description": "Data i l'hora en que s'espera que s'hagi completat l'element de tasca.",
+                    "name": "Data i hora de venciment"
+                },
+                "item": {
+                    "name": "Nom de l'element"
+                },
+                "rename": {
+                    "name": "Canvia nom de l'element"
+                },
+                "status": {
+                    "description": "Estat o confirmaci\u00f3 de l'element.",
+                    "name": "Estat"
+                }
+            }
+        }
+    },
+    "title": "Llista de tasques"
+}

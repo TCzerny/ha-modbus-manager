@@ -1,0 +1,39 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API-sleutel",
+                    "url": "URL"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "apparent_power": {
+                "name": "Schijnbaar vermogen {emoncms_details}"
+            },
+            "concentration": {
+                "name": "Concentratie {emoncms_details}"
+            },
+            "current": {
+                "name": "Vermogen {emoncms_details}"
+            },
+            "decibel": {
+                "name": "Decibel {emoncms_details}"
+            },
+            "energy": {
+                "name": "Energie {emoncms_details}"
+            }
+        }
+    },
+    "issues": {
+        "missing_include_only_feed_id": {
+            "description": "Het configureren van {domain} met behulp van YAML wordt verwijderd.\n\nVoeg handmatig de feeds toe die je wilt synchroniseren met de `configureer` knop van de integratie."
+        },
+        "remove_value_template": {
+            "description": "Het configureren van {domain} met behulp van YAML wordt verwijderd en de `{parameter}` parameter kan niet worden ge\u00efmporteerd.\n\nVerwijder de `{parameter}` parameter van je `{domain}` YAML-configuratie en start Home Assistant opnieuw.\n\nAls alternatief kun je de `{domain}` YAML-configuratie volledig verwijderen uit je configuration.yaml bestand, Home Assistant herstarten en de {domain} integratie handmatig weer toevoegen."
+        }
+    }
+}

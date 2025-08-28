@@ -1,0 +1,77 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich",
+            "wrong_device": "Dieses Cambridge Audio-Ger\u00e4t stimmt nicht mit der vorhandenen Ger\u00e4te-ID \u00fcberein. Bitte stelle sicher, dass du die richtige IP-Adresse eingegeben hast."
+        },
+        "error": {
+            "cannot_connect": "Verbindung zum Cambridge Audio-Ger\u00e4t konnte nicht hergestellt werden. Bitte stelle sicher, dass das Ger\u00e4t eingeschaltet und mit dem Netzwerk verbunden ist. Versuche, das Ger\u00e4t aus- und wieder einzuschalten, wenn keine Verbindung hergestellt werden kann."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "M\u00f6chtest du {name} einrichten?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse des Cambridge Audio Streamer."
+                },
+                "description": "Deinen Cambridge Audio Streamer neu konfigurieren."
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse des Cambridge Audio Streamer."
+                },
+                "description": "Richte deinen Cambridge Audio Streamer f\u00fcr die Integration mit Home Assistant ein."
+            }
+        }
+    },
+    "entity": {
+        "select": {
+            "audio_output": {
+                "name": "Audio-Ausgang"
+            },
+            "display_brightness": {
+                "name": "Display-Helligkeit",
+                "state": {
+                    "bright": "Hell",
+                    "dim": "Dunkel",
+                    "off": "Aus"
+                }
+            }
+        },
+        "switch": {
+            "early_update": {
+                "name": "Fr\u00fches Update"
+            },
+            "pre_amp": {
+                "name": "Vorverst\u00e4rker"
+            }
+        }
+    },
+    "exceptions": {
+        "command_error": {
+            "message": "Fehler beim Ausf\u00fchren von {function_name} auf Entit\u00e4t {entity_id}"
+        },
+        "entry_cannot_connect": {
+            "message": "Fehler beim Verbinden mit {host}"
+        },
+        "missing_preset": {
+            "message": "Fehlende Voreinstellung f\u00fcr media_id: {preset_id}"
+        },
+        "preset_non_integer": {
+            "message": "Voreinstellung muss eine ganze Zahl sein, erhalten: {preset_id}"
+        },
+        "unsupported_media_type": {
+            "message": "Nicht unterst\u00fctzter Medientyp f\u00fcr Cambridge Audio-Ger\u00e4t: {media_type}"
+        }
+    }
+}

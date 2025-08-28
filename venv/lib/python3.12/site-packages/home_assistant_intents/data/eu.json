@@ -1,0 +1,280 @@
+{
+  "language": "eu",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "<itzali> <name> [argia[k]|etengailua[k]]",
+            "<name> [argia[k]|etengailua[k]] itzali",
+            "desaktibatu <name> [argia[k]|etengailua[k]]"
+          ],
+          "excludes_context": {
+            "domain": [
+              "cover",
+              "lock",
+              "scene",
+              "script"
+            ]
+          }
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "<piztu> <name> [argia[k]|etengailua[k]]",
+            "<name> [argia[k]|etengailua[k]] piztu",
+            "aktibatu <name> [argia[k]|etengailua[k]]"
+          ],
+          "excludes_context": {
+            "domain": [
+              "cover",
+              "lock",
+              "scene",
+              "script"
+            ]
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "ez kezkatu"
+          ]
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "(ba [<ahal>] dakizu|esaidazu|zein da) [uneko|momentu honetako] <name>[[r]en (egoera|balioa)] [<area>] [zein den]"
+          ],
+          "response": "one",
+          "excludes_context": {
+            "domain": [
+              "scene",
+              "script"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<name> [<area>[n]] {on_off_states:state} [<ahal>] (dago|da)"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "ba [<ahal>] dago [batere] {on_off_domains:domain} {on_off_states:state} [<area>]",
+            "(ba [<ahal>] dakizu|esaidazu) [batere] {on_off_domains:domain} {on_off_states:state} badagoen [<area>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "{on_off_domains:domain} guztiak {on_off_states:state} [<ahal>] daude [<area>]",
+            "<area> {on_off_domains:domain} guztiak {on_off_states:state} [<ahal>] daude"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "[ba [<ahal>] dakizu] zein {on_off_domains:domain} (dago|daude|dagoen|dauden) {on_off_states:state} [<area>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "[(esaidazu|esan)] zenbat {on_off_domains:domain} (daude|dauden) {on_off_states:state} [<area>]"
+          ],
+          "response": "how_many"
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Barkatu, ez dizut ulertu",
+      "no_area": "Ez dago {{ area }} izeneko gunerik",
+      "no_domain_in_area": "{{ area }} guneak ez dauka {{ domain }} moduko elementurik",
+      "no_device_class_in_area": "Ez dago {{ device_class }} motako elementurik {{ area }} gunean",
+      "no_entity": "Ez da {{ entity }} izeneko gailu edo entitaterik existitzen",
+      "handle_error": "Espero ez zen errore bat gertatu da agindua prozesatzean"
+    },
+    "intents": {
+      "HassGetState": {
+        "default": "{{ state.state_with_unit }}\n",
+        "one": "{{ slots.name | capitalize }} gailuaren egoera {{ state.state_with_unit }} da\n",
+        "one_yesno": "{% if query.matched %}\n  Bai\n{% else %}\n  Ez, {{ state.state_with_unit }} dago\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Bai, {{ match[:3] | join(\", \") }} eta beste {{ (match | length - 3) }} gehiago\n  {%- else -%}\n    {% if match | length == 1 %}\n      Bai, {{ match|first }}\n    {% else %}\n      Bai,\n      {% for name in match -%}\n        {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} eta {% endif -%}\n        {{ name }}\n      {%- endfor -%}\n    {% endif %}\n  {% endif %}\n{% else %}\n  Ez\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  Bai\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    Ez, {{ no_match[:3] | join(\", \") }} eta beste {{ (no_match | length - 3) }} ere ez\n  {% else %}\n    {% if no_match | length == 1 %}\n      Ez, {{ no_match|first }} ez\n    {%- else -%}\n      Ez,\n      {% for name in no_match -%}\n        {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} eta {% endif -%}\n        {{ name }}\n      {%- endfor %}\n      ez daude\n    {% endif %}\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  Gailu bat bera ere ez\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} eta beste {{ (match | length - 3) }} gehiago\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} eta {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n"
+      },
+      "HassTurnOff": {
+        "default": "{{ slots.name }} itzalita",
+        "lights_area": "Argiak itzalita",
+        "fans_area": "Haizegailuak itzalita",
+        "cover": "Itxita",
+        "light_all": "Argi guztiak itzalita",
+        "fan_all": "Haizegailu guztiak itzalita",
+        "cover_device_class": "{{ slots.device_class }} itxita",
+        "lock": "Irekita"
+      },
+      "HassTurnOn": {
+        "default": "{{ slots.name }} piztuta",
+        "lights_area": "Argiak piztuta",
+        "fans_area": "Haizegailuak piztuta",
+        "cover": "Irekita",
+        "cover_device_class": "{{ slots.device_class }} irekita",
+        "scene": "Aktibatuta",
+        "script": "Hasita",
+        "lock": "Itxita"
+      },
+      "HassLightSet": {
+        "brightness": "Distira ezarrita",
+        "color": "Kolorea ezarrita"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{{ state.state_with_unit }}"
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "zuria",
+          "out": "white"
+        },
+        {
+          "in": "beltza",
+          "out": "black"
+        },
+        {
+          "in": "gorria",
+          "out": "red"
+        },
+        {
+          "in": "laranja",
+          "out": "orange"
+        },
+        {
+          "in": "horia",
+          "out": "yellow"
+        },
+        {
+          "in": "berdea",
+          "out": "green"
+        },
+        {
+          "in": "urdina",
+          "out": "blue"
+        },
+        {
+          "in": "morea",
+          "out": "purple"
+        },
+        {
+          "in": "marroia",
+          "out": "brown"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        "celsius",
+        {
+          "in": "c",
+          "out": "celsius"
+        },
+        {
+          "in": "zentigrado",
+          "out": "celsius"
+        },
+        "fahrenheit",
+        {
+          "in": "f",
+          "out": "fahrenheit"
+        }
+      ]
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "(maximoa|altuena|gorena)",
+          "out": 100
+        },
+        {
+          "in": "(minimoa|baxuena|txikiena)",
+          "out": 1
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "piztuta",
+          "out": "on"
+        },
+        {
+          "in": "itzalita",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "argi[(a|ak|rik)]|lanpara[(k|rik)]",
+          "out": "light"
+        },
+        {
+          "in": "haizegailu[(a|ak|rik)]",
+          "out": "fan"
+        },
+        {
+          "in": "etengailu[(a|ak|rik)]",
+          "out": "switch"
+        }
+      ]
+    }
+  },
+  "expansion_rules": {
+    "name": "{name}[n]",
+    "area": "{area}[n]",
+    "piztu": "(piztu|aktibatu|gaitu|eman)",
+    "itzali": "(itzali|desaktibatu|ezgaitu|kendu)",
+    "piztuta": "(piztuta|aktibatuta|gaituta|emanda)",
+    "itzalita": "(itzalita|desaktibatuta|ezgaituta|kenduta)",
+    "ahal": "(ahal|al)"
+  },
+  "skip_words": [
+    "mesedez",
+    "eskerrik asko"
+  ]
+}

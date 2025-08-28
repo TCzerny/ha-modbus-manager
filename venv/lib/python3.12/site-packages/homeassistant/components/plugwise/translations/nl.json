@@ -1,0 +1,177 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dienst is al geconfigureerd",
+            "anna_with_adam": "Zowel Anna als Adam gedetecteerd. Voeg je Adam toe in plaats van je Anna",
+            "not_the_same_smile": "De geconfigureerde Smile ID komt niet overeen met de Smile ID op het gevraagde IP-adres.",
+            "reconfigure_successful": "Herconfiguratie was succesvol"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "invalid_auth": "Ongeldige authenticatie",
+            "response_error": "Ongeldige XML-gegevens, of foutindicatie ontvangen",
+            "unknown": "Onverwachte fout",
+            "unsupported": "Apparaat met niet ondersteunde firmware"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "IP-adres",
+                    "port": "Poort"
+                },
+                "data_description": {
+                    "host": "De hostnaam of het IP-adres van je Smile. Deze kun je vinden in je router of in de Plugwise App."
+                },
+                "description": "Configuratie bijwerken voor {title}."
+            },
+            "user": {
+                "data": {
+                    "host": "IP-adres",
+                    "password": "Smile ID",
+                    "port": "Poort",
+                    "username": "Smile gebruikersnaam"
+                },
+                "data_description": {
+                    "host": "De hostnaam of het IP-adres van je Smile. Deze kun je vinden in je router of in de Plugwise App."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "compressor_state": {
+                "name": "Compressor status"
+            },
+            "cooling_enabled": {
+                "name": "Koeling ingeschakeld"
+            },
+            "cooling_state": {
+                "name": "Koelen"
+            },
+            "dhw_state": {
+                "name": "Huishoudelijk warmwater status"
+            },
+            "flame_state": {
+                "name": "Vlam status"
+            },
+            "heating_state": {
+                "name": "Verwarmen"
+            },
+            "plugwise_notification": {
+                "name": "Plugwise melding"
+            }
+        },
+        "button": {
+            "reboot": {
+                "name": "Herstarten"
+            }
+        },
+        "climate": {
+            "plugwise": {
+                "state_attributes": {
+                    "available_schemas": {
+                        "name": "Beschikbare schema's"
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "asleep": "Nacht",
+                            "away": "Afwezig",
+                            "home": "Thuis",
+                            "no_frost": "Vorstbescherming",
+                            "vacation": "Vakantie"
+                        }
+                    },
+                    "selected_schema": {
+                        "name": "Geselecteerd schema"
+                    }
+                }
+            }
+        },
+        "number": {
+            "maximum_boiler_temperature": {
+                "name": "Maximum boiler temperatuur instelling"
+            }
+        },
+        "select": {
+            "dhw_mode": {
+                "name": "Huishoudelijk warmwater modus",
+                "state": {
+                    "auto": "Auto",
+                    "boost": "Boost",
+                    "comfort": "Comfort",
+                    "off": "Uit"
+                }
+            },
+            "gateway_mode": {
+                "state": {
+                    "away": "Gepauzeerd",
+                    "vacation": "Vakantie"
+                }
+            },
+            "regulation_mode": {
+                "name": "Regulatie modus",
+                "state": {
+                    "bleeding_cold": "Koud onluchten",
+                    "bleeding_hot": "Warm onluchten",
+                    "cooling": "Koelen",
+                    "heating": "Verwarmen",
+                    "off": "Uit"
+                }
+            },
+            "select_schedule": {
+                "name": "Thermostaat schema",
+                "state": {
+                    "off": "Uit"
+                }
+            }
+        },
+        "sensor": {
+            "cooling_setpoint": {
+                "name": "Instelpunt koeling"
+            },
+            "dhw_temperature": {
+                "name": "Warmwatertemperatuur"
+            },
+            "electricity_consumed": {
+                "name": "Verbruikte elektriciteit"
+            },
+            "outdoor_temperature": {
+                "name": "Buitentemperatuur"
+            },
+            "water_temperature": {
+                "name": "Watertemperatuur"
+            }
+        },
+        "switch": {
+            "cooling_ena_switch": {
+                "name": "Koelen"
+            },
+            "dhw_cm_switch": {
+                "name": "Huishoudelijk warm water comfort modus"
+            },
+            "relay": {
+                "name": "Schakelaar"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_failed": {
+            "message": "Ongeldige authenticatie"
+        },
+        "data_incomplete_or_missing": {
+            "message": "Gegevens onvolledig of ontbreken."
+        },
+        "error_communicating_with_api": {
+            "message": "Communicatiefout met API: {error}."
+        },
+        "failed_to_connect": {
+            "message": "Kan geen verbinding maken"
+        },
+        "invalid_xml_data": {
+            "message": "Ongeldige XML-gegevens, of foutindicatie ontvangen"
+        },
+        "unsupported_firmware": {
+            "message": "Apparaat met niet ondersteunde firmware"
+        }
+    }
+}

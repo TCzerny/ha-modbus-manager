@@ -1,0 +1,210 @@
+{
+    "common": {
+        "climate_preset_heater": "\u0160ildytuvas",
+        "climate_preset_solar": "Saul\u0117s",
+        "climate_preset_solar_prefered": "Pageidautina saul\u0117s energija",
+        "service_config_entry_description": "\u0160iam veiksmui naudojamas konfig\u016bracijos \u012fra\u0161as.",
+        "service_config_entry_name": "Konfig\u016bracijos \u012fra\u0161as"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "gateway_entry": {
+                "data": {
+                    "ip_address": "IP adresas",
+                    "port": "Prievadas"
+                },
+                "description": "\u012eveskite savo \u201eScreenLogic Gateway\u201c informacij\u0105.",
+                "title": "ScreenLogic"
+            },
+            "gateway_select": {
+                "data": {
+                    "selected_gateway": "Gateway"
+                },
+                "description": "Buvo aptikti \u0161ie \u201eScreenLogic\u201c prieigos vartai. Pasirinkite vienus, kur\u012f norite konfig\u016bruoti, arba pasirinkite rankiniu b\u016bdu konfig\u016bruoti \u201eScreenLogic\u201c prieigos vartus.",
+                "title": "ScreenLogic"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_alert": {
+                "name": "Aktyvus \u012fsp\u0117jimas"
+            },
+            "chem_high_alarm": {
+                "name": "{chem} auk\u0161tas signalas"
+            },
+            "chem_limit": {
+                "name": "{chem} pasiekta ribin\u0117 doz\u0117"
+            },
+            "chem_low_alarm": {
+                "name": "{chem} \u017eemas signalas"
+            },
+            "chem_supply_alarm": {
+                "name": "{chem} tiekimo signalizacija"
+            },
+            "cleaner_delay": {
+                "name": "Valytojo v\u0117lavimas"
+            },
+            "corosive": {
+                "name": "SI korozinis"
+            },
+            "flow_alarm": {
+                "name": "Srauto signalizacija"
+            },
+            "freeze_mode": {
+                "name": "U\u017e\u0161aldymo re\u017eimas"
+            },
+            "ph_lockout": {
+                "name": "pH blokavimas"
+            },
+            "pool_delay": {
+                "name": "Baseino v\u0117lavimas"
+            },
+            "probe_fault_alarm": {
+                "name": "Zondo gedimas"
+            },
+            "scaling": {
+                "name": "SI mastelis"
+            },
+            "scg_state": {
+                "name": "Chloratorius"
+            },
+            "spa_delay": {
+                "name": "SPA v\u0117lavimas"
+            }
+        },
+        "climate": {
+            "body_0": {
+                "name": "Baseino \u0161iluma"
+            },
+            "body_1": {
+                "name": "SPA \u0161iluma"
+            }
+        },
+        "number": {
+            "calcium_hardness": {
+                "name": "Kalcio kietumas"
+            },
+            "cya": {
+                "name": "Cianuro r\u016bg\u0161tis"
+            },
+            "pool_setpoint": {
+                "name": "Baseino chloravimo ta\u0161kas"
+            },
+            "salt_tds_ppm": {
+                "name": "Druska / TDS"
+            },
+            "spa_setpoint": {
+                "name": "SPA chloravimo ta\u0161kas"
+            },
+            "total_alkalinity": {
+                "name": "Bendras \u0161armingumas"
+            }
+        },
+        "sensor": {
+            "air_temperature": {
+                "name": "Oro temperat\u016bra"
+            },
+            "calcium_hardness": {
+                "name": "Kalcio kietumas"
+            },
+            "chem_dose_state": {
+                "name": "{chem} dozavimo b\u016bkl\u0117"
+            },
+            "chem_last_dose_time": {
+                "name": "{chem} paskutin\u0117s doz\u0117s laikas"
+            },
+            "chem_last_dose_volume": {
+                "name": "{chem} paskutin\u0117s doz\u0117s t\u016bris"
+            },
+            "chem_now": {
+                "name": "{chem} dabar"
+            },
+            "chem_setpoint": {
+                "name": "{chem} nustatyta vert\u0117"
+            },
+            "chem_supply_level": {
+                "name": "{chem} tiekimo lygis"
+            },
+            "cya": {
+                "name": "Cianuro r\u016bg\u0161tis"
+            },
+            "ph_probe_water_temp": {
+                "name": "pH zondo vandens temperat\u016bra"
+            },
+            "salt_ppm": {
+                "name": "Chloruojanti druska"
+            },
+            "salt_tds_ppm": {
+                "name": "Druska / TDS"
+            },
+            "saturation": {
+                "name": "Prisotinimo indeksas"
+            },
+            "super_chlor_timer": {
+                "name": "Super chloravimo laikmatis"
+            },
+            "total_alkalinity": {
+                "name": "Bendras \u0161armingumas"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Sekund\u0117s tarp nuskaitym\u0173"
+                },
+                "description": "Nurodykite {gateway_name} nustatymus",
+                "title": "ScreenLogic"
+            }
+        }
+    },
+    "services": {
+        "set_color_mode": {
+            "description": "Nustatomas vis\u0173 prie \u0161io \u201eScreenLogic\u201c prieigos vart\u0173 prijungt\u0173 \u0161viestuv\u0173 spalv\u0173 re\u017eimas.",
+            "fields": {
+                "color_mode": {
+                    "description": "Nustatyti ScreenLogic spalv\u0173 re\u017eim\u0105.",
+                    "name": "Spalv\u0173 re\u017eimas"
+                },
+                "config_entry": {
+                    "description": "\u0160iam veiksmui naudojamas konfig\u016bracijos \u012fra\u0161as.",
+                    "name": "Konfig\u016bracijos \u012fra\u0161as"
+                }
+            },
+            "name": "Nustatykite spalv\u0173 re\u017eim\u0105"
+        },
+        "start_super_chlorination": {
+            "description": "Prasideda superchlorinimas, veikia nurodyt\u0105 laikotarp\u012f arba 24 valandas, jei nenurodyta.",
+            "fields": {
+                "config_entry": {
+                    "description": "\u0160iam veiksmui naudojamas konfig\u016bracijos \u012fra\u0161as.",
+                    "name": "Konfig\u016bracijos \u012fra\u0161as"
+                },
+                "runtime": {
+                    "description": "Superchlorinimo valand\u0173 skai\u010dius.",
+                    "name": "Veikimo laikas"
+                }
+            },
+            "name": "Prad\u0117kite superchloravim\u0105"
+        },
+        "stop_super_chlorination": {
+            "description": "Sustabdo superchloravim\u0105.",
+            "fields": {
+                "config_entry": {
+                    "description": "\u0160iam veiksmui naudojamas konfig\u016bracijos \u012fra\u0161as.",
+                    "name": "Konfig\u016bracijos \u012fra\u0161as"
+                }
+            },
+            "name": "Sustabdykite superchloravim\u0105"
+        }
+    }
+}

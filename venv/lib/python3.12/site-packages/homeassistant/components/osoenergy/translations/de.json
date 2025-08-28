@@ -1,0 +1,233 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "error": {
+            "invalid_auth": "Ung\u00fcltige Authentifizierung"
+        },
+        "step": {
+            "reauth": {
+                "data": {
+                    "api_key": "API-Code"
+                },
+                "description": "Gib einen neuen \u201eAbonnementschl\u00fcssel\u201c f\u00fcr dein Konto ein, der unter https://portal.osoenergy.no/ erstellt wurde.",
+                "title": "Authentifizierung f\u00fcr OSO Energy"
+            },
+            "user": {
+                "data": {
+                    "api_key": "API-Code"
+                },
+                "description": "Gib einen \u201eAbonnementschl\u00fcssel\u201c f\u00fcr dein Konto ein, der unter https://portal.osoenergy.no/ erstellt wurde.",
+                "title": "Authentifizierung f\u00fcr OSO Energy"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "extra_energy": {
+                "name": "Zus\u00e4tzliche Energie"
+            },
+            "heating": {
+                "name": "Heizung"
+            },
+            "power_save": {
+                "name": "Energiesparen"
+            }
+        },
+        "sensor": {
+            "capacity_mixed_water_40": {
+                "name": "Kapazit\u00e4t Mischwasser 40\u00b0C"
+            },
+            "heater_mode": {
+                "name": "Heizungs-Modus",
+                "state": {
+                    "auto": "Auto",
+                    "extraenergy": "Zus\u00e4tzliche Energie",
+                    "ffr": "Schnelle Frequenzreserve",
+                    "legionella": "Legionellen",
+                    "manual": "Manuell",
+                    "off": "Aus",
+                    "powersave": "Energiesparen",
+                    "voltage": "Spannung"
+                }
+            },
+            "optimization_mode": {
+                "name": "Optimierungsmodus",
+                "state": {
+                    "advanced": "Erweitert",
+                    "gridcompany": "Netzbetreiber",
+                    "off": "Aus",
+                    "oso": "OSO",
+                    "smartcompany": "Intelligentes Unternehmen"
+                }
+            },
+            "profile": {
+                "name": "Profil lokal"
+            },
+            "tapping_capacity": {
+                "name": "Zapfleistung"
+            },
+            "temperature_low": {
+                "name": "Temperatur unten"
+            },
+            "temperature_mid": {
+                "name": "Temperatur mittel"
+            },
+            "temperature_one": {
+                "name": "Temperatur eins"
+            },
+            "temperature_top": {
+                "name": "Temperatur oben"
+            },
+            "v40_level_max": {
+                "name": "Maximalf\u00fcllstand Mischwasser bei 40 \u00b0C"
+            },
+            "v40_level_min": {
+                "name": "Mindestf\u00fcllstand Mischwasser bei 40 \u00b0C"
+            },
+            "v40_min": {
+                "name": "Mischwasser bei 40\u00b0C"
+            }
+        }
+    },
+    "services": {
+        "get_profile": {
+            "description": "Ruft das Temperaturprofil des Warmwasserbereiters ab",
+            "name": "Warmwasser-Profil abrufen"
+        },
+        "set_profile": {
+            "description": "Stellt des Temperaturprofil des Warmwasserbereiters ein",
+            "fields": {
+                "hour_00": {
+                    "description": "00:00 Uhr",
+                    "name": "00:00"
+                },
+                "hour_01": {
+                    "description": "01:00 Uhr",
+                    "name": "01:00"
+                },
+                "hour_02": {
+                    "description": "02:00 Uhr",
+                    "name": "02:00"
+                },
+                "hour_03": {
+                    "description": "03:00 Uhr",
+                    "name": "03:00"
+                },
+                "hour_04": {
+                    "description": "04:00 Uhr",
+                    "name": "04:00"
+                },
+                "hour_05": {
+                    "description": "05:00 Uhr",
+                    "name": "05:00"
+                },
+                "hour_06": {
+                    "description": "06:00 Uhr",
+                    "name": "06:00"
+                },
+                "hour_07": {
+                    "description": "07:00 Uhr",
+                    "name": "07:00"
+                },
+                "hour_08": {
+                    "description": "08:00 Uhr",
+                    "name": "08:00"
+                },
+                "hour_09": {
+                    "description": "09:00 Uhr",
+                    "name": "09:00"
+                },
+                "hour_10": {
+                    "description": "10:00 Uhr",
+                    "name": "10:00"
+                },
+                "hour_11": {
+                    "description": "11:00 Uhr",
+                    "name": "11:00"
+                },
+                "hour_12": {
+                    "description": "12:00 Uhr",
+                    "name": "12:00"
+                },
+                "hour_13": {
+                    "description": "13:00 Uhr",
+                    "name": "13:00"
+                },
+                "hour_14": {
+                    "description": "14:00 Uhr",
+                    "name": "14:00"
+                },
+                "hour_15": {
+                    "description": "15:00 Uhr",
+                    "name": "15:00"
+                },
+                "hour_16": {
+                    "description": "16:00 Uhr",
+                    "name": "16:00"
+                },
+                "hour_17": {
+                    "description": "17:00 Uhr",
+                    "name": "17:00"
+                },
+                "hour_18": {
+                    "description": "18:00 Uhr",
+                    "name": "18:00"
+                },
+                "hour_19": {
+                    "description": "19:00 Uhr",
+                    "name": "19:00"
+                },
+                "hour_20": {
+                    "description": "20:00 Uhr",
+                    "name": "20:00"
+                },
+                "hour_21": {
+                    "description": "21:00 Uhr",
+                    "name": "21:00"
+                },
+                "hour_22": {
+                    "description": "22:00 Uhr",
+                    "name": "22:00"
+                },
+                "hour_23": {
+                    "description": "23:00 Uhr",
+                    "name": "23:00"
+                }
+            },
+            "name": "Warmwasser-Profil einstellen"
+        },
+        "set_v40_min": {
+            "description": "Stellt die Mindestwassermenge bei 40 \u00b0C f\u00fcr Warmwasserbereiter ein",
+            "fields": {
+                "v40_min": {
+                    "description": "Mindestwassermenge bei 40\u00b0C (200-350 f\u00fcr SAGA S200, 300-550 f\u00fcr SAGA S300)",
+                    "name": "V40 Min"
+                }
+            },
+            "name": "V40 min einstellen"
+        },
+        "turn_off": {
+            "description": "Stellt den Heizbetrieb f\u00fcr eine Stunde aus oder bis die Mindesttemperatur erreicht ist",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "Ausw\u00e4hlen, ob der Heizbetrieb bis zum Erreichen der Mindesttemperatur (Wahr) oder f\u00fcr eine Stunde (Falsch) ausgeschaltet werden soll",
+                    "name": "Bis Temperaturbegrenzung"
+                }
+            },
+            "name": "Heizbetrieb ausschalten"
+        },
+        "turn_on": {
+            "description": "Schaltet den Heizbetrieb f\u00fcr eine Stunde ein oder bis die H\u00f6chsttemperatur erreicht ist",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "Ausw\u00e4hlen, ob der Heizbetrieb bis zum Erreichen der H\u00f6chsttemperatur (Wahr) oder f\u00fcr eine Stunde (Falsch) eingeschaltet werden soll",
+                    "name": "Bis Temperaturbegrenzung"
+                }
+            },
+            "name": "Heizbetrieb einschalten"
+        }
+    }
+}

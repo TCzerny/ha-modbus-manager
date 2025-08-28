@@ -1,0 +1,145 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "reauth_failed": "\u00c9rv\u00e9nytelen hiteles\u00edt\u00e9s",
+            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "invalid_auth": "\u00c9rv\u00e9nytelen hiteles\u00edt\u00e9s",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "password": "Jelsz\u00f3",
+                    "username": "Felhaszn\u00e1l\u00f3n\u00e9v"
+                },
+                "description": "K\u00e9rj\u00fck, adja meg a felhaszn\u00e1l\u00f3nevet \u00e9s a jelsz\u00f3t"
+            },
+            "confirm_discovery": {
+                "description": "Szeretn\u00e9 be\u00e1ll\u00edtani az SMLIGHT eszk\u00f6zt a(z) {host} c\u00edmen?"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Jelsz\u00f3",
+                    "username": "Felhaszn\u00e1l\u00f3n\u00e9v"
+                },
+                "description": "K\u00e9rj\u00fck, adja meg a helyes felhaszn\u00e1l\u00f3nevet \u00e9s jelsz\u00f3t",
+                "title": "A(z) {name} hiteles\u00edt\u00e9se lej\u00e1rt"
+            },
+            "user": {
+                "data": {
+                    "host": "Hoszt"
+                },
+                "data_description": {
+                    "host": "Az SMLIGHT SLZB-06x eszk\u00f6z hostneve vagy IP-c\u00edme"
+                },
+                "description": "Az SMLIGHT Zigbee integr\u00e1ci\u00f3 be\u00e1ll\u00edt\u00e1sa"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "ethernet": {
+                "name": "Ethernet"
+            },
+            "internet": {
+                "name": "Internet"
+            },
+            "vpn": {
+                "name": "VPN"
+            },
+            "wifi": {
+                "name": "Wi-Fi"
+            }
+        },
+        "button": {
+            "core_restart": {
+                "name": "Rendszermag \u00fajraind\u00edt\u00e1sa"
+            },
+            "reconnect_zigbee_router": {
+                "name": "Zigbee router \u00fajracsatlakoztat\u00e1sa"
+            },
+            "zigbee_flash_mode": {
+                "name": "Zigbee flash m\u00f3d"
+            },
+            "zigbee_restart": {
+                "name": "Zigbee \u00fajraind\u00edt\u00e1s"
+            }
+        },
+        "sensor": {
+            "core_temperature": {
+                "name": "Rendszermag chip h\u0151m\u00e9rs\u00e9klete"
+            },
+            "core_uptime": {
+                "name": "Rendszermag \u00fczemid\u0151"
+            },
+            "device_mode": {
+                "name": "Csatlakoz\u00e1si m\u00f3d",
+                "state": {
+                    "eth": "Ethernet",
+                    "usb": "USB",
+                    "wifi": "Wi-Fi"
+                }
+            },
+            "firmware_channel": {
+                "name": "Firmware csatorna",
+                "state": {
+                    "dev": "Fejleszt\u0151i",
+                    "release": "Stabil"
+                }
+            },
+            "fs_usage": {
+                "name": "F\u00e1jlrendszer haszn\u00e1lat"
+            },
+            "ram_usage": {
+                "name": "RAM haszn\u00e1lat"
+            },
+            "socket_uptime": {
+                "name": "Zigbee \u00fczemid\u0151"
+            },
+            "zigbee_temperature": {
+                "name": "Zigbee chip h\u0151m\u00e9rs\u00e9klet"
+            },
+            "zigbee_type": {
+                "name": "Zigbee t\u00edpus",
+                "state": {
+                    "coordinator": "Koordin\u00e1tor",
+                    "router": "\u00datv\u00e1laszt\u00f3",
+                    "thread": "Thread"
+                }
+            }
+        },
+        "switch": {
+            "auto_zigbee_update": {
+                "name": "Automatikus Zigbee friss\u00edt\u00e9s"
+            },
+            "disable_led": {
+                "name": "LED-ek letilt\u00e1sa"
+            },
+            "night_mode": {
+                "name": "LED \u00e9jszakai \u00fczemm\u00f3d"
+            },
+            "vpn_enabled": {
+                "name": "VPN enged\u00e9lyezve"
+            }
+        },
+        "update": {
+            "core_update": {
+                "name": "Core firmware"
+            },
+            "zigbee_update": {
+                "name": "Zigbee firmware"
+            }
+        }
+    },
+    "issues": {
+        "unsupported_firmware": {
+            "description": "Az SMLIGHT SLZB-06x eszk\u00f6ze nem t\u00e1mogatott firmware verzi\u00f3t futtat. K\u00e9rj\u00fck, friss\u00edtse a leg\u00fajabb verzi\u00f3ra, hogy \u00e9lvezhesse ennek az integr\u00e1ci\u00f3nak minden funkci\u00f3j\u00e1t.",
+            "title": "Friss\u00edt\u00e9s sz\u00fcks\u00e9ges az SLZB core firmware-hez"
+        }
+    }
+}

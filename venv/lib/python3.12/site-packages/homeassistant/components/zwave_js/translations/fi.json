@@ -1,0 +1,433 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Laite on jo m\u00e4\u00e4ritetty",
+            "already_in_progress": "M\u00e4\u00e4ritysprosessi on jo k\u00e4ynniss\u00e4",
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "discovery_requires_supervisor": "L\u00f6yt\u00e4minen vaatii valvojan.",
+            "not_zwave_device": "L\u00f6ytynyt laite ei ole Z-Wave-laite."
+        },
+        "error": {
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "invalid_ws_url": "Virheellinen websocket URL-osoite",
+            "unknown": "Odottamaton virhe"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "configure_addon": {
+                "data": {
+                    "s0_legacy_key": "S0-avain (vanha)",
+                    "s2_access_control_key": "S2-p\u00e4\u00e4synvalvonta-avain",
+                    "s2_authenticated_key": "S2 Todennettu avain",
+                    "s2_unauthenticated_key": "S2 Todentamaton avain",
+                    "usb_path": "USB-laitteen polku"
+                },
+                "description": "Lis\u00e4osa luo suojausavaimet, jos n\u00e4m\u00e4 kent\u00e4t j\u00e4tet\u00e4\u00e4n tyhjiksi."
+            },
+            "manual": {
+                "data": {
+                    "url": "URL-osoite"
+                }
+            },
+            "on_supervisor": {
+                "title": "Valitse yhteystapa"
+            }
+        }
+    },
+    "device_automation": {
+        "action_type": {
+            "clear_lock_usercode": "Tyhjenn\u00e4 k\u00e4ytt\u00e4j\u00e4koodi kohteessa {entity_name}",
+            "ping": "Pingaa laitetta",
+            "refresh_value": "P\u00e4ivit\u00e4 {entity_name}:n arvo(t).",
+            "reset_meter": "Nollaa mittarit: {subtype}",
+            "set_config_parameter": "Aseta m\u00e4\u00e4ritysparametrin {subtype} arvo",
+            "set_lock_usercode": "Aseta k\u00e4ytt\u00e4j\u00e4koodi kohteelle {entity_name}",
+            "set_value": "Aseta Z-Wave-arvon arvo"
+        },
+        "condition_type": {
+            "config_parameter": "M\u00e4\u00e4rit\u00e4 parametrin {subtype} arvo",
+            "node_status": "Solmun tila",
+            "value": "Nykyinen Z-Wave-arvon arvo"
+        },
+        "trigger_type": {
+            "event.notification.entry_control": "L\u00e4hetti Entry Control -ilmoituksen",
+            "event.notification.notification": "L\u00e4hetti ilmoituksen",
+            "event.value_notification.basic": "CC-perustapahtuma {subtype}",
+            "event.value_notification.central_scene": "Keskeinen tilanne toiminta kohteella {subtype}",
+            "event.value_notification.scene_activation": "Tilanteen aktivointi {subtype}:ss\u00e4",
+            "state.node_status": "Solmun tila muuttunut",
+            "zwave_js.value_updated.config_parameter": "Konfiguraatioparametrin {subtype} arvonmuutos"
+        }
+    },
+    "entity": {
+        "button": {
+            "ping": {
+                "name": "Ping"
+            }
+        },
+        "sensor": {
+            "average_background_rssi": {
+                "name": "Taustan keskim\u00e4\u00e4r\u00e4inen RSSI (kanava {channel})"
+            },
+            "can": {
+                "name": "T\u00f6rm\u00e4ykset"
+            },
+            "commands_dropped": {
+                "name": "Hyl\u00e4tyt komennot ({direction})"
+            },
+            "controller_status": {
+                "name": "Tila",
+                "state": {
+                    "jammed": "Jumissa",
+                    "ready": "Valmis",
+                    "unresponsive": "Ei vastaa"
+                }
+            },
+            "current_background_rssi": {
+                "name": "Nykyinen taustan RSSI (kanava {channel})"
+            },
+            "last_seen": {
+                "name": "Viimeksi n\u00e4hty"
+            },
+            "messages_dropped": {
+                "name": "Hyl\u00e4tyt viestit ({direction})"
+            },
+            "nak": {
+                "name": "Viestej\u00e4 ei hyv\u00e4ksyt\u00e4"
+            },
+            "node_status": {
+                "name": "Solmun tila",
+                "state": {
+                    "alive": "Elossa",
+                    "asleep": "Unessa",
+                    "awake": "Hereill\u00e4",
+                    "dead": "Kuollut",
+                    "unknown": "Tuntematon"
+                }
+            },
+            "rssi": {
+                "name": "RSSI"
+            },
+            "rtt": {
+                "name": "Edestakainen matka-aika"
+            },
+            "successful_commands": {
+                "name": "Onnistuneet komennot ({direction})"
+            },
+            "successful_messages": {
+                "name": "Onnistuneet viestit ({direction})"
+            },
+            "timeout_ack": {
+                "name": "Puuttuvat ACK:t"
+            },
+            "timeout_callback": {
+                "name": "Takaisinsoittojen aikakatkaisu"
+            },
+            "timeout_response": {
+                "name": "Aikakatkaistut vastaukset"
+            }
+        }
+    },
+    "issues": {
+        "device_config_file_changed": {
+            "fix_flow": {
+                "abort": {
+                    "cannot_connect": "Yhteytt\u00e4 {device_name} ei voida muodostaa. Yrit\u00e4 my\u00f6hemmin uudelleen, kun olet varmistanut, ett\u00e4 Z-Wave-verkkosi on toiminnassa ja yhteydess\u00e4 Home Assistantiin.",
+                    "issue_ignored": "Laitteen konfigurointitiedoston p\u00e4ivitys {device_name} j\u00e4tet\u00e4\u00e4n huomiotta."
+                },
+                "step": {
+                    "init": {
+                        "menu_options": {
+                            "confirm": "Haastattele laite uudelleen",
+                            "ignore": "Ohita laitteen asetusten p\u00e4ivitys"
+                        },
+                        "title": "Laitteen m\u00e4\u00e4ritystiedostoa muutettu: {device_name}"
+                    }
+                }
+            },
+            "title": "Laitteen m\u00e4\u00e4ritystiedostoa muutettu: {device_name}"
+        }
+    },
+    "options": {
+        "abort": {
+            "addon_get_discovery_info_failed": "Z-Wave JS -lis\u00e4osan l\u00f6yt\u00f6tietojen hakeminen ep\u00e4onnistui.",
+            "addon_info_failed": "Z-Wave JS -lis\u00e4osan tietojen hakeminen ep\u00e4onnistui.",
+            "addon_install_failed": "Z-Wave JS -lis\u00e4osan asennus ep\u00e4onnistui.",
+            "addon_set_config_failed": "Z-Wave JS -m\u00e4\u00e4rityksen asettaminen ep\u00e4onnistui.",
+            "addon_start_failed": "Z-Wave JS -lis\u00e4osan k\u00e4ynnist\u00e4minen ep\u00e4onnistui.",
+            "already_configured": "Laite on jo m\u00e4\u00e4ritetty",
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "different_device": "Liitetty USB-laite ei ole sama, joka on aiemmin m\u00e4\u00e4ritetty t\u00e4h\u00e4n konfigurointimerkint\u00e4\u00e4n. Luo sen sijaan uusi konfigurointimerkint\u00e4 uudelle laitteelle."
+        },
+        "error": {
+            "cannot_connect": "Yhteyden muodostaminen ep\u00e4onnistui",
+            "invalid_ws_url": "Virheellinen websocket URL-osoite",
+            "unknown": "Odottamaton virhe"
+        },
+        "progress": {
+            "install_addon": "Odota, kunnes Z-Wave JS -lis\u00e4osan asennus on valmis. T\u00e4m\u00e4 voi kest\u00e4\u00e4 useita minuutteja.",
+            "start_addon": "Odota, kunnes Z-Wave JS -lis\u00e4osan k\u00e4ynnistys on valmis. T\u00e4m\u00e4 voi kest\u00e4\u00e4 muutaman sekunnin."
+        },
+        "step": {
+            "configure_addon": {
+                "data": {
+                    "emulate_hardware": "Emuloi laitteistoa",
+                    "log_level": "Lokitaso",
+                    "s0_legacy_key": "S0-avain (vanha)",
+                    "s2_access_control_key": "S2-p\u00e4\u00e4synvalvonta-avain",
+                    "s2_authenticated_key": "S2 Todennettu avain",
+                    "s2_unauthenticated_key": "S2 Todentamaton avain",
+                    "usb_path": "USB-laitteen polku"
+                },
+                "description": "Lis\u00e4osa luo suojausavaimet, jos n\u00e4m\u00e4 kent\u00e4t j\u00e4tet\u00e4\u00e4n tyhjiksi.",
+                "title": "Anna Z-Wave JS -lis\u00e4osan m\u00e4\u00e4ritys"
+            },
+            "install_addon": {
+                "title": "Z-Wave JS -lis\u00e4osan asennus on alkanut"
+            },
+            "manual": {
+                "data": {
+                    "url": "URL-osoite"
+                }
+            },
+            "on_supervisor": {
+                "data": {
+                    "use_addon": "K\u00e4yt\u00e4 Z-Wave JS Supervisor -lis\u00e4osaa"
+                },
+                "description": "Haluatko k\u00e4ytt\u00e4\u00e4 Z-Wave JS Supervisor -lis\u00e4osaa?",
+                "title": "Valitse yhteystapa"
+            },
+            "start_addon": {
+                "title": "Z-Wave JS -lis\u00e4osa k\u00e4ynnistyy."
+            }
+        }
+    },
+    "services": {
+        "bulk_set_partial_config_parameters": {
+            "description": "Mahdollistaa osittaisten parametrien massas\u00e4\u00e4d\u00f6n. Hy\u00f6dyllinen, kun useita osittaisia parametreja on asetettava samanaikaisesti.",
+            "fields": {
+                "endpoint": {
+                    "description": "M\u00e4\u00e4ritysparametrin p\u00e4\u00e4tepiste.",
+                    "name": "P\u00e4\u00e4tepiste"
+                },
+                "parameter": {
+                    "description": "Sen konfigurointiparametrin nimi (tai tunnus), jonka haluat m\u00e4\u00e4ritt\u00e4\u00e4.",
+                    "name": "Parametri"
+                },
+                "value": {
+                    "description": "Uusi arvo(t), jo(t)ka asetetaan t\u00e4lle konfiguraatioparametrille. Voi olla joko raaka kokonaislukuarvo, joka edustaa massamuutosta, tai kartoitus, jossa avain on bittimerkki (joko heksan- tai kokonaislukumuodossa) ja arvo on uusi arvo, jonka haluat asettaa kyseiselle osittaiselle parametrille.",
+                    "name": "Arvo"
+                }
+            }
+        },
+        "clear_lock_usercode": {
+            "description": "Poistaa k\u00e4ytt\u00e4j\u00e4koodin lukosta.",
+            "fields": {
+                "code_slot": {
+                    "description": "Koodipaikka, josta koodi poistetaan.",
+                    "name": "Koodipaikka"
+                }
+            },
+            "name": "Tyhjenn\u00e4 lukituksen k\u00e4ytt\u00e4j\u00e4koodi"
+        },
+        "invoke_cc_api": {
+            "fields": {
+                "command_class": {
+                    "description": "Sen komentoluokan tunnus, jolle haluat antaa komennon.",
+                    "name": "Komentoluokka"
+                },
+                "endpoint": {
+                    "description": "P\u00e4\u00e4tepiste, josta API:ta kutsutaan. Jos p\u00e4\u00e4tepiste on m\u00e4\u00e4ritetty, kyseiseen p\u00e4\u00e4tepisteeseen kohdistetaan kaikki kohdealueisiin, -laitteisiin ja/tai -yksik\u00f6ihin liittyv\u00e4t solmut. Jos p\u00e4\u00e4tepistett\u00e4 ei ole m\u00e4\u00e4ritetty, kohdealueisiin ja -laitteisiin liittyv\u00e4t solmut kohdistetaan juurip\u00e4\u00e4tepisteeseen (0) ja kunkin entiteetin ensisijaisen arvon p\u00e4\u00e4tepisteeseen.",
+                    "name": "P\u00e4\u00e4tepiste"
+                },
+                "method_name": {
+                    "name": "Menetelm\u00e4n nimi"
+                },
+                "parameters": {
+                    "name": "Parametrit"
+                }
+            },
+            "name": "Kutsu komentoluokan API solmussa (edistynyt)"
+        },
+        "multicast_set_value": {
+            "fields": {
+                "broadcast": {
+                    "description": "L\u00e4hetet\u00e4\u00e4nk\u00f6 komento kaikille verkon laitteille.",
+                    "name": "L\u00e4hetet\u00e4\u00e4nk\u00f6?"
+                },
+                "command_class": {
+                    "description": "Arvon komentoluokan tunnus.",
+                    "name": "Komentoluokka"
+                },
+                "endpoint": {
+                    "description": "Arvon p\u00e4\u00e4tepiste.",
+                    "name": "P\u00e4\u00e4tepiste"
+                },
+                "options": {
+                    "description": "Aseta arvovaihtoehtojen kartta. Lis\u00e4tietoja asetettavista vaihtoehdoista on Z-Wave JS -dokumentaatiossa.",
+                    "name": "Asetukset"
+                },
+                "property": {
+                    "description": "Arvon omaisuuden tunnus.",
+                    "name": "Omaisuus"
+                },
+                "property_key": {
+                    "description": "Arvon ominaisuusavaimen tunnus.",
+                    "name": "Ominaisuuden avain"
+                },
+                "value": {
+                    "description": "Uusi asetettava arvo.",
+                    "name": "Arvo"
+                }
+            },
+            "name": "Aseta arvo useisiin laitteisiin monil\u00e4hetyksen kautta (laajennettu)."
+        },
+        "ping": {
+            "name": "Pingaa solmua"
+        },
+        "refresh_notifications": {
+            "description": "P\u00e4ivitt\u00e4\u00e4 solmun ilmoitukset ilmoitustyypin ja valinnaisesti ilmoitustapahtuman perusteella.",
+            "fields": {
+                "notification_event": {
+                    "description": "Ilmoitustapahtuman numero, joka on m\u00e4\u00e4ritetty Z-Waven teknisiss\u00e4 tiedoissa.",
+                    "name": "Ilmoitustapahtuma"
+                },
+                "notification_type": {
+                    "description": "Ilmoitustyypin numero, joka on m\u00e4\u00e4ritelty Z-Wave-spesifikaatioissa.",
+                    "name": "Ilmoituksen tyyppi"
+                }
+            },
+            "name": "Solmun ilmoitusten p\u00e4ivitt\u00e4minen (edistynyt)"
+        },
+        "refresh_value": {
+            "description": "Pakottaa p\u00e4ivitt\u00e4m\u00e4\u00e4n Z-Wave-entiteetin arvot.",
+            "fields": {
+                "entity_id": {
+                    "description": "P\u00e4ivitett\u00e4v\u00e4t entiteetit.",
+                    "name": "Entiteetit"
+                },
+                "refresh_all_values": {
+                    "description": "P\u00e4ivitet\u00e4\u00e4nk\u00f6 kaikki arvot (true) vai vain ensisijainen arvo (false).",
+                    "name": "P\u00e4ivitet\u00e4\u00e4nk\u00f6 kaikki arvot?"
+                }
+            },
+            "name": "P\u00e4ivit\u00e4 arvot"
+        },
+        "reset_meter": {
+            "description": "Nollaa solmun mittarit.",
+            "fields": {
+                "meter_type": {
+                    "description": "Nollattavan mittarin tyyppi. Kaikki mittarit eiv\u00e4t tue mahdollisuutta valita nollattavaa mittarityyppi\u00e4.",
+                    "name": "Mittarin tyyppi"
+                },
+                "value": {
+                    "description": "Arvo, johon mittarit on nollattava. Kaikki mittarit eiv\u00e4t tue mahdollisuutta nollata tiettyyn arvoon.",
+                    "name": "Tavoitearvo"
+                }
+            },
+            "name": "Nollaa solmun mittarit"
+        },
+        "set_config_parameter": {
+            "description": "Muuttaa Z-Wave-laitteiden konfigurointiparametreja.",
+            "fields": {
+                "bitmask": {
+                    "name": "Bittinaamio"
+                },
+                "endpoint": {
+                    "description": "M\u00e4\u00e4ritysparametrin p\u00e4\u00e4tepiste.",
+                    "name": "P\u00e4\u00e4tepiste"
+                },
+                "parameter": {
+                    "description": "Sen konfigurointiparametrin nimi (tai tunnus), jonka haluat m\u00e4\u00e4ritt\u00e4\u00e4.",
+                    "name": "Parametri"
+                },
+                "value": {
+                    "description": "T\u00e4lle konfiguraatioparametrille asetettava uusi arvo.",
+                    "name": "Arvo"
+                },
+                "value_format": {
+                    "name": "Arvon muoto"
+                },
+                "value_size": {
+                    "name": "Arvon koko"
+                }
+            },
+            "name": "Aseta laitteen konfigurointiparametri"
+        },
+        "set_lock_configuration": {
+            "description": "M\u00e4\u00e4ritt\u00e4\u00e4 lukon konfiguraation.",
+            "fields": {
+                "auto_relock_time": {
+                    "description": "Kesto sekunteina, kunnes lukko palaa turvalliseen tilaan. K\u00e4ytet\u00e4\u00e4n vain, kun operaation tyyppi on `constant`.",
+                    "name": "Automaattinen uudelleenlukitusaikam"
+                },
+                "block_to_block": {
+                    "description": "Ota lohkosta lohkoon -toiminto k\u00e4ytt\u00f6\u00f6n.",
+                    "name": "Lohko lohkolta lohkolle"
+                },
+                "hold_and_release_time": {
+                    "description": "Salvan sis\u00e4\u00e4nvedon kesto sekunteina.",
+                    "name": "Pito- ja vapautusaika"
+                },
+                "lock_timeout": {
+                    "description": "Sekuntia, kunnes lukitustilan aika p\u00e4\u00e4ttyy. K\u00e4ytet\u00e4\u00e4n vain, jos toimintatyyppi on `timed`.",
+                    "name": "Lukituksen aikakatkaisu"
+                },
+                "operation_type": {
+                    "description": "Lukon toimintatyyppi.",
+                    "name": "Toimintatyyppi"
+                },
+                "twist_assist": {
+                    "description": "Ota Twist Assist k\u00e4ytt\u00f6\u00f6n.",
+                    "name": "Twist assist"
+                }
+            },
+            "name": "Aseta lukon asetukset"
+        },
+        "set_lock_usercode": {
+            "description": "Asettaa k\u00e4ytt\u00e4j\u00e4koodin lukkoon.",
+            "fields": {
+                "code_slot": {
+                    "description": "Koodipaikka koodin asettamista varten.",
+                    "name": "Koodipaikka"
+                },
+                "usercode": {
+                    "description": "Asetettava lukituskoodi.",
+                    "name": "Koodi"
+                }
+            },
+            "name": "Aseta lukituksen k\u00e4ytt\u00e4j\u00e4koodi"
+        },
+        "set_value": {
+            "fields": {
+                "command_class": {
+                    "description": "Arvon komentoluokan tunnus.",
+                    "name": "Komentoluokka"
+                },
+                "endpoint": {
+                    "description": "Arvon p\u00e4\u00e4tepiste.",
+                    "name": "P\u00e4\u00e4tepiste"
+                },
+                "options": {
+                    "name": "Asetukset"
+                },
+                "property": {
+                    "description": "Arvon omaisuuden tunnus.",
+                    "name": "Omaisuus"
+                },
+                "property_key": {
+                    "description": "Arvon ominaisuusavaimen tunnus.",
+                    "name": "Ominaisuuden avain"
+                },
+                "value": {
+                    "description": "Uusi asetettava arvo.",
+                    "name": "Arvo"
+                },
+                "wait_for_result": {
+                    "name": "Odota tulosta?"
+                }
+            },
+            "name": "Aseta arvo (edistynyt)"
+        }
+    }
+}

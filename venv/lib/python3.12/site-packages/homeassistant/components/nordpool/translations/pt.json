@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "no_data": "A API est\u00e1 conectada, mas a resposta estava vazia"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "\u00c1reas",
+                    "currency": "Moeda"
+                },
+                "data_description": {
+                    "areas": "\u00c1reas para exibir pre\u00e7os de acordo com as \u00e1reas de mercado da Nordpool.",
+                    "currency": "Selecione a moeda para exibir os pre\u00e7os, EUR \u00e9 a moeda base."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "\u00c1reas",
+                    "currency": "Moeda"
+                },
+                "data_description": {
+                    "areas": "\u00c1reas para exibir pre\u00e7os de acordo com as \u00e1reas de mercado da Nordpool.",
+                    "currency": "Selecione a moeda para exibir os pre\u00e7os, EUR \u00e9 a moeda base."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} m\u00e9dia"
+            },
+            "block_end_time": {
+                "name": "{block} tempo at\u00e9"
+            },
+            "block_max": {
+                "name": "{block} pre\u00e7o mais alto"
+            },
+            "block_min": {
+                "name": "{block} pre\u00e7o mais baixo"
+            },
+            "block_start_time": {
+                "name": "{block} tempo de"
+            },
+            "currency": {
+                "name": "Moeda"
+            },
+            "current_price": {
+                "name": "Pre\u00e7o atual"
+            },
+            "daily_average": {
+                "name": "M\u00e9dia di\u00e1ria"
+            },
+            "exchange_rate": {
+                "name": "Taxa de c\u00e2mbio"
+            },
+            "highest_price": {
+                "name": "Pre\u00e7o mais alto",
+                "state_attributes": {
+                    "end": {
+                        "name": "Hora de fim"
+                    },
+                    "start": {
+                        "name": "Hora de in\u00edcio"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "Pre\u00e7o anterior"
+            },
+            "lowest_price": {
+                "name": "Pre\u00e7o mais baixo",
+                "state_attributes": {
+                    "end": {
+                        "name": "Hora de fim"
+                    },
+                    "start": {
+                        "name": "Hora de in\u00edcio"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "Pr\u00f3ximo pre\u00e7o"
+            },
+            "updated_at": {
+                "name": "\u00daltima atualiza\u00e7\u00e3o"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Ocorreu um erro de autentica\u00e7\u00e3o ao tentar recuperar dados muito antigos."
+        },
+        "connection_error": {
+            "message": "Ocorreu um erro de liga\u00e7\u00e3o ao ligar \u00e0 API. Tente novamente mais tarde."
+        },
+        "empty_response": {
+            "message": "A Nord Pool n\u00e3o publicou os pre\u00e7os de mercado para a data fornecida."
+        },
+        "entry_not_found": {
+            "message": "A integra\u00e7\u00e3o do Nord Pool n\u00e3o est\u00e1 configurada no Home Assistant."
+        },
+        "entry_not_loaded": {
+            "message": "A integra\u00e7\u00e3o Nord Pool n\u00e3o est\u00e1 carregada ou est\u00e1 desativada no Home Assistant."
+        },
+        "initial_update_failed": {
+            "message": "A atualiza\u00e7\u00e3o inicial falhou na inicializa\u00e7\u00e3o com o erro {error}"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "Obter pre\u00e7os para uma data espec\u00edfica.",
+            "fields": {
+                "areas": {
+                    "description": "Uma ou v\u00e1rias \u00e1reas para obter pre\u00e7os. Se deixado em branco, usar\u00e1 as \u00e1reas j\u00e1 configuradas.",
+                    "name": "\u00c1reas"
+                },
+                "config_entry": {
+                    "description": "Escolha a entrada de configura\u00e7\u00e3o.",
+                    "name": "Escolha a entrada de configura\u00e7\u00e3o do Nord Pool"
+                },
+                "currency": {
+                    "description": "Moeda para obter pre\u00e7os. Se deixado em branco, ser\u00e1 utilizada a moeda j\u00e1 configurada.",
+                    "name": "Divisa"
+                },
+                "date": {
+                    "description": "Apenas s\u00e3o permitidas datas de dois meses no passado e um dia no futuro.",
+                    "name": "Data"
+                }
+            },
+            "name": "Obter pre\u00e7os para data"
+        }
+    }
+}

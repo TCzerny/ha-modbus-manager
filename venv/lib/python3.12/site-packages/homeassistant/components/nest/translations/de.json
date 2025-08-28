@@ -1,0 +1,113 @@
+{
+    "application_credentials": {
+        "description": "Folge den [Anweisungen]({more_info_url}), um die Cloud-Konsole zu konfigurieren:\n\n1. Gehe zum [OAuth-Zustimmungsbildschirm]({oauth_consent_url}) und konfiguriere\n1. Gehe zu [Anmeldedaten]({oauth_creds_url}) und w\u00e4hle **Anmeldedaten erstellen**.\n1. W\u00e4hle in der Dropdown-Liste **OAuth-Client-ID**.\n1. W\u00e4hle **Webanwendung** f\u00fcr den Anwendungstyp.\n1. F\u00fcge `{redirect_url}` unter *Authorized redirect URI* hinzu."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "authorize_url_timeout": "Zeit\u00fcberschreitung beim Erstellen der Autorisierungs-URL.",
+            "invalid_access_token": "Ung\u00fcltiges Zugriffstoken",
+            "missing_configuration": "Die Komponente ist nicht konfiguriert. Bitte der Dokumentation folgen.",
+            "missing_credentials": "F\u00fcr die Integration sind OAuth-Anmeldedaten erforderlich.",
+            "no_url_available": "Keine URL verf\u00fcgbar. Informationen zu diesem Fehler [findest du im Hilfebereich]({docs_url}).",
+            "oauth_error": "Ung\u00fcltige Token-Daten empfangen.",
+            "oauth_failed": "Fehler beim Abrufen des Zugriffstokens.",
+            "oauth_timeout": "Zeit\u00fcberschreitung beim Aufl\u00f6sen des OAuth-Tokens.",
+            "oauth_unauthorized": "OAuth-Autorisierungsfehler beim Abrufen des Zugriffstokens.",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "unknown_authorize_url_generation": "Unbekannter Fehler beim Generieren einer Autorisierungs-URL."
+        },
+        "create_entry": {
+            "default": "Erfolgreich authentifiziert"
+        },
+        "error": {
+            "bad_project_id": "Bitte gib eine g\u00fcltige Cloud-Projekt-ID ein (\u00fcberpr\u00fcfe die Cloud-Konsole).",
+            "no_pubsub_topics": "Keine geeigneten Pub/Sub-Themen gefunden, bitte stelle sicher, dass die Device Access Console ein Pub/Sub-Thema hat.",
+            "pubsub_api_error": "Unbekannter Fehler bei der Kommunikation mit Cloud Pub/Sub, siehe Protokolle",
+            "subscriber_error": "Unbekannter Abonnentenfehler, siehe Protokolle",
+            "wrong_project_id": "Gib eine g\u00fcltige Cloud-Projekt-ID ein (identisch mit der Projekt-ID f\u00fcr den Ger\u00e4tezugriff)."
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "Google Cloud Projekt-ID"
+                },
+                "description": "Gib unten die Cloud-Projekt-ID ein, z. B. *example-project-12345*. Siehe die [Google Cloud Console]({cloud_console_url}) oder die Dokumentation f\u00fcr [weitere Informationen]({more_info_url}).",
+                "title": "Nest: Cloud-Projekt-ID eingeben"
+            },
+            "create_cloud_project": {
+                "description": "Die Nest-Integration erm\u00f6glicht es dir, deine Nest Thermostate, Kameras und T\u00fcrklingeln \u00fcber die Smart Device Management API zu integrieren. Die SDM API **erfordert eine einmalige Einrichtungsgeb\u00fchr von US $5**. Siehe Dokumentation f\u00fcr [weitere Informationen]({more_info_url}).\n\n1. Rufe die [Google Cloud Console]({cloud_console_url}) auf.\n1. Wenn dies dein erstes Projekt ist, dr\u00fccke auf **Projekt erstellen** und dann auf **Neues Projekt**.\n1. Gib deinem Cloud-Projekt einen Namen und dr\u00fccke dann auf **Erstellen**.\n1. Merke dir die Cloud Projekt ID, z. B. *beispiel-projekt-12345*, da du diese sp\u00e4ter ben\u00f6tigst.\n1. Gehe zur API-Bibliothek f\u00fcr [Smart Device Management API]({sdm_api_url}) und dr\u00fccke auf **Aktivieren**.\n1. Wechsele zur API-Bibliothek f\u00fcr [Cloud Pub/Sub API]({pubsub_api_url}) und dr\u00fccke auf **Aktivieren**.\n\nFahre fort, sobald dein Cloud-Projekt eingerichtet ist.",
+                "title": "Nest: Cloud-Projekt erstellen und konfigurieren"
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "Ger\u00e4tezugriffsprojekt ID"
+                },
+                "description": "Erstelle ein Nest Device Access-Projekt, f\u00fcr dessen Einrichtung **eine Geb\u00fchr von 5 US-Dollar an Google zu zahlen ist**.\n1. Gehe zur [Ger\u00e4tezugriffskonsole]({device_access_console_url}) und durch den Zahlungsablauf.\n1. Klicke auf **Projekt erstellen**\n1. Gib deinem Device Access-Projekt einen Namen und w\u00e4hle **Weiter**.\n1. Gib deine OAuth-Client-ID ein\n1. Aktiviere Ereignisse, indem du auf **Aktivieren** und **Projekt erstellen** klickst. \n\nGib unten deine Projekt-ID f\u00fcr den Ger\u00e4tezugriff ein ([weitere Informationen]({more_info_url})).",
+                "title": "Nest: Ein Ger\u00e4tezugriffsprojekt erstellen"
+            },
+            "pick_implementation": {
+                "title": "Authentifizierungsmethode w\u00e4hlen"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "Google Cloud Projekt-ID"
+                },
+                "description": "Home Assistant verwendet Cloud Pub/Sub, um Aktualisierungen von Nest-Ger\u00e4ten in Echtzeit zu erhalten. Nest-Server ver\u00f6ffentlichen Updates zu einem Pub/Sub-Thema und Home Assistant erh\u00e4lt die Updates \u00fcber ein Pub/Sub-Abonnement.\n\n1. Besuche die [Ger\u00e4tezugriffskonsole]({device_access_console_url}) und stelle sicher, dass ein Pub/Sub-Thema konfiguriert ist.\n2. Besuche die [Cloud Console]({url}), um deine Google Cloud-Projekt-ID zu finden, und best\u00e4tige unten, dass sie korrekt ist.\n3. Im n\u00e4chsten Schritt wird versucht, Pub/Sub-Themen und -Abonnements automatisch zu erkennen.\n\n[Weitere Informationen]({more_info_url}) in der Integrationsdokumentation.",
+                "title": "Google Cloud Pub/Sub konfigurieren"
+            },
+            "pubsub_subscription": {
+                "data": {
+                    "subscription_name": "Name des Pub/Sub-Abonnements"
+                },
+                "description": "Home Assistant erh\u00e4lt Echtzeit-Updates f\u00fcr Nest-Ger\u00e4te mit einem Cloud Pub/Sub-Abonnement f\u00fcr das Thema `{topic}`.\n\nW\u00e4hle unten ein bestehendes Abonnement aus, wenn bereits eines vorhanden ist, oder erstelle im n\u00e4chsten Schritt ein neues f\u00fcr dich.\n[Weitere Informationen]({more_info_url}) in der Integrationsdokumentation.",
+                "title": "Cloud Pub/Sub-Abonnement konfigurieren"
+            },
+            "pubsub_topic": {
+                "data": {
+                    "topic_name": "Name des Pub/Sub-Themas"
+                },
+                "description": "Nest-Ger\u00e4te ver\u00f6ffentlichen Updates zu einem Cloud Pub/Sub-Thema. W\u00e4hle unten dasselbe Pub/Sub-Thema wie in der [Ger\u00e4tezugriffskonsole]({device_access_console_url}) aus.\n[Weitere Informationen]({more_info_url}) in der Integrationsdokumentation.",
+                "title": "Cloud Pub/Sub-Thema konfigurieren"
+            },
+            "reauth_confirm": {
+                "description": "Die Nest-Integration muss das Konto neu authentifizieren",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "Sobald Bewegung erkannt wird",
+            "camera_person": "Sobald eine Person erkannt wird",
+            "camera_sound": "Sobald ein Ger\u00e4usch erkannt wird",
+            "doorbell_chime": "Sobald die T\u00fcrklingel bet\u00e4tigt wird"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "Klingeln",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "Klingeln"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "Bewegung",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "Bewegung",
+                            "camera_person": "Person",
+                            "camera_sound": "Ton"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

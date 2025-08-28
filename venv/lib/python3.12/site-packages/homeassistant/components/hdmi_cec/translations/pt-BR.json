@@ -1,0 +1,59 @@
+{
+    "services": {
+        "power_on": {
+            "name": "Ligar"
+        },
+        "select_device": {
+            "fields": {
+                "device": {
+                    "name": "Dispositivo"
+                }
+            },
+            "name": "Selecionar dispositivo"
+        },
+        "send_command": {
+            "description": "Envia o comando CEC para um adaptador compat\u00edvel com HDMI CEC.",
+            "fields": {
+                "att": {
+                    "description": "Par\u00e2metros opcionais.",
+                    "name": "Att"
+                },
+                "cmd": {
+                    "name": "Comando"
+                },
+                "dst": {
+                    "name": "Destino"
+                },
+                "raw": {
+                    "description": "Comando CEC bruto no formato \"00:00:00:00\" em que os dois primeiros d\u00edgitos s\u00e3o a origem e o destino, o segundo byte \u00e9 o comando e os outros bytes opcionais s\u00e3o par\u00e2metros de comando. Se o comando bruto for especificado, outros par\u00e2metros ser\u00e3o ignorados.",
+                    "name": "Bruto"
+                },
+                "src": {
+                    "name": "Fonte"
+                }
+            },
+            "name": "Enviar comando"
+        },
+        "standby": {
+            "name": "Em espera"
+        },
+        "update": {
+            "description": "Atualiza o estado dos dispositivos da rede.",
+            "name": "Atualiza\u00e7\u00e3o"
+        },
+        "volume": {
+            "fields": {
+                "down": {
+                    "name": "Para baixo"
+                },
+                "mute": {
+                    "name": "Mudo"
+                },
+                "up": {
+                    "name": "Para cima"
+                }
+            },
+            "name": "Volume"
+        }
+    }
+}

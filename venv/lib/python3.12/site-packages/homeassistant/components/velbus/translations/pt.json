@@ -1,0 +1,79 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "name": "O nome para esta liga\u00e7\u00e3o velbus",
+                    "port": "Cadeia de liga\u00e7\u00e3o"
+                },
+                "title": "Definir o tipo de liga\u00e7\u00e3o velbus"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_hvac_mode": {
+            "message": "O modo de climatiza\u00e7\u00e3o {hvac_mode} n\u00e3o \u00e9 suportado."
+        }
+    },
+    "services": {
+        "clear_cache": {
+            "description": "Limpa o velbuscache e inicia uma nova verifica\u00e7\u00e3o.",
+            "fields": {
+                "address": {
+                    "description": "O endere\u00e7o do m\u00f3dulo em formato decimal; se este for fornecido, ser\u00e1 limpo apenas este m\u00f3dulo; se nada for fornecido, limparemos totalmente a pasta da cache (todos os m\u00f3dulos).",
+                    "name": "Endere\u00e7o"
+                },
+                "interface": {
+                    "description": "A interface velbus para onde enviar o comando, este ser\u00e1 o mesmo valor utilizado durante a configura\u00e7\u00e3o.",
+                    "name": "Interface"
+                }
+            },
+            "name": "Limpar a cache"
+        },
+        "scan": {
+            "description": "Analisa os m\u00f3dulos velbus, isto ser\u00e1 necess\u00e1rio se vir avisos de m\u00f3dulos desconhecidos nos registos, ou quando adicionou novos m\u00f3dulos.",
+            "fields": {
+                "interface": {
+                    "description": "A interface velbus para onde enviar o comando, este ser\u00e1 o mesmo valor utilizado durante a configura\u00e7\u00e3o.",
+                    "name": "Interface"
+                }
+            },
+            "name": "Digitaliza\u00e7\u00e3o"
+        },
+        "set_memo_text": {
+            "description": "Define o texto do memorando para o ecr\u00e3 de m\u00f3dulos como VMBGPO, VMBGPOD Certifique-se de que a(s) p\u00e1gina(s) do m\u00f3dulo est\u00e1(\u00e3o) configurada(s) para apresentar o texto do memorando.",
+            "fields": {
+                "address": {
+                    "description": "O endere\u00e7o do m\u00f3dulo em formato decimal. Os endere\u00e7os decimais s\u00e3o apresentados \u00e0 frente dos m\u00f3dulos listados na p\u00e1gina de integra\u00e7\u00e3o.",
+                    "name": "Endere\u00e7o"
+                },
+                "interface": {
+                    "description": "A interface velbus para onde enviar o comando, este ser\u00e1 o mesmo valor utilizado durante a configura\u00e7\u00e3o.",
+                    "name": "Interface"
+                },
+                "memo_text": {
+                    "description": "O texto efetivo a ser apresentado. O texto est\u00e1 limitado a 64 caracteres.",
+                    "name": "Texto do memorando"
+                }
+            },
+            "name": "Definir texto do memorando"
+        },
+        "sync_clock": {
+            "description": "Sincroniza o rel\u00f3gio dos m\u00f3dulos velbus com o rel\u00f3gio do Home Assistant, isto \u00e9 o mesmo que o 'rel\u00f3gio de sincroniza\u00e7\u00e3o' do VelbusLink.",
+            "fields": {
+                "interface": {
+                    "description": "A interface velbus para onde enviar o comando, este ser\u00e1 o mesmo valor utilizado durante a configura\u00e7\u00e3o.",
+                    "name": "Interface"
+                }
+            },
+            "name": "Sincronizar rel\u00f3gio"
+        }
+    }
+}

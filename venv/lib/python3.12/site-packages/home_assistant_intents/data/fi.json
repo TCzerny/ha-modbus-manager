@@ -1,0 +1,1622 @@
+{
+  "language": "fi",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "[<laita>] (<päältä>;{name};[<alue_pääte>])",
+            "[<laita>] <päältä> {name} <alue_taivutus> {area}",
+            "[<laita>] (<päältä>;[<alue_taivutus> {area}];{name})",
+            "<pysäytä> ([<alue_taivutus> {area}];{name})",
+            "<pysäytä> ({name};[<alue_pääte>])"
+          ],
+          "excludes_context": {
+            "domain": [
+              "binary_sensor",
+              "cover",
+              "lock",
+              "scene",
+              "script",
+              "sensor"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<kytke> (<huone>;<valo>;<päältä>)",
+            "sammuta (<huone>;<valo>)",
+            "<kytke> (<alue_taivutus> <huone>;<päältä>;<valo>)",
+            "sammuta (<alue_taivutus> <huone>;<valo>)",
+            "<kytke> (<alue_pääte>;<päältä>;<valo>)",
+            "sammuta (<alue_pääte>;<valo>)"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area_singular"
+        },
+        {
+          "sentences": [
+            "<kytke> ([kaikki];<huone>;<valot>;<päältä>)",
+            "sammuta ([kaikki];<huone>;<valot>)",
+            "<kytke> (jokainen;<huone>;<valo>;<päältä>)",
+            "sammuta (jokainen;<huone>;<valo>)",
+            "<kytke> ([kaikki];<alue_taivutus> <huone>;<valot>;<päältä>)",
+            "sammuta ([kaikki];<alue_taivutus> <huone>;<valot>)",
+            "<kytke> (jokainen;<alue_taivutus> <huone>;<valo>;<päältä>)",
+            "sammuta (jokainen;<alue_taivutus> <huone>;<valo>)",
+            "<kytke> ([kaikki];<alue_pääte>;<valot>;<päältä>)",
+            "<kytke> (jokainen;<alue_pääte>;<valo>;<päältä>)",
+            "sammuta (jokainen;<alue_pääte>;<valo>)",
+            "sammuta ([kaikki];<alue_pääte>;<valot>)"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area_plural"
+        },
+        {
+          "sentences": [
+            "pimennä <huone>",
+            "<kytke> (<päältä>;(<valaistus>|<valaistukset>);<huone>)",
+            "sammuta ((<valaistus>|<valaistukset>);<huone>)",
+            "<kytke> (<päältä>;(<valaistus>|<valaistukset>);<alue_taivutus> <huone>)",
+            "sammuta ((<valaistus>|<valaistukset>);<alue_taivutus> <huone>)",
+            "<kytke> (<päältä>;(<valaistus>|<valaistukset>);<alue_pääte>)",
+            "sammuta ((<valaistus>|<valaistukset>);<alue_pääte>)"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area_uncountable"
+        },
+        {
+          "sentences": [
+            "<sulje> {name} [[<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone>]"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<sulje> autotallin ovi"
+          ],
+          "slots": {
+            "domain": "cover",
+            "device_class": "garage"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<sulje> {cover_classes:device_class} [<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone>",
+            "<sulje> [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone> {cover_classes:device_class}"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<pysäytä> (<tuuletin>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))",
+            "[<kytke>] (<tuuletin>;<päältä>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fans_area_singular"
+        },
+        {
+          "sentences": [
+            "[<kytke>] (<päältä>;[kaikki];<tuulettimet>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))",
+            "<pysäytä> ((<huone>|<alue_taivutus> <huone>|<alue_pääte>);[kaikki];<tuulettimet>)",
+            "[<kytke>] (<päältä>;jokainen;<tuuletin>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))",
+            "<pysäytä> (jokainen;<tuuletin>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fans_area_plural"
+        },
+        {
+          "sentences": [
+            "Avaa [lukko|lukitus] {name} [(<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>) <huone>]"
+          ],
+          "requires_context": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "Avaa [lukosta|lukituksesta] [<kaikki>] [lukot|ovet] [<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone>",
+            "Avaa [lukosta|lukituksesta] [<kaikki>] [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone> [lukot|ovet]",
+            "Avaa [lukosta|lukituksesta] [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone> <kaikki> [lukot|ovet]"
+          ],
+          "slots": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "<sulje> <nimi>"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          },
+          "response": "valve"
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel> [minun|mun] (ajastin|ajastus)",
+            "<timer_cancel> [minun|mun] <timer_start> (ajastin|ajastus)",
+            "<timer_cancel> [minun|mun] <alueen> {area} (ajastin|ajastus)",
+            "<timer_cancel> [minun|mun] (ajastin|ajastus) (<alueella>|<alueelta>|<alueesta>|<alueessa>) {area}",
+            "<timer_cancel> [minun|mun] (ajastin|ajastus) nimeltä {timer_name:name}",
+            "<timer_cancel> [minun|mun] {timer_name:name} niminen (ajastin|ajastus)"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "[mikä on] <timer_start> (ajastimen|ajastuksen) [jäljellä oleva] (tila|tilanne|aika|status)",
+            "[mikä on] (ajastimen|ajastuksen|ajastimien|ajastuksien) [jäljellä oleva] (tila|tilanne|aika|status)",
+            "[mikä on] [<alueen>] {area} [jäljellä oleva] [ajastimen|ajastuksen] (tila|tilanne|aika|status)"
+          ]
+        },
+        {
+          "sentences": [
+            "jäljellä oleva aika [minun|mun] (ajastimessa[ni]|ajastuksessa[ni]|ajastimissa[ni]|ajastuksissa[ni])",
+            "jäljellä oleva aika [minun|mun]  <timer_start> (ajastimessa[ni]|ajastuksessa[ni]|ajastimissa[ni]|ajastuksissa[ni])",
+            "jäljellä oleva aika [minun|mun] [<alueen>] {area} (ajastimessa|ajastuksessa)",
+            "jäljellä oleva aika [minun|mun] (ajastimessa[ni]|ajastuksessa[ni]|ajastimissa[ni]|ajastuksissa[ni]) [<alueella>|<alueessa>] {area}"
+          ]
+        },
+        {
+          "sentences": [
+            "(paljonko|kauanko|(kuinka|miten) (kauan|paljon)) ([on] jäljellä [aikaa]|(aikaa;[on]) [jäljellä]) [minun|mun] (ajastimessa[ni]|ajastuksessa[ni]|ajastimissa[ni]|ajastuksissa[ni])",
+            "(paljonko|kauanko|(kuinka|miten) (kauan|paljon)) ([on] jäljellä [aikaa]|(aikaa;[on]) [jäljellä]) [minun|mun] <timer_start> (ajastimessa|ajastuksessa)",
+            "(paljonko|kauanko|(kuinka|miten) (kauan|paljon)) ([on] jäljellä [aikaa]|(aikaa;[on]) [jäljellä]) [minun|mun] [<alueen>] {area} (ajastimessa|ajastuksessa)",
+            "(paljonko|kauanko|(kuinka|miten) (kauan|paljon)) ([on] jäljellä [aikaa]|(aikaa;[on]) [jäljellä]) [minun|mun] (ajastimessa[ni]|ajastuksessa[ni]|ajastimissa[ni]|ajastuksissa[ni]) [<alueella>|<alueessa>] {area}"
+          ]
+        },
+        {
+          "sentences": [
+            "[minun|mun] (ajastimessa[ni]|ajastuksessa[ni]|ajastimissa[ni]|ajastuksissa[ni]) (tila|tilanne|aika|status) ",
+            "[minun|mun] <timer_start> (ajastimen|ajastuksen) (tila|tilanne|aika|status)",
+            "[minun|mun] [<alueen>] {area} (ajastimen|ajastuksen) (tila|tilanne|aika|status)",
+            "[minun|mun] (ajastimen|ajastuksen) (tila|tilanne|aika|status) [<alueella>|<alueessa>] {area} "
+          ]
+        },
+        {
+          "sentences": [
+            "[mikä on] {timer_name:name} nimisen (ajastimen|ajastuksen) (tila|tilanne|aika|status)",
+            "(paljonko|kauanko|(kuinka|miten) (kauan|paljon)) ([on] jäljellä [aikaa]|(aikaa;[on]) [jäljellä]) [minun|mun] {timer_name:name} nimisessä (ajastimessa|ajastuksessa)",
+            "(ajastimen|ajastuksen) {timer_name:name} (tila|tilanne|aika|status)"
+          ]
+        }
+      ]
+    },
+    "HassGetWeather": {
+      "data": [
+        {
+          "sentences": [
+            "(<kerro> [<kuinka>]|<kuinka>) [kylmä|lämmin|kuuma] (sä|sää|lämpötila) (on [[nyt];[ulkona]]|ulkona (on;[nyt]))",
+            "[<kerro>] lämpötila ulkona",
+            "[<kerro>] <paljonko> (pakkasta;(on;[ulkona];[nyt]))",
+            "[<kerro>] <paljonko> (on;(pakkasta;[ulkona];[nyt]))"
+          ]
+        },
+        {
+          "sentences": [
+            "[<kerro>] [<kuinka>] [kylmä|lämmin|kuuma] ([(sää|sä|ilma)];[on];[<paikka>];<nimi>)"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          }
+        }
+      ]
+    },
+    "HassGetCurrentTime": {
+      "data": [
+        {
+          "sentences": [
+            "[kerro] (mitä|paljonko|paljon) kello on [juuri nyt|nyt]",
+            "[kerro] [nykyinen|tämän hetken] [kellon]aika",
+            "[kerro] (kuinka|miten) (aikaista|myöhäistä|aikainen|myöhäinen|myöhä) [nyt on|on[nyt]]"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "<kytke> (<huone>;<valo>;<päälle>)",
+            "<kytke> (<alue_taivutus> <huone>;<päälle>;<valo>)",
+            "<kytke> (<alue_pääte>;<päälle>;<valo>)"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area_singular"
+        },
+        {
+          "sentences": [
+            "<kytke> ([kaikki];<huone>;<valot>;<päälle>)",
+            "<kytke> (jokainen;<huone>;<valo>;<päälle>)",
+            "<kytke> ([kaikki];<alue_taivutus> <huone>;<valot>;<päälle>)",
+            "<kytke> (jokainen;<alue_taivutus> <huone>;<valo>;<päälle>)",
+            "<kytke> ([kaikki];<alue_pääte>;<valot>;<päälle>)",
+            "<kytke> (jokainen;<alue_pääte>;<valo>;<päälle>)"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area_plural"
+        },
+        {
+          "sentences": [
+            "valaise <huone>",
+            "<kytke> (<päälle>;(<valaistus>|<valaistukset>);<huone>)",
+            "<kytke> (<päälle>;(<valaistus>|<valaistukset>);<alue_taivutus> <huone>)",
+            "<kytke> (<päälle>;(<valaistus>|<valaistukset>);<alue_pääte>)"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area_uncountable"
+        },
+        {
+          "sentences": [
+            "<käynnistä> (<tuuletin>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))",
+            "[<kytke>] (<tuuletin>;<päälle>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fans_area_singular"
+        },
+        {
+          "sentences": [
+            "[<kytke>] (<päälle>;[kaikki];<tuulettimet>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))",
+            "<käynnistä> ((<huone>|<alue_taivutus> <huone>|<alue_pääte>);[kaikki];<tuulettimet>)",
+            "[<kytke>] (<päälle>;jokainen;<tuuletin>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))",
+            "<käynnistä> (jokainen;<tuuletin>;(<huone>|<alue_taivutus> <huone>|<alue_pääte>))"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fans_area_plural"
+        },
+        {
+          "sentences": [
+            "<käynnistä> <nimi>",
+            "<laita> <nimi> <päälle>",
+            "<laita> <päälle> <nimi>"
+          ],
+          "requires_context": {
+            "domain": "script"
+          },
+          "slots": {
+            "domain": "script"
+          },
+          "response": "script"
+        },
+        {
+          "sentences": [
+            "<avaa> <nimi>"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          },
+          "response": "valve"
+        },
+        {
+          "sentences": [
+            "Lukitse {name} [(<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>) <huone>]"
+          ],
+          "requires_context": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "Lukitse [<kaikki>] [lukot|ovet] [<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone>",
+            "Lukitse [<kaikki>] [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone> [lukot|ovet]",
+            "Lukitse [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone> <kaikki> [lukot|ovet]"
+          ],
+          "slots": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "[<laita>] (<päälle>;{name};[<alue_pääte>])",
+            "[<laita>] <päälle> {name} <alue_taivutus> {area}",
+            "[<laita>] (<päälle>;[<alue_taivutus> {area}];{name})",
+            "<käynnistä> ([<alue_taivutus> {area}];{name})",
+            "<käynnistä> ({name};[<alue_pääte>])"
+          ],
+          "excludes_context": {
+            "domain": [
+              "binary_sensor",
+              "cover",
+              "lock",
+              "scene",
+              "sensor",
+              "valve",
+              "script"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<avaa> {name} [[<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone>]"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<avaa> autotallin ovi"
+          ],
+          "slots": {
+            "domain": "cover",
+            "device_class": "garage"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<avaa> {cover_classes:device_class} [<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone>",
+            "<avaa> [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>] <huone> {cover_classes:device_class}"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_device_class"
+        }
+      ]
+    },
+    "HassMediaUnpause": {
+      "data": [
+        {
+          "sentences": [
+            "jatka [laitteen|soittimen] <nimi> [toistoa]"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassShoppingListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "(lisää|laita) <item> <my_list>",
+            "(lisää|laita) <my_list> <item>"
+          ],
+          "response": "item_added",
+          "expansion_rules": {
+            "my_list": "[minun|mun|miun|meidän] ostoslista[lle|lleni|llemme]",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassCancelAllTimers": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel> kaikki [minun|mun] (ajastimet|ajastukset)",
+            "<timer_cancel> jokainen [minun|mun] (ajastin|ajastus)"
+          ]
+        },
+        {
+          "sentences": [
+            "<timer_cancel> kaikki [<alueen>] {area} (ajastimet|ajastukset)",
+            "<timer_cancel> jokainen [<alueen>] {area} (ajastin|ajastus)",
+            "<timer_cancel> kaikki (<alue_pääte>;(ajastimet|ajastukset))",
+            "<timer_cancel> jokainen (<alue_pääte>;(ajastin|ajastus))",
+            "<timer_cancel> kaikki (ajastimet|ajastukset) (<alue_taivutus>) {area}",
+            "<timer_cancel> jokainen (ajastin|ajastus) (<alue_taivutus>) {area}"
+          ],
+          "response": "area"
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "ei [sittenkään] mitään",
+            "unohda",
+            "peruuta",
+            "anna [sittenkin] olla"
+          ]
+        }
+      ]
+    },
+    "HassGetCurrentDate": {
+      "data": [
+        {
+          "sentences": [
+            "[kerro] (mikä|monesko|kerro) [mikä] (päivä|päivämäärä|päiväys) [nyt|tänään] [on]"
+          ]
+        }
+      ]
+    },
+    "HassIncreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(lisää [aikaa] <timer_duration>|<timer_duration> lisää [aikaa]) [minun|mun] (ajastimeen|ajastukseen)",
+            "(pidennä) [minun|mun] (ajastinta|ajastusta) <timer_duration>"
+          ]
+        },
+        {
+          "sentences": [
+            "lisää [aikaa] ([minun|mun] <timer_start> (ajastimeen|ajastukseen);<timer_duration>)",
+            "(pidennä) ([minun|mun] <timer_start> (ajastinta|ajastusta);<timer_duration>)"
+          ]
+        },
+        {
+          "sentences": [
+            "(lisää [aikaa] <timer_duration>|<timer_duration> lisää [aikaa]) [minun|mun] ((ajastimeen|ajastukseen);[<alueella>|<alueessa>|<alueelta>|<alueen>] {area})",
+            "(pidennä) [minun|mun] ((ajastinta|ajastusta);[<alueella>|<alueelta>|<alueessa>|<alueen>] {area};<timer_duration>)"
+          ]
+        },
+        {
+          "sentences": [
+            "(pidennä) [minun|mun] (ajastinta|ajastusta) [nimeltä] {timer_name:name} ajalla <timer_duration>",
+            "(pidennä) (<timer_duration>;[minun|mun] {timer_name:name} [nimistä] (ajastinta|ajastusta))",
+            "(pidennä) <timer_duration> (ajastinta|ajastusta) [nimeltä] {timer_name:name}",
+            "lisää (<timer_duration>;[minun|mun] {timer_name:name} [nimiseen] (ajastimeen|ajastukseen))",
+            "lisää (<timer_duration>;[minun|mun] (ajastimeen|ajastukseen) [nimeltä] {timer_name:name})",
+            "(lisää [aikaa] <timer_duration>|<timer_duration> lisää [aikaa]) [minun|mun] {timer_name:name} [nimisestä|nimiseltä] (ajastimeen|ajastukseen)",
+            "(lisää [aikaa] <timer_duration>|<timer_duration> lisää [aikaa]) [minun|mun] (ajastimeen|ajastukseen) [nimeltä] {timer_name:name}",
+            "(lisää [aikaa] <timer_duration>|<timer_duration> lisää [aikaa]) [minun|mun] {timer_name:name} [nimisestä|nimiseltä] (ajastimeen|ajastukseen)",
+            "lisää {timer_name:name} (ajastimeen|ajastukseen) <timer_duration> [aikaa]"
+          ]
+        }
+      ]
+    },
+    "HassSetPosition": {
+      "data": [
+        {
+          "sentences": [
+            "<laita> <nimi> [asentoon|sijaintiin] <asento>"
+          ],
+          "requires_context": {
+            "domain": [
+              "cover",
+              "valve"
+            ]
+          }
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "[<laita>] ({name};[<kirkkaus_taivutus>];<k_prosentti_taivutus>)"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<laita>] ([<kirkkaus_taivutus>];[<alue_taivutus>] <huone>;<k_prosentti_taivutus>)",
+            "[<laita>] (<kirkkaus_taivutus>;<alue_pääte>;<k_prosentti_taivutus>)"
+          ],
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<laita>] ({name};[<kirkkaus_taivutus>];{brightness_level:brightness})"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<laita>] (<alue_taivutus> <huone>;<kirkkaus_taivutus>;{brightness_level:brightness})",
+            "[<laita>] (<alue_pääte>;(<kirkkaus_taivutus>);{brightness_level:brightness})"
+          ],
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "[<laita>] ({name};[<väri_taivutus>];{color})"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "color"
+        },
+        {
+          "sentences": [
+            "[<laita>] (<alue_pääte>;[<kaikki>]) [<valo>|<valot>] ([<väri_taivutus>];{color})",
+            "[<laita>] ([<väri_taivutus>];{color}) (<alue_pääte>;[<kaikki>]) [<valo>|<valot>]",
+            "[<laita>] (<väri_taivutus>;<alue_taivutus> <huone>) {color}",
+            "[<laita>] (<alue_taivutus> <huone>;[<kaikki>]) [<valo>|<valot>] ([<väri_taivutus>];{color})",
+            "[<laita>] ([<väri_taivutus>];{color}) (<alue_taivutus> <huone>;[<kaikki>]) [<valo>|<valot>]"
+          ],
+          "response": "color"
+        }
+      ]
+    },
+    "HassMediaNext": {
+      "data": [
+        {
+          "sentences": [
+            "seuraava [raita|biisi|kappale|jakso] [laitteelle|laitteella] <nimi>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassPauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(keskeytä|pysäytä) [minun|mun] (ajastin|ajastus)",
+            "(keskeytä|pysäytä) [minun|mun] <timer_start> (ajastin|ajastus)",
+            "(keskeytä|pysäytä) [minun|mun] (ajastin|ajastus) <timer_start>",
+            "(keskeytä|pysäytä) [minun|mun] [<alueen>] {area} (ajastin|ajastus)",
+            "(keskeytä|pysäytä) [minun|mun] (ajastin|ajastus) [<alueella>|<alueessa>|<alueelta>] {area}",
+            "(keskeytä|pysäytä) [minun|mun] {timer_name:name} [niminen] (ajastin|ajastus)",
+            "(keskeytä|pysäytä) [minun|mun] (ajastin|ajastus) [nimeltä] {timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassDecreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "poista <timer_duration> [minun|mun] (ajastimesta|ajastuksesta)",
+            "poista <timer_duration> [minun|mun] <timer_start> (ajastimesta|ajastuksesta)",
+            "poista <timer_duration> [minun|mun] [<alueen>] {area} (ajastimesta|ajastuksesta)",
+            "poista <timer_duration> [minun|mun] (ajastimesta|ajastuksesta) [<alueella>|<alueelta>|<alueessa>] {area}",
+            "poista <timer_duration> [minun|mun] {timer_name:name} [nimisestä|nimiseltä] (ajastimesta|ajastuksesta)",
+            "poista <timer_duration> [minun|mun] (ajastimesta|ajastuksesta) [nimeltä] {timer_name:name}"
+          ]
+        },
+        {
+          "sentences": [
+            "(ota pois <timer_duration>|ota <timer_duration> pois) [minun|mun] (ajastimesta|ajastuksesta)",
+            "(ota pois <timer_duration>|ota <timer_duration> pois) [minun|mun] <timer_start> (ajastimesta|ajastuksesta)",
+            "(ota pois <timer_duration>|ota <timer_duration> pois) [minun|mun] [<alueen>] {area} (ajastimesta|ajastuksesta)",
+            "(ota pois <timer_duration>|ota <timer_duration> pois) [minun|mun] (ajastimesta|ajastuksesta) [<alueella>|<alueessa>|<alueelta>] {area}",
+            "(ota pois <timer_duration>|ota <timer_duration> pois) [minun|mun] {timer_name:name} [nimisestä|nimiseltä] (ajastimesta|ajastuksesta)",
+            "(ota pois <timer_duration>|ota <timer_duration> pois) [minun|mun] (ajastimesta|ajastuksesta) [nimeltä] {timer_name:name}"
+          ]
+        },
+        {
+          "sentences": [
+            "(vähennä|pienennä|lyhennä) [minun|mun] (ajastinta|ajastusta|ajastimesta|ajastuksesta) <timer_duration>",
+            "(vähennä|pienennä|lyhennä) [minun|mun] <timer_start> (ajastinta|ajastusta|ajastimesta|ajastuksesta) <timer_duration>",
+            "(vähennä|pienennä|lyhennä) <timer_duration> [minun|mun] <timer_start> (ajastinta|ajastusta|ajastimesta|ajastuksesta)",
+            "(vähennä|pienennä|lyhennä) <timer_duration> [minun|mun] {timer_name:name} (ajastinta|ajastusta|ajastimesta|ajastuksesta)",
+            "(vähennä|pienennä|lyhennä) [minun|mun] [<alueen>] {area} (ajastinta|ajastusta|ajastimesta|ajastuksesta) <timer_duration>",
+            "(vähennä|pienennä|lyhennä) [minun|mun] (ajastinta|ajastusta|ajastimesta|ajastuksesta) [<alueella>|<alueelta>|<alueessa>] {area} <timer_duration>",
+            "(vähennä|pienennä|lyhennä) <timer_duration> (ajastinta|ajastusta|ajastimesta|ajastuksesta) [nimeltä] {timer_name:name}",
+            "(vähennä|pienennä|lyhennä) [minun|mun] {timer_name:name} [nimistä] (ajastinta|ajastusta|ajastimesta|ajastuksesta) <timer_duration>",
+            "(vähennä|pienennä|lyhennä) [minun|mun] (ajastinta|ajastusta|ajastimesta|ajastuksesta) [nimeltä] {timer_name:name} ajalla <timer_duration>"
+          ]
+        }
+      ]
+    },
+    "HassMediaPause": {
+      "data": [
+        {
+          "sentences": [
+            "keskeytä [laite|soitin] <nimi>",
+            "<nimi> paussille"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassUnpauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(jatka) [minun|mun] (ajastinta|ajastusta)",
+            "(jatka) [minun|mun] <timer_start> (ajastinta|ajastusta)",
+            "(jatka) [minun|mun] (ajastinta|ajastusta) <timer_start>",
+            "(jatka) [minun|mun] [<alueen>] {area} (ajastinta|ajastusta)",
+            "(jatka) [minun|mun] (ajastinta|ajastusta) [<alueella>|<alueessa>] {area}",
+            "(jatka) [minun|mun] (ajastinta|ajastusta) [nimeltä] {timer_name:name}",
+            "(jatka) [minun|mun] {timer_name:name} [nimistä] (ajastinta|ajastusta)"
+          ]
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_set> <timer_duration> (ajastin|ajastus) (nimellä|nimeltä|nimelle) {timer_name:name}",
+            "<timer_set> (ajastin|ajastus) (nimellä|nimeltä|nimelle) {timer_name:name} ajalle <timer_duration>",
+            "<timer_set> (ajastin|ajastus) <timer_duration> (nimellä|nimeltä|nimelle) {timer_name:name}",
+            "<timer_set> {timer_name:name} (niminen) (ajastin|ajastus) <timer_duration>",
+            "<timer_set> <timer_duration> (ajastin|ajastus) (nimeltä|nimelle|nimellä) {timer_name:name}",
+            "(ajastin|ajastus) <timer_duration> (nimeltä|nimelle|nimellä) {timer_name:name}",
+            "<timer_set> <timer_duration> (ajastin|ajastus)",
+            "<timer_set> (ajastin|ajastus) <timer_duration>",
+            "(ajastin|ajastus) <timer_duration>",
+            "<timer_duration> (ajastin|ajastus)"
+          ]
+        },
+        {
+          "sentences": [
+            "<timer_duration> (kuluttua|päästä|jälkeen) {timer_command:conversation_command}",
+            "{timer_command:conversation_command} kun on (kulunut|mennyt) <timer_duration>",
+            "jälkeen <timer_duration> {timer_command:conversation_command}",
+            "komento {timer_command:conversation_command} (ajastus|ajasta) <timer_duration>"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "[<kerro>] <lämpötila>",
+            "[<kerro>] <lämpötila> <nyt>",
+            "[<kerro>] (<nyt>|nykyinen) <lämpötila>",
+            "[<kerro>] <paljonko> on <lämpötila>",
+            "[<kerro>] <paljonko> <lämpötila> on",
+            "[<kerro>] <paljonko> on <lämpötila> <nyt>",
+            "[<kerro>] <paljonko> on (<nyt>|nykyinen) <lämpötila>",
+            "[<kerro>] <paljonko> <lämpötila> on <nyt>",
+            "[<kerro>] <paljonko> <lämpötila> <nyt> on",
+            "[<kerro>] <paljonko> <nyt> on <lämpötila>",
+            "[<kerro>] <paljonko> (<nyt>|nykyinen) <lämpötila> on",
+            "[<kerro>] <nyt> <paljonko> on <lämpötila>",
+            "[<kerro>] <nyt> <paljonko> <lämpötila> on",
+            "[<kerro>] <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) on",
+            "[<kerro>] <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) on <nyt>",
+            "[<kerro>] <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) <nyt> on",
+            "[<kerro>] <nyt> <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) on",
+            "[<kerro>] <kuinka> (<kuuman>|<kylmän>) tuntuista on",
+            "[<kerro>] <kuinka> (<kuuman>|<kylmän>) tuntuista on <nyt>",
+            "[<kerro>] <kuinka> (<kuuman>|<kylmän>) tuntuista <nyt> on",
+            "[<kerro>] <nyt> <kuinka> (<kuuman>|<kylmän>) tuntuista on",
+            "[<kerro>] [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila> [<nyt>]",
+            "[<kerro>] [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt> <lämpötila>",
+            "[<kerro>] <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> [<nyt>]",
+            "[<kerro>] <lämpötila> <nyt> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] (<nyt>|nykyinen) [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila>",
+            "[<kerro>] (<nyt>|nykyinen) <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> on <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> on [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila>",
+            "[<kerro>] <paljonko> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on <lämpötila>",
+            "[<kerro>] <paljonko> <lämpötila> on [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on",
+            "[<kerro>] <paljonko> [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila> on",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> <lämpötila> on",
+            "[<kerro>] <paljonko> on <lämpötila> <nyt> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> on <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt>",
+            "[<kerro>] <paljonko> on [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila> <nyt>",
+            "[<kerro>] <paljonko> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on <lämpötila> <nyt>",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> on <lämpötila> <nyt>",
+            "[<kerro>] <paljonko> on (<nyt>|nykyinen) <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> on (<nyt>|nykyinen) [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila>",
+            "[<kerro>] <paljonko> on [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (<nyt>|nykyinen) <lämpötila>",
+            "[<kerro>] <paljonko> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (<nyt>|nykyinen) <lämpötila>",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> on (<nyt>|nykyinen) <lämpötila>",
+            "[<kerro>] <paljonko> <lämpötila> on <nyt> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> <lämpötila> on [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt>",
+            "[<kerro>] <paljonko> <lämpötila> [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on <nyt>",
+            "[<kerro>] <paljonko> [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila> on <nyt>",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> <lämpötila> on <nyt>",
+            "[<kerro>] <paljonko> <lämpötila> <nyt> on [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> <lämpötila> <nyt> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on",
+            "[<kerro>] <paljonko> <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt> on",
+            "[<kerro>] <paljonko> [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila> <nyt> on",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> <lämpötila> <nyt> on",
+            "[<kerro>] <paljonko> <nyt> on <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> <nyt> on [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila>",
+            "[<kerro>] <paljonko> <nyt> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on <lämpötila>",
+            "[<kerro>] <paljonko> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt> on <lämpötila>",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> <nyt> on <lämpötila>",
+            "[<kerro>] <paljonko> (<nyt>|nykyinen) <lämpötila> on [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <paljonko> (<nyt>|nykyinen) <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on",
+            "[<kerro>] <paljonko> (<nyt>|nykyinen) [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila> on",
+            "[<kerro>] <paljonko> [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (<nyt>|nykyinen) <lämpötila> on",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> (<nyt>|nykyinen) <lämpötila> on",
+            "[<kerro>] <nyt> <paljonko> on <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <nyt> <paljonko> on [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila>",
+            "[<kerro>] <nyt> <paljonko> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on <lämpötila>",
+            "[<kerro>] <nyt> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> on <lämpötila>",
+            "[<kerro>] <nyt> <paljonko> <lämpötila> on [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <nyt> <paljonko> <lämpötila> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on",
+            "[<kerro>] <nyt> <paljonko> [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <lämpötila> on",
+            "[<kerro>] <nyt> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <paljonko> <lämpötila> on",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt> <paljonko> <lämpötila> on",
+            "[<kerro>] <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) on [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) on <nyt> [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) on [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt>",
+            "[<kerro>] <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on [<nyt>]",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <kuinka> (<kuuma>|<kuumaa>|<kylmä>|<kylmää>) on [<nyt>]",
+            "[<kerro>] <kuinka> (<kuuman>|<kylmän>) tuntuista on [<nyt>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <kuinka> (<kuuman>|<kylmän>) tuntuista on [<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt>",
+            "[<kerro>] <kuinka> (<kuuman>|<kylmän>) tuntuista [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on [<nyt>]",
+            "[<kerro>] [<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <kuinka> (<kuuman>|<kylmän>) tuntuista on [<nyt>]",
+            "[<kerro>] <kuinka> (<kuumana>|<kylmänä>) on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <kuinka> (<kuumana>|<kylmänä>) on <nyt> [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone>",
+            "[<kerro>] <kuinka> (<kuumana>|<kylmänä>) on [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt>",
+            "[<kerro>] <kuinka> (<kuumana>|<kylmänä>) [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on [<nyt>]",
+            "[<kerro>] [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <kuinka> (<kuumana>|<kylmänä>) se on [<nyt>]",
+            "[<kerro>] [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <kuinka> (<kuumana>|<kylmänä>) on se [<nyt>]",
+            "[<kerro>] <kuinka> <kuumaksi> on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (lämmennyt|lämmitetty)",
+            "[<kerro>] <kuinka> <kuumaksi> on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (lämmennyt|lämmitetty) <nyt>",
+            "[<kerro>] <kuinka> <kuumaksi> on [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt> (lämmennyt|lämmitetty)",
+            "[<kerro>] <kuinka> <kuumaksi> on <nyt> [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (lämmennyt|lämmitetty)",
+            "[<kerro>] <kuinka> <kuumaksi> <nyt> on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (lämmennyt|lämmitetty)",
+            "[<kerro>] <nyt> <kuinka> <kuumaksi> on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (lämmennyt|lämmitetty)",
+            "[<kerro>] <kuinka> <kuumaksi> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (lämmennyt|lämmitetty) <nyt>",
+            "[<kerro>] <kuinka> <kuumaksi> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (lämmennyt|lämmitetty)",
+            "[<kerro>] <kuinka> <kuumaksi> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on <nyt> (lämmennyt|lämmitetty)",
+            "[<kerro>] <kuinka> <kuumaksi> <nyt> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (lämmennyt|lämmitetty)",
+            "[<kerro>] <nyt> <kuinka> <kuumaksi> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (lämmennyt|lämmitetty)",
+            "[<kerro>] <kuinka> <kylmäksi> on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)",
+            "[<kerro>] <kuinka> <kylmäksi> on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (jäähtynyt|viilentynyt|jäähdytetty|viilennetty) <nyt>",
+            "[<kerro>] <kuinka> <kylmäksi> on [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> <nyt> (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)",
+            "[<kerro>] <kuinka> <kylmäksi> on <nyt> [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)",
+            "[<kerro>] <kuinka> <kylmäksi> <nyt> on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)",
+            "[<kerro>] <nyt> <kuinka> <kylmäksi> on [<alue>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)",
+            "[<kerro>] <kuinka> <kylmäksi> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (jäähtynyt|viilentynyt|jäähdytetty|viilennetty) <nyt>",
+            "[<kerro>] <kuinka> <kylmäksi> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)",
+            "[<kerro>] <kuinka> <kylmäksi> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on <nyt> (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)",
+            "[<kerro>] <kuinka> <kylmäksi> <nyt> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)",
+            "[<kerro>] <nyt> <kuinka> <kylmäksi> [<alue>|<alueen>|<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>] <huone> on (jäähtynyt|viilentynyt|jäähdytetty|viilennetty)"
+          ]
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "<onko> {name} {lock_states:state} [(<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>) <huone>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "lock"
+          },
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "(<onko>|<ovatko>) (<jokin>|<jotkut>) (ovi|ovet|lukko|lukot) {lock_states:state} [(<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>) <huone>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "(<onko>|<ovatko>) <kaikki> (ovi|ovet|lukko|lukot) {lock_states:state} [(<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>) <huone>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "(mikä|mitkä) (ovi|ovet|lukko|lukot) (on|ovat) {lock_states:state} [(<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>) <huone>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "<montako> (ovi|ovet|ovea|ovia|lukko|lukot|lukkoa|lukkoja) (on|ovat) {lock_states:state} [(<alueessa>|<alueesta>|<alueella>|<alueelta>|<alueelle>) <huone>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "Paljonko {name} [[<alueessa>|<alueella>] <huone>] on"
+          ],
+          "response": "one"
+        },
+        {
+          "sentences": [
+            "Onko {name} {on_off_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "Onko [[<alueessa>|<alueella>] <huone>] {on_off_domains:domain} {on_off_states:state}"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "Onko <kaikki> {on_off_domains:domain} {on_off_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "mitkä {on_off_domains:domain} (on|ovat) {on_off_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "Montako {on_off_domains:domain} on {on_off_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "how_many"
+        },
+        {
+          "sentences": [
+            "<onko> {name} {cover_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "cover"
+          },
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<onko>|<ovatko>) (<jokin>|<jotkut>) {cover_classes:device_class} {cover_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<onko>|<ovatko>) <kaikki> {cover_classes:device_class} {cover_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(mikä|mitkä) {cover_classes:device_class} (on|ovat) {cover_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<montako> {cover_classes:device_class} on {cover_states:state} [[<alueessa>|<alueella>] <huone>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassVacuumReturnToBase": {
+      "data": [
+        {
+          "sentences": [
+            "(pyydä|käske) imuri <nimi> palaamaan [takaisin|kotiin]",
+            "palauta imuri <nimi> [takaisin|kotiin]"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassVacuumStart": {
+      "data": [
+        {
+          "sentences": [
+            "käynnistä imuri <nimi>",
+            "aloita imurointi [laitteelle|laitteella|imurilla] <nimi>"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassRespond": {
+      "data": [
+        {
+          "sentences": [
+            "(hei|moi|heippa|moikka|terve) [home assistant]"
+          ],
+          "response": "hello"
+        },
+        {
+          "sentences": [
+            "(kuunteletko|tallennatko|äänitätkö) aina [ääntä]",
+            "kuunteletko [minua] aina",
+            "onko (tallennus|äänitys) aina päällä"
+          ],
+          "response": "listening"
+        },
+        {
+          "sentences": [
+            "(minne|mihin) (tietoni|datani|tietoani|tietojani) (viedään|joutuu|joutuvat|menee|käytetään)"
+          ],
+          "response": "data"
+        },
+        {
+          "sentences": [
+            "mitä voin (sanoa|kysyä|tehdä)"
+          ],
+          "response": "commands"
+        },
+        {
+          "sentences": [
+            "(kuka|ketkä|ketä) (on luonut|loi) sinut"
+          ],
+          "response": "creator"
+        }
+      ]
+    },
+    "HassMediaPrevious": {
+      "data": [
+        {
+          "sentences": [
+            "edellinen [raita|biisi|kappale|jakso] [laitteelle|laitteella] <nimi>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "(lisää|laita) <item> <my_list>",
+            "(lisää|laita) <my_list> <item>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "my_list": "[minun|mun|miun|meidän] lista(lle|lleni|llemme) {name}",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassSetVolume": {
+      "data": [
+        {
+          "sentences": [
+            "<laita> [laitteen] <nimi> äänenvoimakkuudeksi <a_prosenttia>",
+            "<laita> [laitteen] <nimi> (vola|volyymi|äänenvoimakkuus) <a_prosenttia>",
+            "<laita> [laitteen] <nimi> (vola|volyymi|äänenvoimakkuus) <a_prosenttiin>",
+            "<laita> [laitteen] <nimi> (vola|volyymi|äänenvoimakkuus) <a_prosentiksi>",
+            "<laita> [laitteen] <nimi> (vola|volyymi|äänenvoimakkuus) <a_prosentille>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Pahoittelut, en ymmärtänyt",
+      "handle_error": "Odottamaton virhe tapahtui",
+      "no_area": "Aluetta {{ area }} ei löydy",
+      "no_domain": "Pahoittelut, yhtäkään {{ domain }} ei löydy",
+      "no_domain_in_area": "Pahoittelut, yhtäkään {{ domain }} ei löydy alueelta {{ area }}",
+      "no_device_class": "Pahoittelut, yhtäkään {{ device_class }} ei löydy",
+      "no_device_class_in_area": "Pahoittelut, yhtäkään {{ device_class }} ei löydy alueelta {{ area }}",
+      "no_entity": "Pahoittelut, en löydä laitetta tai kohdetta nimellä {{ entity }}",
+      "no_entity_in_area": "Pahoittelut, en löydä laitetta nimellä {{ entity }} alueelta {{ area }}",
+      "no_entity_exposed": "Pahoittelut, {{ entity }} ei ole asetettu näkyviin",
+      "no_entity_in_area_exposed": "Pahoittelut, {{ entity }} alueella {{ area }} ei ole asetettu näkyviin",
+      "no_domain_exposed": "Pahoittelut, yhtäkään {{ domain }} ei ole asetettu näkyviin",
+      "no_domain_in_area_exposed": "Pahoittelut, yhtäkään {{ domain }} alueella {{ area }} ei ole asetettu näkyviin",
+      "no_device_class_exposed": "Pahoittelut, yhtäkään {{ device_class }} ei ole asetettu näkyviin",
+      "no_device_class_in_area_exposed": "Pahoittelut, yhtäkään {{ device_class }} alueella {{ area }} ei ole asetettu näkyviin",
+      "no_entity_in_floor_exposed": "Pahoittelut, {{ entity }} ei ole asetettu näkyviin kerroksessa {{ floor }}",
+      "no_domain_in_floor_exposed": "Pahoittelut, yhtäkään {{ domain }} ei ole asetettu näkyviin kerroksessa {{ floor }}",
+      "no_device_class_in_floor_exposed": "Pahoittelut, yhtäkään {{ device_class }} ei ole asetettu näkyviin kerroksessa {{ floor }}",
+      "duplicate_entities": "Pahoittelut, useita laitteita nimellä {{ entity }} löytyi",
+      "duplicate_entities_in_area": "Pahoittelut, useita laitteita nimellä {{ entity }} löytyi alueelta {{ area }}",
+      "timer_not_found": "Pahoittelut, en löydä tätä ajastinta",
+      "multiple_timers_matched": "Pahoittelut, en voi käskyttää useampaa ajastinta",
+      "no_timer_support": "Pahoittelut, ajastimia ei tueta tällä laitteella"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "{{ slots.name | capitalize }} on {{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\n  Kyllä\n{% else %}\n  Ei, {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Kyllä, {{ match[:3] | join(\", \") }} ja {{ (match | length - 3) }} muuta on\n  {%- else -%}\n    Kyllä,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} ja {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  Ei\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  Kyllä\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    Ei, {{ no_match[:3] | join(\", \") }} ja {{ (no_match | length - 3) }} muuta ei ole\n  {%- else -%}\n    Ei,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} ja {% endif -%}\n      {{ name }}\n    {%- endfor %} ei ole\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  Ei yhtään\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} ja {{ (match | length - 3) }} muuta\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} ja {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n"
+      },
+      "HassTurnOff": {
+        "default": "Kytkettiin pois päältä {{ slots.name }}",
+        "lights_area_singular": "Sammutettiin valo",
+        "lights_area_plural": "Sammutettiin valot",
+        "lights_area_uncountable": "Pimennettiin",
+        "fans_area_singular": "Tuuletin on nyt sammutettu",
+        "fans_area_plural": "Tuulettimet ovat nyt sammutettu",
+        "cover": "Suljettiin",
+        "cover_device_class": "Suljettiin {{ slots.device_class }}",
+        "lock": "Lukitus on auki",
+        "valve": "Suljettiin"
+      },
+      "HassStartTimer": {
+        "default": "Ajastin käynnistetty",
+        "command": "Komento vastaanotettu"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "{{ slots.item }} lisätty"
+      },
+      "HassTurnOn": {
+        "default": "Kytkettiin päälle {{ slots.name }}",
+        "lights_area_singular": "Laitettiin valo päälle",
+        "lights_area_plural": "Laitettiin valot päälle",
+        "lights_area_uncountable": "Valaistiin",
+        "fans_area_singular": "Tuuletin on nyt päällä",
+        "fans_area_plural": "Tuulettimet ovat nyt päällä",
+        "cover": "Avattiin",
+        "cover_device_class": "Avattiin {{ slots.device_class }}",
+        "lock": "Lukittu",
+        "valve": "Avattiin",
+        "script": "Käynnistettiin {{ slots.name }}"
+      },
+      "HassMediaPause": {
+        "default": "Keskeytettiin"
+      },
+      "HassGetCurrentTime": {
+        "default": "{% set hour_str = slots.time.hour %} {% set minute_str = '{:02d}'.format(slots.time.minute) %} Kello on {{ hour_str }}:{{ minute_str }}\n"
+      },
+      "HassPauseTimer": {
+        "default": "Ajastin keskeytetty"
+      },
+      "HassNevermind": {
+        "default": "Selvä"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  Ei ajastimia.\n{% elif num_active_timers == 0: %}\n  {# Ei aktiivisia ajastimia #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    Ajastin on keskeytetty.\n  {% else: %}\n    {{ num_paused_timers }} keskeytettyä ajastinta.\n  {% endif %}\n{% else: %}\n  {# Ainakin yksi aktiivinen ajastin #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# Get active timer that will finish soonest #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {{ num_active_timers }} käynnissä olevaa ajastinta.\n  {% endif %}\n\n  {% if num_paused_timers == 1: %}\n    1 keskeytetty ajastin.\n  {% elif num_paused_timers > 0: %}\n    {{ num_paused_timers }} keskeytettyä ajastinta.\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n  {# At least one active timer #}\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0): %}\n    noin 1 tunti ja {{ next_timer.rounded_minutes_left }} minuuttia\n  {% elif (next_timer.rounded_hours_left == 1): %}\n    1 tunti\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0): %}\n    noin {{ next_timer.rounded_hours_left }} tuntia ja {{ next_timer.rounded_minutes_left }} minuuttia\n  {% elif (next_timer.rounded_hours_left > 1): %}\n    {{ next_timer.rounded_hours_left }} tuntia\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0): %}\n    1 minuutti ja {{ next_timer.rounded_seconds_left }} sekuntia\n  {% elif (next_timer.rounded_minutes_left == 1): %}\n    1 minuutti\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} minuuttia ja {{ next_timer.rounded_seconds_left }} sekuntia\n  {% elif (next_timer.rounded_minutes_left > 1): %}\n    {{ next_timer.rounded_minutes_left }} minuuttia\n  {% elif (next_timer.rounded_seconds_left == 1): %}\n    1 sekunti\n  {% elif (next_timer.rounded_seconds_left > 1): %}\n    {{ next_timer.rounded_seconds_left }} sekuntia\n  {% endif %}\n\n\n  {% if num_timers > 1: %}\n    {# Give some extra information to disambiguate #}\n    jäljellä\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_hours }} tuntia ja {{ next_timer.start_minutes }} minuuttia\n    {% elif (next_timer.start_hours == 1): %}\n      yhden tunnin\n    {% elif (next_timer.start_hours == 2): %}\n      kahden tunnin\n    {% elif (next_timer.start_hours == 3): %}\n      kolmen tunnin\n    {% elif (next_timer.start_hours == 4): %}\n      neljän tunnin\n    {% elif (next_timer.start_hours == 5): %}\n      viiden tunnin\n    {% elif (next_timer.start_hours == 6): %}\n      kuuden tunnin\n    {% elif (next_timer.start_hours > 6): %}\n      {{ next_timer.start_hours }} tunnin\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_minutes }} minuuttia ja {{ next_timer.start_seconds }} sekuntia\n    {% elif (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_minutes }} minuutin\n    {% elif (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_seconds }} sekuntia\n    {% endif %}\n\n    {% if next_timer.name: %}\n      {{ next_timer.name }}\n    {% elif next_timer.area: %}\n      {{ next_timer.area }}\n    {% endif %}\n\n    ajastimessa.\n  {% else: %}\n    jäljellä.\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "{{ slots.item }} lisätty"
+      },
+      "HassGetCurrentDate": {
+        "default": "{% set months = {\n   1: '1.',\n   2: '2.',\n   3: '3.',\n   4: '4.',\n   5: '5.',\n   6: '6.',\n   7: '7.',\n   8: '8.',\n   9: '9.',\n   10: '10.',\n   11: '11.',\n   12: '12.',\n} %} {% set ordinal = {\n   1: '1.',\n   2: '2.',\n   3: '3.',\n   4: '4.',\n   5: '5.',\n   6: '6.',\n   7: '7.',\n   8: '8.',\n   9: '9.',\n   10: '10.',\n   11: '11.',\n   12: '12.',\n   13: '13.',\n   14: '14.',\n   15: '15.',\n   16: '16.',\n   17: '17.',\n   18: '18.',\n   19: '19.',\n   20: '20.',\n   21: '21.',\n   22: '22.',\n   23: '23.',\n   24: '24.',\n   25: '25.',\n   26: '26.',\n   27: '27.',\n   28: '28.',\n   29: '29.',\n   30: '30.',\n   31: '31.',\n } %}\n{% set weekday = [\n  'maanantai',\n  'tiistai',\n  'keskiviikko',\n  'torstai',\n  'perjantai',\n  'lauantai',\n  'sunnuntai'\n] %} Tänään on {{ weekday[slots.date.weekday()] }} {{ ordinal[slots.date.day] }}{{ months[slots.date.month] }}{{ slots.date.year }}\n"
+      },
+      "HassUnpauseTimer": {
+        "default": "Ajastinta jatkettu"
+      },
+      "HassMediaPrevious": {
+        "default": "Toistetaan edellinen"
+      },
+      "HassGetWeather": {
+        "default": "{% set weather_condition = {\n  'Selkeä': 'ja kirkasta',\n  'Yö, selkeää': 'ja kirkasta',\n  'Pilvistä': 'ja pilvistä',\n  'Poikkeuksellinen': 'ja poikkeukselliset sääolosuhteet',\n  'Sumuista': 'ja sumuista',\n  'Raekuuroja': 'ja raekuuroja',\n  'Ukkoskuuroja': 'ja ukkosta',\n  'Ukkosvaara, sateista': 'ja ukkosmyrsky',\n  'Puolipilvistä': 'ja puolipilvistä',\n  'Kaatosadetta': 'ja kaatosade',\n  'Vesisadetta': 'ja sataa vettä',\n  'Lumisadetta': 'ja sataa lunta',\n  'Räntäsadetta': 'ja sataa räntää',\n  'Aurinkoista': 'ja aurinkoista',\n  'Tuulista': 'ja tuulista',\n  'Tuulista, pilvistä': 'ja tuulista ja pilvistä'\n} %} {% set temperature = state.attributes.get('temperature') | int %} {% if temperature < 0 %}\n  {% set temperature_string = 'miinus ' ~ (temperature * -1) | string | replace('.', ',') %}\n{% else %}\n  {% set temperature_string = temperature | string | replace('.', ',') %}\n{% endif %}\n\n{% set yksikkö = state.attributes.get('temperature_unit') | string  %}\n  {% if yksikkö == \"°C\" %}\n    {% set yksikkö = \"astetta\" %}\n  {% else %}\n    {% set yksikkö = \"faaren haittia\" %}\n  {%- endif %}\n{{ temperature_string }} {{ yksikkö }} {{ weather_condition.get(state.state, state.state | string) }}\n"
+      },
+      "HassLightSet": {
+        "brightness": "Kirkkaus asetettu",
+        "color": "Väri asetettu"
+      },
+      "HassCancelAllTimers": {
+        "default": "{% if slots.canceled < 1: %} Ajastimia ei peruutettu. {% elif slots.canceled == 1: %} Peruutettiin 1 ajastin. {% else: %} Peruutettiin {{ slots.canceled }} ajastinta. {% endif %}\n",
+        "area": "{% if slots.canceled < 1: %} Alueelta {{ slots.area }} ei peruutettu ajastimia. {% elif slots.canceled == 1: %} Peruutettiin 1 {{ slots.area }} ajastin. {% else: %} Peruutettiin {{ slots.canceled }} ajastinta alueella {{ slots.area }}. {% endif %}\n"
+      },
+      "HassVacuumStart": {
+        "default": "Käynnistettiin"
+      },
+      "HassMediaUnpause": {
+        "default": "Jatkettiin"
+      },
+      "HassSetPosition": {
+        "default": "Asento säädetty"
+      },
+      "HassMediaNext": {
+        "default": "Toistetaan seuraava"
+      },
+      "HassCancelTimer": {
+        "default": "Ajastin peruutettu"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{{ state_attr(state.entity_id, 'current_temperature') }}"
+      },
+      "HassSetVolume": {
+        "default": "Äänenvoimakkuus asetettu"
+      },
+      "HassDecreaseTimer": {
+        "default": "Ajastin päivitetty"
+      },
+      "HassIncreaseTimer": {
+        "default": "Ajastin päivitetty"
+      },
+      "HassVacuumReturnToBase": {
+        "default": "Palaamassa"
+      },
+      "HassRespond": {
+        "hello": "Tervehdys Home Assistantilta.",
+        "listening": "En, äänitän ainoastaan kun kuulen herätesanan.",
+        "data": "Tietosi lähetetään ainoastaan sinun Home Assistant-palvelimellesi.",
+        "commands": "Oppiaksesi lisää mitä voit kysyä minulta, vieraile home-assistant.io kautta voice.",
+        "creator": "Minut on luonut loistava Home Assistant -yhteisö, joka koostuu maailmanlaajuisista puuhastelijoista."
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "(valkoinen|valkois(en|ta|ena|eksi|essa|esta|een|ella|elta|elle|etta|ina|ineen)|valkois(et|ten|ia|iksi|issa|ista|iin|illa|ilta|ille|itta|in))",
+          "out": "white"
+        },
+        {
+          "in": "(musta|must(an|aa|ana|aksi|assa|asta|aan|alla|alta|alle|atta|ina|ineen)|mustat|musti(en|a|ksi|ssa|sta|in|lla|lta|lle|tta|n))",
+          "out": "black"
+        },
+        {
+          "in": "punainen|punais(en|ta|ena|eksi|essa|esta|een|ella|elta|elle|etta|ina|ineen)|punais(et|ten|ia|ina|iksi|issa|ista|iin|illa|ilta|ille|itta|in|ineen)",
+          "out": "red"
+        },
+        {
+          "in": "(oranss(i|in|ia|ina|iksi|issa|ista|iin|illa|ilta|ille|itta|ineen)|oranss(it|ien|eja|eina|eiksi|eissa|eista|eihin|eilla|eilta|eille|eitta|ein|eineen))",
+          "out": "orange"
+        },
+        {
+          "in": "keltainen|keltais(en|ta|ena|eksi|essa|esta|een|ella|elta|elle|etta|ina|ineen)|keltais(et|ten|ia|ina|iksi|issa|ista|iin|illa|ilta|ille|itta|in|ineen)",
+          "out": "yellow"
+        },
+        {
+          "in": "vihreä|vihre(än|ää|änä|äksi|ässä|ästä|ään|ällä|ältä|älle|ättä|inä|ineen)|vihre(ät|iden|itä|inä|iksi|issä|istä|isiin|illä|iltä|ille|ittä|in)",
+          "out": "green"
+        },
+        {
+          "in": "sininen|sinis(en|tä|enä|eksi|essä|estä|een|ellä|eltä|elle|etta|inä|ineen)|sinis(et|ten|iä|iksi|issä|istä|iin|illä|iltä|ille|itta|in)",
+          "out": "blue"
+        },
+        {
+          "in": "violetti|violet(in|tia|tina|iksi|issa|ista|tiin|illa|ilta|ille|itta|tineen)|violet(it|tien|teja|teina|eiksi|eissa|eista|teihin|eilla|eilta|eille|teitta|ein)",
+          "out": "purple"
+        },
+        {
+          "in": "ruskea|ruskea(n|a|na|ksi|ssa|sta|an|lla|lta|lle|tta)|ruskeat|ruskei(den|ta|ksi|ssa|sta|siin|lla|lta|lle|tta)",
+          "out": "brown"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        "celsius",
+        {
+          "in": "c",
+          "out": "celsius"
+        },
+        "fahrenheit",
+        {
+          "in": "f",
+          "out": "fahrenheit"
+        }
+      ]
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "(max|maksimi|maksimiin|maksimi tasolle|maksimitasolle|korkein|korkeimmalle tasolle|täysille|täysillä)",
+          "out": 100
+        },
+        {
+          "in": "(min|minimi|minimiin|minimille|minimitasolle|alin|matalin|matalimmalle tasolle)",
+          "out": 1
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "(<päälle>|päällä)",
+          "out": "on"
+        },
+        {
+          "in": "<päältä>",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "(<valo>|<valot>|<valaistus>|<valaistukset>|valoa)",
+          "out": "light"
+        },
+        {
+          "in": "(<tuuletin>|<tuulettimet>)",
+          "out": "fan"
+        },
+        {
+          "in": "(<kytkin>|<kytkimet>|kytkimiä)",
+          "out": "switch"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "(auki|avoinna|avattu)",
+          "out": "open"
+        },
+        {
+          "in": "open",
+          "out": "avoinna"
+        },
+        {
+          "in": "(kiinni|suljettu)",
+          "out": "closed"
+        },
+        {
+          "in": "avautuu",
+          "out": "opening"
+        },
+        {
+          "in": "sulkeutuu",
+          "out": "closing"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "markiisi[t]",
+          "out": "awning"
+        },
+        {
+          "in": "(kaihdin|kaihtimet|sälekaihdin|sälekaihtimet)",
+          "out": "blind"
+        },
+        {
+          "in": "verho[t]",
+          "out": "curtain"
+        },
+        {
+          "in": "(ovi|ovet)",
+          "out": "door"
+        },
+        {
+          "in": "autotallin (ovi|ovet)",
+          "out": "garage"
+        },
+        {
+          "in": "(portti|portit)",
+          "out": "gate"
+        },
+        {
+          "in": "varjo[t]",
+          "out": "shade"
+        },
+        {
+          "in": "(luukku|luukut)",
+          "out": "shutter"
+        },
+        {
+          "in": "ikkuna[t]",
+          "out": "window"
+        }
+      ]
+    },
+    "lock_states": {
+      "values": [
+        {
+          "in": "(lukittu|lukossa|lukittuna)",
+          "out": "locked"
+        },
+        {
+          "in": "(auki|avoinna|lukitsematta)",
+          "out": "unlocked"
+        }
+      ]
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "volume": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "(puoli|puoleksi|puolen|puolen tunnin|puolella tunnilla)",
+          "out": 30
+        },
+        {
+          "in": "1/2",
+          "out": 30
+        }
+      ]
+    },
+    "timer_quarter": {
+      "values": [
+        {
+          "in": "(vartin|varttitunnin|vartiksi|varttitunniksi|vartilla|varttitunnilla)",
+          "out": "15"
+        }
+      ]
+    },
+    "timer_three_quarter": {
+      "values": [
+        {
+          "in": "(3 vartin|3 vartiksi|3 vartilla)",
+          "out": "45"
+        }
+      ]
+    },
+    "timer_one_hour": {
+      "values": [
+        {
+          "in": "(tunnin|tunti|tunniksi|tunnilla)",
+          "out": "1"
+        }
+      ]
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    },
+    "default_areas": {
+      "values": [
+        {
+          "in": "(yläkerrassa|yläkerrasta|yläkerran|yläkertaan)",
+          "out": "Yläkerta"
+        },
+        {
+          "in": "(alakerrassa|alakerrasta|alakerran|alakertaan)",
+          "out": "Alakerta"
+        },
+        {
+          "in": "(eteisessä|eteisestä|eteisen|eteiseen)",
+          "out": "Eteinen"
+        },
+        {
+          "in": "(ullakolla|ullakolta|ullakon|ullakolle)",
+          "out": "Ullakko"
+        },
+        {
+          "in": "(parvekkeella|parvekkeelta|parvekkeen|parvekkeelle)",
+          "out": "Parveke"
+        },
+        {
+          "in": "(parvella|parvelta|parven|parvelle)",
+          "out": "Parvi"
+        },
+        {
+          "in": "(verannalla|verannalta|verannan|verannalle)",
+          "out": "Veranta"
+        },
+        {
+          "in": "(portaikossa|portaikosta|portaikon|portaikkoon|portaikolta|portaikoille)",
+          "out": "Portaikko"
+        },
+        {
+          "in": "(vintillä|vintiltä|vintille|vintin)",
+          "out": "Vintti"
+        },
+        {
+          "in": "(nurkkauksessa|nurkkauksesta|nurkkaukselle|nurkkauksen)",
+          "out": "Nurkkaus"
+        },
+        {
+          "in": "(mökissä|mökistä|mökkiin|mökille|mökiltä|mökin)",
+          "out": "Mökki"
+        }
+      ]
+    }
+  },
+  "expansion_rules": {
+    "päälle": "päälle",
+    "päältä": "(päältä|pois|pois päältä)",
+    "valo": "(valo|valaisin|lamppu|polttimo|ledi)",
+    "valot": "(valot|valaisimet|lamput|polttimot|ledit)",
+    "valaistus": "(valaistus|valaisu)",
+    "valaistukset": "(valaistukset|valaisut)",
+    "tuuletin": "(tuuletin|tuuletus|puhallin|puhallus|ilmastointi|ilmanvaihto)",
+    "tuulettimet": "(tuulettimet|tuuletukset|puhaltimet|puhallukset|ilmastoinnit|ilmanvaihdot)",
+    "kytkin": "(kytkin|vipu)",
+    "kytkimet": "(kytkimet|vivut)",
+    "kerro": "(kerro|näytä|sano)",
+    "kytke": "(kytke|laita|aseta)",
+    "käynnistä": "(käynnistä|starttaa|aja)",
+    "pysäytä": "(pysäytä|sammuta|stoppaa)",
+    "avaa": "(avaa|aukaise|nosta)",
+    "sulje": "(sulje|laske)",
+    "laita": "(kytke|aseta|käännä|säädä|saada|pistä|muuta|laita)",
+    "asento": "{position}[[ ]%| prosenttia]",
+    "a_prosentti": "{volume:volume_level}[[ ]%| prosentti]",
+    "a_prosenttiin": "{volume:volume_level}[[ ]%| prosenttiin]",
+    "a_prosenttia": "{volume:volume_level}[[ ]%| prosenttia]",
+    "a_prosentiksi": "{volume:volume_level}[[ ]%| prosentiksi]",
+    "a_prosentille": "{volume:volume_level}[[ ]%| prosentille]",
+    "kuinka": "(kuinka|miten|millainen|minkälainen)",
+    "onko": "(onko|onhan|onkohan|oliko)",
+    "ovatko": "(ovatko|olivatko)",
+    "paljonko": "(paljonko|mikä|(kuinka|miten) paljon)",
+    "montako": "(montako|moniko|kuinka moni|kuinka monet|kuinka monta|miten moni|miten monta)",
+    "nyt": "(nyt|juuri nyt|just nyt|tällä hetkellä)",
+    "lämpötila": "(lämpötila|lämpö|sisälämpötila|ulkolämpötila|asteet)",
+    "asteeseen": "{temperature}[ ]([°|asteeseen|astetta][ ][{temperature_unit}]|{temperature_unit}[ ][°|asteeseen|astetta])",
+    "k_prosentti_taivutus": "<k_prosentti>|<k_prosenttia>|<k_prosentiksi>|<k_prosenttiin>|<k_prosentille>",
+    "k_prosentti": "{brightness}[ ][%|prosentti]",
+    "k_prosenttia": "{brightness}[ ]prosenttia",
+    "k_prosentiksi": "{brightness}[ ]prosentiksi",
+    "k_prosenttiin": "{brightness}[ ]prosenttiin",
+    "k_prosentille": "{brightness}[ ]prosentille",
+    "kirkkaus_taivutus": "(<kirkkaus>|<kirkkaudeksi>|<kirkkauteen>|<kirkkaudelle>)",
+    "kirkkaus": "(kirkkaus|valoteho|loiste|intensiteetti)",
+    "kirkkaudeksi": "(kirkkaudeksi|valotehoksi|loisteeksi|intensiteetiksi)",
+    "kirkkauteen": "(kirkkauteen|valotehoon|loisteeseen|intensiteettiin)",
+    "kirkkaudelle": "(kirkkaudelle|valoteholle|loisteelle|intensiteetille)",
+    "väri_taivutus": "(<väri>|<väriksi>|<väriin>|<värille>|<värit>|<väreiksi>|<väreihin>|<väreille>|<väriltään>)",
+    "väri": "(väri|[väri]sävy|värivivahde)",
+    "väriksi": "(väriksi|[väri]sävyksi|värivivahteeksi)",
+    "väriin": "(väriin|[väri]sävyyn|värivivahteeksi)",
+    "värille": "(värille|[väri]sävylle|värivivahteelle)",
+    "värit": "(värit|[väri]sävyt|värivivahteet)",
+    "väreiksi": "(väreiksi|[väri]sävyiksi|värivivahteiksi)",
+    "väreihin": "(väreihin|[väri]sävyihin|värivivahteisiin)",
+    "väreille": "(väreille|[väri]sävyille|värivivahteille)",
+    "väriltään": "(väriltään|väreiltään)",
+    "huone": "({default_areas:area}|{area})",
+    "paikka": "(kaupunki|kaupungissa|paikka|paikassa|kaupungin|paikan)",
+    "nimi": "{name}",
+    "jokin": "(jokin|mikään|joku|ainutkaan|yksikään)",
+    "jotkut": "(jotkut|mitkään|yhdetkään)",
+    "kaikki": "(kaikki|jokainen|jokikinen)",
+    "laite_taivutus": "<laite>|<laitteen>|<laitteessa>|<laitteesta>|<laitteeseen>|<laitteelta>|<laitteelle>",
+    "laite": "[äly]laite",
+    "laitteen": "[äly]laitteen",
+    "laitteessa": "[äly]laitteessa",
+    "laitteesta": "[äly]laitteesta",
+    "laitteeseen": "[äly]laitteeseen",
+    "laitteelta": "[äly]laitteelta",
+    "laitteelle": "[äly]laitteelle",
+    "alue": "(alue|paikka|huone|tila)",
+    "alue_taivutus": "(<alue>|<alueen>|<alueessa>|<alueesta>|<alueeseen>|<alueella>|<alueelta>|<alueelle>)",
+    "alueen": "(alueen|paikan|huoneen|tilan)",
+    "alueessa": "(alueessa|paikassa|huoneessa|tilassa)",
+    "alueesta": "(alueesta|paikasta|huoneesta|tilasta)",
+    "alueeseen": "(alueeseen|paikkaan|huoneeseen|tilaan)",
+    "alueella": "(alueella|paikalla|huoneella|tilalla)",
+    "alueelta": "(alueelta|paikalta|huoneelta|tilalta)",
+    "alueelle": "(alueelle|paikalle|huoneelle|tilalle)",
+    "alue_pääte": "({default_areas:area}|{area}[e][ssa|ssä|sta|stä|än|in|an|on|ön|seen|ltä|llä|lla|lta|lle|n])",
+    "kuuma": "(kuuma|lämmin|lämpöinen)",
+    "kuuman": "(kuuman|lämpimän|lämpöisen)",
+    "kuumaa": "(kuumaa|lämmintä|lämpöistä)",
+    "kuumana": "(kuumana|lämpimänä|lämpöisenä)",
+    "kuumaksi": "(kuumaksi|lämpimäksi|lämpöiseksi)",
+    "kylmä": "(kylmä|viileä|vilpoinen)",
+    "kylmän": "(kylmän|viileän|vilpoisen)",
+    "kylmää": "(kylmää|viileää|vilpoista)",
+    "kylmänä": "(kylmänä|viileänä|vilpoisena)",
+    "kylmäksi": "(kylmäksi|viileäksi|vilpoiseksi)",
+    "timer_set": "(aloita|luo|käynnistä|aseta|laita)",
+    "timer_cancel": "(peruuta|poista|lopeta)",
+    "timer_duration_seconds": "{timer_seconds:seconds} (sekunti[a]|sekunnilla|sekunniksi|sekunnille|sekunnin)",
+    "timer_duration_minutes": "{timer_three_quarter:minutes}|{timer_quarter:minutes}|({timer_minutes:minutes} (minuutti[a]|minuutilla|minuutiksi|minuutille|minuutin)[ [ja ]{timer_seconds:seconds} (sekunti[a]|sekunnilla|sekunniksi|sekunnille|sekunnin)])|({timer_minutes:minutes} ja {timer_half:seconds} (minuutti[a]|minuutilla|minuutiksi|minuutille|minuutin))|({timer_half:seconds} (minuutti[a]|minuutilla|minuutiksi|minuutille|minuutin))",
+    "timer_duration_hours": "{timer_one_hour:hours}|({timer_hours:hours} (tunti[a]|tunnilla|tunniksi|tunnille|tunnin)[ [ja ]{timer_minutes:minutes} (minuutti[a]|minuutilla|minuutiksi|minuutille|minuutin)][ [ja ]{timer_seconds:seconds} (sekunti[a]|sekunnilla|sekunniksi|sekunnille|sekunnin)])|({timer_hours:hours} ja {timer_half:minutes} (tunti[a]|tunnilla|tunniksi|tunnille|tunnin))|({timer_half:minutes} (tunti[a]|tunnilla|tunniksi|tunnille|tunnin))",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes>|<timer_duration_hours>|{timer_hours:hours}.{timer_minutes:minutes}",
+    "timer_start_seconds": "{timer_seconds:start_seconds} (sekunti[a]|sekunnin|sekunnille)",
+    "timer_start_minutes": "{timer_minutes:start_minutes} (minuutti[a]|minuutin|minuutille)[ [ja ]{timer_seconds:start_seconds} (sekunti[a]|sekunnin|sekunnille)]",
+    "timer_start_hours": "{timer_three_quarter:start_minutes}|{timer_quarter:start_minutes}|{timer_one_hour:start_hours}|{timer_hours:start_hours} (tunti[a]|tunnin|tunnille)[ [ja ]{timer_minutes:start_minutes} (minuutti[a]|minuutin|minuutille)][ [ja ]{timer_seconds:start_seconds} (sekunti[a]|sekunnin|sekunnille)]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes>|<timer_start_hours>|{timer_hours:start_hours}.{timer_minutes:start_minutes}"
+  },
+  "skip_words": [
+    "voitko",
+    "voisitko"
+  ]
+}

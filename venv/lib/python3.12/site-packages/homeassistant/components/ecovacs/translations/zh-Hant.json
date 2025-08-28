@@ -1,0 +1,270 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u5e33\u865f\u5df2\u7d93\u8a2d\u5b9a\u5b8c\u6210"
+        },
+        "error": {
+            "cannot_connect": "\u9023\u7dda\u5931\u6557",
+            "invalid_auth": "\u8eab\u4efd\u9a57\u8b49\u7121\u6548",
+            "invalid_url": "URL \u7121\u6548",
+            "invalid_url_schema_override_mqtt_url": "MQTT URL scheme \u7121\u6548\u3002\nURL \u61c9\u8a72\u4ee5 `mqtt://` or `mqtts://` \u958b\u982d\u3002",
+            "invalid_url_schema_override_rest_url": "REST URL scheme \u7121\u6548\u3002\nURL \u61c9\u8a72\u4ee5 `http://` or `https://` \u958b\u982d\u3002",
+            "unknown": "\u672a\u9810\u671f\u932f\u8aa4"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "country": "\u570b\u5bb6",
+                    "override_mqtt_url": "MQTT URL",
+                    "override_rest_url": "REST URL",
+                    "password": "\u5bc6\u78bc",
+                    "username": "\u4f7f\u7528\u8005\u540d\u7a31",
+                    "verify_mqtt_certificate": "\u9a57\u8b49 MQTT SSL \u8a8d\u8b49"
+                },
+                "data_description": {
+                    "override_mqtt_url": "\u8f38\u5165\u81ea\u8a17\u7ba1\u5be6\u4f8b\u7684 MQTT URL\u3001\u5305\u62ec scheme\uff08mqtt/mqtts\uff09\u3002",
+                    "override_rest_url": "\u8f38\u5165\u81ea\u8a17\u7ba1\u5be6\u4f8b\u7684 REST URL\u3001\u5305\u62ec scheme\uff08http/https\uff09\u3002"
+                }
+            },
+            "user": {
+                "data": {
+                    "mode": "\u6a21\u5f0f"
+                },
+                "data_description": {
+                    "mode": "\u9078\u64c7\u9023\u7dda Ecovacs \u7684\u6a21\u5f0f\u3002\u5982\u679c\u4e0d\u78ba\u5b9a\uff0c\u8acb\u9078\u64c7 **\u96f2\u7aef**\u3002\n\n\u53ea\u6709\u5728\u5177\u6709\u4e00\u7d44\u57f7\u884c\u4e2d\u7684\u81ea\u8a17\u7ba1\u5be6\u4f8b\u6642\u3001\u624d\u9078\u64c7 **\u81ea\u8a17\u7ba1**\u3002"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "water_mop_attached": {
+                "name": "\u62d6\u628a\u5df2\u5b89\u88dd"
+            }
+        },
+        "button": {
+            "relocate": {
+                "name": "\u91cd\u65b0\u5b9a\u4f4d"
+            },
+            "reset_lifespan_base_station_filter": {
+                "name": "\u91cd\u7f6e\u5145\u96fb\u7ad9\u904e\u6ffe\u5668\u58fd\u547d"
+            },
+            "reset_lifespan_blade": {
+                "name": "\u91cd\u7f6e\u5200\u7247\u58fd\u547d"
+            },
+            "reset_lifespan_brush": {
+                "name": "\u91cd\u7f6e\u4e3b\u5237\u58fd\u547d"
+            },
+            "reset_lifespan_filter": {
+                "name": "\u91cd\u7f6e\u904e\u6ffe\u5668\u58fd\u547d"
+            },
+            "reset_lifespan_lens_brush": {
+                "name": "\u91cd\u7f6e\u93e1\u982d\u5237\u58fd\u547d"
+            },
+            "reset_lifespan_round_mop": {
+                "name": "\u91cd\u7f6e\u5713\u5f62\u62d6\u628a\u58fd\u547d"
+            },
+            "reset_lifespan_side_brush": {
+                "name": "\u91cd\u7f6e\u908a\u5237\u58fd\u547d"
+            },
+            "reset_lifespan_unit_care": {
+                "name": "\u91cd\u7f6e\u8a2d\u5099\u4fdd\u56fa\u58fd\u547d"
+            },
+            "station_action_empty_dustbin": {
+                "name": "\u6e05\u7a7a\u96c6\u5875\u76d2"
+            }
+        },
+        "event": {
+            "last_job": {
+                "name": "\u4e0a\u6b21\u5de5\u4f5c",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "finished": "\u5b8c\u6210",
+                            "finished_with_warnings": "\u5df2\u5b8c\u6210\u5e36\u8b66\u544a",
+                            "manually_stopped": "\u624b\u52d5\u505c\u6b62"
+                        }
+                    }
+                }
+            }
+        },
+        "image": {
+            "map": {
+                "name": "\u5730\u5716"
+            }
+        },
+        "number": {
+            "clean_count": {
+                "name": "\u6e05\u6383\u6b21\u6578"
+            },
+            "cut_direction": {
+                "name": "\u5207\u5272\u65b9\u5411"
+            },
+            "volume": {
+                "name": "\u9762\u7a4d"
+            }
+        },
+        "select": {
+            "water_amount": {
+                "name": "\u6c34\u91cf\u7b49\u7d1a",
+                "state": {
+                    "high": "\u9ad8",
+                    "low": "\u4f4e",
+                    "medium": "\u4e2d",
+                    "ultrahigh": "\u8d85\u9ad8"
+                }
+            },
+            "work_mode": {
+                "name": "\u5de5\u4f5c\u6a21\u5f0f",
+                "state": {
+                    "mop": "\u62d6\u5730",
+                    "mop_after_vacuum": "\u65bc\u6e05\u6383\u5f8c\u62d6\u5730",
+                    "vacuum": "\u6e05\u6383",
+                    "vacuum_and_mop": "\u6e05\u6383\u8207\u62d6\u5730"
+                }
+            }
+        },
+        "sensor": {
+            "error": {
+                "name": "\u932f\u8aa4",
+                "state_attributes": {
+                    "description": {
+                        "name": "\u8aaa\u660e"
+                    }
+                }
+            },
+            "lifespan_base_station_filter": {
+                "name": "\u5145\u96fb\u7ad9\u904e\u6ffe\u5668\u58fd\u547d"
+            },
+            "lifespan_blade": {
+                "name": "\u5200\u7247\u58fd\u547d"
+            },
+            "lifespan_brush": {
+                "name": "\u4e3b\u5237\u58fd\u547d"
+            },
+            "lifespan_filter": {
+                "name": "\u904e\u6ffe\u5668\u58fd\u547d"
+            },
+            "lifespan_lens_brush": {
+                "name": "\u93e1\u982d\u5237\u58fd\u547d"
+            },
+            "lifespan_main_brush": {
+                "name": "\u4e3b\u5237\u58fd\u547d"
+            },
+            "lifespan_round_mop": {
+                "name": "\u5713\u5f62\u62d6\u628a\u58fd\u547d"
+            },
+            "lifespan_side_brush": {
+                "name": "\u908a\u5237\u58fd\u547d"
+            },
+            "lifespan_unit_care": {
+                "name": "\u8a2d\u5099\u4fdd\u56fa\u58fd\u547d"
+            },
+            "network_ip": {
+                "name": "IP \u4f4d\u5740"
+            },
+            "network_rssi": {
+                "name": "Wi-Fi RSSI"
+            },
+            "network_ssid": {
+                "name": "Wi-Fi SSID"
+            },
+            "station_state": {
+                "name": "\u5145\u96fb\u7ad9\u72c0\u614b",
+                "state": {
+                    "emptying_dustbin": "\u6e05\u7a7a\u96c6\u5875\u76d2",
+                    "idle": "\u5f85\u547d"
+                }
+            },
+            "stats_area": {
+                "name": "\u5df2\u6e05\u6383\u5340\u57df"
+            },
+            "stats_time": {
+                "name": "\u6e05\u6383\u6642\u9593"
+            },
+            "total_stats_area": {
+                "name": "\u5df2\u6e05\u6383\u7e3d\u5340\u57df"
+            },
+            "total_stats_cleanings": {
+                "name": "\u7e3d\u6e05\u6383"
+            },
+            "total_stats_time": {
+                "name": "\u7e3d\u6e05\u6383\u6642\u9593"
+            }
+        },
+        "switch": {
+            "advanced_mode": {
+                "name": "\u9032\u968e\u6a21\u5f0f"
+            },
+            "border_switch": {
+                "name": "\u908a\u754c\u958b\u95dc"
+            },
+            "carpet_auto_fan_boost": {
+                "name": "\u5730\u6bef\u81ea\u52d5\u5438\u529b\u589e\u5f37"
+            },
+            "child_lock": {
+                "name": "\u5152\u7ae5\u9396"
+            },
+            "clean_preference": {
+                "name": "\u6e05\u6383\u504f\u597d"
+            },
+            "continuous_cleaning": {
+                "name": "\u6301\u7e8c\u6e05\u6383"
+            },
+            "cross_map_border_warning": {
+                "name": "\u8de8\u5730\u5716\u908a\u754c\u8b66\u544a"
+            },
+            "move_up_warning": {
+                "name": "\u5411\u4e0a\u79fb\u52d5\u8b66\u544a"
+            },
+            "safe_protect": {
+                "name": "\u5b89\u5168\u4fdd\u8b77"
+            },
+            "true_detect": {
+                "name": "\u771f\u5be6\u5075\u6e2c"
+            }
+        },
+        "vacuum": {
+            "vacuum": {
+                "state_attributes": {
+                    "fan_speed": {
+                        "state": {
+                            "max": "\u6700\u9ad8",
+                            "max_plus": "\u6700\u9ad8+",
+                            "normal": "\u6b63\u5e38",
+                            "quiet": "\u975c\u97f3"
+                        }
+                    },
+                    "rooms": {
+                        "name": "\u623f\u9593"
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "vacuum_raw_get_positions_not_supported": {
+            "message": "\u4e0d\u652f\u63f4\u7372\u53d6\u5145\u96fb\u7ad9\u548c\u88dd\u7f6e\u672c\u8eab\u7684\u4f4d\u7f6e"
+        },
+        "vacuum_send_command_params_dict": {
+            "message": "\u53c3\u6578\u5fc5\u9808\u662f\u5b57\u5178\uff0c\u800c\u4e0d\u662f\u5217\u8868"
+        },
+        "vacuum_send_command_params_required": {
+            "message": "\u9700\u8981\u53c3\u6578\u4ee5\u57f7\u884c\u547d\u4ee4\uff1a{command}"
+        }
+    },
+    "selector": {
+        "installation_mode": {
+            "options": {
+                "cloud": "\u96f2\u7aef",
+                "self_hosted": "\u81ea\u8a17\u7ba1"
+            }
+        }
+    },
+    "services": {
+        "raw_get_positions": {
+            "description": "\u53d6\u5f97\u5145\u96fb\u7ad9\u8207\u88dd\u7f6e\u672c\u8eab\u7684\u539f\u59cb\u56de\u61c9\u4f4d\u7f6e\u3002",
+            "name": "\u53d6\u5f97\u539f\u59cb\u4f4d\u7f6e"
+        }
+    }
+}

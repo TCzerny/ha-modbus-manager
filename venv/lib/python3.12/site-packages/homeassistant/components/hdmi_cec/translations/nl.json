@@ -1,0 +1,59 @@
+{
+    "services": {
+        "power_on": {
+            "name": "Inschakelen"
+        },
+        "select_device": {
+            "fields": {
+                "device": {
+                    "name": "Apparaat"
+                }
+            },
+            "name": "Kies apparaat"
+        },
+        "send_command": {
+            "description": "Stuurt CEC commando naar een HDMI CEC geschikte adapter",
+            "fields": {
+                "att": {
+                    "description": "Optionele parameters.",
+                    "name": "Att"
+                },
+                "cmd": {
+                    "name": "Commando"
+                },
+                "dst": {
+                    "name": "Bestemming"
+                },
+                "raw": {
+                    "description": "Ruw CEC commando in het formaat \"00:00:00:00\" waarbij de eerste twee cijfers de bron en bestemming, het tweede byte het commando en de overige bytes voor de commandoparameters zijn. Als het ruwe commando is gespecificeerd, worden andere parameters genegeerd.",
+                    "name": "Ruwe waarde"
+                },
+                "src": {
+                    "name": "Bron"
+                }
+            },
+            "name": "Stuur commando"
+        },
+        "standby": {
+            "name": "Stand-by"
+        },
+        "update": {
+            "description": "Werkt de apparaatstatus bij van het netwerk.",
+            "name": "Bijwerken"
+        },
+        "volume": {
+            "fields": {
+                "down": {
+                    "name": "Omlaag"
+                },
+                "mute": {
+                    "name": "Dempen"
+                },
+                "up": {
+                    "name": "Omhoog"
+                }
+            },
+            "name": "Volume"
+        }
+    }
+}

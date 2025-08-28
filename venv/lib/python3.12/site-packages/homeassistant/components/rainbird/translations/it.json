@@ -1,0 +1,82 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il dispositivo \u00e8 gi\u00e0 configurato",
+            "reauth_successful": "La riautenticazione ha avuto successo"
+        },
+        "error": {
+            "cannot_connect": "Impossibile connettersi",
+            "invalid_auth": "Autenticazione non valida",
+            "timeout_connect": "Tempo scaduto per stabile la connessione."
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Password"
+                },
+                "title": "Autenticazione scaduta per {name}"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Password"
+                },
+                "description": "Inserisci le informazioni sul modulo WiFi LNK per il tuo dispositivo Rain Bird.",
+                "title": "Configura Rain Bird"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Sensore di pioggia"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Ritardo dovuto alla pioggia"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "Ritardo per pioggia"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Tempo di irrigazione predefinito in minuti"
+                },
+                "title": "Configura Rain Bird"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "Imposta la durata della disattivazione dell'irrigazione automatica.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "L'impostazione verr\u00e0 regolata sul controller specificato.",
+                    "name": "Voce di configurazione del controller Rainbird"
+                },
+                "duration": {
+                    "description": "Durata della disattivazione del sistema.",
+                    "name": "Durata"
+                }
+            },
+            "name": "Imposta il ritardo della pioggia"
+        },
+        "start_irrigation": {
+            "description": "Avvia l'irrigazione.",
+            "fields": {
+                "duration": {
+                    "description": "Durata dell'accensione di questo irrigatore.",
+                    "name": "Durata"
+                }
+            },
+            "name": "Avvio dell'irrigazione"
+        }
+    }
+}

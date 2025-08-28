@@ -1,0 +1,177 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Paskyra jau sukonfig\u016bruota",
+            "reauth_successful": "Pakartotinis autentifikavimas buvo s\u0117kmingas",
+            "reauth_wrong_account": "I\u0161 naujo autentifikuoti \u0161\u012f \u012fra\u0161\u0105 galite tik naudodami t\u0105 pa\u010di\u0105 Overkiz paskyr\u0105 ir centr\u0105"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "certificate_verify_failed": "Nepavyko prisijungti prie pagrindinio kompiuterio, nepavyko patikrinti sertifikato.",
+            "developer_mode_disabled": "K\u016br\u0117jo re\u017eimas i\u0161jungtas. Pirmiausia suaktyvinkite \u201eSomfy TaHoma\u201c d\u0117\u017eut\u0117s k\u016br\u0117jo re\u017eim\u0105.",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "no_such_token": "Negalima sukurti \u0161io prieigos vart\u0173 prieigos rakto. Patvirtinkite, ar paskyra susieta su \u0161iais prieigos vartais.",
+            "server_in_maintenance": "Serveris neveikia d\u0117l technin\u0117s prie\u017ei\u016bros",
+            "too_many_attempts": "Per daug bandym\u0173 naudojant netinkam\u0105 prieigos rakt\u0105, laikinai u\u017edrausta",
+            "too_many_requests": "Per daug u\u017eklaus\u0173, v\u0117liau bandykite dar kart\u0105",
+            "unknown": "Netik\u0117ta klaida",
+            "unsupported_hardware": "\u0160i integracija nepalaiko j\u016bs\u0173 {unsupported_device} technin\u0117s \u012frangos."
+        },
+        "flow_title": "Vartai: {gateway_id}",
+        "step": {
+            "cloud": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas"
+                },
+                "data_description": {
+                    "password": "J\u016bs\u0173 debesies paskyros (program\u0117l\u0117s) slapta\u017eodis.",
+                    "username": "J\u016bs\u0173 debesies paskyros (program\u0117l\u0117s) naudotojo vardas."
+                },
+                "description": "\u012eveskite savo programos kredencialus."
+            },
+            "local": {
+                "data": {
+                    "host": "Host",
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas",
+                    "verify_ssl": "Patikrinkite SSL sertifikat\u0105"
+                },
+                "data_description": {
+                    "host": "\u201eOverkiz\u201c centro pagrindinio kompiuterio pavadinimas arba IP adresas.",
+                    "password": "J\u016bs\u0173 debesies paskyros (program\u0117l\u0117s) slapta\u017eodis.",
+                    "username": "J\u016bs\u0173 debesies paskyros (program\u0117l\u0117s) naudotojo vardas.",
+                    "verify_ssl": "Patikrinkite SSL sertifikat\u0105. Pasirinkite tai tik tuo atveju, jei jungiat\u0117s naudodami pagrindinio kompiuterio pavadinim\u0105."
+                },
+                "description": "Suaktyvin\u0119 [\u201eTaHoma\u201c d\u0117\u017eut\u0117s k\u016br\u0117jo re\u017eim\u0105](https://github.com/Somfy-Developer/Somfy-TaHoma-Developer-Mode#getting-started), galite \u012fgalioti tre\u010diosios \u0161alies programin\u0119 \u012frang\u0105 (pvz., \u201eHome Assistant\u201c) prisijungti prie jo per vietin\u012f tinkl\u0105. \n \n Suaktyvin\u0119 \u012fveskite programos kredencialus ir pakeiskite pagrindin\u012f kompiuter\u012f, kad \u012ftrauktum\u0117te \u0161liuzo PIN kod\u0105 arba \u012fveskite \u0161liuzo IP adres\u0105."
+            },
+            "local_or_cloud": {
+                "data": {
+                    "api_type": "API tipas"
+                },
+                "data_description": {
+                    "api_type": "Vietin\u0119 API palaiko tik \u201eTaHoma Connexoon\u201c, \u201eTaHoma v2\u201c ir \u201eTaHoma Switch\u201c. Klimato \u012frenginiai ir scenarijai **ne** pasiekiami per vietin\u0119 API."
+                },
+                "description": "Pasirinkite, kaip norite prisijungti prie \u0161liuzo."
+            },
+            "user": {
+                "data": {
+                    "hub": "Serveris"
+                },
+                "data_description": {
+                    "hub": "Pasirinkite program\u0105 mobiliesiems, kuri\u0105 naudojate savo \u012frenginiams valdyti."
+                },
+                "description": "Pasirinkite savo server\u012f. Overkiz platform\u0105 naudoja \u012fvair\u016bs pardav\u0117jai, tokie kaip Somfy (Connexoon / TaHoma), Hitachi (Hi Kumo) ir Atlantic (Cozytouch)."
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "overkiz": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "away": "I\u0161vyk\u0119s",
+                            "bypass_boost": "Ap\u0117jimo padidinimas",
+                            "home_boost": "Nam\u0173 didinimas",
+                            "kitchen_boost": "Virtuv\u0117s padidinimas"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "auto": "Automatinis",
+                            "comfort-1": "Komfortas 1",
+                            "comfort-2": "Komfortas 2",
+                            "drying": "D\u017eiovinimas",
+                            "external": "I\u0161orinis",
+                            "freeze": "U\u017e\u0161aldyti",
+                            "frost_protection": "Apsauga nuo u\u017e\u0161alimo",
+                            "manual": "Rankinis",
+                            "night": "Naktis",
+                            "prog": "Prog"
+                        }
+                    }
+                }
+            }
+        },
+        "select": {
+            "memorized_simple_volume": {
+                "state": {
+                    "highest": "Auk\u0161\u010diausias",
+                    "standard": "Standartinis"
+                }
+            },
+            "open_closed_partial": {
+                "state": {
+                    "closed": "U\u017edaryta",
+                    "open": "Atidaryta",
+                    "partial": "Dalinis"
+                }
+            },
+            "open_closed_pedestrian": {
+                "state": {
+                    "closed": "U\u017edaryta",
+                    "open": "Atidaryta",
+                    "pedestrian": "P\u0117s\u010di\u0173j\u0173"
+                }
+            }
+        },
+        "sensor": {
+            "battery": {
+                "state": {
+                    "full": "Pilnas",
+                    "low": "\u017demas",
+                    "medium": "Vidutinis",
+                    "normal": "Normalus",
+                    "verylow": "Labai \u017eemas"
+                }
+            },
+            "discrete_rssi_level": {
+                "state": {
+                    "good": "Geras",
+                    "low": "\u017demas",
+                    "normal": "Normalus",
+                    "verylow": "Labai \u017eemas"
+                }
+            },
+            "priority_lock_originator": {
+                "state": {
+                    "external_gateway": "I\u0161oriniai vartai",
+                    "local_user": "Vietinis vartotojas",
+                    "lsc": "LSC",
+                    "myself": "A\u0161 pats",
+                    "rain": "Lietus",
+                    "saac": "SAAC",
+                    "security": "Saugumas",
+                    "sfc": "SFC",
+                    "temperature": "Temperat\u016bra",
+                    "timer": "Laikmatis",
+                    "ups": "UPS",
+                    "user": "Vartotojas",
+                    "wind": "V\u0117jas"
+                }
+            },
+            "sensor_defect": {
+                "state": {
+                    "dead": "Negyvas",
+                    "low_battery": "Senka baterija",
+                    "maintenance_required": "Reikalinga prie\u017ei\u016bra",
+                    "no_defect": "Jokio defekto"
+                }
+            },
+            "sensor_room": {
+                "state": {
+                    "clean": "\u0160varus",
+                    "dirty": "Purvinas"
+                }
+            },
+            "three_way_handle_direction": {
+                "state": {
+                    "closed": "U\u017edaryta",
+                    "open": "Atidaryta",
+                    "tilt": "Pakreipti"
+                }
+            }
+        }
+    }
+}

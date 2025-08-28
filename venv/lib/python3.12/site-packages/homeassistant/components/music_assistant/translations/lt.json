@@ -1,0 +1,235 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "already_in_progress": "Konfig\u016bracijos procesas jau vyksta",
+            "cannot_connect": "Nepavyko prisijungti",
+            "reconfiguration_successful": "\u201eMusic Assistant\u201c integracija s\u0117kmingai sukonfig\u016bruota.",
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_server_version": "\u201eMusic Assistant\u201c serverio versija n\u0117ra tinkama",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Ar norite prid\u0117ti \u201eMusic Assistant\u201c server\u012f \u201e{url}\u201c prie \u201eHome Assistant\u201c?",
+                "title": "Atrado \u201eMusic Assistant\u201c server\u012f"
+            },
+            "init": {
+                "data": {
+                    "url": "\u201eMusic Assistant\u201c serverio URL"
+                }
+            },
+            "manual": {
+                "data": {
+                    "url": "\u201eMusic Assistant\u201c serverio URL"
+                },
+                "description": "\u012eveskite jau veikian\u010dio \u201eMusic Assistant Server\u201c URL. Jei neveikia \u201eMusic Assistant\u201c serveris, pirmiausia tur\u0117tum\u0117te j\u012f \u012fdiegti.",
+                "title": "Rankiniu b\u016bdu prid\u0117ti muzikos pagalbin\u012f server\u012f"
+            }
+        }
+    },
+    "issues": {
+        "invalid_server_version": {
+            "description": "Patikrinkite, ar yra \u201eMusic Assistant Server\u201c ir (arba) integracijos naujinim\u0173.",
+            "title": "\u201eMusic Assistant\u201c serverio versija n\u0117ra tinkama"
+        }
+    },
+    "selector": {
+        "album_type": {
+            "options": {
+                "album": "Albumas",
+                "compilation": "Kompiliacija",
+                "ep": "EP",
+                "single": "Vienas",
+                "unknown": "Ne\u017einoma"
+            }
+        },
+        "enqueue": {
+            "options": {
+                "add": "Prid\u0117ti \u012f eil\u0119",
+                "next": "Groti toliau",
+                "play": "Groti",
+                "replace": "Groti dabar ir i\u0161valykite eil\u0119",
+                "replace_next": "Groti kit\u0105 ir i\u0161valyti eil\u0119"
+            }
+        },
+        "media_type": {
+            "options": {
+                "album": "Albumas",
+                "artist": "Atlik\u0117jas",
+                "playlist": "Grojara\u0161tis",
+                "radio": "Radijas",
+                "track": "Trasa"
+            }
+        },
+        "order_by": {
+            "options": {
+                "artist_name": "Atlik\u0117jo vardas",
+                "artist_name_desc": "Atlik\u0117jo vardas (ma\u017e\u0117ja)",
+                "last_played": "Paskutin\u012f kart\u0105 leista",
+                "last_played_desc": "Paskutin\u012f kart\u0105 leista (ma\u017e\u0117ja)",
+                "name": "Pavadinimas",
+                "name_desc": "Pavadinimas (ma\u017e\u0117jimas)",
+                "play_count": "Paleidim\u0173 skai\u010dius",
+                "play_count_desc": "Paleidim\u0173 skai\u010dius (ma\u017e\u0117ja)",
+                "position": "Pozicija",
+                "position_desc": "Pozicija (ma\u017e\u0117jimas)",
+                "random": "Atsitiktinis",
+                "random_play_count": "Atsitiktinis + ma\u017eiausiai leid\u017eiamas",
+                "sort_name": "R\u016b\u0161iuoti pavadinim\u0105",
+                "sort_name_desc": "R\u016b\u0161iuoti pavadinim\u0105 (ma\u017e\u0117jantis)",
+                "timestamp_added": "Prid\u0117ta",
+                "timestamp_added_desc": "Prid\u0117ta (ma\u017e\u0117ja)",
+                "year": "Metai",
+                "year_desc": "Metai (ma\u017e\u0117jimas)"
+            }
+        }
+    },
+    "services": {
+        "get_library": {
+            "description": "Gaukite elementus i\u0161 \u201eMusic Assistant\u201c bibliotekos.",
+            "fields": {
+                "album_artists_only": {
+                    "description": "Albumo atlik\u0117jus gr\u0105\u017einkite tik \u012ftraukdami \u012f s\u0105ra\u0161\u0105 Atlik\u0117j\u0173 bibliotekos elementus.",
+                    "name": "\u012egalinti albumo atlik\u0117j\u0173 filtr\u0105 (tik atlik\u0117j\u0173 bibliotekai)"
+                },
+                "album_type": {
+                    "description": "Filtruoti albumus pagal tip\u0105.",
+                    "name": "Albumo tipo filtras (tik album\u0173 bibliotekoje)"
+                },
+                "config_entry_id": {
+                    "description": "Pasirinkite Music Assistant egzempliori\u0173, kuriame norite atlikti paie\u0161k\u0105.",
+                    "name": "Muzikos asistento pavyzdys"
+                },
+                "favorite": {
+                    "description": "Filtruokite elementus, kad b\u016bt\u0173 gr\u0105\u017einami tik m\u0117gstamiausi elementai.",
+                    "name": "Tik m\u0117gstamiausi"
+                },
+                "limit": {
+                    "description": "Maksimalus gr\u0105\u017eintin\u0173 preki\u0173 skai\u010dius.",
+                    "name": "Apribojimas"
+                },
+                "media_type": {
+                    "description": "Medijos tipas, d\u0117l kurio reikia pra\u0161yti i\u0161samios informacijos.",
+                    "name": "Medijos tipas"
+                },
+                "offset": {
+                    "description": "Poslinkis, nuo kurio pradedamas s\u0105ra\u0161as.",
+                    "name": "U\u017eskaita"
+                },
+                "order_by": {
+                    "description": "R\u016b\u0161iuoti s\u0105ra\u0161\u0105 pagal \u0161\u012f lauk\u0105.",
+                    "name": "U\u017esakyti pagal"
+                },
+                "search": {
+                    "description": "Pasirenkama paie\u0161kos eilut\u0117, norint ie\u0161koti \u0161ioje bibliotekoje.",
+                    "name": "Ie\u0161koti"
+                }
+            },
+            "name": "Gaukite bibliotekos elementus"
+        },
+        "get_queue": {
+            "description": "Gaukite i\u0161sami\u0105 informacij\u0105 apie \u0161iuo metu aktyvi\u0105 \u201eMusic Assistant\u201c grotuvo eil\u0119.",
+            "name": "Gaukite i\u0161sami\u0105 \u017eaid\u0117jo eil\u0117s informacij\u0105 (i\u0161pl\u0117stin\u0117)"
+        },
+        "play_announcement": {
+            "description": "Leiskite prane\u0161imus \u201eMusic Assistant\u201c grotuve su smulkesn\u0117mis valdymo parinktimis.",
+            "fields": {
+                "announce_volume": {
+                    "description": "Skelbimui naudokite priverstin\u012f garsumo lyg\u012f. Nenaudokite grotuvo numatytojo.",
+                    "name": "Paskelbkite garsum\u0105"
+                },
+                "url": {
+                    "description": "URL \u012f prane\u0161imo gars\u0105.",
+                    "name": "URL"
+                },
+                "use_pre_announce": {
+                    "description": "Skelbimui naudokite i\u0161ankstinio prane\u0161imo gars\u0105. Nenaudokite numatyt\u0173j\u0173 grotuvo.",
+                    "name": "Naudokite i\u0161ankstin\u012f prane\u0161im\u0105"
+                }
+            },
+            "name": "Leisti i\u0161 anksto nustatyt\u0105"
+        },
+        "play_media": {
+            "description": "Leiskite medij\u0105 naudodami \u201eMusic Assistant\u201c grotuv\u0105 su smulkesn\u0117mis valdymo parinktimis.",
+            "fields": {
+                "album": {
+                    "description": "Nurodydami takel\u012f pagal pavadinim\u0105 lauke Media ID, galite pasirinktinai apriboti rezultatus pagal \u0161\u012f albumo pavadinim\u0105.",
+                    "name": "Albumo pavadinimas"
+                },
+                "artist": {
+                    "description": "Nurodydami takel\u012f ar album\u0105 pagal pavadinim\u0105 lauke Medijos ID, galite pasirinktinai apriboti rezultatus pagal \u0161\u012f atlik\u0117jo pavadinim\u0105.",
+                    "name": "Atlik\u0117jo vardas"
+                },
+                "enqueue": {
+                    "description": "Jei turinys tur\u0117t\u0173 b\u016bti paleistas dabar arba \u012ftrauktas \u012f eil\u0119.",
+                    "name": "Eil\u0117"
+                },
+                "media_id": {
+                    "description": "URI arba elemento, kur\u012f norite \u017eaisti, pavadinimas. Nurodykite s\u0105ra\u0161\u0105, jei norite paleisti / sud\u0117ti \u012f eil\u0119 kelis elementus.",
+                    "name": "Medijos ID"
+                },
+                "media_type": {
+                    "description": "Leid\u017eiamo turinio tipas. Pavyzd\u017eiui, atlik\u0117jas, albumas, takelis ar grojara\u0161tis. Bus automati\u0161kai nustatyta, jei praleista.",
+                    "name": "Medijos tipas"
+                },
+                "radio_mode": {
+                    "description": "\u012egalinkite radijo re\u017eim\u0105, kad pagal pasirinkim\u0105 b\u016bt\u0173 automati\u0161kai generuojamas grojara\u0161tis.",
+                    "name": "\u012ejungti radijo re\u017eim\u0105"
+                }
+            },
+            "name": "Leisti medij\u0105"
+        },
+        "search": {
+            "description": "Atlikite visuotin\u0119 paie\u0161k\u0105 \u201eMusic Assistant\u201c bibliotekoje ir visuose teik\u0117juose.",
+            "fields": {
+                "album": {
+                    "description": "Nurodydami takelio pavadinim\u0105 pavadinimo lauke, galite pasirinktinai apriboti rezultatus pagal \u0161\u012f albumo pavadinim\u0105.",
+                    "name": "Albumo pavadinimas"
+                },
+                "artist": {
+                    "description": "Vardo lauke nurodydami takelio arba albumo pavadinim\u0105, galite pasirinktinai apriboti rezultatus pagal \u0161\u012f atlik\u0117jo pavadinim\u0105.",
+                    "name": "Atlik\u0117jo vardas"
+                },
+                "config_entry_id": {
+                    "description": "Pasirinkite Music Assistant egzempliori\u0173, kuriame norite atlikti paie\u0161k\u0105.",
+                    "name": "Muzikos asistento pavyzdys"
+                },
+                "library_only": {
+                    "description": "\u012etraukite tik tuos rezultatus, kurie yra bibliotekoje.",
+                    "name": "Tik bibliotekos daiktai"
+                },
+                "limit": {
+                    "description": "Maksimalus gr\u0105\u017eintin\u0173 element\u0173 skai\u010dius (kiekvienam laikmenos tipui).",
+                    "name": "Riba"
+                },
+                "media_type": {
+                    "description": "Ie\u0161komo turinio tipas. Pavyzd\u017eiui, atlik\u0117jas, albumas, takelis, radijas ar grojara\u0161tis. Visi tipai, jei praleista.",
+                    "name": "Medijos tipas (-ai)"
+                },
+                "name": {
+                    "description": "Vardas / pavadinimas, kurio reikia ie\u0161koti.",
+                    "name": "Paie\u0161kos pavadinimas"
+                }
+            },
+            "name": "Ie\u0161kokite muzikos asistento"
+        },
+        "transfer_queue": {
+            "description": "Perkelkite grotuvo eil\u0119 kitam grotuvui.",
+            "fields": {
+                "auto_play": {
+                    "description": "Prad\u0117kite \u017eaisti eil\u0119 tiksliniame grotuve. Nenaudokite numatytosios elgsenos.",
+                    "name": "Automatinis paleidimas"
+                },
+                "source_player": {
+                    "description": "\u0160altinio medijos grotuvas, kuriame yra norima perkelti eil\u0117. Jei nepateikiama, bus naudojamas pirmas grojantis grotuvas.",
+                    "name": "\u0160altinio medijos grotuvas"
+                }
+            },
+            "name": "Perdavimo eil\u0117"
+        }
+    }
+}

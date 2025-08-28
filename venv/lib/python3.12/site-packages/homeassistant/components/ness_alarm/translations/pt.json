@@ -1,0 +1,28 @@
+{
+    "services": {
+        "aux": {
+            "description": "Acionar uma sa\u00edda auxiliar.",
+            "fields": {
+                "output_id": {
+                    "description": "A sa\u00edda auxiliar que pretende alterar.",
+                    "name": "ID de sa\u00edda"
+                },
+                "state": {
+                    "description": "O estado ligado/desligado. Se P14xE 8E estiver ativado, ent\u00e3o um valor de verdadeiro far\u00e1 pulsar a sa\u00edda x durante o tempo especificado em P14(x+4)E.",
+                    "name": "Estado"
+                }
+            },
+            "name": "Aux"
+        },
+        "panic": {
+            "description": "Desencadeia o p\u00e2nico.",
+            "fields": {
+                "code": {
+                    "description": "O c\u00f3digo de utilizador a utilizar para desencadear o p\u00e2nico.",
+                    "name": "C\u00f3digo"
+                }
+            },
+            "name": "P\u00e2nico"
+        }
+    }
+}

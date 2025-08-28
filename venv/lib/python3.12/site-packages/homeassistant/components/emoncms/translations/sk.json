@@ -1,0 +1,99 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Tento server je u\u017e nakonfigurovan\u00fd"
+        },
+        "error": {
+            "api_error": "V rozhran\u00ed API pyemoncms sa vyskytla chyba: {details}"
+        },
+        "step": {
+            "choose_feeds": {
+                "data": {
+                    "include_only_feed_id": "Vyberte si kan\u00e1ly, ktor\u00e9 chcete zahrn\u00fa\u0165"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API k\u013e\u00fa\u010d",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "V\u00e1\u0161 32-bitov\u00fd k\u013e\u00fa\u010d API",
+                    "url": "Adresa URL servera za\u010d\u00ednaj\u00faca protokolom (http alebo https)"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "apparent_power": {
+                "name": "Zdanliv\u00fd v\u00fdkon {emoncms_details}"
+            },
+            "concentration": {
+                "name": "Koncentr\u00e1cia {emoncms_details}"
+            },
+            "current": {
+                "name": "Pr\u00fad {emoncms_details}"
+            },
+            "decibel": {
+                "name": "Decibel {emoncms_details}"
+            },
+            "energy": {
+                "name": "Energia {emoncms_details}"
+            },
+            "flow": {
+                "name": "Prietok {emoncms_details}"
+            },
+            "frequency": {
+                "name": "Frekvencia {emoncms_details}"
+            },
+            "percent": {
+                "name": "Percento {emoncms_details}"
+            },
+            "power": {
+                "name": "V\u00fdkon {emoncms_details}"
+            },
+            "pressure": {
+                "name": "Tlak {emoncms_details}"
+            },
+            "speed": {
+                "name": "R\u00fdchlos\u0165 {emoncms_details}"
+            },
+            "temperature": {
+                "name": "Teplota {emoncms_details}"
+            },
+            "voltage": {
+                "name": "Nap\u00e4tie {emoncms_details}"
+            },
+            "volume": {
+                "name": "Objem {emoncms_details}"
+            }
+        }
+    },
+    "issues": {
+        "migrate_database": {
+            "description": "V\u00e1\u0161 [emoncms]({url}) nem\u00e1 jedine\u010dn\u00fd identifik\u00e1tor.\n\nPros\u00edm, aktualizujte na verziu aspo\u0148 11.5.7 a migrujte svoju datab\u00e1zu emoncms.\n\nViac inform\u00e1ci\u00ed n\u00e1jdete v [dokument\u00e1cii emoncms]({doc_url})",
+            "title": "Aktualiz\u00e1cia verzie emoncms"
+        },
+        "missing_include_only_feed_id": {
+            "description": "Konfigur\u00e1cia str\u00e1nky {domain} pomocou jazyka YAML sa odstra\u0148uje.\n\nPros\u00edm, pridajte ru\u010dne kan\u00e1ly, ktor\u00e9 chcete synchronizova\u0165 pomocou tla\u010didla `konfigurova\u0165` integr\u00e1cie.",
+            "title": "\u017diadny zdroj synchronizovan\u00fd s {domain} sn\u00edma\u010dom"
+        },
+        "remove_value_template": {
+            "description": "Konfigur\u00e1cia {domain} pomocou YAML je odstr\u00e1nen\u00e1 a parameter `{parameter}` nie je mo\u017en\u00e9 importova\u0165.\n\nOdstr\u00e1\u0148te pros\u00edm `{parameter}` z konfigur\u00e1cie `{domain}` yaml a re\u0161tartujte Home Assistant\n\nPr\u00edpadne m\u00f4\u017eete \u00faplne odstr\u00e1ni\u0165 konfigur\u00e1ciu `{domain}` zo svojho konfigura\u010dn\u00e9ho s\u00faboru configuration.yaml, re\u0161tartova\u0165 aplik\u00e1ciu Home Assistant a prida\u0165 integr\u00e1ciu {domain} ru\u010dne.",
+            "title": "Integr\u00e1cia str\u00e1nky {domain} sa nem\u00f4\u017ee spusti\u0165"
+        }
+    },
+    "options": {
+        "error": {
+            "api_error": "V rozhran\u00ed API pyemoncms sa vyskytla chyba: {details}"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "include_only_feed_id": "Vyberte si kan\u00e1ly, ktor\u00e9 chcete zahrn\u00fa\u0165"
+                }
+            }
+        }
+    }
+}

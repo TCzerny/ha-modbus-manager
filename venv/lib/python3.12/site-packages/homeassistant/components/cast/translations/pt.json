@@ -1,0 +1,61 @@
+{
+    "config": {
+        "error": {
+            "invalid_known_hosts": "Os anfitri\u00f5es conhecidos t\u00eam de ser uma lista de anfitri\u00f5es separada por v\u00edrgulas."
+        },
+        "step": {
+            "config": {
+                "data": {
+                    "known_hosts": "Anfitri\u00f5es conhecidos"
+                },
+                "description": "Anfitri\u00f5es conhecidos - Uma lista separada por v\u00edrgulas de nomes de anfitri\u00f5es ou endere\u00e7os IP de dispositivos de transmiss\u00e3o, utilizada se a descoberta mDNS n\u00e3o estiver a funcionar.",
+                "title": "Configura\u00e7\u00e3o do Google Cast"
+            },
+            "confirm": {
+                "description": "Quer dar in\u00edcio \u00e0 configura\u00e7\u00e3o?"
+            }
+        }
+    },
+    "options": {
+        "error": {
+            "invalid_known_hosts": "Os anfitri\u00f5es conhecidos t\u00eam de ser uma lista de anfitri\u00f5es separada por v\u00edrgulas."
+        },
+        "step": {
+            "advanced_options": {
+                "data": {
+                    "ignore_cec": "Ignorar CEC",
+                    "uuid": "UUIDs permitidos"
+                },
+                "description": "UUIDs permitidos - Uma lista separada por v\u00edrgulas de UUIDs de dispositivos Cast para adicionar ao Home Assistant. Use apenas se n\u00e3o quiser adicionar todos os dispositivos de transmiss\u00e3o dispon\u00edveis.\n Ignorar CEC - Uma lista separada por v\u00edrgulas de Chromecasts que devem ignorar dados CEC para determinar a entrada ativa. Isso ser\u00e1 passado para pychromecast.IGNORE_CEC.",
+                "title": "Configura\u00e7\u00e3o avan\u00e7ada do Google Cast"
+            },
+            "basic_options": {
+                "data": {
+                    "known_hosts": "Anfitri\u00f5es conhecidos"
+                },
+                "description": "Anfitri\u00f5es conhecidos - Uma lista separada por v\u00edrgulas de nomes de anfitri\u00f5es ou endere\u00e7os IP de dispositivos de transmiss\u00e3o, utilizada se a descoberta mDNS n\u00e3o estiver a funcionar.",
+                "title": "Configura\u00e7\u00e3o do Google Cast"
+            }
+        }
+    },
+    "services": {
+        "show_lovelace_view": {
+            "description": "Mostra uma vista de painel de controlo num dispositivo Chromecast.",
+            "fields": {
+                "dashboard_path": {
+                    "description": "O caminho URL do painel de controlo a mostrar.",
+                    "name": "Caminho do painel de controlo"
+                },
+                "entity_id": {
+                    "description": "Entidade do leitor multim\u00e9dia para mostrar a vista do painel.",
+                    "name": "Entidade"
+                },
+                "view_path": {
+                    "description": "O caminho URL da vista do painel a mostrar.",
+                    "name": "Ver caminho"
+                }
+            },
+            "name": "Mostrar a vista do painel de controlo"
+        }
+    }
+}

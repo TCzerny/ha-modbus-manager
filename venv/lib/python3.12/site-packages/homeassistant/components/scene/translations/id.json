@@ -1,0 +1,52 @@
+{
+    "exceptions": {
+        "entity_not_dynamically_created": {
+            "message": "Skenario {entity_id} tidak dibuat dengan layanan aksi `scene.create`."
+        }
+    },
+    "services": {
+        "apply": {
+            "description": "Mengaktifkan skenario dengan konfigurasi.",
+            "fields": {
+                "entities": {
+                    "description": "Daftar entitas dan status targetnya.",
+                    "name": "Status entitas"
+                },
+                "transition": {
+                    "description": "Waktu yang diperlukan perangkat untuk bertransisi ke status yang ditentukan dalam skenario.",
+                    "name": "Transisi"
+                }
+            },
+            "name": "Terapkan"
+        },
+        "create": {
+            "description": "Membuat skenario baru",
+            "fields": {
+                "scene_id": {
+                    "description": "ID entitas dari skenario baru.",
+                    "name": "ID entitas skenario"
+                }
+            },
+            "name": "Buat"
+        },
+        "delete": {
+            "description": "Menghapus skenario yang dibuat secara dinamis.",
+            "name": "Hapus"
+        },
+        "reload": {
+            "description": "Memuat ulang skenario dari konfigurasi YAML.",
+            "name": "Muat Ulang"
+        },
+        "turn_on": {
+            "description": "Mengaktifkan skenario",
+            "fields": {
+                "transition": {
+                    "description": "Waktu yang diperlukan perangkat untuk bertransisi ke status yang ditentukan dalam skenario.",
+                    "name": "Transisi"
+                }
+            },
+            "name": "Aktifkan"
+        }
+    },
+    "title": "Skenario"
+}

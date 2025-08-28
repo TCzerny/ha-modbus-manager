@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Se volvi\u00f3 a configurar correctamente"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "no_data": "API conectada pero la respuesta estaba vac\u00eda"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "\u00c1reas",
+                    "currency": "Moneda"
+                },
+                "data_description": {
+                    "areas": "\u00c1reas para mostrar precios seg\u00fan las \u00e1reas de mercado de Nordpool.",
+                    "currency": "Selecciona la moneda en la que quieres mostrar los precios, EUR es la moneda base."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "\u00c1reas",
+                    "currency": "Moneda"
+                },
+                "data_description": {
+                    "areas": "\u00c1reas para mostrar precios seg\u00fan las \u00e1reas de mercado de Nordpool.",
+                    "currency": "Selecciona la moneda en la que quieres mostrar los precios, EUR es la moneda base."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "Promedio de {block}"
+            },
+            "block_end_time": {
+                "name": "Hora final de {block}"
+            },
+            "block_max": {
+                "name": "Precio m\u00e1s alto de {block}"
+            },
+            "block_min": {
+                "name": "Menor precio de {block}"
+            },
+            "block_start_time": {
+                "name": "Hora inicial de {block}"
+            },
+            "currency": {
+                "name": "Moneda"
+            },
+            "current_price": {
+                "name": "Precio actual"
+            },
+            "daily_average": {
+                "name": "Media diaria"
+            },
+            "exchange_rate": {
+                "name": "Tipo de cambio"
+            },
+            "highest_price": {
+                "name": "Precio m\u00e1s alto",
+                "state_attributes": {
+                    "end": {
+                        "name": "Hora de finalizaci\u00f3n"
+                    },
+                    "start": {
+                        "name": "Hora de inicio"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "Precio anterior"
+            },
+            "lowest_price": {
+                "name": "Precio m\u00e1s bajo",
+                "state_attributes": {
+                    "end": {
+                        "name": "Hora de finalizaci\u00f3n"
+                    },
+                    "start": {
+                        "name": "Hora de inicio"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "Pr\u00f3ximo precio"
+            },
+            "updated_at": {
+                "name": "\u00daltima actualizaci\u00f3n"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Se produjo un error de autenticaci\u00f3n porque intentaste recuperar datos demasiado antiguos."
+        },
+        "connection_error": {
+            "message": "Se produjo un error de conexi\u00f3n al conectarse a la API. Int\u00e9ntalo de nuevo m\u00e1s tarde."
+        },
+        "empty_response": {
+            "message": "Nord Pool no ha publicado los precios de mercado para la fecha proporcionada."
+        },
+        "entry_not_found": {
+            "message": "La integraci\u00f3n de Nord Pool no est\u00e1 configurada en Home Assistant."
+        },
+        "entry_not_loaded": {
+            "message": "La integraci\u00f3n de Nord Pool actualmente no est\u00e1 cargada o est\u00e1 deshabilitada en Home Assistant."
+        },
+        "initial_update_failed": {
+            "message": "La actualizaci\u00f3n inicial fall\u00f3 al iniciarse con el error {error}"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "Recuperar los precios para una fecha espec\u00edfica.",
+            "fields": {
+                "areas": {
+                    "description": "Una o varias \u00e1reas para obtener precios. Si se deja vac\u00edo, se utilizar\u00e1n las \u00e1reas ya configuradas.",
+                    "name": "\u00c1reas"
+                },
+                "config_entry": {
+                    "description": "Selecciona la entrada de configuraci\u00f3n.",
+                    "name": "Selecciona la entrada de configuraci\u00f3n Nord Pool"
+                },
+                "currency": {
+                    "description": "Moneda en la que se obtendr\u00e1n los precios. Si se deja vac\u00edo, se utilizar\u00e1 la moneda ya configurada.",
+                    "name": "Moneda"
+                },
+                "date": {
+                    "description": "S\u00f3lo se permiten fechas de dos meses en el pasado y un d\u00eda en el futuro.",
+                    "name": "Fecha"
+                }
+            },
+            "name": "Obtener precios por fecha"
+        }
+    }
+}

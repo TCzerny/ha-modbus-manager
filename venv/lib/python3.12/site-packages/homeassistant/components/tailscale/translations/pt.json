@@ -1,0 +1,66 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "api_key": "Chave da API"
+                },
+                "description": "Os tokens de acesso \u00e0 API do Tailscale s\u00e3o v\u00e1lidos por 90 dias. Pode criar um novo token de acesso \u00e0 API Tailscale em {authkeys_url}."
+            },
+            "user": {
+                "data": {
+                    "api_key": "Chave da API",
+                    "tailnet": "Tailnet"
+                },
+                "description": "Esta integra\u00e7\u00e3o monitoriza a sua rede Tailscale, mas **N\u00c3O** torna o seu Home Assistant acess\u00edvel atrav\u00e9s do Tailscale VPN. \n\nPara se autenticar com o Tailscale, ter\u00e1 de criar um token de acesso \u00e0 API em {authkeys_url}.\n\nUm Tailnet \u00e9 o nome da sua rede Tailscale. Pode encontr\u00e1-lo no canto superior esquerdo do Painel de Administra\u00e7\u00e3o do Tailscale (ao lado do log\u00f3tipo Tailscale)."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "client": {
+                "name": "Cliente"
+            },
+            "client_supports_hair_pinning": {
+                "name": "Suporta hairpinning"
+            },
+            "client_supports_ipv6": {
+                "name": "Suporta IPv6"
+            },
+            "client_supports_pcp": {
+                "name": "Suporta PCP"
+            },
+            "client_supports_pmp": {
+                "name": "Suporta NAT-PMP"
+            },
+            "client_supports_udp": {
+                "name": "Suporta UDP"
+            },
+            "client_supports_upnp": {
+                "name": "Suporta UPnP"
+            },
+            "key_expiry_disabled": {
+                "name": "Expira\u00e7\u00e3o da chave desativada"
+            }
+        },
+        "sensor": {
+            "expires": {
+                "name": "Expira"
+            },
+            "ip": {
+                "name": "Endere\u00e7o IP"
+            },
+            "last_seen": {
+                "name": "Visto pela \u00faltima vez"
+            }
+        }
+    }
+}

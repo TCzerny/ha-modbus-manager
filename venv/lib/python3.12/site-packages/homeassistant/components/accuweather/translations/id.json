@@ -1,0 +1,174 @@
+{
+    "config": {
+        "create_entry": {
+            "default": "Beberapa sensor tidak diaktifkan secara default. Anda dapat mengaktifkannya di registri entitas setelah konfigurasi integrasi."
+        },
+        "error": {
+            "cannot_connect": "Gagal terhubung",
+            "invalid_api_key": "Kunci API tidak valid",
+            "requests_exceeded": "Jumlah permintaan yang diizinkan ke API Accuweather telah terlampaui. Anda harus menunggu atau mengubah Kunci API."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "Kunci API",
+                    "latitude": "Lintang",
+                    "longitude": "Bujur",
+                    "name": "Nama"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "air_quality": {
+                "state": {
+                    "good": "Baik",
+                    "hazardous": "Berbahaya",
+                    "high": "Tinggi",
+                    "low": "Rendah",
+                    "moderate": "Sedang",
+                    "unhealthy": "Tidak Sehat"
+                }
+            },
+            "apparent_temperature": {
+                "name": "Suhu yang tampak"
+            },
+            "cloud_ceiling": {
+                "name": "Ketinggian awan"
+            },
+            "cloud_cover": {
+                "name": "Tutupan awan"
+            },
+            "dew_point": {
+                "name": "Titik embun"
+            },
+            "grass_pollen": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Tingkat",
+                        "state": {
+                            "good": "Baik",
+                            "hazardous": "Berbahaya",
+                            "high": "Tinggi",
+                            "low": "Rendah",
+                            "moderate": "Sedang",
+                            "unhealthy": "Tidak Sehat"
+                        }
+                    }
+                }
+            },
+            "mold_pollen": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Tingkat",
+                        "state": {
+                            "good": "Baik",
+                            "hazardous": "Berbahaya",
+                            "high": "Tinggi",
+                            "low": "Rendah",
+                            "moderate": "Sedang",
+                            "unhealthy": "Tidak Sehat"
+                        }
+                    }
+                }
+            },
+            "precipitation": {
+                "name": "Curah hujan"
+            },
+            "pressure_tendency": {
+                "name": "Kecenderungan tekanan",
+                "state": {
+                    "falling": "Turun",
+                    "rising": "Naik",
+                    "steady": "Tetap"
+                }
+            },
+            "ragweed_pollen": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Tingkat",
+                        "state": {
+                            "good": "Baik",
+                            "hazardous": "Berbahaya",
+                            "high": "Tinggi",
+                            "low": "Rendah",
+                            "moderate": "Sedang",
+                            "unhealthy": "Tidak Sehat"
+                        }
+                    }
+                }
+            },
+            "realfeel_temperature": {
+                "name": "RealFeel suhu"
+            },
+            "realfeel_temperature_shade": {
+                "name": "RealFeel suhu teduh"
+            },
+            "tree_pollen": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Tingkat",
+                        "state": {
+                            "good": "Baik",
+                            "hazardous": "Berbahaya",
+                            "high": "Tinggi",
+                            "low": "Rendah",
+                            "moderate": "Sedang",
+                            "unhealthy": "Tidak Sehat"
+                        }
+                    }
+                }
+            },
+            "uv_index": {
+                "name": "Indeks UV",
+                "state_attributes": {
+                    "level": {
+                        "name": "[%key:component::accuweather::entity::sensor::grass_pollen_0d::state_attributes::level::name%]",
+                        "state": {
+                            "good": "Baik",
+                            "hazardous": "Berbahaya",
+                            "high": "Tinggi",
+                            "low": "Rendah",
+                            "moderate": "Sedang",
+                            "unhealthy": "Tidak Sehat"
+                        }
+                    }
+                }
+            },
+            "uv_index_forecast": {
+                "state_attributes": {
+                    "level": {
+                        "name": "Tingkat",
+                        "state": {
+                            "good": "Baik",
+                            "hazardous": "Berbahaya",
+                            "high": "Tinggi",
+                            "low": "Rendah",
+                            "moderate": "Sedang",
+                            "unhealthy": "Tidak Sehat"
+                        }
+                    }
+                }
+            },
+            "wet_bulb_temperature": {
+                "name": "Suhu bola basah"
+            },
+            "wind_chill_temperature": {
+                "name": "Suhu angin dingin"
+            },
+            "wind_gust_speed": {
+                "name": "Kecepatan gust angin"
+            },
+            "wind_speed": {
+                "name": "Kecepatan angin"
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "can_reach_server": "Keterjangkauan server AccuWeather",
+            "remaining_requests": "Sisa permintaan yang diizinkan"
+        }
+    }
+}

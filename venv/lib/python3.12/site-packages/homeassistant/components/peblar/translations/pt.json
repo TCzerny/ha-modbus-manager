@@ -1,0 +1,176 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "different_device": "A informa\u00e7\u00e3o inserida \u00e9 de um carregador Peblar EV diferente.",
+            "no_serial_number": "O dispositivo Peblar descoberto n\u00e3o forneceu um n\u00famero de s\u00e9rie.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "password": "A mesma palavra-passe que usa para iniciar sess\u00e3o na interface web local do carregador Peblar EV."
+                },
+                "description": "Reautentique-se com o seu carregador Peblar EV.\n\nPara isso, ter\u00e1 de introduzir a sua nova palavra-passe que utiliza para iniciar sess\u00e3o na interface web do carregador Peblar EV."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "host": "O nome de anfitri\u00e3o ou endere\u00e7o IP do seu carregador Peblar EV na sua rede dom\u00e9stica.",
+                    "password": "A mesma palavra-passe que usa para iniciar sess\u00e3o na interface web local do carregador Peblar EV."
+                },
+                "description": "Reconfigure o seu carregador Peblar EV.\n\nIsto permite-lhe alterar o endere\u00e7o IP do seu carregador Peblar EV e a palavra-passe que utiliza para iniciar sess\u00e3o na sua interface web."
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "host": "O nome de anfitri\u00e3o ou endere\u00e7o IP do seu carregador Peblar EV na sua rede dom\u00e9stica.",
+                    "password": "A mesma palavra-passe que usa para iniciar sess\u00e3o na interface web local do carregador Peblar EV."
+                },
+                "description": "Configurar o seu carregador Peblar EV para integrar com o Home Assistant.\n\nPara isso, precisar\u00e1 de obter o endere\u00e7o IP do seu carregador Peblar EV e a palavra-passe que usa para iniciar sess\u00e3o na interface web do carregador.\n\nO Home Assistant configurar\u00e1 automaticamente o seu carregador Peblar EV para uso com o Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "password": "A mesma palavra-passe que usa para iniciar sess\u00e3o na interface web local do carregador Peblar EV."
+                },
+                "description": "Configure o seu carregador Peblar EV {hostname}, no endere\u00e7o IP {host}, para integrar com o Home Assistant.\n\nPara isso, precisar\u00e1 da palavra-passe que usa para fazer login na interface web do carregador Peblar EV.\n\nO Home Assistant configurar\u00e1 automaticamente o seu carregador Peblar EV para uso com o Home Assistant."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Erros ativos"
+            },
+            "active_warning_codes": {
+                "name": "Avisos ativos"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "Limite de carregamento"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "Carregamento inteligente",
+                "state": {
+                    "default": "Predefini\u00e7\u00e3o",
+                    "fast_solar": "Solar r\u00e1pido",
+                    "pure_solar": "Solar puro",
+                    "scheduled": "Agendado",
+                    "smart_solar": "Solar inteligente"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Fonte de limite",
+                "state": {
+                    "charging_cable": "Cabo de carregamento",
+                    "current_limiter": "Limitador de corrente",
+                    "dynamic_load_balancing": "Balanceamento de carga din\u00e2mico",
+                    "external_power_limit": "Limite de pot\u00eancia externa",
+                    "group_load_balancing": "Balanceamento de carga em grupo",
+                    "hardware_limitation": "Limita\u00e7\u00e3o de hardware",
+                    "high_temperature": "Alta temperatura",
+                    "household_power_limit": "Limite de pot\u00eancia dom\u00e9stica",
+                    "installation_limit": "Limite de instala\u00e7\u00e3o",
+                    "local_modbus_api": "API Modbus",
+                    "local_rest_api": "REST API",
+                    "ocpp_smart_charging": "Carregamento inteligente OCPP",
+                    "overcurrent_protection": "Prote\u00e7\u00e3o de sobrecorrente",
+                    "phase_imbalance": "Desequil\u00edbrio de fase",
+                    "power_factor": "Fator de pot\u00eancia",
+                    "solar_charging": "Carregamento solar"
+                }
+            },
+            "cp_state": {
+                "name": "Estado",
+                "state": {
+                    "charging": "A carregar",
+                    "error": "Erro",
+                    "fault": "Falha",
+                    "invalid": "Inv\u00e1lido",
+                    "no_ev_connected": "Nenhum EV ligado",
+                    "suspended": "Suspenso"
+                }
+            },
+            "current_phase_1": {
+                "name": "Corrente fase 1"
+            },
+            "current_phase_2": {
+                "name": "Corrente fase 2"
+            },
+            "current_phase_3": {
+                "name": "Corrente fase 3"
+            },
+            "energy_session": {
+                "name": "Energia da sess\u00e3o"
+            },
+            "energy_total": {
+                "name": "Energia vital\u00edcia"
+            },
+            "power_phase_1": {
+                "name": "Pot\u00eancia fase 1"
+            },
+            "power_phase_2": {
+                "name": "Pot\u00eancia fase 2"
+            },
+            "power_phase_3": {
+                "name": "Pot\u00eancia fase 3"
+            },
+            "uptime": {
+                "name": "Tempo de atividade"
+            },
+            "voltage_phase_1": {
+                "name": "Tens\u00e3o fase 1"
+            },
+            "voltage_phase_2": {
+                "name": "Tens\u00e3o fase 2"
+            },
+            "voltage_phase_3": {
+                "name": "Tens\u00e3o fase 3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "For\u00e7ar fase \u00fanica"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "Personaliza\u00e7\u00e3o"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Ocorreu uma falha de autentica\u00e7\u00e3o ao comunicar com o carregador Peblar EV."
+        },
+        "communication_error": {
+            "message": "Ocorreu um erro ao comunicar com o carregador Peblar EV: {error}"
+        },
+        "unknown_error": {
+            "message": "Ocorreu um erro desconhecido ao comunicar com o carregador Peblar EV: {error}"
+        }
+    }
+}

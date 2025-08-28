@@ -1,0 +1,50 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "missing_internal_url": "Home Assistant'\u0131n ge\u00e7erli bir dahili URL'ye sahip oldu\u011fundan emin olun",
+            "missing_nasweb_data": "Cihaz\u0131n dahili yap\u0131land\u0131rmas\u0131nda bir sorun var. Cihaz\u0131 ve Home Assistant'\u0131 yeniden ba\u015flatmay\u0131 deneyin.",
+            "missing_status": "Beklenen zaman aral\u0131\u011f\u0131nda herhangi bir durum g\u00fcncellemesi al\u0131nmad\u0131. Home Assistant dahili URL'sinin NASweb cihaz\u0131ndan eri\u015filebilir oldu\u011fundan emin olun.",
+            "unknown": "Beklenmeyen hata"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Sunucu",
+                    "password": "\u015eifre",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "description": "{nasweb_schema_img} NASweb, bir kontrol panelinin i\u015flevlerini ve bina otomasyonunu y\u00f6netme yetene\u011fini birle\u015ftirir. Cihaz, sens\u00f6rlerden ve programlanabilir anahtarlardan gelen bilgi ak\u0131\u015f\u0131n\u0131 izler ve ayarlar\u0131, tan\u0131mlar\u0131 ve yap\u0131land\u0131r\u0131lm\u0131\u015f eylemleri depolar.",
+                "title": "NASweb cihaz\u0131 ekle"
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "switch_output": {
+                "name": "R\u00f6le Anahtar\u0131 {index}"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_error_internal_error": {
+            "message": "Cihaz\u0131n dahili yap\u0131land\u0131rmas\u0131nda bir sorun var. Cihaz\u0131 ve Home Assistant'\u0131 yeniden ba\u015flatmay\u0131 deneyin. Sorun devam ederse {support_email} adresinden destekle ileti\u015fime ge\u00e7in"
+        },
+        "config_entry_error_invalid_authentication": {
+            "message": "Ge\u00e7ersiz kullan\u0131c\u0131 ad\u0131/\u015fifre. B\u00fcy\u00fck olas\u0131l\u0131kla kullan\u0131c\u0131 \u015fifreyi de\u011fi\u015ftirmi\u015f veya kald\u0131r\u0131lm\u0131\u015ft\u0131r. Bu giri\u015fi silin ve do\u011fru kullan\u0131c\u0131 ad\u0131/\u015fifre ile yeni bir tane olu\u015fturun."
+        },
+        "config_entry_error_missing_internal_url": {
+            "message": "Home Assistant'\u0131n ge\u00e7erli bir dahili URL'ye sahip oldu\u011fundan emin olun"
+        },
+        "config_entry_error_no_status_update": {
+            "message": "Beklenen zaman aral\u0131\u011f\u0131nda herhangi bir durum g\u00fcncellemesi al\u0131nmad\u0131. Home Assistant dahili URL'sinin NASweb cihaz\u0131ndan eri\u015filebilir oldu\u011fundan emin olun. Sorun devam ederse {support_email} adresinden destek ekibiyle ileti\u015fime ge\u00e7in"
+        },
+        "serial_mismatch": {
+            "message": "Farkl\u0131 bir NASweb cihaz\u0131na ba\u011fland\u0131 (seri numaras\u0131 uyu\u015fmuyor)."
+        }
+    }
+}

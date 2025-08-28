@@ -1,0 +1,147 @@
+{
+    "config": {
+        "abort": {
+            "already_configured_device": "Enheten \u00e4r redan konfigurerad",
+            "api_error": "Fel vid kommunikation med SwitchBot API: {error_detail}",
+            "no_devices_found": "Inga SwitchBot-enheter som st\u00f6ds hittades inom r\u00e4ckh\u00e5ll; Om enheten \u00e4r inom r\u00e4ckh\u00e5ll, kontrollera att skannern har aktiv skanning aktiverad, eftersom SwitchBot-enheter inte kan uppt\u00e4ckas med passiva skanningar. Aktiv skanning kan inaktiveras n\u00e4r enheten har konfigurerats. Om du beh\u00f6ver f\u00e5 klarhet i om enheten \u00e4r inom r\u00e4ckvidd kan du ladda ner diagnostiken f\u00f6r den integration som tillhandah\u00e5ller din Bluetooth-adapter eller proxy och kontrollera om SwitchBot-enhetens MAC-adress finns med.",
+            "switchbot_unsupported_type": "Switchbot-typ som inte st\u00f6ds.",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "error": {
+            "auth_failed": "Autentisering misslyckades: {error_detail}",
+            "encryption_key_invalid": "Nyckel-id eller krypteringsnyckel \u00e4r ogiltig"
+        },
+        "flow_title": "{name} ({address})",
+        "step": {
+            "confirm": {
+                "description": "Vill du konfigurera {name}?"
+            },
+            "encrypted_auth": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "description": "Ange ditt anv\u00e4ndarnamn och l\u00f6senord f\u00f6r SwitchBot-appen. Dessa uppgifter sparas inte och anv\u00e4nds endast f\u00f6r att h\u00e4mta din enhets krypteringsnyckel. Anv\u00e4ndarnamn och l\u00f6senord \u00e4r skiftl\u00e4gesk\u00e4nsliga."
+            },
+            "encrypted_choose_method": {
+                "description": "En krypterad SwitchBot-enhet kan konfigureras i Home Assistant p\u00e5 tv\u00e5 olika s\u00e4tt.\n\nDu kan ange nyckel-ID och krypteringsnyckel sj\u00e4lv, eller s\u00e5 kan Home Assistant importera dem fr\u00e5n ditt SwitchBot-konto.",
+                "menu_options": {
+                    "encrypted_auth": "Switchbot-konto (rekommenderas)",
+                    "encrypted_key": "Ange krypteringsnyckeln manuellt"
+                }
+            },
+            "encrypted_key": {
+                "data": {
+                    "encryption_key": "Krypteringnyckel",
+                    "key_id": "Nyckel-ID"
+                },
+                "description": "{name}-enheten kr\u00e4ver krypteringsnyckel, information om hur du skaffar den finns i dokumentationen."
+            },
+            "password": {
+                "data": {
+                    "password": "L\u00f6senord"
+                },
+                "description": "{name} -enheten kr\u00e4ver ett l\u00f6senord"
+            },
+            "user": {
+                "data": {
+                    "address": "MAC-adress"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "calibration": {
+                "name": "Kalibrering"
+            },
+            "door_auto_lock_paused": {
+                "name": "Autol\u00e5sning pausad"
+            },
+            "door_timeout": {
+                "name": "Timeout"
+            },
+            "door_unclosed_alarm": {
+                "name": "Larm f\u00f6r \u00f6ppen d\u00f6rr"
+            },
+            "door_unlocked_alarm": {
+                "name": "Larm f\u00f6r ol\u00e5st d\u00f6rr"
+            }
+        },
+        "cover": {
+            "cover": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problem",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "humidifier": {
+            "humidifier": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problem",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "lock": {
+            "lock": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problem",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "bluetooth_signal": {
+                "name": "Bluetooth-signal"
+            },
+            "light_level": {
+                "name": "Ljusniv\u00e5"
+            },
+            "wifi_signal": {
+                "name": "Wi-Fi signal"
+            }
+        },
+        "switch": {
+            "bot": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problem",
+                            "true": "OK"
+                        }
+                    },
+                    "switch_mode": {
+                        "state": {
+                            "false": "Momentan",
+                            "true": "Dra/dra tillbaka"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "lock_force_nightlatch": "Tvinga Nightlatch-driftl\u00e4ge",
+                    "retry_count": "Antal ompr\u00f6vningar"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "no_devices_found": "Keine Ger\u00e4te im Netzwerk gefunden",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich",
+            "unique_id_mismatch": "Die Seriennummer des Ger\u00e4ts stimmt nicht mit der vorherigen Seriennummer \u00fcberein",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "empty_input_source_list": "Liste der Eingangsquellen darf nicht leer sein",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "configure_receiver": {
+                "data": {
+                    "input_sources": "Eingangsquellen",
+                    "volume_resolution": "Lautst\u00e4rkeaufl\u00f6sung"
+                },
+                "data_description": {
+                    "input_sources": "Liste der vom Receiver unterst\u00fctzten Eingangsquellen.",
+                    "volume_resolution": "Anzahl der Schritte, die der Receiver ben\u00f6tigt, um von der niedrigsten zur h\u00f6chstm\u00f6glichen Lautst\u00e4rke zu gelangen."
+                },
+                "description": "{name} konfigurieren"
+            },
+            "eiscp_discovery": {
+                "data": {
+                    "device": "Ger\u00e4t"
+                },
+                "data_description": {
+                    "device": "W\u00e4hle den zu konfigurierenden Receiver aus."
+                }
+            },
+            "manual": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Hostname oder IP-Adresse des Receivers."
+                }
+            },
+            "user": {
+                "menu_options": {
+                    "eiscp_discovery": "Onkyo-Erkennung",
+                    "manual": "Manuelle Eingabe"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_source": {
+            "message": "Die Eingangsquelle \u201e{invalid_source}\u201c kann f\u00fcr die Entit\u00e4t {entity_id} nicht ausgew\u00e4hlt werden."
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "Die Konfiguration von Onkyo mit YAML wird entfernt, aber beim Importieren deiner YAML-Konfiguration ist ein Verbindungsfehler zum Host {host} aufgetreten.\n\nStelle sicher, dass die Verbindung zum Receiver funktioniert, und starte Home Assistant neu, um es erneut zu versuchen, oder entferne die Onkyo YAML-Konfiguration aus deiner Datei \u201econfiguration.yaml\u201c und fahre mit der manuellen [Einrichtung der Integration]({url}) fort.",
+            "title": "Import der Onkyo YAML-Konfiguration fehlgeschlagen"
+        },
+        "deprecated_yaml_import_issue_no_discover": {
+            "description": "Die Konfiguration von Onkyo mit YAML wird entfernt, aber beim Importieren deiner YAML-Konfiguration wurden keine Receiver erkannt.\n\nStelle sicher, dass die Verbindung zum Receiver funktioniert, und starte Home Assistant neu, um es erneut zu versuchen, oder entferne die Onkyo YAML-Konfiguration aus deiner Datei \u201econfiguration.yaml\u201c und fahre mit der manuellen [Einrichtung der Integration]({url}) fort.",
+            "title": "Import der Onkyo YAML-Konfiguration fehlgeschlagen"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_volume": "Lautst\u00e4rkebegrenzung (%)"
+                },
+                "data_description": {
+                    "max_volume": "Begrenzung der maximalen Lautst\u00e4rke in Prozent. Dadurch wird die maximale Lautst\u00e4rke von Home Assistant diesem Wert am Empf\u00e4nger zugeordnet. Wenn dieser Wert auf 50 % eingestellt ist, wird damit die Lautst\u00e4rke am Empf\u00e4nger auf 50 % des Maximalwerts begrenzt, wenn die Lautst\u00e4rke in Home Assistant auf 100 % eingestellt wird."
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Za\u0159\u00edzen\u00ed je ji\u017e nastaveno",
+            "reauth_successful": "Op\u011btovn\u00e9 ov\u011b\u0159en\u00ed bylo \u00fasp\u011b\u0161n\u00e9"
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "invalid_auth": "Neplatn\u00e9 ov\u011b\u0159en\u00ed",
+            "timeout_connect": "Vypr\u0161el \u010dasov\u00fd limit pro nav\u00e1z\u00e1n\u00ed spojen\u00ed"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Heslo"
+                },
+                "data_description": {
+                    "password": "Heslo pro ov\u011b\u0159en\u00ed pomoc\u00ed za\u0159\u00edzen\u00ed Rain Bird."
+                },
+                "description": "Integrace Rain Bird se mus\u00ed se za\u0159\u00edzen\u00edm znovu ov\u011b\u0159it.",
+                "title": "Platnost ov\u011b\u0159en\u00ed pro {name} vypr\u0161ela"
+            },
+            "user": {
+                "data": {
+                    "host": "Hostitel",
+                    "password": "Heslo"
+                },
+                "data_description": {
+                    "host": "N\u00e1zev hostitele nebo IP adresa va\u0161eho za\u0159\u00edzen\u00ed Rain Bird.",
+                    "password": "Heslo pou\u017e\u00edvan\u00e9 k ov\u011b\u0159en\u00ed se za\u0159\u00edzen\u00edm Rain Bird."
+                },
+                "description": "Zadejte informace o modulu LNK Wi-Fi pro za\u0159\u00edzen\u00ed Rain Bird.",
+                "title": "Nastavit Rain Bird"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Senzor de\u0161t\u011b"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Zpo\u017ed\u011bn\u00ed de\u0161t\u011b"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "Zpo\u017ed\u011bn\u00ed de\u0161t\u011b"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "V\u00fdchoz\u00ed doba zavla\u017eov\u00e1n\u00ed v minut\u00e1ch"
+                },
+                "data_description": {
+                    "duration": "V\u00fdchoz\u00ed doba, po kterou bude zavla\u017eova\u010d b\u011b\u017eet po zapnut\u00ed."
+                },
+                "title": "Nastavit Rain Bird"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "Nastav\u00ed, jak dlouho bude automatick\u00e9 zavla\u017eov\u00e1n\u00ed vypnut\u00e9.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Nastaven\u00ed bude upraveno na ur\u010den\u00e9m ovlada\u010di.",
+                    "name": "Polo\u017eka nastaven\u00ed ovlada\u010de Rain Bird"
+                },
+                "duration": {
+                    "description": "Doba, za kterou se tento syst\u00e9m vypne.",
+                    "name": "Doba trv\u00e1n\u00ed"
+                }
+            },
+            "name": "Nastavit zpo\u017ed\u011bn\u00ed de\u0161t\u011b"
+        },
+        "start_irrigation": {
+            "description": "Spust\u00ed zavla\u017eov\u00e1n\u00ed.",
+            "fields": {
+                "duration": {
+                    "description": "Doba, po kterou bude tento post\u0159ikova\u010d zapnut\u00fd.",
+                    "name": "Doba trv\u00e1n\u00ed"
+                }
+            },
+            "name": "Spustit zavla\u017eov\u00e1n\u00ed"
+        }
+    }
+}

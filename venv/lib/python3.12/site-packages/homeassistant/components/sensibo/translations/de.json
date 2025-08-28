@@ -1,0 +1,530 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "incorrect_api_key": "Der angegebene API-Schl\u00fcssel passt nicht zu diesem Konto",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "no_devices": "Keine Ger\u00e4te gefunden. Stelle sicher, dass deine Sensibo-Ger\u00e4te richtig eingerichtet sind und eine Fernbedienung definiert ist",
+            "no_username": "Der Benutzername konnte nicht abgerufen werden. Stelle sicher, dass dein Sensibo-Konto \u00fcber einen korrekten Benutzernamen verf\u00fcgt, und versuche es erneut."
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "api_key": "API-Code"
+                },
+                "data_description": {
+                    "api_key": "Folge der [Dokumentation]({url}), um deinen API-Code zu erhalten."
+                }
+            },
+            "reconfigure": {
+                "data": {
+                    "api_key": "API-Code"
+                },
+                "data_description": {
+                    "api_key": "Folge der [Dokumentation]({url}), um deinen API-Code zu erhalten."
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API-Code"
+                },
+                "data_description": {
+                    "api_key": "Folge der [Dokumentation]({url}), um deinen API-Code zu erhalten."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "filter_clean": {
+                "name": "Filterreinigung erforderlich"
+            },
+            "is_main_sensor": {
+                "name": "Hauptsensor"
+            },
+            "pure_ac_integration": {
+                "name": "Pure Boost verbunden mit AC"
+            },
+            "pure_geo_integration": {
+                "name": "Pure Boost mit Anwesenheitserkennung verbunden"
+            },
+            "pure_measure_integration": {
+                "name": "Pure Boost verbunden mit der Raumluftqualit\u00e4t"
+            },
+            "pure_prime_integration": {
+                "name": "Pure Boost verbunden mit der Au\u00dfenluftqualit\u00e4t"
+            },
+            "room_occupied": {
+                "name": "Zimmer belegt"
+            }
+        },
+        "button": {
+            "reset_filter": {
+                "name": "Filter zur\u00fccksetzen"
+            }
+        },
+        "climate": {
+            "climate_device": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Hoch",
+                            "low": "Niedrig",
+                            "medium": "Mittel",
+                            "medium_high": "Mittelhoch",
+                            "medium_low": "Mitteltief",
+                            "quiet": "Leise",
+                            "strong": "Stark"
+                        }
+                    },
+                    "swing_mode": {
+                        "state": {
+                            "both": "Beides",
+                            "fixedbottom": "Unten fixiert",
+                            "fixedmiddle": "Mitte fixiert",
+                            "fixedmiddlebottom": "Mitte unten fixiert",
+                            "fixedmiddletop": "Mitte oben fixiert",
+                            "fixedtop": "Oben fixiert",
+                            "horizontal": "Horizontal",
+                            "rangebottom": "Bereich unten",
+                            "rangefull": "Bereich voll",
+                            "rangemiddle": "Bereich Mitte",
+                            "rangetop": "Bereich oben",
+                            "stopped": "Aus"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "calibration_humidity": {
+                "name": "Kalibrierung der Luftfeuchtigkeit"
+            },
+            "calibration_temperature": {
+                "name": "Temperaturkalibrierung"
+            }
+        },
+        "select": {
+            "horizontalswing": {
+                "name": "Horizontale Oszillation",
+                "state": {
+                    "fixedcenter": "Feststehend mittig",
+                    "fixedcenterleft": "Feststehend Mitte links",
+                    "fixedcenterright": "Feststehend Mitte rechts",
+                    "fixedleft": "Feststehend links",
+                    "fixedleftright": "Feststehend links rechts",
+                    "fixedright": "Feststehend rechts",
+                    "rangecenter": "Bereich mittig",
+                    "rangefull": "Bereich voll",
+                    "rangeleft": "Bereich links",
+                    "rangeright": "Bereich rechts",
+                    "stopped": "Aus"
+                }
+            },
+            "light": {
+                "name": "Leuchte",
+                "state": {
+                    "dim": "Gedimmt",
+                    "off": "Aus",
+                    "on": "Ein"
+                }
+            }
+        },
+        "sensor": {
+            "airq_co2": {
+                "name": "AirQ CO\u2082"
+            },
+            "airq_tvoc": {
+                "name": "AirQ TVOC"
+            },
+            "battery_voltage": {
+                "name": "Batteriespannung"
+            },
+            "climate_react_high": {
+                "name": "Obere Temperaturschwelle f\u00fcr Climate React",
+                "state_attributes": {
+                    "fanlevel": {
+                        "name": "L\u00fcftermodus",
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Hoch",
+                            "low": "Niedrig",
+                            "medium": "Mittel",
+                            "medium_high": "Mittelhoch",
+                            "medium_low": "Mitteltief",
+                            "quiet": "Leise",
+                            "strong": "Stark"
+                        }
+                    },
+                    "horizontalswing": {
+                        "name": "Horizontale Oszillation",
+                        "state": {
+                            "fixedcenter": "Feststehend mittig",
+                            "fixedcenterleft": "Feststehend Mitte links",
+                            "fixedcenterright": "Feststehend Mitte rechts",
+                            "fixedleft": "Feststehend links",
+                            "fixedleftright": "Feststehend links rechts",
+                            "fixedright": "Feststehend rechts",
+                            "rangecenter": "Bereich mittig",
+                            "rangefull": "Bereich voll",
+                            "stopped": "Aus"
+                        }
+                    },
+                    "light": {
+                        "name": "Leuchte",
+                        "state": {
+                            "dim": "Gedimmt",
+                            "off": "Aus",
+                            "on": "Ein"
+                        }
+                    },
+                    "mode": {
+                        "name": "Modus",
+                        "state": {
+                            "auto": "Auto",
+                            "cool": "K\u00fchlbetrieb",
+                            "dry": "Entfeuchtung",
+                            "fan_only": "Nur L\u00fcftung",
+                            "heat": "Heizbetrieb",
+                            "heat_cool": "Heizen/K\u00fchlen",
+                            "off": "Aus"
+                        }
+                    },
+                    "on": {
+                        "name": "Ein",
+                        "state": {
+                            "false": "Aus",
+                            "true": "Ein"
+                        }
+                    },
+                    "swing": {
+                        "name": "Oszillationsart",
+                        "state": {
+                            "both": "Beides",
+                            "fixedbottom": "Unten fixiert",
+                            "fixedmiddle": "Mitte fixiert",
+                            "fixedmiddlebottom": "Mitte unten fixiert",
+                            "fixedmiddletop": "Mitte oben fixiert",
+                            "fixedtop": "Oben fixiert",
+                            "horizontal": "Horizontal",
+                            "rangebottom": "Bereich unten",
+                            "rangefull": "Bereich voll",
+                            "rangemiddle": "Bereich Mitte",
+                            "rangetop": "Bereich oben",
+                            "stopped": "Aus"
+                        }
+                    },
+                    "targettemperature": {
+                        "name": "Soll-Temperatur"
+                    },
+                    "temperatureunit": {
+                        "name": "Temperatureinheit",
+                        "state": {
+                            "c": "Celsius",
+                            "f": "Fahrenheit"
+                        }
+                    }
+                }
+            },
+            "climate_react_low": {
+                "name": "Untere Temperaturschwelle f\u00fcr Climate React",
+                "state_attributes": {
+                    "fanlevel": {
+                        "name": "L\u00fcftermodus",
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Hoch",
+                            "low": "Niedrig",
+                            "medium": "Mittel",
+                            "medium_high": "Mittelhoch",
+                            "medium_low": "Mitteltief",
+                            "quiet": "Leise",
+                            "strong": "Stark"
+                        }
+                    },
+                    "horizontalswing": {
+                        "name": "Horizontale Oszillation",
+                        "state": {
+                            "fixedcenter": "Feststehend mittig",
+                            "fixedcenterleft": "Feststehend Mitte links",
+                            "fixedcenterright": "Feststehend Mitte rechts",
+                            "fixedleft": "Feststehend links",
+                            "fixedleftright": "Feststehend links rechts",
+                            "fixedright": "Feststehend rechts",
+                            "rangecenter": "Bereich mittig",
+                            "rangefull": "Bereich voll",
+                            "stopped": "Aus"
+                        }
+                    },
+                    "light": {
+                        "name": "Leuchte",
+                        "state": {
+                            "dim": "Gedimmt",
+                            "off": "Aus",
+                            "on": "Ein"
+                        }
+                    },
+                    "mode": {
+                        "name": "Modus",
+                        "state": {
+                            "auto": "Auto",
+                            "cool": "K\u00fchlbetrieb",
+                            "dry": "Entfeuchtung",
+                            "fan_only": "Nur L\u00fcftung",
+                            "heat": "Heizbetrieb",
+                            "heat_cool": "Heizen/K\u00fchlen",
+                            "off": "Aus"
+                        }
+                    },
+                    "on": {
+                        "name": "Ein",
+                        "state": {
+                            "false": "Aus",
+                            "true": "Ein"
+                        }
+                    },
+                    "swing": {
+                        "name": "Oszillationsart",
+                        "state": {
+                            "both": "Beides",
+                            "fixedbottom": "Unten fixiert",
+                            "fixedmiddle": "Mitte fixiert",
+                            "fixedmiddlebottom": "Mitte unten fixiert",
+                            "fixedmiddletop": "Mitte oben fixiert",
+                            "fixedtop": "Oben fixiert",
+                            "horizontal": "Horizontal",
+                            "rangebottom": "Bereich unten",
+                            "rangefull": "Bereich voll",
+                            "rangemiddle": "Bereich Mitte",
+                            "rangetop": "Bereich oben",
+                            "stopped": "Aus"
+                        }
+                    },
+                    "targettemperature": {
+                        "name": "Soll-Temperatur"
+                    },
+                    "temperatureunit": {
+                        "name": "Temperatureinheit",
+                        "state": {
+                            "c": "Celsius",
+                            "f": "Fahrenheit"
+                        }
+                    }
+                }
+            },
+            "ethanol": {
+                "name": "Ethanol"
+            },
+            "feels_like": {
+                "name": "Die Temperatur f\u00fchlt sich an wie"
+            },
+            "filter_last_reset": {
+                "name": "Letztes Zur\u00fccksetzen des Filters"
+            },
+            "pm25_pure": {
+                "name": "Reiner AQI",
+                "state": {
+                    "bad": "Schlecht",
+                    "good": "Gut",
+                    "moderate": "M\u00e4\u00dfig"
+                }
+            },
+            "rssi": {
+                "name": "RSSI"
+            },
+            "sensitivity": {
+                "name": "Pure Sensibilit\u00e4t",
+                "state": {
+                    "n": "Normal",
+                    "s": "Empfindlich"
+                }
+            },
+            "smart_type": {
+                "name": "Typ von Climate React",
+                "state": {
+                    "feelslike": "F\u00fchlt sich an wie",
+                    "humidity": "Luftfeuchtigkeit",
+                    "temperature": "Temperatur"
+                }
+            },
+            "timer_time": {
+                "name": "Endzeit des Timers"
+            },
+            "tvoc": {
+                "name": "TVOC"
+            }
+        },
+        "switch": {
+            "climate_react_switch": {
+                "name": "Climate React",
+                "state_attributes": {
+                    "type": {
+                        "name": "Typ",
+                        "state": {
+                            "feelslike": "F\u00fchlt sich an wie",
+                            "humidity": "Luftfeuchtigkeit",
+                            "temperature": "Temperatur"
+                        }
+                    }
+                }
+            },
+            "pure_boost_switch": {
+                "name": "Reiner Boost"
+            },
+            "timer_on_switch": {
+                "name": "Timer",
+                "state_attributes": {
+                    "id": {
+                        "name": "ID"
+                    },
+                    "turn_on": {
+                        "name": "Schaltet ein",
+                        "state": {
+                            "false": "Aus",
+                            "true": "Ein"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "climate_react_not_available": {
+            "message": "Verwende einmal die Sensibo-Aktion \u201eClimate React aktivieren\u201c oder die Sensibo-App, um den Schalter zu aktivieren"
+        },
+        "fan_mode_not_supported": {
+            "message": "Klima-L\u00fcftermodus {fan_mode} wird von der Integration nicht unterst\u00fctzt, bitte \u00f6ffne einen Fehlerbericht"
+        },
+        "no_fan_level_in_features": {
+            "message": "Der aktuelle Modus unterst\u00fctzt keine Einstellung der L\u00fcfterstufe"
+        },
+        "no_swing_in_features": {
+            "message": "Der aktuelle Modus unterst\u00fctzt keine Einstellung der Oszillation"
+        },
+        "no_target_temperature_in_features": {
+            "message": "Der aktuelle Modus unterst\u00fctzt die Einstellung der Soll-Temperatur nicht"
+        },
+        "select_option_not_available": {
+            "message": "Die aktuelle Betriebsart {hvac_mode} unterst\u00fctzt die Einstellung {key} nicht"
+        },
+        "service_raised": {
+            "message": "Die Aktion f\u00fcr {name} konnte aufgrund des Fehlers {error} nicht ausgef\u00fchrt werden."
+        },
+        "service_result_not_true": {
+            "message": "Aktion f\u00fcr {name} konnte nicht ausgef\u00fchrt werden"
+        },
+        "swing_not_supported": {
+            "message": "Die Oszillationsart {swing_mode} wird von der Integration nicht unterst\u00fctzt. Bitte erstelle einen Fehlerbericht."
+        }
+    },
+    "services": {
+        "assume_state": {
+            "description": "Setzt das Sensibo-Ger\u00e4t auf einen externen Status.",
+            "fields": {
+                "state": {
+                    "description": "Zu setzender Zustand.",
+                    "name": "Zustand"
+                }
+            },
+            "name": "Zustand annehmen"
+        },
+        "enable_climate_react": {
+            "description": "Aktiviert und konfiguriert Climate React.",
+            "fields": {
+                "high_temperature_state": {
+                    "description": "Was beim oberem Schwellenwert passieren soll. Erfordert vollst\u00e4ndigen Zustand.",
+                    "name": "Zustand bei oberem Schwellenwert"
+                },
+                "high_temperature_threshold": {
+                    "description": "Wenn die Temperatur/Luftfeuchtigkeit dar\u00fcber steigt.",
+                    "name": "Oberer Schwellenwert"
+                },
+                "low_temperature_state": {
+                    "description": "Was beim unteren Schwellenwert passieren soll. Erfordert vollst\u00e4ndigen Zustand.",
+                    "name": "Zustand bei unterem Schwellenwert"
+                },
+                "low_temperature_threshold": {
+                    "description": "Wenn Temperatur/Luftfeuchtigkeit darunter sinkt.",
+                    "name": "Unterer Schwellenwert"
+                },
+                "smart_type": {
+                    "description": "W\u00e4hle zwischen Temperatur/Gef\u00fchlt wie/Luftfeuchtigkeit.",
+                    "name": "Ausl\u00f6sertyp"
+                }
+            },
+            "name": "Climate React aktivieren"
+        },
+        "enable_pure_boost": {
+            "description": "Aktiviert und konfiguriert Pure Boost-Einstellungen.",
+            "fields": {
+                "ac_integration": {
+                    "description": "Integration mit Klimaanlage.",
+                    "name": "AC-Integration"
+                },
+                "geo_integration": {
+                    "description": "Mit Anwesenheitserkennung integrieren",
+                    "name": "Geo-Integration"
+                },
+                "indoor_integration": {
+                    "description": "\u00dcberpr\u00fcfung der Raumluftqualit\u00e4t einbeziehen.",
+                    "name": "Raumluftqualit\u00e4t"
+                },
+                "outdoor_integration": {
+                    "description": "\u00dcberpr\u00fcfung der Au\u00dfenluftqualit\u00e4t einbeziehen.",
+                    "name": "Au\u00dfenluftqualit\u00e4t"
+                },
+                "sensitivity": {
+                    "description": "Stellt die Empfindlichkeit f\u00fcr Pure Boost ein.",
+                    "name": "Empfindlichkeit"
+                }
+            },
+            "name": "Pure Boost aktivieren"
+        },
+        "enable_timer": {
+            "description": "Aktiviert den Timer mit benutzerdefinierter Zeit.",
+            "fields": {
+                "minutes": {
+                    "description": "Countdown f\u00fcr Timer (f\u00fcr Timer-Status ein).",
+                    "name": "Minuten"
+                }
+            },
+            "name": "Timer aktivieren"
+        },
+        "full_state": {
+            "description": "Stellt den gesamten Status f\u00fcr das Sensibo-Ger\u00e4t ein.",
+            "fields": {
+                "fan_mode": {
+                    "description": "Stellt den L\u00fcftermodus ein.",
+                    "name": "L\u00fcftermodus"
+                },
+                "horizontal_swing_mode": {
+                    "description": "Stellt die horizontale Oszillation ein.",
+                    "name": "Horizontale Oszillationsart"
+                },
+                "light": {
+                    "description": "Leuchte ein- oder ausschalten.",
+                    "name": "Leuchte"
+                },
+                "mode": {
+                    "description": "Einzustellende Betriebsart der Heizung/L\u00fcftung/Klimatisierung.",
+                    "name": "HLK-Betriebsart"
+                },
+                "swing_mode": {
+                    "description": "Oszillationsart einstellen.",
+                    "name": "Oszillationsart"
+                },
+                "target_temperature": {
+                    "description": "Soll-Temperatur einstellen.",
+                    "name": "Soll-Temperatur"
+                }
+            },
+            "name": "Gesamten Status einstellen"
+        }
+    }
+}

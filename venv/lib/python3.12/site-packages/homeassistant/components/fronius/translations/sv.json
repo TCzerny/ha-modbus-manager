@@ -1,0 +1,395 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "invalid_host": "Ogiltigt v\u00e4rdnamn eller IP-adress",
+            "reconfigure_successful": "Omkonfigurationen lyckades",
+            "unique_id_mismatch": "Identifieraren st\u00e4mmer inte \u00f6verens med den tidigare identifieraren"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "flow_title": "{device}",
+        "step": {
+            "confirm_discovery": {
+                "description": "Vill du l\u00e4gga till {device} i Home Assistant?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "IP-adressen eller v\u00e4rdnamnet f\u00f6r din Fronius-enhet."
+                },
+                "description": "Uppdatera din konfigurationsinformation f\u00f6r {device}."
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "IP-adressen eller v\u00e4rdnamnet f\u00f6r din Fronius-enhet."
+                },
+                "description": "Konfigurera din Fronius SolarAPI-enhet."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "capacity_designed": {
+                "name": "Designad kapacitet"
+            },
+            "capacity_maximum": {
+                "name": "Max kapacitet"
+            },
+            "cash_factor": {
+                "name": "Tariff f\u00f6r export till eln\u00e4t"
+            },
+            "co2_factor": {
+                "name": "CO\u2082 -faktor"
+            },
+            "current_ac": {
+                "name": "AC str\u00f6m"
+            },
+            "current_ac_phase_1": {
+                "name": "Str\u00f6m Fas 1"
+            },
+            "current_ac_phase_2": {
+                "name": "Str\u00f6m Fas 2"
+            },
+            "current_ac_phase_3": {
+                "name": "Str\u00f6m Fas 3"
+            },
+            "current_dc": {
+                "name": "DC str\u00f6m"
+            },
+            "current_dc_2": {
+                "name": "DC str\u00f6m 2"
+            },
+            "delivery_factor": {
+                "name": "Tariff f\u00f6r import fr\u00e5n eln\u00e4t"
+            },
+            "energy_day": {
+                "name": "Energi dag"
+            },
+            "energy_reactive_ac_consumed": {
+                "name": "Reaktiv energi f\u00f6rbrukad"
+            },
+            "energy_reactive_ac_produced": {
+                "name": "Reaktiv energi producerad"
+            },
+            "energy_real_ac_consumed": {
+                "name": "Energi f\u00f6rbrukad"
+            },
+            "energy_real_ac_minus": {
+                "name": "Verklig energi minus"
+            },
+            "energy_real_ac_plus": {
+                "name": "Verklig energi plus"
+            },
+            "energy_real_consumed": {
+                "name": "Verklig energi f\u00f6rbrukad"
+            },
+            "energy_real_produced": {
+                "name": "Verklig energi producerad"
+            },
+            "energy_total": {
+                "name": "Total energi"
+            },
+            "energy_year": {
+                "name": "Energi \u00e5r"
+            },
+            "error_code": {
+                "name": "Felkod"
+            },
+            "error_message": {
+                "name": "Felmeddelande",
+                "state": {
+                    "ac_current_sensor_error": "Fel p\u00e5 AC-str\u00f6msensor",
+                    "ac_frequency_too_high": "AC-frekvensen \u00e4r f\u00f6r h\u00f6g",
+                    "ac_frequency_too_low": "AC-frekvensen \u00e4r f\u00f6r l\u00e5g",
+                    "ac_grid_outside_permissible_limits": "AC-n\u00e4tet utanf\u00f6r till\u00e5tna gr\u00e4nser",
+                    "ac_module_over_temperature": "AC-modul \u00f6vertemperatur",
+                    "ac_module_temperature_sensor_faulty_l1": "Fel p\u00e5 temperaturgivaren f\u00f6r AC-modulen (L1)",
+                    "ac_module_temperature_sensor_faulty_l2": "Fel p\u00e5 temperaturgivaren f\u00f6r AC-modulen (L2)",
+                    "ac_module_temperature_sensor_faulty_l3": "Fel p\u00e5 temperaturgivaren f\u00f6r AC-modulen (L3)",
+                    "ac_voltage_too_high": "AC-sp\u00e4nning f\u00f6r h\u00f6g",
+                    "ac_voltage_too_low": "AC-sp\u00e4nning f\u00f6r l\u00e5g",
+                    "arc_detection_triggered": "Ljusb\u00e5gsdetektering utl\u00f6st",
+                    "arc_detector_switched_off": "Ljusb\u00e5gsdetektorn avst\u00e4ngd (t.ex. vid extern ljusb\u00e5gs\u00f6vervakning)",
+                    "can_bus_full": "CAN-bussen \u00e4r full",
+                    "communication": "Kommunikationsfel",
+                    "compatibility_error_invalid_power_stage_configuration": "Kompatibilitetsfel (t.ex. p\u00e5 grund av byte av ett kretskort) - ogiltig konfiguration av effektstegsinst\u00e4llningen",
+                    "current_sensor_calibration_timeout": "Timeout f\u00f6r kalibrering av str\u00f6msensor",
+                    "dc_component_measured_in_grid_too_high": "DC-komponent uppm\u00e4tt i n\u00e4tet f\u00f6r h\u00f6gt",
+                    "dc_connection_inverter_battery_interrupted": "DC-f\u00f6rbindelse mellan v\u00e4xelriktare och batteri avbruten",
+                    "dc_input_voltage_mppt_1_too_high": "DC-ing\u00e5ngssp\u00e4nning MPPT 1 f\u00f6r h\u00f6g",
+                    "dc_input_voltage_mppt_2_too_high": "DC-ing\u00e5ngssp\u00e4nning MPPT 2 f\u00f6r h\u00f6g",
+                    "dc_low_string_1": "DC l\u00e5g str\u00e4ng 1",
+                    "dc_low_string_2": "DC l\u00e5g str\u00e4ng 2",
+                    "dc_module_over_temperature": "DC-modul \u00f6vertemperatur",
+                    "dc_module_temperature_sensor_faulty": "Fel p\u00e5 temperaturgivaren f\u00f6r DC-modulen",
+                    "derating_caused_by_over_frequency": "Derating orsakad av \u00f6verfrekvens",
+                    "different_power_limitation_in_hardware_modules": "Olika effektbegr\u00e4nsningar i h\u00e5rdvarumodulerna",
+                    "eeprom_reinitialised": "EEPROM har \u00e5terinitialiserats",
+                    "emergency_power_derating_activated": "Nedv\u00e4xling av reservkraft aktiverad",
+                    "error_during_logging_data_recording": "Fel under inspelning av loggdata",
+                    "error_during_update_process": "Ett fel uppstod under uppdateringsprocessen",
+                    "fan_1_error": "Fel p\u00e5 fl\u00e4kt 1",
+                    "fan_2_error": "Fel p\u00e5 fl\u00e4kt 2",
+                    "file_could_not_be_opened": "Filen kunde inte \u00f6ppnas",
+                    "fixed_voltage_mode_out_of_range": "Fast sp\u00e4nningsl\u00e4ge har valts ist\u00e4llet f\u00f6r MPP sp\u00e4nningsl\u00e4ge och den fasta sp\u00e4nningen har st\u00e4llts in p\u00e5 ett f\u00f6r l\u00e5gt eller f\u00f6r h\u00f6gt v\u00e4rde",
+                    "functional_incompatibility_between_pc_boards": "Funktionell inkompatibilitet (ett eller flera kretskort i v\u00e4xelriktaren \u00e4r inte kompatibla med varandra, t.ex. efter att ett kretskort har bytts ut)",
+                    "grid_frequency_exceeded_limit_reconnecting": "N\u00e4tfrekvensen har \u00f6verskridit ett gr\u00e4nsv\u00e4rde vid \u00e5terinkoppling",
+                    "grid_voltage_dependent_power_reduction_active": "N\u00e4tsp\u00e4nningsberoende effektreduktion \u00e4r aktiv",
+                    "guard_cannot_be_found": "Vakten kan inte hittas",
+                    "hardware_id_problem": "Problem med h\u00e5rdvaru-ID",
+                    "hid_range_error": "Fel i HID-intervallet",
+                    "initialisation_error_file_system_error_on_usb": "Initieringsfel i filsystemet p\u00e5 USB-minnet",
+                    "initialisation_error_usb_flash_drive_not_supported": "Initieringsfel \u2013 USB-minne st\u00f6ds inte",
+                    "initialisation_error_usb_stick_over_current": "Initieringsfel \u2013 \u00d6verstr\u00f6m p\u00e5 USB-minnet",
+                    "insulation_error_on_solar_panels": "Isoleringsfel p\u00e5 solpanelerna",
+                    "insulation_fault": "Isoleringsfel",
+                    "insulation_measurement_triggered": "Isolationsm\u00e4tning utl\u00f6st",
+                    "intermediate_circuit_voltage_too_high": "Mellankretssp\u00e4nningen f\u00f6r h\u00f6g",
+                    "intermediate_circuit_voltage_too_low_or_asymmetric": "Mellankretssp\u00e4nning f\u00f6r l\u00e5g eller asymmetrisk",
+                    "internal_dsp_malfunction": "Internt DSP-fel",
+                    "internal_hardware_error": "Internt h\u00e5rdvarufel",
+                    "internal_processor_status": "Varning f\u00f6r den interna processorns status. Se statuskod f\u00f6r mer information",
+                    "interrupt_check_fail": "Avbrottskontroll misslyckades",
+                    "invalid_device_type": "Ogiltig enhetstyp",
+                    "inverter_required_setup_values_not_received": "Inverterns n\u00f6dv\u00e4ndiga inst\u00e4llningsv\u00e4rden kunde inte tas emot",
+                    "inverter_settings_changed_restart_required": "Inverterns inst\u00e4llningar har \u00e4ndrats, omstart av invertern kr\u00e4vs",
+                    "log_file_cannot_be_saved": "Loggfilen kan inte sparas (t.ex. USB-minnet \u00e4r skrivskyddat eller fullt)",
+                    "low_pv_voltage_dc_input_voltage_too_low": "L\u00e5g PV-sp\u00e4nning - DC-ing\u00e5ngssp\u00e4nningen \u00e4r f\u00f6r l\u00e5g f\u00f6r att energi ska kunna matas in i n\u00e4tet",
+                    "mains_voltage_dependent_power_reduction": "N\u00e4tsp\u00e4nningsberoende effektminskning",
+                    "memory_error_detected": "Minnesfel uppt\u00e4ckt",
+                    "neutral_conductor_not_connected": "Neutralledare ej ansluten",
+                    "no_communication_between_power_stage_and_control_system": "Ingen kommunikation m\u00f6jlig mellan effektsteget och styrsystemet",
+                    "no_communication_with_filter": "Ingen kommunikation med filter m\u00f6jlig",
+                    "no_communication_with_hybrid_manager": "Ingen kommunikation m\u00f6jlig med Hybrid Manager",
+                    "no_communication_with_power_stage_set": "Ingen kommunikation med effektsteget \u00e4r m\u00f6jlig",
+                    "no_communication_with_storage_unit": "Ingen kommunikation m\u00f6jlig med lagringsenheten",
+                    "no_energy_fed_by_mppt1_past_24_hours": "Ingen energi matades in i n\u00e4tet av MPPT1 under de senaste 24 timmarna",
+                    "no_energy_fed_into_grid_past_24_hours": "Ingen energi har matats in i eln\u00e4tet under de senaste 24 timmarna",
+                    "no_error": "Inget fel",
+                    "no_power_fed_in_despite_closed_relay": "Ingen str\u00f6m matas in trots st\u00e4ngt rel\u00e4",
+                    "no_usb_flash_drive_connected": "Inget USB-minne anslutet",
+                    "overcurrent_ac": "\u00d6verstr\u00f6m (AC)",
+                    "overcurrent_dc": "\u00d6verstr\u00f6m (DC)",
+                    "overtemperature_in_connection_area": "\u00d6vertemperatur i anslutningsomr\u00e5det",
+                    "pmc_power_stage_set_not_available": "PMC effektstegsupps\u00e4ttning \u00e4r inte tillg\u00e4nglig",
+                    "polarity_of_dc_strings_reversed": "Polariteten hos DC-slingorna \u00e4r felv\u00e4nd",
+                    "possible_hardware_fault": "M\u00f6jligt h\u00e5rdvarufel",
+                    "power_derating_due_to_high_temperature": "Effektreduktion orsakad av f\u00f6r h\u00f6g temperatur",
+                    "power_stage_set_problem": "Problem med effektstegsupps\u00e4ttning",
+                    "pv_output_too_low_for_feeding_energy_into_the_grid": "PV-utg\u00e5ng f\u00f6r l\u00e5g f\u00f6r att mata energi till n\u00e4tet",
+                    "rcmu_error": "RCMU-fel",
+                    "real_time_clock_communication_error": "Kommunikationsfel i modulen f\u00f6r realtidsklocka",
+                    "real_time_clock_hardware_error": "H\u00e5rdvarufel i modulen f\u00f6r realtidsklocka",
+                    "real_time_clock_in_emergency_mode": "Internt fel: Realtidsklockamodulen \u00e4r i n\u00f6dl\u00e4ge",
+                    "safety_cut_out_triggered": "S\u00e4kerhetsavst\u00e4ngning via tillvalskort eller RECERBO har utl\u00f6sts",
+                    "software_problem": "Problem med programvara",
+                    "software_update_invalid_country_setup": "Programuppdateringsgrupp 0 (ogiltig landsinst\u00e4llning)",
+                    "stand_alone_operation_detected": "Detekterad frist\u00e5ende drift",
+                    "storage_unit_not_available": "Lagringsenhet inte tillg\u00e4nglig",
+                    "time_lost": "Tid f\u00f6rlorad",
+                    "too_little_dc_power_for_feed_in_operation": "F\u00f6r l\u00e5g DC-effekt f\u00f6r inmatningsdrift",
+                    "unique_id_conflict": "Unik ID-konflikt",
+                    "update_file_corrupt": "Uppdateringsfilen \u00e4r korrupt",
+                    "update_file_does_not_match_device": "Uppdateringsfilen matchar inte enheten, uppdateringsfilen \u00e4r f\u00f6r gammal",
+                    "update_file_not_recognised_or_missing": "Uppdateringsfilen k\u00e4nns inte igen eller finns inte",
+                    "wired_shut_down_triggered": "Tr\u00e5dbunden avst\u00e4ngning utl\u00f6stes",
+                    "write_or_read_error_occurred": "Skriv- eller l\u00e4sfel uppstod"
+                }
+            },
+            "frequency_phase_average": {
+                "name": "Frekvens fas medelv\u00e4rde"
+            },
+            "inverter_state": {
+                "name": "Inverterl\u00e4ge"
+            },
+            "led_color": {
+                "name": "LED-f\u00e4rg"
+            },
+            "led_state": {
+                "name": "LED-l\u00e4ge"
+            },
+            "meter_location": {
+                "name": "M\u00e4tarplats"
+            },
+            "meter_location_description": {
+                "name": "Beskrivning av m\u00e4tarens plats",
+                "state": {
+                    "consumption_path": "Konsumtionens v\u00e4g",
+                    "external_battery": "Externt batteri",
+                    "external_generator": "Extern generator",
+                    "feed_in": "Sammanl\u00e4nkningspunkt f\u00f6r eln\u00e4t",
+                    "subload": "Underlast"
+                }
+            },
+            "meter_mode": {
+                "name": "M\u00e4tarl\u00e4ge"
+            },
+            "power_ac": {
+                "name": "V\u00e4xelstr\u00f6m"
+            },
+            "power_apparent_phase_1": {
+                "name": "Skenbar effekt fas 1"
+            },
+            "power_apparent_phase_2": {
+                "name": "Skenbar effekt fas 2"
+            },
+            "power_apparent_phase_3": {
+                "name": "Skenbar effekt fas 3"
+            },
+            "power_battery": {
+                "name": "Effekt batteri"
+            },
+            "power_battery_charge": {
+                "name": "Batteriladdning"
+            },
+            "power_battery_discharge": {
+                "name": "Batteriurladdning"
+            },
+            "power_factor_phase_1": {
+                "name": "Effektfaktor fas 1"
+            },
+            "power_factor_phase_2": {
+                "name": "Effektfaktor fas 2"
+            },
+            "power_factor_phase_3": {
+                "name": "Effektfaktor fas 3"
+            },
+            "power_grid": {
+                "name": "Eln\u00e4t"
+            },
+            "power_grid_export": {
+                "name": "Eln\u00e4t export"
+            },
+            "power_grid_import": {
+                "name": "Eln\u00e4t import"
+            },
+            "power_load": {
+                "name": "Belastning"
+            },
+            "power_load_consumed": {
+                "name": "F\u00f6rbrukad effekt"
+            },
+            "power_load_generated": {
+                "name": "Genererad effekt"
+            },
+            "power_photovoltaics": {
+                "name": "Effekt solceller"
+            },
+            "power_reactive": {
+                "name": "Reaktiv effekt"
+            },
+            "power_reactive_phase_1": {
+                "name": "Reaktiv effekt fas 1"
+            },
+            "power_reactive_phase_2": {
+                "name": "Reaktiv effekt fas 2"
+            },
+            "power_reactive_phase_3": {
+                "name": "Reaktiv effekt fas 3"
+            },
+            "power_real": {
+                "name": "Aktiv effekt"
+            },
+            "power_real_phase_1": {
+                "name": "Aktiv effekt fas 1"
+            },
+            "power_real_phase_2": {
+                "name": "Aktiv effekt fas 2"
+            },
+            "power_real_phase_3": {
+                "name": "Aktiv effekt fas 3"
+            },
+            "relative_autonomy": {
+                "name": "Relativ autonomi"
+            },
+            "relative_self_consumption": {
+                "name": "Relativ sj\u00e4lvkonsumtion"
+            },
+            "state_code": {
+                "name": "Tillst\u00e5ndskod"
+            },
+            "state_message": {
+                "name": "Tillst\u00e5ndsmeddelande",
+                "state": {
+                    "boost_mode": "Boost-l\u00e4ge",
+                    "critical_fault": "Kritiskt fel",
+                    "fault": "Fel",
+                    "keep_minimum_temperature": "H\u00e5ll l\u00e4gsta temperatur",
+                    "legionella_protection": "Legionellaskydd",
+                    "up_and_running": "Ig\u00e5ng"
+                }
+            },
+            "state_of_charge": {
+                "name": "L\u00e4ge p\u00e5 laddning"
+            },
+            "status_code": {
+                "name": "Statuskod"
+            },
+            "status_message": {
+                "name": "Statusmeddelande",
+                "state": {
+                    "bootloading": "Bootloading",
+                    "error": "Fel",
+                    "idle": "Inaktiv",
+                    "ready": "Redo",
+                    "running": "K\u00f6r",
+                    "sleeping": "Sover",
+                    "standby": "Vilol\u00e4ge",
+                    "startup": "Uppstart"
+                }
+            },
+            "temperature_cell": {
+                "name": "Temperatur"
+            },
+            "voltage_ac": {
+                "name": "AC sp\u00e4nning"
+            },
+            "voltage_ac_phase_1": {
+                "name": "Sp\u00e4nning fas 1"
+            },
+            "voltage_ac_phase_2": {
+                "name": "Sp\u00e4nning fas 2"
+            },
+            "voltage_ac_phase_3": {
+                "name": "Sp\u00e4nning fas 3"
+            },
+            "voltage_ac_phase_to_phase_12": {
+                "name": "Sp\u00e4nning fas 1-2"
+            },
+            "voltage_ac_phase_to_phase_23": {
+                "name": "Sp\u00e4nning fas 2-3"
+            },
+            "voltage_ac_phase_to_phase_31": {
+                "name": "Sp\u00e4nning fas 3-1"
+            },
+            "voltage_dc": {
+                "name": "DC-sp\u00e4nning"
+            },
+            "voltage_dc_2": {
+                "name": "DC-sp\u00e4nning 2"
+            },
+            "voltage_dc_maximum_cell": {
+                "name": "Maximal cellsp\u00e4nning"
+            },
+            "voltage_dc_minimum_cell": {
+                "name": "Minsta cellsp\u00e4nning"
+            }
+        }
+    },
+    "exceptions": {
+        "entry_cannot_connect": {
+            "message": "Misslyckades med att ansluta till Fronius-enheten p\u00e5 {host}: {fronius_error}"
+        },
+        "update_failed": {
+            "message": "Ett fel uppstod n\u00e4r du f\u00f6rs\u00f6kte h\u00e4mta data: {fronius_error}"
+        }
+    }
+}

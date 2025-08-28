@@ -1,0 +1,52 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud"
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus",
+            "unknown": "Ootamatu t\u00f5rge"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API v\u00f5ti"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "away_mode": {
+                "name": "Eemalolekure\u017eiim"
+            }
+        },
+        "sensor": {
+            "daily_usage": {
+                "name": "Igap\u00e4evane kasutus"
+            },
+            "monthly_usage": {
+                "name": "Igakuine kasutus"
+            },
+            "yearly_usage": {
+                "name": "Aastane kasutus"
+            }
+        }
+    },
+    "services": {
+        "set_away_mode": {
+            "description": "M\u00e4\u00e4rab Streamlabsi veemonitori kodus/eemal re\u017eiimi.",
+            "fields": {
+                "away_mode": {
+                    "description": "Kodus v\u00f5i eemal.",
+                    "name": "Eemalolekure\u017eiim"
+                },
+                "location_id": {
+                    "description": "Streamlabs Water Monitor'i asukoha ID.",
+                    "name": "Asukoha ID"
+                }
+            },
+            "name": "M\u00e4\u00e4ra eemalolekure\u017eiim"
+        }
+    }
+}

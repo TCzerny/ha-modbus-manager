@@ -1,0 +1,124 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Tempo atmosferico",
+            "state": {
+                "clear-night": "Sereno, notte",
+                "cloudy": "Nuvoloso",
+                "exceptional": "Eccezionale",
+                "fog": "Nebbia",
+                "hail": "Grandine",
+                "lightning": "Temporale",
+                "lightning-rainy": "Temporale, piovoso",
+                "partlycloudy": "Parzialmente nuvoloso",
+                "pouring": "Rovescio",
+                "rainy": "Piovoso",
+                "snowy": "Nevoso",
+                "snowy-rainy": "Nevoso, piovoso",
+                "sunny": "Soleggiato",
+                "windy": "Ventoso",
+                "windy-variant": "Ventoso, nuvoloso"
+            },
+            "state_attributes": {
+                "apparent_temperature": {
+                    "name": "Temperatura apparente"
+                },
+                "cloud_coverage": {
+                    "name": "Copertura nuvolosa"
+                },
+                "dew_point": {
+                    "name": "Temperatura del punto di rugiada"
+                },
+                "forecast": {
+                    "name": "Previsione"
+                },
+                "humidity": {
+                    "name": "Umidit\u00e0"
+                },
+                "ozone": {
+                    "name": "Ozono"
+                },
+                "precipitation_unit": {
+                    "name": "Unit\u00e0 di precipitazione"
+                },
+                "pressure": {
+                    "name": "Pressione"
+                },
+                "pressure_unit": {
+                    "name": "Unit\u00e0 di pressione"
+                },
+                "temperature": {
+                    "name": "Temperatura"
+                },
+                "temperature_unit": {
+                    "name": "Unit\u00e0 di temperatura"
+                },
+                "uv_index": {
+                    "name": "Indice UV"
+                },
+                "visibility": {
+                    "name": "Visibilit\u00e0"
+                },
+                "visibility_unit": {
+                    "name": "Unit\u00e0 di visibilit\u00e0"
+                },
+                "wind_bearing": {
+                    "name": "Direzione del vento"
+                },
+                "wind_gust_speed": {
+                    "name": "Velocit\u00e0 delle raffiche di vento"
+                },
+                "wind_speed": {
+                    "name": "Velocit\u00e0 del vento"
+                },
+                "wind_speed_unit": {
+                    "name": "Unit\u00e0 di velocit\u00e0 del vento"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_weather_get_forecast": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Utilizza invece `weather.get_forecasts` che supporta pi\u00f9 entit\u00e0.\n\nSostituisci questo servizio, modifica le automazioni e gli script, quindi seleziona **invia** per chiudere il problema.",
+                        "title": "Rilevato utilizzo del servizio deprecato `weather.get_forecast`"
+                    }
+                }
+            }
+        }
+    },
+    "selector": {
+        "forecast_type": {
+            "options": {
+                "daily": "Quotidiano",
+                "hourly": "Ogni ora",
+                "twice_daily": "Due volte al giorno"
+            }
+        }
+    },
+    "services": {
+        "get_forecast": {
+            "description": "Ottieni le previsioni del tempo.",
+            "fields": {
+                "type": {
+                    "description": "Tipo di previsione: giornaliera, oraria o due volte al giorno.",
+                    "name": "Tipo di previsione"
+                }
+            },
+            "name": "Ottieni previsioni"
+        },
+        "get_forecasts": {
+            "description": "Ricevi le previsioni del tempo.",
+            "fields": {
+                "type": {
+                    "description": "Tipo di previsione: giornaliera, oraria o due volte al giorno.",
+                    "name": "Tipo di previsione"
+                }
+            },
+            "name": "Ottieni previsioni"
+        }
+    },
+    "title": "Tempo atmosferico"
+}

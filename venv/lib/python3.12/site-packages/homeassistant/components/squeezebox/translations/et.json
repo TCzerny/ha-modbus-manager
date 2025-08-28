@@ -1,0 +1,107 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud",
+            "no_server_found": "LMS serverit ei leitud."
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus",
+            "invalid_auth": "Tuvastamine nurjus",
+            "no_server_found": "Serverit ei \u00f5nnestunud automaatselt tuvastada.",
+            "unknown": "Tundmatu viga"
+        },
+        "flow_title": "{host}",
+        "step": {
+            "edit": {
+                "data": {
+                    "host": "",
+                    "https": "\u00dchenda https-i kaudu (n\u00f5uab p\u00f6\u00f6rdpuhverserverit)",
+                    "password": "Salas\u00f5na",
+                    "port": "",
+                    "username": "Kasutajanimi"
+                },
+                "title": "\u00dchenduse teabe muutmine"
+            },
+            "user": {
+                "data": {
+                    "host": ""
+                },
+                "data_description": {
+                    "host": "Lyrion Music Serveri hostinimi v\u00f5i IP-aadress."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "needsrestart": {
+                "name": "Vajab taask\u00e4ivitamist"
+            },
+            "rescan": {
+                "name": "Teegi uuesti skannimine"
+            }
+        },
+        "sensor": {
+            "info_total_albums": {
+                "name": "Albumeid kokku",
+                "unit_of_measurement": "albumit"
+            },
+            "info_total_artists": {
+                "name": "Esitajaid kokku",
+                "unit_of_measurement": "esitajat"
+            },
+            "info_total_duration": {
+                "name": "Kogukestus"
+            },
+            "info_total_genres": {
+                "name": "\u017danrid kokku",
+                "unit_of_measurement": "\u017eanri"
+            },
+            "info_total_songs": {
+                "name": "Laule kokku",
+                "unit_of_measurement": "lugu"
+            },
+            "lastscan": {
+                "name": "Viimane skannimine"
+            },
+            "other_player_count": {
+                "name": "M\u00e4ngijate loendamise teenus",
+                "unit_of_measurement": "m\u00e4ngijat"
+            },
+            "player_count": {
+                "name": "M\u00e4ngijate arv",
+                "unit_of_measurement": "m\u00e4ngijat"
+            }
+        }
+    },
+    "services": {
+        "call_method": {
+            "description": "Kutsub v\u00e4lja kohandatud Squeezeboxi JSONRPC API.",
+            "fields": {
+                "command": {
+                    "description": "K\u00e4sk edastamiseks Lyrion Music Serverile (p0 CLI dokumentatsioonis).",
+                    "name": "K\u00e4sk"
+                },
+                "parameters": {
+                    "description": "Lisaparameetrite massiiv, mis edastatakse Lyrioni muusikaserverisse (p1, ..., pN CLI dokumentatsioonis).",
+                    "name": "Parameetrid"
+                }
+            },
+            "name": "P\u00e4ringu meetod"
+        },
+        "call_query": {
+            "description": "Kutsub v\u00e4lja kohandatud Squeezeboxi JSONRPC API. Tulemus salvestatakse olemi Squeezebox atribuudis 'query_result'.",
+            "fields": {
+                "command": {
+                    "description": "K\u00e4sk edastamiseks Lyrion Music Serverile (p0 CLI dokumentatsioonis).",
+                    "name": "K\u00e4sk"
+                },
+                "parameters": {
+                    "description": "Lisaparameetrite massiiv, mis edastatakse Lyrioni muusikaserverisse (p1, ..., pN CLI dokumentatsioonis).",
+                    "name": "Parameetrid"
+                }
+            },
+            "name": "Edasta p\u00e4ring"
+        }
+    }
+}

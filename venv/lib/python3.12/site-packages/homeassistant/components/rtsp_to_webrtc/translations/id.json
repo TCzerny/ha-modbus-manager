@@ -1,0 +1,42 @@
+{
+    "config": {
+        "abort": {
+            "server_failure": "Server RTSPtoWebRTC mengembalikan kesalahan. Periksa log untuk informasi lebih lanjut.",
+            "server_unreachable": "Tidak dapat berkomunikasi dengan server RTSPtoWebRTC. Periksa log untuk informasi lebih lanjut.",
+            "single_instance_allowed": "Sudah dikonfigurasi. Hanya satu konfigurasi yang diizinkan."
+        },
+        "error": {
+            "invalid_url": "Harus menjadi URL server RTSPtoWebRTC yang valid misalnya https://example.com",
+            "server_failure": "Server RTSPtoWebRTC mengembalikan kesalahan. Periksa log untuk informasi lebih lanjut.",
+            "server_unreachable": "Tidak dapat berkomunikasi dengan server RTSPtoWebRTC. Periksa log untuk informasi lebih lanjut."
+        },
+        "step": {
+            "hassio_confirm": {
+                "description": "Ingin mengonfigurasi Home Assistant untuk terhubung ke server RTSPtoWebRTC yang disediakan oleh add-on: {addon}?",
+                "title": "RTSPtoWebRTC melalui add-on Home Assistant"
+            },
+            "user": {
+                "data": {
+                    "server_url": "URL server RTSPtoWebRTC misalnya https://example.com"
+                },
+                "description": "Integrasi RTSPtoWebRTC membutuhkan server untuk menerjemahkan aliran RTSP ke WebRTC. Masukkan URL ke server RTSPtoWebRTC.",
+                "title": "Konfigurasikan RTSPtoWebrTC"
+            }
+        }
+    },
+    "issues": {
+        "deprecated": {
+            "description": "Integrasi RTSPtoWebRTC tidak digunakan lagi dan akan dihapus. Gunakan integrasi {go2rtc} yang diaktifkan secara default dan memberikan pengalaman yang lebih baik. Anda hanya perlu menghapus entri konfigurasi RTSPtoWebRTC.",
+            "title": "Integrasi RTSPtoWebRTC sudah tidak digunakan lagi"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "stun_server": "Alamat server stun (host:port)"
+                }
+            }
+        }
+    }
+}

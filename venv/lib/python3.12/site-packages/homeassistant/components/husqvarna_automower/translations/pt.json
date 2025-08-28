@@ -1,0 +1,352 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Conta j\u00e1 configurada",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "authorize_url_timeout": "Excedido o tempo limite para gerar um URL de autoriza\u00e7\u00e3o",
+            "missing_amc_scope": "A `Authentication API` e a `Automower Connect API` n\u00e3o est\u00e3o ligadas \u00e0 sua aplica\u00e7\u00e3o no Husqvarna Developer Portal.",
+            "missing_configuration": "O componente n\u00e3o est\u00e1 configurado. Por favor, siga a documenta\u00e7\u00e3o.",
+            "missing_credentials": "A integra\u00e7\u00e3o requer credenciais de aplica\u00e7\u00e3o.",
+            "no_mower_connected": "N\u00e3o h\u00e1 corta-relvas ligados a esta conta.",
+            "no_url_available": "Nenhum URL est\u00e1 dispon\u00edvel. Para obter informa\u00e7\u00f5es sobre esse erro, [consulte a sec\u00e7\u00e3o de ajuda]({docs_url})",
+            "oauth_error": "Recebido token de autentica\u00e7\u00e3o inv\u00e1lido.",
+            "oauth_failed": "Erro ao obter o token de acesso.",
+            "oauth_timeout": "Excedido o tempo limite para o OAuth token.",
+            "oauth_unauthorized": "Erro de autoriza\u00e7\u00e3o OAuth ao obter o token de acesso.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "unknown": "Erro inesperado",
+            "user_rejected_authorize": "Vincula\u00e7\u00e3o de conta rejeitada: {error}",
+            "wrong_account": "S\u00f3 \u00e9 poss\u00edvel reautenticar esta entrada com a mesma conta Husqvarna."
+        },
+        "create_entry": {
+            "default": "Autenticado com sucesso"
+        },
+        "step": {
+            "missing_scope": {
+                "description": "Para obter a melhor experi\u00eancia com esta integra\u00e7\u00e3o, tanto a `Authentication API` como a `Automower Connect API` devem estar ligadas. Certifique-se de que ambas est\u00e3o ligadas \u00e0 sua conta no [Husqvarna Developer Portal] ({application_url}).",
+                "title": "A sua conta n\u00e3o tem algumas liga\u00e7\u00f5es API"
+            },
+            "pick_implementation": {
+                "title": "Escolha o m\u00e9todo de autentica\u00e7\u00e3o"
+            },
+            "reauth_confirm": {
+                "description": "A integra\u00e7\u00e3o do cortador de relva Husqvarna precisa de autenticar novamente a sua conta",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "leaving_dock": {
+                "name": "A sair da doca"
+            },
+            "returning_to_dock": {
+                "name": "A regressar \u00e0 doca"
+            }
+        },
+        "button": {
+            "confirm_error": {
+                "name": "Confirmar erro"
+            },
+            "sync_clock": {
+                "name": "Sincronizar rel\u00f3gio"
+            }
+        },
+        "number": {
+            "cutting_height": {
+                "name": "Altura de corte"
+            },
+            "my_lawn_cutting_height_work_area": {
+                "name": "A altura do corte da minha relva"
+            },
+            "work_area_cutting_height_work_area": {
+                "name": "Altura do corte em {work_area}"
+            }
+        },
+        "select": {
+            "headlight_mode": {
+                "name": "Modo de farol",
+                "state": {
+                    "always_off": "Sempre desligado",
+                    "always_on": "Sempre ligado",
+                    "evening_and_night": "Ao fim a tarde e \u00e0 noite",
+                    "evening_only": "S\u00f3 ao fim da tarde"
+                }
+            }
+        },
+        "sensor": {
+            "cutting_blade_usage_time": {
+                "name": "Tempo de utiliza\u00e7\u00e3o da l\u00e2mina de corte"
+            },
+            "error": {
+                "name": "Erro",
+                "state": {
+                    "alarm_mower_in_motion": "Alarme! Cortador de relva em movimento",
+                    "alarm_mower_lifted": "Alarme! Cortador de relva levantado",
+                    "alarm_mower_stopped": "Alarme! Corta-relva parado",
+                    "alarm_mower_switched_off": "Alarme! Corta-relva desligado",
+                    "alarm_mower_tilted": "Alarme! Cortador inclinado",
+                    "alarm_outside_geofence": "Alarme! Fora da geocerca",
+                    "angular_sensor_problem": "Problema no sensor angular",
+                    "battery_problem": "Problema de bateria",
+                    "battery_restriction_due_to_ambient_temperature": "Restri\u00e7\u00e3o da bateria devido \u00e0 temperatura ambiente",
+                    "can_error": "Erro CAN",
+                    "charging_current_too_high": "Corrente de carga demasiado elevada",
+                    "charging_station_blocked": "Esta\u00e7\u00e3o de carregamento bloqueada",
+                    "charging_system_problem": "Problema no sistema de carregamento",
+                    "collision_sensor_defect": "Defeito no sensor de colis\u00e3o",
+                    "collision_sensor_error": "Erro do sensor de colis\u00e3o",
+                    "collision_sensor_problem_front": "Problema no sensor de colis\u00e3o frontal",
+                    "collision_sensor_problem_rear": "Problema no sensor de colis\u00e3o traseiro",
+                    "com_board_not_available": "Placa de comunica\u00e7\u00e3o n\u00e3o dispon\u00edvel",
+                    "communication_circuit_board_sw_must_be_updated": "O software da placa de circuito de comunica\u00e7\u00e3o deve ser atualizado",
+                    "complex_working_area": "\u00c1rea de trabalho complexa",
+                    "connection_changed": "Liga\u00e7\u00e3o alterada",
+                    "connection_not_changed": "Liga\u00e7\u00e3o N\u00c3O alterada",
+                    "connectivity_problem": "Problema de conectividade",
+                    "connectivity_settings_restored": "Defini\u00e7\u00f5es de conetividade restauradas",
+                    "cutting_drive_motor_1_defect": "Motor de acionamento de corte 1 com defeito",
+                    "cutting_drive_motor_2_defect": "Motor de acionamento de corte 2 com defeito",
+                    "cutting_drive_motor_3_defect": "Motor de acionamento de corte 3 com defeito",
+                    "cutting_height_blocked": "Altura de corte bloqueada",
+                    "cutting_height_problem": "Problema com a altura de corte",
+                    "cutting_height_problem_curr": "Problema de altura de corte, corr",
+                    "cutting_height_problem_dir": "Problema de altura de corte, dir",
+                    "cutting_height_problem_drive": "Problema com a altura de corte, acionamento",
+                    "cutting_motor_problem": "Problema no motor de corte",
+                    "cutting_stopped_slope_too_steep": "Corte interrompido - declive demasiado acentuado",
+                    "cutting_system_blocked": "Sistema de corte bloqueado",
+                    "cutting_system_imbalance_warning": "Desequil\u00edbrio no sistema de corte",
+                    "cutting_system_major_imbalance": "Grande desequil\u00edbrio no sistema de corte",
+                    "destination_not_reachable": "Destino n\u00e3o alcan\u00e7\u00e1vel",
+                    "difficult_finding_home": "Dificuldade em encotrar a base",
+                    "docking_sensor_defect": "Defeito no sensor de acoplamento",
+                    "electronic_problem": "Problema eletr\u00f3nico",
+                    "empty_battery": "Bateria descarregada",
+                    "error": "Erro",
+                    "error_at_power_up": "Erro ao p\u00f4r em funcionamento",
+                    "fatal_error": "Erro fatal",
+                    "folding_cutting_deck_sensor_defect": "Defeito no sensor da plataforma de corte dobr\u00e1vel",
+                    "folding_sensor_activated": "Sensor de dobragem ativado",
+                    "geofence_problem": "Problema na geocerca",
+                    "gps_navigation_problem": "Problema com a navega\u00e7\u00e3o GPS",
+                    "guide_1_not_found": "Guia 1 n\u00e3o encontrada",
+                    "guide_2_not_found": "Guia 2 n\u00e3o encontrada",
+                    "guide_3_not_found": "Guia 3 n\u00e3o encontrada",
+                    "guide_calibration_accomplished": "Calibra\u00e7\u00e3o da guia efetuada",
+                    "guide_calibration_failed": "A calibra\u00e7\u00e3o da guia falhou",
+                    "high_charging_power_loss": "Elevada perda de pot\u00eancia de carregamento",
+                    "high_internal_power_loss": "Elevada perda de pot\u00eancia interna",
+                    "high_internal_temperature": "Temperatura interna elevada",
+                    "internal_voltage_error": "Erro de tens\u00e3o interna",
+                    "invalid_battery_combination_invalid_combination_of_different_battery_types": "Combina\u00e7\u00e3o de baterias inv\u00e1lida - Combina\u00e7\u00e3o inv\u00e1lida de diferentes tipos de baterias.",
+                    "invalid_sub_device_combination": "Combina\u00e7\u00e3o de subdispositivo inv\u00e1lida",
+                    "invalid_system_configuration": "Configura\u00e7\u00e3o de sistema inv\u00e1lida",
+                    "left_brush_motor_overloaded": "Motor da escova esquerda sobrecarregado",
+                    "lift_sensor_defect": "Defeito no sensor de eleva\u00e7\u00e3o",
+                    "lifted": "Levantado",
+                    "limited_cutting_height_range": "Gama limitada de altura de corte",
+                    "loop_sensor_defect": "Defeito no sensor de ciclo",
+                    "loop_sensor_problem_front": "Problema no sensor do ciclo dianteiro",
+                    "loop_sensor_problem_left": "Problema no sensor do ciclo esquerdo",
+                    "loop_sensor_problem_rear": "Problema no sensor do ciclo traseiro",
+                    "loop_sensor_problem_right": "Problema no sensor do ciclo direito",
+                    "low_battery": "Bateria fraca",
+                    "memory_circuit_problem": "Problema no circuito de mem\u00f3ria",
+                    "mower_lifted": "Corta-relva levantado",
+                    "mower_tilted": "Corta-relva inclinado",
+                    "no_accurate_position_from_satellites": "Sem posi\u00e7\u00e3o precisa dos sat\u00e9lites",
+                    "no_confirmed_position": "Sem posi\u00e7\u00e3o confirmada",
+                    "no_drive": "Sem tra\u00e7\u00e3o",
+                    "no_error": "Sem erros",
+                    "no_loop_signal": "Sem sinal de ciclo",
+                    "no_power_in_charging_station": "Sem energia na esta\u00e7\u00e3o de carga",
+                    "no_response_from_charger": "Sem resposta do carregador",
+                    "outside_working_area": "Fora da \u00e1rea de trabalho",
+                    "poor_signal_quality": "M\u00e1 qualidade do sinal",
+                    "reference_station_communication_problem": "Problema na esta\u00e7\u00e3o de comunica\u00e7\u00e3o de refer\u00eancia",
+                    "right_brush_motor_overloaded": "Motor da escova direita sobrecarregado",
+                    "safety_function_faulty": "Fun\u00e7\u00e3o de segura\u00e7\u00e3o defeituosa",
+                    "settings_restored": "Defini\u00e7\u00f5es restauradas",
+                    "sim_card_locked": "Cart\u00e3o SIM bloqueado",
+                    "sim_card_not_found": "Cart\u00e3o SIM n\u00e3o encontrado",
+                    "sim_card_requires_pin": "O cart\u00e3o SIM requer o PIN",
+                    "slipped_mower_has_slipped_situation_not_solved_with_moving_pattern": "Deslizamento - O corta-relva deslizou. Situa\u00e7\u00e3o n\u00e3o resolvida com o padr\u00e3o m\u00f3vel",
+                    "slope_too_steep": "Declive demasiado acentuado",
+                    "sms_could_not_be_sent": "N\u00e3o foi poss\u00edvel enviar o SMS",
+                    "stop_button_problem": "Problema com o bot\u00e3o STOP",
+                    "stuck_in_charging_station": "Preso na esta\u00e7\u00e3o de carga",
+                    "switch_cord_problem": "Problema no cabo do interruptor",
+                    "temporary_battery_problem": "Problema tempor\u00e1rio da bateria",
+                    "tilt_sensor_problem": "Problema no sensor de inclina\u00e7\u00e3o",
+                    "too_high_discharge_current": "Corrente de descarga demasiado elevada",
+                    "too_high_internal_current": "Corrente interna demasiado alta",
+                    "trapped": "Preso",
+                    "ultrasonic_problem": "Problema ultrass\u00f3nico",
+                    "ultrasonic_sensor_1_defect": "Defeito no sensor ultrass\u00f3nico 1",
+                    "ultrasonic_sensor_2_defect": "Defeito no sensor ultrass\u00f3nico 2",
+                    "ultrasonic_sensor_3_defect": "Defeito no sensor ultrass\u00f3nico 3",
+                    "ultrasonic_sensor_4_defect": "Defeito no sensor ultrass\u00f3nico 4",
+                    "unexpected_cutting_height_adj": "Regula\u00e7\u00e3o inesperada da altura de corte",
+                    "unexpected_error": "Erro inesperado",
+                    "upside_down": "De pernas par o ar",
+                    "weak_gps_signal": "Sinal de GPS fraco",
+                    "wheel_drive_problem_left": "Problema de tra\u00e7\u00e3o na roda esquerda",
+                    "wheel_drive_problem_rear_left": "Problema de tra\u00e7\u00e3o na roda tra\u00e7\u00e3o esquerda",
+                    "wheel_drive_problem_rear_right": "Problema de tra\u00e7\u00e3o na roda traseira direita",
+                    "wheel_drive_problem_right": "Problema de tra\u00e7\u00e3o na roda direita",
+                    "wheel_motor_blocked_left": "Motor da roda esquerda bloqueado",
+                    "wheel_motor_blocked_rear_left": "Motor da roda traseira esquerda bloqueado",
+                    "wheel_motor_blocked_rear_right": "Motor da roda traseira direita bloqueado",
+                    "wheel_motor_blocked_right": "Motor da roda direita bloqueado",
+                    "wheel_motor_overloaded_left": "Motor da roda esquerda sobrecarregado",
+                    "wheel_motor_overloaded_rear_left": "Motor da roda traseira esquerda sobrecarregado",
+                    "wheel_motor_overloaded_rear_right": "Motor da roda traseira direita sobrecarregado",
+                    "wheel_motor_overloaded_right": "Motor da roda direita sobrecarregado",
+                    "work_area_not_valid": "\u00c1rea de trabalho inv\u00e1lida",
+                    "wrong_loop_signal": "Sinal de ciclo errado",
+                    "wrong_pin_code": "C\u00f3digo PIN errado",
+                    "zone_generator_problem": "Problema no gerador de zona"
+                }
+            },
+            "mode": {
+                "name": "Modo",
+                "state": {
+                    "demo": "Demo",
+                    "home": "Base",
+                    "main_area": "\u00c1rea principal",
+                    "secondary_area": "\u00c1rea secund\u00e1ria"
+                }
+            },
+            "my_lawn_last_time_completed": {
+                "name": "Hora de fim do \u00faltimo corte da relva"
+            },
+            "my_lawn_progress": {
+                "name": "Progresso do corte da relva"
+            },
+            "next_start_timestamp": {
+                "name": "Pr\u00f3ximo in\u00edcio"
+            },
+            "number_of_charging_cycles": {
+                "name": "N\u00famero de ciclos de carga"
+            },
+            "number_of_collisions": {
+                "name": "N\u00famero de colis\u00f5es"
+            },
+            "restricted_reason": {
+                "name": "Raz\u00e3o restrita",
+                "state": {
+                    "all_work_areas_completed": "Todas as \u00e1reas de trabalho terminadas",
+                    "daily_limit": "Limite di\u00e1rio",
+                    "external": "Externo",
+                    "fota": "Atualiza\u00e7\u00e3o de firmware Over-the-Air em curso",
+                    "frost": "Geada",
+                    "none": "Sem restri\u00e7\u00f5es",
+                    "not_applicable": "N\u00e3o aplic\u00e1vel",
+                    "park_override": "Anula\u00e7\u00e3o do parque",
+                    "sensor": "Temporizador meteorol\u00f3gico",
+                    "week_schedule": "Hor\u00e1rio semanal"
+                }
+            },
+            "total_charging_time": {
+                "name": "Tempo de carga total"
+            },
+            "total_cutting_time": {
+                "name": "Tempo de corte total"
+            },
+            "total_drive_distance": {
+                "name": "Dist\u00e2ncia total percorrida"
+            },
+            "total_running_time": {
+                "name": "Tempo total de execu\u00e7\u00e3o"
+            },
+            "total_searching_time": {
+                "name": "Tempo de pesquisa total"
+            },
+            "work_area": {
+                "name": "\u00c1rea de trabalho",
+                "state": {
+                    "my_lawn": "O meu relvado",
+                    "no_work_area_active": "Nenhuma \u00e1rea de trabalho ativa"
+                },
+                "state_attributes": {
+                    "work_area_id_assignment": {
+                        "name": "Atribui\u00e7\u00e3o de ID da \u00e1rea de trabalho"
+                    }
+                }
+            },
+            "work_area_last_time_completed": {
+                "name": "{work_area} \u00faltima vez conclu\u00edda"
+            },
+            "work_area_progress": {
+                "name": "{work_area} progresso"
+            }
+        },
+        "switch": {
+            "enable_schedule": {
+                "name": "Ativar hor\u00e1rio"
+            },
+            "my_lawn_work_area": {
+                "name": "Meu relvado"
+            },
+            "stay_out_zones": {
+                "name": "Evitar {stay_out_zone}"
+            }
+        }
+    },
+    "exceptions": {
+        "command_send_failed": {
+            "message": "Erro ao enviar comando: {exception}"
+        },
+        "work_area_not_existing": {
+            "message": "A \u00e1rea de trabalho selecionada n\u00e3o existe."
+        },
+        "work_areas_not_supported": {
+            "message": "Este cortador de relva n\u00e3o suporta \u00e1reas de trabalho."
+        }
+    },
+    "issues": {
+        "deprecated_entity": {
+            "description": "A entidade Husqvarna Automower `{entity}` est\u00e1 obsoleta e ser\u00e1 removida numa vers\u00e3o futura.\nPode utilizar, alternativamente, o novo estado de retorno da entidade cortador de relva.\nAtualize as suas automatiza\u00e7\u00f5es e scripts para substituir a entidade sensor pela entidade cortador de relva recentemente adicionada.\nQuando terminar a migra\u00e7\u00e3o, pode desativar `{entity}`.",
+            "title": "O sensor do corta-relvas Husqvarna {entity_name} est\u00e1 obsoleto"
+        }
+    },
+    "selector": {
+        "override_modes": {
+            "options": {
+                "mow": "Cortar",
+                "park": "Parque"
+            }
+        }
+    },
+    "services": {
+        "override_schedule": {
+            "description": "Permite ao cortador cortar a relva ou estacionar durante um determinado per\u00edodo, ignorando todos os hor\u00e1rios.",
+            "fields": {
+                "duration": {
+                    "description": "M\u00ednimo: 1 minuto, m\u00e1ximo: 42 dias, os segundos ser\u00e3o ignorados.",
+                    "name": "Dura\u00e7\u00e3o"
+                },
+                "override_mode": {
+                    "description": "Com que a\u00e7\u00e3o o calend\u00e1rio deve ser substitu\u00eddo.",
+                    "name": "Modo de substitui\u00e7\u00e3o"
+                }
+            },
+            "name": "Substituir programa\u00e7\u00e3o"
+        },
+        "override_schedule_work_area": {
+            "description": "Anular o hor\u00e1rio do cortador durante um per\u00edodo de tempo na \u00e1rea de trabalho selecionada.",
+            "fields": {
+                "duration": {
+                    "description": "M\u00ednimo: 1 minuto, m\u00e1ximo: 42 dias, os segundos ser\u00e3o ignorados.",
+                    "name": "Dura\u00e7\u00e3o"
+                },
+                "work_area_id": {
+                    "description": "Em que \u00e1rea de trabalho o cortador de relva deve cortar a relva.",
+                    "name": "ID da \u00e1rea de trabalho"
+                }
+            },
+            "name": "Anular a \u00e1rea de trabalho do programa"
+        }
+    }
+}

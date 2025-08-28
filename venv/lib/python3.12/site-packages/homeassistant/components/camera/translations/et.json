@@ -1,0 +1,115 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Kaamera",
+            "state": {
+                "idle": "Ootel",
+                "recording": "Salvestab",
+                "streaming": "Voogedastab"
+            },
+            "state_attributes": {
+                "access_token": {
+                    "name": "Juurdep\u00e4\u00e4sut\u00f5end"
+                },
+                "brand": {
+                    "name": "Tootja"
+                },
+                "frontend_stream_type": {
+                    "name": "Voo t\u00fc\u00fcp",
+                    "state": {
+                        "hls": "HLS",
+                        "webrtc": "WebRTC"
+                    }
+                },
+                "model_name": {
+                    "name": "Mudel"
+                },
+                "motion_detection": {
+                    "name": "Liikumise tuvastamine",
+                    "state": {
+                        "false": "Keelatud",
+                        "true": "Lubatud"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_filename_template": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Eelnevalt m\u00e4\u00e4ratletud malli muutujat `entity_id` kasutati tegevuse `{service}` teostamisel mis oli suunatud kaamera\u00fcksusele `{entity_id}`. Eelnevalt m\u00e4\u00e4ratletud malli muutuja `entity_id` eemaldatakse parameetrist `filename` parameetrist `{service}`.\n\nPalun uuenda oma automatiseerimisi ja skripte, et kasutada selle asemel k\u00e4sitsi m\u00e4\u00e4ratletud muutujat, ning vali **Submit**, et sulgeda see probleem.",
+                        "title": "Tuvastati aegunud mallimuutuja kasutamine"
+                    }
+                }
+            },
+            "title": "Tuvastati aegunud mallimuutuja kasutamine"
+        },
+        "legacy_webrtc_provider": {
+            "description": "{legacy_integration} integratsioon on registreerinud vanema WebRTC teenusepakkuja. Home Assistant eelistab kasutada sisseehitatud kaasaegset WebRTC teenusepakkujat, mille on registreerinud {builtin_integration} integratsioon.\n\nSisseehitatud integratsiooni eelised on j\u00e4rgmised:\n\n- Kaameravoog k\u00e4ivitub kiiremini.\n- Toetatakse rohkem kaameraseadmeid.\n\nSelle probleemi lahendamiseks v\u00f5i kdas j\u00e4tkata sisseehitatud kaasaegse WebRTC teenusepakkuja kasutamist ja eemaldada {legacy_integration} integratsiooni v\u00f5i eemaldada {builtin_integration} integratsiooni, et kasutada vanemat teenusepakkujat, ja seej\u00e4rel taask\u00e4ivitada Home Assistant.",
+            "title": "Avastati vanema WebRTC teenusepakkuja kasutamine, mille on registreerinud {legacy_integration}"
+        }
+    },
+    "services": {
+        "disable_motion_detection": {
+            "description": "Keelab liikumise tuvastamise.",
+            "name": "Keela liikumise tuvastamine"
+        },
+        "enable_motion_detection": {
+            "description": "Lubab liikumise tuvastamise.",
+            "name": "Luba liikumise tuvastamine"
+        },
+        "play_stream": {
+            "description": "Esitab kaameravoo toetatud meediam\u00e4ngijas.",
+            "fields": {
+                "format": {
+                    "description": "Meediam\u00e4ngija toetatud voovorming.",
+                    "name": "Vorming"
+                },
+                "media_player": {
+                    "description": "Meediam\u00e4ngijad kuhu voogesitada.",
+                    "name": "Meediam\u00e4ngija"
+                }
+            },
+            "name": "Esita voogu"
+        },
+        "record": {
+            "description": "Loob reaalajas kaamera voo salvestuse.",
+            "fields": {
+                "duration": {
+                    "description": "Salvestuse planeeritud kestus. Tegelik kestus v\u00f5ib erineda.",
+                    "name": "Kestus"
+                },
+                "filename": {
+                    "description": "T\u00e4ielik tee failinime juurde. Peab olema mp4.",
+                    "name": "Faili nimi"
+                },
+                "lookback": {
+                    "description": "Salvestusse kaasatav planeeritud tagasivaateperiood (lisaks kestusele). Saadaval ainult siis, kui praegu on aktiivne HLS-voog. Tagasivaateperioodi tegelik pikkus v\u00f5ib erineda.",
+                    "name": "Tagasivaade"
+                }
+            },
+            "name": "Salvestus"
+        },
+        "snapshot": {
+            "description": "Teeb kaamerast hetkt\u00f5mmise.",
+            "fields": {
+                "filename": {
+                    "description": "T\u00e4ielik tee failinime juurde.",
+                    "name": "Faili nimi"
+                }
+            },
+            "name": "Tee hetkt\u00f5mmis"
+        },
+        "turn_off": {
+            "description": "L\u00fclitab kaamera v\u00e4lja.",
+            "name": "L\u00fclita v\u00e4lja"
+        },
+        "turn_on": {
+            "description": "L\u00fclitab kaamera sisse.",
+            "name": "L\u00fclita sisse"
+        }
+    },
+    "title": "Kaamera"
+}

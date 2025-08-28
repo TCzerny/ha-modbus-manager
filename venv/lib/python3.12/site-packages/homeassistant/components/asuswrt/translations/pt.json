@@ -1,0 +1,120 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_host": "Endere\u00e7o IP ou anfitri\u00e3o inv\u00e1lido.",
+            "pwd_or_ssh": "Fornecer palavra-passe ou ficheiro de chave SSH",
+            "pwd_required": "\u00c9 necess\u00e1ria a palavra-passe para o protocolo selecionado",
+            "ssh_not_file": "Ficheiro de chave SSH n\u00e3o encontrado",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "legacy": {
+                "data": {
+                    "mode": "Modo de opera\u00e7\u00e3o do router"
+                },
+                "description": "Defina os par\u00e2metros necess\u00e1rios para se conectar ao seu router"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "port": "Porta (deixar em branco para o protocolo predefinido)",
+                    "protocol": "Protocolo de comunica\u00e7\u00e3o a utilizar",
+                    "ssh_key": "Caminho para o seu ficheiro de chave SSH (em vez da palavra-passe)",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou o endere\u00e7o IP do seu router ASUSWRT."
+                },
+                "description": "Definir o par\u00e2metro necess\u00e1rio para ligar ao seu router"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "24ghz_temperature": {
+                "name": "Temperatura 2,4GHz"
+            },
+            "5ghz_2_temperature": {
+                "name": "Temperatura a 5GHz (r\u00e1dio 2)"
+            },
+            "5ghz_temperature": {
+                "name": "Temperatura 5GHz"
+            },
+            "6ghz_temperature": {
+                "name": "Temperatura a 6GHz"
+            },
+            "cpu_core_usage": {
+                "name": "Uso do n\u00facleo CPU {core_id}"
+            },
+            "cpu_temperature": {
+                "name": "Temperatura do CPU"
+            },
+            "cpu_usage": {
+                "name": "Uso do CPU"
+            },
+            "devices_connected": {
+                "name": "Dispositivos ligados"
+            },
+            "download": {
+                "name": "Download"
+            },
+            "download_speed": {
+                "name": "Velocidade de download"
+            },
+            "last_boot": {
+                "name": "\u00daltimo arranque"
+            },
+            "load_avg_15m": {
+                "name": "Carga m\u00e9dia (15m)"
+            },
+            "load_avg_1m": {
+                "name": "Carga m\u00e9dia (1m)"
+            },
+            "load_avg_5m": {
+                "name": "Carga m\u00e9dia (5m)"
+            },
+            "memory_free": {
+                "name": "Mem\u00f3ria livre"
+            },
+            "memory_usage": {
+                "name": "Uso da mem\u00f3ria"
+            },
+            "memory_used": {
+                "name": "Mem\u00f3ria usada"
+            },
+            "upload": {
+                "name": "Upload"
+            },
+            "upload_speed": {
+                "name": "Velocidade de upload"
+            },
+            "uptime": {
+                "name": "Tempo ligado"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "consider_home": "Segundos de espera antes de considerar um dispositivo como ausente",
+                    "interface": "O interface do qual quer obter estat\u00edsticas (e.g. eth0, et1, etc)",
+                    "require_ip": "Os dispositivos t\u00eam de ter IP (para o modo de ponto de acesso)",
+                    "track_unknown": "Rastrear dispositivos desconhecidos / sem nome"
+                }
+            }
+        }
+    },
+    "selector": {
+        "protocols": {
+            "options": {
+                "http": "HTTP",
+                "https": "HTTPS",
+                "ssh": "SSH",
+                "telnet": "Telnet"
+            }
+        }
+    }
+}

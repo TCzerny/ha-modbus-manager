@@ -1,0 +1,210 @@
+{
+    "common": {
+        "climate_preset_heater": "V\u00e4rmare",
+        "climate_preset_solar": "Solenergi",
+        "climate_preset_solar_prefered": "F\u00f6retr\u00e4desvis sol",
+        "service_config_entry_description": "Konfigurationsposten som ska anv\u00e4ndas f\u00f6r den h\u00e4r \u00e5tg\u00e4rden.",
+        "service_config_entry_name": "Konfigureringspost"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "gateway_entry": {
+                "data": {
+                    "ip_address": "IP-adress",
+                    "port": "Port"
+                },
+                "description": "Ange din ScreenLogic Gateway-information.",
+                "title": "ScreenLogic"
+            },
+            "gateway_select": {
+                "data": {
+                    "selected_gateway": "Gateway"
+                },
+                "description": "F\u00f6ljande ScreenLogic-gateways uppt\u00e4cktes. V\u00e4lj en att konfigurera, eller v\u00e4lj att manuellt konfigurera en ScreenLogic-gateway.",
+                "title": "ScreenLogic"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_alert": {
+                "name": "Aktiv varning"
+            },
+            "chem_high_alarm": {
+                "name": "{chem} h\u00f6gt larm"
+            },
+            "chem_limit": {
+                "name": "{chem} dosgr\u00e4ns uppn\u00e5dd"
+            },
+            "chem_low_alarm": {
+                "name": "{chem} l\u00e5gt larm"
+            },
+            "chem_supply_alarm": {
+                "name": "{chem} tillf\u00f6rsel larm"
+            },
+            "cleaner_delay": {
+                "name": "F\u00f6rdr\u00f6jning av renare"
+            },
+            "corosive": {
+                "name": "SI korrosiv"
+            },
+            "flow_alarm": {
+                "name": "Fl\u00f6deslarm"
+            },
+            "freeze_mode": {
+                "name": "Frysl\u00e4ge"
+            },
+            "ph_lockout": {
+                "name": "pH-sp\u00e4rr"
+            },
+            "pool_delay": {
+                "name": "F\u00f6rdr\u00f6jning av pool"
+            },
+            "probe_fault_alarm": {
+                "name": "Fel p\u00e5 sond"
+            },
+            "scaling": {
+                "name": "SI-skalning"
+            },
+            "scg_state": {
+                "name": "Klorinator"
+            },
+            "spa_delay": {
+                "name": "F\u00f6rdr\u00f6jning av spa"
+            }
+        },
+        "climate": {
+            "body_0": {
+                "name": "Poolv\u00e4rme"
+            },
+            "body_1": {
+                "name": "Spav\u00e4rme"
+            }
+        },
+        "number": {
+            "calcium_hardness": {
+                "name": "Kalciumh\u00e5rdhet"
+            },
+            "cya": {
+                "name": "Cyanursyra"
+            },
+            "pool_setpoint": {
+                "name": "B\u00f6rv\u00e4rde f\u00f6r klorinator i pool"
+            },
+            "salt_tds_ppm": {
+                "name": "Salt/TDS"
+            },
+            "spa_setpoint": {
+                "name": "B\u00f6rv\u00e4rde f\u00f6r klorinator i spa"
+            },
+            "total_alkalinity": {
+                "name": "Total alkalinitet"
+            }
+        },
+        "sensor": {
+            "air_temperature": {
+                "name": "Lufttemperatur"
+            },
+            "calcium_hardness": {
+                "name": "Kalciumh\u00e5rdhet"
+            },
+            "chem_dose_state": {
+                "name": "{chem} doseringstillst\u00e5nd"
+            },
+            "chem_last_dose_time": {
+                "name": "{chem} senaste dosens tidpunkt"
+            },
+            "chem_last_dose_volume": {
+                "name": "{chem} senaste dosens volym"
+            },
+            "chem_now": {
+                "name": "{chem} nu"
+            },
+            "chem_setpoint": {
+                "name": "{chem} b\u00f6rv\u00e4rde"
+            },
+            "chem_supply_level": {
+                "name": "{chem} tillf\u00f6rselniv\u00e5"
+            },
+            "cya": {
+                "name": "Cyanursyra"
+            },
+            "ph_probe_water_temp": {
+                "name": "pH-sonds vattentemperatur"
+            },
+            "salt_ppm": {
+                "name": "Kloreringssalt"
+            },
+            "salt_tds_ppm": {
+                "name": "Salt/TDS"
+            },
+            "saturation": {
+                "name": "M\u00e4ttnadsindex"
+            },
+            "super_chlor_timer": {
+                "name": "Timer f\u00f6r superklorering"
+            },
+            "total_alkalinity": {
+                "name": "Total alkalinitet"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Sekunder mellan skanningar"
+                },
+                "description": "Ange inst\u00e4llningar f\u00f6r {gateway_name}",
+                "title": "ScreenLogic"
+            }
+        }
+    },
+    "services": {
+        "set_color_mode": {
+            "description": "St\u00e4ller in f\u00e4rgl\u00e4get f\u00f6r alla f\u00e4rgkompatibla lampor som \u00e4r anslutna till denna ScreenLogic-gateway.",
+            "fields": {
+                "color_mode": {
+                    "description": "ScreenLogic-f\u00e4rgl\u00e4ge att st\u00e4lla in.",
+                    "name": "F\u00e4rgl\u00e4ge"
+                },
+                "config_entry": {
+                    "description": "Konfigurationsposten som ska anv\u00e4ndas f\u00f6r den h\u00e4r \u00e5tg\u00e4rden.",
+                    "name": "Konfigureringspost"
+                }
+            },
+            "name": "St\u00e4ll in f\u00e4rgl\u00e4ge"
+        },
+        "start_super_chlorination": {
+            "description": "B\u00f6rjar superklorering, k\u00f6rs under den angivna perioden eller 24 timmar om ingen tid \u00e4r angiven.",
+            "fields": {
+                "config_entry": {
+                    "description": "Konfigurationsposten som ska anv\u00e4ndas f\u00f6r den h\u00e4r \u00e5tg\u00e4rden.",
+                    "name": "Konfigureringspost"
+                },
+                "runtime": {
+                    "description": "Antal timmar som superklorering ska p\u00e5g\u00e5.",
+                    "name": "K\u00f6rtid"
+                }
+            },
+            "name": "Starta superklorering"
+        },
+        "stop_super_chlorination": {
+            "description": "Stoppar superklorering.",
+            "fields": {
+                "config_entry": {
+                    "description": "Konfigurationsposten som ska anv\u00e4ndas f\u00f6r den h\u00e4r \u00e5tg\u00e4rden.",
+                    "name": "Konfigureringspost"
+                }
+            },
+            "name": "Stoppa superklorering"
+        }
+    }
+}

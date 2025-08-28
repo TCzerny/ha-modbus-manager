@@ -1,0 +1,256 @@
+{
+    "common": {
+        "data_description_api_token": "El token API de tu instancia de Mealie de tu perfil de usuario dentro de Mealie.",
+        "data_description_host": "La URL de tu instancia de Mealie, por ejemplo, http://192.168.1.123:1234",
+        "data_description_verify_ssl": "\u00bfSe deben verificar los certificados SSL? Esta opci\u00f3n deber\u00eda estar desactivada para los certificados autofirmados."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "El servicio ya est\u00e1 configurado",
+            "reauth_successful": "La autenticaci\u00f3n se volvi\u00f3 a realizar correctamente",
+            "reconfigure_successful": "Se volvi\u00f3 a configurar correctamente",
+            "wrong_account": "Tienes que utilizar la misma cuenta que se utiliz\u00f3 para configurar la integraci\u00f3n."
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "ingress_url": "Las URL de ingreso solo se utilizan para acceder a la interfaz de usuario de Mealie. Utiliza la direcci\u00f3n IP de Home Assistant y el puerto de red dentro de la pesta\u00f1a de configuraci\u00f3n del complemento Mealie.",
+            "invalid_auth": "Autenticaci\u00f3n no v\u00e1lida",
+            "mealie_version": "La versi\u00f3n m\u00ednima requerida es v1.0.0. Por favor, actualiza Mealie y luego vuelve a intentarlo.",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "api_token": "Token API"
+                },
+                "data_description": {
+                    "api_token": "El token API de tu instancia de Mealie de tu perfil de usuario dentro de Mealie."
+                },
+                "description": "Por favor, vuelve a autenticarte con Mealie."
+            },
+            "reconfigure": {
+                "data": {
+                    "api_token": "Token API",
+                    "host": "URL",
+                    "verify_ssl": "Verificar el certificado SSL"
+                },
+                "data_description": {
+                    "api_token": "El token API de tu instancia de Mealie de tu perfil de usuario dentro de Mealie.",
+                    "host": "La URL de tu instancia de Mealie, por ejemplo, http://192.168.1.123:1234",
+                    "verify_ssl": "\u00bfSe deben verificar los certificados SSL? Esta opci\u00f3n deber\u00eda estar desactivada para los certificados autofirmados."
+                },
+                "description": "Por favor, vuelve a configurarlo con Mealie."
+            },
+            "user": {
+                "data": {
+                    "api_token": "Token API",
+                    "host": "URL",
+                    "verify_ssl": "Verificar el certificado SSL"
+                },
+                "data_description": {
+                    "api_token": "El token API de tu instancia de Mealie de tu perfil de usuario dentro de Mealie.",
+                    "host": "La URL de tu instancia de Mealie, por ejemplo, http://192.168.1.123:1234",
+                    "verify_ssl": "\u00bfSe deben verificar los certificados SSL? Esta opci\u00f3n deber\u00eda estar desactivada para los certificados autofirmados."
+                }
+            }
+        }
+    },
+    "entity": {
+        "calendar": {
+            "breakfast": {
+                "name": "Desayuno"
+            },
+            "dinner": {
+                "name": "Cena"
+            },
+            "lunch": {
+                "name": "Almuerzo"
+            },
+            "side": {
+                "name": "Guarnici\u00f3n"
+            }
+        },
+        "sensor": {
+            "categories": {
+                "name": "Categor\u00edas",
+                "unit_of_measurement": "categor\u00edas"
+            },
+            "recipes": {
+                "name": "Recetas",
+                "unit_of_measurement": "recetas"
+            },
+            "tags": {
+                "name": "Etiquetas",
+                "unit_of_measurement": "etiquetas"
+            },
+            "tools": {
+                "name": "Herramientas",
+                "unit_of_measurement": "herramientas"
+            },
+            "users": {
+                "name": "Usuarios",
+                "unit_of_measurement": "usuarios"
+            }
+        }
+    },
+    "exceptions": {
+        "add_item_error": {
+            "message": "Se produjo un error al a\u00f1adir un art\u00edculo a {shopping_list_name}."
+        },
+        "auth_failed": {
+            "message": "Error de autenticaci\u00f3n. Por favor, vuelve a autenticarte."
+        },
+        "connection_error": {
+            "message": "Error al conectar con la instancia Mealie."
+        },
+        "could_not_import_recipe": {
+            "message": "Mealie no pudo importar la receta desde la URL."
+        },
+        "delete_item_error": {
+            "message": "Se produjo un error al eliminar un art\u00edculo de {shopping_list_name}."
+        },
+        "end_date_before_start_date": {
+            "message": "La fecha de finalizaci\u00f3n debe ser posterior a la fecha de inicio."
+        },
+        "integration_not_found": {
+            "message": "La integraci\u00f3n \"{target}\" no se encuentra en el registro."
+        },
+        "item_not_found_error": {
+            "message": "Art\u00edculo {shopping_list_item} no encontrado."
+        },
+        "not_loaded": {
+            "message": "{target} no est\u00e1 cargado."
+        },
+        "recipe_not_found": {
+            "message": "Receta con ID o slug `{recipe_id}` no encontrada."
+        },
+        "setup_failed": {
+            "message": "No se pudo conectar a la instancia de Mealie."
+        },
+        "update_failed_mealplan": {
+            "message": "No se pudieron obtener los datos del plan de comidas."
+        },
+        "update_failed_shopping_list": {
+            "message": "No se pudieron obtener los datos de la lista de compras."
+        },
+        "update_failed_statistics": {
+            "message": "No se pudieron obtener los datos estad\u00edsticos."
+        },
+        "update_item_error": {
+            "message": "Se produjo un error al actualizar un art\u00edculo en {shopping_list_name}."
+        },
+        "version_error": {
+            "message": "Est\u00e1s ejecutando la versi\u00f3n {mealie_version} de Mealie. La versi\u00f3n m\u00ednima requerida es {min_version}. Por favor, actualiza Mealie y luego vuelve a intentarlo."
+        }
+    },
+    "selector": {
+        "mealplan_entry_type": {
+            "options": {
+                "breakfast": "Desayuno",
+                "dinner": "Cena",
+                "lunch": "Almuerzo",
+                "side": "Guarnici\u00f3n"
+            }
+        }
+    },
+    "services": {
+        "get_mealplan": {
+            "description": "Obt\u00e9n un plan de alimentaci\u00f3n de Mealie",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Selecciona la instancia de Mealie de la que quieres obtener el plan de comidas",
+                    "name": "Instancia de Mealie"
+                },
+                "end_date": {
+                    "description": "La fecha de finalizaci\u00f3n de los datos que se van a obtener (predeterminado: hoy).",
+                    "name": "Fecha de fin"
+                },
+                "start_date": {
+                    "description": "La fecha de inicio de los datos que se van a obtener (predeterminado: hoy).",
+                    "name": "Fecha de inicio"
+                }
+            },
+            "name": "Obtener plan de comidas"
+        },
+        "get_recipe": {
+            "description": "Obtener receta de Mealie",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Selecciona la instancia de Mealie de la que quieres obtener el plan de comidas",
+                    "name": "Instancia de Mealie"
+                },
+                "recipe_id": {
+                    "description": "El ID de la receta o el slug de la receta a obtener.",
+                    "name": "ID de receta o slug"
+                }
+            },
+            "name": "Obtener receta"
+        },
+        "import_recipe": {
+            "description": "Importar receta desde una URL",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Selecciona la instancia de Mealie de la que quieres obtener el plan de comidas",
+                    "name": "Instancia de Mealie"
+                },
+                "include_tags": {
+                    "description": "Incluye etiquetas del sitio web en la receta.",
+                    "name": "Incluir etiquetas"
+                },
+                "url": {
+                    "description": "La URL de la receta a importar.",
+                    "name": "URL a la receta"
+                }
+            },
+            "name": "Importar receta"
+        },
+        "set_mealplan": {
+            "description": "Establecer un plan de comidas para una fecha concreta",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Selecciona la instancia de Mealie de la que quieres obtener el plan de comidas",
+                    "name": "Instancia de Mealie"
+                },
+                "date": {
+                    "description": "Fecha para la que se fija el plan de comidas.",
+                    "name": "Fecha"
+                },
+                "entry_type": {
+                    "description": "El tipo de plato para el que se va a configurar la receta.",
+                    "name": "Tipo de plato"
+                },
+                "note_text": {
+                    "description": "Texto de la nota de la comida para cuando se planifica sin receta.",
+                    "name": "Texto de la nota"
+                },
+                "note_title": {
+                    "description": "T\u00edtulo de la nota de la comida para cuando se planifica sin receta.",
+                    "name": "T\u00edtulo de la nota de la comida"
+                },
+                "recipe_id": {
+                    "description": "El ID de la receta o el nombre de la receta que se desea obtener.",
+                    "name": "ID de la receta"
+                }
+            },
+            "name": "Establecer un plan de comidas"
+        },
+        "set_random_mealplan": {
+            "description": "Establecer un plan de comidas aleatorio para una fecha concreta",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Selecciona la instancia de Mealie de la que quieres obtener el plan de comidas",
+                    "name": "Instancia de Mealie"
+                },
+                "date": {
+                    "description": "Fecha para la que se fija el plan de comidas.",
+                    "name": "Fecha"
+                },
+                "entry_type": {
+                    "description": "El tipo de plato a aleatorizar.",
+                    "name": "Tipo de plato"
+                }
+            },
+            "name": "Establecer un plan de comidas aleatorio"
+        }
+    }
+}

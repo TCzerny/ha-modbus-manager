@@ -1,0 +1,52 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Zariadenie u\u017e je nakonfigurovan\u00e9"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "unknown": "Neo\u010dak\u00e1van\u00e1 chyba"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API k\u013e\u00fa\u010d"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "away_mode": {
+                "name": "Re\u017eim nepr\u00edtomnosti"
+            }
+        },
+        "sensor": {
+            "daily_usage": {
+                "name": "Denn\u00e1 spotreba"
+            },
+            "monthly_usage": {
+                "name": "Mesa\u010dn\u00e1 spotreba"
+            },
+            "yearly_usage": {
+                "name": "Ro\u010dn\u00e1 spotreba"
+            }
+        }
+    },
+    "services": {
+        "set_away_mode": {
+            "description": "Nastavuje re\u017eim doma/nepr\u00edtomnos\u0165 pre monitor vody Streamlabs.",
+            "fields": {
+                "away_mode": {
+                    "description": "Doma alebo nepr\u00edtomnos\u0165.",
+                    "name": "Re\u017eim nepr\u00edtomnosti"
+                },
+                "location_id": {
+                    "description": "Identifik\u00e1tor umiestnenia monitora vody Streamlabs.",
+                    "name": "ID lokality"
+                }
+            },
+            "name": "Nastavenie re\u017eimu nepr\u00edtomnosti"
+        }
+    }
+}

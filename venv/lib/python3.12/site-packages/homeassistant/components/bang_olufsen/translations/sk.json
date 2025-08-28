@@ -1,0 +1,134 @@
+{
+    "common": {
+        "jid_options_description": "Roz\u0161\u00edren\u00e9 mo\u017enosti zoskupovania, pri ktor\u00fdch sa priamo pou\u017e\u00edvaj\u00fa jedine\u010dn\u00e9 identifik\u00e1tory Beolink (naz\u00fdvan\u00e9 JID) zariaden\u00ed. Identifik\u00e1tory JID mo\u017eno n\u00e1js\u0165 v stavov\u00fdch atrib\u00fatoch entity medi\u00e1lneho prehr\u00e1va\u010da.",
+        "jid_options_name": "Mo\u017enosti JID"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Zariadenie u\u017e je nakonfigurovan\u00e9",
+            "already_in_progress": "Konfigur\u00e1cia u\u017e prebieha"
+        },
+        "error": {
+            "api_exception": "Nepodarilo sa pripoji\u0165",
+            "client_connector_error": "Nepodarilo sa pripoji\u0165",
+            "invalid_ip": "Neplatn\u00e1 adresa IPv4",
+            "timeout_error": "Nepodarilo sa pripoji\u0165"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "IP adresa",
+                    "model": "Model"
+                },
+                "description": "Manu\u00e1lne nakonfigurujte svoje zariadenie Bang & Olufsen."
+            },
+            "zeroconf_confirm": {
+                "description": "Potvr\u010fte konfigur\u00e1ciu {model} - {serial_number} @ {host}.",
+                "title": "Nastavte zariadenie Bang & Olufsen"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_grouping_entity": {
+            "message": "Entitu s id: {entity_id} nemo\u017eno prida\u0165 do rel\u00e1cie Beolink. Je entita Bang &amp; Olufsen media_player?"
+        },
+        "invalid_media_type": {
+            "message": "{invalid_media_type} je neplatn\u00fd typ. Platn\u00e9 hodnoty s\u00fa: {valid_media_types}."
+        },
+        "invalid_sound_mode": {
+            "message": "{invalid_sound_mode} je neplatn\u00fd zvukov\u00fd re\u017eim. Platn\u00e9 hodnoty s\u00fa: {valid_sound_modes}."
+        },
+        "invalid_source": {
+            "message": "Neplatn\u00fd zdroj: {invalid_source}. Platn\u00e9 zdroje s\u00fa: {valid_sources}"
+        },
+        "m3u_invalid_format": {
+            "message": "Zdroje m\u00e9di\u00ed s pr\u00edponou .m3u nie s\u00fa podporovan\u00e9."
+        },
+        "play_media_error": {
+            "message": "Pri pokuse o prehr\u00e1vanie na str\u00e1nke {media_type}: {error_message} do\u0161lo k chybe."
+        }
+    },
+    "selector": {
+        "source_ids": {
+            "options": {
+                "aux_a": "Beolink prevodn\u00edk NL/ML AUX_A",
+                "beoradio": "ASE Beoradio",
+                "cd": "Beolink prevodn\u00edk NL/ML CD",
+                "deezer": "ASE / Mozart Deezer",
+                "ph": "Beolink prevodn\u00edk NL/ML PH",
+                "radio": "Prevodn\u00edk Beolink NL/ML RADIO",
+                "spotify": "ASE / Mozart Spotify",
+                "tidal": "Mozart Tidal",
+                "tp1": "Prevodn\u00edk Beolink NL/ML TP1",
+                "tp2": "Prevodn\u00edk Beolink NL/ML TP2"
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "Nastavte v\u0161etky pripojen\u00e9 zariadenia Beolink do pohotovostn\u00e9ho re\u017eimu.",
+            "name": "Beolink v pohotovostnom re\u017eime"
+        },
+        "beolink_expand": {
+            "description": "Roz\u0161\u00edrte s\u00fa\u010dasn\u00e9 prostredie Beolink.",
+            "fields": {
+                "all_discovered": {
+                    "description": "Roz\u0161\u00edrenie sk\u00fasenost\u00ed s Beolinkom na v\u0161etky objaven\u00e9 zariadenia.",
+                    "name": "V\u0161etky objaven\u00e9"
+                },
+                "beolink_jids": {
+                    "description": "Zadajte, ktor\u00e9 JID Beolink sa pripoja k aktu\u00e1lnemu pou\u017e\u00edvaniu Beolink.",
+                    "name": "Beolink JID"
+                }
+            },
+            "name": "Rozbali\u0165 Beolink",
+            "sections": {
+                "jid_options": {
+                    "description": "Roz\u0161\u00edren\u00e9 mo\u017enosti zoskupovania, pri ktor\u00fdch sa priamo pou\u017e\u00edvaj\u00fa jedine\u010dn\u00e9 identifik\u00e1tory Beolink (naz\u00fdvan\u00e9 JID) zariaden\u00ed. Identifik\u00e1tory JID mo\u017eno n\u00e1js\u0165 v stavov\u00fdch atrib\u00fatoch entity medi\u00e1lneho prehr\u00e1va\u010da.",
+                    "name": "Mo\u017enosti JID"
+                }
+            }
+        },
+        "beolink_join": {
+            "description": "Pripojte sa k z\u00e1\u017eitku Beolink.",
+            "fields": {
+                "beolink_jid": {
+                    "description": "Ru\u010dne zadajte Beolink JID na pripojenie.",
+                    "name": "Beolink JID"
+                },
+                "source_id": {
+                    "description": "Zadajte, ku ktor\u00e9mu zdroju sa m\u00e1 pripoji\u0165, spr\u00e1vanie sa l\u00ed\u0161i pod\u013ea hardv\u00e9rovej platformy. N\u00e1zvy zdrojov, pred ktor\u00fdmi je uveden\u00fd n\u00e1zov platformy, mo\u017eno pou\u017ei\u0165 len pri prip\u00e1jan\u00ed k danej platforme. Napr\u00edklad \"ASE Beoradio\" mo\u017eno pou\u017ei\u0165 len pri prip\u00e1jan\u00ed k zariadeniu ASE, zatia\u013e \u010do \"ASE / Mozart Deezer\" mo\u017eno pou\u017ei\u0165 so zariadeniami ASE alebo Mozart. Vy\u017eaduje sa definovan\u00fd Beolink JID.",
+                    "name": "Zdroj"
+                }
+            },
+            "name": "Pripoji\u0165 sa k Beolink",
+            "sections": {
+                "jid_options": {
+                    "description": "Roz\u0161\u00edren\u00e9 mo\u017enosti zoskupovania, pri ktor\u00fdch sa priamo pou\u017e\u00edvaj\u00fa jedine\u010dn\u00e9 identifik\u00e1tory Beolink (naz\u00fdvan\u00e9 JID) zariaden\u00ed. Identifik\u00e1tory JID mo\u017eno n\u00e1js\u0165 v stavov\u00fdch atrib\u00fatoch entity medi\u00e1lneho prehr\u00e1va\u010da.",
+                    "name": "Mo\u017enosti JID"
+                }
+            }
+        },
+        "beolink_leave": {
+            "description": "Zanechajte sk\u00fasenos\u0165 s Beolinkom.",
+            "name": "Opusti\u0165 Beolink"
+        },
+        "beolink_unexpand": {
+            "description": "Roz\u0161\u00edrenie zo s\u00fa\u010dasn\u00fdch sk\u00fasenost\u00ed s Beolinkom.",
+            "fields": {
+                "beolink_jids": {
+                    "description": "Zadajte, ktor\u00e9 JID Beolink opustia z aktu\u00e1lneho prostredia Beolink.",
+                    "name": "Beolink JID"
+                }
+            },
+            "name": "Beolink rozbali\u0165",
+            "sections": {
+                "jid_options": {
+                    "description": "Roz\u0161\u00edren\u00e9 mo\u017enosti zoskupovania, pri ktor\u00fdch sa priamo pou\u017e\u00edvaj\u00fa jedine\u010dn\u00e9 identifik\u00e1tory Beolink (naz\u00fdvan\u00e9 JID) zariaden\u00ed. Identifik\u00e1tory JID mo\u017eno n\u00e1js\u0165 v stavov\u00fdch atrib\u00fatoch entity medi\u00e1lneho prehr\u00e1va\u010da.",
+                    "name": "Mo\u017enosti JID"
+                }
+            }
+        }
+    }
+}

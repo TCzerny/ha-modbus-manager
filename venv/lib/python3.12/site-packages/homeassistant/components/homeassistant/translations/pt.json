@@ -1,0 +1,246 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "J\u00e1 configurado. S\u00f3 pode existir uma configura\u00e7\u00e3o."
+        }
+    },
+    "exceptions": {
+        "component_import_err": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel importar {domain}: {error}"
+        },
+        "config_platform_import_err": {
+            "message": "Erro ao importar a plataforma de configura\u00e7\u00e3o {domain}: {error}."
+        },
+        "config_schema_unknown_err": {
+            "message": "Erro desconhecido ao chamar {domain} CONFIG_SCHEMA - {error}."
+        },
+        "config_validation_err": {
+            "message": "Configura\u00e7\u00e3o inv\u00e1lida para a integra\u00e7\u00e3o {domain} no ficheiro {config_file}, linha {line}: {error}."
+        },
+        "config_validator_unknown_err": {
+            "message": "Erro desconhecido ao chamar o validador de configura\u00e7\u00e3o {domain} - {error}."
+        },
+        "max_length_exceeded": {
+            "message": "O valor {value} para a propriedade {property_name} tem um comprimento m\u00e1ximo de {max_length} carateres."
+        },
+        "multiple_integration_config_errors": {
+            "message": "Falha ao processar a configura\u00e7\u00e3o da integra\u00e7\u00e3o {domain} devido a v\u00e1rios erros ({errors}). Verifique os registos para obter mais informa\u00e7\u00f5es."
+        },
+        "platform_component_load_err": {
+            "message": "Erro de plataforma: {domain} - {error}."
+        },
+        "platform_component_load_exc": {
+            "message": "Erro de plataforma: {domain} - {error}."
+        },
+        "platform_config_validation_err": {
+            "message": "Configura\u00e7\u00e3o inv\u00e1lida para {domain} da integra\u00e7\u00e3o {p_name} no ficheiro {config_file}, linha {line}: {error}. Verifique os registos para obter mais informa\u00e7\u00f5es."
+        },
+        "platform_schema_validator_err": {
+            "message": "Erro desconhecido ao validar a configura\u00e7\u00e3o para {domain} da integra\u00e7\u00e3o {p_name} - {error}."
+        },
+        "service_does_not_support_response": {
+            "message": "Uma a\u00e7\u00e3o que n\u00e3o retorna respostas n\u00e3o pode ser chamada com {return_response}."
+        },
+        "service_lacks_response_request": {
+            "message": "A a\u00e7\u00e3o requer respostas e deve ser chamada com {return_response}."
+        },
+        "service_not_found": {
+            "message": "A\u00e7\u00e3o {domain}.{service} n\u00e3o encontrada."
+        },
+        "service_not_supported": {
+            "message": "A entidade {entity_id} n\u00e3o suporta a a\u00e7\u00e3o {domain}.{service}."
+        },
+        "service_reponse_invalid": {
+            "message": "Falha ao processar os dados da resposta da a\u00e7\u00e3o retornada, esperava-se um dicion\u00e1rio, mas obteve-se {response_data_type}."
+        },
+        "service_should_be_blocking": {
+            "message": "Uma chamada de a\u00e7\u00e3o n\u00e3o bloqueante com o argumento {non_blocking_argument} n\u00e3o pode ser usada com o argumento {return_response}."
+        }
+    },
+    "issues": {
+        "config_entry_only": {
+            "description": "A integra\u00e7\u00e3o {domain} n\u00e3o suporta a configura\u00e7\u00e3o atrav\u00e9s do ficheiro YAML. Poder\u00e1 n\u00e3o notar nenhum problema \u00f3bvio com a integra\u00e7\u00e3o, mas quaisquer defini\u00e7\u00f5es de configura\u00e7\u00e3o definidas em YAML n\u00e3o s\u00e3o efetivamente aplicadas.\n\nPara resolver isto:\n\n1. Se ainda n\u00e3o o tiver feito, [configure a integra\u00e7\u00e3o]({add_integration}).\n\n2. Remova `{domain}:` do seu ficheiro de configura\u00e7\u00e3o YAML.\n\n3. Reinicie o Home Assistant.",
+            "title": "A integra\u00e7\u00e3o {domain} n\u00e3o suporta a configura\u00e7\u00e3o YAML"
+        },
+        "config_entry_reauth": {
+            "description": "\u00c9 necess\u00e1ria uma nova autentica\u00e7\u00e3o",
+            "title": "A autentica\u00e7\u00e3o expirou para {name}"
+        },
+        "config_entry_unique_id_collision": {
+            "description": "Existem v\u00e1rias entradas de configura\u00e7\u00e3o {domain} com o mesmo ID \u00fanico.\nAs entradas de configura\u00e7\u00e3o chamam-se {titles}.\n\nPara corrigir este erro, [configure a integra\u00e7\u00e3o]({configure_url}) e remova todos, exceto um dos duplicados.\n\nNota: Outro grupo de duplicados pode ser revelado ap\u00f3s a remo\u00e7\u00e3o dessas duplica\u00e7\u00f5es.",
+            "title": "V\u00e1rias entradas de configura\u00e7\u00e3o {domain} com o mesmo ID \u00fanico"
+        },
+        "config_entry_unique_id_collision_many": {
+            "description": "Existem v\u00e1rias ({number_of_entries}) entradas de configura\u00e7\u00e3o {domain} com o mesmo ID \u00fanico.\nAs primeiras entradas de configura\u00e7\u00e3o {title_limit} t\u00eam o nome {titles}.\n\nPara corrigir este erro, [configure a integra\u00e7\u00e3o]({configure_url}) e remova todos, exceto um dos duplicados.\n\nNota: Outro grupo de duplicados pode ser revelado ap\u00f3s a remo\u00e7\u00e3o dessas duplica\u00e7\u00f5es.",
+            "title": "V\u00e1rias entradas de configura\u00e7\u00e3o {domain} com o mesmo ID \u00fanico"
+        },
+        "country_not_configured": {
+            "description": "Nenhum pa\u00eds foi configurado, atualize a configura\u00e7\u00e3o clicando no bot\u00e3o \"saber mais\" abaixo.",
+            "title": "O pa\u00eds n\u00e3o foi configurado"
+        },
+        "deprecated_yaml": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} que usa YAML est\u00e1 a ser removida.\n\nA sua configura\u00e7\u00e3o YAML existente foi importada automaticamente para a interface do utilizador.\n\nRemova a configura\u00e7\u00e3o `{domain}` do seu ficheiro configuration.yaml e reinicie o Home Assistant para resolver este problema.",
+            "title": "A configura\u00e7\u00e3o YAML {integration_title} est\u00e1 a ser removida."
+        },
+        "historic_currency": {
+            "description": "A moeda {currency} j\u00e1 n\u00e3o est\u00e1 a ser utilizada, por favor reconfigure a configura\u00e7\u00e3o da moeda.",
+            "title": "A moeda configurada j\u00e1 n\u00e3o est\u00e1 a ser utilizada"
+        },
+        "imperial_unit_system": {
+            "description": "O sistema de unidades imperiais est\u00e1 obsoleto e o seu sistema est\u00e1 atualmente a usar o sistema de unidades dos EUA. Atualize a sua configura\u00e7\u00e3o para usar o sistema de unidades dos EUA e recarregue a configura\u00e7\u00e3o principal para resolver este problema.",
+            "title": "O sistema de unidades imperiais est\u00e1 obsoleto"
+        },
+        "integration_not_found": {
+            "fix_flow": {
+                "abort": {
+                    "issue_ignored": "Integra\u00e7\u00e3o {domain} n\u00e3o existente ignorada."
+                },
+                "step": {
+                    "init": {
+                        "description": "A integra\u00e7\u00e3o `{domain}` n\u00e3o p\u00f4de ser encontrada. Isto acontece quando uma integra\u00e7\u00e3o (personalizada) foi removida do Home Assistant, mas ainda existem configura\u00e7\u00f5es para esta `integra\u00e7\u00e3o`. Utilize os bot\u00f5es abaixo para remover as configura\u00e7\u00f5es anteriores para `{domain}` ou para ignorar.",
+                        "menu_options": {
+                            "confirm": "Remover configura\u00e7\u00f5es anteriores",
+                            "ignore": "Ignorar"
+                        },
+                        "title": "Integra\u00e7\u00e3o {domain} n\u00e3o encontrada."
+                    }
+                }
+            },
+            "title": "Integra\u00e7\u00e3o {domain} n\u00e3o encontrada."
+        },
+        "legacy_templates_false": {
+            "description": "Nada mudar\u00e1 com os seus modelos.\n\nRemova a chave `legacy_templates` da configura\u00e7\u00e3o `homeassistant` no seu ficheiro configuration.yaml e reinicie o Home Assistant para resolver este problema.",
+            "title": "a chave de configura\u00e7\u00e3o `legacy_templates` est\u00e1 a ser removida."
+        },
+        "legacy_templates_true": {
+            "description": "Por favor, siga os seguintes passos:\n- Adapte a sua configura\u00e7\u00e3o para suportar a renderiza\u00e7\u00e3o de modelos para tipos nativos de Python.\n- Remova a chave `legacy_templates` da configura\u00e7\u00e3o `homeassistant` no seu ficheiro configuration.yaml.\n- Reinicie o Home Assistant para resolver este problema.",
+            "title": "O suporte para modelos legados est\u00e1 a ser removido."
+        },
+        "no_platform_setup": {
+            "description": "N\u00e3o \u00e9 poss\u00edvel configurar {platform} {domain} adicionando `{platform_key}` \u00e0 configura\u00e7\u00e3o {domain}. Por favor, verifique a documenta\u00e7\u00e3o para mais informa\u00e7\u00f5es sobre como configurar esta integra\u00e7\u00e3o.\n\nPara resolver isto:\n1. Remova as ocorr\u00eancias de `{platform_key}` da configura\u00e7\u00e3o `{domain}:` no seu ficheiro de configura\u00e7\u00e3o YAML.\n2. Reinicie o Home Assistant.\n\nExemplo que deve ser removido:\n{yaml_example}",
+            "title": "Configura\u00e7\u00e3o YAML n\u00e3o utilizada para a integra\u00e7\u00e3o {platform}"
+        },
+        "platform_only": {
+            "description": "A integra\u00e7\u00e3o {domain} n\u00e3o suporta a configura\u00e7\u00e3o sob a sua pr\u00f3pria chave, deve ser configurada sob as suas plataformas suportadas.\n\nPara resolver este problema:\n\n1. Remova `{domain}:` do seu ficheiro de configura\u00e7\u00e3o YAML.\n\n2. Reinicie o Home Assistant.",
+            "title": "A integra\u00e7\u00e3o {domain} n\u00e3o suporta a configura\u00e7\u00e3o YAML sob a sua pr\u00f3pria chave"
+        },
+        "python_version": {
+            "description": "O suporte para executar o Home Assistant na vers\u00e3o Python usada atualmente {current_python_version} est\u00e1 obsoleto e ser\u00e1 removido no Home Assistant {breaks_in_ha_version}. Por favor atualize o Python para a vers\u00e3o {required_python_version} para evitar que a sua inst\u00e2ncia do Home Assistant seja interrompida.",
+            "title": "O suporte para Python {current_python_version} est\u00e1 a ser removido"
+        },
+        "storage_corruption": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "O armazenamento `{storage_key}` n\u00e3o p\u00f4de ser analisado e foi renomeado para `{corrupt_path}` para permitir que o Home Assistant continue.\n\nUm `{storage_key}` base pode ter sido criado automaticamente.\n\nSe fez edi\u00e7\u00f5es manuais no ficheiro de armazenamento, corrija quaisquer erros de sintaxe em `{corrupt_path}`, restaure o ficheiro para o caminho original `{original_path}` e reinicie o Home Assistant. Caso contr\u00e1rio, restaure o sistema a partir de um backup.\n\nSelecione **Submeter** abaixo para confirmar que reparou o ficheiro ou restaurou a partir de um backup.\n\nO erro exato foi: {error}",
+                        "title": "Corrup\u00e7\u00e3o de armazenamento detetada para {storage_key}."
+                    }
+                }
+            },
+            "title": "Corrup\u00e7\u00e3o de armazenamento detetada para {storage_key}."
+        }
+    },
+    "services": {
+        "check_config": {
+            "description": "Verifica os ficheiros de configura\u00e7\u00e3o YAML do Home Assistant para erros. Os erros ser\u00e3o mostrados nos registos do Home Assistant.",
+            "name": "Valida a configura\u00e7\u00e3o"
+        },
+        "reload_all": {
+            "description": "Recarregar toda a configura\u00e7\u00e3o YAML que pode ser recarregada sem reiniciar o Home Assistant.",
+            "name": "Recarregar tudo"
+        },
+        "reload_config_entry": {
+            "description": "Recarrega a entrada de configura\u00e7\u00e3o especificada.",
+            "fields": {
+                "entry_id": {
+                    "description": "O ID da entrada de configura\u00e7\u00e3o da entrada a ser recarregada.",
+                    "name": "ID da entrada de configura\u00e7\u00e3o"
+                }
+            },
+            "name": "Recarrega entrada de configura\u00e7\u00e3o"
+        },
+        "reload_core_config": {
+            "description": "Recarrega a configura\u00e7\u00e3o principal a partir da configura\u00e7\u00e3o YAML.",
+            "name": "Recarregar a configura\u00e7\u00e3o principal"
+        },
+        "reload_custom_templates": {
+            "description": "Recarrega os modelos Jinja2 encontrados na pasta `custom_templates` na sua configura\u00e7\u00e3o. Ser\u00e3o aplicados novos valores na pr\u00f3xima renderiza\u00e7\u00e3o do modelo.",
+            "name": "Recarrega os templates personalizados Jinja2"
+        },
+        "restart": {
+            "description": "Reinicia o Home Assistant",
+            "fields": {
+                "safe_mode": {
+                    "description": "Desativar integra\u00e7\u00f5es personalizadas e cart\u00f5es personalizados.",
+                    "name": "Modo de seguran\u00e7a"
+                }
+            },
+            "name": "Reiniciar"
+        },
+        "save_persistent_states": {
+            "description": "Guarda os estados persistentes imediatamente. Mant\u00e9m o intervalo de grava\u00e7\u00e3o peri\u00f3dica normal.",
+            "name": "Grava estados persistentes"
+        },
+        "set_location": {
+            "description": "Atualiza a localiza\u00e7\u00e3o do Home Assistant.",
+            "fields": {
+                "elevation": {
+                    "description": "Eleva\u00e7\u00e3o da sua localiza\u00e7\u00e3o acima do n\u00edvel do mar.",
+                    "name": "Eleva\u00e7\u00e3o"
+                },
+                "latitude": {
+                    "description": "Latitude da sua localiza\u00e7\u00e3o",
+                    "name": "Latitude"
+                },
+                "longitude": {
+                    "description": "Longitude da sua localiza\u00e7\u00e3o",
+                    "name": "Longitude"
+                }
+            },
+            "name": "Definir localiza\u00e7\u00e3o"
+        },
+        "stop": {
+            "description": "Para o Home Assistant.",
+            "name": "Parar"
+        },
+        "toggle": {
+            "description": "A\u00e7\u00e3o gen\u00e9rica para alternar dispositivos ligados/desligados em qualquer dom\u00ednio.",
+            "name": "Alternar gen\u00e9rico"
+        },
+        "turn_off": {
+            "description": "A\u00e7\u00e3o gen\u00e9rica para desligar dispositivos em qualquer dom\u00ednio.",
+            "name": "Desativa\u00e7\u00e3o gen\u00e9rica."
+        },
+        "turn_on": {
+            "description": "A\u00e7\u00e3o gen\u00e9rica para ligar dispositivos em qualquer dom\u00ednio.",
+            "name": "Ativa\u00e7\u00e3o gen\u00e9rica."
+        },
+        "update_entity": {
+            "description": "For\u00e7a uma ou mais entidades a atualizar os seus dados.",
+            "fields": {
+                "entity_id": {
+                    "description": "Lista de entidades a for\u00e7ar atualiza\u00e7\u00e3o.",
+                    "name": "Entidades a atualizar"
+                }
+            },
+            "name": "Atualizar entidade"
+        }
+    },
+    "system_health": {
+        "info": {
+            "arch": "Arquitetura do CPU",
+            "config_dir": "Pasta de configura\u00e7\u00e3o",
+            "dev": "Desenvolvimento",
+            "docker": "Docker",
+            "hassio": "Supervisor",
+            "installation_type": "Tipo de instala\u00e7\u00e3o",
+            "os_name": "Fam\u00edlia do sistema operativo",
+            "os_version": "Vers\u00e3o do sistema operativo",
+            "python_version": "Vers\u00e3o do Python",
+            "timezone": "Fuso hor\u00e1rio",
+            "user": "Utilizador",
+            "version": "Vers\u00e3o",
+            "virtualenv": "Ambiente virtual"
+        }
+    }
+}

@@ -1,0 +1,101 @@
+{
+    "device_automation": {
+        "action_type": {
+            "clean": "Laissez {entity_name} nettoyer",
+            "dock": "Laisser {entity_name} retourner \u00e0 la base"
+        },
+        "condition_type": {
+            "is_cleaning": "{entity_name} nettoie",
+            "is_docked": "{entity_name} est sur la base"
+        },
+        "extra_fields": {
+            "for": "Dur\u00e9e"
+        },
+        "trigger_type": {
+            "cleaning": "{entity_name} commence \u00e0 nettoyer",
+            "docked": "{entity_name} est sur la base"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Aspirateur",
+            "state": {
+                "cleaning": "Nettoyage",
+                "docked": "\u00c0 la station d'accueil",
+                "error": "Erreur",
+                "idle": "Inactif",
+                "off": "D\u00e9sactiv\u00e9",
+                "on": "Activ\u00e9",
+                "paused": "En pause",
+                "returning": "Retour \u00e0 la station d'accueil"
+            }
+        }
+    },
+    "services": {
+        "clean_spot": {
+            "description": "Indique \u00e0 l'aspirateur de faire un nettoyage localis\u00e9.",
+            "name": "Nettoyer l'endroit"
+        },
+        "locate": {
+            "description": "Localise le robot aspirateur.",
+            "name": "Localiser"
+        },
+        "pause": {
+            "description": "Suspend la t\u00e2che de nettoyage.",
+            "name": "Mettre en pause"
+        },
+        "return_to_base": {
+            "description": "Indique \u00e0 l'aspirateur de retourner \u00e0 sa station d'accueil.",
+            "name": "Retour \u00e0 la station d'accueil"
+        },
+        "send_command": {
+            "description": "Envoie une commande \u00e0 l'aspirateur.",
+            "fields": {
+                "command": {
+                    "description": "Commande \u00e0 ex\u00e9cuter. Les commandes sont sp\u00e9cifiques \u00e0 l'int\u00e9gration.",
+                    "name": "Commande"
+                },
+                "params": {
+                    "description": "Param\u00e8tres de la commande. Les param\u00e8tres sont sp\u00e9cifiques \u00e0 l'int\u00e9gration.",
+                    "name": "Param\u00e8tres"
+                }
+            },
+            "name": "Envoyer la commande"
+        },
+        "set_fan_speed": {
+            "description": "R\u00e8gle la vitesse du ventilateur de l'aspirateur.",
+            "fields": {
+                "fan_speed": {
+                    "description": "Puissance d'aspiration. La valeur d\u00e9pend de l'int\u00e9gration. Certaines int\u00e9grations ont des cat\u00e9gories de puissances, comme \"moyen\". D'autres utilisent un pourcentage num\u00e9rique compris entre 0 et 100.",
+                    "name": "Puissance d'aspiration"
+                }
+            },
+            "name": "R\u00e9gler la puissance d'aspiration"
+        },
+        "start": {
+            "description": "D\u00e9marre ou reprend la t\u00e2che de nettoyage.",
+            "name": "D\u00e9marrer"
+        },
+        "start_pause": {
+            "description": "D\u00e9marre, met en pause ou reprend la t\u00e2che de nettoyage.",
+            "name": "D\u00e9marrer/mettre en pause"
+        },
+        "stop": {
+            "description": "Arr\u00eate la t\u00e2che de nettoyage en cours.",
+            "name": "Arr\u00eater"
+        },
+        "toggle": {
+            "description": "Permet d\u2019activer/d\u00e9sactiver l\u2019aspirateur.",
+            "name": "Basculer"
+        },
+        "turn_off": {
+            "description": "Arr\u00eate le nettoyage en cours et retourne \u00e0 la station d'accueil.",
+            "name": "\u00c9teindre"
+        },
+        "turn_on": {
+            "description": "D\u00e9marre une nouvelle t\u00e2che de nettoyage.",
+            "name": "Allumer"
+        }
+    },
+    "title": "Aspirateur"
+}

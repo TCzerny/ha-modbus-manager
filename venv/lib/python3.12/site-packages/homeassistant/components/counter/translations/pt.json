@@ -1,0 +1,53 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Contador",
+            "state_attributes": {
+                "editable": {
+                    "name": "Gerido atrav\u00e9s da IU",
+                    "state": {
+                        "false": "N\u00e3o",
+                        "true": "Sim"
+                    }
+                },
+                "initial": {
+                    "name": "Valor inicial"
+                },
+                "maximum": {
+                    "name": "M\u00e1ximo"
+                },
+                "minimum": {
+                    "name": "M\u00ednimo"
+                },
+                "step": {
+                    "name": "Passo"
+                }
+            }
+        }
+    },
+    "services": {
+        "decrement": {
+            "description": "Decrementa um contador pela tamanho do passo.",
+            "name": "Decrementar"
+        },
+        "increment": {
+            "description": "Incrementa um contador pela tamanho do passo.",
+            "name": "Incrementar"
+        },
+        "reset": {
+            "description": "Rep\u00f5e um contador no seu valor inicial.",
+            "name": "Repor"
+        },
+        "set_value": {
+            "description": "Define o contador para um valor espec\u00edfico.",
+            "fields": {
+                "value": {
+                    "description": "O novo valor do contador para o qual a entidade deve ser definida.",
+                    "name": "Valor"
+                }
+            },
+            "name": "Definir"
+        }
+    },
+    "title": "Contador"
+}

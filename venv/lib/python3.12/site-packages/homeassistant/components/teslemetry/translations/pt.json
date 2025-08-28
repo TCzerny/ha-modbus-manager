@@ -1,0 +1,734 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Conta j\u00e1 configurada",
+            "reauth_account_mismatch": "A conta para reautentica\u00e7\u00e3o n\u00e3o corresponde \u00e0 conta original",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_access_token": "Token de acesso inv\u00e1lido",
+            "subscription_required": "\u00c9 necess\u00e1ria uma subscri\u00e7\u00e3o, visite {short_url}",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "access_token": "Token de Acesso"
+                },
+                "description": "A integra\u00e7\u00e3o {name} requer reatentica\u00e7\u00e3o da sua conta. Por favor, introduza um token de acesso do {url}",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "user": {
+                "data": {
+                    "access_token": "Token de Acesso"
+                },
+                "description": "Introduzir um token de acesso a partir de {url}."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "backup_capable": {
+                "name": "\u00c9 capaz de backup"
+            },
+            "charge_state_battery_heater_on": {
+                "name": "Aquecedor da bateria"
+            },
+            "charge_state_charger_phases": {
+                "name": "O carregador tem v\u00e1rias fases"
+            },
+            "charge_state_conn_charge_cable": {
+                "name": "Cabo de carregamento"
+            },
+            "charge_state_preconditioning_enabled": {
+                "name": "Pr\u00e9-condicionamento ativado"
+            },
+            "charge_state_scheduled_charging_pending": {
+                "name": "Carregamento agendado pendente"
+            },
+            "charge_state_trip_charging": {
+                "name": "Carregamento de viagem"
+            },
+            "climate_state_is_preconditioning": {
+                "name": "Pr\u00e9 condicionamento"
+            },
+            "components_grid_services_enabled": {
+                "name": "Servi\u00e7os de rede ativados"
+            },
+            "grid_services_active": {
+                "name": "Servi\u00e7os de rede ativos"
+            },
+            "state": {
+                "name": "Estado"
+            },
+            "storm_mode_active": {
+                "name": "Monitoriza\u00e7\u00e3o de tempestades ativa"
+            },
+            "vehicle_state_dashcam_state": {
+                "name": "C\u00e2mara de bordo"
+            },
+            "vehicle_state_df": {
+                "name": "Porta da frente do condutor"
+            },
+            "vehicle_state_dr": {
+                "name": "Janela traseira do condutor"
+            },
+            "vehicle_state_fd_window": {
+                "name": "Janela dianteira do condutor"
+            },
+            "vehicle_state_fp_window": {
+                "name": "Janela dianteira do passageiro"
+            },
+            "vehicle_state_is_user_present": {
+                "name": "Utilizador presente"
+            },
+            "vehicle_state_pf": {
+                "name": "Porta da frente do passageiro"
+            },
+            "vehicle_state_pr": {
+                "name": "Porta traseira do passageiro"
+            },
+            "vehicle_state_rd_window": {
+                "name": "Janela traseira do condutor"
+            },
+            "vehicle_state_rp_window": {
+                "name": "Janela traseira do passageiro"
+            },
+            "vehicle_state_tpms_soft_warning_fl": {
+                "name": "Aviso de press\u00e3o do pneu dianteiro esquerdo"
+            },
+            "vehicle_state_tpms_soft_warning_fr": {
+                "name": "Aviso de press\u00e3o do pneu dianteiro direito"
+            },
+            "vehicle_state_tpms_soft_warning_rl": {
+                "name": "Aviso de press\u00e3o do pneu traseiro esquerdo"
+            },
+            "vehicle_state_tpms_soft_warning_rr": {
+                "name": "Aviso de press\u00e3o do pneu traseiro direito"
+            }
+        },
+        "button": {
+            "boombox": {
+                "name": "Reproduzir peido"
+            },
+            "enable_keyless_driving": {
+                "name": "Condu\u00e7\u00e3o sem chave"
+            },
+            "flash_lights": {
+                "name": "Piscar as luzes"
+            },
+            "homelink": {
+                "name": "Homelink"
+            },
+            "honk": {
+                "name": "Buzina"
+            },
+            "wake": {
+                "name": "Acordar"
+            }
+        },
+        "climate": {
+            "climate_state_cabin_overheat_protection": {
+                "name": "Prote\u00e7\u00e3o contra o sobreaquecimento da cabina"
+            },
+            "driver_temp": {
+                "name": "Climatiza\u00e7\u00e3o",
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "camp": "Modo de acampamento",
+                            "dog": "Modo c\u00e3o",
+                            "keep": "Manter modo",
+                            "off": "Normal"
+                        }
+                    }
+                }
+            }
+        },
+        "cover": {
+            "charge_state_charge_port_door_open": {
+                "name": "Porta da porta de carregamento"
+            },
+            "vehicle_state_ft": {
+                "name": "Bagageira dianteira"
+            },
+            "vehicle_state_rt": {
+                "name": "Bagageira"
+            },
+            "vehicle_state_sun_roof_state": {
+                "name": "Teto de abrir"
+            },
+            "windows": {
+                "name": "Janelas"
+            }
+        },
+        "device_tracker": {
+            "location": {
+                "name": "Localiza\u00e7\u00e3o"
+            },
+            "route": {
+                "name": "Rota"
+            }
+        },
+        "lock": {
+            "charge_state_charge_port_latch": {
+                "name": "Bloqueio do cabo de carregamento"
+            },
+            "vehicle_state_locked": {
+                "name": "Fechadura"
+            },
+            "vehicle_state_speed_limit_mode_active": {
+                "name": "Limite de velocidade"
+            }
+        },
+        "media_player": {
+            "media": {
+                "name": "Leitor multim\u00e9dia"
+            }
+        },
+        "number": {
+            "backup_reserve_percent": {
+                "name": "Reserva de backup"
+            },
+            "charge_state_charge_current_request": {
+                "name": "Corrente de carga"
+            },
+            "charge_state_charge_limit_soc": {
+                "name": "Limite de carga"
+            },
+            "off_grid_vehicle_charging_reserve_percent": {
+                "name": "Reserva fora da rede"
+            }
+        },
+        "select": {
+            "climate_state_seat_heater_left": {
+                "name": "Aquecedor do assento esquerdo dianteiro",
+                "state": {
+                    "high": "Alto",
+                    "low": "Baixo",
+                    "medium": "M\u00e9dio",
+                    "off": "Desligado"
+                }
+            },
+            "climate_state_seat_heater_rear_center": {
+                "name": "Aquecedor do assento traseiro central",
+                "state": {
+                    "high": "Alto",
+                    "low": "Baixo",
+                    "medium": "M\u00e9dio",
+                    "off": "Desligado"
+                }
+            },
+            "climate_state_seat_heater_rear_left": {
+                "name": "Aquecedor do assento traseiro da esquerda",
+                "state": {
+                    "high": "Alto",
+                    "low": "Baixo",
+                    "medium": "M\u00e9dio",
+                    "off": "Desligado"
+                }
+            },
+            "climate_state_seat_heater_rear_right": {
+                "name": "Aquecedor do assento traseiro da direita",
+                "state": {
+                    "high": "Alto",
+                    "low": "Baixo",
+                    "medium": "M\u00e9dio",
+                    "off": "Desligado"
+                }
+            },
+            "climate_state_seat_heater_right": {
+                "name": "Aquecedor do assento direito da frente",
+                "state": {
+                    "high": "Alto",
+                    "low": "Baixo",
+                    "medium": "M\u00e9dio",
+                    "off": "Desligado"
+                }
+            },
+            "climate_state_seat_heater_third_row_left": {
+                "name": "Aquecedor do assento esquerdo da terceira fila",
+                "state": {
+                    "high": "Alto",
+                    "low": "Baixo",
+                    "medium": "M\u00e9dio",
+                    "off": "Desligado"
+                }
+            },
+            "climate_state_seat_heater_third_row_right": {
+                "name": "Aquecedor do assento direito da terceira fila",
+                "state": {
+                    "high": "Alto",
+                    "low": "Baixo",
+                    "medium": "M\u00e9dio",
+                    "off": "Desligado"
+                }
+            },
+            "climate_state_steering_wheel_heat_level": {
+                "name": "Aquecedor do volante",
+                "state": {
+                    "high": "Alto",
+                    "low": "Baixo",
+                    "off": "Desligado"
+                }
+            },
+            "components_customer_preferred_export_rule": {
+                "name": "Permitir exporta\u00e7\u00e3o",
+                "state": {
+                    "battery_ok": "Bateria",
+                    "never": "Nunca",
+                    "pv_only": "Apenas solar"
+                }
+            },
+            "default_real_mode": {
+                "name": "Modo de opera\u00e7\u00e3o",
+                "state": {
+                    "autonomous": "Aut\u00f3nomo",
+                    "backup": "Backup",
+                    "self_consumption": "Autoconsumo"
+                }
+            }
+        },
+        "sensor": {
+            "battery_energy_exported": {
+                "name": "Bateria exportada"
+            },
+            "battery_energy_imported_from_generator": {
+                "name": "Bateria importado do gerador"
+            },
+            "battery_energy_imported_from_grid": {
+                "name": "Bateria importado da rede"
+            },
+            "battery_energy_imported_from_solar": {
+                "name": "Bateria importado do solar"
+            },
+            "battery_power": {
+                "name": "Pot\u00eancia da bateria"
+            },
+            "charge_state_battery_level": {
+                "name": "N\u00edvel da bateria"
+            },
+            "charge_state_battery_range": {
+                "name": "Autonomia da bateria"
+            },
+            "charge_state_charge_energy_added": {
+                "name": "Energia de carga adicionada"
+            },
+            "charge_state_charge_rate": {
+                "name": "Taxa de carregamento"
+            },
+            "charge_state_charger_actual_current": {
+                "name": "Corrente do carregador"
+            },
+            "charge_state_charger_power": {
+                "name": "Pot\u00eancia do carregador"
+            },
+            "charge_state_charger_voltage": {
+                "name": "Tens\u00e3o do carregador"
+            },
+            "charge_state_charging_state": {
+                "name": "A carregar",
+                "state": {
+                    "charging": "A carregar",
+                    "complete": "Completo",
+                    "disconnected": "Desligado",
+                    "no_power": "Sem energia",
+                    "starting": "A iniciar",
+                    "stopped": "Parado"
+                }
+            },
+            "charge_state_conn_charge_cable": {
+                "name": "Cabo de carregamento"
+            },
+            "charge_state_est_battery_range": {
+                "name": "Autonomia estimada da bateria"
+            },
+            "charge_state_fast_charger_type": {
+                "name": "Tipo de carregador r\u00e1pido"
+            },
+            "charge_state_ideal_battery_range": {
+                "name": "Autonomia ideal da bateria"
+            },
+            "charge_state_minutes_to_full_charge": {
+                "name": "Tempo at\u00e9 \u00e0 carga completa"
+            },
+            "charge_state_usable_battery_level": {
+                "name": "N\u00edvel de bateria utiliz\u00e1vel"
+            },
+            "climate_state_driver_temp_setting": {
+                "name": "Configura\u00e7\u00e3o de temperatura do driver"
+            },
+            "climate_state_inside_temp": {
+                "name": "Temperatura interior"
+            },
+            "climate_state_outside_temp": {
+                "name": "Temperatura exterior"
+            },
+            "climate_state_passenger_temp_setting": {
+                "name": "Configura\u00e7\u00e3o da temperatura do passageiro"
+            },
+            "consumer_energy_imported_from_battery": {
+                "name": "Consumidor importado da bateria"
+            },
+            "consumer_energy_imported_from_generator": {
+                "name": "Consumidor importado do gerador"
+            },
+            "consumer_energy_imported_from_grid": {
+                "name": "Consumidor importado da rede"
+            },
+            "consumer_energy_imported_from_solar": {
+                "name": "Consumidor importado do solar"
+            },
+            "drive_state_active_route_destination": {
+                "name": "Destino"
+            },
+            "drive_state_active_route_energy_at_arrival": {
+                "name": "Estado de carga \u00e0 chegada"
+            },
+            "drive_state_active_route_miles_to_arrival": {
+                "name": "Dist\u00e2ncia at\u00e9 a chegada"
+            },
+            "drive_state_active_route_minutes_to_arrival": {
+                "name": "Tempo at\u00e9 \u00e0 chegada"
+            },
+            "drive_state_active_route_traffic_minutes_delay": {
+                "name": "Atraso no tr\u00e2nsito"
+            },
+            "drive_state_power": {
+                "name": "Pot\u00eancia"
+            },
+            "drive_state_shift_state": {
+                "name": "Estado da caixa",
+                "state": {
+                    "d": "Conduzir",
+                    "n": "Neutro",
+                    "p": "Parque",
+                    "r": "Marcha atr\u00e1s"
+                }
+            },
+            "drive_state_speed": {
+                "name": "Velocidade"
+            },
+            "energy_left": {
+                "name": "Energia restante"
+            },
+            "generator_energy_exported": {
+                "name": "Exportado gerador"
+            },
+            "generator_power": {
+                "name": "Pot\u00eancia do gerador"
+            },
+            "grid_energy_exported_from_battery": {
+                "name": "Exportado para a rede a partir de bateria"
+            },
+            "grid_energy_exported_from_generator": {
+                "name": "Exportado para a rede a partir de gerador"
+            },
+            "grid_energy_exported_from_solar": {
+                "name": "Exportado para a rede a partir do solar"
+            },
+            "grid_energy_imported": {
+                "name": "Importado da rede"
+            },
+            "grid_power": {
+                "name": "Pot\u00eancia da rede"
+            },
+            "grid_services_energy_exported": {
+                "name": "Servi\u00e7os de rede exportados"
+            },
+            "grid_services_energy_imported": {
+                "name": "Servi\u00e7os de rede importados"
+            },
+            "grid_services_power": {
+                "name": "Pot\u00eancia dos servi\u00e7os de rede"
+            },
+            "island_status": {
+                "name": "Estado da ilha",
+                "state": {
+                    "island_status_unknown": "Desconhecido",
+                    "off_grid": "Fora da rede",
+                    "off_grid_intentional": "Fora da rede intencional",
+                    "off_grid_unintentional": "Fora da rede n\u00e3o intencional",
+                    "on_grid": "Na grelha"
+                }
+            },
+            "load_power": {
+                "name": "Pot\u00eancia de carga"
+            },
+            "percentage_charged": {
+                "name": "Percentagem de carregada"
+            },
+            "solar_energy_exported": {
+                "name": "Solar exportada"
+            },
+            "solar_power": {
+                "name": "Energia solar"
+            },
+            "total_battery_charge": {
+                "name": "Bateria carregada"
+            },
+            "total_battery_discharge": {
+                "name": "Bateria descarregada"
+            },
+            "total_grid_energy_exported": {
+                "name": "Exportada para a rede"
+            },
+            "total_home_usage": {
+                "name": "Uso dom\u00e9stico"
+            },
+            "total_pack_energy": {
+                "name": "Energia total do pacote"
+            },
+            "total_solar_generation": {
+                "name": "Gerada pelo sol"
+            },
+            "vehicle_state_odometer": {
+                "name": "Od\u00f3metro"
+            },
+            "vehicle_state_tpms_pressure_fl": {
+                "name": "Press\u00e3o do pneu dianteiro esquerdo"
+            },
+            "vehicle_state_tpms_pressure_fr": {
+                "name": "Press\u00e3o do pneu dianteiro direito"
+            },
+            "vehicle_state_tpms_pressure_rl": {
+                "name": "Press\u00e3o do pneu traseiro esquerdo"
+            },
+            "vehicle_state_tpms_pressure_rr": {
+                "name": "Press\u00e3o do pneu traseiro direito"
+            },
+            "version": {
+                "name": "vers\u00e3o"
+            },
+            "vin": {
+                "name": "Ve\u00edculo",
+                "state": {
+                    "disconnected": "Desligado"
+                }
+            },
+            "vpp_backup_reserve_percent": {
+                "name": "Reserva de seguran\u00e7a VPP"
+            },
+            "wall_connector_fault_state": {
+                "name": "C\u00f3digo do estado da avaria"
+            },
+            "wall_connector_power": {
+                "name": "Energia"
+            },
+            "wall_connector_state": {
+                "name": "C\u00f3digo de estado"
+            }
+        },
+        "switch": {
+            "charge_state_user_charge_enable_request": {
+                "name": "Carregar"
+            },
+            "climate_state_auto_seat_climate_left": {
+                "name": "Auto climatiza\u00e7\u00e3o dos bancos da esquerda"
+            },
+            "climate_state_auto_seat_climate_right": {
+                "name": "Auto climatiza\u00e7\u00e3o dos bancos da direita"
+            },
+            "climate_state_auto_steering_wheel_heat": {
+                "name": "Aquecedor autom\u00e1tico do volante"
+            },
+            "climate_state_defrost_mode": {
+                "name": "Descongelar"
+            },
+            "components_disallow_charge_from_grid_with_solar_installed": {
+                "name": "Permitir carregamento a partir da rede el\u00e9trica"
+            },
+            "user_settings_storm_mode_enabled": {
+                "name": "Monitoriza\u00e7\u00e3o de tempestades"
+            },
+            "vehicle_state_sentry_mode": {
+                "name": "Modo sentinela"
+            },
+            "vehicle_state_valet_mode": {
+                "name": "Modo valet"
+            }
+        },
+        "update": {
+            "vehicle_state_software_update_status": {
+                "name": "Atualiza\u00e7\u00e3o"
+            }
+        }
+    },
+    "exceptions": {
+        "command_error": {
+            "message": "O comando devolveu o erro: {error}"
+        },
+        "command_exception": {
+            "message": "O comando devolveu uma exce\u00e7\u00e3o: {message}"
+        },
+        "command_no_result": {
+            "message": "O comando n\u00e3o teve resultado"
+        },
+        "command_reason": {
+            "message": "O comando foi rejeitado: {reason}"
+        },
+        "invalid_cop_temp": {
+            "message": "A prote\u00e7\u00e3o contra o sobreaquecimento da cabina n\u00e3o suporta essa temperatura"
+        },
+        "invalid_device": {
+            "message": "ID de dispositivo inv\u00e1lido: {device_id}"
+        },
+        "missing_scope": {
+            "message": "Falta o \u00e2mbito necess\u00e1rio: {scope}"
+        },
+        "no_cable": {
+            "message": "O cabo de carregamento ir\u00e1 bloquear automaticamente quando ligado"
+        },
+        "no_config_entry_for_device": {
+            "message": "N\u00e3o h\u00e1 registo de configura\u00e7\u00e3o para o dispositivo com o ID: {device_id}"
+        },
+        "no_energy_site_data_for_device": {
+            "message": "N\u00e3o existem dados do local de energia para o dispositivo com o ID: {device_id}"
+        },
+        "no_vehicle_data_for_device": {
+            "message": "N\u00e3o existem dados do ve\u00edculo para o dispositivo com o ID: {device_id}"
+        },
+        "set_scheduled_charging_time": {
+            "message": "Tempo necess\u00e1rio para concluir a opera\u00e7\u00e3o"
+        },
+        "set_scheduled_departure_off_peak": {
+            "message": "Para permitir a partida programada, \u00e9 necess\u00e1rio o fim da hora de ponta."
+        },
+        "set_scheduled_departure_preconditioning": {
+            "message": "Tempo de partida necess\u00e1rio para permitir o pr\u00e9-condicionamento"
+        },
+        "wake_up_failed": {
+            "message": "Falha ao acordar o ve\u00edculo: {message}"
+        },
+        "wake_up_timeout": {
+            "message": "O tempo para tentar acordar o ve\u00edculo expirou"
+        }
+    },
+    "services": {
+        "navigation_gps_request": {
+            "description": "Define a navega\u00e7\u00e3o do ve\u00edculo para as coordenadas de latitude/longitude fornecidas.",
+            "fields": {
+                "device_id": {
+                    "description": "Ve\u00edculo com o qual partilhar",
+                    "name": "Ve\u00edculo"
+                },
+                "gps": {
+                    "description": "Localiza\u00e7\u00e3o para onde navegar.",
+                    "name": "Localiza\u00e7\u00e3o"
+                },
+                "order": {
+                    "description": "Ordena\u00e7\u00e3o para este destino se forem indicados v\u00e1rios destinos.",
+                    "name": "Ordem"
+                }
+            },
+            "name": "Navegar para as coordenadas"
+        },
+        "set_scheduled_charging": {
+            "description": "Define a hora em que o carregamento deve ser conclu\u00eddo.",
+            "fields": {
+                "device_id": {
+                    "description": "Ve\u00edculo a agendar.",
+                    "name": "Ve\u00edculo"
+                },
+                "enable": {
+                    "description": "Ativar ou desativar o carregamento programado.",
+                    "name": "Ativar"
+                },
+                "time": {
+                    "description": "Hora para come\u00e7ar a carregar.",
+                    "name": "Hora"
+                }
+            },
+            "name": "Definir o carregamento programado"
+        },
+        "set_scheduled_departure": {
+            "description": "Define a hora de partida de um ve\u00edculo para programar o carregamento e o pr\u00e9-condicionamento.",
+            "fields": {
+                "departure_time": {
+                    "description": "Hora para ser pr\u00e9-condicionado.",
+                    "name": "Hora de partida"
+                },
+                "device_id": {
+                    "description": "Ve\u00edculo a agendar.",
+                    "name": "Ve\u00edculo"
+                },
+                "enable": {
+                    "description": "Ativar ou desativar a partida programada.",
+                    "name": "Ativar"
+                },
+                "end_off_peak_time": {
+                    "description": "Tempo para concluir o carregamento.",
+                    "name": "Fim da hora de ponta"
+                },
+                "off_peak_charging_enabled": {
+                    "description": "Ativar o carregamento fora de horas de ponta.",
+                    "name": "Carregamento fora de horas de ponta ativado"
+                },
+                "off_peak_charging_weekdays_only": {
+                    "description": "Ativar o carregamento fora de horas de ponta apenas nos dias \u00fateis.",
+                    "name": "Carregamento fora de horas de ponta apenas nos dias \u00fateis"
+                },
+                "preconditioning_enabled": {
+                    "description": "Ativar pr\u00e9-condicionamento.",
+                    "name": "Pr\u00e9-condicionamento ativado"
+                },
+                "preconditioning_weekdays_only": {
+                    "description": "Ativar o pr\u00e9-condicionamento apenas nos dias \u00fateis.",
+                    "name": "Pr\u00e9-condicionamento apenas durante a semana"
+                }
+            },
+            "name": "Definir partida programada"
+        },
+        "speed_limit": {
+            "description": "Ativa o limite de velocidade do ve\u00edculo.",
+            "fields": {
+                "device_id": {
+                    "description": "Ve\u00edculo a limitar.",
+                    "name": "Ve\u00edculo"
+                },
+                "enable": {
+                    "description": "Ativar ou desativar o limite de velocidade.",
+                    "name": "Ativar"
+                },
+                "pin": {
+                    "description": "PIN de 4 d\u00edgitos.",
+                    "name": "PIN"
+                }
+            },
+            "name": "Definir limite de velocidade"
+        },
+        "time_of_use": {
+            "description": "Atualizar as defini\u00e7\u00f5es de tempo de utiliza\u00e7\u00e3o para o local de energia.",
+            "fields": {
+                "device_id": {
+                    "description": "S\u00edtio de energia a configurar.",
+                    "name": "S\u00edtio de energia"
+                },
+                "tou_settings": {
+                    "description": "Ver https://developer.tesla.com/docs/fleet-api#time_of_use_settings para mais pormenores.",
+                    "name": "Defini\u00e7\u00f5es"
+                }
+            },
+            "name": "Defini\u00e7\u00f5es de tempo de utiliza\u00e7\u00e3o"
+        },
+        "valet_mode": {
+            "description": "Ativa o modo valet do ve\u00edculo.",
+            "fields": {
+                "device_id": {
+                    "description": "Ve\u00edculo a limitar.",
+                    "name": "Ve\u00edculo"
+                },
+                "enable": {
+                    "description": "Ativar ou desativar o modo valet.",
+                    "name": "Ativar"
+                },
+                "pin": {
+                    "description": "PIN de 4 d\u00edgitos.",
+                    "name": "PIN"
+                }
+            },
+            "name": "Definir o modo Valet"
+        }
+    }
+}

@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "\u518d\u8a2d\u5b9a\u306b\u6210\u529f\u3057\u307e\u3057\u305f"
+        },
+        "error": {
+            "cannot_connect": "\u63a5\u7d9a\u306b\u5931\u6557\u3057\u307e\u3057\u305f",
+            "no_data": "API \u306f\u63a5\u7d9a\u3055\u308c\u307e\u3057\u305f\u304c\u3001\u5fdc\u7b54\u304c\u7a7a\u3067\u3057\u305f"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "\u30a8\u30ea\u30a2",
+                    "currency": "\u901a\u8ca8"
+                },
+                "data_description": {
+                    "areas": "Nordpool \u5e02\u5834\u30a8\u30ea\u30a2\u306b\u5fdc\u3058\u3066\u4fa1\u683c\u3092\u8868\u793a\u3059\u308b\u30a8\u30ea\u30a2\u3002",
+                    "currency": "\u4fa1\u683c\u3092\u8868\u793a\u3059\u308b\u901a\u8ca8\u3092\u9078\u629e\u3057\u307e\u3059\u3002\u57fa\u672c\u901a\u8ca8\u306f EUR \u3067\u3059\u3002"
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "\u30a8\u30ea\u30a2",
+                    "currency": "\u901a\u8ca8"
+                },
+                "data_description": {
+                    "areas": "Nordpool \u5e02\u5834\u30a8\u30ea\u30a2\u306b\u5fdc\u3058\u3066\u4fa1\u683c\u3092\u8868\u793a\u3059\u308b\u30a8\u30ea\u30a2\u3002",
+                    "currency": "\u4fa1\u683c\u3092\u8868\u793a\u3059\u308b\u901a\u8ca8\u3092\u9078\u629e\u3057\u307e\u3059\u3002\u57fa\u672c\u901a\u8ca8\u306f EUR \u3067\u3059\u3002"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block}\u5e73\u5747"
+            },
+            "block_end_time": {
+                "name": "{block}\u6642\u9593\u307e\u3067"
+            },
+            "block_max": {
+                "name": "{block}\u6700\u9ad8\u4fa1\u683c"
+            },
+            "block_min": {
+                "name": "{block}\u6700\u4f4e\u4fa1\u683c"
+            },
+            "block_start_time": {
+                "name": "{block}\u6642\u9593\u304b\u3089"
+            },
+            "currency": {
+                "name": "\u901a\u8ca8"
+            },
+            "current_price": {
+                "name": "\u73fe\u5728\u306e\u4fa1\u683c"
+            },
+            "daily_average": {
+                "name": "\u65e5\u5e73\u5747"
+            },
+            "exchange_rate": {
+                "name": "\u70ba\u66ff\u30ec\u30fc\u30c8"
+            },
+            "highest_price": {
+                "name": "\u6700\u9ad8\u4fa1\u683c",
+                "state_attributes": {
+                    "end": {
+                        "name": "\u7d42\u4e86\u6642\u9593"
+                    },
+                    "start": {
+                        "name": "\u958b\u59cb\u6642\u9593"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "\u524d\u306e\u4fa1\u683c"
+            },
+            "lowest_price": {
+                "name": "\u6700\u4f4e\u4fa1\u683c",
+                "state_attributes": {
+                    "end": {
+                        "name": "\u7d42\u4e86\u6642\u9593"
+                    },
+                    "start": {
+                        "name": "\u958b\u59cb\u6642\u9593"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "\u6b21\u306e\u4fa1\u683c"
+            },
+            "updated_at": {
+                "name": "\u6700\u7d42\u66f4\u65b0"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "\u904e\u53bb\u306e\u30c7\u30fc\u30bf\u3092\u53d6\u5f97\u3057\u3088\u3046\u3068\u3057\u305f\u305f\u3081\u3001\u8a8d\u8a3c\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f\u3002"
+        },
+        "connection_error": {
+            "message": "API \u3078\u306e\u63a5\u7d9a\u4e2d\u306b\u63a5\u7d9a\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f\u3002\u3057\u3070\u3089\u304f\u3057\u3066\u304b\u3089\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+        },
+        "empty_response": {
+            "message": "Nord Pool \u306f\u6307\u5b9a\u3055\u308c\u305f\u65e5\u4ed8\u306e\u5e02\u5834\u4fa1\u683c\u3092\u516c\u958b\u3057\u3066\u3044\u307e\u305b\u3093\u3002"
+        },
+        "entry_not_found": {
+            "message": "Nord Pool \u7d71\u5408\u306f Home Assistant \u3067\u69cb\u6210\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002"
+        },
+        "entry_not_loaded": {
+            "message": "Nord Pool \u7d71\u5408\u306f\u73fe\u5728\u3001Home Assistant \u306b\u8aad\u307f\u8fbc\u307e\u308c\u3066\u3044\u306a\u3044\u304b\u3001\u7121\u52b9\u306b\u306a\u3063\u3066\u3044\u307e\u3059\u3002"
+        },
+        "initial_update_failed": {
+            "message": "\u8d77\u52d5\u6642\u306b\u30a8\u30e9\u30fc{error}\u304c\u767a\u751f\u3057\u3001\u521d\u671f\u66f4\u65b0\u306b\u5931\u6557\u3057\u307e\u3057\u305f"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "\u7279\u5b9a\u306e\u65e5\u4ed8\u306e\u4fa1\u683c\u3092\u53d6\u5f97\u3057\u307e\u3059\u3002",
+            "fields": {
+                "areas": {
+                    "description": "\u4fa1\u683c\u3092\u53d6\u5f97\u3059\u308b 1 \u3064\u307e\u305f\u306f\u8907\u6570\u306e\u30a8\u30ea\u30a2\u3002\u7a7a\u306e\u307e\u307e\u306b\u3059\u308b\u3068\u3001\u3059\u3067\u306b\u69cb\u6210\u3055\u308c\u3066\u3044\u308b\u30a8\u30ea\u30a2\u304c\u4f7f\u7528\u3055\u308c\u307e\u3059\u3002",
+                    "name": "\u30a8\u30ea\u30a2"
+                },
+                "config_entry": {
+                    "description": "\u69cb\u6210\u30a8\u30f3\u30c8\u30ea\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "Nord Pool\u306e\u8a2d\u5b9a\u30a8\u30f3\u30c8\u30ea\u3092\u9078\u629e"
+                },
+                "currency": {
+                    "description": "\u4fa1\u683c\u3092\u53d6\u5f97\u3059\u308b\u901a\u8ca8\u3002\u7a7a\u306e\u307e\u307e\u306b\u3059\u308b\u3068\u3001\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u308b\u901a\u8ca8\u304c\u4f7f\u7528\u3055\u308c\u307e\u3059\u3002",
+                    "name": "\u901a\u8ca8"
+                },
+                "date": {
+                    "description": "\u904e\u53bb2\u30f6\u6708\u3001\u672a\u67651\u65e5\u306e\u65e5\u4ed8\u306b\u9650\u308b\u3002",
+                    "name": "\u65e5\u4ed8"
+                }
+            },
+            "name": "\u65e5\u4ed8\u306e\u4fa1\u683c\u3092\u53d6\u5f97"
+        }
+    }
+}

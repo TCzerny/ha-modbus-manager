@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u30c7\u30d0\u30a4\u30b9\u306f\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u3059",
+            "reauth_successful": "\u518d\u8a8d\u8a3c\u306b\u6210\u529f\u3057\u307e\u3057\u305f"
+        },
+        "error": {
+            "cannot_connect": "\u63a5\u7d9a\u306b\u5931\u6557\u3057\u307e\u3057\u305f",
+            "invalid_auth": "\u7121\u52b9\u306a\u8a8d\u8a3c",
+            "timeout_connect": "\u63a5\u7d9a\u78ba\u7acb\u6642\u306b\u30bf\u30a4\u30e0\u30a2\u30a6\u30c8"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "\u30d1\u30b9\u30ef\u30fc\u30c9"
+                },
+                "data_description": {
+                    "password": "Rain Bird \u30c7\u30d0\u30a4\u30b9\u3067\u8a8d\u8a3c\u3059\u308b\u305f\u3081\u306e\u30d1\u30b9\u30ef\u30fc\u30c9\u3002"
+                },
+                "description": "Rain Bird \u7d71\u5408\u3067\u306f\u3001\u30c7\u30d0\u30a4\u30b9\u3068\u306e\u518d\u8a8d\u8a3c\u304c\u5fc5\u8981\u3067\u3059\u3002",
+                "title": "{name} \u306e\u8a8d\u8a3c\u306e\u6709\u52b9\u671f\u9650\u304c\u5207\u308c\u307e\u3057\u305f"
+            },
+            "user": {
+                "data": {
+                    "host": "\u30db\u30b9\u30c8",
+                    "password": "\u30d1\u30b9\u30ef\u30fc\u30c9"
+                },
+                "data_description": {
+                    "host": "Rain Bird \u30c7\u30d0\u30a4\u30b9\u306e\u30db\u30b9\u30c8\u540d\u307e\u305f\u306f IP \u30a2\u30c9\u30ec\u30b9\u3002",
+                    "password": "Rain Bird \u30c7\u30d0\u30a4\u30b9\u3067\u8a8d\u8a3c\u3059\u308b\u305f\u3081\u306b\u4f7f\u7528\u3055\u308c\u308b\u30d1\u30b9\u30ef\u30fc\u30c9\u3002"
+                },
+                "description": "Rain Bird \u30c7\u30d0\u30a4\u30b9\u306e LNK Wi-Fi \u30e2\u30b8\u30e5\u30fc\u30eb\u60c5\u5831\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+                "title": "Rain Bird \u3092\u69cb\u6210\u3059\u308b"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "\u30ec\u30a4\u30f3\u30bb\u30f3\u30b5\u30fc"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "\u96e8\u306e\u9045\u308c"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "\u96e8\u306e\u9045\u308c"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "\u30c7\u30d5\u30a9\u30eb\u30c8\u306e\u704c\u6c34\u6642\u9593\uff08\u5206\uff09"
+                },
+                "data_description": {
+                    "duration": "\u30b9\u30d7\u30ea\u30f3\u30af\u30e9\u30fc\u304c\u30aa\u30f3\u306b\u306a\u3063\u305f\u3068\u304d\u306b\u5b9f\u884c\u3055\u308c\u308b\u30c7\u30d5\u30a9\u30eb\u30c8\u306e\u7d99\u7d9a\u6642\u9593\u3002"
+                },
+                "title": "Rain Bird \u3092\u69cb\u6210\u3059\u308b"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "\u81ea\u52d5\u704c\u6f11\u3092\u30aa\u30d5\u306b\u3059\u308b\u6642\u9593\u3092\u8a2d\u5b9a\u3057\u307e\u3059\u3002",
+            "fields": {
+                "config_entry_id": {
+                    "description": "\u8a2d\u5b9a\u306f\u6307\u5b9a\u3055\u308c\u305f\u30b3\u30f3\u30c8\u30ed\u30fc\u30e9\u30fc\u3067\u8abf\u6574\u3055\u308c\u307e\u3059\u3002",
+                    "name": "Rainbird \u30b3\u30f3\u30c8\u30ed\u30fc\u30e9\u30fc\u69cb\u6210\u30a8\u30f3\u30c8\u30ea\u30fc"
+                },
+                "duration": {
+                    "description": "\u3053\u306e\u30b7\u30b9\u30c6\u30e0\u306e\u96fb\u6e90\u304c\u30aa\u30d5\u306b\u306a\u308b\u307e\u3067\u306e\u6642\u9593\u3002",
+                    "name": "\u671f\u9593"
+                }
+            },
+            "name": "\u96e8\u306e\u9045\u5ef6\u3092\u8a2d\u5b9a\u3059\u308b"
+        },
+        "start_irrigation": {
+            "description": "\u704c\u6f11\u3092\u958b\u59cb\u3057\u307e\u3059\u3002",
+            "fields": {
+                "duration": {
+                    "description": "\u3053\u306e\u30b9\u30d7\u30ea\u30f3\u30af\u30e9\u30fc\u304c\u4f5c\u52d5\u3059\u308b\u307e\u3067\u306e\u6642\u9593\u3002",
+                    "name": "\u671f\u9593"
+                }
+            },
+            "name": "\u704c\u6f11\u958b\u59cb"
+        }
+    }
+}

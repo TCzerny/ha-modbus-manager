@@ -1,0 +1,62 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Lista de quefaceres"
+        }
+    },
+    "exceptions": {
+        "item_not_found": {
+            "message": "Incapaz de atopar o elemento da lista de quefaceres: {item}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Completado",
+                "needs_action": "Non completado"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "fields": {
+                "due_datetime": {
+                    "description": "A data e a hora nas que se espera que o elemento a quefacer estea completado."
+                },
+                "item": {
+                    "description": "O nome que representa o elemento da lista de quefaceres.",
+                    "name": "Nome do elemento"
+                }
+            }
+        },
+        "get_items": {
+            "fields": {
+                "status": {
+                    "name": "Estado"
+                }
+            }
+        },
+        "remove_item": {
+            "fields": {
+                "item": {
+                    "name": "Nome do elemento"
+                }
+            }
+        },
+        "update_item": {
+            "fields": {
+                "item": {
+                    "name": "Nome do elemento"
+                },
+                "rename": {
+                    "name": "Renomear elemento"
+                },
+                "status": {
+                    "description": "Un estado ou confirmaci\u00f3n do elemento a facer.",
+                    "name": "Establecer estado"
+                }
+            }
+        }
+    },
+    "title": "Lista de quefaceres"
+}

@@ -1,0 +1,58 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Hizmet zaten yap\u0131land\u0131r\u0131lm\u0131\u015f"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "broadcast_address": "Yay\u0131n adresi",
+                    "broadcast_port": "Yay\u0131n ba\u011flant\u0131 noktas\u0131",
+                    "mac": "MAC adresi"
+                },
+                "data_description": {
+                    "broadcast_address": "Sihirli paketin g\u00f6nderilece\u011fi sunucunun IP adresi. Varsay\u0131lan\u0131 `255.255.255.255` olup normalde de\u011fi\u015ftirilmez.",
+                    "broadcast_port": "Sihirli paketin g\u00f6nderilece\u011fi port. Varsay\u0131lan\u0131 `9`dur ve normalde de\u011fi\u015ftirilmez.",
+                    "mac": "Uyand\u0131r\u0131lacak cihaz\u0131n MAC adresi."
+                }
+            }
+        }
+    },
+    "options": {
+        "abort": {
+            "already_configured": "Hizmet zaten yap\u0131land\u0131r\u0131lm\u0131\u015f"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "broadcast_address": "Yay\u0131n adresi",
+                    "broadcast_port": "Yay\u0131n ba\u011flant\u0131 noktas\u0131"
+                },
+                "data_description": {
+                    "broadcast_address": "Sihirli paketin g\u00f6nderilece\u011fi sunucunun IP adresi. Varsay\u0131lan\u0131 `255.255.255.255` olup normalde de\u011fi\u015ftirilmez.",
+                    "broadcast_port": "Sihirli paketin g\u00f6nderilece\u011fi port. Varsay\u0131lan\u0131 `9`dur ve normalde de\u011fi\u015ftirilmez."
+                }
+            }
+        }
+    },
+    "services": {
+        "send_magic_packet": {
+            "description": "'Wake-On-LAN' \u00f6zelliklerine sahip bir cihaz\u0131 uyand\u0131rmak i\u00e7in bir 'sihirli paket' g\u00f6nderir.",
+            "fields": {
+                "broadcast_address": {
+                    "description": "Sihirli paketin g\u00f6nderilece\u011fi sunucunun IP adresi. Varsay\u0131lan\u0131 `255.255.255.255` olup normalde de\u011fi\u015ftirilmez.",
+                    "name": "Yay\u0131n adresi"
+                },
+                "broadcast_port": {
+                    "description": "Sihirli paketin g\u00f6nderilece\u011fi port. Varsay\u0131lan\u0131 `9`dur ve normalde de\u011fi\u015ftirilmez.",
+                    "name": "Yay\u0131n ba\u011flant\u0131 noktas\u0131"
+                },
+                "mac": {
+                    "description": "Uyand\u0131r\u0131lacak cihaz\u0131n MAC adresi.",
+                    "name": "MAC adresi"
+                }
+            },
+            "name": "Sihirli paket g\u00f6nder"
+        }
+    }
+}

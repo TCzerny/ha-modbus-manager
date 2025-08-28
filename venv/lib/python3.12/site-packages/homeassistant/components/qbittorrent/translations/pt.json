@@ -1,0 +1,101 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "url": "URL",
+                    "username": "Nome de Utilizador",
+                    "verify_ssl": "Verificar o certificado SSL"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "active_torrents": {
+                "name": "Torrents ativas",
+                "unit_of_measurement": "torrents"
+            },
+            "all_torrents": {
+                "name": "Todas as torrents",
+                "unit_of_measurement": "torrents"
+            },
+            "current_status": {
+                "name": "Estado",
+                "state": {
+                    "downloading": "A descarregar",
+                    "idle": "Inativo",
+                    "seeding": "A semear",
+                    "up_down": "Subir/Descer"
+                }
+            },
+            "download_speed": {
+                "name": "Velocidade de download"
+            },
+            "inactive_torrents": {
+                "name": "Torrents inativas",
+                "unit_of_measurement": "torrents"
+            },
+            "paused_torrents": {
+                "name": "Torrents em pausa",
+                "unit_of_measurement": "torrents"
+            },
+            "upload_speed": {
+                "name": "Velocidade de upload"
+            }
+        },
+        "switch": {
+            "alternative_speed": {
+                "name": "Velocidade alternativa"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel ligar ao QBittorrent, verifique a sua configura\u00e7\u00e3o."
+        },
+        "invalid_device": {
+            "message": "N\u00e3o foi encontrado nenhum dispositivo com o ID {device_id}"
+        },
+        "invalid_entry_id": {
+            "message": "N\u00e3o foi encontrada nenhuma entrada com o id {device_id}"
+        },
+        "login_error": {
+            "message": "Ocorreu um erro de in\u00edcio de sess\u00e3o. Verifique o seu nome de utilizador e a sua palavra-passe."
+        }
+    },
+    "services": {
+        "get_all_torrents": {
+            "description": "Obt\u00e9m uma lista de torrents atuais de todas as inst\u00e2ncias do qBittorrent",
+            "fields": {
+                "torrent_filter": {
+                    "description": "O tipo de torrents que pretende devolver, como Todas ou Ativas.",
+                    "name": "Filtro de torrents"
+                }
+            },
+            "name": "Obter todas as torrents"
+        },
+        "get_torrents": {
+            "description": "Obt\u00e9m uma lista de torrents atuais",
+            "fields": {
+                "device_id": {
+                    "description": "Qual o servi\u00e7o a partir do qual obter a lista",
+                    "name": "Dispositivo"
+                },
+                "torrent_filter": {
+                    "description": "O tipo de torrents que pretende devolver, como Todas ou Ativas.",
+                    "name": "Filtro de torrents"
+                }
+            },
+            "name": "Obter torrents"
+        }
+    }
+}

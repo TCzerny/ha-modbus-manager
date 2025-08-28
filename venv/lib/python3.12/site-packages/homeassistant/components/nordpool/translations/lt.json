@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "no_data": "API prisijung\u0119s, bet atsakymas buvo tu\u0161\u010dias"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "Regionai",
+                    "currency": "Valiuta"
+                },
+                "data_description": {
+                    "areas": "Sritys, kuriose rodomos kainos pagal Nordpool rinkos sritis.",
+                    "currency": "Pasirinkite valiut\u0105, kuria norite rodyti kainas. EUR yra bazin\u0117 valiuta."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "Regionai",
+                    "currency": "Valiuta"
+                },
+                "data_description": {
+                    "areas": "Sritys, kuriose rodomos kainos pagal Nordpool rinkos sritis.",
+                    "currency": "Pasirinkite valiut\u0105, kuria norite rodyti kainas. EUR yra bazin\u0117 valiuta."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} vidurkis"
+            },
+            "block_end_time": {
+                "name": "{block} laikas iki"
+            },
+            "block_max": {
+                "name": "{block} did\u017eiausia kaina"
+            },
+            "block_min": {
+                "name": "{block} ma\u017eiausia kaina"
+            },
+            "block_start_time": {
+                "name": "{block} laikas nuo"
+            },
+            "currency": {
+                "name": "Valiuta"
+            },
+            "current_price": {
+                "name": "Dabartin\u0117 kaina"
+            },
+            "daily_average": {
+                "name": "Dienos vidurkis"
+            },
+            "exchange_rate": {
+                "name": "Keitimo kursas"
+            },
+            "highest_price": {
+                "name": "Auk\u0161\u010diausia kaina",
+                "state_attributes": {
+                    "end": {
+                        "name": "Pabaigos laikas"
+                    },
+                    "start": {
+                        "name": "Prad\u017eios laikas"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "Praeita kaina"
+            },
+            "lowest_price": {
+                "name": "Ma\u017eiausia kaina",
+                "state_attributes": {
+                    "end": {
+                        "name": "Pabaigos laikas"
+                    },
+                    "start": {
+                        "name": "Prad\u017eios laikas"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "Sekanti kaina"
+            },
+            "updated_at": {
+                "name": "Paskutin\u012f kart\u0105 atnaujinta"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "\u012evyko autentifikavimo klaida, nes anks\u010diau band\u0117te gauti duomenis per toli."
+        },
+        "connection_error": {
+            "message": "Prisijungiant prie API \u012fvyko ry\u0161io klaida. V\u0117liau bandykite dar kart\u0105."
+        },
+        "empty_response": {
+            "message": "\u201eNord Pool\u201c nepaskelb\u0117 rinkos kain\u0173 nurodytai datai."
+        },
+        "entry_not_found": {
+            "message": "\u201eNord Pool\u201c integracija nesukonfig\u016bruota \u201eHome Assistant\u201c."
+        },
+        "entry_not_loaded": {
+            "message": "\u201eNord Pool\u201c integracija \u0161iuo metu n\u0117ra \u012fkelta arba i\u0161jungta \u201eHome Assistant\u201c."
+        },
+        "initial_update_failed": {
+            "message": "Pradinis naujinimas nepavyko paleid\u017eiant ir \u012fvyko klaida {error}"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "Gaukite konkre\u010dios datos kainas.",
+            "fields": {
+                "areas": {
+                    "description": "Vienai ar kelioms sritims gauti kainas. Jei paliksite tu\u0161\u010di\u0105, bus naudojamos jau sukonfig\u016bruotos sritys.",
+                    "name": "Sritys"
+                },
+                "config_entry": {
+                    "description": "Pasirinkite konfig\u016bracijos \u012fra\u0161\u0105.",
+                    "name": "Pasirinkite Nord Pool konfig\u016bracijos \u012fra\u0161\u0105"
+                },
+                "currency": {
+                    "description": "Valiuta kainoms gauti. Jei paliksite tu\u0161\u010di\u0105, bus naudojama jau sukonfig\u016bruota valiuta.",
+                    "name": "Valiuta"
+                },
+                "date": {
+                    "description": "Leid\u017eiamos tik datos, kurios yra du m\u0117nesiai praeityje ir viena diena ateityje.",
+                    "name": "Data"
+                }
+            },
+            "name": "Gaukite dat\u0173 kainas"
+        }
+    }
+}

@@ -1,0 +1,115 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Cam\u00e9ra",
+            "state": {
+                "idle": "Inactif",
+                "recording": "Enregistrement",
+                "streaming": "Diffusion en cours"
+            },
+            "state_attributes": {
+                "access_token": {
+                    "name": "Jeton d'acc\u00e8s"
+                },
+                "brand": {
+                    "name": "Marque"
+                },
+                "frontend_stream_type": {
+                    "name": "Type de flux",
+                    "state": {
+                        "hls": "HLS",
+                        "webrtc": "WebRTC"
+                    }
+                },
+                "model_name": {
+                    "name": "Mod\u00e8le"
+                },
+                "motion_detection": {
+                    "name": "D\u00e9tection de mouvement",
+                    "state": {
+                        "false": "D\u00e9sactiv\u00e9",
+                        "true": "Activ\u00e9"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_filename_template": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "La variable de mod\u00e8le pr\u00e9d\u00e9finie `entity_id` a \u00e9t\u00e9 utilis\u00e9e lors de l'ex\u00e9cution de l'action `{service}` ciblant l'entit\u00e9 de cam\u00e9ra `{entity_id}`. La variable de mod\u00e8le pr\u00e9d\u00e9finie `entity_id` est supprim\u00e9e du param\u00e8tre `filename` de `{service}`.\n\nVeuillez mettre \u00e0 jour vos automatisations et scripts pour utiliser une variable d\u00e9finie manuellement \u00e0 la place et s\u00e9lectionner **VALIDER** pour fermer ce probl\u00e8me.",
+                        "title": "Utilisation d\u00e9tect\u00e9e d'une variable de mod\u00e8le obsol\u00e8te"
+                    }
+                }
+            },
+            "title": "Utilisation d\u00e9tect\u00e9e d'une variable de mod\u00e8le obsol\u00e8te"
+        },
+        "legacy_webrtc_provider": {
+            "description": "L'int\u00e9gration {legacy_integration} a enregistr\u00e9 un ancien fournisseur WebRTC. Home Assistant pr\u00e9f\u00e8re utiliser le fournisseur WebRTC moderne int\u00e9gr\u00e9 enregistr\u00e9 par l'int\u00e9gration {builtin_integration}.\n\nLes avantages de l'int\u00e9gration int\u00e9gr\u00e9e sont les suivants\u00a0:\n\n- Le flux de la cam\u00e9ra d\u00e9marre plus rapidement.\n- Davantage de p\u00e9riph\u00e9riques de cam\u00e9ra sont pris en charge.\n\nPour r\u00e9soudre ce probl\u00e8me, vous pouvez continuer \u00e0 utiliser le fournisseur WebRTC moderne int\u00e9gr\u00e9 et supprimer l'int\u00e9gration {legacy_integration} ou supprimer l'int\u00e9gration {builtin_integration} pour utiliser l'ancien fournisseur, puis red\u00e9marrer Home Assistant.",
+            "title": "Utilisation d\u00e9tect\u00e9e d'un ancien fournisseur WebRTC enregistr\u00e9 par {legacy_integration}"
+        }
+    },
+    "services": {
+        "disable_motion_detection": {
+            "description": "D\u00e9sactive la d\u00e9tection de mouvement.",
+            "name": "D\u00e9sactiver la d\u00e9tection de mouvement"
+        },
+        "enable_motion_detection": {
+            "description": "Active la d\u00e9tection de mouvement.",
+            "name": "Activer la d\u00e9tection de mouvement"
+        },
+        "play_stream": {
+            "description": "Lit le flux de la cam\u00e9ra sur un lecteur multim\u00e9dia pris en charge.",
+            "fields": {
+                "format": {
+                    "description": "Format de flux pris en charge par le lecteur multim\u00e9dia.",
+                    "name": "Format"
+                },
+                "media_player": {
+                    "description": "Lecteurs multim\u00e9dias vers lesquels diffuser.",
+                    "name": "Lecteur multim\u00e9dia"
+                }
+            },
+            "name": "Lire le flux"
+        },
+        "record": {
+            "description": "Cr\u00e9e un enregistrement d'un flux de cam\u00e9ra en direct.",
+            "fields": {
+                "duration": {
+                    "description": "Dur\u00e9e pr\u00e9vue de l'enregistrement. La dur\u00e9e r\u00e9elle peut varier.",
+                    "name": "Dur\u00e9e"
+                },
+                "filename": {
+                    "description": "Chemin complet vers le nom de fichier. Doit \u00eatre mp4.",
+                    "name": "Nom de fichier"
+                },
+                "lookback": {
+                    "description": "P\u00e9riode d'analyse planifi\u00e9e \u00e0 inclure dans l'enregistrement (en plus de la dur\u00e9e). Uniquement disponible s'il existe actuellement un flux HLS actif. La dur\u00e9e r\u00e9elle de la p\u00e9riode d'analyse peut varier.",
+                    "name": "Retour en arri\u00e8re"
+                }
+            },
+            "name": "Enregistrer"
+        },
+        "snapshot": {
+            "description": "Prend un instantan\u00e9 \u00e0 partir d'une cam\u00e9ra.",
+            "fields": {
+                "filename": {
+                    "description": "Chemin complet vers le nom de fichier.",
+                    "name": "Nom de fichier"
+                }
+            },
+            "name": "Prendre un instantan\u00e9"
+        },
+        "turn_off": {
+            "description": "\u00c9teint la cam\u00e9ra.",
+            "name": "\u00c9teindre"
+        },
+        "turn_on": {
+            "description": "Allume la cam\u00e9ra.",
+            "name": "Allumer"
+        }
+    },
+    "title": "Cam\u00e9ra"
+}

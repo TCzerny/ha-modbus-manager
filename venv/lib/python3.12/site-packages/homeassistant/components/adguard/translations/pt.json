@@ -1,0 +1,135 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "existing_instance_updated": "Configura\u00e7\u00e3o existente atualizada."
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "step": {
+            "hassio_confirm": {
+                "description": "Deseja configurar o Home Assistant para se ligar ao AdGuard Home fornecido pelo suplemento: {addon}?",
+                "title": "AdGuard Home via suplemento de Supervisor"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL",
+                    "username": "Nome de Utilizador",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "data_description": {
+                    "host": "Nome de anfitri\u00e3o ou endere\u00e7o IP do seu dispositivo onde corre o AdGuard Home."
+                },
+                "description": "Configure a sua inst\u00e2ncia do AdGuard Home para permitir a monitoriza\u00e7\u00e3o e o controlo."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "average_processing_speed": {
+                "name": "Velocidade m\u00e9dia de processamento"
+            },
+            "dns_queries": {
+                "name": "Consultas de DNS"
+            },
+            "dns_queries_blocked": {
+                "name": "Consultas de DNS bloqueadas"
+            },
+            "dns_queries_blocked_ratio": {
+                "name": "R\u00e1cio de consultas DNS bloqueadas"
+            },
+            "parental_control_blocked": {
+                "name": "Controlo parental bloqueado"
+            },
+            "rules_count": {
+                "name": "Contagem de regras"
+            },
+            "safe_browsing_blocked": {
+                "name": "Pesquisa segura bloqueada"
+            },
+            "safe_searches_enforced": {
+                "name": "Pesquisa segura ativada"
+            }
+        },
+        "switch": {
+            "filtering": {
+                "name": "Filtragem"
+            },
+            "parental": {
+                "name": "Controlo parental"
+            },
+            "protection": {
+                "name": "Prote\u00e7\u00e3o"
+            },
+            "query_log": {
+                "name": "Registo de consultas"
+            },
+            "safe_browsing": {
+                "name": "Navega\u00e7\u00e3o segura"
+            },
+            "safe_search": {
+                "name": "Pesquisa segura"
+            }
+        }
+    },
+    "services": {
+        "add_url": {
+            "description": "Adicionar uma nova subscri\u00e7\u00e3o de filtro ao AdGuard Home.",
+            "fields": {
+                "name": {
+                    "description": "O nome da subscri\u00e7\u00e3o do filtro.",
+                    "name": "Nome"
+                },
+                "url": {
+                    "description": "O URL do filtro a subscrever, que cont\u00e9m as regras de filtragem.",
+                    "name": "URL"
+                }
+            },
+            "name": "Adicionar URL"
+        },
+        "disable_url": {
+            "description": "Desativa uma subscri\u00e7\u00e3o de filtro no AdGuard Home.",
+            "fields": {
+                "url": {
+                    "description": "O URL de subscri\u00e7\u00e3o do filtro a desativar.",
+                    "name": "URL"
+                }
+            },
+            "name": "Desativar URL"
+        },
+        "enable_url": {
+            "description": "Ativa uma subscri\u00e7\u00e3o de filtro no AdGuard Home.",
+            "fields": {
+                "url": {
+                    "description": "O URL de subscri\u00e7\u00e3o do filtro a ativar.",
+                    "name": "URL"
+                }
+            },
+            "name": "Ativar URL"
+        },
+        "refresh": {
+            "description": "Atualizar todas as subscri\u00e7\u00f5es de filtros no AdGuard Home.",
+            "fields": {
+                "force": {
+                    "description": "For\u00e7ar a atualiza\u00e7\u00e3o (ignora a limita\u00e7\u00e3o do AdGuard Home). \"verdadeiro\" para for\u00e7ar, ou \"falso\" para omitir para uma atualiza\u00e7\u00e3o regular.",
+                    "name": "For\u00e7ar"
+                }
+            },
+            "name": "Atualizar"
+        },
+        "remove_url": {
+            "description": "Remove uma subscri\u00e7\u00e3o de filtro do AdGuard Home.",
+            "fields": {
+                "url": {
+                    "description": "O URL da subscri\u00e7\u00e3o do filtro a remover.",
+                    "name": "URL"
+                }
+            },
+            "name": "Remover URL"
+        }
+    }
+}

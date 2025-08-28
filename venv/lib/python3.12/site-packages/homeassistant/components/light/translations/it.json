@@ -1,0 +1,364 @@
+{
+    "common": {
+        "field_brightness_step_pct_name": "Passo di luminosit\u00e0",
+        "field_color_name_description": "Un nome di colore leggibile dall'uomo.",
+        "field_color_name_name": "Nome del colore",
+        "field_color_temp_description": "Temperatura di colore in mireds.",
+        "field_effect_description": "Effetto luce.",
+        "field_effect_name": "Effetto",
+        "field_flash_description": "Indica alla luce di lampeggiare, pu\u00f2 essere un valore breve o lungo.",
+        "field_flash_name": "Lampeggio",
+        "field_hs_color_description": "Colore in formato hue/sat. Un elenco di due numeri interi. Hue (Tonalit\u00e0) \u00e8 tra 0-360 e Sat (Saturazione) \u00e8 tra 0-100.",
+        "field_hs_color_name": "Tonalit\u00e0/Saturazione del colore",
+        "field_kelvin_description": "Temperatura di colore in Kelvin.",
+        "field_kelvin_name": "Temperatura di colore",
+        "field_transition_description": "Durata necessaria per passare allo stato successivo.",
+        "field_transition_name": "Transizione",
+        "field_white_description": "Imposta la luce in modalit\u00e0 bianca.",
+        "field_white_name": "Bianco",
+        "field_xy_color_description": "Colore in formato XY. Un elenco di due numeri decimali compresi tra 0 e 1.",
+        "field_xy_color_name": "Colore XY",
+        "section_advanced_fields_name": "Opzioni avanzate"
+    },
+    "device_automation": {
+        "action_type": {
+            "brightness_decrease": "Riduci la luminosit\u00e0 di {entity_name}",
+            "brightness_increase": "Aumenta la luminosit\u00e0 di {entity_name}",
+            "flash": "Flash {entity_name}",
+            "toggle": "Attiva/disattiva {entity_name}",
+            "turn_off": "Disattiva {entity_name}",
+            "turn_on": "Attiva {entity_name}"
+        },
+        "condition_type": {
+            "is_off": "{entity_name} \u00e8 disattivato",
+            "is_on": "{entity_name} \u00e8 attivo"
+        },
+        "trigger_type": {
+            "changed_states": "{entity_name} attivato o disattivato",
+            "turned_off": "{entity_name} disattivato",
+            "turned_on": "{entity_name} attivato"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Luce",
+            "state": {
+                "off": "Spento/a",
+                "on": "Acceso/a"
+            },
+            "state_attributes": {
+                "brightness": {
+                    "name": "Luminosit\u00e0"
+                },
+                "color_mode": {
+                    "name": "Modalit\u00e0 colore",
+                    "state": {
+                        "brightness": "Solo luminosit\u00e0",
+                        "color_temp": "Temperatura di colore",
+                        "hs": "HS",
+                        "onoff": "Acceso/Spento",
+                        "rgb": "RGB",
+                        "rgbw": "RGBW",
+                        "rgbww": "RGBWW",
+                        "unknown": "Sconosciuto",
+                        "white": "Bianco",
+                        "xy": "XY"
+                    }
+                },
+                "color_temp": {
+                    "name": "Temperatura di colore (mireds)"
+                },
+                "color_temp_kelvin": {
+                    "name": "Temperatura di colore (Kelvin)"
+                },
+                "effect": {
+                    "name": "Effetto"
+                },
+                "effect_list": {
+                    "name": "Effetti disponibili"
+                },
+                "max_color_temp_kelvin": {
+                    "name": "Temperatura massima del colore (Kelvin)"
+                },
+                "max_mireds": {
+                    "name": "Temperatura massima del colore (mireds)"
+                },
+                "min_color_temp_kelvin": {
+                    "name": "Temperatura minima del colore (Kelvin)"
+                },
+                "min_mireds": {
+                    "name": "Temperatura minima del colore (mireds)"
+                },
+                "supported_color_modes": {
+                    "name": "Modalit\u00e0 colore disponibili",
+                    "state": {
+                        "brightness": "Solo luminosit\u00e0",
+                        "color_temp": "Temperatura di colore",
+                        "hs": "HS",
+                        "onoff": "Acceso/Spento",
+                        "rgb": "RGB",
+                        "rgbw": "RGBW",
+                        "rgbww": "RGBWW",
+                        "unknown": "Sconosciuto",
+                        "white": "Bianco",
+                        "xy": "XY"
+                    }
+                }
+            }
+        }
+    },
+    "selector": {
+        "color_name": {
+            "options": {
+                "aliceblue": "Blu Alice",
+                "antiquewhite": "Bianco antico",
+                "aqua": "Acqua",
+                "aquamarine": "Acquamarina",
+                "azure": "Azzurro",
+                "beige": "Beige",
+                "bisque": "Biscotto",
+                "blanchedalmond": "Mandorla sbiancata",
+                "blue": "Blu",
+                "blueviolet": "Blu violetto",
+                "brown": "Marrone",
+                "burlywood": "Radica",
+                "cadetblue": "Blu cadetto",
+                "chartreuse": "Verde certosino",
+                "chocolate": "Cioccolato",
+                "coral": "Corallo",
+                "cornflowerblue": "Blu fiordaliso",
+                "cornsilk": "Seta di mais",
+                "crimson": "Cremisi",
+                "cyan": "Ciano",
+                "darkblue": "Blu scuro",
+                "darkcyan": "Ciano scuro",
+                "darkgoldenrod": "Oro dorato scuro",
+                "darkgray": "Grigio scuro",
+                "darkgreen": "Verde scuro",
+                "darkgrey": "Grigio scuro",
+                "darkkhaki": "Kaki scuro",
+                "darkmagenta": "Magenta scuro",
+                "darkolivegreen": "Verde oliva scuro",
+                "darkorange": "Arancione scuro",
+                "darkorchid": "Orchidea nera",
+                "darkred": "Rosso scuro",
+                "darksalmon": "Salmone scuro",
+                "darkseagreen": "Verde mare scuro",
+                "darkslateblue": "Blu ardesia scuro",
+                "darkslategray": "Grigio ardesia scuro",
+                "darkslategrey": "Grigio ardesia scuro",
+                "darkturquoise": "Turchese scuro",
+                "darkviolet": "Viola scuro",
+                "deeppink": "Rosa intenso",
+                "deepskyblue": "Blu cielo profondo",
+                "dimgray": "Grigio tenue",
+                "dimgrey": "Grigio tenue",
+                "dodgerblue": "Blu Dodger",
+                "firebrick": "Mattone refrattario",
+                "floralwhite": "Bianco floreale",
+                "forestgreen": "Verde foresta",
+                "fuchsia": "Fucsia",
+                "gainsboro": "Gainsboro",
+                "ghostwhite": "Bianco fantasma",
+                "gold": "Oro",
+                "goldenrod": "Verga d'oro",
+                "gray": "Grigio",
+                "green": "Verde",
+                "greenyellow": "Verde giallo",
+                "grey": "Grigio",
+                "homeassistant": "Home Assistant",
+                "honeydew": "Melata",
+                "hotpink": "Rosa caldo",
+                "indianred": "Rosso indiano",
+                "indigo": "Indaco",
+                "ivory": "Avorio",
+                "khaki": "Cachi",
+                "lavender": "Lavanda",
+                "lavenderblush": "Fard alla lavanda",
+                "lawngreen": "Verde prato",
+                "lemonchiffon": "Chiffon al limone",
+                "lightblue": "Azzurro",
+                "lightcoral": "Corallo chiaro",
+                "lightcyan": "Ciano chiaro",
+                "lightgoldenrodyellow": "Giallo paglierino chiaro",
+                "lightgray": "Grigio chiaro",
+                "lightgreen": "Verde chiaro",
+                "lightgrey": "Grigio chiaro",
+                "lightpink": "Rosa chiaro",
+                "lightsalmon": "Salmone chiaro",
+                "lightseagreen": "Verde mare chiaro",
+                "lightskyblue": "Azzurro chiaro",
+                "lightslategray": "Grigio ardesia chiaro",
+                "lightslategrey": "Grigio ardesia chiaro",
+                "lightsteelblue": "Blu acciaio chiaro",
+                "lightyellow": "Giallo chiaro",
+                "lime": "Lime",
+                "limegreen": "Verde lime",
+                "linen": "Lino",
+                "magenta": "Magenta",
+                "maroon": "Marrone",
+                "mediumaquamarine": "Acquamarina media",
+                "mediumblue": "Blu medio",
+                "mediumorchid": "Orchidea media",
+                "mediumpurple": "Viola medio",
+                "mediumseagreen": "Verde mare medio",
+                "mediumslateblue": "Blu ardesia medio",
+                "mediumspringgreen": "Verde medio primaverile",
+                "mediumturquoise": "Turchese medio",
+                "mediumvioletred": "Rosso violaceo medio",
+                "midnightblue": "Blu notte",
+                "mintcream": "Crema alla menta",
+                "mistyrose": "Rosa nebbiosa",
+                "moccasin": "Mocassino",
+                "navajowhite": "Bianco navajo",
+                "navy": "Marina Militare",
+                "navyblue": "Blu marino",
+                "oldlace": "Vecchio merletto",
+                "olive": "Oliva",
+                "olivedrab": "Verde oliva",
+                "orange": "Arancione",
+                "orangered": "Arancione rosso",
+                "orchid": "Orchidea",
+                "palegoldenrod": "Verga d'oro pallido",
+                "palegreen": "Verde pallido",
+                "paleturquoise": "Turchese pallido",
+                "palevioletred": "Rosso violaceo tenue",
+                "papayawhip": "Frusta di papaia",
+                "peachpuff": "Sfoglia di pesca",
+                "peru": "Per\u00f9",
+                "pink": "Rosa",
+                "plum": "Prugna",
+                "powderblue": "Blu polvere",
+                "purple": "Viola",
+                "red": "Rosso",
+                "rosybrown": "Marrone rosato",
+                "royalblue": "Blu Reale",
+                "saddlebrown": "Marrone sella",
+                "salmon": "Salmone",
+                "sandybrown": "Marrone sabbia",
+                "seagreen": "Mare verde",
+                "seashell": "Conchiglia",
+                "sienna": "Siena",
+                "silver": "Argento",
+                "skyblue": "Cielo blu",
+                "slateblue": "Blu ardesia",
+                "slategray": "Grigio ardesia",
+                "slategrey": "Grigio ardesia",
+                "snow": "Neve",
+                "springgreen": "Verde primavera",
+                "steelblue": "Blu acciaio",
+                "tan": "Abbronzatura",
+                "teal": "Verde acqua",
+                "thistle": "Cardo",
+                "tomato": "Pomodoro",
+                "turquoise": "Turchese",
+                "violet": "Viola",
+                "wheat": "Grano",
+                "white": "Bianco",
+                "whitesmoke": "Fumo bianco",
+                "yellow": "Giallo",
+                "yellowgreen": "Giallo verde"
+            }
+        }
+    },
+    "services": {
+        "toggle": {
+            "description": "Attiva/disattiva una o pi\u00f9 luci, da acceso a spento o da spento ad acceso, in base al loro stato attuale.",
+            "fields": {
+                "color_name": {
+                    "description": "Un nome di colore leggibile dall'uomo.",
+                    "name": "Nome del colore"
+                },
+                "color_temp": {
+                    "description": "Temperatura di colore in mireds."
+                },
+                "effect": {
+                    "description": "Effetto luce.",
+                    "name": "Effetto"
+                },
+                "flash": {
+                    "description": "Indica alla luce di lampeggiare, pu\u00f2 essere un valore breve o lungo.",
+                    "name": "Lampeggio"
+                },
+                "hs_color": {
+                    "description": "Colore in formato hue/sat. Un elenco di due numeri interi. Hue (Tonalit\u00e0) \u00e8 tra 0-360 e Sat (Saturazione) \u00e8 tra 0-100.",
+                    "name": "Tonalit\u00e0/Saturazione del colore"
+                },
+                "kelvin": {
+                    "description": "Temperatura di colore in Kelvin.",
+                    "name": "Temperatura di colore"
+                }
+            },
+            "name": "Commuta",
+            "sections": {
+                "advanced_fields": {
+                    "name": "Opzioni avanzate"
+                }
+            }
+        },
+        "turn_off": {
+            "description": "Spegni una o pi\u00f9 luci.",
+            "fields": {
+                "transition": {
+                    "name": "Transizione"
+                }
+            },
+            "name": "Spegni",
+            "sections": {
+                "advanced_fields": {
+                    "name": "Opzioni avanzate"
+                }
+            }
+        },
+        "turn_on": {
+            "description": "Accendi una o pi\u00f9 luci e regola le propriet\u00e0 della luce, anche quando sono gi\u00e0 accese.",
+            "fields": {
+                "brightness_step_pct": {
+                    "name": "Passo di luminosit\u00e0"
+                },
+                "color_name": {
+                    "description": "Un nome di colore leggibile dall'uomo.",
+                    "name": "Nome del colore"
+                },
+                "color_temp": {
+                    "description": "Temperatura di colore in mireds."
+                },
+                "effect": {
+                    "description": "Effetto luce.",
+                    "name": "Effetto"
+                },
+                "flash": {
+                    "description": "Indica alla luce di lampeggiare, pu\u00f2 essere un valore breve o lungo.",
+                    "name": "Lampeggio"
+                },
+                "hs_color": {
+                    "description": "Colore in formato hue/sat. Un elenco di due numeri interi. Hue (Tonalit\u00e0) \u00e8 tra 0-360 e Sat (Saturazione) \u00e8 tra 0-100.",
+                    "name": "Tonalit\u00e0/Saturazione del colore"
+                },
+                "kelvin": {
+                    "description": "Temperatura di colore in Kelvin.",
+                    "name": "Temperatura di colore"
+                },
+                "transition": {
+                    "description": "Durata necessaria per passare allo stato successivo.",
+                    "name": "Transizione"
+                },
+                "white": {
+                    "description": "Imposta la luce in modalit\u00e0 bianca.",
+                    "name": "Bianco"
+                },
+                "xy_color": {
+                    "description": "Colore in formato XY. Un elenco di due numeri decimali compresi tra 0 e 1.",
+                    "name": "Colore XY"
+                }
+            },
+            "name": "Accendi",
+            "sections": {
+                "advanced_fields": {
+                    "name": "Opzioni avanzate"
+                }
+            }
+        }
+    },
+    "title": "Luce"
+}

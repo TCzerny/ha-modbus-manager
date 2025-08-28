@@ -1,0 +1,368 @@
+{
+    "config": {
+        "step": {
+            "alarm_control_panel": {
+                "data": {
+                    "arm_away": "A\u00e7\u00e3o armado ausente",
+                    "arm_custom_bypass": "A\u00e7\u00e3o para armado personalizado",
+                    "arm_home": "A\u00e7\u00e3o armado em casa",
+                    "arm_night": "A\u00e7\u00e3o armado noite",
+                    "arm_vacation": "A\u00e7\u00e3o armado para f\u00e9rias",
+                    "code_arm_required": "C\u00f3digo necess\u00e1rio para armar.",
+                    "code_format": "Formato de c\u00f3digo",
+                    "device_id": "Dispositivo",
+                    "disarm": "Desarmar a\u00e7\u00e3o",
+                    "name": "Nome",
+                    "trigger": "Espoletar a\u00e7\u00e3o",
+                    "value_template": "Template de valor"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Crie um template para um painel de controlo de alarme"
+            },
+            "binary_sensor": {
+                "data": {
+                    "device_class": "Classe de dispositivo",
+                    "device_id": "Dispositivo",
+                    "name": "Nome",
+                    "state": "Template de estado"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar sensor bin\u00e1rio a partir do template"
+            },
+            "button": {
+                "data": {
+                    "device_class": "Classe de dispositivo",
+                    "device_id": "Dispositivo",
+                    "name": "Nome",
+                    "press": "A\u00e7\u00f5es ao premir"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar bot\u00e3o a partir do template"
+            },
+            "image": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "name": "Nome",
+                    "url": "URL",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar imagem a partir do template"
+            },
+            "number": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "max": "Valor m\u00e1ximo",
+                    "min": "Valor m\u00ednimo",
+                    "name": "Nome",
+                    "set_value": "A\u00e7\u00f5es ao definir valor",
+                    "state": "Template de estado",
+                    "step": "Valor incremental",
+                    "unit_of_measurement": "Unidade de medida"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar n\u00famero a partir do template"
+            },
+            "select": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "name": "Nome",
+                    "options": "Op\u00e7\u00f5es dispon\u00edveis",
+                    "select_option": "A\u00e7\u00f5es na sele\u00e7\u00e3o",
+                    "state": "Template de estado"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar sele\u00e7\u00e3o a partir do template"
+            },
+            "sensor": {
+                "data": {
+                    "device_class": "Classe de dispositivo",
+                    "device_id": "Dispositivo",
+                    "name": "Nome",
+                    "state": "Template de estado",
+                    "state_class": "Classe do Estado",
+                    "unit_of_measurement": "Unidade de medida"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar sensor a partir do template"
+            },
+            "switch": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "name": "Nome",
+                    "turn_off": "A\u00e7\u00f5es ao desligar",
+                    "turn_on": "A\u00e7\u00f5es ao ligar",
+                    "value_template": "Template de valor"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade.",
+                    "value_template": "Define um template para definir o estado do interruptor. Se n\u00e3o for definido, o interruptor assumir\u00e1, de forma otimista, que todos os comandos s\u00e3o bem-sucedidos."
+                },
+                "title": "Criar interruptor a partir do template"
+            },
+            "user": {
+                "description": "Este auxiliar permite-lhe criar entidades auxiliares que definem o seu estado usando um modelo.",
+                "menu_options": {
+                    "alarm_control_panel": "Crie um template para um painel de controlo de alarme.",
+                    "binary_sensor": "Criar um sensor bin\u00e1rio a partir do template",
+                    "button": "Criar um bot\u00e3o a partir do template",
+                    "image": "Criar uma imagem a partir do template",
+                    "number": "Criar um n\u00famero a partir do template",
+                    "select": "Criar uma sele\u00e7\u00e3o a partir do template",
+                    "sensor": "Criar um sensor a partir do template",
+                    "switch": "Criar um interruptor a partir do template"
+                },
+                "title": "Auxiliar de template"
+            }
+        }
+    },
+    "exceptions": {
+        "code_format_template_error": {
+            "message": "Erro ao avaliar o modelo de formato de c\u00f3digo \"{code_format_template}\" para {entity_id}: {cause}"
+        }
+    },
+    "options": {
+        "step": {
+            "alarm_control_panel": {
+                "data": {
+                    "arm_away": "A\u00e7\u00e3o armado ausente",
+                    "arm_custom_bypass": "A\u00e7\u00e3o para armado personalizado",
+                    "arm_home": "A\u00e7\u00e3o armado em casa",
+                    "arm_night": "A\u00e7\u00e3o armado noite",
+                    "arm_vacation": "A\u00e7\u00e3o armado para f\u00e9rias",
+                    "code_arm_required": "C\u00f3digo necess\u00e1rio para armar.",
+                    "code_format": "Formato de c\u00f3digo",
+                    "device_id": "Dispositivo",
+                    "disarm": "Desarmar a\u00e7\u00e3o",
+                    "trigger": "Espoletar a\u00e7\u00e3o",
+                    "value_template": "Template de valor"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Crie um template para um painel de controlo de alarme"
+            },
+            "binary_sensor": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "state": "Template de estado"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar sensor bin\u00e1rio a partir do template"
+            },
+            "button": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "press": "A\u00e7\u00f5es ao premir"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar bot\u00e3o a partir do template"
+            },
+            "image": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "url": "URL",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar imagem a partir do template"
+            },
+            "number": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "max": "Valor m\u00e1ximo",
+                    "min": "Valor m\u00ednimo",
+                    "name": "Nome",
+                    "set_value": "A\u00e7\u00f5es ao definir valor",
+                    "state": "Template de estado",
+                    "step": "Valor incremental"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar n\u00famero a partir do template"
+            },
+            "select": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "name": "Nome",
+                    "options": "Op\u00e7\u00f5es dispon\u00edveis",
+                    "select_option": "A\u00e7\u00f5es na sele\u00e7\u00e3o",
+                    "state": "Template de estado"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar sele\u00e7\u00e3o a partir do template"
+            },
+            "sensor": {
+                "data": {
+                    "device_class": "Classe de dispositivo",
+                    "device_id": "Dispositivo",
+                    "state": "Template de estado",
+                    "state_class": "Classe do Estado",
+                    "unit_of_measurement": "Unidade de medida"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade."
+                },
+                "title": "Criar sensor a partir do template"
+            },
+            "switch": {
+                "data": {
+                    "device_id": "Dispositivo",
+                    "name": "Nome",
+                    "turn_off": "A\u00e7\u00f5es ao desligar",
+                    "turn_on": "A\u00e7\u00f5es ao ligar",
+                    "value_template": "Template de valor"
+                },
+                "data_description": {
+                    "device_id": "Selecione um dispositivo para associar a esta entidade.",
+                    "value_template": "Define um template para definir o estado do interruptor. Se n\u00e3o for definido, o interruptor assumir\u00e1, de forma otimista, que todos os comandos s\u00e3o bem-sucedidos."
+                },
+                "title": "Criar interruptor a partir do template"
+            }
+        }
+    },
+    "selector": {
+        "alarm_control_panel_code_format": {
+            "options": {
+                "no_code": "Formato sem c\u00f3digo",
+                "number": "N\u00famero",
+                "text": "Texto"
+            }
+        },
+        "binary_sensor_device_class": {
+            "options": {
+                "battery": "Bateria",
+                "battery_charging": "A carregar",
+                "carbon_monoxide": "Mon\u00f3xido de carbono",
+                "cold": "Frio",
+                "connectivity": "Conectividade",
+                "door": "Porta",
+                "garage_door": "Porta de garagem",
+                "gas": "G\u00e1s",
+                "heat": "Aquecimento",
+                "light": "Luz",
+                "lock": "Fechadura",
+                "moisture": "Humidade",
+                "motion": "Movimento",
+                "moving": "Movimento",
+                "occupancy": "Ocupa\u00e7\u00e3o",
+                "opening": "Abertura",
+                "plug": "Ficha",
+                "power": "Pot\u00eancia",
+                "presence": "Presen\u00e7a",
+                "problem": "Problema",
+                "running": "Execu\u00e7\u00e3o",
+                "safety": "Seguran\u00e7a",
+                "smoke": "Fumo",
+                "sound": "Som",
+                "tamper": "Adultera\u00e7\u00e3o",
+                "update": "Atualizar",
+                "vibration": "Vibra\u00e7\u00e3o",
+                "window": "Janela"
+            }
+        },
+        "button_device_class": {
+            "options": {
+                "identify": "Identificar",
+                "restart": "Reiniciar",
+                "update": "Atualizar"
+            }
+        },
+        "sensor_device_class": {
+            "options": {
+                "apparent_power": "Pot\u00eancia aparente",
+                "aqi": "\u00cdndice de qualidade do ar",
+                "atmospheric_pressure": "Press\u00e3o atmosf\u00e9rica",
+                "battery": "Bateria",
+                "carbon_dioxide": "Di\u00f3xido de carbono",
+                "carbon_monoxide": "Mon\u00f3xido de carbono",
+                "conductivity": "Condutividade",
+                "current": "Corrente",
+                "data_rate": "Taxa de dados",
+                "data_size": "Tamanho de dados",
+                "date": "Data",
+                "distance": "Dist\u00e2ncia",
+                "duration": "Dura\u00e7\u00e3o",
+                "energy": "Energia",
+                "energy_storage": "Energia armazenada",
+                "frequency": "Frequ\u00eancia",
+                "gas": "G\u00e1s",
+                "humidity": "Humidade",
+                "illuminance": "Ilumin\u00e2ncia",
+                "irradiance": "Irradi\u00e2ncia",
+                "moisture": "Humidade",
+                "monetary": "Saldo",
+                "nitrogen_dioxide": "Di\u00f3xido de azoto",
+                "nitrogen_monoxide": "Mon\u00f3xido de azoto",
+                "nitrous_oxide": "\u00d3xido nitroso",
+                "ozone": "Ozono",
+                "ph": "pH",
+                "pm1": "PM1",
+                "pm10": "PM10",
+                "pm25": "PM2.5",
+                "power": "Pot\u00eancia",
+                "power_factor": "Fator de pot\u00eancia",
+                "precipitation": "Precipita\u00e7\u00e3o",
+                "precipitation_intensity": "Intensidade da precipita\u00e7\u00e3o",
+                "pressure": "Press\u00e3o",
+                "reactive_power": "Pot\u00eancia reativa",
+                "signal_strength": "Intensidade do sinal",
+                "sound_pressure": "Press\u00e3o sonora",
+                "speed": "Velocidade",
+                "sulphur_dioxide": "Di\u00f3xido de enxofre",
+                "temperature": "Temperatura",
+                "timestamp": "Data/hora",
+                "volatile_organic_compounds": "VOCs",
+                "volatile_organic_compounds_parts": "VOCs",
+                "voltage": "Tens\u00e3o",
+                "volume": "Volume",
+                "volume_flow_rate": "Caudal volum\u00e9trico",
+                "volume_storage": "Volume armazenado",
+                "water": "\u00c1gua",
+                "weight": "Peso",
+                "wind_speed": "Velocidade do vento"
+            }
+        },
+        "sensor_state_class": {
+            "options": {
+                "measurement": "Medi\u00e7\u00e3o",
+                "total": "Total",
+                "total_increasing": "Aumento total"
+            }
+        },
+        "sensor_unit_of_measurement": {
+            "options": {
+                "none": "Sem unidade de medida"
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "Recarrega entidades de template a partir da configura\u00e7\u00e3o YAML.",
+            "name": "Recarregar"
+        }
+    }
+}

@@ -1,0 +1,822 @@
+{
+    "common": {
+        "confirmed": "Bekr\u00e4ftad",
+        "present": "Nuvarande"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "Komponenten har inte konfigurerats. F\u00f6lj dokumentationen.",
+            "no_url_available": "Ingen webbadress tillg\u00e4nglig. F\u00f6r information om detta fel, [kolla hj\u00e4lpavsnittet]({docs_url})",
+            "oauth_error": "Mottog ogiltiga tokendata.",
+            "oauth_failed": "Fel vid h\u00e4mtning av \u00e5tkomsttoken.",
+            "oauth_timeout": "Timeout vid h\u00e4mtning av OAuth-token.",
+            "oauth_unauthorized": "OAuth-auktoriseringsfel vid h\u00e4mtning av \u00e5tkomsttoken."
+        },
+        "create_entry": {
+            "default": "Autentisering lyckades"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "V\u00e4lj autentiseringsmetod"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "Batteriets laddningsl\u00e4ge"
+            },
+            "charging_connection": {
+                "name": "Anslutning f\u00f6r laddare"
+            },
+            "chiller_door": {
+                "name": "Kylard\u00f6rr"
+            },
+            "dust_box_inserted": {
+                "name": "Dammbeh\u00e5llare",
+                "state": {
+                    "off": "Ej insatt",
+                    "on": "Insatt"
+                }
+            },
+            "freezer_door": {
+                "name": "Frysd\u00f6rr"
+            },
+            "lifted": {
+                "name": "Upplyft"
+            },
+            "local_control": {
+                "name": "Lokal kontroll"
+            },
+            "lost": {
+                "name": "F\u00f6rlorad"
+            },
+            "refrigerator_door": {
+                "name": "Kylsk\u00e5psd\u00f6rr"
+            },
+            "remote_control": {
+                "name": "Fj\u00e4rrman\u00f6vrering"
+            },
+            "remote_start": {
+                "name": "Fj\u00e4rrstart"
+            }
+        },
+        "light": {
+            "ambient_light": {
+                "name": "Omgivande ljus"
+            },
+            "cooking_lighting": {
+                "name": "Funktionell belysning"
+            },
+            "external_light": {
+                "name": "Utv\u00e4ndig belysning"
+            },
+            "internal_light": {
+                "name": "Intern belysning"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "Flaskkylarens temperatur"
+            },
+            "chiller_left_setpoint_temperature": {
+                "name": "Temperatur v\u00e4nster kylare"
+            },
+            "chiller_right_setpoint_temperature": {
+                "name": "Temperatur h\u00f6ger kylare"
+            },
+            "chiller_setpoint_temperature": {
+                "name": "Kylartemperatur"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "Frysens temperatur"
+            },
+            "refrigerator_setpoint_temperature": {
+                "name": "Kylsk\u00e5pets temperatur"
+            },
+            "wine_compartment_2_setpoint_temperature": {
+                "name": "Vinfack 2 temperatur"
+            },
+            "wine_compartment_3_setpoint_temperature": {
+                "name": "Vinfack 3 temperatur"
+            },
+            "wine_compartment_setpoint_temperature": {
+                "name": "Vinfackets temperatur"
+            }
+        },
+        "select": {
+            "active_program": {
+                "name": "Aktivt program",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "K\u00f6r hem",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "St\u00e4da allt",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "St\u00e4dkarta",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caf\u00e9 Grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caf\u00e9 Latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Kaffe",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso Doppio",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso Macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Varmvatten",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte Macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Mj\u00f6lkskum",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Varm mj\u00f6lk",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL Kaffe",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Caf\u00e9 au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Caf\u00e9 con Leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Caf\u00e9 Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead Eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doppio",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat white",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Galao",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Grosser brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kleiner brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verl\u00e4ngerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verl\u00e4ngerter Braun",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener Melange",
+                    "cooking_common_program_hood_automatic": "Automatisk",
+                    "cooking_common_program_hood_delayed_shut_off": "F\u00f6rdr\u00f6jd avst\u00e4ngning",
+                    "cooking_common_program_hood_venting": "Ventilerar",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Underv\u00e4rme",
+                    "cooking_oven_program_heating_mode_defrost": "Upptining",
+                    "cooking_oven_program_heating_mode_desiccation": "Torkning",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Speciell uppv\u00e4rmning f\u00f6r frysta produkter",
+                    "cooking_oven_program_heating_mode_hot_air": "Varmluft",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Varmluft + 100 \u00e5nga",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Varmluft + 30 \u00e5nga",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Varmluft + 60 \u00e5nga",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Varmluft + 80 \u00e5nga",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Varmluft eko",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Varmluftsgrillning",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intensiv v\u00e4rme",
+                    "cooking_oven_program_heating_mode_keep_warm": "Varmh\u00e5llning",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pizza",
+                    "cooking_oven_program_heating_mode_pre_heating": "F\u00f6rv\u00e4rmning",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "F\u00f6rv\u00e4rm ugnsform",
+                    "cooking_oven_program_heating_mode_proof": "Bevis",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Sabbatsprogram",
+                    "cooking_oven_program_heating_mode_slow_cook": "L\u00e5ngkok",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u00d6ver- och underv\u00e4rme",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u00d6ver- och underv\u00e4rme Eko",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Uppv\u00e4rmningsl\u00e5da",
+                    "cooking_oven_program_microwave_1000_watt": "1000 watt",
+                    "cooking_oven_program_microwave_180_watt": "180 watt",
+                    "cooking_oven_program_microwave_360_watt": "360 watt",
+                    "cooking_oven_program_microwave_600_watt": "600 watt",
+                    "cooking_oven_program_microwave_900_watt": "900 watt",
+                    "cooking_oven_program_microwave_90_watt": "90 watt",
+                    "cooking_oven_program_microwave_max": "Max",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Auto halvfull maskin",
+                    "dishcare_dishwasher_program_eco_50": "Eko 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Expressrent 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Glas 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Glasv\u00e5rd",
+                    "dishcare_dishwasher_program_intensiv_45": "Intensiv 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intensiv 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intensiv kraft",
+                    "dishcare_dishwasher_program_kurz_60": "Kort 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Maskinv\u00e5rd",
+                    "dishcare_dishwasher_program_magic_daily": "Daglig magi",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maximal reng\u00f6ring",
+                    "dishcare_dishwasher_program_mixed_load": "Blandad last",
+                    "dishcare_dishwasher_program_night_wash": "Nattv\u00e4tt",
+                    "dishcare_dishwasher_program_normal_45": "Normal 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Normal 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "F\u00f6rsk\u00f6ljning",
+                    "dishcare_dishwasher_program_quick_45": "Snabb 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "Snabb 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "\u00c5ngrent",
+                    "dishcare_dishwasher_program_super_60": "Super 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Anti-krympning",
+                    "laundry_care_dryer_program_blankets": "Filtar",
+                    "laundry_care_dryer_program_business_shirts": "Skjortor",
+                    "laundry_care_dryer_program_cotton": "Bomull",
+                    "laundry_care_dryer_program_delicates": "Underkl\u00e4der",
+                    "laundry_care_dryer_program_dessous": "Dessous",
+                    "laundry_care_dryer_program_down_feathers": "Dunfj\u00e4drar",
+                    "laundry_care_dryer_program_hygiene": "Hygien",
+                    "laundry_care_dryer_program_in_basket": "I korg",
+                    "laundry_care_dryer_program_jeans": "Jeans",
+                    "laundry_care_dryer_program_mix": "Blandat",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Min torktid",
+                    "laundry_care_dryer_program_outdoor": "Utomhus",
+                    "laundry_care_dryer_program_pillow": "Kudde",
+                    "laundry_care_dryer_program_shirts_15": "Skjortor 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "Syntetiskt",
+                    "laundry_care_dryer_program_synthetic_refresh": "Syntetiskt uppfr\u00e4schning",
+                    "laundry_care_dryer_program_time_cold": "Kallt (variabel tid)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Kallt (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Kallt (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Kallt (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Varm (variabel tid)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Varm (30 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Varm (40 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Varm (60 min)",
+                    "laundry_care_dryer_program_towels": "Handdukar",
+                    "laundry_care_washer_dryer_program_cotton": "Bomull",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Bomull eko 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "L\u00e4ttsk\u00f6tt",
+                    "laundry_care_washer_dryer_program_mix": "Blandat",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Tv\u00e4tta och torka (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Tv\u00e4tta och torka (90 min)",
+                    "laundry_care_washer_program_auto_30": "Auto 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Auto 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Auto 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "Chiffong",
+                    "laundry_care_washer_program_cotton": "Bomull",
+                    "laundry_care_washer_program_cotton_colour": "Bomull f\u00e4rg",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Bomull eko",
+                    "laundry_care_washer_program_cotton_eco_4060": "Bomull eko 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Gardiner",
+                    "laundry_care_washer_program_dark_wash": "M\u00f6rk tv\u00e4tt",
+                    "laundry_care_washer_program_delicates_silk": "Underkl\u00e4der siden",
+                    "laundry_care_washer_program_dessous": "Dessous",
+                    "laundry_care_washer_program_down_duvet_duvet": "Dunt\u00e4cke",
+                    "laundry_care_washer_program_drum_clean": "Trumreng\u00f6ring",
+                    "laundry_care_washer_program_easy_care": "L\u00e4ttsk\u00f6tt",
+                    "laundry_care_washer_program_mix": "Blandat",
+                    "laundry_care_washer_program_mix_night_wash": "Blandat nattv\u00e4tt",
+                    "laundry_care_washer_program_monsoon": "Monsun",
+                    "laundry_care_washer_program_outdoor": "Utomhus",
+                    "laundry_care_washer_program_plush_toy": "Gosedjur",
+                    "laundry_care_washer_program_power_speed_59": "Snabbprogram <60 min",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Sk\u00f6lj och centrifugera",
+                    "laundry_care_washer_program_sensitive": "K\u00e4nsligt",
+                    "laundry_care_washer_program_shirts_blouses": "Blusar",
+                    "laundry_care_washer_program_sport_fitness": "Sport och fitness",
+                    "laundry_care_washer_program_super_153045_super_15": "Super 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "Super 15/30 min",
+                    "laundry_care_washer_program_towels": "Handdukar",
+                    "laundry_care_washer_program_water_proof": "Vattent\u00e4t",
+                    "laundry_care_washer_program_wool": "Ull"
+                }
+            },
+            "selected_program": {
+                "name": "Valt program",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "K\u00f6r hem",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "St\u00e4da allt",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "St\u00e4dkarta",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caf\u00e9 Grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caf\u00e9 Latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Kaffe",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso Doppio",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso Macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Varmvatten",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte Macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Mj\u00f6lkskum",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Varm mj\u00f6lk",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL Kaffe",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Caf\u00e9 au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Caf\u00e9 con Leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Caf\u00e9 Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead Eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doppio",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat white",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Galao",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Grosser brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kleiner brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verl\u00e4ngerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verl\u00e4ngerter Braun",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener Melange",
+                    "cooking_common_program_hood_automatic": "Automatisk",
+                    "cooking_common_program_hood_delayed_shut_off": "F\u00f6rdr\u00f6jd avst\u00e4ngning",
+                    "cooking_common_program_hood_venting": "Ventilerar",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Underv\u00e4rme",
+                    "cooking_oven_program_heating_mode_defrost": "Upptining",
+                    "cooking_oven_program_heating_mode_desiccation": "Torkning",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Speciell uppv\u00e4rmning f\u00f6r frysta produkter",
+                    "cooking_oven_program_heating_mode_hot_air": "Varmluft",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Varmluft + 100 \u00e5nga",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Varmluft + 30 \u00e5nga",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Varmluft + 60 \u00e5nga",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Varmluft + 80 \u00e5nga",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Varmluft eko",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Varmluftsgrillning",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intensiv v\u00e4rme",
+                    "cooking_oven_program_heating_mode_keep_warm": "Varmh\u00e5llning",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pizza",
+                    "cooking_oven_program_heating_mode_pre_heating": "F\u00f6rv\u00e4rmning",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "F\u00f6rv\u00e4rm ugnsform",
+                    "cooking_oven_program_heating_mode_proof": "Bevis",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Sabbatsprogram",
+                    "cooking_oven_program_heating_mode_slow_cook": "L\u00e5ngkok",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u00d6ver- och underv\u00e4rme",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u00d6ver- och underv\u00e4rme Eko",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Uppv\u00e4rmningsl\u00e5da",
+                    "cooking_oven_program_microwave_1000_watt": "1000 watt",
+                    "cooking_oven_program_microwave_180_watt": "180 watt",
+                    "cooking_oven_program_microwave_360_watt": "360 watt",
+                    "cooking_oven_program_microwave_600_watt": "600 watt",
+                    "cooking_oven_program_microwave_900_watt": "900 watt",
+                    "cooking_oven_program_microwave_90_watt": "90 watt",
+                    "cooking_oven_program_microwave_max": "Max",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Auto halvfull maskin",
+                    "dishcare_dishwasher_program_eco_50": "Eko 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Expressrent 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Glas 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Glasv\u00e5rd",
+                    "dishcare_dishwasher_program_intensiv_45": "Intensiv 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intensiv 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intensiv kraft",
+                    "dishcare_dishwasher_program_kurz_60": "Kort 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Maskinv\u00e5rd",
+                    "dishcare_dishwasher_program_magic_daily": "Daglig magi",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maximal reng\u00f6ring",
+                    "dishcare_dishwasher_program_mixed_load": "Blandad last",
+                    "dishcare_dishwasher_program_night_wash": "Nattv\u00e4tt",
+                    "dishcare_dishwasher_program_normal_45": "Normal 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Normal 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "F\u00f6rsk\u00f6ljning",
+                    "dishcare_dishwasher_program_quick_45": "Snabb 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "Snabb 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "\u00c5ngrent",
+                    "dishcare_dishwasher_program_super_60": "Super 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Anti-krympning",
+                    "laundry_care_dryer_program_blankets": "Filtar",
+                    "laundry_care_dryer_program_business_shirts": "Skjortor",
+                    "laundry_care_dryer_program_cotton": "Bomull",
+                    "laundry_care_dryer_program_delicates": "Underkl\u00e4der",
+                    "laundry_care_dryer_program_dessous": "Dessous",
+                    "laundry_care_dryer_program_down_feathers": "Dunfj\u00e4drar",
+                    "laundry_care_dryer_program_hygiene": "Hygien",
+                    "laundry_care_dryer_program_in_basket": "I korg",
+                    "laundry_care_dryer_program_jeans": "Jeans",
+                    "laundry_care_dryer_program_mix": "Blandat",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Min torktid",
+                    "laundry_care_dryer_program_outdoor": "Utomhus",
+                    "laundry_care_dryer_program_pillow": "Kudde",
+                    "laundry_care_dryer_program_shirts_15": "Skjortor 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "Syntetiskt",
+                    "laundry_care_dryer_program_synthetic_refresh": "Syntetiskt uppfr\u00e4schning",
+                    "laundry_care_dryer_program_time_cold": "Kallt (variabel tid)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Kallt (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Kallt (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Kallt (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Varm (variabel tid)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Varm (30 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Varm (40 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Varm (60 min)",
+                    "laundry_care_dryer_program_towels": "Handdukar",
+                    "laundry_care_washer_dryer_program_cotton": "Bomull",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Bomull eko 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "L\u00e4ttsk\u00f6tt",
+                    "laundry_care_washer_dryer_program_mix": "Blandat",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Tv\u00e4tta och torka (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Tv\u00e4tta och torka (90 min)",
+                    "laundry_care_washer_program_auto_30": "Auto 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Auto 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Auto 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "Chiffong",
+                    "laundry_care_washer_program_cotton": "Bomull",
+                    "laundry_care_washer_program_cotton_colour": "Bomull f\u00e4rg",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Bomull eko",
+                    "laundry_care_washer_program_cotton_eco_4060": "Bomull eko 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Gardiner",
+                    "laundry_care_washer_program_dark_wash": "M\u00f6rk tv\u00e4tt",
+                    "laundry_care_washer_program_delicates_silk": "Underkl\u00e4der siden",
+                    "laundry_care_washer_program_dessous": "Dessous",
+                    "laundry_care_washer_program_down_duvet_duvet": "Dunt\u00e4cke",
+                    "laundry_care_washer_program_drum_clean": "Trumreng\u00f6ring",
+                    "laundry_care_washer_program_easy_care": "L\u00e4ttsk\u00f6tt",
+                    "laundry_care_washer_program_mix": "Blandat",
+                    "laundry_care_washer_program_mix_night_wash": "Blandat nattv\u00e4tt",
+                    "laundry_care_washer_program_monsoon": "Monsun",
+                    "laundry_care_washer_program_outdoor": "Utomhus",
+                    "laundry_care_washer_program_plush_toy": "Gosedjur",
+                    "laundry_care_washer_program_power_speed_59": "Snabbprogram <60 min",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Sk\u00f6lj och centrifugera",
+                    "laundry_care_washer_program_sensitive": "K\u00e4nsligt",
+                    "laundry_care_washer_program_shirts_blouses": "Blusar",
+                    "laundry_care_washer_program_sport_fitness": "Sport och fitness",
+                    "laundry_care_washer_program_super_153045_super_15": "Super 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "Super 15/30 min",
+                    "laundry_care_washer_program_towels": "Handdukar",
+                    "laundry_care_washer_program_water_proof": "Vattent\u00e4t",
+                    "laundry_care_washer_program_wool": "Ull"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "Batteriniv\u00e5"
+            },
+            "bean_container_empty": {
+                "name": "Beh\u00e5llare f\u00f6r b\u00f6nor tom",
+                "state": {
+                    "confirmed": "Bekr\u00e4ftad",
+                    "off": "Av",
+                    "present": "Nuvarande"
+                }
+            },
+            "camera_state": {
+                "name": "Kamerans tillst\u00e5nd",
+                "state": {
+                    "disabled": "Inaktiverad",
+                    "error": "Fel",
+                    "ready": "Redo",
+                    "sleeping": "Sover",
+                    "streamingcloud": "Streamar molnet",
+                    "streaminglocal": "Streamar lokalt",
+                    "streaminglocal_and_cloud": "Streamar lokalt och molnet"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "Kaffe- och mj\u00f6lkkoppar"
+            },
+            "coffee_counter": {
+                "name": "Kaffe"
+            },
+            "door": {
+                "name": "D\u00f6rr/lucka",
+                "state": {
+                    "closed": "St\u00e4ngd",
+                    "locked": "L\u00e5st",
+                    "open": "\u00d6ppen"
+                }
+            },
+            "drip_tray_full": {
+                "name": "Dropptr\u00e5get \u00e4r fullt",
+                "state": {
+                    "confirmed": "Bekr\u00e4ftad",
+                    "off": "Av",
+                    "present": "Nuvarande"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "Larm f\u00f6r frysd\u00f6rr",
+                "state": {
+                    "confirmed": "Bekr\u00e4ftad",
+                    "present": "Nuvarande"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "Temperaturlarm f\u00f6r frysen",
+                "state": {
+                    "confirmed": "Bekr\u00e4ftad",
+                    "off": "Av",
+                    "present": "Nuvarande"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "Koppar med skummad mj\u00f6lk"
+            },
+            "hot_milk_counter": {
+                "name": "Koppar med varm mj\u00f6lk"
+            },
+            "hot_water_counter": {
+                "name": "Hetvatten"
+            },
+            "hot_water_cups_counter": {
+                "name": "Koppar med varmt vatten"
+            },
+            "last_selected_map": {
+                "name": "Senast valda karta",
+                "state": {
+                    "map1": "Karta 1",
+                    "map2": "Karta 2",
+                    "map3": "Karta 3",
+                    "tempmap": "Tillf\u00e4llig karta"
+                }
+            },
+            "milk_counter": {
+                "name": "Koppar med mj\u00f6lk"
+            },
+            "operation_state": {
+                "name": "Driftstatus",
+                "state": {
+                    "aborting": "Avbryter",
+                    "actionrequired": "\u00c5tg\u00e4rd kr\u00e4vs",
+                    "delayedstart": "F\u00f6rdr\u00f6jd start",
+                    "error": "Fel",
+                    "finished": "F\u00e4rdig",
+                    "inactive": "Inaktiv",
+                    "pause": "Pausad",
+                    "ready": "Redo",
+                    "run": "K\u00f6r"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "Pulverkaffe"
+            },
+            "program_finish_time": {
+                "name": "Programmets sluttid"
+            },
+            "program_progress": {
+                "name": "Programmets framsteg"
+            },
+            "refrigerator_door_alarm": {
+                "name": "Larm f\u00f6r kylsk\u00e5psd\u00f6rr",
+                "state": {
+                    "confirmed": "Bekr\u00e4ftad",
+                    "off": "Av",
+                    "present": "Nuvarande"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "name": "Sk\u00f6ljmedlet n\u00e4stan tomt",
+                "state": {
+                    "confirmed": "Bekr\u00e4ftad",
+                    "off": "Av",
+                    "present": "Nuvarande"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "Koppar med Ristretto espresso"
+            },
+            "salt_nearly_empty": {
+                "name": "Saltet \u00e4r n\u00e4stan tomt",
+                "state": {
+                    "confirmed": "Bekr\u00e4ftad",
+                    "off": "Av",
+                    "present": "Nuvarande"
+                }
+            },
+            "water_tank_empty": {
+                "name": "Tom vattentank",
+                "state": {
+                    "confirmed": "Bekr\u00e4ftad",
+                    "off": "Av",
+                    "present": "Nuvarande"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "Barnl\u00e5s"
+            },
+            "cup_warmer": {
+                "name": "Koppv\u00e4rmare"
+            },
+            "dispenser_enabled": {
+                "name": "Dispenser",
+                "state": {
+                    "off": "Inaktiverad",
+                    "on": "Aktiverad"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "Assistent f\u00f6r frysd\u00f6rr"
+            },
+            "door_assistant_fridge": {
+                "name": "Assistent f\u00f6r kylsk\u00e5psd\u00f6rr"
+            },
+            "eco_mode": {
+                "name": "Ekonomil\u00e4ge"
+            },
+            "freezer_super_mode": {
+                "name": "Superl\u00e4ge f\u00f6r frys"
+            },
+            "fresh_mode": {
+                "name": "F\u00e4rskhetsl\u00e4ge"
+            },
+            "power": {
+                "name": "Av/P\u00e5"
+            },
+            "refrigerator_super_mode": {
+                "name": "Superl\u00e4ge f\u00f6r kylsk\u00e5p"
+            },
+            "sabbath_mode": {
+                "name": "Sabbatsl\u00e4ge"
+            },
+            "vacation_mode": {
+                "name": "Semesterl\u00e4ge"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "Larmklocka"
+            }
+        }
+    },
+    "exceptions": {
+        "appliance_not_found": {
+            "message": "Det gick inte att hitta enheten f\u00f6r enhets-ID {device_id}"
+        },
+        "execute_command": {
+            "message": "Fel vid kommando {command}: {description}"
+        },
+        "pause_program": {
+            "message": "Fel n\u00e4r programmet pausades: {description}"
+        },
+        "power_off": {
+            "message": "Det gick inte att st\u00e4nga av {appliance_name} med v\u00e4rdet \"{value}\": {description}"
+        },
+        "power_on": {
+            "message": "Det gick inte att sl\u00e5 p\u00e5 {appliance_name} : {description}"
+        },
+        "select_light_custom_color": {
+            "message": "Fel vid val av anpassad f\u00e4rg f\u00f6r {entity_id} : {description}"
+        },
+        "select_program": {
+            "message": "Fel vid val av program {program}: {description}"
+        },
+        "set_light_brightness": {
+            "message": "Fel vid inst\u00e4llning av ljusstyrka f\u00f6r {entity_id} : {description}"
+        },
+        "set_light_color": {
+            "message": "Fel vid inst\u00e4llning av f\u00e4rg f\u00f6r {entity_id} : {description}"
+        },
+        "set_options_active_program": {
+            "message": "Fel n\u00e4r alternativ st\u00e4lldes in f\u00f6r det aktiva programmet: {description}"
+        },
+        "set_options_selected_program": {
+            "message": "Fel n\u00e4r alternativ st\u00e4lldes in f\u00f6r det valda programmet: {description}"
+        },
+        "set_setting": {
+            "message": "Fel vid tilldelning av v\u00e4rdet \"{value}\" till inst\u00e4llningen \"{key}\": {description}"
+        },
+        "set_setting_entity": {
+            "message": "Fel vid tilldelning av v\u00e4rdet \"{value}\" till inst\u00e4llningen \"{key}\" f\u00f6r {entity_id} : {description}"
+        },
+        "start_program": {
+            "message": "Fel vid start av programmet {program}: {description}"
+        },
+        "stop_program": {
+            "message": "Fel vid stopp av programmet: {description}"
+        },
+        "turn_off": {
+            "message": "Fel vid avst\u00e4ngning av {entity_id} ({key}): {description}"
+        },
+        "turn_off_light": {
+            "message": "Det gick inte att st\u00e4nga av {entity_id} : {description}"
+        },
+        "turn_off_not_supported": {
+            "message": "{appliance_name} har inte st\u00f6d f\u00f6r att st\u00e4nga av eller g\u00e5 in i standby-l\u00e4ge."
+        },
+        "turn_on": {
+            "message": "Fel vid tillslag av {entity_id} ({key}): {description}"
+        },
+        "turn_on_light": {
+            "message": "Fel vid p\u00e5slagning av {entity_id}: {description}"
+        },
+        "unable_to_retrieve_turn_off": {
+            "message": "Det gick inte att st\u00e4nga av {appliance_name} eftersom dess st\u00f6d f\u00f6r att st\u00e4nga av eller g\u00e5 in i standby-l\u00e4ge inte kunde fastst\u00e4llas."
+        }
+    },
+    "issues": {
+        "deprecated_binary_common_door_sensor": {
+            "description": "Den bin\u00e4ra d\u00f6rrsensorn `{entity}`, som \u00e4r utfasad, anv\u00e4nds i f\u00f6ljande automatiseringar eller skript:\n{items}\n\nEn sensorenhet med ytterligare m\u00f6jliga tillst\u00e5nd finns tillg\u00e4nglig och b\u00f6r anv\u00e4ndas fram\u00f6ver; Anv\u00e4nd den i ovanst\u00e5ende automationer eller skript f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "Utfasad bin\u00e4r d\u00f6rrsensor har identifierats i vissa automatiseringar eller skript"
+        },
+        "deprecated_program_switch": {
+            "description": "Programv\u00e4ljare \u00e4r utfasad och {entity_id} anv\u00e4nds i f\u00f6ljande automatiseringar eller skript: \n{items}\n \nDu kan anv\u00e4nda aktiv programv\u00e4ljarenhet f\u00f6r att k\u00f6ra programmet utan ytterligare alternativ f\u00f6r att f\u00e5 det aktuella programmet som k\u00f6rs p\u00e5 ovanst\u00e5ende automatiseringar eller skript f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "Utfasad programv\u00e4ljare uppt\u00e4ckt i vissa automatiseringar eller skript"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "\u00c4ndra en inst\u00e4llning.",
+            "fields": {
+                "device_id": {
+                    "description": "Enhetens ID.",
+                    "name": "Enhets-ID"
+                },
+                "key": {
+                    "description": "Nyckel f\u00f6r inst\u00e4llningen.",
+                    "name": "Nyckel"
+                },
+                "value": {
+                    "description": "Inst\u00e4llningens v\u00e4rde.",
+                    "name": "V\u00e4rde"
+                }
+            },
+            "name": "\u00c4ndra inst\u00e4llning"
+        },
+        "pause_program": {
+            "description": "Pausar det aktuella programmet som k\u00f6rs.",
+            "fields": {
+                "device_id": {
+                    "description": "Enhetens ID.",
+                    "name": "Enhets-ID"
+                }
+            },
+            "name": "Pausa programmet"
+        },
+        "resume_program": {
+            "description": "Forts\u00e4tter det pausade programmet.",
+            "fields": {
+                "device_id": {
+                    "description": "Enhetens ID.",
+                    "name": "Enhets-ID"
+                }
+            },
+            "name": "Forts\u00e4tter programmet"
+        },
+        "select_program": {
+            "description": "V\u00e4ljer ett program utan att starta det.",
+            "fields": {
+                "device_id": {
+                    "description": "Enhetens ID.",
+                    "name": "Enhets-ID"
+                },
+                "key": {
+                    "description": "Nyckel f\u00f6r alternativet.",
+                    "name": "Alternativknapp"
+                },
+                "program": {
+                    "description": "Program att v\u00e4lja.",
+                    "name": "Program"
+                },
+                "unit": {
+                    "description": "Enhet f\u00f6r alternativet.",
+                    "name": "Tillvalsenhet"
+                },
+                "value": {
+                    "description": "V\u00e4rdet p\u00e5 alternativet.",
+                    "name": "V\u00e4rde p\u00e5 valet"
+                }
+            },
+            "name": "V\u00e4lj program"
+        },
+        "set_option_active": {
+            "description": "St\u00e4ller in ett alternativ f\u00f6r det aktiva programmet.",
+            "fields": {
+                "device_id": {
+                    "description": "Enhetens ID.",
+                    "name": "Enhets-ID"
+                },
+                "key": {
+                    "description": "Nyckel f\u00f6r alternativet.",
+                    "name": "Nyckel"
+                },
+                "value": {
+                    "description": "V\u00e4rdet p\u00e5 alternativet.",
+                    "name": "V\u00e4rde"
+                }
+            },
+            "name": "Ange aktivt programalternativ"
+        },
+        "set_option_selected": {
+            "description": "St\u00e4ller in alternativ f\u00f6r det valda programmet.",
+            "fields": {
+                "device_id": {
+                    "description": "Enhetens ID.",
+                    "name": "Enhets-ID"
+                },
+                "key": {
+                    "description": "Nyckel f\u00f6r alternativet.",
+                    "name": "Nyckel"
+                },
+                "value": {
+                    "description": "V\u00e4rdet p\u00e5 alternativet.",
+                    "name": "V\u00e4rde"
+                }
+            },
+            "name": "St\u00e4ll in valt programalternativ"
+        },
+        "start_program": {
+            "description": "V\u00e4ljer ett program och startar det.",
+            "fields": {
+                "device_id": {
+                    "description": "Enhetens ID.",
+                    "name": "Enhets-ID"
+                },
+                "key": {
+                    "description": "Nyckel f\u00f6r alternativet.",
+                    "name": "Alternativknapp"
+                },
+                "program": {
+                    "description": "Program att v\u00e4lja.",
+                    "name": "Program"
+                },
+                "unit": {
+                    "description": "Enhet f\u00f6r alternativet.",
+                    "name": "Tillvalsenhet"
+                },
+                "value": {
+                    "description": "V\u00e4rdet p\u00e5 alternativet.",
+                    "name": "V\u00e4rde p\u00e5 valet"
+                }
+            },
+            "name": "Starta programmet"
+        }
+    }
+}

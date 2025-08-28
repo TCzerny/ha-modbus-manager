@@ -1,0 +1,822 @@
+{
+    "common": {
+        "confirmed": "Kinnitatud",
+        "present": "Kohal"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "Osis pole seadistatud. Palun vaata dokumentatsiooni.",
+            "no_url_available": "URL pole saadaval. Selle t\u00f5rke kohta teabe saamiseks vaata [spikrijaotis]({docs_url})",
+            "oauth_error": "Saadi sobimatud loaandmed.",
+            "oauth_failed": "T\u00f5rge juurdep\u00e4\u00e4sut\u00f5endi hankimisel.",
+            "oauth_timeout": "OAuthi loa lahendamise ajal\u00f5pp.",
+            "oauth_unauthorized": "OAuthi tuvastaimisviga juurdep\u00e4\u00e4sut\u00f5endi hankimisel."
+        },
+        "create_entry": {
+            "default": "Tuvastamine \u00f5nnestus"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Vali tuvastusmeetod"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "Aku laadimise olek"
+            },
+            "charging_connection": {
+                "name": "Laadimis\u00fchendus"
+            },
+            "chiller_door": {
+                "name": "Jahuti uks"
+            },
+            "dust_box_inserted": {
+                "name": "Tolmukast",
+                "state": {
+                    "off": "Pole sisestatud",
+                    "on": "Sisestatud"
+                }
+            },
+            "freezer_door": {
+                "name": "S\u00fcgavk\u00fclmiku uks"
+            },
+            "lifted": {
+                "name": "T\u00f5stetud"
+            },
+            "local_control": {
+                "name": "Kohalik juhtimine"
+            },
+            "lost": {
+                "name": "Kadunud"
+            },
+            "refrigerator_door": {
+                "name": "K\u00fclmiku uks"
+            },
+            "remote_control": {
+                "name": "Kaugjuhtimine"
+            },
+            "remote_start": {
+                "name": "Kaugk\u00e4ivitus"
+            }
+        },
+        "light": {
+            "ambient_light": {
+                "name": "\u00dcmbritsev valgus"
+            },
+            "cooking_lighting": {
+                "name": "Funktsionaalne valgus"
+            },
+            "external_light": {
+                "name": "V\u00e4line valgus"
+            },
+            "internal_light": {
+                "name": "Seesmine valgus"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "Pudelijahuti temperatuur"
+            },
+            "chiller_left_setpoint_temperature": {
+                "name": "Vasaku jahuti temperatuur"
+            },
+            "chiller_right_setpoint_temperature": {
+                "name": "Parema jahuti temperatuur"
+            },
+            "chiller_setpoint_temperature": {
+                "name": "Jahuti temperatuur"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "S\u00fcgavk\u00fclmiku temperatuur"
+            },
+            "refrigerator_setpoint_temperature": {
+                "name": "K\u00fclmkapi temperatuur"
+            },
+            "wine_compartment_2_setpoint_temperature": {
+                "name": "Veinikambri 2 temperatuur"
+            },
+            "wine_compartment_3_setpoint_temperature": {
+                "name": "Veinikambri 3 temperatuur"
+            },
+            "wine_compartment_setpoint_temperature": {
+                "name": "Veiniruumi temperatuur"
+            }
+        },
+        "select": {
+            "active_program": {
+                "name": "Aktiivne programm",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "Naase dokki",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "Puhasta k\u00f5ik",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "Puhasta kaardi alusel",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caffe grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caffe latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Kohv",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso doppio",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Kuum vesi",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Piimavaht",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Soe piim",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL kohv",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Cafe au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Cafe con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Cafe cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doppio",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat white",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Galao",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Grosser brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kleiner brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verlaengerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verlaengerter braun",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener melange",
+                    "cooking_common_program_hood_automatic": "Automaatne",
+                    "cooking_common_program_hood_delayed_shut_off": "Viivitusega v\u00e4ljal\u00fclitamine",
+                    "cooking_common_program_hood_venting": "Ventilatsioon",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Alumine soojendus",
+                    "cooking_oven_program_heating_mode_defrost": "Sulatamine",
+                    "cooking_oven_program_heating_mode_desiccation": "Kuivatamine",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Spetsiaalne kuumutus k\u00fclmutatud toodete jaoks",
+                    "cooking_oven_program_heating_mode_hot_air": "Kuum \u00f5hk",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Kuum \u00f5hk + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Kuum \u00f5hk + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Kuum \u00f5hk + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Kuum \u00f5hk + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Kuum \u00f5hk \u00f6ko",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Kuuma \u00f5huga grillimine",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intensiivne kuumus",
+                    "cooking_oven_program_heating_mode_keep_warm": "Hoia soojas",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pitsa seade",
+                    "cooking_oven_program_heating_mode_pre_heating": "Eelsoojendus",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Kuumuta ahjun\u00f5usid",
+                    "cooking_oven_program_heating_mode_proof": "Kinnitus",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Hingamisp\u00e4eva programm",
+                    "cooking_oven_program_heating_mode_slow_cook": "Aeglane k\u00fcpsetamine",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u00dclemine alumine k\u00fcte",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u00dclemine alumine k\u00fcte \u00f6ko",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Soojendussahtel",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watti",
+                    "cooking_oven_program_microwave_max": "Max",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Automaatne poolkoormus",
+                    "dishcare_dishwasher_program_eco_50": "\u00d6ko 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Ekspress s\u00e4ra 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Klaas 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Klaasi hooldamine",
+                    "dishcare_dishwasher_program_intensiv_45": "Intensiivne 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intensiivne 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intensiivne v\u00f5imsus",
+                    "dishcare_dishwasher_program_kurz_60": "L\u00fchike 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Masina hooldus",
+                    "dishcare_dishwasher_program_magic_daily": "Maagia iga p\u00e4ev",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maksimaalne puhastamine",
+                    "dishcare_dishwasher_program_mixed_load": "Segakoormus",
+                    "dishcare_dishwasher_program_night_wash": "\u00d6ine pesu",
+                    "dishcare_dishwasher_program_normal_45": "Tavaline 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Tavaline 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "Eelloputus",
+                    "dishcare_dishwasher_program_quick_45": "Kiire 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "Kiire 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Aurutage v\u00e4rskeks",
+                    "dishcare_dishwasher_program_super_60": "Super 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Kahanemisvastane",
+                    "laundry_care_dryer_program_blankets": "Tekid",
+                    "laundry_care_dryer_program_business_shirts": "\u00c4ris\u00e4rgid",
+                    "laundry_care_dryer_program_cotton": "Puuvillane",
+                    "laundry_care_dryer_program_delicates": "\u00d5rnad",
+                    "laundry_care_dryer_program_dessous": "Dessous",
+                    "laundry_care_dryer_program_down_feathers": "Udusuled",
+                    "laundry_care_dryer_program_hygiene": "H\u00fcgieen",
+                    "laundry_care_dryer_program_in_basket": "Korvis",
+                    "laundry_care_dryer_program_jeans": "Teksad",
+                    "laundry_care_dryer_program_mix": "Segu",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Minu kuivamisaeg",
+                    "laundry_care_dryer_program_outdoor": "V\u00e4lisriided",
+                    "laundry_care_dryer_program_pillow": "Padi",
+                    "laundry_care_dryer_program_shirts_15": "S\u00e4rgid 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "S\u00fcnteetiline",
+                    "laundry_care_dryer_program_synthetic_refresh": "S\u00fcnteetika v\u00e4rskendus",
+                    "laundry_care_dryer_program_time_cold": "K\u00fclm (muutuv aeg)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "K\u00fclm (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "K\u00fclm (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "K\u00fclm (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Soe (muutuv aeg)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Soe (30 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Soe (40 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Soe (60 min)",
+                    "laundry_care_dryer_program_towels": "K\u00e4ter\u00e4tid",
+                    "laundry_care_washer_dryer_program_cotton": "Puuvillane",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Puuvillane \u00f6ko 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Lihtne hooldus",
+                    "laundry_care_washer_dryer_program_mix": "Segu",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Pese ja kuivata (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Pese ja kuivata (90 min)",
+                    "laundry_care_washer_program_auto_30": "Automaatne 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Automaatne 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Automaatne 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "Sifoon",
+                    "laundry_care_washer_program_cotton": "Puuvillane",
+                    "laundry_care_washer_program_cotton_colour": "Puuvillane v\u00e4rviline",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Puuvill \u00f6ko",
+                    "laundry_care_washer_program_cotton_eco_4060": "Puuvill \u00f6ko 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Kardinad",
+                    "laundry_care_washer_program_dark_wash": "Tume pesu",
+                    "laundry_care_washer_program_delicates_silk": "\u00d5rn siid",
+                    "laundry_care_washer_program_dessous": "Dessous",
+                    "laundry_care_washer_program_down_duvet_duvet": "Suletekk",
+                    "laundry_care_washer_program_drum_clean": "Trumli puhastamine",
+                    "laundry_care_washer_program_easy_care": "Lihtne hooldus",
+                    "laundry_care_washer_program_mix": "Segu",
+                    "laundry_care_washer_program_mix_night_wash": "Segu \u00f6ine pesu",
+                    "laundry_care_washer_program_monsoon": "Mussoon",
+                    "laundry_care_washer_program_outdoor": "V\u00e4lisriided",
+                    "laundry_care_washer_program_plush_toy": "Pl\u00fc\u00fc\u017eist m\u00e4nguasi",
+                    "laundry_care_washer_program_power_speed_59": "V\u00f5imsuskiirus <60 min",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Loputa tsentrifuugi kuivenda",
+                    "laundry_care_washer_program_sensitive": "\u00d5rn pesu",
+                    "laundry_care_washer_program_shirts_blouses": "S\u00e4rgid pluusid",
+                    "laundry_care_washer_program_sport_fitness": "Spordir\u00f5ivad",
+                    "laundry_care_washer_program_super_153045_super_15": "Super 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "Super 15/30 min",
+                    "laundry_care_washer_program_towels": "K\u00e4ter\u00e4tid",
+                    "laundry_care_washer_program_water_proof": "Veekindel",
+                    "laundry_care_washer_program_wool": "Villane"
+                }
+            },
+            "selected_program": {
+                "name": "Valitud programm",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "Naase dokki",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "Puhasta k\u00f5ik",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "Puhasta kaardi alusel",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caffe grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caffe latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Kohv",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso doppio",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Kuum vesi",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Piimavaht",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Soe piim",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL kohv",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Cafe au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Cafe con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Cafe cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doppio",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat white",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Galao",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Grosser brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kleiner brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verlaengerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verlaengerter braun",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener melange",
+                    "cooking_common_program_hood_automatic": "Automaatne",
+                    "cooking_common_program_hood_delayed_shut_off": "Viivitusega v\u00e4ljal\u00fclitamine",
+                    "cooking_common_program_hood_venting": "Ventilatsioon",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Alumine soojendus",
+                    "cooking_oven_program_heating_mode_defrost": "Sulatamine",
+                    "cooking_oven_program_heating_mode_desiccation": "Kuivatamine",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Spetsiaalne kuumutus k\u00fclmutatud toodete jaoks",
+                    "cooking_oven_program_heating_mode_hot_air": "Kuum \u00f5hk",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Kuum \u00f5hk + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Kuum \u00f5hk + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Kuum \u00f5hk + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Kuum \u00f5hk + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Kuum \u00f5hk \u00f6ko",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Kuuma \u00f5huga grillimine",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intensiivne kuumus",
+                    "cooking_oven_program_heating_mode_keep_warm": "Hoia soojas",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pitsa seade",
+                    "cooking_oven_program_heating_mode_pre_heating": "Eelsoojendus",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Kuumuta ahjun\u00f5usid",
+                    "cooking_oven_program_heating_mode_proof": "Kinnitus",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Hingamisp\u00e4eva programm",
+                    "cooking_oven_program_heating_mode_slow_cook": "Aeglane k\u00fcpsetamine",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u00dclemine alumine k\u00fcte",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u00dclemine alumine k\u00fcte \u00f6ko",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Soojendussahtel",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watti",
+                    "cooking_oven_program_microwave_max": "Max",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Automaatne poolkoormus",
+                    "dishcare_dishwasher_program_eco_50": "\u00d6ko 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Ekspress s\u00e4ra 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Klaas 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Klaasi hooldamine",
+                    "dishcare_dishwasher_program_intensiv_45": "Intensiivne 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intensiivne 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intensiivne v\u00f5imsus",
+                    "dishcare_dishwasher_program_kurz_60": "L\u00fchike 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Masina hooldus",
+                    "dishcare_dishwasher_program_magic_daily": "Maagia iga p\u00e4ev",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maksimaalne puhastamine",
+                    "dishcare_dishwasher_program_mixed_load": "Segakoormus",
+                    "dishcare_dishwasher_program_night_wash": "\u00d6ine pesu",
+                    "dishcare_dishwasher_program_normal_45": "Tavaline 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Tavaline 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "Eelloputus",
+                    "dishcare_dishwasher_program_quick_45": "Kiire 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "Kiire 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Aurutage v\u00e4rskeks",
+                    "dishcare_dishwasher_program_super_60": "Super 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Kahanemisvastane",
+                    "laundry_care_dryer_program_blankets": "Tekid",
+                    "laundry_care_dryer_program_business_shirts": "\u00c4ris\u00e4rgid",
+                    "laundry_care_dryer_program_cotton": "Puuvillane",
+                    "laundry_care_dryer_program_delicates": "\u00d5rnad",
+                    "laundry_care_dryer_program_dessous": "Dessous",
+                    "laundry_care_dryer_program_down_feathers": "Udusuled",
+                    "laundry_care_dryer_program_hygiene": "H\u00fcgieen",
+                    "laundry_care_dryer_program_in_basket": "Korvis",
+                    "laundry_care_dryer_program_jeans": "Teksad",
+                    "laundry_care_dryer_program_mix": "Segu",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Minu kuivamisaeg",
+                    "laundry_care_dryer_program_outdoor": "V\u00e4lisriided",
+                    "laundry_care_dryer_program_pillow": "Padi",
+                    "laundry_care_dryer_program_shirts_15": "S\u00e4rgid 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "S\u00fcnteetiline",
+                    "laundry_care_dryer_program_synthetic_refresh": "S\u00fcnteetika v\u00e4rskendus",
+                    "laundry_care_dryer_program_time_cold": "K\u00fclm (muutuv aeg)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "K\u00fclm (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "K\u00fclm (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "K\u00fclm (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Soe (muutuv aeg)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Soe (30 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Soe (40 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Soe (60 min)",
+                    "laundry_care_dryer_program_towels": "K\u00e4ter\u00e4tid",
+                    "laundry_care_washer_dryer_program_cotton": "Puuvillane",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Puuvillane \u00f6ko 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Lihtne hooldus",
+                    "laundry_care_washer_dryer_program_mix": "Segu",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Pese ja kuivata (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Pese ja kuivata (90 min)",
+                    "laundry_care_washer_program_auto_30": "Automaatne 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Automaatne 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Automaatne 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "Sifoon",
+                    "laundry_care_washer_program_cotton": "Puuvillane",
+                    "laundry_care_washer_program_cotton_colour": "Puuvillane v\u00e4rviline",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Puuvill \u00f6ko",
+                    "laundry_care_washer_program_cotton_eco_4060": "Puuvill \u00f6ko 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Kardinad",
+                    "laundry_care_washer_program_dark_wash": "Tume pesu",
+                    "laundry_care_washer_program_delicates_silk": "\u00d5rn siid",
+                    "laundry_care_washer_program_dessous": "Dessous",
+                    "laundry_care_washer_program_down_duvet_duvet": "Suletekk",
+                    "laundry_care_washer_program_drum_clean": "Trumli puhastamine",
+                    "laundry_care_washer_program_easy_care": "Lihtne hooldus",
+                    "laundry_care_washer_program_mix": "Segu",
+                    "laundry_care_washer_program_mix_night_wash": "Segu \u00f6ine pesu",
+                    "laundry_care_washer_program_monsoon": "Mussoon",
+                    "laundry_care_washer_program_outdoor": "V\u00e4lisriided",
+                    "laundry_care_washer_program_plush_toy": "Pl\u00fc\u00fc\u017eist m\u00e4nguasi",
+                    "laundry_care_washer_program_power_speed_59": "V\u00f5imsuskiirus <60 min",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Loputa tsentrifuugi kuivenda",
+                    "laundry_care_washer_program_sensitive": "\u00d5rn pesu",
+                    "laundry_care_washer_program_shirts_blouses": "S\u00e4rgid pluusid",
+                    "laundry_care_washer_program_sport_fitness": "Spordir\u00f5ivad",
+                    "laundry_care_washer_program_super_153045_super_15": "Super 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "Super 15/30 min",
+                    "laundry_care_washer_program_towels": "K\u00e4ter\u00e4tid",
+                    "laundry_care_washer_program_water_proof": "Veekindel",
+                    "laundry_care_washer_program_wool": "Villane"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "Aku laetus"
+            },
+            "bean_container_empty": {
+                "name": "Oakonteiner t\u00fchi",
+                "state": {
+                    "confirmed": "Kinnitatud",
+                    "off": "V\u00e4ljas",
+                    "present": "Kohal"
+                }
+            },
+            "camera_state": {
+                "name": "Kaamera olek",
+                "state": {
+                    "disabled": "Keelatud",
+                    "error": "T\u00f5rge",
+                    "ready": "Valmis",
+                    "sleeping": "Ootel",
+                    "streamingcloud": "Voogesituse pilvest",
+                    "streaminglocal": "Kohalik voogesitus",
+                    "streaminglocal_and_cloud": "Kohaliku ja pilve voogesitus"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "Kohvi- ja piimatasse"
+            },
+            "coffee_counter": {
+                "name": "Kohvitasse"
+            },
+            "door": {
+                "name": "Uks",
+                "state": {
+                    "closed": "Suletud",
+                    "locked": "Lukus",
+                    "open": "Avatud"
+                }
+            },
+            "drip_tray_full": {
+                "name": "Tilgaalus t\u00e4is",
+                "state": {
+                    "confirmed": "Kinnitatud",
+                    "off": "V\u00e4ljas",
+                    "present": "Kohal"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "S\u00fcgavk\u00fclmiku ukse alarm",
+                "state": {
+                    "confirmed": "Kinnitatud",
+                    "present": "Kohal"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "S\u00fcgavk\u00fclmiku temperatuuri alarm",
+                "state": {
+                    "confirmed": "Kinnitatud",
+                    "off": "V\u00e4ljas",
+                    "present": "Kohal"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "Vahustatud piima tasse"
+            },
+            "hot_milk_counter": {
+                "name": "Kuuma piima tasse"
+            },
+            "hot_water_counter": {
+                "name": "Kuum vesi"
+            },
+            "hot_water_cups_counter": {
+                "name": "Kuuma vee tasse"
+            },
+            "last_selected_map": {
+                "name": "Viimati valitud kaart",
+                "state": {
+                    "map1": "Kaart 1",
+                    "map2": "Kaart 2",
+                    "map3": "Kaart 3",
+                    "tempmap": "Ajutine kaart"
+                }
+            },
+            "milk_counter": {
+                "name": "Piima tasse"
+            },
+            "operation_state": {
+                "name": "T\u00f6\u00f6re\u017eiim",
+                "state": {
+                    "aborting": "Katkestamine",
+                    "actionrequired": "Vajalik on toiming",
+                    "delayedstart": "Viivitatud algus",
+                    "error": "T\u00f5rge",
+                    "finished": "L\u00f5petanud",
+                    "inactive": "Passiivne",
+                    "pause": "Peatatud",
+                    "ready": "Valmis",
+                    "run": "K\u00e4ivita"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "Jahvatatud kohv"
+            },
+            "program_finish_time": {
+                "name": "Programmi l\u00f5puaeg"
+            },
+            "program_progress": {
+                "name": "Programmi edenemine"
+            },
+            "refrigerator_door_alarm": {
+                "name": "K\u00fclmkapi ukse h\u00e4ire",
+                "state": {
+                    "confirmed": "Kinnitatud",
+                    "off": "V\u00e4ljas",
+                    "present": "Kohal"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "name": "Loputusvahend peaaegu t\u00fchi",
+                "state": {
+                    "confirmed": "Kinnitatud",
+                    "off": "V\u00e4ljas",
+                    "present": "Kohal"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "Ristretto espresso tassid"
+            },
+            "salt_nearly_empty": {
+                "name": "Sool on peaaegu otsas",
+                "state": {
+                    "confirmed": "Kinnitatud",
+                    "off": "V\u00e4ljas",
+                    "present": "Kohal"
+                }
+            },
+            "water_tank_empty": {
+                "name": "Veepaak on t\u00fchi",
+                "state": {
+                    "confirmed": "Kinnitatud",
+                    "off": "V\u00e4ljas",
+                    "present": "Kohal"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "Lapselukk"
+            },
+            "cup_warmer": {
+                "name": "Tassi soojendaja"
+            },
+            "dispenser_enabled": {
+                "name": "Dosaator",
+                "state": {
+                    "off": "Keelatud",
+                    "on": "Lubatud"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "S\u00fcgavk\u00fclmiku ukse assistent"
+            },
+            "door_assistant_fridge": {
+                "name": "K\u00fclmkapi ukse assistent"
+            },
+            "eco_mode": {
+                "name": "\u00d6kore\u017eiim"
+            },
+            "freezer_super_mode": {
+                "name": "S\u00fcgavk\u00fclmiku superre\u017eiim"
+            },
+            "fresh_mode": {
+                "name": "V\u00e4rske re\u017eiim"
+            },
+            "power": {
+                "name": "V\u00f5imsus"
+            },
+            "refrigerator_super_mode": {
+                "name": "K\u00fclmiku superre\u017eiim"
+            },
+            "sabbath_mode": {
+                "name": "Hingamisp\u00e4eva re\u017eiim"
+            },
+            "vacation_mode": {
+                "name": "Puhkuse re\u017eiim"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "\u00c4ratuskell"
+            }
+        }
+    },
+    "exceptions": {
+        "appliance_not_found": {
+            "message": "Seadet ID-ga {device_id} ei leitud"
+        },
+        "execute_command": {
+            "message": "Viga k\u00e4su {command} t\u00e4itmisel: {description}"
+        },
+        "pause_program": {
+            "message": "Viga programmi peatamisel: {description}"
+        },
+        "power_off": {
+            "message": "Viga seadme {appliance_name} v\u00e4ljal\u00fclitamisel v\u00e4\u00e4rtusega \" {value} \": {description}"
+        },
+        "power_on": {
+            "message": "Viga seadme {appliance_name} sissel\u00fclitamisel: {description}"
+        },
+        "select_light_custom_color": {
+            "message": "Viga objekti {entity_id} kohandatud v\u00e4rvi valimisel: {description}"
+        },
+        "select_program": {
+            "message": "Viga programmi {program} valimisel: {description}"
+        },
+        "set_light_brightness": {
+            "message": "Viga objekti {entity_id} heleduse seadistamisel: {description}"
+        },
+        "set_light_color": {
+            "message": "Viga objekti {entity_id} v\u00e4rvi m\u00e4\u00e4ramisel: {description}"
+        },
+        "set_options_active_program": {
+            "message": "Viga aktiivse programm s\u00e4tete m\u00e4\u00e4ramisel: {description}"
+        },
+        "set_options_selected_program": {
+            "message": "Viga valitud programm s\u00e4tete m\u00e4\u00e4ramisel: {description}"
+        },
+        "set_setting": {
+            "message": "Viga v\u00e4\u00e4rtuse \"{value}\" m\u00e4\u00e4ramisel seadistusele \"{key}\": {description}"
+        },
+        "set_setting_entity": {
+            "message": "Viga v\u00e4\u00e4rtuse \"{value}\" m\u00e4\u00e4ramisel seadistuse \"{key}\" jaoks {entity_id}: {description}"
+        },
+        "start_program": {
+            "message": "Viga programmi {program} k\u00e4ivitamisel: {description}"
+        },
+        "stop_program": {
+            "message": "Viga programmi peatamisel: {description}"
+        },
+        "turn_off": {
+            "message": "Viga {entity_id} ( {key} ) v\u00e4ljal\u00fclitamisel: {description}"
+        },
+        "turn_off_light": {
+            "message": "Viga {entity_id} v\u00e4ljal\u00fclitamisel: {description}"
+        },
+        "turn_off_not_supported": {
+            "message": "{appliance_name} ei toeta v\u00e4ljal\u00fclitamist ega ootere\u017eiimi sisenemist."
+        },
+        "turn_on": {
+            "message": "Viga {entity_id} ( {key} ) sissel\u00fclitamisel: {description}"
+        },
+        "turn_on_light": {
+            "message": "Viga {entity_id} sissel\u00fclitamisel: {description}"
+        },
+        "unable_to_retrieve_turn_off": {
+            "message": "Seadet {appliance_name} ei saa v\u00e4lja l\u00fclitada kuna selle v\u00e4ljal\u00fclitamise v\u00f5i ootere\u017eiimi sisenemise tuge ei \u00f5nnestunud kindlaks teha."
+        }
+    },
+    "issues": {
+        "deprecated_binary_common_door_sensor": {
+            "description": "Binaarset uksesensorit `{entity}`, mis on vananenud, kasutatakse j\u00e4rgmistes automatiseerimistes v\u00f5i skriptides:\n{items}\n\nAnduriobjekt on saadaval t\u00e4iendavate v\u00f5imalike seisunditega ja seda tuleks edaspidi kasutada; kasuta seda \u00fclaltoodud automatiseerimistes v\u00f5i skriptides, et seda probleemi parandada.",
+            "title": "M\u00f5nes automatiseerimises v\u00f5i skriptis tuvastati aegunud binaarne ukseandur"
+        },
+        "deprecated_program_switch": {
+            "description": "Programmi l\u00fcliti on aegunud ja {entity_id} on kasutusel j\u00e4rgmistes automatiseerimises v\u00f5i skriptides: \n {items} \n \n Saad kasutada aktiivse programmi valimise olemit, et k\u00e4ivitada programm ilma lisavalikuteta ja hankida praegune t\u00f6\u00f6tav programm \u00fclaltoodud automatiseerimisel v\u00f5i skriptidel selle probleemi lahendamiseks.",
+            "title": "M\u00f5nes automatiseerimises v\u00f5i skriptis tuvastati aegunud programmil\u00fcliti"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "Muudab s\u00e4tet.",
+            "fields": {
+                "device_id": {
+                    "description": "Seadme ID.",
+                    "name": "Seadme ID"
+                },
+                "key": {
+                    "description": "S\u00e4tte v\u00f5ti.",
+                    "name": "V\u00f5ti"
+                },
+                "value": {
+                    "description": "S\u00e4tte v\u00e4\u00e4rtus.",
+                    "name": "V\u00e4\u00e4rtus"
+                }
+            },
+            "name": "Muuda s\u00e4tteid"
+        },
+        "pause_program": {
+            "description": "Peatab k\u00e4imasoleva programmi.",
+            "fields": {
+                "device_id": {
+                    "description": "Seadme ID.",
+                    "name": "Seadme ID"
+                }
+            },
+            "name": "Programmi peatamine"
+        },
+        "resume_program": {
+            "description": "J\u00e4tkab peatatud programmi.",
+            "fields": {
+                "device_id": {
+                    "description": "Seadme ID.",
+                    "name": "Seadme ID"
+                }
+            },
+            "name": "J\u00e4tka programmi"
+        },
+        "select_program": {
+            "description": "Valib programmi ilma seda k\u00e4ivitamata.",
+            "fields": {
+                "device_id": {
+                    "description": "Seadme ID.",
+                    "name": "Seadme ID"
+                },
+                "key": {
+                    "description": "Valiku v\u00f5ti.",
+                    "name": "Valikuline v\u00f5ti"
+                },
+                "program": {
+                    "description": "Valitav programm.",
+                    "name": "Programm"
+                },
+                "unit": {
+                    "description": "Valiku \u00fchik.",
+                    "name": "Valiku \u00fchik"
+                },
+                "value": {
+                    "description": "Valiku v\u00e4\u00e4rtus.",
+                    "name": "Valiku v\u00e4\u00e4rtus"
+                }
+            },
+            "name": "Vali programm"
+        },
+        "set_option_active": {
+            "description": "M\u00e4\u00e4rab aktiivse programmi suvandi.",
+            "fields": {
+                "device_id": {
+                    "description": "Seadme ID.",
+                    "name": "Seadme ID"
+                },
+                "key": {
+                    "description": "Valiku v\u00f5ti.",
+                    "name": "V\u00f5ti"
+                },
+                "value": {
+                    "description": "Valiku v\u00e4\u00e4rtus.",
+                    "name": "V\u00e4\u00e4rtus"
+                }
+            },
+            "name": "M\u00e4\u00e4ra aktiivse programmi valik"
+        },
+        "set_option_selected": {
+            "description": "M\u00e4\u00e4rab valitud programmi jaoks suvandi.",
+            "fields": {
+                "device_id": {
+                    "description": "Seadme ID.",
+                    "name": "Seadme ID"
+                },
+                "key": {
+                    "description": "Valiku v\u00f5ti.",
+                    "name": "V\u00f5ti"
+                },
+                "value": {
+                    "description": "Valiku v\u00e4\u00e4rtus.",
+                    "name": "V\u00e4\u00e4rtus"
+                }
+            },
+            "name": "M\u00e4\u00e4ra valitud programmi valikud"
+        },
+        "start_program": {
+            "description": "Valib programmi ja k\u00e4ivitab selle.",
+            "fields": {
+                "device_id": {
+                    "description": "Seadme ID.",
+                    "name": "Seadme ID"
+                },
+                "key": {
+                    "description": "Valiku v\u00f5ti.",
+                    "name": "Valikuline v\u00f5ti"
+                },
+                "program": {
+                    "description": "Valitav programm.",
+                    "name": "Programm"
+                },
+                "unit": {
+                    "description": "Valiku \u00fchik.",
+                    "name": "Valiku \u00fchik"
+                },
+                "value": {
+                    "description": "Valiku v\u00e4\u00e4rtus.",
+                    "name": "Valiku v\u00e4\u00e4rtus"
+                }
+            },
+            "name": "K\u00e4ivita programm"
+        }
+    }
+}

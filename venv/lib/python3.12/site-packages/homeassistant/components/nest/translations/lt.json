@@ -1,0 +1,113 @@
+{
+    "application_credentials": {
+        "description": "Vykdykite [instrukcijas]({more_info_url}), kad sukonfig\u016bruotum\u0117te \u201eCloud Console\u201c: 1. Eikite \u012f [OAuth sutikimo ekran\u0105] ({oauth_consent_url}) ir sukonfig\u016bruokite 1. Eikite \u012f [Credentials]({oauth_creds_url}) ir pasirinkite **Sukurti. \u012egaliojimai**. 1. I\u0161skleid\u017eiamajame s\u0105ra\u0161e pasirinkite **OAuth kliento ID**. 1. Programos tipui pasirinkite **Web Application**. 1. \u012etraukite \u201e{redirect_url}\u201c prie *Authorized redirect URI*."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Paskyra jau sukonfig\u016bruota",
+            "authorize_url_timeout": "Baig\u0117si skirtasis laikas generuojant \u012fgaliojimo URL.",
+            "invalid_access_token": "Neteisingas prieigos raktas",
+            "missing_configuration": "Komponentas nesukonfig\u016bruotas. Pra\u0161ome vadovautis dokumentacija.",
+            "missing_credentials": "Integracijai reikalingi programos kredencialai.",
+            "no_url_available": "N\u0117ra URL. Nor\u0117dami gauti informacijos apie \u0161i\u0105 klaid\u0105, [\u017er. pagalbos skyri\u0173]({docs_url})",
+            "oauth_error": "Gauti neteisingi prieigos rakto duomenys.",
+            "oauth_failed": "Klaida gaunant prieigos rakt\u0105.",
+            "oauth_timeout": "Baig\u0117si skirtasis OAuth prieigos raktas.",
+            "oauth_unauthorized": "OAuth prieigos teis\u0117s klaida gaunant prieigos rakt\u0105.",
+            "reauth_successful": "Pakartotinis autentifikavimas buvo s\u0117kmingas",
+            "unknown_authorize_url_generation": "Ne\u017einoma klaida generuojant autorizavimo URL."
+        },
+        "create_entry": {
+            "default": "S\u0117kmingai autentifikuota"
+        },
+        "error": {
+            "bad_project_id": "\u012eveskite tinkam\u0105 \u201eCloud Project\u201c ID (patikrinkite \u201eCloud Console\u201c)",
+            "no_pubsub_topics": "Nerasta tinkam\u0173 Pub/Sub tem\u0173, \u012fsitikinkite, kad prietaiso prieigos konsol\u0117je yra Pub/Sub tema.",
+            "pubsub_api_error": "Ne\u017einoma klaida kalbant su \u201eCloud Pub\u201c / \u201eSub\u201c, \u017er. \u017eurnalus",
+            "subscriber_error": "Ne\u017einoma abonento klaida, \u017er. \u017eurnalus",
+            "wrong_project_id": "\u012eveskite galiojant\u012f debesies projekto ID (buvo toks pat kaip prietaiso prieigos projekto ID)"
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "\"Google Cloud\" projekto ID"
+                },
+                "description": "Toliau \u012fveskite debesies projekto ID, pvz., *example-projektas-12345*. \u017dr. [Google Cloud Console]({cloud_console_url}) arba [daugiau informacijos] dokumentus ({more_info_url}).",
+                "title": "Nest: \u012fveskite debesies projekto ID"
+            },
+            "create_cloud_project": {
+                "description": "\u201eNest\u201c integracija leid\u017eia integruoti \u201eNest\u201c termostatus, kameras ir dur\u0173 skambu\u010dius naudojant i\u0161mani\u0173j\u0173 prietais\u0173 valdymo API. SDM API **reikia sumok\u0117ti 5 doleri\u0173** vienkartin\u012f s\u0105rankos mokest\u012f. Nor\u0117dami gauti [daugiau informacijos], \u017er. dokumentus ({more_info_url}). 1. Eikite \u012f [Google Cloud Console] ({cloud_console_url}). 1. Jei tai j\u016bs\u0173 pirmasis projektas, pasirinkite **Sukurti projekt\u0105**, tada **Naujas projektas**. 1. Suteikite savo debesijos projektui pavadinim\u0105 ir pasirinkite **Sukurti**. 1. I\u0161saugokite debeijos projekto ID, pvz., *example-project-12345*, nes jo prireiks v\u0117liau. 1. Eikite \u012f API bibliotek\u0105 [Smart Device Management API] ({sdm_api_url}) ir pasirinkite **\u012egalinti**. 1. Eikite \u012f API bibliotek\u0105, skirt\u0105 [Cloud Pub/Sub API] ({pubsub_api_url}) ir pasirinkite **\u012egalinti**. T\u0119skite, kai bus nustatytas debesijos projektas.",
+                "title": "\u201eNest\u201c: kurkite ir konfig\u016bruokite \u201eCloud Project\u201c."
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "Prietaiso prieigos projekto ID"
+                },
+                "description": "Sukurkite \u201eNest Device Access\u201c projekt\u0105, kuriam nustatyti **reikia sumok\u0117ti \u201eGoogle\u201c 5 USD mokest\u012f**. 1. Eikite \u012f [Device Access Console] ({device_access_console_url}) ir eikite \u012f mok\u0117jimo sraut\u0105. 1. Pasirinkite **Sukurti projekt\u0105** 1. Suteikite savo prietaiso prieigos projektui pavadinim\u0105 ir pasirinkite **Kitas**. 1. \u012eveskite savo \u201eOAuth\u201c kliento ID 1. \u012egalinkite \u012fvykius spustel\u0117dami **\u012egalinti** ir **Sukurti projekt\u0105**. Toliau \u012fveskite prietaiso prieigos projekto ID ([daugiau informacijos]({more_info_url})).",
+                "title": "Nest: sukurkite prietaiso prieigos projekt\u0105"
+            },
+            "pick_implementation": {
+                "title": "Pasirinkite autentifikavimo metod\u0105"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "\"Google Cloud\" projekto ID"
+                },
+                "description": "Home Assistant naudoja Cloud Pub/Sub, kad realiuoju laiku gaut\u0173 Nest \u012frenginio atnaujinimus. Nest serveriai skelbia atnaujinimus Pub/Sub temoje, o Home Assistan\" gauna atnaujinimus per Pub/Sub prenumerat\u0105.\n\n1. Apsilankykite [Device Access Console]({device_access_console_url}) ir \u012fsitikinkite, kad Pub/Sub tema yra sukonfig\u016bruota.\n2. Apsilankykite [Cloud Console]({url}), kad surastum\u0117te savo Google Cloud projekto ID ir patvirtintum\u0117te, kad jis yra teisingas, toliau nurodykite j\u012f.\n3. Kitame \u017eingsnyje bus bandoma automati\u0161kai atrasti Pub/Sub temas ir prenumeratas.\n\n\u017dr. integracijos dokumentacij\u0105 [daugiau informacijos]({more_info_url}).",
+                "title": "Konfig\u016bruokite \u201eGoogle Cloud Pub/Sub\u201c."
+            },
+            "pubsub_subscription": {
+                "data": {
+                    "subscription_name": "Leidinio / prenumeratos pavadinimas"
+                },
+                "description": "\u201eHome Assistant\u201c gauna \u201eNest\u201c prietaiso naujinius realiuoju laiku, u\u017esiprenumeravus \u201eCloud Pub\u201c/\u201eSub\u201c tem\u0105 \u201e{topic}\u201c.\n\nToliau pasirinkite esam\u0105 prenumerat\u0105, jei tokia jau yra, arba atlikus kit\u0105 veiksm\u0105 bus sukurta nauja prenumerata. Jei reikia [daugiau informacijos], \u017er. integracijos dokumentus ({more_info_url}).",
+                "title": "Konfig\u016bruokite \u201eCloud Pub\u201c / \u201eSub\u201c prenumerat\u0105"
+            },
+            "pubsub_topic": {
+                "data": {
+                    "topic_name": "Pub/sub temos pavadinimas"
+                },
+                "description": "\u201eNest\u201c prietaisai skelbia \u201eCloud Pub\u201c/\u201eSub\u201c temos naujinius. Toliau pasirinkite Pub/Sub tem\u0105, kuri yra tokia pati kaip [Device Access Console]({device_access_console_url}). Jei reikia [daugiau informacijos], \u017er. integracijos dokumentus ({more_info_url}).",
+                "title": "Konfig\u016bruokite \u201eCloud Pub/Sub\u201c tem\u0105"
+            },
+            "reauth_confirm": {
+                "description": "Integruojant \u201eNest\u201c reikia i\u0161 naujo autentifikuoti paskyr\u0105",
+                "title": "Baig\u0117si {name} autentifikavimo galiojimas"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "Aptiktas judesys",
+            "camera_person": "Aptiktas asmuo",
+            "camera_sound": "Aptiktas garsas",
+            "doorbell_chime": "Paspaustas dur\u0173 skambutis"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "Skambutis",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "Skambutis"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "Judesys",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "Judesys",
+                            "camera_person": "Asmuo",
+                            "camera_sound": "Garsas"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

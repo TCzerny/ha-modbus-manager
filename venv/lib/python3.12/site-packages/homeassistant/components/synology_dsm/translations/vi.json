@@ -1,0 +1,195 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Thi\u1ebft b\u1ecb \u0111\u00e3 \u0111\u01b0\u1ee3c c\u1ea5u h\u00ecnh",
+            "no_mac_address": "\u0110\u1ecba ch\u1ec9 MAC b\u1ecb thi\u1ebfu trong b\u1ea3n ghi zeroconf",
+            "reauth_successful": "X\u00e1c th\u1ef1c l\u1ea1i th\u00e0nh c\u00f4ng",
+            "reconfigure_successful": "C\u1ea5u h\u00ecnh l\u1ea1i th\u00e0nh c\u00f4ng"
+        },
+        "error": {
+            "cannot_connect": "K\u1ebft n\u1ed1i th\u1ea5t b\u1ea1i",
+            "invalid_auth": "X\u00e1c th\u1ef1c kh\u00f4ng h\u1ee3p l\u1ec7",
+            "missing_data": "Thi\u1ebfu d\u1eef li\u1ec7u: vui l\u00f2ng th\u1eed l\u1ea1i sau ho\u1eb7c c\u1ea5u h\u00ecnh kh\u00e1c",
+            "otp_failed": "X\u00e1c th\u1ef1c hai b\u01b0\u1edbc kh\u00f4ng th\u00e0nh c\u00f4ng, h\u00e3y th\u1eed l\u1ea1i b\u1eb1ng m\u1eadt m\u00e3 m\u1edbi",
+            "unknown": "L\u1ed7i kh\u00f4ng mong \u0111\u1ee3i"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "2sa": {
+                "data": {
+                    "otp_code": "M\u00e3"
+                },
+                "title": "Synology DSM: x\u00e1c th\u1ef1c hai b\u01b0\u1edbc"
+            },
+            "link": {
+                "data": {
+                    "password": "M\u1eadt kh\u1ea9u",
+                    "port": "C\u1ed5ng",
+                    "ssl": "D\u00f9ng ch\u1ee9ng ch\u1ec9 SSL",
+                    "username": "T\u00ean \u0111\u0103ng nh\u1eadp",
+                    "verify_ssl": "X\u00e1c minh ch\u1ee9ng ch\u1ec9 SSL"
+                },
+                "description": "B\u1ea1n c\u00f3 mu\u1ed1n thi\u1ebft l\u1eadp {name} ({host}) kh\u00f4ng?"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "M\u1eadt kh\u1ea9u",
+                    "username": "T\u00ean \u0111\u0103ng nh\u1eadp"
+                },
+                "title": "X\u00e1c th\u1ef1c l\u1ea1i Synology DSM"
+            },
+            "user": {
+                "data": {
+                    "host": "M\u00e1y ch\u1ee7",
+                    "password": "M\u1eadt kh\u1ea9u",
+                    "port": "C\u1ed5ng",
+                    "ssl": "D\u00f9ng ch\u1ee9ng ch\u1ec9 SSL",
+                    "username": "T\u00ean \u0111\u0103ng nh\u1eadp",
+                    "verify_ssl": "X\u00e1c minh ch\u1ee9ng ch\u1ec9 SSL"
+                },
+                "data_description": {
+                    "host": "T\u00ean m\u00e1y ch\u1ee7 ho\u1eb7c \u0111\u1ecba ch\u1ec9 IP c\u1ee7a Synology NAS."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "disk_below_remain_life_thr": {
+                "name": "Th\u1eddi gian s\u1ed1ng c\u00f2n l\u1ea1i d\u01b0\u1edbi m\u1ee9c t\u1ed1i thi\u1ec3u"
+            },
+            "disk_exceed_bad_sector_thr": {
+                "name": "S\u1ed1 l\u01b0\u1ee3ng sector x\u1ea5u v\u01b0\u1ee3t m\u1ee9c t\u1ed1i \u0111a"
+            },
+            "status": {
+                "name": "Tr\u1ea1ng th\u00e1i b\u1ea3o m\u1eadt"
+            }
+        },
+        "sensor": {
+            "cpu_15min_load": {
+                "name": "T\u1ea3i CPU trung b\u00ecnh (15 ph\u00fat)"
+            },
+            "cpu_1min_load": {
+                "name": "T\u1ea3i CPU trung b\u00ecnh (1 ph\u00fat)"
+            },
+            "cpu_5min_load": {
+                "name": "T\u1ea3i CPU trung b\u00ecnh (5 ph\u00fat)"
+            },
+            "cpu_other_load": {
+                "name": "S\u1eed d\u1ee5ng CPU (kh\u00e1c)"
+            },
+            "cpu_system_load": {
+                "name": "S\u1eed d\u1ee5ng CPU (h\u1ec7 th\u1ed1ng)"
+            },
+            "cpu_total_load": {
+                "name": "S\u1eed d\u1ee5ng CPU (t\u1ed5ng c\u1ed9ng)"
+            },
+            "cpu_user_load": {
+                "name": "S\u1eed d\u1ee5ng CPU (ng\u01b0\u1eddi d\u00f9ng)"
+            },
+            "disk_smart_status": {
+                "name": "Tr\u1ea1ng th\u00e1i (th\u00f4ng minh)"
+            },
+            "disk_status": {
+                "name": "Tr\u1ea1ng th\u00e1i"
+            },
+            "disk_temp": {
+                "name": "Nhi\u1ec7t \u0111\u1ed9"
+            },
+            "memory_available_real": {
+                "name": "B\u1ed9 nh\u1edb kh\u1ea3 d\u1ee5ng (th\u1ef1c)"
+            },
+            "memory_available_swap": {
+                "name": "B\u1ed9 nh\u1edb kh\u1ea3 d\u1ee5ng (ho\u00e1n \u0111\u1ed5i)"
+            },
+            "memory_cached": {
+                "name": "B\u1ed9 nh\u1edb \u0111\u01b0\u1ee3c \u0111\u1ec7m"
+            },
+            "memory_real_usage": {
+                "name": "B\u1ed9 nh\u1edb s\u1eed d\u1ee5ng (th\u1ef1c)"
+            },
+            "memory_size": {
+                "name": "K\u00edch th\u01b0\u1edbc b\u1ed9 nh\u1edb"
+            },
+            "memory_total_real": {
+                "name": "T\u1ed5ng b\u1ed9 nh\u1edb (th\u1ef1c)"
+            },
+            "memory_total_swap": {
+                "name": "T\u1ed5ng b\u1ed9 nh\u1edb (ho\u00e1n \u0111\u1ed5i)"
+            },
+            "network_down": {
+                "name": "Th\u00f4ng l\u01b0\u1ee3ng t\u1ea3i xu\u1ed1ng"
+            },
+            "network_up": {
+                "name": "Th\u00f4ng l\u01b0\u1ee3ng t\u1ea3i l\u00ean"
+            },
+            "temperature": {
+                "name": "Nhi\u1ec7t \u0111\u1ed9"
+            },
+            "uptime": {
+                "name": "L\u1ea7n kh\u1edfi \u0111\u1ed9ng cu\u1ed1i"
+            },
+            "volume_disk_temp_avg": {
+                "name": "Nhi\u1ec7t \u0111\u1ed9 \u0111\u0129a trung b\u00ecnh"
+            },
+            "volume_disk_temp_max": {
+                "name": "Nhi\u1ec7t \u0111\u1ed9 \u0111\u0129a t\u1ed1i \u0111a"
+            },
+            "volume_percentage_used": {
+                "name": "S\u1ed1 \u1ed5 \u0111\u0129a s\u1eed d\u1ee5ng"
+            },
+            "volume_size_total": {
+                "name": "T\u1ed5ng k\u00edch th\u01b0\u1edbc"
+            },
+            "volume_size_used": {
+                "name": "Kh\u00f4ng gian \u0111\u00e3 s\u1eed d\u1ee5ng"
+            },
+            "volume_status": {
+                "name": "Tr\u1ea1ng th\u00e1i"
+            }
+        },
+        "switch": {
+            "home_mode": {
+                "name": "Ch\u1ebf \u0111\u1ed9 nh\u00e0"
+            }
+        },
+        "update": {
+            "update": {
+                "name": "C\u1eadp nh\u1eadt DSM"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Ph\u00fat gi\u1eefa c\u00e1c l\u1ea7n qu\u00e9t",
+                    "snap_profile_type": "M\u1ee9c ch\u1ea5t l\u01b0\u1ee3ng \u1ea3nh ch\u1ee5p nhanh c\u1ee7a m\u00e1y \u1ea3nh (0:cao 1:trung b\u00ecnh 2:th\u1ea5p)",
+                    "timeout": "Th\u1eddi gian ch\u1edd (gi\u00e2y)"
+                }
+            }
+        }
+    },
+    "services": {
+        "reboot": {
+            "description": "Kh\u1edfi \u0111\u1ed9ng l\u1ea1i NAS. H\u00e0nh \u0111\u1ed9ng n\u00e0y \u0111\u00e3 l\u1ed7i th\u1eddi v\u00e0 s\u1ebd b\u1ecb x\u00f3a trong b\u1ea3n ph\u00e1t h\u00e0nh trong t\u01b0\u01a1ng lai. Vui l\u00f2ng s\u1eed d\u1ee5ng th\u1ef1c th\u1ec3 n\u00fat t\u01b0\u01a1ng \u1ee9ng.",
+            "fields": {
+                "serial": {
+                    "description": "S\u1ed1 s\u00ea-ri c\u1ee7a NAS \u0111\u1ec3 kh\u1edfi \u0111\u1ed9ng l\u1ea1i; b\u1eaft bu\u1ed9c khi c\u1ea5u h\u00ecnh nhi\u1ec1u NAS.",
+                    "name": "S\u1ed1 s\u00ea-ri"
+                }
+            },
+            "name": "Kh\u1edfi \u0111\u1ed9ng l\u1ea1i"
+        },
+        "shutdown": {
+            "description": "T\u1eaft NAS. H\u00e0nh \u0111\u1ed9ng n\u00e0y \u0111\u00e3 l\u1ed7i th\u1eddi v\u00e0 s\u1ebd b\u1ecb x\u00f3a trong b\u1ea3n ph\u00e1t h\u00e0nh trong t\u01b0\u01a1ng lai. Vui l\u00f2ng s\u1eed d\u1ee5ng th\u1ef1c th\u1ec3 n\u00fat t\u01b0\u01a1ng \u1ee9ng.",
+            "fields": {
+                "serial": {
+                    "description": "S\u1ed1 s\u00ea-ri c\u1ee7a NAS \u0111\u1ec3 t\u1eaft m\u00e1y; c\u1ea7n thi\u1ebft khi c\u1ea5u h\u00ecnh nhi\u1ec1u NAS.",
+                    "name": "S\u1ed1 s\u00ea-ri"
+                }
+            },
+            "name": "T\u1eaft"
+        }
+    }
+}

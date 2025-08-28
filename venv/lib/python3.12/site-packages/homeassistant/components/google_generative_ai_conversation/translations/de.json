@@ -1,0 +1,65 @@
+{
+    "config": {
+        "abort": {
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "api": {
+                "data": {
+                    "api_key": "API-Code"
+                },
+                "description": "Hole dir deinen API-Code [hier]({api_key_url})."
+            },
+            "reauth_confirm": {
+                "description": "Dein aktueller API-Code: {api_key} ist nicht mehr g\u00fcltig. Bitte gib einen neuen g\u00fcltigen API-Code ein.",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "chat_model": "Modell",
+                    "dangerous_block_threshold": "F\u00f6rdert, erleichtert oder ermutigt sch\u00e4dliche Handlungen",
+                    "harassment_block_threshold": "Negative oder verletzende Kommentare, die auf die Identit\u00e4t und/oder gesch\u00fctzte Attribute abzielen",
+                    "hate_block_threshold": "Unh\u00f6flicher, respektloser oder vulg\u00e4rer Inhalt",
+                    "llm_hass_api": "Home Assistant steuern",
+                    "max_tokens": "Maximale Anzahl von Token, die als Antwort zur\u00fcckgegeben werden",
+                    "prompt": "Anweisungen",
+                    "recommended": "Empfohlene Modelleinstellungen",
+                    "sexual_block_threshold": "Enth\u00e4lt Hinweise auf sexuelle Handlungen oder andere anst\u00f6\u00dfige Inhalte",
+                    "temperature": "Temperatur",
+                    "top_k": "Top K",
+                    "top_p": "Top P"
+                },
+                "data_description": {
+                    "prompt": "Gib Anweisungen, wie das LLM reagieren soll. Dies kann ein Template sein."
+                }
+            }
+        }
+    },
+    "services": {
+        "generate_content": {
+            "description": "Erzeugt Inhalte aus einem Prompt, der aus Text und optional aus Bildern besteht",
+            "fields": {
+                "image_filename": {
+                    "description": "Bilder",
+                    "example": "/config/www/image.jpg",
+                    "name": "Dateiname eines Bildes"
+                },
+                "prompt": {
+                    "description": "Die Textanweisung",
+                    "example": "Beschreibe, was du auf diesen Bildern siehst",
+                    "name": "Prompt"
+                }
+            },
+            "name": "Inhalte erzeugen"
+        }
+    }
+}

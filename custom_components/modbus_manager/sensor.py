@@ -1,260 +1,352 @@
-"""Modbus Manager Sensor Platform."""
-from __future__ import annotations
+"""Modbus Template Sensor for Modbus Manager."""
+import asyncio
+import logging
+from typing import Any, Optional
 
 from homeassistant.components.sensor import SensorEntity
-from homeassistant.helpers.entity_platform import AddEntitiesCallback
-from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT
+from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.const import (
+    CONF_NAME, CONF_UNIT_OF_MEASUREMENT, CONF_DEVICE_CLASS
+)
+from homeassistant.components.sensor.const import CONF_STATE_CLASS
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 
-async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
-    """Set up Modbus Manager sensors from a config entry."""
-    prefix = entry.data["prefix"]
-    template_name = entry.data["template"]
-    registers = entry.data.get("registers", [])
-    hub_name = f"modbus_manager_{prefix}"
-
-    entities = []
-
-    for reg in registers:
-        # Unique_ID Format: {prefix}_{template_sensor_name}
-        sensor_name = reg.get("name", "unknown")
-        unique_id = f"{prefix}_{sensor_name.lower().replace(' ', '_')}"
+async def async_setup_entry(
+    hass: HomeAssistant,
+    entry: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
+) -> None:
+    """Set up Modbus Template Sensors from a config entry."""
+    try:
+        _LOGGER.info("Setup von Modbus Template Sensoren für %s", entry.data.get("prefix", "unbekannt"))
         
-        entities.append(ModbusTemplateSensor(
-            hass=hass,
-            name=sensor_name,
-            unique_id=unique_id,
-            hub_name=hub_name,
-            slave_id=entry.data.get("slave_id", 1),
-            register_data=reg,
-            device_info={
-                "identifiers": {(DOMAIN, f"{prefix}_{template_name}")},
-                "name": f"{prefix} {template_name}",
-                "manufacturer": "Modbus Manager",
-                "model": template_name,
-                "via_device": (DOMAIN, hub_name)
-            }
-        ))
-
-    async_add_entities(entities)
+        # Daten aus der Konfiguration abrufen
+        if entry.entry_id not in hass.data[DOMAIN]:
+            _LOGGER.error("Keine Konfigurationsdaten für Entry %s gefunden", entry.entry_id)
+            return
+        
+        config_data = hass.data[DOMAIN][entry.entry_id]
+        registers = config_data.get("registers", [])
+        prefix = config_data.get("prefix", "unknown")
+        template_name = config_data.get("template", "unknown")
+        
+        _LOGGER.info("Konfigurationsdaten abgerufen: prefix=%s, template=%s, register=%d", 
+                     prefix, template_name, len(registers))
+        
+        if not registers:
+            _LOGGER.warning("Keine Register für Template %s gefunden", template_name)
+            return
+        
+        _LOGGER.info("Erstelle %d Sensoren für Template %s mit Präfix %s", len(registers), template_name, prefix)
+        
+        # Nur Sensor-Entitäten erstellen
+        sensor_registers = [reg for reg in registers if reg.get("entity_type") == "sensor"]
+        _LOGGER.info("Gefundene Sensor-Register: %d", len(sensor_registers))
+        
+        entities = []
+        for reg in sensor_registers:
+            try:
+                # Unique_ID Format: {prefix}_{template_sensor_name}
+                sensor_name = reg.get("name", "unknown")
+                # Bereinige den Namen für den unique_id
+                clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+                unique_id = f"{prefix}_{clean_name}"
+                
+                _LOGGER.info("Erstelle Sensor: name=%s, prefix=%s, unique_id=%s", 
+                             sensor_name, prefix, unique_id)
+                
+                entities.append(ModbusTemplateSensor(
+                    hass=hass,
+                    entry=entry,
+                    register=reg,
+                    prefix=prefix,
+                    unique_id=unique_id
+                ))
+                
+            except Exception as e:
+                _LOGGER.error("Fehler beim Erstellen des Sensors %s: %s", reg.get("name", "unbekannt"), str(e))
+                continue
+        
+        if entities:
+            async_add_entities(entities)
+            _LOGGER.info("%d Modbus Template Sensoren erfolgreich erstellt", len(entities))
+        else:
+            _LOGGER.warning("Keine Sensoren erstellt")
+            
+    except Exception as e:
+        _LOGGER.error("Fehler beim Setup der Modbus Template Sensoren: %s", str(e))
+        import traceback
+        _LOGGER.error("Traceback: %s", traceback.format_exc())
 
 
 class ModbusTemplateSensor(SensorEntity):
     """Representation of a Modbus Template Sensor."""
 
-    def __init__(self, hass: HomeAssistant, name: str, unique_id: str, hub_name: str, 
-                 slave_id: int, register_data: dict, device_info: dict):
-        """Initialize the sensor."""
-        self.hass = hass
-        self._attr_name = name
+    def __init__(self, hass: HomeAssistant, entry: ConfigEntry, register: dict, prefix: str, unique_id: str):
+        """Initialize the Modbus Template Sensor."""
+        self._hass = hass
+        self._entry = entry
+        self._register = register
+        self._prefix = prefix
+        self._unique_id = unique_id
+        
+        # Register-Eigenschaften
+        self._name = register.get("name", "Unknown Sensor")
+        self._address = register.get("address", 0)
+        self._data_type = register.get("data_type", "uint16")
+        self._count = register.get("count", 1)
+        self._scale = register.get("scale", 1.0)
+        self._offset = register.get("offset", 0.0)
+        self._unit = register.get("unit_of_measurement", "")
+        self._device_class = register.get("device_class")
+        self._state_class = register.get("state_class")
+        self._precision = register.get("precision", 0)
+        
+        # Modbus-spezifische Eigenschaften
+        self._input_type = register.get("input_type", "input")
+        self._slave_id = register.get("device_address", 1)
+        
+        # Entity-Attribute setzen
+        self._attr_name = f"{prefix}_{self._name}"
         self._attr_unique_id = unique_id
-        self._hub_name = hub_name
-        self._slave_id = slave_id
-        self._register_data = register_data
-        self._attr_device_info = DeviceInfo(**device_info)
+        self._attr_device_class = self._device_class
+        self._attr_state_class = self._state_class
+        self._attr_native_unit_of_measurement = self._unit
+        self._attr_should_poll = True
         
-        # Register properties
-        self._address = register_data.get("address", 0)
-        self._data_type = register_data.get("data_type", "uint16")
-        self._input_type = register_data.get("input_type", "input")
-        self._count = register_data.get("count", 1)
-        self._scale = register_data.get("scale", 1.0)
-        self._precision = register_data.get("precision", 0)
-        self._swap = register_data.get("swap", False)
+        # Device-Info
+        template_name = self._register.get("template", "unknown")
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, f"{prefix}_{template_name}")},
+            name=f"{prefix} ({template_name})",
+            manufacturer="Modbus Manager",
+            model=template_name,
+            via_device=(DOMAIN, entry.entry_id),
+        )
         
-        # Neue Datenverarbeitungsoptionen aus modbus_connect
-        self._offset = register_data.get("offset", 0.0)
-        self._multiplier = register_data.get("multiplier", 1.0)
-        self._sum_scale = register_data.get("sum_scale")
-        self._shift_bits = register_data.get("shift_bits", 0)
-        self._bits = register_data.get("bits")
-        self._is_float = register_data.get("float", False)
-        self._is_string = register_data.get("string", False)
-        self._map = register_data.get("map", {})
-        self._flags = register_data.get("flags", {})
-        
-        # Entity properties
-        self._attr_native_unit_of_measurement = register_data.get("unit_of_measurement", "")
-        self._attr_device_class = register_data.get("device_class")
-        self._attr_state_class = register_data.get("state_class")
-        
-        # Group for aggregations
-        self._group = register_data.get("group")
-        if self._group:
-            self._attr_extra_state_attributes = {"group": self._group}
-        
-        self._attr_native_value = None
+        _LOGGER.info("Sensor %s initialisiert (Adresse: %d, Typ: %s, Präfix: %s, Name: %s, Unique-ID: %s)", 
+                     self._name, self._address, self._data_type, prefix, self._attr_name, unique_id)
 
     @property
-    def should_poll(self) -> bool:
-        """Return True if entity has to be polled for state."""
-        return True
+    def template_name(self) -> str:
+        """Return the template name."""
+        return self._register.get("template", "unknown")
 
-    async def async_update(self):
-        """Update the sensor state."""
+    async def async_update(self) -> None:
+        """Update the sensor value."""
         try:
-            if self._hub_name not in self.hass.data.get(DOMAIN, {}):
-                _LOGGER.error("Hub %s nicht gefunden", self._hub_name)
+            # Modbus-Hub aus der Konfiguration abrufen
+            if self._entry.entry_id not in self._hass.data[DOMAIN]:
+                _LOGGER.error("Keine Konfigurationsdaten für Entry %s gefunden", self._entry.entry_id)
                 return
-
-            hub = self.hass.data[DOMAIN][self._hub_name]
             
-            # Standard Home Assistant Modbus API nutzen
+            config_data = self._hass.data[DOMAIN][self._entry.entry_id]
+            hub = config_data.get("hub")
+            
+            if not hub:
+                _LOGGER.error("Modbus-Hub nicht gefunden")
+                return
+            
+            # Modbus-Operation basierend auf input_type
             if self._input_type == "input":
-                result = await hub.read_input_registers(self._address, self._count, unit=self._slave_id)
+                # Input Register lesen
+                result = await self._read_input_registers(hub)
+            elif self._input_type == "holding":
+                # Holding Register lesen
+                result = await self._read_holding_registers(hub)
+            elif self._input_type == "coil":
+                # Coil lesen
+                result = await self._read_coils(hub)
+            elif self._input_type == "discrete":
+                # Discrete Input lesen
+                result = await self._read_discrete_inputs(hub)
             else:
-                result = await hub.read_holding_registers(self._address, self._count, unit=self._slave_id)
-            
-            if result.isError():
-                _LOGGER.warning("Fehler beim Lesen von Register %s: %s", self._address, result)
-                self._attr_native_value = None
+                _LOGGER.warning("Unbekannter input_type: %s", self._input_type)
                 return
             
-            # Wert verarbeiten basierend auf data_type
-            raw_value = self._process_register_value(result.registers)
-            
-            # Erweiterte Datenverarbeitung anwenden
-            if raw_value is not None:
-                processed_value = self._apply_data_processing(raw_value)
-                
-                # Skalierung anwenden
-                scaled_value = processed_value * self._scale
-                
-                # Offset anwenden
-                final_value = scaled_value + self._offset
-                
-                # Präzision anwenden
-                if self._precision > 0:
-                    final_value = round(final_value, self._precision)
-                
-                self._attr_native_value = final_value
+            if result is not None:
+                # Wert verarbeiten
+                processed_value = self._process_value(result)
+                self._attr_native_value = processed_value
+                _LOGGER.debug("Sensor %s aktualisiert: %s", self._name, processed_value)
             else:
-                self._attr_native_value = None
+                _LOGGER.warning("Keine Daten für Sensor %s empfangen", self._name)
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Update von Sensor %s: %s", self._attr_name, str(e))
-            self._attr_native_value = None
+            _LOGGER.error("Fehler beim Update von Sensor %s: %s", self._name, str(e))
 
-    def _process_register_value(self, registers):
-        """Process register value based on data type and count."""
+    async def _read_input_registers(self, hub) -> Optional[Any]:
+        """Read input registers from Modbus device."""
         try:
-            if self._count == 1:
-                raw_value = registers[0]
-            else:
-                # Für 32-bit Werte (2 Register)
-                if self._swap:
-                    raw_value = (registers[1] << 16) | registers[0]
-                else:
-                    raw_value = (registers[0] << 16) | registers[1]
+            # Verwende die korrekte Home Assistant Modbus API
+            from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_INPUT
             
-            # Konvertierung basierend auf data_type
-            if self._data_type == "int16":
-                raw_value = raw_value if raw_value < 32768 else raw_value - 65536
-            elif self._data_type == "string":
-                # String aus Registern extrahieren
-                raw_value = self._registers_to_string(registers)
-            elif self._data_type == "float":
-                # Float aus Registern extrahieren
-                raw_value = self._registers_to_float(registers)
-            elif self._data_type == "boolean":
-                # Boolean aus Register extrahieren
-                raw_value = bool(raw_value)
+            # Modbus-Call über Standard API
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                self._count,
+                CALL_TYPE_REGISTER_INPUT
+            )
             
-            return raw_value
+            if result and hasattr(result, 'registers'):
+                return result.registers
+            return None
             
-        except (IndexError, ValueError) as e:
-            _LOGGER.error("Fehler bei der Verarbeitung der Register-Werte: %s", str(e))
+        except Exception as e:
+            _LOGGER.error("Fehler beim Lesen der Input-Register für %s: %s", self._name, str(e))
             return None
 
-    def _apply_data_processing(self, raw_value):
-        """Apply advanced data processing options from modbus_connect."""
+    async def _read_holding_registers(self, hub) -> Optional[Any]:
+        """Read holding registers from Modbus device."""
         try:
-            processed_value = raw_value
+            from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
             
-            # Sum_scale anwenden (für mehrere Register)
-            if self._sum_scale and isinstance(self._sum_scale, list):
-                # Hier würden wir mehrere Register verarbeiten
-                # Für jetzt verwenden wir den ersten Wert
-                pass
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                self._count,
+                CALL_TYPE_REGISTER_HOLDING
+            )
             
-            # Bit-Shift anwenden
-            if self._shift_bits > 0:
-                processed_value = processed_value >> self._shift_bits
+            if result and hasattr(result, 'registers'):
+                return result.registers
+            return None
             
-            # Bit-Mask anwenden
-            if self._bits is not None:
-                processed_value = processed_value & ((1 << self._bits) - 1)
+        except Exception as e:
+            _LOGGER.error("Fehler beim Lesen der Holding-Register für %s: %s", self._name, str(e))
+            return None
+
+    async def _read_coils(self, hub) -> Optional[Any]:
+        """Read coils from Modbus device."""
+        try:
+            from homeassistant.components.modbus.const import CALL_TYPE_COIL
             
-            # Multiplier anwenden
-            processed_value = processed_value * self._multiplier
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                self._count,
+                CALL_TYPE_COIL
+            )
             
-            # Map anwenden (Enum-Mapping)
-            if self._map and processed_value in self._map:
-                processed_value = self._map[processed_value]
+            if result and hasattr(result, 'bits'):
+                return result.bits
+            return None
             
-            # Flags verarbeiten (Bit-Flags)
-            if self._flags and isinstance(processed_value, (int, float)):
-                flag_attributes = {}
-                for bit, flag_name in self._flags.items():
-                    if isinstance(bit, int) and bit >= 0:
-                        flag_value = bool(processed_value & (1 << bit))
-                        flag_attributes[f"flag_{flag_name}"] = flag_value
+        except Exception as e:
+            _LOGGER.error("Fehler beim Lesen der Coils für %s: %s", self._name, str(e))
+            return None
+
+    async def _read_discrete_inputs(self, hub) -> Optional[Any]:
+        """Read discrete inputs from Modbus device."""
+        try:
+            from homeassistant.components.modbus.const import CALL_TYPE_DISCRETE
+            
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                self._count,
+                CALL_TYPE_DISCRETE
+            )
+            
+            if result and hasattr(result, 'bits'):
+                return result.bits
+            return None
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Lesen der Discrete-Inputs für %s: %s", self._name, str(e))
+            return None
+
+    def _process_value(self, raw_value: Any) -> Any:
+        """Process the raw Modbus value."""
+        try:
+            if raw_value is None:
+                return None
+            
+            # Wert basierend auf data_type verarbeiten
+            if self._data_type == "uint16":
+                if isinstance(raw_value, list) and len(raw_value) > 0:
+                    value = raw_value[0]
+                else:
+                    value = raw_value
+                processed_value = (value * self._scale) + self._offset
                 
-                if flag_attributes:
-                    self._attr_extra_state_attributes = {
-                        **(self._attr_extra_state_attributes or {}),
-                        **flag_attributes
-                    }
+            elif self._data_type == "int16":
+                if isinstance(raw_value, list) and len(raw_value) > 0:
+                    value = raw_value[0]
+                    if value > 32767:  # Negative Zahl in 16-bit
+                        value = value - 65536
+                else:
+                    value = raw_value
+                processed_value = (value * self._scale) + self._offset
+                
+            elif self._data_type == "uint32":
+                if isinstance(raw_value, list) and len(raw_value) >= 2:
+                    value = (raw_value[0] << 16) | raw_value[1]
+                else:
+                    value = raw_value
+                processed_value = (value * self._scale) + self._offset
+                
+            elif self._data_type == "int32":
+                if isinstance(raw_value, list) and len(raw_value) >= 2:
+                    value = (raw_value[0] << 16) | raw_value[1]
+                    if value > 2147483647:  # Negative Zahl in 32-bit
+                        value = value - 4294967296
+                else:
+                    value = raw_value
+                processed_value = (value * self._scale) + self._offset
+                
+            elif self._data_type == "float":
+                if isinstance(raw_value, list) and len(raw_value) >= 2:
+                    import struct
+                    # 32-bit Float aus zwei 16-bit Registern
+                    raw_bytes = struct.pack('>HH', raw_value[0], raw_value[1])
+                    value = struct.unpack('>f', raw_bytes)[0]
+                else:
+                    value = raw_value
+                processed_value = (value * self._scale) + self._offset
+                
+            elif self._data_type == "string":
+                if isinstance(raw_value, list):
+                    # String aus Registern extrahieren
+                    string_value = ""
+                    for reg in raw_value:
+                        if reg == 0:  # Null-Terminator
+                            break
+                        string_value += chr((reg >> 8) & 0xFF) + chr(reg & 0xFF)
+                    value = string_value.strip('\x00')
+                else:
+                    value = str(raw_value)
+                processed_value = value
+                
+            elif self._data_type == "boolean":
+                if isinstance(raw_value, list) and len(raw_value) > 0:
+                    value = bool(raw_value[0])
+                else:
+                    value = bool(raw_value)
+                processed_value = value
+                
+            else:
+                # Fallback für unbekannte Typen
+                if isinstance(raw_value, list) and len(raw_value) > 0:
+                    value = raw_value[0]
+                else:
+                    value = raw_value
+                processed_value = (value * self._scale) + self._offset
+            
+            # Präzision anwenden
+            if isinstance(processed_value, (int, float)) and self._precision > 0:
+                processed_value = round(processed_value, self._precision)
             
             return processed_value
             
         except Exception as e:
-            _LOGGER.error("Fehler bei der Datenverarbeitung: %s", str(e))
-            return raw_value
-
-    def _registers_to_string(self, registers):
-        """Convert registers to string."""
-        try:
-            # Jedes Register zu 2 ASCII-Zeichen konvertieren
-            string_parts = []
-            for reg in registers:
-                high_byte = (reg >> 8) & 0xFF
-                low_byte = reg & 0xFF
-                if high_byte != 0:
-                    string_parts.append(chr(high_byte))
-                if low_byte != 0:
-                    string_parts.append(chr(low_byte))
-            return ''.join(string_parts).strip('\x00')
-        except Exception as e:
-            _LOGGER.error("Fehler bei String-Konvertierung: %s", str(e))
-            return None
-
-    def _registers_to_float(self, registers):
-        """Convert registers to float (32-bit)."""
-        try:
-            if len(registers) < 2:
-                return None
-            
-            # IEEE 754 Float aus 2 Registern
-            if self._swap:
-                raw_bytes = (registers[1] << 16) | registers[0]
-            else:
-                raw_bytes = (registers[0] << 16) | registers[1]
-            
-            # Float aus Bytes extrahieren
-            import struct
-            float_bytes = struct.pack('>I', raw_bytes)
-            float_value = struct.unpack('>f', float_bytes)[0]
-            
-            return float_value
-            
-        except Exception as e:
-            _LOGGER.error("Fehler bei Float-Konvertierung: %s", str(e))
+            _LOGGER.error("Fehler bei der Wertverarbeitung für %s: %s", self._name, str(e))
             return None

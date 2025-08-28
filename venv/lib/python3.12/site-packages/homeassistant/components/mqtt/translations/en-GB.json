@@ -1,0 +1,50 @@
+{
+    "issues": {
+        "deprecated_color_handling": {
+            "title": "Deprecated colour handling used for MQTT light"
+        }
+    },
+    "services": {
+        "dump": {
+            "description": "Writes all messages on a specific topic into the `mqtt_dump.txt` file in your configuration folder.",
+            "fields": {
+                "duration": {
+                    "description": "How long we should listen for messages in seconds.",
+                    "name": "Duration"
+                },
+                "topic": {
+                    "description": "Topic to listen to."
+                }
+            },
+            "name": "Export"
+        },
+        "publish": {
+            "description": "Publishes a message to an MQTT topic.",
+            "fields": {
+                "payload": {
+                    "description": "The payload to publish.",
+                    "name": "Payload"
+                },
+                "payload_template": {
+                    "description": "Template to render as a payload value. If a payload is provided, the template is ignored.",
+                    "name": "Payload template"
+                },
+                "qos": {
+                    "name": "QoS"
+                },
+                "retain": {
+                    "description": "If the message should have the retain flag set. If set, the broker stores the most recent message on a topic.",
+                    "name": "Retain"
+                },
+                "topic": {
+                    "description": "Topic to publish to."
+                }
+            },
+            "name": "Publish"
+        },
+        "reload": {
+            "description": "Reloads MQTT entities from the YAML-configuration.",
+            "name": "Reload"
+        }
+    }
+}

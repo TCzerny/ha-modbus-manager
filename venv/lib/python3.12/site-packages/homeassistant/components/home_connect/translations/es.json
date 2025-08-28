@@ -1,0 +1,822 @@
+{
+    "common": {
+        "confirmed": "Confirmado",
+        "present": "Presente"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "El componente no est\u00e1 configurado. Por favor, sigue la documentaci\u00f3n.",
+            "no_url_available": "No hay URL disponible. Para obtener informaci\u00f3n sobre este error, [revisa la secci\u00f3n de ayuda]({docs_url})",
+            "oauth_error": "Se han recibido datos de token no v\u00e1lidos.",
+            "oauth_failed": "Error al obtener el token de acceso.",
+            "oauth_timeout": "Tiempo de espera agotado mientras se resolv\u00eda el token OAuth.",
+            "oauth_unauthorized": "Error de autorizaci\u00f3n OAuth al obtener el token de acceso."
+        },
+        "create_entry": {
+            "default": "Autenticado correctamente"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Selecciona el m\u00e9todo de autenticaci\u00f3n"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "Estado de carga de la bater\u00eda"
+            },
+            "charging_connection": {
+                "name": "Conexi\u00f3n de carga"
+            },
+            "chiller_door": {
+                "name": "Puerta del refrigerador"
+            },
+            "dust_box_inserted": {
+                "name": "Caja del polvo",
+                "state": {
+                    "off": "Sin insertar",
+                    "on": "Insertado"
+                }
+            },
+            "freezer_door": {
+                "name": "Puerta del congelador"
+            },
+            "lifted": {
+                "name": "Levantado"
+            },
+            "local_control": {
+                "name": "Control local"
+            },
+            "lost": {
+                "name": "Perdido"
+            },
+            "refrigerator_door": {
+                "name": "Puerta del frigor\u00edfico"
+            },
+            "remote_control": {
+                "name": "Control remoto"
+            },
+            "remote_start": {
+                "name": "Inicio remoto"
+            }
+        },
+        "light": {
+            "ambient_light": {
+                "name": "Luz ambiental"
+            },
+            "cooking_lighting": {
+                "name": "Luz de funcionamiento"
+            },
+            "external_light": {
+                "name": "Luz exterior"
+            },
+            "internal_light": {
+                "name": "Luz interior"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "Temperatura del enfriador de botellas"
+            },
+            "chiller_left_setpoint_temperature": {
+                "name": "Temperatura izquierda del refrigerador"
+            },
+            "chiller_right_setpoint_temperature": {
+                "name": "Temperatura derecha del refrigerador"
+            },
+            "chiller_setpoint_temperature": {
+                "name": "Temperatura del refrigerador"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "Temperatura del congelador"
+            },
+            "refrigerator_setpoint_temperature": {
+                "name": "Temperatura del frigor\u00edfico"
+            },
+            "wine_compartment_2_setpoint_temperature": {
+                "name": "Temperatura del compartimento de vino 2"
+            },
+            "wine_compartment_3_setpoint_temperature": {
+                "name": "Temperatura del compartimento de vino 3"
+            },
+            "wine_compartment_setpoint_temperature": {
+                "name": "Temperatura del compartimento de vino"
+            }
+        },
+        "select": {
+            "active_program": {
+                "name": "Programa activo",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "Volver a casa",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "Limpiar todo",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "Limpiar mapa",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caf\u00e9 grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caf\u00e9 latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Capuchino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Caf\u00e9",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso doble",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Agua caliente",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Espuma de leche",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Leche caliente",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "Caf\u00e9 XL",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Caf\u00e9 con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Caf\u00e9 con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Caf\u00e9 cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doble",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat white",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Galao",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Grosser brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kleiner brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verlaengerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verlaengerter braun",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener melange",
+                    "cooking_common_program_hood_automatic": "Autom\u00e1tico",
+                    "cooking_common_program_hood_delayed_shut_off": "Apagado diferido",
+                    "cooking_common_program_hood_venting": "Ventilaci\u00f3n",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Calefacci\u00f3n inferior",
+                    "cooking_oven_program_heating_mode_defrost": "Descongelar",
+                    "cooking_oven_program_heating_mode_desiccation": "Desecaci\u00f3n",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Calentamiento especial para productos congelados",
+                    "cooking_oven_program_heating_mode_hot_air": "Aire caliente",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Aire caliente + 100 HR",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Aire caliente + 30 HR",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Aire caliente + 60 HR",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Aire caliente + 80 HR",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Aire caliente eco",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Parrilla de aire caliente",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Calor intenso",
+                    "cooking_oven_program_heating_mode_keep_warm": "Mantener el calor",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Configuraci\u00f3n de pizza",
+                    "cooking_oven_program_heating_mode_pre_heating": "Precalentamiento",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Precalentar los utensilios del horno",
+                    "cooking_oven_program_heating_mode_proof": "Prueba",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Programa del sabbat",
+                    "cooking_oven_program_heating_mode_slow_cook": "Cocci\u00f3n lenta",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "Calentamiento de arriba a abajo",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "Calentamiento de arriba a abajo eco",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Caj\u00f3n calentador",
+                    "cooking_oven_program_microwave_1000_watt": "1000 vatios",
+                    "cooking_oven_program_microwave_180_watt": "180 vatios",
+                    "cooking_oven_program_microwave_360_watt": "360 vatios",
+                    "cooking_oven_program_microwave_600_watt": "600 vatios",
+                    "cooking_oven_program_microwave_900_watt": "900 vatios",
+                    "cooking_oven_program_microwave_90_watt": "90 vatios",
+                    "cooking_oven_program_microwave_max": "M\u00e1x.",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Media carga autom\u00e1tica",
+                    "dishcare_dishwasher_program_eco_50": "Eco 50 \u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Brillo expr\u00e9s 65 \u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Cristal 40 \u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Cuidado del cristal",
+                    "dishcare_dishwasher_program_intensiv_45": "Intensivo 45 \u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intensivo 70 \u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Potencia intensiva",
+                    "dishcare_dishwasher_program_kurz_60": "Kurz 60 \u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Cuidado de la m\u00e1quina",
+                    "dishcare_dishwasher_program_magic_daily": "Magic diario",
+                    "dishcare_dishwasher_program_maximum_cleaning": "M\u00e1xima limpieza",
+                    "dishcare_dishwasher_program_mixed_load": "Carga mixta",
+                    "dishcare_dishwasher_program_night_wash": "Lavado nocturno",
+                    "dishcare_dishwasher_program_normal_45": "Normal 45 \u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Normal 65 \u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "Pre enjuague",
+                    "dishcare_dishwasher_program_quick_45": "R\u00e1pido 45 \u00baC",
+                    "dishcare_dishwasher_program_quick_65": "R\u00e1pido 65 \u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Vapor fresco",
+                    "dishcare_dishwasher_program_super_60": "S\u00faper 60 \u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Anti encogimiento",
+                    "laundry_care_dryer_program_blankets": "Mantas",
+                    "laundry_care_dryer_program_business_shirts": "Camisas de negocios",
+                    "laundry_care_dryer_program_cotton": "Algod\u00f3n",
+                    "laundry_care_dryer_program_delicates": "Prendas delicadas",
+                    "laundry_care_dryer_program_dessous": "Dessous",
+                    "laundry_care_dryer_program_down_feathers": "Plumas de plum\u00f3n",
+                    "laundry_care_dryer_program_hygiene": "Higiene",
+                    "laundry_care_dryer_program_in_basket": "En la cesta",
+                    "laundry_care_dryer_program_jeans": "Vaqueros",
+                    "laundry_care_dryer_program_mix": "Mix",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Mi tiempo de secado",
+                    "laundry_care_dryer_program_outdoor": "Exterior",
+                    "laundry_care_dryer_program_pillow": "Almohada",
+                    "laundry_care_dryer_program_shirts_15": "Camisas 15 \u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40 \u00baC",
+                    "laundry_care_dryer_program_synthetic": "Sint\u00e9tico",
+                    "laundry_care_dryer_program_synthetic_refresh": "Sint\u00e9tico refresco",
+                    "laundry_care_dryer_program_time_cold": "Fr\u00edo (tiempo variable)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Fr\u00edo (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Fr\u00edo (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Fr\u00edo (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Caliente (tiempo variable)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Caliente (30 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Caliente (40 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Caliente (60 min)",
+                    "laundry_care_dryer_program_towels": "Toallas",
+                    "laundry_care_washer_dryer_program_cotton": "Algod\u00f3n",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Algod\u00f3n eco 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Cuidado f\u00e1cil",
+                    "laundry_care_washer_dryer_program_mix": "Mix",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Lavado y secado (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Lavado y secado (90 min)",
+                    "laundry_care_washer_program_auto_30": "Auto 30 \u00baC",
+                    "laundry_care_washer_program_auto_40": "Auto 40 \u00baC",
+                    "laundry_care_washer_program_auto_60": "Auto 60 \u00baC",
+                    "laundry_care_washer_program_chiffon": "Gasa",
+                    "laundry_care_washer_program_cotton": "Algod\u00f3n",
+                    "laundry_care_washer_program_cotton_colour": "Algod\u00f3n de color",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Algod\u00f3n eco",
+                    "laundry_care_washer_program_cotton_eco_4060": "Algod\u00f3n eco 40/60 \u00baC",
+                    "laundry_care_washer_program_curtains": "Cortinas",
+                    "laundry_care_washer_program_dark_wash": "Ropa oscura",
+                    "laundry_care_washer_program_delicates_silk": "Seda delicada",
+                    "laundry_care_washer_program_dessous": "Dessous",
+                    "laundry_care_washer_program_down_duvet_duvet": "Edred\u00f3n de plumas",
+                    "laundry_care_washer_program_drum_clean": "Limpieza del tambor",
+                    "laundry_care_washer_program_easy_care": "Cuidado f\u00e1cil",
+                    "laundry_care_washer_program_mix": "Mix",
+                    "laundry_care_washer_program_mix_night_wash": "Lavado mixto nocturno",
+                    "laundry_care_washer_program_monsoon": "Monz\u00f3n",
+                    "laundry_care_washer_program_outdoor": "Exterior",
+                    "laundry_care_washer_program_plush_toy": "Juguete de peluche",
+                    "laundry_care_washer_program_power_speed_59": "Velocidad de potencia <60 min",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Aclarado centrifugado y desag\u00fce",
+                    "laundry_care_washer_program_sensitive": "Delicada",
+                    "laundry_care_washer_program_shirts_blouses": "Camisas blusas",
+                    "laundry_care_washer_program_sport_fitness": "Ropa deportiva",
+                    "laundry_care_washer_program_super_153045_super_15": "S\u00faper 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "S\u00faper 15/30 min",
+                    "laundry_care_washer_program_towels": "Toallas",
+                    "laundry_care_washer_program_water_proof": "Impermeable",
+                    "laundry_care_washer_program_wool": "Lana"
+                }
+            },
+            "selected_program": {
+                "name": "Programa seleccionado",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "Volver a casa",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "Limpiar todo",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "Limpiar mapa",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caf\u00e9 grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caf\u00e9 latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Capuchino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Caf\u00e9",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Espresso doble",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Espresso macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Agua caliente",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Espuma de leche",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Leche caliente",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "Caf\u00e9 XL",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Caf\u00e9 con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Caf\u00e9 con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Caf\u00e9 cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doble",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat white",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Galao",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Grosser brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kleiner brauner",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Verlaengerter",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Verlaengerter braun",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener melange",
+                    "cooking_common_program_hood_automatic": "Autom\u00e1tico",
+                    "cooking_common_program_hood_delayed_shut_off": "Apagado diferido",
+                    "cooking_common_program_hood_venting": "Ventilaci\u00f3n",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Calefacci\u00f3n inferior",
+                    "cooking_oven_program_heating_mode_defrost": "Descongelar",
+                    "cooking_oven_program_heating_mode_desiccation": "Desecaci\u00f3n",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Calentamiento especial para productos congelados",
+                    "cooking_oven_program_heating_mode_hot_air": "Aire caliente",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Aire caliente + 100 HR",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Aire caliente + 30 HR",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Aire caliente + 60 HR",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Aire caliente + 80 HR",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Aire caliente eco",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Parrilla de aire caliente",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Calor intenso",
+                    "cooking_oven_program_heating_mode_keep_warm": "Mantener el calor",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Configuraci\u00f3n de pizza",
+                    "cooking_oven_program_heating_mode_pre_heating": "Precalentamiento",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Precalentar los utensilios del horno",
+                    "cooking_oven_program_heating_mode_proof": "Prueba",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Programa del sabbat",
+                    "cooking_oven_program_heating_mode_slow_cook": "Cocci\u00f3n lenta",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "Calentamiento de arriba a abajo",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "Calentamiento de arriba a abajo eco",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Caj\u00f3n calentador",
+                    "cooking_oven_program_microwave_1000_watt": "1000 vatios",
+                    "cooking_oven_program_microwave_180_watt": "180 vatios",
+                    "cooking_oven_program_microwave_360_watt": "360 vatios",
+                    "cooking_oven_program_microwave_600_watt": "600 vatios",
+                    "cooking_oven_program_microwave_900_watt": "900 vatios",
+                    "cooking_oven_program_microwave_90_watt": "90 vatios",
+                    "cooking_oven_program_microwave_max": "M\u00e1x.",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Media carga autom\u00e1tica",
+                    "dishcare_dishwasher_program_eco_50": "Eco 50 \u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Brillo expr\u00e9s 65 \u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Cristal 40 \u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Cuidado del cristal",
+                    "dishcare_dishwasher_program_intensiv_45": "Intensivo 45 \u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intensivo 70 \u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Potencia intensiva",
+                    "dishcare_dishwasher_program_kurz_60": "Kurz 60 \u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Cuidado de la m\u00e1quina",
+                    "dishcare_dishwasher_program_magic_daily": "Magic diario",
+                    "dishcare_dishwasher_program_maximum_cleaning": "M\u00e1xima limpieza",
+                    "dishcare_dishwasher_program_mixed_load": "Carga mixta",
+                    "dishcare_dishwasher_program_night_wash": "Lavado nocturno",
+                    "dishcare_dishwasher_program_normal_45": "Normal 45 \u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Normal 65 \u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "Pre enjuague",
+                    "dishcare_dishwasher_program_quick_45": "R\u00e1pido 45 \u00baC",
+                    "dishcare_dishwasher_program_quick_65": "R\u00e1pido 65 \u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Vapor fresco",
+                    "dishcare_dishwasher_program_super_60": "S\u00faper 60 \u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Anti encogimiento",
+                    "laundry_care_dryer_program_blankets": "Mantas",
+                    "laundry_care_dryer_program_business_shirts": "Camisas de negocios",
+                    "laundry_care_dryer_program_cotton": "Algod\u00f3n",
+                    "laundry_care_dryer_program_delicates": "Prendas delicadas",
+                    "laundry_care_dryer_program_dessous": "Dessous",
+                    "laundry_care_dryer_program_down_feathers": "Plumas de plum\u00f3n",
+                    "laundry_care_dryer_program_hygiene": "Higiene",
+                    "laundry_care_dryer_program_in_basket": "En la cesta",
+                    "laundry_care_dryer_program_jeans": "Vaqueros",
+                    "laundry_care_dryer_program_mix": "Mix",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Mi tiempo de secado",
+                    "laundry_care_dryer_program_outdoor": "Exterior",
+                    "laundry_care_dryer_program_pillow": "Almohada",
+                    "laundry_care_dryer_program_shirts_15": "Camisas 15 \u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40 \u00baC",
+                    "laundry_care_dryer_program_synthetic": "Sint\u00e9tico",
+                    "laundry_care_dryer_program_synthetic_refresh": "Sint\u00e9tico refresco",
+                    "laundry_care_dryer_program_time_cold": "Fr\u00edo (tiempo variable)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Fr\u00edo (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Fr\u00edo (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Fr\u00edo (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Caliente (tiempo variable)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Caliente (30 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Caliente (40 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Caliente (60 min)",
+                    "laundry_care_dryer_program_towels": "Toallas",
+                    "laundry_care_washer_dryer_program_cotton": "Algod\u00f3n",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Algod\u00f3n eco 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Cuidado f\u00e1cil",
+                    "laundry_care_washer_dryer_program_mix": "Mix",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Lavado y secado (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Lavado y secado (90 min)",
+                    "laundry_care_washer_program_auto_30": "Auto 30 \u00baC",
+                    "laundry_care_washer_program_auto_40": "Auto 40 \u00baC",
+                    "laundry_care_washer_program_auto_60": "Auto 60 \u00baC",
+                    "laundry_care_washer_program_chiffon": "Gasa",
+                    "laundry_care_washer_program_cotton": "Algod\u00f3n",
+                    "laundry_care_washer_program_cotton_colour": "Algod\u00f3n de color",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Algod\u00f3n eco",
+                    "laundry_care_washer_program_cotton_eco_4060": "Algod\u00f3n eco 40/60 \u00baC",
+                    "laundry_care_washer_program_curtains": "Cortinas",
+                    "laundry_care_washer_program_dark_wash": "Ropa oscura",
+                    "laundry_care_washer_program_delicates_silk": "Seda delicada",
+                    "laundry_care_washer_program_dessous": "Dessous",
+                    "laundry_care_washer_program_down_duvet_duvet": "Edred\u00f3n de plumas",
+                    "laundry_care_washer_program_drum_clean": "Limpieza del tambor",
+                    "laundry_care_washer_program_easy_care": "Cuidado f\u00e1cil",
+                    "laundry_care_washer_program_mix": "Mix",
+                    "laundry_care_washer_program_mix_night_wash": "Lavado mixto nocturno",
+                    "laundry_care_washer_program_monsoon": "Monz\u00f3n",
+                    "laundry_care_washer_program_outdoor": "Exterior",
+                    "laundry_care_washer_program_plush_toy": "Juguete de peluche",
+                    "laundry_care_washer_program_power_speed_59": "Velocidad de potencia <60 min",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "Aclarado centrifugado y desag\u00fce",
+                    "laundry_care_washer_program_sensitive": "Delicada",
+                    "laundry_care_washer_program_shirts_blouses": "Camisas blusas",
+                    "laundry_care_washer_program_sport_fitness": "Ropa deportiva",
+                    "laundry_care_washer_program_super_153045_super_15": "S\u00faper 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "S\u00faper 15/30 min",
+                    "laundry_care_washer_program_towels": "Toallas",
+                    "laundry_care_washer_program_water_proof": "Impermeable",
+                    "laundry_care_washer_program_wool": "Lana"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "Nivel de bater\u00eda"
+            },
+            "bean_container_empty": {
+                "name": "Dep\u00f3sito de granos vac\u00edo",
+                "state": {
+                    "confirmed": "Confirmado",
+                    "off": "Apagado",
+                    "present": "Presente"
+                }
+            },
+            "camera_state": {
+                "name": "Estado de la c\u00e1mara",
+                "state": {
+                    "disabled": "Deshabilitado",
+                    "error": "Error",
+                    "ready": "Listo",
+                    "sleeping": "Ahorro de energ\u00eda",
+                    "streamingcloud": "Transmisi\u00f3n en la nube",
+                    "streaminglocal": "Transmisi\u00f3n local",
+                    "streaminglocal_and_cloud": "Transmisi\u00f3n local y en la nube"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "Tazas de caf\u00e9 con leche"
+            },
+            "coffee_counter": {
+                "name": "Caf\u00e9s"
+            },
+            "door": {
+                "name": "Puerta",
+                "state": {
+                    "closed": "Cerrado",
+                    "locked": "Bloqueado",
+                    "open": "Abierto"
+                }
+            },
+            "drip_tray_full": {
+                "name": "Bandeja de goteo llena",
+                "state": {
+                    "confirmed": "Confirmado",
+                    "off": "Apagado",
+                    "present": "Presente"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "Alarma de la puerta del congelador",
+                "state": {
+                    "confirmed": "Confirmado",
+                    "present": "Presente"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "Alarma de temperatura del congelador",
+                "state": {
+                    "confirmed": "Confirmado",
+                    "off": "Apagado",
+                    "present": "Presente"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "Tazas de espuma de leche"
+            },
+            "hot_milk_counter": {
+                "name": "Tazas de leche caliente"
+            },
+            "hot_water_counter": {
+                "name": "Agua caliente"
+            },
+            "hot_water_cups_counter": {
+                "name": "Tazas de agua caliente"
+            },
+            "last_selected_map": {
+                "name": "\u00daltimo mapa seleccionado",
+                "state": {
+                    "map1": "Mapa 1",
+                    "map2": "Mapa 2",
+                    "map3": "Mapa 3",
+                    "tempmap": "Mapa temporal"
+                }
+            },
+            "milk_counter": {
+                "name": "Tazas de leche"
+            },
+            "operation_state": {
+                "name": "Estado de operaci\u00f3n",
+                "state": {
+                    "aborting": "Abortando",
+                    "actionrequired": "Acci\u00f3n requerida",
+                    "delayedstart": "Inicio diferido",
+                    "error": "Error",
+                    "finished": "Finalizado",
+                    "inactive": "Inactivo",
+                    "pause": "En pausa",
+                    "ready": "Listo",
+                    "run": "Ejecutar"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "Caf\u00e9s en polvo"
+            },
+            "program_finish_time": {
+                "name": "Hora de finalizaci\u00f3n del programa"
+            },
+            "program_progress": {
+                "name": "Progreso del programa"
+            },
+            "refrigerator_door_alarm": {
+                "name": "Alarma de la puerta del frigor\u00edfico",
+                "state": {
+                    "confirmed": "Confirmado",
+                    "off": "Apagado",
+                    "present": "Presente"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "name": "Abrillantador casi vac\u00edo",
+                "state": {
+                    "confirmed": "Confirmado",
+                    "off": "Apagado",
+                    "present": "Presente"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "Tazas de caf\u00e9 espresso Ristretto"
+            },
+            "salt_nearly_empty": {
+                "name": "Sal casi vac\u00eda",
+                "state": {
+                    "confirmed": "Confirmado",
+                    "off": "Apagado",
+                    "present": "Presente"
+                }
+            },
+            "water_tank_empty": {
+                "name": "Dep\u00f3sito de agua vac\u00edo",
+                "state": {
+                    "confirmed": "Confirmado",
+                    "off": "Apagado",
+                    "present": "Presente"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "Bloqueo infantil"
+            },
+            "cup_warmer": {
+                "name": "Calentador de tazas"
+            },
+            "dispenser_enabled": {
+                "name": "Dispensador",
+                "state": {
+                    "off": "Deshabilitado",
+                    "on": "Habilitado"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "Asistente de la puerta del congelador"
+            },
+            "door_assistant_fridge": {
+                "name": "Asistente de la puerta del frigor\u00edfico"
+            },
+            "eco_mode": {
+                "name": "Modo Eco"
+            },
+            "freezer_super_mode": {
+                "name": "Modo s\u00faper congelador"
+            },
+            "fresh_mode": {
+                "name": "Modo fresco"
+            },
+            "power": {
+                "name": "Energ\u00eda"
+            },
+            "refrigerator_super_mode": {
+                "name": "Modo s\u00faper frigor\u00edfico"
+            },
+            "sabbath_mode": {
+                "name": "Modo Sabbath"
+            },
+            "vacation_mode": {
+                "name": "Modo vacaciones"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "Despertador"
+            }
+        }
+    },
+    "exceptions": {
+        "appliance_not_found": {
+            "message": "No se encontr\u00f3 el dispositivo con ID {device_id}"
+        },
+        "execute_command": {
+            "message": "Error al ejecutar el comando {command}: {description}"
+        },
+        "pause_program": {
+            "message": "Error al pausar el programa: {description}"
+        },
+        "power_off": {
+            "message": "Error al apagar {appliance_name} con el valor \"{value} \": {description}"
+        },
+        "power_on": {
+            "message": "Error al encender {appliance_name}: {description}"
+        },
+        "select_light_custom_color": {
+            "message": "Error al seleccionar el color personalizado de {entity_id}: {description}"
+        },
+        "select_program": {
+            "message": "Error al seleccionar el programa {program}: {description}"
+        },
+        "set_light_brightness": {
+            "message": "Error al establecer el brillo de {entity_id}: {description}"
+        },
+        "set_light_color": {
+            "message": "Error al establecer el color de {entity_id}: {description}"
+        },
+        "set_options_active_program": {
+            "message": "Error al configurar las opciones para el programa activo: {description}"
+        },
+        "set_options_selected_program": {
+            "message": "Error al configurar las opciones para el programa seleccionado: {description}"
+        },
+        "set_setting": {
+            "message": "Error al asignar el valor \"{value}\" a la configuraci\u00f3n \"{key}\": {description}"
+        },
+        "set_setting_entity": {
+            "message": "Error al asignar el valor \"{value}\" a la configuraci\u00f3n \"{key}\" para {entity_id}: {description}"
+        },
+        "start_program": {
+            "message": "Error al iniciar el programa {program}: {description}"
+        },
+        "stop_program": {
+            "message": "Error al parar el programa: {description}"
+        },
+        "turn_off": {
+            "message": "Error al apagar {entity_id} ({key}): {description}"
+        },
+        "turn_off_light": {
+            "message": "Error al apagar {entity_id}: {description}"
+        },
+        "turn_off_not_supported": {
+            "message": "{appliance_name} no permite apagarse ni entrar en modo de espera."
+        },
+        "turn_on": {
+            "message": "Error al encender {entity_id} ({key}): {description}"
+        },
+        "turn_on_light": {
+            "message": "Error al encender {entity_id}: {description}"
+        },
+        "unable_to_retrieve_turn_off": {
+            "message": "No se puede apagar {appliance_name} porque no se pudo determinar su soporte para apagar o entrar al modo de espera."
+        }
+    },
+    "issues": {
+        "deprecated_binary_common_door_sensor": {
+            "description": "El sensor de puerta binario `{entity}`, que est\u00e1 obsoleto, se utiliza en las siguientes automatizaciones o scripts:\n{items}\n\nHay una entidad de sensor con posibles estados adicionales disponible y se debe usar en el futuro; por favor, \u00fasala en las automatizaciones o scripts anteriores para solucionar este problema.",
+            "title": "Se detect\u00f3 un sensor de puerta binario obsoleto en algunas automatizaciones o scripts"
+        },
+        "deprecated_program_switch": {
+            "description": "Los cambios de programa est\u00e1n obsoletos y {entity_id} se usa en las siguientes automatizaciones o scripts: \n {items} \n \nPuedes usar la entidad de selecci\u00f3n de programa activa para ejecutar el programa sin ninguna opci\u00f3n adicional y obtener el programa que se est\u00e1 ejecutando actualmente en las automatizaciones o scripts anteriores para solucionar este problema.",
+            "title": "Se detect\u00f3 un cambio de programa obsoleto en algunas automatizaciones o scripts"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "Cambia un ajuste.",
+            "fields": {
+                "device_id": {
+                    "description": "ID del dispositivo.",
+                    "name": "ID del dispositivo"
+                },
+                "key": {
+                    "description": "Clave del ajuste",
+                    "name": "Clave"
+                },
+                "value": {
+                    "description": "Valor del ajuste.",
+                    "name": "Valor"
+                }
+            },
+            "name": "Cambiar ajuste"
+        },
+        "pause_program": {
+            "description": "Pausa el programa en ejecuci\u00f3n actual.",
+            "fields": {
+                "device_id": {
+                    "description": "ID del dispositivo.",
+                    "name": "ID del dispositivo"
+                }
+            },
+            "name": "Pausar programa"
+        },
+        "resume_program": {
+            "description": "Reanuda un programa en pausa.",
+            "fields": {
+                "device_id": {
+                    "description": "ID del dispositivo.",
+                    "name": "ID del dispositivo"
+                }
+            },
+            "name": "Reanudar programa"
+        },
+        "select_program": {
+            "description": "Selecciona un programa sin iniciarlo.",
+            "fields": {
+                "device_id": {
+                    "description": "ID del dispositivo.",
+                    "name": "ID del dispositivo"
+                },
+                "key": {
+                    "description": "Clave de la opci\u00f3n.",
+                    "name": "Clave de opci\u00f3n"
+                },
+                "program": {
+                    "description": "Programa a seleccionar.",
+                    "name": "Programa"
+                },
+                "unit": {
+                    "description": "Unidad para la opci\u00f3n.",
+                    "name": "Unidad opcional"
+                },
+                "value": {
+                    "description": "Valor de la opci\u00f3n.",
+                    "name": "Valor de la opci\u00f3n"
+                }
+            },
+            "name": "Seleccionar programa"
+        },
+        "set_option_active": {
+            "description": "Establece una opci\u00f3n para el programa activo.",
+            "fields": {
+                "device_id": {
+                    "description": "ID del dispositivo.",
+                    "name": "ID del dispositivo"
+                },
+                "key": {
+                    "description": "Clave de la opci\u00f3n.",
+                    "name": "Clave"
+                },
+                "value": {
+                    "description": "Valor de la opci\u00f3n.",
+                    "name": "Valor"
+                }
+            },
+            "name": "Establecer opci\u00f3n de programa activo"
+        },
+        "set_option_selected": {
+            "description": "Establece una opci\u00f3n para el programa seleccionado.",
+            "fields": {
+                "device_id": {
+                    "description": "ID del dispositivo.",
+                    "name": "ID del dispositivo"
+                },
+                "key": {
+                    "description": "Clave de la opci\u00f3n.",
+                    "name": "Clave"
+                },
+                "value": {
+                    "description": "Valor de la opci\u00f3n.",
+                    "name": "Valor"
+                }
+            },
+            "name": "Establecer opci\u00f3n de programa seleccionado"
+        },
+        "start_program": {
+            "description": "Selecciona un programa y lo inicia.",
+            "fields": {
+                "device_id": {
+                    "description": "ID del dispositivo.",
+                    "name": "ID del dispositivo"
+                },
+                "key": {
+                    "description": "Clave de la opci\u00f3n.",
+                    "name": "Clave de opci\u00f3n"
+                },
+                "program": {
+                    "description": "Programa a seleccionar.",
+                    "name": "Programa"
+                },
+                "unit": {
+                    "description": "Unidad para la opci\u00f3n.",
+                    "name": "Unidad opcional"
+                },
+                "value": {
+                    "description": "Valor de la opci\u00f3n.",
+                    "name": "Valor de la opci\u00f3n"
+                }
+            },
+            "name": "Iniciar programa"
+        }
+    }
+}

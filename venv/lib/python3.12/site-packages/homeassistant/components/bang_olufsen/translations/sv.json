@@ -1,0 +1,134 @@
+{
+    "common": {
+        "jid_options_description": "Avancerade grupperingsalternativ, d\u00e4r enheternas unika Beolink ID:n (kallade JID) anv\u00e4nds direkt. JID:er finns i tillst\u00e5ndsattributen f\u00f6r mediespelarentiteten.",
+        "jid_options_name": "JID-alternativ"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "already_in_progress": "Konfigurationsfl\u00f6det p\u00e5g\u00e5r redan"
+        },
+        "error": {
+            "api_exception": "Det gick inte att ansluta.",
+            "client_connector_error": "Det gick inte att ansluta.",
+            "invalid_ip": "Felaktig IPv4-adress",
+            "timeout_error": "Det gick inte att ansluta."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "IP-adress",
+                    "model": "Modell"
+                },
+                "description": "Konfigurera din Bang & Olufsen-enhet manuellt."
+            },
+            "zeroconf_confirm": {
+                "description": "Bekr\u00e4fta konfigurationen av {model} - {serial_number} @ {host} .",
+                "title": "Konfigurera Bang & Olufsen-enheten"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_grouping_entity": {
+            "message": "Entitet med id: {entity_id} kan inte l\u00e4ggas till i Beolink-sessionen. \u00c4r enheten en Bang & Olufsen media_player?"
+        },
+        "invalid_media_type": {
+            "message": "{invalid_media_type} \u00e4r en ogiltig typ. Giltiga v\u00e4rden \u00e4r: {valid_media_types}."
+        },
+        "invalid_sound_mode": {
+            "message": "{invalid_sound_mode} \u00e4r ett ogiltigt ljudl\u00e4ge. Giltiga v\u00e4rden \u00e4r: {valid_sound_modes}."
+        },
+        "invalid_source": {
+            "message": "Ogiltig k\u00e4lla: {invalid_source}. Giltiga k\u00e4llor \u00e4r: {valid_sources}"
+        },
+        "m3u_invalid_format": {
+            "message": "Mediek\u00e4llor med filnamnstill\u00e4gget .m3u st\u00f6ds inte."
+        },
+        "play_media_error": {
+            "message": "Ett fel uppstod n\u00e4r du f\u00f6rs\u00f6kte spela {media_type}: {error_message}."
+        }
+    },
+    "selector": {
+        "source_ids": {
+            "options": {
+                "aux_a": "Beolink Converter NL/ML AUX_A",
+                "beoradio": "ASE Beoradio",
+                "cd": "Beolink Converter NL/ML CD",
+                "deezer": "ASE / Mozart Deezer",
+                "ph": "Beolink Converter NL/ML PH",
+                "radio": "Beolink Converter NL/ML RADIO",
+                "spotify": "ASE / Mozart Spotify",
+                "tidal": "Mozart Tidal",
+                "tp1": "Beolink Converter NL/ML TP1",
+                "tp2": "Beolink Converter NL/ML TP2"
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "S\u00e4tt alla anslutna Beolink-enheter i standby.",
+            "name": "Beolink alla standby"
+        },
+        "beolink_expand": {
+            "description": "Ut\u00f6ka den nuvarande Beolink-upplevelsen.",
+            "fields": {
+                "all_discovered": {
+                    "description": "Ut\u00f6ka Beolink-upplevelsen till alla uppt\u00e4ckta enheter.",
+                    "name": "Alla uppt\u00e4ckta"
+                },
+                "beolink_jids": {
+                    "description": "Specificera vilka Beolink JID:n som kommer att g\u00e5 med i nuvarande Beolink-upplevelse.",
+                    "name": "Beolink JID:er"
+                }
+            },
+            "name": "Beolink expandera",
+            "sections": {
+                "jid_options": {
+                    "description": "Avancerade grupperingsalternativ, d\u00e4r enheternas unika Beolink ID:n (kallade JID) anv\u00e4nds direkt. JID:er finns i tillst\u00e5ndsattributen f\u00f6r mediespelarentiteten.",
+                    "name": "JID-alternativ"
+                }
+            }
+        },
+        "beolink_join": {
+            "description": "G\u00e5 med i en Beolink-upplevelse.",
+            "fields": {
+                "beolink_jid": {
+                    "description": "Ange manuellt Beolink JID f\u00f6r att ansluta.",
+                    "name": "Beolink JID"
+                },
+                "source_id": {
+                    "description": "Ange vilken k\u00e4lla som ska anslutas, beteendet varierar mellan olika maskinvaruplattformar. K\u00e4llnamn som inleds med ett plattformsnamn kan endast anv\u00e4ndas n\u00e4r du ansluter till den plattformen. Till exempel kan \"ASE Beoradio\" endast anv\u00e4ndas n\u00e4r du ansluter till en ASE-enhet, medan \"ASE / Mozart Deezer\" kan anv\u00e4ndas med ASE- eller Mozart-enheter. Ett definierat Beolink JID kr\u00e4vs.",
+                    "name": "K\u00e4lla"
+                }
+            },
+            "name": "Beolink g\u00e5 med",
+            "sections": {
+                "jid_options": {
+                    "description": "Avancerade grupperingsalternativ, d\u00e4r enheternas unika Beolink ID:n (kallade JID) anv\u00e4nds direkt. JID:er finns i tillst\u00e5ndsattributen f\u00f6r mediespelarentiteten.",
+                    "name": "JID-alternativ"
+                }
+            }
+        },
+        "beolink_leave": {
+            "description": "L\u00e4mna en Beolink-upplevelse.",
+            "name": "Beolink l\u00e4mna"
+        },
+        "beolink_unexpand": {
+            "description": "Minska den nuvarande Beolink-upplevelsen.",
+            "fields": {
+                "beolink_jids": {
+                    "description": "Specificera vilka Beolink JID:n som kommer att l\u00e4mna den nuvarande Beolink-upplevelsen.",
+                    "name": "Beolink JID:er"
+                }
+            },
+            "name": "Beolink minska",
+            "sections": {
+                "jid_options": {
+                    "description": "Avancerade grupperingsalternativ, d\u00e4r enheternas unika Beolink ID:n (kallade JID) anv\u00e4nds direkt. JID:er finns i tillst\u00e5ndsattributen f\u00f6r mediespelarentiteten.",
+                    "name": "JID-alternativ"
+                }
+            }
+        }
+    }
+}

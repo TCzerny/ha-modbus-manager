@@ -1,0 +1,82 @@
+{
+    "device_automation": {
+        "action_type": {
+            "lock": "Schlie\u00dfe {entity_name} ab",
+            "open": "\u00d6ffne {entity_name}",
+            "unlock": "Schlie\u00dfe {entity_name} auf"
+        },
+        "condition_type": {
+            "is_locked": "Wenn {entity_name} abgeschlossen ist",
+            "is_open": "Wenn {entity_name} ge\u00f6ffnet ist",
+            "is_unlocked": "Wenn {entity_name} aufgeschlossen ist"
+        },
+        "extra_fields": {
+            "for": "Dauer"
+        },
+        "trigger_type": {
+            "locked": "Sobald {entity_name} abgeschlossen ist",
+            "open": "Sobald {entity_name} ge\u00f6ffnet ist",
+            "unlocked": "Sobald {entity_name} aufgeschlossen ist"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Schloss",
+            "state": {
+                "jammed": "Verklemmt",
+                "locked": "Abgeschlossen",
+                "locking": "Sperren",
+                "open": "Ge\u00f6ffnet",
+                "opening": "\u00d6ffnet",
+                "unlocked": "Aufgeschlossen",
+                "unlocking": "Entsperren"
+            },
+            "state_attributes": {
+                "changed_by": {
+                    "name": "Ge\u00e4ndert durch"
+                },
+                "code_format": {
+                    "name": "Codeformat"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "add_default_code": {
+            "message": "Der Code f\u00fcr {entity_id} stimmt nicht mit dem Muster {code_format} \u00fcberein."
+        }
+    },
+    "services": {
+        "lock": {
+            "description": "Verriegelt ein Schloss.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Verriegeln des Schlosses.",
+                    "name": "Code"
+                }
+            },
+            "name": "Abschlie\u00dfen"
+        },
+        "open": {
+            "description": "\u00d6ffnet ein Schloss.",
+            "fields": {
+                "code": {
+                    "description": "Code zum \u00d6ffnen des Schlosses.",
+                    "name": "Code"
+                }
+            },
+            "name": "\u00d6ffnen"
+        },
+        "unlock": {
+            "description": "Entriegelt ein Schloss.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Entriegeln des Schlosses.",
+                    "name": "Code"
+                }
+            },
+            "name": "Aufschlie\u00dfen"
+        }
+    },
+    "title": "Schloss"
+}

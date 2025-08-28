@@ -1,0 +1,108 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "home_control": "Devolo Home Control Central Unit fungerar inte med denna integration.",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "flow_title": "{product} ({name})",
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "password": "L\u00f6senord som du skyddade enheten med."
+                }
+            },
+            "user": {
+                "data": {
+                    "ip_address": "IP-adress"
+                },
+                "data_description": {
+                    "ip_address": "IP-adressen f\u00f6r din devolo Home Network-enhet. Du hittar den i devolo Home Network-appen p\u00e5 enhetens instrumentpanel."
+                },
+                "description": "Vill du starta konfigurationen?"
+            },
+            "zeroconf_confirm": {
+                "description": "Vill du l\u00e4gga till devolos hemn\u00e4tverksenhet med v\u00e4rdnamnet ` {host_name} ` till Home Assistant?",
+                "title": "Uppt\u00e4ckte devolo hemn\u00e4tverksenhet"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "connected_to_router": {
+                "name": "Ansluten till router"
+            }
+        },
+        "button": {
+            "identify": {
+                "name": "Identifiera enheten med en blinkande LED"
+            },
+            "pairing": {
+                "name": "Starta PLC-parning"
+            },
+            "restart": {
+                "name": "Nollst\u00e4ll enhet"
+            },
+            "start_wps": {
+                "name": "Starta WPS"
+            }
+        },
+        "image": {
+            "image_guest_wifi": {
+                "name": "G\u00e4st-Wifi inloggningsuppgifter som QR-kod"
+            }
+        },
+        "sensor": {
+            "connected_plc_devices": {
+                "name": "Anslutna PLC-enheter"
+            },
+            "connected_wifi_clients": {
+                "name": "Anslutna Wifi-klienter"
+            },
+            "last_restart": {
+                "name": "Senaste omstart av enheten"
+            },
+            "neighboring_wifi_networks": {
+                "name": "N\u00e4rliggande Wifi-n\u00e4tverk"
+            },
+            "plc_rx_rate": {
+                "name": "PLC nedl\u00e4nk PHY-hastighet"
+            },
+            "plc_tx_rate": {
+                "name": "PLC uppl\u00e4nk PHY-hastighet"
+            }
+        },
+        "switch": {
+            "switch_guest_wifi": {
+                "name": "Aktivera g\u00e4st-Wifi"
+            },
+            "switch_leds": {
+                "name": "Aktivera LED"
+            }
+        }
+    },
+    "exceptions": {
+        "connection_failed": {
+            "message": "Det g\u00e5r inte att ansluta till {ip_address}"
+        },
+        "no_response": {
+            "message": "Enhet {title} svarade inte"
+        },
+        "password_protected": {
+            "message": "Enhet {title} kr\u00e4ver ny autentisering f\u00f6r att st\u00e4lla in eller \u00e4ndra l\u00f6senordet"
+        },
+        "password_wrong": {
+            "message": "Det anv\u00e4nda l\u00f6senordet \u00e4r fel"
+        },
+        "update_failed": {
+            "message": "Fel vid uppdatering av data: {error}"
+        }
+    }
+}

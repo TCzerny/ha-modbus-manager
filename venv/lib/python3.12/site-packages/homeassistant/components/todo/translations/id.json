@@ -1,0 +1,87 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Daftar tugas"
+        }
+    },
+    "exceptions": {
+        "item_not_found": {
+            "message": "Tidak dapat menemukan item daftar tugas: {item}"
+        },
+        "update_field_not_supported": {
+            "message": "Entitas tidak mendukung bidang pengaturan: {service_field}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Selesai",
+                "needs_action": "Belum selesai"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "fields": {
+                "description": {
+                    "description": "Deskripsi item tugas yang lebih lengkap",
+                    "name": "Deskripsi"
+                },
+                "due_date": {
+                    "description": "Tanggal item tugas harus diselesaikan.",
+                    "name": "Tanggal tenggat"
+                },
+                "due_datetime": {
+                    "description": "Tanggal dan waktu item tugas harus diselesaikan.",
+                    "name": "Tanggal dan waktu tenggat"
+                },
+                "item": {
+                    "description": "Nama yang mewakili item tugas.",
+                    "name": "Nama item"
+                }
+            }
+        },
+        "get_items": {
+            "fields": {
+                "status": {
+                    "description": "Hanya mengembalikan item yang harus dilakukan dengan status tertentu. Mengembalikan tindakan yang belum selesai secara default.",
+                    "name": "Status"
+                }
+            }
+        },
+        "remove_item": {
+            "fields": {
+                "item": {
+                    "name": "Nama item"
+                }
+            }
+        },
+        "update_item": {
+            "fields": {
+                "description": {
+                    "description": "Deskripsi item tugas yang lebih lengkap",
+                    "name": "Deskripsi"
+                },
+                "due_date": {
+                    "description": "Tanggal item tugas harus diselesaikan.",
+                    "name": "Tanggal tenggat"
+                },
+                "due_datetime": {
+                    "description": "Tanggal dan waktu item tugas harus diselesaikan.",
+                    "name": "Tanggal dan waktu tenggat"
+                },
+                "item": {
+                    "name": "Nama item"
+                },
+                "rename": {
+                    "name": "Ganti nama item"
+                },
+                "status": {
+                    "description": "Status atau konfirmasi item tugas.",
+                    "name": "Tetapkan status"
+                }
+            }
+        }
+    },
+    "title": "Daftar tugas"
+}

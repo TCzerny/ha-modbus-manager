@@ -1,0 +1,100 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "cannot_connect": "Det gick inte att ansluta."
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamn eller IP-adress f\u00f6r din TechnoVE-station."
+                },
+                "description": "St\u00e4ll in din TechnoVE-station s\u00e5 att den kan integreras med Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "description": "Vill du l\u00e4gga till TechnoVE Station med namnet `{name}` till Home Assistant?",
+                "title": "Uppt\u00e4ckte TechnoVE-station"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "conflict_in_sharing_config": {
+                "name": "Konflikt med str\u00f6mdelningsl\u00e4ge"
+            },
+            "in_sharing_mode": {
+                "name": "Str\u00f6mdelningsl\u00e4ge"
+            },
+            "is_battery_protected": {
+                "name": "Batteriet \u00e4r skyddat"
+            },
+            "is_static_ip": {
+                "name": "Statisk IP"
+            }
+        },
+        "number": {
+            "max_current": {
+                "name": "Maximal str\u00f6m"
+            }
+        },
+        "sensor": {
+            "energy_session": {
+                "name": "Senaste sessionens energianv\u00e4ndning"
+            },
+            "energy_total": {
+                "name": "Total energianv\u00e4ndning"
+            },
+            "max_station_current": {
+                "name": "Max stationsstr\u00f6m"
+            },
+            "ssid": {
+                "name": "Namn p\u00e5 Wi-Fi-n\u00e4tverk"
+            },
+            "status": {
+                "name": "Status",
+                "state": {
+                    "high_charge_period": "Period med h\u00f6g laddning",
+                    "out_of_activation_period": "Utanf\u00f6r aktiveringsperiod",
+                    "plugged_charging": "Ansluten, laddar",
+                    "plugged_waiting": "Ansluten, v\u00e4ntar",
+                    "unplugged": "Ej ansluten"
+                }
+            },
+            "voltage_in": {
+                "name": "Insp\u00e4nning"
+            },
+            "voltage_out": {
+                "name": "Utsp\u00e4nning"
+            }
+        },
+        "switch": {
+            "auto_charge": {
+                "name": "Automatisk laddning"
+            },
+            "session_active": {
+                "name": "Laddning aktiverad"
+            }
+        }
+    },
+    "exceptions": {
+        "max_current_in_sharing_mode": {
+            "message": "Det g\u00e5r inte att st\u00e4lla in maxstr\u00f6m n\u00e4r str\u00f6mdelningsl\u00e4get \u00e4r aktiverat."
+        },
+        "set_charging_enabled_on_auto_charge": {
+            "message": "Det g\u00e5r inte att aktivera eller inaktivera laddning n\u00e4r automatisk laddning \u00e4r aktiverad. F\u00f6rs\u00f6k att avaktivera automatisk laddning f\u00f6rst."
+        }
+    },
+    "issues": {
+        "deprecated_entity_is_session_active": {
+            "description": "`{entity}` \u00e4r utfasad.\nUppdatera dina automatiseringar och skript f\u00f6r att ers\u00e4tta den bin\u00e4ra sensorenheten med den nyligen tillagda switch-entiteten.\nN\u00e4r du \u00e4r klar med migreringen kan du inaktivera `{entity}`.",
+            "title": "Den bin\u00e4ra sensorn TechnoVE {sensor_name} \u00e4r utfasad"
+        }
+    }
+}

@@ -1,0 +1,129 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_access_token": "Token de acesso inv\u00e1lido",
+            "timeout": "Excedido o tempo limite para estabelecer liga\u00e7\u00e3o"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Token de Acesso"
+                },
+                "description": "Introduza o seu token de acesso a partir de {url}"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "accumulated_consumption": {
+                "name": "Consumo acumulado"
+            },
+            "accumulated_consumption_last_hour": {
+                "name": "Custo acumulado hora atual"
+            },
+            "accumulated_cost": {
+                "name": "Custo acumulado"
+            },
+            "accumulated_production": {
+                "name": "Produ\u00e7\u00e3o acumulada"
+            },
+            "accumulated_production_last_hour": {
+                "name": "Produ\u00e7\u00e3o acumulada hora atual"
+            },
+            "accumulated_reward": {
+                "name": "Recompensa acumulada"
+            },
+            "average_power": {
+                "name": "Pot\u00eancia m\u00e9dia"
+            },
+            "current_l1": {
+                "name": "Corrente L1"
+            },
+            "current_l2": {
+                "name": "Corrente L2"
+            },
+            "current_l3": {
+                "name": "Corrente L3"
+            },
+            "electricity_price": {
+                "name": "Pre\u00e7o da eletricidade"
+            },
+            "estimated_hour_consumption": {
+                "name": "Consumo estimado hora atual"
+            },
+            "last_meter_consumption": {
+                "name": "\u00daltimo consumo no contador"
+            },
+            "last_meter_production": {
+                "name": "Produ\u00e7\u00e3o do \u00faltimo contador"
+            },
+            "max_power": {
+                "name": "Pot\u00eancia m\u00e1x"
+            },
+            "min_power": {
+                "name": "Pot\u00eancia m\u00edn"
+            },
+            "month_cons": {
+                "name": "Consumo l\u00edquido mensal"
+            },
+            "month_cost": {
+                "name": "Custo mensal"
+            },
+            "peak_hour": {
+                "name": "Consumo mensal na hora de ponta"
+            },
+            "peak_hour_time": {
+                "name": "Hora de consumo m\u00e1ximo"
+            },
+            "power": {
+                "name": "Pot\u00eancia"
+            },
+            "power_factor": {
+                "name": "Fator de Pot\u00eancia"
+            },
+            "power_production": {
+                "name": "Produ\u00e7\u00e3o de energia"
+            },
+            "signal_strength": {
+                "name": "For\u00e7a do sinal"
+            },
+            "voltage_phase1": {
+                "name": "Tens\u00e3o fase1"
+            },
+            "voltage_phase2": {
+                "name": "Tens\u00e3o fase2"
+            },
+            "voltage_phase3": {
+                "name": "Tens\u00e3o fase3"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_date": {
+            "message": "A data/hora fornecida \u00e9 inv\u00e1lida {date}"
+        },
+        "send_message_timeout": {
+            "message": "Tempo limite de envio de mensagem com o Tibber"
+        }
+    },
+    "services": {
+        "get_prices": {
+            "description": "Obter pre\u00e7os de energia de hora a hora de Tibber",
+            "fields": {
+                "end": {
+                    "description": "Especifica a data e a hora at\u00e9 \u00e0s quais se pretende obter os pre\u00e7os. Se omitido, usa a \u00faltima hora de hoje.",
+                    "name": "Fim"
+                },
+                "start": {
+                    "description": "Especifica a data e a hora a partir das quais os pre\u00e7os ser\u00e3o recuperados. Se omitido, por defeito \u00e9 hoje.",
+                    "name": "In\u00edcio"
+                }
+            },
+            "name": "Obter pre\u00e7os da energia"
+        }
+    }
+}

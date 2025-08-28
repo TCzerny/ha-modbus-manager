@@ -1,0 +1,158 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "no_homes": "Es sind keine Standorte mit diesem Tado-Konto verkn\u00fcpft.",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "password": "Gib das (neue) Passwort f\u00fcr Tado ein."
+                },
+                "description": "Konfiguriere den Eintrag f\u00fcr dein Konto neu: `{username}`.",
+                "title": "Dein Tado neu konfigurieren"
+            },
+            "user": {
+                "data": {
+                    "password": "Passwort",
+                    "username": "Benutzername"
+                },
+                "title": "Verbindung zu deinem Tado-Konto herstellen"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "connection_state": {
+                "name": "Verbindungszustand"
+            },
+            "early_start": {
+                "name": "Fr\u00fcher Start"
+            },
+            "overlay": {
+                "name": "Overlay"
+            }
+        },
+        "climate": {
+            "tado": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "auto": "Auto"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "ac": {
+                "name": "AC"
+            },
+            "automatic_geofencing": {
+                "name": "Automatisches Geofencing"
+            },
+            "geofencing_mode": {
+                "name": "Geofencing-Modus"
+            },
+            "heating": {
+                "name": "Heizung"
+            },
+            "outdoor_temperature": {
+                "name": "Au\u00dfentemperatur"
+            },
+            "solar_percentage": {
+                "name": "Solarprozentsatz"
+            },
+            "tado_mode": {
+                "name": "Tado-Modus"
+            },
+            "weather_condition": {
+                "name": "Wetterlage"
+            }
+        }
+    },
+    "issues": {
+        "water_heater_fallback": {
+            "description": "Aufgrund der zus\u00e4tzlichen Unterst\u00fctzung f\u00fcr Warmwasserbereiter-Entit\u00e4ten k\u00f6nnen diese Entit\u00e4ten unterschiedliche Overlays verwenden. Bitte konfiguriere die Overlay-Optionen f\u00fcr Integrations-Entit\u00e4ten und Warmwasserbereiterzonen der Tado-App. Andernfalls konfiguriere bitte die Overlay-Optionen f\u00fcr Integrations-Entit\u00e4ten und Warmwasserbereiterzonen der Tado-App (unter Einstellungen \u2192 R\u00e4ume & Ger\u00e4te \u2192 Warmwasser).",
+            "title": "Tado-Warmwasserbereiter-Entit\u00e4ten unterst\u00fctzen jetzt Fallback-Optionen"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "fallback": "Aktiviere den Fallback-Modus."
+                },
+                "description": "Mit dem Fallback-Modus kannst du festlegen, wann von deinem manuellen Zonen-Overlay auf den intelligenten Zeitplan umgeschaltet werden soll. (NEXT_TIME_BLOCK:= Wechsel bei der n\u00e4chsten Smart Schedule-\u00c4nderung; MANUAL:= Kein Wechsel, bis du abbrichst; TADO_DEFAULT:= Wechsel basierend auf deiner Einstellung in der Tado-App).",
+                "title": "Passe die Tado-Optionen an."
+            }
+        }
+    },
+    "services": {
+        "add_meter_reading": {
+            "description": "F\u00fcge Z\u00e4hlerst\u00e4nde zu Tado Energy IQ hinzu.",
+            "fields": {
+                "config_entry": {
+                    "description": "Konfigurationseintrag zum Hinzuf\u00fcgen von Z\u00e4hlerst\u00e4nden.",
+                    "name": "Konfigurationseintrag"
+                },
+                "reading": {
+                    "description": "Z\u00e4hlerstand in m\u00b3 oder kWh ohne Dezimalstellen.",
+                    "name": "Z\u00e4hlerstand"
+                }
+            },
+            "name": "Z\u00e4hlerst\u00e4nde hinzuf\u00fcgen"
+        },
+        "set_climate_temperature_offset": {
+            "description": "Bestimmt den Temperatur-Korrekturwert von Klima-Entit\u00e4ten.",
+            "fields": {
+                "offset": {
+                    "description": "Der gew\u00fcnschte Korrekturwert (abh\u00e4ngig von deinem Ger\u00e4t).",
+                    "name": "Korrekturwert"
+                }
+            },
+            "name": "Korrekturwert f\u00fcr Klimatisierungstemperatur einstellen"
+        },
+        "set_climate_timer": {
+            "description": "Schaltet Klima-Entit\u00e4ten f\u00fcr eine festgelegte Zeit ein.",
+            "fields": {
+                "requested_overlay": {
+                    "description": "W\u00e4hle dies oder den Zeitraum. Erm\u00f6glicht die Auswahl eines Overlays. MANUAL:=Overlay, bis der Benutzer es entfernt; NEXT_TIME_BLOCK:=\u00dcberlagerung bis zum n\u00e4chsten Zeitblock; TADO_DEFAULT:=Overlay basierend auf der Tado-App-Einstellung.",
+                    "name": "Overlay"
+                },
+                "temperature": {
+                    "description": "Temperatur, auf die die Klima-Entit\u00e4t eingestellt werden soll.",
+                    "name": "Temperatur"
+                },
+                "time_period": {
+                    "description": "W\u00e4hle dies oder Overlay. Lege den Zeitraum f\u00fcr die \u00c4nderung fest, wenn du genau sein m\u00f6chtest. Alternativ kannst du Overlay verwenden.",
+                    "name": "Zeitraum"
+                }
+            },
+            "name": "Timer f\u00fcr Klimatisierung einstellen"
+        },
+        "set_water_heater_timer": {
+            "description": "Schaltet den Warmwasserbereiter f\u00fcr eine festgelegte Zeit ein.",
+            "fields": {
+                "temperature": {
+                    "description": "Temperatur, auf die die Heizung eingestellt werden soll.",
+                    "name": "Temperatur"
+                },
+                "time_period": {
+                    "description": "Legt den Zeitraum f\u00fcr den Boost-Modus fest.",
+                    "name": "Zeitraum"
+                }
+            },
+            "name": "Timer f\u00fcr Warmwasserbereiter einstellen"
+        }
+    }
+}

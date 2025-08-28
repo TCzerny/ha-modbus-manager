@@ -1,0 +1,822 @@
+{
+    "common": {
+        "confirmed": "Meger\u0151s\u00edtve",
+        "present": "Jelen van"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "A komponens nincs konfigur\u00e1lva. K\u00e9rem, k\u00f6vesse a dokument\u00e1ci\u00f3t.",
+            "no_url_available": "Nincs el\u00e9rhet\u0151 URL. A hib\u00e1val kapcsolatos inform\u00e1ci\u00f3k\u00e9rt n\u00e9zze meg a [s\u00fag\u00f3]({docs_url}) le\u00edr\u00e1s\u00e1t.",
+            "oauth_error": "\u00c9rv\u00e9nytelen token adatok \u00e9rkeztek.",
+            "oauth_failed": "Hiba a hozz\u00e1f\u00e9r\u00e9si token megszerz\u00e9se k\u00f6zben.",
+            "oauth_timeout": "Id\u0151t\u00fall\u00e9p\u00e9s az OAuth-token felold\u00e1sakor.",
+            "oauth_unauthorized": "OAuth enged\u00e9lyez\u00e9si hiba a hozz\u00e1f\u00e9r\u00e9si token megszerz\u00e9se sor\u00e1n."
+        },
+        "create_entry": {
+            "default": "Sikeres hiteles\u00edt\u00e9s"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "V\u00e1lasszon egy hiteles\u00edt\u00e9si m\u00f3dszert"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "Akkumul\u00e1tor t\u00f6lt\u00e9si \u00e1llapota"
+            },
+            "charging_connection": {
+                "name": "T\u00f6lt\u00e9si kapcsolat"
+            },
+            "chiller_door": {
+                "name": "H\u0171t\u0151rekesz ajt\u00f3"
+            },
+            "dust_box_inserted": {
+                "name": "Porgy\u0171jt\u0151",
+                "state": {
+                    "off": "Nincs behelyezve",
+                    "on": "Behelyezve"
+                }
+            },
+            "freezer_door": {
+                "name": "Fagyaszt\u00f3 ajt\u00f3"
+            },
+            "lifted": {
+                "name": "Megemelve"
+            },
+            "local_control": {
+                "name": "Helyi vez\u00e9rl\u00e9s"
+            },
+            "lost": {
+                "name": "Elveszett"
+            },
+            "refrigerator_door": {
+                "name": "H\u0171t\u0151szekr\u00e9ny ajt\u00f3"
+            },
+            "remote_control": {
+                "name": "T\u00e1voli vez\u00e9rl\u00e9s"
+            },
+            "remote_start": {
+                "name": "T\u00e1voli ind\u00edt\u00e1s"
+            }
+        },
+        "light": {
+            "ambient_light": {
+                "name": "Hangulatvil\u00e1g\u00edt\u00e1s"
+            },
+            "cooking_lighting": {
+                "name": "Munkater\u00fclet vil\u00e1g\u00edt\u00e1s"
+            },
+            "external_light": {
+                "name": "K\u00fcls\u0151 vil\u00e1g\u00edt\u00e1s"
+            },
+            "internal_light": {
+                "name": "Bels\u0151 vil\u00e1g\u00edt\u00e1s"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "Palackh\u0171t\u0151 h\u0151m\u00e9rs\u00e9klete"
+            },
+            "chiller_left_setpoint_temperature": {
+                "name": "Bal oldali h\u0171t\u0151rekesz h\u0151m\u00e9rs\u00e9klete"
+            },
+            "chiller_right_setpoint_temperature": {
+                "name": "Jobb oldali h\u0171t\u0151rekesz h\u0151m\u00e9rs\u00e9klete"
+            },
+            "chiller_setpoint_temperature": {
+                "name": "H\u0171t\u0151rekesz h\u0151m\u00e9rs\u00e9klete"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "Fagyaszt\u00f3 h\u0151m\u00e9rs\u00e9klete"
+            },
+            "refrigerator_setpoint_temperature": {
+                "name": "H\u0171t\u0151szekr\u00e9ny h\u0151m\u00e9rs\u00e9klete"
+            },
+            "wine_compartment_2_setpoint_temperature": {
+                "name": "2. bort\u00e1rol\u00f3 h\u0151m\u00e9rs\u00e9klete"
+            },
+            "wine_compartment_3_setpoint_temperature": {
+                "name": "3. bort\u00e1rol\u00f3 h\u0151m\u00e9rs\u00e9klete"
+            },
+            "wine_compartment_setpoint_temperature": {
+                "name": "Bort\u00e1rol\u00f3 h\u0151m\u00e9rs\u00e9klete"
+            }
+        },
+        "select": {
+            "active_program": {
+                "name": "Akt\u00edv program",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "Vissza a dokkol\u00f3hoz",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "Teljes tiszt\u00edt\u00e1s",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "Tiszt\u00edt\u00e1si t\u00e9rk\u00e9p",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caff\u00e8 grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caff\u00e8 latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "K\u00e1v\u00e9",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Eszpressz\u00f3",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Dupla eszpressz\u00f3",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Eszpressz\u00f3 macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Melegv\u00edz",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Tejhab",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Meleg tej",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL k\u00e1v\u00e9",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black Eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Caf\u00e9 au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Caf\u00e9 con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Caf\u00e9 cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead Eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Dupla",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat White",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Gal\u00e3o",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Nagy barna (Grosser brauner)",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kis barna (Kleiner brauner)",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Holland tejesk\u00e1v\u00e9 (Koffie verkeerd)",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Hossz\u00fak\u00e1v\u00e9",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Hossz\u00fak\u00e1v\u00e9 barna",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "B\u00e9csi melange",
+                    "cooking_common_program_hood_automatic": "Automatikus",
+                    "cooking_common_program_hood_delayed_shut_off": "K\u00e9sleltetett kikapcsol\u00e1s",
+                    "cooking_common_program_hood_venting": "Szell\u0151ztet\u00e9s",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Als\u00f3 s\u00fct\u00e9s",
+                    "cooking_oven_program_heating_mode_defrost": "Kiolvaszt\u00e1s",
+                    "cooking_oven_program_heating_mode_desiccation": "Sz\u00e1r\u00edt\u00e1s",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Speci\u00e1lis felmeleg\u00edt\u00e9s fagyasztott term\u00e9kekhez",
+                    "cooking_oven_program_heating_mode_hot_air": "Forr\u00f3 leveg\u0151s s\u00fct\u00e9s",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Forr\u00f3 leveg\u0151 + 100% p\u00e1ratartalom",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Forr\u00f3 leveg\u0151 + 30% p\u00e1ratartalom",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Forr\u00f3 leveg\u0151 + 60% p\u00e1ratartalom",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Forr\u00f3 leveg\u0151 + 80% p\u00e1ratartalom",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Forr\u00f3 leveg\u0151 ECO",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Forr\u00f3 leveg\u0151s grillez\u00e9s",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intenz\u00edv s\u00fct\u00e9s",
+                    "cooking_oven_program_heating_mode_keep_warm": "Melegen tart\u00e1s",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pizza be\u00e1ll\u00edt\u00e1s",
+                    "cooking_oven_program_heating_mode_pre_heating": "El\u0151meleg\u00edt\u00e9s",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Ed\u00e9ny el\u0151meleg\u00edt\u00e9se",
+                    "cooking_oven_program_heating_mode_proof": "Keleszt\u00e9s",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Sabbath program",
+                    "cooking_oven_program_heating_mode_slow_cook": "Lass\u00fa f\u0151z\u00e9s",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "Als\u00f3-fels\u0151 s\u00fct\u00e9s",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "Als\u00f3-fels\u0151 s\u00fct\u00e9s ECO m\u00f3dban",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Meleg\u00edt\u0151 fi\u00f3k",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watt",
+                    "cooking_oven_program_microwave_max": "Maximum",
+                    "dishcare_dishwasher_program_auto_1": "Automatikus 1",
+                    "dishcare_dishwasher_program_auto_2": "Automatikus 2",
+                    "dishcare_dishwasher_program_auto_3": "Automatikus 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Automatikus f\u00e9lt\u00f6ltet",
+                    "dishcare_dishwasher_program_eco_50": "Eco 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Expressz csillog\u00e1s 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "\u00dcveg 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "\u00dcveg\u00e1pol\u00e1s",
+                    "dishcare_dishwasher_program_intensiv_45": "Intenz\u00edv 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intenz\u00edv 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intenz\u00edv teljes\u00edtm\u00e9ny",
+                    "dishcare_dishwasher_program_kurz_60": "R\u00f6vid program 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "G\u00e9ptiszt\u00edt\u00e1s",
+                    "dishcare_dishwasher_program_magic_daily": "M\u00e1gikus napi",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maxim\u00e1lis tiszt\u00edt\u00e1s",
+                    "dishcare_dishwasher_program_mixed_load": "Vegyes t\u00f6ltet",
+                    "dishcare_dishwasher_program_night_wash": "\u00c9jszakai mos\u00e1s",
+                    "dishcare_dishwasher_program_normal_45": "Norm\u00e1l 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Norm\u00e1l 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "El\u0151\u00f6bl\u00edt\u00e9s",
+                    "dishcare_dishwasher_program_quick_45": "Gyors 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "Gyors 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Friss\u00edt\u0151 g\u0151zprogram",
+                    "dishcare_dishwasher_program_super_60": "Szuper 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Zsugorod\u00e1sg\u00e1tl\u00f3",
+                    "laundry_care_dryer_program_blankets": "Takar\u00f3",
+                    "laundry_care_dryer_program_business_shirts": "\u00dczleti ing",
+                    "laundry_care_dryer_program_cotton": "Pamut",
+                    "laundry_care_dryer_program_delicates": "K\u00edm\u00e9l\u0151",
+                    "laundry_care_dryer_program_dessous": "Feh\u00e9rnem\u0171",
+                    "laundry_care_dryer_program_down_feathers": "Pehelytollas ruha",
+                    "laundry_care_dryer_program_hygiene": "Higi\u00e9niai program",
+                    "laundry_care_dryer_program_in_basket": "Kos\u00e1rban sz\u00e1r\u00edt\u00e1s",
+                    "laundry_care_dryer_program_jeans": "Farmer",
+                    "laundry_care_dryer_program_mix": "Vegyes",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Saj\u00e1t sz\u00e1r\u00edt\u00e1si id\u0151",
+                    "laundry_care_dryer_program_outdoor": "K\u00fclt\u00e9ri",
+                    "laundry_care_dryer_program_pillow": "P\u00e1rna",
+                    "laundry_care_dryer_program_shirts_15": "Ing 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Szuper 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "M\u0171sz\u00e1las",
+                    "laundry_care_dryer_program_synthetic_refresh": "M\u0171sz\u00e1las friss\u00edt\u00e9s",
+                    "laundry_care_dryer_program_time_cold": "Hideg (v\u00e1ltoz\u00f3 id\u0151)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Hideg (20 perc)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Hideg (30 perc)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Hideg (60 perc)",
+                    "laundry_care_dryer_program_time_warm": "Meleg (v\u00e1ltoz\u00f3 id\u0151)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Meleg (30 perc)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Meleg (40 perc)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Meleg (60 perc)",
+                    "laundry_care_dryer_program_towels": "T\u00f6r\u00f6lk\u00f6z\u0151",
+                    "laundry_care_washer_dryer_program_cotton": "Pamut",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Pamut ECO 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "K\u00edm\u00e9l\u0151 \u00e1pol\u00e1s",
+                    "laundry_care_washer_dryer_program_mix": "Vegyes",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Mos\u00e1s \u00e9s sz\u00e1r\u00edt\u00e1s (60 perc)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Mos\u00e1s \u00e9s sz\u00e1r\u00edt\u00e1s (90 perc)",
+                    "laundry_care_washer_program_auto_30": "Automatikus 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Automatikus 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Automatikus 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "K\u00edm\u00e9l\u0151 - sifon",
+                    "laundry_care_washer_program_cotton": "Pamut",
+                    "laundry_care_washer_program_cotton_colour": "Sz\u00ednes pamut",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Pamut ECO",
+                    "laundry_care_washer_program_cotton_eco_4060": "Pamut ECO 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "F\u00fcgg\u00f6ny",
+                    "laundry_care_washer_program_dark_wash": "S\u00f6t\u00e9t mos\u00e1s",
+                    "laundry_care_washer_program_delicates_silk": "K\u00edm\u00e9l\u0151 - selyem",
+                    "laundry_care_washer_program_dessous": "Feh\u00e9rnem\u0171",
+                    "laundry_care_washer_program_down_duvet_duvet": "Pehelypaplan",
+                    "laundry_care_washer_program_drum_clean": "Dob tiszt\u00edt\u00e1s",
+                    "laundry_care_washer_program_easy_care": "K\u00edm\u00e9l\u0151 \u00e1pol\u00e1s",
+                    "laundry_care_washer_program_mix": "Vegyes ruh\u00e1zat",
+                    "laundry_care_washer_program_mix_night_wash": "\u00c9jszakai vegyes mos\u00e1s",
+                    "laundry_care_washer_program_monsoon": "Monszun",
+                    "laundry_care_washer_program_outdoor": "K\u00fclt\u00e9ri ruh\u00e1zat",
+                    "laundry_care_washer_program_plush_toy": "Pl\u00fcss j\u00e1t\u00e9k",
+                    "laundry_care_washer_program_power_speed_59": "Gyorsmos\u00e1s <60 perc",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "\u00d6bl\u00edt\u00e9s, centrifug\u00e1l\u00e1s \u00e9s leereszt\u00e9s",
+                    "laundry_care_washer_program_sensitive": "\u00c9rz\u00e9keny",
+                    "laundry_care_washer_program_shirts_blouses": "Ingek, bl\u00fazok",
+                    "laundry_care_washer_program_sport_fitness": "Sport fitnesz",
+                    "laundry_care_washer_program_super_153045_super_15": "Szuper 15 perc",
+                    "laundry_care_washer_program_super_153045_super_1530": "Szuper 15/30 perc",
+                    "laundry_care_washer_program_towels": "T\u00f6r\u00f6lk\u00f6z\u0151",
+                    "laundry_care_washer_program_water_proof": "V\u00edz\u00e1ll\u00f3",
+                    "laundry_care_washer_program_wool": "Gyapj\u00fa"
+                }
+            },
+            "selected_program": {
+                "name": "Kiv\u00e1lasztott program",
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "Vissza a dokkol\u00f3hoz",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "Teljes tiszt\u00edt\u00e1s",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "Tiszt\u00edt\u00e1si t\u00e9rk\u00e9p",
+                    "consumer_products_coffee_maker_program_beverage_caffe_grande": "Caff\u00e8 grande",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "Caff\u00e8 latte",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "K\u00e1v\u00e9",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Eszpressz\u00f3",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "Dupla eszpressz\u00f3",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "Eszpressz\u00f3 macchiato",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Melegv\u00edz",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Tejhab",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "Ristretto",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Meleg tej",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "XL k\u00e1v\u00e9",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "Americano",
+                    "consumer_products_coffee_maker_program_coffee_world_black_eye": "Black Eye",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_au_lait": "Caf\u00e9 au lait",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_con_leche": "Caf\u00e9 con leche",
+                    "consumer_products_coffee_maker_program_coffee_world_cafe_cortado": "Caf\u00e9 cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_cortado": "Cortado",
+                    "consumer_products_coffee_maker_program_coffee_world_dead_eye": "Dead Eye",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Dupla",
+                    "consumer_products_coffee_maker_program_coffee_world_flat_white": "Flat White",
+                    "consumer_products_coffee_maker_program_coffee_world_galao": "Gal\u00e3o",
+                    "consumer_products_coffee_maker_program_coffee_world_garoto": "Garoto",
+                    "consumer_products_coffee_maker_program_coffee_world_grosser_brauner": "Nagy barna (Grosser brauner)",
+                    "consumer_products_coffee_maker_program_coffee_world_kaapi": "Kaapi",
+                    "consumer_products_coffee_maker_program_coffee_world_kleiner_brauner": "Kis barna (Kleiner brauner)",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Holland tejesk\u00e1v\u00e9 (Koffie verkeerd)",
+                    "consumer_products_coffee_maker_program_coffee_world_red_eye": "Red eye",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter": "Hossz\u00fak\u00e1v\u00e9",
+                    "consumer_products_coffee_maker_program_coffee_world_verlaengerter_braun": "Hossz\u00fak\u00e1v\u00e9 barna",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "B\u00e9csi melange",
+                    "cooking_common_program_hood_automatic": "Automatikus",
+                    "cooking_common_program_hood_delayed_shut_off": "K\u00e9sleltetett kikapcsol\u00e1s",
+                    "cooking_common_program_hood_venting": "Szell\u0151ztet\u00e9s",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Als\u00f3 s\u00fct\u00e9s",
+                    "cooking_oven_program_heating_mode_defrost": "Kiolvaszt\u00e1s",
+                    "cooking_oven_program_heating_mode_desiccation": "Sz\u00e1r\u00edt\u00e1s",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Speci\u00e1lis felmeleg\u00edt\u00e9s fagyasztott term\u00e9kekhez",
+                    "cooking_oven_program_heating_mode_hot_air": "Forr\u00f3 leveg\u0151s s\u00fct\u00e9s",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Forr\u00f3 leveg\u0151 + 100% p\u00e1ratartalom",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Forr\u00f3 leveg\u0151 + 30% p\u00e1ratartalom",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Forr\u00f3 leveg\u0151 + 60% p\u00e1ratartalom",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Forr\u00f3 leveg\u0151 + 80% p\u00e1ratartalom",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Forr\u00f3 leveg\u0151 ECO",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Forr\u00f3 leveg\u0151s grillez\u00e9s",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intenz\u00edv s\u00fct\u00e9s",
+                    "cooking_oven_program_heating_mode_keep_warm": "Melegen tart\u00e1s",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pizza be\u00e1ll\u00edt\u00e1s",
+                    "cooking_oven_program_heating_mode_pre_heating": "El\u0151meleg\u00edt\u00e9s",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Ed\u00e9ny el\u0151meleg\u00edt\u00e9se",
+                    "cooking_oven_program_heating_mode_proof": "Keleszt\u00e9s",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Sabbath program",
+                    "cooking_oven_program_heating_mode_slow_cook": "Lass\u00fa f\u0151z\u00e9s",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "Als\u00f3-fels\u0151 s\u00fct\u00e9s",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "Als\u00f3-fels\u0151 s\u00fct\u00e9s ECO m\u00f3dban",
+                    "cooking_oven_program_heating_mode_warming_drawer": "Meleg\u00edt\u0151 fi\u00f3k",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watt",
+                    "cooking_oven_program_microwave_max": "Maximum",
+                    "dishcare_dishwasher_program_auto_1": "Automatikus 1",
+                    "dishcare_dishwasher_program_auto_2": "Automatikus 2",
+                    "dishcare_dishwasher_program_auto_3": "Automatikus 3",
+                    "dishcare_dishwasher_program_auto_half_load": "Automatikus f\u00e9lt\u00f6ltet",
+                    "dishcare_dishwasher_program_eco_50": "Eco 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "Expressz csillog\u00e1s 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "\u00dcveg 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "\u00dcveg\u00e1pol\u00e1s",
+                    "dishcare_dishwasher_program_intensiv_45": "Intenz\u00edv 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intenz\u00edv 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intenz\u00edv teljes\u00edtm\u00e9ny",
+                    "dishcare_dishwasher_program_kurz_60": "R\u00f6vid program 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "G\u00e9ptiszt\u00edt\u00e1s",
+                    "dishcare_dishwasher_program_magic_daily": "M\u00e1gikus napi",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maxim\u00e1lis tiszt\u00edt\u00e1s",
+                    "dishcare_dishwasher_program_mixed_load": "Vegyes t\u00f6ltet",
+                    "dishcare_dishwasher_program_night_wash": "\u00c9jszakai mos\u00e1s",
+                    "dishcare_dishwasher_program_normal_45": "Norm\u00e1l 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Norm\u00e1l 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "El\u0151\u00f6bl\u00edt\u00e9s",
+                    "dishcare_dishwasher_program_quick_45": "Gyors 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "Gyors 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Friss\u00edt\u0151 g\u0151zprogram",
+                    "dishcare_dishwasher_program_super_60": "Szuper 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Zsugorod\u00e1sg\u00e1tl\u00f3",
+                    "laundry_care_dryer_program_blankets": "Takar\u00f3",
+                    "laundry_care_dryer_program_business_shirts": "\u00dczleti ing",
+                    "laundry_care_dryer_program_cotton": "Pamut",
+                    "laundry_care_dryer_program_delicates": "K\u00edm\u00e9l\u0151",
+                    "laundry_care_dryer_program_dessous": "Feh\u00e9rnem\u0171",
+                    "laundry_care_dryer_program_down_feathers": "Pehelytollas ruha",
+                    "laundry_care_dryer_program_hygiene": "Higi\u00e9niai program",
+                    "laundry_care_dryer_program_in_basket": "Kos\u00e1rban sz\u00e1r\u00edt\u00e1s",
+                    "laundry_care_dryer_program_jeans": "Farmer",
+                    "laundry_care_dryer_program_mix": "Vegyes",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Saj\u00e1t sz\u00e1r\u00edt\u00e1si id\u0151",
+                    "laundry_care_dryer_program_outdoor": "K\u00fclt\u00e9ri",
+                    "laundry_care_dryer_program_pillow": "P\u00e1rna",
+                    "laundry_care_dryer_program_shirts_15": "Ing 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Szuper 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "M\u0171sz\u00e1las",
+                    "laundry_care_dryer_program_synthetic_refresh": "M\u0171sz\u00e1las friss\u00edt\u00e9s",
+                    "laundry_care_dryer_program_time_cold": "Hideg (v\u00e1ltoz\u00f3 id\u0151)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Hideg (20 perc)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Hideg (30 perc)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Hideg (60 perc)",
+                    "laundry_care_dryer_program_time_warm": "Meleg (v\u00e1ltoz\u00f3 id\u0151)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Meleg (30 perc)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Meleg (40 perc)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Meleg (60 perc)",
+                    "laundry_care_dryer_program_towels": "T\u00f6r\u00f6lk\u00f6z\u0151",
+                    "laundry_care_washer_dryer_program_cotton": "Pamut",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Pamut ECO 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "K\u00edm\u00e9l\u0151 \u00e1pol\u00e1s",
+                    "laundry_care_washer_dryer_program_mix": "Vegyes",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Mos\u00e1s \u00e9s sz\u00e1r\u00edt\u00e1s (60 perc)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Mos\u00e1s \u00e9s sz\u00e1r\u00edt\u00e1s (90 perc)",
+                    "laundry_care_washer_program_auto_30": "Automatikus 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Automatikus 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Automatikus 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "K\u00edm\u00e9l\u0151 - sifon",
+                    "laundry_care_washer_program_cotton": "Pamut",
+                    "laundry_care_washer_program_cotton_colour": "Sz\u00ednes pamut",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Pamut ECO",
+                    "laundry_care_washer_program_cotton_eco_4060": "Pamut ECO 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "F\u00fcgg\u00f6ny",
+                    "laundry_care_washer_program_dark_wash": "S\u00f6t\u00e9t mos\u00e1s",
+                    "laundry_care_washer_program_delicates_silk": "K\u00edm\u00e9l\u0151 - selyem",
+                    "laundry_care_washer_program_dessous": "Feh\u00e9rnem\u0171",
+                    "laundry_care_washer_program_down_duvet_duvet": "Pehelypaplan",
+                    "laundry_care_washer_program_drum_clean": "Dob tiszt\u00edt\u00e1s",
+                    "laundry_care_washer_program_easy_care": "K\u00edm\u00e9l\u0151 \u00e1pol\u00e1s",
+                    "laundry_care_washer_program_mix": "Vegyes ruh\u00e1zat",
+                    "laundry_care_washer_program_mix_night_wash": "\u00c9jszakai vegyes mos\u00e1s",
+                    "laundry_care_washer_program_monsoon": "Monszun",
+                    "laundry_care_washer_program_outdoor": "K\u00fclt\u00e9ri ruh\u00e1zat",
+                    "laundry_care_washer_program_plush_toy": "Pl\u00fcss j\u00e1t\u00e9k",
+                    "laundry_care_washer_program_power_speed_59": "Gyorsmos\u00e1s <60 perc",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "\u00d6bl\u00edt\u00e9s, centrifug\u00e1l\u00e1s \u00e9s leereszt\u00e9s",
+                    "laundry_care_washer_program_sensitive": "\u00c9rz\u00e9keny",
+                    "laundry_care_washer_program_shirts_blouses": "Ingek, bl\u00fazok",
+                    "laundry_care_washer_program_sport_fitness": "Sport fitnesz",
+                    "laundry_care_washer_program_super_153045_super_15": "Szuper 15 perc",
+                    "laundry_care_washer_program_super_153045_super_1530": "Szuper 15/30 perc",
+                    "laundry_care_washer_program_towels": "T\u00f6r\u00f6lk\u00f6z\u0151",
+                    "laundry_care_washer_program_water_proof": "V\u00edz\u00e1ll\u00f3",
+                    "laundry_care_washer_program_wool": "Gyapj\u00fa"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "Akkumul\u00e1tor szint"
+            },
+            "bean_container_empty": {
+                "name": "Babtart\u00e1ly \u00fcres",
+                "state": {
+                    "confirmed": "Meger\u0151s\u00edtve",
+                    "off": "Ki",
+                    "present": "Jelen van"
+                }
+            },
+            "camera_state": {
+                "name": "Kamera \u00e1llapot",
+                "state": {
+                    "disabled": "Letiltva",
+                    "error": "Hiba",
+                    "ready": "K\u00e9sz",
+                    "sleeping": "Alv\u00f3 \u00e1llapotban",
+                    "streamingcloud": "Felh\u0151be k\u00f6zvet\u00edt\u00e9s",
+                    "streaminglocal": "Helyi k\u00f6zvet\u00edt\u00e9s",
+                    "streaminglocal_and_cloud": "Helyi \u00e9s felh\u0151be k\u00f6zvet\u00edt\u00e9s"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "K\u00e1v\u00e9- \u00e9s tejescs\u00e9sze"
+            },
+            "coffee_counter": {
+                "name": "K\u00e1v\u00e9"
+            },
+            "door": {
+                "name": "Ajt\u00f3",
+                "state": {
+                    "closed": "Z\u00e1rva",
+                    "locked": "Z\u00e1rolt",
+                    "open": "Nyitva"
+                }
+            },
+            "drip_tray_full": {
+                "name": "Cseppt\u00e1lca tele",
+                "state": {
+                    "confirmed": "Meger\u0151s\u00edtve",
+                    "off": "Ki",
+                    "present": "Jelen van"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "Fagyaszt\u00f3 ajt\u00f3riaszt\u00e1s",
+                "state": {
+                    "confirmed": "Meger\u0151s\u00edtve",
+                    "present": "Jelen van"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "Fagyaszt\u00f3 h\u0151m\u00e9rs\u00e9klet riaszt\u00e1s",
+                "state": {
+                    "confirmed": "Meger\u0151s\u00edtve",
+                    "off": "Ki",
+                    "present": "Jelen van"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "Habos tejes cs\u00e9sze"
+            },
+            "hot_milk_counter": {
+                "name": "Forr\u00f3 tejes cs\u00e9sze"
+            },
+            "hot_water_counter": {
+                "name": "Melegv\u00edz"
+            },
+            "hot_water_cups_counter": {
+                "name": "Melegvizes poh\u00e1r"
+            },
+            "last_selected_map": {
+                "name": "Utolj\u00e1ra kiv\u00e1lasztott t\u00e9rk\u00e9p",
+                "state": {
+                    "map1": "T\u00e9rk\u00e9p 1",
+                    "map2": "T\u00e9rk\u00e9p 2",
+                    "map3": "T\u00e9rk\u00e9p 3",
+                    "tempmap": "Ideiglenes t\u00e9rk\u00e9p"
+                }
+            },
+            "milk_counter": {
+                "name": "Tejes cs\u00e9sze"
+            },
+            "operation_state": {
+                "name": "M\u0171k\u00f6d\u00e9si \u00e1llapot",
+                "state": {
+                    "aborting": "Megszak\u00edt\u00e1s alatt",
+                    "actionrequired": "Beavatkoz\u00e1s sz\u00fcks\u00e9ges",
+                    "delayedstart": "K\u00e9sleltetett ind\u00edt\u00e1s",
+                    "error": "Hiba",
+                    "finished": "Befejezve",
+                    "inactive": "Inakt\u00edv",
+                    "pause": "Sz\u00fcnetel",
+                    "ready": "K\u00e9sz",
+                    "run": "M\u0171k\u00f6d\u00e9s"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "\u0150r\u00f6lt k\u00e1v\u00e9"
+            },
+            "program_finish_time": {
+                "name": "Program befejez\u00e9si ideje"
+            },
+            "program_progress": {
+                "name": "Program el\u0151rehalad\u00e1sa"
+            },
+            "refrigerator_door_alarm": {
+                "name": "H\u0171t\u0151szekr\u00e9ny ajt\u00f3riaszt\u00e1s",
+                "state": {
+                    "confirmed": "Meger\u0151s\u00edtve",
+                    "off": "Ki",
+                    "present": "Jelen van"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "name": "\u00d6bl\u00edt\u0151szer majdnem elfogyott",
+                "state": {
+                    "confirmed": "Meger\u0151s\u00edtve",
+                    "off": "Ki",
+                    "present": "Jelen van"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "Ristretto eszpressz\u00f3 cs\u00e9sze"
+            },
+            "salt_nearly_empty": {
+                "name": "S\u00f3 majdnem elfogyott",
+                "state": {
+                    "confirmed": "Meger\u0151s\u00edtve",
+                    "off": "Ki",
+                    "present": "Jelen van"
+                }
+            },
+            "water_tank_empty": {
+                "name": "V\u00edztart\u00e1ly \u00fcres",
+                "state": {
+                    "confirmed": "Meger\u0151s\u00edtve",
+                    "off": "Ki",
+                    "present": "Jelen van"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "Gyerekz\u00e1r"
+            },
+            "cup_warmer": {
+                "name": "Cs\u00e9szemeleg\u00edt\u0151"
+            },
+            "dispenser_enabled": {
+                "name": "Adagol\u00f3",
+                "state": {
+                    "off": "Letiltva",
+                    "on": "Enged\u00e9lyezve"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "Fagyaszt\u00f3ajt\u00f3 asszisztens"
+            },
+            "door_assistant_fridge": {
+                "name": "H\u0171t\u0151ajt\u00f3 asszisztens"
+            },
+            "eco_mode": {
+                "name": "Eco m\u00f3d"
+            },
+            "freezer_super_mode": {
+                "name": "Fagyaszt\u00f3 szuper m\u00f3d"
+            },
+            "fresh_mode": {
+                "name": "Friss m\u00f3d"
+            },
+            "power": {
+                "name": "\u00c1ramell\u00e1t\u00e1s"
+            },
+            "refrigerator_super_mode": {
+                "name": "H\u0171t\u0151szekr\u00e9ny szuper m\u00f3d"
+            },
+            "sabbath_mode": {
+                "name": "Sabbath m\u00f3d"
+            },
+            "vacation_mode": {
+                "name": "Vak\u00e1ci\u00f3 m\u00f3d"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "\u00c9breszt\u0151\u00f3ra"
+            }
+        }
+    },
+    "exceptions": {
+        "appliance_not_found": {
+            "message": "A(z) {device_id} azonos\u00edt\u00f3j\u00fa eszk\u00f6z nem tal\u00e1lhat\u00f3."
+        },
+        "execute_command": {
+            "message": "Hiba a(z) {command} parancs v\u00e9grehajt\u00e1sa sor\u00e1n: {description}"
+        },
+        "pause_program": {
+            "message": "Hiba a program sz\u00fcneteltet\u00e9se sor\u00e1n: {description}"
+        },
+        "power_off": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {appliance_name} kikapcsol\u00e1sakor a(z) \"{value}\" \u00e9rt\u00e9kkel: {description}"
+        },
+        "power_on": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {appliance_name} bekapcsol\u00e1sakor: {description}"
+        },
+        "select_light_custom_color": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {entity_id} egy\u00e9ni sz\u00edn\u00e9nek kiv\u00e1laszt\u00e1sakor: {description}"
+        },
+        "select_program": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {program} program kiv\u00e1laszt\u00e1sakor: {description}"
+        },
+        "set_light_brightness": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {entity_id} f\u00e9nyerej\u00e9nek be\u00e1ll\u00edt\u00e1sakor: {description}"
+        },
+        "set_light_color": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {entity_id} sz\u00edn\u00e9nek be\u00e1ll\u00edt\u00e1sakor: {description}"
+        },
+        "set_options_active_program": {
+            "message": "Hiba t\u00f6rt\u00e9nt az akt\u00edv program be\u00e1ll\u00edt\u00e1sainak m\u00f3dos\u00edt\u00e1sa sor\u00e1n: {description}"
+        },
+        "set_options_selected_program": {
+            "message": "Hiba t\u00f6rt\u00e9nt a kiv\u00e1lasztott program be\u00e1ll\u00edt\u00e1sainak m\u00f3dos\u00edt\u00e1sa sor\u00e1n: {description}"
+        },
+        "set_setting": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) \"{key}\" be\u00e1ll\u00edt\u00e1s \"{value}\" \u00e9rt\u00e9kre t\u00f6rt\u00e9n\u0151 m\u00f3dos\u00edt\u00e1sa sor\u00e1n: {description}"
+        },
+        "set_setting_entity": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {entity_id} be\u00e1ll\u00edt\u00e1s \"{key}\" \u00e9rt\u00e9k\u00e9nek \"{value}\" \u00e9rt\u00e9kre t\u00f6rt\u00e9n\u0151 m\u00f3dos\u00edt\u00e1sa sor\u00e1n: {description}"
+        },
+        "start_program": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {program} program ind\u00edt\u00e1sakor: {description}"
+        },
+        "stop_program": {
+            "message": "Hiba a program le\u00e1ll\u00edt\u00e1sa sor\u00e1n: {description}"
+        },
+        "turn_off": {
+            "message": "Hiba a(z) {entity_id} ({key}) kikapcsol\u00e1sa sor\u00e1n: {description}"
+        },
+        "turn_off_light": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {entity_id} kikapcsol\u00e1sakor: {description}"
+        },
+        "turn_off_not_supported": {
+            "message": "A(z) {appliance_name} nem t\u00e1mogatja a kikapcsol\u00e1st vagy a k\u00e9szenl\u00e9ti m\u00f3dba l\u00e9p\u00e9st."
+        },
+        "turn_on": {
+            "message": "Hiba a(z) {entity_id} ({key}) bekapcsol\u00e1sa sor\u00e1n: {description}"
+        },
+        "turn_on_light": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {entity_id} bekapcsol\u00e1sakor: {description}"
+        },
+        "unable_to_retrieve_turn_off": {
+            "message": "Nem siker\u00fclt kikapcsolni a(z) {appliance_name} eszk\u00f6zt, mert nem lehetett meghat\u00e1rozni, hogy t\u00e1mogatja-e a kikapcsol\u00e1st vagy a k\u00e9szenl\u00e9ti m\u00f3dot."
+        }
+    },
+    "issues": {
+        "deprecated_binary_common_door_sensor": {
+            "description": "A(z) `{entity}` bin\u00e1ris ajt\u00f3\u00e9rz\u00e9kel\u0151, amely elavult, a k\u00f6vetkez\u0151 automatiz\u00e1l\u00e1sokban vagy szkriptekben van haszn\u00e1latban:\n{items}\n\nEgy tov\u00e1bbi \u00e1llapotokkal rendelkez\u0151 \u00e9rz\u00e9kel\u0151 entit\u00e1s \u00e9rhet\u0151 el, amelyet a j\u00f6v\u0151ben haszn\u00e1lni kell; k\u00e9rj\u00fck, alkalmazza azt a fenti automatiz\u00e1l\u00e1sokban vagy szkriptekben a probl\u00e9ma megold\u00e1sa \u00e9rdek\u00e9ben.",
+            "title": "Elavult bin\u00e1ris ajt\u00f3\u00e9rz\u00e9kel\u0151t \u00e9szlelve n\u00e9h\u00e1ny automatiz\u00e1l\u00e1sban vagy szkriptben"
+        },
+        "deprecated_program_switch": {
+            "description": "A programkapcsol\u00f3k elavultak \u00e9s a(z) {entity_id} a k\u00f6vetkez\u0151 automatiz\u00e1l\u00e1sokban vagy szkriptekben van haszn\u00e1latban:  \n{items}  \n\nA probl\u00e9ma megold\u00e1s\u00e1hoz haszn\u00e1lhatja az akt\u00edv program kiv\u00e1laszt\u00e1s\u00e1ra szolg\u00e1l\u00f3 entit\u00e1st, amellyel a programot tov\u00e1bbi be\u00e1ll\u00edt\u00e1sok n\u00e9lk\u00fcl futtathatja, valamint a fent eml\u00edtett automatiz\u00e1l\u00e1sokban vagy szkriptekben megkaphatja a jelenleg fut\u00f3 programot.",
+            "title": "Elavult programkapcsol\u00f3t \u00e9szlelt n\u00e9h\u00e1ny automatiz\u00e1l\u00e1sban vagy szkriptben"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "Megv\u00e1ltoztat egy be\u00e1ll\u00edt\u00e1st.",
+            "fields": {
+                "device_id": {
+                    "description": "Az eszk\u00f6z azonos\u00edt\u00f3ja.",
+                    "name": "Eszk\u00f6z azonos\u00edt\u00f3"
+                },
+                "key": {
+                    "description": "A be\u00e1ll\u00edt\u00e1s kulcsa.",
+                    "name": "Kulcs"
+                },
+                "value": {
+                    "description": "A be\u00e1ll\u00edt\u00e1s \u00e9rt\u00e9ke.",
+                    "name": "\u00c9rt\u00e9k"
+                }
+            },
+            "name": "Be\u00e1ll\u00edt\u00e1s m\u00f3dos\u00edt\u00e1sa"
+        },
+        "pause_program": {
+            "description": "Sz\u00fcnetelteti az \u00e9ppen fut\u00f3 programot.",
+            "fields": {
+                "device_id": {
+                    "description": "Az eszk\u00f6z azonos\u00edt\u00f3ja.",
+                    "name": "Eszk\u00f6z azonos\u00edt\u00f3"
+                }
+            },
+            "name": "Program sz\u00fcneteltet\u00e9se"
+        },
+        "resume_program": {
+            "description": "Folytatja a sz\u00fcneteltetett programot.",
+            "fields": {
+                "device_id": {
+                    "description": "Az eszk\u00f6z azonos\u00edt\u00f3ja.",
+                    "name": "Eszk\u00f6z azonos\u00edt\u00f3"
+                }
+            },
+            "name": "Program folytat\u00e1sa"
+        },
+        "select_program": {
+            "description": "Kiv\u00e1laszt egy programot an\u00e9lk\u00fcl, hogy elind\u00edtan\u00e1.",
+            "fields": {
+                "device_id": {
+                    "description": "Az eszk\u00f6z azonos\u00edt\u00f3ja.",
+                    "name": "Eszk\u00f6z azonos\u00edt\u00f3"
+                },
+                "key": {
+                    "description": "Az opci\u00f3 kulcsa.",
+                    "name": "Opci\u00f3 kulcs"
+                },
+                "program": {
+                    "description": "Program kiv\u00e1laszt\u00e1sa.",
+                    "name": "Program"
+                },
+                "unit": {
+                    "description": "Egys\u00e9g az opci\u00f3hoz.",
+                    "name": "Opci\u00f3 egys\u00e9g"
+                },
+                "value": {
+                    "description": "Az opci\u00f3 \u00e9rt\u00e9ke.",
+                    "name": "Opci\u00f3 \u00e9rt\u00e9k"
+                }
+            },
+            "name": "Program kiv\u00e1laszt\u00e1sa"
+        },
+        "set_option_active": {
+            "description": "Be\u00e1ll\u00edt egy opci\u00f3t az akt\u00edv programhoz.",
+            "fields": {
+                "device_id": {
+                    "description": "Az eszk\u00f6z azonos\u00edt\u00f3ja.",
+                    "name": "Eszk\u00f6z azonos\u00edt\u00f3"
+                },
+                "key": {
+                    "description": "Az opci\u00f3 kulcsa.",
+                    "name": "Kulcs"
+                },
+                "value": {
+                    "description": "Az opci\u00f3 \u00e9rt\u00e9ke.",
+                    "name": "\u00c9rt\u00e9k"
+                }
+            },
+            "name": "Akt\u00edv program opci\u00f3j\u00e1nak be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_option_selected": {
+            "description": "Be\u00e1ll\u00edt egy opci\u00f3t a kiv\u00e1lasztott programhoz.",
+            "fields": {
+                "device_id": {
+                    "description": "Az eszk\u00f6z azonos\u00edt\u00f3ja.",
+                    "name": "Eszk\u00f6z azonos\u00edt\u00f3"
+                },
+                "key": {
+                    "description": "Az opci\u00f3 kulcsa.",
+                    "name": "Kulcs"
+                },
+                "value": {
+                    "description": "Az opci\u00f3 \u00e9rt\u00e9ke.",
+                    "name": "\u00c9rt\u00e9k"
+                }
+            },
+            "name": "Kiv\u00e1lasztott program opci\u00f3j\u00e1nak be\u00e1ll\u00edt\u00e1sa"
+        },
+        "start_program": {
+            "description": "Kiv\u00e1laszt egy programot \u00e9s elind\u00edtja.",
+            "fields": {
+                "device_id": {
+                    "description": "Az eszk\u00f6z azonos\u00edt\u00f3ja.",
+                    "name": "Eszk\u00f6z azonos\u00edt\u00f3"
+                },
+                "key": {
+                    "description": "Az opci\u00f3 kulcsa.",
+                    "name": "Opci\u00f3 kulcs"
+                },
+                "program": {
+                    "description": "Program kiv\u00e1laszt\u00e1sa.",
+                    "name": "Program"
+                },
+                "unit": {
+                    "description": "Egys\u00e9g az opci\u00f3hoz.",
+                    "name": "Opci\u00f3 egys\u00e9g"
+                },
+                "value": {
+                    "description": "Az opci\u00f3 \u00e9rt\u00e9ke.",
+                    "name": "Opci\u00f3 \u00e9rt\u00e9k"
+                }
+            },
+            "name": "Program ind\u00edt\u00e1sa"
+        }
+    }
+}

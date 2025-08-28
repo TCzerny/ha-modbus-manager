@@ -1,0 +1,134 @@
+{
+    "common": {
+        "jid_options_description": "T\u00e4psemad r\u00fchmitamisvalikud kus seadmete ainulaadseid Beolink ID-sid (nimetatakse JID-deks) kasutatakse otse. JID-sid v\u00f5ib leida meediapleieri olemi olekuatribuutidest.",
+        "jid_options_name": "JID valikud"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud",
+            "already_in_progress": "Seadistamine on juba k\u00e4imas"
+        },
+        "error": {
+            "api_exception": "\u00dchendamine nurjus",
+            "client_connector_error": "\u00dchendamine nurjus",
+            "invalid_ip": "Sobimatu IPv4-aadress",
+            "timeout_error": "\u00dchendamine nurjus"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "IP-aadress",
+                    "model": "Mudel"
+                },
+                "description": "Seadista oma Bang & Olufseni seade k\u00e4sitsi."
+            },
+            "zeroconf_confirm": {
+                "description": "Kinnita {model} - {serial_number} @ {host} konfiguratsioon.",
+                "title": "Seadista Bang & Olufseni seade"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_grouping_entity": {
+            "message": "Olemit ID-ga: {entity_id} ei saa Beolini seansile lisada. Kas see \u00fcksus on Bang & Olufseni media_player?"
+        },
+        "invalid_media_type": {
+            "message": "{invalid_media_type} on sobimatu t\u00fc\u00fcp. Kehtivad v\u00e4\u00e4rtused on: {valid_media_types} ."
+        },
+        "invalid_sound_mode": {
+            "message": "{invalid_sound_mode} on sobimatu helire\u017eiim. Kehtivad v\u00e4\u00e4rtused on: {valid_sound_modes} ."
+        },
+        "invalid_source": {
+            "message": "Sobimatu allikas: {invalid_source}. Kehtivad allikad on: {valid_sources}"
+        },
+        "m3u_invalid_format": {
+            "message": "Meediumiallikaid laiendiga .m3u ei toetata."
+        },
+        "play_media_error": {
+            "message": "{media_type} esitamise katsel ilmnes t\u00f5rge: {error_message} ."
+        }
+    },
+    "selector": {
+        "source_ids": {
+            "options": {
+                "aux_a": "Beolink Converter NL/ML AUX_A",
+                "beoradio": "ASE Beoraadio",
+                "cd": "Beolink Converter NL/ML CD",
+                "deezer": "ASE / Mozart Deezer",
+                "ph": "Beolink Converter NL/ML PH",
+                "radio": "Beolink Converter NL/ML RADIO",
+                "spotify": "ASE / Mozart Spotify",
+                "tidal": "Mozart Tidal",
+                "tp1": "Beolink Converter NL/ML TP1",
+                "tp2": "Beolink Converter NL/ML TP2"
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "L\u00fclita k\u00f5ik \u00fchendatud Beolinki seadmed ootere\u017eiimi.",
+            "name": "Beolink k\u00f5ik ootere\u017eiimil"
+        },
+        "beolink_expand": {
+            "description": "Laienda praegust Beolini kasutuskogemust.",
+            "fields": {
+                "all_discovered": {
+                    "description": "Laienda Beolini kasutuskogemust k\u00f5ikidele avastatud seadmetele.",
+                    "name": "K\u00f5ik avastatud"
+                },
+                "beolink_jids": {
+                    "description": "M\u00e4\u00e4rak millised Beolini JID-d liituvad praeguse Beolini kasutuskogemusega.",
+                    "name": "Beolink JID-d"
+                }
+            },
+            "name": "Beolinki laienemine",
+            "sections": {
+                "jid_options": {
+                    "description": "T\u00e4psemad r\u00fchmitamisvalikud kus seadmete ainulaadseid Beolink ID-sid (nimetatakse JID-deks) kasutatakse otse. JID-sid v\u00f5ib leida meediapleieri olemi olekuatribuutidest.",
+                    "name": "JID valikud"
+                }
+            }
+        },
+        "beolink_join": {
+            "description": "Liitu Beolinki kogemusega.",
+            "fields": {
+                "beolink_jid": {
+                    "description": "M\u00e4\u00e4ra k\u00e4sitsi liitumiseks Beolink JID.",
+                    "name": "Beolink-i JID"
+                },
+                "source_id": {
+                    "description": "M\u00e4\u00e4ra millise allikaga liituda. Riistvaraplatvormide k\u00e4itumine on erinev. Allikanimesid, mille eess\u00f5naks on platvormi nimi, saab kasutada ainult selle platvormiga \u00fchenduse loomisel. N\u00e4iteks \"ASE Beoradio\" saab kasutada ainult ASE seadmega \u00fchendamisel, samas kui \"ASE / Mozart Deezer\" saab kasutada ASE v\u00f5i Mozarti seadmetega. Vaja on m\u00e4\u00e4ratletud Beolinki JID-d.",
+                    "name": "Allikas"
+                }
+            },
+            "name": "Beolinkiga liitumine",
+            "sections": {
+                "jid_options": {
+                    "description": "T\u00e4psemad r\u00fchmitamisvalikud kus seadmete ainulaadseid Beolink ID-sid (nimetatakse JID-deks) kasutatakse otse. JID-sid v\u00f5ib leida meediapleieri olemi olekuatribuutidest.",
+                    "name": "JID valikud"
+                }
+            }
+        },
+        "beolink_leave": {
+            "description": "Lahku Beolinki kogemusest.",
+            "name": "Beolinkist lahkumine"
+        },
+        "beolink_unexpand": {
+            "description": "Loobu praegusest Beolinki kogemusest.",
+            "fields": {
+                "beolink_jids": {
+                    "description": "M\u00e4\u00e4ra millised Beolink JID-d lahkuvad praegusest Beolink-kogemusest.",
+                    "name": "Beolink JID-d"
+                }
+            },
+            "name": "Beolinki laiendamise t\u00fchistatamine",
+            "sections": {
+                "jid_options": {
+                    "description": "T\u00e4psemad r\u00fchmitamisvalikud kus seadmete ainulaadseid Beolink ID-sid (nimetatakse JID-deks) kasutatakse otse. JID-sid v\u00f5ib leida meediapleieri olemi olekuatribuutidest.",
+                    "name": "JID valikud"
+                }
+            }
+        }
+    }
+}

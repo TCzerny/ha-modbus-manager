@@ -1,0 +1,69 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert"
+        },
+        "error": {
+            "not_allowed": "Der Zugriff auf den ausgew\u00e4hlten Dateipfad ist nicht zul\u00e4ssig"
+        },
+        "step": {
+            "notify": {
+                "data": {
+                    "file_path": "Dateipfad",
+                    "timestamp": "Zeitstempel"
+                },
+                "data_description": {
+                    "file_path": "Ein lokaler Dateipfad, in den die Benachrichtigung geschrieben werden soll",
+                    "timestamp": "F\u00fcgt der Benachrichtigung einen Zeitstempel hinzu"
+                },
+                "description": "Richtet einen Dienst ein, der das Schreiben von Benachrichtigungen in eine Datei erm\u00f6glicht.",
+                "title": "Benachrichtigung in Datei"
+            },
+            "sensor": {
+                "data": {
+                    "file_path": "Dateipfad",
+                    "unit_of_measurement": "Ma\u00dfeinheit",
+                    "value_template": "Wert-Template"
+                },
+                "data_description": {
+                    "file_path": "Der lokale Dateipfad, aus dem der Sensorwert abgerufen werden soll",
+                    "unit_of_measurement": "Ma\u00dfeinheit f\u00fcr den Sensor",
+                    "value_template": "Ein Template zum Bestimmen des Sensorwerts basierend auf dem Dateiinhalt"
+                },
+                "description": "Einrichten eines dateibasierten Sensors",
+                "title": "Dateisensor"
+            },
+            "user": {
+                "description": "Bitte ausw\u00e4hlen",
+                "menu_options": {
+                    "notify": "Einrichten eines Benachrichtigungsdienstes",
+                    "sensor": "Einrichten eines dateibasierten Sensors"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "dir_not_allowed": {
+            "message": "Der Zugriff auf {filename} ist nicht zul\u00e4ssig."
+        },
+        "write_access_failed": {
+            "message": "Schreibzugriff auf {filename} fehlgeschlagen: {exc}."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "timestamp": "Zeitstempel",
+                    "unit_of_measurement": "Ma\u00dfeinheit",
+                    "value_template": "Wert-Template"
+                },
+                "data_description": {
+                    "timestamp": "F\u00fcgt der Benachrichtigung einen Zeitstempel hinzu",
+                    "unit_of_measurement": "Ma\u00dfeinheit f\u00fcr den Sensor",
+                    "value_template": "Ein Template zum Bestimmen des Sensorwerts basierend auf dem Dateiinhalt"
+                }
+            }
+        }
+    }
+}

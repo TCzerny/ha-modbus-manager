@@ -1,0 +1,88 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "timeout_connect": "Excedido o tempo limite para estabelecer liga\u00e7\u00e3o",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Indique o nome de utilizador e a palavra-passe da sua conta Hydrawise na nuvem:",
+                "title": "In\u00edcio de Sess\u00e3o Hydrawise"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rain_sensor": {
+                "name": "Sensor de chuva"
+            },
+            "watering": {
+                "name": "Rega"
+            }
+        },
+        "sensor": {
+            "daily_active_water_time": {
+                "name": "Tempo de rega ativa di\u00e1ria"
+            },
+            "daily_active_water_use": {
+                "name": "Utiliza\u00e7\u00e3o di\u00e1ria de \u00e1gua ativa"
+            },
+            "daily_inactive_water_use": {
+                "name": "Utiliza\u00e7\u00e3o di\u00e1ria de \u00e1gua inativa"
+            },
+            "daily_total_water_use": {
+                "name": "Consumo total di\u00e1rio de \u00e1gua"
+            },
+            "next_cycle": {
+                "name": "Pr\u00f3ximo ciclo"
+            },
+            "watering_time": {
+                "name": "Tempo de rega restante"
+            }
+        },
+        "switch": {
+            "auto_watering": {
+                "name": "Rega autom\u00e1tica"
+            },
+            "manual_watering": {
+                "name": "Rega manual"
+            }
+        }
+    },
+    "services": {
+        "resume": {
+            "description": "Retoma o hor\u00e1rio de rega autom\u00e1tica de uma zona de irriga\u00e7\u00e3o.",
+            "name": "Retomar a rega autom\u00e1tica"
+        },
+        "start_watering": {
+            "description": "Inicia um ciclo de rega na zona de irriga\u00e7\u00e3o selecionada.",
+            "fields": {
+                "duration": {
+                    "description": "Dura\u00e7\u00e3o do tempo para executar o ciclo de rega. Se n\u00e3o for especificado (ou zero), ser\u00e1 utilizada a dura\u00e7\u00e3o de rega definida por defeito na aplica\u00e7\u00e3o m\u00f3vel ou web Hydrawise para a zona de irriga\u00e7\u00e3o.",
+                    "name": "Dura\u00e7\u00e3o"
+                }
+            },
+            "name": "Iniciar rega"
+        },
+        "suspend": {
+            "description": "Suspende o hor\u00e1rio de rega autom\u00e1tica de uma zona de irriga\u00e7\u00e3o at\u00e9 \u00e0 data e hora indicadas.",
+            "fields": {
+                "until": {
+                    "description": "Data e hora para retomar o hor\u00e1rio de rega automatizado.",
+                    "name": "At\u00e9"
+                }
+            },
+            "name": "Suspender rega autom\u00e1tica"
+        }
+    }
+}

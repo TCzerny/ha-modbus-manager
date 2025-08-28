@@ -1,0 +1,88 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Tj\u00e4nsten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "timeout_connect": "Timeout vid uppr\u00e4ttande av anslutning",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "description": "Ange anv\u00e4ndarnamn och l\u00f6senord f\u00f6r ditt Hydrawise-molnkonto:",
+                "title": "Hydrawise Logga in"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rain_sensor": {
+                "name": "Regnsensor"
+            },
+            "watering": {
+                "name": "Bevattning"
+            }
+        },
+        "sensor": {
+            "daily_active_water_time": {
+                "name": "Daglig aktiv bevattningstid"
+            },
+            "daily_active_water_use": {
+                "name": "Daglig aktiv vattenanv\u00e4ndning"
+            },
+            "daily_inactive_water_use": {
+                "name": "Daglig inaktiv vattenanv\u00e4ndning"
+            },
+            "daily_total_water_use": {
+                "name": "Daglig total vattenanv\u00e4ndning"
+            },
+            "next_cycle": {
+                "name": "N\u00e4sta cykel"
+            },
+            "watering_time": {
+                "name": "\u00c5terst\u00e5ende bevattningstid"
+            }
+        },
+        "switch": {
+            "auto_watering": {
+                "name": "Automatisk bevattning"
+            },
+            "manual_watering": {
+                "name": "Manuell bevattning"
+            }
+        }
+    },
+    "services": {
+        "resume": {
+            "description": "\u00c5terupptar en bevattningszons automatiska bevattningsschema.",
+            "name": "\u00c5teruppta automatisk bevattning"
+        },
+        "start_watering": {
+            "description": "Startar en bevattningscykel i den valda bevattningszonen.",
+            "fields": {
+                "duration": {
+                    "description": "Tidsperiod f\u00f6r att k\u00f6ra bevattningscykeln. Om detta inte anges (eller om v\u00e4rdet \u00e4r noll) anv\u00e4nds den standardtid f\u00f6r bevattning som st\u00e4llts in i Hydrawise mobil- eller webbapp f\u00f6r bevattningszonen.",
+                    "name": "Varaktighet"
+                }
+            },
+            "name": "B\u00f6rja vattna"
+        },
+        "suspend": {
+            "description": "Avbryter en bevattningszons automatiska bevattningsschema fram till angivet datum och klockslag.",
+            "fields": {
+                "until": {
+                    "description": "Datum och tid f\u00f6r att \u00e5teruppta det automatiska bevattningsschemat.",
+                    "name": "Fram till"
+                }
+            },
+            "name": "St\u00e4ng av automatisk bevattning"
+        }
+    }
+}

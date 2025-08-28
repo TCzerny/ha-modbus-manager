@@ -1,0 +1,102 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Zoznam \u00faloh"
+        }
+    },
+    "exceptions": {
+        "item_not_found": {
+            "message": "Nie je mo\u017en\u00e9 n\u00e1js\u0165 polo\u017eku zoznamu \u00faloh: {item}"
+        },
+        "update_field_not_supported": {
+            "message": "Entita nepodporuje pole nastavenia: {service_field}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Dokon\u010den\u00e9",
+                "needs_action": "Nedokon\u010den\u00e9"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "description": "Prid\u00e1 nov\u00fa polo\u017eku zoznamu \u00faloh.",
+            "fields": {
+                "description": {
+                    "description": "\u00daplnej\u0161\u00ed opis polo\u017eky \u00falohy, ne\u017e ak\u00fd poskytuje n\u00e1zov polo\u017eky.",
+                    "name": "Popis"
+                },
+                "due_date": {
+                    "description": "D\u00e1tum, kedy sa o\u010dak\u00e1va dokon\u010denie \u00falohy.",
+                    "name": "D\u00e1tum splatnosti"
+                },
+                "due_datetime": {
+                    "description": "D\u00e1tum a \u010das, kedy sa m\u00e1 polo\u017eka \u00falohy dokon\u010di\u0165.",
+                    "name": "D\u00e1tum a \u010das splatnosti"
+                },
+                "item": {
+                    "description": "N\u00e1zov, ktor\u00fd predstavuje polo\u017eku \u00falohy.",
+                    "name": "N\u00e1zov polo\u017eky"
+                }
+            },
+            "name": "Prida\u0165 polo\u017eku"
+        },
+        "get_items": {
+            "description": "Z\u00edska polo\u017eky na zozname \u00faloh.",
+            "fields": {
+                "status": {
+                    "description": "Vr\u00e1ti len polo\u017eky \u00faloh so zadan\u00fdmi stavmi. Predvolene vracia nedokon\u010den\u00e9 akcie.",
+                    "name": "Stav"
+                }
+            },
+            "name": "Z\u00edska\u0165 polo\u017eky"
+        },
+        "remove_completed_items": {
+            "description": "Odstr\u00e1ni v\u0161etky polo\u017eky zoznamu \u00faloh, ktor\u00e9 boli dokon\u010den\u00e9.",
+            "name": "Odstr\u00e1nenie dokon\u010den\u00fdch polo\u017eiek"
+        },
+        "remove_item": {
+            "description": "Odstr\u00e1ni existuj\u00facu polo\u017eku zoznamu \u00faloh pod\u013ea jej n\u00e1zvu.",
+            "fields": {
+                "item": {
+                    "description": "N\u00e1zov polo\u017eky zoznamu \u00faloh.",
+                    "name": "N\u00e1zov polo\u017eky"
+                }
+            },
+            "name": "Odstr\u00e1ni\u0165 polo\u017eku"
+        },
+        "update_item": {
+            "description": "Aktualizuje existuj\u00facu polo\u017eku zoznamu \u00faloh na z\u00e1klade jej n\u00e1zvu.",
+            "fields": {
+                "description": {
+                    "description": "\u00daplnej\u0161\u00ed opis polo\u017eky \u00falohy, ne\u017e ak\u00fd poskytuje n\u00e1zov polo\u017eky.",
+                    "name": "Popis"
+                },
+                "due_date": {
+                    "description": "D\u00e1tum, kedy sa o\u010dak\u00e1va dokon\u010denie \u00falohy.",
+                    "name": "D\u00e1tum splatnosti"
+                },
+                "due_datetime": {
+                    "description": "D\u00e1tum a \u010das, kedy sa m\u00e1 polo\u017eka \u00falohy dokon\u010di\u0165.",
+                    "name": "D\u00e1tum a \u010das splatnosti"
+                },
+                "item": {
+                    "description": "Aktu\u00e1lny n\u00e1zov polo\u017eky \u00falohy.",
+                    "name": "N\u00e1zov polo\u017eky"
+                },
+                "rename": {
+                    "description": "Nov\u00fd n\u00e1zov polo\u017eky \u00falohy",
+                    "name": "Premenova\u0165 polo\u017eku"
+                },
+                "status": {
+                    "description": "Stav alebo potvrdenie polo\u017eky zoznamu \u00faloh.",
+                    "name": "Nastavi\u0165 stav"
+                }
+            },
+            "name": "Aktualiz\u00e1cia polo\u017eky"
+        }
+    },
+    "title": "Zoznam \u00faloh"
+}

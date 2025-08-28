@@ -1,0 +1,163 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "invalid_auth": "\u00c9rv\u00e9nytelen hiteles\u00edt\u00e9s",
+            "invalid_host": "A c\u00edm bejegyz\u00e9se nem volt teljes URL-form\u00e1tumban, p\u00e9ld\u00e1ul: http://192.168.10.100:80",
+            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Jelsz\u00f3",
+                    "username": "Felhaszn\u00e1l\u00f3n\u00e9v"
+                },
+                "description": "{host} hiteles\u00edt\u0151 adatai m\u00e1r nem \u00e9rv\u00e9nyesek.",
+                "title": "ISY \u00fajrahiteles\u00edt\u00e9se"
+            },
+            "user": {
+                "data": {
+                    "host": "URL",
+                    "password": "Jelsz\u00f3",
+                    "tls": "Az ISY vez\u00e9rl\u0151 TLS verzi\u00f3ja.",
+                    "username": "Felhaszn\u00e1l\u00f3n\u00e9v"
+                },
+                "description": "A c\u00edm bejegyz\u00e9s\u00e9nek teljes URL form\u00e1tumban kell lennie, pl. http://192.168.10.100:80",
+                "title": "Csatlakozzon az ISY-hez"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignore_string": "Karakterl\u00e1nc figyelmen k\u00edv\u00fcl hagy\u00e1sa",
+                    "restore_light_state": "F\u00e9nyer\u0151 vissza\u00e1ll\u00edt\u00e1sa",
+                    "sensor_string": "Csom\u00f3pont \u00e9rz\u00e9kel\u0151 karakterl\u00e1nc",
+                    "variable_sensor_string": "V\u00e1ltoz\u00f3 \u00e9rz\u00e9kel\u0151 karakterl\u00e1nc"
+                },
+                "title": "ISY be\u00e1ll\u00edt\u00e1sok"
+            }
+        }
+    },
+    "services": {
+        "delete_zwave_lock_user_code": {
+            "fields": {
+                "user_num": {
+                    "description": "A z\u00e1rfelhaszn\u00e1l\u00f3 hely (slot) sz\u00e1ma.",
+                    "name": "Felhaszn\u00e1l\u00f3 sz\u00e1ma"
+                }
+            }
+        },
+        "get_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "Az eszk\u00f6zb\u0151l lek\u00e9rdezend\u0151 param\u00e9ter sz\u00e1ma.",
+                    "name": "Param\u00e9ter"
+                }
+            },
+            "name": "Z-Wave param\u00e9terek lek\u00e9rdez\u00e9se"
+        },
+        "rename_node": {
+            "fields": {
+                "name": {
+                    "description": "Az ISY-n bel\u00fcl haszn\u00e1land\u00f3 \u00faj n\u00e9v.",
+                    "name": "\u00daj n\u00e9v"
+                }
+            }
+        },
+        "send_node_command": {
+            "fields": {
+                "command": {
+                    "description": "Az eszk\u00f6znek k\u00fcldend\u0151 parancs.",
+                    "name": "Parancs"
+                }
+            },
+            "name": "Csom\u00f3pont parancs k\u00fcld\u00e9se"
+        },
+        "send_program_command": {
+            "description": "Parancsot k\u00fcld egy ISY program vagy mappa vez\u00e9rl\u00e9s\u00e9re. Az \u00e9rv\u00e9nyes parancsok a k\u00f6vetkez\u0151k: run, run_then, run_else, stop, enable, disable, enable_run_at_startup \u00e9s disable_run_at_startup.",
+            "fields": {
+                "address": {
+                    "description": "A program vez\u00e9rl\u00e9s\u00e9hez haszn\u00e1lt c\u00edm (haszn\u00e1ljon c\u00edmet vagy nevet).",
+                    "name": "C\u00edm"
+                },
+                "command": {
+                    "description": "Az elk\u00fcldend\u0151 ISY programparancs.",
+                    "name": "Parancs"
+                },
+                "isy": {
+                    "description": "Ha t\u00f6bb mint egy ISY-vel rendelkezik, adja meg az ISY nev\u00e9t, amelyet lek\u00e9rdezni szeretne (ahogy az az eszk\u00f6znyilv\u00e1ntart\u00e1sban vagy az ISY Admin Konzol legfels\u0151 csom\u00f3pontj\u00e1ban l\u00e1that\u00f3). Ha ugyanaz a programn\u00e9v vagy c\u00edm szerepel t\u00f6bb ISY-n, ennek elhagy\u00e1sa eset\u00e9n az \u00f6sszesen futtatja a parancsot.",
+                    "name": "ISY"
+                },
+                "name": {
+                    "description": "Az ir\u00e1ny\u00edtand\u00f3 program neve (haszn\u00e1ljon c\u00edmet vagy nevet).",
+                    "name": "Elnevez\u00e9s"
+                }
+            },
+            "name": "Programparancs k\u00fcld\u00e9se"
+        },
+        "send_raw_node_command": {
+            "description": "\u00c1ll\u00edtsa be az ISY integr\u00e1ci\u00f3 be\u00e1ll\u00edt\u00e1sait:\n \u2022 Csom\u00f3pont \u00e9rz\u00e9kel\u0151 karakterl\u00e1nc: B\u00e1rmely eszk\u00f6z vagy mappa, amelynek nev\u00e9ben \u201eNode Sensor String\u201d szerepel, \u00e9rz\u00e9kel\u0151k\u00e9nt vagy bin\u00e1ris \u00e9rz\u00e9kel\u0151k\u00e9nt lesz kezelve.\n \u2022 Karakterl\u00e1nc figyelmen k\u00edv\u00fcl hagy\u00e1sa: Minden olyan eszk\u00f6z, amelynek nev\u00e9ben \u201eIgnore String\u201d szerepel, figyelmen k\u00edv\u00fcl lesz hagyva.\n \u2022 V\u00e1ltoz\u00f3 \u00e9rz\u00e9kel\u0151 karakterl\u00e1nc: B\u00e1rmely v\u00e1ltoz\u00f3, amely tartalmazza a \u201eVariable Sensor String\u201d sz\u00f6veget, hozz\u00e1ad\u00f3dik \u00e9rz\u00e9kel\u0151k\u00e9nt.\n \u2022 F\u00e9nyer\u0151ss\u00e9g vissza\u00e1ll\u00edt\u00e1sa: Ha enged\u00e9lyezve van, akkor az el\u0151z\u0151 f\u00e9nyer\u0151 vissza\u00e1ll a f\u00e9ny bekapcsol\u00e1sakor figyelmen k\u00edv\u00fcl hagyva az eszk\u00f6zben l\u00e9v\u0151 On-Level \u00e9rt\u00e9ket.",
+            "fields": {
+                "command": {
+                    "name": "Parancs"
+                },
+                "parameters": {
+                    "description": "Egy param\u00e9terekb\u0151l \u00e1ll\u00f3 sz\u00f3t\u00e1r, amelyet a lek\u00e9rdez\u00e9si karakterl\u00e1ncban kell elk\u00fcldeni (p\u00e9ld\u00e1ul sz\u00ednes izz\u00f3k vez\u00e9rl\u00e9s\u00e9hez).",
+                    "name": "Param\u00e9terek"
+                },
+                "unit_of_measurement": {
+                    "name": "M\u00e9rt\u00e9kegys\u00e9g"
+                },
+                "value": {
+                    "description": "A parancsban k\u00fcldend\u0151 eg\u00e9sz sz\u00e1m \u00e9rt\u00e9k.",
+                    "name": "\u00c9rt\u00e9k"
+                }
+            },
+            "name": "Nyers csom\u00f3pont parancs k\u00fcld\u00e9se"
+        },
+        "set_zwave_lock_user_code": {
+            "fields": {
+                "code": {
+                    "description": "A felhaszn\u00e1l\u00f3nak be\u00e1ll\u00edtand\u00f3 k\u00f3d.",
+                    "name": "K\u00f3d"
+                },
+                "user_num": {
+                    "description": "A z\u00e1rfelhaszn\u00e1l\u00f3 hely (slot) sz\u00e1ma.",
+                    "name": "Felhaszn\u00e1l\u00f3 sz\u00e1ma"
+                }
+            }
+        },
+        "set_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "A param\u00e9ter sz\u00e1m be\u00e1ll\u00edt\u00e1sa a v\u00e9gberendez\u00e9sen.",
+                    "name": "Param\u00e9ter"
+                },
+                "size": {
+                    "description": "A param\u00e9ter m\u00e9rete, lehet 1, 2 vagy 4 b\u00e1jt.",
+                    "name": "M\u00e9ret"
+                },
+                "value": {
+                    "description": "A param\u00e9ter be\u00e1ll\u00edt\u00e1s\u00e1hoz haszn\u00e1lt \u00e9rt\u00e9k. Lehet eg\u00e9sz sz\u00e1m vagy b\u00e1jt string (pl. \"0xFFFF\").",
+                    "name": "\u00c9rt\u00e9k"
+                }
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "device_connected": "ISY csatlakoztatva",
+            "host_reachable": "Hoszt el\u00e9rhet\u0151",
+            "last_heartbeat": "Utols\u00f3 sz\u00edvver\u00e9s ideje",
+            "websocket_status": "Esem\u00e9ny kapcsolati \u00e1llapota"
+        }
+    }
+}

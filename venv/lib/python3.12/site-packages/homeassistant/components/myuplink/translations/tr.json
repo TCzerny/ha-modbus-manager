@@ -1,0 +1,66 @@
+{
+    "application_credentials": {
+        "description": "Home Assistant'\u0131n myUplink hesab\u0131n\u0131za eri\u015fmesine izin vermek i\u00e7in [talimatlar\u0131]( {more_info_url} ) izleyin. Ayr\u0131ca hesab\u0131n\u0131za ba\u011fl\u0131 uygulama kimlik bilgileri olu\u015fturman\u0131z gerekir: \n 1. [myUplink geli\u015ftirici sitesindeki Uygulamalar]( {create_creds_url} )'a gidin ve mevcut bir uygulamadan kimlik bilgileri al\u0131n veya **Yeni Uygulama Olu\u015ftur**'u se\u00e7in. \n 1. Uygun Uygulama ad\u0131n\u0131 ve A\u00e7\u0131klamay\u0131 ayarlay\u0131n \n 1. Geri Arama URL'si olarak ` {callback_url} ` girin"
+    },
+    "config": {
+        "abort": {
+            "account_mismatch": "Kullan\u0131lan hesap orijinal hesapla e\u015fle\u015fmiyor",
+            "already_configured": "Hesap zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "already_in_progress": "Yap\u0131land\u0131rma ak\u0131\u015f\u0131 zaten devam ediyor",
+            "authorize_url_timeout": "Yetkilendirme URL'si olu\u015ftururken zaman a\u015f\u0131m\u0131.",
+            "missing_configuration": "Bile\u015fen yap\u0131land\u0131r\u0131lmam\u0131\u015f. L\u00fctfen belgeleri takip edin.",
+            "no_url_available": "Kullan\u0131labilir URL yok. Bu hata hakk\u0131nda bilgi i\u00e7in [yard\u0131m b\u00f6l\u00fcm\u00fcne bak\u0131n]({docs_url})",
+            "oauth_error": "Ge\u00e7ersiz anahtar verileri al\u0131nd\u0131.",
+            "oauth_failed": "Eri\u015fim anahtar\u0131 al\u0131n\u0131rken hata olu\u015ftu.",
+            "oauth_timeout": "OAuth anahtar\u0131n\u0131 \u00e7\u00f6zme zaman a\u015f\u0131m\u0131.",
+            "oauth_unauthorized": "Eri\u015fim anahtar\u0131 al\u0131n\u0131rken OAuth yetkilendirme hatas\u0131.",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu",
+            "reconfigure_successful": "Yeniden yap\u0131land\u0131rma ba\u015far\u0131l\u0131 oldu",
+            "user_rejected_authorize": "Hesap ba\u011flama reddedildi: {error}"
+        },
+        "create_entry": {
+            "default": "Ba\u015far\u0131yla do\u011fruland\u0131"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Kimlik do\u011frulama y\u00f6ntemini se\u00e7"
+            },
+            "reauth_confirm": {
+                "description": "myUplink entegrasyonunun hesab\u0131n\u0131z\u0131 yeniden do\u011frulamas\u0131 gerekiyor",
+                "title": "{name} i\u00e7in kimlik do\u011frulaman\u0131n s\u00fcresi doldu"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "alarm": {
+                "name": "Alarm"
+            }
+        },
+        "sensor": {
+            "status": {
+                "name": "Durum"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_auth_failed": {
+            "message": "API'ye giri\u015f yaparken hata olu\u015ftu. L\u00fctfen kimlik bilgilerinizi kontrol edin."
+        },
+        "config_entry_not_ready": {
+            "message": "Entegrasyon y\u00fcklenirken hata olu\u015ftu."
+        },
+        "incorrect_oauth2_scope": {
+            "message": "Saklanan izinler ge\u00e7ersiz. L\u00fctfen izinleri g\u00fcncellemek i\u00e7in tekrar giri\u015f yap\u0131n."
+        },
+        "set_number_error": {
+            "message": "{point} / {entity} i\u00e7in yeni de\u011fer {value} ayarlanamad\u0131."
+        },
+        "set_select_error": {
+            "message": "{point} / {entity} i\u00e7in yeni se\u00e7enek {option} ayarlanamad\u0131."
+        },
+        "set_switch_error": {
+            "message": "{entity} i\u00e7in durum ayarlanamad\u0131."
+        }
+    }
+}

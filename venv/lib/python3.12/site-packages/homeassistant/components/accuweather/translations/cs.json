@@ -1,0 +1,231 @@
+{
+    "config": {
+        "create_entry": {
+            "default": "N\u011bkter\u00e9 senzory nejsou ve v\u00fdchoz\u00edm nastaven\u00ed povoleny. M\u016f\u017eete je povolit po nastaven\u00ed integrace v registru entit."
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "invalid_api_key": "Neplatn\u00fd kl\u00ed\u010d API",
+            "requests_exceeded": "Byl p\u0159ekro\u010den povolen\u00fd po\u010det po\u017eadavk\u016f pro API Accuweather. Mus\u00edte po\u010dkat nebo zm\u011bnit kl\u00ed\u010d API."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "Kl\u00ed\u010d API",
+                    "latitude": "Zem\u011bpisn\u00e1 \u0161\u00ed\u0159ka",
+                    "longitude": "Zem\u011bpisn\u00e1 d\u00e9lka",
+                    "name": "N\u00e1zev"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "air_quality": {
+                "name": "Kvalita ovzdu\u0161\u00ed ve dne: {forecast_day}",
+                "state": {
+                    "good": "Dobr\u00e1",
+                    "hazardous": "Nebezpe\u010dn\u00e1",
+                    "high": "Vysok\u00e1",
+                    "low": "N\u00edzk\u00e1",
+                    "moderate": "St\u0159edn\u00ed",
+                    "unhealthy": "Nezdrav\u00e1"
+                }
+            },
+            "apparent_temperature": {
+                "name": "Zd\u00e1nliv\u00e1 teplota"
+            },
+            "cloud_ceiling": {
+                "name": "Strop z mrak\u016f"
+            },
+            "cloud_cover": {
+                "name": "Obla\u010dnost"
+            },
+            "cloud_cover_day": {
+                "name": "Obla\u010dnost ve dne: {forecast_day}"
+            },
+            "cloud_cover_night": {
+                "name": "Obla\u010dnost v noci: {forecast_day}"
+            },
+            "condition_day": {
+                "name": "Podm\u00ednky ve dne: {forecast_day}"
+            },
+            "condition_night": {
+                "name": "Podm\u00ednky v noc: {forecast_day}"
+            },
+            "dew_point": {
+                "name": "Rosn\u00fd bod"
+            },
+            "grass_pollen": {
+                "name": "Pyly trav ve dne: {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "\u00darove\u0148",
+                        "state": {
+                            "good": "Dobr\u00e1",
+                            "hazardous": "Nebezpe\u010dn\u00e1",
+                            "high": "Vysok\u00e1",
+                            "low": "N\u00edzk\u00e1",
+                            "moderate": "St\u0159edn\u00ed",
+                            "unhealthy": "Nezdrav\u00e1"
+                        }
+                    }
+                }
+            },
+            "hours_of_sun": {
+                "name": "Hodiny slune\u010dn\u00edho svitu ve dne: {forecast_day}"
+            },
+            "mold_pollen": {
+                "name": "Spory pl\u00edsn\u00ed ve dne: {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "\u00darove\u0148",
+                        "state": {
+                            "good": "Dobr\u00e1",
+                            "hazardous": "Nebezpe\u010dn\u00e1",
+                            "high": "Vysok\u00e1",
+                            "low": "N\u00edzk\u00e1",
+                            "moderate": "St\u0159edn\u00ed",
+                            "unhealthy": "Nezdrav\u00e1"
+                        }
+                    }
+                }
+            },
+            "precipitation": {
+                "name": "Sr\u00e1\u017eky"
+            },
+            "pressure_tendency": {
+                "name": "Tlakov\u00e1 tendence",
+                "state": {
+                    "falling": "Klesaj\u00edc\u00ed",
+                    "rising": "Stoupaj\u00edc\u00ed",
+                    "steady": "Stabiln\u00ed"
+                }
+            },
+            "ragweed_pollen": {
+                "name": "Pyly ambr\u00f3zie ve dne: {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "\u00darove\u0148",
+                        "state": {
+                            "good": "Dobr\u00e1",
+                            "hazardous": "Nebezpe\u010dn\u00e1",
+                            "high": "Vysok\u00e1",
+                            "low": "N\u00edzk\u00e1",
+                            "moderate": "St\u0159edn\u00ed",
+                            "unhealthy": "Nezdrav\u00e1"
+                        }
+                    }
+                }
+            },
+            "realfeel_temperature": {
+                "name": "Pocitov\u00e1 teplota"
+            },
+            "realfeel_temperature_max": {
+                "name": "Maxim\u00e1ln\u00ed pocitov\u00e1 teplota ve dne: {forecast_day}"
+            },
+            "realfeel_temperature_min": {
+                "name": "Minim\u00e1ln\u00ed pocitov\u00e1 teplota ve dne: {forecast_day}"
+            },
+            "realfeel_temperature_shade": {
+                "name": "Pocitov\u00e1 teplota ve st\u00ednu dnes"
+            },
+            "realfeel_temperature_shade_max": {
+                "name": "Maxim\u00e1ln\u00ed pocitov\u00e1 teplota ve st\u00ednu ve dne: {forecast_day}"
+            },
+            "realfeel_temperature_shade_min": {
+                "name": "Minim\u00e1ln\u00ed pocitov\u00e1 teplota ve st\u00ednu ve dne: {forecast_day}"
+            },
+            "solar_irradiance_day": {
+                "name": "Slune\u010dn\u00ed z\u00e1\u0159en\u00ed ve dne: {forecast_day}"
+            },
+            "solar_irradiance_night": {
+                "name": "Slune\u010dn\u00ed z\u00e1\u0159en\u00ed v noci: {forecast_day}"
+            },
+            "thunderstorm_probability_day": {
+                "name": "Pravd\u011bpodobnost bou\u0159ky ve dne: {forecast_day}"
+            },
+            "thunderstorm_probability_night": {
+                "name": "Pravd\u011bpodobnost bou\u0159ky v noci: {forecast_day}"
+            },
+            "tree_pollen": {
+                "name": "Pyly strom\u016f ve dne: {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "\u00darove\u0148",
+                        "state": {
+                            "good": "Dobr\u00e1",
+                            "hazardous": "Nebezpe\u010dn\u00e1",
+                            "high": "Vysok\u00e1",
+                            "low": "N\u00edzk\u00e1",
+                            "moderate": "St\u0159edn\u00ed",
+                            "unhealthy": "Nezdrav\u00e1"
+                        }
+                    }
+                }
+            },
+            "uv_index": {
+                "name": "UV index",
+                "state_attributes": {
+                    "level": {
+                        "name": "\u00darove\u0148",
+                        "state": {
+                            "good": "Dobr\u00e1",
+                            "hazardous": "Nebezpe\u010dn\u00e1",
+                            "high": "Vysok\u00e1",
+                            "low": "N\u00edzk\u00e1",
+                            "moderate": "St\u0159edn\u00ed",
+                            "unhealthy": "Nezdrav\u00e1"
+                        }
+                    }
+                }
+            },
+            "uv_index_forecast": {
+                "name": "UV index ve dne: {forecast_day}",
+                "state_attributes": {
+                    "level": {
+                        "name": "\u00darove\u0148",
+                        "state": {
+                            "good": "Dobr\u00e1",
+                            "hazardous": "Nebezpe\u010dn\u00e1",
+                            "high": "Vysok\u00e1",
+                            "low": "N\u00edzk\u00e1",
+                            "moderate": "St\u0159edn\u00ed",
+                            "unhealthy": "Nezdrav\u00e1"
+                        }
+                    }
+                }
+            },
+            "wet_bulb_temperature": {
+                "name": "Teplota vlhk\u00e9 \u017e\u00e1rovky"
+            },
+            "wind_chill_temperature": {
+                "name": "Teplota chladu v\u011btru"
+            },
+            "wind_gust_speed": {
+                "name": "Rychlost n\u00e1razov\u00e9ho v\u011btru"
+            },
+            "wind_gust_speed_day": {
+                "name": "Rychlost n\u00e1razov\u00e9ho v\u011btru ve dne: {forecast_day}"
+            },
+            "wind_gust_speed_night": {
+                "name": "Rychlost n\u00e1razov\u00e9ho v\u011btru v noci: {forecast_day}"
+            },
+            "wind_speed": {
+                "name": "Rychlost v\u011btru"
+            },
+            "wind_speed_day": {
+                "name": "Rychlost v\u011btru ve dne: {forecast_day}"
+            },
+            "wind_speed_night": {
+                "name": "Rychlost v\u011btru v noci: {forecast_day}"
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "can_reach_server": "Lze kontaktovat AccuWeather server",
+            "remaining_requests": "Zb\u00fdvaj\u00edc\u00ed povolen\u00e9 po\u017eadavky"
+        }
+    }
+}

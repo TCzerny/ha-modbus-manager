@@ -1,0 +1,123 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Tj\u00e4nsten \u00e4r redan konfigurerad",
+            "bad_config": "Beg\u00e4ran misslyckades p\u00e5 grund av felaktig konfiguration: Kontrollera [stationboard]({stationboard_url}) f\u00f6r giltiga stationer.",
+            "cannot_connect": "Kan inte ansluta till servern",
+            "unknown": "Ett ok\u00e4nt fel uppstod av python-opendata-transport"
+        },
+        "error": {
+            "bad_config": "Beg\u00e4ran misslyckades p\u00e5 grund av felaktig konfiguration: Kontrollera vid [stationboard]({stationboard_url}) om dina stationsnamn \u00e4r giltiga",
+            "cannot_connect": "Kan inte ansluta till servern",
+            "too_many_via_stations": "F\u00f6r m\u00e5nga via-stationer, endast upp till 5 via-stationer \u00e4r till\u00e5tna per anslutning.",
+            "unknown": "Ett ok\u00e4nt fel uppstod av python-opendata-transport"
+        },
+        "step": {
+            "time_fixed": {
+                "data": {
+                    "time_fixed": "Tid p\u00e5 dygnet"
+                },
+                "description": "V\u00e4lj den relevanta tiden f\u00f6r anslutningen (t.ex. 7:12:00 varje morgon).",
+                "title": "Schweiz Kollektivtrafik"
+            },
+            "time_offset": {
+                "data": {
+                    "time_offset": "Tidsf\u00f6rskjutning"
+                },
+                "description": "V\u00e4lj relevant offset f\u00f6r att l\u00e4gga till den tidigaste m\u00f6jliga anslutningen (t.ex. l\u00e4gg till +00:05:00 offset, med h\u00e4nsyn till tiden det tar att g\u00e5 till stationen)",
+                "title": "Schweiz Kollektivtrafik"
+            },
+            "user": {
+                "data": {
+                    "from": "Startstation",
+                    "time_mode": "V\u00e4lj ett tidsl\u00e4ge",
+                    "time_station": "V\u00e4lj den relevanta stationen",
+                    "to": "Slutstation",
+                    "via": "Via stationer"
+                },
+                "data_description": {
+                    "time_mode": "I tidsl\u00e4get kan du \u00e4ndra avg\u00e5ngstiden och fixera den till en specifik tid (t.ex. 7:12:00 varje morgon) eller l\u00e4gga till en r\u00f6rlig f\u00f6rskjutning (t.ex. +00:05:00 med h\u00e4nsyn till tiden det tar att g\u00e5 till stationen).",
+                    "time_station": "Vanligtvis sp\u00e5ras avg\u00e5ngstiden f\u00f6r en f\u00f6rbindelse n\u00e4r den l\u00e4mnar startstationen. Alternativt kan du sp\u00e5ra tiden n\u00e4r anslutningen anl\u00e4nder till sin slutstation."
+                },
+                "description": "Ange start- och slutstation f\u00f6r din anslutning,\noch som tillval upp till 5 via-stationer.\n\nKontrollera [stationboard]({stationboard_url}) f\u00f6r giltiga stationer.",
+                "title": "Swiss Public Transport"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delay": {
+                "name": "F\u00f6rdr\u00f6jning"
+            },
+            "departure0": {
+                "name": "Avg\u00e5ng"
+            },
+            "departure1": {
+                "name": "Avg\u00e5ng +1"
+            },
+            "departure2": {
+                "name": "Avg\u00e5ng +2"
+            },
+            "duration": {
+                "name": "Varaktighet"
+            },
+            "line": {
+                "name": "Linje"
+            },
+            "platform": {
+                "name": "Plattform"
+            },
+            "transfers": {
+                "name": "Byten"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Det g\u00e5r inte att ansluta till servern.\n{error}"
+        },
+        "config_entry_not_found": {
+            "message": "Swiss Public Transport integrationsinstans \"{target}\" hittades inte."
+        },
+        "invalid_data": {
+            "message": "Konfigurationen misslyckades f\u00f6r posten {config_title} med ogiltiga data, kontrollera p\u00e5 [stationboard]( {stationboard_url} ) om dina stationsnamn \u00e4r giltiga.\n {error}"
+        },
+        "not_loaded": {
+            "message": "{target} \u00e4r inte laddad."
+        },
+        "request_timeout": {
+            "message": "Timeout vid anslutning f\u00f6r post {config_title}.\n{error}"
+        }
+    },
+    "selector": {
+        "time_mode": {
+            "options": {
+                "fixed": "Vid en best\u00e4md tid p\u00e5 dagen",
+                "now": "Nu",
+                "offset": "Med en offset fr\u00e5n nu"
+            }
+        },
+        "time_station": {
+            "options": {
+                "arrival": "Visa ankomsttid vid slutstation",
+                "departure": "Visa avg\u00e5ngstid fr\u00e5n startstationen"
+            }
+        }
+    },
+    "services": {
+        "fetch_connections": {
+            "description": "H\u00e4mta en lista \u00f6ver anslutningar fr\u00e5n den schweiziska kollektivtrafiken.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Swiss Public Transport-instans att h\u00e4mta anslutningar f\u00f6r.",
+                    "name": "Instans"
+                },
+                "limit": {
+                    "description": "Antal anslutningar att h\u00e4mta fr\u00e5n [1-15]",
+                    "name": "Begr\u00e4nsa"
+                }
+            },
+            "name": "H\u00e4mta anslutningar"
+        }
+    }
+}

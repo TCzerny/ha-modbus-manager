@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Paslauga jau sukonfig\u016bruota",
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_api_key": "Neteisingas API raktas"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API raktas",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "SABnzbd serverio API raktas. Tai galima rasti SABnzbd \u017einiatinklio s\u0105sajos dalyje Config cog (vir\u0161uje de\u0161in\u0117je) > Bendra > Sauga.",
+                    "url": "Visas SABnzbd serverio URL, \u012fskaitant prievad\u0105. Pavyzdys: \u201ehttp://localhost:8080\u201c arba \u201ehttp://a02368d7-sabnzbd:8080\u201c, jei naudojate pried\u0105."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "warnings": {
+                "name": "\u012esp\u0117jimai"
+            }
+        },
+        "button": {
+            "pause": {
+                "name": "Pauz\u0117"
+            },
+            "resume": {
+                "name": "T\u0119sti"
+            }
+        },
+        "number": {
+            "speedlimit": {
+                "name": "Grei\u010dio apribojimas"
+            }
+        },
+        "sensor": {
+            "daily_total": {
+                "name": "I\u0161 viso per dien\u0105"
+            },
+            "free_disk_space": {
+                "name": "Laisvos vietos diske"
+            },
+            "left": {
+                "name": "Liko atsisi\u0173sti"
+            },
+            "monthly_total": {
+                "name": "I\u0161 viso per m\u0117nes\u012f"
+            },
+            "overall_total": {
+                "name": "Bendra suma"
+            },
+            "queue": {
+                "name": "Eil\u0117"
+            },
+            "queue_count": {
+                "name": "Eili\u0173 skai\u010dius"
+            },
+            "speed": {
+                "name": "Greitis"
+            },
+            "status": {
+                "name": "B\u016bsena"
+            },
+            "total_disk_space": {
+                "name": "Bendra vieta diske"
+            },
+            "weekly_total": {
+                "name": "I\u0161 viso per savait\u0119"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_exception": {
+            "message": "Nepavyko i\u0161si\u0173sti komandos SABnzbd d\u0117l ry\u0161io klaidos, bandykite dar kart\u0105 v\u0117liau"
+        }
+    },
+    "issues": {
+        "pause_action_deprecated": {
+            "description": "Veiksmas \u201ePristabdyti\u201c nebenaudojamas ir bus pa\u0161alintas b\u016bsimoje versijoje. Vietoj to naudokite mygtuk\u0105 \u201ePristabdyti\u201c. Nor\u0117dami pa\u0161alinti \u0161i\u0105 problem\u0105, atitinkamai sureguliuokite automatizavim\u0105 ir i\u0161 naujo paleiskite nam\u0173 asistent\u0105.",
+            "title": "SABnzbd pristabdymo veiksmas nebenaudojamas"
+        },
+        "resume_action_deprecated": {
+            "description": "Veiksmas \u201eT\u0119sti\u201c nebenaudojamas ir bus pa\u0161alintas b\u016bsimoje versijoje. Vietoj to naudokite mygtuk\u0105 \u201eT\u0119sti\u201c. Nor\u0117dami pa\u0161alinti \u0161i\u0105 problem\u0105, atitinkamai sureguliuokite automatizavim\u0105 ir i\u0161 naujo paleiskite nam\u0173 asistent\u0105.",
+            "title": "SABnzbd t\u0119stinio veiksmo naudojimas nebenaudojamas"
+        },
+        "set_speed_action_deprecated": {
+            "description": "Veiksmas \u201eNustatyti greit\u012f\u201c nebenaudojamas ir bus pa\u0161alintas b\u016bsimoje versijoje. Vietoj to naudokite numerio element\u0105 \u201eGrei\u010dio apribojimas\u201c. Nor\u0117dami pa\u0161alinti \u0161i\u0105 problem\u0105, atitinkamai sureguliuokite automatizavim\u0105 ir i\u0161 naujo paleiskite nam\u0173 asistent\u0105.",
+            "title": "SABnzbd set_speed veiksmas nebenaudojamas"
+        }
+    },
+    "services": {
+        "pause": {
+            "description": "Pristabdo atsisiuntimus.",
+            "fields": {
+                "api_key": {
+                    "description": "SABnzbd API raktas, skirtas pristabdyti atsisiuntimus.",
+                    "name": "SABnzbd API raktas"
+                }
+            },
+            "name": "Pauz\u0117"
+        },
+        "resume": {
+            "description": "T\u0119sia atsisiuntimus.",
+            "fields": {
+                "api_key": {
+                    "description": "SABnzbd API raktas, skirtas t\u0119sti atsisiuntimus.",
+                    "name": "SABnzbd API raktas"
+                }
+            },
+            "name": "T\u0119sti"
+        },
+        "set_speed": {
+            "description": "Nustato atsisiuntimo grei\u010dio apribojim\u0105.",
+            "fields": {
+                "api_key": {
+                    "description": "SABnzbd API raktas grei\u010dio apribojimui nustatyti.",
+                    "name": "SABnzbd API raktas"
+                },
+                "speed": {
+                    "description": "Grei\u010dio apribojimas. Jei nurodomas skai\u010dius be vienet\u0173, jis bus interpretuojamas kaip procentas. Jei nurodyti vienetai (pvz., 500K), bus interpretuojamas absoliu\u010diai.",
+                    "name": "Greitis"
+                }
+            },
+            "name": "Nustatykite greit\u012f"
+        }
+    }
+}

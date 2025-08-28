@@ -1,0 +1,159 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "incorrect_api_key": "Ung\u00fcltiger API-Code f\u00fcr ausgew\u00e4hltes Konto",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "invalid_station": "Es konnte kein Bahnhof mit dem angegebenen Namen gefunden werden",
+            "more_stations": "Mehrere Bahnh\u00f6fe mit dem angegebenen Namen gefunden",
+            "no_trains": "Kein Zug gefunden"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "api_key": "API-Code"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API-Code",
+                    "filter_product": "Filtern nach Produktbeschreibung",
+                    "from": "Startbahnhof",
+                    "time": "Zeit (optional)",
+                    "to": "Zielbahnhof",
+                    "weekday": "Tage"
+                },
+                "data_description": {
+                    "filter_product": "Um nach Produktbeschreibung zu filtern, f\u00fcge hier den passenden Ausdruck ein",
+                    "time": "Stelle die Zeit ein, um gezielt zu dieser Uhrzeit zu suchen. Es muss sich dabei um die genaue Uhrzeit der geplanten Zugabfahrt handeln"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "actual_time": {
+                "name": "Genaue Uhrzeit",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "cancelled": {
+                "name": "Abgesagt",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "delayed_time": {
+                "name": "Versp\u00e4tete Zeit",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "departure_state": {
+                "name": "Abfahrtsstatus",
+                "state": {
+                    "canceled": "Abgesagt",
+                    "delayed": "Versp\u00e4tet",
+                    "on_time": "P\u00fcnktlich"
+                },
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "departure_time": {
+                "name": "Abfahrtszeit",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "departure_time_next": {
+                "name": "N\u00e4chste Abfahrtszeit",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "departure_time_next_next": {
+                "name": "N\u00e4chste Abfahrtszeit nach",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "deviation": {
+                "name": "Abweichung",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "estimated_time": {
+                "name": "Gesch\u00e4tzte Zeit",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "other_info": {
+                "name": "Andere Informationen",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            },
+            "planned_time": {
+                "name": "Geplante Zeit",
+                "state_attributes": {
+                    "product_filter": {
+                        "name": "Zugfilterung"
+                    }
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "filter_product": "Nach Produktbeschreibung filtern"
+                },
+                "data_description": {
+                    "filter_product": "Um nach Produktbeschreibung zu filtern, f\u00fcge hier die passende Phrase hinzu"
+                }
+            }
+        }
+    },
+    "selector": {
+        "weekday": {
+            "options": {
+                "fri": "Freitag",
+                "mon": "Montag",
+                "sat": "Samstag",
+                "sun": "Sonntag",
+                "thu": "Donnerstag",
+                "tue": "Dienstag",
+                "wed": "Mittwoch"
+            }
+        }
+    }
+}

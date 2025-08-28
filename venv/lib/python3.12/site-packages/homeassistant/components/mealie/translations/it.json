@@ -1,0 +1,84 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il servizio \u00e8 gi\u00e0 configurato",
+            "reauth_successful": "La riautenticazione ha avuto successo",
+            "reconfigure_successful": "La riconfigurazione \u00e8 stata completata con successo",
+            "wrong_account": "Devi usare lo stesso account che hai usato per configurare l'integrazione."
+        },
+        "error": {
+            "cannot_connect": "Impossibile connettersi",
+            "invalid_auth": "Autenticazione non valida",
+            "unknown": "Errore imprevisto"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "api_token": "Token API"
+                }
+            },
+            "reconfigure": {
+                "data": {
+                    "api_token": "Token API",
+                    "host": "URL",
+                    "verify_ssl": "Verifica il certificato SSL"
+                },
+                "description": "Si prega di riconfigurare con Mealie."
+            },
+            "user": {
+                "data": {
+                    "api_token": "Token API",
+                    "host": "URL",
+                    "verify_ssl": "Verifica il certificato SSL"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "item_not_found_error": {
+            "message": "Oggetto {shopping_list_item} non trovato."
+        }
+    },
+    "services": {
+        "get_mealplan": {
+            "fields": {
+                "config_entry_id": {
+                    "name": "Istanza Mealie"
+                }
+            }
+        },
+        "get_recipe": {
+            "fields": {
+                "config_entry_id": {
+                    "name": "Istanza Mealie"
+                }
+            }
+        },
+        "import_recipe": {
+            "fields": {
+                "config_entry_id": {
+                    "name": "Istanza Mealie"
+                }
+            }
+        },
+        "set_mealplan": {
+            "description": "Imposta un piano alimentare per una data specifica",
+            "fields": {
+                "config_entry_id": {
+                    "name": "Istanza Mealie"
+                },
+                "entry_type": {
+                    "description": "Il tipo di piatto su cui impostare la ricetta."
+                }
+            },
+            "name": "Imposta un piano alimentare"
+        },
+        "set_random_mealplan": {
+            "fields": {
+                "config_entry_id": {
+                    "name": "Istanza Mealie"
+                }
+            }
+        }
+    }
+}

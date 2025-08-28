@@ -1,0 +1,99 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Account is al geconfigureerd",
+            "reauth_successful": "Herauthenticatie geslaagd",
+            "reconfigure_successful": "Herconfiguratie was succesvol"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "invalid_auth": "Ongeldige authenticatie"
+        },
+        "step": {
+            "captcha": {
+                "data": {
+                    "captcha_token": "Captcha token"
+                },
+                "data_description": {
+                    "captcha_token": "Eenmalig token verkregen uit de captcha-uitdaging."
+                },
+                "description": "Voor BMW-login is een captcha vereist. Bezoek de externe website om de uitdaging te voltooien en het formulier in te dienen. Kopieer het resulterende token in het onderstaande veld. \n \n {captcha_url} \n \nEr worden geen gegevens openbaar gemaakt buiten je Home Assistant instantie.",
+                "title": "Ben jij een robot?"
+            },
+            "change_password": {
+                "data": {
+                    "password": "Wachtwoord"
+                },
+                "description": "Werk je MyBMW/MINI Connected-wachtwoord bij voor account `{username}` in regio `{region}`."
+            },
+            "user": {
+                "data": {
+                    "password": "Wachtwoord",
+                    "region": "ConnectedDrive-regio",
+                    "username": "Gebruikersnaam"
+                }
+            }
+        }
+    },
+    "entity": {
+        "lock": {
+            "lock": {
+                "name": "Slot"
+            }
+        },
+        "select": {
+            "charging_mode": {
+                "state": {
+                    "no_action": "Geen actie"
+                }
+            }
+        },
+        "sensor": {
+            "charging_status": {
+                "state": {
+                    "charging": "Opladen",
+                    "error": "Fout",
+                    "finished_fully_charged": "Klaar, vol",
+                    "finished_not_full": "Klaar, niet vol",
+                    "fully_charged": "Volledig opgeladen",
+                    "invalid": "Ongeldig",
+                    "not_charging": "Niet aan het opladen",
+                    "plugged_in": "Ingeplugd",
+                    "waiting_for_charging": "Wachten op opladen"
+                }
+            },
+            "climate_status": {
+                "name": "Klimaatstatus",
+                "state": {
+                    "cooling": "Koelen",
+                    "heating": "Verwarmen",
+                    "inactive": "Inactief",
+                    "standby": "Standby",
+                    "ventilation": "Ventilatie"
+                }
+            },
+            "mileage": {
+                "name": "Kilometerstand"
+            }
+        },
+        "switch": {
+            "charging": {
+                "name": "Opladen"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_auth": {
+            "message": "Ongeldige authenticatie"
+        }
+    },
+    "selector": {
+        "regions": {
+            "options": {
+                "china": "China",
+                "north_america": "Noord Amerika",
+                "rest_of_world": "Rest van de wereld"
+            }
+        }
+    }
+}

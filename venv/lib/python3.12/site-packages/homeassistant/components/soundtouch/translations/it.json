@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il dispositivo \u00e8 gi\u00e0 configurato"
+        },
+        "error": {
+            "cannot_connect": "Impossibile connettersi"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Il nome host o l'indirizzo IP del tuo dispositivo Bose SoundTouch."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Stai per aggiungere il dispositivo SoundTouch denominato `{name}` a Home Assistant.",
+                "title": "Conferma l'aggiunta del dispositivo Bose SoundTouch"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "fields": {
+                "slaves": {
+                    "name": "Secondari"
+                }
+            }
+        },
+        "create_zone": {
+            "description": "Crea una zona multiroom SoundTouch.",
+            "name": "Crea zona"
+        },
+        "play_everywhere": {
+            "description": "Riproduce su tutti i dispositivi Bose SoundTouch.",
+            "name": "Riproduci ovunque"
+        },
+        "remove_zone_slave": {
+            "fields": {
+                "master": {
+                    "description": "Nome dell'entit\u00e0 principale che coordina la zona multiroom. Dipendente dalla piattaforma."
+                },
+                "slaves": {
+                    "name": "Secondari"
+                }
+            }
+        }
+    }
+}

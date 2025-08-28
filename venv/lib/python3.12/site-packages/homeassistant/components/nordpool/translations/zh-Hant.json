@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "\u91cd\u65b0\u8a2d\u5b9a\u6210\u529f"
+        },
+        "error": {
+            "cannot_connect": "\u9023\u7dda\u5931\u6557",
+            "no_data": "API \u5df2\u9023\u63a5\u3001\u4f46\u56de\u61c9\u7a7a\u767d"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "\u5206\u5340",
+                    "currency": "\u8ca8\u5e63"
+                },
+                "data_description": {
+                    "areas": "\u6839\u64da Nordpool \u5e02\u5834\u5340\u57df\u986f\u793a\u50f9\u683c\u5340\u57df\u3002",
+                    "currency": "\u9078\u64c7\u986f\u793a\u50f9\u683c\u7684\u8ca8\u5e63\uff0c\u6b50\u5143\u70ba\u57fa\u790e\u8ca8\u5e63\u3002"
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "\u5206\u5340",
+                    "currency": "\u8ca8\u5e63"
+                },
+                "data_description": {
+                    "areas": "\u6839\u64da Nordpool \u5e02\u5834\u5340\u57df\u986f\u793a\u50f9\u683c\u5340\u57df\u3002",
+                    "currency": "\u9078\u64c7\u986f\u793a\u50f9\u683c\u7684\u8ca8\u5e63\uff0c\u6b50\u5143\u70ba\u57fa\u790e\u8ca8\u5e63\u3002"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} \u5e73\u5747"
+            },
+            "block_end_time": {
+                "name": "{block} \u6642\u9593\u81f3"
+            },
+            "block_max": {
+                "name": "{block} \u6700\u9ad8\u50f9"
+            },
+            "block_min": {
+                "name": "{block} \u6700\u4f4e\u50f9"
+            },
+            "block_start_time": {
+                "name": "{block} \u6642\u9593\u5f9e"
+            },
+            "currency": {
+                "name": "\u8ca8\u5e63"
+            },
+            "current_price": {
+                "name": "\u73fe\u50f9"
+            },
+            "daily_average": {
+                "name": "\u65e5\u5e73\u5747"
+            },
+            "exchange_rate": {
+                "name": "\u532f\u7387"
+            },
+            "highest_price": {
+                "name": "\u6700\u9ad8\u8cbb\u7387",
+                "state_attributes": {
+                    "end": {
+                        "name": "\u7d50\u675f\u6642\u9593"
+                    },
+                    "start": {
+                        "name": "\u958b\u59cb\u6642\u9593"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "\u524d\u4e00\u500b\u50f9\u683c"
+            },
+            "lowest_price": {
+                "name": "\u6700\u4f4e\u8cbb\u7387",
+                "state_attributes": {
+                    "end": {
+                        "name": "\u7d50\u675f\u6642\u9593"
+                    },
+                    "start": {
+                        "name": "\u958b\u59cb\u6642\u9593"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "\u4e0b\u4e00\u500b\u50f9\u683c"
+            },
+            "updated_at": {
+                "name": "\u6700\u5f8c\u66f4\u65b0"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "\u65bc\u5617\u8a66\u6aa2\u7d22\u904e\u53bb\u592a\u4e45\u8cc7\u6599\u6642\uff0c\u767c\u751f\u8eab\u4efd\u9a57\u8b49\u932f\u8aa4\u3002"
+        },
+        "connection_error": {
+            "message": "\u9023\u7dda\u81f3 API \u6642\u767c\u751f\u9023\u7dda\u932f\u8aa4\uff0c\u8acb\u7a0d\u5f8c\u518d\u8a66\u3002"
+        },
+        "empty_response": {
+            "message": "Nord Pool \u5c1a\u672a\u767c\u5e03\u6240\u63d0\u4f9b\u65e5\u671f\u7684\u5e02\u5834\u50f9\u683c\u3002"
+        },
+        "entry_not_found": {
+            "message": "\u5c1a\u672a\u65bc Home Assistant \u4e2d\u8a2d\u5b9a Nord Pool \u6574\u5408\u3002"
+        },
+        "entry_not_loaded": {
+            "message": "\u5c1a\u672a\u65bc Home Assistant \u4e2d\u8f09\u5165\u6216\u95dc\u9589 Nord Pool \u6574\u5408\u3002"
+        },
+        "initial_update_failed": {
+            "message": "\u555f\u52d5\u521d\u59cb\u66f4\u65b0\u5931\u6557\u3001\u932f\u8aa4{error}"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "\u6aa2\u7d22\u7279\u5b9a\u65e5\u671f\u7684\u50f9\u683c\u3002",
+            "fields": {
+                "areas": {
+                    "description": "\u53d6\u5f97\u4e00\u500b\u6216\u591a\u500b\u5340\u57df\u7684\u50f9\u683c\u3002\u5982\u679c\u4fdd\u6301\u7a7a\u767d\uff0c\u5c07\u4f7f\u7528\u5df2\u8a2d\u5b9a\u7684\u5340\u57df\u3002",
+                    "name": "\u5340\u57df"
+                },
+                "config_entry": {
+                    "description": "\u9078\u64c7\u8a2d\u5b9a\u9805\u76ee\u3002",
+                    "name": "\u9078\u64c7 Nord Pool \u8a2d\u5b9a\u689d\u76ee"
+                },
+                "currency": {
+                    "description": "\u7528\u65bc\u53d6\u5f97\u50f9\u683c\u7684\u8ca8\u5e63\u3002\u5982\u679c\u4fdd\u6301\u7a7a\u767d\uff0c\u5c07\u4f7f\u7528\u5df2\u8a2d\u5b9a\u7684\u8ca8\u5e63\u3002",
+                    "name": "\u8ca8\u5e63"
+                },
+                "date": {
+                    "description": "\u53ea\u5141\u8a31\u4f7f\u7528\u904e\u53bb\u5169\u500b\u6708\u53ca\u672a\u4f86\u4e00\u5929\u7684\u65e5\u671f\u3002",
+                    "name": "\u65e5\u671f"
+                }
+            },
+            "name": "\u53d6\u5f97\u65e5\u671f\u50f9\u683c"
+        }
+    }
+}

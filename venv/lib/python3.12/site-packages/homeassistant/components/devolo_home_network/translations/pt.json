@@ -1,0 +1,108 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "home_control": "A Unidade Central de Controlo Dom\u00e9stico devolo n\u00e3o funciona com esta integra\u00e7\u00e3o.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "unknown": "Erro inesperado"
+        },
+        "flow_title": "{product} ({name})",
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "password": "A palavra-passe com que protegeu o dispositivo."
+                }
+            },
+            "user": {
+                "data": {
+                    "ip_address": "Endere\u00e7o IP"
+                },
+                "data_description": {
+                    "ip_address": "Endere\u00e7o IP do seu dispositivo devolo Home Network. Isso pode ser encontrado no painel de controle do dispositivo no aplicativo devolo Home Network."
+                },
+                "description": "Quer dar in\u00edcio \u00e0 configura\u00e7\u00e3o?"
+            },
+            "zeroconf_confirm": {
+                "description": "Pretende adicionar o dispositivo de rede dom\u00e9stica devolo com o nome de anfitri\u00e3o `{host_name}` ao Home Assistant?",
+                "title": "Dispositivo de rede dom\u00e9stica devolo descoberto"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "connected_to_router": {
+                "name": "Ligado ao router"
+            }
+        },
+        "button": {
+            "identify": {
+                "name": "Identificar o dispositivo com um LED intermitente"
+            },
+            "pairing": {
+                "name": "Iniciar o emparelhamento do PLC"
+            },
+            "restart": {
+                "name": "Reiniciar o dispositivo"
+            },
+            "start_wps": {
+                "name": "Iniciar WPS"
+            }
+        },
+        "image": {
+            "image_guest_wifi": {
+                "name": "Credenciais Wi-Fi para convidados como c\u00f3digo QR"
+            }
+        },
+        "sensor": {
+            "connected_plc_devices": {
+                "name": "Dispositivos PLC ligados"
+            },
+            "connected_wifi_clients": {
+                "name": "Clientes Wi-Fi ligados"
+            },
+            "last_restart": {
+                "name": "\u00daltima reinicializa\u00e7\u00e3o do dispositivo"
+            },
+            "neighboring_wifi_networks": {
+                "name": "Redes Wi-Fi vizinhas"
+            },
+            "plc_rx_rate": {
+                "name": "Taxa PHY de liga\u00e7\u00e3o descendente PLC"
+            },
+            "plc_tx_rate": {
+                "name": "Taxa PHY de liga\u00e7\u00e3o ascendente PLC"
+            }
+        },
+        "switch": {
+            "switch_guest_wifi": {
+                "name": "Ativar o Wi-Fi para convidados"
+            },
+            "switch_leds": {
+                "name": "Ativar LEDs"
+            }
+        }
+    },
+    "exceptions": {
+        "connection_failed": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel ligar a {ip_address}"
+        },
+        "no_response": {
+            "message": "Dispositivo {title} n\u00e3o respondeu"
+        },
+        "password_protected": {
+            "message": "O dispositivo {title} requer uma nova autentica\u00e7\u00e3o para definir ou alterar a palavra-passe"
+        },
+        "password_wrong": {
+            "message": "A palavra-passe utilizada est\u00e1 errada"
+        },
+        "update_failed": {
+            "message": "Erro ao atualizar os dados: {error}"
+        }
+    }
+}

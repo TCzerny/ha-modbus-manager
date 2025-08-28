@@ -1,0 +1,99 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u6b64\u670d\u52a1\u5668\u5df2\u914d\u7f6e"
+        },
+        "error": {
+            "api_error": "pyemoncms API \u53d1\u751f\u9519\u8bef\uff1a{details}"
+        },
+        "step": {
+            "choose_feeds": {
+                "data": {
+                    "include_only_feed_id": "\u9009\u62e9\u8981\u5305\u542b\u7684\u8ba2\u9605\u6e90"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API \u5bc6\u94a5",
+                    "url": "\u7f51\u5740"
+                },
+                "data_description": {
+                    "api_key": "\u60a8\u7684 32 \u4f4d API \u5bc6\u94a5",
+                    "url": "\u4ee5\u534f\u8bae\uff08http \u6216 https\uff09\u5f00\u5934\u7684\u670d\u52a1\u5668\u7f51\u5740"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "apparent_power": {
+                "name": "\u89c6\u5728\u529f\u7387 {emoncms_details}"
+            },
+            "concentration": {
+                "name": "\u6d53\u5ea6 {emoncms_details}"
+            },
+            "current": {
+                "name": "\u7535\u6d41 {emoncms_details}"
+            },
+            "decibel": {
+                "name": "\u5206\u8d1d {emoncms_details}"
+            },
+            "energy": {
+                "name": "\u7535\u529b {emoncms_details}"
+            },
+            "flow": {
+                "name": "\u6d41\u91cf {emoncms_details}"
+            },
+            "frequency": {
+                "name": "\u9891\u7387 {emoncms_details}"
+            },
+            "percent": {
+                "name": "\u767e\u5206\u6bd4 {emoncms_details}"
+            },
+            "power": {
+                "name": "\u7535\u6e90 {emoncms_details}"
+            },
+            "pressure": {
+                "name": "\u538b\u529b {emoncms_details}"
+            },
+            "speed": {
+                "name": "\u901f\u5ea6 {emoncms_details}"
+            },
+            "temperature": {
+                "name": "\u6e29\u5ea6 {emoncms_details}"
+            },
+            "voltage": {
+                "name": "\u7535\u538b {emoncms_details}"
+            },
+            "volume": {
+                "name": "\u97f3\u91cf {emoncms_details}"
+            }
+        }
+    },
+    "issues": {
+        "migrate_database": {
+            "description": "\u60a8\u7684\u3010emoncms\u3011({url}) \u672a\u53d1\u9001\u552f\u4e00\u6807\u8bc6\u7b26\u3002\n \n \u8bf7\u81f3\u5c11\u5347\u7ea7\u5230\u7248\u672c 11.5.7 \u5e76\u8fc1\u79fb\u60a8\u7684 emoncms \u6570\u636e\u5e93\u3002\n \n \u3010emoncms \u6587\u6863\u3011({doc_url} ) \u4e2d\u6709\u66f4\u591a\u4fe1\u606f",
+            "title": "\u5347\u7ea7\u4f60\u7684 emoncms \u7248\u672c"
+        },
+        "missing_include_only_feed_id": {
+            "description": "\u4f7f\u7528 YAML \u914d\u7f6e\u7684{domain}\u6b63\u5728\u88ab\u79fb\u9664\u3002\n\n\u8bf7\u4f7f\u7528\u96c6\u6210\u7684\u201c\u914d\u7f6e\u201d\u6309\u94ae\u624b\u52a8\u6dfb\u52a0\u8981\u540c\u6b65\u7684\u8ba2\u9605\u6e90\u3002",
+            "title": "\u6ca1\u6709\u4e0e{domain}\u4f20\u611f\u5668\u540c\u6b65\u7684\u8ba2\u9605\u6e90"
+        },
+        "remove_value_template": {
+            "description": "\u4f7f\u7528 YAML \u914d\u7f6e\u7684\u201d{domain}\u201c\u6b63\u5728\u88ab\u79fb\u9664\uff0c\u65e0\u6cd5\u5bfc\u5165 {parameter} \u53c2\u6570\u3002\n\n\u8bf7\u4ece\u201d{domain}\u201c\u7684 yaml \u914d\u7f6e\u4e2d\u79fb\u9664 {parameter} \uff0c\u7136\u540e\u91cd\u65b0\u542f\u52a8 Home Assistant \u3002\n\n\u6216\u8005\uff0c\u60a8\u53ef\u4ee5\u4ece configuration.yaml \u4e2d\u5b8c\u5168\u79fb\u9664\u201d{domain}\u201c\u914d\u7f6e\uff0c\u91cd\u65b0\u542f\u52a8 Home Assistant\uff0c\u7136\u540e\u624b\u52a8\u6dfb\u52a0\u201d{domain}\u201c\u96c6\u6210\u3002",
+            "title": "\u201d{domain}\u201c\u96c6\u6210\u65e0\u6cd5\u542f\u52a8"
+        }
+    },
+    "options": {
+        "error": {
+            "api_error": "pyemoncms API \u53d1\u751f\u9519\u8bef\uff1a{details}"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "include_only_feed_id": "\u9009\u62e9\u8981\u5305\u542b\u7684\u8ba2\u9605\u6e90"
+                }
+            }
+        }
+    }
+}

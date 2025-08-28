@@ -1,0 +1,90 @@
+{
+    "application_credentials": {
+        "description": "Ikuti [instruksi]({more_info_url}) untuk [layar persetujuan OAuth]({oauth_consent_url}) untuk memberi Home Assistant akses ke Google Kalender Anda. Anda juga perlu membuat Kredensial Aplikasi yang ditautkan ke akun Anda:\n1. Buka [Kredensial]({oauth_creds_url}) dan pilih **Buat Kredensial**.\n1. Dari daftar drop-down pilih **ID klien OAuth**.\n1. Pilih **Aplikasi web** untuk Jenis Aplikasi."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Akun sudah dikonfigurasi",
+            "already_in_progress": "Alur konfigurasi sedang berlangsung",
+            "api_disabled": "Anda harus mengaktifkan API Google Kalender di Google Cloud Console",
+            "cannot_connect": "Gagal terhubung",
+            "code_expired": "Kode autentikasi kedaluwarsa atau penyiapan kredensial tidak valid, coba lagi.",
+            "invalid_access_token": "Token akses tidak valid",
+            "missing_configuration": "Komponen tidak dikonfigurasi. Ikuti petunjuk dalam dokumentasi.",
+            "missing_credentials": "Integrasi memerlukan kredensial aplikasi.",
+            "oauth_error": "Menerima respons token yang tidak valid.",
+            "oauth_failed": "Terjadi kesalahan saat mendapatkan token akses.",
+            "oauth_timeout": "Tenggang waktu penyelesaian token OAuth habis.",
+            "oauth_unauthorized": "Kesalahan otorisasi OAuth saat mendapatkan token akses.",
+            "reauth_successful": "Autentikasi ulang berhasil",
+            "timeout_connect": "Tenggang waktu pembuatan koneksi habis"
+        },
+        "create_entry": {
+            "default": "Berhasil diautentikasi"
+        },
+        "progress": {
+            "exchange": "Untuk menautkan akun Google Anda, kunjungi [{url}]({url}) dan masukkan kode:\n\n{user_code}"
+        },
+        "step": {
+            "auth": {
+                "title": "Tautkan Akun Google"
+            },
+            "pick_implementation": {
+                "title": "Pilih metode autentikasi"
+            },
+            "reauth_confirm": {
+                "description": "Integrasi Google Kalender perlu mengautentikasi ulang akun Anda",
+                "title": "Autentikasi ulang integrasi untuk {name}"
+            }
+        }
+    },
+    "entity": {
+        "calendar": {
+            "working_location": {
+                "name": "Lokasi kerja"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "calendar_access": "Akses Home Assistant ke Google Kalender"
+                }
+            }
+        }
+    },
+    "services": {
+        "add_event": {
+            "description": "Menambahkan acara kalender baru.",
+            "fields": {
+                "calendar_id": {
+                    "description": "ID kalender yang diinginkan.",
+                    "name": "ID Kalender"
+                },
+                "description": {
+                    "description": "Deskripsi acara. Opsional.",
+                    "name": "Deskripsi"
+                },
+                "end_date": {
+                    "description": "Tanggal berakhir acara seharian."
+                }
+            }
+        },
+        "create_event": {
+            "description": "Menambahkan acara kalender baru.",
+            "fields": {
+                "description": {
+                    "description": "Deskripsi acara. Opsional."
+                },
+                "end_date": {
+                    "description": "Tanggal berakhir acara seharian."
+                },
+                "location": {
+                    "name": "Lokasi"
+                }
+            },
+            "name": "Buat acara"
+        }
+    }
+}

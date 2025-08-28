@@ -1,0 +1,114 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositiu ja est\u00e0 configurat"
+        },
+        "error": {
+            "cannot_connect": "Ha fallat la connexi\u00f3",
+            "invalid_access_token": "Token d'acc\u00e9s inv\u00e0lid",
+            "invalid_auth": "Autenticaci\u00f3 inv\u00e0lida",
+            "unknown": "Error inesperat"
+        },
+        "step": {
+            "2fa": {
+                "data": {
+                    "pin": "Codi de verificaci\u00f3 en dos passos"
+                },
+                "description": "Introdueix el PIN enviat per correu electr\u00f2nic o SMS",
+                "title": "Autenticaci\u00f3 de dos factors"
+            },
+            "user": {
+                "data": {
+                    "password": "Contrasenya",
+                    "username": "Nom d'usuari"
+                },
+                "title": "Inici de sessi\u00f3 amb un compte de Blink"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "camera_armed": {
+                "name": "C\u00e0mera preparada"
+            }
+        },
+        "sensor": {
+            "wifi_strength": {
+                "name": "Pot\u00e8ncia del senyal Wi-Fi"
+            }
+        },
+        "switch": {
+            "camera_motion": {
+                "name": "Detecci\u00f3 de moviment de la c\u00e0mera"
+            }
+        }
+    },
+    "exceptions": {
+        "cant_write": {
+            "message": "No s'ha pogut escriure al fitxer."
+        },
+        "integration_not_found": {
+            "message": "La integraci\u00f3 \"{target}\" no s'ha trobat al registre."
+        },
+        "no_path": {
+            "message": "No es pot escriure al directori {target}, no hi ha acc\u00e9s a la ruta!"
+        },
+        "not_loaded": {
+            "message": "{target} no est\u00e0 carregat."
+        }
+    },
+    "issues": {
+        "service_deprecation": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "El servei d'actualitzaci\u00f3 de Blink est\u00e0 sent eliminant"
+                    }
+                }
+            },
+            "title": "El servei d'actualitzaci\u00f3 de Blink est\u00e0 sent eliminant"
+        }
+    },
+    "options": {
+        "step": {
+            "simple_options": {
+                "data": {
+                    "scan_interval": "Interval d'escaneig (segons)"
+                },
+                "description": "Configura la integraci\u00f3 Blink",
+                "title": "Opcions de Blink"
+            }
+        }
+    },
+    "services": {
+        "save_recent_clips": {
+            "description": "Desa tots els videoclips recents amb el patr\u00f3 de fitxer \"%Y%m%d_%H%M%S_[nom de la c\u00e0mera].mp4\" a un directori local.",
+            "fields": {
+                "file_path": {
+                    "name": "Directori de sortida"
+                }
+            },
+            "name": "Desa clips recents"
+        },
+        "save_video": {
+            "description": "Desa el darrer video gravat a un fitxer local.",
+            "fields": {
+                "filename": {
+                    "name": "Nom del fitxer"
+                }
+            },
+            "name": "Desa el v\u00eddeo"
+        },
+        "send_pin": {
+            "fields": {
+                "config_entry_id": {
+                    "name": "ID d'integraci\u00f3"
+                }
+            }
+        },
+        "trigger_camera": {
+            "description": "Demana a la c\u00e0mera que faci una foto.",
+            "name": "Dispara la c\u00e0mera"
+        }
+    }
+}

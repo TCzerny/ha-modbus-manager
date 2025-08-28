@@ -1,0 +1,102 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "\u5f85\u529e\u4e8b\u9879\u6e05\u5355"
+        }
+    },
+    "exceptions": {
+        "item_not_found": {
+            "message": "\u627e\u4e0d\u5230\u5f85\u529e\u6e05\u5355\u4e8b\u9879\uff1a{item}"
+        },
+        "update_field_not_supported": {
+            "message": "\u5b9e\u4f53\u4e0d\u652f\u6301\u8bbe\u7f6e\u5b57\u6bb5\uff1a{service_field}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "\u5df2\u5b8c\u6210",
+                "needs_action": "\u672a\u5b8c\u6210"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "description": "\u6dfb\u52a0\u65b0\u7684\u5f85\u529e\u6e05\u5355\u4e8b\u9879\u3002",
+            "fields": {
+                "description": {
+                    "description": "\u76f8\u8f83\u4e8b\u9879\u540d\u79f0\u63d0\u4f9b\u66f4\u5b8c\u6574\u7684\u5f85\u529e\u4e8b\u9879\u63cf\u8ff0\u3002",
+                    "name": "\u63cf\u8ff0"
+                },
+                "due_date": {
+                    "description": "\u5f85\u529e\u4e8b\u9879\u9884\u8ba1\u5b8c\u6210\u7684\u65e5\u671f\u3002",
+                    "name": "\u622a\u6b62\u65e5\u671f"
+                },
+                "due_datetime": {
+                    "description": "\u5f85\u529e\u4e8b\u9879\u9884\u8ba1\u5b8c\u6210\u7684\u65e5\u671f\u548c\u65f6\u95f4\u3002",
+                    "name": "\u622a\u6b62\u65e5\u671f\u548c\u65f6\u95f4"
+                },
+                "item": {
+                    "description": "\u4ee3\u8868\u5f85\u529e\u4e8b\u9879\u7684\u540d\u79f0\u3002",
+                    "name": "\u4e8b\u9879\u540d\u79f0"
+                }
+            },
+            "name": "\u6dfb\u52a0\u9879\u76ee"
+        },
+        "get_items": {
+            "description": "\u83b7\u53d6\u5f85\u529e\u4e8b\u9879\u6e05\u5355\u4e2d\u7684\u9879\u76ee\u3002",
+            "fields": {
+                "status": {
+                    "description": "\u4ec5\u8fd4\u56de\u5177\u6709\u6307\u5b9a\u72b6\u6001\u7684\u5f85\u529e\u4e8b\u9879\u3002\u9ed8\u8ba4\u8fd4\u56de\u672a\u5b8c\u6210\u7684\u64cd\u4f5c\u3002",
+                    "name": "\u72b6\u6001"
+                }
+            },
+            "name": "\u83b7\u53d6\u9879\u76ee"
+        },
+        "remove_completed_items": {
+            "description": "\u79fb\u9664\u6240\u6709\u5df2\u5b8c\u6210\u7684\u5f85\u529e\u6e05\u5355\u4e8b\u9879\u3002",
+            "name": "\u79fb\u9664\u5df2\u5b8c\u6210\u9879\u76ee"
+        },
+        "remove_item": {
+            "description": "\u6309\u540d\u79f0\u79fb\u9664\u73b0\u6709\u7684\u5f85\u529e\u6e05\u5355\u4e8b\u9879\u3002",
+            "fields": {
+                "item": {
+                    "description": "\u5f85\u529e\u6e05\u5355\u4e8b\u9879\u7684\u540d\u79f0\u3002",
+                    "name": "\u4e8b\u9879\u540d\u79f0"
+                }
+            },
+            "name": "\u79fb\u9664\u9879\u76ee"
+        },
+        "update_item": {
+            "description": "\u6309\u540d\u79f0\u66f4\u65b0\u73b0\u6709\u7684\u5f85\u529e\u6e05\u5355\u4e8b\u9879\u3002",
+            "fields": {
+                "description": {
+                    "description": "\u76f8\u8f83\u4e8b\u9879\u540d\u79f0\u63d0\u4f9b\u66f4\u5b8c\u6574\u7684\u5f85\u529e\u4e8b\u9879\u63cf\u8ff0\u3002",
+                    "name": "\u63cf\u8ff0"
+                },
+                "due_date": {
+                    "description": "\u5f85\u529e\u4e8b\u9879\u9884\u8ba1\u5b8c\u6210\u7684\u65e5\u671f\u3002",
+                    "name": "\u622a\u6b62\u65e5\u671f"
+                },
+                "due_datetime": {
+                    "description": "\u5f85\u529e\u4e8b\u9879\u9884\u8ba1\u5b8c\u6210\u7684\u65e5\u671f\u548c\u65f6\u95f4\u3002",
+                    "name": "\u622a\u6b62\u65e5\u671f\u548c\u65f6\u95f4"
+                },
+                "item": {
+                    "description": "\u5f85\u529e\u4e8b\u9879\u7684\u5f53\u524d\u540d\u79f0\u3002",
+                    "name": "\u4e8b\u9879\u540d\u79f0"
+                },
+                "rename": {
+                    "description": "\u5f85\u529e\u4e8b\u9879\u7684\u65b0\u540d\u79f0",
+                    "name": "\u91cd\u547d\u540d\u4e8b\u9879"
+                },
+                "status": {
+                    "description": "\u5f85\u529e\u4e8b\u9879\u7684\u72b6\u6001\u6216\u786e\u8ba4\u3002",
+                    "name": "\u8bbe\u7f6e\u72b6\u6001"
+                }
+            },
+            "name": "\u66f4\u65b0\u9879\u76ee"
+        }
+    },
+    "title": "\u5f85\u529e\u4e8b\u9879\u6e05\u5355"
+}

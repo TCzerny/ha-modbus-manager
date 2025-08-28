@@ -1,0 +1,52 @@
+{
+    "exceptions": {
+        "entity_not_dynamically_created": {
+            "message": "{entity_id} sahnesi `scene.create` eylemiyle olu\u015fturulmad\u0131."
+        }
+    },
+    "services": {
+        "apply": {
+            "description": "Yap\u0131land\u0131rma ile bir sahneyi etkinle\u015ftirir.",
+            "fields": {
+                "entities": {
+                    "description": "Varl\u0131klar\u0131n ve hedef durumlar\u0131n\u0131n listesi.",
+                    "name": "Varl\u0131klar\u0131n durumu"
+                },
+                "transition": {
+                    "description": "Cihazlar\u0131n sahnede tan\u0131mlanan durumlara ge\u00e7mesi i\u00e7in ge\u00e7en s\u00fcre.",
+                    "name": "Ge\u00e7i\u015f"
+                }
+            },
+            "name": "Uygula"
+        },
+        "create": {
+            "description": "Yeni bir sahne olu\u015fturur.",
+            "fields": {
+                "scene_id": {
+                    "description": "Yeni sahnenin varl\u0131k kimli\u011fi.",
+                    "name": "Sahne varl\u0131\u011f\u0131 kimli\u011fi"
+                }
+            },
+            "name": "Olu\u015ftur"
+        },
+        "delete": {
+            "description": "Dinamik olarak olu\u015fturulmu\u015f bir sahneyi siler.",
+            "name": "Sil"
+        },
+        "reload": {
+            "description": "Sahneleri YAML yap\u0131land\u0131rmas\u0131ndan yeniden y\u00fckler.",
+            "name": "Tekrar y\u00fckle"
+        },
+        "turn_on": {
+            "description": "Bir sahneyi etkinle\u015ftirir.",
+            "fields": {
+                "transition": {
+                    "description": "Cihazlar\u0131n sahnede tan\u0131mlanan durumlara ge\u00e7mesi i\u00e7in ge\u00e7en s\u00fcre.",
+                    "name": "Ge\u00e7i\u015f"
+                }
+            },
+            "name": "Etkinle\u015ftir"
+        }
+    },
+    "title": "Senaryo"
+}

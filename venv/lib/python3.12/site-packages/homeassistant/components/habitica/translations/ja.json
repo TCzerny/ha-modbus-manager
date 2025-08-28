@@ -1,0 +1,540 @@
+{
+    "common": {
+        "config_entry_name": "\u6587\u5b57\u3092\u9078\u629e",
+        "dailies": "\u30c7\u30a4\u30ea\u30fc",
+        "todos": "To-Do",
+        "unit_experience_points": "XP",
+        "unit_health_points": "HP",
+        "unit_mana_points": "MP",
+        "unit_tasks": "\u30bf\u30b9\u30af"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "\u30a2\u30ab\u30a6\u30f3\u30c8\u306f\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u3059"
+        },
+        "error": {
+            "cannot_connect": "\u63a5\u7d9a\u306b\u5931\u6557\u3057\u307e\u3057\u305f",
+            "invalid_auth": "\u7121\u52b9\u306a\u8a8d\u8a3c",
+            "unknown": "\u4e88\u671f\u3057\u306a\u3044\u30a8\u30e9\u30fc"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "API\u30c8\u30fc\u30af\u30f3",
+                    "api_user": "\u30e6\u30fc\u30b6\u30fcID",
+                    "url": "URL",
+                    "verify_ssl": "SSL\u8a3c\u660e\u66f8\u3092\u78ba\u8a8d\u3059\u308b"
+                },
+                "data_description": {
+                    "api_key": "Habitica\u30a2\u30ab\u30a6\u30f3\u30c8\u306eAPI\u30c8\u30fc\u30af\u30f3",
+                    "api_user": "Habitica\u30a2\u30ab\u30a6\u30f3\u30c8\u306e\u30e6\u30fc\u30b6\u30fcID",
+                    "url": "\u63a5\u7d9a\u3059\u308bHabitica\u30a4\u30f3\u30b9\u30c8\u30fc\u30eb\u306eURL\u3002\u30c7\u30d5\u30a9\u30eb\u30c8\u306f` {default_url} `\u3067\u3059\u3002"
+                },
+                "description": "`\u30e6\u30fc\u30b6\u30fcID`\u3068`API\u30c8\u30fc\u30af\u30f3`\u306f\u3001Habitica\u307e\u305f\u306f\u63a5\u7d9a\u3057\u305f\u3044\u30a4\u30f3\u30b9\u30bf\u30f3\u30b9\u306e[**\u8a2d\u5b9a -> \u30b5\u30a4\u30c8\u30c7\u30fc\u30bf**]( {site_data} )\u304b\u3089\u53d6\u5f97\u3067\u304d\u307e\u3059\u3002",
+                "title": "\u4ed6\u306e\u30a4\u30f3\u30b9\u30bf\u30f3\u30b9\u306b\u30ed\u30b0\u30a4\u30f3\u3059\u308b"
+            },
+            "login": {
+                "data": {
+                    "password": "\u30d1\u30b9\u30ef\u30fc\u30c9",
+                    "username": "\u96fb\u5b50\u30e1\u30fc\u30eb\u307e\u305f\u306f\u30e6\u30fc\u30b6\u30fc\u540d\uff08\u5927\u6587\u5b57\u3068\u5c0f\u6587\u5b57\u3092\u533a\u5225\uff09"
+                },
+                "data_description": {
+                    "password": "Home Assistant\u3092Habitica\u306b\u63a5\u7d9a\u3059\u308b\u305f\u3081\u306e\u30a2\u30ab\u30a6\u30f3\u30c8\u306e\u30d1\u30b9\u30ef\u30fc\u30c9",
+                    "username": "Home Assistant \u3092 Habitica \u30a2\u30ab\u30a6\u30f3\u30c8\u306b\u63a5\u7d9a\u3059\u308b\u305f\u3081\u306e\u30e1\u30fc\u30eb\u30a2\u30c9\u30ec\u30b9\u307e\u305f\u306f\u30e6\u30fc\u30b6\u30fc\u540d (\u5927\u6587\u5b57\u3068\u5c0f\u6587\u5b57\u304c\u533a\u5225\u3055\u308c\u307e\u3059)"
+                },
+                "description": "\u30ed\u30b0\u30a4\u30f3\u60c5\u5831\u3092\u5165\u529b\u3057\u3066\u3001Home Assistant \u3067 Habitica \u3092\u4f7f\u3044\u59cb\u3081\u307e\u3057\u3087\u3046\n \n [\u30d1\u30b9\u30ef\u30fc\u30c9\u3092\u5fd8\u308c\u307e\u3057\u305f\u304b?]( {forgot_password} )",
+                "title": "Habitica\u306b\u30ed\u30b0\u30a4\u30f3"
+            },
+            "user": {
+                "description": "![Habiticans]( {habiticans} ) Habitica \u30a2\u30ab\u30a6\u30f3\u30c8\u306b\u63a5\u7d9a\u3057\u3066\u3001\u5192\u967a\u8005\u306e\u7d71\u8a08\u60c5\u5831\u3084\u9032\u884c\u72b6\u6cc1\u3092\u8ffd\u8de1\u3057\u3001\u3084\u308b\u3053\u3068\u30ea\u30b9\u30c8\u3084\u65e5\u3005\u306e\u30bf\u30b9\u30af\u3092\u7ba1\u7406\u3057\u307e\u3057\u3087\u3046\u3002 \n \n [Habitica \u30a2\u30ab\u30a6\u30f3\u30c8\u3092\u304a\u6301\u3061\u3067\u306f\u3042\u308a\u307e\u305b\u3093\u304b? \u3053\u3061\u3089\u304b\u3089\u30b5\u30a4\u30f3\u30a2\u30c3\u30d7\u3057\u3066\u304f\u3060\u3055\u3044\u3002]( {signup} )",
+                "menu_options": {
+                    "advanced": "\u4ed6\u306e\u30a4\u30f3\u30b9\u30bf\u30f3\u30b9\u306b\u30ed\u30b0\u30a4\u30f3\u3059\u308b",
+                    "login": "Habitica\u306b\u30ed\u30b0\u30a4\u30f3"
+                },
+                "title": "Habitica - \u4eba\u751f\u3092\u30b2\u30fc\u30e0\u5316\u3059\u308b"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pending_quest": {
+                "name": "\u4fdd\u7559\u4e2d\u306e\u30af\u30a8\u30b9\u30c8\u62db\u5f85"
+            }
+        },
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "\u3059\u3079\u3066\u306e\u30b9\u30c6\u30fc\u30bf\u30b9\u30dd\u30a4\u30f3\u30c8\u3092\u5272\u308a\u5f53\u3066\u308b"
+            },
+            "brightness": {
+                "name": "\u713c\u3051\u3064\u304f\u3088\u3046\u306a\u660e\u308b\u3055"
+            },
+            "buy_health_potion": {
+                "name": "\u5065\u5eb7\u30dd\u30fc\u30b7\u30e7\u30f3\u3092\u8cfc\u5165\u3059\u308b"
+            },
+            "defensive_stance": {
+                "name": "\u5b88\u5099\u306e\u30b9\u30bf\u30f3\u30b9"
+            },
+            "earth": {
+                "name": "\u5730\u9707"
+            },
+            "frost": {
+                "name": "\u51cd\u308b\u3088\u3046\u306a\u971c"
+            },
+            "heal": {
+                "name": "\u7652\u3057\u306e\u5149"
+            },
+            "heal_all": {
+                "name": "\u795d\u798f"
+            },
+            "intimidate": {
+                "name": "\u5a01\u5727\u7684\u306a\u8996\u7dda"
+            },
+            "mpheal": {
+                "name": "\u512a\u7f8e\u306a\u5927\u6ce2"
+            },
+            "protect_aura": {
+                "name": "\u4fdd\u8b77\u30aa\u30fc\u30e9"
+            },
+            "revive": {
+                "name": "\u6b7b\u304b\u3089\u8607\u308b"
+            },
+            "run_cron": {
+                "name": "\u4e00\u65e5\u306e\u59cb\u307e\u308a"
+            },
+            "stealth": {
+                "name": "\u30b9\u30c6\u30eb\u30b9"
+            },
+            "tools_of_trade": {
+                "name": "\u53d6\u5f15\u306e\u30c4\u30fc\u30eb"
+            },
+            "valorous_presence": {
+                "name": "\u52c7\u6562\u306a\u5b58\u5728"
+            }
+        },
+        "calendar": {
+            "daily_reminders": {
+                "name": "\u30c7\u30a4\u30ea\u30fc\u30ea\u30de\u30a4\u30f3\u30c0\u30fc"
+            },
+            "dailys": {
+                "name": "\u30c7\u30a4\u30ea\u30fc",
+                "state_attributes": {
+                    "yesterdaily": {
+                        "name": "\u6628\u65e5-\u6bce\u65e5",
+                        "state": {
+                            "false": "\u3044\u3044\u3048",
+                            "true": "\u306f\u3044"
+                        }
+                    }
+                }
+            },
+            "todo_reminders": {
+                "name": "ToDo\u30ea\u30de\u30a4\u30f3\u30c0\u30fc"
+            },
+            "todos": {
+                "name": "To-Do"
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "\u30af\u30e9\u30b9",
+                "state": {
+                    "healer": "\u30d2\u30fc\u30e9\u30fc",
+                    "rogue": "\u30ed\u30fc\u30b0",
+                    "warrior": "\u6226\u58eb",
+                    "wizard": "\u9b54\u9053\u58eb"
+                }
+            },
+            "constitution": {
+                "name": "\u61b2\u6cd5",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "\u5272\u308a\u5f53\u3066\u3089\u308c\u305f\u5c5e\u6027\u30dd\u30a4\u30f3\u30c8"
+                    },
+                    "buffs": {
+                        "name": "\u30d0\u30d5"
+                    },
+                    "class": {
+                        "name": "\u30af\u30e9\u30b9\u88c5\u5099\u30dc\u30fc\u30ca\u30b9"
+                    },
+                    "equipment": {
+                        "name": "\u30d0\u30c8\u30eb\u30ae\u30a2"
+                    },
+                    "level": {
+                        "name": "\u30ec\u30d9\u30eb"
+                    }
+                }
+            },
+            "dailys": {
+                "name": "\u30c7\u30a4\u30ea\u30fc",
+                "unit_of_measurement": "\u30bf\u30b9\u30af"
+            },
+            "display_name": {
+                "name": "\u8868\u793a\u540d"
+            },
+            "experience": {
+                "name": "\u7d4c\u9a13",
+                "unit_of_measurement": "XP"
+            },
+            "experience_max": {
+                "name": "\u6b21\u306e\u30ec\u30d9\u30eb",
+                "unit_of_measurement": "XP"
+            },
+            "gems": {
+                "name": "\u5b9d\u77f3",
+                "unit_of_measurement": "\u5b9d\u77f3"
+            },
+            "gold": {
+                "name": "\u30b4\u30fc\u30eb\u30c9",
+                "unit_of_measurement": "GP"
+            },
+            "habits": {
+                "name": "\u7fd2\u6163",
+                "unit_of_measurement": "\u30bf\u30b9\u30af"
+            },
+            "health": {
+                "name": "\u30d8\u30eb\u30b9",
+                "unit_of_measurement": "HP"
+            },
+            "health_max": {
+                "name": "\u6700\u5927.\u30d8\u30eb\u30b9",
+                "unit_of_measurement": "HP"
+            },
+            "intelligence": {
+                "name": "\u30a4\u30f3\u30c6\u30ea\u30b8\u30a7\u30f3\u30b9",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "\u5272\u308a\u5f53\u3066\u3089\u308c\u305f\u5c5e\u6027\u30dd\u30a4\u30f3\u30c8"
+                    },
+                    "buffs": {
+                        "name": "\u30d0\u30d5"
+                    },
+                    "class": {
+                        "name": "\u30af\u30e9\u30b9\u88c5\u5099\u30dc\u30fc\u30ca\u30b9"
+                    },
+                    "equipment": {
+                        "name": "\u30d0\u30c8\u30eb\u30ae\u30a2"
+                    },
+                    "level": {
+                        "name": "\u30ec\u30d9\u30eb"
+                    }
+                }
+            },
+            "level": {
+                "name": "\u30ec\u30d9\u30eb"
+            },
+            "mana": {
+                "name": "Mana",
+                "unit_of_measurement": "MP"
+            },
+            "mana_max": {
+                "name": "\u6700\u5927. mana",
+                "unit_of_measurement": "MP"
+            },
+            "perception": {
+                "name": "\u77e5\u899a",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "\u5272\u308a\u5f53\u3066\u3089\u308c\u305f\u5c5e\u6027\u30dd\u30a4\u30f3\u30c8"
+                    },
+                    "buffs": {
+                        "name": "\u30d0\u30d5"
+                    },
+                    "class": {
+                        "name": "\u30af\u30e9\u30b9\u88c5\u5099\u30dc\u30fc\u30ca\u30b9"
+                    },
+                    "equipment": {
+                        "name": "\u30d0\u30c8\u30eb\u30ae\u30a2"
+                    },
+                    "level": {
+                        "name": "\u30ec\u30d9\u30eb"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "\u5831\u916c",
+                "unit_of_measurement": "\u30bf\u30b9\u30af"
+            },
+            "strength": {
+                "name": "\u5f37\u3055",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "\u5272\u308a\u5f53\u3066\u3089\u308c\u305f\u5c5e\u6027\u30dd\u30a4\u30f3\u30c8"
+                    },
+                    "buffs": {
+                        "name": "\u30d0\u30d5"
+                    },
+                    "class": {
+                        "name": "\u30af\u30e9\u30b9\u88c5\u5099\u30dc\u30fc\u30ca\u30b9"
+                    },
+                    "equipment": {
+                        "name": "\u30d0\u30c8\u30eb\u30ae\u30a2"
+                    },
+                    "level": {
+                        "name": "\u30ec\u30d9\u30eb"
+                    }
+                }
+            },
+            "todos": {
+                "name": "To-Do",
+                "unit_of_measurement": "\u30bf\u30b9\u30af"
+            },
+            "trinkets": {
+                "name": "\u795e\u79d8\u7684\u306a\u7802\u6642\u8a08"
+            }
+        },
+        "switch": {
+            "sleep": {
+                "name": "\u5bbf\u3067\u4f11\u3080"
+            }
+        },
+        "todo": {
+            "dailys": {
+                "name": "\u30c7\u30a4\u30ea\u30fc"
+            },
+            "todos": {
+                "name": "To-Do"
+            }
+        }
+    },
+    "exceptions": {
+        "create_todos_item_failed": {
+            "message": "Habitica \u306e\u65b0\u3057\u3044 ToDo\u300c {name} \u300d\u3092\u4f5c\u6210\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+        },
+        "delete_completed_todos_failed": {
+            "message": "Habitica \u306e ToDo \u30ea\u30b9\u30c8\u304b\u3089\u5b8c\u4e86\u3057\u305f ToDo \u9805\u76ee\u3092\u524a\u9664\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+        },
+        "delete_todos_failed": {
+            "message": "Habitica\u306eToDo\u30ea\u30b9\u30c8\u304b\u3089\u30a2\u30a4\u30c6\u30e0\u3092\u524a\u9664\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044"
+        },
+        "entry_not_found": {
+            "message": "\u9078\u629e\u3057\u305f\u6587\u5b57\u306f Home Assistant \u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002"
+        },
+        "entry_not_loaded": {
+            "message": "\u9078\u629e\u3057\u305f\u6587\u5b57\u306f\u73fe\u5728 Home Assistant \u306b\u8aad\u307f\u8fbc\u307e\u308c\u3066\u3044\u306a\u3044\u304b\u7121\u52b9\u306b\u306a\u3063\u3066\u3044\u307e\u3059\u3002"
+        },
+        "item_not_found": {
+            "message": "{item}\u3092\u4f7f\u7528\u3067\u304d\u307e\u305b\u3093\u3002\u3053\u306e\u30a2\u30a4\u30c6\u30e0\u3092\u6240\u6709\u3057\u3066\u3044\u307e\u305b\u3093\u3002"
+        },
+        "move_dailys_item_failed": {
+            "message": "Habitica \u306e\u30c7\u30a4\u30ea\u30fc\u3092\u4f4d\u7f6e{pos}\u306b\u79fb\u52d5\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+        },
+        "move_todos_item_failed": {
+            "message": "Habitica \u306e ToDo \u3092\u4f4d\u7f6e{pos}\u306b\u79fb\u52d5\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+        },
+        "not_enough_gold": {
+            "message": "\u5831\u916c\u3092\u8cfc\u5165\u3067\u304d\u307e\u305b\u3093\u3002\u30b4\u30fc\u30eb\u30c9\u304c\u8db3\u308a\u307e\u305b\u3093\u3002\u3042\u306a\u305f\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306f{gold}\u3092\u6301\u3063\u3066\u3044\u307e\u3059\u304c\u3001\u5831\u916c\u306b\u306f{cost}\u304b\u304b\u308a\u307e\u3059\u3002"
+        },
+        "not_enough_mana": {
+            "message": "\u30b9\u30ad\u30eb\u3092\u30ad\u30e3\u30b9\u30c8\u3067\u304d\u307e\u305b\u3093\u3002\u30de\u30ca\u304c\u8db3\u308a\u307e\u305b\u3093\u3002\u3042\u306a\u305f\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306f{mana}\u3092\u6301\u3063\u3066\u3044\u307e\u3059\u304c\u3001\u30b9\u30ad\u30eb\u306b\u306f{cost}\u304c\u304b\u304b\u308a\u307e\u3059\u3002"
+        },
+        "party_not_found": {
+            "message": "\u30bf\u30fc\u30b2\u30c3\u30c8\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3002\u73fe\u5728\u30d1\u30fc\u30c6\u30a3\u30fc\u306b\u53c2\u52a0\u3057\u3066\u3044\u307e\u305b\u3093\u3002\u30bf\u30fc\u30b2\u30c3\u30c8\u3067\u304d\u308b\u306e\u306f\u81ea\u5206\u81ea\u8eab\u3060\u3051\u3067\u3059"
+        },
+        "quest_action_unallowed": {
+            "message": "\u30a2\u30af\u30b7\u30e7\u30f3\u306f\u8a31\u53ef\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002\u3053\u306e\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3067\u304d\u308b\u306e\u306f\u30af\u30a8\u30b9\u30c8\u30ea\u30fc\u30c0\u30fc\u307e\u305f\u306f\u30b0\u30eb\u30fc\u30d7\u30ea\u30fc\u30c0\u30fc\u306e\u307f\u3067\u3059\u3002"
+        },
+        "quest_not_found": {
+            "message": "\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b8c\u4e86\u3067\u304d\u307e\u305b\u3093\u3001\u30af\u30a8\u30b9\u30c8\u307e\u305f\u306f\u30b0\u30eb\u30fc\u30d7\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+        },
+        "score_dailys_item_failed": {
+            "message": "Habitica \u306e\u30c7\u30a4\u30ea\u30fc\u306e\u30b9\u30b3\u30a2\u300c {name} \u300d\u3092\u66f4\u65b0\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+        },
+        "score_todos_item_failed": {
+            "message": "Habitica \u306e ToDo ` {name} ` \u306e\u30b9\u30b3\u30a2\u3092\u66f4\u65b0\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+        },
+        "service_call_unallowed": {
+            "message": "\u5fc5\u8981\u306a\u6761\u4ef6\u304c\u6e80\u305f\u3055\u308c\u3066\u3044\u306a\u3044\u305f\u3081\u3001\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b8c\u4e86\u3067\u304d\u307e\u305b\u3093\u3002"
+        },
+        "skill_not_found": {
+            "message": "\u30b9\u30ad\u30eb\u3092\u30ad\u30e3\u30b9\u30c8\u3067\u304d\u307e\u305b\u3093\u3002\u3042\u306a\u305f\u306e\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306f\u30b9\u30ad\u30eb\u307e\u305f\u306f\u546a\u6587{skill}\u3092\u6301\u3063\u3066\u3044\u307e\u305b\u3093\u3002"
+        },
+        "target_not_found": {
+            "message": "\u30d1\u30fc\u30c6\u30a3\u30fc\u5185\u306b\u30bf\u30fc\u30b2\u30c3\u30c8{target}\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093"
+        },
+        "task_not_found": {
+            "message": "\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b8c\u4e86\u3067\u304d\u307e\u305b\u3093\u3002\u30bf\u30b9\u30af{task}\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f"
+        },
+        "update_dailys_item_failed": {
+            "message": "Habitica \u306e\u30c7\u30a4\u30ea\u30fc ` {name} ` \u3092\u66f4\u65b0\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044"
+        },
+        "update_todos_item_failed": {
+            "message": "Habitica \u306e ToDo ` {name} ` \u3092\u66f4\u65b0\u3067\u304d\u307e\u305b\u3093\u3002\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044"
+        }
+    },
+    "issues": {
+        "deprecated_api_call": {
+            "description": "Habitica \u30a2\u30af\u30b7\u30e7\u30f3 `habitica.api_call` \u306f\u975e\u63a8\u5968\u3068\u306a\u308a\u3001Home Assistant 2025.5.0 \u3067\u524a\u9664\u3055\u308c\u307e\u3059\u3002__\n\n\u4ed6\u306e Habitica \u30a2\u30af\u30b7\u30e7\u30f3\u3068\u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u3092\u4f7f\u7528\u3059\u308b\u3088\u3046\u306b\u30aa\u30fc\u30c8\u30e1\u30fc\u30b7\u30e7\u30f3\u3068\u30b9\u30af\u30ea\u30d7\u30c8\u3092\u66f4\u65b0\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "title": "Habitica \u30a2\u30af\u30b7\u30e7\u30f3 Hobbyica.api_call \u306f\u975e\u63a8\u5968\u306b\u306a\u308a\u307e\u3057\u305f"
+        },
+        "deprecated_task_entity": {
+            "description": "Habitica \u30a8\u30f3\u30c6\u30a3\u30c6\u30a3 ` {entity} ` \u306f\u975e\u63a8\u5968\u3067\u3042\u308a\u3001\u5c06\u6765\u306e\u30ea\u30ea\u30fc\u30b9\u3067\u524a\u9664\u3055\u308c\u308b\u4e88\u5b9a\u3067\u3059\u3002\u30aa\u30fc\u30c8\u30e1\u30fc\u30b7\u30e7\u30f3\u3068\u30b9\u30af\u30ea\u30d7\u30c8\u3092\u66f4\u65b0\u3057\u3066\u3001\u30bb\u30f3\u30b5\u30fc \u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u3092\u65b0\u3057\u304f\u8ffd\u52a0\u3055\u308c\u305f todo \u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u306b\u7f6e\u304d\u63db\u3048\u3066\u304f\u3060\u3055\u3044\u3002\u79fb\u884c\u304c\u5b8c\u4e86\u3057\u305f\u3089\u3001` {entity} ` \u3092\u7121\u52b9\u306b\u3067\u304d\u307e\u3059\u3002",
+            "title": "Habitica {task_name}\u30bb\u30f3\u30b5\u30fc\u306f\u975e\u63a8\u5968\u3067\u3059"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "\u30ed\u30fc\u30b0\uff1a\u80cc\u5f8c\u304b\u3089\u306e\u653b\u6483",
+                "fireball": "\u9b54\u6cd5\u4f7f\u3044\uff1a\u708e\u306e\u7206\u767a",
+                "pickpocket": "\u76d7\u8cca\uff1a\u30b9\u30ea",
+                "smash": "\u6226\u58eb\uff1a\u6b8b\u5fcd\u306a\u30b9\u30de\u30c3\u30b7\u30e5"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "\u30b7\u30fc\u30d5\u30a9\u30fc\u30e0",
+                "shiny_seed": "\u8f1d\u304f\u7a2e\u5b50",
+                "snowball": "\u30b9\u30ce\u30fc\u30dc\u30fc\u30eb",
+                "spooky_sparkles": "\u4e0d\u6c17\u5473\u306a\u8f1d\u304d"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "description": "\u30d1\u30fc\u30c6\u30a3\u306e\u9032\u884c\u4e2d\u306e\u30af\u30a8\u30b9\u30c8\u3092\u7d42\u4e86\u3057\u307e\u3059\u3002\u3059\u3079\u3066\u306e\u9032\u884c\u72b6\u6cc1\u306f\u5931\u308f\u308c\u3001\u30af\u30a8\u30b9\u30c8 \u30ed\u30fc\u30eb\u306f\u6240\u6709\u8005\u306e\u30a4\u30f3\u30d9\u30f3\u30c8\u30ea\u306b\u623b\u308a\u307e\u3059\u3002\u3053\u306e\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3067\u304d\u308b\u306e\u306f\u3001\u30af\u30a8\u30b9\u30c8 \u30ea\u30fc\u30c0\u30fc\u307e\u305f\u306f\u30b0\u30eb\u30fc\u30d7 \u30ea\u30fc\u30c0\u30fc\u306e\u307f\u3067\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3059\u308b Habitica \u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                }
+            },
+            "name": "\u9032\u884c\u4e2d\u306e\u30af\u30a8\u30b9\u30c8\u3092\u4e2d\u6b62\u3059\u308b"
+        },
+        "accept_quest": {
+            "description": "\u4fdd\u7559\u4e2d\u306e\u30af\u30a8\u30b9\u30c8\u3078\u306e\u62db\u5f85\u3092\u627f\u8afe\u3057\u307e\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3059\u308b Habitica \u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                }
+            },
+            "name": "\u30af\u30a8\u30b9\u30c8\u3078\u306e\u62db\u5f85\u3092\u627f\u8afe\u3059\u308b"
+        },
+        "api_call": {
+            "description": "Habitica API\u3092\u547c\u3073\u51fa\u3057\u307e\u3059\u3002",
+            "fields": {
+                "args": {
+                    "description": "\u8ffd\u52a0\u306e JSON \u307e\u305f\u306f URL \u30d1\u30e9\u30e1\u30fc\u30bf\u30fc\u5f15\u6570\u3002\u30d1\u30b9\u306b\u3064\u3044\u3066\u306f\u3001\u8a00\u53ca\u3055\u308c\u3066\u3044\u308b apidoc \u3092\u53c2\u7167\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u4f8b\u3067\u306f\u540c\u3058 API \u30a8\u30f3\u30c9\u30dd\u30a4\u30f3\u30c8\u3092\u4f7f\u7528\u3057\u307e\u3059\u3002",
+                    "name": "\u5f15\u6570"
+                },
+                "name": {
+                    "description": "\u547c\u3073\u51fa\u3059 Habitica \u306e\u30e6\u30fc\u30b6\u30fc\u540d\u3002",
+                    "name": "\u540d\u524d"
+                },
+                "path": {
+                    "description": "API URL \u306e\u9805\u76ee\u3002\u672b\u5c3e\u306b\u30e1\u30bd\u30c3\u30c9\u304c\u4ed8\u52a0\u3055\u308c\u305f\u914d\u5217\u5f62\u5f0f\u3067\u3059\u3002 https://habitica.com/apidoc/ \u3092\u53c2\u7167\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u4f8b\u3067\u306f https://habitica.com/apidoc/#api-Task-CreateUserTasks \u3092\u4f7f\u7528\u3057\u307e\u3059\u3002",
+                    "name": "\u30d1\u30b9"
+                }
+            },
+            "name": "API\u540d"
+        },
+        "cancel_quest": {
+            "description": "\u307e\u3060\u958b\u59cb\u3055\u308c\u3066\u3044\u306a\u3044\u30af\u30a8\u30b9\u30c8\u3092\u30ad\u30e3\u30f3\u30bb\u30eb\u3057\u307e\u3059\u3002\u627f\u8a8d\u6e08\u307f\u304a\u3088\u3073\u4fdd\u7559\u4e2d\u306e\u62db\u5f85\u306f\u3059\u3079\u3066\u30ad\u30e3\u30f3\u30bb\u30eb\u3055\u308c\u3001\u30af\u30a8\u30b9\u30c8 \u30ed\u30fc\u30eb\u306f\u6240\u6709\u8005\u306e\u30a4\u30f3\u30d9\u30f3\u30c8\u30ea\u306b\u623b\u3055\u308c\u307e\u3059\u3002\u3053\u306e\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3067\u304d\u308b\u306e\u306f\u3001\u30af\u30a8\u30b9\u30c8 \u30ea\u30fc\u30c0\u30fc\u307e\u305f\u306f\u30b0\u30eb\u30fc\u30d7 \u30ea\u30fc\u30c0\u30fc\u306e\u307f\u3067\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3059\u308b Habitica \u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                }
+            },
+            "name": "\u4fdd\u7559\u4e2d\u306e\u30af\u30a8\u30b9\u30c8\u3092\u30ad\u30e3\u30f3\u30bb\u30eb\u3059\u308b"
+        },
+        "cast_skill": {
+            "description": "\u7279\u5b9a\u306e\u30bf\u30b9\u30af\u306b Habitica \u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306e\u30b9\u30ad\u30eb\u307e\u305f\u306f\u546a\u6587\u3092\u4f7f\u7528\u3057\u3066\u3001\u305d\u306e\u9032\u884c\u72b6\u6cc1\u3084\u30b9\u30c6\u30fc\u30bf\u30b9\u306b\u5f71\u97ff\u3092\u4e0e\u3048\u307e\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u30b9\u30ad\u30eb\u3092\u767a\u52d5\u3059\u308bHabitica\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                },
+                "skill": {
+                    "description": "\u30bf\u30b9\u30af\u3067\u4f7f\u7528\u3059\u308b\u30b9\u30ad\u30eb\u307e\u305f\u306f\u546a\u6587\u3092\u9078\u629e\u3057\u307e\u3059\u3002\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306e\u30af\u30e9\u30b9\u306b\u5bfe\u5fdc\u3059\u308b\u30b9\u30ad\u30eb\u306e\u307f\u4f7f\u7528\u3067\u304d\u307e\u3059\u3002",
+                    "name": "\u30b9\u30ad\u30eb"
+                },
+                "task": {
+                    "description": "\u30b9\u30ad\u30eb\u307e\u305f\u306f\u546a\u6587\u306e\u5bfe\u8c61\u3068\u306a\u308b\u30bf\u30b9\u30af\u306e\u540d\u524d (\u307e\u305f\u306f\u30bf\u30b9\u30af ID)\u3002",
+                    "name": "\u30bf\u30b9\u30af\u540d"
+                }
+            },
+            "name": "\u30b9\u30ad\u30eb\u3092\u30ad\u30e3\u30b9\u30c8\u3059\u308b"
+        },
+        "leave_quest": {
+            "description": "\u73fe\u5728\u53c2\u52a0\u3057\u3066\u3044\u308b\u30af\u30a8\u30b9\u30c8\u3092\u7d42\u4e86\u3057\u307e\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3059\u308b Habitica \u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                }
+            },
+            "name": "\u30af\u30a8\u30b9\u30c8\u3092\u6b8b\u3059"
+        },
+        "reject_quest": {
+            "description": "\u4fdd\u7559\u4e2d\u306e\u30af\u30a8\u30b9\u30c8\u3078\u306e\u62db\u5f85\u3092\u62d2\u5426\u3057\u307e\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3059\u308b Habitica \u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                }
+            },
+            "name": "\u30af\u30a8\u30b9\u30c8\u306e\u62db\u5f85\u3092\u62d2\u5426\u3059\u308b"
+        },
+        "score_habit": {
+            "description": "\u7fd2\u6163\u306e\u9032\u6357\u72b6\u6cc1\u3092\u8ffd\u8de1\u3059\u308b\u305f\u3081\u306b\u3001\u7fd2\u6163\u306e\u30d7\u30e9\u30b9\u307e\u305f\u306f\u30de\u30a4\u30ca\u30b9\u306e\u50be\u5411\u3092\u5897\u3084\u3057\u307e\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u3042\u306a\u305f\u306e\u7fd2\u6163\u3092\u8ffd\u8de1\u3057\u3066\u3044\u308bHabitica\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                },
+                "direction": {
+                    "description": "\u3042\u306a\u305f\u306e\u7fd2\u6163\u306b\u3064\u3044\u3066\u8ffd\u8de1\u3057\u305f\u3044\u306e\u306f\u3001\u30dd\u30b8\u30c6\u30a3\u30d6\u306a\u9032\u6b69\u3067\u3059\u304b\u30cd\u30ac\u30c6\u30a3\u30d6\u306a\u9032\u6b69\u3067\u3059\u304b\u3002",
+                    "name": "\u5831\u916c\u307e\u305f\u306f\u640d\u5931"
+                },
+                "task": {
+                    "description": "Habitica habit\u306e\u540d\u524d (\u307e\u305f\u306f\u30bf\u30b9\u30af ID)\u3002",
+                    "name": "Habit \u540d"
+                }
+            },
+            "name": "habit\u3092\u8ffd\u8de1\u3059\u308b"
+        },
+        "score_reward": {
+            "description": "\u30bf\u30b9\u30af\u3092\u9054\u6210\u3057\u3066\u7372\u5f97\u3057\u305f\u30b4\u30fc\u30eb\u30c9\u3067\u30ab\u30b9\u30bf\u30e0\u5831\u916c\u306e 1 \u3064\u3092\u8cfc\u5165\u3057\u307e\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u5831\u916c\u3092\u8cfc\u5165\u3059\u308bHabitica\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                },
+                "task": {
+                    "description": "\u30ab\u30b9\u30bf\u30e0\u5831\u916c\u306e\u540d\u524d (\u307e\u305f\u306f\u30bf\u30b9\u30af ID)\u3002",
+                    "name": "\u5831\u916c\u540d"
+                }
+            },
+            "name": "\u5831\u916c\u3092\u8cfc\u5165\u3059\u308b"
+        },
+        "start_quest": {
+            "description": "\u627f\u8a8d\u307e\u305f\u306f\u62d2\u5426\u3055\u308c\u3066\u3044\u306a\u3044\u4fdd\u7559\u4e2d\u306e\u62db\u5f85\u3092\u7121\u8996\u3057\u3066\u3001\u30af\u30a8\u30b9\u30c8\u3092\u3059\u3050\u306b\u958b\u59cb\u3057\u307e\u3059\u3002\u3053\u306e\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3067\u304d\u308b\u306e\u306f\u3001\u30af\u30a8\u30b9\u30c8 \u30ea\u30fc\u30c0\u30fc\u307e\u305f\u306f\u30b0\u30eb\u30fc\u30d7 \u30ea\u30fc\u30c0\u30fc\u306e\u307f\u3067\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u30a2\u30af\u30b7\u30e7\u30f3\u3092\u5b9f\u884c\u3059\u308b Habitica \u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                }
+            },
+            "name": "\u4fdd\u7559\u4e2d\u306e\u30af\u30a8\u30b9\u30c8\u3092\u5f37\u5236\u7684\u306b\u958b\u59cb\u3059\u308b"
+        },
+        "transformation": {
+            "description": "Habitica \u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306e\u30a4\u30f3\u30d9\u30f3\u30c8\u30ea\u306b\u3042\u308b\u5909\u8eab\u30a2\u30a4\u30c6\u30e0\u3092\u3001\u30d1\u30fc\u30c6\u30a3\u30fc\u306e\u30e1\u30f3\u30d0\u30fc\u307e\u305f\u306f\u81ea\u5206\u81ea\u8eab\u306b\u4f7f\u7528\u3057\u307e\u3059\u3002",
+            "fields": {
+                "config_entry": {
+                    "description": "\u5909\u8eab\u30a2\u30a4\u30c6\u30e0\u3092\u4f7f\u7528\u3059\u308bHabitica\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u3092\u9078\u629e\u3057\u307e\u3059\u3002",
+                    "name": "\u6587\u5b57\u3092\u9078\u629e"
+                },
+                "item": {
+                    "description": "\u4f7f\u7528\u3059\u308b\u5909\u63db\u30a2\u30a4\u30c6\u30e0\u3092\u9078\u629e\u3057\u307e\u3059\u3002\u30a2\u30a4\u30c6\u30e0\u306f\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306e\u30a4\u30f3\u30d9\u30f3\u30c8\u30ea\u5185\u306b\u306a\u3051\u308c\u3070\u306a\u308a\u307e\u305b\u3093\u3002",
+                    "name": "\u5909\u8eab\u30a2\u30a4\u30c6\u30e0"
+                },
+                "target": {
+                    "description": "\u5909\u8eab\u30a2\u30a4\u30c6\u30e0\u3092\u4f7f\u7528\u3059\u308b\u30ad\u30e3\u30e9\u30af\u30bf\u30fc\u306e\u540d\u524d\u3002\u30d7\u30ec\u30a4\u30e4\u30fc\u306e\u30e6\u30fc\u30b6\u30fc\u540d\u307e\u305f\u306f\u30e6\u30fc\u30b6\u30fc ID \u3092\u6307\u5b9a\u3059\u308b\u3053\u3068\u3082\u3067\u304d\u307e\u3059\u3002",
+                    "name": "\u5bfe\u8c61\u30ad\u30e3\u30e9\u30af\u30bf\u30fc"
+                }
+            },
+            "name": "\u5909\u8eab\u30a2\u30a4\u30c6\u30e0\u3092\u4f7f\u3046"
+        }
+    }
+}

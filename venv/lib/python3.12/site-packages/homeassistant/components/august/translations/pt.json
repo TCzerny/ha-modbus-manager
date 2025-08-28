@@ -1,0 +1,92 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Conta j\u00e1 configurada",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "invalid_verification_code": "C\u00f3digo de verifica\u00e7\u00e3o inv\u00e1lido",
+            "unhandled": "Erro n\u00e3o tratado: {error}"
+        },
+        "step": {
+            "reauth_validate": {
+                "data": {
+                    "brand": "Marca",
+                    "password": "Palavra-passe"
+                },
+                "description": "Escolha a marca correta para o seu dispositivo e introduza a palavra-passe para {username}. Se escolher a marca errada, poder\u00e1 conseguir autenticar-se inicialmente; no entanto, n\u00e3o poder\u00e1 operar dispositivos. Se n\u00e3o tiver a certeza da marca, crie novamente a integra\u00e7\u00e3o e tente outra marca.",
+                "title": "Reautenticar uma conta August"
+            },
+            "user_validate": {
+                "data": {
+                    "brand": "Marca",
+                    "login_method": "M\u00e9todo de Login",
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Recomenda-se a utiliza\u00e7\u00e3o do m\u00e9todo de in\u00edcio de sess\u00e3o \"e-mail\", uma vez que algumas marcas podem n\u00e3o funcionar com o m\u00e9todo \"telefone\". Se o m\u00e9todo de in\u00edcio de sess\u00e3o for \"e-mail\", o nome de utilizador \u00e9 o endere\u00e7o de e-mail. Se o m\u00e9todo de in\u00edcio de sess\u00e3o for \"telefone\", o nome de utilizador \u00e9 o n\u00famero de telefone no formato \"+NNNNNNNNNN\". Se escolher a marca errada, pode conseguir autenticar-se inicialmente; no entanto, n\u00e3o poder\u00e1 utilizar os dispositivos. Se n\u00e3o tiver a certeza da marca, crie novamente a integra\u00e7\u00e3o e tente outra marca.",
+                "title": "Criar uma conta August"
+            },
+            "validation": {
+                "data": {
+                    "verification_code": "C\u00f3digo de verifica\u00e7\u00e3o"
+                },
+                "description": "Verifique o seu {login_method} ({username}) e introduza o c\u00f3digo de verifica\u00e7\u00e3o abaixo. Os c\u00f3digos podem demorar alguns minutos a chegar.",
+                "title": "Autentica\u00e7\u00e3o de dois fatores"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "ding": {
+                "name": "Campainha da porta"
+            },
+            "image_capture": {
+                "name": "Captura de imagem"
+            }
+        },
+        "button": {
+            "wake": {
+                "name": "Acordar"
+            }
+        },
+        "camera": {
+            "camera": {
+                "name": "C\u00e2mara"
+            }
+        },
+        "event": {
+            "doorbell": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "ring": "Tocar"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "motion": "Movimento"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "operator": {
+                "name": "Operador"
+            }
+        }
+    },
+    "issues": {
+        "yale_brand_migration": {
+            "description": "Adicione a [integra\u00e7\u00e3o Yale]({migrate_url}) e remova a integra\u00e7\u00e3o de agosto o mais rapidamente poss\u00edvel para evitar uma interrup\u00e7\u00e3o do servi\u00e7o. A marca Yale Home deixar\u00e1 de funcionar com a integra\u00e7\u00e3o de agosto em breve e ser\u00e1 removida numa vers\u00e3o futura.",
+            "title": "O Yale Home tem uma nova integra\u00e7\u00e3o"
+        }
+    }
+}

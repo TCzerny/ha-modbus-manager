@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_api_key": "Chave de API inv\u00e1lida"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "Chave da API",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "A chave da API do servidor SABnzbd. Pode ser encontrada na interface web do SABnzbd em Configura\u00e7\u00e3o (\u00edcone de engrenagem no canto superior direito) > Geral > Seguran\u00e7a.",
+                    "url": "O URL completo, incluindo a porta, do servidor SABnzbd. Exemplo: `http://localhost:8080` ou `http://a02368d7-sabnzbd:8080`, se estiver a usar o add-on."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "warnings": {
+                "name": "Avisos"
+            }
+        },
+        "button": {
+            "pause": {
+                "name": "Pausar"
+            },
+            "resume": {
+                "name": "Retomar"
+            }
+        },
+        "number": {
+            "speedlimit": {
+                "name": "Limite de velocidade"
+            }
+        },
+        "sensor": {
+            "daily_total": {
+                "name": "Total di\u00e1rio"
+            },
+            "free_disk_space": {
+                "name": "Espa\u00e7o livre no disco"
+            },
+            "left": {
+                "name": "Download em falta"
+            },
+            "monthly_total": {
+                "name": "Total mensal"
+            },
+            "overall_total": {
+                "name": "Total geral"
+            },
+            "queue": {
+                "name": "Fila"
+            },
+            "queue_count": {
+                "name": "Contagem de filas"
+            },
+            "speed": {
+                "name": "Velocidade"
+            },
+            "status": {
+                "name": "Estado"
+            },
+            "total_disk_space": {
+                "name": "Espa\u00e7o total em disco"
+            },
+            "weekly_total": {
+                "name": "Total semanal"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_exception": {
+            "message": "N\u00e3o foi poss\u00edvel enviar o comando para SABnzbd devido a um erro de liga\u00e7\u00e3o, tente mais tarde"
+        }
+    },
+    "issues": {
+        "pause_action_deprecated": {
+            "description": "A a\u00e7\u00e3o 'Pausa' est\u00e1 obsoleta e ser\u00e1 removida numa vers\u00e3o futura. Por favor, utilize o bot\u00e3o 'Pausa' em substitui\u00e7\u00e3o. Para resolver este problema, ajuste as automatiza\u00e7\u00f5es em conformidade e reinicie o Home Assistant.",
+            "title": "A\u00e7\u00e3o de pausa do SABnzbd obsoleta"
+        },
+        "resume_action_deprecated": {
+            "description": "A a\u00e7\u00e3o 'Retomar' est\u00e1 obsoleta e ser\u00e1 removida numa vers\u00e3o futura. Por favor, utilize o bot\u00e3o 'Retomar' em substitui\u00e7\u00e3o. Para resolver este problema, ajuste as automatiza\u00e7\u00f5es em conformidade e reinicie o Home Assistant.",
+            "title": "A\u00e7\u00e3o de retomar do SABnzbd obsoleta"
+        },
+        "set_speed_action_deprecated": {
+            "description": "A a\u00e7\u00e3o 'Definir velocidade' est\u00e1 obsoleta e ser\u00e1 removida numa vers\u00e3o futura. Por favor, utilize a entidade num\u00e9rica 'Limite de velocidade' em substitui\u00e7\u00e3o. Para resolver este problema, ajuste as automatiza\u00e7\u00f5es em conformidade e reinicie o Home Assistant.",
+            "title": "A a\u00e7\u00e3o `set_speed` no SABnzbd foi descontinuada"
+        }
+    },
+    "services": {
+        "pause": {
+            "description": "Pausar downloads.",
+            "fields": {
+                "api_key": {
+                    "description": "A chave da API do SABnzbd para pausar os downloads.",
+                    "name": "Chave API do SABnzbd"
+                }
+            },
+            "name": "Pausar"
+        },
+        "resume": {
+            "description": "Retomar downloads.",
+            "fields": {
+                "api_key": {
+                    "description": "A chave API do SABnzbd para retomar os downloads.",
+                    "name": "Chave API do SABnzbd"
+                }
+            },
+            "name": "Retomar"
+        },
+        "set_speed": {
+            "description": "Define o limite de velocidade de download.",
+            "fields": {
+                "api_key": {
+                    "description": "A chave API SABnzbd para definir o limite de velocidade.",
+                    "name": "Chave API do SABnzbd"
+                },
+                "speed": {
+                    "description": "Limite de velocidade. Se for especificado como um n\u00famero sem unidades, ser\u00e1 interpretado como uma percentagem. Se forem fornecidas unidades (por exemplo, 500K), ser\u00e1 interpretado de forma absoluta.",
+                    "name": "Velocidade"
+                }
+            },
+            "name": "Definir velocidade"
+        }
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API-Code"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Ung\u00fcltiger Konfigurationseintrag angegeben. {config_entry} erhalten."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "chat_model": "Modell",
+                    "llm_hass_api": "Home Assistant steuern",
+                    "max_tokens": "Maximale Anzahl von Token, die als Antwort zur\u00fcckgegeben werden",
+                    "prompt": "Anweisungen",
+                    "recommended": "Empfohlene Modelleinstellungen",
+                    "temperature": "Temperatur",
+                    "top_p": "Top P"
+                },
+                "data_description": {
+                    "prompt": "Gib Anweisungen, wie das LLM reagieren soll. Dies kann ein Template sein."
+                }
+            }
+        }
+    },
+    "services": {
+        "generate_image": {
+            "description": "Wandelt einen Prompt in ein Bild um",
+            "fields": {
+                "config_entry": {
+                    "description": "Der f\u00fcr diese Aktion zu verwendende Konfigurationseintrag",
+                    "name": "Konfigurationseintrag"
+                },
+                "prompt": {
+                    "description": "Der Text, der in ein Bild umgewandelt werden soll",
+                    "example": "Ein Foto eines Hundes",
+                    "name": "Prompt"
+                },
+                "quality": {
+                    "description": "Die Qualit\u00e4t des Bildes, das generiert wird",
+                    "name": "Qualit\u00e4t"
+                },
+                "size": {
+                    "description": "Die Gr\u00f6\u00dfe des zu generierenden Bildes",
+                    "name": "Gr\u00f6\u00dfe"
+                },
+                "style": {
+                    "description": "Der Stil des generierten Bildes",
+                    "name": "Stil"
+                }
+            },
+            "name": "Bild generieren"
+        }
+    }
+}

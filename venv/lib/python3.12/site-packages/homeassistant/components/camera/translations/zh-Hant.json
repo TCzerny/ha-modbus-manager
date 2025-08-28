@@ -1,0 +1,115 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "\u651d\u5f71\u6a5f",
+            "state": {
+                "idle": "\u5f85\u547d",
+                "recording": "\u9304\u5f71\u4e2d",
+                "streaming": "\u76e3\u63a7\u4e2d"
+            },
+            "state_attributes": {
+                "access_token": {
+                    "name": "\u5b58\u53d6\u5bc6\u9470"
+                },
+                "brand": {
+                    "name": "\u54c1\u724c"
+                },
+                "frontend_stream_type": {
+                    "name": "\u4e32\u6d41\u985e\u578b",
+                    "state": {
+                        "hls": "HLS",
+                        "webrtc": "WebRTC"
+                    }
+                },
+                "model_name": {
+                    "name": "\u578b\u865f"
+                },
+                "motion_detection": {
+                    "name": "\u5075\u6e2c\u5230\u52d5\u4f5c",
+                    "state": {
+                        "false": "\u5df2\u95dc\u9589",
+                        "true": "\u5df2\u555f\u7528"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_filename_template": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "\u65bc\u57f7\u884c\u52d5\u4f5c `{service}` \u6642\uff0c\u4f7f\u7528\u4e86\u9810\u5b9a\u7fa9\u91dd\u5c0d\u651d\u50cf\u6a5f\u5be6\u9ad4 `{entity_id}`\u7684\u6a21\u677f\u8b8a\u6578 `entity_id` \u3002\u9810\u5b9a\u7fa9\u6a21\u677f\u8b8a\u6578 `entity_id` \u5df2\u7d93\u7531 `{service}` \u7684 `filename` \u53c3\u6578\u4e2d\u79fb\u9664\u3002\n\n\u8acb\u66f4\u65b0\u81ea\u52d5\u5316\u53ca\u8173\u672c\u4ee5\u4f7f\u7528\u624b\u52d5\u5b9a\u7fa9\u8b8a\u6578\u3001\u4e26\u7136\u5f8c\u9078\u64c7 **\u50b3\u9001** \u4ee5\u95dc\u9589\u6b64\u554f\u984c\u3002",
+                        "title": "\u6aa2\u6e2c\u5230\u4f7f\u7528\u5df2\u4e0d\u518d\u4f7f\u7528\u7684\u6a21\u677f\u8b8a\u6578"
+                    }
+                }
+            },
+            "title": "\u6aa2\u6e2c\u5230\u4f7f\u7528\u5df2\u4e0d\u518d\u4f7f\u7528\u7684\u6a21\u677f\u8b8a\u6578"
+        },
+        "legacy_webrtc_provider": {
+            "description": "{legacy_integration} \u6574\u5408\u8a3b\u518a\u4e86\u820a\u7248 WebRTC \u670d\u52d9\u63d0\u4f9b\u3002Home Assistant \u5efa\u8b70\u4f7f\u7528\u7531 {builtin_integration} \u6574\u5408\u8a3b\u518a\u7684\u5167\u5efa\u65b0\u7248 WebRTC \u670d\u52d9\u63d0\u4f9b\u3002\n\n\u5167\u5efa\u6574\u5408\u7684\u597d\u8655\u662f\uff1a\n\n- \u651d\u5f71\u6a5f\u4e32\u6d41\u555f\u52d5\u66f4\u5feb\u3002\n- \u652f\u63f4\u66f4\u591a\u651d\u5f71\u6a5f\u88dd\u7f6e\u3002\n\n\u8981\u4fee\u6b63\u6b64\u554f\u984c\uff0c\u53ef\u4ee5\u9078\u64c7\u7e7c\u7e8c\u4f7f\u7528\u5167\u5efa\u7684\u65b0\u7248 WebRTC \u670d\u52d9\u63d0\u4f9b\u4e26\u79fb\u9664 {legacy_integration} \u6574\u5408\uff0c\u6216\u79fb\u9664 {builtin_integration} \u6574\u5408\u4ee5\u7e7c\u7e8c\u4f7f\u7528\u820a\u7248\u670d\u52d9\u63d0\u4f9b\uff0c\u4e26\u91cd\u65b0\u555f\u52d5 Home Assistant\u3002",
+            "title": "\u5075\u6e2c\u5230\u4f7f\u7528\u7531 {legacy_integration} \u8a3b\u518a\u7684\u820a\u7248 WebRTC \u670d\u52d9\u63d0\u4f9b"
+        }
+    },
+    "services": {
+        "disable_motion_detection": {
+            "description": "\u95dc\u9589\u52d5\u4f5c\u611f\u6e2c\u3002",
+            "name": "\u95dc\u9589\u52d5\u4f5c\u611f\u6e2c"
+        },
+        "enable_motion_detection": {
+            "description": "\u958b\u555f\u52d5\u4f5c\u611f\u6e2c\u3002",
+            "name": "\u958b\u555f\u52d5\u4f5c\u611f\u6e2c"
+        },
+        "play_stream": {
+            "description": "\u65bc\u652f\u63f4\u7684\u5a92\u9ad4\u64ad\u653e\u5668\u4e0a\u64ad\u653e\u651d\u5f71\u6a5f\u4e32\u6d41\u3002",
+            "fields": {
+                "format": {
+                    "description": "\u5a92\u9ad4\u64ad\u653e\u5668\u652f\u63f4\u4e32\u6d41\u683c\u5f0f\u3002",
+                    "name": "\u683c\u5f0f"
+                },
+                "media_player": {
+                    "description": "\u64ad\u653e\u4e32\u6d41\u7684\u5a92\u9ad4\u64ad\u653e\u5668\u3002",
+                    "name": "\u5a92\u9ad4\u64ad\u653e\u5668"
+                }
+            },
+            "name": "\u64ad\u653e\u4e32\u6d41"
+        },
+        "record": {
+            "description": "\u65b0\u589e\u5373\u6642\u651d\u5f71\u6a5f\u4e32\u6d41\u9304\u5f71\u3002",
+            "fields": {
+                "duration": {
+                    "description": "\u898f\u5283\u7684\u9304\u5f71\u6301\u7e8c\u6642\u9593\u3002\u5be6\u969b\u6642\u9593\u53ef\u80fd\u6709\u6240\u5dee\u7570\u3002",
+                    "name": "\u6301\u7e8c\u6642\u9593"
+                },
+                "filename": {
+                    "description": "\u6a94\u6848\u540d\u7a31\u5b8c\u6574\u8def\u5f91\uff0c\u5fc5\u9808\u70ba MP4 \u6a94\u3002",
+                    "name": "\u6a94\u540d"
+                },
+                "lookback": {
+                    "description": "\u8a08\u5283\u56de\u770b\u671f\u9593\u5305\u62ec\u65bc\u9304\u5f71\u4e2d\uff08\u6301\u7e8c\u6642\u9593\u4e4b\u5916\uff09\uff0c\u50c5\u6709\u7576\u4f7f\u7528\u555f\u7528 HLS \u4e32\u6d41\u6642\u3001\u65b9\u80fd\u4f7f\u7528\u3002\u56de\u770b\u5be6\u969b\u6642\u9593\u53ef\u80fd\u6709\u6240\u5dee\u7570\u3002",
+                    "name": "\u56de\u770b"
+                }
+            },
+            "name": "\u9304\u5f71"
+        },
+        "snapshot": {
+            "description": "\u7531\u651d\u5f71\u6a5f\u62cd\u651d\u5feb\u7167\u3002",
+            "fields": {
+                "filename": {
+                    "description": "\u6a94\u6848\u540d\u7a31\u5b8c\u6574\u8def\u5f91\u3002",
+                    "name": "\u6a94\u540d"
+                }
+            },
+            "name": "\u62cd\u651d\u5feb\u7167"
+        },
+        "turn_off": {
+            "description": "\u95dc\u9589\u651d\u5f71\u6a5f\u3002",
+            "name": "\u95dc\u9589"
+        },
+        "turn_on": {
+            "description": "\u958b\u555f\u651d\u5f71\u6a5f\u3002",
+            "name": "\u958b\u555f"
+        }
+    },
+    "title": "\u651d\u5f71\u6a5f"
+}

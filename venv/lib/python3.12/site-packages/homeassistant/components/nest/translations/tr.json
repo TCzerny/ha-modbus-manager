@@ -1,0 +1,113 @@
+{
+    "application_credentials": {
+        "description": "Cloud Console'u yap\u0131land\u0131rmak i\u00e7in [talimatlar\u0131]( {more_info_url} ) izleyin: \n \n 1. [OAuth onay ekran\u0131na]( {oauth_consent_url} ) gidin ve yap\u0131land\u0131r\u0131n \n 1. [Kimlik Bilgileri]( {oauth_creds_url} ) \u00f6\u011fesine gidin ve **Kimlik Bilgileri Olu\u015ftur** \u00f6\u011fesini se\u00e7in. \n 1. A\u00e7\u0131l\u0131r listeden **OAuth istemci kimli\u011fi** \u00f6\u011fesini se\u00e7in. \n 1. Uygulama T\u00fcr\u00fc i\u00e7in **Web Uygulamas\u0131** \u00f6\u011fesini se\u00e7in. \n 1. *Yetkili y\u00f6nlendirme URI'si* alt\u0131na ` {redirect_url} ` \u00f6\u011fesini ekleyin."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Hesap zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "authorize_url_timeout": "Yetkilendirme URL'si olu\u015ftururken zaman a\u015f\u0131m\u0131.",
+            "invalid_access_token": "Ge\u00e7ersiz eri\u015fim anahtar\u0131",
+            "missing_configuration": "Bile\u015fen yap\u0131land\u0131r\u0131lmam\u0131\u015f. L\u00fctfen belgeleri takip edin.",
+            "missing_credentials": "Entegrasyon, uygulama kimlik bilgilerini gerektirir.",
+            "no_url_available": "Kullan\u0131labilir URL yok. Bu hata hakk\u0131nda bilgi i\u00e7in [yard\u0131m b\u00f6l\u00fcm\u00fcne bak\u0131n]({docs_url})",
+            "oauth_error": "Ge\u00e7ersiz anahtar verileri al\u0131nd\u0131.",
+            "oauth_failed": "Eri\u015fim anahtar\u0131 al\u0131n\u0131rken hata olu\u015ftu.",
+            "oauth_timeout": "OAuth anahtar\u0131n\u0131 \u00e7\u00f6zme zaman a\u015f\u0131m\u0131.",
+            "oauth_unauthorized": "Eri\u015fim anahtar\u0131 al\u0131n\u0131rken OAuth yetkilendirme hatas\u0131.",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu",
+            "unknown_authorize_url_generation": "Yetkilendirme url'si olu\u015fturulurken bilinmeyen hata."
+        },
+        "create_entry": {
+            "default": "Ba\u015far\u0131yla do\u011fruland\u0131"
+        },
+        "error": {
+            "bad_project_id": "L\u00fctfen ge\u00e7erli bir Cloud Project Kimli\u011fi girin (Cloud Console'a bak\u0131n)",
+            "no_pubsub_topics": "Uygun Pub/Sub konusu bulunamad\u0131. L\u00fctfen Device Access Console'un bir Pub/Sub konusuna sahip oldu\u011fundan emin olun.",
+            "pubsub_api_error": "Cloud Pub/Sub ile ileti\u015fimde bilinmeyen hata olu\u015ftu, g\u00fcnl\u00fckleri inceleyin",
+            "subscriber_error": "Bilinmeyen abone hatas\u0131, g\u00fcnl\u00fcklere bak\u0131n\u0131z",
+            "wrong_project_id": "L\u00fctfen ge\u00e7erli bir Bulut Projesi Kimli\u011fi girin (Cihaz Eri\u015fimi Proje Kimli\u011fi ile ayn\u0131yd\u0131)"
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "Google Bulut Proje Kimli\u011fi"
+                },
+                "description": "Bulut Projesi Kimli\u011fini a\u015fa\u011f\u0131ya girin, \u00f6rne\u011fin *example-project-12345*. [Google Cloud Console]( {cloud_console_url} ) veya [daha fazla bilgi]( {more_info_url} ) i\u00e7in belgelere bak\u0131n.",
+                "title": "Nest: Bulut Proje Kimli\u011fini Girin"
+            },
+            "create_cloud_project": {
+                "description": "Nest entegrasyonu, Ak\u0131ll\u0131 Cihaz Y\u00f6netimi API'sini kullanarak Nest Termostatlar\u0131n\u0131z\u0131, Kameralar\u0131n\u0131z\u0131 ve Kap\u0131 Zillerinizi entegre etmenizi sa\u011flar. SDM API'si **5 ABD Dolar\u0131** tutar\u0131nda bir kerelik kurulum \u00fccreti gerektirir. [Daha fazla bilgi]( {more_info_url} ) i\u00e7in belgelere bak\u0131n. \n \n 1. [Google Cloud Console]( {cloud_console_url} )'a gidin. \n 1. Bu ilk projenizse **Proje Olu\u015ftur**'u ve ard\u0131ndan **Yeni Proje**'yi se\u00e7in. \n 1. Bulut Projenize bir Ad verin ve ard\u0131ndan **Olu\u015ftur**'u se\u00e7in. \n 1. Daha sonra ihtiya\u00e7 duyaca\u011f\u0131n\u0131z i\u00e7in Bulut Proje Kimli\u011fini kaydedin, \u00f6rne\u011fin *example-project-12345* \n 1. [Ak\u0131ll\u0131 Cihaz Y\u00f6netimi API'si]( {sdm_api_url} ) i\u00e7in API Kitapl\u0131\u011f\u0131na gidin ve **Etkinle\u015ftir**'i se\u00e7in. \n 1. [Cloud Pub/Sub API]( {pubsub_api_url} ) i\u00e7in API Kitapl\u0131\u011f\u0131na gidin ve **Etkinle\u015ftir**'i se\u00e7in. \n \n Bulut projeniz kuruldu\u011funda devam edin.",
+                "title": "Nest: Bulut Projesi olu\u015fturma ve yap\u0131land\u0131rma"
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "Cihaz Eri\u015fim Projesi Kimli\u011fi"
+                },
+                "description": "Kurulumu i\u00e7in Google'a 5 ABD dolar\u0131 \u00fccret \u00f6demeyi gerektiren bir Nest Device Access projesi olu\u015fturun. \n 1. [Cihaz Eri\u015fim Konsolu]'na ( {device_access_console_url} ) gidin ve \u00f6deme ak\u0131\u015f\u0131ndan ge\u00e7in. \n 1. **Proje olu\u015ftur**'u se\u00e7in. \n 1. Cihaz Eri\u015fim projenize bir ad verin ve **\u0130leri**'yi se\u00e7in. \n 1. OAuth \u0130stemci Kimli\u011finizi girin. \n 1. **Etkinle\u015ftir** ve **Proje olu\u015ftur**'a t\u0131klayarak etkinlikleri etkinle\u015ftirin. \n \n A\u015fa\u011f\u0131ya Cihaz Eri\u015fim Proje Kimli\u011finizi girin ([daha fazla bilgi]( {more_info_url} )).",
+                "title": "Yuva: Bir Cihaz Eri\u015fim Projesi Olu\u015fturun"
+            },
+            "pick_implementation": {
+                "title": "Kimlik do\u011frulama y\u00f6ntemini se\u00e7"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "Google Bulut Proje Kimli\u011fi"
+                },
+                "description": "Home Assistant, ger\u00e7ek zamanl\u0131 Nest cihaz g\u00fcncellemelerini almak i\u00e7in Cloud Pub/Sub'\u0131 kullan\u0131r. Nest sunucular\u0131 bir Pub/Sub konusuna g\u00fcncellemeler yay\u0131nlar ve Home Assistant g\u00fcncellemeleri bir Pub/Sub aboneli\u011fi arac\u0131l\u0131\u011f\u0131yla al\u0131r. \n \n 1. [Cihaz Eri\u015fim Konsolu]'nu ( {device_access_console_url} ) ziyaret edin ve bir Pub/Sub konusunun yap\u0131land\u0131r\u0131ld\u0131\u011f\u0131ndan emin olun. \n 2. Google Cloud Proje Kimli\u011finizi bulmak ve a\u015fa\u011f\u0131da do\u011fru oldu\u011funu onaylamak i\u00e7in [Cloud Konsolu]'nu ( {url} ) ziyaret edin. \n 3. Sonraki ad\u0131m, Pub/Sub konular\u0131n\u0131 ve aboneliklerini otomatik olarak ke\u015ffetmeyi deneyecektir. \n \n [Daha fazla bilgi]( {more_info_url} ) i\u00e7in entegrasyon belgelerine bak\u0131n.",
+                "title": "Google Cloud Pub/Sub'\u0131 yap\u0131land\u0131r\u0131n"
+            },
+            "pubsub_subscription": {
+                "data": {
+                    "subscription_name": "Pub/Sub abonelik ad\u0131"
+                },
+                "description": "Home Assistant, ` {topic} ` konusu i\u00e7in bir Cloud Pub/Sub aboneli\u011fiyle ger\u00e7ek zamanl\u0131 Nest cihaz g\u00fcncellemeleri al\u0131r. \n \n Zaten varsa a\u015fa\u011f\u0131dan mevcut bir abonelik se\u00e7in veya bir sonraki ad\u0131mda sizin i\u00e7in yeni bir abonelik olu\u015fturulacakt\u0131r. [daha fazla bilgi]( {more_info_url} ) i\u00e7in entegrasyon belgelerine bak\u0131n.",
+                "title": "Cloud Pub/Sub aboneli\u011fini yap\u0131land\u0131r\u0131n"
+            },
+            "pubsub_topic": {
+                "data": {
+                    "topic_name": "Pub/Sub konu ad\u0131"
+                },
+                "description": "Nest cihazlar\u0131 bir Cloud Pub/Sub konusu \u00fczerinde g\u00fcncellemeler yay\u0131nlar. A\u015fa\u011f\u0131dan [Device Access Console]( {device_access_console_url} ) ile ayn\u0131 olan Pub/Sub konusunu se\u00e7in. [Daha fazla bilgi]( {more_info_url} ) i\u00e7in entegrasyon belgelerine bak\u0131n.",
+                "title": "Cloud Pub/Sub konusunu yap\u0131land\u0131r\u0131n"
+            },
+            "reauth_confirm": {
+                "description": "Nest entegrasyonunun hesab\u0131n\u0131z\u0131 yeniden do\u011frulamas\u0131 gerekiyor",
+                "title": "{name} i\u00e7in kimlik do\u011frulaman\u0131n s\u00fcresi doldu"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "Hareket alg\u0131land\u0131",
+            "camera_person": "Ki\u015fi alg\u0131land\u0131",
+            "camera_sound": "Ses alg\u0131land\u0131",
+            "doorbell_chime": "Kap\u0131 zili bas\u0131ld\u0131"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "Zil sesi",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "Zil sesi"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "Hareket",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "Hareket",
+                            "camera_person": "Ki\u015fi",
+                            "camera_sound": "Ses"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,50 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_auth": "Autenticaci\u00f3n no v\u00e1lida",
+            "missing_internal_url": "Aseg\u00farate de que Home Assistant tenga una URL interna v\u00e1lida",
+            "missing_nasweb_data": "Hay alg\u00fan problema con la configuraci\u00f3n interna del dispositivo. Prueba a reiniciar el dispositivo y Home Assistant.",
+            "missing_status": "No se ha recibido ninguna actualizaci\u00f3n de estado en el plazo previsto. Aseg\u00farate de que se puede acceder a la URL interna del Home Assistant desde el dispositivo NASweb.",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Contrase\u00f1a",
+                    "username": "Nombre de usuario"
+                },
+                "description": "{nasweb_schema_img}NASweb combina las funciones de un panel de control y la capacidad de gestionar la automatizaci\u00f3n de edificios. El dispositivo monitorea el flujo de informaci\u00f3n de los sensores e interruptores programables y almacena configuraciones, definiciones y acciones configuradas.",
+                "title": "A\u00f1adir dispositivo NASweb"
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "switch_output": {
+                "name": "Interruptor de rel\u00e9 {index}"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_error_internal_error": {
+            "message": "Hay alg\u00fan problema con la configuraci\u00f3n interna del dispositivo. Prueba a reiniciar el dispositivo y Home Assistant. Si el problema persiste, comun\u00edcate con el servicio de asistencia en {support_email}"
+        },
+        "config_entry_error_invalid_authentication": {
+            "message": "Nombre de usuario/contrase\u00f1a no v\u00e1lidos. Lo m\u00e1s probable es que el usuario haya cambiado la contrase\u00f1a o haya sido eliminado. Elimina esta entrada y crea una nueva con el nombre de usuario/contrase\u00f1a correctos."
+        },
+        "config_entry_error_missing_internal_url": {
+            "message": "Aseg\u00farate de que Home Assistant tenga una URL interna v\u00e1lida"
+        },
+        "config_entry_error_no_status_update": {
+            "message": "No se ha recibido ninguna actualizaci\u00f3n de estado en el plazo previsto. Aseg\u00farate de que se puede acceder a la URL interna del Home Assistant desde el dispositivo NASweb. Si el problema persiste, ponte en contacto con el servicio de asistencia en {support_email}"
+        },
+        "serial_mismatch": {
+            "message": "Conectado a un dispositivo NASweb diferente (el n\u00famero de serie no coincide)."
+        }
+    }
+}

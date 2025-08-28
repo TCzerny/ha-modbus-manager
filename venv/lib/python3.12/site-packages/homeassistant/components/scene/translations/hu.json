@@ -1,0 +1,52 @@
+{
+    "exceptions": {
+        "entity_not_dynamically_created": {
+            "message": "A(z) {entity_id} jelenet nem a `scene.create` m\u0171velettel lett l\u00e9trehozva."
+        }
+    },
+    "services": {
+        "apply": {
+            "description": "Konfigur\u00e1ci\u00f3val aktiv\u00e1l egy jelenetet.",
+            "fields": {
+                "entities": {
+                    "description": "Entit\u00e1sok list\u00e1ja \u00e9s a c\u00e9l\u00e1llapotuk.",
+                    "name": "Entit\u00e1sok \u00e1llapota"
+                },
+                "transition": {
+                    "description": "Az az id\u0151, am\u00edg az eszk\u00f6z\u00f6k \u00e1tmennek a jelenetben meghat\u00e1rozott \u00e1llapotokba.",
+                    "name": "\u00c1tmenet"
+                }
+            },
+            "name": "Alkalmaz"
+        },
+        "create": {
+            "description": "\u00daj jelenetet hoz l\u00e9tre.",
+            "fields": {
+                "scene_id": {
+                    "description": "Az \u00faj jelenet entit\u00e1s azonos\u00edt\u00f3ja.",
+                    "name": "Jelenet entit\u00e1s azonos\u00edt\u00f3ja"
+                }
+            },
+            "name": "L\u00e9trehoz\u00e1s"
+        },
+        "delete": {
+            "description": "Dinamikusan l\u00e9trehozott jelenet t\u00f6rl\u00e9se.",
+            "name": "T\u00f6rl\u00e9s"
+        },
+        "reload": {
+            "description": "\u00dajrat\u00f6lti a jeleneteket a YAML-konfigur\u00e1ci\u00f3b\u00f3l.",
+            "name": "\u00dajrat\u00f6lt\u00e9s"
+        },
+        "turn_on": {
+            "description": "Aktiv\u00e1l egy jelenetet.",
+            "fields": {
+                "transition": {
+                    "description": "Az az id\u0151, am\u00edg az eszk\u00f6z\u00f6k \u00e1tmennek a jelenetben meghat\u00e1rozott \u00e1llapotokba.",
+                    "name": "\u00c1tmenet"
+                }
+            },
+            "name": "Aktiv\u00e1l\u00e1s"
+        }
+    },
+    "title": "Jelenet"
+}

@@ -1,0 +1,124 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Tj\u00e4nsten \u00e4r redan konfigurerad",
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delivered": {
+                "name": "Levererad"
+            },
+            "expired": {
+                "name": "Utg\u00e5tt"
+            },
+            "in_transit": {
+                "name": "P\u00e5 v\u00e4g"
+            },
+            "not_found": {
+                "name": "Hittades inte"
+            },
+            "package": {
+                "name": "Paket {name}"
+            },
+            "ready_to_be_picked_up": {
+                "name": "Redo att h\u00e4mtas"
+            },
+            "returned": {
+                "name": "\u00c5terl\u00e4mnad"
+            },
+            "undelivered": {
+                "name": "Ej levererad"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Ogiltig konfigurationspost har angetts. Fick {config_entry_id}"
+        },
+        "unloaded_config_entry": {
+            "message": "Ogiltig konfigurationspost har angetts. {config_entry_id} \u00e4r inte laddad."
+        }
+    },
+    "issues": {
+        "deprecate_sensor": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "17Track-paketsensorer \u00e4r utfasade och kommer att tas bort.\nUppdatera dina automatiseringar och skript f\u00f6r att h\u00e4mta data med hj\u00e4lp av \u00e5tg\u00e4rden `seventeentrack.get_packages`.",
+                        "title": "17Track-paketsensorer h\u00e5ller p\u00e5 att fasas ut"
+                    }
+                }
+            },
+            "title": "17Track-paketsensorer h\u00e5ller p\u00e5 att fasas ut"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "show_archived": "Om sensorer ska skapas f\u00f6r arkiverade paket",
+                    "show_delivered": "Om sensorer ska skapas f\u00f6r levererade paket"
+                },
+                "description": "Konfigurera allm\u00e4nna inst\u00e4llningar"
+            }
+        }
+    },
+    "selector": {
+        "package_state": {
+            "options": {
+                "delivered": "Levererad",
+                "expired": "Utg\u00e5tt",
+                "in_transit": "P\u00e5 v\u00e4g",
+                "not_found": "Hittades inte",
+                "ready_to_be_picked_up": "Redo att h\u00e4mtas",
+                "returned": "\u00c5terl\u00e4mnad",
+                "undelivered": "Ej levererad"
+            }
+        }
+    },
+    "services": {
+        "archive_package": {
+            "description": "Arkivera ett paket",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Paketet kommer att arkiveras f\u00f6r den valda tj\u00e4nsten.",
+                    "name": "17Track-tj\u00e4nst"
+                },
+                "package_tracking_number": {
+                    "description": "Paketet kommer att arkiveras f\u00f6r det angivna sp\u00e5rningsnumret.",
+                    "name": "Paketets sp\u00e5rningsnummer"
+                }
+            },
+            "name": "Arkivera paket"
+        },
+        "get_packages": {
+            "description": "H\u00e4mta paket fr\u00e5n 17Track",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Paketen kommer att h\u00e4mtas f\u00f6r den valda tj\u00e4nsten.",
+                    "name": "17Track-tj\u00e4nst"
+                },
+                "package_state": {
+                    "description": "Returnera endast paket med angivna tillst\u00e5nd. Returnerar alla paket om inte specificerat.",
+                    "name": "Paketets tillst\u00e5nd"
+                }
+            },
+            "name": "H\u00e4mta paket"
+        }
+    }
+}

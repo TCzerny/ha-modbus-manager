@@ -1,0 +1,183 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "connection_error": "N\u00e3o foi poss\u00edvel ligar ao controlador.",
+            "credentials_needed": "O controlador requer credenciais.",
+            "duplicated_controller_id": "O nome do controlador j\u00e1 est\u00e1 a ser utilizado.",
+            "duplicated_host_port": "O anfitri\u00e3o e a porta especificados j\u00e1 est\u00e3o configurados.",
+            "invalid_credentials": "As credenciais fornecidas n\u00e3o s\u00e3o v\u00e1lidas.",
+            "need_username_with_password": "As credenciais devem ser um nome de utilizador e uma palavra-passe ou apenas um nome de utilizador.",
+            "unknown_error": "Erro inesperado"
+        },
+        "step": {
+            "import_controller_name": {
+                "data": {
+                    "name": "Nome do controlador"
+                },
+                "data_description": {
+                    "name": "Um nome \u00fanico que identifica o controlador Lutron Homeworks"
+                },
+                "description": "O Lutron Homeworks j\u00e1 n\u00e3o \u00e9 configurado atrav\u00e9s do ficheiro configuration.yaml.\n\nPor favor, preencha o formul\u00e1rio para importar a configura\u00e7\u00e3o existente para a IU."
+            },
+            "import_finish": {
+                "description": "A configura\u00e7\u00e3o YAML existente foi importada com sucesso.\n\nAgora pode remover a configura\u00e7\u00e3o `homeworks` do seu ficheiro configuration.yaml."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "password": "Palavra-passe opcional, deixe em branco se o seu sistema n\u00e3o precisar de credenciais ou precisar de apenas uma credencial.",
+                    "username": "Nome de utilizador opcional, deixar em branco se o seu sistema n\u00e3o necessitar de credenciais de in\u00edcio de sess\u00e3o"
+                },
+                "description": "Modificar as defini\u00e7\u00f5es de liga\u00e7\u00e3o de um controlador Lutron Homeworks"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "name": "Nome do controlador",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "name": "Um nome \u00fanico que identifica o controlador Lutron Homeworks",
+                    "password": "Palavra-passe opcional, deixe em branco se o seu sistema n\u00e3o precisar de credenciais ou precisar de apenas uma credencial.",
+                    "username": "Nome de utilizador opcional, deixar em branco se o seu sistema n\u00e3o necessitar de credenciais de in\u00edcio de sess\u00e3o"
+                },
+                "description": "Adicionar um controlador Lutron Homeworks"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_controller_id": {
+            "message": "ID_controlador inv\u00e1lido \"{controller_id}\", esperava-se um de \"{controller_ids}\""
+        }
+    },
+    "options": {
+        "error": {
+            "duplicated_addr": "O endere\u00e7o especificado j\u00e1 est\u00e1 a ser utilizado",
+            "duplicated_number": "O n\u00famero especificado j\u00e1 est\u00e1 a ser utilizado",
+            "invalid_addr": "Endere\u00e7o inv\u00e1lido"
+        },
+        "step": {
+            "add_button": {
+                "data": {
+                    "led": "LED",
+                    "name": "Nome",
+                    "number": "N\u00famero",
+                    "release_delay": "Diferimento para soltar"
+                },
+                "data_description": {
+                    "led": "Ativar se o bot\u00e3o tiver um indicador de sele\u00e7\u00e3o de cena",
+                    "number": "N\u00famero do bot\u00e3o no intervalo de 1 a 24",
+                    "release_delay": "Tempo entre a press\u00e3o e a liberta\u00e7\u00e3o, definido como 0 para apenas pressionar"
+                },
+                "title": "Adicionar teclado"
+            },
+            "add_keypad": {
+                "data": {
+                    "addr": "Morada",
+                    "name": "Nome"
+                },
+                "data_description": {
+                    "addr": "Endere\u00e7o do teclado, deve ser formatado como `[##:##:##:##:##]`"
+                },
+                "title": "Adicionar teclado"
+            },
+            "add_light": {
+                "data": {
+                    "addr": "Morada",
+                    "name": "Nome",
+                    "rate": "Taxa de esbatimento"
+                },
+                "data_description": {
+                    "addr": "Endere\u00e7o do teclado, deve ser formatado como `[##:##:##:##:##]`",
+                    "rate": "Tempo em segundos para a transi\u00e7\u00e3o da luz para um novo n\u00edvel de luminosidade"
+                },
+                "title": "Adicionar luz"
+            },
+            "edit_button": {
+                "data": {
+                    "led": "LED",
+                    "release_delay": "Diferimento para soltar"
+                },
+                "data_description": {
+                    "led": "Ativar se o bot\u00e3o tiver um indicador de sele\u00e7\u00e3o de cena",
+                    "release_delay": "Tempo entre a press\u00e3o e a liberta\u00e7\u00e3o, definido como 0 para apenas pressionar"
+                },
+                "title": "Bot\u00e3o Configurar"
+            },
+            "edit_keypad": {
+                "menu_options": {
+                    "add_button": "Bot\u00e3o Adicionar",
+                    "remove_button": "Remover bot\u00e3o",
+                    "select_edit_button": "Bot\u00e3o Configurar"
+                }
+            },
+            "edit_light": {
+                "data": {
+                    "rate": "Taxa de esbatimento"
+                },
+                "data_description": {
+                    "rate": "Tempo em segundos para a transi\u00e7\u00e3o da luz para um novo n\u00edvel de luminosidade"
+                },
+                "description": "Selecione uma luz para configurar",
+                "title": "Configurar luz"
+            },
+            "init": {
+                "menu_options": {
+                    "add_keypad": "Adicionar teclado",
+                    "add_light": "Adicionar luz",
+                    "remove_keypad": "Remover teclado",
+                    "remove_light": "Remover luz",
+                    "select_edit_keypad": "Configurar teclado",
+                    "select_edit_light": "Configurar luz"
+                }
+            },
+            "remove_button": {
+                "description": "Selecione os bot\u00f5es a remover",
+                "title": "Remover bot\u00e3o"
+            },
+            "remove_keypad": {
+                "description": "Selecione os teclados a remover",
+                "title": "Remover teclado"
+            },
+            "remove_light": {
+                "description": "Selecione as luzes a remover",
+                "title": "Remover luz"
+            },
+            "select_edit_button": {
+                "title": "Bot\u00e3o Configurar"
+            },
+            "select_edit_keypad": {
+                "title": "Configurar teclado"
+            },
+            "select_edit_light": {
+                "title": "Configurar luz"
+            }
+        }
+    },
+    "services": {
+        "send_command": {
+            "description": "Enviar comando personalizado para um controlador",
+            "fields": {
+                "command": {
+                    "description": "Comando a enviar para o controlador. Pode ser um \u00fanico comando ou uma lista de comandos.",
+                    "name": "Comando"
+                },
+                "controller_id": {
+                    "description": "O controlador para o qual enviar o comando.",
+                    "name": "ID do controlador"
+                }
+            },
+            "name": "Enviar comando"
+        }
+    }
+}

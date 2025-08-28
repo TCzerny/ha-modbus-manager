@@ -1,0 +1,123 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Paslauga jau sukonfig\u016bruota",
+            "bad_config": "U\u017eklausa nepavyko d\u0117l netinkamos konfig\u016bracijos: patikrinkite [stationboard] ({stationboard_url}), ar n\u0117ra galiojan\u010di\u0173 sto\u010di\u0173.",
+            "cannot_connect": "Negalima prisijungti prie serverio",
+            "unknown": "Python-opendata-transport suk\u0117l\u0117 ne\u017einom\u0105 klaid\u0105"
+        },
+        "error": {
+            "bad_config": "U\u017eklausa nepavyko d\u0117l netinkamos konfig\u016bracijos: patikrinkite [stationboard] ({stationboard_url}), ar j\u016bs\u0173 sto\u010di\u0173 pavadinimai galioja",
+            "cannot_connect": "Negalima prisijungti prie serverio",
+            "too_many_via_stations": "Per daug tarpini\u0173 sto\u010di\u0173, vienam ry\u0161iui leid\u017eiama tik iki 5 sto\u010di\u0173.",
+            "unknown": "Python-opendata-transport suk\u0117l\u0117 ne\u017einom\u0105 klaid\u0105"
+        },
+        "step": {
+            "time_fixed": {
+                "data": {
+                    "time_fixed": "Paros laikas"
+                },
+                "description": "Pasirinkite tinkam\u0105 prisijungimo laik\u0105 (pvz., 7:12:00 kiekvien\u0105 ryt\u0105).",
+                "title": "\u0160veicarijos vie\u0161asis transportas"
+            },
+            "time_offset": {
+                "data": {
+                    "time_offset": "Laiko poslinkis"
+                },
+                "description": "Pasirinkite atitinkam\u0105 poslink\u012f, kad prid\u0117tum\u0117te prie kuo ankstyvesnio ry\u0161io (pvz., prid\u0117kite +00:05:00 poslink\u012f, atsi\u017evelgiant \u012f laik\u0105 iki stoties p\u0117s\u010diomis).",
+                "title": "\u0160veicarijos vie\u0161asis transportas"
+            },
+            "user": {
+                "data": {
+                    "from": "Prad\u0117ti stot\u012f",
+                    "time_mode": "Pasirinkite laiko re\u017eim\u0105",
+                    "time_station": "Pasirinkite atitinkam\u0105 stot\u012f",
+                    "to": "Pabaigos stotis",
+                    "via": "Per stotis"
+                },
+                "data_description": {
+                    "time_mode": "Laiko re\u017eimas leid\u017eia pakeisti i\u0161vykimo laik\u0105 ir nustatyti j\u012f tam tikru laiku (pvz., 7:12:00 kiekvien\u0105 ryt\u0105) arba prid\u0117ti jud\u0117jimo poslink\u012f (pvz., +00:05:00, atsi\u017evelgiant \u012f laik\u0105 iki stoties p\u0117s\u010diomis). .",
+                    "time_station": "Paprastai yra sekamas ry\u0161io i\u0161vykimo laikas, kai jis palieka starto stot\u012f. Arba steb\u0117kite laik\u0105, kada ry\u0161ys pasiekia galin\u0119 stot\u012f."
+                },
+                "description": "Nurodykite ry\u0161io prad\u017eios ir pabaigos stotis,\n ir pasirinktinai iki 5 per sto\u010di\u0173. \n\n Patikrinkite [stationboard]({stationboard_url}), ar n\u0117ra galiojan\u010di\u0173 sto\u010di\u0173.",
+                "title": "\u0160veicarijos vie\u0161asis transportas"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delay": {
+                "name": "U\u017edelsimas"
+            },
+            "departure0": {
+                "name": "I\u0161vykimas"
+            },
+            "departure1": {
+                "name": "I\u0161vykimas +1"
+            },
+            "departure2": {
+                "name": "I\u0161vykimas +2"
+            },
+            "duration": {
+                "name": "Trukm\u0117"
+            },
+            "line": {
+                "name": "Linija"
+            },
+            "platform": {
+                "name": "Platforma"
+            },
+            "transfers": {
+                "name": "Pervedimai"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Nepavyksta prisijungti prie serverio.\n{error}"
+        },
+        "config_entry_not_found": {
+            "message": "\u0160veicarijos vie\u0161ojo transporto integracijos pavyzdys \u201e{target}\u201c nerastas."
+        },
+        "invalid_data": {
+            "message": "\u012evesties {config_title} su neteisingais duomenimis s\u0105ranka nepavyko, patikrinkite [stationboard] ({stationboard_url}), ar j\u016bs\u0173 sto\u010di\u0173 pavadinimai galioja.\n {error}"
+        },
+        "not_loaded": {
+            "message": "{target} ne\u012fkeltas."
+        },
+        "request_timeout": {
+            "message": "Baig\u0117si skirtasis laikas prisijungiant prie \u012fra\u0161o {config_title} .\n {error}"
+        }
+    },
+    "selector": {
+        "time_mode": {
+            "options": {
+                "fixed": "Fiksuotu paros metu",
+                "now": "Dabar",
+                "offset": "Su kompensacija nuo dabar"
+            }
+        },
+        "time_station": {
+            "options": {
+                "arrival": "Rodyti atvykimo laik\u0105 \u012f galin\u0119 stot\u012f",
+                "departure": "Rodyti i\u0161vykimo i\u0161 starto stoties laik\u0105"
+            }
+        }
+    },
+    "services": {
+        "fetch_connections": {
+            "description": "Gaukite jung\u010di\u0173 s\u0105ra\u0161\u0105 i\u0161 \u0160veicarijos vie\u0161ojo transporto.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "\u0160veicarijos vie\u0161ojo transporto pavyzdys susisiekimui gauti.",
+                    "name": "Pavyzdys"
+                },
+                "limit": {
+                    "description": "Ry\u0161i\u0173, kuriuos reikia gauti, skai\u010dius [1\u201315]",
+                    "name": "Riba"
+                }
+            },
+            "name": "Gauti ry\u0161ius"
+        }
+    }
+}

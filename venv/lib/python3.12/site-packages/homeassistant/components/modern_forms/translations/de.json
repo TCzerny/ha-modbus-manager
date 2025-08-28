@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines Modern Forms Ventilators."
+                },
+                "description": "Einrichten deines Modern Forms Ventilators f\u00fcr die Integration in Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "description": "M\u00f6chtest du den Modern Forms Ventilator mit dem Namen `{name}` zu Home Assistant hinzuf\u00fcgen?",
+                "title": "Modern Forms Ventilator entdeckt"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "fan_sleep_timer_active": {
+                "name": "Ventilator-Schlaf-Timer aktiv"
+            },
+            "light_sleep_timer_active": {
+                "name": "Leuchten-Schlaf-Timer aktiv"
+            }
+        },
+        "fan": {
+            "fan": {
+                "name": "Ventilator"
+            }
+        },
+        "light": {
+            "light": {
+                "name": "Leuchte"
+            }
+        },
+        "sensor": {
+            "fan_timer_remaining_time": {
+                "name": "Ventilator-Schlaf-Zeit"
+            },
+            "light_timer_remaining_time": {
+                "name": "Leuchten-Schlaf-Zeit"
+            }
+        },
+        "switch": {
+            "adaptive_learning": {
+                "name": "Adaptives Lernen"
+            },
+            "away_mode": {
+                "name": "Abwesendmodus"
+            }
+        }
+    },
+    "services": {
+        "clear_fan_sleep_timer": {
+            "description": "L\u00f6scht den Schlaf-Timer eines Modern Forms-Ventilators.",
+            "name": "Ventilator-Schlaf-Timer l\u00f6schen"
+        },
+        "clear_light_sleep_timer": {
+            "description": "L\u00f6scht den Schlaf-Timer einer Modern Forms-Leuchte.",
+            "name": "Leuchten-Schlaf-Timer l\u00f6schen"
+        },
+        "set_fan_sleep_timer": {
+            "description": "Stellt den Schlaf-Timer f\u00fcr einen Modern Forms-Ventilator ein.",
+            "fields": {
+                "sleep_time": {
+                    "description": "Anzahl der Minuten f\u00fcr die Timereinstellung.",
+                    "name": "Schlaf-Zeit"
+                }
+            },
+            "name": "Ventilator-Schlaf-Timer einstellen"
+        },
+        "set_light_sleep_timer": {
+            "description": "Stellt den Schlaf-Timer f\u00fcr eine Modern Forms-Leuchte ein.",
+            "fields": {
+                "sleep_time": {
+                    "description": "Anzahl der Minuten f\u00fcr die Timereinstellung.",
+                    "name": "Schlaf-Zeit"
+                }
+            },
+            "name": "Leuchten-Schlaf-Timer einstellen"
+        }
+    }
+}

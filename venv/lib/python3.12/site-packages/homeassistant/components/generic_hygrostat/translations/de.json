@@ -1,0 +1,56 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "device_class": "Ger\u00e4teklasse",
+                    "dry_tolerance": "Trocken-Toleranz",
+                    "humidifier": "Stellschalter",
+                    "min_cycle_duration": "Mindestzyklusdauer",
+                    "name": "Name",
+                    "target_sensor": "Luftfeuchtigkeitssensor",
+                    "wet_tolerance": "Feuchte-Toleranz"
+                },
+                "data_description": {
+                    "dry_tolerance": "Die Mindestdifferenz zwischen dem vom angegebenen Sensor gemessenen Wert und dem Sollwert der Luftfeuchtigkeit, die vor dem Einschalten erreicht werden muss.",
+                    "humidifier": "Stellschalter f\u00fcr Luftbefeuchter oder Luftentfeuchter; muss ein Umschalter-Ger\u00e4t sein.",
+                    "min_cycle_duration": "Mindestdauer, die der angegebene Stellschalter in seinem aktuellen Zustand bleiben muss, bevor er aus- oder eingeschaltet wird.",
+                    "target_sensor": "Sensor mit aktueller Luftfeuchtigkeit.",
+                    "wet_tolerance": "Die Mindestdifferenz zwischen dem vom angegebenen Sensor gemessenen Wert und dem Sollwert der Luftfeuchtigkeit, die vor dem Ausschalten erreicht werden muss."
+                },
+                "description": "Erstellt eine Luftbefeuchter-Entit\u00e4t, die die Luftfeuchtigkeit \u00fcber einen Stellschalter und einen Sensor regelt.",
+                "title": "Generischen Hygrostat erstellen"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "device_class": "Ger\u00e4teklasse",
+                    "dry_tolerance": "Trocken-Toleranz",
+                    "humidifier": "Stellschalter",
+                    "min_cycle_duration": "Mindestzyklusdauer",
+                    "target_sensor": "Luftfeuchtigkeitssensor",
+                    "wet_tolerance": "Feuchte-Toleranz"
+                },
+                "data_description": {
+                    "dry_tolerance": "Die Mindestdifferenz zwischen dem vom angegebenen Sensor gemessenen Wert und dem Sollwert der Luftfeuchtigkeit, die vor dem Einschalten erreicht werden muss.",
+                    "humidifier": "Stellschalter f\u00fcr Luftbefeuchter oder Luftentfeuchter; muss ein Umschalter-Ger\u00e4t sein.",
+                    "min_cycle_duration": "Mindestdauer, die der angegebene Stellschalter in seinem aktuellen Zustand bleiben muss, bevor er aus- oder eingeschaltet wird.",
+                    "target_sensor": "Sensor mit aktueller Luftfeuchtigkeit.",
+                    "wet_tolerance": "Die Mindestdifferenz zwischen dem vom angegebenen Sensor gemessenen Wert und dem Sollwert der Luftfeuchtigkeit, die vor dem Ausschalten erreicht werden muss."
+                }
+            }
+        }
+    },
+    "selector": {
+        "device_class": {
+            "options": {
+                "dehumidifier": "Luftentfeuchter",
+                "humidifier": "Luftbefeuchter"
+            }
+        }
+    },
+    "title": "Generischer Hygrostat"
+}

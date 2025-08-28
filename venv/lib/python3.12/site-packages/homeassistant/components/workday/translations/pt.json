@@ -1,0 +1,229 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "O servi\u00e7o j\u00e1 foi configurado com a configura\u00e7\u00e3o escolhida."
+        },
+        "error": {
+            "add_holiday_error": "Formato incorreto da data (AAAA-MM-DD)",
+            "add_holiday_range_error": "Formato incorreto no intervalo de datas (AAAA-MM-DD,AAAA-MM-DD).",
+            "remove_holiday_error": "Formato incorreto da data (AAAA-MM-DD) ou nome do feriado n\u00e3o encontrado",
+            "remove_holiday_range_error": "Formato incorreto no intervalo de datas (AAAA-MM-DD,AAAA-MM-DD)."
+        },
+        "step": {
+            "options": {
+                "data": {
+                    "add_holidays": "Adicionar feriados",
+                    "category": "Categoria adicional como feriado.",
+                    "days_offset": "Desvio",
+                    "excludes": "Dias a excluir",
+                    "language": "Idioma para o nome dos feriados",
+                    "province": "Subdivis\u00e3o do pa\u00eds",
+                    "remove_holidays": "Remover feriados",
+                    "workdays": "Dias a incluir"
+                },
+                "data_description": {
+                    "add_holidays": "Adicionar feriados personalizados como AAAA-MM-DD ou como intervalo usando `,` como separador.",
+                    "category": "Selecione categorias adicionais para incluir como feriados.",
+                    "days_offset": "Diferen\u00e7a de dias para a data atual",
+                    "excludes": "Selecione os dias da semana a excluir como dias \u00fateis.\nA chave `holidays` adiciona-os ao pa\u00eds configurado, personaliz\u00e1vel por todas as configura\u00e7\u00f5es abaixo. Leia a documenta\u00e7\u00e3o sobre como us\u00e1-los corretamente.",
+                    "language": "Idioma a utilizar na configura\u00e7\u00e3o de exclus\u00f5es de feriados com nome",
+                    "province": "Estado, territ\u00f3rio, prov\u00edncia ou regi\u00e3o do Pa\u00eds",
+                    "remove_holidays": "Remover feriados como AAAA-MM-DD, como intervalo utilizando `,` como separador ou utilizando uma parte do nome",
+                    "workdays": "Selecione que dias da semana incluir como poss\u00edveis dias \u00fateis."
+                },
+                "description": "Defina op\u00e7\u00f5es adicionais para {name} configuradas para o pa\u00eds {country}"
+            },
+            "user": {
+                "data": {
+                    "country": "Pa\u00eds",
+                    "name": "Nome"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "workday": {
+                "state_attributes": {
+                    "days_offset": {
+                        "name": "Desvio"
+                    },
+                    "excludes": {
+                        "name": "Dias a excluir"
+                    },
+                    "workdays": {
+                        "name": "Dias a incluir"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "bad_country": {
+            "fix_flow": {
+                "step": {
+                    "country": {
+                        "data": {
+                            "country": "Pa\u00eds"
+                        },
+                        "description": "Selecione um pa\u00eds para usar no seu sensor Dia \u00datil.",
+                        "title": "Selecione o pa\u00eds para {title}"
+                    },
+                    "province": {
+                        "data": {
+                            "province": "Subdivis\u00e3o do pa\u00eds"
+                        },
+                        "data_description": {
+                            "province": "Estado, Territ\u00f3rio, Prov\u00edncia, Regi\u00e3o do Pa\u00eds."
+                        },
+                        "description": "Selecione uma prov\u00edncia no pa\u00eds {country} para usar no seu sensor Workday.",
+                        "title": "Selecione a prov\u00edncia para {title}"
+                    }
+                }
+            },
+            "title": "O pa\u00eds configurado para {title} n\u00e3o existe"
+        },
+        "bad_date_holiday": {
+            "fix_flow": {
+                "error": {
+                    "remove_holiday_error": "Formato incorreto da data (AAAA-MM-DD) ou nome do feriado n\u00e3o encontrado"
+                },
+                "step": {
+                    "fix_remove_holiday": {
+                        "data": {
+                            "remove_holidays": "Remover feriados"
+                        },
+                        "data_description": {
+                            "remove_holidays": "Remover feriados como AAAA-MM-DD, como intervalo utilizando `,` como separador ou utilizando uma parte do nome"
+                        },
+                        "description": "Remover o feriado na data `{remove_holidays}` porque n\u00e3o pode ser encontrado no pa\u00eds {country}.",
+                        "title": "A data do feriado configurado {remove_holidays} para {title} n\u00e3o existe"
+                    }
+                }
+            },
+            "title": "A data do feriado configurado {remove_holidays} para {title} n\u00e3o existe"
+        },
+        "bad_named_holiday": {
+            "fix_flow": {
+                "error": {
+                    "remove_holiday_error": "Formato incorreto da data (AAAA-MM-DD) ou nome do feriado n\u00e3o encontrado"
+                },
+                "step": {
+                    "fix_remove_holiday": {
+                        "data": {
+                            "remove_holidays": "Remover feriados"
+                        },
+                        "data_description": {
+                            "remove_holidays": "Remover feriados como AAAA-MM-DD, como intervalo utilizando `,` como separador ou utilizando uma parte do nome"
+                        },
+                        "description": "Remover o feriado com nome `{remove_holidays}` porque n\u00e3o pode ser encontrado no pa\u00eds {country}.",
+                        "title": "O feriado com nome configurado {remove_holidays} para {title} n\u00e3o existe"
+                    }
+                }
+            },
+            "title": "O feriado com nome configurado {remove_holidays} para {title} n\u00e3o existe"
+        },
+        "bad_province": {
+            "fix_flow": {
+                "step": {
+                    "province": {
+                        "data": {
+                            "province": "Subdivis\u00e3o do pa\u00eds"
+                        },
+                        "data_description": {
+                            "province": "Estado, Territ\u00f3rio, Prov\u00edncia, Regi\u00e3o do Pa\u00eds."
+                        },
+                        "description": "Selecione uma prov\u00edncia no pa\u00eds {country} para usar no seu sensor Workday.",
+                        "title": "Selecione a prov\u00edncia para {title}"
+                    }
+                }
+            },
+            "title": "A prov\u00edncia configurada no pa\u00eds {country} para {title} n\u00e3o existe"
+        }
+    },
+    "options": {
+        "error": {
+            "add_holiday_error": "Formato incorreto da data (AAAA-MM-DD)",
+            "add_holiday_range_error": "Formato incorreto no intervalo de datas (AAAA-MM-DD,AAAA-MM-DD).",
+            "already_configured": "J\u00e1 existe um servi\u00e7o com esta configura\u00e7\u00e3o",
+            "remove_holiday_error": "Formato incorreto da data (AAAA-MM-DD) ou nome do feriado n\u00e3o encontrado",
+            "remove_holiday_range_error": "Formato incorreto no intervalo de datas (AAAA-MM-DD,AAAA-MM-DD)."
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "add_holidays": "Adicionar feriados",
+                    "category": "Categoria adicional como feriado.",
+                    "days_offset": "Desvio",
+                    "excludes": "Dias a excluir",
+                    "language": "Idioma para o nome dos feriados",
+                    "province": "Subdivis\u00e3o do pa\u00eds",
+                    "remove_holidays": "Remover feriados",
+                    "workdays": "Dias a incluir"
+                },
+                "data_description": {
+                    "add_holidays": "Adicionar feriados personalizados como AAAA-MM-DD ou como intervalo usando `,` como separador.",
+                    "category": "Selecione categorias adicionais para incluir como feriados.",
+                    "days_offset": "Diferen\u00e7a de dias para a data atual",
+                    "excludes": "Selecione os dias da semana a excluir como dias \u00fateis.\nA chave `holidays` adiciona-os ao pa\u00eds configurado, personaliz\u00e1vel por todas as configura\u00e7\u00f5es abaixo. Leia a documenta\u00e7\u00e3o sobre como us\u00e1-los corretamente.",
+                    "language": "Idioma a utilizar na configura\u00e7\u00e3o de exclus\u00f5es de feriados com nome",
+                    "province": "Estado, territ\u00f3rio, prov\u00edncia ou regi\u00e3o do Pa\u00eds",
+                    "remove_holidays": "Remover feriados como AAAA-MM-DD, como intervalo utilizando `,` como separador ou utilizando uma parte do nome",
+                    "workdays": "Selecione que dias da semana incluir como poss\u00edveis dias \u00fateis."
+                },
+                "description": "Altere op\u00e7\u00f5es adicionais para {name} configuradas para o pa\u00eds {country}."
+            }
+        }
+    },
+    "selector": {
+        "category": {
+            "options": {
+                "armed_forces": "For\u00e7as Armadas",
+                "bank": "Banca",
+                "catholic": "Cat\u00f3lico",
+                "chinese": "Chin\u00eas",
+                "christian": "Crist\u00e3o",
+                "government": "Governo",
+                "half_day": "Meio dia",
+                "hebrew": "Hebreu",
+                "hindu": "Hindu",
+                "islamic": "Isl\u00e2mico",
+                "optional": "Opcional",
+                "public": "P\u00fablico",
+                "school": "Escola",
+                "unofficial": "N\u00e3o oficial",
+                "workday": "Dia \u00fatil"
+            }
+        },
+        "days": {
+            "options": {
+                "fri": "Sexta-feira",
+                "holiday": "Feriados",
+                "mon": "Segunda-feira",
+                "sat": "S\u00e1bado",
+                "sun": "Domingo",
+                "thu": "Quinta-feira",
+                "tue": "Ter\u00e7a-feira",
+                "wed": "Quarta-feira"
+            }
+        },
+        "province": {
+            "options": {
+                "none": "Sem subdivis\u00e3o"
+            }
+        }
+    },
+    "services": {
+        "check_date": {
+            "description": "Verificar se a data \u00e9 dia \u00fatil",
+            "fields": {
+                "check_date": {
+                    "description": "Data a verificar se \u00e9 dia \u00fatil",
+                    "name": "Data"
+                }
+            },
+            "name": "Confirmar data"
+        }
+    },
+    "title": "Dia \u00datil"
+}

@@ -1,0 +1,47 @@
+{
+    "config": {
+        "step": {
+            "settings": {
+                "data": {
+                    "attribute": "Attribut f\u00f6r entitet som denna sensor sp\u00e5rar",
+                    "invert": "Invertera resultat"
+                }
+            },
+            "user": {
+                "data": {
+                    "entity_id": "Entitet som denna sensor sp\u00e5rar",
+                    "name": "Namn"
+                },
+                "description": "Med trend-hj\u00e4lparen skapas en sensor som visar trenden f\u00f6r ett numeriskt tillst\u00e5nd eller ett tillst\u00e5ndsattribut fr\u00e5n en annan entitet.",
+                "title": "Trend-hj\u00e4lpare"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "attribute": "Attribut f\u00f6r entitet som denna sensor sp\u00e5rar",
+                    "invert": "Invertera resultat",
+                    "max_samples": "Maximalt antal lagrade datapunkter",
+                    "min_gradient": "Minsta hastighet som v\u00e4rdet m\u00e5ste f\u00f6r\u00e4ndras",
+                    "min_samples": "Minsta antal lagrade datapunkter",
+                    "sample_duration": "Varaktighet i sekunder att lagra datapunkter"
+                },
+                "data_description": {
+                    "max_samples": "Det maximala antalet datapunkter som ska lagras. Om antalet datapunkter \u00f6verstiger detta v\u00e4rde kommer de \u00e4ldsta datapunkterna att kasseras.",
+                    "min_gradient": "Den minsta hastighet med vilken det observerade v\u00e4rdet m\u00e5ste \u00e4ndras f\u00f6r att denna sensor ska sl\u00e5s p\u00e5. Trendlinjens lutning m\u00e4ts i sensorenheter per sekund.",
+                    "min_samples": "Det minsta antal datapunkter som m\u00e5ste samlas in innan trendlinjens lutning kan ber\u00e4knas.",
+                    "sample_duration": "Varaktigheten i sekunder som datapunkter kommer att lagras. Datapunkter som \u00e4r \u00e4ldre \u00e4n det h\u00e4r v\u00e4rdet kommer att kasseras."
+                }
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "Laddar om trendsensorer fr\u00e5n YAML-konfigurationen.",
+            "name": "Ladda om"
+        }
+    },
+    "title": "Trend"
+}

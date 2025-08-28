@@ -1,0 +1,107 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "no_server_found": "N\u00e3o foi encontrado nenhum servidor LMS."
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "no_server_found": "N\u00e3o foi poss\u00edvel descobrir automaticamente o servidor.",
+            "unknown": "Erro inesperado"
+        },
+        "flow_title": "{host}",
+        "step": {
+            "edit": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "https": "Ligar atrav\u00e9s de https (requer proxy invertido)",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "username": "Utilizador"
+                },
+                "title": "Editar informa\u00e7\u00e3o sobre a liga\u00e7\u00e3o"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou o endere\u00e7o IP do seu Lyrion Music Server."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "needsrestart": {
+                "name": "Necessita reiniciar"
+            },
+            "rescan": {
+                "name": "Reanalisar biblioteca"
+            }
+        },
+        "sensor": {
+            "info_total_albums": {
+                "name": "Total de \u00e1lbuns",
+                "unit_of_measurement": "\u00e1lbuns"
+            },
+            "info_total_artists": {
+                "name": "Total de artistas",
+                "unit_of_measurement": "artistas"
+            },
+            "info_total_duration": {
+                "name": "Dura\u00e7\u00e3o total"
+            },
+            "info_total_genres": {
+                "name": "Total de g\u00e9neros",
+                "unit_of_measurement": "g\u00e9neros"
+            },
+            "info_total_songs": {
+                "name": "Total de m\u00fasicas",
+                "unit_of_measurement": "m\u00fasicas"
+            },
+            "lastscan": {
+                "name": "\u00daltima varredura"
+            },
+            "other_player_count": {
+                "name": "Contagem de reprodutores fora do servi\u00e7o",
+                "unit_of_measurement": "dispositivos"
+            },
+            "player_count": {
+                "name": "Contagem de reprodutores",
+                "unit_of_measurement": "dispositivos"
+            }
+        }
+    },
+    "services": {
+        "call_method": {
+            "description": "Chama uma API JSONRPC personalizada do Squeezebox.",
+            "fields": {
+                "command": {
+                    "description": "Comando a transmitir ao Lyrion Music Server (p0 na documenta\u00e7\u00e3o CLI).",
+                    "name": "Comando"
+                },
+                "parameters": {
+                    "description": "Conjunto de par\u00e2metros adicionais para passar ao Lyrion Music Server (p1, ..., pN na documenta\u00e7\u00e3o CLI).",
+                    "name": "Par\u00e2metros"
+                }
+            },
+            "name": "M\u00e9todo de chamada"
+        },
+        "call_query": {
+            "description": "Chama uma API JSONRPC personalizada do Squeezebox. O resultado ser\u00e1 armazenado no atributo 'query_result' da entidade Squeezebox.",
+            "fields": {
+                "command": {
+                    "description": "Comando a transmitir ao Lyrion Music Server (p0 na documenta\u00e7\u00e3o CLI).",
+                    "name": "Comando"
+                },
+                "parameters": {
+                    "description": "Conjunto de par\u00e2metros adicionais para passar ao Lyrion Music Server (p1, ..., pN na documenta\u00e7\u00e3o CLI).",
+                    "name": "Par\u00e2metros"
+                }
+            },
+            "name": "Consulta de chamadas"
+        }
+    }
+}

@@ -1,0 +1,72 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Timer",
+            "state": {
+                "active": "Aktiv",
+                "idle": "Inaktiv",
+                "paused": "Pausad"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Varaktighet"
+                },
+                "editable": {
+                    "name": "Hanteras via anv\u00e4ndargr\u00e4nssnittet",
+                    "state": {
+                        "false": "Nej",
+                        "true": "Ja"
+                    }
+                },
+                "finishes_at": {
+                    "name": "Avslutas vid"
+                },
+                "remaining": {
+                    "name": "\u00c5terst\u00e5ende"
+                },
+                "restore": {
+                    "name": "\u00c5terst\u00e4ll"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "description": "\u00c5terst\u00e4ller en timers varaktighet till det senast k\u00e4nda startv\u00e4rdet utan att utl\u00f6sa h\u00e4ndelsen Timer finished.",
+            "name": "Avbryt"
+        },
+        "change": {
+            "description": "\u00c4ndrar en timer genom att l\u00e4gga till eller dra ifr\u00e5n en viss tid.",
+            "fields": {
+                "duration": {
+                    "description": "Varaktighet som ska l\u00e4ggas till eller dras ifr\u00e5n den p\u00e5g\u00e5ende timern.",
+                    "name": "Varaktighet"
+                }
+            },
+            "name": "\u00c4ndra"
+        },
+        "finish": {
+            "description": "Avslutar en p\u00e5g\u00e5ende timer tidigare \u00e4n planerat.",
+            "name": "Avsluta"
+        },
+        "pause": {
+            "description": "Pausar en p\u00e5g\u00e5ende timer och beh\u00e5ller den \u00e5terst\u00e5ende tiden f\u00f6r senare forts\u00e4ttning.",
+            "name": "Pausa"
+        },
+        "reload": {
+            "description": "Laddar om timers fr\u00e5n YAML-konfigurationen.",
+            "name": "Ladda om"
+        },
+        "start": {
+            "description": "Startar en timer eller startar om den med en angiven varaktighet.",
+            "fields": {
+                "duration": {
+                    "description": "Anpassad varaktighet f\u00f6r att starta om timern med.",
+                    "name": "Varaktighet"
+                }
+            },
+            "name": "Starta"
+        }
+    },
+    "title": "Timer"
+}

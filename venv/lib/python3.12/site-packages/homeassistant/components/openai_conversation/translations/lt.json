@@ -1,0 +1,68 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API raktas"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Pateiktas neteisingas konfig\u016bracijos \u012fra\u0161as. Gauta {config_entry}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "chat_model": "Modelis",
+                    "llm_hass_api": "Valdykite \u201eHome Assistant\u201c",
+                    "max_tokens": "Did\u017eiausias \u017eeton\u0173 skai\u010dius, kur\u012f reikia gr\u0105\u017einti atsakant",
+                    "prompt": "Instrukcijos",
+                    "recommended": "Rekomenduojami modelio nustatymai",
+                    "temperature": "Temperat\u016bra",
+                    "top_p": "Vir\u0161utin\u0117 P"
+                },
+                "data_description": {
+                    "prompt": "Nurodykite, kaip LLM tur\u0117t\u0173 reaguoti. Tai gali b\u016bti \u0161ablonas."
+                }
+            }
+        }
+    },
+    "services": {
+        "generate_image": {
+            "description": "Paverskite u\u017eklaus\u0105 vaizdu",
+            "fields": {
+                "config_entry": {
+                    "description": "\u0160iam veiksmui naudojamas konfig\u016bracijos \u012fra\u0161as",
+                    "name": "Konfig\u016bracijos \u012fra\u0161as"
+                },
+                "prompt": {
+                    "description": "Tekstas, kur\u012f reikia paversti vaizdu",
+                    "example": "\u0160uns nuotrauka",
+                    "name": "Raginimas"
+                },
+                "quality": {
+                    "description": "Vaizdo, kuris bus sugeneruotas, kokyb\u0117",
+                    "name": "Kokyb\u0117"
+                },
+                "size": {
+                    "description": "Sugeneruojamo vaizdo dydis",
+                    "name": "Dydis"
+                },
+                "style": {
+                    "description": "Sukurto vaizdo stilius",
+                    "name": "Stilius"
+                }
+            },
+            "name": "Sukurti vaizd\u0105"
+        }
+    }
+}

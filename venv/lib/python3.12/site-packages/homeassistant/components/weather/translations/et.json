@@ -1,0 +1,125 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Ilm",
+            "state": {
+                "clear-night": "Selge \u00f6\u00f6",
+                "cloudy": "Pilves",
+                "exceptional": "Ohtlikud olud",
+                "fog": "Udu",
+                "hail": "Rahe",
+                "lightning": "\u00c4ikeseline",
+                "lightning-rainy": "\u00c4ikeseline, vihmane",
+                "partlycloudy": "Osaliselt pilves",
+                "pouring": "Kallab",
+                "rainy": "Vihmane",
+                "snowy": "Lumine",
+                "snowy-rainy": "L\u00f6rtsine",
+                "sunny": "P\u00e4ikeseline",
+                "windy": "Tuuline",
+                "windy-variant": "Tuuline, pilvine"
+            },
+            "state_attributes": {
+                "apparent_temperature": {
+                    "name": "Tunduv temperatuur"
+                },
+                "cloud_coverage": {
+                    "name": "Pilvisus"
+                },
+                "dew_point": {
+                    "name": "Kastepunkti temperatuur"
+                },
+                "forecast": {
+                    "name": "Ennustus"
+                },
+                "humidity": {
+                    "name": "Niiskus"
+                },
+                "ozone": {
+                    "name": "Osoon"
+                },
+                "precipitation_unit": {
+                    "name": "Sademete \u00fchik"
+                },
+                "pressure": {
+                    "name": "\u00d5hur\u00f5hk"
+                },
+                "pressure_unit": {
+                    "name": "\u00d5hur\u00f5hu \u00fchik"
+                },
+                "temperature": {
+                    "name": "Temperatuur"
+                },
+                "temperature_unit": {
+                    "name": "Temperatuuri \u00fchik"
+                },
+                "uv_index": {
+                    "name": "UV-indeks"
+                },
+                "visibility": {
+                    "name": "N\u00e4htavus"
+                },
+                "visibility_unit": {
+                    "name": "N\u00e4htavuse \u00fchik"
+                },
+                "wind_bearing": {
+                    "name": "Tuule suund"
+                },
+                "wind_gust_speed": {
+                    "name": "Tuulepuhangu kiirus"
+                },
+                "wind_speed": {
+                    "name": "Tuule kiirus"
+                },
+                "wind_speed_unit": {
+                    "name": "Tuule kiiruse m\u00f5\u00f5t\u00fchik"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_weather_get_forecast": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Kasuta selle asemel teenust \"weather.get_forecasts\" mis toetab mitut olemit. \n\n Asenda see teenus ja kohanda oma automatiseerimisi ja skripte ning vali selle probleemi sulgemiseks **Esita**.",
+                        "title": "Tuvastati aegunud teenuse weather.get_forecast kasutamine"
+                    }
+                }
+            },
+            "title": "Tuvastati aegunud teenuse weather.get_forecast kasutamine"
+        }
+    },
+    "selector": {
+        "forecast_type": {
+            "options": {
+                "daily": "Igap\u00e4evane",
+                "hourly": "Tunnip\u00f5hine",
+                "twice_daily": "Kaks korda p\u00e4evas"
+            }
+        }
+    },
+    "services": {
+        "get_forecast": {
+            "description": "Hangi ilmateade.",
+            "fields": {
+                "type": {
+                    "description": "Ilmateate t\u00fc\u00fcp: igap\u00e4evane, tunnip\u00f5hine v\u00f5i kaks korda p\u00e4evas.",
+                    "name": "Ilmateate t\u00fc\u00fcp"
+                }
+            },
+            "name": "Hangi ilmateade"
+        },
+        "get_forecasts": {
+            "description": "Hangi ilmaennustused.",
+            "fields": {
+                "type": {
+                    "description": "Ilmateate t\u00fc\u00fcp: igap\u00e4evane, tunnip\u00f5hine v\u00f5i kaks korda p\u00e4evas.",
+                    "name": "Ilmateate t\u00fc\u00fcp"
+                }
+            },
+            "name": "Hangi ilmateade"
+        }
+    },
+    "title": "Ilm"
+}

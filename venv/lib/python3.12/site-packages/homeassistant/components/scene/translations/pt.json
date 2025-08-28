@@ -1,0 +1,52 @@
+{
+    "exceptions": {
+        "entity_not_dynamically_created": {
+            "message": "O cen\u00e1rio {entity_id} n\u00e3o \u00e9 criado com a a\u00e7\u00e3o `scene.create`."
+        }
+    },
+    "services": {
+        "apply": {
+            "description": "Ativa um cen\u00e1rio com configura\u00e7\u00e3o.",
+            "fields": {
+                "entities": {
+                    "description": "Lista de entidades e o seu estado alvo.",
+                    "name": "Estado das entidades"
+                },
+                "transition": {
+                    "description": "O tempo que os dispositivos levam para transitar para os estados definidos no cen\u00e1rio.",
+                    "name": "Transi\u00e7\u00e3o"
+                }
+            },
+            "name": "Aplicar"
+        },
+        "create": {
+            "description": "Cria um novo cen\u00e1rio.",
+            "fields": {
+                "scene_id": {
+                    "description": "O ID de entidade do novo cen\u00e1rio.",
+                    "name": "ID de entidade do cen\u00e1rio"
+                }
+            },
+            "name": "Criar"
+        },
+        "delete": {
+            "description": "Apaga um cen\u00e1rio criado de forma din\u00e2mica.",
+            "name": "Apagar"
+        },
+        "reload": {
+            "description": "Recarrega os cen\u00e1rios a partir da configura\u00e7\u00e3o YAML.",
+            "name": "Recarregar"
+        },
+        "turn_on": {
+            "description": "Ativa um cen\u00e1rio.",
+            "fields": {
+                "transition": {
+                    "description": "O tempo que os dispositivos levam para transitar para os estados definidos no cen\u00e1rio.",
+                    "name": "Transi\u00e7\u00e3o"
+                }
+            },
+            "name": "Ativar"
+        }
+    },
+    "title": "Cena"
+}

@@ -1,0 +1,97 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "credentials": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Introduza o seu nome de utilizador e palavra-passe Kodi. Estes podem ser encontrados em Sistema/Defini\u00e7\u00f5es/Rede/Servi\u00e7os."
+            },
+            "discovery_confirm": {
+                "description": "Pretende adicionar o Kodi (`{name}`) ao Home Assistant?",
+                "title": "Kodi descoberto"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL"
+                },
+                "data_description": {
+                    "host": "Nome de anfitri\u00e3o ou endere\u00e7o IP do sistema anfitri\u00e3o do seu servidor Kodi."
+                },
+                "description": "Informa\u00e7\u00f5es de conex\u00e3o Kodi. Certifique-se de habilitar \"Permitir controle do Kodi via HTTP\" em Sistema / Configura\u00e7\u00f5es / Rede / Servi\u00e7os."
+            },
+            "ws_port": {
+                "data": {
+                    "ws_port": "Porta"
+                },
+                "description": "A porta WebSocket (por vezes chamada porta TCP no Kodi). Para se ligar atrav\u00e9s do WebSocket, tem de ativar a op\u00e7\u00e3o \"Permitir que os programas ... controlem o Kodi\" em Sistema/Defini\u00e7\u00f5es/Rede/Servi\u00e7os. Se o WebSocket n\u00e3o estiver ativado, remova a porta e deixe-a vazia."
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "turn_off": "{entity_name} foi desligado",
+            "turn_on": "{entity_name} foi ligado"
+        }
+    },
+    "entity": {
+        "media_player": {
+            "media_player": {
+                "state_attributes": {
+                    "dynamic_range": {
+                        "name": "Gama din\u00e2mica"
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "add_to_playlist": {
+            "description": "Adiciona m\u00fasica \u00e0 lista de reprodu\u00e7\u00e3o predefinida (ou seja, playlistid=0).",
+            "fields": {
+                "artist_name": {
+                    "description": "Nome de artista opcional para filtrar as media.",
+                    "name": "Nome do artista"
+                },
+                "media_id": {
+                    "description": "ID \u00fanico da entrada de media a adicionar (`songid` ou albumid`). Se n\u00e3o for definido, o nome da media e o nome do artista s\u00e3o necess\u00e1rios para pesquisar a biblioteca de m\u00fasica do Kodi.",
+                    "name": "ID da media"
+                },
+                "media_name": {
+                    "description": "Nome opcional da media para filtrar. Pode ser \"TODOS\" quando o tipo de suporte \u00e9 \"\u00c1LBUM\" e o nome do artista \u00e9 especificado, para adicionar todas as can\u00e7\u00f5es de um artista.",
+                    "name": "Nome da media"
+                },
+                "media_type": {
+                    "description": "Identificador do tipo de suporte. Deve ser um de \"SONG\" ou \"ALBUM\".",
+                    "name": "Tipo de media"
+                }
+            },
+            "name": "Adicionar \u00e0 lista de reprodu\u00e7\u00e3o"
+        },
+        "call_method": {
+            "description": "Chama um m\u00e9todo da API JSONRPC do Kodi com par\u00e2metros opcionais. Os resultados da chamada da API Kodi ser\u00e3o redirecionados para um evento do Home Assistant: `kodi_call_method_result`.",
+            "fields": {
+                "method": {
+                    "description": "Nome do m\u00e9todo da API JSONRPC do Kodi a ser chamado.",
+                    "name": "M\u00e9todo"
+                }
+            },
+            "name": "Chamar m\u00e9todo"
+        }
+    }
+}

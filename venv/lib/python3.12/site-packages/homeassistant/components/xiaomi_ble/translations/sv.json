@@ -1,0 +1,232 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "already_in_progress": "Konfigurationsfl\u00f6det p\u00e5g\u00e5r redan",
+            "api_error": "Fel vid kommunikation med Mi API: {error_detail}",
+            "no_devices_found": "Inga enheter hittades i n\u00e4tverket",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "api_device_not_found": "Enheten hittades inte i ditt Mi-konto.",
+            "auth_failed": "Autentisering misslyckades: {error_detail}",
+            "decryption_failed": "Den tillhandah\u00e5llna bindningsnyckeln fungerade inte, sensordata kunde inte dekrypteras. Kontrollera den och f\u00f6rs\u00f6k igen.",
+            "expected_24_characters": "F\u00f6rv\u00e4ntade ett hexadecimalt bindningsnyckel med 24 tecken.",
+            "expected_32_characters": "F\u00f6rv\u00e4ntade ett hexadecimalt bindningsnyckel med 32 tecken."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "bluetooth_confirm": {
+                "description": "Vill du konfigurera {name}?"
+            },
+            "cloud_auth": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "description": "Ange ditt anv\u00e4ndarnamn och l\u00f6senord f\u00f6r Mi-appen. Dessa uppgifter sparas inte och anv\u00e4nds endast f\u00f6r att h\u00e4mta enhetens krypteringsnyckel. Anv\u00e4ndarnamn och l\u00f6senord \u00e4r skiftl\u00e4gesk\u00e4nsliga."
+            },
+            "confirm_slow": {
+                "description": "Det har inte s\u00e4nts fr\u00e5n den h\u00e4r enheten under den senaste minuten s\u00e5 vi \u00e4r inte s\u00e4kra p\u00e5 om den h\u00e4r enheten anv\u00e4nder kryptering eller inte. Det kan bero p\u00e5 att enheten anv\u00e4nder ett l\u00e5ngsamt s\u00e4ndningsintervall. Bekr\u00e4fta att l\u00e4gga till den h\u00e4r enheten \u00e4nd\u00e5, n\u00e4sta g\u00e5ng en s\u00e4ndning tas emot kommer du att uppmanas att ange dess bindnyckel om det beh\u00f6vs."
+            },
+            "get_encryption_key_4_5": {
+                "data": {
+                    "bindkey": "Bindningsnyckel"
+                },
+                "description": "De sensordata som s\u00e4nds av sensorn \u00e4r krypterade. F\u00f6r att dekryptera dem beh\u00f6ver vi en hexadecimal bindningsnyckel med 32 tecken."
+            },
+            "get_encryption_key_4_5_choose_method": {
+                "description": "En Mi-enhet kan konfigureras i Home Assistant p\u00e5 tv\u00e5 olika s\u00e4tt.\n\nDu kan ange bindningsnyckeln sj\u00e4lv, eller s\u00e5 kan Home Assistant importera dem fr\u00e5n ditt Mi-konto.",
+                "menu_options": {
+                    "cloud_auth": "Mi-konto (rekommenderas)",
+                    "get_encryption_key_4_5": "Ange krypteringsnyckeln manuellt"
+                }
+            },
+            "get_encryption_key_legacy": {
+                "data": {
+                    "bindkey": "Bindningsnyckel"
+                },
+                "description": "De sensordata som s\u00e4nds av sensorn \u00e4r krypterade. F\u00f6r att dekryptera dem beh\u00f6ver vi en hexadecimal bindningsnyckel med 24 tecken."
+            },
+            "user": {
+                "data": {
+                    "address": "Enhet"
+                },
+                "description": "V\u00e4lj en enhet att konfigurera"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_subtype": {
+            "abnormal": "Onormal",
+            "double_press": "Dubbeltryck",
+            "insufficient_area": "Otillr\u00e4cklig yta",
+            "lock_inside_the_door": "L\u00e5s innanf\u00f6r d\u00f6rren",
+            "lock_outside_the_door": "L\u00e5s utanf\u00f6r d\u00f6rren",
+            "locked": "L\u00e5st",
+            "long_press": "L\u00e5ngt tryck",
+            "low_quality_too_light_fuzzy": "L\u00e5g kvalitet (f\u00f6r ljust, suddigt)",
+            "match_failed": "Matchningen misslyckades",
+            "match_successful": "Matchningen lyckades",
+            "motion_detected": "R\u00f6relse uppt\u00e4ckt",
+            "press": "Tryck",
+            "release_the_antilock": "Sl\u00e4pp antilock",
+            "rotate_left": "Rotera v\u00e4nster",
+            "rotate_left_pressed": "Rotera v\u00e4nster (intryckt)",
+            "rotate_right": "Rotera h\u00f6ger",
+            "rotate_right_pressed": "Rotera h\u00f6ger (intryckt)",
+            "skin_is_too_dry": "Huden \u00e4r f\u00f6r torr",
+            "skin_is_too_wet": "Huden \u00e4r f\u00f6r v\u00e5t",
+            "turn_off_child_lock": "St\u00e4ng av barnl\u00e5set",
+            "turn_on_antilock": "Sl\u00e5 p\u00e5 antilock",
+            "turn_on_child_lock": "Aktivera barnl\u00e5s",
+            "unlock_inside_the_door": "L\u00e5s upp utanf\u00f6r d\u00f6rren",
+            "unlock_outside_the_door": "L\u00e5s upp utanf\u00f6r d\u00f6rren"
+        },
+        "trigger_type": {
+            "button": "Knapp \"{subtype}\"",
+            "button_air_exchange": "Knapp luftv\u00e4xlare \"{subtype}\"",
+            "button_brightness": "Knapp ljusstyrka \"{subtype}\"",
+            "button_color_temperature": "Knapp f\u00e4rgtemperatur \"{subtype}\"",
+            "button_decrease_speed": "Knapp minska hastighet \"{subtype}\"",
+            "button_decrease_wind_speed": "Knapp minska vindhastighet \"{subtype}\"",
+            "button_dry": "Knapp torr \"{subtype}\"",
+            "button_fan": "Knapp fl\u00e4kt \"{subtype}\"",
+            "button_heat": "Knapp v\u00e4rme \"{subtype}\"",
+            "button_increase_speed": "Knapp f\u00f6r att \u00f6ka hastigheten \"{subtype}\"",
+            "button_increase_wind_speed": "Knapp \u00f6ka vindhastighet \"{subtype}\"",
+            "button_left": "Knapp v\u00e4nster \"{subtype}\"",
+            "button_light": "Knapp ljus \"{subtype}\"",
+            "button_m": "Knapp M \"{subtype}\"",
+            "button_middle": "Knapp mitten \"{subtype}\"",
+            "button_min": "Knapp min \"{subtype}\"",
+            "button_off": "Knapp av \"{subtype}\"",
+            "button_on": "Knapp p\u00e5 \"{subtype}\"",
+            "button_plus": "Knapp plus \"{subtype}\"",
+            "button_power": "Knapp power \"{subtype}\"",
+            "button_right": "Knapp h\u00f6ger \"{subtype}\"",
+            "button_stop": "Knapp Stopp \"{subtype}\"",
+            "button_swing": "Knapp swing \"{subtype}\"",
+            "button_timer_30_minutes": "Knapp timer 30 minuter \"{subtype}\"",
+            "button_timer_60_minutes": "Knapp timer 30 minuter \"{subtype}\"",
+            "button_wind_mode": "Knapp vindl\u00e4ge \"{subtype}\"",
+            "button_wind_speed": "Knapp vindhastighet \"{subtype}\"",
+            "cube": "{subtype}",
+            "dimmer": "{subtype}",
+            "fingerprint": "{subtype}",
+            "lock": "{subtype}",
+            "motion": "{subtype}"
+        }
+    },
+    "entity": {
+        "event": {
+            "button": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "double_press": "Dubbeltryck",
+                            "long_press": "L\u00e5ngtryck",
+                            "press": "Tryck"
+                        }
+                    }
+                }
+            },
+            "cube": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "rotate_left": "Rotera v\u00e4nster",
+                            "rotate_right": "Rotera h\u00f6ger"
+                        }
+                    }
+                }
+            },
+            "dimmer": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "long_press": "L\u00e5ngtryck",
+                            "press": "Tryck",
+                            "rotate_left": "Rotera v\u00e4nster",
+                            "rotate_left_pressed": "Rotera v\u00e4nster (intryckt)",
+                            "rotate_right": "Rotera h\u00f6ger",
+                            "rotate_right_pressed": "Rotera h\u00f6ger (nedtryckt)"
+                        }
+                    }
+                }
+            },
+            "error": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "error_nfc_frequently_unlocks": "Fel: NFC l\u00e5ses ofta upp",
+                            "failure_to_unlock_frequently_in_multiple_ways": "Misslyckas med att l\u00e5sa upp ofta p\u00e5 flera s\u00e4tt",
+                            "failure_to_unlock_the_vein_frequently": "Misslyckas med att l\u00e5sa upp venen ofta",
+                            "foreign_body_in_the_keyhole": "Fr\u00e4mmande f\u00f6rem\u00e5l i nyckelh\u00e5let",
+                            "frequent_unlocking_with_incorrect_password": "Frekvent uppl\u00e5sning med felaktigt l\u00f6senord",
+                            "frequent_unlocking_with_wrong_fingerprints": "Frekvent uppl\u00e5sning med fel fingeravtryck",
+                            "hijacking_alarm": "Larm f\u00f6r kapning",
+                            "lock_picking": "L\u00e5sdyrkning",
+                            "mechanical_failure": "Mekaniskt fel",
+                            "operation_timeout_password_input_timeout": "Timeout f\u00f6r drift timeout f\u00f6r l\u00f6senordsinmatning",
+                            "palmprints_frequently_fail_to_unlock": "Handavtryck misslyckas ofta med att l\u00e5sa upp",
+                            "reset_button_is_pressed": "\u00c5terst\u00e4llningsknappen \u00e4r intryckt",
+                            "the_accessory_battery_is_low": "Batteriet i tillbeh\u00f6ret \u00e4r l\u00e5gt",
+                            "the_battery_level_is_less_than_10_percent": "Batteriniv\u00e5n \u00e4r l\u00e4gre \u00e4n 10%.",
+                            "the_battery_level_is_less_than_5_percent": "Batteriniv\u00e5n \u00e4r l\u00e4gre \u00e4n 5%.",
+                            "the_fingerprint_sensor_is_abnormal": "Fingeravtryckssensorn \u00e4r onormal",
+                            "the_key_has_not_been_taken_out": "Nyckeln har inte tagits ut",
+                            "the_lock_sensor_is_faulty": "L\u00e5ssensorn \u00e4r defekt",
+                            "the_safe_was_moved": "Kassask\u00e5pet har flyttats",
+                            "the_wrong_key_is_frequently_unlocked": "Fel nyckel l\u00e5ses ofta upp",
+                            "timeout_is_not_locked_as_required": "Timeout \u00e4r inte l\u00e5st p\u00e5 det s\u00e4tt som kr\u00e4vs",
+                            "unlock_inside_the_door_after_arming": "L\u00e5s upp insidan av d\u00f6rren efter tillkoppling",
+                            "unlocking_the_face_frequently_fails": "Att l\u00e5sa upp ansiktet misslyckas ofta"
+                        }
+                    }
+                }
+            },
+            "fingerprint": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "insufficient_area": "Otillr\u00e4cklig yta",
+                            "low_quality_too_light_fuzzy": "L\u00e5g kvalitet (f\u00f6r ljust, suddigt)",
+                            "match_failed": "Matchningen misslyckades",
+                            "match_successful": "Matchningen lyckades",
+                            "skin_is_too_dry": "Huden \u00e4r f\u00f6r torr",
+                            "skin_is_too_wet": "Huden \u00e4r f\u00f6r v\u00e5t"
+                        }
+                    }
+                }
+            },
+            "lock": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "abnormal": "Onormal",
+                            "lock_inside_the_door": "L\u00e5s innanf\u00f6r d\u00f6rren",
+                            "lock_outside_the_door": "L\u00e5s utanf\u00f6r d\u00f6rren",
+                            "locked": "L\u00e5st",
+                            "release_the_antilock": "Sl\u00e4pp antilock",
+                            "turn_off_child_lock": "St\u00e4ng av barnl\u00e5set",
+                            "turn_on_antilock": "Sl\u00e5 p\u00e5 antilock",
+                            "turn_on_child_lock": "Aktivera barnl\u00e5s",
+                            "unlock_inside_the_door": "L\u00e5s upp utanf\u00f6r d\u00f6rren",
+                            "unlock_outside_the_door": "L\u00e5s upp utanf\u00f6r d\u00f6rren"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "motion_detected": "R\u00f6relse uppt\u00e4ckt"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

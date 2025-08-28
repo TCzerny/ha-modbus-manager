@@ -1,0 +1,95 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Integra\u00e7\u00e3o com o MELCloud j\u00e1 configurada para este email. O token de acesso foi atualizado.",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "E-mail"
+                },
+                "description": "A integra\u00e7\u00e3o do Melcloud precisa de autenticar novamente os seus detalhes de liga\u00e7\u00e3o",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "reconfigure": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "password": "Insira a (nova) palavra-passe para o MelCloud."
+                },
+                "description": "Reconfigure a entrada para obter um novo token, para a sua conta: `{username}`.",
+                "title": "Reconfigure a sua MelCloud."
+            },
+            "user": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "E-mail"
+                },
+                "description": "Ligue-se usando sua conta MELCloud.",
+                "title": "Conectar ao MELCloud"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "flow_temperature": {
+                "name": "Temperatura do fluxo"
+            },
+            "outside_temperature": {
+                "name": "Temperatura exterior"
+            },
+            "return_temperature": {
+                "name": "Temperatura de retorno do caudal"
+            },
+            "room_temperature": {
+                "name": "Temperatura da divis\u00e3o"
+            },
+            "tank_temperature": {
+                "name": "Temperatura do tanque"
+            }
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "A configura\u00e7\u00e3o do MELCloud via YAML est\u00e1 a ser removida, mas houve um erro de liga\u00e7\u00e3o ao importar sua configura\u00e7\u00e3o YAML.\n\nCertifique-se de que a liga\u00e7\u00e3o ao MELCloud funciona e reinicie o Home Assistant para tentar novamente, ou remova a configura\u00e7\u00e3o YAML do MELCloud do seu ficheiro configuration.yaml e continue a [configurar a integra\u00e7\u00e3o](/config/integrations/dashboard/add?domain=melcoud) manualmente.",
+            "title": "A importa\u00e7\u00e3o da configura\u00e7\u00e3o YAML do MELCloud falhou"
+        },
+        "deprecated_yaml_import_issue_invalid_auth": {
+            "description": "A configura\u00e7\u00e3o do MELCloud via YAML est\u00e1 a ser removida, mas houve um erro de autentica\u00e7\u00e3o ao importar sua configura\u00e7\u00e3o YAML.\n\nCorrija a configura\u00e7\u00e3o YAML e reinicie o Home Assistant para tentar novamente ou remova a configura\u00e7\u00e3o YAML do MELCloud do seu ficheiro configuration.yaml e continue a [configurar a integra\u00e7\u00e3o](/config/integrations/dashboard/add?domain=melcoud) manualmente.",
+            "title": "A importa\u00e7\u00e3o da configura\u00e7\u00e3o YAML do MELCloud falhou"
+        }
+    },
+    "services": {
+        "set_vane_horizontal": {
+            "description": "Define a posi\u00e7\u00e3o horizontal da palheta.",
+            "fields": {
+                "position": {
+                    "description": "Posi\u00e7\u00e3o horizontal da palheta. As op\u00e7\u00f5es poss\u00edveis podem ser encontradas no atributo de estado vane_horizontal_positions.",
+                    "name": "Posi\u00e7\u00e3o"
+                }
+            },
+            "name": "Definir palhetas horizontais"
+        },
+        "set_vane_vertical": {
+            "description": "Define a posi\u00e7\u00e3o da palheta vertical.",
+            "fields": {
+                "position": {
+                    "description": "Posi\u00e7\u00e3o vertical da palheta. As op\u00e7\u00f5es poss\u00edveis podem ser encontradas no atributo de estado vane_vertical_positions.",
+                    "name": "Posi\u00e7\u00e3o"
+                }
+            },
+            "name": "Definir palheta vertical"
+        }
+    }
+}

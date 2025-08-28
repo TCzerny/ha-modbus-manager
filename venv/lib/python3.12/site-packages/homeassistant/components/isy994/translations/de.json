@@ -1,0 +1,176 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "invalid_host": "Der Host Eintrag hatte nicht das vollst\u00e4ndige URL-Format, z. B. http://192.168.10.100:80",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Passwort",
+                    "username": "Benutzername"
+                },
+                "description": "Die Anmeldedaten f\u00fcr {host} sind nicht mehr g\u00fcltig.",
+                "title": "Reauthentifizierung deines ISY"
+            },
+            "user": {
+                "data": {
+                    "host": "URL",
+                    "password": "Passwort",
+                    "tls": "Die TLS-Version des ISY-Controllers.",
+                    "username": "Benutzername"
+                },
+                "description": "Der Host Eintrag muss im vollst\u00e4ndigen URL-Format vorliegen, z. B. http://192.168.10.100:80",
+                "title": "Verbindung zu deinem ISY"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignore_string": "Ignorieren-String",
+                    "restore_light_state": "Leuchten-Helligkeit wiederherstellen",
+                    "sensor_string": "Node-Sensor-String",
+                    "variable_sensor_string": "Variablen-Sensor-String"
+                },
+                "description": "Lege die Optionen f\u00fcr die ISY-Integration fest: \n - Node-Sensor-String: Jedes Ger\u00e4t oder jeder Ordner, die den \u201eNode-Sensor-String\u201c im Namen enthalten, werden als Sensor oder Bin\u00e4rsensor behandelt. \n - Ignorieren-String: Jedes Ger\u00e4t mit dem \u201eIgnorieren-String\u201c im Namen wird ignoriert. \n - Variablen-Sensor-String: Jede Variable, die den \u201eVariablen-Sensor-String\u201c im Namen enth\u00e4lt, wird als Sensor hinzugef\u00fcgt. \n - Leuchten-Helligkeit wiederherstellen: Wenn diese Option aktiviert ist, wird beim Einschalten einer Leuchte die vorherige Helligkeit wiederhergestellt und nicht das eingebaute Ein-Niveau des Ger\u00e4ts.",
+                "title": "ISY-Optionen"
+            }
+        }
+    },
+    "services": {
+        "delete_zwave_lock_user_code": {
+            "description": "L\u00f6scht \u00fcber den ISY einen Benutzercode f\u00fcr ein Z-Wave Schloss.",
+            "fields": {
+                "user_num": {
+                    "description": "Die Benutzerslotnummer auf dem Schloss.",
+                    "name": "Benutzernummer"
+                }
+            },
+            "name": "Z-Wave Schloss-Benutzercode l\u00f6schen"
+        },
+        "get_zwave_parameter": {
+            "description": "Fordert einen Z-Wave-Ger\u00e4teparameter \u00fcber den ISY an. Der Parameterwert wird als zus\u00e4tzliches Attribut des Entit\u00e4tszustands mit dem Namen \u201eZW_#\u201c zur\u00fcckgegeben, wobei \u201e#\u201c die Parameternummer ist.",
+            "fields": {
+                "parameter": {
+                    "description": "Die vom Ger\u00e4t abzurufende Parameternummer.",
+                    "name": "Parameter"
+                }
+            },
+            "name": "Z-Wave-Parameter abrufen"
+        },
+        "rename_node": {
+            "description": "Benennt einen Knoten oder eine Gruppe (Szene) auf dem ISY um. Hinweis: Dadurch wird der Home Assistant-Entit\u00e4tsname oder die Entit\u00e4ts-ID nicht automatisch entsprechend ge\u00e4ndert. Der Entit\u00e4tsname und die ID werden erst nach dem Neuladen der Integration oder dem Neustart von Home Assistant aktualisiert, und NUR WENN du den Namen nicht bereits in Home Assistant angepasst hast.",
+            "fields": {
+                "name": {
+                    "description": "Der neue Name, der innerhalb des ISY verwendet werden soll.",
+                    "name": "Neuer Name"
+                }
+            },
+            "name": "Knoten auf ISY umbenennen"
+        },
+        "send_node_command": {
+            "description": "Sendet einen Befehl an ein ISY-Ger\u00e4t unter Verwendung seiner Home Assistant-Entit\u00e4ts-ID. G\u00fcltige Befehle sind: beep, brighten, dim, disable, enable, fade_down, fade_stop, fade_up, fast_off, fast_on und query.",
+            "fields": {
+                "command": {
+                    "description": "Der Befehl, der an das Ger\u00e4t gesendet werden soll.",
+                    "name": "Befehl"
+                }
+            },
+            "name": "Knotenbefehl senden"
+        },
+        "send_program_command": {
+            "description": "Sendet einen Befehl zur Steuerung eines ISY-Programms oder -Ordners. G\u00fcltige Befehle sind \u201erun\u201c, \u201erun_then\u201c, \u201erun_else\u201c, \u201estop\u201c, \u201eenable\u201c, \u201edisable\u201c, \u201eenable_run_at_startup\u201c und \u201edisable_run_at_startup\u201c.",
+            "fields": {
+                "address": {
+                    "description": "Die Adresse des zu steuernden Programms (entweder Adresse oder Name verwenden).",
+                    "name": "Adresse"
+                },
+                "command": {
+                    "description": "Der zu sendende ISY-Programmbefehl.",
+                    "name": "Befehl"
+                },
+                "isy": {
+                    "description": "Wenn mehr als ein ISY verbunden ist, gib den Namen des abzufragenden ISY an (wie in der Ger\u00e4teregistrierung oder als oberster Knoten in der ISY-Administratorkonsole angezeigt). Wenn du auf mehreren ISYs denselben Programmnamen oder dieselbe Adresse hast, wird der Befehl auf allen ISYs ausgef\u00fchrt, wenn du dies wegl\u00e4sst.",
+                    "name": "ISY"
+                },
+                "name": {
+                    "description": "Der Name des zu steuernden Programms (entweder Adresse oder Name verwenden).",
+                    "name": "Name"
+                }
+            },
+            "name": "Programmbefehl senden"
+        },
+        "send_raw_node_command": {
+            "description": "Lege die Optionen f\u00fcr die ISY-Integration fest: \n - Node-Sensor-String: Jedes Ger\u00e4t oder jeder Ordner, die den \u201eNode-Sensor-String\u201c im Namen enthalten, werden als Sensor oder Bin\u00e4rsensor behandelt. \n - Ignorieren-String: Jedes Ger\u00e4t mit dem \u201eIgnorieren-String\u201c im Namen wird ignoriert. \n - Variablen-Sensor-String: Jede Variable, die den \u201eVariablen-Sensor-String\u201c im Namen enth\u00e4lt, wird als Sensor hinzugef\u00fcgt. \n - Leuchten-Helligkeit wiederherstellen: Wenn diese Option aktiviert ist, wird beim Einschalten einer Leuchte die vorherige Helligkeit wiederhergestellt und nicht das eingebaute Ein-Niveau des Ger\u00e4ts.",
+            "fields": {
+                "command": {
+                    "description": "Der ISY REST-Befehl, der an das Ger\u00e4t gesendet werden soll.",
+                    "name": "Befehl"
+                },
+                "parameters": {
+                    "description": "Ein Dictionary von Parametern, die in der Abfragezeichenfolge gesendet werden sollen (z. B. zur Steuerung farbiger Birnen).",
+                    "name": "Parameter"
+                },
+                "unit_of_measurement": {
+                    "description": "Die ISY-Ma\u00dfeinheit, die bei Bedarf mit dem Befehl gesendet werden soll.",
+                    "name": "Ma\u00dfeinheit"
+                },
+                "value": {
+                    "description": "Der ganzzahlige Wert, der mit dem Befehl gesendet werden soll.",
+                    "name": "Wert"
+                }
+            },
+            "name": "Raw-Node-Befehl senden"
+        },
+        "set_zwave_lock_user_code": {
+            "description": "Legt \u00fcber den ISY einen Benutzercode f\u00fcr ein Z-Wave-Schloss fest.",
+            "fields": {
+                "code": {
+                    "description": "Der f\u00fcr den Benutzer festzulegende Code.",
+                    "name": "Code"
+                },
+                "user_num": {
+                    "description": "Die Benutzerslotnummer auf dem Schloss.",
+                    "name": "Benutzernummer"
+                }
+            },
+            "name": "Z-Wave Schloss-Benutzercode einstellen"
+        },
+        "set_zwave_parameter": {
+            "description": "Aktualisiert einen Z-Wave-Ger\u00e4teparameter \u00fcber den ISY. Der Parameterwert wird auch als zus\u00e4tzliches Attribut des Entit\u00e4tszustands mit dem Namen \u201eZW_#\u201c zur\u00fcckgegeben, wobei \u201e#\u201c die Parameter-Nummer ist.",
+            "fields": {
+                "parameter": {
+                    "description": "Die Parameternummer, die auf dem Endger\u00e4t eingestellt werden soll.",
+                    "name": "Parameter"
+                },
+                "size": {
+                    "description": "Die Gr\u00f6\u00dfe des Parameters, entweder 1, 2 oder 4 Byte.",
+                    "name": "Gr\u00f6\u00dfe"
+                },
+                "value": {
+                    "description": "Der f\u00fcr den Parameter festzulegende Wert. Kann eine Ganzzahl oder eine Bytefolge sein (z. B. \u201e0xFFFF\u201c).",
+                    "name": "Wert"
+                }
+            },
+            "name": "Z-Wave-Parameter einstellen"
+        }
+    },
+    "system_health": {
+        "info": {
+            "device_connected": "ISY verbunden",
+            "host_reachable": "Deutsch",
+            "last_heartbeat": "Letzte Heartbeat-Zeit",
+            "websocket_status": "Ereignis-Socket Status"
+        }
+    }
+}

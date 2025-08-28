@@ -1,0 +1,39 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "Bereits konfiguriert. Nur eine einzige Konfiguration m\u00f6glich."
+        },
+        "error": {
+            "directory_does_not_exist": "Das Verzeichnis konnte nicht erreicht werden. Bitte \u00fcberpr\u00fcfe deine Einstellungen."
+        },
+        "step": {
+            "user": {
+                "description": "W\u00e4hle einen Speicherort f\u00fcr Downloads aus. Die Einrichtung pr\u00fcft, ob das Verzeichnis existiert."
+            }
+        }
+    },
+    "services": {
+        "download_file": {
+            "description": "L\u00e4dt eine Datei an den Download-Speicherort herunter.",
+            "fields": {
+                "filename": {
+                    "description": "Eigener Name f\u00fcr die heruntergeladene Datei.",
+                    "name": "Dateiname"
+                },
+                "overwrite": {
+                    "description": "Eine vorhandene Datei \u00fcberschreiben.",
+                    "name": "\u00dcberschreiben"
+                },
+                "subdir": {
+                    "description": "Relativer Download-Pfad.",
+                    "name": "Unterverzeichnis"
+                },
+                "url": {
+                    "description": "Die URL der Datei, die heruntergeladen werden soll.",
+                    "name": "URL"
+                }
+            },
+            "name": "Datei herunterladen"
+        }
+    }
+}

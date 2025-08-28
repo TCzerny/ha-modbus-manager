@@ -1,0 +1,94 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Bu sunucu zaten yap\u0131land\u0131r\u0131lm\u0131\u015f"
+        },
+        "error": {
+            "api_error": "pyemoncms API'sinde bir hata olu\u015ftu: {details}"
+        },
+        "step": {
+            "choose_feeds": {
+                "data": {
+                    "include_only_feed_id": "Dahil edilecek beslemeleri se\u00e7in"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API Anahtar\u0131",
+                    "url": "URL"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "apparent_power": {
+                "name": "G\u00f6r\u00fcn\u00fcr g\u00fc\u00e7 {emoncms_details}"
+            },
+            "concentration": {
+                "name": "Konsantrasyon {emoncms_details}"
+            },
+            "current": {
+                "name": "G\u00fcncel {emoncms_details}"
+            },
+            "decibel": {
+                "name": "Desibel {emoncms_details}"
+            },
+            "energy": {
+                "name": "Enerji {emoncms_details}"
+            },
+            "flow": {
+                "name": "Ak\u0131\u015f h\u0131z\u0131 {emoncms_details}"
+            },
+            "frequency": {
+                "name": "Frekans {emoncms_details}"
+            },
+            "percent": {
+                "name": "Y\u00fczde {emoncms_details}"
+            },
+            "power": {
+                "name": "G\u00fc\u00e7 {emoncms_details}"
+            },
+            "pressure": {
+                "name": "Bas\u0131n\u00e7 {emoncms_details}"
+            },
+            "speed": {
+                "name": "H\u0131z {emoncms_details}"
+            },
+            "temperature": {
+                "name": "S\u0131cakl\u0131k {emoncms_details}"
+            },
+            "voltage": {
+                "name": "Voltaj {emoncms_details}"
+            },
+            "volume": {
+                "name": "Seviye {emoncms_details}"
+            }
+        }
+    },
+    "issues": {
+        "migrate_database": {
+            "title": "Emoncms s\u00fcr\u00fcm\u00fcn\u00fcz\u00fc y\u00fckseltin"
+        },
+        "missing_include_only_feed_id": {
+            "description": "{domain} i YAML kullanarak yap\u0131land\u0131rma kald\u0131r\u0131l\u0131yor. L\u00fctfen entegrasyonun `configure` d\u00fc\u011fmesiyle senkronize etmek istedi\u011finiz beslemeleri manuel olarak ekleyin.",
+            "title": "{domain} sens\u00f6r\u00fcyle senkronize edilmi\u015f besleme yok"
+        },
+        "remove_value_template": {
+            "description": "YAML kullanarak {domain} yap\u0131land\u0131rmas\u0131 kald\u0131r\u0131l\u0131yor ve `{parameter}` parametresi i\u00e7e aktar\u0131lam\u0131yor.\n\nL\u00fctfen `{parameter}` adresini `{domain}` yaml yap\u0131land\u0131rman\u0131zdan kald\u0131r\u0131n ve Home Assistant'\u0131 yeniden ba\u015flat\u0131n\n\nAlternatif olarak, configuration.yaml dosyan\u0131zdan `{domain}` yap\u0131land\u0131rmas\u0131n\u0131 tamamen kald\u0131rabilir, Home Assistant'\u0131 yeniden ba\u015flatabilir ve {domain} entegrasyonunu manuel olarak ekleyebilirsiniz.",
+            "title": "{domain} entegrasyonu ba\u015flat\u0131lam\u0131yor"
+        }
+    },
+    "options": {
+        "error": {
+            "api_error": "pyemoncms API'sinde bir hata olu\u015ftu: {details}"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "include_only_feed_id": "Dahil edilecek beslemeleri se\u00e7in"
+                }
+            }
+        }
+    }
+}

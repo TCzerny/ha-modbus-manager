@@ -1,0 +1,53 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Compteur",
+            "state_attributes": {
+                "editable": {
+                    "name": "G\u00e9r\u00e9 via l'interface utilisateur",
+                    "state": {
+                        "false": "Non",
+                        "true": "Oui"
+                    }
+                },
+                "initial": {
+                    "name": "Valeur initiale"
+                },
+                "maximum": {
+                    "name": "Maximum"
+                },
+                "minimum": {
+                    "name": "Minimum"
+                },
+                "step": {
+                    "name": "Pas"
+                }
+            }
+        }
+    },
+    "services": {
+        "decrement": {
+            "description": "D\u00e9cr\u00e9mente un compteur en fonction de sa taille de pas.",
+            "name": "D\u00e9cr\u00e9menter"
+        },
+        "increment": {
+            "description": "Incr\u00e9mente un compteur en fonction de sa taille de pas.",
+            "name": "Incr\u00e9menter"
+        },
+        "reset": {
+            "description": "R\u00e9initialise un compteur \u00e0 sa valeur initiale.",
+            "name": "R\u00e9initialiser"
+        },
+        "set_value": {
+            "description": "D\u00e9finit le compteur sur une valeur sp\u00e9cifique.",
+            "fields": {
+                "value": {
+                    "description": "La nouvelle valeur de compteur \u00e0 laquelle l'entit\u00e9 doit \u00eatre d\u00e9finie.",
+                    "name": "Valeur"
+                }
+            },
+            "name": "D\u00e9finir"
+        }
+    },
+    "title": "Compteur"
+}

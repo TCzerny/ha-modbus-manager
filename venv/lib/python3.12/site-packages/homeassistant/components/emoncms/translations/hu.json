@@ -1,0 +1,99 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ez a kiszolg\u00e1l\u00f3 m\u00e1r konfigur\u00e1lva van"
+        },
+        "error": {
+            "api_error": "Hiba t\u00f6rt\u00e9nt a pyemoncms API-ban: {details}"
+        },
+        "step": {
+            "choose_feeds": {
+                "data": {
+                    "include_only_feed_id": "V\u00e1lassza ki a felvenni k\u00edv\u00e1nt h\u00edrcsatorn\u00e1kat"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API kulcs",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "A 32 bites API-kulcsa",
+                    "url": "A kiszolg\u00e1l\u00f3 URL-je, amelynek a protokollal kell kezd\u0151dnie (http vagy https)"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "apparent_power": {
+                "name": "L\u00e1tsz\u00f3lagos teljes\u00edtm\u00e9ny {emoncms_details}"
+            },
+            "concentration": {
+                "name": "Koncentr\u00e1ci\u00f3 {emoncms_details}"
+            },
+            "current": {
+                "name": "\u00c1ramer\u0151ss\u00e9g {emoncms_details}"
+            },
+            "decibel": {
+                "name": "Decibel {emoncms_details}"
+            },
+            "energy": {
+                "name": "Energia {emoncms_details}"
+            },
+            "flow": {
+                "name": "\u00c1raml\u00e1si sebess\u00e9g {emoncms_details}"
+            },
+            "frequency": {
+                "name": "Frekvencia {emoncms_details}"
+            },
+            "percent": {
+                "name": "Sz\u00e1zal\u00e9k {emoncms_details}"
+            },
+            "power": {
+                "name": "Teljes\u00edtm\u00e9ny {emoncms_details}"
+            },
+            "pressure": {
+                "name": "Nyom\u00e1s {emoncms_details}"
+            },
+            "speed": {
+                "name": "Sebess\u00e9g {emoncms_details}"
+            },
+            "temperature": {
+                "name": "H\u0151m\u00e9rs\u00e9klet {emoncms_details}"
+            },
+            "voltage": {
+                "name": "Fesz\u00fclts\u00e9g {emoncms_details}"
+            },
+            "volume": {
+                "name": "T\u00e9rfogat {emoncms_details}"
+            }
+        }
+    },
+    "issues": {
+        "migrate_database": {
+            "description": "Az \u00d6n [emoncms]({url}) rendszere nem tartalmaz egyedi azonos\u00edt\u00f3t.  \n\nFriss\u00edtsen legal\u00e1bb 11.5.7 verzi\u00f3ra \u00e9s migr\u00e1lja az emoncms adatb\u00e1zist.  \n\nTov\u00e1bbi inform\u00e1ci\u00f3\u00e9rt tekintse meg az [emoncms dokument\u00e1ci\u00f3t]({doc_url}).",
+            "title": "Friss\u00edtse az emoncms verzi\u00f3j\u00e1t"
+        },
+        "missing_include_only_feed_id": {
+            "description": "A(z) {domain} YAML-alap\u00fa konfigur\u00e1l\u00e1sa megsz\u0171nik.\n\nK\u00e9rj\u00fck, manu\u00e1lisan adja hozz\u00e1 a szinkroniz\u00e1lni k\u00edv\u00e1nt adatfolyamokat az integr\u00e1ci\u00f3 `konfigur\u00e1l\u00e1s` gombj\u00e1val.",
+            "title": "Nincs h\u00edrcsatorna szinkroniz\u00e1lva a(z) {domain} \u00e9rz\u00e9kel\u0151vel"
+        },
+        "remove_value_template": {
+            "description": "A(z) {domain} YAML-alap\u00fa konfigur\u00e1l\u00e1sa megsz\u0171nik \u00e9s a(z) `{parameter}` param\u00e9ter nem import\u00e1lhat\u00f3.\n\nK\u00e9rj\u00fck, t\u00e1vol\u00edtsa el a(z) `{parameter}` param\u00e9tert a(z) {domain} YAML konfigur\u00e1ci\u00f3j\u00e1b\u00f3l, majd ind\u00edtsa \u00fajra a Home Assistantot.\n\nAlternat\u00edv megold\u00e1sk\u00e9nt teljesen elt\u00e1vol\u00edthatja a(z) {domain} konfigur\u00e1ci\u00f3t a configuration.yaml f\u00e1jlb\u00f3l, ind\u00edtsa \u00fajra a Home Assistantot \u00e9s manu\u00e1lisan adja hozz\u00e1 a(z) {domain} integr\u00e1ci\u00f3t.",
+            "title": "A(z) {domain} integr\u00e1ci\u00f3 nem tud elindulni"
+        }
+    },
+    "options": {
+        "error": {
+            "api_error": "Hiba t\u00f6rt\u00e9nt a pyemoncms API-ban: {details}"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "include_only_feed_id": "V\u00e1lassza ki a felvenni k\u00edv\u00e1nt h\u00edrcsatorn\u00e1kat"
+                }
+            }
+        }
+    }
+}

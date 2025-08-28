@@ -3,6 +3,7 @@
 # Status: In Entwicklung - Phase 1-5 ABGESCHLOSSEN, Phase 6 gestartet
 
 ## 🎯 WICHTIGE GRUNDSÄTZE
+- **KOMMENTARE UND DOKUMENTATIONEN** immer in Englisch
 - **KEINE voreiligen Annahmen** - Immer erst die komplette Verarbeitungskette verstehen
 - **Standard Home Assistant API nutzen** - Nur in Ausnahmefällen eigene Lösungen bauen
 - **Maximal eine logische Änderung pro Commit**
@@ -162,15 +163,30 @@
 - [ ] Performance-Monitoring
 - [ ] Predictive Maintenance
 
+### 6.5 Modbus-API-Integration behoben ✅
+- [x] **ModbusHub-Erstellung korrigiert**:
+  - [x] Alle erforderlichen Parameter übergeben (`name`, `type`, `host`, `port`, `delay`, `timeout`)
+  - [x] Korrekte ModbusHub-API-Methoden verwendet (`async_setup`, `async_pb_connect`)
+  - [x] Keine überflüssigen Parameter mehr
+- [x] **Modbus-API-Aufrufe korrigiert**:
+  - [x] Parameter-Reihenfolge in `async_pb_call` korrigiert
+  - [x] Korrekte Konstanten aus `homeassistant.components.modbus.const` importiert
+  - [x] Alle Entity-Typen verwenden korrekte Modbus-API
+- [x] **Config Flow 500-Fehler behoben**:
+  - [x] Doppelten Import entfernt
+  - [x] None-Check für Template-Register hinzugefügt
+  - [x] Spezifische Fehlermeldungen implementiert
+
 ## 📊 AKTUELLER FORTSCHRITT
 
-### ✅ **ABGESCHLOSSEN (Phase 1-5 + 6.1):**
+### ✅ **ABGESCHLOSSEN (Phase 1-5 + 6.1-6.5):**
 - Grundstruktur & Standards
 - Template-System (Sungrow + modbus_connect)
 - Aggregations-Modul
 - UI & Konfiguration
 - Dokumentation
 - modbus_connect Features integriert
+- **Modbus-API-Integration vollständig behoben**
 
 ### 🔄 **IN ARBEIT (Phase 6.2-6.4):**
 - Vollständige Entity-Implementierung
@@ -209,11 +225,11 @@
 
 ## 🎯 NÄCHSTE SCHRITTE
 
-1. **Vollständige Entity-Implementierung** (Phase 6.2)
-2. **Erweiterte Modbus-Funktionen** (Phase 6.3)
+1. **Integration testen** mit allen neuen Features ✅
+2. **Performance-Optimierung** und Monitoring
 3. **Intelligente Features** (Phase 6.4)
-4. **Integration testen** mit allen neuen Features
-5. **Performance-Optimierung** und Monitoring
+4. **Finale Tests** und Bug-Fixes
+5. **Release-Vorbereitung**
 
 ## 🏆 ERREICHTE MEILENSTEINE
 

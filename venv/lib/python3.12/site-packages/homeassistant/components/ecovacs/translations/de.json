@@ -1,0 +1,270 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "invalid_url": "Ung\u00fcltige URL",
+            "invalid_url_schema_override_mqtt_url": "Ung\u00fcltiges MQTT-URL-Schema.\nDie URL sollte mit `mqtt://` oder `mqtts://` beginnen.",
+            "invalid_url_schema_override_rest_url": "Ung\u00fcltiges REST-URL-Schema.\nDie URL sollte mit `http://` oder `https://` beginnen.",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "country": "Land",
+                    "override_mqtt_url": "MQTT-URL",
+                    "override_rest_url": "REST-URL",
+                    "password": "Passwort",
+                    "username": "Benutzername",
+                    "verify_mqtt_certificate": "MQTT-SSL-Zertifikat verifizieren"
+                },
+                "data_description": {
+                    "override_mqtt_url": "Gib die MQTT-URL deiner selbst gehosteten Instanz einschlie\u00dflich des Schemas (mqtt/mqtts) ein.",
+                    "override_rest_url": "Gib die REST-URL deiner selbst gehosteten Instanz einschlie\u00dflich des Schemas (http/https) ein."
+                }
+            },
+            "user": {
+                "data": {
+                    "mode": "Modus"
+                },
+                "data_description": {
+                    "mode": "W\u00e4hle den Modus aus, den du f\u00fcr die Verbindung mit Ecovacs verwenden m\u00f6chtest. Wenn du unsicher bist, w\u00e4hle **Cloud**. \n\nW\u00e4hle **Selbstgehostet** nur aus, wenn du \u00fcber eine funktionierende selbstgehostete Instanz verf\u00fcgst."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "water_mop_attached": {
+                "name": "Mopp angebracht"
+            }
+        },
+        "button": {
+            "relocate": {
+                "name": "Verlegen"
+            },
+            "reset_lifespan_base_station_filter": {
+                "name": "Lebensdauer des Stationsfilters zur\u00fccksetzen"
+            },
+            "reset_lifespan_blade": {
+                "name": "Klingenlebensdauer zur\u00fccksetzen"
+            },
+            "reset_lifespan_brush": {
+                "name": "Lebensdauer der Hauptb\u00fcrste zur\u00fccksetzen"
+            },
+            "reset_lifespan_filter": {
+                "name": "Lebensdauer des Filters zur\u00fccksetzen"
+            },
+            "reset_lifespan_lens_brush": {
+                "name": "Lebensdauer der Objektivb\u00fcrste zur\u00fccksetzen"
+            },
+            "reset_lifespan_round_mop": {
+                "name": "Lebensdauer des Rundwischers zur\u00fccksetzen"
+            },
+            "reset_lifespan_side_brush": {
+                "name": "Lebensdauer der Seitenb\u00fcrste zur\u00fccksetzen"
+            },
+            "reset_lifespan_unit_care": {
+                "name": "Lebensdauer der Pflegeeinheit zur\u00fccksetzen"
+            },
+            "station_action_empty_dustbin": {
+                "name": "Staubbeh\u00e4lter entleeren"
+            }
+        },
+        "event": {
+            "last_job": {
+                "name": "Letzter Auftrag",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "finished": "Abgeschlossen",
+                            "finished_with_warnings": "Mit Warnungen abgeschlossen",
+                            "manually_stopped": "Manuell gestoppt"
+                        }
+                    }
+                }
+            }
+        },
+        "image": {
+            "map": {
+                "name": "Karte"
+            }
+        },
+        "number": {
+            "clean_count": {
+                "name": "Reinigungsz\u00e4hler"
+            },
+            "cut_direction": {
+                "name": "Schnittrichtung"
+            },
+            "volume": {
+                "name": "Lautst\u00e4rke"
+            }
+        },
+        "select": {
+            "water_amount": {
+                "name": "Wasserdurchfluss",
+                "state": {
+                    "high": "Hoch",
+                    "low": "Niedrig",
+                    "medium": "Mittel",
+                    "ultrahigh": "Ultrahoch"
+                }
+            },
+            "work_mode": {
+                "name": "Betriebsmodus",
+                "state": {
+                    "mop": "Mopp",
+                    "mop_after_vacuum": "Wischen nach dem Staubsaugen",
+                    "vacuum": "Staubsaugen",
+                    "vacuum_and_mop": "Staubsaugen & Wischen"
+                }
+            }
+        },
+        "sensor": {
+            "error": {
+                "name": "Fehler",
+                "state_attributes": {
+                    "description": {
+                        "name": "Beschreibung"
+                    }
+                }
+            },
+            "lifespan_base_station_filter": {
+                "name": "Lebensdauer des Stationsfilters"
+            },
+            "lifespan_blade": {
+                "name": "Klingenlebensdauer"
+            },
+            "lifespan_brush": {
+                "name": "Lebensdauer der Hauptb\u00fcrste"
+            },
+            "lifespan_filter": {
+                "name": "Lebensdauer des Filters"
+            },
+            "lifespan_lens_brush": {
+                "name": "Lebensdauer der Objektivb\u00fcrste"
+            },
+            "lifespan_main_brush": {
+                "name": "Lebensdauer der Hauptb\u00fcrste"
+            },
+            "lifespan_round_mop": {
+                "name": "Lebensdauer des Rundwischers"
+            },
+            "lifespan_side_brush": {
+                "name": "Lebensdauer der Seitenb\u00fcrste"
+            },
+            "lifespan_unit_care": {
+                "name": "Lebensdauer der Pflegeeinheit"
+            },
+            "network_ip": {
+                "name": "IP-Adresse"
+            },
+            "network_rssi": {
+                "name": "WLAN-RSSI"
+            },
+            "network_ssid": {
+                "name": "WLAN-SSID"
+            },
+            "station_state": {
+                "name": "Zustand der Station",
+                "state": {
+                    "emptying_dustbin": "Staubbeh\u00e4lter wird entleert",
+                    "idle": "Leerlauf"
+                }
+            },
+            "stats_area": {
+                "name": "Fl\u00e4che gereinigt"
+            },
+            "stats_time": {
+                "name": "Reinigungsdauer"
+            },
+            "total_stats_area": {
+                "name": "Gesamtfl\u00e4che gereinigt"
+            },
+            "total_stats_cleanings": {
+                "name": "Reinigungen insgesamt"
+            },
+            "total_stats_time": {
+                "name": "Gesamtdauer der Reinigung"
+            }
+        },
+        "switch": {
+            "advanced_mode": {
+                "name": "Erweiterter Modus"
+            },
+            "border_switch": {
+                "name": "Grenzschalter"
+            },
+            "carpet_auto_fan_boost": {
+                "name": "Automatische Saugkraftverst\u00e4rkung f\u00fcr Teppiche"
+            },
+            "child_lock": {
+                "name": "Kindersicherung"
+            },
+            "clean_preference": {
+                "name": "Reinigungspr\u00e4ferenz"
+            },
+            "continuous_cleaning": {
+                "name": "Kontinuierliche Reinigung"
+            },
+            "cross_map_border_warning": {
+                "name": "Warnung vor \u00dcberschreitung der Kartengrenzen"
+            },
+            "move_up_warning": {
+                "name": "Warnung vor \u201eNach oben\u201c"
+            },
+            "safe_protect": {
+                "name": "Safe protect"
+            },
+            "true_detect": {
+                "name": "TrueDetect"
+            }
+        },
+        "vacuum": {
+            "vacuum": {
+                "state_attributes": {
+                    "fan_speed": {
+                        "state": {
+                            "max": "Maximal",
+                            "max_plus": "Maximal+",
+                            "normal": "Normal",
+                            "quiet": "Leise"
+                        }
+                    },
+                    "rooms": {
+                        "name": "R\u00e4ume"
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "vacuum_raw_get_positions_not_supported": {
+            "message": "Das Abrufen der Positionen der Ladeger\u00e4te und des Ger\u00e4ts selbst wird nicht unterst\u00fctzt"
+        },
+        "vacuum_send_command_params_dict": {
+            "message": "Parameter m\u00fcssen ein Dictionary und keine Liste sein"
+        },
+        "vacuum_send_command_params_required": {
+            "message": "Parameter sind f\u00fcr den Befehl erforderlich: {command}"
+        }
+    },
+    "selector": {
+        "installation_mode": {
+            "options": {
+                "cloud": "Cloud",
+                "self_hosted": "Selbstgehostet"
+            }
+        }
+    },
+    "services": {
+        "raw_get_positions": {
+            "description": "Fragt die Rohantwort f\u00fcr die Positionen der Ladeger\u00e4te und des Ger\u00e4ts selbst ab.",
+            "name": "Rohpositionen abrufen"
+        }
+    }
+}

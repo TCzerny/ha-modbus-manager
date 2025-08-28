@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Tj\u00e4nsten \u00e4r redan konfigurerad",
+            "reconfigure_successful": "Omkonfigurationen lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_api_key": "Ogiltig API-nyckel"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API-nyckel",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "API-nyckeln f\u00f6r SABnzbd-servern. Den finns i webbgr\u00e4nssnittet f\u00f6r SABnzbd under kugghjulet (uppe till h\u00f6ger) > Allm\u00e4nt > Inst\u00e4llningar.",
+                    "url": "Den fullst\u00e4ndiga URL-adressen, inklusive port, f\u00f6r SABnzbd-servern. Exempel: `http://localhost:8080` eller `http://a02368d7-sabnzbd:8080` om du anv\u00e4nder till\u00e4gget."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "warnings": {
+                "name": "Varningar"
+            }
+        },
+        "button": {
+            "pause": {
+                "name": "Pausa"
+            },
+            "resume": {
+                "name": "\u00c5teruppta"
+            }
+        },
+        "number": {
+            "speedlimit": {
+                "name": "Hastighetsbegr\u00e4nsning"
+            }
+        },
+        "sensor": {
+            "daily_total": {
+                "name": "Totalt per dag"
+            },
+            "free_disk_space": {
+                "name": "Ledigt diskutrymme"
+            },
+            "left": {
+                "name": "Kvar att ladda ner"
+            },
+            "monthly_total": {
+                "name": "Totalt per m\u00e5nad"
+            },
+            "overall_total": {
+                "name": "Totalt allt"
+            },
+            "queue": {
+                "name": "K\u00f6"
+            },
+            "queue_count": {
+                "name": "K\u00f6nummer"
+            },
+            "speed": {
+                "name": "Hastighet"
+            },
+            "status": {
+                "name": "Status"
+            },
+            "total_disk_space": {
+                "name": "Totalt diskutrymme"
+            },
+            "weekly_total": {
+                "name": "Totalt per vecka"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_exception": {
+            "message": "Det gick inte att skicka ett kommando till SABnzbd p\u00e5 grund av ett anslutningsfel, f\u00f6rs\u00f6k igen senare"
+        }
+    },
+    "issues": {
+        "pause_action_deprecated": {
+            "description": "\u00c5tg\u00e4rden \"Pausa\" \u00e4r utfasad och kommer att tas bort i en framtida version. Anv\u00e4nd ist\u00e4llet knappen \"Pausa\". F\u00f6r att ta bort detta problem, v\u00e4nligen justera automatiseringar i enlighet med detta och starta om Home Assistant.",
+            "title": "SABnzbd-paus\u00e5tg\u00e4rd utfasad"
+        },
+        "resume_action_deprecated": {
+            "description": "\u00c5tg\u00e4rden \"Resume\" \u00e4r utfasad och kommer att tas bort i en framtida version. Anv\u00e4nd knappen \"Resume\" ist\u00e4llet. F\u00f6r att ta bort detta problem, v\u00e4nligen justera automatiseringar i enlighet med detta och starta om Home Assistant.",
+            "title": "SABnzbd \u00e5teruppta \u00e5tg\u00e4rd utfasad"
+        },
+        "set_speed_action_deprecated": {
+            "description": "\u00c5tg\u00e4rden \"Set speed\" \u00e4r utfasad och kommer att tas bort i en framtida version. Anv\u00e4nd ist\u00e4llet nummerenheten \"Speedlimit\". F\u00f6r att ta bort detta problem, v\u00e4nligen justera automatiseringar i enlighet med detta och starta om Home Assistant.",
+            "title": "SABnzbd set_speed \u00e5tg\u00e4rd \u00e4r utfasad"
+        }
+    },
+    "services": {
+        "pause": {
+            "description": "Pausar nedladdningen.",
+            "fields": {
+                "api_key": {
+                    "description": "SABnzbd API-nyckeln f\u00f6r att pausa nedladdningar.",
+                    "name": "SABnzbd API-nyckel"
+                }
+            },
+            "name": "Pausa"
+        },
+        "resume": {
+            "description": "\u00c5terupptar nedladdningar.",
+            "fields": {
+                "api_key": {
+                    "description": "SABnzbd API-nyckeln f\u00f6r att \u00e5teruppta nedladdningar.",
+                    "name": "SABnzbd API-nyckel"
+                }
+            },
+            "name": "\u00c5teruppta"
+        },
+        "set_speed": {
+            "description": "St\u00e4ller in gr\u00e4nsen f\u00f6r nedladdningshastighet.",
+            "fields": {
+                "api_key": {
+                    "description": "SABnzbd API-nyckel f\u00f6r att st\u00e4lla in hastighetsgr\u00e4ns.",
+                    "name": "SABnzbd API-nyckel"
+                },
+                "speed": {
+                    "description": "Hastighetsbegr\u00e4nsning. Om det anges som ett tal utan enheter tolkas det som procent. Om enheter anges (t.ex. 500K) tolkas detta absolut.",
+                    "name": "Hastighet"
+                }
+            },
+            "name": "St\u00e4ll in hastighet"
+        }
+    }
+}

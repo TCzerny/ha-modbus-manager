@@ -1,0 +1,202 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "reauth_successful": "Pakartotinis autentifikavimas buvo s\u0117kmingas"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "invalid_charset": "Nurodytas simboli\u0173 rinkinys nepalaikomas",
+            "invalid_folder": "Pasirinktas aplankas netinkamas",
+            "invalid_search": "Pasirinkta paie\u0161ka neteisinga",
+            "ssl_error": "\u012evyko SSL klaida. Pakeiskite SSL \u0161ifr\u0173 s\u0105ra\u0161\u0105 ir bandykite dar kart\u0105."
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Slapta\u017eodis"
+                },
+                "data_description": {
+                    "password": "Pataisykite IMAP slapta\u017eod\u012f."
+                },
+                "description": "Neteisingas {username} slapta\u017eodis.",
+                "title": "Baig\u0117si {name} autentifikavimo galiojimas"
+            },
+            "user": {
+                "data": {
+                    "charset": "Simboli\u0173 rinkinys",
+                    "event_message_data": "\u012e \u012fvykio `imap_content` duomenis \u012ftraukiami prane\u0161imo duomenys:",
+                    "folder": "Aplankas",
+                    "password": "Slapta\u017eodis",
+                    "port": "Prievadas",
+                    "search": "IMAP paie\u0161ka",
+                    "server": "Serveris",
+                    "ssl_cipher_list": "SSL \u0161ifr\u0173 s\u0105ra\u0161as (i\u0161pl\u0117stinis)",
+                    "username": "Naudotojo vardas",
+                    "verify_ssl": "Patikrinkite SSL sertifikat\u0105"
+                },
+                "data_description": {
+                    "charset": "Naudojamas simboli\u0173 rinkinys. Da\u017eniausiai pasitaikan\u010dios reik\u0161m\u0117s yra `utf-8` arba `US-ASCII`.",
+                    "event_message_data": "Atminkite, kad \u012fvykio dydis yra ribotas ir ne visas prane\u0161imo tekstas gali b\u016bti i\u0161si\u0173stas kartu su \u012fvykiu, jei prane\u0161imas yra per didelis.",
+                    "folder": "Paprastai aplankas yra nustatytas \u012f \"INBOX\", bet pvz., jei yra antrinis aplankas, pavadintas \"Test\", tai tur\u0117t\u0173 b\u016bti \"INBOX.Test\".",
+                    "password": "IMAP slapta\u017eodis",
+                    "port": "IMAP prievadas, palaikantis SSL, paprastai tai yra 993.",
+                    "search": "IMAP paie\u0161kos komanda, kuri pagal numatytuosius nustatymus yra \u201eUnSeen UnDeleted\u201c.",
+                    "server": "IMAP serveris.",
+                    "ssl_cipher_list": "Jei IMAP paslauga palaiko tik sen\u0105 \u0161ifravim\u0105, pabandykite tai pakeisti.",
+                    "username": "IMAP vartotojo vardas.",
+                    "verify_ssl": "Rekomenduojama, norint u\u017etikrinti, kad serverio sertifikatas galiot\u0173. I\u0161junkite, jei serverio sertifikatas nepasitiki (pvz., pats pasira\u0161ytas)."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "imap_mail_count": {
+                "name": "Prane\u0161imai",
+                "unit_of_measurement": "prane\u0161imai"
+            }
+        }
+    },
+    "exceptions": {
+        "copy_failed": {
+            "message": "Nepavyko nukopijuoti prane\u0161imo d\u0117l \" {error} \"."
+        },
+        "delete_failed": {
+            "message": "Nepavyko pa\u017eym\u0117ti prane\u0161imo trynimui naudojant \" {error} \"."
+        },
+        "expunge_failed": {
+            "message": "Nepavyko i\u0161trinti prane\u0161imo d\u0117l \" {error} \"."
+        },
+        "fetch_failed": {
+            "message": "Nepavyko gauti prane\u0161imo teksto d\u0117l \u201e{error}\u201c."
+        },
+        "imap_server_fail": {
+            "message": "IMAP serveriui nepavyko prisijungti: {error} ."
+        },
+        "invalid_auth": {
+            "message": "Neteisingas autentifikavimas"
+        },
+        "invalid_entry": {
+            "message": "Nerastas tinkamas IMAP \u012fra\u0161as."
+        },
+        "invalid_folder": {
+            "message": "Pasirinktas aplankas netinkamas"
+        },
+        "seen_failed": {
+            "message": "Nepavyko pa\u017eym\u0117ti prane\u0161imo kaip matyto naudojant \u201e{error}\u201c."
+        }
+    },
+    "options": {
+        "error": {
+            "already_configured": "\u012era\u0161as su \u0161iais aplankais ir paie\u0161kos parinktimis jau yra.",
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "invalid_charset": "Nurodytas simboli\u0173 rinkinys nepalaikomas",
+            "invalid_folder": "Pasirinktas aplankas netinkamas",
+            "invalid_search": "Pasirinkta paie\u0161ka neteisinga"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "custom_event_data_template": "\u0160ablonas pasirinktiniams \u012fvykio duomenims kurti",
+                    "enable_push": "\u012ejunkite Push-IMAP, jei serveris j\u012f palaiko. I\u0161junkite, jei \u201ePush-IMAP\u201c naujinimai nepatikimi.",
+                    "event_message_data": "Prane\u0161imo duomenys, kurie turi b\u016bti \u012ftraukti \u012f \u201eimap_content\u201c \u012fvykio duomenis.",
+                    "folder": "Aplankas",
+                    "max_message_size": "Maksimalus prane\u0161imo dydis (2048 < dydis < 30000)",
+                    "search": "IMAP paie\u0161ka"
+                },
+                "data_description": {
+                    "custom_event_data_template": "\u0160is \u0161ablonas \u012fvertinamas, kai gaunamas naujas prane\u0161imas, o rezultatas pridedamas prie \u012fvykio duomen\u0173 \u201etinkinto\u201c atributo.",
+                    "enable_push": "Rekomenduojama naudoti Push-IMAP. Apklausa padidins atsakymo laik\u0105.",
+                    "event_message_data": "Atminkite, kad \u012fvykio dydis yra ribotas ir ne visas prane\u0161imo tekstas gali b\u016bti i\u0161si\u0173stas kartu su \u012fvykiu, jei prane\u0161imas yra per didelis.",
+                    "folder": "Paprastai aplankas yra nustatytas \u012f \"INBOX\", bet pvz., jei yra antrinis aplankas, pavadintas \"Test\", tai tur\u0117t\u0173 b\u016bti \"INBOX.Test\".",
+                    "max_message_size": "Apribokite did\u017eiausi\u0105 renginio dyd\u012f. U\u017euot perdavus (vis\u0105) tekstin\u012f prane\u0161im\u0105, geriau naudoti \u0161ablon\u0105.",
+                    "search": "IMAP paie\u0161kos komanda, kuri pagal numatytuosius nustatymus yra \u201eUnSeen UnDeleted\u201c."
+                }
+            }
+        }
+    },
+    "selector": {
+        "event_message_data": {
+            "options": {
+                "headers": "Prane\u0161imo \u017eyma",
+                "text": "K\u016bno temperat\u016bra"
+            }
+        },
+        "ssl_cipher_list": {
+            "options": {
+                "intermediate": "Tarpiniai \u0161ifrai",
+                "modern": "\u0160iuolaikiniai \u0161ifrai",
+                "python_default": "Numatytieji nustatymai"
+            }
+        }
+    },
+    "services": {
+        "delete": {
+            "description": "I\u0161trinkite el. lai\u0161k\u0105.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP konfig\u016bracijos \u012fra\u0161as.",
+                    "name": "\u012e\u0117jimas"
+                },
+                "uid": {
+                    "description": "El. pa\u0161to identifikatorius (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "I\u0161trinti prane\u0161im\u0105"
+        },
+        "fetch": {
+            "description": "Gaukite el. lai\u0161k\u0105 i\u0161 serverio.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP konfig\u016bracijos \u012fra\u0161as.",
+                    "name": "\u012e\u0117jimas"
+                },
+                "uid": {
+                    "description": "El. pa\u0161to identifikatorius (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Gauti prane\u0161im\u0105"
+        },
+        "move": {
+            "description": "Perkelkite el. lai\u0161k\u0105 \u012f tikslin\u012f aplank\u0105.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP konfig\u016bracijos \u012fra\u0161as.",
+                    "name": "\u012e\u0117jimas"
+                },
+                "seen": {
+                    "description": "Pa\u017eym\u0117kite el. lai\u0161k\u0105 kaip matyt\u0105.",
+                    "name": "Pamatyta"
+                },
+                "target_folder": {
+                    "description": "Tikslinis aplankas, \u012f kur\u012f turi b\u016bti perkeltas el. lai\u0161kas.",
+                    "name": "Tikslinis aplankas"
+                },
+                "uid": {
+                    "description": "El. pa\u0161to identifikatorius (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Perkelti \u017einut\u0119"
+        },
+        "seen": {
+            "description": "Pa\u017eym\u0117kite el. lai\u0161k\u0105 kaip matyt\u0105.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP konfig\u016bracijos \u012fra\u0161as.",
+                    "name": "\u012e\u0117jimas"
+                },
+                "uid": {
+                    "description": "El. pa\u0161to identifikatorius (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Pa\u017eym\u0117ti prane\u0161im\u0105 kaip matyt\u0105"
+        }
+    }
+}

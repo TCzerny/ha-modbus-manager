@@ -1,0 +1,80 @@
+{
+    "device_automation": {
+        "action_type": {
+            "select_first": "\u00c4ndere {entity_name} auf die erste Option",
+            "select_last": "\u00c4ndere {entity_name} auf die letzte Option",
+            "select_next": "\u00c4ndere {entity_name} auf die n\u00e4chste Option",
+            "select_option": "\u00c4ndere die Option {entity_name}",
+            "select_previous": "\u00c4ndere {entity_name} auf die vorherige Option"
+        },
+        "condition_type": {
+            "selected_option": "Aktuell ausgew\u00e4hlte Option von {entity_name}"
+        },
+        "extra_fields": {
+            "cycle": "Umlaufend",
+            "for": "Dauer",
+            "from": "Von",
+            "option": "Option",
+            "to": "Auf"
+        },
+        "trigger_type": {
+            "current_option_changed": "Sobald die Option von {entity_name} ge\u00e4ndert wird"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Auswahl",
+            "state_attributes": {
+                "options": {
+                    "name": "Optionen"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "not_valid_option": {
+            "message": "Option {option} ist f\u00fcr die Entit\u00e4t {entity_id} nicht g\u00fcltig, g\u00fcltige Optionen sind: {options}."
+        }
+    },
+    "services": {
+        "select_first": {
+            "description": "W\u00e4hlt die erste Option aus.",
+            "name": "Erste"
+        },
+        "select_last": {
+            "description": "W\u00e4hlt die letzte Option aus.",
+            "name": "Letzte"
+        },
+        "select_next": {
+            "description": "W\u00e4hlt die n\u00e4chste Option aus.",
+            "fields": {
+                "cycle": {
+                    "description": "Ob die Option von der letzten zur ersten Option springen soll.",
+                    "name": "Umlaufend"
+                }
+            },
+            "name": "N\u00e4chste"
+        },
+        "select_option": {
+            "description": "W\u00e4hlt eine Option aus.",
+            "fields": {
+                "option": {
+                    "description": "Zu w\u00e4hlende Option.",
+                    "name": "Option"
+                }
+            },
+            "name": "Ausw\u00e4hlen"
+        },
+        "select_previous": {
+            "description": "W\u00e4hlt die vorherige Option aus.",
+            "fields": {
+                "cycle": {
+                    "description": "Ob die Option von der ersten zur letzten Option springen soll.",
+                    "name": "Umlaufend"
+                }
+            },
+            "name": "Vorherige"
+        }
+    },
+    "title": "Auswahl"
+}

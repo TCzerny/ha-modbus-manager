@@ -1,0 +1,72 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "\u010casova\u010d",
+            "state": {
+                "active": "Akt\u00edvny",
+                "idle": "Ne\u010dinn\u00e1",
+                "paused": "Pozastaven\u00fd"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Trvanie"
+                },
+                "editable": {
+                    "name": "Spravovan\u00e9 cez pou\u017e\u00edvate\u013esk\u00e9 rozhranie",
+                    "state": {
+                        "false": "Nie",
+                        "true": "\u00c1no"
+                    }
+                },
+                "finishes_at": {
+                    "name": "Kon\u010d\u00ed o"
+                },
+                "remaining": {
+                    "name": "Zost\u00e1vaj\u00face"
+                },
+                "restore": {
+                    "name": "Obnovi\u0165"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "description": "Obnov\u00ed trvanie \u010dasova\u010da na posledn\u00fa zn\u00e1mu po\u010diato\u010dn\u00fa hodnotu bez toho, aby sa spustila udalos\u0165 ukon\u010denia \u010dasova\u010da.",
+            "name": "Zru\u0161i\u0165"
+        },
+        "change": {
+            "description": "Zmen\u00ed \u010dasova\u010d pridan\u00edm alebo od\u010d\u00edtan\u00edm dan\u00e9ho trvania.",
+            "fields": {
+                "duration": {
+                    "description": "Trvanie, ktor\u00e9 sa m\u00e1 prida\u0165 alebo odpo\u010d\u00edta\u0165 od spusten\u00e9ho \u010dasova\u010da.",
+                    "name": "Trvanie"
+                }
+            },
+            "name": "Zmena"
+        },
+        "finish": {
+            "description": "Ukon\u010d\u00ed spusten\u00fd \u010dasova\u010d sk\u00f4r, ako je napl\u00e1novan\u00e9.",
+            "name": "Dokon\u010di\u0165"
+        },
+        "pause": {
+            "description": "Pozastav\u00ed be\u017eiaci \u010dasova\u010d a ponech\u00e1 zost\u00e1vaj\u00face trvanie pre neskor\u0161ie pokra\u010dovanie.",
+            "name": "Pauza"
+        },
+        "reload": {
+            "description": "Znova na\u010d\u00edta \u010dasova\u010de z konfigur\u00e1cie YAML.",
+            "name": "Znovu na\u010d\u00edta\u0165"
+        },
+        "start": {
+            "description": "Spust\u00ed \u010dasova\u010d alebo ho re\u0161tartuje s poskytnut\u00fdm trvan\u00edm.",
+            "fields": {
+                "duration": {
+                    "description": "Vlastn\u00e9 trvanie na re\u0161tartovanie \u010dasova\u010da.",
+                    "name": "Trvanie"
+                }
+            },
+            "name": "\u0160tart"
+        }
+    },
+    "title": "\u010casova\u010d"
+}

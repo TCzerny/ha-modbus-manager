@@ -1,0 +1,37 @@
+{
+    "entity": {
+        "binary_sensor": {
+            "assist_in_progress": {
+                "name": "Pagalba vykstant"
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Pad\u0117j\u0117jas",
+                "state": {
+                    "preferred": "Pageidautina"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Baigtas kalb\u0117jimo aptikimas",
+                "state": {
+                    "aggressive": "Agresyvus",
+                    "default": "Numatytas",
+                    "relaxed": "Atsipalaidav\u0119s"
+                }
+            }
+        }
+    },
+    "issues": {
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "Vykdomas dvejetainis jutiklis {integration_name} \u201e{entity_id}\u201c nebenaudojamas. Perkelkite savo konfig\u016bracij\u0105, kad gal\u0117tum\u0117te naudoti atitinkam\u0105 subjekt\u0105 \u201e{assist_satellite_domain}\u201c, tada spustel\u0117kite PATEIKTI, kad i\u0161jungtum\u0117te vykdom\u0105 dvejetain\u012f jutikl\u012f ir i\u0161spr\u0119stum\u0117te \u0161i\u0105 problem\u0105."
+                    }
+                }
+            },
+            "title": "Vykdomi dvejetainiai jutikliai {integration_name} yra nebenaudojami"
+        }
+    }
+}

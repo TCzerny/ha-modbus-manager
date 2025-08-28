@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "no_devices_found": "Inga enheter hittades i n\u00e4tverket",
+            "reconfigure_successful": "Omkonfigurationen lyckades",
+            "unique_id_mismatch": "Enhetens serienummer st\u00e4mmer inte \u00f6verens med det tidigare serienumret",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "empty_input_source_list": "Listan \u00f6ver ing\u00e5ngsk\u00e4llor kan inte vara tom",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "configure_receiver": {
+                "data": {
+                    "input_sources": "Ing\u00e5ngsk\u00e4llor",
+                    "volume_resolution": "Volymuppl\u00f6sning"
+                },
+                "data_description": {
+                    "input_sources": "Lista \u00f6ver ing\u00e5ngsk\u00e4llor som st\u00f6ds av receivern.",
+                    "volume_resolution": "Antal steg det tar f\u00f6r mottagaren att g\u00e5 fr\u00e5n l\u00e4gsta till h\u00f6gsta m\u00f6jliga volym."
+                },
+                "description": "Konfigurera {name}"
+            },
+            "eiscp_discovery": {
+                "data": {
+                    "device": "Enhet"
+                },
+                "data_description": {
+                    "device": "V\u00e4lj den receiver som ska konfigureras."
+                }
+            },
+            "manual": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamn eller IP-adress f\u00f6r receivern."
+                }
+            },
+            "user": {
+                "menu_options": {
+                    "eiscp_discovery": "Onkyo uppt\u00e4ckt",
+                    "manual": "Manuell inmatning"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_source": {
+            "message": "Det g\u00e5r inte att v\u00e4lja ing\u00e5ngsk\u00e4lla \"{invalid_source}\" f\u00f6r entitet: {entity_id}."
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "Konfigurera Onkyo med hj\u00e4lp av YAML tas bort men det uppstod ett anslutningsfel n\u00e4r du importerade din YAML-konfiguration f\u00f6r v\u00e4rden {host}.\n\nSe till att anslutningen till mottagaren fungerar och starta om Home Assistant f\u00f6r att f\u00f6rs\u00f6ka igen eller ta bort Onkyo YAML-konfigurationen fr\u00e5n din configuration.yaml-fil och forts\u00e4tt att [konfigurera integrationen]({url}) manuellt.",
+            "title": "Importen av Onkyo YAML-konfigurationen misslyckades"
+        },
+        "deprecated_yaml_import_issue_no_discover": {
+            "description": "Konfigurering av Onkyo med YAML tas bort men inga mottagare uppt\u00e4cktes vid import av din YAML-konfiguration.\n\nSe till att anslutningen till mottagaren fungerar och starta om Home Assistant f\u00f6r att f\u00f6rs\u00f6ka igen eller ta bort Onkyo YAML-konfigurationen fr\u00e5n din configuration.yaml-fil och forts\u00e4tt att [konfigurera integrationen]({url}) manuellt.",
+            "title": "Importen av Onkyo YAML-konfigurationen misslyckades"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_volume": "Maximal volymgr\u00e4ns (%)"
+                },
+                "data_description": {
+                    "max_volume": "Maximal volymgr\u00e4ns i procent. Detta kommer att koppla Home Assistants maximala volym till detta v\u00e4rde p\u00e5 mottagaren, dvs. om du st\u00e4ller in detta p\u00e5 50 %, kommer inst\u00e4llningen av volymen till 100 % i Home Assistant att g\u00f6ra att volymen p\u00e5 mottagaren st\u00e4lls in p\u00e5 50 % av dess maximala v\u00e4rde."
+                }
+            }
+        }
+    }
+}

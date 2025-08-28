@@ -1,0 +1,47 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Huskeliste"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Afsluttet",
+                "needs_action": "Ikke afsluttet"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "fields": {
+                "item": {
+                    "description": "Navnet, der repr\u00e6senterer huskelisteelementet.",
+                    "name": "Elementnavn"
+                }
+            }
+        },
+        "remove_item": {
+            "fields": {
+                "item": {
+                    "name": "Elementnavn"
+                }
+            }
+        },
+        "update_item": {
+            "fields": {
+                "item": {
+                    "name": "Elementnavn"
+                },
+                "rename": {
+                    "name": "Omd\u00f8b element"
+                },
+                "status": {
+                    "description": "En status eller bekr\u00e6ftelse af huskelisteelementet.",
+                    "name": "Angiv status"
+                }
+            }
+        }
+    },
+    "title": "Huskeliste"
+}

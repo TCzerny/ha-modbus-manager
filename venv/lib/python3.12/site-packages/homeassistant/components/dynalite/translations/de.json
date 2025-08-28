@@ -1,0 +1,56 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Port"
+                },
+                "description": "Gateway-Adresse f\u00fcr die Verbindung zum DYNET-Netzwerk",
+                "title": "Dynalite-Verbindung konfigurieren"
+            }
+        }
+    },
+    "services": {
+        "request_area_preset": {
+            "description": "Fordert Dynalite auf, die Voreinstellung f\u00fcr einen Bereich zu melden.",
+            "fields": {
+                "area": {
+                    "description": "Bereich zur Abfrage der gemeldeten Voreinstellung.",
+                    "name": "Bereich"
+                },
+                "channel": {
+                    "description": "Kanal, von dem die Voreinstellung gemeldet werden soll.",
+                    "name": "Kanal"
+                },
+                "host": {
+                    "description": "IP des Host-Gateways, an das gesendet werden soll, oder alle konfigurierten Gateways, falls nicht angegeben.",
+                    "name": "Host"
+                }
+            },
+            "name": "Bereichsvoreinstellung anfordern"
+        },
+        "request_channel_level": {
+            "description": "Fordert Dynalite auf, den Level eines bestimmten Kanals zu melden.",
+            "fields": {
+                "area": {
+                    "description": "Bereich f\u00fcr den angeforderten Kanal.",
+                    "name": "Bereich"
+                },
+                "channel": {
+                    "description": "Kanal, f\u00fcr den der Level angefordert werden soll.",
+                    "name": "Kanal"
+                },
+                "host": {
+                    "description": "IP des Host-Gateways, an das gesendet werden soll, oder alle konfigurierten Gateways, falls nicht angegeben.",
+                    "name": "Host"
+                }
+            },
+            "name": "Kanal-Level anfordern"
+        }
+    }
+}

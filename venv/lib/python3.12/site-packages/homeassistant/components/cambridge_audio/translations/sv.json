@@ -1,0 +1,77 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "cannot_connect": "Det gick inte att ansluta.",
+            "reconfigure_successful": "Omkonfigurationen lyckades",
+            "wrong_device": "Denna Cambridge Audio-enhet matchar inte den befintliga enhetens ID. Kontrollera att du har angett r\u00e4tt IP-adress."
+        },
+        "error": {
+            "cannot_connect": "Misslyckades med att ansluta till Cambridge Audio-enheten. Kontrollera att enheten \u00e4r p\u00e5slagen och ansluten till n\u00e4tverket. F\u00f6rs\u00f6k att starta om enheten om den inte ansluter."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Vill du konfigurera {name}?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r Cambridge Audio Streamer."
+                },
+                "description": "Konfigurera om din Cambridge Audio Streamer."
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r Cambridge Audio Streamer."
+                },
+                "description": "St\u00e4ll in din Cambridge Audio Streamer s\u00e5 att den integreras med Home Assistant."
+            }
+        }
+    },
+    "entity": {
+        "select": {
+            "audio_output": {
+                "name": "Ljudutg\u00e5ng"
+            },
+            "display_brightness": {
+                "name": "Sk\u00e4rmens ljusstyrka",
+                "state": {
+                    "bright": "Ljust",
+                    "dim": "Dimmad",
+                    "off": "Av"
+                }
+            }
+        },
+        "switch": {
+            "early_update": {
+                "name": "Tidig uppdatering"
+            },
+            "pre_amp": {
+                "name": "Pre-Amp"
+            }
+        }
+    },
+    "exceptions": {
+        "command_error": {
+            "message": "Fel vid k\u00f6rning av {function_name} p\u00e5 entitet {entity_id}"
+        },
+        "entry_cannot_connect": {
+            "message": "Fel vid anslutning till {host}"
+        },
+        "missing_preset": {
+            "message": "Saknar f\u00f6rinst\u00e4llning f\u00f6r media_id: {preset_id}"
+        },
+        "preset_non_integer": {
+            "message": "F\u00f6rinst\u00e4llning m\u00e5ste vara ett heltal, fick: {preset_id}"
+        },
+        "unsupported_media_type": {
+            "message": "Mediatyp som inte st\u00f6ds f\u00f6r Cambridge Audio-enhet: {media_type}"
+        }
+    }
+}

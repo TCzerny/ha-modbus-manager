@@ -1,0 +1,143 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "device_not_supported": "Este dispositivo n\u00e3o \u00e9 suportado",
+            "invalid_discovery_parameters": "Par\u00e2metros de descoberta inv\u00e1lidos",
+            "reauth_successful": "A ativa\u00e7\u00e3o da API foi bem-sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida",
+            "unknown_error": "Erro inesperado",
+            "unsupported_api_version": "Detetada vers\u00e3o n\u00e3o suportada da API",
+            "wrong_device": "O dispositivo configurado n\u00e3o \u00e9 o mesmo encontrado neste endere\u00e7o IP."
+        },
+        "error": {
+            "api_not_enabled": "A API n\u00e3o est\u00e1 ativada. Ativar a API no HomeWizard Energy App nas defini\u00e7\u00f5es do dispositivo.",
+            "network_error": "Dispositivo inacess\u00edvel, verifique se inseriu o endere\u00e7o IP correto e se o dispositivo est\u00e1 dispon\u00edvel na sua rede"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Pretende criar {product_type} ({serial}) em {ip_address}?",
+                "title": "Confirmar"
+            },
+            "reauth_confirm": {
+                "description": "A API local est\u00e1 desativada. V\u00e1 para o aplicativo HomeWizard Energy e habilite a API nas configura\u00e7\u00f5es do dispositivo."
+            },
+            "reconfigure": {
+                "data": {
+                    "ip_address": "Endere\u00e7o IP"
+                },
+                "data_description": {
+                    "ip_address": "O endere\u00e7o IP do seu dispositivo Homewizard Energy."
+                },
+                "description": "Atualizar configura\u00e7\u00e3o para {title}"
+            },
+            "user": {
+                "data": {
+                    "ip_address": "Endere\u00e7o IP"
+                },
+                "data_description": {
+                    "ip_address": "O endere\u00e7o IP do seu dispositivo Homewizard Energy."
+                },
+                "description": "Indique o endere\u00e7o de IP do ser dispositivo HomeWizard Energy para integrar com o Home Assistant.",
+                "title": "Configurar dispositivo"
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "status_light_brightness": {
+                "name": "Brilho da luz de estado"
+            }
+        },
+        "sensor": {
+            "active_apparent_power_phase_va": {
+                "name": "Fase de pot\u00eancia aparente {phase}"
+            },
+            "active_current_phase_a": {
+                "name": "Fase de corrente {phase}"
+            },
+            "active_liter_lpm": {
+                "name": "Utiliza\u00e7\u00e3o de \u00e1gua"
+            },
+            "active_power_average_w": {
+                "name": "Procura m\u00e9dia"
+            },
+            "active_power_factor_phase": {
+                "name": "Fase de fator de pot\u00eancia {phase}"
+            },
+            "active_power_phase_w": {
+                "name": "Fase de pot\u00eancia {phase}"
+            },
+            "active_reactive_power_phase_var": {
+                "name": "Fase de pot\u00eancia reactiva {phase}"
+            },
+            "active_tariff": {
+                "name": "Tarif\u00e1rio"
+            },
+            "active_voltage_phase_v": {
+                "name": "Fase de tens\u00e3o {phase}"
+            },
+            "any_power_fail_count": {
+                "name": "Falhas de energia detetadas"
+            },
+            "dsmr_version": {
+                "name": "Vers\u00e3o DSMR"
+            },
+            "long_power_fail_count": {
+                "name": "Detetadas falhas de energia longas"
+            },
+            "meter_model": {
+                "name": "Modelo de contador inteligente"
+            },
+            "monthly_power_peak_w": {
+                "name": "Pico de procura no m\u00eas atual"
+            },
+            "total_energy_export_kwh": {
+                "name": "Exporta\u00e7\u00e3o de energia"
+            },
+            "total_energy_export_tariff_kwh": {
+                "name": "Tarifa de exporta\u00e7\u00e3o de energia {tariff}"
+            },
+            "total_energy_import_kwh": {
+                "name": "Importa\u00e7\u00e3o de energia"
+            },
+            "total_energy_import_tariff_kwh": {
+                "name": "Tarifa de importa\u00e7\u00e3o de energia {tariff}"
+            },
+            "total_liter_m3": {
+                "name": "Consumo total de \u00e1gua"
+            },
+            "unique_meter_id": {
+                "name": "Identificador de contador inteligente"
+            },
+            "voltage_sag_phase_count": {
+                "name": "Fase de dete\u00e7\u00e3o de desfasamentos de tens\u00e3o {phase}"
+            },
+            "voltage_swell_phase_count": {
+                "name": "Fase de dete\u00e7\u00e3o de oscila\u00e7\u00f5es de tens\u00e3o {phase}"
+            },
+            "wifi_ssid": {
+                "name": "SSID do Wi-Fi"
+            },
+            "wifi_strength": {
+                "name": "For\u00e7a do Wi-Fi"
+            }
+        },
+        "switch": {
+            "cloud_connection": {
+                "name": "Liga\u00e7\u00e3o \u00e0 nuvem"
+            },
+            "switch_lock": {
+                "name": "Bloqueio do interruptor"
+            }
+        }
+    },
+    "exceptions": {
+        "api_disabled": {
+            "message": "A API local est\u00e1 desativada."
+        },
+        "communication_error": {
+            "message": "Ocorreu um erro durante a comunica\u00e7\u00e3o com o dispositivo HomeWizard"
+        }
+    }
+}

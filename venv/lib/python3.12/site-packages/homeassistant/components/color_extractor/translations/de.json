@@ -1,0 +1,25 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "M\u00f6chtest du mit der Einrichtung beginnen?"
+            }
+        }
+    },
+    "services": {
+        "turn_on": {
+            "description": "Stellt die RGB-Werte einer Leuchte auf die vorherrschende Farbe eines per URL oder Dateipfad angegebenen Bildes ein.",
+            "fields": {
+                "color_extract_path": {
+                    "description": "Der vollst\u00e4ndige Systempfad zu dem Bild, aus dem die RGB-Werte extrahiert werden sollen. Muss in `allowlist_external_dirs` erlaubt sein.",
+                    "name": "Pfad"
+                },
+                "color_extract_url": {
+                    "description": "Die URL des Bildes, aus dem die RGB-Werte extrahiert werden sollen. Muss in `allowlist_external_urls` erlaubt sein.",
+                    "name": "URL"
+                }
+            },
+            "name": "Einschalten"
+        }
+    }
+}

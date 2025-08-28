@@ -1,0 +1,145 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "cannot_connect": "Det gick inte att ansluta.",
+            "reauth_failed": "Ogiltig autentisering",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "description": "Ange anv\u00e4ndarnamn och l\u00f6senord"
+            },
+            "confirm_discovery": {
+                "description": "Vill du konfigurera SMLIGHT p\u00e5 {host}?"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "description": "Ange r\u00e4tt anv\u00e4ndarnamn och l\u00f6senord f\u00f6r v\u00e4rden: {host}",
+                "title": "Autentiseringen har upph\u00f6rt att g\u00e4lla f\u00f6r {name}"
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r SMLIGHT SLZB-06x-enheten"
+                },
+                "description": "Konfigurera SMLIGHT Zigbee-integration"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "ethernet": {
+                "name": "Ethernet"
+            },
+            "internet": {
+                "name": "Internet"
+            },
+            "vpn": {
+                "name": "VPN"
+            },
+            "wifi": {
+                "name": "Wifi"
+            }
+        },
+        "button": {
+            "core_restart": {
+                "name": "Omstart av core"
+            },
+            "reconnect_zigbee_router": {
+                "name": "\u00c5teranslut zigbee-routern"
+            },
+            "zigbee_flash_mode": {
+                "name": "Zigbee flash-l\u00e4ge"
+            },
+            "zigbee_restart": {
+                "name": "Zigbee omstart"
+            }
+        },
+        "sensor": {
+            "core_temperature": {
+                "name": "Core-chip temperatur"
+            },
+            "core_uptime": {
+                "name": "Core upptid"
+            },
+            "device_mode": {
+                "name": "Anslutningsl\u00e4ge",
+                "state": {
+                    "eth": "Ethernet",
+                    "usb": "USB",
+                    "wifi": "Wifi"
+                }
+            },
+            "firmware_channel": {
+                "name": "Firmware-kanal",
+                "state": {
+                    "dev": "Utveckling",
+                    "release": "Stabil"
+                }
+            },
+            "fs_usage": {
+                "name": "Filsystemanv\u00e4ndning"
+            },
+            "ram_usage": {
+                "name": "RAM-anv\u00e4ndning"
+            },
+            "socket_uptime": {
+                "name": "Zigbee upptid"
+            },
+            "zigbee_temperature": {
+                "name": "Zigbee-chip temperatur"
+            },
+            "zigbee_type": {
+                "name": "Zigbee-typ",
+                "state": {
+                    "coordinator": "Koordinator",
+                    "router": "Router",
+                    "thread": "Thread"
+                }
+            }
+        },
+        "switch": {
+            "auto_zigbee_update": {
+                "name": "Automatisk Zigbee-uppdatering"
+            },
+            "disable_led": {
+                "name": "Inaktivera LED"
+            },
+            "night_mode": {
+                "name": "LED nattl\u00e4ge"
+            },
+            "vpn_enabled": {
+                "name": "VPN aktiverad"
+            }
+        },
+        "update": {
+            "core_update": {
+                "name": "Inbyggd programvara"
+            },
+            "zigbee_update": {
+                "name": "Zigbee firmware"
+            }
+        }
+    },
+    "issues": {
+        "unsupported_firmware": {
+            "description": "Din SMLIGHT SLZB-06x-enhet k\u00f6r en version av core-firmware som inte st\u00f6ds. Uppdatera den till den senaste versionen f\u00f6r att f\u00e5 tillg\u00e5ng till alla funktioner i denna integration.",
+            "title": "SLZB core firmware-uppdatering kr\u00e4vs"
+        }
+    }
+}

@@ -1,0 +1,404 @@
+{
+    "common": {
+        "state_not_supported": "Non supportato",
+        "state_supported": "Supportato"
+    },
+    "config": {
+        "error": {
+            "already_configured": "Il dispositivo \u00e8 gi\u00e0 configurato",
+            "cannot_connect": "Impossibile connettersi",
+            "timeout_connect": "Tempo scaduto per stabile la connessione."
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "device": "Percorso o URL",
+                    "id": "ID",
+                    "name": "Nome"
+                }
+            }
+        }
+    },
+    "device": {
+        "boiler_device": {
+            "name": "Caldaia OpenTherm"
+        },
+        "gateway_device": {
+            "name": "Gateway OpenTherm"
+        },
+        "thermostat_device": {
+            "name": "Termostato OpenTherm"
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "cooling": {
+                "name": "Raffreddamento"
+            },
+            "diagnostic_indication": {
+                "name": "Indicazione diagnostica"
+            },
+            "fault_indication": {
+                "name": "Indicazione di guasto"
+            },
+            "flame": {
+                "name": "Fiamma"
+            },
+            "gas_fault": {
+                "name": "Guasto del gas"
+            },
+            "hot_water": {
+                "name": "Acqua calda"
+            },
+            "hot_water_config": {
+                "name": "Tipo di sistema ad acqua calda"
+            },
+            "service_required": {
+                "name": "Servizio richiesto"
+            },
+            "supports_central_heating_setpoint_transfer": {
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "supports_central_heating_setpoint_writing": {
+                "name": "Supporto scrittura setpoint riscaldamento centralizzato",
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "supports_ch_2": {
+                "name": "Supporto riscaldamento centralizzato 2",
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "supports_cooling": {
+                "name": "Supporto per il raffreddamento",
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "supports_hot_water": {
+                "name": "Supporto per l'acqua calda",
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "supports_hot_water_setpoint_transfer": {
+                "name": "Supporto per il trasferimento del setpoint dell'acqua calda",
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "supports_hot_water_setpoint_writing": {
+                "name": "Supporto per la scrittura del setpoint dell'acqua calda",
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "supports_pump_control": {
+                "name": "Supporto per il controllo della pompa",
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "supports_remote_reset": {
+                "name": "Supporto per il reset remoto",
+                "state": {
+                    "off": "Non supportato",
+                    "on": "Supportato"
+                }
+            },
+            "water_overtemperature": {
+                "name": "Surriscaldamento dell'acqua"
+            }
+        },
+        "select": {
+            "gpio_mode_n": {
+                "name": "Modalit\u00e0 GPIO {gpio_id}",
+                "state": {
+                    "away": "Fuori Casa",
+                    "dhw_block": "Blocca l'acqua calda",
+                    "ds1820": "DS1820",
+                    "home": "Home",
+                    "input": "Immissione",
+                    "led_e": "LED E",
+                    "led_f": "LED F",
+                    "vcc": "Vcc (5V)"
+                }
+            },
+            "led_mode_n": {
+                "name": "Modalit\u00e0 LED {led_id}",
+                "state": {
+                    "boiler_maintenance_required": "Manutenzione della caldaia necessaria",
+                    "boiler_traffic": "Traffico sull'interfaccia della caldaia",
+                    "central_heating_on": "Il riscaldamento centralizzato \u00e8 acceso",
+                    "comfort_mode_on": "La modalit\u00e0 comfort \u00e8 attiva",
+                    "flame_on": "La fiamma della caldaia \u00e8 accesa",
+                    "hot_water_on": "L'acqua calda \u00e8 accesa",
+                    "raised_power_mode_active": "Modalit\u00e0 potenza elevata attiva",
+                    "receive_any": "Ricezione su qualsiasi interfaccia",
+                    "setpoint_override_active": "L'override del setpoint \u00e8 attivo",
+                    "thermostat_traffic": "Traffico sull'interfaccia del termostato",
+                    "transmit_any": "Trasmissione su qualsiasi interfaccia",
+                    "transmit_error_detected": "Errore di trasmissione rilevato"
+                }
+            }
+        },
+        "sensor": {
+            "central_heating_pressure": {
+                "name": "Pressione dell'acqua del riscaldamento centralizzato"
+            },
+            "central_heating_pump_hours": {
+                "name": "Tempo di funzionamento della pompa di riscaldamento centralizzato"
+            },
+            "central_heating_pump_starts": {
+                "name": "Conteggio degli avvii della pompa di riscaldamento centralizzato"
+            },
+            "central_heating_temperature_n": {
+                "name": "Temperatura dell'acqua del riscaldamento centralizzato {circuit_number}"
+            },
+            "clock_speed": {
+                "name": "Velocit\u00e0 dell'orologio"
+            },
+            "control_setpoint_n": {
+                "name": "Setpoint di controllo {circuit_number}"
+            },
+            "cooling_control": {
+                "name": "Segnale di controllo del raffreddamento"
+            },
+            "exhaust_temperature": {
+                "name": "Temperatura dei gas di scarico"
+            },
+            "firmware_build": {
+                "name": "Creazione del firmware"
+            },
+            "firmware_version": {
+                "name": "Versione del firmware"
+            },
+            "gpio_mode_n": {
+                "name": "Modalit\u00e0 GPIO {gpio_id}"
+            },
+            "hot_water_burner_hours": {
+                "name": "Tempo di funzionamento del bruciatore dell'acqua calda"
+            },
+            "hot_water_burner_starts": {
+                "name": "Conteggio degli avvii del bruciatore dell'acqua calda"
+            },
+            "hot_water_flow_rate": {
+                "name": "Portata acqua calda"
+            },
+            "hot_water_override_mode": {
+                "name": "Modalit\u00e0 di esclusione dell'acqua calda"
+            },
+            "hot_water_pump_hours": {
+                "name": "Tempo di funzionamento della pompa dell'acqua calda"
+            },
+            "hot_water_pump_starts": {
+                "name": "Conteggio degli avvii della pompa dell'acqua calda"
+            },
+            "hot_water_setpoint": {
+                "name": "Punto di regolazione dell'acqua calda"
+            },
+            "hot_water_temperature_n": {
+                "name": "Temperatura dell'acqua calda {circuit_number}"
+            },
+            "led_mode_n": {
+                "name": "Modalit\u00e0 LED {led_id} "
+            },
+            "manufacturer_id": {
+                "name": "ID produttore"
+            },
+            "max_capacity": {
+                "name": "Capacit\u00e0 massima"
+            }
+        }
+    },
+    "issues": {
+        "deprecated_import_from_configuration_yaml": {
+            "description": "La configurazione dell'integrazione OpenTherm Gateway tramite configuration.yaml \u00e8 deprecata. La tua configurazione \u00e8 stata migrata alle voci di configurazione. Si prega di rimuovere qualsiasi configurazione di OpenTherm Gateway dal tuo configuration.yaml.",
+            "title": "Configurazione deprecata"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "floor_temperature": "Temperatura del pavimento",
+                    "read_precision": "Leggi la precisione",
+                    "set_precision": "Imposta la precisione",
+                    "temporary_override_mode": "Modalit\u00e0 di esclusione temporanea del setpoint"
+                }
+            }
+        }
+    },
+    "services": {
+        "reset_gateway": {
+            "description": "Reimposta il gateway OpenTherm.",
+            "fields": {
+                "gateway_id": {
+                    "name": "ID del gateway"
+                }
+            },
+            "name": "Reimposta il gateway"
+        },
+        "send_transparent_command": {
+            "fields": {
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                }
+            }
+        },
+        "set_central_heating_ovrd": {
+            "fields": {
+                "ch_override": {
+                    "description": "Il valore booleano desiderato per l'override del riscaldamento centrale.",
+                    "name": "Esclusione del riscaldamento centralizzato"
+                },
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                }
+            },
+            "name": "Imposta l'esclusione del riscaldamento centralizzato"
+        },
+        "set_clock": {
+            "description": "Imposta l'orologio e il giorno della settimana sul termostato collegato.",
+            "fields": {
+                "date": {
+                    "description": "Data opzionale da cui estrarre il giorno della settimana. Si imposta come data predefinita oggi.",
+                    "name": "Data"
+                },
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                },
+                "time": {
+                    "description": "Ora opzionale in formato 24 ore che verr\u00e0 fornita al termostato. L'impostazione predefinita \u00e8 l'ora corrente.",
+                    "name": "Ore"
+                }
+            },
+            "name": "Imposta l'orologio"
+        },
+        "set_control_setpoint": {
+            "fields": {
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                },
+                "temperature": {
+                    "name": "Temperatura"
+                }
+            },
+            "name": "Imposta il punto di controllo"
+        },
+        "set_gpio_mode": {
+            "description": "Modifica la funzione dei pin GPIO del gateway.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                },
+                "id": {
+                    "description": "L'ID del pin GPIO.",
+                    "name": "ID"
+                },
+                "mode": {
+                    "name": "Modalit\u00e0"
+                }
+            },
+            "name": "Imposta la modalit\u00e0 gpio"
+        },
+        "set_hot_water_ovrd": {
+            "description": "Imposta l'opzione di abilitazione dell'acqua calda sanitaria sul gateway.",
+            "fields": {
+                "dhw_override": {
+                    "name": "Esclusione dell'acqua calda sanitaria"
+                },
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                }
+            },
+            "name": "Imposta l'esclusione dell'acqua calda"
+        },
+        "set_hot_water_setpoint": {
+            "description": "Imposta il setpoint dell'acqua calda sanitaria sul gateway.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                },
+                "temperature": {
+                    "name": "Temperatura"
+                }
+            },
+            "name": "Imposta il punto di riferimento per l'acqua calda"
+        },
+        "set_led_mode": {
+            "description": "Cambia la funzione dei LED del gateway.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                },
+                "id": {
+                    "description": "L'ID del LED.",
+                    "name": "ID"
+                },
+                "mode": {
+                    "name": "Modalit\u00e0"
+                }
+            },
+            "name": "Imposta la modalit\u00e0 LED"
+        },
+        "set_max_modulation": {
+            "fields": {
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                },
+                "level": {
+                    "name": "Livello"
+                }
+            },
+            "name": "Imposta la massima modulazione"
+        },
+        "set_outside_temperature": {
+            "fields": {
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                },
+                "temperature": {
+                    "name": "Temperatura"
+                }
+            },
+            "name": "Imposta la temperatura esterna"
+        },
+        "set_setback_temperature": {
+            "description": "Configura la temperatura di setback da utilizzare con la funzione GPIO modalit\u00e0 fuori casa.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Il gateway_id del gateway OpenTherm.",
+                    "name": "ID del gateway"
+                },
+                "temperature": {
+                    "description": "La temperatura di setback da configurare sul gateway.",
+                    "name": "Temperatura"
+                }
+            },
+            "name": "Imposta la temperatura di setback"
+        }
+    }
+}

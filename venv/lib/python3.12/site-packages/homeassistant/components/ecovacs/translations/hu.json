@@ -1,0 +1,270 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "A fi\u00f3k m\u00e1r konfigur\u00e1lva van"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "invalid_auth": "\u00c9rv\u00e9nytelen hiteles\u00edt\u00e9s",
+            "invalid_url": "\u00c9rv\u00e9nytelen URL",
+            "invalid_url_schema_override_mqtt_url": "\u00c9rv\u00e9nytelen MQTT URL s\u00e9ma.\nAz URL-nek `mqtt://` vagy `mqtts://`-el kell kezd\u0151dnie.",
+            "invalid_url_schema_override_rest_url": "\u00c9rv\u00e9nytelen REST URL s\u00e9ma.\nAz URL-nek `http://` -vel vagy `https://` -el kell kezd\u0151dnie.",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "country": "Orsz\u00e1g",
+                    "override_mqtt_url": "MQTT URL",
+                    "override_rest_url": "REST URL",
+                    "password": "Jelsz\u00f3",
+                    "username": "Felhaszn\u00e1l\u00f3n\u00e9v",
+                    "verify_mqtt_certificate": "MQTT SSL-tan\u00fas\u00edtv\u00e1ny ellen\u0151rz\u00e9se"
+                },
+                "data_description": {
+                    "override_mqtt_url": "Adja meg a saj\u00e1t \u00fczemeltet\u00e9s\u0171 p\u00e9ld\u00e1ny MQTT URL-c\u00edm\u00e9t, bele\u00e9rtve a s\u00e9m\u00e1t (mqtt/mqtts).",
+                    "override_rest_url": "Adja meg a saj\u00e1t \u00fczemeltet\u00e9s\u0171 p\u00e9ld\u00e1ny REST URL-c\u00edm\u00e9t, bele\u00e9rtve a s\u00e9m\u00e1t (http/https)."
+                }
+            },
+            "user": {
+                "data": {
+                    "mode": "M\u00f3d"
+                },
+                "data_description": {
+                    "mode": "V\u00e1lassza ki azt a m\u00f3dot, amelyet haszn\u00e1lni szeretne az Ecovacs-hoz val\u00f3 csatlakoz\u00e1shoz. Ha nem biztos benne, v\u00e1lassza a **Felh\u0151** lehet\u0151s\u00e9get.\n\nA **Saj\u00e1t \u00fczemeltet\u00e9s\u0171** opci\u00f3t csak akkor v\u00e1lassza, ha rendelkezik egy m\u0171k\u00f6d\u0151 saj\u00e1t hosztolt p\u00e9ld\u00e1nnyal."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "water_mop_attached": {
+                "name": "Felmos\u00f3 csatlakoztatva"
+            }
+        },
+        "button": {
+            "relocate": {
+                "name": "\u00dajrapoz\u00edcion\u00e1l\u00e1s"
+            },
+            "reset_lifespan_base_station_filter": {
+                "name": "\u00c1llom\u00e1ssz\u0171r\u0151 \u00e9lettartam\u00e1nak vissza\u00e1ll\u00edt\u00e1sa"
+            },
+            "reset_lifespan_blade": {
+                "name": "Penge \u00e9lettartam\u00e1nak vissza\u00e1ll\u00edt\u00e1sa"
+            },
+            "reset_lifespan_brush": {
+                "name": "F\u0151kefe \u00e9lettartam\u00e1nak null\u00e1z\u00e1sa"
+            },
+            "reset_lifespan_filter": {
+                "name": "Sz\u0171r\u0151 \u00e9lettartam\u00e1nak null\u00e1z\u00e1sa"
+            },
+            "reset_lifespan_lens_brush": {
+                "name": "Objekt\u00edvkefe \u00e9lettartam\u00e1nak vissza\u00e1ll\u00edt\u00e1sa"
+            },
+            "reset_lifespan_round_mop": {
+                "name": "Kerek felmos\u00f3rongy \u00e9lettartam\u00e1nak vissza\u00e1ll\u00edt\u00e1sa"
+            },
+            "reset_lifespan_side_brush": {
+                "name": "Oldalkefe \u00e9lettartam\u00e1nak null\u00e1z\u00e1sa"
+            },
+            "reset_lifespan_unit_care": {
+                "name": "Eszk\u00f6z karbantart\u00e1si \u00e9lettartam\u00e1nak vissza\u00e1ll\u00edt\u00e1sa"
+            },
+            "station_action_empty_dustbin": {
+                "name": "Portart\u00e1ly ki\u00fcr\u00edt\u00e9se"
+            }
+        },
+        "event": {
+            "last_job": {
+                "name": "Utols\u00f3 feladat",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "finished": "Befejezve",
+                            "finished_with_warnings": "Figyelmeztet\u00e9sekkel befejezve",
+                            "manually_stopped": "Manu\u00e1lisan le\u00e1ll\u00edtva"
+                        }
+                    }
+                }
+            }
+        },
+        "image": {
+            "map": {
+                "name": "T\u00e9rk\u00e9p"
+            }
+        },
+        "number": {
+            "clean_count": {
+                "name": "Tiszt\u00edt\u00e1si sz\u00e1m"
+            },
+            "cut_direction": {
+                "name": "V\u00e1g\u00e1si ir\u00e1ny"
+            },
+            "volume": {
+                "name": "Hanger\u0151"
+            }
+        },
+        "select": {
+            "water_amount": {
+                "name": "V\u00edz \u00e1raml\u00e1si szintje",
+                "state": {
+                    "high": "Magas",
+                    "low": "Alacsony",
+                    "medium": "K\u00f6zepes",
+                    "ultrahigh": "Nagyon magas"
+                }
+            },
+            "work_mode": {
+                "name": "Munka \u00fczemm\u00f3d",
+                "state": {
+                    "mop": "Felmos\u00e1s",
+                    "mop_after_vacuum": "Porsz\u00edv\u00f3z\u00e1s ut\u00e1n felmos\u00e1s",
+                    "vacuum": "Porsz\u00edv\u00f3z\u00e1s",
+                    "vacuum_and_mop": "Porsz\u00edv\u00f3z\u00e1s \u00e9s felmos\u00e1s"
+                }
+            }
+        },
+        "sensor": {
+            "error": {
+                "name": "Hiba",
+                "state_attributes": {
+                    "description": {
+                        "name": "Le\u00edr\u00e1s"
+                    }
+                }
+            },
+            "lifespan_base_station_filter": {
+                "name": "Dokkol\u00f3 sz\u0171r\u0151 \u00e9lettartama"
+            },
+            "lifespan_blade": {
+                "name": "Penge \u00e9lettartam"
+            },
+            "lifespan_brush": {
+                "name": "F\u0151kefe \u00e9lettartam"
+            },
+            "lifespan_filter": {
+                "name": "Sz\u0171r\u0151 \u00e9lettartam"
+            },
+            "lifespan_lens_brush": {
+                "name": "Objekt\u00edvkefe \u00e9lettartam"
+            },
+            "lifespan_main_brush": {
+                "name": "F\u0151kefe \u00e9lettartam"
+            },
+            "lifespan_round_mop": {
+                "name": "Kerek felmos\u00f3rongy \u00e9lettartam"
+            },
+            "lifespan_side_brush": {
+                "name": "Oldalkefe \u00e9lettartam"
+            },
+            "lifespan_unit_care": {
+                "name": "Eszk\u00f6z karbatart\u00e1s \u00e9lettartam"
+            },
+            "network_ip": {
+                "name": "IP-c\u00edm"
+            },
+            "network_rssi": {
+                "name": "Wi-Fi RSSI"
+            },
+            "network_ssid": {
+                "name": "Wi-Fi SSID"
+            },
+            "station_state": {
+                "name": "Dokkol\u00f3 \u00e1llapota",
+                "state": {
+                    "emptying_dustbin": "Portart\u00e1ly ki\u00fcr\u00edt\u00e9se folyamatban",
+                    "idle": "T\u00e9tlen"
+                }
+            },
+            "stats_area": {
+                "name": "Tiszt\u00edtott ter\u00fclet"
+            },
+            "stats_time": {
+                "name": "Tiszt\u00edtott id\u0151"
+            },
+            "total_stats_area": {
+                "name": "Teljes megtiszt\u00edtott ter\u00fclet"
+            },
+            "total_stats_cleanings": {
+                "name": "\u00d6sszes tiszt\u00edt\u00e1s"
+            },
+            "total_stats_time": {
+                "name": "Teljes tiszt\u00edt\u00e1si id\u0151"
+            }
+        },
+        "switch": {
+            "advanced_mode": {
+                "name": "Halad\u00f3 \u00fczemm\u00f3d"
+            },
+            "border_switch": {
+                "name": "Hat\u00e1r kapcsol\u00f3"
+            },
+            "carpet_auto_fan_boost": {
+                "name": "Sz\u0151nyegen automatikus ventil\u00e1tor sebess\u00e9gn\u00f6vel\u00e9s"
+            },
+            "child_lock": {
+                "name": "Gyerekz\u00e1r"
+            },
+            "clean_preference": {
+                "name": "Takar\u00edt\u00e1si preferencia"
+            },
+            "continuous_cleaning": {
+                "name": "Folyamatos tiszt\u00edt\u00e1s"
+            },
+            "cross_map_border_warning": {
+                "name": "T\u00e9rk\u00e9phat\u00e1r-\u00e1tmenet figyelmeztet\u00e9s"
+            },
+            "move_up_warning": {
+                "name": "Mozgat\u00e1s felfel\u00e9 figyelmeztet\u00e9s"
+            },
+            "safe_protect": {
+                "name": "Biztons\u00e1gos v\u00e9delem"
+            },
+            "true_detect": {
+                "name": "Val\u00f3di \u00e9rz\u00e9kel\u00e9s"
+            }
+        },
+        "vacuum": {
+            "vacuum": {
+                "state_attributes": {
+                    "fan_speed": {
+                        "state": {
+                            "max": "Max",
+                            "max_plus": "Max+",
+                            "normal": "Norm\u00e1l",
+                            "quiet": "Csendes"
+                        }
+                    },
+                    "rooms": {
+                        "name": "Szob\u00e1k"
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "vacuum_raw_get_positions_not_supported": {
+            "message": "A t\u00f6lt\u0151k \u00e9s az eszk\u00f6z poz\u00edci\u00f3inak lek\u00e9rdez\u00e9se nem t\u00e1mogatott"
+        },
+        "vacuum_send_command_params_dict": {
+            "message": "A param\u00e9tereknek sz\u00f3t\u00e1rnak kell lenni\u00fck, nem list\u00e1nak"
+        },
+        "vacuum_send_command_params_required": {
+            "message": "A k\u00f6vetkez\u0151 parancshoz param\u00e9terek sz\u00fcks\u00e9gesek: {command}"
+        }
+    },
+    "selector": {
+        "installation_mode": {
+            "options": {
+                "cloud": "Felh\u0151",
+                "self_hosted": "Saj\u00e1t \u00fczemeltet\u00e9s\u0171"
+            }
+        }
+    },
+    "services": {
+        "raw_get_positions": {
+            "description": "Lek\u00e9rdezi a t\u00f6lt\u0151k \u00e9s az eszk\u00f6z poz\u00edci\u00f3inak nyers v\u00e1lasz\u00e1t.",
+            "name": "Nyers poz\u00edci\u00f3k lek\u00e9r\u00e9se"
+        }
+    }
+}

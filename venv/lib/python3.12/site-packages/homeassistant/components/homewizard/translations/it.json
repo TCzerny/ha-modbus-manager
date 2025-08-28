@@ -1,0 +1,101 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il dispositivo \u00e8 gi\u00e0 configurato",
+            "device_not_supported": "Questo dispositivo non \u00e8 supportato",
+            "invalid_discovery_parameters": "Parametri di individuazione non validi",
+            "reauth_successful": "L'abilitazione dell'API \u00e8 riuscita",
+            "reconfigure_successful": "La riconfigurazione \u00e8 stata completata con successo",
+            "unknown_error": "Errore imprevisto",
+            "unsupported_api_version": "Rilevata versione API non supportata"
+        },
+        "error": {
+            "network_error": "Dispositivo irraggiungibile, assicurati di aver inserito l'indirizzo IP corretto e che il dispositivo sia disponibile nella tua rete"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Vuoi configurare {product_type} ({serial}) su {ip_address}?",
+                "title": "Conferma"
+            },
+            "reauth_confirm": {
+                "description": "L'API locale \u00e8 disabilitata. Vai all'app HomeWizard Energy e abilita l'API nelle impostazioni del dispositivo."
+            },
+            "reconfigure": {
+                "data": {
+                    "ip_address": "Indirizzo IP"
+                }
+            },
+            "user": {
+                "data": {
+                    "ip_address": "Indirizzo IP"
+                },
+                "description": "Inserisci l'indirizzo IP del tuo dispositivo HomeWizard Energy per integrarlo con Home Assistant.",
+                "title": "Configura il dispositivo"
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "status_light_brightness": {
+                "name": "Luminosit\u00e0 della luce di stato"
+            }
+        },
+        "sensor": {
+            "active_liter_lpm": {
+                "name": "Consumo di acqua"
+            },
+            "active_power_average_w": {
+                "name": "Domanda media"
+            },
+            "active_tariff": {
+                "name": "Tariffa"
+            },
+            "any_power_fail_count": {
+                "name": "Rilevate interruzioni di corrente"
+            },
+            "dsmr_version": {
+                "name": "Versione DSMR"
+            },
+            "long_power_fail_count": {
+                "name": "Rilevate interruzioni di corrente prolungate"
+            },
+            "meter_model": {
+                "name": "Modello di contatore intelligente"
+            },
+            "monthly_power_peak_w": {
+                "name": "Picco di domanda del mese in corso"
+            },
+            "total_energy_export_kwh": {
+                "name": "Esportazione di energia"
+            },
+            "total_energy_import_kwh": {
+                "name": "Importazione di energia"
+            },
+            "total_liter_m3": {
+                "name": "Consumo totale di acqua"
+            },
+            "unique_meter_id": {
+                "name": "Identificatore del contatore intelligente"
+            },
+            "wifi_ssid": {
+                "name": "SSID Wi-Fi"
+            },
+            "wifi_strength": {
+                "name": "Potenza Wi-Fi"
+            }
+        },
+        "switch": {
+            "cloud_connection": {
+                "name": "Connessione al cloud"
+            },
+            "switch_lock": {
+                "name": "Blocco interruttore"
+            }
+        }
+    },
+    "exceptions": {
+        "communication_error": {
+            "message": "Si \u00e8 verificato un errore durante la comunicazione con il dispositivo HomeWizard"
+        }
+    }
+}

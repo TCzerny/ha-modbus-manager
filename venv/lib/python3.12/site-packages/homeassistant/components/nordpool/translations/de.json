@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "no_data": "API wurde verbunden, aber die Antwort war leer"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "Regionen",
+                    "currency": "W\u00e4hrung"
+                },
+                "data_description": {
+                    "areas": "Regionen, f\u00fcr die die Preise entsprechend den Nordpool-Marktregionen angezeigt werden sollen.",
+                    "currency": "W\u00e4hle die W\u00e4hrung, in der die Preise angezeigt werden sollen, EUR ist die Basisw\u00e4hrung."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "Regionen",
+                    "currency": "W\u00e4hrung"
+                },
+                "data_description": {
+                    "areas": "Regionen, f\u00fcr die die Preise entsprechend den Nordpool-Marktregionen angezeigt werden sollen.",
+                    "currency": "W\u00e4hle die W\u00e4hrung, in der die Preise angezeigt werden sollen, EUR ist die Basisw\u00e4hrung."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} Durchschnitt"
+            },
+            "block_end_time": {
+                "name": "{block} Ende"
+            },
+            "block_max": {
+                "name": "{block} Maximum"
+            },
+            "block_min": {
+                "name": "{block} Minimum"
+            },
+            "block_start_time": {
+                "name": "{block} Beginn"
+            },
+            "currency": {
+                "name": "W\u00e4hrung"
+            },
+            "current_price": {
+                "name": "Aktueller Preis"
+            },
+            "daily_average": {
+                "name": "Tagesdurchschnitt"
+            },
+            "exchange_rate": {
+                "name": "Wechselkurs"
+            },
+            "highest_price": {
+                "name": "H\u00f6chster Preis",
+                "state_attributes": {
+                    "end": {
+                        "name": "Endzeitpunkt"
+                    },
+                    "start": {
+                        "name": "Anfangszeitpunkt"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "Vorheriger Preis"
+            },
+            "lowest_price": {
+                "name": "Niedrigster Preis",
+                "state_attributes": {
+                    "end": {
+                        "name": "Endzeitpunkt"
+                    },
+                    "start": {
+                        "name": "Anfangszeitpunkt"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "N\u00e4chster Preis"
+            },
+            "updated_at": {
+                "name": "Letzte Aktualisierung"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Es ist ein Authentifizierungsfehler aufgetreten, da du versucht hast, Daten zu weit in der Vergangenheit abzurufen."
+        },
+        "connection_error": {
+            "message": "Beim Verbinden mit der API ist ein Verbindungsfehler aufgetreten. Versuche es sp\u00e4ter erneut."
+        },
+        "empty_response": {
+            "message": "Nord Pool hat f\u00fcr das angegebene Datum keine Marktpreise ver\u00f6ffentlicht."
+        },
+        "entry_not_found": {
+            "message": "Die Nord Pool-Integration ist in Home Assistant nicht konfiguriert."
+        },
+        "entry_not_loaded": {
+            "message": "Die Nord Pool-Integration ist derzeit in Home Assistant nicht geladen oder deaktiviert."
+        },
+        "initial_update_failed": {
+            "message": "Das erste Update ist beim Start mit dem Fehler {error} fehlgeschlagen"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "Ruft die Preise f\u00fcr ein bestimmtes Datum ab.",
+            "fields": {
+                "areas": {
+                    "description": "Eine oder mehrere Regionen, f\u00fcr die Preise abgerufen werden sollen. Wenn das Feld leer gelassen wird, werden die bereits konfigurierten Regionen verwendet.",
+                    "name": "Regionen"
+                },
+                "config_entry": {
+                    "description": "W\u00e4hle den Konfigurationseintrag.",
+                    "name": "Nord Pool-Konfigurationseintrag ausw\u00e4hlen"
+                },
+                "currency": {
+                    "description": "W\u00e4hrung, in der die Preise abgerufen werden sollen. Wenn das Feld leer gelassen wird, wird die bereits konfigurierte W\u00e4hrung verwendet.",
+                    "name": "W\u00e4hrung"
+                },
+                "date": {
+                    "description": "Es sind nur Daten erlaubt, die zwei Monate in der Vergangenheit und einen Tag in der Zukunft liegen.",
+                    "name": "Datum"
+                }
+            },
+            "name": "Preise f\u00fcr Datum abrufen"
+        }
+    }
+}

@@ -1,0 +1,233 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Zariadenie u\u017e je nakonfigurovan\u00e9",
+            "reauth_successful": "Op\u00e4tovn\u00e9 overenie bolo \u00faspe\u0161n\u00e9"
+        },
+        "error": {
+            "invalid_auth": "Neplatn\u00e9 overenie"
+        },
+        "step": {
+            "reauth": {
+                "data": {
+                    "api_key": "API k\u013e\u00fa\u010d"
+                },
+                "description": "Zadajte nov\u00fd \u201ek\u013e\u00fa\u010d predplatn\u00e9ho\u201c pre v\u00e1\u0161 \u00fa\u010det vygenerovan\u00fd na str\u00e1nke \u201ehttps://portal.osoenergy.no/\u201c.",
+                "title": "OSO Energy auth"
+            },
+            "user": {
+                "data": {
+                    "api_key": "API k\u013e\u00fa\u010d"
+                },
+                "description": "Zadajte \u201ek\u013e\u00fa\u010d predplatn\u00e9ho\u201c pre v\u00e1\u0161 \u00fa\u010det vygenerovan\u00fd na str\u00e1nke \u201ehttps://portal.osoenergy.no/\u201c",
+                "title": "OSO Energy auth"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "extra_energy": {
+                "name": "Energia navy\u0161e"
+            },
+            "heating": {
+                "name": "Vykurovanie"
+            },
+            "power_save": {
+                "name": "\u00daspora energie"
+            }
+        },
+        "sensor": {
+            "capacity_mixed_water_40": {
+                "name": "Kapacita zmie\u0161anej vody 40\u00b0C"
+            },
+            "heater_mode": {
+                "name": "Re\u017eim ohrieva\u010da",
+                "state": {
+                    "auto": "Auto",
+                    "extraenergy": "Energia navy\u0161e",
+                    "ffr": "R\u00fdchla frekven\u010dn\u00e1 rezerva",
+                    "legionella": "Legionela",
+                    "manual": "Manu\u00e1lne",
+                    "off": "Vypnut\u00e9",
+                    "powersave": "\u00daspora energie",
+                    "voltage": "Nap\u00e4tie"
+                }
+            },
+            "optimization_mode": {
+                "name": "Re\u017eim optimaliz\u00e1cie",
+                "state": {
+                    "advanced": "Roz\u0161\u00edren\u00fd",
+                    "gridcompany": "Sie\u0165ov\u00e1 spolo\u010dnos\u0165",
+                    "off": "Vypnut\u00e9",
+                    "oso": "OSO",
+                    "smartcompany": "Inteligentn\u00e1 spolo\u010dnos\u0165"
+                }
+            },
+            "profile": {
+                "name": "Miestny profil"
+            },
+            "tapping_capacity": {
+                "name": "Kapacita odberu"
+            },
+            "temperature_low": {
+                "name": "Teplota dole"
+            },
+            "temperature_mid": {
+                "name": "Teplota stred"
+            },
+            "temperature_one": {
+                "name": "Teplota jedna"
+            },
+            "temperature_top": {
+                "name": "Teplota hore"
+            },
+            "v40_level_max": {
+                "name": "Maxim\u00e1lna hladina zmie\u0161anej vody pri 40\u00b0C"
+            },
+            "v40_level_min": {
+                "name": "Minim\u00e1lna hladina zmie\u0161anej vody pri 40\u00b0C"
+            },
+            "v40_min": {
+                "name": "Mie\u0161an\u00e1 voda 40\u00b0C"
+            }
+        }
+    },
+    "services": {
+        "get_profile": {
+            "description": "Z\u00edska teplotn\u00fd profil pre ohrieva\u010d vody",
+            "name": "Z\u00edskajte profil ohrieva\u010da"
+        },
+        "set_profile": {
+            "description": "Nastavuje teplotn\u00fd profil pre ohrieva\u010d vody",
+            "fields": {
+                "hour_00": {
+                    "description": "00:00 hod",
+                    "name": "00:00"
+                },
+                "hour_01": {
+                    "description": "01:00 hod",
+                    "name": "01:00"
+                },
+                "hour_02": {
+                    "description": "02:00 hod",
+                    "name": "02:00"
+                },
+                "hour_03": {
+                    "description": "03:00 hod",
+                    "name": "03:00"
+                },
+                "hour_04": {
+                    "description": "04:00 hod",
+                    "name": "04:00"
+                },
+                "hour_05": {
+                    "description": "05:00 hod",
+                    "name": "05:00"
+                },
+                "hour_06": {
+                    "description": "06:00 hod",
+                    "name": "06:00"
+                },
+                "hour_07": {
+                    "description": "07:00 hod",
+                    "name": "07:00"
+                },
+                "hour_08": {
+                    "description": "08:00 hod",
+                    "name": "08:00"
+                },
+                "hour_09": {
+                    "description": "09:00 hod",
+                    "name": "09:00"
+                },
+                "hour_10": {
+                    "description": "10:00 hod",
+                    "name": "10:00"
+                },
+                "hour_11": {
+                    "description": "11:00 hod",
+                    "name": "11:00"
+                },
+                "hour_12": {
+                    "description": "12:00 hod",
+                    "name": "12:00"
+                },
+                "hour_13": {
+                    "description": "13:00 hod",
+                    "name": "13:00"
+                },
+                "hour_14": {
+                    "description": "14:00 hod",
+                    "name": "14:00"
+                },
+                "hour_15": {
+                    "description": "15:00 hod",
+                    "name": "15:00"
+                },
+                "hour_16": {
+                    "description": "16:00 hod",
+                    "name": "16:00"
+                },
+                "hour_17": {
+                    "description": "17:00 hod",
+                    "name": "17:00"
+                },
+                "hour_18": {
+                    "description": "18:00 hod",
+                    "name": "18:00"
+                },
+                "hour_19": {
+                    "description": "19:00 hod",
+                    "name": "19:00"
+                },
+                "hour_20": {
+                    "description": "20:00 hod",
+                    "name": "20:00"
+                },
+                "hour_21": {
+                    "description": "21:00 hod",
+                    "name": "21:00"
+                },
+                "hour_22": {
+                    "description": "22:00 hod",
+                    "name": "22:00"
+                },
+                "hour_23": {
+                    "description": "23:00 hod",
+                    "name": "23:00"
+                }
+            },
+            "name": "Nastavenie profilu ohrieva\u010da"
+        },
+        "set_v40_min": {
+            "description": "Nastavuje minim\u00e1lne mno\u017estvo vody na 40\u00b0C pre ohrieva\u010d",
+            "fields": {
+                "v40_min": {
+                    "description": "Minim\u00e1lne mno\u017estvo vody pri 40 \u00b0C (200-350 pre SAGA S200, 300-550 pre SAGA S300)",
+                    "name": "V40 Min"
+                }
+            },
+            "name": "Nastavi\u0165 v40 min"
+        },
+        "turn_off": {
+            "description": "Vypne ohrev na jednu hodinu alebo k\u00fdm sa nedosiahne minim\u00e1lna teplota",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "Vyberte, \u010di m\u00e1 by\u0165 ohrev vypnut\u00fd, k\u00fdm sa nedosiahne minim\u00e1lna teplota (True), alebo po\u010das jednej hodiny (False)",
+                    "name": "A\u017e do teplotn\u00e9ho limitu"
+                }
+            },
+            "name": "Vypnutie vykurovania"
+        },
+        "turn_on": {
+            "description": "Zapne ohrev na jednu hodinu alebo do dosiahnutia maxim\u00e1lnej teploty",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "Vyberte, \u010di m\u00e1 by\u0165 ohrev zapnut\u00fd, k\u00fdm sa nedosiahne maxim\u00e1lna teplota (True), alebo po\u010das jednej hodiny (False)",
+                    "name": "A\u017e do teplotn\u00e9ho limitu"
+                }
+            },
+            "name": "Zapnutie vykurovania"
+        }
+    }
+}

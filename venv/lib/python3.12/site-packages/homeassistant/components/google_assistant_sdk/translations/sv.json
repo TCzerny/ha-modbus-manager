@@ -1,0 +1,61 @@
+{
+    "application_credentials": {
+        "description": "F\u00f6lj [instruktionerna]({more_info_url}) f\u00f6r [OAuth-samtyckessk\u00e4rmen]({oauth_consent_url}) f\u00f6r att ge Home Assistant \u00e5tkomst till dina Google Assistant SDK. Du m\u00e5ste ocks\u00e5 skapa applikationsuppgifter kopplade till ditt konto:\n 1. G\u00e5 till [Inloggningsuppgifter]({oauth_creds_url}) och v\u00e4lj **Skapa inloggningsuppgifter**.\n 1. V\u00e4lj **OAuth-klient-ID** i rullgardinsmenyn.\n 1. V\u00e4lj **Webbapplikation** f\u00f6r applikationstyp. \n\n"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Konto har redan konfigurerats",
+            "already_in_progress": "Konfigurationsfl\u00f6det p\u00e5g\u00e5r redan",
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_access_token": "Ogiltig \u00e5tkomstnyckel",
+            "missing_configuration": "Komponenten har inte konfigurerats. F\u00f6lj dokumentationen.",
+            "oauth_error": "Mottog ogiltiga tokendata.",
+            "oauth_failed": "Fel vid h\u00e4mtning av \u00e5tkomsttoken.",
+            "oauth_timeout": "Timeout vid h\u00e4mtning av OAuth-token.",
+            "oauth_unauthorized": "OAuth-auktoriseringsfel vid h\u00e4mtning av \u00e5tkomsttoken.",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "timeout_connect": "Timeout vid uppr\u00e4ttande av anslutning",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "create_entry": {
+            "default": "Autentisering lyckades"
+        },
+        "step": {
+            "auth": {
+                "title": "L\u00e4nka Google-konto"
+            },
+            "pick_implementation": {
+                "title": "V\u00e4lj autentiseringsmetod"
+            },
+            "reauth_confirm": {
+                "description": "Google Assistant SDK-integrationen m\u00e5ste autentisera ditt konto igen",
+                "title": "Autentiseringen har upph\u00f6rt att g\u00e4lla f\u00f6r {name}"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "language_code": "Kod f\u00f6r spr\u00e5k"
+                }
+            }
+        }
+    },
+    "services": {
+        "send_text_command": {
+            "description": "Skickar ett kommando som en textfr\u00e5ga till Google Assistant.",
+            "fields": {
+                "command": {
+                    "description": "Kommando(n) att skicka till Google Assistant.",
+                    "name": "Kommando"
+                },
+                "media_player": {
+                    "description": "Namn p\u00e5 mediaspelare-entiteter som svaret ska spelas upp p\u00e5.",
+                    "name": "Mediaspelarentitet"
+                }
+            },
+            "name": "Skicka textkommando"
+        }
+    }
+}

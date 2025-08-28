@@ -1,0 +1,202 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "invalid_charset": "Den angivna teckenupps\u00e4ttningen st\u00f6ds inte",
+            "invalid_folder": "Den valda mappen \u00e4r ogiltig",
+            "invalid_search": "Den valda s\u00f6kningen \u00e4r ogiltig",
+            "ssl_error": "Ett SSL-fel uppstod. \u00c4ndra SSL-chifferlista och f\u00f6rs\u00f6k igen"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "password": "Korrigera IMAP-l\u00f6senordet."
+                },
+                "description": "L\u00f6senordet f\u00f6r {username} \u00e4r ogiltigt.",
+                "title": "Autentiseringen har upph\u00f6rt att g\u00e4lla f\u00f6r {name}"
+            },
+            "user": {
+                "data": {
+                    "charset": "Teckenupps\u00e4ttning",
+                    "event_message_data": "Meddelandedata som ska ing\u00e5 i h\u00e4ndelsedata fr\u00e5n `imap_content`:",
+                    "folder": "Mapp",
+                    "password": "L\u00f6senord",
+                    "port": "Port",
+                    "search": "IMAP s\u00f6kning",
+                    "server": "Server",
+                    "ssl_cipher_list": "SSL-chifferlista (Avancerat)",
+                    "username": "Anv\u00e4ndarnamn",
+                    "verify_ssl": "Verifiera SSL-certifikat"
+                },
+                "data_description": {
+                    "charset": "Den teckenupps\u00e4ttning som anv\u00e4nds. Vanliga v\u00e4rden \u00e4r `utf-8` eller `US-ASCII`.",
+                    "event_message_data": "Observera att h\u00e4ndelsestorleken \u00e4r begr\u00e4nsad och att all meddelandetext kanske inte skickas med h\u00e4ndelsen om meddelandet \u00e4r f\u00f6r stort.",
+                    "folder": "I allm\u00e4nhet \u00e4r mappen inst\u00e4lld p\u00e5 `INBOX`, men t.ex. om det finns en undermapp med namnet `Test`, b\u00f6r detta vara `INBOX.Test`.",
+                    "password": "IMAP-l\u00f6senordet",
+                    "port": "IMAP-port som st\u00f6der SSL, vanligtvis \u00e4r detta 993.",
+                    "search": "IMAP-s\u00f6kningskommandot som \u00e4r `UnSeen UnDeleted` som standard.",
+                    "server": "IMAP-servern.",
+                    "ssl_cipher_list": "Om IMAP-tj\u00e4nsten endast st\u00f6der \u00e4ldre kryptering kan du f\u00f6rs\u00f6ka \u00e4ndra detta.",
+                    "username": "IMAP-anv\u00e4ndarnamnet.",
+                    "verify_ssl": "Rekommenderas f\u00f6r att s\u00e4kerst\u00e4lla att servercertifikatet \u00e4r giltigt. St\u00e4ng av om servercertifikatet inte \u00e4r betrott (t.ex. sj\u00e4lvunderskrivet)."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "imap_mail_count": {
+                "name": "Meddelanden",
+                "unit_of_measurement": "meddelanden"
+            }
+        }
+    },
+    "exceptions": {
+        "copy_failed": {
+            "message": "Kopieringen av meddelandet misslyckades med \"{error}\"."
+        },
+        "delete_failed": {
+            "message": "Det gick inte att markera meddelandet f\u00f6r borttagning med \"{error}\"."
+        },
+        "expunge_failed": {
+            "message": "Det gick inte att radera meddelandet med \"{error}\"."
+        },
+        "fetch_failed": {
+            "message": "Det gick inte att h\u00e4mta meddelandetexten med \"{error}\"."
+        },
+        "imap_server_fail": {
+            "message": "IMAP-servern kunde inte ansluta: {error} ."
+        },
+        "invalid_auth": {
+            "message": "Ogiltig autentisering"
+        },
+        "invalid_entry": {
+            "message": "Ingen giltig IMAP-post hittades."
+        },
+        "invalid_folder": {
+            "message": "Den valda mappen \u00e4r ogiltig"
+        },
+        "seen_failed": {
+            "message": "Det gick inte att markera meddelandet som sett med \"{error}\"."
+        }
+    },
+    "options": {
+        "error": {
+            "already_configured": "En post med dessa mapp- och s\u00f6kalternativ finns redan",
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "invalid_charset": "Den angivna teckenupps\u00e4ttningen st\u00f6ds inte",
+            "invalid_folder": "Den valda mappen \u00e4r ogiltig",
+            "invalid_search": "Den valda s\u00f6kningen \u00e4r ogiltig"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "custom_event_data_template": "Mall f\u00f6r att skapa anpassad h\u00e4ndelsedata",
+                    "enable_push": "Aktivera Push-IMAP om servern st\u00f6der det. Inaktivera detta om Push-IMAP-uppdateringar inte \u00e4r tillf\u00f6rlitliga.",
+                    "event_message_data": "Meddelandedata som ska ing\u00e5 i h\u00e4ndelsedata fr\u00e5n `imap_content`.",
+                    "folder": "Mapp",
+                    "max_message_size": "Max meddelandestorlek (2048 < storlek < 30000)",
+                    "search": "IMAP s\u00f6kning"
+                },
+                "data_description": {
+                    "custom_event_data_template": "Denna mall utv\u00e4rderas n\u00e4r ett nytt meddelande har tagits emot och resultatet l\u00e4ggs till i attributet `custom` i h\u00e4ndelsedata.",
+                    "enable_push": "Vi rekommenderar att Push-IMAP anv\u00e4nds. Polling \u00f6kar tiden f\u00f6r att svara.",
+                    "event_message_data": "Observera att h\u00e4ndelsestorleken \u00e4r begr\u00e4nsad och att all meddelandetext kanske inte skickas med h\u00e4ndelsen om meddelandet \u00e4r f\u00f6r stort.",
+                    "folder": "I allm\u00e4nhet \u00e4r mappen inst\u00e4lld p\u00e5 `INBOX`, men t.ex. om det finns en undermapp med namnet `Test`, b\u00f6r detta vara `INBOX.Test`.",
+                    "max_message_size": "Begr\u00e4nsa den maximala storleken p\u00e5 h\u00e4ndelsen. I st\u00e4llet f\u00f6r att skicka (hela) textmeddelandet \u00e4r det b\u00e4ttre att anv\u00e4nda en mall.",
+                    "search": "IMAP-s\u00f6kningskommandot som \u00e4r `UnSeen UnDeleted` som standard."
+                }
+            }
+        }
+    },
+    "selector": {
+        "event_message_data": {
+            "options": {
+                "headers": "Meddelanderubriker",
+                "text": "Br\u00f6dtext"
+            }
+        },
+        "ssl_cipher_list": {
+            "options": {
+                "intermediate": "Intermedi\u00e4ra chiffer",
+                "modern": "Moderna chiffer",
+                "python_default": "Standardinst\u00e4llningar"
+            }
+        }
+    },
+    "services": {
+        "delete": {
+            "description": "Raderar ett e-postmeddelande.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP-konfigurationsposten.",
+                    "name": "Konfigurationspost"
+                },
+                "uid": {
+                    "description": "E-postidentifieraren (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Radera meddelande"
+        },
+        "fetch": {
+            "description": "H\u00e4mtar ett e-postmeddelande fr\u00e5n servern.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP-konfigurationsposten.",
+                    "name": "Konfigurationspost"
+                },
+                "uid": {
+                    "description": "E-postidentifieraren (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "H\u00e4mta meddelande"
+        },
+        "move": {
+            "description": "Flytta ett e-postmeddelande till en m\u00e5lmapp.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP-konfigurationsposten.",
+                    "name": "Konfigurationspost"
+                },
+                "seen": {
+                    "description": "Markerar ett e-postmeddelande som l\u00e4st.",
+                    "name": "L\u00e4st"
+                },
+                "target_folder": {
+                    "description": "Den m\u00e5lmapp som e-postmeddelandet ska flyttas till.",
+                    "name": "M\u00e5lmapp"
+                },
+                "uid": {
+                    "description": "E-postidentifieraren (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Flytta meddelande"
+        },
+        "seen": {
+            "description": "Markera ett e-postmeddelande som sett.",
+            "fields": {
+                "entry": {
+                    "description": "IMAP-konfigurationsposten.",
+                    "name": "Konfigurationspost"
+                },
+                "uid": {
+                    "description": "E-postidentifieraren (UID).",
+                    "name": "UID"
+                }
+            },
+            "name": "Markera meddelande som sett"
+        }
+    }
+}

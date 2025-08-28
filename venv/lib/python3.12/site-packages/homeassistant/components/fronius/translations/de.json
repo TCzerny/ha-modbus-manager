@@ -1,0 +1,395 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "invalid_host": "Ung\u00fcltiger Hostname oder IP-Adresse",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich",
+            "unique_id_mismatch": "Die Kennung stimmt nicht mit der vorherigen Kennung \u00fcberein"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "flow_title": "{device}",
+        "step": {
+            "confirm_discovery": {
+                "description": "M\u00f6chtest du {device} zu Home Assistant hinzuf\u00fcgen?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Die IP-Adresse oder der Hostname deines Fronius-Ger\u00e4tes."
+                },
+                "description": "Aktualisiere deine Konfigurationsinformationen f\u00fcr {device}."
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Die IP-Adresse oder der Hostname deines Fronius-Ger\u00e4tes."
+                },
+                "description": "Konfiguriere dein Fronius SolarAPI-Ger\u00e4t."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "capacity_designed": {
+                "name": "Ausgelegte Kapazit\u00e4t"
+            },
+            "capacity_maximum": {
+                "name": "Maximale Kapazit\u00e4t"
+            },
+            "cash_factor": {
+                "name": "Einspeisetarif"
+            },
+            "co2_factor": {
+                "name": "CO\u2082-Faktor"
+            },
+            "current_ac": {
+                "name": "Stromst\u00e4rke AC"
+            },
+            "current_ac_phase_1": {
+                "name": "Stromst\u00e4rke L1"
+            },
+            "current_ac_phase_2": {
+                "name": "Stromst\u00e4rke L2"
+            },
+            "current_ac_phase_3": {
+                "name": "Stromst\u00e4rke L3"
+            },
+            "current_dc": {
+                "name": "Stromst\u00e4rke DC"
+            },
+            "current_dc_2": {
+                "name": "Stromst\u00e4rke DC 2"
+            },
+            "delivery_factor": {
+                "name": "Bezugstarif"
+            },
+            "energy_day": {
+                "name": "Energie Tag"
+            },
+            "energy_reactive_ac_consumed": {
+                "name": "Bezogene Blindleistung"
+            },
+            "energy_reactive_ac_produced": {
+                "name": "Eingespeiste Blindleistung"
+            },
+            "energy_real_ac_consumed": {
+                "name": "Verbrauchte Energie"
+            },
+            "energy_real_ac_minus": {
+                "name": "Wirkenergie Minus"
+            },
+            "energy_real_ac_plus": {
+                "name": "Wirkenergie Plus"
+            },
+            "energy_real_consumed": {
+                "name": "Bezogene Wirkenergie"
+            },
+            "energy_real_produced": {
+                "name": "Eingespeiste Wirkenergie"
+            },
+            "energy_total": {
+                "name": "Energie gesamt"
+            },
+            "energy_year": {
+                "name": "Energie Jahr"
+            },
+            "error_code": {
+                "name": "Fehlercode"
+            },
+            "error_message": {
+                "name": "Fehlermeldung",
+                "state": {
+                    "ac_current_sensor_error": "Fehler des Wechselstromsensors",
+                    "ac_frequency_too_high": "Wechselstromfrequenz zu hoch",
+                    "ac_frequency_too_low": "Wechselstromfrequenz zu niedrig",
+                    "ac_grid_outside_permissible_limits": "Wechselstromnetz au\u00dferhalb der zul\u00e4ssigen Grenzwerte",
+                    "ac_module_over_temperature": "\u00dcbertemperatur des Wechselstrommoduls",
+                    "ac_module_temperature_sensor_faulty_l1": "Temperatursensor des Wechselstrommoduls defekt (L1)",
+                    "ac_module_temperature_sensor_faulty_l2": "Temperatursensor des Wechselstrommoduls defekt (L2)",
+                    "ac_module_temperature_sensor_faulty_l3": "Temperatursensor des Wechselstrommoduls defekt (L3)",
+                    "ac_voltage_too_high": "Wechselspannung zu hoch",
+                    "ac_voltage_too_low": "Wechselspannung zu niedrig",
+                    "arc_detection_triggered": "Lichtbogenerkennung ausgel\u00f6st",
+                    "arc_detector_switched_off": "Lichtbogenmelder ausgeschaltet (z. B. bei externer Lichtbogen\u00fcberwachung)",
+                    "can_bus_full": "CAN-Bus ist voll",
+                    "communication": "Kommunikationsfehler",
+                    "compatibility_error_invalid_power_stage_configuration": "Kompatibilit\u00e4tsfehler (z. B. durch Austausch einer Leiterplatte) - ung\u00fcltige Leistungsstufenkonfiguration",
+                    "current_sensor_calibration_timeout": "Zeit\u00fcberschreitung bei der Stromsensorkalibrierung",
+                    "dc_component_measured_in_grid_too_high": "Gemessener Gleichstromanteil im Netz zu hoch",
+                    "dc_connection_inverter_battery_interrupted": "Gleichstromverbindung zwischen Wechselrichter und Batterie unterbrochen",
+                    "dc_input_voltage_mppt_1_too_high": "Eingangsgleichspannung MPPT 1 zu hoch",
+                    "dc_input_voltage_mppt_2_too_high": "Eingangsgleichspannung MPPT 2 zu hoch",
+                    "dc_low_string_1": "Gleichspannung String 1 niedrig",
+                    "dc_low_string_2": "Gleichspannung String 2 niedrig",
+                    "dc_module_over_temperature": "\u00dcbertemperatur des Gleichspannungsmoduls",
+                    "dc_module_temperature_sensor_faulty": "Temperatursensor des Gleichspannungsmoduls defekt",
+                    "derating_caused_by_over_frequency": "Leistungsminderung durch \u00dcberfrequenz",
+                    "different_power_limitation_in_hardware_modules": "Unterschiedliche Leistungsbegrenzung in den Hardware-Modulen",
+                    "eeprom_reinitialised": "EEPROM wurde neu initialisiert",
+                    "emergency_power_derating_activated": "Notfall-Leistungsbegrenzung aktiviert",
+                    "error_during_logging_data_recording": "Fehler beim Aufzeichnen der Protokolldaten",
+                    "error_during_update_process": "Fehler w\u00e4hrend des Update-Vorgangs",
+                    "fan_1_error": "L\u00fcfter 1 Fehler",
+                    "fan_2_error": "L\u00fcfter 2 Fehler",
+                    "file_could_not_be_opened": "Datei konnte nicht ge\u00f6ffnet werden",
+                    "fixed_voltage_mode_out_of_range": "Anstelle des MPP-Spannungsmodus wurde der Festspannungsmodus ausgew\u00e4hlt und die Festspannung auf einen zu niedrigen oder zu hohen Wert eingestellt",
+                    "functional_incompatibility_between_pc_boards": "Funktionale Inkompatibilit\u00e4t (eine oder mehrere Leiterplatten im Wechselrichter sind zueinander nicht kompatibel, z. B. nach dem Austausch einer Leiterplatte)",
+                    "grid_frequency_exceeded_limit_reconnecting": "Die Netzfrequenz hat beim Wiedereinschalten einen Grenzwert \u00fcberschritten",
+                    "grid_voltage_dependent_power_reduction_active": "Netzspannungsabh\u00e4ngige Leistungsreduzierung aktiviert",
+                    "guard_cannot_be_found": "W\u00e4chter kann nicht gefunden werden",
+                    "hardware_id_problem": "Problem mit der Hardware-ID",
+                    "hid_range_error": "HID-Reichweitenfehler",
+                    "initialisation_error_file_system_error_on_usb": "Initialisierungsfehler im Dateisystem auf dem USB-Speicherstick",
+                    "initialisation_error_usb_flash_drive_not_supported": "Initialisierungsfehler \u2013 USB-Speicherstick wird nicht unterst\u00fctzt",
+                    "initialisation_error_usb_stick_over_current": "Initialisierungsfehler \u2013 \u00dcberstrom auf USB-Stick",
+                    "insulation_error_on_solar_panels": "Isolationsfehler an den PV-Modulen",
+                    "insulation_fault": "Isolationsfehler",
+                    "insulation_measurement_triggered": "Isolationsmessung ausgel\u00f6st",
+                    "intermediate_circuit_voltage_too_high": "Zwischenkreisspannung zu hoch",
+                    "intermediate_circuit_voltage_too_low_or_asymmetric": "Zwischenkreisspannung zu niedrig oder asymmetrisch",
+                    "internal_dsp_malfunction": "Interne DSP-Fehlfunktion",
+                    "internal_hardware_error": "Interner Hardwarefehler",
+                    "internal_processor_status": "Warnung zum internen Prozessorstatus. Siehe Statuscode f\u00fcr weitere Informationen",
+                    "interrupt_check_fail": "Unterbrechungspr\u00fcfung fehlgeschlagen",
+                    "invalid_device_type": "Ung\u00fcltiger Ger\u00e4tetyp",
+                    "inverter_required_setup_values_not_received": "Die vom Wechselrichter ben\u00f6tigten Einstellwerte konnten nicht empfangen werden",
+                    "inverter_settings_changed_restart_required": "Wechselrichter-Einstellungen wurden ge\u00e4ndert, Wechselrichter-Neustart erforderlich",
+                    "log_file_cannot_be_saved": "Protokolldatei kann nicht gespeichert werden (z. B. USB-Flash-Laufwerk ist schreibgesch\u00fctzt oder voll)",
+                    "low_pv_voltage_dc_input_voltage_too_low": "Niedrige PV-Spannung \u2013 DC-Eingangsspannung zu niedrig f\u00fcr die Einspeisung von Energie ins Netz",
+                    "mains_voltage_dependent_power_reduction": "Netzspannungsabh\u00e4ngige Leistungsreduzierung",
+                    "memory_error_detected": "Speicherfehler erkannt",
+                    "neutral_conductor_not_connected": "Neutralleiter nicht angeschlossen",
+                    "no_communication_between_power_stage_and_control_system": "Keine Kommunikation zwischen Leistungsteil und Steuerung m\u00f6glich",
+                    "no_communication_with_filter": "Keine Kommunikation mit Filter m\u00f6glich",
+                    "no_communication_with_hybrid_manager": "Keine Kommunikation mit dem Hybridmanager m\u00f6glich",
+                    "no_communication_with_power_stage_set": "Keine Kommunikation mit dem Leistungsteil m\u00f6glich",
+                    "no_communication_with_storage_unit": "Keine Kommunikation mit der Speichereinheit m\u00f6glich",
+                    "no_energy_fed_by_mppt1_past_24_hours": "Keine Energieeinspeisung durch MPPT1 in den letzten 24 Stunden",
+                    "no_energy_fed_into_grid_past_24_hours": "Keine Energieeinspeisung durch MPPT2 in den letzten 24 Stunden",
+                    "no_error": "Kein Fehler",
+                    "no_power_fed_in_despite_closed_relay": "Keine Stromeinspeisung trotz geschlossenem Relais",
+                    "no_usb_flash_drive_connected": "Kein USB-Stick angeschlossen",
+                    "overcurrent_ac": "\u00dcberstrom (AC)",
+                    "overcurrent_dc": "\u00dcberstrom (DC)",
+                    "overtemperature_in_connection_area": "\u00dcbertemperatur im Anschlussbereich",
+                    "pmc_power_stage_set_not_available": "PMC-Leistungsteil nicht verf\u00fcgbar",
+                    "polarity_of_dc_strings_reversed": "Polarit\u00e4t der DC-Strings vertauscht",
+                    "possible_hardware_fault": "M\u00f6glicher Hardwarefehler",
+                    "power_derating_due_to_high_temperature": "Leistungsreduzierung durch \u00dcbertemperatur",
+                    "power_stage_set_problem": "Leistungsteil-Problem",
+                    "pv_output_too_low_for_feeding_energy_into_the_grid": "PV-Leistung zu gering f\u00fcr die Einspeisung ins Netz",
+                    "rcmu_error": "RCMU-Fehler",
+                    "real_time_clock_communication_error": "Kommunikationsfehler des Echtzeituhr-Moduls",
+                    "real_time_clock_hardware_error": "Hardwarefehler im Echtzeituhr-Modul",
+                    "real_time_clock_in_emergency_mode": "Interner Fehler: Echtzeituhr-Modul im Notfallmodus",
+                    "safety_cut_out_triggered": "Sicherheitsabschaltung \u00fcber Optionskarte oder RECERBO hat ausgel\u00f6st",
+                    "software_problem": "Softwareproblem",
+                    "software_update_invalid_country_setup": "Softwareupdate-Gruppe 0 (ung\u00fcltige L\u00e4ndereinstellung)",
+                    "stand_alone_operation_detected": "Standalone-Betrieb erkannt",
+                    "storage_unit_not_available": "Speichereinheit nicht verf\u00fcgbar",
+                    "time_lost": "Verlorene Zeit",
+                    "too_little_dc_power_for_feed_in_operation": "Zu geringe DC-Leistung f\u00fcr Einspeisebetrieb",
+                    "unique_id_conflict": "Konflikt mit eindeutiger ID",
+                    "update_file_corrupt": "Update-Datei besch\u00e4digt",
+                    "update_file_does_not_match_device": "Updatedatei passt nicht zum Ger\u00e4t, Updatedatei zu alt",
+                    "update_file_not_recognised_or_missing": "Update-Datei nicht erkannt oder nicht vorhanden",
+                    "wired_shut_down_triggered": "Kabelgebundenes Herunterfahren ausgel\u00f6st",
+                    "write_or_read_error_occurred": "Schreib- oder Lesefehler aufgetreten"
+                }
+            },
+            "frequency_phase_average": {
+                "name": "Netzfrequenz"
+            },
+            "inverter_state": {
+                "name": "Wechselrichterstatus"
+            },
+            "led_color": {
+                "name": "LED-Farbe"
+            },
+            "led_state": {
+                "name": "LED-Status"
+            },
+            "meter_location": {
+                "name": "Z\u00e4hlerposition"
+            },
+            "meter_location_description": {
+                "name": "Z\u00e4hlerstandort",
+                "state": {
+                    "consumption_path": "Verbrauchszweig",
+                    "external_battery": "Externe Batterie",
+                    "external_generator": "Externer Generator",
+                    "feed_in": "Netzkopplungspunkt",
+                    "subload": "Subz\u00e4hler"
+                }
+            },
+            "meter_mode": {
+                "name": "Z\u00e4hlermodus"
+            },
+            "power_ac": {
+                "name": "Leistung AC"
+            },
+            "power_apparent_phase_1": {
+                "name": "Scheinleistung Phase 1"
+            },
+            "power_apparent_phase_2": {
+                "name": "Scheinleistung Phase 2"
+            },
+            "power_apparent_phase_3": {
+                "name": "Scheinleistung Phase 3"
+            },
+            "power_battery": {
+                "name": "Leistung Speicher"
+            },
+            "power_battery_charge": {
+                "name": "Ladeleistung"
+            },
+            "power_battery_discharge": {
+                "name": "Entladeleistung"
+            },
+            "power_factor_phase_1": {
+                "name": "Leistungsfaktor Phase 1"
+            },
+            "power_factor_phase_2": {
+                "name": "Leistungsfaktor Phase 2"
+            },
+            "power_factor_phase_3": {
+                "name": "Leistungsfaktor Phase 3"
+            },
+            "power_grid": {
+                "name": "Leistung vom Netz"
+            },
+            "power_grid_export": {
+                "name": "Leistung Netzeinspeisung"
+            },
+            "power_grid_import": {
+                "name": "Leistung Netzbezug"
+            },
+            "power_load": {
+                "name": "Leistung Last"
+            },
+            "power_load_consumed": {
+                "name": "Leistung Verbrauch"
+            },
+            "power_load_generated": {
+                "name": "Leistung Generator"
+            },
+            "power_photovoltaics": {
+                "name": "PV Leistung"
+            },
+            "power_reactive": {
+                "name": "Blindleistung"
+            },
+            "power_reactive_phase_1": {
+                "name": "Blindleistung Phase 1"
+            },
+            "power_reactive_phase_2": {
+                "name": "Blindleistung Phase 2"
+            },
+            "power_reactive_phase_3": {
+                "name": "Blindleistung Phase 3"
+            },
+            "power_real": {
+                "name": "Wirkleistung"
+            },
+            "power_real_phase_1": {
+                "name": "Wirkleistung Phase 1"
+            },
+            "power_real_phase_2": {
+                "name": "Wirkleistung Phase 2"
+            },
+            "power_real_phase_3": {
+                "name": "Wirkleistung Phase 3"
+            },
+            "relative_autonomy": {
+                "name": "Autarkiegrad"
+            },
+            "relative_self_consumption": {
+                "name": "Eigenverbrauch"
+            },
+            "state_code": {
+                "name": "Statuscode"
+            },
+            "state_message": {
+                "name": "Statusmeldung",
+                "state": {
+                    "boost_mode": "Boost-Modus",
+                    "critical_fault": "Kritischer Fehler",
+                    "fault": "Fehler",
+                    "keep_minimum_temperature": "Mindesttemperatur halten",
+                    "legionella_protection": "Legionellenschutz",
+                    "up_and_running": "In Betrieb"
+                }
+            },
+            "state_of_charge": {
+                "name": "Ladezustand"
+            },
+            "status_code": {
+                "name": "Statuscode"
+            },
+            "status_message": {
+                "name": "Statusnachricht",
+                "state": {
+                    "bootloading": "Hochfahren",
+                    "error": "Fehler",
+                    "idle": "Leerlauf",
+                    "ready": "Bereit",
+                    "running": "In Betrieb",
+                    "sleeping": "Schlafend",
+                    "standby": "Standby",
+                    "startup": "Start"
+                }
+            },
+            "temperature_cell": {
+                "name": "Temperatur"
+            },
+            "voltage_ac": {
+                "name": "Spannung AC"
+            },
+            "voltage_ac_phase_1": {
+                "name": "Spannung Phase 1"
+            },
+            "voltage_ac_phase_2": {
+                "name": "Spannung Phase 2"
+            },
+            "voltage_ac_phase_3": {
+                "name": "Spannung Phase 3"
+            },
+            "voltage_ac_phase_to_phase_12": {
+                "name": "Spannung Phase 1\u20132"
+            },
+            "voltage_ac_phase_to_phase_23": {
+                "name": "Spannung Phase 2\u20133"
+            },
+            "voltage_ac_phase_to_phase_31": {
+                "name": "Spannung Phase 3\u20131"
+            },
+            "voltage_dc": {
+                "name": "Spannung DC"
+            },
+            "voltage_dc_2": {
+                "name": "Spannung DC 2"
+            },
+            "voltage_dc_maximum_cell": {
+                "name": "Maximale Zellspannung"
+            },
+            "voltage_dc_minimum_cell": {
+                "name": "Minimale Zellspannung"
+            }
+        }
+    },
+    "exceptions": {
+        "entry_cannot_connect": {
+            "message": "Die Verbindung zum Fronius-Ger\u00e4t unter {host} ist fehlgeschlagen: {fronius_error}"
+        },
+        "update_failed": {
+            "message": "Beim Versuch, Daten abzurufen, ist ein Fehler aufgetreten: {fronius_error}"
+        }
+    }
+}

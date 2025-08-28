@@ -1,0 +1,47 @@
+{
+    "config": {
+        "abort": {
+            "invalid_webhook_url": "Home Assistant ist nicht richtig konfiguriert, um Updates von SmartThings zu erhalten. Die Webhook-URL ist ung\u00fcltig: \n \u2192 {webhook_url} \n\nBitte aktualisiere deine Konfiguration gem\u00e4\u00df den [Anweisungen]({component_url}), starte Home Assistant neu und versuche es erneut.",
+            "no_available_locations": "In Home Assistant sind keine SmartThings-Standorte zum Einrichten verf\u00fcgbar.",
+            "reauth_successful": "Home Assistant wurde erfolgreich erneut bei SmartThings autorisiert."
+        },
+        "error": {
+            "app_setup_error": "SmartApp kann nicht eingerichtet werden. Bitte versuche es erneut.",
+            "token_forbidden": "Das Token verf\u00fcgt nicht \u00fcber die erforderlichen OAuth-Bereiche.",
+            "token_invalid_format": "Das Token muss im UID/GUID-Format vorliegen.",
+            "token_unauthorized": "Das Token ist ung\u00fcltig oder nicht mehr autorisiert.",
+            "webhook_error": "SmartThings konnte die Webhook-URL nicht \u00fcberpr\u00fcfen. Bitte stelle sicher, dass die Webhook-URL \u00fcber das Internet erreichbar ist, und versuche es erneut."
+        },
+        "step": {
+            "authorize": {
+                "title": "Home Assistant autorisieren"
+            },
+            "pat": {
+                "data": {
+                    "access_token": "Zugriffstoken"
+                },
+                "description": "Bitte gib ein [Personal Access Token]({token_url}) f\u00fcr SmartThings ein, das gem\u00e4\u00df den [Anweisungen]({component_url}) erstellt wurde. Dies wird zur Erstellung der Home Assistant-Integration in deinem SmartThings-Konto verwendet.\n\n**Bitte beachte, dass alle Personal Access Token, die nach dem 30. Dezember 2024 erstellt werden, nur 24 Stunden g\u00fcltig sind. Danach funktioniert die Integration nicht mehr. Wir arbeiten an einer L\u00f6sung.**",
+                "title": "Pers\u00f6nliches Zugriffstoken (PAT) eingeben"
+            },
+            "reauth_confirm": {
+                "description": "Du bist dabei, Home Assistant bei SmartThings zu reautorisieren. Dazu musst du dich anmelden und die Integration erneut autorisieren.",
+                "title": "Home Assistant erneut autorisieren"
+            },
+            "select_location": {
+                "data": {
+                    "location_id": "Standort"
+                },
+                "description": "Bitte w\u00e4hle den SmartThings-Standort aus, den du zu Home Assistant hinzuf\u00fcgen m\u00f6chtest. Wir \u00f6ffnen dann ein neues Fenster und bitten dich, sich anzumelden und die Installation der Home Assistant-Integration am ausgew\u00e4hlten Standort zu autorisieren.",
+                "title": "Standort ausw\u00e4hlen"
+            },
+            "update_confirm": {
+                "description": "Du hast Home Assistant bei SmartThings fast erfolgreich erneut autorisiert. Bitte dr\u00fccke die Taste unten, um den Vorgang abzuschlie\u00dfen.",
+                "title": "Erneute Authentifizierung abschlie\u00dfen"
+            },
+            "user": {
+                "description": "SmartThings wird so konfiguriert, dass Push-Updates an Home Assistant gesendet werden an die URL: \n \u2192 {webhook_url} \n\nWenn dies nicht korrekt ist, aktualisiere bitte deine Konfiguration, starte Home Assistant neu und versuche es erneut.",
+                "title": "R\u00fcckruf-URL best\u00e4tigen"
+            }
+        }
+    }
+}

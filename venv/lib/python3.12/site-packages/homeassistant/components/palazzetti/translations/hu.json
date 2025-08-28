@@ -1,0 +1,125 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Szeretn\u00e9 hozz\u00e1adni a(z) {name} ({host}) eszk\u00f6zt a Home Assistant rendszerhez?"
+            },
+            "user": {
+                "data": {
+                    "host": "Hoszt"
+                },
+                "data_description": {
+                    "host": "A Palazzetti CBox g\u00e9pneve vagy IP-c\u00edme"
+                }
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "palazzetti": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Magas",
+                            "silent": "Csendes"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "combustion_power": {
+                "name": "\u00c9g\u00e9si teljes\u00edtm\u00e9ny"
+            }
+        },
+        "sensor": {
+            "air_outlet_temperature": {
+                "name": "Kil\u00e9p\u0151 leveg\u0151 h\u0151m\u00e9rs\u00e9klete"
+            },
+            "pellet_level": {
+                "name": "Pellet szint"
+            },
+            "pellet_quantity": {
+                "name": "Pellet mennyis\u00e9ge"
+            },
+            "return_water_temperature": {
+                "name": "Visszat\u00e9r\u0151 v\u00edz h\u0151m\u00e9rs\u00e9klete"
+            },
+            "room_temperature": {
+                "name": "Helyis\u00e9g h\u0151m\u00e9rs\u00e9klete"
+            },
+            "status": {
+                "name": "\u00c1llapot",
+                "state": {
+                    "burning": "M\u0171k\u00f6d\u00e9s",
+                    "burning_mod": "M\u0171k\u00f6d\u00e9s - Modul\u00e1l\u00f3",
+                    "chimney_alarm": "K\u00e9m\u00e9ny riaszt\u00e1s",
+                    "clean_fire": "T\u0171zt\u00e9r tiszt\u00edt\u00e1s",
+                    "cleaning_warning": "Tiszt\u00edt\u00e1si figyelmeztet\u00e9s",
+                    "cleanup": "V\u00e9gs\u0151 tiszt\u00edt\u00e1s",
+                    "cool_fluid": "K\u00e9szenl\u00e9t",
+                    "cooling": "H\u0171t\u00e9s folyamatban",
+                    "door_open": "Ajt\u00f3 nyitva",
+                    "ecomode": "Takar\u00e9kos m\u00f3d",
+                    "exhaust_temp_high": "T\u00fal magas a f\u00fcstg\u00e1z h\u0151m\u00e9rs\u00e9klete",
+                    "fire_stop": "Kikapcsol\u00e1s",
+                    "firewood_finished": "T\u0171zifa elfogyott",
+                    "flue_probe_failure": "F\u00fcstg\u00e1z \u00e9rz\u00e9kel\u0151 meghib\u00e1sod\u00e1s",
+                    "fuel_error": "\u00dczemanyag hiba",
+                    "fueling": "Gy\u00fajt\u00e1s",
+                    "general_error": "\u00c1ltal\u00e1nos hiba",
+                    "grate_error": "R\u00e1cs hiba",
+                    "hatch_door_open": "Bet\u00f6lt\u0151 ny\u00edl\u00e1s vagy ajt\u00f3 nyitva",
+                    "heatup": "Pellet adagol\u00e1s",
+                    "ign_test": "\u00dczemanyag-ellen\u0151rz\u00e9s",
+                    "main_probe_failure": "F\u0151 szonda meghib\u00e1sod\u00e1sa",
+                    "off": "Ki",
+                    "off_timer": "Id\u0151z\u00edt\u0151 \u00e1ltal vez\u00e9relt kikapcsol\u00e1s",
+                    "pellet_finished": "Pellet elfogyott vagy gy\u00fajt\u00e1s sikertelen",
+                    "pellet_water_error": "Pellet \u00e9rz\u00e9kel\u0151 vagy visszat\u00e9r\u0151 v\u00edz hib\u00e1ja",
+                    "pressure_error": "Biztons\u00e1gi nyom\u00e1skapcsol\u00f3 hib\u00e1ja",
+                    "t05_error": "T05 hiba: lecsatlakozott vagy hib\u00e1s \u00e9rz\u00e9kel\u0151.",
+                    "temp_too_high": "T\u00fal magas h\u0151m\u00e9rs\u00e9klet",
+                    "test_fire": "Gy\u00fajt\u00e1si teszt",
+                    "unknown": "Ismeretlen"
+                }
+            },
+            "t1_hydro": {
+                "name": "V\u00edzh\u0151m\u00e9rs\u00e9klet 1"
+            },
+            "t2_hydro": {
+                "name": "V\u00edzh\u0151m\u00e9rs\u00e9klet 2"
+            },
+            "tank_water_temperature": {
+                "name": "Tart\u00e1ly v\u00edzh\u0151m\u00e9rs\u00e9klete"
+            },
+            "wood_combustion_temperature": {
+                "name": "Fa \u00e9g\u00e9si h\u0151m\u00e9rs\u00e9klete"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Nem siker\u00fclt csatlakozni az eszk\u00f6zh\u00f6z."
+        },
+        "invalid_combustion_power": {
+            "message": "A(z) {value} \u00e9g\u00e9si teljes\u00edtm\u00e9ny \u00e9rv\u00e9nytelen."
+        },
+        "invalid_fan_mode": {
+            "message": "A(z) {value} ventil\u00e1tor m\u00f3d \u00e9rv\u00e9nytelen."
+        },
+        "invalid_target_temperature": {
+            "message": "A c\u00e9lh\u0151m\u00e9rs\u00e9klet {value} \u00e9rv\u00e9nytelen."
+        },
+        "on_off_not_available": {
+            "message": "A k\u00e9sz\u00fcl\u00e9k nem kapcsolhat\u00f3 be vagy ki."
+        }
+    }
+}

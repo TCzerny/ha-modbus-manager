@@ -1,0 +1,25 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "Vuoi avviare la configurazione?"
+            }
+        }
+    },
+    "services": {
+        "turn_on": {
+            "description": "Imposta la luce RGB sul colore predominante trovato nell'immagine fornita dall'URL o dal percorso del file.",
+            "fields": {
+                "color_extract_path": {
+                    "description": "Il percorso di sistema completo dell'immagine da cui vogliamo estrarre i valori RGB. Deve essere consentito in allowlist_external_dirs.",
+                    "name": "Percorso"
+                },
+                "color_extract_url": {
+                    "description": "L'URL dell'immagine da cui vogliamo estrarre i valori RGB. Deve essere consentito in allowlist_external_urls.",
+                    "name": "URL"
+                }
+            },
+            "name": "Accendi"
+        }
+    }
+}

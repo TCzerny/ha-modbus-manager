@@ -1,0 +1,124 @@
+{
+    "device_automation": {
+        "action_type": {
+            "set_humidity": "Stelle Luftfeuchtigkeit f\u00fcr {entity_name} ein",
+            "set_mode": "\u00c4ndere Betriebsart von {entity_name}",
+            "toggle": "Schalte {entity_name} um",
+            "turn_off": "Schalte {entity_name} aus",
+            "turn_on": "Schalte {entity_name} ein"
+        },
+        "condition_type": {
+            "is_mode": "Wenn {entity_name} auf eine bestimmte Betriebsart eingestellt ist",
+            "is_off": "Wenn {entity_name} ausgeschaltet ist",
+            "is_on": "Wenn {entity_name} eingeschaltet ist"
+        },
+        "extra_fields": {
+            "above": "\u00dcber",
+            "below": "Unter",
+            "for": "Dauer",
+            "humidity": "Luftfeuchtigkeit",
+            "mode": "Betriebsart"
+        },
+        "trigger_type": {
+            "changed_states": "Sobald {entity_name} ein- oder ausgeschaltet wird",
+            "target_humidity_changed": "Sobald der Sollwert der Luftfeuchtigkeit von {entity_name} ge\u00e4ndert wird",
+            "turned_off": "Sobald {entity_name} ausgeschaltet wird",
+            "turned_on": "Sobald {entity_name} eingeschaltet wird"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Luftbefeuchter",
+            "state": {
+                "off": "Aus",
+                "on": "Ein"
+            },
+            "state_attributes": {
+                "action": {
+                    "name": "Aktion",
+                    "state": {
+                        "drying": "Entfeuchtung",
+                        "humidifying": "Befeuchtung",
+                        "idle": "Leerlauf",
+                        "off": "Aus"
+                    }
+                },
+                "available_modes": {
+                    "name": "Verf\u00fcgbare Betriebsarten"
+                },
+                "current_humidity": {
+                    "name": "Ist-Wert der Luftfeuchtigkeit"
+                },
+                "humidity": {
+                    "name": "Sollwert der Luftfeuchtigkeit"
+                },
+                "max_humidity": {
+                    "name": "Maximaler Sollwert der Luftfeuchtigkeit"
+                },
+                "min_humidity": {
+                    "name": "Minimaler Sollwert der Luftfeuchtigkeit"
+                },
+                "mode": {
+                    "name": "Betriebsart",
+                    "state": {
+                        "auto": "Auto",
+                        "away": "Abwesend",
+                        "baby": "Baby",
+                        "boost": "Boost",
+                        "comfort": "Komfort",
+                        "eco": "Eco",
+                        "home": "Zuhause",
+                        "normal": "Normal",
+                        "sleep": "Schlafen"
+                    }
+                }
+            }
+        },
+        "dehumidifier": {
+            "name": "Luftentfeuchter"
+        },
+        "humidifier": {
+            "name": "Luftbefeuchter"
+        }
+    },
+    "exceptions": {
+        "humidity_out_of_range": {
+            "message": "Die angegebene Luftfeuchtigkeit {humidity} ist ung\u00fcltig. Der zul\u00e4ssige Bereich liegt zwischen {min_humidity} und {max_humidity}."
+        }
+    },
+    "services": {
+        "set_humidity": {
+            "description": "Legt den Sollwert der Luftfeuchtigkeit fest.",
+            "fields": {
+                "humidity": {
+                    "description": "Sollwert der Luftfeuchtigkeit.",
+                    "name": "Luftfeuchtigkeit"
+                }
+            },
+            "name": "Luftfeuchtigkeit einstellen"
+        },
+        "set_mode": {
+            "description": "Legt die Betriebsart des Luftbefeuchters fest.",
+            "fields": {
+                "mode": {
+                    "description": "Betriebsart. Zum Beispiel _normal_, _eco_ oder _away_. Eine Liste m\u00f6glicher Werte findest du in der Integrationsdokumentation.",
+                    "name": "Betriebsart"
+                }
+            },
+            "name": "Betriebsart einstellen"
+        },
+        "toggle": {
+            "description": "Schaltet den Luftbefeuchter zwischen ein und aus um.",
+            "name": "Umschalten"
+        },
+        "turn_off": {
+            "description": "Schaltet den Luftbefeuchter aus.",
+            "name": "Ausschalten"
+        },
+        "turn_on": {
+            "description": "Schaltet den Luftbefeuchter ein.",
+            "name": "Einschalten"
+        }
+    },
+    "title": "Luftbefeuchter"
+}

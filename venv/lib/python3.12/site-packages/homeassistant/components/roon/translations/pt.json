@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "fallback": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "port": "Porta"
+                },
+                "description": "N\u00e3o foi poss\u00edvel descobrir o servidor Roon, introduza o nome do anfitri\u00e3o e a porta."
+            },
+            "link": {
+                "description": "Tem de autorizar o Home Assistant no Roon. Depois de selecionar **Enviar**, v\u00e1 \u00e0 aplica\u00e7\u00e3o Roon Core, abra **Configura\u00e7\u00f5es** e ative o Home Assistant no separador **Extens\u00f5es**.",
+                "title": "Autorizar o Home Assistant no Roon"
+            }
+        }
+    },
+    "entity": {
+        "event": {
+            "volume": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "mute_toggle": "Alternar o modo silencioso",
+                            "volume_down": "Diminuir volume",
+                            "volume_up": "Aumentar volume"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "transfer": {
+            "description": "Transfere a reprodu\u00e7\u00e3o de um leitor para outro.",
+            "fields": {
+                "transfer_id": {
+                    "description": "ID do jogador de destino.",
+                    "name": "ID de transfer\u00eancia"
+                }
+            },
+            "name": "Transferir"
+        }
+    }
+}

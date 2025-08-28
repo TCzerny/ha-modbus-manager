@@ -1,0 +1,546 @@
+{
+    "common": {
+        "config_entry_name": "V\u00e4lj karakt\u00e4r",
+        "dailies": "Dagliga",
+        "todos": "Att g\u00f6ra",
+        "unit_experience_points": "XP",
+        "unit_health_points": "HP",
+        "unit_mana_points": "MP",
+        "unit_tasks": "uppgifter"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Konto har redan konfigurerats"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "API-token",
+                    "api_user": "Anv\u00e4ndar-ID",
+                    "url": "URL",
+                    "verify_ssl": "Verifiera SSL-certifikat"
+                },
+                "data_description": {
+                    "api_key": "API-token f\u00f6r Habitica-kontot",
+                    "api_user": "Anv\u00e4ndar-ID f\u00f6r ditt Habitica-konto",
+                    "url": "URL f\u00f6r Habitica-installationen att ansluta till. Standardv\u00e4rdet \u00e4r `{default_url}`"
+                },
+                "description": "Du kan h\u00e4mta ditt \"Anv\u00e4ndar-ID\" och \"API-token\" fr\u00e5n [**Inst\u00e4llningar -> Webbplatsdata**]({site_data}) p\u00e5 Habitica eller den instans du vill ansluta till",
+                "title": "Logga in till andra instanser"
+            },
+            "login": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "E-post eller anv\u00e4ndarnamn (skiftl\u00e4gesk\u00e4nsligt)"
+                },
+                "data_description": {
+                    "password": "L\u00f6senord f\u00f6r kontot f\u00f6r att ansluta Home Assistant till Habitica",
+                    "username": "E-post eller anv\u00e4ndarnamn (skiftl\u00e4gesk\u00e4nsligt) f\u00f6r att ansluta Home Assistant till ditt Habitica-konto"
+                },
+                "description": "Ange dina inloggningsuppgifter f\u00f6r att b\u00f6rja anv\u00e4nda Habitica med Home Assistant\n\n[Gl\u00f6mt ditt l\u00f6senord?]({forgot_password})",
+                "title": "Logga in p\u00e5 Habitica"
+            },
+            "user": {
+                "description": "![Habiticans]({habiticans}) Anslut ditt Habitica-konto f\u00f6r att h\u00e5lla koll p\u00e5 din \u00e4ventyrares statistik, framsteg och hantera dina att-g\u00f6ra-uppgifter och dagliga uppgifter.\n\n[Har du inget Habitica-konto? Registrera dig h\u00e4r.]({signup})",
+                "menu_options": {
+                    "advanced": "Logga in till andra instanser",
+                    "login": "Logga in p\u00e5 Habitica"
+                },
+                "title": "Habitica - Gamifiera ditt liv"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pending_quest": {
+                "name": "V\u00e4ntande uppdragsinbjudan"
+            }
+        },
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "Tilldela alla statspo\u00e4ng"
+            },
+            "brightness": {
+                "name": "Br\u00e4nnande ljusstyrka"
+            },
+            "buy_health_potion": {
+                "name": "K\u00f6p en h\u00e4lsodryck"
+            },
+            "defensive_stance": {
+                "name": "Defensiv h\u00e5llning"
+            },
+            "earth": {
+                "name": "Jordb\u00e4vning"
+            },
+            "frost": {
+                "name": "Kylande frost"
+            },
+            "heal": {
+                "name": "L\u00e4kande ljus"
+            },
+            "heal_all": {
+                "name": "V\u00e4lsignelse"
+            },
+            "intimidate": {
+                "name": "Skr\u00e4mmande blick"
+            },
+            "mpheal": {
+                "name": "Eterisk v\u00e5g"
+            },
+            "protect_aura": {
+                "name": "Skyddande aura"
+            },
+            "revive": {
+                "name": "\u00c5teruppliva fr\u00e5n d\u00f6den"
+            },
+            "run_cron": {
+                "name": "B\u00f6rja min dag"
+            },
+            "stealth": {
+                "name": "Smygande"
+            },
+            "tools_of_trade": {
+                "name": "Redskap"
+            },
+            "valorous_presence": {
+                "name": "Tapper n\u00e4rvaro"
+            }
+        },
+        "calendar": {
+            "daily_reminders": {
+                "name": "Dagliga p\u00e5minnelser"
+            },
+            "dailys": {
+                "name": "Dagliga",
+                "state_attributes": {
+                    "yesterdaily": {
+                        "name": "Ig\u00e5r-dagligen",
+                        "state": {
+                            "false": "Nej",
+                            "true": "Ja"
+                        }
+                    }
+                }
+            },
+            "todo_reminders": {
+                "name": "Att g\u00f6ra-p\u00e5minnelser"
+            },
+            "todos": {
+                "name": "Att g\u00f6ra"
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "Klass",
+                "state": {
+                    "healer": "Healer",
+                    "rogue": "Skurk",
+                    "warrior": "Krigare",
+                    "wizard": "Magiker"
+                }
+            },
+            "constitution": {
+                "name": "Konstitution",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Tilldelade attributpo\u00e4ng"
+                    },
+                    "buffs": {
+                        "name": "F\u00f6rdelar"
+                    },
+                    "class": {
+                        "name": "Bonus f\u00f6r klassutrustning"
+                    },
+                    "equipment": {
+                        "name": "Stridsutrustning"
+                    },
+                    "level": {
+                        "name": "Niv\u00e5"
+                    }
+                }
+            },
+            "dailys": {
+                "name": "Dagliga",
+                "unit_of_measurement": "uppgifter"
+            },
+            "display_name": {
+                "name": "Visningsnamn"
+            },
+            "experience": {
+                "name": "Erfarenhet",
+                "unit_of_measurement": "XP"
+            },
+            "experience_max": {
+                "name": "N\u00e4sta niv\u00e5",
+                "unit_of_measurement": "XP"
+            },
+            "gems": {
+                "name": "\u00c4delstenar",
+                "unit_of_measurement": "\u00e4delstenar"
+            },
+            "gold": {
+                "name": "Guld",
+                "unit_of_measurement": "GP"
+            },
+            "habits": {
+                "name": "Vanor",
+                "unit_of_measurement": "uppgifter"
+            },
+            "health": {
+                "name": "H\u00e4lsa",
+                "unit_of_measurement": "HP"
+            },
+            "health_max": {
+                "name": "Max. h\u00e4lsa",
+                "unit_of_measurement": "HP"
+            },
+            "intelligence": {
+                "name": "Intelligens",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Tilldelade attributpo\u00e4ng"
+                    },
+                    "buffs": {
+                        "name": "F\u00f6rdelar"
+                    },
+                    "class": {
+                        "name": "Bonus f\u00f6r klassutrustning"
+                    },
+                    "equipment": {
+                        "name": "Stridsutrustning"
+                    },
+                    "level": {
+                        "name": "Niv\u00e5"
+                    }
+                }
+            },
+            "level": {
+                "name": "Niv\u00e5"
+            },
+            "mana": {
+                "name": "Mana",
+                "unit_of_measurement": "MP"
+            },
+            "mana_max": {
+                "name": "Max. mana",
+                "unit_of_measurement": "MP"
+            },
+            "perception": {
+                "name": "Uppfattning",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Tilldelade attributpo\u00e4ng"
+                    },
+                    "buffs": {
+                        "name": "F\u00f6rdelar"
+                    },
+                    "class": {
+                        "name": "Bonus f\u00f6r klassutrustning"
+                    },
+                    "equipment": {
+                        "name": "Stridsutrustning"
+                    },
+                    "level": {
+                        "name": "Niv\u00e5"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "Bel\u00f6ningar",
+                "unit_of_measurement": "uppgifter"
+            },
+            "strength": {
+                "name": "Styrka",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Tilldelade attributpo\u00e4ng"
+                    },
+                    "buffs": {
+                        "name": "F\u00f6rdelar"
+                    },
+                    "class": {
+                        "name": "Bonus f\u00f6r klassutrustning"
+                    },
+                    "equipment": {
+                        "name": "Stridsutrustning"
+                    },
+                    "level": {
+                        "name": "Niv\u00e5"
+                    }
+                }
+            },
+            "todos": {
+                "name": "Att g\u00f6ra",
+                "unit_of_measurement": "uppgifter"
+            },
+            "trinkets": {
+                "name": "Mystiska timglas"
+            }
+        },
+        "switch": {
+            "sleep": {
+                "name": "Vila i v\u00e4rdshuset"
+            }
+        },
+        "todo": {
+            "dailys": {
+                "name": "Dagliga"
+            },
+            "todos": {
+                "name": "Att g\u00f6ra"
+            }
+        }
+    },
+    "exceptions": {
+        "create_todos_item_failed": {
+            "message": "Det gick inte att skapa en ny uppgift `{name}` f\u00f6r Habitica, f\u00f6rs\u00f6k igen"
+        },
+        "delete_completed_todos_failed": {
+            "message": "Det g\u00e5r inte att ta bort slutf\u00f6rda att-g\u00f6ra-objekt fr\u00e5n Habitica att-g\u00f6ra-listan, f\u00f6rs\u00f6k igen"
+        },
+        "delete_todos_failed": {
+            "message": "Det gick inte att ta bort objekt fr\u00e5n Habiticas att-g\u00f6ra-lista, f\u00f6rs\u00f6k igen"
+        },
+        "entry_not_found": {
+            "message": "Den valda karakt\u00e4ren \u00e4r inte konfigurerad i Home Assistant."
+        },
+        "entry_not_loaded": {
+            "message": "Den valda karakt\u00e4ren \u00e4r f\u00f6r n\u00e4rvarande inte laddad eller inaktiverad i Home Assistant."
+        },
+        "item_not_found": {
+            "message": "Det g\u00e5r inte att anv\u00e4nda {item}, du \u00e4ger inte detta f\u00f6rem\u00e5l."
+        },
+        "move_dailys_item_failed": {
+            "message": "Det gick inte att flytta Habitica daily till position {pos}, f\u00f6rs\u00f6k igen"
+        },
+        "move_todos_item_failed": {
+            "message": "Det gick inte att flytta Habitica to-do till position {pos}, f\u00f6rs\u00f6k igen"
+        },
+        "not_enough_gold": {
+            "message": "G\u00e5r inte att k\u00f6pa bel\u00f6ning, inte tillr\u00e4ckligt med guld. Din karakt\u00e4r har {gold}, men bel\u00f6ningen kostar {cost}."
+        },
+        "not_enough_mana": {
+            "message": "Kan inte tilldela f\u00e4rdighet, inte tillr\u00e4ckligt med mana. Din karakt\u00e4r har {mana}, men f\u00e4rdigheten kostar {cost}."
+        },
+        "party_not_found": {
+            "message": "Kan inte hitta m\u00e5let, du \u00e4r f\u00f6r n\u00e4rvarande inte med i ett s\u00e4llskap. Du kan bara rikta in dig p\u00e5 dig sj\u00e4lv"
+        },
+        "quest_action_unallowed": {
+            "message": "\u00c5tg\u00e4rden \u00e4r inte till\u00e5ten, endast uppdragsledaren eller gruppledaren kan utf\u00f6ra denna \u00e5tg\u00e4rd"
+        },
+        "quest_not_found": {
+            "message": "Det gick inte att slutf\u00f6ra \u00e5tg\u00e4rden, uppdraget eller gruppen hittades inte"
+        },
+        "score_dailys_item_failed": {
+            "message": "Det gick inte att uppdatera po\u00e4ngen f\u00f6r din Habitica daily `{name}`, f\u00f6rs\u00f6k igen"
+        },
+        "score_todos_item_failed": {
+            "message": "Det gick inte att uppdatera po\u00e4ngen f\u00f6r din Habitica to-do `{name}`, f\u00f6rs\u00f6k igen"
+        },
+        "service_call_exception": {
+            "message": "Det g\u00e5r inte att ansluta till Habitica: {reason}"
+        },
+        "service_call_unallowed": {
+            "message": "Det g\u00e5r inte att utf\u00f6ra \u00e5tg\u00e4rden eftersom de n\u00f6dv\u00e4ndiga villkoren inte \u00e4r uppfyllda"
+        },
+        "setup_rate_limit_exception": {
+            "message": "Frekvensgr\u00e4nsen har \u00f6verskridits, f\u00f6rs\u00f6k igen om {retry_after} sekunder"
+        },
+        "skill_not_found": {
+            "message": "Kan inte tilldela f\u00e4rdighet, din karakt\u00e4r har inte f\u00e4rdigheten eller besv\u00e4rjelsen {skill}."
+        },
+        "target_not_found": {
+            "message": "Det gick inte att hitta m\u00e5let {target} i ditt s\u00e4llskap"
+        },
+        "task_not_found": {
+            "message": "Kan inte slutf\u00f6ra \u00e5tg\u00e4rden, kunde inte hitta uppgiften {task}"
+        },
+        "update_dailys_item_failed": {
+            "message": "Det gick inte att uppdatera Habitica daily `{name}`, f\u00f6rs\u00f6k igen"
+        },
+        "update_todos_item_failed": {
+            "message": "Det gick inte att uppdatera Habitica to-do `{name}`, f\u00f6rs\u00f6k igen"
+        }
+    },
+    "issues": {
+        "deprecated_api_call": {
+            "description": "Habitica-\u00e5tg\u00e4rden `habitica.api_call` \u00e4r utfasad och kommer att tas bort i Home Assistant 2025.5.0.\n\nUppdatera dina automatiseringar och skript f\u00f6r att anv\u00e4nda andra Habitica-\u00e5tg\u00e4rder och enheter.",
+            "title": "Habitica-\u00e5tg\u00e4rden habitica.api_call \u00e4r utfasad"
+        },
+        "deprecated_task_entity": {
+            "description": "Habitica-enheten `{entity}` \u00e4r utfasad och kommer att tas bort i `2024.12`.\nUppdatera dina automatiseringar och skript f\u00f6r att ers\u00e4tta sensor-entiteten med den nyligen tillagda todo-entiteten.\nN\u00e4r du \u00e4r klar med migreringen kan du inaktivera `{entity}`.",
+            "title": "Habitica-sensorn `{task_name}` \u00e4r utfasad"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "Skurk: Rygghugg",
+                "fireball": "Magiker: Explosion av eld",
+                "pickpocket": "Skurk: Ficktjuv",
+                "smash": "Krigare: Brutalt slag"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "Havsskum",
+                "shiny_seed": "Gl\u00e4nsande fr\u00f6",
+                "snowball": "Sn\u00f6boll",
+                "spooky_sparkles": "Sp\u00f6klika gnistor"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "description": "Avslutar din grupps p\u00e5g\u00e5ende uppdrag. Alla framsteg g\u00e5r f\u00f6rlorade och uppdragsrullen \u00e5terg\u00e5r till \u00e4garens inventarief\u00f6rteckning. Endast uppdragsledaren eller gruppledaren kan utf\u00f6ra denna \u00e5tg\u00e4rd.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som du vill utf\u00f6ra \u00e5tg\u00e4rden f\u00f6r.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                }
+            },
+            "name": "Avbryt ett aktivt uppdrag"
+        },
+        "accept_quest": {
+            "description": "Accepterar en v\u00e4ntande inbjudan till ett uppdrag.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som du vill utf\u00f6ra \u00e5tg\u00e4rden f\u00f6r.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                }
+            },
+            "name": "Acceptera en inbjudan till ett uppdrag"
+        },
+        "api_call": {
+            "description": "Anropar Habitica API.",
+            "fields": {
+                "args": {
+                    "description": "Ytterligare JSON- eller URL-parameterargument. Se API-dokumentation f\u00f6r mer information. Exemplet anv\u00e4nder samma API-slutpunkt.",
+                    "name": "Argument"
+                },
+                "name": {
+                    "description": "Habiticas anv\u00e4ndarnamn att anropa.",
+                    "name": "Namn"
+                },
+                "path": {
+                    "description": "Objekt fr\u00e5n API:ets URL i form av en array med metod bifogad i slutet. Konsultera https://habitica.com/apidoc/. Exemplet anv\u00e4nder https://habitica.com/apidoc/#api-Task-CreateUserTasks.",
+                    "name": "S\u00f6kv\u00e4g"
+                }
+            },
+            "name": "API-namn"
+        },
+        "cancel_quest": {
+            "description": "Avbryter ett uppdrag som \u00e4nnu inte har startat. Alla accepterade och v\u00e4ntande inbjudningar kommer att avbrytas och uppdragsrullen \u00e5terg\u00e5r till \u00e4garens inventarier. Endast uppdragsledaren eller gruppledaren kan utf\u00f6ra denna \u00e5tg\u00e4rd.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som du vill utf\u00f6ra \u00e5tg\u00e4rden f\u00f6r.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                }
+            },
+            "name": "Avbryt ett p\u00e5g\u00e5ende uppdrag"
+        },
+        "cast_skill": {
+            "description": "Anv\u00e4nder en f\u00e4rdighet eller besv\u00e4rjelse fr\u00e5n din Habitica-karakt\u00e4r p\u00e5 en specifik uppgift f\u00f6r att p\u00e5verka dess framsteg eller status.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som ska tilldelas f\u00e4rdigheten.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                },
+                "skill": {
+                    "description": "V\u00e4lj den f\u00e4rdighet eller besv\u00e4rjelse som du vill anv\u00e4nda p\u00e5 uppgiften. Endast f\u00e4rdigheter som motsvarar din karakt\u00e4rs klass kan anv\u00e4ndas.",
+                    "name": "F\u00e4rdighet"
+                },
+                "task": {
+                    "description": "Namnet (eller uppgifts-ID) p\u00e5 den uppgift som du vill rikta f\u00e4rdigheten eller besv\u00e4rjelsen mot.",
+                    "name": "Uppgiftens namn"
+                }
+            },
+            "name": "Casta en f\u00e4rdighet"
+        },
+        "leave_quest": {
+            "description": "L\u00e4mnar det aktuella uppdraget som du deltar i.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som du vill utf\u00f6ra \u00e5tg\u00e4rden f\u00f6r.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                }
+            },
+            "name": "L\u00e4mna ett uppdrag"
+        },
+        "reject_quest": {
+            "description": "Avvisar en v\u00e4ntande inbjudan till ett uppdrag.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som du vill utf\u00f6ra \u00e5tg\u00e4rden f\u00f6r.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                }
+            },
+            "name": "Avvisa en inbjudan till uppdrag"
+        },
+        "score_habit": {
+            "description": "\u00d6kar den positiva eller negativa k\u00e4nslan av en vana f\u00f6r att f\u00f6lja dess framsteg.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj Habitica-karakt\u00e4ren som ska sp\u00e5ra din vana.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                },
+                "direction": {
+                    "description": "\u00c4r det positiva eller negativa framsteg du vill f\u00f6lja f\u00f6r din vana.",
+                    "name": "Bel\u00f6ning eller f\u00f6rlust"
+                },
+                "task": {
+                    "description": "Namnet (eller uppgifts-ID:t) p\u00e5 Habitica-vanan.",
+                    "name": "Namn p\u00e5 vana"
+                }
+            },
+            "name": "Sp\u00e5ra en vana"
+        },
+        "score_reward": {
+            "description": "K\u00f6per en av dina anpassade bel\u00f6ningar med guld som tj\u00e4nats in genom att utf\u00f6ra uppgifter.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som k\u00f6per bel\u00f6ningen.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                },
+                "task": {
+                    "description": "Namnet (eller uppgifts-ID) p\u00e5 den anpassade bel\u00f6ningen.",
+                    "name": "Namn p\u00e5 bel\u00f6ning"
+                }
+            },
+            "name": "K\u00f6p en bel\u00f6ning"
+        },
+        "start_quest": {
+            "description": "P\u00e5b\u00f6rjar uppdraget omedelbart och f\u00f6rbig\u00e5 alla v\u00e4ntande inbjudningar som inte har accepterats eller avvisats. Endast uppdragsledaren eller gruppledaren kan utf\u00f6ra denna \u00e5tg\u00e4rd.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som du vill utf\u00f6ra \u00e5tg\u00e4rden f\u00f6r.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                }
+            },
+            "name": "Tvinga ig\u00e5ng ett v\u00e4ntande uppdrag"
+        },
+        "transformation": {
+            "description": "Anv\u00e4nder ett transformationsf\u00f6rem\u00e5l fr\u00e5n din Habitica-karakt\u00e4rs inventarie p\u00e5 en medlem i ditt s\u00e4llskap eller dig sj\u00e4lv.",
+            "fields": {
+                "config_entry": {
+                    "description": "V\u00e4lj den Habitica-karakt\u00e4r som ska anv\u00e4nda transformationsobjektet.",
+                    "name": "V\u00e4lj karakt\u00e4r"
+                },
+                "item": {
+                    "description": "V\u00e4lj det transformationsobjekt som du vill anv\u00e4nda. F\u00f6rem\u00e5let m\u00e5ste finnas i karakt\u00e4rens inventarief\u00f6rteckning.",
+                    "name": "Transformationsobjekt"
+                },
+                "target": {
+                    "description": "Namnet p\u00e5 den karakt\u00e4r som du vill anv\u00e4nda transformationsobjektet p\u00e5. Du kan ocks\u00e5 ange spelarens anv\u00e4ndarnamn eller anv\u00e4ndar-ID.",
+                    "name": "M\u00e5l karakt\u00e4r"
+                }
+            },
+            "name": "Anv\u00e4nd ett transformationsobjekt"
+        }
+    }
+}

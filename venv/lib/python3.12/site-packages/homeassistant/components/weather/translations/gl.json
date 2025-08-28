@@ -1,0 +1,66 @@
+{
+    "entity_component": {
+        "_": {
+            "state": {
+                "clear-night": "Despexado, de noite",
+                "cloudy": "Nubrado",
+                "lightning-rainy": "L\u00f3stregos, chuvioso",
+                "partlycloudy": "Parcialmente nubrado",
+                "rainy": "Chuvioso",
+                "snowy-rainy": "Nevarada, chuviosa",
+                "sunny": "Soleado"
+            },
+            "state_attributes": {
+                "wind_speed": {
+                    "name": "Velocidade do vento"
+                },
+                "wind_speed_unit": {
+                    "name": "Unidade de velocidade do vento"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_weather_get_forecast": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "title": "Detectouse o uso do servizo obsoleto `weather.get_forecast`"
+                    }
+                }
+            }
+        }
+    },
+    "selector": {
+        "forecast_type": {
+            "options": {
+                "daily": "Diario",
+                "hourly": "Cada hora",
+                "twice_daily": "D\u00faas veces ao d\u00eda"
+            }
+        }
+    },
+    "services": {
+        "get_forecast": {
+            "description": "Obter a predici\u00f3n do tempo.",
+            "fields": {
+                "type": {
+                    "description": "Tipo de predici\u00f3n: diaria, horaria ou d\u00faas veces ao d\u00eda.",
+                    "name": "Tipo de predici\u00f3n"
+                }
+            },
+            "name": "Obter predici\u00f3n"
+        },
+        "get_forecasts": {
+            "description": "Obte\u00f1a predici\u00f3ns meteorol\u00f3xicas.",
+            "fields": {
+                "type": {
+                    "description": "Tipo de predici\u00f3n: diaria, horaria ou d\u00faas veces ao d\u00eda.",
+                    "name": "Tipo de predici\u00f3n"
+                }
+            },
+            "name": "Obter predici\u00f3n"
+        }
+    },
+    "title": "Clima"
+}

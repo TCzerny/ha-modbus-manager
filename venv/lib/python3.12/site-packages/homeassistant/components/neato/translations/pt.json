@@ -1,0 +1,67 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "authorize_url_timeout": "Excedido o tempo limite para gerar um URL de autoriza\u00e7\u00e3o",
+            "missing_configuration": "O componente n\u00e3o est\u00e1 configurado. Por favor, siga a documenta\u00e7\u00e3o.",
+            "no_url_available": "Nenhum URL est\u00e1 dispon\u00edvel. Para obter informa\u00e7\u00f5es sobre esse erro, [consulte a sec\u00e7\u00e3o de ajuda]({docs_url})",
+            "oauth_error": "Recebido token de autentica\u00e7\u00e3o inv\u00e1lido.",
+            "oauth_failed": "Erro ao obter o token de acesso.",
+            "oauth_timeout": "Excedido o tempo limite para o OAuth token.",
+            "oauth_unauthorized": "Erro de autoriza\u00e7\u00e3o OAuth ao obter o token de acesso.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "create_entry": {
+            "default": "Autenticado com sucesso"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Escolha o m\u00e9todo de autentica\u00e7\u00e3o"
+            },
+            "reauth_confirm": {
+                "title": "Quer dar in\u00edcio \u00e0 configura\u00e7\u00e3o?"
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "dismiss_alert": {
+                "name": "Ignorar alerta"
+            }
+        },
+        "camera": {
+            "cleaning_map": {
+                "name": "Mapa de limpeza"
+            }
+        },
+        "switch": {
+            "schedule": {
+                "name": "Agenda"
+            }
+        }
+    },
+    "services": {
+        "custom_cleaning": {
+            "description": "Inicia uma limpeza personalizada da sua casa.",
+            "fields": {
+                "category": {
+                    "description": "Se deve ou n\u00e3o ser utilizado um mapa persistente para a limpeza (ou seja, linhas No go): 2 para sem mapa, 4 para com mapa. A predefini\u00e7\u00e3o \u00e9 utilizar o mapa se n\u00e3o estiver definido (e recuar para sem mapa se n\u00e3o for encontrado nenhum mapa).",
+                    "name": "Utilizar o mapa de limpeza"
+                },
+                "mode": {
+                    "description": "Define o modo de limpeza: 1 para eco e 2 para turbo. A predefini\u00e7\u00e3o \u00e9 turbo se n\u00e3o estiver definido.",
+                    "name": "Modo de limpeza"
+                },
+                "navigation": {
+                    "description": "Define o modo de navega\u00e7\u00e3o: 1 para normal, 2 para cuidado extra, 3 para profundo. A predefini\u00e7\u00e3o \u00e9 normal se n\u00e3o estiver definido.",
+                    "name": "Modo de navega\u00e7\u00e3o"
+                },
+                "zone": {
+                    "description": "Nome da zona a limpar (apenas suportado no Botvac D7). A predefini\u00e7\u00e3o \u00e9 sem zona, ou seja, limpeza completa da casa.",
+                    "name": "Zona"
+                }
+            },
+            "name": "Limpeza personalizada"
+        }
+    }
+}

@@ -1,0 +1,83 @@
+{
+    "application_credentials": {
+        "description": "Siga as [instru\u00e7\u00f5es]({more_info_url}) para a [tela de consentimento OAuth]({oauth_consent_url}) para dar ao Home Assistant acesso ao seu Google Mail. Tamb\u00e9m precisa criar Credenciais de Aplica\u00e7\u00e3o vinculadas \u00e0 sua conta:\n1. V\u00e1 para [Credenciais]({oauth_creds_url}) e selecione **Criar Credenciais**.\n2. Na lista suspensa, selecione **ID do cliente OAuth**.\n3. Selecione **Aplica\u00e7\u00e3o Web** para o Tipo de Aplica\u00e7\u00e3o."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Conta j\u00e1 configurada",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_access_token": "Token de acesso inv\u00e1lido",
+            "missing_configuration": "O componente n\u00e3o est\u00e1 configurado. Por favor, siga a documenta\u00e7\u00e3o.",
+            "oauth_error": "Recebido token de autentica\u00e7\u00e3o inv\u00e1lido.",
+            "oauth_failed": "Erro ao obter o token de acesso.",
+            "oauth_timeout": "Excedido o tempo limite para o OAuth token.",
+            "oauth_unauthorized": "Erro de autoriza\u00e7\u00e3o OAuth ao obter o token de acesso.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "timeout_connect": "Excedido o tempo limite para estabelecer liga\u00e7\u00e3o",
+            "unknown": "Erro inesperado",
+            "wrong_account": "Conta errada: Autentique-se com {email}."
+        },
+        "create_entry": {
+            "default": "Autenticado com sucesso"
+        },
+        "step": {
+            "auth": {
+                "title": "Associar conta Google"
+            },
+            "pick_implementation": {
+                "title": "Escolha o m\u00e9todo de autentica\u00e7\u00e3o"
+            },
+            "reauth_confirm": {
+                "description": "A integra\u00e7\u00e3o do Google Mail precisa de autenticar novamente a sua conta",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "vacation_end_date": {
+                "name": "Data de fim das f\u00e9rias"
+            }
+        }
+    },
+    "services": {
+        "set_vacation": {
+            "description": "Define as defini\u00e7\u00f5es de resposta de f\u00e9rias para o Google Mail.",
+            "fields": {
+                "enabled": {
+                    "description": "Desligue esta op\u00e7\u00e3o para acabar com as respostas de f\u00e9rias.",
+                    "name": "Ativo"
+                },
+                "end": {
+                    "description": "\u00daltimo dia de f\u00e9rias.",
+                    "name": "Fim"
+                },
+                "message": {
+                    "description": "Corpo do email.",
+                    "name": "Mensagem"
+                },
+                "plain_text": {
+                    "description": "Escolha enviar a mensagem em texto simples ou HTML.",
+                    "name": "Texto simples"
+                },
+                "restrict_contacts": {
+                    "description": "Restringir a resposta autom\u00e1tica aos contactos.",
+                    "name": "Restringir aos contactos"
+                },
+                "restrict_domain": {
+                    "description": "Restringir a resposta autom\u00e1tica ao dom\u00ednio. Isto s\u00f3 afecta as contas do Google Workspace.",
+                    "name": "Restringir ao dom\u00ednio"
+                },
+                "start": {
+                    "description": "Primeiro dia de f\u00e9rias."
+                },
+                "title": {
+                    "description": "O assunto da mensagem de email.",
+                    "name": "T\u00edtulo"
+                }
+            },
+            "name": "Definir f\u00e9rias"
+        }
+    }
+}

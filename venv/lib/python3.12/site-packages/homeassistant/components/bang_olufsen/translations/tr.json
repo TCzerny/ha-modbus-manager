@@ -1,0 +1,134 @@
+{
+    "common": {
+        "jid_options_description": "Cihazlar\u0131n benzersiz Beolink ID'lerinin (JID olarak adland\u0131r\u0131l\u0131r) do\u011frudan kullan\u0131ld\u0131\u011f\u0131 geli\u015fmi\u015f gruplama se\u00e7enekleri. JID'ler, medya oynat\u0131c\u0131 varl\u0131\u011f\u0131n\u0131n durum \u00f6zniteliklerinde bulunabilir.",
+        "jid_options_name": "JID se\u00e7enekleri"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "already_in_progress": "Yap\u0131land\u0131rma ak\u0131\u015f\u0131 zaten devam ediyor"
+        },
+        "error": {
+            "api_exception": "Ba\u011flanma hatas\u0131",
+            "client_connector_error": "Ba\u011flanma hatas\u0131",
+            "invalid_ip": "Ge\u00e7ersiz IPv4 adresi",
+            "timeout_error": "Ba\u011flanma hatas\u0131"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "IP Adresi",
+                    "model": "Model"
+                },
+                "description": "Bang & Olufsen cihaz\u0131n\u0131z\u0131 manuel olarak yap\u0131land\u0131r\u0131n."
+            },
+            "zeroconf_confirm": {
+                "description": "{model} - {serial_number} @ {host} yap\u0131land\u0131rmas\u0131n\u0131 onaylay\u0131n.",
+                "title": "Bang & Olufsen cihaz\u0131n\u0131 kurun"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_grouping_entity": {
+            "message": "{entity_id} kimlikli varl\u0131k Beolink oturumuna eklenemiyor. Varl\u0131k bir Bang & Olufsen media_player m\u0131?"
+        },
+        "invalid_media_type": {
+            "message": "{invalid_media_type} ge\u00e7ersiz bir t\u00fcrd\u00fcr. Ge\u00e7erli de\u011ferler \u015funlard\u0131r: {valid_media_types} ."
+        },
+        "invalid_sound_mode": {
+            "message": "{invalid_sound_mode} ge\u00e7ersiz bir ses modudur. Ge\u00e7erli de\u011ferler \u015funlard\u0131r: {valid_sound_modes}."
+        },
+        "invalid_source": {
+            "message": "Ge\u00e7ersiz kaynak: {invalid_source} . Ge\u00e7erli kaynaklar \u015funlard\u0131r: {valid_sources}"
+        },
+        "m3u_invalid_format": {
+            "message": ".m3u uzant\u0131l\u0131 medya kaynaklar\u0131 desteklenmez."
+        },
+        "play_media_error": {
+            "message": "{media_type} : {error_message} oynat\u0131lmaya \u00e7al\u0131\u015f\u0131l\u0131rken bir hata olu\u015ftu."
+        }
+    },
+    "selector": {
+        "source_ids": {
+            "options": {
+                "aux_a": "Beolink D\u00f6n\u00fc\u015ft\u00fcr\u00fcc\u00fc NL/ML AUX_A",
+                "beoradio": "ASE Radyosu",
+                "cd": "Beolink D\u00f6n\u00fc\u015ft\u00fcr\u00fcc\u00fc NL/ML CD",
+                "deezer": "ASE / Mozart Deezer",
+                "ph": "Beolink D\u00f6n\u00fc\u015ft\u00fcr\u00fcc\u00fc NL/ML PH",
+                "radio": "Beolink D\u00f6n\u00fc\u015ft\u00fcr\u00fcc\u00fc NL/ML RADYO",
+                "spotify": "ASE / Mozart Spotify",
+                "tidal": "Mozart Gelgit",
+                "tp1": "Beolink D\u00f6n\u00fc\u015ft\u00fcr\u00fcc\u00fc NL/ML TP1",
+                "tp2": "Beolink D\u00f6n\u00fc\u015ft\u00fcr\u00fcc\u00fc NL/ML TP2"
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "Ba\u011fl\u0131 t\u00fcm Beolink cihazlar\u0131n\u0131 bekleme moduna ayarlay\u0131n.",
+            "name": "Beolink hepsi beklemede"
+        },
+        "beolink_expand": {
+            "description": "Mevcut Beolink deneyiminizi geni\u015fletin.",
+            "fields": {
+                "all_discovered": {
+                    "description": "Beolink deneyimini ke\u015ffedilen t\u00fcm cihazlara geni\u015fletin.",
+                    "name": "Hepsi ke\u015ffedildi"
+                },
+                "beolink_jids": {
+                    "description": "Mevcut Beolink deneyimine hangi Beolink JID'lerinin kat\u0131laca\u011f\u0131n\u0131 belirtin.",
+                    "name": "Beolink JID'leri"
+                }
+            },
+            "name": "Beolink geni\u015flet",
+            "sections": {
+                "jid_options": {
+                    "description": "Cihazlar\u0131n benzersiz Beolink ID'lerinin (JID olarak adland\u0131r\u0131l\u0131r) do\u011frudan kullan\u0131ld\u0131\u011f\u0131 geli\u015fmi\u015f gruplama se\u00e7enekleri. JID'ler, medya oynat\u0131c\u0131 varl\u0131\u011f\u0131n\u0131n durum \u00f6zniteliklerinde bulunabilir.",
+                    "name": "JID se\u00e7enekleri"
+                }
+            }
+        },
+        "beolink_join": {
+            "description": "Beolink deneyimine kat\u0131l\u0131n.",
+            "fields": {
+                "beolink_jid": {
+                    "description": "Kat\u0131lmak i\u00e7in Beolink JID'yi manuel olarak belirtin.",
+                    "name": "Beolink JID"
+                },
+                "source_id": {
+                    "description": "Hangi kayna\u011fa kat\u0131laca\u011f\u0131n\u0131z\u0131 belirtin, davran\u0131\u015f donan\u0131m platformlar\u0131 aras\u0131nda de\u011fi\u015fir. Bir platform ad\u0131yla ba\u015flayan kaynak adlar\u0131 yaln\u0131zca o platforma ba\u011flan\u0131rken kullan\u0131labilir. \u00d6rne\u011fin, \"ASE Beoradio\" yaln\u0131zca bir ASE cihaz\u0131na kat\u0131l\u0131rken kullan\u0131labilirken, \"ASE / Mozart Deezer\" ASE veya Mozart cihazlar\u0131yla kullan\u0131labilir. Tan\u0131mlanm\u0131\u015f bir Beolink JID gereklidir.",
+                    "name": "Kaynak"
+                }
+            },
+            "name": "Beolink'e kat\u0131l\u0131n",
+            "sections": {
+                "jid_options": {
+                    "description": "Cihazlar\u0131n benzersiz Beolink ID'lerinin (JID olarak adland\u0131r\u0131l\u0131r) do\u011frudan kullan\u0131ld\u0131\u011f\u0131 geli\u015fmi\u015f gruplama se\u00e7enekleri. JID'ler, medya oynat\u0131c\u0131 varl\u0131\u011f\u0131n\u0131n durum \u00f6zniteliklerinde bulunabilir.",
+                    "name": "JID se\u00e7enekleri"
+                }
+            }
+        },
+        "beolink_leave": {
+            "description": "Beolink deneyiminden ayr\u0131l\u0131n.",
+            "name": "Beolink izni"
+        },
+        "beolink_unexpand": {
+            "description": "Mevcut Beolink deneyiminden yararlan\u0131n.",
+            "fields": {
+                "beolink_jids": {
+                    "description": "Mevcut Beolink deneyiminden hangi Beolink JID'lerinin ayr\u0131laca\u011f\u0131n\u0131 belirtin.",
+                    "name": "Beolink JID'leri"
+                }
+            },
+            "name": "Beolink geni\u015fletilmiyor",
+            "sections": {
+                "jid_options": {
+                    "description": "Cihazlar\u0131n benzersiz Beolink ID'lerinin (JID olarak adland\u0131r\u0131l\u0131r) do\u011frudan kullan\u0131ld\u0131\u011f\u0131 geli\u015fmi\u015f gruplama se\u00e7enekleri. JID'ler, medya oynat\u0131c\u0131 varl\u0131\u011f\u0131n\u0131n durum \u00f6zniteliklerinde bulunabilir.",
+                    "name": "JID se\u00e7enekleri"
+                }
+            }
+        }
+    }
+}

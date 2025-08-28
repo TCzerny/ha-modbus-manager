@@ -1,0 +1,116 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Hesap zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "already_in_progress": "Yap\u0131land\u0131rma ak\u0131\u015f\u0131 zaten devam ediyor",
+            "authorize_url_timeout": "Yetkilendirme URL'si olu\u015ftururken zaman a\u015f\u0131m\u0131.",
+            "missing_configuration": "Bile\u015fen yap\u0131land\u0131r\u0131lmam\u0131\u015f. L\u00fctfen belgeleri takip edin.",
+            "no_devices_found": "Bu hesapta herhangi bir \u0131s\u0131 pompas\u0131 bulunamad\u0131",
+            "no_url_available": "Kullan\u0131labilir URL yok. Bu hata hakk\u0131nda bilgi i\u00e7in [yard\u0131m b\u00f6l\u00fcm\u00fcne bak\u0131n]({docs_url})",
+            "oauth_error": "Ge\u00e7ersiz anahtar verileri al\u0131nd\u0131.",
+            "oauth_failed": "Eri\u015fim anahtar\u0131 al\u0131n\u0131rken hata olu\u015ftu.",
+            "oauth_timeout": "OAuth anahtar\u0131n\u0131 \u00e7\u00f6zme zaman a\u015f\u0131m\u0131.",
+            "oauth_unauthorized": "Eri\u015fim anahtar\u0131 al\u0131n\u0131rken OAuth yetkilendirme hatas\u0131.",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu",
+            "user_rejected_authorize": "Hesap ba\u011flama reddedildi: {error}",
+            "wrong_account": "Bu hesab\u0131 yaln\u0131zca ayn\u0131 kullan\u0131c\u0131yla yeniden do\u011frulayabilirsiniz."
+        },
+        "create_entry": {
+            "default": "Ba\u015far\u0131yla do\u011fruland\u0131"
+        },
+        "step": {
+            "find_devices": {
+                "title": "Is\u0131 pompan\u0131z\u0131 se\u00e7in"
+            },
+            "pick_implementation": {
+                "title": "Kimlik do\u011frulama y\u00f6ntemini se\u00e7"
+            },
+            "reauth_confirm": {
+                "description": "Devam etmek i\u00e7in WeHeat ile yeniden kimlik do\u011frulamas\u0131 yapman\u0131z gerekiyor",
+                "title": "WeHeat ile yeniden kimlik do\u011frulamas\u0131 yap\u0131n"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "indoor_unit_auxiliary_pump_state": {
+                "name": "\u0130\u00e7 \u00fcnite yard\u0131mc\u0131 su pompas\u0131"
+            },
+            "indoor_unit_dhw_valve_or_pump_state": {
+                "name": "\u0130\u00e7 \u00fcnite DHW vanas\u0131 veya su pompas\u0131"
+            },
+            "indoor_unit_electric_heater_state": {
+                "name": "\u0130\u00e7 \u00fcnite elektrikli \u0131s\u0131t\u0131c\u0131"
+            },
+            "indoor_unit_gas_boiler_state": {
+                "name": "\u0130\u00e7 \u00fcnite gaz kazan\u0131 \u0131s\u0131tmas\u0131na izin verildi"
+            },
+            "indoor_unit_water_pump_state": {
+                "name": "\u0130\u00e7 \u00fcnite su pompas\u0131"
+            }
+        },
+        "sensor": {
+            "ch_inlet_temperature": {
+                "name": "Merkezi \u0131s\u0131tma giri\u015f s\u0131cakl\u0131\u011f\u0131"
+            },
+            "compressor_percentage": {
+                "name": "Kompres\u00f6r kullan\u0131m\u0131"
+            },
+            "compressor_rpm": {
+                "name": "Kompres\u00f6r h\u0131z\u0131"
+            },
+            "cop": {
+                "name": "COP"
+            },
+            "dhw_bottom_temperature": {
+                "name": "DHW alt s\u0131cakl\u0131\u011f\u0131"
+            },
+            "dhw_top_temperature": {
+                "name": "DHW \u00fcst s\u0131cakl\u0131\u011f\u0131"
+            },
+            "electricity_used": {
+                "name": "Kullan\u0131lan elektrik"
+            },
+            "energy_output": {
+                "name": "Toplam enerji \u00e7\u0131kt\u0131s\u0131"
+            },
+            "heat_pump_state": {
+                "state": {
+                    "cooling": "So\u011futuluyor",
+                    "defrosting": "Buz \u00e7\u00f6zme",
+                    "dhw": "Is\u0131tma DHW",
+                    "heating": "Is\u0131tma",
+                    "legionella_prevention": "Lejyonella \u00f6nleme",
+                    "manual_control": "Manuel kontrol",
+                    "self_test": "Kendi kendine test",
+                    "standby": "Bekleme modu",
+                    "water_check": "Su s\u0131cakl\u0131\u011f\u0131n\u0131n kontrol edilmesi"
+                }
+            },
+            "outside_temperature": {
+                "name": "D\u0131\u015f s\u0131cakl\u0131k"
+            },
+            "power_input": {
+                "name": "Giri\u015f g\u00fcc\u00fc"
+            },
+            "power_output": {
+                "name": "\u00c7\u0131k\u0131\u015f g\u00fcc\u00fc"
+            },
+            "thermostat_room_temperature": {
+                "name": "Mevcut oda s\u0131cakl\u0131\u011f\u0131"
+            },
+            "thermostat_room_temperature_setpoint": {
+                "name": "Oda s\u0131cakl\u0131\u011f\u0131 ayar noktas\u0131"
+            },
+            "thermostat_water_setpoint": {
+                "name": "Su hedef s\u0131cakl\u0131\u011f\u0131"
+            },
+            "water_inlet_temperature": {
+                "name": "Su giri\u015f s\u0131cakl\u0131\u011f\u0131"
+            },
+            "water_outlet_temperature": {
+                "name": "Su \u00e7\u0131k\u0131\u015f s\u0131cakl\u0131\u011f\u0131"
+            }
+        }
+    }
+}

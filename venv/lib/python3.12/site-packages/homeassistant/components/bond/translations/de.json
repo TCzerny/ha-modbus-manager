@@ -1,0 +1,101 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "old_firmware": "Nicht unterst\u00fctzte alte Firmware auf dem Bond-Ger\u00e4t - bitte aktualisiere, bevor du fortf\u00e4hrst",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "confirm": {
+                "data": {
+                    "access_token": "Zugriffstoken"
+                },
+                "description": "M\u00f6chtest du {name} einrichten?"
+            },
+            "user": {
+                "data": {
+                    "access_token": "Zugriffstoken",
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Die IP-Adresse deines Bond-Hubs."
+                }
+            }
+        }
+    },
+    "services": {
+        "set_fan_speed_tracked_state": {
+            "description": "Legt die \u00fcberwachte Drehzahl f\u00fcr einen Bond-Ventilator fest.",
+            "fields": {
+                "entity_id": {
+                    "description": "Namen von Entit\u00e4ten, deren \u00fcberwachte Ventilatordrehzahl eingestellt werden soll.",
+                    "name": "Entit\u00e4t"
+                },
+                "speed": {
+                    "description": "Ventilatordrehzahl in %.",
+                    "name": "Ventilatordrehzahl"
+                }
+            },
+            "name": "\u00dcberwachten Zustand der Ventilatordrehzahl festlegen"
+        },
+        "set_light_brightness_tracked_state": {
+            "description": "Legt den \u00fcberwachten Helligkeitszustand einer Bond-Leuchte fest.",
+            "fields": {
+                "brightness": {
+                    "description": "Helligkeit.",
+                    "name": "Helligkeit"
+                },
+                "entity_id": {
+                    "description": "Namen der Entit\u00e4ten, deren \u00fcberwachter Helligkeitszustand festgelegt werden soll.",
+                    "name": "Entit\u00e4t"
+                }
+            },
+            "name": "Den \u00fcberwachten Helligkeitszustand festlegen"
+        },
+        "set_light_power_tracked_state": {
+            "description": "Legt den \u00fcberwachten Einschaltzustand einer Bond-Leuchte fest.",
+            "fields": {
+                "entity_id": {
+                    "description": "Namen der Entit\u00e4ten, deren \u00fcberwachter Einschaltzustand festgelegt werden soll.",
+                    "name": "Entit\u00e4t"
+                },
+                "power_state": {
+                    "description": "Einschaltzustand.",
+                    "name": "Einschaltzustand"
+                }
+            },
+            "name": "Den \u00fcberwachten Einschaltzustand der Leuchte einstellen"
+        },
+        "set_switch_power_tracked_state": {
+            "description": "Legt den \u00fcberwachten Einschaltzustand eines Bond-Schalters fest.",
+            "fields": {
+                "entity_id": {
+                    "description": "Namen der Entit\u00e4ten, deren \u00fcberwachter Einschaltzustand festgelegt werden soll.",
+                    "name": "Entit\u00e4t"
+                },
+                "power_state": {
+                    "description": "Einschaltzustand.",
+                    "name": "Einschaltzustand"
+                }
+            },
+            "name": "Den \u00fcberwachten Einschaltzustand des Schalters einstellen"
+        },
+        "start_decreasing_brightness": {
+            "description": "Die Helligkeit der Leuchte absenken (veraltet).",
+            "name": "Beginn der Verringerung der Helligkeit"
+        },
+        "start_increasing_brightness": {
+            "description": "Die Helligkeit der Leuchte erh\u00f6hen (veraltet).",
+            "name": "Beginn der Erh\u00f6hung der Helligkeit"
+        },
+        "stop": {
+            "description": "Stoppt alle laufenden Aktionen und leert die Warteschlange (veraltet).",
+            "name": "Stoppen"
+        }
+    }
+}

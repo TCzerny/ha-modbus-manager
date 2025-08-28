@@ -1,0 +1,851 @@
+{
+  "language": "sk",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "<turn_off> <name>[ <area>]"
+          ]
+        },
+        {
+          "sentences": [
+            "<close> {name}"
+          ],
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<close> {name} <area>"
+          ],
+          "response": "cover_area"
+        },
+        {
+          "sentences": [
+            "<turn_off_light> {name}"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "response": "light"
+        },
+        {
+          "sentences": [
+            "(<turn_off>|<turn_off_light>) (svetlo|lampu) <area>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "light"
+        },
+        {
+          "sentences": [
+            "(<turn_off>|<turn_off_light>) [(všetky|všetko)] [(svetlá|osvetlenie|lampy)] <area>"
+          ],
+          "slots": {
+            "domain": "light",
+            "name": "all"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<close> garáž",
+            "<close> garážovú bránu"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "garage",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<close> (rolety|žalúzie|záves[y]|záclon(u|y)) <area>"
+          ],
+          "response": "cover_area",
+          "slots": {
+            "device_class": [
+              "blind",
+              "curtain",
+              "shutter"
+            ],
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<turn_off> (ventilátor|vetrák) <area>"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fan"
+        },
+        {
+          "sentences": [
+            "<turn_off> ( ventiláciu|vetranie) <area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_ventilation"
+        },
+        {
+          "sentences": [
+            "<turn_off> [(všetky|všetko)] (ventilátory|vetráky|ventiláciu|vetranie) <area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_area"
+        }
+      ]
+    },
+    "HassGetWeather": {
+      "data": [
+        {
+          "sentences": [
+            "<what_is> počasie"
+          ]
+        },
+        {
+          "sentences": [
+            "<what_is> počasie[ <is>] <in> <name>",
+            "<what_is>[ <in>] <name> počasie"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          }
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "<turn_on_light> {name}"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "slots": {
+            "domain": "light"
+          },
+          "response": "light"
+        },
+        {
+          "sentences": [
+            "(<turn_on>|<turn_on_light>) (svetlo|lampu) <area>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "light"
+        },
+        {
+          "sentences": [
+            "(<turn_on>|<turn_on_light>) [(všetky|všetko)] [(svetlá|osvetlenie|lampy)] <area>"
+          ],
+          "slots": {
+            "domain": "light",
+            "name": "all"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<turn_on> (ventilátor|vetrák) <area>"
+          ],
+          "slots": {
+            "domain": "fan"
+          },
+          "response": "fan"
+        },
+        {
+          "sentences": [
+            "<turn_on> (ventiláciu|vetranie) <area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_ventilation"
+        },
+        {
+          "sentences": [
+            "<turn_on> [(všetky|všetko)] (ventilátory|vetráky|ventiláciu|vetranie) <area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_area"
+        },
+        {
+          "sentences": [
+            "<turn_on> <name>[ <area>]"
+          ]
+        },
+        {
+          "sentences": [
+            "<open> {name}"
+          ],
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<open> {name} <area>"
+          ],
+          "response": "cover_area"
+        },
+        {
+          "sentences": [
+            "<open> garáž",
+            "<open> garážovú bránu"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "garage",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<open> (rolety|žalúzie|záves[y]|záclon(u|y)) <area>"
+          ],
+          "response": "cover_area",
+          "slots": {
+            "device_class": [
+              "blind",
+              "curtain",
+              "shutter"
+            ],
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassMediaUnpause": {
+      "data": [
+        {
+          "sentences": [
+            "spusti <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassShoppingListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "(daj|pridaj|pripíš) <item> (do|na)<my_list>"
+          ],
+          "response": "item_added",
+          "expansion_rules": {
+            "my_list": "[ nákupn(ý|ého)] zoznam[u]",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "nevadí",
+            "to nevadí"
+          ]
+        }
+      ]
+    },
+    "HassSetPosition": {
+      "data": [
+        {
+          "sentences": [
+            "<set> [polohu|pozíciu] <name> na <position>"
+          ],
+          "requires_context": {
+            "domain": [
+              "cover",
+              "valve"
+            ]
+          }
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "<set> <name> na <brightness>",
+            "<set> jas <name> na <brightness>",
+            "<set> <name> jas <brightness>"
+          ],
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "<set> jas <area> na <brightness>",
+            "<set> jas <area> <brightness>",
+            "<set> <area> <brightness> jas"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness_area"
+        },
+        {
+          "sentences": [
+            "<set> {color} [farbu] <name>",
+            "<set> <name> {color} [farbu]",
+            "<set> <name> na {color}"
+          ],
+          "response": "color"
+        },
+        {
+          "sentences": [
+            "<set> {color} [farbu] <area>",
+            "<set> [v] <area> {color} [farbu]",
+            "<set> [v] <area> na {color}"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "color_area"
+        }
+      ]
+    },
+    "HassMediaNext": {
+      "data": [
+        {
+          "sentences": [
+            "[prehraj] ďalš(ia|iu|í) [položk(a|u)|skladb(a|u)|kanál] na <name>",
+            "preskoč [túto|tento] [položk(a|u)|skladb(a|u)|kanál] na <name>",
+            "preskoč na ďalš(ia|iu|í) [položk(a|u)|skladb(a|u)|kanál] na <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassMediaPause": {
+      "data": [
+        {
+          "sentences": [
+            "[po]zastav <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "<what_is> <temp> [je] <area>",
+            "<how_many> stupňov [je] <area>",
+            "<how_many> stupňov",
+            "<what_is> <temp>"
+          ]
+        }
+      ]
+    },
+    "HassVacuumReturnToBase": {
+      "data": [
+        {
+          "sentences": [
+            "vráť <name>[ do doku]",
+            "zadokuj <name>"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "<what_is> <name> [<area>]"
+          ],
+          "response": "one"
+        },
+        {
+          "sentences": [
+            "<is> <name> {on_off_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<is> {on_off_states:state} <any> {on_off_domains:domain} [<area>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "<is> <all> {on_off_domains:domain} [<area>] {on_off_states:state}"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "<which> {on_off_domains:domain} <is> {on_off_states:state} [<area>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "<how_many> {on_off_domains:domain} <is> {on_off_states:state} [<area>]"
+          ],
+          "response": "how_many"
+        },
+        {
+          "sentences": [
+            "<is> {name} {bs_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor"
+          },
+          "slots": {
+            "domain": "binary_sensor"
+          }
+        },
+        {
+          "sentences": [
+            "<is> <area> {bs_classes:device_class} {bs_states:state}",
+            "<is> <area> {bs_states:state} {bs_classes:device_class}",
+            "<is> {bs_states:state} [<area>] {bs_classes:device_class} [<area>]",
+            "<is> {bs_classes:device_class} [<area>] {bs_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": [
+              "door",
+              "garage_door",
+              "window"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<is> <any> {bs_classes:device_class} {bs_states:state} [<area>]",
+            "<is> {bs_states:state} <any> {bs_classes:device_class} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": [
+              "door",
+              "garage_door",
+              "window"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<is> <all> {bs_classes:device_class} {bs_states:state} [<area>]",
+            "<is> {bs_states:state} <all> {bs_classes:device_class} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": [
+              "door",
+              "garage_door",
+              "window"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<which> {bs_classes:device_class} [<is>] [<area>] [<is>] {bs_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": [
+              "door",
+              "garage_door",
+              "window"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<how_many> {bs_classes:device_class} [<is>] [<area>] [<is>] {bs_states:state} [<area>]",
+            "<how_many> [<is>] {bs_states:state} [<area>] {bs_classes:device_class} [<is>] [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": [
+              "door",
+              "garage_door",
+              "window"
+            ]
+          }
+        }
+      ]
+    },
+    "HassVacuumStart": {
+      "data": [
+        {
+          "sentences": [
+            "[s]pus[ti|ť] <name>"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "(daj|pridaj|pripíš) <item> (do|na)<my_list>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "my_list": "[ môj[ho]] {name}",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassSetVolume": {
+      "data": [
+        {
+          "sentences": [
+            "<set> hlasitosť <name> na <volume> [percent]"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Prepáč, nerozumel som tomu",
+      "handle_error": "Pri spracovaní došlo k neočakávanej chybe",
+      "no_area": "Prepáč, nepoznám žiadnu oblasť s názvom {{ area }}",
+      "no_floor": "Prepáč, nepoznám žiadne poschodie s názvom {{ floor }}",
+      "no_domain": "Prepáč, nepoznám {{ domain }}",
+      "no_domain_in_area": "Prepáč, nepoznám {{ domain }} v oblasti {{ area }}",
+      "no_domain_in_floor": "Prepáč, nepoznám {{ domain }} na poschodí {{ floor }}",
+      "no_device_class": "Prepáč, nepoznám {{ domain }}",
+      "no_device_class_in_area": "Prepáč, nepoznám {{ device_class }} v oblasti {{ area }}",
+      "no_device_class_in_floor": "Prepáč, nepoznám {{ device_class }} na poschodí {{ floor }}",
+      "no_entity": "Prepáč, nepoznám žiadne zariadenie ani entitu s názvom {{ entity }}",
+      "no_entity_in_area": "Prepáč, nepoznám žiadne zariadenie ani entitu s názvom {{ entity }} v oblasti {{ area }}",
+      "no_entity_in_floor": "Prepáč, nepoznám žiadne zariadenie ani entitu s názvom {{ entity }} na poschodí {{ floor }}",
+      "feature_not_supported": "Prepáč, žiadne zariadenie nepodporuje požadovanú schopnosť",
+      "no_entity_exposed": "Prepáč, {{ entity }} nie je zverejnená",
+      "no_entity_in_area_exposed": "Prepáč, {{ entity }} v oblasti {{ area }} nie je zverejnená",
+      "no_entity_in_floor_exposed": "Prepáč, {{ entity }} na poschodí {{ floor }} nie je zverejnená",
+      "no_domain_exposed": "Prepáč, žiadna {{ domain }} nie je zverejnená",
+      "no_domain_in_area_exposed": "Prepáč, žiadna {{ domain }} v oblasti {{ area }} nie je zverejnená",
+      "no_domain_in_floor_exposed": "Prepáč, žiadna {{ domain }} na poschodí {{ floor }} nie je zverejnená",
+      "no_device_class_exposed": "Prepáč, žiadna {{ device_class }} nie je zverejnená",
+      "no_device_class_in_area_exposed": "Prepáč, žiadna {{ device_class }} v oblasti {{ area }} nie je zverejnená",
+      "no_device_class_in_floor_exposed": "Prepáč, žiadna {{ device_class }} na poschodí {{ floor }} nie je zverejnená",
+      "duplicate_entities": "Prepáč, existuje viacero zariadení s názvom {{ entity }}",
+      "duplicate_entities_in_area": "Prepáč, existuje viacero zariadení s názvom {{ entity }} v oblasti {{ area }}",
+      "duplicate_entities_in_floor": "Prepáč, existuje viacero zariadení s názvom {{ entity }} na poschodí {{ floor }}",
+      "timer_not_found": "Prepáč, nemohol som nájsť daný časovač",
+      "multiple_timers_matched": "Prepáč, nemôžem reagovať s viacerými časovačmi naraz",
+      "no_timer_support": "Prepáč, časovače nie sú podporované na tomto zariadení"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "{{ slots.name }} je {{ state.state_with_unit }}",
+        "one_yesno": "{% if query.matched: %}\nÁno\n{% else: %}\nNie\n{% endif %}\n",
+        "any": "{% if query.matched: %}\nÁno, {{ query.matched | map(attribute=\"name\") | sort | join(\", \") }}\n{% else: %}\nNie\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\nÁno\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Nie, {{ match[:3] | join(\", \") }} a {{ (match | length - 3) }} ďalšie\n  {%- else -%}\n    Nie, {{ query.unmatched | map(attribute=\"name\") | sort | join(\", \") }}\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched: %}\nŽiadne\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} a {{ (match | length - 3) }} ďalšie\n  {%- else -%}\n    {{ query.matched | map(attribute=\"name\") | sort | join(\", \") }}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{% if not query.matched: %}\n0\n{% else: %}\n{{ query.matched | length }}\n{% endif %}\n"
+      },
+      "HassTurnOff": {
+        "default": "Vypínam {{ slots.name }}",
+        "light": "Svetlo {{ slots.name }} bolo zhasnuté",
+        "lights_area": "Svetlá v {{ slots.area }} boli zhasnuté",
+        "fan": "Ventilátor {{ slots.name }} bol vypnutý",
+        "fans_ventilation": "Vetranie {{ slots.area }} bolo ukončené",
+        "fans_area": "Ventilátory v {{ slots.area }} boli vypnuté",
+        "cover": "Zatváram {{ slots.name }}",
+        "cover_area": "Zatváram v {{ slots.area }}",
+        "garage": "Zatváram {{ slots.name }}",
+        "cover_device_class": "Zatváram {{ slots.device_class }}"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "Pridané: {{ slots.item }}"
+      },
+      "HassTurnOn": {
+        "default": "Zapínam {{ slots.name }}",
+        "light": "Svetlo {{ slots.name }} bolo rozsvietené",
+        "lights_area": "Svetlá v {{ slots.area }} boli rozsvietené",
+        "fan": "Ventilátor {{ slots.name }} bol zapnutý",
+        "fans_ventilation": "Vetranie {{ slots.area }} bolo spustené",
+        "fans_area": "Ventilátory v {{ slots.area }} boli zapnuté",
+        "cover": "Otváram {{ slots.name }}",
+        "cover_area": "Otváram v {{ slots.area }}",
+        "garage": "Otváram {{ slots.name }}",
+        "cover_device_class": "Otváram {{ slots.device_class }}"
+      },
+      "HassMediaPause": {
+        "default": "Pozastavené"
+      },
+      "HassNevermind": {
+        "default": "Požiadavka bola zrušená"
+      },
+      "HassListAddItem": {
+        "item_added": "Pridané: {{ slots.item }}"
+      },
+      "HassGetWeather": {
+        "default": "{% set weather_condition = {\n  'clear': 'a jasno',\n  'clear-night': 'a jasno',\n  'cloudy': 'a oblačno',\n  'exceptional': 'a výstrahy',\n  'fog': 'a hmla',\n  'hail': 'a krúpy',\n  'lightning': 'a blesky',\n  'lightning-rainy': 's bleskami a dážďom',\n  'partlycloudy': 'a čiastočne oblačno',\n  'pouring': 'a silný dážď',\n  'rainy': 'a dážď',\n  'snowy': 'a sneží',\n  'snowy-rainy': 'so snehom a dážďom',\n  'sunny': 'a slnečno',\n  'windy': 'a veterno',\n  'windy-variant': 's vetrom a oblačno'\n} %} {{ state.attributes.get('temperature') }} {{ state.attributes.get('temperature_unit') }} {{ weather_condition.get((state.state | string).lower(), \"\") }}\n"
+      },
+      "HassLightSet": {
+        "brightness": "Jas {{ slots.name }} nastavený na {{ slots.brightness }}",
+        "brightness_area": "Jas {{ slots.area }} nastavený na {{ slots.brightness }}",
+        "color": "Farba {{ slots.name }} zmenená na {{ slots.color }}",
+        "color_area": "Farba {{ slots.area }} zmenená na {{ slots.color }}"
+      },
+      "HassVacuumStart": {
+        "default": "Spúšťam"
+      },
+      "HassMediaUnpause": {
+        "default": "Spustené"
+      },
+      "HassSetPosition": {
+        "default": "Poloha nastavená"
+      },
+      "HassMediaNext": {
+        "default": "Prehrávam ďalšie"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{% set temperature = state_attr(state.entity_id, 'current_temperature') %} {{ temperature }} {{ 'stupeň' if temperature | int | abs == 1 else 'stupne' if temperature | int | abs in [2,3,4] else 'stupňov' }}\n"
+      },
+      "HassSetVolume": {
+        "default": "Hlasitosť nastavená"
+      },
+      "HassVacuumReturnToBase": {
+        "default": "Vraciam do doku"
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "biel(a|e|y|o|u)",
+          "out": "white"
+        },
+        {
+          "in": "čiern(a|e|y|o|u)",
+          "out": "black"
+        },
+        {
+          "in": "červen(á|é|ý|o|ú)",
+          "out": "red"
+        },
+        {
+          "in": "oranžov(á|é|ý|o|ú)",
+          "out": "orange"
+        },
+        {
+          "in": "žlt(á|é|ý|o|ú)",
+          "out": "yellow"
+        },
+        {
+          "in": "zelen(á|é|ý|o|ú)",
+          "out": "green"
+        },
+        {
+          "in": "modr(á|é|ý|o|ú)",
+          "out": "blue"
+        },
+        {
+          "in": "fialov(á|é|ý|o|ú)",
+          "out": "purple"
+        },
+        {
+          "in": "hned(á|é|ý|o|ú)",
+          "out": "brown"
+        },
+        {
+          "in": "ružov(á|é|ý|o|ú)",
+          "out": "pink"
+        },
+        {
+          "in": "tyrkysov(á|é|ý|o|ú)",
+          "out": "turquoise"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        "celsius",
+        {
+          "in": "c|Celzia",
+          "out": "Celsius"
+        },
+        "fahrenheit",
+        {
+          "in": "f|Fahrenheita",
+          "out": "Fahrenheit"
+        }
+      ]
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "(max|maximum|(najvyšš|najväčš(ie|í|iu)))",
+          "out": 100
+        },
+        {
+          "in": "(min|minimum|(namenš|najnižš(ie|í|iu)))",
+          "out": 1
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "(zapnut(ý|á|é|ých)|zasvieten(ý|á|é|ých)|otvoren(ý|á|é|ých))",
+          "out": "on"
+        },
+        {
+          "in": "(vypnut(ý|á|é|ých)|zhasnut(ý|á|é|ých)|zatvoren(ý|á|é|ých))",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "svet(lo|lá|iel)",
+          "out": "light"
+        },
+        {
+          "in": "ventilátor[y|ov]",
+          "out": "fan"
+        },
+        {
+          "in": "vypínač[e|ov]",
+          "out": "switch"
+        }
+      ]
+    },
+    "bs_classes": {
+      "values": [
+        {
+          "in": "dver(e|í)",
+          "out": "door"
+        },
+        {
+          "in": "(garážov(é|ých) dver(e|í)|garáž)",
+          "out": "garage_door"
+        },
+        {
+          "in": "ok[ie]n[(o|a|á)]",
+          "out": "window"
+        }
+      ]
+    },
+    "bs_states": {
+      "values": [
+        {
+          "in": "otvoren(ý|á|é|ých)",
+          "out": "on"
+        },
+        {
+          "in": "zatvoren(é|á|ý|ých)",
+          "out": "off"
+        }
+      ]
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "volume": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "in": "(v|vo|na)",
+    "name": "{name}",
+    "area": "[<in>] {area}",
+    "what_is": "((ak(á|é|ý|o)[ je])|je)",
+    "is": "(je|sú)",
+    "any": "nejak(ý|á|é)",
+    "all": "(všetk(y)|každ(ý|á|é))",
+    "which": "ktor(ý|í|á|é|ú)",
+    "how_many": "koľko[ je]",
+    "brightness": "{brightness}[%| percent]",
+    "temp": "teplot(a|u)",
+    "temperature": "{temperature}[°| stupňov ][{temperature_unit}]",
+    "turn_on": "(zapni|zapnúť)",
+    "turn_off": "(vypni|vypnúť)",
+    "turn_on_light": "(zasvieť|zažni|rozžni|rozsvieť)",
+    "turn_off_light": "(zahas|zhasni)",
+    "set": "(nastav[iť]|prestav[iť]|zme(ň|niť)|zvýš[iť]|zníž[iť])",
+    "open": "(otvor[iť]|odostri[eť]|(roz|vy)tiahn[i|uť])",
+    "close": "(zatvor[iť]|zavri[eť]|zatvor[iť]|zastri[eť]|(s|za)tiahn(i|uť))",
+    "position": "{position}[[ ]%| percent]",
+    "volume": "{volume:volume_level}[[ ]%| percent]"
+  },
+  "skip_words": [
+    "prosím"
+  ]
+}

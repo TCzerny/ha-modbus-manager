@@ -1,0 +1,395 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "invalid_host": "Nombre de host o direcci\u00f3n IP no v\u00e1lidos",
+            "reconfigure_successful": "Se volvi\u00f3 a configurar correctamente",
+            "unique_id_mismatch": "El identificador no coincide con el identificador anterior"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "unknown": "Error inesperado"
+        },
+        "flow_title": "{device}",
+        "step": {
+            "confirm_discovery": {
+                "description": "\u00bfQuieres a\u00f1adir {device} a Home Assistant?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "La direcci\u00f3n IP o el nombre de host de tu dispositivo Fronius."
+                },
+                "description": "Actualiza tu informaci\u00f3n de configuraci\u00f3n para {device}."
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "La direcci\u00f3n IP o el nombre de host de tu dispositivo Fronius."
+                },
+                "description": "Configua tu dispositivo Fronius SolarAPI."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "capacity_designed": {
+                "name": "Capacidad de dise\u00f1o"
+            },
+            "capacity_maximum": {
+                "name": "Capacidad m\u00e1xima"
+            },
+            "cash_factor": {
+                "name": "Tarifa de exportaci\u00f3n a la red"
+            },
+            "co2_factor": {
+                "name": "Factor CO\u2082"
+            },
+            "current_ac": {
+                "name": "Corriente alterna"
+            },
+            "current_ac_phase_1": {
+                "name": "Corriente de la fase 1"
+            },
+            "current_ac_phase_2": {
+                "name": "Corriente de la fase 2"
+            },
+            "current_ac_phase_3": {
+                "name": "Corriente de la fase 3"
+            },
+            "current_dc": {
+                "name": "Corriente continua"
+            },
+            "current_dc_2": {
+                "name": "Corriente continua 2"
+            },
+            "delivery_factor": {
+                "name": "Tarifa de importaci\u00f3n de red"
+            },
+            "energy_day": {
+                "name": "Energ\u00eda al d\u00eda"
+            },
+            "energy_reactive_ac_consumed": {
+                "name": "Energ\u00eda reactiva consumida"
+            },
+            "energy_reactive_ac_produced": {
+                "name": "Energ\u00eda reactiva producida"
+            },
+            "energy_real_ac_consumed": {
+                "name": "Energ\u00eda consumida"
+            },
+            "energy_real_ac_minus": {
+                "name": "Energ\u00eda real menos"
+            },
+            "energy_real_ac_plus": {
+                "name": "Energ\u00eda real plus"
+            },
+            "energy_real_consumed": {
+                "name": "Energ\u00eda real consumida"
+            },
+            "energy_real_produced": {
+                "name": "Energ\u00eda real producida"
+            },
+            "energy_total": {
+                "name": "Energ\u00eda total"
+            },
+            "energy_year": {
+                "name": "Energ\u00eda al a\u00f1o"
+            },
+            "error_code": {
+                "name": "C\u00f3digo de error"
+            },
+            "error_message": {
+                "name": "Mensaje de error",
+                "state": {
+                    "ac_current_sensor_error": "Error del sensor de corriente alterna",
+                    "ac_frequency_too_high": "Frecuencia de CA demasiado alta",
+                    "ac_frequency_too_low": "Frecuencia de CA demasiado baja",
+                    "ac_grid_outside_permissible_limits": "Red de CA fuera de los l\u00edmites permitidos",
+                    "ac_module_over_temperature": "Temperatura superior al l\u00edmite en el m\u00f3dulo de CA",
+                    "ac_module_temperature_sensor_faulty_l1": "Sensor de temperatura del m\u00f3dulo de CA defectuoso (L1)",
+                    "ac_module_temperature_sensor_faulty_l2": "Sensor de temperatura del m\u00f3dulo de CA defectuoso (L2)",
+                    "ac_module_temperature_sensor_faulty_l3": "Sensor de temperatura del m\u00f3dulo de CA defectuoso (L3)",
+                    "ac_voltage_too_high": "Tensi\u00f3n de CA demasiado alta",
+                    "ac_voltage_too_low": "Tensi\u00f3n de CA demasiado baja",
+                    "arc_detection_triggered": "Detecci\u00f3n de arco activada",
+                    "arc_detector_switched_off": "Detector de arco apagado (por ejemplo, durante la monitorizaci\u00f3n de arco externo)",
+                    "can_bus_full": "El bus CAN est\u00e1 lleno",
+                    "communication": "Error de comunicaci\u00f3n",
+                    "compatibility_error_invalid_power_stage_configuration": "Error de compatibilidad (por ejemplo, debido al reemplazo de una placa de PC): configuraci\u00f3n de etapa de potencia no v\u00e1lida",
+                    "current_sensor_calibration_timeout": "Tiempo de espera de calibraci\u00f3n del sensor actual",
+                    "dc_component_measured_in_grid_too_high": "El componente de CC medido en la red es demasiado alto",
+                    "dc_connection_inverter_battery_interrupted": "Conexi\u00f3n de CC entre el inversor y la bater\u00eda interrumpida",
+                    "dc_input_voltage_mppt_1_too_high": "El voltaje de entrada de CC MPPT 1 es demasiado alto",
+                    "dc_input_voltage_mppt_2_too_high": "El voltaje de entrada de CC MPPT 2 es demasiado alto",
+                    "dc_low_string_1": "Cadena de CC baja 1",
+                    "dc_low_string_2": "Cadena de CC baja 2",
+                    "dc_module_over_temperature": "Temperatura superior al l\u00edmite en el m\u00f3dulo de CC",
+                    "dc_module_temperature_sensor_faulty": "Sensor de temperatura del m\u00f3dulo de CC defectuoso",
+                    "derating_caused_by_over_frequency": "Reducci\u00f3n de potencia causada por frecuencia superior al l\u00edmite",
+                    "different_power_limitation_in_hardware_modules": "Limitaciones de potencia diferentes en los m\u00f3dulos de hardware",
+                    "eeprom_reinitialised": "Se ha reiniciado la EEPROM",
+                    "emergency_power_derating_activated": "Reducci\u00f3n de potencia de emergencia activada",
+                    "error_during_logging_data_recording": "Error durante la grabaci\u00f3n de datos de registro",
+                    "error_during_update_process": "Se produjo un error durante el proceso de actualizaci\u00f3n",
+                    "fan_1_error": "Error del ventilador 1",
+                    "fan_2_error": "Error del ventilador 2",
+                    "file_could_not_be_opened": "No se pudo abrir el archivo",
+                    "fixed_voltage_mode_out_of_range": "Se ha seleccionado el modo de voltaje fijo en lugar del modo de voltaje MPP y el voltaje fijo se ha configurado en un valor demasiado bajo o demasiado alto",
+                    "functional_incompatibility_between_pc_boards": "Incompatibilidad funcional (una o m\u00e1s placas de circuito impreso del inversor no son compatibles entre s\u00ed, por ejemplo, despu\u00e9s de haber sustituido una placa de circuito impreso)",
+                    "grid_frequency_exceeded_limit_reconnecting": "La frecuencia de la red ha superado un valor l\u00edmite al volver a conectarse",
+                    "grid_voltage_dependent_power_reduction_active": "La reducci\u00f3n de potencia dependiente del voltaje de la red est\u00e1 activa",
+                    "guard_cannot_be_found": "No se puede encontrar la guarda",
+                    "hardware_id_problem": "Problema de ID del hardware",
+                    "hid_range_error": "Error de rango HID",
+                    "initialisation_error_file_system_error_on_usb": "Error de inicializaci\u00f3n en el sistema de archivos de la unidad flash USB",
+                    "initialisation_error_usb_flash_drive_not_supported": "Error de inicializaci\u00f3n: la unidad flash USB no es compatible",
+                    "initialisation_error_usb_stick_over_current": "Error de inicializaci\u00f3n: Sobrecorriente en la memoria USB",
+                    "insulation_error_on_solar_panels": "Error de aislamiento en los paneles solares.",
+                    "insulation_fault": "Fallo de aislamiento",
+                    "insulation_measurement_triggered": "Medici\u00f3n de aislamiento activada",
+                    "intermediate_circuit_voltage_too_high": "El voltaje del circuito intermedio es demasiado alto",
+                    "intermediate_circuit_voltage_too_low_or_asymmetric": "El voltaje del circuito intermedio es demasiado bajo o asim\u00e9trico",
+                    "internal_dsp_malfunction": "Mal funcionamiento del DSP interno",
+                    "internal_hardware_error": "Error interno de hardware",
+                    "internal_processor_status": "Advertencia sobre el estado del procesador interno. Consulta el c\u00f3digo de estado para obtener m\u00e1s informaci\u00f3n",
+                    "interrupt_check_fail": "Fallo de comprobaci\u00f3n de interrupci\u00f3n",
+                    "invalid_device_type": "Tipo de dispositivo no v\u00e1lido",
+                    "inverter_required_setup_values_not_received": "No se pudieron recibir los valores de configuraci\u00f3n necesarios para el inversor",
+                    "inverter_settings_changed_restart_required": "Se han cambiado los valores de configuraci\u00f3n del inversor, es necesario reiniciarlo",
+                    "log_file_cannot_be_saved": "No se puede guardar el archivo de registro (por ejemplo, la unidad flash USB est\u00e1 protegida contra escritura o llena)",
+                    "low_pv_voltage_dc_input_voltage_too_low": "Voltaje fotovoltaico bajo: el voltaje de entrada de CC es demasiado bajo para suministrar energ\u00eda a la red",
+                    "mains_voltage_dependent_power_reduction": "Reducci\u00f3n de potencia en funci\u00f3n de la tensi\u00f3n de red",
+                    "memory_error_detected": "Error de memoria detectado",
+                    "neutral_conductor_not_connected": "Conductor neutro no conectado",
+                    "no_communication_between_power_stage_and_control_system": "No es posible la comunicaci\u00f3n entre la etapa de potencia y el sistema de control",
+                    "no_communication_with_filter": "No es posible la comunicaci\u00f3n con el filtro",
+                    "no_communication_with_hybrid_manager": "No es posible la comunicaci\u00f3n con el administrador h\u00edbrido",
+                    "no_communication_with_power_stage_set": "No es posible la comunicaci\u00f3n con la etapa de potencia",
+                    "no_communication_with_storage_unit": "No es posible la comunicaci\u00f3n con la unidad de almacenamiento",
+                    "no_energy_fed_by_mppt1_past_24_hours": "No se ha suministrado energ\u00eda a la red mediante MPPT1 en las \u00faltimas 24 horas",
+                    "no_energy_fed_into_grid_past_24_hours": "No se ha suministrado energ\u00eda a la red en las \u00faltimas 24 horas",
+                    "no_error": "No hay error",
+                    "no_power_fed_in_despite_closed_relay": "No se suministra energ\u00eda, a pesar de que el rel\u00e9 est\u00e1 cerrado",
+                    "no_usb_flash_drive_connected": "No hay ninguna unidad flash USB conectada",
+                    "overcurrent_ac": "Sobrecorriente (CA)",
+                    "overcurrent_dc": "Sobrecorriente (CC)",
+                    "overtemperature_in_connection_area": "Temperatura superior al l\u00edmite en la zona de conexi\u00f3n",
+                    "pmc_power_stage_set_not_available": "Etapa de potencia PMC no disponible",
+                    "polarity_of_dc_strings_reversed": "Polaridad de las cadenas de CC invertida",
+                    "possible_hardware_fault": "Posible fallo de hardware",
+                    "power_derating_due_to_high_temperature": "Reducci\u00f3n de potencia causada por una temperatura demasiado alta",
+                    "power_stage_set_problem": "Problema con la etapa de potencia",
+                    "pv_output_too_low_for_feeding_energy_into_the_grid": "La producci\u00f3n fotovoltaica es demasiado baja para suministrar energ\u00eda a la red",
+                    "rcmu_error": "Error de RCMU",
+                    "real_time_clock_communication_error": "Error de comunicaci\u00f3n del m\u00f3dulo de Reloj de Tiempo Real",
+                    "real_time_clock_hardware_error": "Error de hardware en el m\u00f3dulo de Reloj de Tiempo Real",
+                    "real_time_clock_in_emergency_mode": "Error interno: el m\u00f3dulo de Reloj de Tiempo Real est\u00e1 en modo de emergencia",
+                    "safety_cut_out_triggered": "Se ha disparado la desconexi\u00f3n de seguridad mediante tarjeta opcional o RECERBO",
+                    "software_problem": "Problema de software",
+                    "software_update_invalid_country_setup": "Grupo de actualizaci\u00f3n de software 0 (configuraci\u00f3n de pa\u00eds no v\u00e1lida)",
+                    "stand_alone_operation_detected": "Funcionamiento aut\u00f3nomo detectado",
+                    "storage_unit_not_available": "Unidad de almacenamiento no disponible",
+                    "time_lost": "Tiempo perdido",
+                    "too_little_dc_power_for_feed_in_operation": "Demasiada poca potencia de CC para el funcionamiento de alimentaci\u00f3n",
+                    "unique_id_conflict": "Conflicto de ID \u00fanico",
+                    "update_file_corrupt": "Archivo de actualizaci\u00f3n corrupto",
+                    "update_file_does_not_match_device": "El archivo de actualizaci\u00f3n no coincide con el dispositivo, el archivo de actualizaci\u00f3n es demasiado antiguo",
+                    "update_file_not_recognised_or_missing": "Archivo de actualizaci\u00f3n no reconocido o no presente",
+                    "wired_shut_down_triggered": "Apagado por cable activado",
+                    "write_or_read_error_occurred": "Se produjo un error de escritura o lectura"
+                }
+            },
+            "frequency_phase_average": {
+                "name": "Promedio de frecuencia de fase"
+            },
+            "inverter_state": {
+                "name": "Estado del inversor"
+            },
+            "led_color": {
+                "name": "Color del LED"
+            },
+            "led_state": {
+                "name": "Estado de LED"
+            },
+            "meter_location": {
+                "name": "Ubicaci\u00f3n del medidor"
+            },
+            "meter_location_description": {
+                "name": "Descripci\u00f3n de la ubicaci\u00f3n del contador",
+                "state": {
+                    "consumption_path": "Ruta de consumo",
+                    "external_battery": "Bater\u00eda externa",
+                    "external_generator": "Generador externo",
+                    "feed_in": "Punto de interconexi\u00f3n a la red",
+                    "subload": "Subcarga"
+                }
+            },
+            "meter_mode": {
+                "name": "Modo medidor"
+            },
+            "power_ac": {
+                "name": "Alimentaci\u00f3n CA"
+            },
+            "power_apparent_phase_1": {
+                "name": "Potencia aparente fase 1"
+            },
+            "power_apparent_phase_2": {
+                "name": "Potencia aparente fase 2"
+            },
+            "power_apparent_phase_3": {
+                "name": "Potencia aparente fase 3"
+            },
+            "power_battery": {
+                "name": "Bater\u00eda de alimentaci\u00f3n"
+            },
+            "power_battery_charge": {
+                "name": "Carga de la bater\u00eda"
+            },
+            "power_battery_discharge": {
+                "name": "Descarga de la bater\u00eda"
+            },
+            "power_factor_phase_1": {
+                "name": "Factor de potencia fase 1"
+            },
+            "power_factor_phase_2": {
+                "name": "Factor de potencia fase 2"
+            },
+            "power_factor_phase_3": {
+                "name": "Factor de potencia fase 3"
+            },
+            "power_grid": {
+                "name": "Red el\u00e9ctrica"
+            },
+            "power_grid_export": {
+                "name": "Exportaci\u00f3n a la red el\u00e9ctrica"
+            },
+            "power_grid_import": {
+                "name": "Importaci\u00f3n de la red el\u00e9ctrica"
+            },
+            "power_load": {
+                "name": "Carga de energ\u00eda"
+            },
+            "power_load_consumed": {
+                "name": "Carga de energ\u00eda consumida"
+            },
+            "power_load_generated": {
+                "name": "Carga de energ\u00eda generada"
+            },
+            "power_photovoltaics": {
+                "name": "Energ\u00eda fotovoltaica"
+            },
+            "power_reactive": {
+                "name": "Potencia reactiva"
+            },
+            "power_reactive_phase_1": {
+                "name": "Potencia reactiva fase 1"
+            },
+            "power_reactive_phase_2": {
+                "name": "Potencia reactiva fase 2"
+            },
+            "power_reactive_phase_3": {
+                "name": "Potencia reactiva fase 3"
+            },
+            "power_real": {
+                "name": "Potencia real"
+            },
+            "power_real_phase_1": {
+                "name": "Potencia real fase 1"
+            },
+            "power_real_phase_2": {
+                "name": "Potencia real fase 2"
+            },
+            "power_real_phase_3": {
+                "name": "Potencia real fase 3"
+            },
+            "relative_autonomy": {
+                "name": "Autonom\u00eda relativa"
+            },
+            "relative_self_consumption": {
+                "name": "Autoconsumo relativo"
+            },
+            "state_code": {
+                "name": "C\u00f3digo de estado"
+            },
+            "state_message": {
+                "name": "Mensaje de estado",
+                "state": {
+                    "boost_mode": "Modo de impulso",
+                    "critical_fault": "Fallo cr\u00edtico",
+                    "fault": "Fallo",
+                    "keep_minimum_temperature": "Mantener la temperatura m\u00ednima",
+                    "legionella_protection": "Protecci\u00f3n contra legionela",
+                    "up_and_running": "En funcionamiento"
+                }
+            },
+            "state_of_charge": {
+                "name": "Estado de carga"
+            },
+            "status_code": {
+                "name": "C\u00f3digo de estado"
+            },
+            "status_message": {
+                "name": "Mensaje de estado",
+                "state": {
+                    "bootloading": "Carga de arranque",
+                    "error": "Error",
+                    "idle": "Inactivo",
+                    "ready": "Listo",
+                    "running": "En ejecuci\u00f3n",
+                    "sleeping": "Durmiendo",
+                    "standby": "En espera",
+                    "startup": "Puesta en marcha"
+                }
+            },
+            "temperature_cell": {
+                "name": "Temperatura"
+            },
+            "voltage_ac": {
+                "name": "Voltaje de CA"
+            },
+            "voltage_ac_phase_1": {
+                "name": "Tensi\u00f3n fase 1"
+            },
+            "voltage_ac_phase_2": {
+                "name": "Tensi\u00f3n fase 2"
+            },
+            "voltage_ac_phase_3": {
+                "name": "Tensi\u00f3n fase 3"
+            },
+            "voltage_ac_phase_to_phase_12": {
+                "name": "Tensi\u00f3n fase 1-2"
+            },
+            "voltage_ac_phase_to_phase_23": {
+                "name": "Tensi\u00f3n fase 2-3"
+            },
+            "voltage_ac_phase_to_phase_31": {
+                "name": "Tensi\u00f3n fase 3-1"
+            },
+            "voltage_dc": {
+                "name": "Voltaje de CC"
+            },
+            "voltage_dc_2": {
+                "name": "Voltaje DC 2"
+            },
+            "voltage_dc_maximum_cell": {
+                "name": "Tensi\u00f3n m\u00e1xima de la celda"
+            },
+            "voltage_dc_minimum_cell": {
+                "name": "Tensi\u00f3n m\u00ednima de la celda"
+            }
+        }
+    },
+    "exceptions": {
+        "entry_cannot_connect": {
+            "message": "No se pudo conectar al dispositivo Fronius en {host}: {fronius_error}"
+        },
+        "update_failed": {
+            "message": "Se produjo un error al intentar obtener los datos: {fronius_error}"
+        }
+    }
+}

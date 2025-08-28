@@ -1,0 +1,154 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "already_in_progress": "Konfigurationsablauf wird bereits ausgef\u00fchrt",
+            "authorize_url_timeout": "Zeit\u00fcberschreitung beim Erstellen der Autorisierungs-URL.",
+            "missing_configuration": "Die Komponente ist nicht konfiguriert. Bitte der Dokumentation folgen.",
+            "missing_credentials": "F\u00fcr die Integration sind OAuth-Anmeldedaten erforderlich.",
+            "no_url_available": "Keine URL verf\u00fcgbar. Informationen zu diesem Fehler [findest du im Hilfebereich]({docs_url}).",
+            "oauth_error": "Ung\u00fcltige Token-Daten empfangen.",
+            "oauth_failed": "Fehler beim Abrufen des Zugriffstokens.",
+            "oauth_timeout": "Zeit\u00fcberschreitung beim Aufl\u00f6sen des OAuth-Tokens.",
+            "oauth_unauthorized": "OAuth-Autorisierungsfehler beim Abrufen des Zugriffstokens.",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "create_entry": {
+            "default": "Erfolgreich authentifiziert"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Authentifizierungsmethode w\u00e4hlen"
+            },
+            "reauth_confirm": {
+                "description": "Die yolink Integration muss dein Konto neu authentifizieren",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "button_1_long_press": "Button_1 (lang gedr\u00fcckt)",
+            "button_1_short_press": "Button_1 (kurz gedr\u00fcckt)",
+            "button_2_long_press": "Button_2 (lang gedr\u00fcckt)",
+            "button_2_short_press": "Button_2 (kurz gedr\u00fcckt)",
+            "button_3_long_press": "Button_3 (lang gedr\u00fcckt)",
+            "button_3_short_press": "Button_3 (kurz gedr\u00fcckt)",
+            "button_4_long_press": "Button_4 (lang gedr\u00fcckt)",
+            "button_4_short_press": "Button_4 (kurz gedr\u00fcckt)"
+        }
+    },
+    "entity": {
+        "number": {
+            "config_volume": {
+                "name": "Lautst\u00e4rke"
+            }
+        },
+        "sensor": {
+            "current_power": {
+                "name": "Aktuelle Leistung"
+            },
+            "power_consumption": {
+                "name": "Stromverbrauch"
+            },
+            "power_failure_alarm": {
+                "name": "Stromausfallalarm",
+                "state": {
+                    "alert": "Alarm",
+                    "normal": "Normal",
+                    "off": "Aus"
+                }
+            },
+            "power_failure_alarm_beep": {
+                "name": "Alarmton bei Stromausfall",
+                "state": {
+                    "disabled": "Deaktiviert",
+                    "enabled": "Aktiviert"
+                }
+            },
+            "power_failure_alarm_mute": {
+                "name": "Stummschaltung des Stromausfallalarms",
+                "state": {
+                    "muted": "Stummgeschaltet",
+                    "unmuted": "Nicht stummgeschaltet"
+                }
+            },
+            "power_failure_alarm_volume": {
+                "name": "Lautst\u00e4rke des Stromausfallalarms",
+                "state": {
+                    "high": "Hoch",
+                    "low": "Niedrig",
+                    "medium": "Mittel"
+                }
+            },
+            "water_meter_reading": {
+                "name": "Wasserz\u00e4hlerstand"
+            }
+        },
+        "switch": {
+            "plug_1": {
+                "name": "Stecker 1"
+            },
+            "plug_2": {
+                "name": "Stecker 2"
+            },
+            "plug_3": {
+                "name": "Stecker 3"
+            },
+            "plug_4": {
+                "name": "Stecker 4"
+            },
+            "usb_ports": {
+                "name": "USB-Anschl\u00fcsse"
+            }
+        },
+        "valve": {
+            "meter_valve_state": {
+                "name": "Ventilzustand"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Konfigurationseintrag nicht gefunden oder nicht geladen!"
+        }
+    },
+    "selector": {
+        "speaker_tone": {
+            "options": {
+                "alert": "Alarm",
+                "emergency": "Notfall",
+                "tip": "Tipp",
+                "warn": "Warnen"
+            }
+        }
+    },
+    "services": {
+        "play_on_speaker_hub": {
+            "description": "Wandelt Text in Audiowiedergabe auf YoLink SpeakerHub um",
+            "fields": {
+                "message": {
+                    "description": "Abzuspielende Textnachricht.",
+                    "name": "Textnachricht"
+                },
+                "repeat": {
+                    "description": "Die Anzahl der Wiederholungen des Textes.",
+                    "name": "Wiederholen"
+                },
+                "target_device": {
+                    "description": "SpeakerHub-Ger\u00e4t",
+                    "name": "SpeakerHub-Ger\u00e4t"
+                },
+                "tone": {
+                    "description": "Ton vor der Audiowiedergabe.",
+                    "name": "Ton"
+                },
+                "volume": {
+                    "description": "\u00c4ndert die Lautsprecherlautst\u00e4rke nur f\u00fcr die Wiedergabe dieser Nachricht.",
+                    "name": "Lautst\u00e4rke"
+                }
+            },
+            "name": "Auf SpeakerHub abspielen"
+        }
+    }
+}

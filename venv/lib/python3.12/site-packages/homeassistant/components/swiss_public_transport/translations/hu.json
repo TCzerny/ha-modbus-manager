@@ -1,0 +1,123 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "A szolg\u00e1ltat\u00e1s m\u00e1r konfigur\u00e1lva van",
+            "bad_config": "A k\u00e9r\u00e9s sikertelen volt rossz konfigur\u00e1ci\u00f3 miatt: Ellen\u0151rizze a [menetrendet]({stationboard_url}) \u00e9rv\u00e9nyes \u00e1llom\u00e1sok\u00e9rt.",
+            "cannot_connect": "Nem lehet kapcsol\u00f3dni a szerverhez",
+            "unknown": "Ismeretlen hiba l\u00e9pett fel a python-opendata-transportban"
+        },
+        "error": {
+            "bad_config": "A k\u00e9r\u00e9s sikertelen volt rossz konfigur\u00e1ci\u00f3 miatt: Ellen\u0151rizze a [menetrendet]({stationboard_url}) oldalon, hogy \u00e9rv\u00e9nyesek-e az \u00e1llom\u00e1snevek",
+            "cannot_connect": "Nem lehet kapcsol\u00f3dni a szerverhez",
+            "too_many_via_stations": "T\u00fal sok k\u00f6zbens\u0151 \u00e1llom\u00e1s, legfeljebb 5 k\u00f6zbens\u0151 \u00e1llom\u00e1s enged\u00e9lyezett kapcsolatk\u00e9nt.",
+            "unknown": "Ismeretlen hiba l\u00e9pett fel a python-opendata-transportban"
+        },
+        "step": {
+            "time_fixed": {
+                "data": {
+                    "time_fixed": "Napszak"
+                },
+                "description": "K\u00e9rj\u00fck, v\u00e1lassza ki a csatlakoz\u00e1shoz tartoz\u00f3 megfelel\u0151 id\u0151pontot (pl. minden reggel 7:12:00).",
+                "title": "Sv\u00e1jci t\u00f6megk\u00f6zleked\u00e9s"
+            },
+            "time_offset": {
+                "data": {
+                    "time_offset": "Id\u0151eltol\u00e1s"
+                },
+                "description": "K\u00e9rj\u00fck, v\u00e1lassza ki a megfelel\u0151 id\u0151eltol\u00e1st, amelyet a legkor\u00e1bbi lehets\u00e9ges csatlakoz\u00e1shoz szeretne hozz\u00e1adni (pl. +00:05:00 elt\u00e9r\u00e9s hozz\u00e1ad\u00e1sa, figyelembe v\u00e9ve az \u00e1llom\u00e1sig tart\u00f3 s\u00e9t\u00e1t).",
+                "title": "Sv\u00e1jci t\u00f6megk\u00f6zleked\u00e9s"
+            },
+            "user": {
+                "data": {
+                    "from": "Indul\u00e1si \u00e1llom\u00e1s",
+                    "time_mode": "V\u00e1lasszon egy id\u0151z\u00edt\u00e9si m\u00f3dot",
+                    "time_station": "V\u00e1lassza ki a megfelel\u0151 \u00e1llom\u00e1st",
+                    "to": "V\u00e9g\u00e1llom\u00e1s",
+                    "via": "\u00c1tsz\u00e1ll\u00f3 \u00e1llom\u00e1sok"
+                },
+                "data_description": {
+                    "time_mode": "Az id\u0151z\u00edt\u00e9si m\u00f3d lehet\u0151v\u00e9 teszi az indul\u00e1si id\u0151 m\u00f3dos\u00edt\u00e1s\u00e1t, r\u00f6gz\u00edtheti egy meghat\u00e1rozott id\u0151pontra (pl. minden reggel 7:12:00) vagy hozz\u00e1adhat egy id\u0151eltol\u00e1st (pl. +00:05:00, figyelembe v\u00e9ve az \u00e1llom\u00e1sig tart\u00f3 s\u00e9t\u00e1t).",
+                    "time_station": "\u00c1ltal\u00e1ban egy j\u00e1rat indul\u00e1si idej\u00e9t k\u00f6vetik nyomon, amikor az elhagyja az indul\u00f3 \u00e1llom\u00e1st. Alternat\u00edv megold\u00e1sk\u00e9nt k\u00f6vetheti a j\u00e1rat \u00e9rkez\u00e9si idej\u00e9t a v\u00e9g\u00e1llom\u00e1sra."
+                },
+                "description": "Adja meg a kiindul\u00e1si \u00e9s v\u00e9g\u00e1llom\u00e1st az \u00fatvonal\u00e1hoz, valamint opcion\u00e1lisan legfeljebb 5 \u00e1tsz\u00e1ll\u00e1si \u00e1llom\u00e1st.\n\nA [menetrend]({stationboard_url}) seg\u00edts\u00e9g\u00e9vel ellen\u0151rizheti az \u00e9rv\u00e9nyes \u00e1llom\u00e1sokat.",
+                "title": "Sv\u00e1jci t\u00f6megk\u00f6zleked\u00e9s"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delay": {
+                "name": "K\u00e9s\u00e9s"
+            },
+            "departure0": {
+                "name": "Indul\u00e1s"
+            },
+            "departure1": {
+                "name": "Indul\u00e1s +1"
+            },
+            "departure2": {
+                "name": "Indul\u00e1s +2"
+            },
+            "duration": {
+                "name": "Id\u0151tartam"
+            },
+            "line": {
+                "name": "Vonal"
+            },
+            "platform": {
+                "name": "Platform"
+            },
+            "transfers": {
+                "name": "\u00c1tsz\u00e1ll\u00e1sok"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Nem tud csatlakozni a kiszolg\u00e1l\u00f3hoz.\n{error}"
+        },
+        "config_entry_not_found": {
+            "message": "A \" {target} \" sv\u00e1jci t\u00f6megk\u00f6zleked\u00e9si integr\u00e1ci\u00f3s p\u00e9ld\u00e1ny nem tal\u00e1lhat\u00f3."
+        },
+        "invalid_data": {
+            "message": "A(z) {config_title} be\u00e1ll\u00edt\u00e1sa sikertelen az \u00e9rv\u00e9nytelen adatok miatt, ellen\u0151rizze a [menetrendben]({stationboard_url}), hogy az \u00e1llom\u00e1snevek \u00e9rv\u00e9nyesek-e.\n{error}"
+        },
+        "not_loaded": {
+            "message": "{target} nincs bet\u00f6ltve."
+        },
+        "request_timeout": {
+            "message": "Id\u0151t\u00fall\u00e9p\u00e9s a {config_title} bejegyz\u00e9s csatlakoz\u00e1sakor.\n{error}"
+        }
+    },
+    "selector": {
+        "time_mode": {
+            "options": {
+                "fixed": "Egy meghat\u00e1rozott napszakban",
+                "now": "Most",
+                "offset": "Id\u0151eltol\u00e1ssal mostant\u00f3l"
+            }
+        },
+        "time_station": {
+            "options": {
+                "arrival": "\u00c9rkez\u00e9si id\u0151 megjelen\u00edt\u00e9se a v\u00e9g\u00e1llom\u00e1son",
+                "departure": "Indul\u00e1si id\u0151 megjelen\u00edt\u00e9se a kiindul\u00f3 \u00e1llom\u00e1sr\u00f3l"
+            }
+        }
+    },
+    "services": {
+        "fetch_connections": {
+            "description": "T\u00f6ltse le a csatlakoz\u00e1sok list\u00e1j\u00e1t a sv\u00e1jci t\u00f6megk\u00f6zleked\u00e9sb\u0151l.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Sv\u00e1jci t\u00f6megk\u00f6zleked\u00e9si p\u00e9ld\u00e1ny, amelyhez kapcsolatokat kell lek\u00e9rni.",
+                    "name": "P\u00e9ld\u00e1ny"
+                },
+                "limit": {
+                    "description": "A lek\u00e9rdezend\u0151 kapcsolatok sz\u00e1ma [1-15]",
+                    "name": "Korl\u00e1t"
+                }
+            },
+            "name": "Kapcsolatok lek\u00e9r\u00e9se"
+        }
+    }
+}

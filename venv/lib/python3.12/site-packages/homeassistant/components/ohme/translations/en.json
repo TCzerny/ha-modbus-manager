@@ -1,0 +1,67 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Device is already configured",
+            "reauth_successful": "Re-authentication was successful"
+        },
+        "error": {
+            "invalid_auth": "Invalid authentication",
+            "unknown": "Unexpected error"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Password"
+                },
+                "data_description": {
+                    "password": "Enter the password for your Ohme account"
+                },
+                "description": "Please update your password for {email}",
+                "title": "Authentication expired for {name}"
+            },
+            "user": {
+                "data": {
+                    "email": "Email",
+                    "password": "Password"
+                },
+                "data_description": {
+                    "email": "Enter the email address associated with your Ohme account.",
+                    "password": "Enter the password for your Ohme account"
+                },
+                "description": "Configure your Ohme account. If you signed up to Ohme with a third party account like Google, please reset your password via Ohme before configuring this integration."
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "approve": {
+                "name": "Approve charge"
+            }
+        },
+        "sensor": {
+            "ct_current": {
+                "name": "CT current"
+            },
+            "status": {
+                "name": "Status",
+                "state": {
+                    "charging": "Charging",
+                    "pending_approval": "Pending approval",
+                    "plugged_in": "Plugged in",
+                    "unplugged": "Unplugged"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "api_failed": {
+            "message": "Error communicating with Ohme API"
+        },
+        "auth_failed": {
+            "message": "Unable to login to Ohme"
+        },
+        "device_info_failed": {
+            "message": "Unable to get Ohme device information"
+        }
+    }
+}

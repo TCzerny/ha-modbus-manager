@@ -1,0 +1,116 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Standort ist bereits konfiguriert",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "destination": "Zielpunkt",
+                    "name": "Name",
+                    "origin": "Startpunkt",
+                    "region": "Region"
+                },
+                "description": "Gib f\u00fcr Ursprung und Ziel die Adresse oder die GPS-Koordinaten des Standorts ein (GPS-Koordinaten m\u00fcssen durch ein Komma getrennt werden). Du kannst auch eine Entit\u00e4ts-ID eingeben, die diese Daten in ihrem Zustand bereitstellt, eine Entit\u00e4ts-ID mit den Attributen Breitengrad und L\u00e4ngengrad oder einen Zonen-Namen."
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "avoid_ferries": "F\u00e4hren meiden?",
+                    "avoid_subscription_roads": "Stra\u00dfen vermeiden, f\u00fcr die eine Vignette oder ein Abonnement ben\u00f6tigt wird?",
+                    "avoid_toll_roads": "Mautstra\u00dfen meiden?",
+                    "excl_filter": "Genauer Stra\u00dfenname, der NICHT Teil der ausgew\u00e4hlten Route sein darf",
+                    "incl_filter": "Genauer Stra\u00dfenname, der Teil der ausgew\u00e4hlten Route sein muss",
+                    "realtime": "Reisezeit in Echtzeit?",
+                    "units": "Einheiten",
+                    "vehicle_type": "Fahrzeugtyp"
+                },
+                "description": "Mit einigen Optionen kannst du die Integration zwingen, bei der Berechnung der Reisezeit eine bestimmte Route zu verwenden oder zu vermeiden."
+            }
+        }
+    },
+    "selector": {
+        "region": {
+            "options": {
+                "au": "Australien",
+                "eu": "Europa",
+                "il": "Israel",
+                "na": "Nordamerika",
+                "us": "USA"
+            }
+        },
+        "units": {
+            "options": {
+                "imperial": "Imperiales System",
+                "metric": "Metrisches System"
+            }
+        },
+        "vehicle_type": {
+            "options": {
+                "car": "Auto",
+                "motorcycle": "Motorrad",
+                "taxi": "Taxi"
+            }
+        }
+    },
+    "services": {
+        "get_travel_times": {
+            "description": "Ruft Routenalternativen und Reisezeiten zwischen zwei Orten ab.",
+            "fields": {
+                "avoid_ferries": {
+                    "description": "Ob F\u00e4hren gemieden werden sollen.",
+                    "name": "F\u00e4hren meiden?"
+                },
+                "avoid_subscription_roads": {
+                    "description": "Ob Abonnementstra\u00dfen gemieden werden sollen.",
+                    "name": "Stra\u00dfen vermeiden, f\u00fcr die eine Vignette oder ein Abonnement ben\u00f6tigt wird?"
+                },
+                "avoid_toll_roads": {
+                    "description": "Ob mautpflichtige Stra\u00dfen gemieden werden sollen.",
+                    "name": "Mautstra\u00dfen meiden?"
+                },
+                "destination": {
+                    "description": "Der Zielpunkt der Route.",
+                    "name": "Zielpunkt"
+                },
+                "excl_filter": {
+                    "description": "Genauer Stra\u00dfenname, der NICHT Teil der ausgew\u00e4hlten Route sein darf.",
+                    "name": "Genauer Stra\u00dfenname, der NICHT Teil der ausgew\u00e4hlten Route sein darf"
+                },
+                "incl_filter": {
+                    "description": "Genauer Stra\u00dfenname, der Teil der ausgew\u00e4hlten Route sein muss.",
+                    "name": "Genauer Stra\u00dfenname, der Teil der ausgew\u00e4hlten Route sein muss"
+                },
+                "origin": {
+                    "description": "Der Startpunkt der Route.",
+                    "name": "Startpunkt"
+                },
+                "realtime": {
+                    "description": "Echtzeit- oder statistische Daten verwenden.",
+                    "name": "Reisezeit in Echtzeit?"
+                },
+                "region": {
+                    "description": "Die Region. Bestimmt, welcher Waze-Server verwendet wird.",
+                    "name": "Region"
+                },
+                "units": {
+                    "description": "Welches Einheitensystem verwendet werden soll.",
+                    "name": "Einheiten"
+                },
+                "vehicle_type": {
+                    "description": "Welches Fahrzeug verwendet werden soll.",
+                    "name": "Fahrzeugtyp"
+                }
+            },
+            "name": "Reisezeiten abrufen"
+        }
+    },
+    "title": "Waze Reisezeit"
+}

@@ -1,0 +1,77 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Zariadenie u\u017e je nakonfigurovan\u00e9",
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "reconfigure_successful": "Rekonfigur\u00e1cia bola \u00faspe\u0161n\u00e1",
+            "wrong_device": "Toto zariadenie Cambridge Audio sa nezhoduje s existuj\u00facim ID zariadenia. Skontrolujte, \u010di ste zadali spr\u00e1vnu IP adresu."
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165 k zariadeniu Cambridge Audio. Skontrolujte, \u010di je zariadenie zapnut\u00e9 a pripojen\u00e9 k sieti. Ak sa zariadenie nepripoj\u00ed, sk\u00faste ho vypn\u00fa\u0165."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "Chcete nastavi\u0165 {name}?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Hostite\u013e"
+                },
+                "data_description": {
+                    "host": "N\u00e1zov hostite\u013ea alebo IP adresa Cambridge Audio Streamer."
+                },
+                "description": "Prekonfigurujte svoj Cambridge Audio Streamer."
+            },
+            "user": {
+                "data": {
+                    "host": "Hostite\u013e"
+                },
+                "data_description": {
+                    "host": "N\u00e1zov hostite\u013ea alebo IP adresa Cambridge Audio Streamer."
+                },
+                "description": "Nastavte si Cambridge Audio Streamer na integr\u00e1ciu s Home Assistant."
+            }
+        }
+    },
+    "entity": {
+        "select": {
+            "audio_output": {
+                "name": "Zvukov\u00fd v\u00fdstup"
+            },
+            "display_brightness": {
+                "name": "Jas displeja",
+                "state": {
+                    "bright": "Jas",
+                    "dim": "Dim",
+                    "off": "Neakt\u00edvny"
+                }
+            }
+        },
+        "switch": {
+            "early_update": {
+                "name": "Skor\u00e1 aktualiz\u00e1cia"
+            },
+            "pre_amp": {
+                "name": "Predzosil\u0148ova\u010d"
+            }
+        }
+    },
+    "exceptions": {
+        "command_error": {
+            "message": "Chyba pri vykon\u00e1van\u00ed {function_name} na entite {entity_id}"
+        },
+        "entry_cannot_connect": {
+            "message": "Chyba pri prip\u00e1jan\u00ed k {host}"
+        },
+        "missing_preset": {
+            "message": "Ch\u00fdba predvo\u013eba pre media_id: {preset_id}"
+        },
+        "preset_non_integer": {
+            "message": "Predvo\u013eba mus\u00ed by\u0165 cel\u00e9 \u010d\u00edslo, m\u00e1: {preset_id}"
+        },
+        "unsupported_media_type": {
+            "message": "Nepodporovan\u00fd typ m\u00e9dia pre zariadenie Cambridge Audio: {media_type}"
+        }
+    }
+}

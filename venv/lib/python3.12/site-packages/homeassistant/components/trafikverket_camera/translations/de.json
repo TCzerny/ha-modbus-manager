@@ -1,0 +1,100 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "invalid_location": "Es konnte kein Kamerastandort mit dem angegebenen Namen gefunden werden",
+            "more_locations": "Es wurden mehrere Kamerastandorte mit dem angegebenen Namen gefunden"
+        },
+        "step": {
+            "multiple_cameras": {
+                "data": {
+                    "id": "Kamera ausw\u00e4hlen"
+                },
+                "description": "Das Ergebnis kam mit mehreren Kameras zur\u00fcck"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "api_key": "API-Code"
+                }
+            },
+            "reconfigure": {
+                "data": {
+                    "api_key": "API-Code",
+                    "location": "Standort"
+                },
+                "data_description": {
+                    "location": "Name, Beschreibung, Kamera-ID oder ein Teil davon. Sei so genau wie m\u00f6glich, um zu vermeiden, dass du dadurch mehrere Kameras erh\u00e4ltst"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API-Code",
+                    "location": "Standort"
+                },
+                "data_description": {
+                    "location": "Name, Beschreibung, Kamera-ID oder ein Teil davon. Sei so genau wie m\u00f6glich, um zu vermeiden, dass du dadurch mehrere Kameras erh\u00e4ltst"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active": {
+                "name": "Aktiv"
+            }
+        },
+        "camera": {
+            "tv_camera": {
+                "state_attributes": {
+                    "description": {
+                        "name": "Beschreibung"
+                    },
+                    "direction": {
+                        "name": "Richtung"
+                    },
+                    "full_size_photo": {
+                        "name": "Foto in voller Gr\u00f6\u00dfe"
+                    },
+                    "location": {
+                        "name": "Standort"
+                    },
+                    "photo_url": {
+                        "name": "Foto-URL"
+                    },
+                    "status": {
+                        "name": "Status"
+                    },
+                    "type": {
+                        "name": "Kameratyp"
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "camera_type": {
+                "name": "Kameratyp"
+            },
+            "direction": {
+                "name": "Richtung"
+            },
+            "modified": {
+                "name": "Ge\u00e4ndert"
+            },
+            "photo_time": {
+                "name": "Fotozeit"
+            },
+            "photo_url": {
+                "name": "Foto-URL"
+            },
+            "status": {
+                "name": "Status"
+            }
+        }
+    }
+}

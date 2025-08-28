@@ -1,0 +1,206 @@
+{
+    "config": {
+        "abort": {
+            "already_configured_account": "La cuenta ya est\u00e1 configurada",
+            "ezviz_cloud_account_missing": "Falta la cuenta en la nube de EZVIZ. Por favor, vuelve a configurar la cuenta en la nube de EZVIZ",
+            "reauth_successful": "La autenticaci\u00f3n se volvi\u00f3 a realizar correctamente",
+            "unknown": "Error inesperado"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_auth": "Autenticaci\u00f3n no v\u00e1lida",
+            "invalid_host": "Nombre de host o direcci\u00f3n IP no v\u00e1lidos",
+            "mfa_required": "2FA habilitado en la cuenta, por favor, desact\u00edvalo y vuelve a intentarlo"
+        },
+        "flow_title": "{serial}",
+        "step": {
+            "confirm": {
+                "data": {
+                    "password": "Contrase\u00f1a",
+                    "username": "Nombre de usuario"
+                },
+                "description": "Introduce las credenciales RTSP para la c\u00e1mara EZVIZ {serial} con IP {ip_address}",
+                "title": "Descubierta c\u00e1mara EZVIZ"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Contrase\u00f1a",
+                    "username": "Nombre de usuario"
+                },
+                "description": "Introduce las credenciales para volver a autenticarte en la cuenta en la nube EZVIZ",
+                "title": "Autenticaci\u00f3n caducada para {name}"
+            },
+            "user": {
+                "data": {
+                    "password": "Contrase\u00f1a",
+                    "url": "URL",
+                    "username": "Nombre de usuario"
+                },
+                "title": "Conectar con EZVIZ Cloud"
+            },
+            "user_custom_url": {
+                "data": {
+                    "password": "Contrase\u00f1a",
+                    "url": "URL",
+                    "username": "Nombre de usuario"
+                },
+                "description": "Especificar manualmente la URL de tu regi\u00f3n",
+                "title": "Conectar a la URL personalizada de EZVIZ"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "alarm_schedules_enabled": {
+                "name": "Programaciones de alarma habilitadas"
+            },
+            "encrypted": {
+                "name": "Cifrado"
+            }
+        },
+        "button": {
+            "ptz_down": {
+                "name": "PTZ abajo"
+            },
+            "ptz_left": {
+                "name": "PTZ izquierda"
+            },
+            "ptz_right": {
+                "name": "PTZ derecha"
+            },
+            "ptz_up": {
+                "name": "PTZ arriba"
+            }
+        },
+        "image": {
+            "last_motion_image": {
+                "name": "Imagen de \u00faltimo movimiento"
+            }
+        },
+        "light": {
+            "light": {
+                "name": "Luz"
+            }
+        },
+        "number": {
+            "detection_sensibility": {
+                "name": "Sensibilidad de detecci\u00f3n"
+            }
+        },
+        "select": {
+            "alarm_sound_mode": {
+                "name": "Sonido de advertencia",
+                "state": {
+                    "intensive": "Intensivo",
+                    "silent": "Silencioso",
+                    "soft": "Suave"
+                }
+            }
+        },
+        "sensor": {
+            "alarm_sound_mod": {
+                "name": "Nivel de sonido de alarma"
+            },
+            "last_alarm_pic": {
+                "name": "URL de la \u00faltima imagen de alarma"
+            },
+            "last_alarm_time": {
+                "name": "\u00daltima hora de alarma"
+            },
+            "last_alarm_type_code": {
+                "name": "C\u00f3digo del \u00faltimo tipo de alarma"
+            },
+            "last_alarm_type_name": {
+                "name": "Nombre del \u00faltimo tipo de alarma"
+            },
+            "local_ip": {
+                "name": "IP local"
+            },
+            "pir_status": {
+                "name": "Estado del PIR"
+            },
+            "seconds_last_trigger": {
+                "name": "Segundos desde el \u00faltimo desencadenante"
+            },
+            "supported_channels": {
+                "name": "Canales admitidos"
+            },
+            "wan_ip": {
+                "name": "IP WAN"
+            }
+        },
+        "siren": {
+            "siren": {
+                "name": "Sirena"
+            }
+        },
+        "switch": {
+            "all_day_video_recording": {
+                "name": "Grabaci\u00f3n de v\u00eddeo todo el d\u00eda"
+            },
+            "audio": {
+                "name": "Audio"
+            },
+            "auto_sleep": {
+                "name": "Suspensi\u00f3n autom\u00e1tica"
+            },
+            "flicker_light_on_movement": {
+                "name": "Parpadeo de luz en movimiento"
+            },
+            "follow_movement": {
+                "name": "Seguir movimiento"
+            },
+            "infrared_light": {
+                "name": "Luz infrarroja"
+            },
+            "motion_tracking": {
+                "name": "Seguimiento del movimiento"
+            },
+            "pir_motion_activated_light": {
+                "name": "Luz activada por movimiento PIR"
+            },
+            "privacy": {
+                "name": "Privacidad"
+            },
+            "sleep": {
+                "name": "Suspender"
+            },
+            "status_light": {
+                "name": "Luz de estado"
+            },
+            "tamper_alarm": {
+                "name": "Alarma de manipulaci\u00f3n"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ffmpeg_arguments": "Argumentos pasados a ffmpeg para las c\u00e1maras",
+                    "timeout": "Tiempo de espera de la solicitud (segundos)"
+                }
+            }
+        }
+    },
+    "services": {
+        "set_alarm_detection_sensibility": {
+            "description": "Cambia el nivel de sensibilidad de la detecci\u00f3n de movimiento.",
+            "fields": {
+                "level": {
+                    "description": "Nivel de sensibilidad. 1-6 para el tipo 0 (c\u00e1mara normal), o 1-100 para el tipo 3 (c\u00e1mara con sensor PIR).",
+                    "name": "Nivel"
+                },
+                "type_value": {
+                    "description": "Tipo de detecci\u00f3n. 0 para c\u00e1mara normal o 3 para c\u00e1mara con sensor PIR.",
+                    "name": "Tipo"
+                }
+            },
+            "name": "Establecer la sensibilidad de detecci\u00f3n"
+        },
+        "wake_device": {
+            "description": "Despierta una c\u00e1mara del modo de suspensi\u00f3n. Especialmente \u00fatil para c\u00e1maras con bater\u00eda.",
+            "name": "Despertar c\u00e1mara"
+        }
+    }
+}

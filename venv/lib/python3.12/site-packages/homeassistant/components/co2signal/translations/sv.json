@@ -1,0 +1,66 @@
+{
+    "config": {
+        "abort": {
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "invalid_auth": "Ogiltig autentisering",
+            "no_data": "Inga data finns tillg\u00e4ngliga f\u00f6r den plats du har valt.",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "coordinates": {
+                "data": {
+                    "latitude": "Latitud",
+                    "longitude": "Longitud"
+                }
+            },
+            "country": {
+                "data": {
+                    "country_code": "Landskod"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "api_key": "\u00c5tkomstnyckel"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "\u00c5tkomstnyckel",
+                    "location": "Plats"
+                },
+                "description": "Bes\u00f6k https://electricitymaps.com/free-tier f\u00f6r att beg\u00e4ra en token."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "carbon_intensity": {
+                "name": "CO2-intensitet",
+                "state_attributes": {
+                    "country_code": {
+                        "name": "Landskod"
+                    }
+                }
+            },
+            "fossil_fuel_percentage": {
+                "name": "Procent fossila br\u00e4nslen i eln\u00e4tet",
+                "state_attributes": {
+                    "country_code": {
+                        "name": "Landskod"
+                    }
+                }
+            }
+        }
+    },
+    "selector": {
+        "location": {
+            "options": {
+                "specify_coordinates": "Ange koordinater",
+                "specify_country_code": "Ange landskod",
+                "use_home_location": "Anv\u00e4nd hemplats"
+            }
+        }
+    }
+}

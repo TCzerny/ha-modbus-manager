@@ -1,0 +1,302 @@
+{
+    "config": {
+        "step": {
+            "binary_sensor": {
+                "data": {
+                    "all": "Alla entiteter",
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "description": "Om \"alla entiteter\" \u00e4r aktiverat s\u00e5 kommer gruppens status vara \"p\u00e5\" n\u00e4r alla medlemmar \u00e4r p\u00e5.\\nOm \"alla entiteter\" \u00e4r inaktiverat s\u00e5 kommer gruppens status vara \"p\u00e5\" n\u00e4r minst en medlem \u00e4r p\u00e5.",
+                "title": "Skapa grupp"
+            },
+            "button": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "cover": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "event": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "fan": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "light": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "lock": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "media_player": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "notify": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "sensor": {
+                "data": {
+                    "device_class": "Enhetsklass",
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "ignore_non_numeric": "Ignorera icke-numeriska",
+                    "name": "Namn",
+                    "round_digits": "Avrunda v\u00e4rdet till antalet decimaler",
+                    "state_class": "Tillst\u00e5ndsklass",
+                    "type": "Typ",
+                    "unit_of_measurement": "M\u00e5ttenhet"
+                },
+                "title": "Skapa grupp"
+            },
+            "switch": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "name": "Namn"
+                },
+                "title": "Skapa grupp"
+            },
+            "user": {
+                "description": "Med grupper kan du skapa en ny entitet som representerar flera entiteter av samma typ.",
+                "menu_options": {
+                    "binary_sensor": "Bin\u00e4r sensorgrupp",
+                    "button": "Knappgrupp",
+                    "cover": "T\u00e4ckningsgrupp",
+                    "event": "Eventgrupp",
+                    "fan": "Fl\u00e4ktgrupp",
+                    "light": "Ljusgrupp",
+                    "lock": "L\u00e5sgrupp",
+                    "media_player": "Grupp av mediaspelare",
+                    "notify": "Aviseringsgrupp",
+                    "sensor": "Sensorgrupp",
+                    "switch": "Brytargrupp"
+                },
+                "title": "Skapa grupp"
+            }
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Grupp",
+            "state": {
+                "closed": "St\u00e4ngd",
+                "home": "Hemma",
+                "locked": "L\u00e5st",
+                "not_home": "Borta",
+                "off": "Av",
+                "ok": "OK",
+                "on": "P\u00e5",
+                "open": "\u00d6ppen",
+                "problem": "Problem",
+                "unlocked": "Ol\u00e5st"
+            },
+            "state_attributes": {
+                "entity_id": {
+                    "name": "Medlemmar"
+                }
+            }
+        }
+    },
+    "issues": {
+        "device_classes_not_matching": {
+            "description": "Enhetsklasser `{device_classes}` p\u00e5 k\u00e4llenheter `{source_entities}` m\u00e5ste vara identiska f\u00f6r sensorgruppen `{entity_id}`.\n\nKorrigera enhetsklasserna p\u00e5 k\u00e4llenheterna och ladda om gruppsensorn f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "Enhetsklasserna \u00e4r inte korrekta"
+        },
+        "state_classes_not_matching": {
+            "description": "Tillst\u00e5ndsklasserna ` {state_classes} ` p\u00e5 k\u00e4llenheter ` {source_entities} ` m\u00e5ste vara identiska f\u00f6r sensorgruppen ` {entity_id} `. \n \n Korrigera tillst\u00e5ndsklasserna p\u00e5 k\u00e4llentiteterna och ladda om gruppsensorn f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "Tillst\u00e5ndsklasser \u00e4r inte korrekta"
+        },
+        "uoms_not_matching_device_class": {
+            "description": "M\u00e5ttenheten `{uoms}` f\u00f6r ing\u00e5ngssensorerna `{source_entities}` \u00e4r inte kompatibla och kan inte konverteras med enhetsklassen `{device_class}` f\u00f6r sensorgruppen `{entity_id}`.\n\nKorrigera m\u00e5ttenheten p\u00e5 k\u00e4llenheterna och ladda om gruppsensorn f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "M\u00e5ttenheten \u00e4r inte korrekt"
+        },
+        "uoms_not_matching_no_device_class": {
+            "description": "M\u00e5ttenheten `{uoms}` f\u00f6r ing\u00e5ngssensorerna `{source_entities}` \u00e4r inte kompatibla om man inte anv\u00e4nder en enhetsklass p\u00e5 sensorgruppen `{entity_id}`.\n\nKorrigera m\u00e5ttenheten p\u00e5 k\u00e4llenheterna eller st\u00e4ll in en korrekt enhetsklass p\u00e5 sensorgruppen och ladda om gruppsensorn f\u00f6r att \u00e5tg\u00e4rda problemet.",
+            "title": "M\u00e5ttenheten \u00e4r inte korrekt"
+        }
+    },
+    "options": {
+        "step": {
+            "binary_sensor": {
+                "data": {
+                    "all": "Alla entiteter",
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                },
+                "description": "Om \"alla entiteter\" \u00e4r aktiverat s\u00e5 kommer gruppens status vara \"p\u00e5\" n\u00e4r alla medlemmar \u00e4r p\u00e5.\\nOm \"alla entiteter\" \u00e4r inaktiverat s\u00e5 kommer gruppens status vara \"p\u00e5\" n\u00e4r minst en medlem \u00e4r p\u00e5."
+            },
+            "button": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                }
+            },
+            "cover": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                }
+            },
+            "fan": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                }
+            },
+            "light": {
+                "data": {
+                    "all": "Alla entiteter",
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                },
+                "description": "Om \"alla entiteter\" \u00e4r aktiverat s\u00e5 kommer gruppens status vara \"p\u00e5\" n\u00e4r alla medlemmar \u00e4r p\u00e5.\\nOm \"alla entiteter\" \u00e4r inaktiverat s\u00e5 kommer gruppens status vara \"p\u00e5\" n\u00e4r minst en medlem \u00e4r p\u00e5."
+            },
+            "lock": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                }
+            },
+            "media_player": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                }
+            },
+            "notify": {
+                "data": {
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                }
+            },
+            "sensor": {
+                "data": {
+                    "device_class": "Enhetsklass",
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar",
+                    "ignore_non_numeric": "Ignorera icke-numeriska",
+                    "round_digits": "Avrunda v\u00e4rdet till antalet decimaler",
+                    "state_class": "Tillst\u00e5ndsklass",
+                    "type": "Typ",
+                    "unit_of_measurement": "M\u00e5ttenhet"
+                },
+                "description": "Om \"ignorera icke-numerisk\" \u00e4r aktiverat ber\u00e4knas gruppens status om minst en medlem har ett numeriskt v\u00e4rde. Om \"ignorera icke-numerisk\" \u00e4r inaktiverat ber\u00e4knas gruppens status endast om alla gruppmedlemmar har numeriska v\u00e4rden."
+            },
+            "switch": {
+                "data": {
+                    "all": "Alla entiteter",
+                    "entities": "Medlemmar",
+                    "hide_members": "D\u00f6lj medlemmar"
+                },
+                "description": "Om \"alla entiteter\" \u00e4r aktiverat s\u00e5 kommer gruppens status vara \"p\u00e5\" n\u00e4r alla medlemmar \u00e4r p\u00e5.\\nOm \"alla entiteter\" \u00e4r inaktiverat s\u00e5 kommer gruppens status vara \"p\u00e5\" n\u00e4r minst en medlem \u00e4r p\u00e5."
+            }
+        }
+    },
+    "selector": {
+        "type": {
+            "options": {
+                "last": "Senast uppdaterad",
+                "max": "Maximalt",
+                "mean": "Aritmetiskt medelv\u00e4rde",
+                "median": "Median",
+                "min": "Minimum",
+                "product": "Produkt",
+                "range": "Statistiskt intervall",
+                "stdev": "Standardavvikelse",
+                "sum": "Summa"
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "Laddar om gruppkonfiguration, entiteter och meddelandetj\u00e4nster fr\u00e5n YAML-konfigurationen.",
+            "name": "Ladda om"
+        },
+        "remove": {
+            "description": "Tar bort en grupp.",
+            "fields": {
+                "object_id": {
+                    "description": "Objekt-ID f\u00f6r denna grupp. Detta objekt-ID anv\u00e4nds som en del av entitets-ID:t. Format f\u00f6r entitets-ID: [dom\u00e4n].[objekt_id].",
+                    "name": "Objekt-ID"
+                }
+            },
+            "name": "Ta bort"
+        },
+        "set": {
+            "description": "Skapar/uppdaterar en grupp.",
+            "fields": {
+                "add_entities": {
+                    "description": "Lista \u00f6ver medlemmar som ska l\u00e4ggas till i gruppen. Kan inte anv\u00e4ndas i kombination med `Entiteter` eller `Ta bort entiteter`.",
+                    "name": "L\u00e4gga till entiteter"
+                },
+                "all": {
+                    "description": "Aktivera detta alternativ om gruppen endast ska anv\u00e4ndas n\u00e4r alla entiteter har tillst\u00e5ndet `p\u00e5`.",
+                    "name": "Alla"
+                },
+                "entities": {
+                    "description": "Lista \u00f6ver alla medlemmar i gruppen. Kan inte anv\u00e4ndas i kombination med `L\u00e4gg till entiteter` eller `Ta bort entiteter`.",
+                    "name": "Entiteter"
+                },
+                "icon": {
+                    "description": "Namn p\u00e5 ikonen f\u00f6r gruppen.",
+                    "name": "Ikon"
+                },
+                "name": {
+                    "description": "Namn p\u00e5 gruppen.",
+                    "name": "Namn"
+                },
+                "object_id": {
+                    "description": "Objekt-ID f\u00f6r denna grupp. Detta objekt-ID anv\u00e4nds som en del av entitets-ID:t. Format f\u00f6r entitets-ID: [dom\u00e4n].[objekt_id].",
+                    "name": "Objekt-ID"
+                },
+                "remove_entities": {
+                    "description": "Lista \u00f6ver medlemmar som ska tas bort fr\u00e5n en grupp. Kan inte anv\u00e4ndas i kombination med `Entiteter` eller `L\u00e4gg till entiteter`.",
+                    "name": "Ta bort entiteter"
+                }
+            },
+            "name": "St\u00e4ll in"
+        }
+    },
+    "title": "Grupp"
+}

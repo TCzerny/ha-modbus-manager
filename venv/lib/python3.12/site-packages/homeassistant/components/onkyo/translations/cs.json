@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Za\u0159\u00edzen\u00ed je ji\u017e nastaveno",
+            "no_devices_found": "V s\u00edti nebyla nalezena \u017e\u00e1dn\u00e1 za\u0159\u00edzen\u00ed",
+            "reconfigure_successful": "P\u0159enastaven\u00ed bylo \u00fasp\u011b\u0161n\u00e9",
+            "unique_id_mismatch": "S\u00e9riov\u00e9 \u010d\u00edslo za\u0159\u00edzen\u00ed neodpov\u00edd\u00e1 p\u0159edchoz\u00edmu s\u00e9riov\u00e9mu \u010d\u00edslu",
+            "unknown": "Neo\u010dek\u00e1van\u00e1 chyba"
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "empty_input_source_list": "Seznam vstupn\u00edch zdroj\u016f nem\u016f\u017ee b\u00fdt pr\u00e1zdn\u00fd",
+            "unknown": "Neo\u010dek\u00e1van\u00e1 chyba"
+        },
+        "step": {
+            "configure_receiver": {
+                "data": {
+                    "input_sources": "Vstupn\u00ed zdroje",
+                    "volume_resolution": "Rozli\u0161en\u00ed hlasitosti"
+                },
+                "data_description": {
+                    "input_sources": "Seznam vstupn\u00edch zdroj\u016f podporovan\u00fdch p\u0159ij\u00edma\u010dem.",
+                    "volume_resolution": "Po\u010det krok\u016f, kter\u00e9 p\u0159ij\u00edma\u010d pot\u0159ebuje, aby p\u0159e\u0161el od nejni\u017e\u0161\u00ed k nejvy\u0161\u0161\u00ed mo\u017en\u00e9 hlasitosti."
+                },
+                "description": "Nastavit {name}"
+            },
+            "eiscp_discovery": {
+                "data": {
+                    "device": "Za\u0159\u00edzen\u00ed"
+                },
+                "data_description": {
+                    "device": "Vyberte p\u0159ij\u00edma\u010d, kter\u00fd chcete nastavit."
+                }
+            },
+            "manual": {
+                "data": {
+                    "host": "Hostitel"
+                },
+                "data_description": {
+                    "host": "N\u00e1zev hostitele nebo IP adresa p\u0159ij\u00edma\u010de."
+                }
+            },
+            "user": {
+                "menu_options": {
+                    "eiscp_discovery": "Zji\u0161t\u011bn\u00ed Onkyo",
+                    "manual": "Ru\u010dn\u00ed zad\u00e1n\u00ed"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_source": {
+            "message": "Nelze vybrat vstupn\u00ed zdroj \"{invalid_source}\" pro entitu: {entity_id}."
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "Nastaven\u00ed Onkyo pomoc\u00ed YAML se odeb\u00edr\u00e1, ale p\u0159i importu va\u0161eho nastaven\u00ed YAML pro hostitele {host} do\u0161lo k chyb\u011b p\u0159ipojen\u00ed.\n\nUjist\u011bte se, \u017ee p\u0159ipojen\u00ed k p\u0159ij\u00edma\u010di funguje a restartujte Home Assistanta, abyste to zkusili znovu, neboodeberte nastaven\u00ed Onkyo YAML ze souboru configuration.yaml a pokra\u010dujte v [nastaven\u00ed integrace]({url}) ru\u010dn\u011b.",
+            "title": "Import nastaven\u00ed Onkyo YAML se nezda\u0159il"
+        },
+        "deprecated_yaml_import_issue_no_discover": {
+            "description": "Nastaven\u00ed Onkyo pomoc\u00ed YAML se odeb\u00edr\u00e1, ale p\u0159i importu va\u0161eho nastaven\u00ed YAML nebyly objeveny \u017e\u00e1dn\u00e9 p\u0159ij\u00edma\u010de.\n\nUjist\u011bte se, \u017ee p\u0159ipojen\u00ed k p\u0159ij\u00edma\u010di funguje a restartujte Home Assistanta, abyste to zkusili znovu, nebo odeberte nastaven\u00ed Onkyo YAML ze souboru configuration.yaml a pokra\u010dujte v [nastaven\u00ed integrace]({url}) ru\u010dn\u011b.",
+            "title": "Import nastaven\u00ed Onkyo YAML se nezda\u0159il"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_volume": "Maxim\u00e1ln\u00ed limit hlasitosti (%)"
+                },
+                "data_description": {
+                    "max_volume": "Maxim\u00e1ln\u00ed limit hlasitosti v procentech. To p\u0159i\u0159ad\u00ed maxim\u00e1ln\u00ed hlasitost Home Assistanta t\u00e9to hodnot\u011b na p\u0159ij\u00edma\u010di, tj. pokud toto nastav\u00edte na 50 %, pak nastaven\u00ed hlasitosti na 100 % v Home Assistantovi zp\u016fsob\u00ed, \u017ee hlasitost na p\u0159ij\u00edma\u010di bude nastavena na 50 % maxim\u00e1ln\u00ed hodnoty."
+                }
+            }
+        }
+    }
+}

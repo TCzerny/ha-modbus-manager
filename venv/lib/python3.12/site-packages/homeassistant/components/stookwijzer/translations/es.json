@@ -1,0 +1,41 @@
+{
+    "config": {
+        "error": {
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "location": "Ubicaci\u00f3n"
+                },
+                "data_description": {
+                    "location": "Utiliza el mapa para establecer la ubicaci\u00f3n de Stookwijzer."
+                },
+                "description": "Selecciona la ubicaci\u00f3n para la que deseas recibir la informaci\u00f3n de Stookwijzer."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "advice": {
+                "name": "C\u00f3digo de consejo",
+                "state": {
+                    "code_orange": "Naranja",
+                    "code_red": "Rojo",
+                    "code_yellow": "Amarillo"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "no_data_received": {
+            "message": "No se recibieron datos de Stookwijzer."
+        }
+    },
+    "issues": {
+        "location_migration_failed": {
+            "description": "La integraci\u00f3n Stookwijzer no pudo migrar autom\u00e1ticamente tu ubicaci\u00f3n a un nuevo formato que utilizan las integraciones actualizadas. \n \n Aseg\u00farate de estar conectado a Internet y reinicia Home Assistant para volver a intentarlo. \n \n Si esto no resuelve el error, elimina y vuelve a a\u00f1adir la integraci\u00f3n.",
+            "title": "Error en la migraci\u00f3n de tu ubicaci\u00f3n"
+        }
+    }
+}

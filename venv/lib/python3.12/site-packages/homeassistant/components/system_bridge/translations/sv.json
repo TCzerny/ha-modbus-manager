@@ -1,0 +1,227 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "unique_id_mismatch": "Identifieraren st\u00e4mmer inte \u00f6verens med den tidigare identifieraren",
+            "unknown": "Ov\u00e4ntat fel",
+            "unsupported_version": "Din version av System Bridge st\u00f6ds inte. V\u00e4nligen uppgradera till den senaste versionen."
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "authenticate": {
+                "data": {
+                    "token": "API-token"
+                },
+                "description": "Ange API-nyckeln som du st\u00e4llt in i din konfiguration f\u00f6r {name} ."
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "port": "Port",
+                    "token": "Token"
+                },
+                "description": "Ange dina anslutningsuppgifter."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "camera_in_use": {
+                "name": "Kamera i bruk"
+            },
+            "pending_reboot": {
+                "name": "V\u00e4ntar p\u00e5 omstart"
+            }
+        },
+        "media_player": {
+            "media": {
+                "name": "Media"
+            }
+        },
+        "sensor": {
+            "amount_memory_used": {
+                "name": "Anv\u00e4nd minnesm\u00e4ngd"
+            },
+            "battery_time_remaining": {
+                "name": "\u00c5terst\u00e5ende batteritid"
+            },
+            "boot_time": {
+                "name": "Starttid"
+            },
+            "cpu_power_package": {
+                "name": "Processor-paketeffekt"
+            },
+            "cpu_speed": {
+                "name": "Processorhastighet"
+            },
+            "cpu_temperature": {
+                "name": "Processortemperatur"
+            },
+            "cpu_voltage": {
+                "name": "Processorsp\u00e4nning"
+            },
+            "displays_connected": {
+                "name": "Sk\u00e4rmar anslutna"
+            },
+            "kernel": {
+                "name": "K\u00e4rna"
+            },
+            "load": {
+                "name": "Last"
+            },
+            "memory_free": {
+                "name": "Ledigt minne"
+            },
+            "memory_used": {
+                "name": "Anv\u00e4nt minne"
+            },
+            "os": {
+                "name": "Operativsystem"
+            },
+            "processes": {
+                "name": "Processer"
+            },
+            "version": {
+                "name": "Version"
+            },
+            "version_latest": {
+                "name": "Senaste version"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_failed": {
+            "message": "Autentiseringen misslyckades f\u00f6r {title} ({host})"
+        },
+        "connection_failed": {
+            "message": "Ett anslutningsfel uppstod f\u00f6r {title} ({host})"
+        },
+        "device_not_found": {
+            "message": "Kunde inte hitta enheten {device}"
+        },
+        "no_data_received": {
+            "message": "Ingen data mottagen fr\u00e5n {host}"
+        },
+        "process_not_found": {
+            "message": "Kunde inte hitta processen med id {id}."
+        },
+        "timeout": {
+            "message": "En timeout uppstod f\u00f6r {title} ({host})"
+        },
+        "unsupported_version": {
+            "message": "Du k\u00f6r en version av System Bridge f\u00f6r {title} ({host}) som inte st\u00f6ds. V\u00e4nligen uppgradera till den senaste versionen"
+        }
+    },
+    "issues": {
+        "unsupported_version": {
+            "description": "Din version av System Bridge f\u00f6r v\u00e4rd {host} st\u00f6ds inte. \n \n Uppgradera till den senaste versionen.",
+            "title": "System Bridge-uppgradering kr\u00e4vs"
+        }
+    },
+    "services": {
+        "get_process_by_id": {
+            "description": "H\u00e4mtar en process med hj\u00e4lp av ID.",
+            "fields": {
+                "bridge": {
+                    "description": "Server att prata med.",
+                    "name": "Brygga"
+                },
+                "id": {
+                    "description": "ID f\u00f6r den process som ska h\u00e4mtas.",
+                    "name": "ID"
+                }
+            },
+            "name": "H\u00e4mta process efter ID"
+        },
+        "get_processes_by_name": {
+            "description": "H\u00e4mtar en lista \u00f6ver processer med namnet.",
+            "fields": {
+                "bridge": {
+                    "description": "Server att prata med.",
+                    "name": "Brygga"
+                },
+                "name": {
+                    "description": "Namn p\u00e5 den process som ska h\u00e4mtas.",
+                    "name": "Namn"
+                }
+            },
+            "name": "H\u00e4mta processer efter namn"
+        },
+        "open_path": {
+            "description": "\u00d6ppnar en fil p\u00e5 servern med hj\u00e4lp av standardprogrammet.",
+            "fields": {
+                "bridge": {
+                    "description": "Server att prata med.",
+                    "name": "Brygga"
+                },
+                "path": {
+                    "description": "S\u00f6kv\u00e4g att \u00f6ppna.",
+                    "name": "S\u00f6kv\u00e4g"
+                }
+            },
+            "name": "\u00d6ppna s\u00f6kv\u00e4g"
+        },
+        "open_url": {
+            "description": "\u00d6ppnar en URL p\u00e5 servern med standardprogrammet.",
+            "fields": {
+                "bridge": {
+                    "description": "Server att prata med.",
+                    "name": "Brygga"
+                },
+                "url": {
+                    "description": "URL att \u00f6ppna.",
+                    "name": "URL"
+                }
+            },
+            "name": "\u00d6ppna URL"
+        },
+        "power_command": {
+            "description": "Skickar ett power-kommando till systemet.",
+            "fields": {
+                "bridge": {
+                    "description": "Den server som kommandot ska skickas till.",
+                    "name": "Brygga"
+                },
+                "command": {
+                    "description": "Kommando att anropa.",
+                    "name": "Kommando"
+                }
+            },
+            "name": "Str\u00f6mkommando"
+        },
+        "send_keypress": {
+            "description": "Skickar en tangenttryckning.",
+            "fields": {
+                "bridge": {
+                    "description": "Den server som kommandot ska skickas till.",
+                    "name": "Brygga"
+                },
+                "key": {
+                    "description": "Knapp att trycka p\u00e5. Lista tillg\u00e4nglig h\u00e4r: http://robotjs.io/docs/syntax#keys.",
+                    "name": "Knapp"
+                }
+            },
+            "name": "Skicka tangenttryckning"
+        },
+        "send_text": {
+            "description": "Skickar text som servern kan skriva.",
+            "fields": {
+                "bridge": {
+                    "description": "Den server som kommandot ska skickas till.",
+                    "name": "Brygga"
+                },
+                "text": {
+                    "description": "Text att skriva.",
+                    "name": "Text"
+                }
+            },
+            "name": "Skicka tangentbordstext"
+        }
+    }
+}

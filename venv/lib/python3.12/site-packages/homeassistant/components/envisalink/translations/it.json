@@ -1,0 +1,30 @@
+{
+    "services": {
+        "alarm_keypress": {
+            "description": "Invia pressioni di tasti personalizzate all'allarme.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome della centrale di allarme da attivare.",
+                    "name": "Entit\u00e0"
+                },
+                "keypress": {
+                    "description": "Stringa da inviare alla centrale di allarme (1-6 caratteri).",
+                    "name": "Tasto premuto"
+                }
+            },
+            "name": "Pressione del tasto di allarme"
+        },
+        "invoke_custom_function": {
+            "fields": {
+                "partition": {
+                    "name": "Partizione"
+                },
+                "pgm": {
+                    "description": "Il numero PGM da attivare sul pannello di allarme.",
+                    "name": "PGM"
+                }
+            },
+            "name": "Richiama la funzione personalizzata"
+        }
+    }
+}

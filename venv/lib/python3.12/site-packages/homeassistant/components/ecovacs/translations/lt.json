@@ -1,0 +1,270 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Paskyra jau sukonfig\u016bruota"
+        },
+        "error": {
+            "cannot_connect": "Prisijungti nepavyko",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "invalid_url": "Netinkamas URL",
+            "invalid_url_schema_override_mqtt_url": "Netinkama MQTT URL schema.\n URL turi prasid\u0117ti \u201emqtt://\u201c arba \u201emqtts://\u201c.",
+            "invalid_url_schema_override_rest_url": "Netinkama REST URL schema.\n URL turi prasid\u0117ti \u201ehttp://\u201c arba \u201ehttps://\u201c.",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "country": "\u0160alis",
+                    "override_mqtt_url": "MQTT URL",
+                    "override_rest_url": "REST URL",
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas",
+                    "verify_mqtt_certificate": "Patvirtinkite MQTT SSL sertifikat\u0105"
+                },
+                "data_description": {
+                    "override_mqtt_url": "\u012eveskite savaranki\u0161kai priglobto egzemplioriaus MQTT URL, \u012fskaitant schem\u0105 (mqtt/mqtts).",
+                    "override_rest_url": "\u012eveskite savaranki\u0161kai priglobto egzemplioriaus REST URL, \u012fskaitant schem\u0105 (http/https)."
+                }
+            },
+            "user": {
+                "data": {
+                    "mode": "Re\u017eimas"
+                },
+                "data_description": {
+                    "mode": "Pasirinkite re\u017eim\u0105, kur\u012f norite naudoti prisijungdami prie Ecovacs. Jei nesate tikri, pasirinkite **Debesis**. Pasirinkite **Savaranki\u0161kai priegloba**, tik jei turite veikiant\u012f savaranki\u0161kai priglobt\u0105 egzempliori\u0173."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "water_mop_attached": {
+                "name": "Pritvirtinta \u0161luost\u0117"
+            }
+        },
+        "button": {
+            "relocate": {
+                "name": "Perkelti"
+            },
+            "reset_lifespan_base_station_filter": {
+                "name": "I\u0161 naujo nustatykite stoties filtro tarnavimo laik\u0105"
+            },
+            "reset_lifespan_blade": {
+                "name": "I\u0161 naujo nustatykite a\u0161men\u0173 naudojimo trukm\u0119"
+            },
+            "reset_lifespan_brush": {
+                "name": "I\u0161 naujo nustatykite pagrindinio \u0161epe\u010dio naudojimo trukm\u0119"
+            },
+            "reset_lifespan_filter": {
+                "name": "I\u0161 naujo nustatykite filtro tarnavimo laik\u0105"
+            },
+            "reset_lifespan_lens_brush": {
+                "name": "I\u0161 naujo nustatykite objektyvo \u0161epet\u0117lio tarnavimo laik\u0105"
+            },
+            "reset_lifespan_round_mop": {
+                "name": "I\u0161 naujo nustatykite apvalios \u0161luost\u0117s tarnavimo laik\u0105"
+            },
+            "reset_lifespan_side_brush": {
+                "name": "I\u0161 naujo nustatykite \u0161oninio \u0161epe\u010dio tarnavimo laik\u0105"
+            },
+            "reset_lifespan_unit_care": {
+                "name": "I\u0161 naujo nustatykite prietaiso prie\u017ei\u016bros trukm\u0119"
+            },
+            "station_action_empty_dustbin": {
+                "name": "Tu\u0161\u010dia \u0161iuk\u0161li\u0173 d\u0117\u017e\u0117"
+            }
+        },
+        "event": {
+            "last_job": {
+                "name": "Paskutinis darbas",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "finished": "Baigta",
+                            "finished_with_warnings": "Baigta \u012fsp\u0117jimais",
+                            "manually_stopped": "Sustojo rankiniu b\u016bdu"
+                        }
+                    }
+                }
+            }
+        },
+        "image": {
+            "map": {
+                "name": "\u017dem\u0117lapis"
+            }
+        },
+        "number": {
+            "clean_count": {
+                "name": "\u0160varus skai\u010dius"
+            },
+            "cut_direction": {
+                "name": "Pjovimo kryptis"
+            },
+            "volume": {
+                "name": "Apimtis"
+            }
+        },
+        "select": {
+            "water_amount": {
+                "name": "Vandens srauto lygis",
+                "state": {
+                    "high": "Auk\u0161tas",
+                    "low": "\u017demas",
+                    "medium": "Vidutinis",
+                    "ultrahigh": "Itin auk\u0161tas"
+                }
+            },
+            "work_mode": {
+                "name": "Darbo re\u017eimas",
+                "state": {
+                    "mop": "Plauna",
+                    "mop_after_vacuum": "\u0160luostyti po siurbimo",
+                    "vacuum": "Siurbti",
+                    "vacuum_and_mop": "Siurbti ir \u0161luostyti"
+                }
+            }
+        },
+        "sensor": {
+            "error": {
+                "name": "Klaida",
+                "state_attributes": {
+                    "description": {
+                        "name": "Apra\u0161ymas"
+                    }
+                }
+            },
+            "lifespan_base_station_filter": {
+                "name": "Stoties filtro tarnavimo laikas"
+            },
+            "lifespan_blade": {
+                "name": "A\u0161men\u0173 tarnavimo laikas"
+            },
+            "lifespan_brush": {
+                "name": "Pagrindinio \u0161epe\u010dio tarnavimo laikas"
+            },
+            "lifespan_filter": {
+                "name": "Filtro tarnavimo laikas"
+            },
+            "lifespan_lens_brush": {
+                "name": "Objektyvo \u0161epet\u0117lio tarnavimo laikas"
+            },
+            "lifespan_main_brush": {
+                "name": "Pagrindinio \u0161epe\u010dio tarnavimo laikas"
+            },
+            "lifespan_round_mop": {
+                "name": "Apvalios \u0161luost\u0117s tarnavimo laikas"
+            },
+            "lifespan_side_brush": {
+                "name": "\u0160oninio \u0161epe\u010dio tarnavimo laikas"
+            },
+            "lifespan_unit_care": {
+                "name": "Vieneto prie\u017ei\u016bros tarnavimo laikas"
+            },
+            "network_ip": {
+                "name": "IP adresas"
+            },
+            "network_rssi": {
+                "name": "Wi-Fi RSSI"
+            },
+            "network_ssid": {
+                "name": "Wi-Fi SSID"
+            },
+            "station_state": {
+                "name": "Stoties b\u016bsena",
+                "state": {
+                    "emptying_dustbin": "\u0160iuk\u0161liad\u0117\u017e\u0117s i\u0161tu\u0161tinimas",
+                    "idle": "Nedaroma nieko"
+                }
+            },
+            "stats_area": {
+                "name": "Teritorija i\u0161valyta"
+            },
+            "stats_time": {
+                "name": "Valymo trukm\u0117"
+            },
+            "total_stats_area": {
+                "name": "Visas plotas i\u0161valytas"
+            },
+            "total_stats_cleanings": {
+                "name": "Visi\u0161kas valymas"
+            },
+            "total_stats_time": {
+                "name": "Bendra valymo trukm\u0117"
+            }
+        },
+        "switch": {
+            "advanced_mode": {
+                "name": "I\u0161pl\u0117stinis re\u017eimas"
+            },
+            "border_switch": {
+                "name": "Sienos jungiklis"
+            },
+            "carpet_auto_fan_boost": {
+                "name": "Kilim\u0173 automatinis siurbimas"
+            },
+            "child_lock": {
+                "name": "Apsauga nuo vaik\u0173"
+            },
+            "clean_preference": {
+                "name": "\u0160varus pasirinkimas"
+            },
+            "continuous_cleaning": {
+                "name": "Nuolatinis valymas"
+            },
+            "cross_map_border_warning": {
+                "name": "Persp\u0117jimas apie sienos per\u0117jim\u0105 \u017eem\u0117lapyje"
+            },
+            "move_up_warning": {
+                "name": "Persp\u0117jimas jud\u0117ti auk\u0161tyn"
+            },
+            "safe_protect": {
+                "name": "Saugi apsauga"
+            },
+            "true_detect": {
+                "name": "Tikras aptikimas"
+            }
+        },
+        "vacuum": {
+            "vacuum": {
+                "state_attributes": {
+                    "fan_speed": {
+                        "state": {
+                            "max": "Max",
+                            "max_plus": "Max+",
+                            "normal": "Normalus",
+                            "quiet": "Tyliai"
+                        }
+                    },
+                    "rooms": {
+                        "name": "Kambariai"
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "vacuum_raw_get_positions_not_supported": {
+            "message": "\u012ekrovikli\u0173 ir paties prietaiso pad\u0117ties nustatymas nepalaikomas"
+        },
+        "vacuum_send_command_params_dict": {
+            "message": "Paramos turi b\u016bti \u017eodynas, o ne s\u0105ra\u0161as"
+        },
+        "vacuum_send_command_params_required": {
+            "message": "Parametrai reikalingi komandai: {command}"
+        }
+    },
+    "selector": {
+        "installation_mode": {
+            "options": {
+                "cloud": "Debesis",
+                "self_hosted": "Savaranki\u0161kai priglobta"
+            }
+        }
+    },
+    "services": {
+        "raw_get_positions": {
+            "description": "Gaukite neapdorot\u0105 atsakym\u0105 \u012f \u012fkrovikli\u0173 ir paties prietaiso pad\u0117tis.",
+            "name": "Gaukite neapdorotas pozicijas"
+        }
+    }
+}

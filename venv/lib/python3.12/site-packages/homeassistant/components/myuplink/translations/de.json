@@ -1,0 +1,66 @@
+{
+    "application_credentials": {
+        "description": "Folge den [Anweisungen]({more_info_url}), um Home Assistant Zugriff auf dein myUplink-Konto zu gew\u00e4hren. Du musst au\u00dferdem mit deinem Konto verkn\u00fcpfte OAuth-Anmeldedaten  erstellen:\n1. Gehe zu [Anwendungen auf der myUplink-Entwicklersite]({create_creds_url}) und hole dir Anmeldedaten von einer vorhandenen Anwendung oder w\u00e4hle **Neue Anwendung erstellen**.\n1. Lege den entsprechenden Anwendungsnamen und die entsprechende Beschreibung fest\n1. Gib `{callback_url}` als Callback-URL ein"
+    },
+    "config": {
+        "abort": {
+            "account_mismatch": "Das verwendete Konto entspricht nicht dem urspr\u00fcnglichen Konto",
+            "already_configured": "Konto ist bereits konfiguriert",
+            "already_in_progress": "Konfigurationsablauf wird bereits ausgef\u00fchrt",
+            "authorize_url_timeout": "Zeit\u00fcberschreitung beim Erstellen der Autorisierungs-URL.",
+            "missing_configuration": "Die Komponente ist nicht konfiguriert. Bitte der Dokumentation folgen.",
+            "no_url_available": "Keine URL verf\u00fcgbar. Informationen zu diesem Fehler [findest du im Hilfebereich]({docs_url}).",
+            "oauth_error": "Ung\u00fcltige Token-Daten empfangen.",
+            "oauth_failed": "Fehler beim Abrufen des Zugriffstokens.",
+            "oauth_timeout": "Zeit\u00fcberschreitung beim Aufl\u00f6sen des OAuth-Tokens.",
+            "oauth_unauthorized": "OAuth-Autorisierungsfehler beim Abrufen des Zugriffstokens.",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich",
+            "user_rejected_authorize": "Kontoverkn\u00fcpfung abgelehnt: {error}"
+        },
+        "create_entry": {
+            "default": "Erfolgreich authentifiziert"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Authentifizierungsmethode w\u00e4hlen"
+            },
+            "reauth_confirm": {
+                "description": "Die myUplink-Integration muss dein Konto erneut authentifizieren",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "alarm": {
+                "name": "Alarm"
+            }
+        },
+        "sensor": {
+            "status": {
+                "name": "Status"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_auth_failed": {
+            "message": "Fehler beim Anmelden bei der API. Bitte \u00fcberpr\u00fcfe deine Anmeldedaten."
+        },
+        "config_entry_not_ready": {
+            "message": "Fehler beim Laden der Integration."
+        },
+        "incorrect_oauth2_scope": {
+            "message": "Gespeicherte Berechtigungen sind ung\u00fcltig. Bitte melde dich erneut an, um die Berechtigungen zu aktualisieren."
+        },
+        "set_number_error": {
+            "message": "Der neue Wert {value} f\u00fcr {point}/{entity} konnte nicht gesetzt werden."
+        },
+        "set_select_error": {
+            "message": "Die neue Option {option} f\u00fcr {point}/{entity} konnte nicht gesetzt werden."
+        },
+        "set_switch_error": {
+            "message": "Der Status f\u00fcr {entity} konnte nicht gesetzt werden."
+        }
+    }
+}

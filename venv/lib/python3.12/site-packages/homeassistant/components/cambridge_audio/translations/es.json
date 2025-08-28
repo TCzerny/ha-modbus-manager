@@ -1,0 +1,77 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "cannot_connect": "No se pudo conectar",
+            "reconfigure_successful": "Se volvi\u00f3 a configurar correctamente",
+            "wrong_device": "Este dispositivo de Cambridge Audio no coincide con el ID del dispositivo existente. Por favor, aseg\u00farate de haber introducido la direcci\u00f3n IP correcta."
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar al dispositivo Cambridge Audio. Por favor, aseg\u00farate de que el dispositivo est\u00e9 encendido y conectado a la red. Intenta apagar y encender el dispositivo si no se conecta."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "discovery_confirm": {
+                "description": "\u00bfQuieres configurar {name}?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP del Cambridge Audio Streamer."
+                },
+                "description": "Volver a configurar tu Cambridge Audio Streamer."
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP del Cambridge Audio Streamer."
+                },
+                "description": "Configura tu Cambridge Audio Streamer para que se integre con Home Assistant."
+            }
+        }
+    },
+    "entity": {
+        "select": {
+            "audio_output": {
+                "name": "Salida de audio"
+            },
+            "display_brightness": {
+                "name": "Brillo de la pantalla",
+                "state": {
+                    "bright": "Brillante",
+                    "dim": "Atenuado",
+                    "off": "Apagado"
+                }
+            }
+        },
+        "switch": {
+            "early_update": {
+                "name": "Actualizaci\u00f3n temprana"
+            },
+            "pre_amp": {
+                "name": "Preamplificador"
+            }
+        }
+    },
+    "exceptions": {
+        "command_error": {
+            "message": "Error al ejecutar {function_name} en la entidad {entity_id}"
+        },
+        "entry_cannot_connect": {
+            "message": "Error al conectar con {host}"
+        },
+        "missing_preset": {
+            "message": "Falta preselecci\u00f3n para media_id: {preset_id}"
+        },
+        "preset_non_integer": {
+            "message": "La preselecci\u00f3n debe ser un n\u00famero entero, se obtuvo: {preset_id}"
+        },
+        "unsupported_media_type": {
+            "message": "Tipo de medio no compatible con el dispositivo Cambridge Audio: {media_type}"
+        }
+    }
+}

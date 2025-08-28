@@ -1,0 +1,115 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 est\u00e1 configurado",
+            "discovery_started": "Descoberta iniciada"
+        },
+        "error": {
+            "cannot_connect": "Falha ao conectar",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "protect_version": "A vers\u00e3o m\u00ednima exigida \u00e9 v1.20.0. Atualize o UniFi Protect e tente novamente."
+        },
+        "flow_title": "{name} ({ip_address})",
+        "step": {
+            "discovery_confirm": {
+                "data": {
+                    "password": "Senha",
+                    "username": "Usu\u00e1rio"
+                },
+                "description": "Deseja configurar {name} ({ip_address})? Voc\u00ea precisar\u00e1 de um usu\u00e1rio local criado em seu UniFi OS Console para efetuar login. Ubiquiti Cloud Users n\u00e3o funcionar\u00e1. Para mais informa\u00e7\u00f5es: {local_user_documentation_url}",
+                "title": "Descoberta UniFi Protect"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "host": "IP/Host do Servidor UniFi Protect",
+                    "password": "Senha",
+                    "port": "Porta",
+                    "username": "Usu\u00e1rio"
+                },
+                "title": "Reautentica\u00e7\u00e3o UniFi Protect"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Senha",
+                    "port": "Porta",
+                    "username": "Usu\u00e1rio",
+                    "verify_ssl": "Verifique o certificado SSL"
+                },
+                "description": "Voc\u00ea precisar\u00e1 de um usu\u00e1rio local criado no console do sistema operacional UniFi para fazer login. Usu\u00e1rios da Ubiquiti Cloud n\u00e3o funcionar\u00e3o. Para mais informa\u00e7\u00f5es: {local_user_documentation_url}",
+                "title": "Configura\u00e7\u00e3o do UniFi Protect"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "license_plate": {
+                "state": {
+                    "none": "Limpar"
+                }
+            }
+        }
+    },
+    "issues": {
+        "cloud_user": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "A partir de 22 de julho de 2024, a Ubiquiti exigir\u00e1 que todos os usu\u00e1rios da nuvem se inscrevam na autentica\u00e7\u00e3o multifator (MFA), que \u00e9 incompat\u00edvel com o Home Assistant. \n \n Seria melhor migrar para o uso de um [usu\u00e1rio local]( {learn_more} ) o mais r\u00e1pido poss\u00edvel para manter a integra\u00e7\u00e3o funcionando. \n \n A confirma\u00e7\u00e3o desse reparo acionar\u00e1 um fluxo de reautentica\u00e7\u00e3o para inserir as credenciais de autentica\u00e7\u00e3o necess\u00e1rias."
+                    }
+                }
+            }
+        },
+        "ea_setup_failed": {
+            "title": "Erro de configura\u00e7\u00e3o usando a vers\u00e3o de acesso antecipado"
+        },
+        "rtsp_disabled_readonly": {
+            "fix_flow": {
+                "step": {
+                    "start": {
+                        "description": "O RTSPS est\u00e1 desabilitado na c\u00e2mera {camera}. O RTSPS \u00e9 necess\u00e1rio para poder transmitir sua c\u00e2mera ao vivo no Home Assistant. Se voc\u00ea n\u00e3o habilitar o RTSPS, isso pode criar uma carga adicional no seu UniFi Protect NVR, pois qualquer player de v\u00eddeo ao vivo ir\u00e1, por padr\u00e3o, extrair rapidamente instant\u00e2neos da c\u00e2mera. \n \n Por favor, [habilite o RTSPS]( {learn_more} ) na c\u00e2mera e depois volte e confirme este reparo."
+                    }
+                }
+            }
+        },
+        "rtsp_disabled_writable": {
+            "fix_flow": {
+                "step": {
+                    "start": {
+                        "description": "O RTSPS est\u00e1 desabilitado na c\u00e2mera {camera}. O RTSPS \u00e9 necess\u00e1rio para transmitir sua c\u00e2mera ao vivo no Home Assistant. Se voc\u00ea n\u00e3o habilitar o RTSPS, ele pode criar uma carga adicional no seu UniFi Protect NVR, pois qualquer player de v\u00eddeo ao vivo ir\u00e1, por padr\u00e3o, extrair rapidamente instant\u00e2neos da c\u00e2mera. \n \n Voc\u00ea pode [habilitar o RTSPS]( {learn_more} ) manualmente no canal de qualidade da c\u00e2mera selecionado ou o Home Assistant pode habilitar automaticamente o canal de qualidade mais alta para voc\u00ea. Confirme este reparo depois de habilitar o canal RTSPS ou se quiser que o Home Assistant habilite a qualidade mais alta automaticamente."
+                    }
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "all_updates": "M\u00e9tricas em tempo real (AVISO: aumenta muito o uso da CPU)",
+                    "disable_rtsp": "Desativar o fluxo RTSP",
+                    "max_media": "N\u00famero m\u00e1ximo de eventos a serem carregados para o Media Browser (aumenta o uso de RAM)",
+                    "override_connection_host": "Anular o host de conex\u00e3o"
+                },
+                "description": "A op\u00e7\u00e3o de m\u00e9tricas em tempo real s\u00f3 deve ser habilitada se voc\u00ea tiver habilitado os sensores de diagn\u00f3stico e quiser que eles sejam atualizados em tempo real. Se n\u00e3o estiver ativado, eles ser\u00e3o atualizados apenas uma vez a cada 15 minutos.",
+                "title": "Op\u00e7\u00f5es de prote\u00e7\u00e3o UniFi"
+            }
+        }
+    },
+    "services": {
+        "remove_privacy_zone": {
+            "fields": {
+                "device_id": {
+                    "name": "C\u00e2mera"
+                }
+            }
+        },
+        "set_chime_paired_doorbells": {
+            "fields": {
+                "doorbells": {
+                    "name": "Campainhas"
+                }
+            }
+        }
+    }
+}

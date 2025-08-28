@@ -1,0 +1,65 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "unknown": "Error inesperado"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "link": {
+                "description": "\u00bfQuieres configurar {name} ({host})?",
+                "title": "Configurar Logitech Harmony Hub"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "name": "Nombre del concentrador"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP de tu Logitech Harmony Hub."
+                },
+                "title": "Configurar Logitech Harmony Hub"
+            }
+        }
+    },
+    "entity": {
+        "select": {
+            "activities": {
+                "name": "Actividades",
+                "state": {
+                    "power_off": "Apagar"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "activity": "La actividad por defecto a ejecutar cuando no se especifica ninguna.",
+                    "delay_secs": "El retardo entre el env\u00edo de comandos."
+                },
+                "description": "Ajustar las opciones de Harmony Hub"
+            }
+        }
+    },
+    "services": {
+        "change_channel": {
+            "description": "Env\u00eda el comando de cambio de canal al Harmony HUB.",
+            "fields": {
+                "channel": {
+                    "description": "N\u00famero de canal al que cambiar.",
+                    "name": "Canal"
+                }
+            },
+            "name": "Cambiar canal"
+        },
+        "sync": {
+            "description": "Sincroniza la configuraci\u00f3n del control remoto.",
+            "name": "Sincronizar"
+        }
+    }
+}

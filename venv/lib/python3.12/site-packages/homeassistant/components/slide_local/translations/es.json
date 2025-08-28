@@ -1,0 +1,80 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "discovery_connection_failed": "La configuraci\u00f3n del dispositivo detectado fall\u00f3 con el siguiente error: {error}. Por favor, intenta configurarlo manualmente.",
+            "reconfigure_successful": "Se volvi\u00f3 a configurar correctamente",
+            "unique_id_mismatch": "La direcci\u00f3n MAC del dispositivo ({mac}) no coincide con la direcci\u00f3n MAC anterior."
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_auth": "Autenticaci\u00f3n no v\u00e1lida",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "password": "Contrase\u00f1a"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP de tu Slide local",
+                    "password": "El c\u00f3digo del dispositivo de tu Slide (dentro del Slide o en la caja, la longitud es de 8 caracteres). Si tu Slide ejecuta la versi\u00f3n 2 del firmware, esto es opcional, ya que no lo utiliza la API local."
+                },
+                "description": "Volver a configurar la informaci\u00f3n de tu dispositivo Slide"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Contrase\u00f1a"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP de tu Slide local",
+                    "password": "El c\u00f3digo del dispositivo de tu Slide (dentro del Slide o en la caja, la longitud es de 8 caracteres). Si tu Slide ejecuta la versi\u00f3n 2 del firmware, esto es opcional, ya que no lo utiliza la API local."
+                },
+                "description": "Proporciona informaci\u00f3n para conectarse al dispositivo Slide"
+            },
+            "zeroconf_confirm": {
+                "description": "\u00bfQuieres configurar {host}?",
+                "title": "Confirmar la configuraci\u00f3n de Slide"
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "calibrate": {
+                "name": "Calibrar"
+            }
+        },
+        "switch": {
+            "touchgo": {
+                "name": "TouchGo"
+            }
+        }
+    },
+    "exceptions": {
+        "calibration_error": {
+            "message": "Error al enviar la solicitud de calibraci\u00f3n al dispositivo."
+        },
+        "touchgo_error": {
+            "message": "Error al enviar la solicitud de configuraci\u00f3n Touch&Go a {state} al dispositivo."
+        },
+        "update_error": {
+            "message": "Error al actualizar datos desde la API."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "invert_position": "Invertir posici\u00f3n"
+                },
+                "data_description": {
+                    "invert_position": "Invierte la posici\u00f3n de la cubierta Slide."
+                },
+                "description": "Volver a configurar el dispositivo Slide",
+                "title": "Configurar Slide"
+            }
+        }
+    }
+}

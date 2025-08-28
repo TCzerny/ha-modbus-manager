@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud",
+            "no_devices_found": "V\u00f5rgust ei leitud \u00fchtegi seadet",
+            "reconfigure_successful": "\u00dcmberseadistamine \u00f5nnestus",
+            "unique_id_mismatch": "Seadme seerianumber ei \u00fchti eelmise seerianumbriga",
+            "unknown": "Ootamatu t\u00f5rge"
+        },
+        "error": {
+            "cannot_connect": "\u00dchendamine nurjus",
+            "empty_input_source_list": "Sisendallikate loend ei saa olla t\u00fchi",
+            "unknown": "Ootamatu t\u00f5rge"
+        },
+        "step": {
+            "configure_receiver": {
+                "data": {
+                    "input_sources": "Sisendallikad",
+                    "volume_resolution": "Helitugevuse eraldusv\u00f5ime"
+                },
+                "data_description": {
+                    "input_sources": "Vastuv\u00f5tja poolt toetatud sisendallikate loetelu.",
+                    "volume_resolution": "Sammude arv mis kulub vastuv\u00f5tjal, et minna madalaimast v\u00f5imalikust helitugevusest k\u00f5rgeimale helitugevusele."
+                },
+                "description": "{name} seadistamine"
+            },
+            "eiscp_discovery": {
+                "data": {
+                    "device": "Seade"
+                },
+                "data_description": {
+                    "device": "Vali seadistatav vastuv\u00f5tja."
+                }
+            },
+            "manual": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Vastuv\u00f5tja hostinimi v\u00f5i IP-aadress."
+                }
+            },
+            "user": {
+                "menu_options": {
+                    "eiscp_discovery": "Onkyo avastamine",
+                    "manual": "K\u00e4sitsi sisestamine"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_source": {
+            "message": "Ei saa valida sisendiallikat \"{invalid_source}\" \u00fcksusele: {entity_id}."
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "Onkyo seadistamine YAML-i abil eemaldatakse kuid YAML-i konfiguratsiooni importimisel hosti {host} jaoks ilmnes \u00fchenduse viga. Veendu, et \u00fchendus vastuv\u00f5tjaga toimiks ja taask\u00e4ivita Home Assistant, et uuesti proovida, v\u00f5i eemalda Onkyo YAML-i konfiguratsioon failist configuration.yaml ja j\u00e4tka k\u00e4sitsi [integratsiooni seadistamisega] ( {url} ).",
+            "title": "Onkyo YAML-i konfiguratsiooni importimine nurjus"
+        },
+        "deprecated_yaml_import_issue_no_discover": {
+            "description": "Onkyo konfigureerimine YAML-i abil eemaldatakse kuid  YAML-i konfiguratsiooni importimisel vastuv\u00f5tjaid ei leitud. Veendu, et \u00fchendus vastuv\u00f5tjaga toimiks ja taask\u00e4ivita Home Assistant, et uuesti proovida v\u00f5i eemalda Onkyo YAML-i konfiguratsioon failist configuration.yaml ja j\u00e4tka k\u00e4sitsi [integratsiooni seadistamisega] ( {url} ).",
+            "title": "Onkyo YAML-i konfiguratsiooni importimine nurjus"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "max_volume": "Maksimaalne helitugevus (%)"
+                },
+                "data_description": {
+                    "max_volume": "Maksimaalne helitugevuse piirang protsentides. See seob Home Assistant'i maksimaalse helitugevuse selle v\u00e4\u00e4rtusega vastuv\u00f5tjas, st kui m\u00e4\u00e4rad selle v\u00e4\u00e4rtuseks 50%, siis helitugevuse seadmine 100%-ni Home Assistant'is p\u00f5hjustab vastuv\u00f5tja helitugevuse seadmise 50%-ni selle maksimaalsest v\u00e4\u00e4rtusest."
+                }
+            }
+        }
+    }
+}

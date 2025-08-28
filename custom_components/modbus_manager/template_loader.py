@@ -64,7 +64,10 @@ def load_templates() -> Dict[str, List[Dict[str, Any]]]:
                 template_data = load_single_template(template_path)
                 if template_data:
                     templates[template_data["name"]] = template_data["registers"]
-                    _LOGGER.info("Template %s erfolgreich geladen", template_data["name"])
+                    _LOGGER.info("Template %s erfolgreich geladen mit %d Registern", template_data["name"], len(template_data["registers"]))
+                    
+                    # Debug: Template-Struktur anzeigen
+                    _LOGGER.debug("Template %s: name=%s, registers=%d", template_data["name"], template_data["name"], len(template_data["registers"]))
                     
             except Exception as e:
                 _LOGGER.error("Fehler beim Laden von Template %s: %s", filename, str(e))
@@ -89,21 +92,38 @@ def load_single_template(template_path: str) -> Dict[str, Any]:
             _LOGGER.error("Template %s hat keinen Namen", template_path)
             return None
         
+        _LOGGER.info("Template %s wird verarbeitet", template_name)
+        
         # Register validieren und verarbeiten
         raw_registers = data.get("sensors", [])
         if not raw_registers:
             _LOGGER.warning("Template %s hat keine Sensoren definiert", template_name)
             return None
         
+        _LOGGER.info("Template %s: %d Sensoren gefunden", template_name, len(raw_registers))
+        
+        # Debug: Erste Register anzeigen
+        if raw_registers:
+            _LOGGER.debug("Erstes Register: %s", raw_registers[0])
+        
         validated_registers = []
         for reg in raw_registers:
             validated_reg = validate_and_process_register(reg, template_name)
             if validated_reg:
+                # Template-Name zu jedem Register hinzufügen
+                validated_reg["template"] = template_name
                 validated_registers.append(validated_reg)
+            else:
+                _LOGGER.warning("Register %s in Template %s konnte nicht validiert werden", reg.get("name", "unbekannt"), template_name)
         
         if not validated_registers:
             _LOGGER.error("Template %s hat keine gültigen Register", template_name)
             return None
+        
+        _LOGGER.info("Template %s: %d gültige Register verarbeitet", template_name, len(validated_registers))
+        
+        # Debug: Template-Struktur anzeigen
+        _LOGGER.debug("Template %s Struktur: name=%s, registers=%d", template_name, template_name, len(validated_registers))
         
         return {
             "name": template_name,
@@ -140,33 +160,34 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
             if field not in processed_reg:
                 processed_reg[field] = value
         
-        # Register-spezifische Validierung
+        # Entity-Typ bestimmen
+        processed_reg["entity_type"] = determine_entity_type(processed_reg)
+        
+        # Register validieren
         if not validate_register_data(processed_reg, template_name):
             return None
-        
-        # Entity-Typ basierend auf control und data_type bestimmen
-        processed_reg["entity_type"] = determine_entity_type(processed_reg)
         
         return processed_reg
         
     except Exception as e:
-        _LOGGER.error("Fehler bei der Register-Validierung in Template %s: %s", template_name, str(e))
+        _LOGGER.error("Fehler bei der Register-Verarbeitung in Template %s: %s", template_name, str(e))
         return None
 
-def determine_entity_type(reg: Dict[str, Any]) -> str:
-    """Determine the Home Assistant entity type based on register configuration."""
-    control = reg.get("control", "none")
-    data_type = reg.get("data_type", "uint16")
+def determine_entity_type(register_data: Dict[str, Any]) -> str:
+    """Determine the appropriate entity type based on register configuration."""
+    control = register_data.get("control", "none")
     
-    if control == "switch":
-        return "switch"
-    elif control == "number":
+    if control == "number":
         return "number"
     elif control == "select":
         return "select"
+    elif control == "switch":
+        return "switch"
+    elif control == "button":
+        return "button"
     elif control == "text":
         return "text"
-    elif data_type == "boolean":
+    elif register_data.get("data_type") == "boolean":
         return "binary_sensor"
     else:
         return "sensor"
@@ -266,4 +287,4 @@ def get_template_names() -> List[str]:
 def get_template_by_name(template_name: str) -> List[Dict[str, Any]]:
     """Get a specific template by name."""
     templates = load_templates()
-    return templates.get(template_name, [])
+    return templates.get(template_name, []) 

@@ -1,0 +1,79 @@
+{
+    "issues": {
+        "deprecated_gender": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "A op\u00e7\u00e3o `{deprecated_option}` para convers\u00e3o de texto em voz na integra\u00e7\u00e3o {integration_name} est\u00e1 obsoleta e ser\u00e1 removida.\nAtualize as suas automatiza\u00e7\u00f5es e scripts para substituir a op\u00e7\u00e3o `{deprecated_option}` por uma op\u00e7\u00e3o para uma `{replacement_option}` suportada.",
+                        "title": "Foi utilizada uma voz descontinuada"
+                    }
+                }
+            },
+            "title": "A op\u00e7\u00e3o de convers\u00e3o de texto em voz `{deprecated_option}` est\u00e1 descontinuada"
+        },
+        "deprecated_tts_platform_config": {
+            "description": "Toda a entrada `platform: cloud` sob a sec\u00e7\u00e3o `tts:` em configuration.yaml est\u00e1 obsoleta e deve ser removida. Pode utilizar a interface do utilizador para alterar as defini\u00e7\u00f5es da plataforma de convers\u00e3o de texto em voz na nuvem. Ajuste o seu configuration.yaml e reinicie o Home Assistant para corrigir este problema.",
+            "title": "A configura\u00e7\u00e3o da plataforma de convers\u00e3o de texto em voz Cloud est\u00e1 obsoleta"
+        },
+        "deprecated_voice": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "A voz `{deprecated_voice}` est\u00e1 obsoleta e ser\u00e1 removida.\nPor favor, atualize as suas automatiza\u00e7\u00f5es e scripts para substituir a `{deprecated_voice}` por outra voz como, por exemplo, `{replacement_voice}`.",
+                        "title": "Foi utilizada uma voz descontinuada"
+                    }
+                }
+            },
+            "title": "Foi utilizada uma voz descontinuada"
+        },
+        "legacy_subscription": {
+            "fix_flow": {
+                "abort": {
+                    "operation_took_too_long": "A opera\u00e7\u00e3o demorou demasiado tempo. Por favor, tente novamente mais tarde."
+                },
+                "step": {
+                    "confirm_change_plan": {
+                        "description": "Actualiz\u00e1mos recentemente o nosso sistema de subscri\u00e7\u00e3o. Para continuar a utilizar o Home Assistant Cloud, tem de aprovar uma vez a altera\u00e7\u00e3o no PayPal.\n\nIsso leva 1 minuto e n\u00e3o aumentar\u00e1 o pre\u00e7o."
+                    }
+                }
+            },
+            "title": "Assinatura antiga detectada"
+        },
+        "reset_bad_custom_domain_configuration": {
+            "description": "A configura\u00e7\u00e3o DNS para o seu dom\u00ednio personalizado ({custom_domains}) n\u00e3o est\u00e1 correta. Este dom\u00ednio foi agora ignorado e n\u00e3o ser\u00e1 utilizado para o Home Assistant Cloud. Se pretender utilizar este dom\u00ednio, corrija a configura\u00e7\u00e3o de DNS e reinicie o Home Assistant. Se j\u00e1 n\u00e3o necessitar deste dom\u00ednio, pode remov\u00ea-lo da p\u00e1gina da conta.",
+            "title": "Dom\u00ednio personalizado ignorado"
+        },
+        "warn_bad_custom_domain_configuration": {
+            "description": "A configura\u00e7\u00e3o de DNS para o seu dom\u00ednio personalizado ({custom_domains}) n\u00e3o est\u00e1 correta. Verifique a configura\u00e7\u00e3o de DNS do seu dom\u00ednio e certifique-se de que aponta para o CNAME correto.",
+            "title": "Detetada uma configura\u00e7\u00e3o incorreta do dom\u00ednio personalizado"
+        }
+    },
+    "services": {
+        "remote_connect": {
+            "description": "Torna a IU da inst\u00e2ncia acess\u00edvel a partir de fora da rede local, ativando a liga\u00e7\u00e3o \u00e0 Home Assistant Cloud.",
+            "name": "Ativar o acesso remoto"
+        },
+        "remote_disconnect": {
+            "description": "Desconecta a inst\u00e2ncia UI do Home Assistant Cloud. Isso desabilita o acesso \u00e0 mesma de fora da sua rede local.",
+            "name": "Desativar o acesso remoto"
+        }
+    },
+    "system_health": {
+        "info": {
+            "alexa_enabled": "Alexa ativada",
+            "can_reach_cert_server": "Alcan\u00e7ar o servidor de certificados",
+            "can_reach_cloud": "Alcan\u00e7a a Home Assistant Cloud",
+            "can_reach_cloud_auth": "Alcan\u00e7ar o servidor de autentica\u00e7\u00e3o",
+            "certificate_status": "Estado do certificado",
+            "google_enabled": "Google ativo",
+            "instance_id": "ID da inst\u00e2ncia",
+            "logged_in": "Ligado em",
+            "relayer_connected": "Retransmissor ligado",
+            "relayer_region": "Regi\u00e3o do retransmissor",
+            "remote_connected": "Ligado remotamente",
+            "remote_enabled": "Remoto ativo",
+            "remote_server": "Servidor remoto",
+            "subscription_expiration": "Validade da subscri\u00e7\u00e3o"
+        }
+    }
+}

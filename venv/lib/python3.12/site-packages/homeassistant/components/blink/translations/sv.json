@@ -1,0 +1,146 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_access_token": "Ogiltig \u00e5tkomstnyckel",
+            "invalid_auth": "Ogiltig autentisering",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "2fa": {
+                "data": {
+                    "pin": "Tv\u00e5faktorskod"
+                },
+                "description": "Ange PIN-koden som skickades till din e-post eller SMS",
+                "title": "Tv\u00e5faktorautentisering"
+            },
+            "user": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "title": "Logga in med Blink-konto"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "camera_armed": {
+                "name": "Kamera Larmad"
+            }
+        },
+        "sensor": {
+            "wifi_strength": {
+                "name": "Wi-Fi signalstyrka"
+            }
+        },
+        "switch": {
+            "camera_motion": {
+                "name": "Kamerans r\u00f6relsedetektering"
+            }
+        }
+    },
+    "exceptions": {
+        "cant_write": {
+            "message": "Det g\u00e5r inte att skriva till filen."
+        },
+        "failed_arm": {
+            "message": "Blink misslyckades med att aktivera kameran."
+        },
+        "failed_arm_motion": {
+            "message": "Blink misslyckades med att aktivera kamerans r\u00f6relsedetektering."
+        },
+        "failed_clip": {
+            "message": "Blink misslyckades med att spela in ett klipp."
+        },
+        "failed_disarm": {
+            "message": "Blink misslyckades med att avaktivera kameran."
+        },
+        "failed_disarm_motion": {
+            "message": "Blink misslyckades med att avaktivera kamerans r\u00f6relsedetektering."
+        },
+        "failed_snap": {
+            "message": "Blink misslyckades med att ta en bild."
+        },
+        "integration_not_found": {
+            "message": "Integration \"{target}\" hittades inte i registret."
+        },
+        "no_path": {
+            "message": "Kan inte skriva till katalogen {target}, ingen \u00e5tkomst till s\u00f6kv\u00e4gen!"
+        },
+        "not_loaded": {
+            "message": "{target} \u00e4r inte laddad."
+        }
+    },
+    "issues": {
+        "service_deprecation": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Blink Update-tj\u00e4nsten \u00e4r utfasad och kommer att tas bort.\nUppdatera dina automatiseringar och skript f\u00f6r att anv\u00e4nda \"Home Assistant Core Integration: Uppdatera entitet\".",
+                        "title": "Blink uppdateringstj\u00e4nst kommer att tas bort"
+                    }
+                }
+            },
+            "title": "Blink uppdateringstj\u00e4nst kommer att tas bort"
+        }
+    },
+    "options": {
+        "step": {
+            "simple_options": {
+                "data": {
+                    "scan_interval": "Skanningsintervall (sekunder)"
+                },
+                "description": "Konfigurera Blink integrationen",
+                "title": "Blink alternativ"
+            }
+        }
+    },
+    "services": {
+        "record": {
+            "description": "Beg\u00e4r att kameran ska spela in ett klipp.",
+            "name": "Spela in"
+        },
+        "save_recent_clips": {
+            "description": "Sparar alla senaste videoklipp lokalt med filnamnet \"%Y%m%d_%H%M%S_[camera name].mp4\".",
+            "fields": {
+                "file_path": {
+                    "description": "Katalognamn f\u00f6r skrivbar s\u00f6kv\u00e4g (katalogen kan beh\u00f6va inkluderas i allowlist_external_dirs i konfigurationen).",
+                    "name": "Katalog f\u00f6r sparade filer"
+                }
+            },
+            "name": "Spara senaste klipp"
+        },
+        "save_video": {
+            "description": "Sparar senast inspelade videoklipp till lokal fil.",
+            "fields": {
+                "filename": {
+                    "description": "Filnamn till skrivbar s\u00f6kv\u00e4g (katalogen kan beh\u00f6va inkluderas i allowlist_external_dirs i konfigurationen).",
+                    "name": "Filnamn"
+                }
+            },
+            "name": "Spara video"
+        },
+        "send_pin": {
+            "description": "Skickar en ny PIN-kod till Blink f\u00f6r 2FA.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Blink Integration-ID",
+                    "name": "Integrations-ID"
+                },
+                "pin": {
+                    "description": "PIN-kod mottagen fr\u00e5n Blink. L\u00e4mna tomt om du bara fick ett verifieringsmeddelande.",
+                    "name": "PIN-kod"
+                }
+            },
+            "name": "Skicka PIN-kod"
+        },
+        "trigger_camera": {
+            "description": "Beg\u00e4r att kameran tar en ny bild.",
+            "name": "Trigga kamera"
+        }
+    }
+}

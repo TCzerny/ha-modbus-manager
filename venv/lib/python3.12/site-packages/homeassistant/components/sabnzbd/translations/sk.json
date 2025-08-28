@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Slu\u017eba u\u017e je nakonfigurovan\u00e1",
+            "reconfigure_successful": "Rekonfigur\u00e1cia bola \u00faspe\u0161n\u00e1"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "invalid_api_key": "Neplatn\u00fd API k\u013e\u00fa\u010d"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API k\u013e\u00fa\u010d",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "K\u013e\u00fa\u010d API servera SABnzbd. N\u00e1jdete ho vo webovom rozhran\u00ed SABnzbd v \u010dasti Konfigur\u00e1cia (vpravo hore) &gt; V\u0161eobecn\u00e9 &gt; Zabezpe\u010denie.",
+                    "url": "\u00dapln\u00e1 adresa URL servera SABnzbd vr\u00e1tane portu. Pr\u00edklad: `http://localhost:8080` alebo `http://a02368d7-sabnzbd:8080`, ak pou\u017e\u00edvate doplnok."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "warnings": {
+                "name": "Upozornenia"
+            }
+        },
+        "button": {
+            "pause": {
+                "name": "Pauza"
+            },
+            "resume": {
+                "name": "Pokra\u010dova\u0165"
+            }
+        },
+        "number": {
+            "speedlimit": {
+                "name": "R\u00fdchlostn\u00fd limit"
+            }
+        },
+        "sensor": {
+            "daily_total": {
+                "name": "Denn\u00fd s\u00fa\u010det"
+            },
+            "free_disk_space": {
+                "name": "Vo\u013en\u00e9 miesto na disku"
+            },
+            "left": {
+                "name": "Zost\u00e1va stiahnu\u0165"
+            },
+            "monthly_total": {
+                "name": "Mesa\u010dn\u00fd s\u00fa\u010det"
+            },
+            "overall_total": {
+                "name": "Celkov\u00fd s\u00fa\u010det"
+            },
+            "queue": {
+                "name": "Fronta"
+            },
+            "queue_count": {
+                "name": "Po\u010det vo fronte"
+            },
+            "speed": {
+                "name": "R\u00fdchlos\u0165"
+            },
+            "status": {
+                "name": "Stav"
+            },
+            "total_disk_space": {
+                "name": "Celkov\u00e9 miesto na disku"
+            },
+            "weekly_total": {
+                "name": "T\u00fd\u017edenn\u00fd s\u00fa\u010det"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_exception": {
+            "message": "Nie je mo\u017en\u00e9 odosla\u0165 pr\u00edkaz do SABnzbd kv\u00f4li chybe pripojenia, sk\u00faste to nesk\u00f4r"
+        }
+    },
+    "issues": {
+        "pause_action_deprecated": {
+            "description": "Akcia \"Pozastavi\u0165\" je zastaran\u00e1 a bude odstr\u00e1nen\u00e1 v niektorej z bud\u00facich verzi\u00ed. Namiesto toho pou\u017eite tla\u010didlo \"Pozastavi\u0165\". Ak chcete odstr\u00e1ni\u0165 tento probl\u00e9m, upravte zodpovedaj\u00facim sp\u00f4sobom automatiz\u00e1cie a re\u0161tartujte aplik\u00e1ciu Home Assistant.",
+            "title": "Akcia pozastavenia SABnzbd bola zastaran\u00e1"
+        },
+        "resume_action_deprecated": {
+            "description": "Akcia \"Obnovi\u0165\" je zastaran\u00e1 a bude odstr\u00e1nen\u00e1 v niektorej z bud\u00facich verzi\u00ed. Namiesto toho pou\u017eite tla\u010didlo \"Obnovi\u0165\". Ak chcete odstr\u00e1ni\u0165 tento probl\u00e9m, upravte zodpovedaj\u00facim sp\u00f4sobom automatiz\u00e1cie a re\u0161tartujte aplik\u00e1ciu Home Assistant.",
+            "title": "Akcia obnovenia SABnzbd je zastaran\u00e1"
+        },
+        "set_speed_action_deprecated": {
+            "description": "Akcia \"Nastavi\u0165 r\u00fdchlos\u0165\" je zastaran\u00e1 a bude odstr\u00e1nen\u00e1 v niektorej z bud\u00facich verzi\u00ed. Namiesto toho pou\u017eite \u010d\u00edseln\u00fa entitu \"Speedlimit\". Ak chcete odstr\u00e1ni\u0165 tento probl\u00e9m, upravte zodpovedaj\u00facim sp\u00f4sobom automatiz\u00e1cie a re\u0161tartujte aplik\u00e1ciu Home Assistant.",
+            "title": "Akcia SABnzbd set_speed je zastaran\u00e1"
+        }
+    },
+    "services": {
+        "pause": {
+            "description": "Pozastav\u00ed s\u0165ahovanie.",
+            "fields": {
+                "api_key": {
+                    "description": "K\u013e\u00fa\u010d API SABnzbd na pozastavenie s\u0165ahovania.",
+                    "name": "K\u013e\u00fa\u010d API SABnzbd"
+                }
+            },
+            "name": "Pauza"
+        },
+        "resume": {
+            "description": "Obnov\u00ed s\u0165ahovanie.",
+            "fields": {
+                "api_key": {
+                    "description": "K\u013e\u00fa\u010d API SABnzbd na obnovenie s\u0165ahovania.",
+                    "name": "K\u013e\u00fa\u010d API SABnzbd"
+                }
+            },
+            "name": "Pokra\u010dova\u0165"
+        },
+        "set_speed": {
+            "description": "Nastav\u00ed limit r\u00fdchlosti s\u0165ahovania.",
+            "fields": {
+                "api_key": {
+                    "description": "K\u013e\u00fa\u010d API SABnzbd na nastavenie obmedzenia r\u00fdchlosti.",
+                    "name": "K\u013e\u00fa\u010d API SABnzbd"
+                },
+                "speed": {
+                    "description": "Obmedzenie r\u00fdchlosti. Ak je zadan\u00fd ako \u010d\u00edslo bez jednotiek, interpretuje sa ako percento. Ak s\u00fa uveden\u00e9 jednotky (napr. 500K), bud\u00fa interpretovan\u00e9 absol\u00fatne.",
+                    "name": "R\u00fdchlos\u0165"
+                }
+            },
+            "name": "Nastavenie r\u00fdchlosti"
+        }
+    }
+}

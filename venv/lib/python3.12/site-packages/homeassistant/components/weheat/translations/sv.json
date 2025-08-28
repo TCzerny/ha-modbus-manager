@@ -1,0 +1,116 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto har redan konfigurerats",
+            "already_in_progress": "Konfigurationsfl\u00f6det p\u00e5g\u00e5r redan",
+            "authorize_url_timeout": "Timeout vid generering av en auktoriserings-URL.",
+            "missing_configuration": "Komponenten har inte konfigurerats. F\u00f6lj dokumentationen.",
+            "no_devices_found": "Kunde inte hitta n\u00e5gra v\u00e4rmepumpar p\u00e5 detta konto",
+            "no_url_available": "Ingen webbadress tillg\u00e4nglig. F\u00f6r information om detta fel, [kolla hj\u00e4lpavsnittet]({docs_url})",
+            "oauth_error": "Mottog ogiltiga tokendata.",
+            "oauth_failed": "Fel vid h\u00e4mtning av \u00e5tkomsttoken.",
+            "oauth_timeout": "Timeout vid h\u00e4mtning av OAuth-token.",
+            "oauth_unauthorized": "OAuth-auktoriseringsfel vid h\u00e4mtning av \u00e5tkomsttoken.",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "user_rejected_authorize": "Kontol\u00e4nkning avvisades: {error}",
+            "wrong_account": "Du kan bara autentisera detta konto igen med samma anv\u00e4ndare."
+        },
+        "create_entry": {
+            "default": "Autentisering lyckades"
+        },
+        "step": {
+            "find_devices": {
+                "title": "V\u00e4lj din v\u00e4rmepump"
+            },
+            "pick_implementation": {
+                "title": "V\u00e4lj autentiseringsmetod"
+            },
+            "reauth_confirm": {
+                "description": "Du m\u00e5ste \u00e5terautentisera dig med WeHeat f\u00f6r att forts\u00e4tta",
+                "title": "Autentisera dig p\u00e5 nytt med WeHeat"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "indoor_unit_auxiliary_pump_state": {
+                "name": "Inomhusenhet extra vattenpump"
+            },
+            "indoor_unit_dhw_valve_or_pump_state": {
+                "name": "Inomhusenhet varmvattenventil eller vattenpump"
+            },
+            "indoor_unit_electric_heater_state": {
+                "name": "Inomhusenhet elektrisk v\u00e4rmare"
+            },
+            "indoor_unit_gas_boiler_state": {
+                "name": "Inomhusenhet gaspanna uppv\u00e4rmning till\u00e5ten"
+            },
+            "indoor_unit_water_pump_state": {
+                "name": "Inomhusenhet vattenpump"
+            }
+        },
+        "sensor": {
+            "ch_inlet_temperature": {
+                "name": "Centralv\u00e4rme tilloppstemperatur"
+            },
+            "compressor_percentage": {
+                "name": "Kompressoranv\u00e4ndning"
+            },
+            "compressor_rpm": {
+                "name": "Kompressorhastighet"
+            },
+            "cop": {
+                "name": "COP"
+            },
+            "dhw_bottom_temperature": {
+                "name": "VVB bottentemperatur"
+            },
+            "dhw_top_temperature": {
+                "name": "VVB topptemperatur"
+            },
+            "electricity_used": {
+                "name": "F\u00f6rbrukad el"
+            },
+            "energy_output": {
+                "name": "Total energiproduktion"
+            },
+            "heat_pump_state": {
+                "state": {
+                    "cooling": "Kyler",
+                    "defrosting": "Avfrostning",
+                    "dhw": "Uppv\u00e4rmning VVB",
+                    "heating": "V\u00e4rmer",
+                    "legionella_prevention": "F\u00f6rebyggande av legionella",
+                    "manual_control": "Manuell styrning",
+                    "self_test": "Sj\u00e4lvtest",
+                    "standby": "Vilol\u00e4ge",
+                    "water_check": "Kontrollerar vattentemperaturen"
+                }
+            },
+            "outside_temperature": {
+                "name": "Utetemperatur"
+            },
+            "power_input": {
+                "name": "Ing\u00e5ngseffekt"
+            },
+            "power_output": {
+                "name": "Utg\u00e5ngseffekt"
+            },
+            "thermostat_room_temperature": {
+                "name": "Aktuell rumstemperatur"
+            },
+            "thermostat_room_temperature_setpoint": {
+                "name": "B\u00f6rv\u00e4rde f\u00f6r rumstemperatur"
+            },
+            "thermostat_water_setpoint": {
+                "name": "M\u00e5ltemperatur f\u00f6r vatten"
+            },
+            "water_inlet_temperature": {
+                "name": "Temperatur vid vatteninlopp"
+            },
+            "water_outlet_temperature": {
+                "name": "Temperatur vid vattenutlopp"
+            }
+        }
+    }
+}

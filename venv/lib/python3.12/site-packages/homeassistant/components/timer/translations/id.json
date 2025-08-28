@@ -1,0 +1,64 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Timer",
+            "state": {
+                "active": "Aktif",
+                "idle": "Siaga",
+                "paused": "Jeda"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Durasi"
+                },
+                "editable": {
+                    "name": "Dikelola lewat antarmuka",
+                    "state": {
+                        "false": "Tidak",
+                        "true": "Ya"
+                    }
+                },
+                "finishes_at": {
+                    "name": "Selesai pada"
+                },
+                "remaining": {
+                    "name": "Sisa"
+                },
+                "restore": {
+                    "name": "Pulihkan"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "name": "Batalkan"
+        },
+        "change": {
+            "fields": {
+                "duration": {
+                    "name": "Durasi"
+                }
+            },
+            "name": "Ubah"
+        },
+        "finish": {
+            "name": "Selesai"
+        },
+        "pause": {
+            "name": "Jeda"
+        },
+        "reload": {
+            "description": "Muat ulang timer dari konfigurasi YAML.",
+            "name": "Muat Ulang"
+        },
+        "start": {
+            "fields": {
+                "duration": {
+                    "name": "Durasi"
+                }
+            },
+            "name": "Mulai"
+        }
+    }
+}

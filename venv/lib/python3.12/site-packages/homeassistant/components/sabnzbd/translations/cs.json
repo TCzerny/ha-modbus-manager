@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Slu\u017eba je ji\u017e nastavena",
+            "reconfigure_successful": "P\u0159enastaven\u00ed bylo \u00fasp\u011b\u0161n\u00e9"
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "invalid_api_key": "Neplatn\u00fd kl\u00ed\u010d API"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "Kl\u00ed\u010d API",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "Kl\u00ed\u010d API serveru SABnzbd. To lze nal\u00e9zt ve webov\u00e9m rozhran\u00ed SABnzbd v Config (vpravo naho\u0159e) > General > Security.",
+                    "url": "\u00dapln\u00e1 adresa URL v\u010detn\u011b portu a serveru SABnzbd. P\u0159\u00edklad: \"http://localhost:8080\" nebo \"http://a02368d7-sabnzbd:8080\", pokud pou\u017e\u00edv\u00e1te dopln\u011bk."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "warnings": {
+                "name": "Varov\u00e1n\u00ed"
+            }
+        },
+        "button": {
+            "pause": {
+                "name": "Pozastavit"
+            },
+            "resume": {
+                "name": "Pokra\u010dovat"
+            }
+        },
+        "number": {
+            "speedlimit": {
+                "name": "Limit rychlosti"
+            }
+        },
+        "sensor": {
+            "daily_total": {
+                "name": "Celkem za den"
+            },
+            "free_disk_space": {
+                "name": "Voln\u00e9 m\u00edsto na disku"
+            },
+            "left": {
+                "name": "Zb\u00fdv\u00e1 st\u00e1hnout"
+            },
+            "monthly_total": {
+                "name": "Celkem za m\u011bs\u00edc"
+            },
+            "overall_total": {
+                "name": "Celkov\u011b"
+            },
+            "queue": {
+                "name": "Fronta"
+            },
+            "queue_count": {
+                "name": "Po\u010det front"
+            },
+            "speed": {
+                "name": "Rychlost"
+            },
+            "status": {
+                "name": "Stav"
+            },
+            "total_disk_space": {
+                "name": "Celkov\u00e9 m\u00edsto na disku"
+            },
+            "weekly_total": {
+                "name": "Celkem za t\u00fdden"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_exception": {
+            "message": "Nelze odeslat p\u0159\u00edkaz do SABnzbd kv\u016fli chyb\u011b p\u0159ipojen\u00ed, zkuste to znovu pozd\u011bji"
+        }
+    },
+    "issues": {
+        "pause_action_deprecated": {
+            "description": "Akce \"Pozastavit\" je zastaral\u00e1 a v budouc\u00ed verzi bude odebr\u00e1na. Pou\u017eijte m\u00edsto toho tla\u010d\u00edtko \"Pozastavit\". Chcete-li tento probl\u00e9m odstranit, upravte odpov\u00eddaj\u00edc\u00edm zp\u016fsobem automatizaci a restartujte Home Assistanta.",
+            "title": "Akce \"Pozastavit\" na SABnzbd je zastaral\u00e1"
+        },
+        "resume_action_deprecated": {
+            "description": "Akce \"Pokra\u010dovat\" je zastaral\u00e1 a v budouc\u00ed verzi bude odebr\u00e1na. Pou\u017eijte m\u00edsto toho tla\u010d\u00edtko \"Pokra\u010dovat\". Chcete-li tento probl\u00e9m odstranit, upravte odpov\u00eddaj\u00edc\u00edm zp\u016fsobem automatizaci a restartujte Home Assistanta.",
+            "title": "Akce \"Porka\u010dovat\" na SABnzbd je zastaral\u00e1"
+        },
+        "set_speed_action_deprecated": {
+            "description": "Akce \"Nastavit rychlost\" je zastaral\u00e1 a v budouc\u00ed verzi bude odebr\u00e1na. M\u00edsto toho pou\u017eijte \u010d\u00edselnou entitu \"Speedlimit\". Chcete-li tento probl\u00e9m odstranit, upravte odpov\u00eddaj\u00edc\u00edm zp\u016fsobem automatizaci a restartujte Home Assistanta.",
+            "title": "Akce \"set_speed\" SABnzbd je zastaral\u00e1"
+        }
+    },
+    "services": {
+        "pause": {
+            "description": "Pozastav\u00ed stahov\u00e1n\u00ed.",
+            "fields": {
+                "api_key": {
+                    "description": "Kl\u00ed\u010d API SABnzbd pro pozastaven\u00ed stahov\u00e1n\u00ed.",
+                    "name": "Kl\u00ed\u010d API SABnzbd"
+                }
+            },
+            "name": "Pozastavit"
+        },
+        "resume": {
+            "description": "Obnov\u00ed stahov\u00e1n\u00ed.",
+            "fields": {
+                "api_key": {
+                    "description": "Kl\u00ed\u010d API SABnzbd pro obnoven\u00ed stahov\u00e1n\u00ed.",
+                    "name": "Kl\u00ed\u010d API SABnzbd"
+                }
+            },
+            "name": "Pokra\u010dovat"
+        },
+        "set_speed": {
+            "description": "Nastav\u00ed limit rychlosti stahov\u00e1n\u00ed.",
+            "fields": {
+                "api_key": {
+                    "description": "Kl\u00ed\u010d API SABnzbd pro nastaven\u00ed omezen\u00ed rychlosti.",
+                    "name": "Kl\u00ed\u010d API SABnzbd"
+                },
+                "speed": {
+                    "description": "Omezen\u00ed rychlosti. Pokud je zad\u00e1no jako \u010d\u00edslo bez jednotek, bude interpretov\u00e1no jako procento. Pokud jsou k dispozici jednotky (nap\u0159. 500K), budou interpretov\u00e1ny absolutn\u011b.",
+                    "name": "Rychlost"
+                }
+            },
+            "name": "Nastavit rychlost"
+        }
+    }
+}

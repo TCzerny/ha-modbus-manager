@@ -1,0 +1,188 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "ignore_ip6_link_local": "O endere\u00e7o local de liga\u00e7\u00e3o IPv6 n\u00e3o \u00e9 suportado.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "cannot_connect": "Falha na liga\u00e7\u00e3o",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown_error": "Erro inesperado",
+            "upnp_not_configured": "Falta de defini\u00e7\u00f5es UPnP no dispositivo."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "ssl": "Utiliza um certificado SSL",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Descobriu FRITZ!Box: {name}\n\nConfigure as ferramentas FRITZ!Box para controlar o seu {name}",
+                "title": "Configurar as ferramentas FRITZ!Box"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Atualizar as credenciais do FRITZ!Box Tools para: {host}.\n\nO FRITZ!Box Tools n\u00e3o consegue iniciar sess\u00e3o no seu FRITZ!Box.",
+                "title": "Atualiza\u00e7\u00e3o das ferramentas FRITZ!Box - credenciais"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL"
+                },
+                "data_description": {
+                    "host": "O nome de anfitri\u00e3o ou endere\u00e7o IP do seu router FRITZ!Box.",
+                    "port": "Deixe em branco para usar a porta padr\u00e3o."
+                },
+                "description": "Atualizar a configura\u00e7\u00e3o FRITZ!Box Tools para: {host}",
+                "title": "A atualizar as ferramentas FRITZ!Box - configura\u00e7\u00e3o"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL",
+                    "username": "Nome de Utilizador"
+                },
+                "data_description": {
+                    "host": "Nome de anfitri\u00e3o ou endere\u00e7o IP do seu router FRITZ!Box.",
+                    "port": "Deixe-o vazio para utilizar a porta predefinida."
+                },
+                "description": "Configure o FRITZ!Box Tools para controlar o seu FRITZ!Box.\nM\u00ednimo necess\u00e1rio: nome de utilizador, palavra-passe.",
+                "title": "Configurar as ferramentas FRITZ!Box"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "is_connected": {
+                "name": "Liga\u00e7\u00e3o"
+            },
+            "is_linked": {
+                "name": "Liga\u00e7\u00e3o"
+            }
+        },
+        "button": {
+            "cleanup": {
+                "name": "Limpeza"
+            },
+            "firmware_update": {
+                "name": "Atualiza\u00e7\u00e3o de firmware"
+            },
+            "reconnect": {
+                "name": "Voltar a ligar"
+            }
+        },
+        "sensor": {
+            "connection_uptime": {
+                "name": "Tempo de funcionamento da liga\u00e7\u00e3o"
+            },
+            "device_uptime": {
+                "name": "\u00daltimo rein\u00edcio"
+            },
+            "external_ip": {
+                "name": "IP externo"
+            },
+            "external_ipv6": {
+                "name": "IPv6 externo"
+            },
+            "gb_received": {
+                "name": "GB recebidos"
+            },
+            "gb_sent": {
+                "name": "GB enviados"
+            },
+            "kb_s_received": {
+                "name": "Taxa de transfer\u00eancia do download"
+            },
+            "kb_s_sent": {
+                "name": "Taxa de transfer\u00eancia de upload"
+            },
+            "link_attenuation_received": {
+                "name": "Atenua\u00e7\u00e3o de pot\u00eancia do link de download"
+            },
+            "link_attenuation_sent": {
+                "name": "Atenua\u00e7\u00e3o de poder de upload de link"
+            },
+            "link_kb_s_received": {
+                "name": "Taxa de transfer\u00eancia do link de download"
+            },
+            "link_kb_s_sent": {
+                "name": "Taxa de transfer\u00eancia de upload de link"
+            },
+            "link_noise_margin_received": {
+                "name": "Margem de ru\u00eddo do link de download"
+            },
+            "link_noise_margin_sent": {
+                "name": "Margem de ru\u00eddo de upload de link"
+            },
+            "max_kb_s_received": {
+                "name": "Taxa de transfer\u00eancia m\u00e1xima de download da liga\u00e7\u00e3o"
+            },
+            "max_kb_s_sent": {
+                "name": "Taxa de transfer\u00eancia m\u00e1xima de upload de liga\u00e7\u00e3o"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_not_found": {
+            "message": "Falha ao executar a\u00e7\u00e3o \"{service}\". Entrada de configura\u00e7\u00e3o para o alvo n\u00e3o encontrada"
+        },
+        "error_refresh_hosts_info": {
+            "message": "Erro ao atualizar a informa\u00e7\u00e3o dos anfitri\u00f5es"
+        },
+        "service_not_supported": {
+            "message": "A\u00e7\u00e3o n\u00e3o suportada"
+        },
+        "service_parameter_unknown": {
+            "message": "A\u00e7\u00e3o ou par\u00e2metro desconhecido"
+        },
+        "unable_to_connect": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel estabelecer uma liga\u00e7\u00e3o"
+        },
+        "update_failed": {
+            "message": "Erro ao atualizar os dados: {error}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "consider_home": "Segundos para considerar um dispositivo em 'casa'",
+                    "old_discovery": "Ativar o m\u00e9todo de descoberta antigo"
+                }
+            }
+        }
+    },
+    "services": {
+        "set_guest_wifi_password": {
+            "description": "Define uma nova palavra-passe para o Wi-Fi de convidado. A palavra-passe deve ter entre 8 e 63 carateres. Se n\u00e3o for definido qualquer par\u00e2metro adicional, a palavra-passe ser\u00e1 gerada automaticamente com um comprimento de 12 carateres.",
+            "fields": {
+                "device_id": {
+                    "description": "Selecione a Fritz!Box a configurar.",
+                    "name": "Dispositivo Fritz!Box"
+                },
+                "length": {
+                    "description": "Comprimento da nova palavra-passe. A palavra-passe ser\u00e1 gerada automaticamente, se n\u00e3o for definida uma palavra-passe.",
+                    "name": "Tamanho da palavra-passe"
+                },
+                "password": {
+                    "description": "Nova palavra-passe para o Wi-Fi de convidado.",
+                    "name": "Palavra-passe"
+                }
+            },
+            "name": "Definir a palavra-passe do Wi-Fi para convidados"
+        }
+    }
+}

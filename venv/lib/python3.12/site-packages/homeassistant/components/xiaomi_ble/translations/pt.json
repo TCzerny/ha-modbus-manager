@@ -1,0 +1,231 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "api_error": "Erro ao comunicar com a API Mi: {error_detail}",
+            "no_devices_found": "Nenhum dispositivo encontrado na rede",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "api_device_not_found": "O dispositivo n\u00e3o foi encontrado na sua conta Mi.",
+            "auth_failed": "A autentica\u00e7\u00e3o falhou: {error_detail}",
+            "decryption_failed": "A chave de liga\u00e7\u00e3o fornecida n\u00e3o funcionou, os dados do sensor n\u00e3o puderam ser desencriptados. Por favor verifique e tente novamente.",
+            "expected_24_characters": "Espera-se uma chave de liga\u00e7\u00e3o hexadecimal de 24 caracteres.",
+            "expected_32_characters": "Esperava-se uma chave de liga\u00e7\u00e3o hexadecimal de 32 caracteres."
+        },
+        "flow_title": "{name}",
+        "step": {
+            "bluetooth_confirm": {
+                "description": "Pretende configurar {name}?"
+            },
+            "cloud_auth": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "description": "Forne\u00e7a o seu nome de utilizador e palavra-passe da aplica\u00e7\u00e3o Mi. Estes dados n\u00e3o ser\u00e3o guardados e apenas ser\u00e3o utilizados para recuperar a chave de encripta\u00e7\u00e3o do dispositivo. Os nomes de utilizador e as palavras-passe s\u00e3o sens\u00edveis ao caso."
+            },
+            "confirm_slow": {
+                "description": "N\u00e3o houve uma transmiss\u00e3o deste dispositivo no \u00faltimo minuto, pelo que n\u00e3o h\u00e1 certeza se este dispositivo utiliza encripta\u00e7\u00e3o ou n\u00e3o. Isto pode dever-se ao facto de o dispositivo utilizar um intervalo de transmiss\u00e3o lento. Confirme a adi\u00e7\u00e3o deste dispositivo na mesma e, da pr\u00f3xima vez que receber uma transmiss\u00e3o, ser-lhe-\u00e1 pedido que introduza a sua chave de liga\u00e7\u00e3o, se necess\u00e1rio."
+            },
+            "get_encryption_key_4_5": {
+                "data": {
+                    "bindkey": "Chave de liga\u00e7\u00e3o"
+                },
+                "description": "Os dados transmitidos pelo sensor s\u00e3o encriptados. Para os desencriptar, \u00e9 necess\u00e1ria de uma chave de liga\u00e7\u00e3o hexadecimal de 32 caracteres."
+            },
+            "get_encryption_key_4_5_choose_method": {
+                "description": "Um dispositivo Mi pode ser configurado no Home Assistant de duas formas diferentes.\n\nPode introduzir voc\u00ea mesmo a chave de liga\u00e7\u00e3o ou o Home Assistant pode import\u00e1-la da sua conta Mi.",
+                "menu_options": {
+                    "cloud_auth": "Conta Mi (recomendado)",
+                    "get_encryption_key_4_5": "Introduzir a chave de encripta\u00e7\u00e3o manualmente"
+                }
+            },
+            "get_encryption_key_legacy": {
+                "data": {
+                    "bindkey": "Chave de liga\u00e7\u00e3o"
+                },
+                "description": "Os dados transmitidos pelo sensor s\u00e3o encriptados. Para os desencriptar, \u00e9 necess\u00e1ria uma chave de liga\u00e7\u00e3o hexadecimal de 24 caracteres."
+            },
+            "user": {
+                "data": {
+                    "address": "Dispositivo"
+                },
+                "description": "Escolher um dispositivo para configurar"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_subtype": {
+            "abnormal": "Anormal",
+            "double_press": "Premir duas vezes",
+            "insufficient_area": "\u00c1rea insuficiente",
+            "lock_inside_the_door": "Fechadura no interior da porta",
+            "lock_outside_the_door": "Fechadura no exterior da porta",
+            "locked": "Bloqueado",
+            "long_press": "Premir prolongadamente",
+            "low_quality_too_light_fuzzy": "Baixa qualidade (demasiado clara, difusa)",
+            "match_failed": "Combina\u00e7\u00e3o falhou",
+            "match_successful": "Combina\u00e7\u00e3o bem sucedida",
+            "motion_detected": "Movimento detetado",
+            "press": "Premir",
+            "release_the_antilock": "Libertar o anti bloqueio",
+            "rotate_left": "Rodar \u00e0 Esquerda",
+            "rotate_left_pressed": "Rodar \u00e0 Esquerda (Premido)",
+            "rotate_right": "Rodar \u00e0 Direita",
+            "rotate_right_pressed": "Rodar \u00e0 Direita (Premido)",
+            "skin_is_too_dry": "A pele est\u00e1 demasiado seca",
+            "skin_is_too_wet": "A pele est\u00e1 demasiado h\u00famida",
+            "turn_off_child_lock": "Desligar bloqueio para crian\u00e7as",
+            "turn_on_antilock": "Ligar o antibloqueio",
+            "turn_on_child_lock": "Ligar bloqueio para crian\u00e7as",
+            "unlock_inside_the_door": "Destrancar fora da porta",
+            "unlock_outside_the_door": "Destrancar fora da porta"
+        },
+        "trigger_type": {
+            "button": "Bot\u00e3o {subtype}",
+            "button_air_exchange": "Bot\u00e3o Renova\u00e7\u00e3o de Ar \"{subtype}\"",
+            "button_brightness": "Bot\u00e3o Brilho \"{subtype}\"",
+            "button_color_temperature": "Bot\u00e3o Temperatura da Cor \"{subtype}\"",
+            "button_decrease_speed": "Bot\u00e3o Diminuir Velocidade \"{subtype}\"",
+            "button_decrease_wind_speed": "Bot\u00e3o Diminuir Ventila\u00e7\u00e3o \"{subtype}\"",
+            "button_dry": "Bot\u00e3o Secar \"{subtype}\"",
+            "button_fan": "Bot\u00e3o Ventoinha \"{subtype}\"",
+            "button_heat": "Bot\u00e3o Calor \"{subtype}\"",
+            "button_increase_wind_speed": "Bot\u00e3o Aumentar Ventila\u00e7\u00e3o \"{subtype}\"",
+            "button_left": "Bot\u00e3o esquerdo \"{subtype}\"",
+            "button_light": "Bot\u00e3o Suave \"{subtype}\"",
+            "button_m": "Bot\u00e3o M \"{subtype}\"",
+            "button_middle": "Bot\u00e3o do meio \"{subtype}\"",
+            "button_min": "Bot\u00e3o M\u00edn \"{subtype}\"",
+            "button_off": "Bot\u00e3o Desligar \"{subtype}\"",
+            "button_on": "Bot\u00e3o Ligar \"{subtype}\"",
+            "button_plus": "Bot\u00e3o Mais \"{subtype}\"",
+            "button_power": "Bot\u00e3o Ligar/Desligar \"{subtype}\"",
+            "button_right": "Bot\u00e3o direito \"{subtype}\"",
+            "button_stop": "Bot\u00e3o Parar \"{subtype}\"",
+            "button_swing": "Bot\u00e3o Oscilar \"{subtype}\"",
+            "button_timer_30_minutes": "Bot\u00e3o Temporizador 30 minutos \"{subtype}\"",
+            "button_timer_60_minutes": "Bot\u00e3o Temporizador 30 minutos \"{subtype}\"",
+            "button_wind_mode": "Bot\u00e3o Modo do Vento \"{subtype}\"",
+            "button_wind_speed": "Bot\u00e3o Velocidade do Vento \"{subtype}\"",
+            "cube": "{subtype}",
+            "dimmer": "{subtype}",
+            "fingerprint": "{subtype}",
+            "lock": "{subtype}",
+            "motion": "{subtype}"
+        }
+    },
+    "entity": {
+        "event": {
+            "button": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "double_press": "Premir duas vezes",
+                            "long_press": "Premir prolongado",
+                            "press": "Premir"
+                        }
+                    }
+                }
+            },
+            "cube": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "rotate_left": "Rodar \u00e0 esquerda",
+                            "rotate_right": "Rodar \u00e0 direita"
+                        }
+                    }
+                }
+            },
+            "dimmer": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "long_press": "Premido longo",
+                            "press": "Premido",
+                            "rotate_left": "Rodar \u00e0 esquerda",
+                            "rotate_left_pressed": "Rodar \u00e0 esquerda (premido)",
+                            "rotate_right": "Rodar \u00e0 direita",
+                            "rotate_right_pressed": "Rodar \u00e0 direita (premido)"
+                        }
+                    }
+                }
+            },
+            "error": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "error_nfc_frequently_unlocks": "Erro o NFC destranca frequentemente",
+                            "failure_to_unlock_frequently_in_multiple_ways": "Erro ao destrancar frequentemente de formas diversas",
+                            "failure_to_unlock_the_vein_frequently": "Falha frequentemente ao destrancar o veio",
+                            "foreign_body_in_the_keyhole": "Corpo estranho no buraco da fechadura",
+                            "frequent_unlocking_with_incorrect_password": "Destrancamento frequente com palavra-passe incorreta",
+                            "frequent_unlocking_with_wrong_fingerprints": "Destrancamento frequente com impress\u00f5es digitais erradas",
+                            "hijacking_alarm": "Alarme de sequestro",
+                            "lock_picking": "Arrombamento de fechaduras",
+                            "mechanical_failure": "Falha mec\u00e2nica",
+                            "operation_timeout_password_input_timeout": "Tempo de opera\u00e7\u00e3o excedido tempo de introdu\u00e7\u00e3o da palavra-passe excedido",
+                            "palmprints_frequently_fail_to_unlock": "As impress\u00f5es palmares falham frequentemente o desbloqueio",
+                            "reset_button_is_pressed": "O bot\u00e3o de reiniciar foi premido",
+                            "the_accessory_battery_is_low": "A bateria do acess\u00f3rio est\u00e1 fraca",
+                            "the_battery_level_is_less_than_10_percent": "A n\u00edvel da bateria \u00e9 inferior a 10%",
+                            "the_battery_level_is_less_than_5_percent": "O n\u00edvel da bateria \u00e9 inferior a 5%",
+                            "the_fingerprint_sensor_is_abnormal": "O sensor de impress\u00e3o digital est\u00e1 anormal",
+                            "the_key_has_not_been_taken_out": "A chave n\u00e3o foi removida",
+                            "the_lock_sensor_is_faulty": "O sensor da tranca est\u00e1 defeituoso",
+                            "the_safe_was_moved": "O cofre foi movido",
+                            "the_wrong_key_is_frequently_unlocked": "A chave errada \u00e9 frequentemente destrancada",
+                            "timeout_is_not_locked_as_required": "O tempo limite n\u00e3o est\u00e1 bloqueado conforme necess\u00e1rio",
+                            "unlock_inside_the_door_after_arming": "Destrancar o interior da porta depois de armar",
+                            "unlocking_the_face_frequently_fails": "Destrancar a face falha frequentemente"
+                        }
+                    }
+                }
+            },
+            "fingerprint": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "insufficient_area": "\u00c1rea insuficiente",
+                            "low_quality_too_light_fuzzy": "Baixa qualidade (demasiado clara, difusa)",
+                            "match_failed": "Combina\u00e7\u00e3o falhou",
+                            "match_successful": "Combina\u00e7\u00e3o bem sucedida",
+                            "skin_is_too_dry": "A pele est\u00e1 demasiado seca",
+                            "skin_is_too_wet": "A pele est\u00e1 demasiado h\u00famida"
+                        }
+                    }
+                }
+            },
+            "lock": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "abnormal": "Anormal",
+                            "lock_inside_the_door": "Fechadura no interior da porta",
+                            "lock_outside_the_door": "Fechadura no exterior da porta",
+                            "locked": "Bloqueado",
+                            "release_the_antilock": "Libertar o anti bloqueio",
+                            "turn_off_child_lock": "Desligar bloqueio para crian\u00e7as",
+                            "turn_on_antilock": "Ligar o antibloqueio",
+                            "turn_on_child_lock": "Ligar bloqueio para crian\u00e7as",
+                            "unlock_inside_the_door": "Destrancar fora da porta",
+                            "unlock_outside_the_door": "Destrancar fora da porta"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "motion_detected": "Movimento detetado"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

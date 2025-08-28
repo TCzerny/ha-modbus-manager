@@ -1,0 +1,147 @@
+{
+    "device_automation": {
+        "action_type": {
+            "arm_away": "Aktiviere {entity_name} im Abwesendmodus",
+            "arm_home": "Aktiviere {entity_name} im Zuhausemodus",
+            "arm_night": "Aktiviere {entity_name} im Nachtmodus",
+            "arm_vacation": "Aktiviere {entity_name} im Urlaubsmodus",
+            "disarm": "Deaktiviere {entity_name}",
+            "trigger": "L\u00f6se {entity_name} aus"
+        },
+        "condition_type": {
+            "is_armed_away": "Wenn {entity_name} im Abwesendmodus aktiviert ist",
+            "is_armed_home": "Wenn {entity_name} im Zuhausemodus aktiviert ist",
+            "is_armed_night": "Wenn {entity_name} im Nachtmodus aktiviert ist",
+            "is_armed_vacation": "Wenn {entity_name} im Urlaubsmodus aktiviert ist",
+            "is_disarmed": "Wenn {entity_name} deaktiviert ist",
+            "is_triggered": "Wenn {entity_name} ausgel\u00f6st ist"
+        },
+        "extra_fields": {
+            "code": "Code",
+            "for": "Dauer"
+        },
+        "trigger_type": {
+            "armed_away": "Sobald {entity_name} im Abwesendmodus aktiviert wird",
+            "armed_home": "Sobald {entity_name} im Zuhausemodus aktiviert wird",
+            "armed_night": "Sobald {entity_name} im Nachtmodus aktiviert wird",
+            "armed_vacation": "Sobald {entity_name} im Urlaubsmodus aktiviert wird",
+            "disarmed": "Sobald {entity_name} deaktiviert wird",
+            "triggered": "Sobald {entity_name} ausgel\u00f6st wird"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Alarmzentrale",
+            "state": {
+                "armed": "Aktiviert",
+                "armed_away": "Aktiviert (Abwesend)",
+                "armed_custom_bypass": "Aktiviert (Mit Bypass)",
+                "armed_home": "Aktiviert (Zuhause)",
+                "armed_night": "Aktiviert (Nacht)",
+                "armed_vacation": "Aktiviert (Urlaub)",
+                "arming": "Wird aktiviert",
+                "disarmed": "Deaktiviert",
+                "disarming": "Wird deaktiviert",
+                "pending": "Anstehend",
+                "triggered": "Ausgel\u00f6st"
+            },
+            "state_attributes": {
+                "changed_by": {
+                    "name": "Ge\u00e4ndert durch"
+                },
+                "code_arm_required": {
+                    "name": "Code zum Aktivieren",
+                    "state": {
+                        "false": "Nicht erforderlich",
+                        "true": "Erforderlich"
+                    }
+                },
+                "code_format": {
+                    "name": "Codeformat",
+                    "state": {
+                        "number": "Nummer",
+                        "text": "Text"
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "code_arm_required": {
+            "message": "Zum Aktivieren ist ein Code erforderlich, f\u00fcr {entity_id} wurde jedoch keiner angegeben."
+        }
+    },
+    "services": {
+        "alarm_arm_away": {
+            "description": "Stellt die Alarmzentrale auf: Aktiviert, niemand zuhause.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Aktivieren der Alarmzentrale.",
+                    "name": "Code"
+                }
+            },
+            "name": "Aktivieren (Abwesend)"
+        },
+        "alarm_arm_custom_bypass": {
+            "description": "Aktiviert die Alarmzentrale und erm\u00f6glicht den Bypass eines benutzerdefinierten Bereichs.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Aktivieren der Alarmzentrale.",
+                    "name": "Code"
+                }
+            },
+            "name": "Aktivieren (Mit Bypass)"
+        },
+        "alarm_arm_home": {
+            "description": "Stellt die Alarmzentrale auf: Aktiviert, aber jemand ist zuhause.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Aktivieren der Alarmzentrale.",
+                    "name": "Code"
+                }
+            },
+            "name": "Aktivieren (Zuhause)"
+        },
+        "alarm_arm_night": {
+            "description": "Stellt die Alarmzentrale auf: Aktiviert \u00fcber Nacht.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Aktivieren der Alarmzentrale.",
+                    "name": "Code"
+                }
+            },
+            "name": "Aktivieren (Nacht)"
+        },
+        "alarm_arm_vacation": {
+            "description": "Stellt die Alarmzentrale auf: Aktiviert f\u00fcr Urlaub.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Aktivieren der Alarmzentrale.",
+                    "name": "Code"
+                }
+            },
+            "name": "Aktivieren (Urlaub)"
+        },
+        "alarm_disarm": {
+            "description": "Deaktiviert die Alarmzentrale.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Deaktivieren der Alarmzentrale.",
+                    "name": "Code"
+                }
+            },
+            "name": "Deaktivieren"
+        },
+        "alarm_trigger": {
+            "description": "L\u00f6st den Alarm manuell aus.",
+            "fields": {
+                "code": {
+                    "description": "Code zum Aktivieren der Alarmzentrale.",
+                    "name": "Code"
+                }
+            },
+            "name": "Ausl\u00f6sen"
+        }
+    },
+    "title": "Alarmzentrale"
+}

@@ -1,0 +1,434 @@
+{
+    "entity": {
+        "binary_sensor": {
+            "state": {
+                "name": "\u0110ang ch\u1ea1y"
+            }
+        },
+        "sensor": {
+            "agent_version": {
+                "name": "Phi\u00ean b\u1ea3n OS Agent"
+            },
+            "apparmor_version": {
+                "name": "Phi\u00ean b\u1ea3n Apparmor"
+            },
+            "cpu_percent": {
+                "name": "Ph\u1ea7n tr\u0103m CPU"
+            },
+            "disk_free": {
+                "name": "\u1ed4 \u0111\u0129a tr\u1ed1ng"
+            },
+            "disk_total": {
+                "name": "T\u1ed5ng \u1ed5 \u0111\u0129a"
+            },
+            "disk_used": {
+                "name": "\u1ed4 \u0111\u0129a \u0111\u00e3 d\u00f9ng"
+            },
+            "memory_percent": {
+                "name": "Ph\u1ea7n tr\u0103m b\u1ed9 nh\u1edb"
+            },
+            "version": {
+                "name": "Phi\u00ean b\u1ea3n"
+            },
+            "version_latest": {
+                "name": "Phi\u00ean b\u1ea3n m\u1edbi nh\u1ea5t"
+            }
+        }
+    },
+    "issues": {
+        "issue_addon_boot_fail": {
+            "fix_flow": {
+                "abort": {
+                    "apply_suggestion_fail": "Kh\u00f4ng th\u1ec3 \u00e1p d\u1ee5ng b\u1ea3n s\u1eeda l\u1ed7i. Ki\u1ec3m tra nh\u1eadt k\u00fd c\u1ee7a Supervisor \u0111\u1ec3 bi\u1ebft th\u00eam chi ti\u1ebft."
+                },
+                "step": {
+                    "fix_menu": {
+                        "description": "Ti\u1ec7n \u00edch b\u1ed5 sung {addon} \u0111\u01b0\u1ee3c \u0111\u1eb7t \u0111\u1ec3 kh\u1edfi \u0111\u1ed9ng khi kh\u1edfi \u0111\u1ed9ng nh\u01b0ng kh\u00f4ng kh\u1edfi \u0111\u1ed9ng \u0111\u01b0\u1ee3c. Th\u00f4ng th\u01b0\u1eddng \u0111i\u1ec1u n\u00e0y x\u1ea3y ra khi c\u1ea5u h\u00ecnh kh\u00f4ng ch\u00ednh x\u00e1c ho\u1eb7c c\u00f9ng m\u1ed9t c\u1ed5ng \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng trong nhi\u1ec1u ti\u1ec7n \u00edch b\u1ed5 sung. Ki\u1ec3m tra c\u1ea5u h\u00ecnh c\u0169ng nh\u01b0 nh\u1eadt k\u00fd {addon} v\u00e0 Supervisor.\n\nD\u00f9ng Kh\u1edfi \u0111\u1ed9ng \u0111\u1ec3 th\u1eed l\u1ea1i ho\u1eb7c V\u00f4 hi\u1ec7u h\u00f3a \u0111\u1ec3 t\u1eaft t\u00f9y ch\u1ecdn b\u1eaft \u0111\u1ea7u khi kh\u1edfi \u0111\u1ed9ng.",
+                        "menu_options": {
+                            "addon_disable_boot": "V\u00f4 hi\u1ec7u h\u00f3a",
+                            "addon_execute_start": "Kh\u1edfi \u0111\u1ed9ng"
+                        }
+                    }
+                }
+            },
+            "title": "Ti\u1ec7n \u00edch b\u1ed5 sung kh\u00f4ng kh\u1edfi \u0111\u1ed9ng \u0111\u01b0\u1ee3c khi kh\u1edfi \u0111\u1ed9ng"
+        },
+        "issue_addon_detached_addon_missing": {
+            "description": "Kho l\u01b0u tr\u1eef cho ti\u1ec7n \u00edch b\u1ed5 sung {addon} b\u1ecb thi\u1ebfu. \u0110i\u1ec1u n\u00e0y c\u00f3 ngh\u0129a l\u00e0 n\u00f3 s\u1ebd kh\u00f4ng nh\u1eadn \u0111\u01b0\u1ee3c b\u1ea3n c\u1eadp nh\u1eadt v\u00e0 b\u1ea3n sao l\u01b0u c\u00f3 th\u1ec3 kh\u00f4ng \u0111\u01b0\u1ee3c kh\u00f4i ph\u1ee5c \u0111\u00fang c\u00e1ch v\u00ec ng\u01b0\u1eddi gi\u00e1m s\u00e1t c\u00f3 th\u1ec3 kh\u00f4ng th\u1ec3 x\u00e2y d\u1ef1ng/t\u1ea3i xu\u1ed1ng c\u00e1c t\u00e0i nguy\u00ean c\u1ea7n thi\u1ebft. \n \nVui l\u00f2ng ki\u1ec3m tra t\u00e0i li\u1ec7u [ti\u1ec7n \u00edch b\u1ed5 sung]({addon_url}) \u0111\u1ec3 bi\u1ebft h\u01b0\u1edbng d\u1eabn c\u00e0i \u0111\u1eb7t v\u00e0 th\u00eam kho l\u01b0u tr\u1eef v\u00e0o c\u1eeda h\u00e0ng.",
+            "title": "Thi\u1ebfu kho l\u01b0u tr\u1eef cho ti\u1ec7n \u00edch b\u1ed5 sung \u0111\u00e3 c\u00e0i \u0111\u1eb7t"
+        },
+        "issue_addon_detached_addon_removed": {
+            "fix_flow": {
+                "abort": {
+                    "apply_suggestion_fail": "Kh\u00f4ng th\u1ec3 g\u1ee1 c\u00e0i \u0111\u1eb7t ti\u1ec7n \u00edch b\u1ed5 sung. Ki\u1ec3m tra nh\u1eadt k\u00fd c\u1ee7a Supervisor \u0111\u1ec3 bi\u1ebft th\u00eam chi ti\u1ebft."
+                },
+                "step": {
+                    "addon_execute_remove": {
+                        "description": "Ti\u1ec7n \u00edch b\u1ed5 sung {addon} \u0111\u00e3 b\u1ecb x\u00f3a kh\u1ecfi kho l\u01b0u tr\u1eef m\u00e0 n\u00f3 \u0111\u01b0\u1ee3c c\u00e0i \u0111\u1eb7t. \u0110i\u1ec1u n\u00e0y c\u00f3 ngh\u0129a l\u00e0 n\u00f3 s\u1ebd kh\u00f4ng nh\u1eadn \u0111\u01b0\u1ee3c c\u00e1c b\u1ea3n c\u1eadp nh\u1eadt v\u00e0 c\u00e1c b\u1ea3n sao l\u01b0u c\u00f3 th\u1ec3 kh\u00f4ng \u0111\u01b0\u1ee3c kh\u00f4i ph\u1ee5c ch\u00ednh x\u00e1c v\u00ec ng\u01b0\u1eddi gi\u00e1m s\u00e1t c\u00f3 th\u1ec3 kh\u00f4ng x\u00e2y d\u1ef1ng/t\u1ea3i xu\u1ed1ng c\u00e1c t\u00e0i nguy\u00ean c\u1ea7n thi\u1ebft.\n\nCh\u1ecdn **G\u1eedi** s\u1ebd g\u1ee1 c\u00e0i \u0111\u1eb7t ti\u1ec7n \u00edch kh\u00f4ng d\u00f9ng n\u1eefa n\u00e0y. Ngo\u00e0i ra, b\u1ea1n c\u00f3 th\u1ec3 ki\u1ec3m tra [Tr\u1ee3 gi\u00fap Home Assistant]({help_url}) v\u00e0 [di\u1ec5n \u0111\u00e0n c\u1ed9ng \u0111\u1ed3ng]({community_url}) \u0111\u1ec3 c\u00f3 c\u00e1c l\u1ef1a ch\u1ecdn thay th\u1ebf \u0111\u1ec3 di chuy\u1ec3n \u0111\u1ebfn."
+                    }
+                }
+            },
+            "title": "Ti\u1ec7n \u00edch b\u1ed5 sung \u0111\u00e3 c\u00e0i \u0111\u1eb7t \u0111\u00e3 b\u1ecb x\u00f3a kh\u1ecfi kho l\u01b0u tr\u1eef"
+        },
+        "issue_mount_mount_failed": {
+            "fix_flow": {
+                "abort": {
+                    "apply_suggestion_fail": "Kh\u00f4ng th\u1ec3 \u00e1p d\u1ee5ng b\u1ea3n s\u1eeda l\u1ed7i. Ki\u1ec3m tra nh\u1eadt k\u00fd c\u1ee7a Supervisor \u0111\u1ec3 bi\u1ebft th\u00eam chi ti\u1ebft."
+                },
+                "step": {
+                    "fix_menu": {
+                        "description": "Kh\u00f4ng th\u1ec3 k\u1ebft n\u1ed1i v\u1edbi `{reference}`. Ki\u1ec3m tra nh\u1eadt k\u00fd m\u00e1y ch\u1ee7 \u0111\u1ec3 t\u00ecm l\u1ed7i t\u1eeb d\u1ecbch v\u1ee5 g\u1eafn k\u1ebft \u0111\u1ec3 bi\u1ebft th\u00eam chi ti\u1ebft.\n\nS\u1eed d\u1ee5ng t\u1ea3i l\u1ea1i \u0111\u1ec3 th\u1eed k\u1ebft n\u1ed1i l\u1ea1i. N\u1ebfu b\u1ea1n c\u1ea7n c\u1eadp nh\u1eadt `{reference}`, \u0111i t\u1edbi [l\u01b0u tr\u1eef]({storage_url}).",
+                        "menu_options": {
+                            "mount_execute_reload": "T\u1ea3i l\u1ea1i",
+                            "mount_execute_remove": "X\u00f3a"
+                        }
+                    }
+                }
+            },
+            "title": "Thi\u1ebft b\u1ecb l\u01b0u tr\u1eef m\u1ea1ng b\u1ecb l\u1ed7i"
+        },
+        "issue_system_docker_config": {
+            "fix_flow": {
+                "abort": {
+                    "apply_suggestion_fail": "M\u1ed9t ho\u1eb7c nhi\u1ec1u l\u1ea7n kh\u1edfi \u0111\u1ed9ng l\u1ea1i kh\u00f4ng th\u00e0nh c\u00f4ng. Ki\u1ec3m tra nh\u1eadt k\u00fd c\u1ee7a Supervisor \u0111\u1ec3 bi\u1ebft th\u00eam chi ti\u1ebft."
+                },
+                "step": {
+                    "system_execute_rebuild": {
+                        "description": "C\u1ea5u h\u00ecnh m\u1eb7c \u0111\u1ecbnh cho ti\u1ec7n \u00edch b\u1ed5 sung v\u00e0 Home Assistant \u0111\u00e3 thay \u0111\u1ed5i. \u0110\u1ec3 c\u1eadp nh\u1eadt c\u1ea5u h\u00ecnh v\u1edbi c\u00e1c m\u1eb7c \u0111\u1ecbnh m\u1edbi, c\u1ea7n kh\u1edfi \u0111\u1ed9ng l\u1ea1i nh\u1eefng m\u1ee5c sau:\n\n- {components}"
+                    }
+                }
+            },
+            "title": "C\u1ea7n kh\u1edfi \u0111\u1ed9ng l\u1ea1i"
+        },
+        "issue_system_multiple_data_disks": {
+            "fix_flow": {
+                "abort": {
+                    "apply_suggestion_fail": "Kh\u00f4ng th\u1ec3 \u0111\u1ed5i t\u00ean h\u1ec7 th\u1ed1ng t\u1eadp tin. Ki\u1ec3m tra nh\u1eadt k\u00fd Supervisor \u0111\u1ec3 bi\u1ebft th\u00eam chi ti\u1ebft."
+                },
+                "step": {
+                    "fix_menu": {
+                        "description": "T\u1ea1i `{reference}`, ch\u00fang t\u00f4i ph\u00e1t hi\u1ec7n ra m\u1ed9t \u0111\u0129a d\u1eef li\u1ec7u \u0111ang ho\u1ea1t \u0111\u1ed9ng kh\u00e1c (ch\u1ee9a h\u1ec7 th\u1ed1ng t\u1eadp tin `hassos-data` t\u1eeb m\u1ed9t c\u00e0i \u0111\u1eb7t Home Assistant kh\u00e1c). \n \nB\u1ea1n c\u1ea7n quy\u1ebft \u0111\u1ecbnh ph\u1ea3i l\u00e0m g\u00ec v\u1edbi n\u00f3. N\u1ebfu kh\u00f4ng, Home Assistant c\u00f3 th\u1ec3 ch\u1ecdn sai \u0111\u0129a d\u1eef li\u1ec7u khi kh\u1edfi \u0111\u1ed9ng l\u1ea1i h\u1ec7 th\u1ed1ng. \n \nN\u1ebfu b\u1ea1n kh\u00f4ng mu\u1ed1n s\u1eed d\u1ee5ng \u0111\u0129a d\u1eef li\u1ec7u n\u00e0y, h\u00e3y r\u00fat n\u00f3 kh\u1ecfi h\u1ec7 th\u1ed1ng. N\u1ebfu b\u1ea1n \u0111\u1ec3 n\u00f3 c\u1eafm v\u00e0o, h\u00e3y ch\u1ecdn m\u1ed9t trong c\u00e1c t\u00f9y ch\u1ecdn sau:",
+                        "menu_options": {
+                            "system_adopt_data_disk": "S\u1eed d\u1ee5ng \u0111\u0129a d\u1eef li\u1ec7u \u0111\u01b0\u1ee3c ph\u00e1t hi\u1ec7n thay v\u00ec h\u1ec7 th\u1ed1ng hi\u1ec7n t\u1ea1i",
+                            "system_rename_data_disk": "\u0110\u00e1nh d\u1ea5u l\u00e0 \u0111\u0129a d\u1eef li\u1ec7u kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng (\u0111\u1ed5i t\u00ean h\u1ec7 th\u1ed1ng t\u1eadp tin)"
+                        }
+                    },
+                    "system_adopt_data_disk": {
+                        "description": "Ch\u1ecdn **G\u1eedi** \u0111\u1ec3 bi\u1ebfn `{reference}` th\u00e0nh \u0111\u0129a d\u1eef li\u1ec7u \u0111ang ho\u1ea1t \u0111\u1ed9ng. \u0110\u0129a duy nh\u1ea5t. \n \nB\u1ea1n s\u1ebd kh\u00f4ng th\u1ec3 truy c\u1eadp v\u00e0o d\u1eef li\u1ec7u Home Assistant hi\u1ec7n t\u1ea1i n\u1eefa (s\u1ebd \u0111\u01b0\u1ee3c \u0111\u00e1nh d\u1ea5u l\u00e0 \u0111\u0129a d\u1eef li\u1ec7u kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng). Sau khi kh\u1edfi \u0111\u1ed9ng l\u1ea1i, h\u1ec7 th\u1ed1ng c\u1ee7a b\u1ea1n s\u1ebd \u1edf tr\u1ea1ng th\u00e1i d\u1eef li\u1ec7u Home Assistant tr\u00ean `{reference}`."
+                    }
+                }
+            },
+            "title": "\u0110\u00e3 ph\u00e1t hi\u1ec7n nhi\u1ec1u \u0111\u0129a d\u1eef li\u1ec7u"
+        },
+        "issue_system_reboot_required": {
+            "fix_flow": {
+                "abort": {
+                    "apply_suggestion_fail": "Kh\u00f4ng th\u1ec3 kh\u1edfi \u0111\u1ed9ng l\u1ea1i h\u1ec7 th\u1ed1ng. Ki\u1ec3m tra nh\u1eadt k\u00fd c\u1ee7a Supervisor \u0111\u1ec3 bi\u1ebft th\u00eam chi ti\u1ebft."
+                },
+                "step": {
+                    "system_execute_reboot": {
+                        "description": "C\u00e0i \u0111\u1eb7t \u0111\u00e3 \u0111\u01b0\u1ee3c thay \u0111\u1ed5i, y\u00eau c\u1ea7u kh\u1edfi \u0111\u1ed9ng l\u1ea1i h\u1ec7 th\u1ed1ng \u0111\u1ec3 c\u00f3 hi\u1ec7u l\u1ef1c. \n \nB\u1ea3n s\u1eeda l\u1ed7i n\u00e0y s\u1ebd kh\u1edfi \u0111\u1ed9ng l\u1ea1i h\u1ec7 th\u1ed1ng, khi\u1ebfn Home Assistant v\u00e0 t\u1ea5t c\u1ea3 c\u00e1c ti\u1ec7n \u00edch b\u1ed5 sung kh\u00f4ng th\u1ec3 truy c\u1eadp \u0111\u01b0\u1ee3c trong m\u1ed9t th\u1eddi gian ng\u1eafn."
+                    }
+                }
+            },
+            "title": "C\u1ea7n kh\u1edfi \u0111\u1ed9ng l\u1ea1i"
+        },
+        "unhealthy": {
+            "description": "H\u1ec7 th\u1ed1ng hi\u1ec7n kh\u00f4ng \u1ed5n \u0111\u1ecbnh do {reason}. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng l\u00e0nh m\u1ea1nh - {reason}"
+        },
+        "unhealthy_docker": {
+            "description": "H\u1ec7 th\u1ed1ng hi\u1ec7n kh\u00f4ng \u1ed5n \u0111\u1ecbnh v\u00ec Docker \u0111\u01b0\u1ee3c c\u1ea5u h\u00ecnh kh\u00f4ng \u0111\u00fang. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng l\u00e0nh m\u1ea1nh - Docker b\u1ecb c\u1ea5u h\u00ecnh sai"
+        },
+        "unhealthy_privileged": {
+            "description": "H\u1ec7 th\u1ed1ng hi\u1ec7n kh\u00f4ng \u1ed5n \u0111\u1ecbnh v\u00ec kh\u00f4ng c\u00f3 quy\u1ec1n truy c\u1eadp \u0111\u1eb7c quy\u1ec1n v\u00e0o docker runtime. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng l\u00e0nh m\u1ea1nh - Kh\u00f4ng c\u00f3 \u0111\u1eb7c quy\u1ec1n"
+        },
+        "unhealthy_setup": {
+            "description": "H\u1ec7 th\u1ed1ng hi\u1ec7n kh\u00f4ng \u1ed5n \u0111\u1ecbnh v\u00ec thi\u1ebft l\u1eadp kh\u00f4ng ho\u00e0n t\u1ea5t. C\u00f3 m\u1ed9t s\u1ed1 l\u00fd do c\u00f3 th\u1ec3 khi\u1ebfn \u0111i\u1ec1u n\u00e0y x\u1ea3y ra, h\u00e3y s\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng l\u00e0nh m\u1ea1nh - Thi\u1ebft l\u1eadp kh\u00f4ng th\u00e0nh c\u00f4ng"
+        },
+        "unhealthy_supervisor": {
+            "description": "H\u1ec7 th\u1ed1ng hi\u1ec7n kh\u00f4ng \u1ed5n \u0111\u1ecbnh v\u00ec n\u1ed7 l\u1ef1c c\u1eadp nh\u1eadt Supervisor l\u00ean phi\u00ean b\u1ea3n m\u1edbi nh\u1ea5t \u0111\u00e3 kh\u00f4ng th\u00e0nh c\u00f4ng. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng l\u00e0nh m\u1ea1nh - C\u1eadp nh\u1eadt Supervisor kh\u00f4ng th\u00e0nh c\u00f4ng"
+        },
+        "unhealthy_untrusted": {
+            "description": "H\u1ec7 th\u1ed1ng hi\u1ec7n kh\u00f4ng \u1ed5n \u0111\u1ecbnh v\u00ec ph\u00e1t hi\u1ec7n m\u00e3 ho\u1eb7c h\u00ecnh \u1ea3nh kh\u00f4ng \u0111\u00e1ng tin c\u1eady \u0111ang \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng l\u00e0nh m\u1ea1nh - M\u00e3 kh\u00f4ng \u0111\u00e1ng tin c\u1eady"
+        },
+        "unsupported": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec {reason}. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - {reason}"
+        },
+        "unsupported_apparmor": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec AppArmor ho\u1ea1t \u0111\u1ed9ng kh\u00f4ng \u0111\u00fang c\u00e1ch v\u00e0 c\u00e1c ti\u1ec7n \u00edch b\u1ed5 sung \u0111ang ch\u1ea1y theo c\u00e1ch kh\u00f4ng \u0111\u01b0\u1ee3c b\u1ea3o v\u1ec7 v\u00e0 kh\u00f4ng an to\u00e0n. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - S\u1ef1 c\u1ed1 AppArmor"
+        },
+        "unsupported_cgroup_version": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 do s\u1eed d\u1ee5ng sai phi\u00ean b\u1ea3n Docker CGroup. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u phi\u00ean b\u1ea3n ch\u00ednh x\u00e1c v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c \u0111i\u1ec1u n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - Phi\u00ean b\u1ea3n CGroup"
+        },
+        "unsupported_connectivity_check": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec Home Assistant kh\u00f4ng th\u1ec3 x\u00e1c \u0111\u1ecbnh khi n\u00e0o c\u00f3 k\u1ebft n\u1ed1i internet. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - Ki\u1ec3m tra k\u1ebft n\u1ed1i \u0111\u00e3 b\u1ecb v\u00f4 hi\u1ec7u h\u00f3a"
+        },
+        "unsupported_content_trust": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec Home Assistant kh\u00f4ng th\u1ec3 x\u00e1c minh n\u1ed9i dung \u0111ang ch\u1ea1y l\u00e0 \u0111\u00e1ng tin c\u1eady v\u00e0 kh\u00f4ng b\u1ecb k\u1ebb t\u1ea5n c\u00f4ng s\u1eeda \u0111\u1ed5i. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - Ki\u1ec3m tra \u0111\u1ed9 tin c\u1eady c\u1ee7a n\u1ed9i dung \u0111\u00e3 b\u1ecb v\u00f4 hi\u1ec7u h\u00f3a"
+        },
+        "unsupported_dbus": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec D-Bus ho\u1ea1t \u0111\u1ed9ng kh\u00f4ng \u0111\u00fang. Nhi\u1ec1u th\u1ee9 s\u1ebd kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng n\u1ebfu kh\u00f4ng c\u00f3 \u0111i\u1ec1u n\u00e0y v\u00ec Supervisor kh\u00f4ng th\u1ec3 giao ti\u1ebfp v\u1edbi m\u00e1y ch\u1ee7. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - S\u1ef1 c\u1ed1 D-Bus"
+        },
+        "unsupported_dns_server": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec m\u00e1y ch\u1ee7 DNS \u0111\u01b0\u1ee3c cung c\u1ea5p kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng \u0111\u00fang v\u00e0 t\u00f9y ch\u1ecdn DNS d\u1ef1 ph\u00f2ng \u0111\u00e3 b\u1ecb v\u00f4 hi\u1ec7u h\u00f3a. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - S\u1ef1 c\u1ed1 m\u00e1y ch\u1ee7 DNS"
+        },
+        "unsupported_docker_configuration": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec daemon Docker \u0111ang ch\u1ea1y theo c\u00e1ch kh\u00f4ng mong mu\u1ed1n. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - Docker b\u1ecb c\u1ea5u h\u00ecnh sai"
+        },
+        "unsupported_docker_version": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec \u0111ang s\u1eed d\u1ee5ng phi\u00ean b\u1ea3n Docker kh\u00f4ng \u0111\u00fang. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u phi\u00ean b\u1ea3n \u0111\u00fang v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - Phi\u00ean b\u1ea3n Docker"
+        },
+        "unsupported_job_conditions": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec m\u1ed9t ho\u1eb7c nhi\u1ec1u \u0111i\u1ec1u ki\u1ec7n c\u00f4ng vi\u1ec7c \u0111\u00e3 b\u1ecb v\u00f4 hi\u1ec7u h\u00f3a \u0111\u1ec3 b\u1ea3o v\u1ec7 kh\u1ecfi c\u00e1c l\u1ed7i v\u00e0 h\u1ecfng h\u00f3c b\u1ea5t ng\u1edd. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - B\u1ea3o v\u1ec7 b\u1ecb v\u00f4 hi\u1ec7u h\u00f3a"
+        },
+        "unsupported_lxc": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec \u0111ang ch\u1ea1y tr\u00ean m\u00e1y \u1ea3o LXC. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - \u0110\u00e3 ph\u00e1t hi\u1ec7n LXC"
+        },
+        "unsupported_network_manager": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec Tr\u00ecnh qu\u1ea3n l\u00fd m\u1ea1ng b\u1ecb thi\u1ebfu, kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng ho\u1eb7c c\u1ea5u h\u00ecnh sai. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - S\u1ef1 c\u1ed1 c\u1ee7a Tr\u00ecnh qu\u1ea3n l\u00fd m\u1ea1ng"
+        },
+        "unsupported_os": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec h\u1ec7 \u0111i\u1ec1u h\u00e0nh \u0111ang s\u1eed d\u1ee5ng kh\u00f4ng \u0111\u01b0\u1ee3c ki\u1ec3m tra ho\u1eb7c b\u1ea3o tr\u00ec \u0111\u1ec3 s\u1eed d\u1ee5ng v\u1edbi Supervisor. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 bi\u1ebft h\u1ec7 \u0111i\u1ec1u h\u00e0nh n\u00e0o \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - H\u1ec7 \u0111i\u1ec1u h\u00e0nh"
+        },
+        "unsupported_os_agent": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec OS-Agent b\u1ecb thi\u1ebfu, kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng ho\u1eb7c c\u1ea5u h\u00ecnh sai. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - S\u1ef1 c\u1ed1 OS-Agent"
+        },
+        "unsupported_restart_policy": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec v\u00f9ng ch\u1ee9a Docker c\u00f3 ch\u00ednh s\u00e1ch kh\u1edfi \u0111\u1ed9ng l\u1ea1i c\u00f3 th\u1ec3 g\u00e2y ra s\u1ef1 c\u1ed1 khi kh\u1edfi \u0111\u1ed9ng. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - Ch\u00ednh s\u00e1ch kh\u1edfi \u0111\u1ed9ng l\u1ea1i container"
+        },
+        "unsupported_software": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec \u0111\u00e3 ph\u00e1t hi\u1ec7n ph\u1ea7n m\u1ec1m b\u1ed5 sung b\u00ean ngo\u00e0i h\u1ec7 sinh th\u00e1i Home Assistant. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - Ph\u1ea7n m\u1ec1m kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3"
+        },
+        "unsupported_source_mods": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec m\u00e3 ngu\u1ed3n c\u1ee7a Supervisor \u0111\u00e3 b\u1ecb s\u1eeda \u0111\u1ed5i. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - S\u1eeda \u0111\u1ed5i m\u00e3 ngu\u1ed3n Supervisor"
+        },
+        "unsupported_supervisor_version": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec phi\u00ean b\u1ea3n Supervisor \u0111\u00e3 l\u1ed7i th\u1eddi v\u00e0 t\u00ednh n\u0103ng t\u1ef1 \u0111\u1ed9ng c\u1eadp nh\u1eadt \u0111\u00e3 b\u1ecb v\u00f4 hi\u1ec7u h\u00f3a. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - Phi\u00ean b\u1ea3n Supervisor"
+        },
+        "unsupported_systemd": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec Systemd b\u1ecb thi\u1ebfu, kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng ho\u1eb7c c\u1ea5u h\u00ecnh sai. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - S\u1ef1 c\u1ed1 Systemd"
+        },
+        "unsupported_systemd_journal": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec Systemd Journal v\u00e0/ho\u1eb7c d\u1ecbch v\u1ee5 c\u1ed5ng b\u1ecb thi\u1ebfu, kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng ho\u1eb7c c\u1ea5u h\u00ecnh sai. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - C\u00e1c v\u1ea5n \u0111\u1ec1 c\u1ee7a Systemd Journal"
+        },
+        "unsupported_systemd_resolved": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec Systemd Resolved b\u1ecb thi\u1ebfu, kh\u00f4ng ho\u1ea1t \u0111\u1ed9ng ho\u1eb7c c\u1ea5u h\u00ecnh sai. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - C\u00e1c v\u1ea5n \u0111\u1ec1 c\u1ee7a Systemd-Resolved"
+        },
+        "unsupported_virtualization_image": {
+            "description": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 v\u00ec \u1ea3nh Home Assistant OS \u0111ang s\u1eed d\u1ee5ng kh\u00f4ng d\u00e0nh cho m\u00f4i tr\u01b0\u1eddng \u1ea3o h\u00f3a. S\u1eed d\u1ee5ng li\u00ean k\u1ebft \u0111\u1ec3 t\u00ecm hi\u1ec3u th\u00eam v\u00e0 c\u00e1ch kh\u1eafc ph\u1ee5c s\u1ef1 c\u1ed1 n\u00e0y.",
+            "title": "H\u1ec7 th\u1ed1ng kh\u00f4ng \u0111\u01b0\u1ee3c h\u1ed7 tr\u1ee3 - \u1ea2nh h\u1ec7 \u0111i\u1ec1u h\u00e0nh kh\u00f4ng ch\u00ednh x\u00e1c cho \u1ea3o h\u00f3a"
+        },
+        "update_service_deprecated": {
+            "description": "H\u00e0nh \u0111\u1ed9ng c\u1eadp nh\u1eadt ti\u1ec7n \u00edch b\u1ed5 sung \u0111\u00e3 kh\u00f4ng c\u00f2n \u0111\u01b0\u1ee3c s\u1eed d\u1ee5ng n\u1eefa v\u00e0 s\u1ebd b\u1ecb x\u00f3a v\u00e0o n\u0103m 2025.5. Vui l\u00f2ng s\u1eed d\u1ee5ng th\u1ef1c th\u1ec3 c\u1eadp nh\u1eadt v\u00e0 h\u00e0nh \u0111\u1ed9ng t\u01b0\u01a1ng \u1ee9ng \u0111\u1ec3 c\u1eadp nh\u1eadt ti\u1ec7n \u00edch b\u1ed5 sung.",
+            "title": "H\u00e0nh \u0111\u1ed9ng c\u1eadp nh\u1eadt ti\u1ec7n \u00edch b\u1ed5 sung \u0111\u00e3 l\u1ed7i th\u1eddi"
+        }
+    },
+    "services": {
+        "addon_restart": {
+            "description": "Kh\u1edfi \u0111\u1ed9ng l\u1ea1i ti\u1ec7n \u00edch b\u1ed5 sung.",
+            "fields": {
+                "addon": {
+                    "description": "Ti\u1ec7n \u00edch b\u1ed5 sung c\u1ea7n kh\u1edfi \u0111\u1ed9ng l\u1ea1i.",
+                    "name": "Ti\u1ec7n \u00edch b\u1ed5 sung"
+                }
+            },
+            "name": "Kh\u1edfi \u0111\u1ed9ng l\u1ea1i ti\u1ec7n \u00edch b\u1ed5 sung"
+        },
+        "addon_start": {
+            "description": "Kh\u1edfi \u0111\u1ed9ng m\u1ed9t ti\u1ec7n \u00edch b\u1ed5 sung.",
+            "fields": {
+                "addon": {
+                    "description": "Ti\u1ec7n \u00edch b\u1ed5 sung c\u1ea7n kh\u1edfi \u0111\u1ed9ng.",
+                    "name": "Ti\u1ec7n \u00edch b\u1ed5 sung"
+                }
+            },
+            "name": "Kh\u1edfi \u0111\u1ed9ng ti\u1ec7n \u00edch b\u1ed5 sung"
+        },
+        "addon_stdin": {
+            "description": "Ghi d\u1eef li\u1ec7u v\u00e0o \u0111\u1ea7u v\u00e0o ti\u00eau chu\u1ea9n c\u1ee7a ti\u1ec7n \u00edch b\u1ed5 sung.",
+            "fields": {
+                "addon": {
+                    "description": "Ti\u1ec7n \u00edch b\u1ed5 sung \u0111\u1ec3 ghi v\u00e0o.",
+                    "name": "Ti\u1ec7n \u00edch b\u1ed5 sung"
+                }
+            },
+            "name": "Ghi d\u1eef li\u1ec7u v\u00e0o stdin ti\u1ec7n \u00edch b\u1ed5 sung"
+        },
+        "addon_stop": {
+            "description": "D\u1eebng ti\u1ec7n \u00edch b\u1ed5 sung.",
+            "fields": {
+                "addon": {
+                    "description": "Ti\u1ec7n \u00edch b\u1ed5 sung c\u1ea7n d\u1eebng.",
+                    "name": "Ti\u1ec7n \u00edch b\u1ed5 sung"
+                }
+            },
+            "name": "D\u1eebng ti\u1ec7n \u00edch b\u1ed5 sung"
+        },
+        "addon_update": {
+            "description": "C\u1eadp nh\u1eadt ti\u1ec7n \u00edch b\u1ed5 sung. C\u1ea7n th\u1eadn tr\u1ecdng khi th\u1ef1c hi\u1ec7n h\u00e0nh \u0111\u1ed9ng n\u00e0y v\u00ec c\u00e1c b\u1ea3n c\u1eadp nh\u1eadt ti\u1ec7n \u00edch b\u1ed5 sung c\u00f3 th\u1ec3 ch\u1ee9a c\u00e1c thay \u0111\u1ed5i \u0111\u1ed9t ng\u1ed9t. B\u1ea1n n\u00ean xem l\u1ea1i c\u00e1c ghi ch\u00fa ph\u00e1t h\u00e0nh/nh\u1eadt k\u00fd thay \u0111\u1ed5i tr\u01b0\u1edbc khi c\u1eadp nh\u1eadt ti\u1ec7n \u00edch b\u1ed5 sung.",
+            "fields": {
+                "addon": {
+                    "description": "Ti\u1ec7n \u00edch b\u1ed5 sung c\u1ea7n c\u1eadp nh\u1eadt.",
+                    "name": "Ti\u1ec7n \u00edch b\u1ed5 sung"
+                }
+            },
+            "name": "C\u1eadp nh\u1eadt ti\u1ec7n \u00edch b\u1ed5 sung"
+        },
+        "backup_full": {
+            "description": "T\u1ea1o b\u1ea3n sao l\u01b0u \u0111\u1ea7y \u0111\u1ee7.",
+            "fields": {
+                "compressed": {
+                    "description": "N\u00e9n c\u00e1c t\u1eadp tin sao l\u01b0u.",
+                    "name": "N\u00e9n"
+                },
+                "homeassistant_exclude_database": {
+                    "description": "Lo\u1ea1i tr\u1eeb t\u1eadp tin c\u01a1 s\u1edf d\u1eef li\u1ec7u Home Assistant kh\u1ecfi b\u1ea3n sao l\u01b0u",
+                    "name": "Home Assistant lo\u1ea1i tr\u1eeb c\u01a1 s\u1edf d\u1eef li\u1ec7u"
+                },
+                "location": {
+                    "description": "T\u00ean c\u1ee7a m\u1ea1ng l\u01b0u tr\u1eef d\u1ef1 ph\u00f2ng \u0111\u1ec3 l\u01b0u tr\u1eef c\u00e1c b\u1ea3n sao l\u01b0u.",
+                    "name": "V\u1ecb tr\u00ed"
+                },
+                "name": {
+                    "description": "T\u00f9y ch\u1ecdn (m\u1eb7c \u0111\u1ecbnh = ng\u00e0y v\u00e0 gi\u1edd hi\u1ec7n t\u1ea1i).",
+                    "name": "T\u00ean"
+                },
+                "password": {
+                    "description": "M\u1eadt kh\u1ea9u \u0111\u1ec3 b\u1ea3o v\u1ec7 b\u1ea3n sao l\u01b0u.",
+                    "name": "M\u1eadt kh\u1ea9u"
+                }
+            },
+            "name": "T\u1ea1o b\u1ea3n sao l\u01b0u \u0111\u1ea7y \u0111\u1ee7."
+        },
+        "backup_partial": {
+            "description": "T\u1ea1o b\u1ea3n sao l\u01b0u m\u1ed9t ph\u1ea7n.",
+            "fields": {
+                "addons": {
+                    "description": "Danh s\u00e1ch c\u00e1c ti\u1ec7n \u00edch b\u1ed5 sung c\u1ea7n \u0111\u01b0a v\u00e0o b\u1ea3n sao l\u01b0u. S\u1eed d\u1ee5ng slug t\u00ean c\u1ee7a m\u1ed7i ti\u1ec7n \u00edch b\u1ed5 sung.",
+                    "name": "Ti\u1ec7n \u00edch b\u1ed5 sung"
+                },
+                "compressed": {
+                    "description": "N\u00e9n c\u00e1c t\u1eadp tin sao l\u01b0u.",
+                    "name": "N\u00e9n"
+                },
+                "folders": {
+                    "description": "Danh s\u00e1ch c\u00e1c th\u01b0 m\u1ee5c c\u1ea7n \u0111\u01b0a v\u00e0o b\u1ea3n sao l\u01b0u.",
+                    "name": "Th\u01b0 m\u1ee5c"
+                },
+                "homeassistant": {
+                    "description": "Bao g\u1ed3m c\u00e0i \u0111\u1eb7t Home Assistant trong b\u1ea3n sao l\u01b0u.",
+                    "name": "C\u00e0i \u0111\u1eb7t Home Assistant"
+                },
+                "homeassistant_exclude_database": {
+                    "description": "Lo\u1ea1i tr\u1eeb t\u1eadp tin c\u01a1 s\u1edf d\u1eef li\u1ec7u Home Assistant kh\u1ecfi b\u1ea3n sao l\u01b0u",
+                    "name": "Home Assistant lo\u1ea1i tr\u1eeb c\u01a1 s\u1edf d\u1eef li\u1ec7u"
+                },
+                "location": {
+                    "description": "T\u00ean c\u1ee7a m\u1ea1ng l\u01b0u tr\u1eef d\u1ef1 ph\u00f2ng \u0111\u1ec3 l\u01b0u tr\u1eef c\u00e1c b\u1ea3n sao l\u01b0u.",
+                    "name": "V\u1ecb tr\u00ed"
+                },
+                "name": {
+                    "description": "T\u00f9y ch\u1ecdn (m\u1eb7c \u0111\u1ecbnh = ng\u00e0y v\u00e0 gi\u1edd hi\u1ec7n t\u1ea1i).",
+                    "name": "T\u00ean"
+                },
+                "password": {
+                    "description": "M\u1eadt kh\u1ea9u \u0111\u1ec3 b\u1ea3o v\u1ec7 b\u1ea3n sao l\u01b0u.",
+                    "name": "M\u1eadt kh\u1ea9u"
+                }
+            },
+            "name": "T\u1ea1o b\u1ea3n sao l\u01b0u m\u1ed9t ph\u1ea7n."
+        },
+        "host_reboot": {
+            "description": "Kh\u1edfi \u0111\u1ed9ng l\u1ea1i h\u1ec7 th\u1ed1ng m\u00e1y ch\u1ee7.",
+            "name": "Kh\u1edfi \u0111\u1ed9ng l\u1ea1i h\u1ec7 th\u1ed1ng m\u00e1y ch\u1ee7"
+        },
+        "host_shutdown": {
+            "description": "T\u1eaft h\u1ec7 th\u1ed1ng m\u00e1y ch\u1ee7.",
+            "name": "T\u1eaft h\u1ec7 th\u1ed1ng m\u00e1y ch\u1ee7"
+        },
+        "restore_full": {
+            "description": "Kh\u00f4i ph\u1ee5c t\u1eeb b\u1ea3n sao l\u01b0u \u0111\u1ea7y \u0111\u1ee7.",
+            "fields": {
+                "password": {
+                    "description": "M\u1eadt kh\u1ea9u t\u00f9y ch\u1ecdn.",
+                    "name": "M\u1eadt kh\u1ea9u"
+                },
+                "slug": {
+                    "description": "Slug c\u1ee7a b\u1ea3n sao l\u01b0u \u0111\u1ec3 kh\u00f4i ph\u1ee5c l\u1ea1i.",
+                    "name": "Slug"
+                }
+            },
+            "name": "Kh\u00f4i ph\u1ee5c t\u1eeb b\u1ea3n sao l\u01b0u \u0111\u1ea7y \u0111\u1ee7"
+        },
+        "restore_partial": {
+            "description": "Kh\u00f4i ph\u1ee5c t\u1eeb b\u1ea3n sao l\u01b0u m\u1ed9t ph\u1ea7n.",
+            "fields": {
+                "addons": {
+                    "description": "Danh s\u00e1ch c\u00e1c ti\u1ec7n \u00edch b\u1ed5 sung \u0111\u1ec3 kh\u00f4i ph\u1ee5c t\u1eeb b\u1ea3n sao l\u01b0u. S\u1eed d\u1ee5ng slug t\u00ean c\u1ee7a m\u1ed7i ti\u1ec7n \u00edch b\u1ed5 sung.",
+                    "name": "Ti\u1ec7n \u00edch b\u1ed5 sung"
+                },
+                "folders": {
+                    "description": "Danh s\u00e1ch c\u00e1c th\u01b0 m\u1ee5c c\u1ea7n kh\u00f4i ph\u1ee5c t\u1eeb b\u1ea3n sao l\u01b0u.",
+                    "name": "Th\u01b0 m\u1ee5c"
+                },
+                "homeassistant": {
+                    "description": "Kh\u00f4i ph\u1ee5c Home Assistant.",
+                    "name": "C\u00e0i \u0111\u1eb7t Home Assistant"
+                },
+                "password": {
+                    "description": "M\u1eadt kh\u1ea9u t\u00f9y ch\u1ecdn.",
+                    "name": "M\u1eadt kh\u1ea9u"
+                },
+                "slug": {
+                    "description": "Slug c\u1ee7a b\u1ea3n sao l\u01b0u \u0111\u1ec3 kh\u00f4i ph\u1ee5c l\u1ea1i.",
+                    "name": "Slug"
+                }
+            },
+            "name": "Kh\u00f4i ph\u1ee5c t\u1eeb b\u1ea3n sao l\u01b0u m\u1ed9t ph\u1ea7n"
+        }
+    },
+    "system_health": {
+        "info": {
+            "agent_version": "Phi\u00ean b\u1ea3n t\u00e1c nh\u00e2n",
+            "board": "B\u1ea3ng",
+            "disk_total": "T\u1ed5ng \u1ed5 \u0111\u0129a",
+            "disk_used": "\u1ed4 \u0111\u0129a \u0111\u00e3 d\u00f9ng",
+            "docker_version": "Phi\u00ean b\u1ea3n Docker",
+            "healthy": "Kh\u1ecfe m\u1ea1nh",
+            "host_os": "H\u1ec7 \u0111i\u1ec1u h\u00e0nh m\u00e1y ch\u1ee7",
+            "installed_addons": "Ti\u1ec7n \u00edch b\u1ed5 sung \u0111\u00e3 c\u00e0i \u0111\u1eb7t",
+            "supervisor_api": "API Supervisor",
+            "supervisor_version": "Phi\u00ean b\u1ea3n Supervisor",
+            "supported": "\u0110\u01b0\u1ee3c h\u1ed7 tr\u1ee3",
+            "update_channel": "C\u1eadp nh\u1eadt k\u00eanh",
+            "version_api": "Phi\u00ean b\u1ea3n API"
+        }
+    }
+}

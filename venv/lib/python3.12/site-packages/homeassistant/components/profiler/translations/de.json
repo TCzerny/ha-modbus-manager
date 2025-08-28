@@ -1,0 +1,99 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "description": "M\u00f6chtest du mit der Einrichtung beginnen?"
+            }
+        }
+    },
+    "services": {
+        "dump_log_objects": {
+            "description": "Schreibt die `repr` aller passenden Objekte ins Protokoll.",
+            "fields": {
+                "type": {
+                    "description": "Der Typ der Objekte, die in das Protokoll geschrieben werden sollen.",
+                    "name": "Typ"
+                }
+            },
+            "name": "Protokollobjekte ausgeben"
+        },
+        "log_current_tasks": {
+            "description": "Protokolliert alle aktuellen asyncio-Tasks.",
+            "name": "Aktuelle asyncio-Tasks protokollieren"
+        },
+        "log_event_loop_scheduled": {
+            "description": "Protokolliert, was in der Ereignisschleife geplant ist.",
+            "name": "Ereignisschleife protokollieren"
+        },
+        "log_thread_frames": {
+            "description": "Protokolliert die aktuellen Frames f\u00fcr alle Threads.",
+            "name": "Thread-Frames protokollieren"
+        },
+        "lru_stats": {
+            "description": "Protokolliert die Statistiken aller LRU-Caches.",
+            "name": "LRU-Statistiken protokollieren"
+        },
+        "memory": {
+            "description": "Startet den Speicherprofiler.",
+            "fields": {
+                "seconds": {
+                    "description": "Die Anzahl der Sekunden, die der Speicherprofiler ausgef\u00fchrt werden soll.",
+                    "name": "Sekunden"
+                }
+            },
+            "name": "Speicher"
+        },
+        "set_asyncio_debug": {
+            "description": "Aktiviert oder deaktiviert Asyncio-Debugging.",
+            "fields": {
+                "enabled": {
+                    "description": "Ob Asyncio-Debugging aktiviert oder deaktiviert werden soll.",
+                    "name": "Aktiviert"
+                }
+            },
+            "name": "Asyncio-Debug einstellen"
+        },
+        "start": {
+            "description": "Startet den Profiler.",
+            "fields": {
+                "seconds": {
+                    "description": "Die Anzahl der Sekunden, die der Profiler ausgef\u00fchrt werden soll.",
+                    "name": "Sekunden"
+                }
+            },
+            "name": "Starten"
+        },
+        "start_log_object_sources": {
+            "description": "Beginnt mit der Protokollierung der Quellen neuer Objekte im Speicher.",
+            "fields": {
+                "max_objects": {
+                    "description": "Die maximale Anzahl der zu protokollierenden Objekte.",
+                    "name": "Maximale Objekte"
+                },
+                "scan_interval": {
+                    "description": "Der Abstand in Sekunden f\u00fcr das Protokollieren von Objekten.",
+                    "name": "Scan-Intervall"
+                }
+            },
+            "name": "Protokollierung von Objektquellen starten"
+        },
+        "start_log_objects": {
+            "description": "Beginnt mit der Protokollierung des Wachstums von Objekten im Speicher.",
+            "fields": {
+                "scan_interval": {
+                    "description": "Der Abstand in Sekunden f\u00fcr das Protokollieren von Objekten.",
+                    "name": "Scan-Intervall"
+                }
+            },
+            "name": "Protokollierung von Objekten starten"
+        },
+        "stop_log_object_sources": {
+            "description": "Stoppt die Protokollierung von Quellen neuer Objekte im Speicher.",
+            "name": "Protokollierung von Objektquellen stoppen"
+        },
+        "stop_log_objects": {
+            "description": "Stoppt die Protokollierung des Objektwachstums im Speicher.",
+            "name": "Protokollierung von Objekten stoppen"
+        }
+    }
+}

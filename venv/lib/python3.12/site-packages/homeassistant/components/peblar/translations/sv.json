@@ -1,0 +1,177 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "different_device": "Den angivna informationen kommer fr\u00e5n en annan Peblar EV-laddare.",
+            "no_serial_number": "Den uppt\u00e4ckta Peblar-enheten hade inget serienummer.",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "reconfigure_successful": "Omkonfigurationen lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "password": "Samma l\u00f6senord som du anv\u00e4nder f\u00f6r att logga in p\u00e5 Peblar EV-laddarens lokala webbgr\u00e4nssnitt."
+                },
+                "description": "Autentisera dig p\u00e5 nytt med din Peblar EV-laddare.\n\nF\u00f6r att g\u00f6ra det m\u00e5ste du ange ditt nya l\u00f6senord som du anv\u00e4nder f\u00f6r att logga in p\u00e5 Peblar EV-laddarens webbgr\u00e4nssnitt."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r din Peblar EV-laddare i ditt hemn\u00e4tverk.",
+                    "password": "Samma l\u00f6senord som du anv\u00e4nder f\u00f6r att logga in p\u00e5 Peblar EV-laddarens lokala webbgr\u00e4nssnitt."
+                },
+                "description": "Konfigurera om din Peblar EV-laddare.\n\nDetta g\u00f6r att du kan \u00e4ndra IP-adressen f\u00f6r din Peblar EV-laddare och det l\u00f6senord du anv\u00e4nder f\u00f6r att logga in p\u00e5 dess webbgr\u00e4nssnitt."
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r din Peblar EV-laddare i ditt hemn\u00e4tverk.",
+                    "password": "Samma l\u00f6senord som du anv\u00e4nder f\u00f6r att logga in p\u00e5 Peblar EV-laddarens lokala webbgr\u00e4nssnitt."
+                },
+                "description": "St\u00e4ll in din Peblar EV-laddare s\u00e5 att den integreras med Home Assistant.\n\nF\u00f6r att g\u00f6ra det m\u00e5ste du f\u00e5 IP-adressen till din Peblar EV-laddare och l\u00f6senordet som du anv\u00e4nder f\u00f6r att logga in p\u00e5 dess webbgr\u00e4nssnitt.\n\nHome Assistant kommer automatiskt att konfigurera din Peblar EV-laddare f\u00f6r anv\u00e4ndning med Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "password": "Samma l\u00f6senord som du anv\u00e4nder f\u00f6r att logga in p\u00e5 Peblar EV-laddarens lokala webbgr\u00e4nssnitt."
+                },
+                "description": "St\u00e4ll in din Peblar EV-laddare {hostname}, p\u00e5 IP-address {host}, s\u00e5 att den integreras med Home Assistant.\n\nF\u00f6r att g\u00f6ra detta beh\u00f6ver du det l\u00f6senord som du anv\u00e4nder f\u00f6r att logga in p\u00e5 Peblar EV-laddarens webbgr\u00e4nssnitt.\n\nHome Assistant kommer automatiskt att konfigurera din Peblar EV-laddare f\u00f6r anv\u00e4ndning med Home Assistant."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Aktiva fel"
+            },
+            "active_warning_codes": {
+                "name": "Aktiva varningar"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "Gr\u00e4ns f\u00f6r laddning"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "Smart laddning",
+                "state": {
+                    "default": "Standard",
+                    "fast_solar": "Snabb solenergi",
+                    "pure_solar": "Endast solenergi",
+                    "scheduled": "Schemalagd",
+                    "smart_solar": "Smart solenergi"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Begr\u00e4nsa k\u00e4llan",
+                "state": {
+                    "charging_cable": "Laddkabel",
+                    "current_limiter": "Str\u00f6mbegr\u00e4nsare",
+                    "dynamic_load_balancing": "Dynamisk lastbalansering",
+                    "external_power_limit": "Gr\u00e4ns f\u00f6r extern effekt",
+                    "group_load_balancing": "Grupp lastbalansering",
+                    "hardware_limitation": "H\u00e5rdvarubegr\u00e4nsning",
+                    "high_temperature": "H\u00f6g temperatur",
+                    "household_power_limit": "Gr\u00e4ns f\u00f6r hush\u00e5llets effekt",
+                    "installation_limit": "Installation gr\u00e4ns",
+                    "local_modbus_api": "Modbus API",
+                    "local_rest_api": "REST API",
+                    "local_scheduled_charging": "Schemalagd laddning",
+                    "ocpp_smart_charging": "OCPP smart laddning",
+                    "overcurrent_protection": "\u00d6verstr\u00f6msskydd",
+                    "phase_imbalance": "Fasobalans",
+                    "power_factor": "Effektfaktor",
+                    "solar_charging": "Laddning med solenergi"
+                }
+            },
+            "cp_state": {
+                "name": "Tillst\u00e5nd",
+                "state": {
+                    "charging": "Laddar",
+                    "error": "Fel",
+                    "fault": "Fel",
+                    "invalid": "Ogiltig",
+                    "no_ev_connected": "Ingen elbil ansluten",
+                    "suspended": "Avst\u00e4ngd"
+                }
+            },
+            "current_phase_1": {
+                "name": "Str\u00f6m Fas 1"
+            },
+            "current_phase_2": {
+                "name": "Str\u00f6m Fas 2"
+            },
+            "current_phase_3": {
+                "name": "Str\u00f6m Fas 3"
+            },
+            "energy_session": {
+                "name": "Session energi"
+            },
+            "energy_total": {
+                "name": "Livstid energi"
+            },
+            "power_phase_1": {
+                "name": "Effekt fas 1"
+            },
+            "power_phase_2": {
+                "name": "Effekt fas 2"
+            },
+            "power_phase_3": {
+                "name": "Effekt fas 3"
+            },
+            "uptime": {
+                "name": "Upptid"
+            },
+            "voltage_phase_1": {
+                "name": "Sp\u00e4nning fas 1"
+            },
+            "voltage_phase_2": {
+                "name": "Sp\u00e4nning fas 2"
+            },
+            "voltage_phase_3": {
+                "name": "Sp\u00e4nning fas 3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "Tvinga enfas"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "Anpassning"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Ett autentiseringsfel uppstod vid kommunikation med Peblar EV-laddaren."
+        },
+        "communication_error": {
+            "message": "Ett fel uppstod vid kommunikation med Peblar EV-laddaren: {error}"
+        },
+        "unknown_error": {
+            "message": "Ett ok\u00e4nt fel uppstod vid kommunikation med Peblar EV-laddaren: {error}"
+        }
+    }
+}

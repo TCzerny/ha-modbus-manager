@@ -1,0 +1,233 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "invalid_auth": "Ogiltig autentisering"
+        },
+        "step": {
+            "reauth": {
+                "data": {
+                    "api_key": "API-nyckel"
+                },
+                "description": "Ange en ny \"Subscription Key\" f\u00f6r ditt konto som genererats p\u00e5 \"https://portal.osoenergy.no/\"",
+                "title": "OSO Energy-autentisering"
+            },
+            "user": {
+                "data": {
+                    "api_key": "API-nyckel"
+                },
+                "description": "Ange \"Subscription Key\" f\u00f6r ditt konto som genererats p\u00e5 \"https://portal.osoenergy.no/\"",
+                "title": "OSO Energy-autentisering"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "extra_energy": {
+                "name": "Extra energi"
+            },
+            "heating": {
+                "name": "V\u00e4rmer"
+            },
+            "power_save": {
+                "name": "Energisparl\u00e4ge"
+            }
+        },
+        "sensor": {
+            "capacity_mixed_water_40": {
+                "name": "Kapacitet blandat vatten 40\u00b0C"
+            },
+            "heater_mode": {
+                "name": "V\u00e4rmel\u00e4ge",
+                "state": {
+                    "auto": "Auto",
+                    "extraenergy": "Extra energi",
+                    "ffr": "Snabb frekvensreserv",
+                    "legionella": "Legionella",
+                    "manual": "Manuell",
+                    "off": "Av",
+                    "powersave": "Str\u00f6msparl\u00e4ge",
+                    "voltage": "Sp\u00e4nning"
+                }
+            },
+            "optimization_mode": {
+                "name": "Optimeringsl\u00e4ge",
+                "state": {
+                    "advanced": "Avancerad",
+                    "gridcompany": "N\u00e4tbolag",
+                    "off": "Av",
+                    "oso": "OSO",
+                    "smartcompany": "Smart f\u00f6retag"
+                }
+            },
+            "profile": {
+                "name": "Profil lokal"
+            },
+            "tapping_capacity": {
+                "name": "Tappningskapacitet"
+            },
+            "temperature_low": {
+                "name": "Temperatur botten"
+            },
+            "temperature_mid": {
+                "name": "Temperatur mitten"
+            },
+            "temperature_one": {
+                "name": "Temperatur ett"
+            },
+            "temperature_top": {
+                "name": "Temperatur topp"
+            },
+            "v40_level_max": {
+                "name": "Maximal niv\u00e5 av blandat vatten vid 40\u00b0C"
+            },
+            "v40_level_min": {
+                "name": "Minsta niv\u00e5 av blandat vatten vid 40\u00b0C"
+            },
+            "v40_min": {
+                "name": "Blandat vatten vid 40\u00b0C"
+            }
+        }
+    },
+    "services": {
+        "get_profile": {
+            "description": "H\u00e4mtar temperaturprofilen f\u00f6r varmvattenberedaren",
+            "name": "H\u00e4mta v\u00e4rmarens profil"
+        },
+        "set_profile": {
+            "description": "St\u00e4ller in temperaturprofilen f\u00f6r varmvattenberedaren",
+            "fields": {
+                "hour_00": {
+                    "description": "Klockan 00:00",
+                    "name": "00:00"
+                },
+                "hour_01": {
+                    "description": "Klockan 01:00",
+                    "name": "01:00"
+                },
+                "hour_02": {
+                    "description": "Klockan 02:00",
+                    "name": "02:00"
+                },
+                "hour_03": {
+                    "description": "Klockan 03:00",
+                    "name": "03:00"
+                },
+                "hour_04": {
+                    "description": "Klockan 04:00",
+                    "name": "04:00"
+                },
+                "hour_05": {
+                    "description": "Klockan 05:00",
+                    "name": "05:00"
+                },
+                "hour_06": {
+                    "description": "Klockan 06:00",
+                    "name": "06:00"
+                },
+                "hour_07": {
+                    "description": "Klockan 07:00",
+                    "name": "07:00"
+                },
+                "hour_08": {
+                    "description": "Klockan 08:00",
+                    "name": "08:00"
+                },
+                "hour_09": {
+                    "description": "Klockan 09:00",
+                    "name": "09:00"
+                },
+                "hour_10": {
+                    "description": "Klockan 10:00",
+                    "name": "10:00"
+                },
+                "hour_11": {
+                    "description": "Klockan 11:00",
+                    "name": "11:00"
+                },
+                "hour_12": {
+                    "description": "Klockan 12:00",
+                    "name": "12:00"
+                },
+                "hour_13": {
+                    "description": "Klockan 13:00",
+                    "name": "13:00"
+                },
+                "hour_14": {
+                    "description": "Klockan 14:00",
+                    "name": "14:00"
+                },
+                "hour_15": {
+                    "description": "Klockan 15:00",
+                    "name": "15:00"
+                },
+                "hour_16": {
+                    "description": "Klockan 16:00",
+                    "name": "16:00"
+                },
+                "hour_17": {
+                    "description": "Klockan 17:00",
+                    "name": "17:00"
+                },
+                "hour_18": {
+                    "description": "Klockan 18:00",
+                    "name": "18:00"
+                },
+                "hour_19": {
+                    "description": "Klockan 19:00",
+                    "name": "19:00"
+                },
+                "hour_20": {
+                    "description": "Klockan 20:00",
+                    "name": "20:00"
+                },
+                "hour_21": {
+                    "description": "Klockan 21:00",
+                    "name": "21:00"
+                },
+                "hour_22": {
+                    "description": "Klockan 22:00",
+                    "name": "22:00"
+                },
+                "hour_23": {
+                    "description": "Klockan 23:00",
+                    "name": "23:00"
+                }
+            },
+            "name": "St\u00e4ll in v\u00e4rmarens profil"
+        },
+        "set_v40_min": {
+            "description": "St\u00e4ller in minsta vattenm\u00e4ngd vid 40\u00b0C f\u00f6r en v\u00e4rmare",
+            "fields": {
+                "v40_min": {
+                    "description": "Minsta vattenm\u00e4ngd vid 40\u00b0C (200-350 f\u00f6r SAGA S200, 300-550 f\u00f6r SAGA S300)",
+                    "name": "V40 Min"
+                }
+            },
+            "name": "St\u00e4ll in v40 min"
+        },
+        "turn_off": {
+            "description": "St\u00e4nger av v\u00e4rmen i en timme eller tills mintemperaturen har uppn\u00e5tts",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "V\u00e4lj om uppv\u00e4rmningen ska vara avst\u00e4ngd tills l\u00e4gsta temperatur (True) uppn\u00e5s eller i en timme (False)",
+                    "name": "Fram till temperaturgr\u00e4ns"
+                }
+            },
+            "name": "St\u00e4ng av v\u00e4rmare"
+        },
+        "turn_on": {
+            "description": "S\u00e4tter p\u00e5 v\u00e4rmaren i en timme eller tills maxtemperaturen har uppn\u00e5tts",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "V\u00e4lj om uppv\u00e4rmningen ska vara p\u00e5 tills maxtemperaturen (True) uppn\u00e5s eller i en timme (False)",
+                    "name": "Fram till temperaturgr\u00e4ns"
+                }
+            },
+            "name": "Sl\u00e5 p\u00e5 v\u00e4rmaren"
+        }
+    }
+}

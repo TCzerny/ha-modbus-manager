@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "timeout_connect": "Timeout vid uppr\u00e4ttande av anslutning"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "password": "L\u00f6senordet f\u00f6r att autentisera med din Rain Bird-enhet."
+                },
+                "description": "Rain Bird-integrationen m\u00e5ste autentisera sig p\u00e5 nytt med enheten.",
+                "title": "Autentiseringen har upph\u00f6rt att g\u00e4lla f\u00f6r {name}"
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r din Rain Bird-enhet.",
+                    "password": "Det l\u00f6senord som anv\u00e4nds f\u00f6r att autentisera med Rain Bird-enheten."
+                },
+                "description": "Ange information om LNK WiFi-modulen f\u00f6r din Rain Bird-enhet.",
+                "title": "Konfigurera Rain Bird"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Regnsensor"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Regn f\u00f6rdr\u00f6jning"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "Regn f\u00f6rdr\u00f6jning"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Standard bevattningstid i minuter"
+                },
+                "data_description": {
+                    "duration": "Standardtiden som sprinklern kommer att k\u00f6ras n\u00e4r den sl\u00e5s p\u00e5."
+                },
+                "title": "Konfigurera Rain Bird"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "Anger hur l\u00e4nge automatisk bevattning ska vara avst\u00e4ngd.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Inst\u00e4llningen kommer att justeras p\u00e5 den angivna styrenheten.",
+                    "name": "Rainbird styrenhet konfigurationspost"
+                },
+                "duration": {
+                    "description": "Hur l\u00e4nge detta system ska vara avst\u00e4ngt",
+                    "name": "Varaktighet"
+                }
+            },
+            "name": "St\u00e4ll in regn f\u00f6rdr\u00f6jning"
+        },
+        "start_irrigation": {
+            "description": "Startar bevattningen.",
+            "fields": {
+                "duration": {
+                    "description": "Hur l\u00e4nge denna sprinkler ska vara p\u00e5slagen",
+                    "name": "Varaktighet"
+                }
+            },
+            "name": "Starta bevattning"
+        }
+    }
+}

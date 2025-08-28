@@ -1,0 +1,41 @@
+{
+    "config": {
+        "error": {
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "location": "Plats"
+                },
+                "data_description": {
+                    "location": "Anv\u00e4nd kartan f\u00f6r att ange platsen f\u00f6r Stookwijzer."
+                },
+                "description": "V\u00e4lj den plats du vill ta emot Stookwijzer-information f\u00f6r."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "advice": {
+                "name": "Kod f\u00f6r r\u00e5dgivning",
+                "state": {
+                    "code_orange": "Orange",
+                    "code_red": "R\u00f6d",
+                    "code_yellow": "Gul"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "no_data_received": {
+            "message": "Inga uppgifter mottagna fr\u00e5n Stookwijzer."
+        }
+    },
+    "issues": {
+        "location_migration_failed": {
+            "description": "Stookwijzer-integrationen kunde inte automatiskt migrera din plats till ett nytt format som de uppdaterade integrationerna anv\u00e4nder.\n\nSe till att du \u00e4r ansluten till internet och starta om Home Assistant f\u00f6r att f\u00f6rs\u00f6ka igen.\n\nOm detta inte l\u00f6ser felet, ta bort och l\u00e4gg till integrationen igen.",
+            "title": "Migreringen av din plats misslyckades"
+        }
+    }
+}

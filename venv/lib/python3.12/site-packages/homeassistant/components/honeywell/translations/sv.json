@@ -1,0 +1,109 @@
+{
+    "config": {
+        "abort": {
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "L\u00f6senord"
+                },
+                "description": "Honeywell-integrationen m\u00e5ste autentisera ditt konto p\u00e5 nytt",
+                "title": "Autentiseringen har upph\u00f6rt att g\u00e4lla f\u00f6r {name}"
+            },
+            "user": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "description": "Ange de autentiseringsuppgifter som anv\u00e4nds f\u00f6r att logga in p\u00e5 mytotalconnectcomfort.com."
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "honeywell": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "away": "Borta",
+                            "hold": "H\u00e5ll",
+                            "none": "Inget"
+                        }
+                    }
+                }
+            }
+        },
+        "humidifier": {
+            "dehumidifier": {
+                "name": "Avfuktare"
+            },
+            "humidifier": {
+                "name": "Luftfuktare"
+            }
+        },
+        "sensor": {
+            "outdoor_humidity": {
+                "name": "Luftfuktighet utomhus"
+            },
+            "outdoor_temperature": {
+                "name": "Temperatur utomhus"
+            }
+        },
+        "switch": {
+            "emergency_heat": {
+                "name": "N\u00f6dv\u00e4rme"
+            }
+        }
+    },
+    "exceptions": {
+        "away_mode_failed": {
+            "message": "Honeywell kunde inte st\u00e4lla in bortal\u00e4ge"
+        },
+        "fan_mode_failed": {
+            "message": "Honeywell kunde inte st\u00e4lla in fl\u00e4ktl\u00e4ge"
+        },
+        "set_hold_failed": {
+            "message": "Honeywell kunde inte st\u00e4lla in permanent h\u00e5ll"
+        },
+        "set_mode_failed": {
+            "message": "Honeywell ogiltigt systeml\u00e4ge returnerade {mode}"
+        },
+        "stop_hold_failed": {
+            "message": "Honeywell kunde inte stoppa h\u00e5ll-l\u00e4ge"
+        },
+        "switch_failed_off": {
+            "message": "Honeywell kunde inte st\u00e4nga av n\u00f6dv\u00e4rmel\u00e4get."
+        },
+        "switch_failed_on": {
+            "message": "Honeywell kunde inte st\u00e4lla in systeml\u00e4ge till n\u00f6dv\u00e4rmel\u00e4ge."
+        },
+        "sys_mode_failed": {
+            "message": "Honeywell kunde inte st\u00e4lla in systeml\u00e4ge"
+        },
+        "temp_failed": {
+            "message": "Honeywell kunde inte st\u00e4lla in temperatur"
+        },
+        "temp_failed_range": {
+            "message": "Honeywell kunde inte st\u00e4lla in temperatur: temperaturen utanf\u00f6r intervallet. L\u00e4ge: {mode}, V\u00e4rmetemperatur: {heat}, Kyltemperatur: {cool}"
+        },
+        "temp_failed_value": {
+            "message": "Honeywell kunde inte st\u00e4lla in temperatur: ogiltig temperatur {temperature}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "away_cool_temperature": "Borta kylningstemperatur",
+                    "away_heat_temperature": "Borta uppv\u00e4rmingstemperatur"
+                },
+                "description": "Ytterligare Honeywell-konfigurationsalternativ. Temperaturen \u00e4r inst\u00e4lld i Fahrenheit."
+            }
+        }
+    }
+}

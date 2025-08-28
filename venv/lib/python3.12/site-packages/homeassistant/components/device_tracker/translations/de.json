@@ -1,0 +1,84 @@
+{
+    "device_automation": {
+        "condition_type": {
+            "is_home": "Wenn {entity_name} zuhause ist",
+            "is_not_home": "Wenn {entity_name} nicht zuhause ist"
+        },
+        "extra_fields": {
+            "zone": "Zone"
+        },
+        "trigger_type": {
+            "enters": "Sobald {entity_name} einen Bereich betritt",
+            "leaves": "Sobald {entity_name} einen Bereich verl\u00e4sst"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Ger\u00e4te-Tracker",
+            "state": {
+                "home": "Zuhause",
+                "not_home": "Abwesend"
+            },
+            "state_attributes": {
+                "battery": {
+                    "name": "Batterie"
+                },
+                "gps_accuracy": {
+                    "name": "GPS-Genauigkeit"
+                },
+                "latitude": {
+                    "name": "Breitengrad"
+                },
+                "longitude": {
+                    "name": "L\u00e4ngengrad"
+                },
+                "source_type": {
+                    "name": "Quelle",
+                    "state": {
+                        "bluetooth": "Bluetooth",
+                        "bluetooth_le": "Bluetooth LE",
+                        "gps": "GPS",
+                        "router": "Router"
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "see": {
+            "description": "Aktualisiert manuell die Datens\u00e4tze eines gesehenen Legacy-Ger\u00e4te-Trackers in der Datei known_devices.yaml.",
+            "fields": {
+                "battery": {
+                    "description": "Batteriestand des Ger\u00e4ts.",
+                    "name": "Batteriestand"
+                },
+                "dev_id": {
+                    "description": "ID des Ger\u00e4ts (in `known_devices.yaml` zu finden).",
+                    "name": "Ger\u00e4te-ID"
+                },
+                "gps": {
+                    "description": "GPS-Koordinaten des Standorts des Ger\u00e4ts, angegeben durch Breiten- und L\u00e4ngengrad (zum Beispiel: [51.513845, -0.100539]).",
+                    "name": "GPS-Koordinaten"
+                },
+                "gps_accuracy": {
+                    "description": "Genauigkeit der GPS-Koordinaten.",
+                    "name": "GPS-Genauigkeit"
+                },
+                "host_name": {
+                    "description": "Hostname des Ger\u00e4ts.",
+                    "name": "Hostname"
+                },
+                "location_name": {
+                    "description": "Name des Standorts, an dem sich das Ger\u00e4t befindet. Die Optionen sind: `home`, `not_home` oder der Name der Zone.",
+                    "name": "Standort"
+                },
+                "mac": {
+                    "description": "MAC-Adresse des Ger\u00e4ts.",
+                    "name": "MAC-Adresse"
+                }
+            },
+            "name": "Sehen"
+        }
+    },
+    "title": "Ger\u00e4te-Tracker"
+}

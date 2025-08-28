@@ -1,0 +1,66 @@
+{
+    "application_credentials": {
+        "description": "Vykdykite [instrukcijas]({more_info_url}), kad suteiktum\u0117te nam\u0173 pad\u0117j\u0117jui prieig\u0105 prie savo myUplink paskyros. Taip pat turite sukurti su paskyra susietus programos kredencialus: \n 1. Eikite \u012f [Applications at myUplink developer site]({create_creds_url}) ir gaukite kredencialus i\u0161 esamos programos arba pasirinkite **Sukurti nauj\u0105 program\u0105**. \n 1. Nustatykite tinkam\u0105 programos pavadinim\u0105 ir apra\u0161\u0105 \n 1. \u012eveskite \u201e{callback_url}\u201c kaip atgalinio skambinimo URL"
+    },
+    "config": {
+        "abort": {
+            "account_mismatch": "Naudojama paskyra nesutampa su pradine paskyra",
+            "already_configured": "Paskyra jau sukonfig\u016bruota",
+            "already_in_progress": "Konfig\u016bracijos procesas jau vyksta",
+            "authorize_url_timeout": "Baig\u0117si skirtasis laikas generuojant \u012fgaliojimo URL.",
+            "missing_configuration": "Komponentas nesukonfig\u016bruotas. Pra\u0161ome vadovautis dokumentacija.",
+            "no_url_available": "N\u0117ra URL. Nor\u0117dami gauti informacijos apie \u0161i\u0105 klaid\u0105, [\u017er. pagalbos skyri\u0173]({docs_url})",
+            "oauth_error": "Gauti neteisingi prieigos rakto duomenys.",
+            "oauth_failed": "Klaida gaunant prieigos rakt\u0105.",
+            "oauth_timeout": "Baig\u0117si skirtasis OAuth prieigos raktas.",
+            "oauth_unauthorized": "OAuth prieigos teis\u0117s klaida gaunant prieigos rakt\u0105.",
+            "reauth_successful": "Pakartotinis autentifikavimas buvo s\u0117kmingas",
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas",
+            "user_rejected_authorize": "Paskyros susiejimas atmestas: {error}"
+        },
+        "create_entry": {
+            "default": "S\u0117kmingai autentifikuota"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Pasirinkite autentifikavimo metod\u0105"
+            },
+            "reauth_confirm": {
+                "description": "\u201emyUplink\u201c integracija turi i\u0161 naujo autentifikuoti j\u016bs\u0173 paskyr\u0105",
+                "title": "Baig\u0117si {name} autentifikavimo galiojimas"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "alarm": {
+                "name": "Signalizacija"
+            }
+        },
+        "sensor": {
+            "status": {
+                "name": "B\u016bsena"
+            }
+        }
+    },
+    "exceptions": {
+        "config_entry_auth_failed": {
+            "message": "Klaida prisijungiant prie API. Patikrinkite savo kredencialus."
+        },
+        "config_entry_not_ready": {
+            "message": "\u012ekeliant integracij\u0105 \u012fvyko klaida."
+        },
+        "incorrect_oauth2_scope": {
+            "message": "I\u0161saugoti leidimai negalioja. Jei norite atnaujinti leidimus, prisijunkite dar kart\u0105."
+        },
+        "set_number_error": {
+            "message": "Nepavyko nustatyti naujos {point} / {entity} vert\u0117s {value}."
+        },
+        "set_select_error": {
+            "message": "Nepavyko nustatyti naujos parinkties {option} {point} / {entity}."
+        },
+        "set_switch_error": {
+            "message": "Nepavyko nustatyti {entity} b\u016bsenos."
+        }
+    }
+}

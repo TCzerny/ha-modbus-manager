@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositiu ja est\u00e0 configurat",
+            "reauth_successful": "Re-autenticaci\u00f3 realitzada correctament"
+        },
+        "error": {
+            "cannot_connect": "Ha fallat la connexi\u00f3",
+            "invalid_auth": "Autenticaci\u00f3 inv\u00e0lida"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Contrasenya"
+                },
+                "description": "La contrasenya de {username} \u00e9s inv\u00e0lida.",
+                "title": "L'autenticaci\u00f3 de {name} ha caducat"
+            },
+            "user": {
+                "data": {
+                    "host": "Amfitri\u00f3",
+                    "password": "Contrasenya",
+                    "path": "Ruta",
+                    "port": "Port",
+                    "ssl": "Utilitza un certificat SSL",
+                    "username": "Nom d'usuari"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "active_torrents": {
+                "name": "Torrents actius",
+                "unit_of_measurement": "torrents"
+            },
+            "completed_torrents": {
+                "name": "Torrents completats",
+                "unit_of_measurement": "torrents"
+            },
+            "download_speed": {
+                "name": "Velocitat de baixada"
+            },
+            "paused_torrents": {
+                "name": "Torrents en pausa",
+                "unit_of_measurement": "torrents"
+            },
+            "started_torrents": {
+                "name": "Torrents iniciats",
+                "unit_of_measurement": "torrents"
+            },
+            "total_torrents": {
+                "name": "Torrents totals",
+                "unit_of_measurement": "torrents"
+            },
+            "transmission_status": {
+                "name": "Estat",
+                "state": {
+                    "downloading": "Baixant",
+                    "idle": "Inactiu",
+                    "seeding": "Sembrant",
+                    "up_down": "Pujada/Baixada"
+                }
+            },
+            "upload_speed": {
+                "name": "Velocitat de pujada"
+            }
+        },
+        "switch": {
+            "on_off": {
+                "name": "Interruptor"
+            },
+            "turtle_mode": {
+                "name": "Mode tortuga"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "limit": "L\u00edmit",
+                    "order": "Ordre"
+                }
+            }
+        }
+    },
+    "services": {
+        "add_torrent": {
+            "description": "Afegeix un nou torrent a descarregar (URL, enlla\u00e7 magn\u00e8tic o codificat en Base64).",
+            "fields": {
+                "torrent": {
+                    "description": "URL, enlla\u00e7 magn\u00e8tic o fitxer codificat en Base64.",
+                    "name": "Torrent"
+                }
+            },
+            "name": "Afegeix torrent"
+        },
+        "remove_torrent": {
+            "description": "Elimina un torrent.",
+            "fields": {
+                "delete_data": {
+                    "description": "Elimina les dades d'un torrent.",
+                    "name": "Elimina dades"
+                },
+                "id": {
+                    "description": "ID del torrent.",
+                    "name": "ID"
+                }
+            },
+            "name": "Elimina torrent"
+        },
+        "start_torrent": {
+            "description": "Inicia un torrent.",
+            "fields": {
+                "id": {
+                    "description": "ID del torrent.",
+                    "name": "ID"
+                }
+            },
+            "name": "Inicia torrent"
+        },
+        "stop_torrent": {
+            "description": "Atura un torrent.",
+            "fields": {
+                "id": {
+                    "description": "ID del torrent.",
+                    "name": "ID"
+                }
+            },
+            "name": "Atura torrent"
+        }
+    }
+}

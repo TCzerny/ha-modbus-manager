@@ -1,0 +1,997 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u30c7\u30d0\u30a4\u30b9\u306f\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u3059",
+            "already_in_progress": "\u69cb\u6210\u30d5\u30ed\u30fc\u306f\u3059\u3067\u306b\u9032\u884c\u4e2d\u3067\u3059"
+        },
+        "error": {
+            "exceeded_api_calls": "API\u547c\u3073\u51fa\u3057\u56de\u6570\u304c\u8d85\u904e\u3057\u307e\u3057\u305f\u3002",
+            "exceeded_user_api_calls": "\u30e6\u30fc\u30b6\u30fc API \u547c\u3073\u51fa\u3057\u56de\u6570\u304c\u8d85\u904e\u3057\u307e\u3057\u305f\u3002",
+            "invalid_token": "\u30c8\u30fc\u30af\u30f3\u304c\u7121\u52b9\u3067\u3059\u3002",
+            "not_acceptable_terms": "\u30b5\u30fc\u30d3\u30b9\u898f\u7d04\u306b\u540c\u610f\u3057\u307e\u305b\u3093\u3002",
+            "not_allowed_api_again": "\u30e6\u30fc\u30b6\u30fc\u306b\u306f API \u547c\u3073\u51fa\u3057\u306e\u6a29\u9650\u304c\u3042\u308a\u307e\u305b\u3093\u3002",
+            "not_supported_country": "\u3053\u306e\u56fd\u306f\u30b5\u30dd\u30fc\u30c8\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002",
+            "token_unauthorized": "\u30c8\u30fc\u30af\u30f3\u304c\u7121\u52b9\u307e\u305f\u306f\u8a31\u53ef\u3055\u308c\u3066\u3044\u307e\u305b\u3093\u3002"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "\u500b\u4eba\u30a2\u30af\u30bb\u30b9\u30c8\u30fc\u30af\u30f3",
+                    "country": "\u56fd"
+                },
+                "description": "LG ThinQ\u30a2\u30ab\u30a6\u30f3\u30c8\u3067\u4f5c\u6210\u3055\u308c\u305fThinQ [PAT(\u500b\u4eba\u30a2\u30af\u30bb\u30b9\u30c8\u30fc\u30af\u30f3)]( {pat_url} )\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+                "title": "ThinQ\u306b\u63a5\u7d9a\u3059\u308b"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clean_light_reminder": {
+                "name": "\u30af\u30ea\u30fc\u30f3\u30a4\u30f3\u30b8\u30b1\u30fc\u30bf\u30e9\u30a4\u30c8"
+            },
+            "eco_friendly_mode": {
+                "name": "\u30a8\u30b3\u30d5\u30ec\u30f3\u30c9\u30ea\u30fc"
+            },
+            "machine_clean_reminder": {
+                "name": "\u30de\u30b7\u30f3\u30af\u30ea\u30fc\u30f3\u30ea\u30de\u30a4\u30f3\u30c0\u30fc"
+            },
+            "one_touch_filter": {
+                "name": "\u30d5\u30ec\u30c3\u30b7\u30e5\u30a8\u30a2\u30d5\u30a3\u30eb\u30bf\u30fc"
+            },
+            "operation_mode": {
+                "name": "\u30d1\u30ef\u30fc"
+            },
+            "power_save_enabled": {
+                "name": "\u7701\u96fb\u529b\u30e2\u30fc\u30c9"
+            },
+            "remote_control_enabled": {
+                "name": "\u30ea\u30e2\u30fc\u30c8\u30b9\u30bf\u30fc\u30c8"
+            },
+            "remote_control_enabled_for_location": {
+                "name": "{location}\u30ea\u30e2\u30fc\u30c8\u30b9\u30bf\u30fc\u30c8"
+            },
+            "rinse_refill": {
+                "name": "\u30ea\u30f3\u30b9\u88dc\u5145\u304c\u5fc5\u8981"
+            },
+            "sabbath_mode": {
+                "name": "\u5b89\u606f\u65e5"
+            },
+            "signal_level": {
+                "name": "\u30c1\u30e3\u30a4\u30e0\u97f3"
+            }
+        },
+        "climate": {
+            "climate_air_conditioner": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "\u81ea\u52d5",
+                            "high": "\u9ad8",
+                            "low": "\u4f4e",
+                            "mid": "\u4e2d",
+                            "power": "\u30d1\u30ef\u30fc",
+                            "slow": "\u30b9\u30ed\u30fc"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "air_clean": "\u7a7a\u6c17\u6e05\u6d44",
+                            "aroma": "\u30a2\u30ed\u30de",
+                            "energy_saving": "\u7701\u30a8\u30cd\u30eb\u30ae\u30fc"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "error": {
+                "name": "\u30a8\u30e9\u30fc",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "block_error": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0\u304c\u505c\u6b62\u3057\u307e\u3057\u305f\u3002\u969c\u5bb3\u7269\u304c\u306a\u3044\u304b\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044",
+                            "brush_error": "\u30d6\u30e9\u30b7\u52d5\u4f5c\u306b\u554f\u984c",
+                            "bubble_error": "\u30d0\u30d6\u30eb\u30a8\u30e9\u30fc",
+                            "child_lock_active_error": "\u30c1\u30e3\u30a4\u30eb\u30c9\u30ed\u30c3\u30af",
+                            "cliff_error": "\u8ee2\u5012\u9632\u6b62\u30bb\u30f3\u30b5\u30fc\u306b\u30a8\u30e9\u30fc\u304c\u3042\u308a\u307e\u3059",
+                            "clutch_error": "\u30af\u30e9\u30c3\u30c1\u30a8\u30e9\u30fc",
+                            "compressor_error": "\u30b3\u30f3\u30d7\u30ec\u30c3\u30b5\u30fc\u30a8\u30e9\u30fc",
+                            "dispensing_error": "\u30c7\u30a3\u30b9\u30da\u30f3\u30b5\u30fc\u30a8\u30e9\u30fc",
+                            "door_close_error": "\u30c9\u30a2\u9589\u30a8\u30e9\u30fc",
+                            "door_lock_error": "\u30c9\u30a2\u30ed\u30c3\u30af\u30a8\u30e9\u30fc",
+                            "door_open_error": "\u30c9\u30a2\u304c\u958b\u3044\u305f",
+                            "door_sensor_error": "\u30c9\u30a2\u30bb\u30f3\u30b5\u30fc\u30a8\u30e9\u30fc",
+                            "drainmotor_error": "\u6392\u6c34\u30a8\u30e9\u30fc",
+                            "dust_full_error": "\u30b4\u30df\u7bb1\u304c\u3044\u3063\u3071\u3044\u306a\u306e\u3067\u7a7a\u306b\u3059\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059",
+                            "empty_water_alert_error": "\u6c34\u304c\u7a7a\u3067\u3059",
+                            "fan_motor_error": "\u30d5\u30a1\u30f3\u30ed\u30c3\u30af\u30a8\u30e9\u30fc",
+                            "filter_clogging_error": "\u30d5\u30a3\u30eb\u30bf\u30fc\u30a8\u30e9\u30fc",
+                            "frozen_error": "\u51cd\u7d50\u691c\u51fa\u30a8\u30e9\u30fc",
+                            "heater_circuit_error": "\u30d2\u30fc\u30bf\u30fc\u56de\u8def\u306e\u6545\u969c",
+                            "high_power_supply_error": "\u96fb\u6e90\u30a8\u30e9\u30fc",
+                            "high_temperature_detection_error": "\u9ad8\u6e29\u30a8\u30e9\u30fc",
+                            "inner_lid_open_error": "\u84cb\u306e\u30aa\u30fc\u30d7\u30f3\u30a8\u30e9\u30fc",
+                            "ir_sensor_error": "IR\u30bb\u30f3\u30b5\u30fc\u30a8\u30e9\u30fc",
+                            "le2_error": "LE2 \u30a8\u30e9\u30fc",
+                            "le_error": "LE\u30a8\u30e9\u30fc",
+                            "left_wheel_error": "\u5de6\u306e\u8eca\u8f2a\u306b\u554f\u984c\u304c\u3042\u308a\u307e\u3059",
+                            "locked_motor_error": "\u30c9\u30e9\u30a4\u30d0\u30fc\u30e2\u30fc\u30bf\u30fc\u30a8\u30e9\u30fc",
+                            "mop_error": "\u30e2\u30c3\u30d7\u3092\u53d6\u308a\u4ed8\u3051\u306a\u3044\u3068\u6b63\u5e38\u306b\u52d5\u4f5c\u3057\u307e\u305b\u3093",
+                            "motor_error": "\u30e2\u30fc\u30bf\u30fc\u30c8\u30e9\u30d6\u30eb",
+                            "motor_lock_error": "\u30e2\u30fc\u30bf\u30fc\u30ed\u30c3\u30af\u30a8\u30e9\u30fc",
+                            "move_error": "\u8eca\u8f2a\u304c\u5e8a\u306b\u89e6\u308c\u3066\u3044\u306a\u3044",
+                            "need_water_drain": "\u6c34\u304c\u7a7a\u3067\u3059",
+                            "need_water_replenishment": "\u6e80\u6c34",
+                            "no_battery_error": "\u30ed\u30dc\u30c3\u30c8\u6383\u9664\u6a5f\u306e\u30d0\u30c3\u30c6\u30ea\u30fc\u6b8b\u91cf\u304c\u5c11\u306a\u304f\u306a\u3063\u3066\u3044\u307e\u3059",
+                            "no_dust_bin_error": "\u30c0\u30b9\u30c8\u30d3\u30f3\u304c\u53d6\u308a\u4ed8\u3051\u3089\u308c\u3066\u3044\u306a\u3044",
+                            "no_filter_error": "\u30d5\u30a3\u30eb\u30bf\u30fc\u30a8\u30e9\u30fc",
+                            "out_of_balance_error": "\u4e0d\u5747\u8861\u306a\u8ca0\u8377",
+                            "overfill_error": "\u30aa\u30fc\u30d0\u30fc\u30d5\u30a3\u30eb\u30a8\u30e9\u30fc",
+                            "part_malfunction_error": "AIE \u30a8\u30e9\u30fc",
+                            "power_code_connection_error": "\u96fb\u6e90\u30b3\u30fc\u30c9\u63a5\u7d9a\u30a8\u30e9\u30fc",
+                            "power_fail_error": "\u505c\u96fb",
+                            "right_wheel_error": "\u53f3\u306e\u8eca\u8f2a\u306b\u554f\u984c\u304c\u3042\u308a\u307e\u3059",
+                            "stack_error": "\u30b9\u30bf\u30c3\u30ad\u30f3\u30b0\u30a8\u30e9\u30fc",
+                            "steam_heat_error": "\u30b9\u30c1\u30fc\u30e0\u30d2\u30fc\u30bf\u30fc\u30a8\u30e9\u30fc",
+                            "suction_blocked_error": "\u5438\u5f15\u30e2\u30fc\u30bf\u30fc\u304c\u8a70\u307e\u3063\u3066\u3044\u308b",
+                            "temperature_sensor_error": "\u30b5\u30fc\u30df\u30b9\u30bf\u30a8\u30e9\u30fc",
+                            "time_to_run_the_tub_clean_cycle_error": "\u6d74\u69fd\u6d17\u6d44\u306e\u63a8\u5968",
+                            "timeout_error": "\u30bf\u30a4\u30e0\u30a2\u30a6\u30c8\u30a8\u30e9\u30fc",
+                            "turbidity_sensor_error": "\u6fc1\u5ea6\u30bb\u30f3\u30b5\u30fc\u30a8\u30e9\u30fc",
+                            "unable_to_lock_error": "\u30c9\u30a2\u30ed\u30c3\u30af\u30a8\u30e9\u30fc",
+                            "unbalanced_load_error": "\u4e0d\u5747\u8861\u306a\u8ca0\u8377",
+                            "unknown_error": "\u88fd\u54c1\u306b\u306f\u6ce8\u610f\u304c\u5fc5\u8981\u3067\u3059",
+                            "vibration_sensor_error": "\u632f\u52d5\u30bb\u30f3\u30b5\u30fc\u30a8\u30e9\u30fc",
+                            "water_drain_error": "\u6392\u6c34\u30a8\u30e9\u30fc",
+                            "water_leakage_error": "\u6c34\u6f0f\u308c\u306e\u554f\u984c",
+                            "water_leaks_error": "\u6c34\u6f0f\u308c\u306e\u554f\u984c",
+                            "water_level_sensor_error": "\u6c34\u30bb\u30f3\u30b5\u30fc\u30a8\u30e9\u30fc",
+                            "water_supply_error": "\u7d66\u6c34\u30a8\u30e9\u30fc"
+                        }
+                    }
+                }
+            },
+            "notification": {
+                "name": "\u901a\u77e5",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "charging_is_complete": "\u5145\u96fb\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f",
+                            "cleaning_is_complete": "\u30b5\u30a4\u30af\u30eb\u304c\u7d42\u4e86\u3057\u307e\u3057\u305f",
+                            "cleaning_is_completed": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f",
+                            "cleaning_is_failed": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0\u306b\u5931\u6557\u3057\u307e\u3057\u305f",
+                            "cooking_is_complete": "\u30aa\u30d5\u306b\u306a\u308a\u307e\u3057\u305f",
+                            "door_is_open": "\u30c9\u30a2\u306f\u958b\u3044\u3066\u3044\u307e\u3059",
+                            "drying_failed": "\u4e7e\u71e5\u6a5f\u306b\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f",
+                            "drying_is_complete": "\u4e7e\u71e5\u5b8c\u4e86",
+                            "error_during_cleaning": "\u30a8\u30e9\u30fc\u306e\u305f\u3081\u30af\u30ea\u30fc\u30cb\u30f3\u30b0\u304c\u505c\u6b62\u3057\u307e\u3057\u305f",
+                            "error_during_washing": "\u6d17\u6fef\u6a5f\u306b\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f",
+                            "error_has_occurred": "\u30a8\u30e9\u30fc\u304c\u767a\u751f\u3057\u307e\u3057\u305f",
+                            "frozen_is_complete": "\u30a2\u30a4\u30b9\u30d7\u30e9\u30b9\u306f\u5b8c\u4e86\u3057\u307e\u3057\u305f",
+                            "homeguard_is_stopped": "\u30db\u30fc\u30e0\u30ac\u30fc\u30c9\u306f\u505c\u6b62\u3057\u307e\u3057\u305f",
+                            "lack_of_water": "\u6c34\u30bf\u30f3\u30af\u306b\u6c34\u304c\u3042\u308a\u307e\u305b\u3093",
+                            "motion_is_detected": "\u81ea\u5b85\u8b66\u5099\u4e2d\u306b\u52d5\u304d\u3092\u691c\u77e5\u3059\u308b\u3068\u5199\u771f\u304c\u9001\u4fe1\u3055\u308c\u307e\u3059",
+                            "need_to_check_location": "\u5834\u6240\u306e\u78ba\u8a8d\u304c\u5fc5\u8981\u3067\u3059",
+                            "pollution_is_high": "\u7a7a\u6c17\u306e\u72b6\u614b\u304c\u6025\u901f\u306b\u60aa\u5316",
+                            "preheating_is_complete": "\u4e88\u71b1\u5b8c\u4e86",
+                            "rinse_is_not_enough": "\u3088\u308a\u826f\u3044\u4e7e\u71e5\u52b9\u679c\u3092\u5f97\u308b\u305f\u3081\u306b\u30ea\u30f3\u30b9\u5264\u3092\u52a0\u3048\u308b",
+                            "salt_refill_is_needed": "\u8edf\u5316\u52b9\u679c\u3092\u9ad8\u3081\u308b\u305f\u3081\u306b\u5869\u3092\u52a0\u3048\u308b",
+                            "scheduled_cleaning_starts": "\u5b9a\u671f\u6e05\u6383\u958b\u59cb",
+                            "styling_is_complete": "\u30b9\u30bf\u30a4\u30ea\u30f3\u30b0\u5b8c\u4e86",
+                            "time_to_change_filter": "\u30d5\u30a3\u30eb\u30bf\u30fc\u3092\u4ea4\u63db\u3059\u308b\u6642\u671f\u3067\u3059",
+                            "time_to_change_water_filter": "\u6c34\u30d5\u30a3\u30eb\u30bf\u30fc\u3092\u4ea4\u63db\u3059\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059",
+                            "time_to_clean": "\u30bb\u30eb\u30d5\u30af\u30ea\u30fc\u30cb\u30f3\u30b0\u304c\u5fc5\u8981",
+                            "time_to_clean_filter": "\u30d5\u30a3\u30eb\u30bf\u30fc\u3092\u6383\u9664\u3059\u308b\u6642\u671f\u3067\u3059",
+                            "timer_is_complete": "\u30bf\u30a4\u30de\u30fc\u304c\u5b8c\u4e86\u3057\u307e\u3057\u305f",
+                            "washing_is_complete": "\u6d17\u6fef\u5b8c\u4e86",
+                            "water_is_full": "\u6c34\u304c\u3044\u3063\u3071\u3044\u3067\u3059",
+                            "water_leak_has_occurred": "\u98df\u5668\u6d17\u3044\u6a5f\u304c\u6c34\u6f0f\u308c\u3092\u691c\u77e5\u3057\u307e\u3057\u305f"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "fan_speed": {
+                "name": "\u30d5\u30a1\u30f3"
+            },
+            "lamp_brightness": {
+                "name": "\u30e9\u30a4\u30c8"
+            },
+            "light_status": {
+                "name": "\u30e9\u30a4\u30c8"
+            },
+            "relative_hour_to_start": {
+                "name": "\u96fb\u6e90\u6295\u5165\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb"
+            },
+            "relative_hour_to_start_for_location": {
+                "name": "{location}\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u3092\u30aa\u30f3\u306b\u3059\u308b"
+            },
+            "relative_hour_to_start_wm": {
+                "name": "\u9045\u5ef6\u958b\u59cb"
+            },
+            "relative_hour_to_start_wm_for_location": {
+                "name": "{location} \u9045\u5ef6\u958b\u59cb"
+            },
+            "relative_hour_to_stop": {
+                "name": "\u96fb\u6e90\u30aa\u30d5\u306e\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb"
+            },
+            "relative_hour_to_stop_for_location": {
+                "name": "{location} \u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u306e\u30aa\u30d5"
+            },
+            "relative_hour_to_stop_wm": {
+                "name": "\u9045\u5ef6\u7d42\u4e86"
+            },
+            "relative_hour_to_stop_wm_for_location": {
+                "name": "{location} \u9045\u5ef6\u7d42\u4e86"
+            },
+            "sleep_timer_relative_hour_to_stop": {
+                "name": "\u30b9\u30ea\u30fc\u30d7\u30bf\u30a4\u30de\u30fc"
+            },
+            "sleep_timer_relative_hour_to_stop_for_location": {
+                "name": "{location}\u30b9\u30ea\u30fc\u30d7\u30bf\u30a4\u30de\u30fc"
+            },
+            "target_humidity": {
+                "name": "\u8a2d\u5b9a\u6e7f\u5ea6"
+            },
+            "target_temperature": {
+                "name": "\u6e29\u5ea6"
+            },
+            "target_temperature_for_location": {
+                "name": "{location}\u6c17\u6e29"
+            },
+            "wind_temperature": {
+                "name": "\u98a8\u306e\u6e29\u5ea6"
+            }
+        },
+        "select": {
+            "air_clean_operation_mode": {
+                "name": "\u7a7a\u6c17\u6e05\u6d44",
+                "state": {
+                    "start": "\u30b9\u30bf\u30fc\u30c8",
+                    "stop": "\u30b9\u30c8\u30c3\u30d7"
+                }
+            },
+            "cook_mode": {
+                "name": "\u8abf\u7406\u30e2\u30fc\u30c9",
+                "state": {
+                    "bake": "\u713c\u304f",
+                    "convection_bake": "\u30b3\u30f3\u30d9\u30af\u30b7\u30e7\u30f3\u30d9\u30a4\u30af",
+                    "convection_roast": "\u30b3\u30f3\u30d9\u30af\u30b7\u30e7\u30f3\u30ed\u30fc\u30b9\u30c8",
+                    "crisp_convection": "\u30b5\u30af\u30b5\u30af\u30b3\u30f3\u30d9\u30af\u30b7\u30e7\u30f3",
+                    "roast": "\u30ed\u30fc\u30b9\u30c8"
+                }
+            },
+            "cook_mode_for_location": {
+                "name": "{location}\u8abf\u7406\u30e2\u30fc\u30c9",
+                "state": {
+                    "bake": "\u713c\u304f",
+                    "convection_bake": "\u30b3\u30f3\u30d9\u30af\u30b7\u30e7\u30f3\u30d9\u30a4\u30af",
+                    "convection_roast": "\u30b3\u30f3\u30d9\u30af\u30b7\u30e7\u30f3\u30ed\u30fc\u30b9\u30c8",
+                    "crisp_convection": "\u30b5\u30af\u30b5\u30af\u30b3\u30f3\u30d9\u30af\u30b7\u30e7\u30f3",
+                    "roast": "\u30ed\u30fc\u30b9\u30c8"
+                }
+            },
+            "current_job_mode": {
+                "name": "\u52d5\u4f5c\u30e2\u30fc\u30c9",
+                "state": {
+                    "air_clean": "\u6d44\u5316\u4e2d",
+                    "auto": "\u81ea\u52d5",
+                    "baby_care": "\u30d9\u30d3\u30fc\u30b1\u30a2\u30e2\u30fc\u30c9",
+                    "circulator": "\u30d6\u30fc\u30b9\u30bf\u30fc",
+                    "clean": "\u30b7\u30f3\u30b0\u30eb",
+                    "direct_clean": "\u30c0\u30a4\u30ec\u30af\u30c8\u30e2\u30fc\u30c9",
+                    "dual_clean": "\u30c7\u30e5\u30a2\u30eb",
+                    "fast": "\u30bf\u30fc\u30dc",
+                    "heat_pump": "\u30d2\u30fc\u30c8\u30dd\u30f3\u30d7",
+                    "humidify": "\u30df\u30b9\u30c8",
+                    "humidify_and_air_clean": "\u30df\u30b9\u30c8\u3068\u6d44\u5316",
+                    "humidity": "\u6e7f\u5ea6\u304c\u9ad8\u3044",
+                    "nature_clean": "\u30ca\u30c1\u30e5\u30e9\u30eb\u30e2\u30fc\u30c9",
+                    "pet_clean": "\u30da\u30c3\u30c8\u30e2\u30fc\u30c9",
+                    "silent": "\u30b5\u30a4\u30ec\u30f3\u30c8",
+                    "sleep": "\u30b9\u30ea\u30fc\u30d7",
+                    "smart": "\u30b9\u30de\u30fc\u30c8\u30e2\u30fc\u30c9",
+                    "space_clean": "\u62e1\u6563\u30e2\u30fc\u30c9",
+                    "spot_clean": "\u30ef\u30a4\u30c9\u30e2\u30fc\u30c9",
+                    "turbo": "\u30bf\u30fc\u30dc",
+                    "up_feature": "\u8ffd\u52a0\u30e2\u30fc\u30c9",
+                    "vacation": "\u30d0\u30b1\u30fc\u30b7\u30e7\u30f3"
+                }
+            },
+            "display_light": {
+                "name": "\u30c7\u30a3\u30b9\u30d7\u30ec\u30a4\u306e\u660e\u308b\u3055",
+                "state": {
+                    "level_1": "\u660e\u308b\u30551",
+                    "level_2": "\u660e\u308b\u30552",
+                    "level_3": "\u660e\u308b\u30553",
+                    "off": "\u30aa\u30d5"
+                }
+            },
+            "fresh_air_filter": {
+                "name": "\u30d5\u30ec\u30c3\u30b7\u30e5\u30a8\u30a2\u30d5\u30a3\u30eb\u30bf\u30fc",
+                "state": {
+                    "auto": "\u81ea\u52d5",
+                    "off": "\u30aa\u30d5",
+                    "power": "\u30d1\u30ef\u30fc",
+                    "replace": "\u30d5\u30a3\u30eb\u30bf\u30fc\u306e\u4ea4\u63db",
+                    "smart_off": "\u30aa\u30d5",
+                    "smart_on": "\u30b9\u30de\u30fc\u30c8\u306a\u5b89\u5168\u4fdd\u7ba1",
+                    "smart_power": "\u30b9\u30de\u30fc\u30c8\u306a\u5b89\u5168\u4fdd\u7ba1"
+                }
+            },
+            "hygiene_dry_mode": {
+                "name": "\u4e7e\u71e5\u30e2\u30fc\u30c9",
+                "state": {
+                    "fast": "\u901f\u3044",
+                    "normal": "\u30c7\u30ea\u30b1\u30fc\u30c8",
+                    "off": "\u30aa\u30d5",
+                    "silent": "\u30b5\u30a4\u30ec\u30f3\u30c8"
+                }
+            },
+            "light_brightness": {
+                "name": "\u7167\u660e"
+            },
+            "monitoring_enabled": {
+                "name": "\u7a7a\u6c17\u8cea\u30bb\u30f3\u30b5\u30fc",
+                "state": {
+                    "always": "\u5e38\u306b\u30aa\u30f3",
+                    "on_working": "\u88fd\u54c1\u3068\u4e00\u7dd2\u306b\u30aa\u30f3"
+                }
+            },
+            "operation_mode": {
+                "name": "\u904b\u8ee2\u30e2\u30fc\u30c9",
+                "state": {
+                    "cancel": "\u30ad\u30e3\u30f3\u30bb\u30eb",
+                    "power_off": "\u96fb\u6e90\u30aa\u30d5",
+                    "preheating": "\u4e88\u71b1",
+                    "start": "\u30b9\u30bf\u30fc\u30c8",
+                    "stop": "\u30b9\u30c8\u30c3\u30d7",
+                    "wake_up": "\u30b9\u30ea\u30fc\u30d7\u30e2\u30fc\u30c9\u30aa\u30d5"
+                }
+            },
+            "operation_mode_for_location": {
+                "name": "{location}\u64cd\u4f5c",
+                "state": {
+                    "cancel": "\u30ad\u30e3\u30f3\u30bb\u30eb",
+                    "power_off": "\u96fb\u6e90\u30aa\u30d5",
+                    "preheating": "\u4e88\u71b1",
+                    "start": "\u30b9\u30bf\u30fc\u30c8",
+                    "stop": "\u30b9\u30c8\u30c3\u30d7",
+                    "wake_up": "\u30b9\u30ea\u30fc\u30d7\u30e2\u30fc\u30c9\u30aa\u30d5"
+                }
+            },
+            "wind_angle": {
+                "name": "\u56de\u8ee2",
+                "state": {
+                    "angle_140": "140\u00b0",
+                    "angle_45": "45\u00b0",
+                    "angle_60": "60\u00b0",
+                    "angle_90": "90\u00b0",
+                    "off": "\u30aa\u30d5"
+                }
+            },
+            "wind_strength": {
+                "name": "\u901f\u5ea6",
+                "state": {
+                    "auto": "\u81ea\u52d5",
+                    "high": "\u9ad8",
+                    "low": "\u4f4e",
+                    "mid": "\u4e2d",
+                    "power": "\u30bf\u30fc\u30dc",
+                    "slow": "\u30b9\u30ed\u30fc",
+                    "turbo": "\u30bf\u30fc\u30dc",
+                    "wind_1": "\u30b9\u30c6\u30c3\u30d71",
+                    "wind_10": "\u30b9\u30c6\u30c3\u30d710",
+                    "wind_2": "\u30b9\u30c6\u30c3\u30d72",
+                    "wind_3": "\u30b9\u30c6\u30c3\u30d73",
+                    "wind_4": "\u30b9\u30c6\u30c3\u30d74",
+                    "wind_5": "\u30b9\u30c6\u30c3\u30d75",
+                    "wind_6": "\u30b9\u30c6\u30c3\u30d76",
+                    "wind_7": "\u30b9\u30c6\u30c3\u30d77",
+                    "wind_8": "\u30b9\u30c6\u30c3\u30d78",
+                    "wind_9": "\u30b9\u30c6\u30c3\u30d79"
+                }
+            }
+        },
+        "sensor": {
+            "absolute_to_start": {
+                "name": "\u96fb\u6e90\u6295\u5165\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb"
+            },
+            "absolute_to_start_for_location": {
+                "name": "{location}\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u3092\u30aa\u30f3\u306b\u3059\u308b"
+            },
+            "absolute_to_stop": {
+                "name": "\u96fb\u6e90\u30aa\u30d5\u306e\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb"
+            },
+            "absolute_to_stop_for_location": {
+                "name": "{location} \u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u306e\u30aa\u30d5"
+            },
+            "battery_level": {
+                "name": "\u30d0\u30c3\u30c6\u30ea\u30fc",
+                "state": {
+                    "high": "\u30d5\u30eb",
+                    "low": "\u4f4e",
+                    "mid": "\u4e2d",
+                    "warning": "\u7a7a"
+                }
+            },
+            "beer_remain": {
+                "name": "\u30ec\u30b7\u30d4\u306e\u9032\u884c\u72b6\u6cc1"
+            },
+            "brightness": {
+                "name": "\u7167\u660e\u306e\u5f37\u3055"
+            },
+            "brightness_for_location": {
+                "name": "{location}\u7167\u660e\u306e\u5f37\u3055"
+            },
+            "cock_state": {
+                "name": "UV\u30ca\u30ce",
+                "state": {
+                    "cleaning": "\u9032\u884c\u4e2d",
+                    "normal": "\u30b9\u30bf\u30f3\u30d0\u30a4"
+                }
+            },
+            "current_dish_washing_course": {
+                "name": "\u73fe\u5728\u306e\u30b5\u30a4\u30af\u30eb",
+                "state": {
+                    "auto": "\u81ea\u52d5",
+                    "delicate": "\u30c7\u30ea\u30b1\u30fc\u30c8",
+                    "download_cycle": "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u30b5\u30a4\u30af\u30eb",
+                    "eco": "\u30a8\u30b3",
+                    "express": "\u6025\u901f",
+                    "heavy": "\u96c6\u4e2d\u7684",
+                    "machine_clean": "\u30de\u30b7\u30f3\u30af\u30ea\u30fc\u30cb\u30f3\u30b0",
+                    "normal": "\u30ce\u30fc\u30de\u30eb",
+                    "quick": "\u30af\u30a4\u30c3\u30af",
+                    "refresh": "\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5",
+                    "rinse": "\u30ea\u30f3\u30b9",
+                    "short_mode": "\u30b7\u30e7\u30fc\u30c8\u30e2\u30fc\u30c9",
+                    "spray": "\u30b9\u30d7\u30ec\u30fc",
+                    "steam": "\u30b9\u30c1\u30fc\u30e0\u30b1\u30a2",
+                    "turbo": "\u30bf\u30fc\u30dc"
+                }
+            },
+            "current_job_mode": {
+                "name": "\u52d5\u4f5c\u30e2\u30fc\u30c9",
+                "state": {
+                    "air_clean": "\u6d44\u5316\u3059\u308b",
+                    "auto": "\u81ea\u52d5",
+                    "clothes_dry": "\u30e9\u30f3\u30c9\u30ea\u30fc",
+                    "edge": "\u30a8\u30c3\u30b8\u30af\u30ea\u30fc\u30cb\u30f3\u30b0",
+                    "heat_pump": "\u30d2\u30fc\u30c8\u30dd\u30f3\u30d7",
+                    "high": "\u30d1\u30ef\u30fc",
+                    "intensive_dry": "\u30b9\u30dd\u30c3\u30c8",
+                    "macro": "\u30ab\u30b9\u30bf\u30e0\u30e2\u30fc\u30c9",
+                    "mop": "\u30e2\u30c3\u30d7",
+                    "normal": "\u30ce\u30fc\u30de\u30eb",
+                    "off": "\u30aa\u30d5",
+                    "quiet_humidity": "\u30b5\u30a4\u30ec\u30f3\u30c8",
+                    "rapid_humidity": "\u30b8\u30a7\u30c3\u30c8",
+                    "sector_base": "\u30bb\u30eb\u3054\u3068",
+                    "select": "\u79c1\u306e\u30b9\u30da\u30fc\u30b9",
+                    "smart_humidity": "\u30b9\u30de\u30fc\u30c8",
+                    "spot": "\u30b9\u30d1\u30a4\u30e9\u30eb\u30b9\u30dd\u30c3\u30c8\u30e2\u30fc\u30c9",
+                    "turbo": "\u30bf\u30fc\u30dc",
+                    "vacation": "\u30d0\u30b1\u30fc\u30b7\u30e7\u30f3",
+                    "zigzag": "\u30b8\u30b0\u30b6\u30b0"
+                }
+            },
+            "current_job_mode_stick_cleaner": {
+                "name": "\u52d5\u4f5c\u30e2\u30fc\u30c9",
+                "state": {
+                    "auto": "\u4f4e\u96fb\u529b",
+                    "high": "\u30d1\u30ef\u30fc",
+                    "mop": "\u30e2\u30c3\u30d7",
+                    "normal": "\u30ce\u30fc\u30de\u30eb",
+                    "off": "\u30aa\u30d5",
+                    "turbo": "\u30bf\u30fc\u30dc"
+                }
+            },
+            "current_state": {
+                "name": "\u73fe\u5728\u306e\u72b6\u6cc1",
+                "state": {
+                    "add_drain": "\u5145\u586b",
+                    "as_pop_up": "\u88fd\u54c1\u306b\u306f\u6ce8\u610f\u304c\u5fc5\u8981\u3067\u3059",
+                    "cancel": "\u30ad\u30e3\u30f3\u30bb\u30eb",
+                    "carbonation": "\u70ad\u9178",
+                    "change_condition": "\u8a2d\u5b9a\u306e\u5909\u66f4",
+                    "charging": "\u5145\u96fb\u4e2d",
+                    "charging_complete": "\u5145\u96fb\u5b8c\u4e86",
+                    "checking_turbidity": "\u571f\u58cc\u30ec\u30d9\u30eb\u306e\u691c\u51fa",
+                    "cleaning": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0",
+                    "cleaning_is_done": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0\u5b8c\u4e86",
+                    "complete": "\u5b8c\u4e86",
+                    "cook": "\u6599\u7406\u4e2d",
+                    "cook_complete": "\u5b8c\u4e86",
+                    "cooking_in_progress": "\u6599\u7406\u4e2d",
+                    "cool_down": "\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+                    "cooling": "\u51b7\u5374\u4e2d",
+                    "detecting": "\u691c\u51fa",
+                    "detergent_amount": "\u6d17\u5264\u306e\u91cf\u306b\u95a2\u3059\u308b\u60c5\u5831\u3092\u63d0\u4f9b\u3059\u308b",
+                    "diagnosis": "\u30b9\u30de\u30fc\u30c8\u8a3a\u65ad\u304c\u9032\u884c\u4e2d\u3067\u3059",
+                    "dispensing": "\u30aa\u30fc\u30c8\u30c7\u30a3\u30b9\u30da\u30f3\u30b5\u30fc",
+                    "display_loadsize": "\u30ed\u30fc\u30c9\u30b5\u30a4\u30ba",
+                    "done": "\u5b8c\u4e86",
+                    "drying": "\u4e7e\u71e5\u4e2d",
+                    "during_aging": "\u30a8\u30a4\u30b8\u30f3\u30b0",
+                    "during_fermentation": "\u767a\u9175",
+                    "end": "\u7d42\u4e86\u3057\u305f",
+                    "end_cooling": "\u4e7e\u71e5\u4e2d",
+                    "error": "\u88fd\u54c1\u306b\u306f\u6ce8\u610f\u304c\u5fc5\u8981\u3067\u3059",
+                    "extracting_capsule": "\u30ab\u30d7\u30bb\u30eb\u91b8\u9020",
+                    "extraction_mode": "\u4fdd\u7ba1",
+                    "firmware": "\u30d5\u30a1\u30fc\u30e0\u30a6\u30a7\u30a2\u66f4\u65b0\u4e2d",
+                    "fota": "\u66f4\u65b0\u4e2d",
+                    "frozen_prevent_initial": "\u51cd\u7d50\u9632\u6b62\u30b9\u30bf\u30f3\u30d0\u30a4",
+                    "frozen_prevent_pause": "\u51cd\u7d50\u9632\u6b62\u304c\u4e00\u6642\u505c\u6b62\u3055\u308c\u307e\u3057\u305f",
+                    "frozen_prevent_running": "\u51cd\u7d50\u9632\u6b62\u304c\u9032\u884c\u4e2d\u3067\u3059",
+                    "homing": "\u79fb\u52d5\u4e2d",
+                    "initial": "\u30b9\u30bf\u30f3\u30d0\u30a4",
+                    "initializing": "\u30b9\u30bf\u30f3\u30d0\u30a4",
+                    "lock": "\u30b3\u30f3\u30c8\u30ed\u30fc\u30eb\u30ed\u30c3\u30af",
+                    "macrosector": "\u30ea\u30e2\u30fc\u30c8\u4f7f\u7528\u4e2d",
+                    "melting": "\u9ea6\u6c41\u306e\u6eb6\u89e3",
+                    "monitoring_detecting": "\u30db\u30fc\u30e0\u30ac\u30fc\u30c9\u306f\u30a2\u30af\u30c6\u30a3\u30d6\u3067\u3059",
+                    "monitoring_moving": "\u30b9\u30bf\u30fc\u30c8\u5730\u70b9\u3078",
+                    "monitoring_positioning": "\u30db\u30fc\u30e0\u30ac\u30fc\u30c9\u958b\u59cb\u70b9\u306e\u8a2d\u5b9a",
+                    "night_dry": "\u591c\u9593\u4e7e\u71e5",
+                    "oven_setting": "\u30af\u30c3\u30af\u30c8\u30c3\u30d7\u63a5\u7d9a",
+                    "pause": "\u4e00\u6642\u505c\u6b62",
+                    "paused": "\u4e00\u6642\u505c\u6b62",
+                    "power_fail": "\u96fb\u6e90\u969c\u5bb3",
+                    "power_off": "\u30aa\u30d5",
+                    "power_on": "\u30aa\u30f3",
+                    "preference": "\u8a2d\u5b9a",
+                    "preheat": "\u4e88\u71b1",
+                    "preheat_complete": "\u4e88\u71b1\u5b8c\u4e86",
+                    "preheating": "\u4e88\u71b1",
+                    "preheating_is_done": "\u4e88\u71b1\u5b8c\u4e86",
+                    "prepareing_fermentation": "\u73fe\u5728\u6e96\u5099\u4e2d",
+                    "presteam": "\u30b9\u30c1\u30fc\u30e0\u6e96\u5099\u5b8c\u4e86",
+                    "prewash": "\u4e88\u6d17\u3044",
+                    "proofing": "\u30d7\u30eb\u30fc\u30d5\u30a3\u30f3\u30b0",
+                    "refreshing": "\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5",
+                    "reservation": "\u30ea\u30e2\u30fc\u30c8\u4f7f\u7528\u4e2d",
+                    "reserved": "\u9045\u5ef6\u8a2d\u5b9a",
+                    "rinse_hold": "\u3059\u3059\u304e\u5f85\u3061",
+                    "rinsing": "\u3059\u3059\u304e",
+                    "running": "\u5b9f\u884c\u4e2d",
+                    "running_end": "\u5b8c\u4e86",
+                    "setdate": "\u30ea\u30e2\u30fc\u30c8\u4f7f\u7528\u4e2d",
+                    "shoes_module": "\u9774\u306e\u4e7e\u71e5",
+                    "sleep": "\u30b9\u30ea\u30fc\u30d7\u30e2\u30fc\u30c9\u6642",
+                    "smart_grid_run": "\u30b9\u30de\u30fc\u30c8\u30b0\u30ea\u30c3\u30c9\u306e\u5b9f\u884c",
+                    "soaking": "\u6d78\u3059",
+                    "softening": "\u67d4\u8edf\u5264",
+                    "spinning": "\u7d21\u7e3e",
+                    "standby": "\u30b9\u30bf\u30f3\u30d0\u30a4",
+                    "stay": "\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5",
+                    "steam": "\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5",
+                    "steam_softening": "\u30b9\u30c1\u30fc\u30e0\u30bd\u30d5\u30cb\u30f3\u30b0",
+                    "sterilize": "\u6bba\u83cc\u3059\u308b",
+                    "temperature_stabilization": "\u6e29\u5ea6\u8abf\u6574",
+                    "working": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0",
+                    "wrinkle_care": "\u3057\u308f\u30b1\u30a2"
+                }
+            },
+            "current_state_for_location": {
+                "name": "{location}\u73fe\u5728\u306e\u30b9\u30c6\u30fc\u30bf\u30b9",
+                "state": {
+                    "add_drain": "\u5145\u586b",
+                    "as_pop_up": "\u88fd\u54c1\u306b\u306f\u6ce8\u610f\u304c\u5fc5\u8981\u3067\u3059",
+                    "cancel": "\u30ad\u30e3\u30f3\u30bb\u30eb",
+                    "carbonation": "\u70ad\u9178",
+                    "change_condition": "\u8a2d\u5b9a\u306e\u5909\u66f4",
+                    "charging": "\u5145\u96fb\u4e2d",
+                    "charging_complete": "\u5145\u96fb\u5b8c\u4e86",
+                    "checking_turbidity": "\u571f\u58cc\u30ec\u30d9\u30eb\u306e\u691c\u51fa",
+                    "cleaning": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0",
+                    "cleaning_is_done": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0\u5b8c\u4e86",
+                    "complete": "\u5b8c\u4e86",
+                    "cook": "\u6599\u7406\u4e2d",
+                    "cook_complete": "\u5b8c\u4e86",
+                    "cooking_in_progress": "\u6599\u7406\u4e2d",
+                    "cool_down": "\u30af\u30fc\u30eb\u30c0\u30a6\u30f3",
+                    "cooling": "\u51b7\u5374\u4e2d",
+                    "detecting": "\u691c\u51fa",
+                    "detergent_amount": "\u6d17\u5264\u306e\u91cf\u306b\u95a2\u3059\u308b\u60c5\u5831\u3092\u63d0\u4f9b\u3059\u308b",
+                    "diagnosis": "\u30b9\u30de\u30fc\u30c8\u8a3a\u65ad\u304c\u9032\u884c\u4e2d\u3067\u3059",
+                    "dispensing": "\u30aa\u30fc\u30c8\u30c7\u30a3\u30b9\u30da\u30f3\u30b5\u30fc",
+                    "display_loadsize": "\u30ed\u30fc\u30c9\u30b5\u30a4\u30ba",
+                    "done": "\u5b8c\u4e86",
+                    "drying": "\u4e7e\u71e5\u4e2d",
+                    "during_aging": "\u30a8\u30a4\u30b8\u30f3\u30b0",
+                    "during_fermentation": "\u767a\u9175",
+                    "end": "\u7d42\u4e86\u3057\u305f",
+                    "end_cooling": "\u4e7e\u71e5\u4e2d",
+                    "error": "\u88fd\u54c1\u306b\u306f\u6ce8\u610f\u304c\u5fc5\u8981\u3067\u3059",
+                    "extracting_capsule": "\u30ab\u30d7\u30bb\u30eb\u91b8\u9020",
+                    "extraction_mode": "\u4fdd\u7ba1",
+                    "firmware": "\u30d5\u30a1\u30fc\u30e0\u30a6\u30a7\u30a2\u66f4\u65b0\u4e2d",
+                    "fota": "\u66f4\u65b0\u4e2d",
+                    "frozen_prevent_initial": "\u51cd\u7d50\u9632\u6b62\u30b9\u30bf\u30f3\u30d0\u30a4",
+                    "frozen_prevent_pause": "\u51cd\u7d50\u9632\u6b62\u304c\u4e00\u6642\u505c\u6b62\u3055\u308c\u307e\u3057\u305f",
+                    "frozen_prevent_running": "\u51cd\u7d50\u9632\u6b62\u304c\u9032\u884c\u4e2d\u3067\u3059",
+                    "homing": "\u79fb\u52d5\u4e2d",
+                    "initial": "\u30b9\u30bf\u30f3\u30d0\u30a4",
+                    "initializing": "\u30b9\u30bf\u30f3\u30d0\u30a4",
+                    "lock": "\u30b3\u30f3\u30c8\u30ed\u30fc\u30eb\u30ed\u30c3\u30af",
+                    "macrosector": "\u30ea\u30e2\u30fc\u30c8\u4f7f\u7528\u4e2d",
+                    "melting": "\u9ea6\u6c41\u306e\u6eb6\u89e3",
+                    "monitoring_detecting": "\u30db\u30fc\u30e0\u30ac\u30fc\u30c9\u306f\u30a2\u30af\u30c6\u30a3\u30d6\u3067\u3059",
+                    "monitoring_moving": "\u30b9\u30bf\u30fc\u30c8\u5730\u70b9\u3078",
+                    "monitoring_positioning": "\u30db\u30fc\u30e0\u30ac\u30fc\u30c9\u958b\u59cb\u70b9\u306e\u8a2d\u5b9a",
+                    "night_dry": "\u591c\u9593\u4e7e\u71e5",
+                    "oven_setting": "\u30af\u30c3\u30af\u30c8\u30c3\u30d7\u63a5\u7d9a",
+                    "pause": "\u4e00\u6642\u505c\u6b62",
+                    "paused": "\u4e00\u6642\u505c\u6b62",
+                    "power_fail": "\u96fb\u6e90\u969c\u5bb3",
+                    "power_off": "\u30aa\u30d5",
+                    "power_on": "\u30aa\u30f3",
+                    "preference": "\u8a2d\u5b9a",
+                    "preheat": "\u4e88\u71b1",
+                    "preheat_complete": "\u4e88\u71b1\u5b8c\u4e86",
+                    "preheating": "\u4e88\u71b1",
+                    "preheating_is_done": "\u4e88\u71b1\u5b8c\u4e86",
+                    "prepareing_fermentation": "\u73fe\u5728\u6e96\u5099\u4e2d",
+                    "presteam": "\u30b9\u30c1\u30fc\u30e0\u6e96\u5099\u5b8c\u4e86",
+                    "prewash": "\u4e88\u6d17\u3044",
+                    "proofing": "\u30d7\u30eb\u30fc\u30d5\u30a3\u30f3\u30b0",
+                    "refreshing": "\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5",
+                    "reservation": "\u30ea\u30e2\u30fc\u30c8\u4f7f\u7528\u4e2d",
+                    "reserved": "\u9045\u5ef6\u8a2d\u5b9a",
+                    "rinse_hold": "\u3059\u3059\u304e\u5f85\u3061",
+                    "rinsing": "\u3059\u3059\u304e",
+                    "running": "\u5b9f\u884c\u4e2d",
+                    "running_end": "\u5b8c\u4e86",
+                    "setdate": "\u30ea\u30e2\u30fc\u30c8\u4f7f\u7528\u4e2d",
+                    "shoes_module": "\u9774\u306e\u4e7e\u71e5",
+                    "sleep": "\u30b9\u30ea\u30fc\u30d7\u30e2\u30fc\u30c9\u6642",
+                    "smart_grid_run": "\u30b9\u30de\u30fc\u30c8\u30b0\u30ea\u30c3\u30c9\u306e\u5b9f\u884c",
+                    "soaking": "\u6d78\u3059",
+                    "softening": "\u67d4\u8edf\u5264",
+                    "spinning": "\u7d21\u7e3e",
+                    "standby": "\u30b9\u30bf\u30f3\u30d0\u30a4",
+                    "stay": "\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5",
+                    "steam": "\u30ea\u30d5\u30ec\u30c3\u30b7\u30e5",
+                    "steam_softening": "\u30b9\u30c1\u30fc\u30e0\u30bd\u30d5\u30cb\u30f3\u30b0",
+                    "sterilize": "\u6bba\u83cc\u3059\u308b",
+                    "temperature_stabilization": "\u6e29\u5ea6\u8abf\u6574",
+                    "working": "\u30af\u30ea\u30fc\u30cb\u30f3\u30b0",
+                    "wrinkle_care": "\u3057\u308f\u30b1\u30a2"
+                }
+            },
+            "current_temperature": {
+                "name": "\u73fe\u5728\u306e\u6e29\u5ea6"
+            },
+            "day_target_temperature": {
+                "name": "\u65e5\u6210\u9577\u6e29\u5ea6"
+            },
+            "day_target_temperature_for_location": {
+                "name": "{location} \u65e5\u6210\u9577\u6e29\u5ea6"
+            },
+            "duration": {
+                "name": "\u70b9\u706f\u6642\u9593"
+            },
+            "duration_for_location": {
+                "name": "{location} \u70b9\u706f\u6642\u9593"
+            },
+            "elapsed_day_state": {
+                "name": "\u91b8\u9020\u671f\u9593"
+            },
+            "elapsed_day_total": {
+                "name": "\u91b8\u9020\u671f\u9593"
+            },
+            "filter_lifetime": {
+                "name": "\u30d5\u30a3\u30eb\u30bf\u30fc\u6b8b\u91cf"
+            },
+            "flavor_info": {
+                "name": "\u98a8\u5473"
+            },
+            "fresh_air_filter": {
+                "name": "\u30d5\u30ec\u30c3\u30b7\u30e5\u30a8\u30a2\u30d5\u30a3\u30eb\u30bf\u30fc",
+                "state": {
+                    "auto": "\u81ea\u52d5",
+                    "off": "\u30aa\u30d5",
+                    "power": "\u30d1\u30ef\u30fc",
+                    "replace": "\u30d5\u30a3\u30eb\u30bf\u30fc\u306e\u4ea4\u63db",
+                    "smart_off": "\u30aa\u30d5",
+                    "smart_on": "\u30b9\u30de\u30fc\u30c8\u306a\u5b89\u5168\u4fdd\u7ba1",
+                    "smart_power": "\u30b9\u30de\u30fc\u30c8\u306a\u5b89\u5168\u4fdd\u7ba1"
+                }
+            },
+            "growth_mode": {
+                "name": "\u30e2\u30fc\u30c9",
+                "state": {
+                    "ext_expert": "\u30ab\u30b9\u30bf\u30e0\u6210\u9577\u30e2\u30fc\u30c9",
+                    "ext_flower": "\u82b1",
+                    "ext_herb": "\u30cf\u30fc\u30d6",
+                    "ext_leaf": "\u91ce\u83dc",
+                    "standard": "\u81ea\u52d5"
+                }
+            },
+            "growth_mode_for_location": {
+                "name": "{location}\u30e2\u30fc\u30c9",
+                "state": {
+                    "ext_expert": "\u30ab\u30b9\u30bf\u30e0\u6210\u9577\u30e2\u30fc\u30c9",
+                    "ext_flower": "\u82b1",
+                    "ext_herb": "\u30cf\u30fc\u30d6",
+                    "ext_leaf": "\u91ce\u83dc",
+                    "standard": "\u81ea\u52d5"
+                }
+            },
+            "hop_oil_info": {
+                "name": "\u30db\u30c3\u30d7"
+            },
+            "light_start": {
+                "name": "\u70b9\u706f\u6642\u9593"
+            },
+            "light_start_for_location": {
+                "name": "{location} \u70b9\u706f\u6642\u9593"
+            },
+            "monitoring_enabled": {
+                "name": "\u7a7a\u6c17\u8cea\u30bb\u30f3\u30b5\u30fc",
+                "state": {
+                    "always": "\u5e38\u306b\u30aa\u30f3",
+                    "on_working": "\u88fd\u54c1\u3068\u4e00\u7dd2\u306b\u30aa\u30f3"
+                }
+            },
+            "night_target_temperature": {
+                "name": "\u591c\u9593\u6210\u9577\u6e29\u5ea6"
+            },
+            "night_target_temperature_for_location": {
+                "name": "{location}\u591c\u9593\u6210\u9577\u6e29\u5ea6"
+            },
+            "odor_level": {
+                "name": "\u81ed\u6c17",
+                "state": {
+                    "invalid": "\u7121\u52b9",
+                    "normal": "\u30ce\u30fc\u30de\u30eb",
+                    "strong": "\u5f37\u3044",
+                    "very_strong": "\u975e\u5e38\u306b\u5f37\u3044",
+                    "weak": "\u5f31\u3044"
+                }
+            },
+            "personalization_mode": {
+                "name": "\u30d1\u30fc\u30bd\u30ca\u30eb\u30e2\u30fc\u30c9",
+                "state": {
+                    "auto_inside": "\u81ea\u52d5\u30e2\u30fc\u30c9",
+                    "auto_outside": "\u30a4\u30f3\u30bf\u30fc\u30ed\u30c3\u30af\u30e2\u30fc\u30c9",
+                    "baby": "\u30d9\u30d3\u30fc\u30b1\u30a2\u30e2\u30fc\u30c9",
+                    "cooking": "\u8abf\u7406\u30e2\u30fc\u30c9",
+                    "exercise": "\u30a8\u30af\u30b5\u30b5\u30a4\u30ba\u30e2\u30fc\u30c9",
+                    "others": "\u305d\u306e\u4ed6",
+                    "pet": "\u30da\u30c3\u30c8\u30e2\u30fc\u30c9",
+                    "sick_house": "\u65b0\u3057\u3044\u30db\u30fc\u30e0\u30e2\u30fc\u30c9",
+                    "sleep": "\u30b9\u30ea\u30fc\u30d7\u30e2\u30fc\u30c9",
+                    "smoke": "\u30b9\u30e2\u30fc\u30af\u30e2\u30fc\u30c9"
+                }
+            },
+            "power_level": {
+                "name": "\u96fb\u529b\u30ec\u30d9\u30eb"
+            },
+            "power_level_for_location": {
+                "name": "{location}\u96fb\u529b\u30ec\u30d9\u30eb"
+            },
+            "recipe_name": {
+                "name": "\u81ea\u5bb6\u88fd\u30ec\u30b7\u30d4",
+                "state": {
+                    "ipa": "IPA",
+                    "my_recipe": "\u79c1\u306e\u30ec\u30b7\u30d4",
+                    "pale_ale": "\u30da\u30fc\u30eb\u30a8\u30fc\u30eb",
+                    "pilsner": "\u30d4\u30eb\u30b9\u30ca\u30fc",
+                    "red_ale": "\u30ec\u30c3\u30c9\u30a8\u30fc\u30eb",
+                    "stout": "\u30b9\u30bf\u30a6\u30c8",
+                    "wheat": "\u5c0f\u9ea6"
+                }
+            },
+            "relative_to_start": {
+                "name": "\u96fb\u6e90\u6295\u5165\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb"
+            },
+            "relative_to_start_for_location": {
+                "name": "{location}\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u3092\u30aa\u30f3\u306b\u3059\u308b"
+            },
+            "relative_to_start_wm": {
+                "name": "\u9045\u5ef6\u958b\u59cb"
+            },
+            "relative_to_start_wm_for_location": {
+                "name": "{location} \u9045\u5ef6\u958b\u59cb"
+            },
+            "relative_to_stop": {
+                "name": "\u96fb\u6e90\u30aa\u30d5\u306e\u30b9\u30b1\u30b8\u30e5\u30fc\u30eb"
+            },
+            "relative_to_stop_for_location": {
+                "name": "{location} \u30b9\u30b1\u30b8\u30e5\u30fc\u30eb\u306e\u30aa\u30d5"
+            },
+            "relative_to_stop_wm": {
+                "name": "\u9045\u5ef6\u7d42\u4e86"
+            },
+            "relative_to_stop_wm_for_location": {
+                "name": "{location} \u9045\u5ef6\u7d42\u4e86"
+            },
+            "remain": {
+                "name": "\u6b8b\u308a\u6642\u9593"
+            },
+            "remain_for_location": {
+                "name": "{location}\u6b8b\u308a\u6642\u9593"
+            },
+            "rinse_level": {
+                "name": "\u30ea\u30f3\u30b9\u5264\u30c7\u30a3\u30b9\u30da\u30f3\u30b5\u30fc\u30ec\u30d9\u30eb",
+                "state": {
+                    "rinselevel_0": "0",
+                    "rinselevel_1": "1",
+                    "rinselevel_2": "2",
+                    "rinselevel_3": "3",
+                    "rinselevel_4": "4"
+                }
+            },
+            "running": {
+                "name": "\u5b9f\u884c\u6642\u9593"
+            },
+            "running_for_location": {
+                "name": "{location}\u5b9f\u884c\u6642\u9593"
+            },
+            "sleep_timer_relative_to_stop": {
+                "name": "\u30b9\u30ea\u30fc\u30d7\u30bf\u30a4\u30de\u30fc"
+            },
+            "sleep_timer_relative_to_stop_for_location": {
+                "name": "{location}\u30b9\u30ea\u30fc\u30d7\u30bf\u30a4\u30de\u30fc"
+            },
+            "softening_level": {
+                "name": "\u8edf\u5316\u30ec\u30d9\u30eb",
+                "state": {
+                    "softeninglevel_1": "1",
+                    "softeninglevel_2": "2",
+                    "softeninglevel_3": "3",
+                    "softeninglevel_4": "4"
+                }
+            },
+            "sterilizing_state": {
+                "name": "\u9ad8\u6e29\u6bba\u83cc",
+                "state": {
+                    "cancel": "\u30ad\u30e3\u30f3\u30bb\u30eb",
+                    "off": "\u30aa\u30d5",
+                    "on": "\u6bba\u83cc"
+                }
+            },
+            "target": {
+                "name": "\u8abf\u7406\u6642\u9593"
+            },
+            "target_for_location": {
+                "name": "{location}\u8abf\u7406\u6642\u9593"
+            },
+            "target_temperature": {
+                "name": "\u6e29\u5ea6",
+                "state": {
+                    "freezer": "\u51b7\u51cd\u5eab",
+                    "fridge": "\u51b7\u8535\u5eab",
+                    "kimchi": "\u30ad\u30e0\u30c1",
+                    "meat_fish": "\u8089/\u9b5a",
+                    "off": "\u30aa\u30d5",
+                    "rice_grain": "\u7c73/\u7a40\u7269",
+                    "storage": "\u30b9\u30c8\u30ec\u30fc\u30b8",
+                    "temperature_number": "\u756a\u53f7",
+                    "vegetable_fruit": "\u91ce\u83dc/\u679c\u7269"
+                }
+            },
+            "target_temperature_for_location": {
+                "name": "{location}\u6c17\u6e29",
+                "state": {
+                    "freezer": "\u51b7\u51cd\u5eab",
+                    "fridge": "\u51b7\u8535\u5eab",
+                    "kimchi": "\u30ad\u30e0\u30c1",
+                    "meat_fish": "\u8089/\u9b5a",
+                    "off": "\u30aa\u30d5",
+                    "rice_grain": "\u7c73/\u7a40\u7269",
+                    "storage": "\u30b9\u30c8\u30ec\u30fc\u30b8",
+                    "temperature_number": "\u756a\u53f7",
+                    "vegetable_fruit": "\u91ce\u83dc/\u679c\u7269"
+                }
+            },
+            "temperature": {
+                "name": "\u6e29\u5ea6"
+            },
+            "temperature_state": {
+                "name": "\u6e29\u5ea6",
+                "state": {
+                    "high": "\u9ad8",
+                    "low": "\u4f4e",
+                    "normal": "\u826f\u3044"
+                }
+            },
+            "temperature_state_for_location": {
+                "name": "{location}\u6c17\u6e29",
+                "state": {
+                    "high": "\u9ad8",
+                    "low": "\u4f4e",
+                    "normal": "\u826f\u3044"
+                }
+            },
+            "total": {
+                "name": "\u5408\u8a08\u6642\u9593"
+            },
+            "total_for_location": {
+                "name": "{location}\u5408\u8a08\u6642\u9593"
+            },
+            "total_pollution_level": {
+                "name": "\u5168\u4f53\u7684\u306a\u7a7a\u6c17\u306e\u8cea",
+                "state": {
+                    "bad": "\u4e0d\u5065\u5eb7",
+                    "good": "\u826f\u3044",
+                    "invalid": "\u7121\u52b9",
+                    "normal": "\u9069\u5ea6",
+                    "very_bad": "\u60aa\u3044"
+                }
+            },
+            "used_time": {
+                "name": "\u4f7f\u7528\u3057\u305f\u6c34\u30d5\u30a3\u30eb\u30bf\u30fc"
+            },
+            "water_type": {
+                "name": "\u30bf\u30a4\u30d7"
+            },
+            "wind_volume_for_location": {
+                "name": "{location}\u98a8\u901f"
+            },
+            "wort_info": {
+                "name": "\u9ea6\u6c41",
+                "state": {
+                    "dark": "\u30c0\u30fc\u30af",
+                    "deep_gold": "\u30c7\u30a3\u30fc\u30d7\u30b4\u30fc\u30eb\u30c9",
+                    "hoppy": "\u30db\u30c3\u30d4\u30fc",
+                    "wheat": "\u5c0f\u9ea6"
+                }
+            },
+            "yeast_info": {
+                "name": "\u30a4\u30fc\u30b9\u30c8",
+                "state": {
+                    "american_ale": "\u30a2\u30e1\u30ea\u30ab\u30f3\u30a8\u30fc\u30eb",
+                    "english_ale": "\u30a4\u30f3\u30b0\u30ea\u30c3\u30b7\u30e5\u30a8\u30fc\u30eb",
+                    "lager": "\u30e9\u30ac\u30fc",
+                    "weizen": "\u5c0f\u9ea6"
+                }
+            }
+        },
+        "switch": {
+            "auto_mode": {
+                "name": "\u81ea\u52d5\u30e2\u30fc\u30c9"
+            },
+            "express_mode": {
+                "name": "\u30a2\u30a4\u30b9\u30d7\u30e9\u30b9"
+            },
+            "hot_water_mode": {
+                "name": "\u6e29\u6c34"
+            },
+            "humidity_warm_mode": {
+                "name": "\u6696\u304b\u3044\u30df\u30b9\u30c8"
+            },
+            "hygiene_dry_mode": {
+                "name": "\u4e7e\u71e5\u30e2\u30fc\u30c9"
+            },
+            "mood_lamp_state": {
+                "name": "\u30e0\u30fc\u30c9\u30e9\u30a4\u30c8"
+            },
+            "operation_power": {
+                "name": "\u30d1\u30ef\u30fc"
+            },
+            "optimal_humidity": {
+                "name": "\u63db\u6c17"
+            },
+            "power_save_enabled": {
+                "name": "\u7701\u30a8\u30cd\u30eb\u30ae\u30fc"
+            },
+            "rapid_freeze": {
+                "name": "\u6025\u901f\u51b7\u51cd"
+            },
+            "sleep_mode": {
+                "name": "\u30b9\u30ea\u30fc\u30d7\u30e2\u30fc\u30c9"
+            },
+            "uv_nano": {
+                "name": "UV\u30ca\u30ce"
+            },
+            "warm_mode": {
+                "name": "\u6696\u623f"
+            }
+        }
+    }
+}

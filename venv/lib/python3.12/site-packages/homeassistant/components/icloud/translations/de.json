@@ -1,0 +1,116 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto ist bereits konfiguriert",
+            "no_device": "Auf keinem deiner Ger\u00e4te ist \u201eWo ist?\u201c aktiviert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "error": {
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "send_verification_code": "Senden des Best\u00e4tigungscodes fehlgeschlagen",
+            "validate_verification_code": "Verifizierung des Best\u00e4tigungscodes fehlgeschlagen, erneut versuchen."
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "App-spezifisches Passwort"
+                },
+                "description": "Dein zuvor eingegebenes Passwort f\u00fcr {username} funktioniert nicht mehr. Aktualisiere dein Passwort, um diese Integration weiterhin zu verwenden.",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            },
+            "trusted_device": {
+                "data": {
+                    "trusted_device": "Vertrauensw\u00fcrdiges Ger\u00e4t"
+                },
+                "description": "W\u00e4hle dein vertrauensw\u00fcrdiges Ger\u00e4t aus",
+                "title": "iCloud vertrauensw\u00fcrdiges Ger\u00e4t"
+            },
+            "user": {
+                "data": {
+                    "password": "App-spezifisches Passwort",
+                    "username": "E-Mail",
+                    "with_family": "Mit Familie"
+                },
+                "description": "Gib deine Anmeldedaten ein",
+                "title": "iCloud-Anmeldedaten"
+            },
+            "verification_code": {
+                "data": {
+                    "verification_code": "Best\u00e4tigungscode"
+                },
+                "description": "Bitte gib den Best\u00e4tigungscode ein, den du gerade von iCloud erhalten hast",
+                "title": "iCloud-Best\u00e4tigungscode"
+            }
+        }
+    },
+    "services": {
+        "display_message": {
+            "description": "Zeigt eine Nachricht auf einem Apple-Ger\u00e4t an.",
+            "fields": {
+                "account": {
+                    "description": "Dein iCloud-Konto-Benutzername (E-Mail) oder Kontoname.",
+                    "name": "Konto"
+                },
+                "device_name": {
+                    "description": "Der Name des Apple-Ger\u00e4ts, auf dem die Nachricht angezeigt werden soll.",
+                    "name": "Ger\u00e4tename"
+                },
+                "message": {
+                    "description": "Der Inhalt deiner Nachricht.",
+                    "name": "Nachricht"
+                },
+                "sound": {
+                    "description": "Um beim Anzeigen der Nachricht einen Ton zu erzeugen.",
+                    "name": "Ton"
+                }
+            },
+            "name": "Nachricht anzeigen"
+        },
+        "lost_device": {
+            "description": "Versetzt ein Apple-Ger\u00e4t in den Verloren-Zustand.",
+            "fields": {
+                "account": {
+                    "description": "Dein iCloud-Konto-Benutzername (E-Mail) oder Kontoname.",
+                    "name": "Konto"
+                },
+                "device_name": {
+                    "description": "Der Name des Apple-Ger\u00e4ts, das als verloren gekennzeichnet werden soll.",
+                    "name": "Ger\u00e4tename"
+                },
+                "message": {
+                    "description": "Die Nachricht, die im Verloren-Modus angezeigt werden soll.",
+                    "name": "Nachricht"
+                },
+                "number": {
+                    "description": "Die Telefonnummer, die im Verloren-Modus angerufen werden soll (muss die Landesvorwahl enthalten).",
+                    "name": "Rufnummer"
+                }
+            },
+            "name": "Ger\u00e4t verloren"
+        },
+        "play_sound": {
+            "description": "Spielt den \u201eGer\u00e4t verloren\u201c-Ton auf einem Apple-Ger\u00e4t ab.",
+            "fields": {
+                "account": {
+                    "description": "Dein iCloud-Konto-Benutzername (E-Mail) oder Kontoname.",
+                    "name": "Konto"
+                },
+                "device_name": {
+                    "description": "Der Name des Apple-Ger\u00e4ts, auf dem der Ton abgespielt werden soll.",
+                    "name": "Ger\u00e4tename"
+                }
+            },
+            "name": "Ton abspielen"
+        },
+        "update": {
+            "description": "Aktualisiert iCloud-Ger\u00e4te.",
+            "fields": {
+                "account": {
+                    "description": "Dein iCloud-Konto-Benutzername (E-Mail) oder Kontoname.",
+                    "name": "Konto"
+                }
+            },
+            "name": "Aktualisieren"
+        }
+    }
+}

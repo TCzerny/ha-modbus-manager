@@ -1,0 +1,53 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "no_devices_found": "Nenhum dispositivo encontrado na rede"
+        },
+        "flow_title": "{name}",
+        "progress": {
+            "wait_for_pairing_mode": "Para concluir a configura\u00e7\u00e3o, coloque este dispositivo no modo de emparelhamento.\n\n### Como entrar no modo de emparelhamento\n1. Force a sa\u00edda das aplica\u00e7\u00f5es m\u00f3veis SNOOZ.\n2. Pressione e mantenha pressionado o bot\u00e3o de ligar do dispositivo. Solte quando as luzes come\u00e7arem a piscar (aproximadamente 5 segundos)."
+        },
+        "step": {
+            "bluetooth_confirm": {
+                "description": "Pretende configurar {name}?"
+            },
+            "pairing_timeout": {
+                "description": "O dispositivo n\u00e3o entrou no modo de emparelhamento. Selecione Submeter para tentar novamente.\n\n### Resolu\u00e7\u00e3o de problemas\n1. Verifique se o dispositivo n\u00e3o est\u00e1 conectado \u00e0 aplica\u00e7\u00e3o m\u00f3vel.\n2. Desligue o dispositivo durante 5 segundos e, em seguida, volte a lig\u00e1-lo."
+            },
+            "user": {
+                "data": {
+                    "address": "Dispositivo"
+                },
+                "description": "Escolher um dispositivo para configurar"
+            }
+        }
+    },
+    "services": {
+        "transition_off": {
+            "description": "O volume das transi\u00e7\u00f5es diminui com o tempo.",
+            "fields": {
+                "duration": {
+                    "description": "Tempo que demora a desligar-se.",
+                    "name": "Dura\u00e7\u00e3o da transi\u00e7\u00e3o"
+                }
+            },
+            "name": "Transi\u00e7\u00e3o desligada"
+        },
+        "transition_on": {
+            "description": "Transi\u00e7\u00f5es para um n\u00edvel de volume alvo ao longo do tempo.",
+            "fields": {
+                "duration": {
+                    "description": "Tempo necess\u00e1rio para atingir o n\u00edvel de volume pretendido.",
+                    "name": "Dura\u00e7\u00e3o da transi\u00e7\u00e3o"
+                },
+                "volume": {
+                    "description": "Se n\u00e3o for especificado, o n\u00edvel de volume \u00e9 lido a partir do dispositivo.",
+                    "name": "Volume alvo"
+                }
+            },
+            "name": "Transi\u00e7\u00e3o ligada"
+        }
+    }
+}

@@ -1,0 +1,395 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Za\u0159\u00edzen\u00ed je ji\u017e nastaveno",
+            "invalid_host": "Neplatn\u00fd hostitel nebo IP adresa",
+            "reconfigure_successful": "P\u0159enastaven\u00ed bylo \u00fasp\u011b\u0161n\u00e9",
+            "unique_id_mismatch": "Identifik\u00e1tor se neshoduje s p\u0159edchoz\u00edm identifik\u00e1torem"
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "unknown": "Neo\u010dek\u00e1van\u00e1 chyba"
+        },
+        "flow_title": "{device}",
+        "step": {
+            "confirm_discovery": {
+                "description": "Chcete p\u0159idat {device} do Home Assistanta?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Hostitel"
+                },
+                "data_description": {
+                    "host": "IP adresa nebo n\u00e1zev hostitele va\u0161eho za\u0159\u00edzen\u00ed Fronius."
+                },
+                "description": "Aktualizujte informace o nastaven\u00ed pro {device}."
+            },
+            "user": {
+                "data": {
+                    "host": "Hostitel"
+                },
+                "data_description": {
+                    "host": "IP adresa nebo n\u00e1zev hostitele va\u0161eho za\u0159\u00edzen\u00ed Fronius."
+                },
+                "description": "Nastavit za\u0159\u00edzen\u00ed Fronius SolarAPI."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "capacity_designed": {
+                "name": "Projektovan\u00e1 kapacita"
+            },
+            "capacity_maximum": {
+                "name": "Maxim\u00e1ln\u00ed kapacita"
+            },
+            "cash_factor": {
+                "name": "Sazba dod\u00e1vky do s\u00edt\u011b"
+            },
+            "co2_factor": {
+                "name": "Faktor CO\u2082"
+            },
+            "current_ac": {
+                "name": "Proud AC"
+            },
+            "current_ac_phase_1": {
+                "name": "F\u00e1ze 1"
+            },
+            "current_ac_phase_2": {
+                "name": "F\u00e1ze 2"
+            },
+            "current_ac_phase_3": {
+                "name": "F\u00e1ze 3"
+            },
+            "current_dc": {
+                "name": "Proud DC"
+            },
+            "current_dc_2": {
+                "name": "Proud DC 2"
+            },
+            "delivery_factor": {
+                "name": "Sazba odb\u011bru ze s\u00edt\u011b"
+            },
+            "energy_day": {
+                "name": "Energetick\u00fd den"
+            },
+            "energy_reactive_ac_consumed": {
+                "name": "Spot\u0159ebovan\u00e1 jalov\u00e1 energie"
+            },
+            "energy_reactive_ac_produced": {
+                "name": "Vyroben\u00e1 jalov\u00e1 energie"
+            },
+            "energy_real_ac_consumed": {
+                "name": "Spot\u0159ebovan\u00e1 energie"
+            },
+            "energy_real_ac_minus": {
+                "name": "Skute\u010dn\u00e1 energie m\u00ednus"
+            },
+            "energy_real_ac_plus": {
+                "name": "Skute\u010dn\u00e1 energie plus"
+            },
+            "energy_real_consumed": {
+                "name": "Skute\u010dn\u00e1 spot\u0159ebovan\u00e1 energie"
+            },
+            "energy_real_produced": {
+                "name": "Skute\u010dn\u00e1 vyroben\u00e1 energie"
+            },
+            "energy_total": {
+                "name": "Celkov\u00e1 energie"
+            },
+            "energy_year": {
+                "name": "Energie ro\u010dn\u011b"
+            },
+            "error_code": {
+                "name": "K\u00f3d chyby"
+            },
+            "error_message": {
+                "name": "Chybov\u00e1 zpr\u00e1va",
+                "state": {
+                    "ac_current_sensor_error": "Chyba sn\u00edma\u010de st\u0159\u00eddav\u00e9ho proudu",
+                    "ac_frequency_too_high": "Frekvence st\u0159\u00eddav\u00e9ho proudu je p\u0159\u00edli\u0161 vysok\u00e1",
+                    "ac_frequency_too_low": "Frekvence st\u0159\u00eddav\u00e9ho proudu je p\u0159\u00edli\u0161 n\u00edzk\u00e1",
+                    "ac_grid_outside_permissible_limits": "S\u00ed\u0165 st\u0159\u00eddav\u00e9ho proudu mimo p\u0159\u00edpustn\u00e9 meze",
+                    "ac_module_over_temperature": "P\u0159eh\u0159\u00e1t\u00ed modulu st\u0159\u00eddav\u00e9ho proudu",
+                    "ac_module_temperature_sensor_faulty_l1": "Vadn\u00fd sn\u00edma\u010d teploty modulu st\u0159\u00eddav\u00e9ho proudu (L1)",
+                    "ac_module_temperature_sensor_faulty_l2": "Vadn\u00fd sn\u00edma\u010d teploty modulu st\u0159\u00eddav\u00e9ho proudu (L2)",
+                    "ac_module_temperature_sensor_faulty_l3": "Vadn\u00fd sn\u00edma\u010d teploty modulu st\u0159\u00eddav\u00e9ho proudu (L3)",
+                    "ac_voltage_too_high": "P\u0159\u00edli\u0161 vysok\u00e9 st\u0159\u00eddav\u00e9 nap\u011bt\u00ed",
+                    "ac_voltage_too_low": "P\u0159\u00edli\u0161 n\u00edzk\u00e9 st\u0159\u00eddav\u00e9 nap\u011bt\u00ed",
+                    "arc_detection_triggered": "Detekce oblouku spu\u0161t\u011bna",
+                    "arc_detector_switched_off": "Detektor oblouku vypnut\u00fd (nap\u0159. p\u0159i extern\u00edm monitorov\u00e1n\u00ed oblouku)",
+                    "can_bus_full": "Sb\u011brnice CAN je pln\u00e1",
+                    "communication": "Chyba komunikace",
+                    "compatibility_error_invalid_power_stage_configuration": "Chyba kompatibility (nap\u0159. z d\u016fvodu v\u00fdm\u011bny PC desky) - neplatn\u00e9 nastaven\u00ed v\u00fdkonov\u00e9ho d\u00edlu",
+                    "current_sensor_calibration_timeout": "\u010casov\u00fd limit kalibrace sn\u00edma\u010de proudu",
+                    "dc_component_measured_in_grid_too_high": "P\u0159\u00edli\u0161 vysok\u00e1 stejnosm\u011brn\u00e1 slo\u017eka nam\u011b\u0159en\u00e1 v s\u00edti",
+                    "dc_connection_inverter_battery_interrupted": "P\u0159eru\u0161en\u00ed stejnosm\u011brn\u00e9ho spojen\u00ed mezi m\u011bni\u010dem a bateri\u00ed",
+                    "dc_input_voltage_mppt_1_too_high": "P\u0159\u00edli\u0161 vysok\u00e9 vstupn\u00ed stejnosm\u011brn\u00e9 nap\u011bt\u00ed MPPT 1",
+                    "dc_input_voltage_mppt_2_too_high": "P\u0159\u00edli\u0161 vysok\u00e9 vstupn\u00ed stejnosm\u011brn\u00e9 nap\u011bt\u00ed MPPT 2",
+                    "dc_low_string_1": "Stejnosm\u011brn\u00fd n\u00edzk\u00fd string 1",
+                    "dc_low_string_2": "Stejnosm\u011brn\u00fd n\u00edzk\u00fd string 2",
+                    "dc_module_over_temperature": "P\u0159eh\u0159\u00e1t\u00ed stejnosm\u011brn\u00e9ho modulu",
+                    "dc_module_temperature_sensor_faulty": "Vadn\u00e9 \u010didlo teploty stejnosm\u011brn\u00e9ho modulu",
+                    "derating_caused_by_over_frequency": "Sn\u00ed\u017een\u00ed v\u00fdkonu zp\u016fsoben\u00e9 nadm\u011brnou frekvenc\u00ed",
+                    "different_power_limitation_in_hardware_modules": "R\u016fzn\u00e9 omezen\u00ed v\u00fdkonu v hardwarov\u00fdch modulech",
+                    "eeprom_reinitialised": "EEPROM byla znovu inicializov\u00e1na",
+                    "emergency_power_derating_activated": "Aktivov\u00e1no nouzov\u00e9 sn\u00ed\u017een\u00ed v\u00fdkonu",
+                    "error_during_logging_data_recording": "Chyba p\u0159i z\u00e1znamu dat protokolu",
+                    "error_during_update_process": "B\u011bhem procesu aktualizace do\u0161lo k chyb\u011b",
+                    "fan_1_error": "Chyba ventil\u00e1toru 1",
+                    "fan_2_error": "Chyba ventil\u00e1toru 2",
+                    "file_could_not_be_opened": "Soubor nelze otev\u0159\u00edt",
+                    "fixed_voltage_mode_out_of_range": "M\u00edsto re\u017eimu nap\u011bt\u00ed MPP byl zvolen re\u017eim pevn\u00e9ho nap\u011bt\u00ed a pevn\u00e9 nap\u011bt\u00ed bylo nastaveno na p\u0159\u00edli\u0161 n\u00edzkou nebo p\u0159\u00edli\u0161 vysokou hodnotu",
+                    "functional_incompatibility_between_pc_boards": "Funk\u010dn\u00ed nekompatibilita (jedna nebo v\u00edce PC desek ve st\u0159\u00edda\u010di nejsou vz\u00e1jemn\u011b kompatibiln\u00ed, nap\u0159. po v\u00fdm\u011bn\u011b PC desky)",
+                    "grid_frequency_exceeded_limit_reconnecting": "S\u00ed\u0165ov\u00e1 frekvence p\u0159i op\u011btovn\u00e9m p\u0159ipojen\u00ed p\u0159ekro\u010dila mezn\u00ed hodnotu",
+                    "grid_voltage_dependent_power_reduction_active": "Sn\u00ed\u017een\u00ed v\u00fdkonu v z\u00e1vislosti na nap\u011bt\u00ed v s\u00edti je aktivn\u00ed",
+                    "guard_cannot_be_found": "Ochranu nelze naj\u00edt",
+                    "hardware_id_problem": "Probl\u00e9m ID hardwaru",
+                    "hid_range_error": "Chyba rozsahu HID",
+                    "initialisation_error_file_system_error_on_usb": "Chyba inicializace v syst\u00e9mu soubor\u016f na USB flash disku",
+                    "initialisation_error_usb_flash_drive_not_supported": "Chyba inicializace - USB flash disk nen\u00ed podporov\u00e1n",
+                    "initialisation_error_usb_stick_over_current": "Chyba inicializace - nadm\u011brn\u00fd proud na USB flash disku",
+                    "insulation_error_on_solar_panels": "Chyba izolace na sol\u00e1rn\u00edch panelech",
+                    "insulation_fault": "Chyba izolace",
+                    "insulation_measurement_triggered": "Bylo spu\u0161t\u011bno m\u011b\u0159en\u00ed izolace",
+                    "intermediate_circuit_voltage_too_high": "Nap\u011bt\u00ed meziobvodu je p\u0159\u00edli\u0161 vysok\u00e9",
+                    "intermediate_circuit_voltage_too_low_or_asymmetric": "Nap\u011bt\u00ed meziobvodu je p\u0159\u00edli\u0161 n\u00edzk\u00e9 nebo asymetrick\u00e9",
+                    "internal_dsp_malfunction": "Vnit\u0159n\u00ed porucha DSP",
+                    "internal_hardware_error": "Vnit\u0159n\u00ed hardwarov\u00e1 chyba",
+                    "internal_processor_status": "Upozorn\u011bn\u00ed na vnit\u0159n\u00ed stav procesoru. Dal\u0161\u00ed informace viz stavov\u00fd k\u00f3d.",
+                    "interrupt_check_fail": "Selh\u00e1n\u00ed kontroly p\u0159eru\u0161en\u00ed",
+                    "invalid_device_type": "Neplatn\u00fd typ za\u0159\u00edzen\u00ed",
+                    "inverter_required_setup_values_not_received": "Nebylo mo\u017en\u00e9 p\u0159ijmout po\u017eadovan\u00e9 hodnoty nastaven\u00ed m\u011bni\u010de",
+                    "inverter_settings_changed_restart_required": "Nastaven\u00ed st\u0159\u00edda\u010de byla zm\u011bn\u011bna, je nutn\u00fd restart st\u0159\u00edda\u010de",
+                    "log_file_cannot_be_saved": "Soubor protokolu nelze ulo\u017eit (nap\u0159. USB flash disk je chr\u00e1n\u011bn proti z\u00e1pisu nebo je pln\u00fd)",
+                    "low_pv_voltage_dc_input_voltage_too_low": "N\u00edzk\u00e9 nap\u011bt\u00ed FV - stejnosm\u011brn\u00e9 vstupn\u00ed nap\u011bt\u00ed je p\u0159\u00edli\u0161 n\u00edzk\u00e9 pro dod\u00e1v\u00e1n\u00ed energie do s\u00edt\u011b",
+                    "mains_voltage_dependent_power_reduction": "Sn\u00ed\u017een\u00ed v\u00fdkonu z\u00e1visl\u00e9 na s\u00ed\u0165ov\u00e9m nap\u011bt\u00ed",
+                    "memory_error_detected": "Byla zji\u0161t\u011bna chyba pam\u011bti",
+                    "neutral_conductor_not_connected": "Nulov\u00fd vodi\u010d nen\u00ed p\u0159ipojen",
+                    "no_communication_between_power_stage_and_control_system": "Nen\u00ed mo\u017en\u00e1 komunikace mezi v\u00fdkonov\u00fdm d\u00edlem a \u0159\u00eddic\u00edm syst\u00e9mem",
+                    "no_communication_with_filter": "Nen\u00ed mo\u017en\u00e1 komunikace s filtrem",
+                    "no_communication_with_hybrid_manager": "Nen\u00ed mo\u017en\u00e1 komunikace s mana\u017eerem Hybrid",
+                    "no_communication_with_power_stage_set": "Nen\u00ed mo\u017en\u00e1 komunikace s v\u00fdkonov\u00fdm stupn\u011bm",
+                    "no_communication_with_storage_unit": "Nen\u00ed mo\u017en\u00e1 komunikace s jednotkou \u00falo\u017ei\u0161t\u011b",
+                    "no_energy_fed_by_mppt1_past_24_hours": "MPPT1 nedodala za posledn\u00edch 24 hodin do s\u00edt\u011b \u017e\u00e1dnou energii",
+                    "no_energy_fed_into_grid_past_24_hours": "Za posledn\u00edch 24 hodin nebyla do s\u00edt\u011b dod\u00e1na \u017e\u00e1dn\u00e1 energie",
+                    "no_error": "\u017d\u00e1dn\u00e1 chyba",
+                    "no_power_fed_in_despite_closed_relay": "I p\u0159es sepnut\u00e9 rel\u00e9 nen\u00ed p\u0159iv\u00e1d\u011bno \u017e\u00e1dn\u00e9 nap\u00e1jen\u00ed",
+                    "no_usb_flash_drive_connected": "Nen\u00ed p\u0159ipojen \u017e\u00e1dn\u00fd USB flash disk",
+                    "overcurrent_ac": "Nadproud (st\u0159\u00eddav\u00fd)",
+                    "overcurrent_dc": "Nadproud (stejnosm\u011brn\u00fd)",
+                    "overtemperature_in_connection_area": "P\u0159eh\u0159\u00e1t\u00ed v oblasti p\u0159ipojen\u00ed",
+                    "pmc_power_stage_set_not_available": "Sada v\u00fdkonov\u00e9ho stupn\u011b PMC nen\u00ed k dispozici",
+                    "polarity_of_dc_strings_reversed": "Polarita stejnosm\u011brn\u00fdch string\u016f je obr\u00e1cen\u00e1",
+                    "possible_hardware_fault": "Mo\u017en\u00e1 hardwarov\u00e1 chyba",
+                    "power_derating_due_to_high_temperature": "Sn\u00ed\u017een\u00ed v\u00fdkonu zp\u016fsoben\u00e9 p\u0159\u00edli\u0161 vysokou teplotou",
+                    "power_stage_set_problem": "Probl\u00e9m s nastaven\u00edm v\u00fdkonov\u00e9ho stupn\u011b",
+                    "pv_output_too_low_for_feeding_energy_into_the_grid": "P\u0159\u00edli\u0161 n\u00edzk\u00fd v\u00fdkon fotovoltaiky pro dod\u00e1vku energie do s\u00edt\u011b",
+                    "rcmu_error": "Chyba RCMU",
+                    "real_time_clock_communication_error": "Chyba komunikace modulu hodin re\u00e1ln\u00e9ho \u010dasu",
+                    "real_time_clock_hardware_error": "Chyba hardwaru v modulu hodin re\u00e1ln\u00e9ho \u010dasu",
+                    "real_time_clock_in_emergency_mode": "Intern\u00ed chyba: Modul hodin re\u00e1ln\u00e9ho \u010dasu je v nouzov\u00e9m re\u017eimu",
+                    "safety_cut_out_triggered": "Spustilo se bezpe\u010dnostn\u00ed vypnut\u00ed prost\u0159ednictv\u00edm dopl\u0148kov\u00e9 karty nebo RECERBO",
+                    "software_problem": "Probl\u00e9m se softwarem",
+                    "software_update_invalid_country_setup": "Skupina aktualizac\u00ed softwaru 0 (neplatn\u00e9 nastaven\u00ed zem\u011b)",
+                    "stand_alone_operation_detected": "Byl zji\u0161t\u011bn samostatn\u00fd provoz",
+                    "storage_unit_not_available": "\u00dalo\u017en\u00e1 jednotka nen\u00ed k dispozici",
+                    "time_lost": "\u010cas ztr\u00e1ty",
+                    "too_little_dc_power_for_feed_in_operation": "P\u0159\u00edli\u0161 mal\u00fd stejnosm\u011brn\u00fd v\u00fdkon pro provoz s nap\u00e1jen\u00edm",
+                    "unique_id_conflict": "Konflikt unik\u00e1tn\u00edch ID",
+                    "update_file_corrupt": "Aktualiza\u010dn\u00ed soubor je po\u0161kozen",
+                    "update_file_does_not_match_device": "Aktualiza\u010dn\u00ed soubor neodpov\u00edd\u00e1 za\u0159\u00edzen\u00ed. Aktualiza\u010dn\u00ed soubor je p\u0159\u00edli\u0161 star\u00fd.",
+                    "update_file_not_recognised_or_missing": "Aktualiza\u010dn\u00ed soubor nebyl rozpozn\u00e1n nebo nen\u00ed p\u0159\u00edtomen",
+                    "wired_shut_down_triggered": "Bylo spu\u0161t\u011bno vypnut\u00ed kabelem",
+                    "write_or_read_error_occurred": "Do\u0161lo k chyb\u011b z\u00e1pisu nebo \u010dten\u00ed"
+                }
+            },
+            "frequency_phase_average": {
+                "name": "Pr\u016fm\u011br frekvence f\u00e1z\u00ed"
+            },
+            "inverter_state": {
+                "name": "Stav m\u011bni\u010de"
+            },
+            "led_color": {
+                "name": "Barva LED"
+            },
+            "led_state": {
+                "name": "Stav LED"
+            },
+            "meter_location": {
+                "name": "Um\u00edst\u011bn\u00ed m\u011b\u0159i\u010de"
+            },
+            "meter_location_description": {
+                "name": "Popis um\u00edst\u011bn\u00ed m\u011b\u0159i\u010de",
+                "state": {
+                    "consumption_path": "Cesta spot\u0159eby",
+                    "external_battery": "Extern\u00ed baterie",
+                    "external_generator": "Extern\u00ed gener\u00e1tor",
+                    "feed_in": "Propojovac\u00ed bod s\u00edt\u011b",
+                    "subload": "D\u00edl\u010d\u00ed zat\u00ed\u017een\u00ed"
+                }
+            },
+            "meter_mode": {
+                "name": "Re\u017eim m\u011b\u0159i\u010de"
+            },
+            "power_ac": {
+                "name": "Nap\u00e1jen\u00ed AC"
+            },
+            "power_apparent_phase_1": {
+                "name": "Zd\u00e1nliv\u00fd v\u00fdkon - f\u00e1ze 1"
+            },
+            "power_apparent_phase_2": {
+                "name": "Zd\u00e1nliv\u00fd v\u00fdkon - f\u00e1ze 2"
+            },
+            "power_apparent_phase_3": {
+                "name": "Zd\u00e1nliv\u00fd v\u00fdkon - f\u00e1ze 3"
+            },
+            "power_battery": {
+                "name": "Nap\u00e1jec\u00ed baterie"
+            },
+            "power_battery_charge": {
+                "name": "Nab\u00edjen\u00ed nap\u00e1jec\u00ed baterie"
+            },
+            "power_battery_discharge": {
+                "name": "Vyb\u00edjen\u00ed nap\u00e1jec\u00ed baterie"
+            },
+            "power_factor_phase_1": {
+                "name": "\u00da\u010din\u00edk - f\u00e1ze 1"
+            },
+            "power_factor_phase_2": {
+                "name": "\u00da\u010din\u00edk - f\u00e1ze 2"
+            },
+            "power_factor_phase_3": {
+                "name": "\u00da\u010din\u00edk - f\u00e1ze 3"
+            },
+            "power_grid": {
+                "name": "Elektrick\u00e1 s\u00ed\u0165"
+            },
+            "power_grid_export": {
+                "name": "Export do elektrick\u00e9 s\u00edt\u011b"
+            },
+            "power_grid_import": {
+                "name": "Import z elektrick\u00e9 s\u00edt\u011b"
+            },
+            "power_load": {
+                "name": "Zat\u00ed\u017een\u00ed"
+            },
+            "power_load_consumed": {
+                "name": "Spot\u0159ebovan\u00fd v\u00fdkon"
+            },
+            "power_load_generated": {
+                "name": "Vygenerovan\u00e1 v\u00fdkonov\u00e1 z\u00e1t\u011b\u017e"
+            },
+            "power_photovoltaics": {
+                "name": "Silov\u00e1 fotovoltaika"
+            },
+            "power_reactive": {
+                "name": "Jalov\u00fd v\u00fdkon"
+            },
+            "power_reactive_phase_1": {
+                "name": "Jalov\u00fd v\u00fdkon - f\u00e1ze 1"
+            },
+            "power_reactive_phase_2": {
+                "name": "Jalov\u00fd v\u00fdkon - f\u00e1ze 2"
+            },
+            "power_reactive_phase_3": {
+                "name": "Jalov\u00fd v\u00fdkon - f\u00e1ze 3"
+            },
+            "power_real": {
+                "name": "Skute\u010dn\u00fd v\u00fdkon"
+            },
+            "power_real_phase_1": {
+                "name": "Skute\u010dn\u00fd v\u00fdkon - f\u00e1ze 1"
+            },
+            "power_real_phase_2": {
+                "name": "Skute\u010dn\u00fd v\u00fdkon - f\u00e1ze 2"
+            },
+            "power_real_phase_3": {
+                "name": "Skute\u010dn\u00fd v\u00fdkon - f\u00e1ze 3"
+            },
+            "relative_autonomy": {
+                "name": "Relativn\u00ed autonomie"
+            },
+            "relative_self_consumption": {
+                "name": "Relativn\u00ed vlastn\u00ed spot\u0159eba"
+            },
+            "state_code": {
+                "name": "K\u00f3d stavu"
+            },
+            "state_message": {
+                "name": "Zpr\u00e1va stavu",
+                "state": {
+                    "boost_mode": "Re\u017eim Zv\u00fd\u0161it v\u00fdkon",
+                    "critical_fault": "Kritick\u00e1 porucha",
+                    "fault": "Porucha",
+                    "keep_minimum_temperature": "Udr\u017eovat minim\u00e1ln\u00ed teplotu",
+                    "legionella_protection": "Ochrana proti legionele",
+                    "up_and_running": "Zapnut\u00fd a b\u011b\u017e\u00edc\u00ed"
+                }
+            },
+            "state_of_charge": {
+                "name": "Stav nabit\u00ed"
+            },
+            "status_code": {
+                "name": "K\u00f3d stavu"
+            },
+            "status_message": {
+                "name": "Stavov\u00e1 zpr\u00e1va",
+                "state": {
+                    "bootloading": "Zav\u00e1d\u011bn\u00ed",
+                    "error": "Chyba",
+                    "idle": "Ne\u010dinn\u00e9",
+                    "ready": "P\u0159ipraveno",
+                    "running": "B\u011b\u017e\u00edc\u00ed",
+                    "sleeping": "Ve sp\u00e1nku",
+                    "standby": "P\u0159ipraveno",
+                    "startup": "Spu\u0161t\u011bn\u00ed"
+                }
+            },
+            "temperature_cell": {
+                "name": "Teplota"
+            },
+            "voltage_ac": {
+                "name": "Nap\u011bt\u00ed AC"
+            },
+            "voltage_ac_phase_1": {
+                "name": "Nap\u011bt\u00ed - f\u00e1ze 1"
+            },
+            "voltage_ac_phase_2": {
+                "name": "Nap\u011bt\u00ed - f\u00e1ze 2"
+            },
+            "voltage_ac_phase_3": {
+                "name": "Nap\u011bt\u00ed - f\u00e1ze 3"
+            },
+            "voltage_ac_phase_to_phase_12": {
+                "name": "Nap\u011bt\u00ed - f\u00e1ze 1-2"
+            },
+            "voltage_ac_phase_to_phase_23": {
+                "name": "Nap\u011bt\u00ed - f\u00e1ze 2-3"
+            },
+            "voltage_ac_phase_to_phase_31": {
+                "name": "Nap\u011bt\u00ed - f\u00e1ze 3-1"
+            },
+            "voltage_dc": {
+                "name": "Nap\u011bt\u00ed DC"
+            },
+            "voltage_dc_2": {
+                "name": "Nap\u011bt\u00ed DC 2"
+            },
+            "voltage_dc_maximum_cell": {
+                "name": "Maxim\u00e1ln\u00ed nap\u011bt\u00ed \u010dl\u00e1nku"
+            },
+            "voltage_dc_minimum_cell": {
+                "name": "Minim\u00e1ln\u00ed nap\u011bt\u00ed \u010dl\u00e1nku"
+            }
+        }
+    },
+    "exceptions": {
+        "entry_cannot_connect": {
+            "message": "Nepoda\u0159ilo se p\u0159ipojit k za\u0159\u00edzen\u00ed Fronius na adrese {host}: {fronius_error}"
+        },
+        "update_failed": {
+            "message": "P\u0159i pokusu o na\u010dten\u00ed dat do\u0161lo k chyb\u011b: {fronius_error}"
+        }
+    }
+}

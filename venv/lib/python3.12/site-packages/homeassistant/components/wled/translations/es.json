@@ -1,0 +1,136 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "cannot_connect": "No se pudo conectar"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Nombre de host o direcci\u00f3n IP de tu dispositivo WLED."
+                },
+                "description": "Configura el WLED para integrarlo con Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "description": "\u00bfQuieres a\u00f1adir el WLED `{name}` a Home Assistant?",
+                "title": "Dispositivo WLED descubierto"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "firmware": {
+                "name": "Firmware"
+            }
+        },
+        "light": {
+            "main": {
+                "name": "Principal"
+            },
+            "segment": {
+                "name": "Segmento {segment}"
+            }
+        },
+        "number": {
+            "intensity": {
+                "name": "Intensidad"
+            },
+            "segment_intensity": {
+                "name": "Intensidad del segmento {segment}"
+            },
+            "segment_speed": {
+                "name": "Velocidad del segmento {segment}"
+            },
+            "speed": {
+                "name": "Velocidad"
+            }
+        },
+        "select": {
+            "color_palette": {
+                "name": "Paleta de color"
+            },
+            "live_override": {
+                "name": "Anulaci\u00f3n en directo",
+                "state": {
+                    "0": "Apagado",
+                    "1": "Encendido",
+                    "2": "Hasta que el dispositivo se reinicie"
+                }
+            },
+            "playlist": {
+                "name": "Lista de reproducci\u00f3n"
+            },
+            "preset": {
+                "name": "Preajuste"
+            },
+            "segment_color_palette": {
+                "name": "Paleta de colores del segmento {segment}"
+            }
+        },
+        "sensor": {
+            "estimated_current": {
+                "name": "Corriente estimada"
+            },
+            "free_heap": {
+                "name": "Memoria libre"
+            },
+            "info_leds_count": {
+                "name": "Recuento de LED"
+            },
+            "info_leds_max_power": {
+                "name": "Corriente m\u00e1xima"
+            },
+            "ip": {
+                "name": "IP"
+            },
+            "uptime": {
+                "name": "Tiempo de funcionamiento"
+            },
+            "wifi_bssid": {
+                "name": "BSSID Wi-Fi"
+            },
+            "wifi_channel": {
+                "name": "Canal Wi-Fi"
+            },
+            "wifi_rssi": {
+                "name": "RSSI Wi-Fi"
+            },
+            "wifi_signal": {
+                "name": "Se\u00f1al Wi-Fi"
+            }
+        },
+        "switch": {
+            "nightlight": {
+                "name": "Luz nocturna"
+            },
+            "reverse": {
+                "name": "Inverso"
+            },
+            "segment_reverse": {
+                "name": "Segmento {segment} inverso"
+            },
+            "sync_receive": {
+                "name": "Recepci\u00f3n de sincronizaci\u00f3n"
+            },
+            "sync_send": {
+                "name": "Env\u00edo de sincronizaci\u00f3n"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "keep_master_light": "Mantener la luz principal, incluso con 1 segmento LED."
+                }
+            }
+        }
+    }
+}

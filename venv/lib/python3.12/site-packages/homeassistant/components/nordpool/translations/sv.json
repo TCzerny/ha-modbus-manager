@@ -1,0 +1,139 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Omkonfigurationen lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "no_data": "API anslutet men svaret var tomt"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "areas": "Omr\u00e5den",
+                    "currency": "Valuta"
+                },
+                "data_description": {
+                    "areas": "Omr\u00e5den att visa priser f\u00f6r enligt Nordpools marknadsomr\u00e5den.",
+                    "currency": "V\u00e4lj valuta att visa priser i, EUR \u00e4r basvalutan."
+                }
+            },
+            "user": {
+                "data": {
+                    "areas": "Omr\u00e5den",
+                    "currency": "Valuta"
+                },
+                "data_description": {
+                    "areas": "Omr\u00e5den att visa priser f\u00f6r enligt Nordpools marknadsomr\u00e5den.",
+                    "currency": "V\u00e4lj valuta att visa priser i, EUR \u00e4r basvalutan."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "block_average": {
+                "name": "{block} genomsnitt"
+            },
+            "block_end_time": {
+                "name": "{block} tid tills"
+            },
+            "block_max": {
+                "name": "{block} h\u00f6gsta pris"
+            },
+            "block_min": {
+                "name": "{block} l\u00e4gsta pris"
+            },
+            "block_start_time": {
+                "name": "{block} tid fr\u00e5n"
+            },
+            "currency": {
+                "name": "Valuta"
+            },
+            "current_price": {
+                "name": "Aktuellt pris"
+            },
+            "daily_average": {
+                "name": "Dagligt genomsnitt"
+            },
+            "exchange_rate": {
+                "name": "V\u00e4xelkurs"
+            },
+            "highest_price": {
+                "name": "H\u00f6gsta pris",
+                "state_attributes": {
+                    "end": {
+                        "name": "Sluttid"
+                    },
+                    "start": {
+                        "name": "Starttid"
+                    }
+                }
+            },
+            "last_price": {
+                "name": "F\u00f6reg\u00e5ende pris"
+            },
+            "lowest_price": {
+                "name": "L\u00e4gsta pris",
+                "state_attributes": {
+                    "end": {
+                        "name": "Sluttid"
+                    },
+                    "start": {
+                        "name": "Starttid"
+                    }
+                }
+            },
+            "next_price": {
+                "name": "N\u00e4sta pris"
+            },
+            "updated_at": {
+                "name": "Senast uppdaterad"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Det uppstod ett autentiseringsfel n\u00e4r du f\u00f6rs\u00f6kte h\u00e4mta data f\u00f6r l\u00e5ngt tillbaka i tiden."
+        },
+        "connection_error": {
+            "message": "Det uppstod ett fel vid anslutningen till API:et. F\u00f6rs\u00f6k igen senare."
+        },
+        "empty_response": {
+            "message": "Nordpool har inte publicerat marknadspriser f\u00f6r den angivna dagen."
+        },
+        "entry_not_found": {
+            "message": "Nordpool-integrationen \u00e4r inte konfigurerad i Home Assistant."
+        },
+        "entry_not_loaded": {
+            "message": "Nordpool-integrationen \u00e4r f\u00f6r n\u00e4rvarande inte laddad eller inaktiverad i Home Assistant."
+        },
+        "initial_update_failed": {
+            "message": "Den initiala uppdateringen misslyckades vid start med felet {error}"
+        }
+    },
+    "services": {
+        "get_prices_for_date": {
+            "description": "H\u00e4mta priserna f\u00f6r ett visst datum.",
+            "fields": {
+                "areas": {
+                    "description": "Ett eller flera omr\u00e5den att h\u00e4mta priser f\u00f6r. Om den l\u00e4mnas tom anv\u00e4nds de omr\u00e5den som redan \u00e4r konfigurerade.",
+                    "name": "Omr\u00e5den"
+                },
+                "config_entry": {
+                    "description": "V\u00e4lj en konfigurationspost.",
+                    "name": "V\u00e4lj konfigurationspost f\u00f6r Nord Pool"
+                },
+                "currency": {
+                    "description": "Valuta f\u00f6r att f\u00e5 priser i. Om den l\u00e4mnas tom anv\u00e4nds den valuta som redan \u00e4r konfigurerad.",
+                    "name": "Valuta"
+                },
+                "date": {
+                    "description": "Endast datum tv\u00e5 m\u00e5nader bak\u00e5t i tiden och en dag fram\u00e5t i tiden \u00e4r till\u00e5tna.",
+                    "name": "Datum"
+                }
+            },
+            "name": "F\u00e5 priser f\u00f6r datum"
+        }
+    }
+}

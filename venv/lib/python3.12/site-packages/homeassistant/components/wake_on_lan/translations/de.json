@@ -1,0 +1,58 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dienst ist bereits konfiguriert"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "broadcast_address": "Broadcast-Adresse",
+                    "broadcast_port": "Broadcast-Port",
+                    "mac": "MAC-Adresse"
+                },
+                "data_description": {
+                    "broadcast_address": "Die IP-Adresse des Hosts, an den das Magic Packet gesendet werden soll. Der Standardwert ist `255.255.255.255` und wird normalerweise nicht ge\u00e4ndert.",
+                    "broadcast_port": "Der Port, an den das Magic Packet gesendet werden soll. Der Standardwert ist `9` und wird normalerweise nicht ge\u00e4ndert.",
+                    "mac": "MAC-Adresse des aufzuweckenden Ger\u00e4ts."
+                }
+            }
+        }
+    },
+    "options": {
+        "abort": {
+            "already_configured": "Dienst ist bereits konfiguriert"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "broadcast_address": "Broadcast-Adresse",
+                    "broadcast_port": "Broadcast-Port"
+                },
+                "data_description": {
+                    "broadcast_address": "Die IP-Adresse des Hosts, an den das Magic Packet gesendet werden soll. Der Standardwert ist `255.255.255.255` und wird normalerweise nicht ge\u00e4ndert.",
+                    "broadcast_port": "Der Port, an den das Magic Packet gesendet werden soll. Der Standardwert ist `9` und wird normalerweise nicht ge\u00e4ndert."
+                }
+            }
+        }
+    },
+    "services": {
+        "send_magic_packet": {
+            "description": "Sendet ein \u201eMagic Packet\u201c, um ein Ger\u00e4t mit \u201eWake-on-LAN\u201c-F\u00e4higkeiten aufzuwecken.",
+            "fields": {
+                "broadcast_address": {
+                    "description": "Die IP-Adresse des Hosts, an den das Magic Packet gesendet werden soll. Der Standardwert ist `255.255.255.255` und wird normalerweise nicht ge\u00e4ndert.",
+                    "name": "Broadcast-Adresse"
+                },
+                "broadcast_port": {
+                    "description": "Der Port, an den das Magic Packet gesendet werden soll. Der Standardwert ist `9` und wird normalerweise nicht ge\u00e4ndert.",
+                    "name": "Broadcast-Port"
+                },
+                "mac": {
+                    "description": "MAC-Adresse des aufzuweckenden Ger\u00e4ts.",
+                    "name": "MAC-Adresse"
+                }
+            },
+            "name": "Magic Packet senden"
+        }
+    }
+}

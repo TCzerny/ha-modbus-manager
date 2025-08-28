@@ -1,0 +1,111 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_upb_file": "Ficheiro de exporta\u00e7\u00e3o UPB UPStart em falta ou inv\u00e1lido, verificar o nome e o caminho do ficheiro.",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "address": "Endere\u00e7o (ver descri\u00e7\u00e3o acima)",
+                    "file_path": "Caminho e nome do ficheiro de exporta\u00e7\u00e3o UPB do UPStart.",
+                    "protocol": "Protocolo"
+                },
+                "description": "Ligar um m\u00f3dulo de interface Powerline Universal Powerline Bus (UPB PIM). A cadeia de endere\u00e7os deve ter o formato \"endere\u00e7o[:porta]\" para \"tcp\". A porta \u00e9 opcional e a predefini\u00e7\u00e3o \u00e9 2101. Exemplo: \"192.168.1.42\". Para o protocolo de s\u00e9rie, o endere\u00e7o deve ter a forma 'tty[:baud]'. O baud \u00e9 opcional e a predefini\u00e7\u00e3o \u00e9 4800. Exemplo: '/dev/ttyS1'.",
+                "title": "Ligar ao UPB PIM"
+            }
+        }
+    },
+    "services": {
+        "light_blink": {
+            "description": "Pisca uma luz.",
+            "fields": {
+                "rate": {
+                    "description": "Tempo durante o qual a liga\u00e7\u00e3o fica intermitente.",
+                    "name": "Taxa"
+                }
+            },
+            "name": "Luz intermitente"
+        },
+        "light_fade_start": {
+            "description": "Inicia o esbatimento de uma luz para cima ou para baixo a partir do brilho atual.",
+            "fields": {
+                "brightness": {
+                    "description": "N\u00famero que indica a luminosidade, em que 0 apaga a luz, 1 \u00e9 a luminosidade m\u00ednima e 255 \u00e9 a luminosidade m\u00e1xima.",
+                    "name": "Brilho"
+                },
+                "brightness_pct": {
+                    "description": "N\u00famero que indica a percentagem da luminosidade total, em que 0 apaga a luz, 1 \u00e9 a luminosidade m\u00ednima e 100 \u00e9 a luminosidade m\u00e1xima.",
+                    "name": "Percentagem de brilho"
+                },
+                "rate": {
+                    "description": "Taxa de transi\u00e7\u00e3o da luz para uma nova luminosidade.",
+                    "name": "Taxa"
+                }
+            },
+            "name": "Iniciar desvanecimento da luz"
+        },
+        "light_fade_stop": {
+            "description": "P\u00e1ra um desvanecimento da luz.",
+            "name": "Desvanecimento da luz de travagem"
+        },
+        "link_blink": {
+            "description": "Pisca um link.",
+            "fields": {
+                "blink_rate": {
+                    "description": "Tempo durante o qual a liga\u00e7\u00e3o fica intermitente.",
+                    "name": "Taxa de intermit\u00eancia"
+                }
+            },
+            "name": "Liga\u00e7\u00e3o de intermit\u00eancia"
+        },
+        "link_deactivate": {
+            "description": "Desativa uma cena UPB.",
+            "name": "Desativar liga\u00e7\u00e3o"
+        },
+        "link_fade_start": {
+            "description": "Inicia o esbatimento de um link para cima ou para baixo a partir do brilho atual.",
+            "fields": {
+                "brightness": {
+                    "description": "N\u00famero que indica a luminosidade, em que 0 desliga a cena, 1 \u00e9 a luminosidade m\u00ednima e 255 \u00e9 a luminosidade m\u00e1xima.",
+                    "name": "Brilho"
+                },
+                "brightness_pct": {
+                    "description": "N\u00famero que indica a percentagem da luminosidade total, em que 0 desliga a cena, 1 \u00e9 a luminosidade m\u00ednima e 100 \u00e9 a luminosidade m\u00e1xima.",
+                    "name": "Percentagem de brilho"
+                },
+                "rate": {
+                    "description": "Tempo de transi\u00e7\u00e3o da cena para uma nova luminosidade.",
+                    "name": "Taxa"
+                }
+            },
+            "name": "Iniciar o desvanecimento da liga\u00e7\u00e3o"
+        },
+        "link_fade_stop": {
+            "description": "Interrompe o desvanecimento de uma liga\u00e7\u00e3o.",
+            "name": "Parar o desvanecimento da liga\u00e7\u00e3o"
+        },
+        "link_goto": {
+            "description": "Definir a cena para brilho.",
+            "fields": {
+                "brightness": {
+                    "description": "N\u00famero que indica a luminosidade, em que 0 desliga a cena, 1 \u00e9 a luminosidade m\u00ednima e 255 \u00e9 a luminosidade m\u00e1xima.",
+                    "name": "Brilho"
+                },
+                "brightness_pct": {
+                    "description": "N\u00famero que indica a percentagem da luminosidade total, em que 0 desliga a cena, 1 \u00e9 a luminosidade m\u00ednima e 100 \u00e9 a luminosidade m\u00e1xima.",
+                    "name": "Percentagem de brilho"
+                },
+                "rate": {
+                    "description": "Tempo de transi\u00e7\u00e3o da cena para uma nova luminosidade.",
+                    "name": "Taxa"
+                }
+            },
+            "name": "Ir para a liga\u00e7\u00e3o"
+        }
+    }
+}

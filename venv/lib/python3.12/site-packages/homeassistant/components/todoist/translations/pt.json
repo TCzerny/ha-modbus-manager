@@ -1,0 +1,91 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "J\u00e1 configurado. S\u00f3 pode existir uma configura\u00e7\u00e3o."
+        },
+        "create_entry": {
+            "default": "Autenticado com sucesso"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_api_key": "Chave de API inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "token": "Token API"
+                },
+                "description": "Introduza o seu token de API a partir da sua [p\u00e1gina de Defini\u00e7\u00f5es Todoist]({settings_url})"
+            }
+        }
+    },
+    "exceptions": {
+        "project_invalid": {
+            "message": "Nome de projeto inv\u00e1lido \"{project}\""
+        },
+        "section_invalid": {
+            "message": "Projeto \"{project}\" n\u00e3o tem nenhuma sec\u00e7\u00e3o \"{section}\""
+        }
+    },
+    "services": {
+        "new_task": {
+            "description": "Cria uma nova tarefa e adiciona-a a um projeto.",
+            "fields": {
+                "assignee": {
+                    "description": "Um nome de utilizador de um membro de um projeto partilhado ao qual atribuir esta tarefa.",
+                    "name": "Tarefeiro"
+                },
+                "content": {
+                    "description": "O nome da tarefa.",
+                    "name": "Conte\u00fado"
+                },
+                "description": {
+                    "description": "Uma descri\u00e7\u00e3o para a tarefa.",
+                    "name": "Descri\u00e7\u00e3o"
+                },
+                "due_date": {
+                    "description": "A hora de vencimento desta tarefa, no formato AAAA-MM-DD ou AAAA-MM-DDTHH:MM:SS, no fuso hor\u00e1rio UTC.",
+                    "name": "Data de conclus\u00e3o"
+                },
+                "due_date_lang": {
+                    "description": "O idioma da cadeia de caracteres due_date_string.",
+                    "name": "Idioma da data de conclus\u00e3o"
+                },
+                "due_date_string": {
+                    "description": "O dia em que esta tarefa deve ser efetuada, em linguagem natural.",
+                    "name": "Cadeia de datas de vencimento"
+                },
+                "labels": {
+                    "description": "Quaisquer etiquetas que pretenda aplicar a esta tarefa, separadas por uma v\u00edrgula.",
+                    "name": "Etiquetas"
+                },
+                "priority": {
+                    "description": "A prioridade desta tarefa, de 1 (normal) a 4 (urgente).",
+                    "name": "Prioridade"
+                },
+                "project": {
+                    "description": "O nome do projeto a que esta tarefa deve pertencer.",
+                    "name": "Projeto"
+                },
+                "reminder_date": {
+                    "description": "Quando \u00e9 que o utilizador deve ser lembrado desta tarefa, no formato AAAA-MM-DDTHH:MM:SS, no fuso hor\u00e1rio UTC.",
+                    "name": "Data do lembrete"
+                },
+                "reminder_date_lang": {
+                    "description": "A l\u00edngua de reminder_date_string.",
+                    "name": "L\u00edngua da data do lembrete"
+                },
+                "reminder_date_string": {
+                    "description": "Quando \u00e9 que o utilizador deve ser lembrado desta tarefa, em linguagem natural.",
+                    "name": "Cadeia de datas de lembrete"
+                },
+                "section": {
+                    "description": "O nome de uma sec\u00e7\u00e3o dentro do projeto \u00e0 qual adicionar a tarefa.",
+                    "name": "Sec\u00e7\u00e3o"
+                }
+            },
+            "name": "Nova tarefa"
+        }
+    }
+}

@@ -1,0 +1,85 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dienst ist bereits konfiguriert"
+        },
+        "step": {
+            "user": {
+                "description": "M\u00f6chtest du die Einkaufsliste konfigurieren?",
+                "title": "Einkaufsliste"
+            }
+        }
+    },
+    "entity": {
+        "todo": {
+            "shopping_list": {
+                "name": "Einkaufsliste"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "description": "F\u00fcgt einen Eintrag zur Einkaufsliste hinzu.",
+            "fields": {
+                "name": {
+                    "description": "Der Name des hinzuzuf\u00fcgenden Eintrags.",
+                    "name": "Name"
+                }
+            },
+            "name": "Eintrag hinzuf\u00fcgen"
+        },
+        "clear_completed_items": {
+            "description": "Entfernt erledigte Eintr\u00e4ge aus der Einkaufsliste.",
+            "name": "Erledigte Eintr\u00e4ge l\u00f6schen"
+        },
+        "complete_all": {
+            "description": "Markiert alle Eintr\u00e4ge in der Einkaufsliste als erledigt (ohne sie von der Liste zu entfernen).",
+            "name": "Alle als erledigt markieren"
+        },
+        "complete_item": {
+            "description": "Markiert den ersten Eintrag mit passendem Namen in der Einkaufsliste als erledigt.",
+            "fields": {
+                "name": {
+                    "description": "Der Name des Eintrags, der als erledigt markiert werden soll (ohne ihn zu entfernen).",
+                    "name": "Name"
+                }
+            },
+            "name": "Eintrag als erledigt markieren"
+        },
+        "incomplete_all": {
+            "description": "Markiert alle Eintr\u00e4ge in der Einkaufsliste als unerledigt.",
+            "name": "Alle als unerledigt markieren"
+        },
+        "incomplete_item": {
+            "description": "Markiert den ersten Eintrag mit passendem Namen in der Einkaufsliste als unerledigt.",
+            "fields": {
+                "name": {
+                    "description": "Der Name des Eintrags, der als unerledigt markiert werden soll.",
+                    "name": "Name"
+                }
+            },
+            "name": "Eintrag als unerledigt markieren"
+        },
+        "remove_item": {
+            "description": "Entfernt den ersten Eintrag mit passendem Namen aus der Einkaufsliste.",
+            "fields": {
+                "name": {
+                    "description": "Der Name des zu entfernenden Eintrags.",
+                    "name": "Name"
+                }
+            },
+            "name": "Eintrag entfernen"
+        },
+        "sort": {
+            "description": "Sortiert alle Eintr\u00e4ge in der Einkaufsliste nach Namen.",
+            "fields": {
+                "reverse": {
+                    "description": "Ob in umgekehrter (absteigender) Reihenfolge sortiert werden soll.",
+                    "name": "Umgekehrt sortieren"
+                }
+            },
+            "name": "Alle Eintr\u00e4ge sortieren"
+        }
+    },
+    "title": "Einkaufsliste"
+}

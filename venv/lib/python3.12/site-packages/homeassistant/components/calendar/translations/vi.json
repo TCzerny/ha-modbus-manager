@@ -1,0 +1,107 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "L\u1ecbch",
+            "state": {
+                "off": "T\u1eaft",
+                "on": "B\u1eadt"
+            },
+            "state_attributes": {
+                "all_day": {
+                    "name": "C\u1ea3 ng\u00e0y",
+                    "state": {
+                        "false": "Kh\u00f4ng",
+                        "true": "C\u00f3"
+                    }
+                },
+                "description": {
+                    "name": "M\u00f4 t\u1ea3"
+                },
+                "end_time": {
+                    "name": "Th\u1eddi gian k\u1ebft th\u00fac"
+                },
+                "location": {
+                    "name": "V\u1ecb tr\u00ed"
+                },
+                "message": {
+                    "name": "Th\u00f4ng \u0111i\u1ec7p"
+                },
+                "start_time": {
+                    "name": "Th\u1eddi gian b\u1eaft \u0111\u1ea7u"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_calendar_list_events": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Thay v\u00e0o \u0111\u00f3, h\u00e3y s\u1eed d\u1ee5ng `calendar.get_events` \u0111\u1ec3 h\u1ed7 tr\u1ee3 nhi\u1ec1u th\u1ef1c th\u1ec3. \n \nVui l\u00f2ng thay th\u1ebf h\u00e0nh \u0111\u1ed9ng n\u00e0y v\u00e0 \u0111i\u1ec1u ch\u1ec9nh c\u00e1c ho\u1ea1t \u0111\u1ed9ng t\u1ef1 \u0111\u1ed9ng h\u00f3a v\u00e0 t\u1eadp l\u1ec7nh c\u1ee7a b\u1ea1n, r\u1ed3i ch\u1ecdn **G\u1eedi** \u0111\u1ec3 \u0111\u00f3ng s\u1ef1 c\u1ed1 n\u00e0y.",
+                        "title": "\u0110\u00e3 ph\u00e1t hi\u1ec7n vi\u1ec7c s\u1eed d\u1ee5ng h\u00e0nh \u0111\u1ed9ng \u0111\u00e3 l\u1ed7i th\u1eddi calendar.list_events"
+                    }
+                }
+            },
+            "title": "\u0110\u00e3 ph\u00e1t hi\u1ec7n vi\u1ec7c s\u1eed d\u1ee5ng h\u00e0nh \u0111\u1ed9ng \u0111\u00e3 l\u1ed7i th\u1eddi calendar.list_events"
+        }
+    },
+    "services": {
+        "create_event": {
+            "description": "Th\u00eam s\u1ef1 ki\u1ec7n l\u1ecbch m\u1edbi.",
+            "fields": {
+                "description": {
+                    "description": "M\u00f4 t\u1ea3 \u0111\u1ea7y \u0111\u1ee7 h\u01a1n v\u1ec1 s\u1ef1 ki\u1ec7n so v\u1edbi b\u1ea3n t\u00f3m t\u1eaft.",
+                    "name": "M\u00f4 t\u1ea3"
+                },
+                "end_date": {
+                    "description": "Ng\u00e0y s\u1ef1 ki\u1ec7n k\u00e9o d\u00e0i c\u1ea3 ng\u00e0y s\u1ebd k\u1ebft th\u00fac (kh\u00f4ng bao g\u1ed3m ng\u00e0y \u0111\u00f3).",
+                    "name": "Ng\u00e0y k\u1ebft th\u00fac"
+                },
+                "end_date_time": {
+                    "description": "Ng\u00e0y v\u00e0 gi\u1edd s\u1ef1 ki\u1ec7n s\u1ebd k\u1ebft th\u00fac.",
+                    "name": "Th\u1eddi gian k\u1ebft th\u00fac"
+                },
+                "in": {
+                    "description": "Nh\u1eefng ng\u00e0y ho\u1eb7c tu\u1ea7n m\u00e0 b\u1ea1n mu\u1ed1n t\u1ea1o s\u1ef1 ki\u1ec7n.",
+                    "name": "Trong"
+                },
+                "location": {
+                    "description": "\u0110\u1ecba \u0111i\u1ec3m di\u1ec5n ra s\u1ef1 ki\u1ec7n.",
+                    "name": "V\u1ecb tr\u00ed"
+                },
+                "start_date": {
+                    "description": "Ng\u00e0y b\u1eaft \u0111\u1ea7u s\u1ef1 ki\u1ec7n k\u00e9o d\u00e0i c\u1ea3 ng\u00e0y.",
+                    "name": "Ng\u00e0y b\u1eaft \u0111\u1ea7u"
+                },
+                "start_date_time": {
+                    "description": "Ng\u00e0y v\u00e0 gi\u1edd s\u1ef1 ki\u1ec7n s\u1ebd b\u1eaft \u0111\u1ea7u.",
+                    "name": "Th\u1eddi gian b\u1eaft \u0111\u1ea7u"
+                },
+                "summary": {
+                    "description": "X\u00e1c \u0111\u1ecbnh b\u1ea3n t\u00f3m t\u1eaft ng\u1eafn g\u1ecdn ho\u1eb7c ch\u1ee7 \u0111\u1ec1 cho s\u1ef1 ki\u1ec7n.",
+                    "name": "T\u00f3m t\u1eaft"
+                }
+            },
+            "name": "T\u1ea1o s\u1ef1 ki\u1ec7n"
+        },
+        "get_events": {
+            "description": "Nh\u1eadn c\u00e1c s\u1ef1 ki\u1ec7n tr\u00ean l\u1ecbch trong m\u1ed9t kho\u1ea3ng th\u1eddi gian nh\u1ea5t \u0111\u1ecbnh.",
+            "fields": {
+                "duration": {
+                    "description": "Tr\u1ea3 v\u1ec1 c\u00e1c s\u1ef1 ki\u1ec7n \u0111ang ho\u1ea1t \u0111\u1ed9ng t\u1eeb th\u1eddi gian B\u1eaft \u0111\u1ea7u trong kho\u1ea3ng th\u1eddi gian \u0111\u00e3 ch\u1ec9 \u0111\u1ecbnh.",
+                    "name": "Th\u1eddi l\u01b0\u1ee3ng"
+                },
+                "end_date_time": {
+                    "description": "Tr\u1ea3 v\u1ec1 c\u00e1c s\u1ef1 ki\u1ec7n \u0111ang ho\u1ea1t \u0111\u1ed9ng tr\u01b0\u1edbc th\u1eddi \u0111i\u1ec3m n\u00e0y (kh\u00f4ng bao g\u1ed3m gi\u1edd \u0111\u00f3). Kh\u00f4ng th\u1ec3 s\u1eed d\u1ee5ng v\u1edbi Th\u1eddi l\u01b0\u1ee3ng.",
+                    "name": "Th\u1eddi gian k\u1ebft th\u00fac"
+                },
+                "start_date_time": {
+                    "description": "Tr\u1ea3 v\u1ec1 c\u00e1c s\u1ef1 ki\u1ec7n \u0111ang ho\u1ea1t \u0111\u1ed9ng sau th\u1eddi gian n\u00e0y (kh\u00f4ng bao g\u1ed3m gi\u1edd \u0111\u00f3). Khi kh\u00f4ng \u0111\u01b0\u1ee3c \u0111\u1eb7t, m\u1eb7c \u0111\u1ecbnh l\u00e0 b\u00e2y gi\u1edd.",
+                    "name": "Th\u1eddi gian b\u1eaft \u0111\u1ea7u"
+                }
+            },
+            "name": "Nh\u1eadn s\u1ef1 ki\u1ec7n"
+        }
+    },
+    "title": "L\u1ecbch"
+}

@@ -1,0 +1,141 @@
+{
+    "common": {
+        "shopping_list_items": "items"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "unique_id_mismatch": "Os detalhes de in\u00edcio de sess\u00e3o correspondem a uma conta diferente. Por favor, reautentique-se na conta configurada anteriormente."
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "email": "E-mail",
+                    "password": "Palavra-passe"
+                },
+                "description": "A integra\u00e7\u00e3o do Bring! precisa de reautenticar a sua conta",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "user": {
+                "data": {
+                    "email": "E-mail",
+                    "password": "Palavra-passe"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "convenient": {
+                "name": "Ocasionalmente",
+                "unit_of_measurement": "items"
+            },
+            "discounted": {
+                "name": "Apenas desconto",
+                "unit_of_measurement": "items"
+            },
+            "list_access": {
+                "name": "Acesso \u00e0 lista",
+                "state": {
+                    "invitation": "Convite pendente",
+                    "registered": "Privado",
+                    "shared": "Partilhado"
+                }
+            },
+            "list_language": {
+                "name": "Regi\u00e3o & idioma",
+                "state": {
+                    "de-at": "\u00c1ustria",
+                    "de-ch": "Sui\u00e7a (Alem\u00e3o)",
+                    "de-de": "Alemanha",
+                    "en-au": "Austr\u00e1lia",
+                    "en-ca": "Canad\u00e1",
+                    "en-gb": "Reino Unido",
+                    "en-us": "Estados Unidos",
+                    "es-es": "Espanha",
+                    "fr-ch": "Sui\u00e7a (Franc\u00eas)",
+                    "fr-fr": "Fran\u00e7a",
+                    "hu-hu": "Hungria",
+                    "it-ch": "Sui\u00e7a (Italiano)",
+                    "it-it": "It\u00e1lia",
+                    "nb-no": "Noruega",
+                    "nl-nl": "Pa\u00edses Baixos",
+                    "pl-pl": "Pol\u00f3nia",
+                    "pt-br": "Portugal",
+                    "ru-ru": "R\u00fassia",
+                    "sv-se": "Su\u00e9cia",
+                    "tr-tr": "Turquia"
+                }
+            },
+            "urgent": {
+                "name": "Urgente",
+                "unit_of_measurement": "items"
+            }
+        }
+    },
+    "exceptions": {
+        "notify_missing_argument_item": {
+            "message": "Falha ao executar a a\u00e7\u00e3o {service}. 'URGENT_MESSAGE' requer um valor @ data['item']. N\u00e3o tem nenhum"
+        },
+        "notify_request_failed": {
+            "message": "Falha ao enviar a notifica\u00e7\u00e3o push para o Bring! devido a um erro de liga\u00e7\u00e3o, tente  mais tarde"
+        },
+        "setup_authentication_exception": {
+            "message": "A autentica\u00e7\u00e3o falhou para {email}, verifique o seu email e a sua palavra-passe."
+        },
+        "setup_parse_exception": {
+            "message": "Falha ao analisar a resposta do servidor, tente mais tarde"
+        },
+        "setup_request_exception": {
+            "message": "Falha na liga\u00e7\u00e3o ao servidor, tente mais tarde"
+        },
+        "todo_delete_item_failed": {
+            "message": "Falha ao eliminar {count} item(s) da lista Bring!"
+        },
+        "todo_rename_item_failed": {
+            "message": "Falha ao mudar o nome do item {name} na lista Bring!"
+        },
+        "todo_save_item_failed": {
+            "message": "Falha ao guardar o item {name} na lista Bring!"
+        },
+        "todo_update_item_failed": {
+            "message": "Falha ao atualizar o item {name} na lista Bring!"
+        }
+    },
+    "selector": {
+        "notification_type_selector": {
+            "options": {
+                "changed_list": "Alterei a lista! - D\u00e1 uma vista de olhos aos artigos",
+                "going_shopping": "Vou \u00e0s compras! - \u00daltima oportunidade para fazer altera\u00e7\u00f5es",
+                "shopping_done": "As compras est\u00e3o feitas - O nosso frigor\u00edfico est\u00e1 bem abastecido",
+                "urgent_message": "Aten\u00e7\u00e3o! Aten\u00e7\u00e3o! - Ainda precisamos urgentemente de: [Itens]"
+            }
+        }
+    },
+    "services": {
+        "send_message": {
+            "description": "Envia uma notifica\u00e7\u00e3o push m\u00f3vel aos membros de uma lista Bring! partilhada.",
+            "fields": {
+                "entity_id": {
+                    "description": "Bring! listar quais os membros (exceto o remetente) a ser notificados.",
+                    "name": "Lista"
+                },
+                "item": {
+                    "description": "Nome(s) do(s) item(ns) a incluir numa mensagem urgente, por exemplo, \"Aten\u00e7\u00e3o! Aten\u00e7\u00e3o! - Ainda precisamos urgentemente de: [Itens]",
+                    "name": "Item (Obrigat\u00f3rio se o tipo de mensagem \"Mensagem urgente\" estiver selecionado)"
+                },
+                "message": {
+                    "description": "Tipo de notifica\u00e7\u00e3o push a enviar aos membros da lista.",
+                    "name": "Tipo de notifica\u00e7\u00e3o"
+                }
+            },
+            "name": "Envia uma notifica\u00e7\u00e3o"
+        }
+    }
+}

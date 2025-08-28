@@ -1,0 +1,128 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "mobile_connected": {
+                "name": "Liga\u00e7\u00e3o m\u00f3vel"
+            },
+            "roaming": {
+                "name": "Roaming"
+            },
+            "wire_connected": {
+                "name": "Ligado por cabo"
+            }
+        },
+        "sensor": {
+            "band": {
+                "name": "Banda atual"
+            },
+            "cell_id": {
+                "name": "ID da c\u00e9lula"
+            },
+            "connection_text": {
+                "name": "Texto de liga\u00e7\u00e3o"
+            },
+            "connection_type": {
+                "name": "Tipo de liga\u00e7\u00e3o"
+            },
+            "radio_quality": {
+                "name": "Qualidade do r\u00e1dio"
+            },
+            "register_network_display": {
+                "name": "Registar a visualiza\u00e7\u00e3o da rede"
+            },
+            "rx_level": {
+                "name": "N\u00edvel Rx"
+            },
+            "service_type": {
+                "name": "Tipo de servi\u00e7o"
+            },
+            "sms": {
+                "name": "SMS"
+            },
+            "sms_total": {
+                "name": "Total de SMS"
+            },
+            "tx_level": {
+                "name": "N\u00edvel Tx"
+            },
+            "upstream": {
+                "name": "A montante"
+            },
+            "usage": {
+                "name": "Utiliza\u00e7\u00e3o"
+            }
+        }
+    },
+    "services": {
+        "connect_lte": {
+            "description": "Pede ao modem para estabelecer a liga\u00e7\u00e3o LTE.",
+            "fields": {
+                "host": {
+                    "description": "O modem que deve ser ligado.",
+                    "name": "Anfitri\u00e3o"
+                }
+            },
+            "name": "Ligar LTE"
+        },
+        "delete_sms": {
+            "description": "Elimina mensagens da caixa de entrada do modem.",
+            "fields": {
+                "host": {
+                    "description": "O modem que deve ter uma mensagem apagada.",
+                    "name": "Anfitri\u00e3o"
+                },
+                "sms_id": {
+                    "description": "N\u00famero inteiro ou lista de n\u00fameros inteiros com IDs da caixa de entrada das mensagens a eliminar.",
+                    "name": "ID SMS"
+                }
+            },
+            "name": "Apagar SMS"
+        },
+        "disconnect_lte": {
+            "description": "Pede ao modem para fechar a liga\u00e7\u00e3o LTE.",
+            "fields": {
+                "host": {
+                    "description": "O modem que deve ser desligado.",
+                    "name": "Anfitri\u00e3o"
+                }
+            },
+            "name": "Desligar o LTE"
+        },
+        "set_option": {
+            "description": "Define as op\u00e7\u00f5es do modem.",
+            "fields": {
+                "autoconnect": {
+                    "description": "Modo de liga\u00e7\u00e3o autom\u00e1tica.",
+                    "name": "Liga\u00e7\u00e3o autom\u00e1tica"
+                },
+                "failover": {
+                    "description": "Modo de recupera\u00e7\u00e3o de falhas.",
+                    "name": "Transfer\u00eancia em caso de falha"
+                },
+                "host": {
+                    "description": "O modem para definir as op\u00e7\u00f5es.",
+                    "name": "Anfitri\u00e3o"
+                }
+            },
+            "name": "Definir op\u00e7\u00e3o"
+        }
+    }
+}

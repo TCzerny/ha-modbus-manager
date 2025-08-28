@@ -1,0 +1,69 @@
+{
+    "common": {
+        "validation_failed_title": "A configura\u00e7\u00e3o do script {name} falhou"
+    },
+    "entity_component": {
+        "_": {
+            "name": "Script",
+            "state": {
+                "off": "Desligado",
+                "on": "Ligado"
+            },
+            "state_attributes": {
+                "current": {
+                    "name": "Automa\u00e7\u00f5es em execu\u00e7\u00e3o"
+                },
+                "last_action": {
+                    "name": "\u00daltima a\u00e7\u00e3o"
+                },
+                "last_triggered": {
+                    "name": "\u00daltima ocorr\u00eancia"
+                },
+                "max": {
+                    "name": "M\u00e1ximo de scripts em execu\u00e7\u00e3o"
+                },
+                "mode": {
+                    "name": "Modo de funcionamento",
+                    "state": {
+                        "parallel": "Paralelo",
+                        "queued": "Em sequ\u00eancia",
+                        "restart": "Reiniciar",
+                        "single": "\u00danico"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "validation_failed_blueprint": {
+            "description": "Ocorreu uma falha ao configurar o script com blueprint \"{name}\" (`{entity_id}`).\n\nErro: `{error}`.\n\nPara corrigir este erro, [edite o script]({edit}) para corrigi-lo, depois grave e recarregue a configura\u00e7\u00e3o do script.",
+            "title": "A configura\u00e7\u00e3o do script {name} falhou"
+        },
+        "validation_failed_schema": {
+            "description": "O script \"{name}\" (`{entity_id}`) n\u00e3o est\u00e1 ativo porque a configura\u00e7\u00e3o tem erros.\n\nErro: `{error}`.\n\nPara corrigir este erro, [edite o script]({edit}) para corrigi-lo, depois grave e recarregue a configura\u00e7\u00e3o do script.",
+            "title": "A configura\u00e7\u00e3o do script {name} falhou"
+        },
+        "validation_failed_sequence": {
+            "description": "O script \"{name}\" (`{entity_id}`) n\u00e3o est\u00e1 ativo porque a sua sequ\u00eancia n\u00e3o p\u00f4de ser configurada.\n\nErro: `{error}`.\n\nPara corrigir este erro, [edite o script]({edit}) em conformidade, depois grave e recarregue a configura\u00e7\u00e3o do script.",
+            "title": "A configura\u00e7\u00e3o do script {name} falhou"
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "Recarrega todos os scripts dispon\u00edveis.",
+            "name": "Recarregar"
+        },
+        "toggle": {
+            "name": "Alternar"
+        },
+        "turn_off": {
+            "description": "Interrompe um script em execu\u00e7\u00e3o.",
+            "name": "Desligar"
+        },
+        "turn_on": {
+            "description": "Executa a sequ\u00eancia de ac\u00e7\u00f5es definidas num script.",
+            "name": "Ligar"
+        }
+    },
+    "title": "Script"
+}

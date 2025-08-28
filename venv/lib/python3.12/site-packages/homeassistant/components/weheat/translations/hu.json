@@ -1,0 +1,116 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "A fi\u00f3k m\u00e1r konfigur\u00e1lva van",
+            "already_in_progress": "A konfigur\u00e1l\u00e1s m\u00e1r folyamatban van",
+            "authorize_url_timeout": "Id\u0151t\u00fall\u00e9p\u00e9s a hiteles\u00edt\u00e9si URL l\u00e9trehoz\u00e1sakor.",
+            "missing_configuration": "A komponens nincs konfigur\u00e1lva. K\u00e9rem, k\u00f6vesse a dokument\u00e1ci\u00f3t.",
+            "no_devices_found": "Nem tal\u00e1lhat\u00f3 h\u0151szivatty\u00fa ezen a fi\u00f3kon",
+            "no_url_available": "Nincs el\u00e9rhet\u0151 URL. A hib\u00e1val kapcsolatos inform\u00e1ci\u00f3k\u00e9rt n\u00e9zze meg a [s\u00fag\u00f3]({docs_url}) le\u00edr\u00e1s\u00e1t.",
+            "oauth_error": "\u00c9rv\u00e9nytelen token adatok \u00e9rkeztek.",
+            "oauth_failed": "Hiba a hozz\u00e1f\u00e9r\u00e9si token megszerz\u00e9se k\u00f6zben.",
+            "oauth_timeout": "Id\u0151t\u00fall\u00e9p\u00e9s az OAuth-token felold\u00e1sakor.",
+            "oauth_unauthorized": "OAuth enged\u00e9lyez\u00e9si hiba a hozz\u00e1f\u00e9r\u00e9si token megszerz\u00e9se sor\u00e1n.",
+            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt",
+            "user_rejected_authorize": "A fi\u00f3k csatol\u00e1sa elutas\u00edtva: {error}",
+            "wrong_account": "Ezt a fi\u00f3kot csak ugyanazzal a felhaszn\u00e1l\u00f3val hiteles\u00edtheti \u00fajra."
+        },
+        "create_entry": {
+            "default": "Sikeres hiteles\u00edt\u00e9s"
+        },
+        "step": {
+            "find_devices": {
+                "title": "V\u00e1lassza ki a h\u0151szivatty\u00faj\u00e1t"
+            },
+            "pick_implementation": {
+                "title": "V\u00e1lasszon egy hiteles\u00edt\u00e9si m\u00f3dszert"
+            },
+            "reauth_confirm": {
+                "description": "A folytat\u00e1shoz \u00fajra kell hiteles\u00edtenie a WeHeat rendszerrel.",
+                "title": "\u00dajrahiteles\u00edt\u00e9s a WeHeat rendszerrel"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "indoor_unit_auxiliary_pump_state": {
+                "name": "Belt\u00e9ri egys\u00e9g kieg\u00e9sz\u00edt\u0151 v\u00edzpumpa"
+            },
+            "indoor_unit_dhw_valve_or_pump_state": {
+                "name": "Belt\u00e9ri egys\u00e9g HMV szelep vagy v\u00edzpumpa"
+            },
+            "indoor_unit_electric_heater_state": {
+                "name": "Belt\u00e9ri egys\u00e9g elektromos f\u0171t\u0151test"
+            },
+            "indoor_unit_gas_boiler_state": {
+                "name": "Belt\u00e9ri egys\u00e9g g\u00e1zkaz\u00e1n f\u0171t\u00e9s enged\u00e9lyezett"
+            },
+            "indoor_unit_water_pump_state": {
+                "name": "Belt\u00e9ri egys\u00e9g v\u00edzpumpa"
+            }
+        },
+        "sensor": {
+            "ch_inlet_temperature": {
+                "name": "F\u0171t\u00e9si rendszer bemeneti h\u0151m\u00e9rs\u00e9klet"
+            },
+            "compressor_percentage": {
+                "name": "Kompresszor kihaszn\u00e1lts\u00e1ga"
+            },
+            "compressor_rpm": {
+                "name": "Kompresszor sebess\u00e9ge"
+            },
+            "cop": {
+                "name": "J\u00f3s\u00e1gi fok (COP)"
+            },
+            "dhw_bottom_temperature": {
+                "name": "HMV als\u00f3 h\u0151m\u00e9rs\u00e9klet"
+            },
+            "dhw_top_temperature": {
+                "name": "HMV fels\u0151 h\u0151m\u00e9rs\u00e9klet"
+            },
+            "electricity_used": {
+                "name": "Felhaszn\u00e1lt villamos energia"
+            },
+            "energy_output": {
+                "name": "Teljes energiafelhaszn\u00e1l\u00e1s"
+            },
+            "heat_pump_state": {
+                "state": {
+                    "cooling": "H\u0171t\u00e9s",
+                    "defrosting": "Leolvaszt\u00e1s",
+                    "dhw": "F\u0171t\u00e9s HMV",
+                    "heating": "F\u0171t\u00e9s",
+                    "legionella_prevention": "Legionella megel\u0151z\u00e9s",
+                    "manual_control": "K\u00e9zi vez\u00e9rl\u00e9s",
+                    "self_test": "\u00d6nteszt",
+                    "standby": "K\u00e9szenl\u00e9tben",
+                    "water_check": "V\u00edz h\u0151m\u00e9rs\u00e9klet\u00e9nek ellen\u0151rz\u00e9se"
+                }
+            },
+            "outside_temperature": {
+                "name": "K\u00fcls\u0151 h\u0151m\u00e9rs\u00e9klet"
+            },
+            "power_input": {
+                "name": "Bemeneti teljes\u00edtm\u00e9ny"
+            },
+            "power_output": {
+                "name": "Kimeneti teljes\u00edtm\u00e9ny"
+            },
+            "thermostat_room_temperature": {
+                "name": "Aktu\u00e1lis szobah\u0151m\u00e9rs\u00e9klet"
+            },
+            "thermostat_room_temperature_setpoint": {
+                "name": "Szoba h\u0151m\u00e9rs\u00e9klet alap\u00e9rt\u00e9k"
+            },
+            "thermostat_water_setpoint": {
+                "name": "V\u00edz c\u00e9lh\u0151m\u00e9rs\u00e9klet"
+            },
+            "water_inlet_temperature": {
+                "name": "V\u00edz bemeneti h\u0151m\u00e9rs\u00e9klet"
+            },
+            "water_outlet_temperature": {
+                "name": "V\u00edz kimeneti h\u0151m\u00e9rs\u00e9klet"
+            }
+        }
+    }
+}

@@ -1,0 +1,61 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparaat is al geconfigureerd",
+            "reauth_successful": "Herauthenticatie geslaagd"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "invalid_auth": "Ongeldige authenticatie",
+            "timeout_connect": "Time-out bij het maken van verbinding"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Wachtwoord"
+                },
+                "title": "Authenticatie is verlopen voor {name}"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Wachtwoord"
+                },
+                "title": "Rain Bird configureren"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Regensensor"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data_description": {
+                    "duration": "De standaardduur dat de sproeier blijft lopen als hij wordt ingeschakeld."
+                },
+                "title": "Rain Bird configureren"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "fields": {
+                "duration": {
+                    "name": "Duur"
+                }
+            }
+        },
+        "start_irrigation": {
+            "fields": {
+                "duration": {
+                    "name": "Duur"
+                }
+            }
+        }
+    }
+}

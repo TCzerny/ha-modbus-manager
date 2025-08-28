@@ -7,12 +7,13 @@ Eine Custom Integration für Home Assistant, die Modbus-Geräte über eine templ
 - **Geräte-Templates**: YAML-basierte Definitionen von Modbus-Geräten mit Register-Mapping, Skalierung, Einheiten, device_class, state_class und Gruppentags
 - **UI-Setup**: Nutzer wählen ein Template, geben IP, Port, Slave-ID und einen Präfix ein – die Entitäten werden automatisch erzeugt
 - **Entitätserzeugung**: Sensoren werden dynamisch aus Templates erstellt, mit Präfix zur Unterscheidung und Gruppentags für spätere Aggregation
-- **Modbus-Hub-Management**: Jeder Gerät wird als eigener virtueller Modbus-Hub registriert, Kommunikation läuft über die Home Assistant Modbus-API
+- **Modbus-Hub-Management**: Jeder Gerät wird als eigener virtueller Modbus-Hub registriert, Kommunikation läuft über die Standard Home Assistant Modbus-API
 - **Aggregationsmodul**: Automatische Erzeugung von Summen-, Durchschnitts-, Max-/Min- und Statussensoren über Entitäten mit gleichem group-Tag
 - **Live-Refresh**: Aggregationssensoren aktualisieren sich sofort bei Änderungen der zugehörigen Entitäten via `async_track_state_change`
 - **Group Discovery**: Alle vorhandenen Gruppen werden erkannt und im UI zur Konfiguration von Aggregationen angeboten
 - **Erweiterte Datenverarbeitung**: Unterstützung für Bit-Operationen, Enum-Mapping, Bit-Flags und mehr (basierend auf [modbus_connect](https://github.com/dmatscheko/modbus_connect))
 - **Vollständige Entity-Typen**: Sensoren, Schalter, Zahlen, Select-Entitäten, Binary-Sensoren
+- **Robuste Modbus-Integration**: Vollständig integriert mit der Standard Home Assistant Modbus-API, umfassende Fehlerbehandlung und Validierung
 
 ## 📋 Unterstützte Geräte
 

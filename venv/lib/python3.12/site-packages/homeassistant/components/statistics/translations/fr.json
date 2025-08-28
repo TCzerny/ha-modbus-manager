@@ -1,0 +1,107 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Le compte est d\u00e9j\u00e0 configur\u00e9"
+        },
+        "error": {
+            "missing_keep_last_sample": "La configuration du capteur doit fournir \u00ab\u00a0max_age\u00a0\u00bb si \u00ab\u00a0keep_last_sample\u00a0\u00bb est vrai",
+            "missing_max_age_or_sampling_size": "La configuration du capteur doit fournir \u00ab\u00a0max_age\u00a0\u00bb et/ou \u00ab\u00a0sampling_size\u00a0\u00bb"
+        },
+        "step": {
+            "options": {
+                "data": {
+                    "keep_last_sample": "Conserver le dernier \u00e9chantillon",
+                    "max_age": "\u00c2ge maximum",
+                    "percentile": "Centile",
+                    "precision": "Pr\u00e9cision",
+                    "sampling_size": "Taille de l'\u00e9chantillon"
+                },
+                "data_description": {
+                    "keep_last_sample": "D\u00e9finit si la valeur \u00e9chantillonn\u00e9e la plus r\u00e9cente doit \u00eatre conserv\u00e9e quel que soit le param\u00e8tre \u00ab\u00a0\u00e2ge maximum\u00a0\u00bb.",
+                    "max_age": "\u00c2ge maximum des mesures du capteur source stock\u00e9es.",
+                    "percentile": "Uniquement pertinent en combinaison avec la caract\u00e9ristique \u00ab\u00a0centile\u00a0\u00bb. Doit \u00eatre une valeur comprise entre 1 et 99.",
+                    "precision": "D\u00e9finit le nombre de d\u00e9cimales de la valeur calcul\u00e9e du capteur.",
+                    "sampling_size": "Nombre maximum de mesures de capteur source stock\u00e9es."
+                },
+                "description": "Lisez la documentation pour plus de d\u00e9tails sur la fa\u00e7on de configurer le capteur de statistiques \u00e0 l'aide de ces options."
+            },
+            "state_characteristic": {
+                "data_description": {
+                    "state_characteristic": "La caract\u00e9ristique statistique qui doit \u00eatre utilis\u00e9e comme \u00e9tat du capteur."
+                },
+                "description": "Lisez la documentation pour plus de d\u00e9tails sur les options disponibles et comment les utiliser."
+            },
+            "user": {
+                "data": {
+                    "entity_id": "Entit\u00e9",
+                    "name": "Nom"
+                },
+                "data_description": {
+                    "entity_id": "Entit\u00e9 \u00e0 partir de laquelle obtenir des statistiques.",
+                    "name": "Nom de l'entit\u00e9 cr\u00e9\u00e9e."
+                },
+                "description": "Cr\u00e9er un capteur de statistiques"
+            }
+        }
+    },
+    "options": {
+        "abort": {
+            "already_configured": "Le compte est d\u00e9j\u00e0 configur\u00e9"
+        },
+        "error": {
+            "missing_keep_last_sample": "La configuration du capteur doit fournir \u00ab\u00a0max_age\u00a0\u00bb si \u00ab\u00a0keep_last_sample\u00a0\u00bb est vrai",
+            "missing_max_age_or_sampling_size": "La configuration du capteur doit fournir \u00ab\u00a0max_age\u00a0\u00bb et/ou \u00ab\u00a0sampling_size\u00a0\u00bb"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "keep_last_sample": "Conserver le dernier \u00e9chantillon",
+                    "max_age": "\u00c2ge maximum",
+                    "percentile": "Centile",
+                    "precision": "Pr\u00e9cision",
+                    "sampling_size": "Taille de l'\u00e9chantillon"
+                },
+                "data_description": {
+                    "keep_last_sample": "D\u00e9finit si la valeur \u00e9chantillonn\u00e9e la plus r\u00e9cente doit \u00eatre conserv\u00e9e quel que soit le param\u00e8tre \u00ab\u00a0\u00e2ge maximum\u00a0\u00bb.",
+                    "max_age": "\u00c2ge maximum des mesures du capteur source stock\u00e9es.",
+                    "percentile": "Uniquement pertinent en combinaison avec la caract\u00e9ristique \u00ab\u00a0centile\u00a0\u00bb. Doit \u00eatre une valeur comprise entre 1 et 99.",
+                    "precision": "D\u00e9finit le nombre de d\u00e9cimales de la valeur calcul\u00e9e du capteur.",
+                    "sampling_size": "Nombre maximum de mesures de capteur source stock\u00e9es."
+                },
+                "description": "Lisez la documentation pour plus de d\u00e9tails sur la fa\u00e7on de configurer le capteur de statistiques \u00e0 l'aide de ces options."
+            }
+        }
+    },
+    "selector": {
+        "state_characteristic": {
+            "options": {
+                "average_linear": "Moyenne lin\u00e9aire",
+                "average_step": "Pas moyen",
+                "datetime_newest": "Date/heure la plus r\u00e9cente",
+                "datetime_oldest": "Date/heure la plus ancienne",
+                "distance_95_percent_of_values": "Distance 95\u2009% des valeurs",
+                "distance_99_percent_of_values": "Distance 99\u2009% des valeurs",
+                "distance_absolute": "Distance absolue",
+                "mean": "Moyenne",
+                "mean_circular": "Moyenne circulaire",
+                "median": "M\u00e9diane",
+                "noisiness": "Bruit",
+                "percentile": "Centile",
+                "standard_deviation": "\u00c9cart-type",
+                "sum": "Somme",
+                "sum_differences": "Somme des diff\u00e9rences",
+                "sum_differences_nonnegative": "Somme des diff\u00e9rences non n\u00e9gative",
+                "total": "Total",
+                "value_max": "Valeur maximale",
+                "value_min": "Valeur minimale",
+                "variance": "Variance"
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "Recharge les capteurs de statistiques \u00e0 partir de la configuration YAML.",
+            "name": "Recharger"
+        }
+    }
+}

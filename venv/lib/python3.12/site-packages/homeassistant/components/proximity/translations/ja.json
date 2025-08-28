@@ -1,0 +1,76 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u30c7\u30d0\u30a4\u30b9\u306f\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u3059",
+            "success": "\u5909\u66f4\u304c\u4fdd\u5b58\u3055\u308c\u307e\u3057\u305f"
+        },
+        "flow_title": "\u8fd1\u63a5",
+        "step": {
+            "user": {
+                "data": {
+                    "ignored_zones": "\u7121\u8996\u3059\u308b\u30be\u30fc\u30f3",
+                    "tolerance": "\u516c\u5dee\u8ddd\u96e2",
+                    "tracked_entities": "\u8ffd\u8de1\u3059\u308b\u30c7\u30d0\u30a4\u30b9\u307e\u305f\u306f\u4eba\u7269",
+                    "zone": "\u8ddd\u96e2\u3092\u8ffd\u8de1\u3059\u308b\u30be\u30fc\u30f3"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "dir_of_travel": {
+                "name": "{tracked_entity}\u9032\u884c\u65b9\u5411",
+                "state": {
+                    "arrived": "\u5230\u7740\u3057\u305f",
+                    "away_from": "\u304b\u3089\u96e2\u308c\u308b",
+                    "stationary": "\u5b9a\u5e38",
+                    "towards": "\u65b9\u5411"
+                }
+            },
+            "dist_to_zone": {
+                "name": "{tracked_entity}\u306e\u8ddd\u96e2"
+            },
+            "nearest": {
+                "name": "\u6700\u3082\u8fd1\u3044\u30c7\u30d0\u30a4\u30b9"
+            },
+            "nearest_dir_of_travel": {
+                "name": "\u6700\u3082\u8fd1\u3044\u9032\u884c\u65b9\u5411",
+                "state": {
+                    "arrived": "\u5230\u7740\u3057\u305f",
+                    "away_from": "\u304b\u3089\u96e2\u308c\u308b",
+                    "stationary": "\u5b9a\u5e38",
+                    "towards": "\u65b9\u5411"
+                }
+            },
+            "nearest_dist_to_zone": {
+                "name": "\u6700\u77ed\u8ddd\u96e2"
+            }
+        }
+    },
+    "issues": {
+        "tracked_entity_removed": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "\u30a8\u30f3\u30c6\u30a3\u30c6\u30a3 ` {entity_id} ` \u306f HA \u304b\u3089\u524a\u9664\u3055\u308c\u307e\u3057\u305f\u304c\u3001\u8fd1\u63a5{name}\u3067\u4f7f\u7528\u3055\u308c\u3066\u3044\u307e\u3059\u3002\u8ffd\u8de1\u3055\u308c\u308b\u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u306e\u30ea\u30b9\u30c8\u304b\u3089\u300c {entity_id} \u300d\u3092\u524a\u9664\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u95a2\u9023\u3059\u308b\u8fd1\u63a5\u30bb\u30f3\u30b5\u30fc \u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u306f\u4f7f\u7528\u4e0d\u53ef\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u308b\u305f\u3081\u3001\u524a\u9664\u3067\u304d\u307e\u3059\u3002",
+                        "title": "\u8ffd\u8de1\u3055\u308c\u305f\u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u306f\u524a\u9664\u3055\u308c\u307e\u3057\u305f"
+                    }
+                }
+            },
+            "title": "\u8ffd\u8de1\u3055\u308c\u305f\u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u306f\u524a\u9664\u3055\u308c\u307e\u3057\u305f"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignored_zones": "\u7121\u8996\u3059\u308b\u30be\u30fc\u30f3",
+                    "tolerance": "\u516c\u5dee\u8ddd\u96e2",
+                    "tracked_entities": "\u8ffd\u8de1\u3059\u308b\u30c7\u30d0\u30a4\u30b9\u307e\u305f\u306f\u4eba\u7269",
+                    "zone": "\u8ddd\u96e2\u3092\u8ffd\u8de1\u3059\u308b\u30be\u30fc\u30f3"
+                }
+            }
+        }
+    },
+    "title": "\u8fd1\u63a5"
+}

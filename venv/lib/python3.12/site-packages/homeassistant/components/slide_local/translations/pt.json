@@ -1,0 +1,80 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "discovery_connection_failed": "A configura\u00e7\u00e3o do dispositivo descoberto falhou com o seguinte erro: {error}. Por favor, tente configur\u00e1-lo manualmente.",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida",
+            "unique_id_mismatch": "O endere\u00e7o MAC do dispositivo ({mac}) n\u00e3o corresponde ao endere\u00e7o MAC anterior."
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "host": "O nome de anfitri\u00e3o ou endere\u00e7o IP do seu Slide local",
+                    "password": "O c\u00f3digo do dispositivo do seu Slide (dentro do Slide ou na caixa, com 8 carateres de comprimento). Se o seu Slide estiver a executar a vers\u00e3o 2 do firmware, isto \u00e9 opcional, pois n\u00e3o \u00e9 utilizado pela API local."
+                },
+                "description": "Reconfigure as informa\u00e7\u00f5es do seu dispositivo Slide"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "host": "O nome de anfitri\u00e3o ou endere\u00e7o IP do seu Slide local",
+                    "password": "O c\u00f3digo do dispositivo do seu Slide (dentro do Slide ou na caixa, com 8 carateres de comprimento). Se o seu Slide estiver a executar a vers\u00e3o 2 do firmware, isto \u00e9 opcional, pois n\u00e3o \u00e9 utilizado pela API local."
+                },
+                "description": "Forne\u00e7a informa\u00e7\u00f5es para ligar ao dispositivo Slide"
+            },
+            "zeroconf_confirm": {
+                "description": "Deseja configurar {host}?",
+                "title": "Confirme a configura\u00e7\u00e3o do Slide"
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "calibrate": {
+                "name": "Calibrar"
+            }
+        },
+        "switch": {
+            "touchgo": {
+                "name": "TouchGo"
+            }
+        }
+    },
+    "exceptions": {
+        "calibration_error": {
+            "message": "Erro ao enviar o pedido de calibra\u00e7\u00e3o para o dispositivo."
+        },
+        "touchgo_error": {
+            "message": "Erro ao enviar o pedido de configura\u00e7\u00e3o do Touch&Go para {state} para o dispositivo."
+        },
+        "update_error": {
+            "message": "Erro ao atualizar dados a partir da API."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "invert_position": "Inverter posi\u00e7\u00e3o"
+                },
+                "data_description": {
+                    "invert_position": "Inverte a posi\u00e7\u00e3o da sua cobertura Slide"
+                },
+                "description": "Reconfigurar o dispositivo Slide",
+                "title": "Configurar Slide"
+            }
+        }
+    }
+}

@@ -1,0 +1,57 @@
+{
+    "device_automation": {
+        "trigger_type": {
+            "changed_states": "{entity_name} update beschikbaarheid gewijzigd",
+            "turned_off": "{entity_name} werd up-to-date",
+            "turned_on": "{entity_name} heeft een update beschikbaar"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Update",
+            "state": {
+                "off": "Up-to-date",
+                "on": "Update beschikbaar"
+            },
+            "state_attributes": {
+                "auto_update": {
+                    "name": "Auto update",
+                    "state": {
+                        "false": "Nee",
+                        "true": "Ja"
+                    }
+                },
+                "in_progress": {
+                    "name": "Bezig",
+                    "state": {
+                        "false": "Nee",
+                        "true": "Ja"
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "clear_skipped": {
+            "description": "Verwijdert de overgeslagen versiemarkering van een update.",
+            "name": "Overgeslagen updates wissen"
+        },
+        "install": {
+            "fields": {
+                "backup": {
+                    "name": "Back-up"
+                },
+                "version": {
+                    "description": "De versie die ge\u00efnstalleerd moet worden. Als deze wordt weggelaten, wordt de laatste versie ge\u00efnstalleerd.",
+                    "name": "Versie"
+                }
+            },
+            "name": "Update installeren"
+        },
+        "skip": {
+            "description": "Markeert de momenteel beschikbare update als overgeslagen.",
+            "name": "Update overslaan"
+        }
+    },
+    "title": "Update"
+}

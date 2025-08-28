@@ -1,0 +1,167 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparaat is al geconfigureerd",
+            "different_device": "De ingevoerde informatie is van een andere Peblar EV-lader.",
+            "no_serial_number": "Het gevonden Peblar EV-lader heeft geen serienummer verstrekt",
+            "reauth_successful": "Herauthenticatie geslaagd",
+            "reconfigure_successful": "Herconfiguratie was succesvol"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "invalid_auth": "Ongeldige authenticatie",
+            "unknown": "Onverwachte fout"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Wachtwoord"
+                },
+                "data_description": {
+                    "password": "Hetzelfde wachtwoord dat wordt gebruikt voor de lokale webinterface van de Peblar EV-lader."
+                }
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "password": "Wachtwoord"
+                },
+                "data_description": {
+                    "host": "De hostnaam of het IP-adres van de Peblar EV-lader in het thuisnetwerk.",
+                    "password": "Hetzelfde wachtwoord dat wordt gebruikt voor de lokale webinterface van de Peblar EV-lader."
+                }
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Wachtwoord"
+                },
+                "data_description": {
+                    "host": "De hostnaam of het IP-adres van de Peblar EV-lader in het thuisnetwerk."
+                }
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "Wachtwoord"
+                },
+                "data_description": {
+                    "password": "Hetzelfde wachtwoord dat wordt gebruikt voor de lokale webinterface van de Peblar EV-lader."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Fouten"
+            },
+            "active_warning_codes": {
+                "name": "Waarschuwingen"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "Laadlimiet"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "Slim laden",
+                "state": {
+                    "default": "Standaard",
+                    "fast_solar": "Snel zonne-laden",
+                    "pure_solar": "Puur zonne-laden",
+                    "scheduled": "Gepland",
+                    "smart_solar": "Slim zonne-laden"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Bron van stroombeperking",
+                "state": {
+                    "charging_cable": "Laadkabel",
+                    "external_power_limit": "Externe stroombeperking",
+                    "hardware_limitation": "Hardwarebeperking",
+                    "high_temperature": "Hoge temperatuur",
+                    "household_power_limit": "Netaansluiting limiet",
+                    "installation_limit": "Installatiebeperking",
+                    "local_modbus_api": "Modbus API",
+                    "local_rest_api": "REST API",
+                    "ocpp_smart_charging": "OCPP slim laden",
+                    "overcurrent_protection": "Overbelastingsbeveiliging",
+                    "phase_imbalance": "Fase onbalans",
+                    "power_factor": "Vermogensfactor",
+                    "solar_charging": "Zonne-laden"
+                }
+            },
+            "cp_state": {
+                "name": "Status",
+                "state": {
+                    "charging": "Opladen",
+                    "error": "Fout",
+                    "fault": "Storing",
+                    "invalid": "Ongeldig",
+                    "no_ev_connected": "Geen EV verbonden"
+                }
+            },
+            "current_phase_1": {
+                "name": "Stroom fase 1"
+            },
+            "current_phase_2": {
+                "name": "Stroom fase 2"
+            },
+            "current_phase_3": {
+                "name": "Stroom fase 3"
+            },
+            "energy_session": {
+                "name": "Sessie energie"
+            },
+            "energy_total": {
+                "name": "Levenslange energie"
+            },
+            "power_phase_1": {
+                "name": "Vermogen fase 1"
+            },
+            "power_phase_2": {
+                "name": "Vermogen fase 2"
+            },
+            "power_phase_3": {
+                "name": "Vermogen fase 3"
+            },
+            "uptime": {
+                "name": "Bedrijfstijd"
+            },
+            "voltage_phase_1": {
+                "name": "Spanning fase 1"
+            },
+            "voltage_phase_2": {
+                "name": "Spanning fase 2"
+            },
+            "voltage_phase_3": {
+                "name": "Spanning fase 3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "Dwing enkelvoudige fase af"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "Personalisatie"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Er is een authenticatiefout opgetreden tijdens het communiceren met de Peblar EV-lader."
+        },
+        "communication_error": {
+            "message": "Er is een communicatiefout opgetreden met de Peblar EV-lader: {error}"
+        },
+        "unknown_error": {
+            "message": "Er is een onbekende fout opgetreden tijdens communicatie met de Peblar EV-lader: {error}"
+        }
+    }
+}

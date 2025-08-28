@@ -1,0 +1,111 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_upb_file": "Fehlende oder ung\u00fcltige UPB UPStart-Exportdatei, \u00fcberpr\u00fcfe den Namen und den Pfad der Datei.",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "address": "Adresse (siehe Beschreibung oben)",
+                    "file_path": "Pfad und Name der UPStart UPB-Exportdatei.",
+                    "protocol": "Protokoll"
+                },
+                "description": "Schlie\u00dfe ein Universal Powerline Bus Powerline Interface Module (UPB PIM) an. Der Adress-String muss in der Form \u201eAdresse[:Port]\u201c f\u00fcr \u201eTCP\u201c vorliegen. Der Port ist optional und standardm\u00e4\u00dfig auf 2101 eingestellt. Beispiel: \u201e192.168.1.42\u201c. F\u00fcr das serielle Protokoll muss die Adresse die Form \u201etty[:baud]\u201c haben. Die Baudrate ist optional und standardm\u00e4\u00dfig auf 4800 eingestellt. Beispiel: \u201e/dev/ttyS1\u201c.",
+                "title": "Verbindung zu UPB PIM herstellen"
+            }
+        }
+    },
+    "services": {
+        "light_blink": {
+            "description": "L\u00e4sst eine Leuchte blinken.",
+            "fields": {
+                "rate": {
+                    "description": "Zeitdauer, in der der Link blinkt.",
+                    "name": "Geschwindigkeit"
+                }
+            },
+            "name": "Leuchte blinken lassen"
+        },
+        "light_fade_start": {
+            "description": "Beginnt, eine Leuchte ausgehend von der aktuellen Helligkeit entweder nach heller oder dunkler zu dimmen.",
+            "fields": {
+                "brightness": {
+                    "description": "Zahl, die die Helligkeit angibt, wobei 0 die Leuchte ausschaltet, 1 die minimale Helligkeit und 255 die maximale Helligkeit ist.",
+                    "name": "Helligkeit"
+                },
+                "brightness_pct": {
+                    "description": "Zahl, die den Prozentsatz der vollen Helligkeit angibt, wobei 0 die Leuchte ausschaltet, 1 die minimale Helligkeit und 100 die maximale Helligkeit ist.",
+                    "name": "Helligkeitsprozentsatz"
+                },
+                "rate": {
+                    "description": "Geschwindigkeit f\u00fcr den \u00dcbergang der Leuchte zur neuen Helligkeit.",
+                    "name": "Geschwindigkeit"
+                }
+            },
+            "name": "Dimmen starten"
+        },
+        "light_fade_stop": {
+            "description": "Stoppt das Dimmen einer Leuchte.",
+            "name": "Dimmen stoppen"
+        },
+        "link_blink": {
+            "description": "L\u00e4sst einen Link blinken.",
+            "fields": {
+                "blink_rate": {
+                    "description": "Zeitdauer, in der der Link blinkt.",
+                    "name": "Blinkrate"
+                }
+            },
+            "name": "Link blinken lassen"
+        },
+        "link_deactivate": {
+            "description": "Deaktiviert eine UPB-Szene.",
+            "name": "Link deaktivieren"
+        },
+        "link_fade_start": {
+            "description": "Beginnt mit der Auf- oder Abdimmen eines Links ausgehend von der aktuellen Helligkeit.",
+            "fields": {
+                "brightness": {
+                    "description": "Zahl, die die Helligkeit angibt, wobei 0 die Szene ausschaltet, 1 die minimale Helligkeit und 255 die maximale Helligkeit ist.",
+                    "name": "Helligkeit"
+                },
+                "brightness_pct": {
+                    "description": "Zahl, die den Prozentsatz der vollen Helligkeit angibt, wobei 0 die Szene ausschaltet, 1 die minimale Helligkeit und 100 die maximale Helligkeit ist.",
+                    "name": "Helligkeitsprozentsatz"
+                },
+                "rate": {
+                    "description": "Zeitdauer f\u00fcr den \u00dcbergang der Szene zur neuen Helligkeit.",
+                    "name": "Geschwindigkeit"
+                }
+            },
+            "name": "Link-Dimmen starten"
+        },
+        "link_fade_stop": {
+            "description": "Stoppt den Dimmvorgang eines Links.",
+            "name": "Link-Dimmen stoppen"
+        },
+        "link_goto": {
+            "description": "Szene auf Helligkeit einstellen.",
+            "fields": {
+                "brightness": {
+                    "description": "Zahl, die die Helligkeit angibt, wobei 0 die Szene ausschaltet, 1 die minimale Helligkeit und 255 die maximale Helligkeit ist.",
+                    "name": "Helligkeit"
+                },
+                "brightness_pct": {
+                    "description": "Zahl, die den Prozentsatz der vollen Helligkeit angibt, wobei 0 die Szene ausschaltet, 1 die minimale Helligkeit und 100 die maximale Helligkeit ist.",
+                    "name": "Helligkeitsprozentsatz"
+                },
+                "rate": {
+                    "description": "Zeitdauer f\u00fcr den \u00dcbergang der Szene zur neuen Helligkeit.",
+                    "name": "Geschwindigkeit"
+                }
+            },
+            "name": "Gehe zum Link"
+        }
+    }
+}

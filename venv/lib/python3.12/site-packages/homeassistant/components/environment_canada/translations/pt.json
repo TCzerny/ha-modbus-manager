@@ -1,0 +1,127 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Servi\u00e7o j\u00e1 configurado"
+        },
+        "error": {
+            "bad_station_id": "O ID da esta\u00e7\u00e3o \u00e9 inv\u00e1lido, est\u00e1 em falta ou n\u00e3o se encontra na base de dados de ID da esta\u00e7\u00e3o",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "error_response": "Resposta do Environment Canada com erro",
+            "too_many_attempts": "As liga\u00e7\u00f5es ao Environment Canada t\u00eam uma taxa limitada; tente novamente dentro de 60 segundos",
+            "unknown": "Erro inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "language": "Idioma da informa\u00e7\u00e3o meteorol\u00f3gica",
+                    "latitude": "Latitude",
+                    "longitude": "Longitude",
+                    "station": "ID da esta\u00e7\u00e3o meteorol\u00f3gica"
+                },
+                "description": "Deve ser especificado um ID de esta\u00e7\u00e3o ou uma latitude/longitude. A latitude/longitude predefinida utilizada s\u00e3o os valores configurados na sua instala\u00e7\u00e3o do Home Assistant. Se especificar coordenadas, ser\u00e1 utilizada a esta\u00e7\u00e3o meteorol\u00f3gica mais pr\u00f3xima das coordenadas. Se for utilizado um c\u00f3digo de esta\u00e7\u00e3o, este deve seguir o formato: PP/c\u00f3digo, em que PP \u00e9 o c\u00f3digo de prov\u00edncia de duas letras e c\u00f3digo \u00e9 o ID da esta\u00e7\u00e3o. A lista de IDs de esta\u00e7\u00f5es pode ser consultada aqui: https://dd.weather.gc.ca/citypage_weather/docs/site_list_towns_en.csv. As informa\u00e7\u00f5es meteorol\u00f3gicas podem ser obtidas em ingl\u00eas ou franc\u00eas.",
+                "title": "Environment Canada: localiza\u00e7\u00e3o e l\u00edngua do tempo"
+            }
+        }
+    },
+    "entity": {
+        "camera": {
+            "radar": {
+                "name": "Radar"
+            }
+        },
+        "sensor": {
+            "advisories": {
+                "name": "Aconselhamento"
+            },
+            "aqhi": {
+                "name": "AQHI"
+            },
+            "condition": {
+                "name": "Estado atual"
+            },
+            "dewpoint": {
+                "name": "Ponto de orvalho"
+            },
+            "endings": {
+                "name": "Finais"
+            },
+            "high_temp": {
+                "name": "Temperatura alta"
+            },
+            "humidex": {
+                "name": "Humidex"
+            },
+            "icon_code": {
+                "name": "C\u00f3digo do \u00edcone"
+            },
+            "low_temp": {
+                "name": "Temperatura baixa"
+            },
+            "normal_high": {
+                "name": "Temperatura normal elevada"
+            },
+            "normal_low": {
+                "name": "Temperatura baixa normal"
+            },
+            "pop": {
+                "name": "Probabilidade de precipita\u00e7\u00e3o"
+            },
+            "pressure": {
+                "name": "Press\u00e3o barom\u00e9trica"
+            },
+            "statements": {
+                "name": "Declara\u00e7\u00f5es"
+            },
+            "tendency": {
+                "name": "Tend\u00eancia"
+            },
+            "text_summary": {
+                "name": "Resumo"
+            },
+            "timestamp": {
+                "name": "Tempo de observa\u00e7\u00e3o"
+            },
+            "uv_index": {
+                "name": "\u00cdndice UV"
+            },
+            "visibility": {
+                "name": "Visibilidade"
+            },
+            "warnings": {
+                "name": "Avisos"
+            },
+            "watches": {
+                "name": "Rel\u00f3gios"
+            },
+            "wind_bearing": {
+                "name": "Dire\u00e7\u00e3o do vento"
+            },
+            "wind_chill": {
+                "name": "Arrefecimento do vento"
+            },
+            "wind_dir": {
+                "name": "Dire\u00e7\u00e3o do vento"
+            },
+            "wind_gust": {
+                "name": "Rajada de vento"
+            }
+        },
+        "weather": {
+            "forecast": {
+                "name": "Previs\u00e3o"
+            }
+        }
+    },
+    "services": {
+        "set_radar_type": {
+            "description": "Define o tipo de imagem de radar a recuperar.",
+            "fields": {
+                "radar_type": {
+                    "description": "O tipo de imagem de radar a apresentar.",
+                    "name": "Tipo de radar"
+                }
+            },
+            "name": "Definir o tipo de radar"
+        }
+    }
+}

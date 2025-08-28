@@ -1,0 +1,111 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Telecamera",
+            "state": {
+                "idle": "Inattivo",
+                "recording": "In registrazione",
+                "streaming": "In trasmissione"
+            },
+            "state_attributes": {
+                "access_token": {
+                    "name": "Token di accesso"
+                },
+                "brand": {
+                    "name": "Marca"
+                },
+                "frontend_stream_type": {
+                    "name": "Tipo di flusso",
+                    "state": {
+                        "hls": "HLS",
+                        "webrtc": "WebRTC"
+                    }
+                },
+                "model_name": {
+                    "name": "Modello"
+                },
+                "motion_detection": {
+                    "name": "Rilevamento del movimento",
+                    "state": {
+                        "false": "Disabilitato",
+                        "true": "Abilitato"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_filename_template": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "La variabile di modello predefinita `entity_id` \u00e8 stata utilizzata durante l'esecuzione dell'azione `{service}` mirata all'entit\u00e0 della telecamera `{entity_id}`. La variabile di modello predefinita `entity_id` viene rimossa dal parametro `filename` di `{service}`.\n\nSi prega di aggiornare le automazioni e gli script per utilizzare una variabile definita manualmente e selezionare **Invia** per chiudere questo problema.",
+                        "title": "Rilevato uso di variabile di modello deprecata"
+                    }
+                }
+            },
+            "title": "Rilevato uso di variabile di modello deprecata"
+        }
+    },
+    "services": {
+        "disable_motion_detection": {
+            "description": "Disabilita il rilevamento del movimento.",
+            "name": "Disabilita il rilevamento del movimento"
+        },
+        "enable_motion_detection": {
+            "description": "Abilita il rilevamento del movimento.",
+            "name": "Abilita il rilevamento del movimento"
+        },
+        "play_stream": {
+            "description": "Riproduce il flusso della videocamera su un lettore multimediale supportato.",
+            "fields": {
+                "format": {
+                    "description": "Formato di streaming supportato dal lettore multimediale.",
+                    "name": "Formato"
+                },
+                "media_player": {
+                    "description": "Lettori multimediali su cui eseguire lo streaming.",
+                    "name": "Lettore multimediale"
+                }
+            },
+            "name": "Riproduci stream"
+        },
+        "record": {
+            "description": "Registra un feed video in diretta.",
+            "fields": {
+                "duration": {
+                    "description": "Durata pianificata della registrazione. La durata effettiva pu\u00f2 variare.",
+                    "name": "Durata"
+                },
+                "filename": {
+                    "description": "Percorso completo del nome file. Deve essere mp4.",
+                    "name": "Nome del file"
+                },
+                "lookback": {
+                    "description": "Periodo di ricerca pianificato da includere nella registrazione (oltre alla durata). Disponibile solo se al momento \u00e8 presente un flusso HLS attivo. La durata effettiva del periodo di ricerca pu\u00f2 variare.",
+                    "name": "Retrospettiva"
+                }
+            },
+            "name": "Registrazione"
+        },
+        "snapshot": {
+            "description": "Scatta un'istantanea da una fotocamera.",
+            "fields": {
+                "filename": {
+                    "description": "Percorso completo del nome file.",
+                    "name": "Nome del file"
+                }
+            },
+            "name": "Scatta un'istantanea"
+        },
+        "turn_off": {
+            "description": "Spegne la fotocamera.",
+            "name": "Spegni"
+        },
+        "turn_on": {
+            "description": "Accende la fotocamera.",
+            "name": "Accendi"
+        }
+    },
+    "title": "Telecamera"
+}

@@ -1,0 +1,2415 @@
+{
+  "language": "da",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "<sluk> <navn>"
+          ]
+        },
+        {
+          "sentences": [
+            "<luk> <navn>",
+            "<luk> <navn> <i_på> <område>"
+          ],
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<sluk> [<al>] <lys> <i_på> <område>",
+            "<sluk> [<al>] <område> <lys>"
+          ],
+          "slots": {
+            "domain": "light",
+            "name": "all"
+          }
+        },
+        {
+          "sentences": [
+            "<luk> <persienne> <i_på> <område>",
+            "<luk> <rullegardin> <i_på> <område>",
+            "rul <rullegardin> ned <i_på> <område>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "blind",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<luk> <gardin> <i_på> <område>",
+            "træk <gardin> for <i_på> <område>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "curtain",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<luk> <garagedør>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "garage",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<luk> <skodde> <i_på> <område>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "shutter",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<sluk> [<al>] <blæser> <i_på> <område>",
+            "<sluk> [<al>] <område> <blæser>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          }
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel>[ min] <timer>",
+            "<timer_cancel> <timer_start>[ |-| min]<timer>",
+            "<timer_cancel> <timer> på <timer_start>",
+            "<timer_cancel>[ min] {timer_name:name}[ |-]<timer>",
+            "<timer_cancel>[ min] <timer> for {timer_name:name}",
+            "<timer_cancel> <timer> <i_på> <område>"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "(<timer>|<timers>) status",
+            "status (<timer>|<timers>)",
+            "status på[ min[e]] (<timer>|<timers>)",
+            "[hvor meget ]tid[ er][ der] igen (på|for)[ min] <område>[ |-]<timer>",
+            "[hvor meget ]tid[ er][ der] igen (på|for) <timer> <i_på> <område>",
+            "[hvor meget ]tid[ er][ der] igen (på|for) <timer_start> <timer>",
+            "[hvor meget ]tid[ er][ der] igen (på|for) <timer>",
+            "[hvor meget ]tid[ er][ der] igen (på|for) {timer_name:name}[[ |-]<timer>]",
+            "<timer_start> <timer> status",
+            "status på[ min] <timer_start> <timer>",
+            "<område> <timer> status",
+            "status (på|for)[ min] <område> <timer>",
+            "status (på|for)[ min] <timer> <i_på> <område>",
+            "{timer_name:name}[ |-]<timer>[ min] status",
+            "status (på|for)[ min] {timer_name:name}[ |-]<timer>",
+            "[hvor meget ]tid[ er][ der] igen (på|for)[ min] {timer_name:name}[ |-]<timer>"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "<tænd> (<lys> <navn> <område> |<lys> <navn> [<i_på> <område>] | <navn> <område> | <navn> [<i_på> <område>])"
+          ],
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<tænd> [<al>] <lys> <i_på> <område>",
+            "<tænd> [<al>] <område> <lys>"
+          ],
+          "response": "lights_area",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<tænd> <al> <lys> overalt",
+            "<tænd> <al> <lys>"
+          ],
+          "response": "light_all",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<tænd> [<al>] <lys> <i_på> <etage>"
+          ],
+          "response": "lights_floor",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<tænd> [<al>] <blæser> <i_på> <område>",
+            "<tænd> [<al>] <område> <blæser>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          }
+        },
+        {
+          "sentences": [
+            "[aktiver] <navn> [scene]",
+            "<navn> [scene] til",
+            "<tænd> <navn> [scene]",
+            "slå <navn> [scene] til",
+            "skift til (<navn> [scene]|scene <navn>)"
+          ],
+          "requires_context": {
+            "domain": "scene"
+          },
+          "slots": {
+            "domain": "scene"
+          },
+          "response": "scene"
+        },
+        {
+          "sentences": [
+            "[aktiver] <område> <navn> [scene]",
+            "<område> <navn> til",
+            "<tænd> <område> <navn> [scene]",
+            "[aktiver] <navn> [scene] <i> <område>",
+            "<tænd> <navn> [scene] <i> <område>",
+            "skift til <navn> [scene] <i> <område>",
+            "skift <område> til <navn> [scene]"
+          ],
+          "requires_context": {
+            "domain": "scene"
+          },
+          "slots": {
+            "domain": "scene"
+          },
+          "response": "scene"
+        },
+        {
+          "sentences": [
+            "<tænd> <navn>"
+          ]
+        },
+        {
+          "sentences": [
+            "<åbn> <navn>",
+            "<åbn> <navn> <i_på> <område>"
+          ],
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<åbn> <persienne> <i_på> <område>",
+            "<åbn> <rullegardin> <i_på> <område>",
+            "rul <rullegardin> op <i_på> <område>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "blind",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<åbn> <gardin> <i_på> <område>",
+            "træk <gardin> fra <i_på> <område>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "curtain",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<åbn> <garagedør>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "garage",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<åbn> <skodde> <i_på> <område>"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "shutter",
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "Glem det"
+          ]
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "sæt <navn>[s] lysstyrke til <lysstyrke>",
+            "sæt lysstyrke[n] på <navn> til <lysstyrke>",
+            "sæt <navn> til [lysstyrke] <lysstyrke>"
+          ],
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "sæt lysstyrke[n] <i_på> <område> til <lysstyrke>",
+            "sæt <område>[s] lysstyrke til <lysstyrke>",
+            "sæt <område> til [lysstyrke] <lysstyrke>"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "sæt <navn>[s] farve til {color}",
+            "sæt [farve[n] på] <navn> til {color}"
+          ],
+          "response": "color"
+        },
+        {
+          "sentences": [
+            "sæt {color}[t] lys <i_på> <område>"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "color"
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_duration> [lang ]<timer>",
+            "<timer> på <timer_duration>",
+            "<timer_duration> <timer> [med navn[et]|som hedder|for] {timer_name:name}",
+            "<timer> for <timer_duration> (med navn|som hedder|for) {timer_name:name}",
+            "<timer_set> <timer_duration> [lang ]<timer>",
+            "<timer_set> <timer>[ på] <timer_duration>",
+            "<timer_set> <timer_duration> <timer> (med navn[et]|som hedder|for) {timer_name:name}",
+            "<timer_set> <timer> (med navn[et]|som hedder|for) {timer_name:name} på <timer_duration>",
+            "<timer> på <timer_duration> (med navn[et]|som hedder|for) {timer_name:name}",
+            "<timer_set> <timer> på <timer_duration> (med navn[et]|som hedder|for) {timer_name:name}",
+            "<timer_set> <timer_duration> "
+          ],
+          "requires_context": {
+            "area": {
+              "slot": false
+            }
+          }
+        },
+        {
+          "sentences": [
+            "{timer_command:conversation_command} om <timer_duration>",
+            "om <timer_duration> {timer_command:conversation_command}"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "hvad er temperatur[en] [<i_på> <område>]",
+            "hvor <koldt_varmt> er <område>",
+            "hvor <koldt_varmt> er (der | det) [<i_på> <område>]",
+            "er (der | det) <koldt_varmt> [<i_på> <område>]",
+            "hvad er <område>[s] temperatur"
+          ]
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "hvad er [(status|tilstand) (på|for)] <navn> [<i_på> <område>]"
+          ],
+          "response": "one",
+          "excludes_context": {
+            "domain": [
+              "scene",
+              "script"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "er [(tilstand|tilstanden|status) (på|for)] <navn> {on_off_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "er [(nogen|nogle)] {on_off_domains:domain} {on_off_states:state} [<i_på> <område>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "er alle {on_off_domains:domain} {on_off_states:state} [<i_på> <område>]"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "(hvilken|hvilke) {on_off_domains:domain} er {on_off_states:state} [<i_på> <område>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "hvor mange {on_off_domains:domain} er {on_off_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many"
+        },
+        {
+          "sentences": [
+            "er <navn> {cover_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "cover"
+          },
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "er [der] (nogen|nogle) {cover_classes:device_class} {cover_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "er alle {cover_classes:device_class} {cover_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(hvilken|hvilke) {cover_classes:device_class} er {cover_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "hvor mange {cover_classes:device_class} er {cover_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> [batteri[et]] {bs_battery_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "er <nogen> batteri[er] {bs_battery_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "er alle batterier[ne] {bs_battery_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> batteri[er] er {bs_battery_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> batteri[er] er {bs_battery_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_battery_charging_states:state} <navn> [battery] [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_battery_charging_states:state} <nogen> batteri[er] [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_battery_charging_states:state} [alle] batteri[er][ne] [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> batteri[er] {bs_battery_charging_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> batteri[er] {bs_battery_charging_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_carbon_monoxide_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "er [der] [<nogen>] <carbonmonoxid_sensor> {bs_carbon_monoxide_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "er der [noget] <carbonmonoxid> [(detekteret|fundet|registreret)] [<i_på> <område>]",
+            "<er_noget> <carbonmonoxid> (detekteret|fundet|registreret) [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er alle <carbonmonoxid_sensor> {bs_carbon_monoxide_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> <carbonmonoxid_sensor> er {bs_carbon_monoxide_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> <carbonmonoxid_sensor> er {bs_carbon_monoxide_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_cold_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "cold"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "cold"
+          }
+        },
+        {
+          "sentences": [
+            "er noget <koldt> [<i_på> <område>]",
+            "<er_noget> <koldt> (detekteret|fundet|registreret) <i_på> <område>",
+            "<er_nogen> <koldt> sensorer [<i_på> <område>]",
+            "<er_nogen> sensorer <koldt> [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "cold",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> [sensorer] er <koldt> [<i_på> <område>]",
+            "hvad er <koldt> [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "cold",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> [sensorer] er <koldt> [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "cold",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_connectivity_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "<er_nogen> <enhed> {bs_connectivity_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "er alle <enhed>[ne] {bs_connectivity_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> <enhed> er {bs_connectivity_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> <enhed> er {bs_connectivity_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_door_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "door"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "door"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_garage_door_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "garage_door"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "garage_door"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_gas_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "er [der] [nogen] gas sensorer {bs_gas_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "er der gas [<i_på> <område>]",
+            "<gas_fundet> <i_på> <område>"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<gas_ikke_fundet> <i_på> <område>"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas",
+            "state": "off"
+          }
+        },
+        {
+          "sentences": [
+            "er alle gas sensorer[ne] {bs_gas_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> gas sensorer er {bs_gas_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> gas sensorer er {bs_gas_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_heat_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "heat"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "heat"
+          }
+        },
+        {
+          "sentences": [
+            "er [der] noget [(som|der) er] varmt [<i_på> <område>]",
+            "er [der] noget varmt [<i_på> <område>]",
+            "<er_nogen> varme sensorer [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "heat",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "hvad er varmt [<i_på> <område>]",
+            "<hvilke> sensorer er varme [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "heat",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> (ting|sensorer) er varme [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "heat",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_light_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "er (<nogen>|noget) lys {bs_light_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "er alle lys {bs_light_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> lys er {bs_light_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> lys er {bs_light_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_lock_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "lock"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> [sensoren] {bs_moisture_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "<er_nogen> (vand|fugt|læk|oversvømmelse) sensorer {bs_moisture_states:state} [<i_på> <område>]",
+            "er (gulv[et]|vand|fugt|læk|oversvømmelses)[ ][sensoren] {bs_moisture_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "er der <nogen> (læk|oversvømmelse) [<i_på> <område>]",
+            "er <område> oversvømmet"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er alle vand sensorer {bs_moisture_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> vand sensorer er {bs_moisture_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> vand sensorer er {bs_moisture_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_motion_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "<er_nogen> <bevaegelses_sensor> {bs_motion_states:state} [<i_på> <område>]",
+            "er bevægelse[s] {bs_motion_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "er der noget (der|som) bevæger sig [<i_på> <område>]",
+            "er der (noget|<nogen>) bevægelse[s] [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er alle bevægelse[s][ ]sensorer {bs_motion_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> <bevaegelses_sensor> er {bs_motion_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> <bevaegelses_sensor> er {bs_motion_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_occupancy_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "er [der] [<nogen>] optaget[ ]sensorer {bs_occupancy_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "er optaget detekteret [<i_på> <område>]",
+            "er optaget registreret [<i_på> <område>]",
+            "er noget optaget [<i_på> <område>]",
+            "er <område> optaget"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er alle optaget[ ]sensorer {bs_occupancy_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> optaget[ ]sensor[er] er {bs_occupancy_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> optaget[ ]sensor[er] er {bs_occupancy_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_opening_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "<er_nogen> åbning[er] {bs_opening_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "er alle åbning[er] {bs_opening_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> åbning[er] er {bs_opening_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> åbning[er] er {bs_opening_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_plug_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "er <nogen> <enhed> {bs_plug_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "er alle <enhed> {bs_plug_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> <enhed> er {bs_plug_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> <enhed> er {bs_plug_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_power_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "<er_nogen> <enhed> {bs_power_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "er alle <enhed> {bs_power_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> <enhed> er {bs_power_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> <enhed> er {bs_power_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_presence_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "<er_nogen> <enhed> {bs_presence_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "er alle <enhed> {bs_presence_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> <enhed> er {bs_presence_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> <enhed> er {bs_presence_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "er der [<nogen>] problemer med <navn> [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "problem"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "problem",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_running_states:state} <navn> [<i_på> <område>]",
+            "er <navn> ved at {bs_running_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_running_states:state} <nogen> <enhed> [<i_på> <område>]",
+            "er <nogen> <enhed> ved at {bs_running_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "er alle <enhed> ved at {bs_running_states:state} [<i_på> <område>]",
+            "{bs_running_states:state} alle <enhed> [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> <enhed> [er ved at] {bs_running_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> <enhed> [er ved at] {bs_running_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_safety_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "safety"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "safety"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_smoke_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "<er_nogen> røg[ ](sensorer|detektorer) {bs_smoke_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "er der røg <i_på> <område>"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er alle røg[ ](sensorer|detektorer) {bs_smoke_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> røg[ ](sensorer|detektorer) er {bs_smoke_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> røg[ ](sensorer|detektorer) er  {bs_smoke_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_sound_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "<er_nogen> (støj|lyd) sensorer {bs_sound_states:state} [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "er [der] noget (der|som) (larmer|støjer) [<i_på> <område>]",
+            "er der (støj|larm) [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er alle (støj|lyd) sensorer {bs_sound_states:state} [<i_på> <område>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> (støj|lyd) sensorer er {bs_sound_states:state} [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> (støj|lyd) sensorer er {bs_sound_states:state} [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_tamper_states:state} [<i_på> <område>]",
+            "er der {bs_tamper_states:state} <navn> [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "tamper"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "tamper"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_update_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "update"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "update"
+          }
+        },
+        {
+          "sentences": [
+            "er der <nogen> [(firmware|software)] opdateringer [<i_på> <område>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "update",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<hvilke> [(firmware|software)] opdateringer er (der|tilgængelige) [<i_på> <område>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "update",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<hvor_mange> [(firmware|software)] opdateringer er (der|tilgængelige) [<i_på> <område>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "update",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "er <navn> {bs_vibration_states:state} [<i_på> <område>]",
+            "{bs_vibration_states:state} <navn> [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "vibration"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "vibration"
+          }
+        },
+        {
+          "sentences": [
+            "er der noget (der|som) vibrerer [<i_på> <område>]"
+          ],
+          "response": "any",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "vibration"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "vibration",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "(er|står) <navn> {bs_window_states:state} [<i_på> <område>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "window"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "window"
+          }
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "tilføj[e] <item>[ til][ (på|i)] <my_list>",
+            "læg[ge] <item>[ til][ (på|i)] <my_list>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "my_list": "[min|den] {name} [liste[n]]",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Undskyld, det forstod jeg ikke",
+      "handle_error": "Der opstod en uventet fejl under håndtering af hensigten",
+      "no_area": "Undskyld, jeg kan ikke finde området kaldet {{ area }}",
+      "no_floor": "Undskyld, jeg kan ikke finde etagen kaldet {{ floor }}",
+      "no_domain": "Undskyld, jeg kender ikke til {{ domain }}",
+      "no_domain_in_area": "Undskyld, jeg kan ikke finde {{ domain }} i området {{ area }}",
+      "no_domain_in_floor": "Undskyld, jeg kan ikke finde {{ domain }} på etagen {{ floor }}",
+      "no_device_class": "Undskyld, jeg kender ikke til {{ device_class }}",
+      "no_device_class_in_area": "Undskyld, jeg kan ikke finde {{ device_class }} i området {{ area }}",
+      "no_device_class_in_floor": "Undskyld, jeg kan ikke finde {{ device_class }} på etagen {{ floor }}",
+      "no_entity": "Undskyld, jeg kan ikke finde {{ entity }}",
+      "no_entity_in_area": "Undskyld jeg kan ikke finde {{ entity }} i området {{ area }}",
+      "no_entity_in_floor": "Undskyld jeg kan ikke finde {{ entity }} på etagen {{ floor}}",
+      "entity_wrong_state": "Undskyld, ingen enhed er {{ state | lower }}",
+      "feature_not_supported": "Undskyld, ingen enhed har supprt for disse funktioner",
+      "no_entity_exposed": "Undskyld, {{ entity }} er ikke eksponeret",
+      "no_entity_in_area_exposed": "Undskyld, {{ entity }} i {{ area }} området er ikke eksponeret",
+      "no_entity_in_floor_exposed": "Undskyld, {{ entity }} på {{ floor }} etage er ikke eksponeret",
+      "no_domain_exposed": "Undskyld, ingen {{ domain }} er eksponeret",
+      "no_domain_in_area_exposed": "Undskyld, ingen {{ domain }} i {{ area }} området er eksponeret",
+      "no_domain_in_floor_exposed": "Undskyld, ingen {{ domain }} på {{ floor }} etage er eksponeret",
+      "no_device_class_exposed": "Undskyld, ingen {{ device_class }} er eksponeret",
+      "no_device_class_in_area_exposed": "Undskyld, ingen {{ device_class }} i {{ area }} omrdået er eksponeret",
+      "no_device_class_in_floor_exposed": "Undskyld, ingen {{ device_class }} på {{ floor }} etage er eksponeret",
+      "duplicate_entities": "Undskyld, der er flere enheder med navnet {{ entity }}",
+      "duplicate_entities_in_area": "Undskyld, er er flere enheder med navnet {{ entity }} i {{ area }} området",
+      "duplicate_entities_in_floor": "Undskyld, er er flere enheder med navnet {{ entity }} på {{ floor }} etage",
+      "timer_not_found": "Undskyld, den timer kunne jeg ikke finde",
+      "multiple_timers_matched": "Undskyld, jeg kan ikke håndtere flere timer",
+      "no_timer_support": "Undskyld, timer er ikk eunderstøttet på denne enhed"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "{{ slots.name | capitalize }} er {{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\n  Ja\n{% else %}\n  Nej, {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Ja, {{ match[:3] | join(\", \") }} og {{ (match | length - 3) }} mere\n  {%- else -%}\n    Ja,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} og {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  Nej\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  Ja\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    Nej, ikke {{ no_match[:3] | join(\", \") }} og {{ (no_match | length - 3) }} mere\n  {%- else -%}\n    Nej, ikke\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} og {% endif -%}\n      {{ name }}\n    {%- endfor %}\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  Ikke nogen\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} og {{ (match | length - 3) }} mere\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} og {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n"
+      },
+      "HassTurnOff": {
+        "default": "Slukkede {{ slots.name }}",
+        "lights_area": "Slukkede lys i {{ slots.name }}",
+        "fans_area": "Slukkede blæsere i {{ slots.name }}",
+        "cover": "Lukkede {{ slots.name }}",
+        "cover_area": "Lukkede {{ slots.area}}",
+        "cover_device_class": "Lukkede {{ slots.device_class }}"
+      },
+      "HassStartTimer": {
+        "default": "Nedtælling startet",
+        "command": "Kommando modtaget"
+      },
+      "HassTurnOn": {
+        "default": "Tændte {{ slots.name }}",
+        "lights_area": "Tændte lys i {{ slots.area }}",
+        "lights_floor": "Tændte lys på {{ slots.floor }}",
+        "light_all": "Tændte alle lys",
+        "fans_area": "Tændte blæsere i {{ slots.area }}",
+        "cover": "Åbnede {{ slots.name }}",
+        "cover_area": "Åbnede {{ slots.area }}",
+        "cover_device_class": "Åbnede {{ slots.device_class }}",
+        "scene": "Aktiveret"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  Ingen nedtællinger.\n{% elif num_active_timers == 0: %}\n  {# No active timers #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    Nedtællingen er pauseret.\n  {% else: %}\n    {{ num_paused_timers }} pauserede nedtællinger.\n  {% endif %}\n{% else: %}\n  {# At least one active timer #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# Get active timer that will finish soonest #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {{ num_active_timers }} aktive nedtællinger.\n  {% endif %}\n\n  {% if num_paused_timers == 1: %}\n    1 pauseret nedtælling.\n  {% elif num_paused_timers > 0: %}\n    {{ num_paused_timers }} pauserede nedtællinger.\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n  {# At least one active timer #}\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0): %}\n    1 time og {{ next_timer.rounded_minutes_left }} minutter\n  {% elif (next_timer.rounded_hours_left == 1): %}\n    1 time\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_hours_left }} timer og {{ next_timer.rounded_minutes_left }} minutter\n  {% elif (next_timer.rounded_hours_left > 1): %}\n    {{ next_timer.rounded_hours_left }} timer\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0): %}\n    1 minut og {{ next_timer.rounded_seconds_left }} sekunder\n  {% elif (next_timer.rounded_minutes_left == 1): %}\n    1 minut\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} minutter og {{ next_timer.rounded_seconds_left }} sekunder\n  {% elif (next_timer.rounded_minutes_left > 1): %}\n    {{ next_timer.rounded_minutes_left }} minutter\n  {% elif (next_timer.rounded_seconds_left == 1): %}\n    1 sekund\n  {% elif (next_timer.rounded_seconds_left > 1): %}\n    {{ next_timer.rounded_seconds_left }} sekunder\n  {% endif %}\n\n  {% if num_timers > 1: %}\n    {# Give some extra information to disambiguate #}\n    tilbage på\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_hours }} timer og {{ next_timer.start_minutes }} minutter\n    {% elif (next_timer.start_hours > 0): %}\n      {{ next_timer.start_hours }} timer\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_minutes }} minut og {{ next_timer.start_seconds }} sekunder\n    {% elif (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_minutes }} minutter\n    {% elif (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_seconds }} sekunder\n    {% endif %}\n\n    {% if next_timer.name: %}\n      {{ next_timer.name }}\n    {% elif next_timer.area: %}\n      {{ next_timer.area }}\n    {% endif %}\n\n    nedtælling.\n  {% else: %}\n    tilbage.\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "{{ slots.item | title }} lagt til"
+      },
+      "HassLightSet": {
+        "brightness": "{{ slots.name }} lysstyrke sat til {{ slots.brightness }}",
+        "brightness_area": "lysstyrke i {{ slots.area }} sat til {{ slots.brightness }}",
+        "color": "{{ slots.name }} farve sat til {{ slots.color }}",
+        "color_area": "Farve i {{ slots.area }} sat til {{ slots.color }}"
+      },
+      "HassCancelTimer": {
+        "default": "Nedtælling afbrudt"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{{ state.state }} grader"
+      }
+    }
+  },
+  "lists": {
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "(højest[e]|maksimal[e]|maksimum|max)",
+          "out": 100
+        },
+        {
+          "in": "(lavest[e]|mindst[e]|minimal[e]|minimum)",
+          "out": 1
+        }
+      ]
+    },
+    "color": {
+      "values": [
+        {
+          "in": "hvid",
+          "out": "white"
+        },
+        {
+          "in": "sort",
+          "out": "black"
+        },
+        {
+          "in": "rød",
+          "out": "red"
+        },
+        {
+          "in": "orange",
+          "out": "orange"
+        },
+        {
+          "in": "gul",
+          "out": "yellow"
+        },
+        {
+          "in": "grøn",
+          "out": "green"
+        },
+        {
+          "in": "blå",
+          "out": "blue"
+        },
+        {
+          "in": "lilla",
+          "out": "purple"
+        },
+        {
+          "in": "brun",
+          "out": "brown"
+        },
+        {
+          "in": "lyserød",
+          "out": "pink"
+        },
+        {
+          "in": "turkis",
+          "out": "turquoise"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "markise[(n|r|rne)]",
+          "out": "awning"
+        },
+        {
+          "in": "persienne[(n|r|rne)]",
+          "out": "blind"
+        },
+        {
+          "in": "gardin[(et|er|erne)]",
+          "out": "curtain"
+        },
+        {
+          "in": "dør[(en|e|ene)]",
+          "out": "door"
+        },
+        {
+          "in": "garage(dør|port)[(en|e|ene)]",
+          "out": "garage"
+        },
+        {
+          "in": "låge[(en|r|rne)]",
+          "out": "gate"
+        },
+        {
+          "in": "(persienne[(en|r|rne)]|rullegardin[(et|er|erne)])",
+          "out": "shade"
+        },
+        {
+          "in": "skodde[(n|r|rne)]",
+          "out": "shutter"
+        },
+        {
+          "in": "vindue[(t|r|rne)]",
+          "out": "window"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "(åben[t]|åbne[t])",
+          "out": "open"
+        },
+        {
+          "in": "lukket",
+          "out": "closed"
+        },
+        {
+          "in": "åbner",
+          "out": "opening"
+        },
+        {
+          "in": "lukker",
+          "out": "closing"
+        }
+      ]
+    },
+    "lock_states": {
+      "values": [
+        {
+          "in": "låst",
+          "out": "locked"
+        },
+        {
+          "in": "ulåst",
+          "out": "unlocked"
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "(på|tændt)",
+          "out": "on"
+        },
+        {
+          "in": "(af|slukket)",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "lys[(et|ene)]",
+          "out": "light"
+        },
+        {
+          "in": "ventilator([en|er|erne])",
+          "out": "fan"
+        },
+        {
+          "in": "(afbryder[(en|ne)]|kontakt[(en|er|erne)])",
+          "out": "switch"
+        }
+      ]
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        "celsius",
+        {
+          "in": "c",
+          "out": "celsius"
+        },
+        "fahrenheit",
+        {
+          "in": "f",
+          "out": "fahrenheit"
+        }
+      ]
+    },
+    "bs_battery_states": {
+      "values": [
+        {
+          "in": "(lav[(e|t)]|flad[(e|t)])",
+          "out": "on"
+        },
+        {
+          "in": "normal[t]",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_battery_charging_states": {
+      "values": [
+        {
+          "in": "(lader|oplader)",
+          "out": "on"
+        },
+        {
+          "in": "(lader|oplader) ikke",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_carbon_monoxide_states": {
+      "values": [
+        {
+          "in": "(detekteret|fundet|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke fundet|ikke registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_cold_states": {
+      "values": [
+        {
+          "in": "kold([t]|[e])",
+          "out": "on"
+        },
+        {
+          "in": "normal[t]",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_connectivity_states": {
+      "values": [
+        {
+          "in": "forbundet",
+          "out": "on"
+        },
+        {
+          "in": "afbrudt",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_door_states": {
+      "values": [
+        {
+          "in": "(åben[t]|åbne[t])",
+          "out": "on"
+        },
+        {
+          "in": "lukket",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_garage_door_states": {
+      "values": [
+        {
+          "in": "(åben[t]|åbne[t])",
+          "out": "on"
+        },
+        {
+          "in": "lukket",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_gas_states": {
+      "values": [
+        {
+          "in": "(detekteret|fundet|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke fundet|ikke registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_heat_states": {
+      "values": [
+        {
+          "in": "varm[t]",
+          "out": "on"
+        },
+        {
+          "in": "normal[t]",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_light_states": {
+      "values": [
+        {
+          "in": "(detekteret|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_lock_states": {
+      "values": [
+        {
+          "in": "(låst op|ulåst)",
+          "out": "on"
+        },
+        {
+          "in": "låst",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_moisture_states": {
+      "values": [
+        {
+          "in": "våd([t]|[e])",
+          "out": "on"
+        },
+        {
+          "in": "tør[t]",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_motion_states": {
+      "values": [
+        {
+          "in": "(detekteret|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_occupancy_states": {
+      "values": [
+        {
+          "in": "(detekteret|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_opening_states": {
+      "values": [
+        {
+          "in": "(åben[t]|åbne[t])",
+          "out": "on"
+        },
+        {
+          "in": "lukket",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_plug_states": {
+      "values": [
+        {
+          "in": "(koblet til|sat i|sat til|tilkoblet|tilsluttet)",
+          "out": "on"
+        },
+        {
+          "in": "ikke (koblet til|sat i|sat til|tilkoblet|tilsluttet)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_power_states": {
+      "values": [
+        {
+          "in": "tændt",
+          "out": "on"
+        },
+        {
+          "in": "slukket",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_presence_states": {
+      "values": [
+        {
+          "in": "(hjemme|tilstedeværende)",
+          "out": "on"
+        },
+        {
+          "in": "(fraværende|ikke hjemme|ude)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_problem_states": {
+      "values": [
+        {
+          "in": "(detekteret|fundet|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke fundet|ikke registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_running_states": {
+      "values": [
+        {
+          "in": "køre[r]",
+          "out": "on"
+        },
+        {
+          "in": "køre[r] ikke",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_safety_states": {
+      "values": [
+        {
+          "in": "(farlig|usikker)",
+          "out": "on"
+        },
+        {
+          "in": "(sikker|ufarlig)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_smoke_states": {
+      "values": [
+        {
+          "in": "(detekteret|fundet|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke fundet|ikke registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_sound_states": {
+      "values": [
+        {
+          "in": "(detekteret|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_tamper_states": {
+      "values": [
+        {
+          "in": "(detekteret|klar|pillet ved|registreret)",
+          "out": "on"
+        },
+        {
+          "in": "ikke (detekteret|klar|pillet ved|registreret)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_update_states": {
+      "values": [
+        {
+          "in": "opdatering tilgængelig",
+          "out": "on"
+        },
+        {
+          "in": "opdateret",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_vibration_states": {
+      "values": [
+        {
+          "in": "(detekteret|registreret|vibrerer)",
+          "out": "on"
+        },
+        {
+          "in": "(ikke detekteret|ikke registreret|vibrerer ikke)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_window_states": {
+      "values": [
+        {
+          "in": "(åben[t]|åbne[t])",
+          "out": "on"
+        },
+        {
+          "in": "lukket",
+          "out": "closed"
+        }
+      ]
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "[en |et ]halv[t]",
+          "out": 30
+        }
+      ]
+    },
+    "timer_quarter": {
+      "values": [
+        {
+          "in": "(1|et) kvarter",
+          "out": 15
+        },
+        {
+          "in": "(3|tre) kvarter",
+          "out": 45
+        }
+      ]
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "al": "(alle | alt | samtlige)",
+    "blæser": "blæser[(e|en|ne)]",
+    "etage": "{area}[(n)]",
+    "garagedør": "garage(dør|port)[(en|e|ene)]",
+    "gardin": "gardin[(et|er|erne)]",
+    "i_på": "(i | på)",
+    "koldt_varmt": "(kold[t] | varm[t])",
+    "koldt": "kold[(t|e)]",
+    "luk": "luk [for]",
+    "lys": "lys[(ene|et)]",
+    "lysstyrke": "{brightness}[%| procent]",
+    "navn": "((den|det) {name}[s]|{name}[(en|ene|et|n|t|men|ten)][s])",
+    "område": "{area}[(en|et|n|t)]",
+    "persienne": "persienne[(n|r|rne)]",
+    "rullegardin": "rullegardin[(et|er|erne)]",
+    "skodde": "skodde[(n|r|rne)]",
+    "sluk": "sluk [for]",
+    "temperatur": "{temperature}[°| grader] [{temperature_unit}]",
+    "tænd": "tænd [for]",
+    "åbn": "(åben|åbn[e]) [for]",
+    "nogen": "(nogen|nogle)",
+    "enhed": "enhed[(en|er|erne)]",
+    "hvor_mange": "hvor[ ]mange",
+    "hvilke": "hvilke[(t|n)]",
+    "er_nogen": "er [der] <nogen>",
+    "er_noget": "er [der] noget",
+    "carbonmonoxid": "(carbonmonoxid|kulilte|kulmonoxid|kulos)",
+    "carbonmonoxid_sensor": "<carbonmonoxid> sensorer[ne]",
+    "gas_fundet": "er [der] [noget] gas (detekteret|fundet|registreret)",
+    "gas_ikke_fundet": "er [der] ikke [noget] gas (detekteret|fundet|registreret)",
+    "bevaegelses_sensor": "bevægelses[ ]sensorer[ne]",
+    "i": "(i|[oppe ]på)",
+    "timer": "(timer | nedtælling)",
+    "timers": "(timere | nedtællinger)",
+    "timer_pause": "(pause|[midlertidig ](stop|stands)[e])",
+    "timer_unpause": "(fortsæt|genoptage)",
+    "timer_add": "(læg til|øge)",
+    "timer_decrease": "(sænk|trække fra|reducer)",
+    "timer_set": "(sæt|start|læg|opret|lav)[ en]",
+    "timer_cancel": "(stop|afbryd|slet|fjern)",
+    "timer_duration_seconds": "{timer_seconds:seconds} sekund[er]",
+    "timer_duration_minutes": "({timer_minutes:minutes} minutt[er][ [og |, ]{timer_seconds:seconds} sekund[er]])|({timer_minutes:minutes} og {timer_half:seconds} minutt[er])|({timer_quarter:minutes})|({timer_half:seconds} minut)",
+    "timer_duration_hours": "({timer_hours:hours} time[r][ [og |, ]{timer_minutes:minutes} minut[ter]][ [og |, ]{timer_seconds:seconds} sekund[er]])|({timer_hours:hours} time[r] og {timer_quarter:minutes})|({timer_hours:hours} og {timer_half:minutes} time[r])|({timer_half:minutes} time)|({timer_hours:hours} og {timer_quarter:minutes})",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes>|<timer_duration_hours>",
+    "timer_start_seconds": "{timer_seconds:start_seconds} sekund[er]",
+    "timer_start_minutes": "{timer_minutes:start_minutes} minut[ter][ [og ]{timer_seconds:start_seconds} sekund[er]]",
+    "timer_start_hours": "{timer_hours:start_hours} time[r][ [og |, ]{timer_minutes:start_minutes} minut[er]][ [og |, ]{timer_seconds:start_seconds} sekund[er]]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes>|<timer_start_hours>"
+  },
+  "skip_words": [
+    "venligst",
+    "vil du",
+    "vær så venlig"
+  ]
+}

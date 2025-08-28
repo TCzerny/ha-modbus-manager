@@ -1,0 +1,206 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "A e\u0219uat conectarea",
+            "invalid_backbone_key": "Cheie backbone nevalid\u0103. Se a\u0219teapt\u0103 32 de numere hexazecimale.",
+            "invalid_individual_address": "Valoarea nu se potrive\u0219te cu modelul pentru adresa individual\u0103 KNX.\n'area.line.device'",
+            "invalid_ip_address": "Adres\u0103 IPv4 nevalid\u0103.",
+            "keyfile_invalid_signature": "Parola pentru a decripta fi\u0219ierul '.knxkeys' este gre\u0219it\u0103.",
+            "keyfile_no_backbone_key": "Fi\u0219ierul '.knxkeys' nu con\u021bine o cheia backbone pentru rutare sigur\u0103.",
+            "keyfile_no_tunnel_for_host": "Fi\u0219ierul '.knxkeys' nu con\u021bine date de conectare la gazda `{host}`.",
+            "keyfile_not_found": "Fi\u0219ierul '.knxkeys' specificat nu a fost g\u0103sit la calea config/.storage/knx/",
+            "no_router_discovered": "\u00cen re\u021bea nu a fost descoperit niciun router KNXnet/IP.",
+            "no_tunnel_discovered": "Nu s-a g\u0103sit niciun server de tunel KNX \u00een re\u021beaua ta",
+            "unsupported_tunnel_type": "Tipul de tunel selectat nu este acceptat de gateway."
+        },
+        "step": {
+            "connection_type": {
+                "title": "Conexiune KNX"
+            },
+            "manual_tunnel": {
+                "data": {
+                    "host": "Gazd\u0103 (host)",
+                    "local_ip": "Interfa\u021b\u0103 IP local\u0103",
+                    "port": "Port",
+                    "route_back": "Rut\u0103 \u00eenapoi / mod NAT"
+                },
+                "data_description": {
+                    "host": "Adresa IP sau hostname-ul dispozitivului de tunelare KNX/IP",
+                    "local_ip": "IP-ul local sau numele interfe\u021bei utilizate pentru conexiunea de la Home Assistant. Las\u0103 necompletat pentru a utiliza descoperirea automat\u0103.",
+                    "route_back": "Activeaz\u0103 dac\u0103 serverul de tunel KNXnet/IP se afl\u0103 \u00een spatele unui NAT. Se aplic\u0103 numai pentru conexiunile UDP."
+                },
+                "description": "Te rug\u0103m s\u0103 introduci detaliile de conectare ale dispozitivului de tunelare.",
+                "title": "Set\u0103rile tunelului"
+            },
+            "routing": {
+                "data": {
+                    "individual_address": "Adres\u0103 individual\u0103",
+                    "local_ip": "Interfa\u021b\u0103 IP local\u0103",
+                    "multicast_group": "Grup multicast",
+                    "multicast_port": "Port multicast"
+                },
+                "data_description": {
+                    "individual_address": "Adresa KNX care urmeaz\u0103 s\u0103 fie utilizat\u0103 de Home Assistant, de exemplu `0.0.4`",
+                    "local_ip": "IP-ul local sau numele interfe\u021bei utilizate pentru conexiunea de la Home Assistant. Las\u0103 necompletat pentru a utiliza descoperirea automat\u0103."
+                },
+                "description": "Te rug\u0103m s\u0103 configurezi op\u021biunile de rutare",
+                "title": "Rutare"
+            },
+            "secure_knxkeys": {
+                "data": {
+                    "knxkeys_file": "Fi\u0219ier \u201ebreloc\u201d (keyring)"
+                },
+                "title": "Importare KNX Keyring"
+            },
+            "secure_routing_manual": {
+                "data": {
+                    "backbone_key": "Cheie backbone",
+                    "sync_latency_tolerance": "Toleran\u021ba la laten\u021ba re\u021belei"
+                },
+                "title": "Rutare securizat\u0103"
+            },
+            "secure_tunnel_manual": {
+                "data": {
+                    "device_authentication": "Parola de autentificare a dispozitivului",
+                    "user_id": "ID utilizator",
+                    "user_password": "Parola de utilizator"
+                },
+                "data_description": {
+                    "device_authentication": "Aceasta este setat\u0103 \u00een panoul \"IP\" al interfe\u021bei din ETS.",
+                    "user_password": "Parola pentru conexiunea tunel specific\u0103 setat\u0103 \u00een panoul \"Propriet\u0103\u021bi\" al tunelului din ETS."
+                },
+                "title": "Tunelare securizat\u0103"
+            },
+            "tunnel": {
+                "title": "Tunel"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "connected_since": {
+                "name": "Conexiune stabilit\u0103"
+            },
+            "connection_type": {
+                "name": "Tipul conexiunii"
+            },
+            "telegram_count": {
+                "name": "Telegrame"
+            },
+            "telegrams_incoming": {
+                "name": "Telegrame primite"
+            },
+            "telegrams_incoming_error": {
+                "name": "Erori la telegramele primite"
+            },
+            "telegrams_outgoing": {
+                "name": "Telegrame trimise"
+            },
+            "telegrams_outgoing_error": {
+                "name": "Erori la telegramele trimise"
+            }
+        }
+    },
+    "options": {
+        "error": {
+            "cannot_connect": "A e\u0219uat conectarea",
+            "invalid_backbone_key": "Cheie backbone nevalid\u0103. Se a\u0219teapt\u0103 32 de numere hexazecimale.",
+            "invalid_individual_address": "Valoarea nu se potrive\u0219te cu modelul pentru adresa individual\u0103 KNX.\n'area.line.device'",
+            "invalid_ip_address": "Adres\u0103 IPv4 nevalid\u0103.",
+            "keyfile_invalid_signature": "Parola pentru a decripta fi\u0219ierul '.knxkeys' este gre\u0219it\u0103.",
+            "keyfile_no_backbone_key": "Fi\u0219ierul '.knxkeys' nu con\u021bine o cheia backbone pentru rutare sigur\u0103.",
+            "keyfile_no_tunnel_for_host": "Fi\u0219ierul '.knxkeys' nu con\u021bine date de conectare la gazda `{host}`.",
+            "keyfile_not_found": "Fi\u0219ierul '.knxkeys' specificat nu a fost g\u0103sit la calea config/.storage/knx/",
+            "no_router_discovered": "\u00cen re\u021bea nu a fost descoperit niciun router KNXnet/IP.",
+            "no_tunnel_discovered": "Nu s-a g\u0103sit niciun server de tunel KNX \u00een re\u021beaua ta",
+            "unsupported_tunnel_type": "Tipul de tunel selectat nu este acceptat de gateway."
+        },
+        "step": {
+            "communication_settings": {
+                "data": {
+                    "rate_limit": "Limita frecven\u021bei de interogare",
+                    "state_updater": "Actualizare de status",
+                    "telegram_log_size": "Limita istoricului telegramelor"
+                },
+                "data_description": {
+                    "telegram_log_size": "Telegrame de p\u0103strat \u00een memorie pentru monitorul grupului de panouri KNX. Maxim: {telegram_log_size_max}"
+                }
+            },
+            "connection_type": {
+                "title": "Conexiune KNX"
+            },
+            "manual_tunnel": {
+                "data": {
+                    "host": "Gazd\u0103 (host)",
+                    "local_ip": "Interfa\u021b\u0103 IP local\u0103",
+                    "port": "Port",
+                    "route_back": "Rut\u0103 \u00eenapoi / mod NAT",
+                    "tunneling_type": "Tip tunel KNX"
+                },
+                "data_description": {
+                    "host": "Adresa IP sau hostname-ul dispozitivului de tunelare KNX/IP",
+                    "local_ip": "IP-ul local sau numele interfe\u021bei utilizate pentru conexiunea de la Home Assistant. Las\u0103 necompletat pentru a utiliza descoperirea automat\u0103.",
+                    "port": "Portul dispozitivului de tunelare KNX/IP.",
+                    "route_back": "Activeaz\u0103 dac\u0103 serverul de tunel KNXnet/IP se afl\u0103 \u00een spatele unui NAT. Se aplic\u0103 numai pentru conexiunile UDP."
+                },
+                "description": "Te rug\u0103m s\u0103 introduci detaliile de conectare ale dispozitivului de tunelare.",
+                "title": "Set\u0103rile tunelului"
+            },
+            "routing": {
+                "data": {
+                    "individual_address": "Adres\u0103 individual\u0103",
+                    "multicast_group": "Grup multicast",
+                    "multicast_port": "Port multicast",
+                    "routing_secure": "Utilizeaz\u0103 KNX IP Secure"
+                },
+                "data_description": {
+                    "individual_address": "Adresa KNX care urmeaz\u0103 s\u0103 fie utilizat\u0103 de Home Assistant, de exemplu `0.0.4`"
+                },
+                "description": "Te rug\u0103m s\u0103 configurezi op\u021biunile de rutare",
+                "title": "Rutare"
+            },
+            "secure_knxkeys": {
+                "data": {
+                    "knxkeys_file": "Fi\u0219ier \u201ebreloc\u201d (keyring)",
+                    "knxkeys_password": "Parola pentru decriptarea fi\u0219ierului `.knxkeys`"
+                },
+                "data_description": {
+                    "knxkeys_password": "Aceasta a fost setat\u0103 odat\u0103 cu exportarea fi\u0219ierului din ETS."
+                },
+                "description": "Te rug\u0103m s\u0103 selectezi un fi\u0219ier `.knxkeys` pentru a fi importat",
+                "title": "Importare KNX Keyring"
+            },
+            "secure_routing_manual": {
+                "data": {
+                    "backbone_key": "Cheie backbone",
+                    "sync_latency_tolerance": "Toleran\u021ba la laten\u021ba re\u021belei"
+                },
+                "data_description": {
+                    "backbone_key": "Poate fi g\u0103sit\u0103 \u00een raportul `Securitate` al unui proiect ETS. Exemplu \"00112233445566778899ABBCCDDEEFF\"",
+                    "sync_latency_tolerance": "Valoarea implicit\u0103 este 1000."
+                },
+                "title": "Rutare securizat\u0103"
+            },
+            "secure_tunnel_manual": {
+                "data": {
+                    "device_authentication": "Parola de autentificare a dispozitivului",
+                    "user_id": "ID utilizator",
+                    "user_password": "Parola de utilizator"
+                },
+                "data_description": {
+                    "device_authentication": "Aceasta este setat\u0103 \u00een panoul \"IP\" al interfe\u021bei din ETS.",
+                    "user_id": "Acesta este adesea num\u0103rul tunelului +1. Deci, \"Tunelul 2\" ar avea ID-ul \"3\".",
+                    "user_password": "Parola pentru conexiunea tunel specific\u0103 setat\u0103 \u00een panoul \"Propriet\u0103\u021bi\" al tunelului din ETS."
+                },
+                "description": "Te rug\u0103m s\u0103 introduci informa\u021biile de securitate IP.",
+                "title": "Tunelare securizat\u0103"
+            },
+            "tunnel": {
+                "data": {
+                    "gateway": "Conexiune tunel KNX"
+                },
+                "title": "Tunel"
+            }
+        }
+    }
+}

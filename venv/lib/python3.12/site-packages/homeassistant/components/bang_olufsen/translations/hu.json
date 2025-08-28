@@ -1,0 +1,134 @@
+{
+    "common": {
+        "jid_options_description": "Halad\u00f3 csoportos\u00edt\u00e1si be\u00e1ll\u00edt\u00e1sok, ahol az eszk\u00f6z\u00f6k egyedi Beolink azonos\u00edt\u00f3i (JID-k\u00e9nt ismertek) k\u00f6zvetlen\u00fcl haszn\u00e1lhat\u00f3k. A JID-ek a m\u00e9dialej\u00e1tsz\u00f3 entit\u00e1s \u00e1llapot attrib\u00fatumaiban tal\u00e1lhat\u00f3k meg.",
+        "jid_options_name": "JID be\u00e1ll\u00edt\u00e1sok"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "already_in_progress": "A konfigur\u00e1l\u00e1s m\u00e1r folyamatban van"
+        },
+        "error": {
+            "api_exception": "Sikertelen csatlakoz\u00e1s",
+            "client_connector_error": "Sikertelen csatlakoz\u00e1s",
+            "invalid_ip": "\u00c9rv\u00e9nytelen IPv4-c\u00edm",
+            "timeout_error": "Sikertelen csatlakoz\u00e1s"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "IP-c\u00edm",
+                    "model": "Modell"
+                },
+                "description": "Manu\u00e1lisan konfigur\u00e1lja a Bang & Olufsen eszk\u00f6zt."
+            },
+            "zeroconf_confirm": {
+                "description": "Ellen\u0151rizze a(z) {model}-{serial_number} @ {host} konfigur\u00e1ci\u00f3j\u00e1t.",
+                "title": "Bang & Olufsen eszk\u00f6z be\u00e1ll\u00edt\u00e1sa"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_grouping_entity": {
+            "message": "Azonos\u00edt\u00f3val rendelkez\u0151 entit\u00e1s: {entity_id} nem adhat\u00f3 hozz\u00e1 a Beolink munkamenethez. Az entit\u00e1s egy Bang & Olufsen media_player?"
+        },
+        "invalid_media_type": {
+            "message": "A(z) {invalid_media_type} \u00e9rv\u00e9nytelen t\u00edpus. \u00c9rv\u00e9nyes \u00e9rt\u00e9kek: {valid_media_types}."
+        },
+        "invalid_sound_mode": {
+            "message": "A(z) {invalid_sound_mode} \u00e9rv\u00e9nytelen hangm\u00f3d. Az \u00e9rv\u00e9nyes \u00e9rt\u00e9kek a k\u00f6vetkez\u0151k: {valid_sound_modes}."
+        },
+        "invalid_source": {
+            "message": "\u00c9rv\u00e9nytelen forr\u00e1s: {invalid_source}. \u00c9rv\u00e9nyes forr\u00e1sok: {valid_sources}"
+        },
+        "m3u_invalid_format": {
+            "message": "Az .m3u kiterjeszt\u00e9s\u0171 m\u00e9diaforr\u00e1sok nem t\u00e1mogatottak."
+        },
+        "play_media_error": {
+            "message": "Hiba t\u00f6rt\u00e9nt a(z) {media_type} lej\u00e1tsz\u00e1sa k\u00f6zben: {error_message}"
+        }
+    },
+    "selector": {
+        "source_ids": {
+            "options": {
+                "aux_a": "Beolink Converter NL/ML AUX_A",
+                "beoradio": "ASE Beoradio",
+                "cd": "Beolink Converter NL/ML CD",
+                "deezer": "ASE / Mozart Deezer",
+                "ph": "Beolink Converter NL/ML PH",
+                "radio": "Beolink Converter NL/ML RADIO",
+                "spotify": "ASE / Mozart Spotify",
+                "tidal": "Mozart Tidal",
+                "tp1": "Beolink Converter NL/ML TP1",
+                "tp2": "Beolink Converter NL/ML TP2"
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "Az \u00f6sszes csatlakoztatott Beolink eszk\u00f6z k\u00e9szenl\u00e9ti \u00e1llapotba helyez\u00e9se.",
+            "name": "Beolink \u00f6sszes k\u00e9szenl\u00e9t"
+        },
+        "beolink_expand": {
+            "description": "A jelenlegi Beolink \u00e9lm\u00e9ny kib\u0151v\u00edt\u00e9se.",
+            "fields": {
+                "all_discovered": {
+                    "description": "A Beolink \u00e9lm\u00e9ny kiterjeszt\u00e9se minden felfedezett eszk\u00f6zre.",
+                    "name": "Minden felfedezett"
+                },
+                "beolink_jids": {
+                    "description": "Adja meg, hogy mely Beolink JID-ek csatlakozzanak a jelenlegi Beolink \u00e9lm\u00e9nyhez.",
+                    "name": "Beolink JID-ek"
+                }
+            },
+            "name": "Beolink kiterjeszt\u00e9s",
+            "sections": {
+                "jid_options": {
+                    "description": "Halad\u00f3 csoportos\u00edt\u00e1si be\u00e1ll\u00edt\u00e1sok, ahol az eszk\u00f6z\u00f6k egyedi Beolink azonos\u00edt\u00f3i (JID-k\u00e9nt ismertek) k\u00f6zvetlen\u00fcl haszn\u00e1lhat\u00f3k. A JID-ek a m\u00e9dialej\u00e1tsz\u00f3 entit\u00e1s \u00e1llapot attrib\u00fatumaiban tal\u00e1lhat\u00f3k meg.",
+                    "name": "JID be\u00e1ll\u00edt\u00e1sok"
+                }
+            }
+        },
+        "beolink_join": {
+            "description": "Csatlakoz\u00e1s egy Beolink \u00e9lm\u00e9nyhez.",
+            "fields": {
+                "beolink_jid": {
+                    "description": "Adja meg manu\u00e1lisan a csatlakozni k\u00edv\u00e1nt Beolink JID-t.",
+                    "name": "Beolink JID"
+                },
+                "source_id": {
+                    "description": "Adja meg, melyik forr\u00e1shoz szeretne csatlakozni. A viselked\u00e9s hardverplatformonk\u00e9nt elt\u00e9rhet. Az olyan forr\u00e1snevek, amelyeket egy platform neve el\u0151z meg, csak az adott platformhoz csatlakozva haszn\u00e1lhat\u00f3k. P\u00e9ld\u00e1ul az \"ASE Beoradio\" csak ASE eszk\u00f6z\u00f6kh\u00f6z csatlakozva haszn\u00e1lhat\u00f3, m\u00edg az \"ASE / Mozart Deezer\" ASE vagy Mozart eszk\u00f6z\u00f6kkel is haszn\u00e1lhat\u00f3. Egy meghat\u00e1rozott Beolink JID sz\u00fcks\u00e9ges.",
+                    "name": "Forr\u00e1s"
+                }
+            },
+            "name": "Beolink csatlakoz\u00e1s",
+            "sections": {
+                "jid_options": {
+                    "description": "Halad\u00f3 csoportos\u00edt\u00e1si be\u00e1ll\u00edt\u00e1sok, ahol az eszk\u00f6z\u00f6k egyedi Beolink azonos\u00edt\u00f3i (JID-k\u00e9nt ismertek) k\u00f6zvetlen\u00fcl haszn\u00e1lhat\u00f3k. A JID-ek a m\u00e9dialej\u00e1tsz\u00f3 entit\u00e1s \u00e1llapot attrib\u00fatumaiban tal\u00e1lhat\u00f3k meg.",
+                    "name": "JID be\u00e1ll\u00edt\u00e1sok"
+                }
+            }
+        },
+        "beolink_leave": {
+            "description": "Kil\u00e9p\u00e9s egy Beolink \u00e9lm\u00e9nyb\u0151l.",
+            "name": "Beolink kil\u00e9p\u00e9s"
+        },
+        "beolink_unexpand": {
+            "description": "Kil\u00e9p\u00e9s a jelenlegi Beolink \u00e9lm\u00e9ny kib\u0151v\u00edtett \u00e1llapot\u00e1b\u00f3l.",
+            "fields": {
+                "beolink_jids": {
+                    "description": "Adja meg, hogy mely Beolink JID-ek l\u00e9pjenek ki a jelenlegi Beolink \u00e9lm\u00e9nyb\u0151l.",
+                    "name": "Beolink JID-ek"
+                }
+            },
+            "name": "Beolink visszavon\u00e1s",
+            "sections": {
+                "jid_options": {
+                    "description": "Halad\u00f3 csoportos\u00edt\u00e1si be\u00e1ll\u00edt\u00e1sok, ahol az eszk\u00f6z\u00f6k egyedi Beolink azonos\u00edt\u00f3i (JID-k\u00e9nt ismertek) k\u00f6zvetlen\u00fcl haszn\u00e1lhat\u00f3k. A JID-ek a m\u00e9dialej\u00e1tsz\u00f3 entit\u00e1s \u00e1llapot attrib\u00fatumaiban tal\u00e1lhat\u00f3k meg.",
+                    "name": "JID be\u00e1ll\u00edt\u00e1sok"
+                }
+            }
+        }
+    }
+}

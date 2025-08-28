@@ -1,0 +1,147 @@
+{
+    "config": {
+        "abort": {
+            "already_configured_device": "Prietaisas jau sukonfig\u016bruotas",
+            "api_error": "Klaida bendraujant su SwitchBot API: {error_detail}",
+            "no_devices_found": "Diapazone nerasta palaikom\u0173 \u201eSwitchBot\u201c prietais\u0173; Jei prietaisas yra diapazone, \u012fsitikinkite, kad skaitytuve \u012fjungtas aktyvus nuskaitymas, nes naudojant pasyvius nuskaitymus SwitchBot prietais\u0173 nepavyks aptikti. Aktyv\u0173 nuskaitym\u0105 galima i\u0161jungti, kai prietaisas sukonfig\u016bruotas. Jei reikia paai\u0161kinimo, ar prietaisas yra diapazone, atsisi\u0173skite integracijos, kuri suteikia j\u016bs\u0173 Bluetooth adapter\u012f arba tarpin\u012f server\u012f, diagnostik\u0105 ir patikrinkite, ar yra SwitchBot prietaiso MAC adresas.",
+            "switchbot_unsupported_type": "Nepalaikomas Switchbot tipas.",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "error": {
+            "auth_failed": "Autentifikavimas nepavyko: {error_detail}",
+            "encryption_key_invalid": "Netinkamas rakto ID arba \u0161ifravimo raktas"
+        },
+        "flow_title": "{name} ({address})",
+        "step": {
+            "confirm": {
+                "description": "Ar norite nustatyti {name} ?"
+            },
+            "encrypted_auth": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas"
+                },
+                "description": "Pateikite savo \u201eSwitchBot\u201c programos naudotojo vard\u0105 ir slapta\u017eod\u012f. \u0160ie duomenys nebus i\u0161saugoti ir naudojami tik \u012frenginio \u0161ifravimo raktui gauti. Vartotojo vardai ir slapta\u017eod\u017eiai skiriami did\u017eiosioms ir ma\u017eosioms raid\u0117ms."
+            },
+            "encrypted_choose_method": {
+                "description": "\u0160ifruot\u0105 \u201eSwitchBot\u201c \u012frengin\u012f \u201eHome Assistant\u201c galima nustatyti dviem skirtingais b\u016bdais. \n \n Galite patys \u012fvesti rakto ID ir \u0161ifravimo rakt\u0105 arba nam\u0173 asistentas gali importuoti juos i\u0161 j\u016bs\u0173 \u201eSwitchBot\u201c paskyros.",
+                "menu_options": {
+                    "encrypted_auth": "\u201eSwitchBot\u201c paskyra (rekomenduojama)",
+                    "encrypted_key": "\u012eveskite \u0161ifravimo rakt\u0105 rankiniu b\u016bdu"
+                }
+            },
+            "encrypted_key": {
+                "data": {
+                    "encryption_key": "\u0160ifravimo raktas",
+                    "key_id": "Rakto ID"
+                },
+                "description": "\u012erenginyje {name} reikalingas \u0161ifravimo raktas. I\u0161sami\u0105 informacij\u0105, kaip j\u012f gauti, rasite dokumentacijoje."
+            },
+            "password": {
+                "data": {
+                    "password": "Slapta\u017eodis"
+                },
+                "description": "Prietaise {name} reikalingas slapta\u017eodis"
+            },
+            "user": {
+                "data": {
+                    "address": "MAC adresas"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "calibration": {
+                "name": "Kalibravimas"
+            },
+            "door_auto_lock_paused": {
+                "name": "Automatinis u\u017eraktas pristabdytas"
+            },
+            "door_timeout": {
+                "name": "Laikas baig\u0117si"
+            },
+            "door_unclosed_alarm": {
+                "name": "Neu\u017edaryta signalizacija"
+            },
+            "door_unlocked_alarm": {
+                "name": "Atrakintas signalas"
+            }
+        },
+        "cover": {
+            "cover": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problema",
+                            "true": "GERAI"
+                        }
+                    }
+                }
+            }
+        },
+        "humidifier": {
+            "humidifier": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problema",
+                            "true": "GERAI"
+                        }
+                    }
+                }
+            }
+        },
+        "lock": {
+            "lock": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problema",
+                            "true": "GERAI"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "bluetooth_signal": {
+                "name": "Bluetooth signalas"
+            },
+            "light_level": {
+                "name": "\u0160viesos lygis"
+            },
+            "wifi_signal": {
+                "name": "Wi-Fi signalas"
+            }
+        },
+        "switch": {
+            "bot": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Problema",
+                            "true": "GERAI"
+                        }
+                    },
+                    "switch_mode": {
+                        "state": {
+                            "false": "Momentinis",
+                            "true": "I\u0161traukti / i\u0161traukti"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "lock_force_nightlatch": "Priverstinis Nightlatch veikimo re\u017eimas",
+                    "retry_count": "Bandykite skai\u010diuoti dar kart\u0105"
+                }
+            }
+        }
+    }
+}

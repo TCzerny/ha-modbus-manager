@@ -1,0 +1,382 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "cannot_connect": "Nepavyko prisijungti",
+            "no_devices_found": "Tinkle nerasta joki\u0173 prietais\u0173",
+            "reauth_successful": "Pakartotinis autentifikavimas buvo s\u0117kmingas",
+            "reconfigure_successful": "Pakartotinis konfig\u016bravimas buvo s\u0117kmingas"
+        },
+        "error": {
+            "camera_creds": "Turite nustatyti ir vartotojo vard\u0105, ir slapta\u017eod\u012f",
+            "cannot_connect": "Ry\u0161io klaida: {error}",
+            "cannot_connect_camera": "Nepavyko pasiekti kameros srauto, patikrinkite, ar nustat\u0117te kameros paskyr\u0105: {error}",
+            "invalid_auth": "Nepavyko autentifikuoti: {error}",
+            "invalid_camera_auth": "Nepavyko patvirtinti kameros srauto"
+        },
+        "flow_title": "{name} {model} ({host})",
+        "step": {
+            "camera_auth_confirm": {
+                "data": {
+                    "live_view": "\u012egalinti kameros tiesiogin\u012f vaizd\u0105",
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas"
+                },
+                "description": "\u012eveskite \u012frenginio kameros paskyros kredencialus.",
+                "title": "Nustatykite fotoaparato paskyros kredencialus"
+            },
+            "discovery_auth_confirm": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas"
+                },
+                "description": "Prietaisui reikalingas autentifikavimas. Toliau \u012fveskite savo TP-Link kredencialus. Atkreipkite d\u0117mes\u012f jog ir el. pa\u0161tas, ir slapta\u017eodis yra jautr\u016bs did\u017eiosioms bei ma\u017eosioms raid\u0117ms.",
+                "title": "Autentifikuoti"
+            },
+            "discovery_confirm": {
+                "description": "Ar norite nustatyti {name} {model} ({host})?"
+            },
+            "pick_device": {
+                "data": {
+                    "device": "Prietaisas"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas"
+                },
+                "description": "Prietaisui reikalingas autentifikavimas. Toliau \u012fveskite savo TP-Link kredencialus. Atkreipkite d\u0117mes\u012f jog ir el. pa\u0161tas, ir slapta\u017eodis yra jautr\u016bs did\u017eiosioms bei ma\u017eosioms raid\u0117ms.",
+                "title": "Baig\u0117si {name} autentifikavimo galiojimas"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                },
+                "description": "Atnaujinkite \u012frenginio {mac} konfig\u016bracij\u0105",
+                "title": "I\u0161 naujo sukonfig\u016bruokite TPLink \u012fra\u0161\u0105"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "J\u016bs\u0173 TP-Link prietaiso pagrindinio kompiuterio pavadinimas arba IP adresas."
+                },
+                "description": "Jei paliksite pagrindin\u012f kompiuter\u012f tu\u0161\u010di\u0105, aptikimas bus naudojamas prietaisams rasti."
+            },
+            "user_auth_confirm": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "username": "Naudotojo vardas"
+                },
+                "description": "Prietaisui reikalingas autentifikavimas. Toliau \u012fveskite savo TP-Link kredencialus. Atkreipkite d\u0117mes\u012f jog ir el. pa\u0161tas, ir slapta\u017eodis yra jautr\u016bs did\u017eiosioms bei ma\u017eosioms raid\u0117ms.",
+                "title": "Autentifikuoti"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_low": {
+                "name": "Baterija i\u0161sekusi"
+            },
+            "cloud_connection": {
+                "name": "Debes\u0173 ry\u0161ys"
+            },
+            "humidity_warning": {
+                "name": "\u012esp\u0117jimas apie oro dr\u0117gm\u0119"
+            },
+            "is_open": {
+                "name": "Durys",
+                "state": {
+                    "off": "U\u017edaryta",
+                    "on": "Atidaryta"
+                }
+            },
+            "overheated": {
+                "name": "Perkait\u0119s"
+            },
+            "temperature_warning": {
+                "name": "\u012esp\u0117jimas apie temperat\u016br\u0105"
+            },
+            "update_available": {
+                "name": "Naujinys",
+                "state": {
+                    "off": "Naujausia",
+                    "on": "Galimas atnaujinimas"
+                }
+            },
+            "water_alert": {
+                "name": "Dr\u0117gm\u0117",
+                "state": {
+                    "off": "Sausas",
+                    "on": "\u0160lapias"
+                }
+            }
+        },
+        "button": {
+            "pan_left": {
+                "name": "Pasukite \u012f kair\u0119"
+            },
+            "pan_right": {
+                "name": "Pasukite \u012f de\u0161in\u0119"
+            },
+            "stop_alarm": {
+                "name": "Sustabdyti signal\u0105"
+            },
+            "test_alarm": {
+                "name": "Bandomasis signalas"
+            },
+            "tilt_down": {
+                "name": "Pakreipkite \u017eemyn"
+            },
+            "tilt_up": {
+                "name": "Pakreipti auk\u0161tyn"
+            }
+        },
+        "camera": {
+            "live_view": {
+                "name": "Tiesioginis vaizdas"
+            }
+        },
+        "number": {
+            "auto_off_minutes": {
+                "name": "I\u0161jungti"
+            },
+            "pan_step": {
+                "name": "Pan laipsniai"
+            },
+            "smooth_transition_off": {
+                "name": "Skland\u017eiai i\u0161jungti"
+            },
+            "smooth_transition_on": {
+                "name": "Sklandus \u012fjungimas"
+            },
+            "temperature_offset": {
+                "name": "Temperat\u016bros poslinkis"
+            },
+            "tilt_step": {
+                "name": "Pasvirimo laipsniai"
+            }
+        },
+        "select": {
+            "alarm_sound": {
+                "name": "Signalizacijos garsas"
+            },
+            "alarm_volume": {
+                "name": "Signalizacijos garsumas"
+            },
+            "light_preset": {
+                "name": "\u0160viesos i\u0161 anksto nustatytas"
+            }
+        },
+        "sensor": {
+            "alarm_source": {
+                "name": "Signalizacijos \u0161altinis"
+            },
+            "auto_off_at": {
+                "name": "Automatinis i\u0161jungimas val"
+            },
+            "available_firmware_version": {
+                "name": "Galima programin\u0117s-technin\u0117s \u012frangos versija"
+            },
+            "battery_level": {
+                "name": "Baterijos lygis"
+            },
+            "consumption_this_month": {
+                "name": "\u0160io m\u0117nesio suvartojimas"
+            },
+            "consumption_today": {
+                "name": "\u0160iandieninis vartojimas"
+            },
+            "consumption_total": {
+                "name": "Bendras suvartojimas"
+            },
+            "current": {
+                "name": "Srov\u0117"
+            },
+            "current_consumption": {
+                "name": "Dabartinis suvartojimas"
+            },
+            "current_firmware_version": {
+                "name": "Dabartin\u0117 programin\u0117s-technin\u0117s \u012frangos versija"
+            },
+            "device_time": {
+                "name": "Prietaiso laikas"
+            },
+            "humidity": {
+                "name": "Oro dr\u0117gm\u0117"
+            },
+            "on_since": {
+                "name": "Nuo tada"
+            },
+            "report_interval": {
+                "name": "Ataskait\u0173 intervalas"
+            },
+            "rssi": {
+                "name": "Signalo stiprumas"
+            },
+            "signal_level": {
+                "name": "Signalo lygis"
+            },
+            "ssid": {
+                "name": "SSID"
+            },
+            "temperature": {
+                "name": "Temperat\u016bra"
+            },
+            "voltage": {
+                "name": "\u012etampa"
+            },
+            "water_alert_timestamp": {
+                "name": "Paskutinis \u012fsp\u0117jimas apie vandens nuot\u0117k\u012f"
+            }
+        },
+        "switch": {
+            "auto_off_enabled": {
+                "name": "Automatinis i\u0161jungimas \u012fjungtas"
+            },
+            "auto_update_enabled": {
+                "name": "Automatinis atnaujinimas \u012fjungtas"
+            },
+            "baby_cry_detection": {
+                "name": "K\u016bdikio verksmo aptikimas"
+            },
+            "child_lock": {
+                "name": "U\u017eraktas nuo vaik\u0173"
+            },
+            "fan_sleep_mode": {
+                "name": "Ventiliatoriaus miego re\u017eimas"
+            },
+            "led": {
+                "name": "LED"
+            },
+            "motion_detection": {
+                "name": "Judesio aptikimas"
+            },
+            "person_detection": {
+                "name": "Asmens aptikimas"
+            },
+            "pir_enabled": {
+                "name": "Judesio daviklis"
+            },
+            "smooth_transitions": {
+                "name": "Skland\u016bs per\u0117jimai"
+            },
+            "tamper_detection": {
+                "name": "Pa\u017eeidimo aptikimas"
+            }
+        }
+    },
+    "exceptions": {
+        "device_authentication": {
+            "message": "Prietaiso autentifikavimo klaida {func} : {exc}"
+        },
+        "device_error": {
+            "message": "Nepavyko susisiekti su prietaisu {func} : {exc}"
+        },
+        "device_timeout": {
+            "message": "Baig\u0117si ry\u0161io su prietaisu {func} laikas: {exc}"
+        }
+    },
+    "issues": {
+        "deprecated_entity": {
+            "description": "Aptikome, kad subjektas \u201e{entity}\u201c naudojamas \u201e{info}\u201c Suk\u016br\u0117me nauj\u0105 subjekt\u0105 \u201e{new_platform}\u201c ir tur\u0117tum\u0117te perkelti \u201e{info}\u201c, kad naudotum\u0117te \u0161\u012f nauj\u0105 subjekt\u0105. Kai baigsite perkelti \u201e{info}\u201c ir b\u016bsite pasireng\u0119 pa\u0161alinti nebenaudojam\u0105 subjekt\u0105 \u201e{entity}\u201c, i\u0161junkite subjekt\u0105 ir i\u0161 naujo paleiskite \u201eHome Assistant\u201c.",
+            "title": "Aptiktas nebenaudojamas {platform} subjekto naudojimas"
+        }
+    },
+    "services": {
+        "random_effect": {
+            "description": "Nustato atsitiktin\u012f efekt\u0105.",
+            "fields": {
+                "backgrounds": {
+                    "description": "HSV sek\u0173 s\u0105ra\u0161as (maks. 16).",
+                    "name": "Fonai"
+                },
+                "brightness": {
+                    "description": "Pradinis ry\u0161kumas.",
+                    "name": "Ry\u0161kumas"
+                },
+                "brightness_range": {
+                    "description": "Ry\u0161kumo diapazonas.",
+                    "name": "Ry\u0161kumo diapazonas"
+                },
+                "duration": {
+                    "description": "Trukm\u0117.",
+                    "name": "Trukm\u0117"
+                },
+                "fadeoff": {
+                    "description": "I\u0161nyksta.",
+                    "name": "I\u0161nyksta"
+                },
+                "hue_range": {
+                    "description": "Atspalvi\u0173 diapazonas.",
+                    "name": "Atspalvi\u0173 diapazonas"
+                },
+                "init_states": {
+                    "description": "Pradin\u0117 HSV seka.",
+                    "name": "Pradin\u0117s b\u016bsenos"
+                },
+                "random_seed": {
+                    "description": "Atsitiktin\u0117 s\u0117kla.",
+                    "name": "Atsitiktin\u0117 s\u0117kla"
+                },
+                "saturation_range": {
+                    "description": "Prisotinimo diapazonas.",
+                    "name": "Sodrumo diapazonas"
+                },
+                "segments": {
+                    "description": "Segment\u0173 s\u0105ra\u0161as (0 visiems).",
+                    "name": "Segmentai"
+                },
+                "transition": {
+                    "description": "Per\u0117jimas.",
+                    "name": "Per\u0117jimas"
+                },
+                "transition_range": {
+                    "description": "Per\u0117jimo diapazonas.",
+                    "name": "Per\u0117jimo diapazonas"
+                }
+            },
+            "name": "Atsitiktinis efektas"
+        },
+        "sequence_effect": {
+            "description": "Nustato sekos efekt\u0105.",
+            "fields": {
+                "brightness": {
+                    "description": "Pradinis ry\u0161kumas.",
+                    "name": "Ry\u0161kumas"
+                },
+                "direction": {
+                    "description": "Kryptis.",
+                    "name": "Kryptis"
+                },
+                "duration": {
+                    "description": "Trukm\u0117.",
+                    "name": "Trukm\u0117"
+                },
+                "repeat_times": {
+                    "description": "Pakartojimai (0 nuolatiniam).",
+                    "name": "Pakartojimai"
+                },
+                "segments": {
+                    "description": "Segment\u0173 s\u0105ra\u0161as (0 visiems).",
+                    "name": "Segmentai"
+                },
+                "sequence": {
+                    "description": "HSV sek\u0173 s\u0105ra\u0161as (maks. 16).",
+                    "name": "Seka"
+                },
+                "spread": {
+                    "description": "Plitimo greitis.",
+                    "name": "Plisti"
+                },
+                "transition": {
+                    "description": "Per\u0117jimas.",
+                    "name": "Per\u0117jimas"
+                }
+            },
+            "name": "Sekos efektas"
+        }
+    }
+}

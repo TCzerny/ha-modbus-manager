@@ -1,0 +1,193 @@
+{
+    "common": {
+        "state_not_supported": "Niet ondersteund",
+        "state_supported": "Ondersteund"
+    },
+    "config": {
+        "error": {
+            "already_configured": "Apparaat is al geconfigureerd",
+            "cannot_connect": "Kan geen verbinding maken",
+            "timeout_connect": "Time-out bij het maken van verbinding"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "device": "Pad of URL",
+                    "id": "ID",
+                    "name": "Naam"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "cooling": {
+                "name": "Koelen"
+            },
+            "flame": {
+                "name": "Vlam"
+            },
+            "hot_water": {
+                "name": "Heet water"
+            },
+            "hot_water_config": {
+                "state": {
+                    "on": "Opslagtank"
+                }
+            },
+            "supports_central_heating_setpoint_transfer": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            },
+            "supports_central_heating_setpoint_writing": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            },
+            "supports_ch_2": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            },
+            "supports_cooling": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            },
+            "supports_hot_water": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            },
+            "supports_hot_water_setpoint_transfer": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            },
+            "supports_hot_water_setpoint_writing": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            },
+            "supports_pump_control": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            },
+            "supports_remote_reset": {
+                "state": {
+                    "off": "Niet ondersteund",
+                    "on": "Ondersteund"
+                }
+            }
+        },
+        "select": {
+            "gpio_mode_n": {
+                "state": {
+                    "away": "Weg",
+                    "ds1820": "DS1820",
+                    "home": "Thuis",
+                    "led_e": "LED E",
+                    "led_f": "LED F"
+                }
+            },
+            "led_mode_n": {
+                "state": {
+                    "central_heating_on": "Centrale verwarming is aan",
+                    "comfort_mode_on": "Comfortmodus is ingeschakeld",
+                    "hot_water_on": "Warmwater is aan"
+                }
+            }
+        },
+        "sensor": {
+            "outside_temperature": {
+                "name": "Buitentemperatuur"
+            },
+            "product_version": {
+                "name": "Product versie"
+            },
+            "room_temperature": {
+                "name": "Kamertemperatuur"
+            },
+            "total_burner_hours": {
+                "name": "Looptijd brander"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "floor_temperature": "Vloertemperatuur",
+                    "read_precision": "Lees Precisie",
+                    "set_precision": "Precisie instellen",
+                    "temporary_override_mode": "Tijdelijke setpoint-overschrijvingsmodus"
+                }
+            }
+        }
+    },
+    "services": {
+        "set_clock": {
+            "fields": {
+                "date": {
+                    "name": "Datum"
+                },
+                "time": {
+                    "name": "Tijd"
+                }
+            }
+        },
+        "set_control_setpoint": {
+            "fields": {
+                "temperature": {
+                    "name": "Temperatuur"
+                }
+            }
+        },
+        "set_gpio_mode": {
+            "fields": {
+                "mode": {
+                    "name": "Modus"
+                }
+            }
+        },
+        "set_hot_water_setpoint": {
+            "fields": {
+                "temperature": {
+                    "name": "Temperatuur"
+                }
+            }
+        },
+        "set_led_mode": {
+            "fields": {
+                "mode": {
+                    "name": "Modus"
+                }
+            }
+        },
+        "set_outside_temperature": {
+            "fields": {
+                "temperature": {
+                    "name": "Temperatuur"
+                }
+            },
+            "name": "Stel buitentemperatuur in"
+        },
+        "set_setback_temperature": {
+            "fields": {
+                "temperature": {
+                    "name": "Temperatuur"
+                }
+            }
+        }
+    }
+}

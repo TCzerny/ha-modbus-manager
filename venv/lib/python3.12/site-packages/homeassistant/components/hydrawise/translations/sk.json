@@ -1,0 +1,88 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Slu\u017eba u\u017e je nakonfigurovan\u00e1",
+            "reauth_successful": "Op\u00e4tovn\u00e9 overenie bolo \u00faspe\u0161n\u00e9"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "invalid_auth": "Neplatn\u00e9 overenie",
+            "timeout_connect": "\u010casov\u00fd limit na nadviazanie spojenia",
+            "unknown": "Neo\u010dak\u00e1van\u00e1 chyba"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "password": "Heslo",
+                    "username": "Pou\u017e\u00edvate\u013esk\u00e9 meno"
+                },
+                "description": "Zadajte pou\u017e\u00edvate\u013esk\u00e9 meno a heslo pre svoje konto Hydrawise cloud:",
+                "title": "Prihl\u00e1senie Hydrawise"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rain_sensor": {
+                "name": "Da\u017e\u010fov\u00fd sn\u00edma\u010d"
+            },
+            "watering": {
+                "name": "Zalievanie"
+            }
+        },
+        "sensor": {
+            "daily_active_water_time": {
+                "name": "Denn\u00fd \u010das akt\u00edvneho zavla\u017eovania"
+            },
+            "daily_active_water_use": {
+                "name": "Denn\u00e1 akt\u00edvna spotreba vody"
+            },
+            "daily_inactive_water_use": {
+                "name": "Denn\u00e1 neakt\u00edvna spotreba vody"
+            },
+            "daily_total_water_use": {
+                "name": "Celkov\u00e1 denn\u00e1 spotreba vody"
+            },
+            "next_cycle": {
+                "name": "\u010eal\u0161\u00ed cyklus"
+            },
+            "watering_time": {
+                "name": "Zost\u00e1vaj\u00faci \u010das zavla\u017eovania"
+            }
+        },
+        "switch": {
+            "auto_watering": {
+                "name": "Automatick\u00e9 zavla\u017eovanie"
+            },
+            "manual_watering": {
+                "name": "Ru\u010dn\u00e9 zavla\u017eovanie"
+            }
+        }
+    },
+    "services": {
+        "resume": {
+            "description": "Obnov\u00ed automatick\u00fd pl\u00e1n zavla\u017eovania z\u00f3ny.",
+            "name": "Obnovenie automatick\u00e9ho zavla\u017eovania"
+        },
+        "start_watering": {
+            "description": "Spust\u00ed zavla\u017eovac\u00ed cyklus vo vybranej zavla\u017eovacej z\u00f3ne.",
+            "fields": {
+                "duration": {
+                    "description": "D\u013a\u017eka trvania zavla\u017eovacieho cyklu. Ak nie je zadan\u00e1 (alebo je nulov\u00e1), pou\u017eije sa predvolen\u00e1 d\u013a\u017eka trvania zavla\u017eovacieho cyklu nastaven\u00e1 v mobilnej alebo webovej aplik\u00e1cii Hydrawise pre dan\u00fa zavla\u017eovaciu z\u00f3nu.",
+                    "name": "Trvanie"
+                }
+            },
+            "name": "Za\u010da\u0165 zalieva\u0165"
+        },
+        "suspend": {
+            "description": "Pozastav\u00ed automatick\u00fd pl\u00e1n zavla\u017eovania z\u00f3ny do dan\u00e9ho d\u00e1tumu a \u010dasu.",
+            "fields": {
+                "until": {
+                    "description": "D\u00e1tum a \u010das obnovenia automatick\u00e9ho pl\u00e1nu zavla\u017eovania.",
+                    "name": "Until"
+                }
+            },
+            "name": "Pozastavenie automatick\u00e9ho zavla\u017eovania"
+        }
+    }
+}

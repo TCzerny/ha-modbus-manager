@@ -1,0 +1,72 @@
+{
+    "services": {
+        "pulse": {
+            "description": "Sendet einen Puls an einen Eingang am IHC-Controller.",
+            "fields": {
+                "controller_id": {
+                    "description": "Wenn du \u00fcber mehrere Controller verf\u00fcgst, ist dies der Index deines Controllers, beginnend mit 0.",
+                    "name": "Controller-ID"
+                },
+                "ihc_id": {
+                    "description": "Die ganzzahlige IHC-Ressourcen-ID.",
+                    "name": "IHC-ID"
+                }
+            },
+            "name": "Pulsieren"
+        },
+        "set_runtime_value_bool": {
+            "description": "Legt einen booleschen Laufzeitwert auf dem IHC-Controller fest.",
+            "fields": {
+                "controller_id": {
+                    "description": "Wenn du \u00fcber mehrere Controller verf\u00fcgst, ist dies der Index deines Controllers, beginnend mit 0.",
+                    "name": "Controller-ID"
+                },
+                "ihc_id": {
+                    "description": "Die ganzzahlige IHC-Ressourcen-ID.",
+                    "name": "IHC-ID"
+                },
+                "value": {
+                    "description": "Der festzulegende boolesche Wert.",
+                    "name": "Wert"
+                }
+            },
+            "name": "Booleschen Laufzeitwert festlegen"
+        },
+        "set_runtime_value_float": {
+            "description": "Legt einen Float-Laufzeitwert auf dem IHC-Controller fest.",
+            "fields": {
+                "controller_id": {
+                    "description": "Wenn du \u00fcber mehrere Controller verf\u00fcgst, ist dies der Index deines Controllers, beginnend mit 0.",
+                    "name": "Controller-ID"
+                },
+                "ihc_id": {
+                    "description": "Die ganzzahlige IHC-Ressourcen-ID.",
+                    "name": "IHC-ID"
+                },
+                "value": {
+                    "description": "Der festzulegende Float-Wert.",
+                    "name": "Wert"
+                }
+            },
+            "name": "Float-Laufzeitwert festlegen"
+        },
+        "set_runtime_value_int": {
+            "description": "Legt einen ganzzahligen Laufzeitwert auf dem IHC-Controller fest.",
+            "fields": {
+                "controller_id": {
+                    "description": "Wenn du \u00fcber mehrere Controller verf\u00fcgst, ist dies der Index deines Controllers, beginnend mit 0.",
+                    "name": "Controller-ID"
+                },
+                "ihc_id": {
+                    "description": "Die ganzzahlige IHC-Ressourcen-ID.",
+                    "name": "IHC-ID"
+                },
+                "value": {
+                    "description": "Der festzulegende ganzzahlige Wert.",
+                    "name": "Wert"
+                }
+            },
+            "name": "Ganzzahligen Laufzeitwert festlegen"
+        }
+    }
+}

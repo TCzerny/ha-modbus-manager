@@ -1,0 +1,113 @@
+{
+    "application_credentials": {
+        "description": "K\u00f6vesse az [\u00fatmutat\u00f3t]({more_info_url}) a Cloud Console be\u00e1ll\u00edt\u00e1s\u00e1hoz:\n\n1. L\u00e1togasson el az [OAuth hozz\u00e1j\u00e1rul\u00e1si k\u00e9perny\u0151]({oauth_consent_url}) oldalra \u00e9s konfigur\u00e1lja.\n1. L\u00e1togasson el a [Hiteles\u00edt\u0151 adatok]({oauth_creds_url}) oldalra \u00e9s v\u00e1lassza a **Create Credentials** lehet\u0151s\u00e9get.\n1. A leg\u00f6rd\u00fcl\u0151 list\u00e1b\u00f3l v\u00e1lassza az **OAuth client ID** lehet\u0151s\u00e9get.\n1. Alkalmaz\u00e1st\u00edpusk\u00e9nt v\u00e1lassza a **Web Application** opci\u00f3t.\n1. Adja hozz\u00e1 a `{redirect_url}` c\u00edmet az *Authorized redirect URI* mez\u0151be."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "A fi\u00f3k m\u00e1r konfigur\u00e1lva van",
+            "authorize_url_timeout": "Id\u0151t\u00fall\u00e9p\u00e9s a hiteles\u00edt\u00e9si URL l\u00e9trehoz\u00e1sakor.",
+            "invalid_access_token": "\u00c9rv\u00e9nytelen hozz\u00e1f\u00e9r\u00e9si token",
+            "missing_configuration": "A komponens nincs konfigur\u00e1lva. K\u00e9rem, k\u00f6vesse a dokument\u00e1ci\u00f3t.",
+            "missing_credentials": "Az integr\u00e1ci\u00f3hoz az alkalmaz\u00e1s hiteles\u00edt\u0151 adataira van sz\u00fcks\u00e9g.",
+            "no_url_available": "Nincs el\u00e9rhet\u0151 URL. A hib\u00e1val kapcsolatos inform\u00e1ci\u00f3k\u00e9rt n\u00e9zze meg a [s\u00fag\u00f3]({docs_url}) le\u00edr\u00e1s\u00e1t.",
+            "oauth_error": "\u00c9rv\u00e9nytelen token adatok \u00e9rkeztek.",
+            "oauth_failed": "Hiba a hozz\u00e1f\u00e9r\u00e9si token megszerz\u00e9se k\u00f6zben.",
+            "oauth_timeout": "Id\u0151t\u00fall\u00e9p\u00e9s az OAuth-token felold\u00e1sakor.",
+            "oauth_unauthorized": "OAuth enged\u00e9lyez\u00e9si hiba a hozz\u00e1f\u00e9r\u00e9si token megszerz\u00e9se sor\u00e1n.",
+            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt",
+            "unknown_authorize_url_generation": "Ismeretlen hiba a hiteles\u00edt\u00e9si URL l\u00e9trehoz\u00e1sakor."
+        },
+        "create_entry": {
+            "default": "Sikeres hiteles\u00edt\u00e9s"
+        },
+        "error": {
+            "bad_project_id": "K\u00e9rem, adjon meg egy \u00e9rv\u00e9nyes Cloud Project azonos\u00edt\u00f3t (Cloud Consoleban l\u00e1that\u00f3).",
+            "no_pubsub_topics": "Nem tal\u00e1lhat\u00f3k megfelel\u0151 Pub/Sub t\u00e9m\u00e1k, k\u00e9rj\u00fck, gy\u0151z\u0151dj\u00f6n meg arr\u00f3l, hogy a Device Access Console rendelkezik Pub/Sub t\u00e9m\u00e1val.",
+            "pubsub_api_error": "Ismeretlen hiba t\u00f6rt\u00e9nt a Cloud Pub/Sub szolg\u00e1ltat\u00e1ssal val\u00f3 kommunik\u00e1ci\u00f3 sor\u00e1n, tekintse meg a napl\u00f3kat",
+            "subscriber_error": "Ismeretlen el\u0151fizet\u0151i hiba, b\u0151vebben a napl\u00f3kban",
+            "wrong_project_id": "K\u00e9rem, adjon meg egy \u00e9rv\u00e9nyes Cloud Project azonos\u00edt\u00f3t (Device Access Project azonos\u00edt\u00f3val azonos)"
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "Google Cloud Project azonos\u00edt\u00f3"
+                },
+                "description": "Adja meg a Cloud projekt azonos\u00edt\u00f3j\u00e1t, pl. *example-project-12345*. B\u0151vebben: [Google Cloud Console]({cloud_console_url}) vagy [dokument\u00e1ci\u00f3]({more_info_url}).",
+                "title": "Nest: Adja meg a Cloud Project azonos\u00edt\u00f3t"
+            },
+            "create_cloud_project": {
+                "description": "A Nest integr\u00e1ci\u00f3 lehet\u0151v\u00e9 teszi, hogy integr\u00e1lja a Nest termoszt\u00e1tjait, kamer\u00e1it \u00e9s cseng\u0151it a Smart Device Management API seg\u00edts\u00e9g\u00e9vel. Az SDM API egyszeri **5 USD** be\u00e1ll\u00edt\u00e1si d\u00edjat ig\u00e9nyel. Tov\u00e1bbi inform\u00e1ci\u00f3k\u00e9rt tekintse meg a [dokument\u00e1ci\u00f3t]({more_info_url}).\n\n1. L\u00e1togasson el a [Google Cloud Console]({cloud_console_url}) oldalra.\n1. Ha ez az els\u0151 projektje, v\u00e1lassza a **Create Project**, majd a **New Project** lehet\u0151s\u00e9get.\n1. Adjon nevet a Cloud Projektj\u00e9nek, majd v\u00e1lassza a **Create** lehet\u0151s\u00e9get.\n1. Mentse el a Cloud Projekt azonos\u00edt\u00f3j\u00e1t, p\u00e9ld\u00e1ul *example-project-12345*, mert k\u00e9s\u0151bb sz\u00fcks\u00e9ge lesz r\u00e1.\n1. L\u00e1togasson el az [Smart Device Management API]({sdm_api_url}) API k\u00f6nyvt\u00e1rba \u00e9s v\u00e1lassza az **Enable** lehet\u0151s\u00e9get.\n1. L\u00e1togasson el az [Cloud Pub/Sub API]({pubsub_api_url}) API k\u00f6nyvt\u00e1rba, \u00e9s v\u00e1lassza az **Enable** lehet\u0151s\u00e9get.\n\nFolytassa, amikor a felh\u0151projekt be van \u00e1ll\u00edtva.",
+                "title": "Nest: Cloud Project l\u00e9trehoz\u00e1sa \u00e9s konfigur\u00e1l\u00e1sa"
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "Eszk\u00f6z-hozz\u00e1f\u00e9r\u00e9s Projekt azonos\u00edt\u00f3"
+                },
+                "description": "Hozzon l\u00e9tre egy Nest Eszk\u00f6zhozz\u00e1f\u00e9r\u00e9si projektet, amelynek be\u00e1ll\u00edt\u00e1s\u00e1hoz **5 USD d\u00edjat kell fizetnie a Google-nak**.\n1. L\u00e1togasson el az [Eszk\u00f6zhozz\u00e1f\u00e9r\u00e9si konzolra]({device_access_console_url}) \u00e9s k\u00f6vesse a fizet\u00e9si folyamatot.\n1. V\u00e1lassza a **Create project** lehet\u0151s\u00e9get.\n1. Adjon nevet az Eszk\u00f6zhozz\u00e1f\u00e9r\u00e9si projektj\u00e9nek, majd v\u00e1lassza a **Next** lehet\u0151s\u00e9get.\n1. Adja meg az OAuth Client ID-t.\n1. Enged\u00e9lyezze az esem\u00e9nyeket a **Enable** \u00e9s a **Create project** gombok megnyom\u00e1s\u00e1val.\n\nAdja meg al\u00e1bb az Eszk\u00f6zhozz\u00e1f\u00e9r\u00e9si Projektazonos\u00edt\u00f3j\u00e1t ([tov\u00e1bbi inform\u00e1ci\u00f3]({more_info_url})).",
+                "title": "Nest: Hozzon l\u00e9tre egy eszk\u00f6z-hozz\u00e1f\u00e9r\u00e9si projektet"
+            },
+            "pick_implementation": {
+                "title": "V\u00e1lasszon egy hiteles\u00edt\u00e9si m\u00f3dszert"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "Google Cloud Project azonos\u00edt\u00f3"
+                },
+                "description": "A Home Assistant a Cloud Pub/Sub szolg\u00e1ltat\u00e1st haszn\u00e1lja a Nest eszk\u00f6z\u00f6k val\u00f3s idej\u0171 friss\u00edt\u00e9seinek fogad\u00e1s\u00e1hoz. A Nest szerverek friss\u00edt\u00e9seket k\u00fcldenek egy Pub/Sub t\u00e9m\u00e1ra, amelyeket a Home Assistant egy Pub/Sub el\u0151fizet\u00e9sen kereszt\u00fcl fogad.\n\n1. L\u00e1togasson el a [Device Access Console]({device_access_console_url}) oldalra \u00e9s ellen\u0151rizze, hogy van-e be\u00e1ll\u00edtva Pub/Sub t\u00e9ma.\n2. Nyissa meg a [Cloud Console]({url}) oldalt, hogy megtal\u00e1lja a Google Cloud projektazonos\u00edt\u00f3j\u00e1t \u00e9s ellen\u0151rizze, hogy az helyesen van-e megadva az al\u00e1bbi mez\u0151ben.\n3. A k\u00f6vetkez\u0151 l\u00e9p\u00e9s megpr\u00f3b\u00e1lja automatikusan felfedezni a Pub/Sub t\u00e9m\u00e1kat \u00e9s el\u0151fizet\u00e9seket.\n\nTov\u00e1bbi inform\u00e1ci\u00f3k\u00e9rt tekintse meg az integr\u00e1ci\u00f3 dokument\u00e1ci\u00f3j\u00e1t [itt]({more_info_url}).",
+                "title": "Google Cloud Pub/Sub konfigur\u00e1l\u00e1sa"
+            },
+            "pubsub_subscription": {
+                "data": {
+                    "subscription_name": "Pub/Sub el\u0151fizet\u00e9s neve"
+                },
+                "description": "A Home Assistant a(z) `{topic}` t\u00e9m\u00e1hoz kapcsol\u00f3d\u00f3 Cloud Pub/Sub el\u0151fizet\u00e9ssel fogadja a Nest eszk\u00f6z\u00f6k val\u00f3s idej\u0171 friss\u00edt\u00e9seit.\n\nV\u00e1lasszon egy megl\u00e9v\u0151 el\u0151fizet\u00e9st az al\u00e1bbi list\u00e1b\u00f3l, ha nem l\u00e9tezik a k\u00f6vetkez\u0151 l\u00e9p\u00e9sben l\u00e9trehozunk \u00d6nnek egy \u00fajat. Tov\u00e1bbi inform\u00e1ci\u00f3k\u00e9rt tekintse meg az integr\u00e1ci\u00f3 dokument\u00e1ci\u00f3j\u00e1t [itt]({more_info_url}).",
+                "title": "Cloud Pub/Sub el\u0151fizet\u00e9s konfigur\u00e1l\u00e1sa"
+            },
+            "pubsub_topic": {
+                "data": {
+                    "topic_name": "Pub/Sub t\u00e9ma neve"
+                },
+                "description": "A Nest eszk\u00f6z\u00f6k friss\u00edt\u00e9seiket egy Cloud Pub/Sub t\u00e9m\u00e1n kereszt\u00fcl publik\u00e1lj\u00e1k. V\u00e1lassza ki az al\u00e1bbi Pub/Sub t\u00e9m\u00e1t, amely megegyezik a [Device Access Console]({device_access_console_url}) be\u00e1ll\u00edt\u00e1saival. Tov\u00e1bbi inform\u00e1ci\u00f3k\u00e9rt tekintse meg az integr\u00e1ci\u00f3 dokument\u00e1ci\u00f3j\u00e1t [itt]({more_info_url}).",
+                "title": "Cloud Pub/Sub t\u00e9ma konfigur\u00e1l\u00e1sa"
+            },
+            "reauth_confirm": {
+                "description": "A Nest integr\u00e1ci\u00f3nak \u00fajra kell hiteles\u00edtenie a fi\u00f3kj\u00e1t",
+                "title": "A(z) {name} hiteles\u00edt\u00e9se lej\u00e1rt"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "Mozg\u00e1s \u00e9szlelve",
+            "camera_person": "Szem\u00e9ly \u00e9szlelve",
+            "camera_sound": "Hang \u00e9szlelve",
+            "doorbell_chime": "Cseng\u0151 megnyomva"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "Cseng\u0151",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "Cseng\u0151"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "Mozg\u00e1s",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "Mozg\u00e1s",
+                            "camera_person": "Szem\u00e9ly",
+                            "camera_sound": "Hang"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

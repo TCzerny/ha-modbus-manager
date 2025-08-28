@@ -1,0 +1,50 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Il servizio \u00e8 gi\u00e0 configurato"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "broadcast_port": "Porta di trasmissione",
+                    "mac": "Indirizzo MAC"
+                },
+                "data_description": {
+                    "broadcast_port": "La porta a cui inviare il pacchetto magico. Il valore predefinito \u00e8 `9` e normalmente non viene modificato.",
+                    "mac": "Indirizzo MAC del dispositivo da riattivare."
+                }
+            }
+        }
+    },
+    "options": {
+        "abort": {
+            "already_configured": "Il servizio \u00e8 gi\u00e0 configurato"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "broadcast_port": "Porta di trasmissione"
+                },
+                "data_description": {
+                    "broadcast_port": "La porta a cui inviare il pacchetto magico. Il valore predefinito \u00e8 `9` e normalmente non viene modificato."
+                }
+            }
+        }
+    },
+    "services": {
+        "send_magic_packet": {
+            "description": "Invia un \"pacchetto magico\" per riattivare un dispositivo con funzionalit\u00e0 \"Wake-On-LAN\".",
+            "fields": {
+                "broadcast_port": {
+                    "description": "La porta a cui inviare il pacchetto magico. Il valore predefinito \u00e8 `9` e normalmente non viene modificato.",
+                    "name": "Porta di trasmissione"
+                },
+                "mac": {
+                    "description": "Indirizzo MAC del dispositivo da riattivare.",
+                    "name": "Indirizzo MAC"
+                }
+            },
+            "name": "Invia pacchetto magico"
+        }
+    }
+}

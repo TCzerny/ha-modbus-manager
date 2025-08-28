@@ -1,0 +1,53 @@
+{
+    "config": {
+        "step": {
+            "user": {
+                "data": {
+                    "entity_ids": "Eingabe-Entit\u00e4ten",
+                    "name": "Name",
+                    "round_digits": "Genauigkeit",
+                    "type": "Statistikmerkmal"
+                },
+                "data_description": {
+                    "round_digits": "Bestimmt die Anzahl der Dezimalstellen in der Ausgabe, wenn das Statistikmerkmal Arithmetisches Mittel, Median oder Summe ist."
+                },
+                "description": "Erstellt einen Sensor, der aus einer Liste von Eingabesensoren deren Minimal-, Maximal-, Mittel-, Median- oder Summenwert berechnet.",
+                "title": "Kombinationssensor"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "entity_ids": "Eingabe-Entit\u00e4ten",
+                    "round_digits": "Genauigkeit",
+                    "type": "Statistikmerkmal"
+                },
+                "data_description": {
+                    "round_digits": "Bestimmt die Anzahl der Dezimalstellen in der Ausgabe, wenn das Statistikmerkmal Arithmetisches Mittel, Median oder Summe ist."
+                }
+            }
+        }
+    },
+    "selector": {
+        "type": {
+            "options": {
+                "last": "Aktuellster Wert",
+                "max": "Maximum",
+                "mean": "Arithmetisches Mittel",
+                "median": "Median",
+                "min": "Minimum",
+                "range": "Spannweite",
+                "sum": "Summe"
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "L\u00e4dt Min/Max-Sensoren aus der YAML-Konfiguration neu.",
+            "name": "Neu laden"
+        }
+    },
+    "title": "Kombinationssensor"
+}

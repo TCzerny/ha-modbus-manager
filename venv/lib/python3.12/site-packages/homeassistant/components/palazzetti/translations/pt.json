@@ -1,0 +1,125 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Deseja adicionar {name} ({host}) ao Home Assistant?"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "O nome de anfitri\u00e3o ou endere\u00e7o IP da Palazzetti Cbox"
+                }
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "palazzetti": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Forte",
+                            "silent": "Silencioso"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "combustion_power": {
+                "name": "Pot\u00eancia de combust\u00e3o"
+            }
+        },
+        "sensor": {
+            "air_outlet_temperature": {
+                "name": "Temperatura da sa\u00edda de ar"
+            },
+            "pellet_level": {
+                "name": "N\u00edvel de pellets"
+            },
+            "pellet_quantity": {
+                "name": "Quantidade de pellets"
+            },
+            "return_water_temperature": {
+                "name": "Devolver a temperatura da \u00e1gua"
+            },
+            "room_temperature": {
+                "name": "Temperatura da divis\u00e3o"
+            },
+            "status": {
+                "name": "Estado",
+                "state": {
+                    "burning": "Em opera\u00e7\u00e3o",
+                    "burning_mod": "Em opera\u00e7\u00e3o - A modular",
+                    "chimney_alarm": "Alarme da chamin\u00e9",
+                    "clean_fire": "Limpeza do pote de queima",
+                    "cleaning_warning": "Aviso de limpeza",
+                    "cleanup": "Limpeza final",
+                    "cool_fluid": "Em espera",
+                    "cooling": "Arrefecimento em curso",
+                    "door_open": "Porta aberta",
+                    "ecomode": "Modo Eco",
+                    "exhaust_temp_high": "Temperatura dos gases de escape demasiado alta",
+                    "fire_stop": "Desligar",
+                    "firewood_finished": "A lenha acabou",
+                    "flue_probe_failure": "Falha na sonda de gases de combust\u00e3o",
+                    "fuel_error": "Erro no combust\u00edvel",
+                    "fueling": "Igni\u00e7\u00e3o",
+                    "general_error": "Erro geral",
+                    "grate_error": "Erro na grelha",
+                    "hatch_door_open": "Escotilha de alimenta\u00e7\u00e3o ou porta aberta",
+                    "heatup": "Alimenta\u00e7\u00e3o de pellets",
+                    "ign_test": "Verifica\u00e7\u00e3o do combust\u00edvel",
+                    "main_probe_failure": "Falha na sonda principal",
+                    "off": "Desligado",
+                    "off_timer": "Desligamento regulado por temporizador",
+                    "pellet_finished": "Pellets acabaram ou falha na igni\u00e7\u00e3o",
+                    "pellet_water_error": "Erro na sonda de pellets ou na \u00e1gua de retorno",
+                    "pressure_error": "Erro do interruptor de press\u00e3o de seguran\u00e7a",
+                    "t05_error": "Erro T05: sonda desconectada ou com defeito",
+                    "temp_too_high": "Temperatura demasiado alta",
+                    "test_fire": "Teste de igni\u00e7\u00e3o",
+                    "unknown": "Desconhecido"
+                }
+            },
+            "t1_hydro": {
+                "name": "Hidro temperatura 1"
+            },
+            "t2_hydro": {
+                "name": "Hidro temperatura 2"
+            },
+            "tank_water_temperature": {
+                "name": "Temperatura do tanque da \u00e1gua"
+            },
+            "wood_combustion_temperature": {
+                "name": "Temperatura de combust\u00e3o da madeira"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "N\u00e3o foi poss\u00edvel ligar ao dispositivo."
+        },
+        "invalid_combustion_power": {
+            "message": "A pot\u00eancia de combust\u00e3o {value} \u00e9 inv\u00e1lida."
+        },
+        "invalid_fan_mode": {
+            "message": "O modo de ventoinha {value} \u00e9 inv\u00e1lido."
+        },
+        "invalid_target_temperature": {
+            "message": "A temperatura alvo {value} \u00e9 inv\u00e1lida."
+        },
+        "on_off_not_available": {
+            "message": "O aparelho n\u00e3o pode ser ligado ou desligado"
+        }
+    }
+}

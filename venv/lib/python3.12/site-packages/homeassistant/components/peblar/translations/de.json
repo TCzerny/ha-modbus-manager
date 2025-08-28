@@ -1,0 +1,177 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "different_device": "Die eingegebenen Daten stammen von einem anderen Peblar EV-Ladeger\u00e4t.",
+            "no_serial_number": "Das entdeckte Peblar-Ger\u00e4t wies keine Seriennummer auf.",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "password": "Dasselbe Passwort, das du f\u00fcr die Anmeldung in der lokalen Weboberfl\u00e4che des Peblar EV-Ladeger\u00e4ts verwendest."
+                },
+                "description": "Authentifiziere dich erneut bei deinem Peblar EV-Ladeger\u00e4t. \n \nDazu musst du dein neues Passwort eingeben, mit dem du dich in der Weboberfl\u00e4che des Peblar EV-Ladeger\u00e4ts anmeldest."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines Peblar EV-Ladeger\u00e4ts in deinem Heimnetzwerk.",
+                    "password": "Dasselbe Passwort, das du f\u00fcr die Anmeldung in der lokalen Weboberfl\u00e4che des Peblar EV-Ladeger\u00e4ts verwendest."
+                },
+                "description": "Konfiguriere dein Peblar EV-Ladeger\u00e4t neu. \n \nDies erlaubt dir, die IP-Adresse deines Peblar EV-Ladeger\u00e4ts und das Passwort zu \u00e4ndern, mit dem du dich in dessen Weboberfl\u00e4che anmeldest."
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines Peblar EV-Ladeger\u00e4ts in deinem Heimnetzwerk.",
+                    "password": "Dasselbe Passwort, das du f\u00fcr die Anmeldung in der lokalen Weboberfl\u00e4che des Peblar EV-Ladeger\u00e4ts verwendest."
+                },
+                "description": "Richte dein Peblar EV-Ladeger\u00e4t f\u00fcr die Integration mit Home Assistant ein. \n \nDazu ben\u00f6tigst du die IP-Adresse deines Peblar EV-Ladeger\u00e4ts und das Passwort, mit dem du dich in dessen Weboberfl\u00e4che anmeldest.\n \nHome Assistant konfiguriert dein Peblar EV-Ladeger\u00e4t dann automatisch f\u00fcr die Verwendung mit Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "password": "Dasselbe Passwort, das du f\u00fcr die Anmeldung in der lokalen Weboberfl\u00e4che des Peblar EV-Ladeger\u00e4ts verwendest."
+                },
+                "description": "Richte dein Peblar EV-Ladeger\u00e4t {hostname}, unter IP-Adresse {host}, f\u00fcr die Integration mit Home Assistant ein.\n \nDazu ben\u00f6tigst du das Passwort, mit dem du dich in der Weboberfl\u00e4che des Peblar EV-Ladeger\u00e4ts anmeldest. \n\nHome Assistant konfiguriert dein Peblar EV-Ladeger\u00e4t automatisch f\u00fcr die Verwendung mit Home Assistant."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Aktive Fehler"
+            },
+            "active_warning_codes": {
+                "name": "Aktive Warnungen"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "Ladestrombegrenzung"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "Intelligentes Laden",
+                "state": {
+                    "default": "Standard",
+                    "fast_solar": "Schnell mit PV",
+                    "pure_solar": "Nur mit PV",
+                    "scheduled": "Nach Zeitplan",
+                    "smart_solar": "Smart mit PV"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Quelle der Begrenzung",
+                "state": {
+                    "charging_cable": "Ladekabel",
+                    "current_limiter": "Strombegrenzer",
+                    "dynamic_load_balancing": "Dynamischer Lastausgleich",
+                    "external_power_limit": "Externe Leistungsbegrenzung",
+                    "group_load_balancing": "Gruppenlastausgleich",
+                    "hardware_limitation": "Hardwarebeschr\u00e4nkung",
+                    "high_temperature": "\u00dcbertemperatur",
+                    "household_power_limit": "Leistungsgrenze des Hausanschlusses",
+                    "installation_limit": "Limit der Installation",
+                    "local_modbus_api": "Modbus-API",
+                    "local_rest_api": "REST-API",
+                    "local_scheduled_charging": "Planm\u00e4\u00dfige Aufladung",
+                    "ocpp_smart_charging": "OCPP Smart Charging",
+                    "overcurrent_protection": "\u00dcberstromschutz",
+                    "phase_imbalance": "Phasenasymmetrie",
+                    "power_factor": "Leistungsfaktor",
+                    "solar_charging": "PV-Ladung"
+                }
+            },
+            "cp_state": {
+                "name": "Zustand",
+                "state": {
+                    "charging": "Aufladen",
+                    "error": "Fehler",
+                    "fault": "St\u00f6rung",
+                    "invalid": "Ung\u00fcltig",
+                    "no_ev_connected": "Kein EV angeschlossen",
+                    "suspended": "Ausgesetzt"
+                }
+            },
+            "current_phase_1": {
+                "name": "Stromst\u00e4rke L1"
+            },
+            "current_phase_2": {
+                "name": "Stromst\u00e4rke L2"
+            },
+            "current_phase_3": {
+                "name": "Stromst\u00e4rke L3"
+            },
+            "energy_session": {
+                "name": "Energie des Vorgangs"
+            },
+            "energy_total": {
+                "name": "Lebenslange Energie"
+            },
+            "power_phase_1": {
+                "name": "Leistung L1"
+            },
+            "power_phase_2": {
+                "name": "Leistung L2"
+            },
+            "power_phase_3": {
+                "name": "Leistung L3"
+            },
+            "uptime": {
+                "name": "Betriebszeit"
+            },
+            "voltage_phase_1": {
+                "name": "Spannung L1"
+            },
+            "voltage_phase_2": {
+                "name": "Spannung L2"
+            },
+            "voltage_phase_3": {
+                "name": "Spannung L3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "Einphasig erzwingen"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "Anpassung"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Bei der Kommunikation mit dem Peblar EV-Ladeger\u00e4t ist ein Authentifizierungsfehler aufgetreten."
+        },
+        "communication_error": {
+            "message": "Bei der Kommunikation mit dem Peblar EV-Ladeger\u00e4t ist ein Fehler aufgetreten: {error}"
+        },
+        "unknown_error": {
+            "message": "Bei der Kommunikation mit dem Peblar EV-Ladeger\u00e4t ist ein unbekannter Fehler aufgetreten: {error}"
+        }
+    }
+}

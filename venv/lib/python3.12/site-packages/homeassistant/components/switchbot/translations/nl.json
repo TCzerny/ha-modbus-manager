@@ -1,0 +1,113 @@
+{
+    "config": {
+        "abort": {
+            "already_configured_device": "Apparaat is al geconfigureerd",
+            "no_devices_found": "Geen apparaten gevonden op het netwerk",
+            "switchbot_unsupported_type": "Niet-ondersteund Switchbot-type.",
+            "unknown": "Onverwachte fout"
+        },
+        "error": {
+            "auth_failed": "Authenticatie mislukt: {error_detail}",
+            "encryption_key_invalid": "Sleutel-ID of encryptiesleutel is ongeldig"
+        },
+        "flow_title": "{name} ({address})",
+        "step": {
+            "encrypted_auth": {
+                "data": {
+                    "password": "Wachtwoord",
+                    "username": "Gebruikersnaam"
+                },
+                "description": "Geef de gebruikersnaam en het wachtwoord van je SwitchBot app op. Deze gegevens worden niet opgeslagen en worden alleen gebruikt om de encryptiesleutels van je apparaten op te halen. Gebruikersnamen en wachtwoorden zijn hoofdlettergevoelig."
+            },
+            "encrypted_choose_method": {
+                "description": "Een versleuteld SwitchBot-apparaat kan op twee verschillende manieren worden ingesteld in Home Assistant.\n\nJe kunt de sleutel-id en encryptiesleutel zelf invoeren, of Home Assistant kan ze importeren vanuit je SwitchBot-account.",
+                "menu_options": {
+                    "encrypted_auth": "SwitchBot-account (aanbevolen)",
+                    "encrypted_key": "Encryptiesleutel handmatig invoeren"
+                }
+            },
+            "encrypted_key": {
+                "data": {
+                    "encryption_key": "Encryptiesleutel",
+                    "key_id": "Sleutel-ID"
+                },
+                "description": "Voor het {name} -apparaat is een encryptiesleutel nodig. Meer informatie over hoe je deze kunt verkrijgen, vindt je in de documentatie."
+            },
+            "password": {
+                "data": {
+                    "password": "Wachtwoord"
+                },
+                "description": "Het {name} apparaat vereist een wachtwoord"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "calibration": {
+                "name": "Kalibratie"
+            }
+        },
+        "cover": {
+            "cover": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Probleem",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "humidifier": {
+            "humidifier": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Probleem",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "lock": {
+            "lock": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Probleem",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "light_level": {
+                "name": "Lichtsterkte"
+            }
+        },
+        "switch": {
+            "bot": {
+                "state_attributes": {
+                    "last_run_success": {
+                        "state": {
+                            "false": "Probleem",
+                            "true": "OK"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "retry_count": "Aantal herhalingen"
+                }
+            }
+        }
+    }
+}

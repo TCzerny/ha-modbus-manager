@@ -1,0 +1,37 @@
+{
+    "entity": {
+        "binary_sensor": {
+            "assist_in_progress": {
+                "name": "Assist in corso"
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Assistente",
+                "state": {
+                    "preferred": "Preferito"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Rilevamento vocale terminato",
+                "state": {
+                    "aggressive": "Aggressivo",
+                    "default": "Predefinito",
+                    "relaxed": "Rilassato"
+                }
+            }
+        }
+    },
+    "issues": {
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "Il sensore binario in corso di {integration_name} `{entity_id}` \u00e8 deprecato. \n\nEsegui la migrazione della configurazione per utilizzare l'entit\u00e0 corrispondente `{assist_satellite_domain}` e quindi fai clic su INVIA per disabilitare il sensore binario in corso e risolvere questo problema."
+                    }
+                }
+            },
+            "title": "I sensori binari in corso di {integration_name} sono deprecati"
+        }
+    }
+}

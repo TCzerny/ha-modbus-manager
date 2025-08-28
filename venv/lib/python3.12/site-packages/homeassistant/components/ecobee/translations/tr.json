@@ -1,0 +1,213 @@
+{
+    "config": {
+        "abort": {
+            "single_instance_allowed": "Zaten yap\u0131land\u0131r\u0131lm\u0131\u015f. Yaln\u0131zca tek bir konfig\u00fcrasyon m\u00fcmk\u00fcnd\u00fcr."
+        },
+        "error": {
+            "pin_request_failed": "ecobee'den PIN istenirken hata olu\u015ftu; l\u00fctfen API anahtar\u0131n\u0131n do\u011fru oldu\u011funu do\u011frulay\u0131n.",
+            "token_request_failed": "ecobee'den anahtar istenirken hata olu\u015ftu; l\u00fctfen tekrar deneyin."
+        },
+        "step": {
+            "authorize": {
+                "description": "L\u00fctfen bu uygulamay\u0131 https://www.ecobee.com/consumerportal/index.html adresinden PIN koduyla yetkilendirin: \n \n {pin} \n \n Ard\u0131ndan **G\u00f6nder**'i se\u00e7in."
+            },
+            "user": {
+                "data": {
+                    "api_key": "API Anahtar\u0131"
+                },
+                "description": "L\u00fctfen ecobee.com'dan al\u0131nan API anahtar\u0131n\u0131 girin."
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "ecobee": {
+                "state_attributes": {
+                    "preset_mode": {
+                        "state": {
+                            "away_indefinitely": "S\u00fcresiz Uzakta"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "compressor_protection_min_temp": {
+                "name": "Kompres\u00f6r minimum s\u0131cakl\u0131\u011f\u0131"
+            },
+            "ventilator_min_type_away": {
+                "name": "Ventilat\u00f6rden minimum uzak kalma s\u00fcresi"
+            },
+            "ventilator_min_type_home": {
+                "name": "Ventilat\u00f6r minimum s\u00fcre evde"
+            }
+        },
+        "switch": {
+            "aux_heat_only": {
+                "name": "Sadece yard\u0131mc\u0131 \u0131s\u0131"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_preset": {
+            "message": "Ge\u00e7ersiz iklim ad\u0131, kullan\u0131labilir se\u00e7enekler \u015funlard\u0131r: {options}"
+        },
+        "invalid_sensor": {
+            "message": "Termostat i\u00e7in ge\u00e7ersiz sens\u00f6r, kullan\u0131labilir se\u00e7enekler \u015funlard\u0131r: {options}"
+        },
+        "sensor_lookup_failed": {
+            "message": "Sens\u00f6r adlar\u0131ndan sens\u00f6r kimlikleri al\u0131n\u0131rken bir hata olu\u015ftu. ecobee entegrasyonunu yeniden y\u00fcklemeyi deneyin."
+        }
+    },
+    "issues": {
+        "migrate_aux_heat": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Ecobee `set_aux_heat` eylemi ta\u015f\u0131nd\u0131. Is\u0131 Pompas\u0131n\u0131 destekleyen her termostat i\u00e7in yeni bir `aux_heat_only` anahtar varl\u0131\u011f\u0131 mevcuttur. T\u00fcm otomasyonlar\u0131 yeni `aux_heat_only` anahtar varl\u0131\u011f\u0131n\u0131 kullanacak \u015fekilde g\u00fcncelleyin. Bu yap\u0131ld\u0131\u011f\u0131nda, bu sorunu d\u00fczeltin ve Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+                        "title": "Eski Ecobee set_aux_heat eylemini devre d\u0131\u015f\u0131 b\u0131rak"
+                    }
+                }
+            },
+            "title": "Ecobee set_aux_heat eyleminin g\u00f6\u00e7\u00fc"
+        }
+    },
+    "services": {
+        "create_vacation": {
+            "description": "Se\u00e7ilen termostatta bir tatil olu\u015fturur. Not: Bu parametrelerin etkili olabilmesi i\u00e7in ba\u015flang\u0131\u00e7/biti\u015f tarihi ve saatinin birlikte belirtilmesi gerekir. Ba\u015flang\u0131\u00e7/biti\u015f tarihi ve saati belirtilmezse, tatil hemen ba\u015flar ve 14 g\u00fcn s\u00fcrer (daha \u00f6nce silinmedi\u011fi s\u00fcrece).",
+            "fields": {
+                "cool_temp": {
+                    "description": "Tatil s\u0131ras\u0131nda so\u011futma s\u0131cakl\u0131\u011f\u0131.",
+                    "name": "So\u011ftma s\u0131cakl\u0131\u011f\u0131"
+                },
+                "end_date": {
+                    "name": "Biti\u015f tarihi"
+                },
+                "end_time": {
+                    "description": "Tatilin bitti\u011fi saat, termostat\u0131n yerel saatinde, 24 saatlik formatta \"SS:DD:SS\".",
+                    "name": "Biti\u015f zaman\u0131"
+                },
+                "entity_id": {
+                    "description": "Tatil olu\u015fturmak i\u00e7in Ecobee termostat\u0131.",
+                    "name": "Varl\u0131k"
+                },
+                "fan_min_on_time": {
+                    "description": "Tatil s\u0131ras\u0131nda fan\u0131n her saat (0 ila 60) \u00e7al\u0131\u015ft\u0131r\u0131laca\u011f\u0131 minimum dakika say\u0131s\u0131.",
+                    "name": "Zaman\u0131nda minimum fan"
+                },
+                "fan_mode": {
+                    "description": "Tatil s\u0131ras\u0131nda termostat\u0131n fan modu.",
+                    "name": "Fan modu"
+                },
+                "heat_temp": {
+                    "description": "Tatil s\u0131ras\u0131nda \u0131s\u0131tma s\u0131cakl\u0131\u011f\u0131.",
+                    "name": "Is\u0131 s\u0131cakl\u0131\u011f\u0131"
+                },
+                "start_date": {
+                    "name": "Ba\u015flang\u0131\u00e7 tarihi"
+                },
+                "start_time": {
+                    "description": "Tatilin ba\u015flama saati, termostat\u0131n yerel saatinde, 24 saatlik formatta \"SS:DD:SS\".",
+                    "name": "Ba\u015flang\u0131\u00e7 zaman\u0131"
+                },
+                "vacation_name": {
+                    "description": "Olu\u015fturulacak tatilin ad\u0131; termostatta benzersiz olmal\u0131d\u0131r.",
+                    "name": "Tatil ad\u0131"
+                }
+            },
+            "name": "Tatil olu\u015ftur"
+        },
+        "delete_vacation": {
+            "description": "Se\u00e7ilen termostattaki bir tatili siler.",
+            "fields": {
+                "entity_id": {
+                    "description": "Tatilin silinece\u011fi Ecobee termostat\u0131.",
+                    "name": "Varl\u0131k"
+                },
+                "vacation_name": {
+                    "description": "Silinecek tatilin ad\u0131.",
+                    "name": "Tatil ad\u0131"
+                }
+            },
+            "name": "Tatili sil"
+        },
+        "resume_program": {
+            "description": "Programlanan program\u0131 devam ettirir.",
+            "fields": {
+                "entity_id": {
+                    "description": "De\u011fi\u015ftirilecek varl\u0131klar\u0131n ad(lar)\u0131.",
+                    "name": "Varl\u0131k"
+                },
+                "resume_all": {
+                    "description": "T\u00fcm etkinlikleri devam ettirin ve planlanan programa geri d\u00f6n\u00fcn.",
+                    "name": "T\u00fcm\u00fcn\u00fc devam ettir"
+                }
+            },
+            "name": "Program\u0131 devam ettir"
+        },
+        "set_dst_mode": {
+            "description": "Otomatik yaz saatini etkinle\u015ftirir/devre d\u0131\u015f\u0131 b\u0131rak\u0131r.",
+            "fields": {
+                "dst_enabled": {
+                    "description": "Otomatik g\u00fcn \u0131\u015f\u0131\u011f\u0131ndan yararlanma saatini etkinle\u015ftirin.",
+                    "name": "G\u00fcn \u0131\u015f\u0131\u011f\u0131ndan yararlanma saati etkinle\u015ftirildi"
+                }
+            },
+            "name": "G\u00fcn \u0131\u015f\u0131\u011f\u0131ndan yararlanma saati modunu ayarla"
+        },
+        "set_fan_min_on_time": {
+            "description": "Minimum fan\u0131 zaman\u0131nda ayarlar.",
+            "fields": {
+                "entity_id": {
+                    "description": "De\u011fi\u015ftirilecek varl\u0131klar\u0131n ad(lar)\u0131.",
+                    "name": "Varl\u0131k"
+                },
+                "fan_min_on_time": {
+                    "description": "Zaman\u0131nda fan min'in yeni de\u011feri.",
+                    "name": "Zaman\u0131nda minimum fan"
+                }
+            },
+            "name": "Fan minimumunu zaman\u0131nda ayarlay\u0131n"
+        },
+        "set_mic_mode": {
+            "fields": {
+                "mic_enabled": {
+                    "name": "Mikrofon etkin"
+                }
+            },
+            "name": "Mikrofon modunu ayarla"
+        },
+        "set_occupancy_modes": {
+            "description": "Ak\u0131ll\u0131 Ev/D\u0131\u015far\u0131da ve Beni Takip et modlar\u0131n\u0131 etkinle\u015ftirir/devre d\u0131\u015f\u0131 b\u0131rak\u0131r.",
+            "fields": {
+                "auto_away": {
+                    "description": "Ak\u0131ll\u0131 Ev/D\u0131\u015far\u0131da modunu etkinle\u015ftirin.",
+                    "name": "Otomatik d\u0131\u015far\u0131da"
+                },
+                "follow_me": {
+                    "description": "Beni Takip Et modunu etkinle\u015ftirin.",
+                    "name": "Beni takip et"
+                }
+            },
+            "name": "Doluluk modlar\u0131n\u0131 ayarla"
+        },
+        "set_sensors_used_in_climate": {
+            "description": "\u0130klim i\u00e7in kat\u0131l\u0131mc\u0131 sens\u00f6rleri ayarlar.",
+            "fields": {
+                "device_ids": {
+                    "description": "Kat\u0131l\u0131mc\u0131 sens\u00f6rler olarak ayarlanacak sens\u00f6rler.",
+                    "name": "Sens\u00f6rler"
+                },
+                "entity_id": {
+                    "description": "Aktif sens\u00f6rlerin ayarlanabilece\u011fi Ecobee termostat\u0131.",
+                    "name": "Varl\u0131k"
+                },
+                "preset_mode": {
+                    "description": "Sens\u00f6rlerin aktif hale getirilece\u011fi iklim program\u0131n\u0131n ad\u0131. \n Varsay\u0131lan olarak \u015fu anda aktif olan programd\u0131r.",
+                    "name": "\u0130klim Ad\u0131"
+                }
+            },
+            "name": "\u0130klimde Kullan\u0131lan Sens\u00f6rleri Ayarlay\u0131n"
+        }
+    }
+}

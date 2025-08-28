@@ -1,0 +1,72 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Timer",
+            "state": {
+                "active": "Aktiv",
+                "idle": "Leerlauf",
+                "paused": "Pause"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Dauer"
+                },
+                "editable": {
+                    "name": "Verwaltet \u00fcber UI",
+                    "state": {
+                        "false": "Nein",
+                        "true": "Ja"
+                    }
+                },
+                "finishes_at": {
+                    "name": "Endet um"
+                },
+                "remaining": {
+                    "name": "Verbleibend"
+                },
+                "restore": {
+                    "name": "Wiederherstellen"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "description": "Setzt die Dauer eines Timers auf den letzten bekannten Anfangswert zur\u00fcck, ohne das Ereignis \u201eTimer beendet\u201c auszul\u00f6sen.",
+            "name": "Abbrechen"
+        },
+        "change": {
+            "description": "\u00c4ndert einen Timer durch Addieren oder Subtrahieren einer angegebenen Dauer.",
+            "fields": {
+                "duration": {
+                    "description": "Dauer, die zum laufenden Timer addiert oder davon subtrahiert werden soll.",
+                    "name": "Dauer"
+                }
+            },
+            "name": "\u00c4ndern"
+        },
+        "finish": {
+            "description": "Beendet einen Timer vorzeitig.",
+            "name": "Beenden"
+        },
+        "pause": {
+            "description": "Pausiert einen laufenden Timer und beh\u00e4lt die verbleibende Dauer f\u00fcr eine sp\u00e4tere Fortsetzung bei.",
+            "name": "Pausieren"
+        },
+        "reload": {
+            "description": "L\u00e4dt Timer aus der YAML-Konfiguration neu.",
+            "name": "Neu laden"
+        },
+        "start": {
+            "description": "Startet einen Timer oder startet ihn mit einer angegebenen Dauer neu.",
+            "fields": {
+                "duration": {
+                    "description": "Neue Dauer, mit der der Timer neu gestartet werden soll.",
+                    "name": "Dauer"
+                }
+            },
+            "name": "Starten"
+        }
+    },
+    "title": "Timer"
+}

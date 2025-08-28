@@ -1,0 +1,93 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "timeout_connect": "Zeit\u00fcberschreitung beim Verbindungsaufbau"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "password": "Das Passwort zur Authentifizierung bei deinem Rain Bird-Ger\u00e4t."
+                },
+                "description": "Die Rain Bird-Integration muss sich erneut beim Ger\u00e4t authentifizieren.",
+                "title": "Authentifizierung f\u00fcr {name} abgelaufen"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Passwort"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines Rain Bird-Ger\u00e4ts.",
+                    "password": "Das zur Authentifizierung beim Rain Bird-Ger\u00e4t verwendete Passwort."
+                },
+                "description": "Bitte gib die LNK-WLAN-Modulinformationen f\u00fcr dein Rain Bird-Ger\u00e4t ein.",
+                "title": "Rain Bird konfigurieren"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "rainsensor": {
+                "name": "Regensensor"
+            }
+        },
+        "number": {
+            "rain_delay": {
+                "name": "Regenverz\u00f6gerung"
+            }
+        },
+        "sensor": {
+            "raindelay": {
+                "name": "Regenverz\u00f6gerung"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "duration": "Standard-Bew\u00e4sserungszeit in Minuten"
+                },
+                "data_description": {
+                    "duration": "Die Standarddauer, die der Sprinkler nach dem Einschalten l\u00e4uft."
+                },
+                "title": "Rain Bird konfigurieren"
+            }
+        }
+    },
+    "services": {
+        "set_rain_delay": {
+            "description": "Legt fest, wie lange die automatische Bew\u00e4sserung ausgeschaltet ist.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Die Einstellung wird auf dem angegebenen Controller angepasst.",
+                    "name": "Eintrag zur Konfiguration des Rainbird-Controllers"
+                },
+                "duration": {
+                    "description": "Dauer, nach der dieses System ausgeschaltet wird.",
+                    "name": "Dauer"
+                }
+            },
+            "name": "Regenverz\u00f6gerung einstellen"
+        },
+        "start_irrigation": {
+            "description": "Startet die Bew\u00e4sserung.",
+            "fields": {
+                "duration": {
+                    "description": "Einschaltdauer dieses Sprinklers.",
+                    "name": "Dauer"
+                }
+            },
+            "name": "Bew\u00e4sserung starten"
+        }
+    }
+}

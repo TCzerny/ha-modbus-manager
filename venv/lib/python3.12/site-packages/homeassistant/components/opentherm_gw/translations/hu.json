@@ -1,0 +1,555 @@
+{
+    "common": {
+        "state_not_supported": "Nem t\u00e1mogatott",
+        "state_supported": "T\u00e1mogatott"
+    },
+    "config": {
+        "error": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "timeout_connect": "Id\u0151t\u00fall\u00e9p\u00e9s a kapcsolat l\u00e9trehoz\u00e1sa sor\u00e1n"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "device": "El\u00e9r\u00e9si \u00fat vagy URL",
+                    "id": "Azonos\u00edt\u00f3",
+                    "name": "Elnevez\u00e9s"
+                }
+            }
+        }
+    },
+    "device": {
+        "boiler_device": {
+            "name": "OpenTherm kaz\u00e1n"
+        },
+        "gateway_device": {
+            "name": "OpenTherm \u00e1tj\u00e1r\u00f3"
+        },
+        "thermostat_device": {
+            "name": "OpenTherm termoszt\u00e1t"
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "air_pressure_fault": {
+                "name": "L\u00e9gnyom\u00e1s hiba"
+            },
+            "central_heating_n": {
+                "name": "K\u00f6zponti f\u0171t\u00e9s {circuit_number}"
+            },
+            "control_type": {
+                "name": "Vez\u00e9rl\u0151 t\u00edpus"
+            },
+            "cooling": {
+                "name": "H\u0171t\u00e9s"
+            },
+            "diagnostic_indication": {
+                "name": "Diagnosztikai jelz\u00e9s"
+            },
+            "fault_indication": {
+                "name": "Hibajelz\u00e9s"
+            },
+            "flame": {
+                "name": "L\u00e1ng"
+            },
+            "gas_fault": {
+                "name": "G\u00e1z hiba"
+            },
+            "gpio_state_n": {
+                "name": "GPIO {gpio_id} \u00e1llapot"
+            },
+            "hot_water": {
+                "name": "Melegv\u00edz"
+            },
+            "hot_water_config": {
+                "name": "Melegv\u00edz rendszer t\u00edpusa",
+                "state": {
+                    "off": "Pillanatnyi vagy meghat\u00e1rozatlan",
+                    "on": "T\u00e1rol\u00f3tart\u00e1ly"
+                }
+            },
+            "ignore_transitions": {
+                "name": "\u00c1tmenetek figyelmen k\u00edv\u00fcl hagy\u00e1sa"
+            },
+            "low_water_pressure": {
+                "name": "Alacsony v\u00edznyom\u00e1s"
+            },
+            "outside_temp_correction": {
+                "name": "K\u00fcls\u0151 h\u0151m\u00e9rs\u00e9klet korrekci\u00f3"
+            },
+            "override_high_byte": {
+                "name": "Magas b\u00e1jt fel\u00fclb\u00edr\u00e1l\u00e1sa"
+            },
+            "override_manual_change_prio": {
+                "name": "A manu\u00e1lis m\u00f3dos\u00edt\u00e1s els\u0151bbs\u00e9get \u00e9lvez a fel\u00fclb\u00edr\u00e1l\u00e1ssal szemben"
+            },
+            "override_program_change_prio": {
+                "name": "A programozott v\u00e1ltoztat\u00e1s els\u0151bbs\u00e9get \u00e9lvez a fel\u00fclb\u00edr\u00e1l\u00e1ssal szemben"
+            },
+            "service_required": {
+                "name": "Szerviz sz\u00fcks\u00e9ges"
+            },
+            "supports_central_heating_setpoint_transfer": {
+                "name": "K\u00f6zponti f\u0171t\u00e9si c\u00e9l\u00e9rt\u00e9k \u00e1tvitel\u00e9nek t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "supports_central_heating_setpoint_writing": {
+                "name": "K\u00f6zponti f\u0171t\u00e9si c\u00e9l\u00e9rt\u00e9k \u00edr\u00e1s\u00e1nak t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "supports_ch_2": {
+                "name": "K\u00f6zponti f\u0171t\u00e9s 2 t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "supports_cooling": {
+                "name": "H\u0171t\u00e9s t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "supports_hot_water": {
+                "name": "Melegv\u00edz t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "supports_hot_water_setpoint_transfer": {
+                "name": "Haszn\u00e1lati melegv\u00edz c\u00e9l\u00e9rt\u00e9k \u00e1tvitel\u00e9nek t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "supports_hot_water_setpoint_writing": {
+                "name": "Haszn\u00e1lati melegv\u00edz c\u00e9l\u00e9rt\u00e9k \u00edr\u00e1s\u00e1nak t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "supports_pump_control": {
+                "name": "Szivatty\u00favez\u00e9rl\u00e9s t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "supports_remote_reset": {
+                "name": "T\u00e1voli vissza\u00e1ll\u00edt\u00e1s t\u00e1mogat\u00e1sa",
+                "state": {
+                    "off": "Nem t\u00e1mogatott",
+                    "on": "T\u00e1mogatott"
+                }
+            },
+            "water_overtemperature": {
+                "name": "T\u00falmelegedett v\u00edz"
+            }
+        },
+        "button": {
+            "cancel_room_setpoint_override": {
+                "name": "Szobah\u0151m\u00e9rs\u00e9klet-alap\u00e9rt\u00e9k fel\u00fcl\u00edr\u00e1s\u00e1nak megsz\u00fcntet\u00e9se"
+            }
+        },
+        "select": {
+            "gpio_mode_n": {
+                "name": "GPIO {gpio_id} m\u00f3d",
+                "state": {
+                    "away": "T\u00e1vol",
+                    "dhw_block": "Haszn\u00e1lati melegv\u00edz blokkol\u00e1sa",
+                    "ds1820": "DS1820",
+                    "ground": "F\u00f6ld",
+                    "home": "Otthon",
+                    "input": "Bemenet",
+                    "led_e": "LED E",
+                    "led_f": "LED F",
+                    "vcc": "Vcc (5V)"
+                }
+            },
+            "led_mode_n": {
+                "name": "LED {led_id} m\u00f3d",
+                "state": {
+                    "boiler_maintenance_required": "Kaz\u00e1n karbantart\u00e1s sz\u00fcks\u00e9ges",
+                    "boiler_traffic": "Forgalom a kaz\u00e1n interf\u00e9szen",
+                    "central_heating_on": "K\u00f6zponti f\u0171t\u00e9s bekapcsolva",
+                    "comfort_mode_on": "Komfort m\u00f3d bekapcsolva",
+                    "flame_on": "Kaz\u00e1nl\u00e1ng bekapcsolva",
+                    "hot_water_on": "Melegv\u00edz bekapcsolva",
+                    "raised_power_mode_active": "Emelt teljes\u00edtm\u00e9ny m\u00f3d akt\u00edv",
+                    "receive_any": "Fogad\u00e1s b\u00e1rmelyik interf\u00e9szen",
+                    "setpoint_override_active": "Alap\u00e9rt\u00e9k fel\u00fcl\u00edr\u00e1sa akt\u00edv",
+                    "thermostat_traffic": "Forgalom a termoszt\u00e1t interf\u00e9szen",
+                    "transmit_any": "Ad\u00e1s b\u00e1rmelyik interf\u00e9szen",
+                    "transmit_error_detected": "Ad\u00e1si hiba \u00e9szlelve"
+                }
+            }
+        },
+        "sensor": {
+            "central_heating_pressure": {
+                "name": "K\u00f6zponti f\u0171t\u00e9s v\u00edznyom\u00e1sa"
+            },
+            "central_heating_pump_hours": {
+                "name": "K\u00f6zponti f\u0171t\u00e9s szivatty\u00fa \u00fczemideje"
+            },
+            "central_heating_pump_starts": {
+                "name": "K\u00f6zponti f\u0171t\u00e9si szivatty\u00fa ind\u00edt\u00e1sok sz\u00e1ma"
+            },
+            "central_heating_temperature_n": {
+                "name": "K\u00f6zponti f\u0171t\u00e9s {circuit_number} v\u00edzh\u0151m\u00e9rs\u00e9klete"
+            },
+            "clock_speed": {
+                "name": "\u00d3rajel"
+            },
+            "control_setpoint_n": {
+                "name": "Vez\u00e9rl\u00e9si alap\u00e9rt\u00e9k {circuit_number}"
+            },
+            "cooling_control": {
+                "name": "H\u0171t\u00e9svez\u00e9rl\u0151 jel"
+            },
+            "exhaust_temperature": {
+                "name": "F\u00fcstg\u00e1z h\u0151m\u00e9rs\u00e9klet"
+            },
+            "firmware_build": {
+                "name": "Firmware build"
+            },
+            "firmware_version": {
+                "name": "Firmware verzi\u00f3"
+            },
+            "gpio_mode_n": {
+                "name": "GPIO {gpio_id} m\u00f3d"
+            },
+            "hot_water_burner_hours": {
+                "name": "Melegv\u00edz \u00e9g\u0151 \u00fczemideje"
+            },
+            "hot_water_burner_starts": {
+                "name": "Melegv\u00edz \u00e9g\u0151 ind\u00edt\u00e1sok sz\u00e1ma"
+            },
+            "hot_water_flow_rate": {
+                "name": "Melegv\u00edz \u00e1raml\u00e1si sebess\u00e9ge"
+            },
+            "hot_water_override_mode": {
+                "name": "Melegv\u00edz fel\u00fclb\u00edr\u00e1l\u00e1si m\u00f3d"
+            },
+            "hot_water_pump_hours": {
+                "name": "Melegv\u00edz szivatty\u00fa \u00fczemideje"
+            },
+            "hot_water_pump_starts": {
+                "name": "Melegv\u00edz szivatty\u00fa ind\u00edt\u00e1sok sz\u00e1ma"
+            },
+            "hot_water_setpoint": {
+                "name": "Melegv\u00edz alap\u00e9rt\u00e9k"
+            },
+            "hot_water_temperature_n": {
+                "name": "Melegv\u00edz {circuit_number} h\u0151m\u00e9rs\u00e9klete"
+            },
+            "led_mode_n": {
+                "name": "LED {led_id} m\u00f3d"
+            },
+            "manufacturer_id": {
+                "name": "Gy\u00e1rt\u00f3i azonos\u00edt\u00f3"
+            },
+            "max_capacity": {
+                "name": "Maxim\u00e1lis kapacit\u00e1s"
+            },
+            "max_central_heating_setpoint": {
+                "name": "Maxim\u00e1lis k\u00f6zponti f\u0171t\u00e9si alap\u00e9rt\u00e9k"
+            },
+            "max_central_heating_setpoint_lower": {
+                "name": "Maxim\u00e1lis k\u00f6zponti f\u0171t\u00e9si alap\u00e9rt\u00e9k als\u00f3 hat\u00e1r"
+            },
+            "max_central_heating_setpoint_upper": {
+                "name": "Maxim\u00e1lis k\u00f6zponti f\u0171t\u00e9si alap\u00e9rt\u00e9k fels\u0151 hat\u00e1r"
+            },
+            "max_hot_water_setpoint_lower": {
+                "name": "Maxim\u00e1lis melegv\u00edz alap\u00e9rt\u00e9k als\u00f3 hat\u00e1r"
+            },
+            "max_hot_water_setpoint_upper": {
+                "name": "Maxim\u00e1lis melegv\u00edz alap\u00e9rt\u00e9k fels\u0151 hat\u00e1r"
+            },
+            "max_relative_mod_level": {
+                "name": "Maxim\u00e1lis relat\u00edv modul\u00e1ci\u00f3s szint"
+            },
+            "min_mod_level": {
+                "name": "Minim\u00e1lis modul\u00e1ci\u00f3s szint"
+            },
+            "oem_diagnostic_code": {
+                "name": "Gy\u00e1rt\u00f3specifikus diagnosztikai k\u00f3d"
+            },
+            "oem_fault_code": {
+                "name": "Gy\u00e1rt\u00f3specifikus hibak\u00f3d"
+            },
+            "opentherm_version": {
+                "name": "OpenTherm protokoll verzi\u00f3"
+            },
+            "operating_mode": {
+                "name": "M\u0171k\u00f6d\u00e9si m\u00f3d"
+            },
+            "outside_temperature": {
+                "name": "K\u00fcls\u0151 h\u0151m\u00e9rs\u00e9klet"
+            },
+            "product_type": {
+                "name": "Term\u00e9kt\u00edpus"
+            },
+            "product_version": {
+                "name": "Term\u00e9k verzi\u00f3"
+            },
+            "reference_voltage": {
+                "name": "Referenciafesz\u00fclts\u00e9g be\u00e1ll\u00edt\u00e1sa"
+            },
+            "relative_mod_level": {
+                "name": "Relat\u00edv modul\u00e1ci\u00f3s szint"
+            },
+            "return_water_temperature": {
+                "name": "Visszat\u00e9r\u0151 v\u00edz h\u0151m\u00e9rs\u00e9klete"
+            },
+            "room_setpoint_n": {
+                "name": "Helyis\u00e9g alap\u00e9rt\u00e9k {setpoint_id}"
+            },
+            "room_setpoint_override": {
+                "name": "Helyis\u00e9g alap\u00e9rt\u00e9k fel\u00fcl\u00edr\u00e1s"
+            },
+            "room_setpoint_override_mode": {
+                "name": "Helyis\u00e9g alap\u00e9rt\u00e9k fel\u00fcl\u00edr\u00e1si m\u00f3d"
+            },
+            "room_temperature": {
+                "name": "Helyis\u00e9g h\u0151m\u00e9rs\u00e9klet"
+            },
+            "setback_temperature": {
+                "name": "Cs\u00f6kkentett komfort h\u0151m\u00e9rs\u00e9klet"
+            },
+            "smart_power_mode": {
+                "name": "Intelligens energiatakar\u00e9kos m\u00f3d"
+            },
+            "solar_collector_temperature": {
+                "name": "Napkollektor h\u0151m\u00e9rs\u00e9klete"
+            },
+            "solar_storage_temperature": {
+                "name": "Napenergia t\u00e1rol\u00f3 h\u0151m\u00e9rs\u00e9klet"
+            },
+            "thermostat_detection_mode": {
+                "name": "Termoszt\u00e1t \u00e9rz\u00e9kel\u00e9si m\u00f3d"
+            },
+            "total_burner_hours": {
+                "name": "\u00c9g\u0151 m\u0171k\u00f6d\u00e9si ideje"
+            },
+            "total_burner_starts": {
+                "name": "\u00c9g\u0151 ind\u00edt\u00e1sok sz\u00e1ma"
+            }
+        },
+        "switch": {
+            "central_heating_override_n": {
+                "name": "K\u00f6zponti f\u0171t\u00e9s {circuit_number} k\u00e9nyszer\u00edtett bekapcsol\u00e1sa"
+            }
+        }
+    },
+    "issues": {
+        "deprecated_import_from_configuration_yaml": {
+            "description": "Az OpenTherm Gateway integr\u00e1ci\u00f3 konfigur\u00e1l\u00e1sa a configuration.yaml f\u00e1jlon kereszt\u00fcl elavult. A konfigur\u00e1ci\u00f3ja \u00e1t lett migr\u00e1lva a konfigur\u00e1ci\u00f3s bejegyz\u00e9sekhez. K\u00e9rj\u00fck, t\u00e1vol\u00edtsa el az OpenTherm Gateway konfigur\u00e1ci\u00f3t a configuration.yaml f\u00e1jlb\u00f3l.",
+            "title": "Elavult konfigur\u00e1ci\u00f3"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "floor_temperature": "Padl\u00f3 h\u0151m\u00e9rs\u00e9klete",
+                    "read_precision": "Pontoss\u00e1g olvas\u00e1sa",
+                    "set_precision": "Pontoss\u00e1g be\u00e1ll\u00edt\u00e1sa",
+                    "temporary_override_mode": "Ideiglenes be\u00e1ll\u00edt\u00e1s fel\u00fclb\u00edr\u00e1l\u00e1si m\u00f3dja"
+                }
+            }
+        }
+    },
+    "services": {
+        "reset_gateway": {
+            "description": "\u00dajraind\u00edtja az OpenTherm \u00e1tj\u00e1r\u00f3t.",
+            "fields": {
+                "gateway_id": {
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                }
+            },
+            "name": "\u00c1tj\u00e1r\u00f3 \u00fajraind\u00edt\u00e1sa"
+        },
+        "send_transparent_command": {
+            "description": "Egyedi otgw parancsok k\u00fcld\u00e9se (https://otgw.tclcode.com/firmware.html) \u00e1tl\u00e1tsz\u00f3 fel\u00fcleten kereszt\u00fcl.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "transp_arg": {
+                    "description": "A parancs param\u00e9tere, amelyet az OpenTherm Gateway-nek kell k\u00fcldeni.",
+                    "name": "Param\u00e9ter"
+                },
+                "transp_cmd": {
+                    "description": "A parancs, amelyet az OpenTherm Gateway-nek kell k\u00fcldeni.",
+                    "name": "Parancs"
+                }
+            },
+            "name": "Transzparens parancs k\u00fcld\u00e9se"
+        },
+        "set_central_heating_ovrd": {
+            "description": "Be\u00e1ll\u00edtja a k\u00f6zponti f\u0171t\u00e9s fel\u00fclb\u00edr\u00e1l\u00e1si opci\u00f3j\u00e1t az \u00e1tj\u00e1r\u00f3n. Amikor a vez\u00e9rl\u00e9si be\u00e1ll\u00edt\u00e1si pontot fel\u00fcl\u00edrja (egy 0-t\u00f3l elt\u00e9r\u0151 \u00e9rt\u00e9k\u0171 set_control_setpoint m\u0171velettel), a gateway automatikusan enged\u00e9lyezi a k\u00f6zponti f\u0171t\u00e9s fel\u00fclb\u00edr\u00e1l\u00e1s\u00e1t, a f\u0171t\u00e9s megkezd\u00e9s\u00e9hez. Ezt a m\u0171veletet ezut\u00e1n a k\u00f6zponti f\u0171t\u00e9s fel\u00fclb\u00edr\u00e1l\u00e1si \u00e1llapot\u00e1nak szab\u00e1lyoz\u00e1s\u00e1ra lehet haszn\u00e1lni. A k\u00f6zponti f\u0171t\u00e9s vez\u00e9rl\u00e9s\u00e9nek visszaad\u00e1s\u00e1hoz a termoszt\u00e1tnak, haszn\u00e1lja a set_control_setpoint m\u0171veletet 0 h\u0151m\u00e9rs\u00e9kleti \u00e9rt\u00e9kkel. Erre csak akkor lesz sz\u00fcks\u00e9ge, ha saj\u00e1t szoftveres termoszt\u00e1tot \u00edr.",
+            "fields": {
+                "ch_override": {
+                    "description": "A k\u00f6zponti f\u0171t\u00e9s fel\u00fclb\u00edr\u00e1l\u00e1s\u00e1nak k\u00edv\u00e1nt logikai \u00e9rt\u00e9ke.",
+                    "name": "K\u00f6zponti f\u0171t\u00e9s fel\u00fclb\u00edr\u00e1l\u00e1sa"
+                },
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                }
+            },
+            "name": "K\u00f6zponti f\u0171t\u00e9s fel\u00fclb\u00edr\u00e1l\u00e1s\u00e1nak be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_clock": {
+            "description": "Be\u00e1ll\u00edtja az \u00f3r\u00e1t \u00e9s a h\u00e9t napj\u00e1t a csatlakoztatott termoszt\u00e1ton.",
+            "fields": {
+                "date": {
+                    "description": "Opcion\u00e1lis d\u00e1tum, amelyb\u0151l a h\u00e9t napja lesz kivonva. Alap\u00e9rtelmez\u00e9s szerint a mai nap.",
+                    "name": "D\u00e1tum"
+                },
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "time": {
+                    "description": "Opcion\u00e1lis id\u0151pont 24 \u00f3r\u00e1s form\u00e1tumban, amelyet a termoszt\u00e1tnak adnak meg. Alap\u00e9rtelmez\u00e9s szerint az aktu\u00e1lis id\u0151pontot veszi figyelembe.",
+                    "name": "Id\u0151"
+                }
+            },
+            "name": "\u00d3ra be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_control_setpoint": {
+            "description": "Be\u00e1ll\u00edtja a k\u00f6zponti f\u0171t\u00e9s vez\u00e9rl\u00e9si be\u00e1ll\u00edt\u00e1si pontj\u00e1nak fel\u00fclb\u00edr\u00e1l\u00e1s\u00e1t az \u00e1tj\u00e1r\u00f3n. Csak akkor lesz erre sz\u00fcks\u00e9ge, ha saj\u00e1t szoftver alap\u00fa termoszt\u00e1tot \u00edr.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "temperature": {
+                    "description": "A k\u00f6zponti f\u0171t\u00e9s vez\u00e9rl\u00e9si be\u00e1ll\u00edt\u00e1si pontj\u00e1nak be\u00e1ll\u00edt\u00e1sa az \u00e1tj\u00e1r\u00f3n. 0 \u00e9s 90 k\u00f6z\u00f6tti \u00e9rt\u00e9kek fogadhat\u00f3k el, de nem minden kaz\u00e1n t\u00e1mogatja ezt a tartom\u00e1nyt. A 0 \u00e9rt\u00e9k letiltja a k\u00f6zponti f\u0171t\u00e9s vez\u00e9rl\u00e9si be\u00e1ll\u00edt\u00e1si pontj\u00e1nak fel\u00fclb\u00edr\u00e1l\u00e1s\u00e1t.",
+                    "name": "H\u0151m\u00e9rs\u00e9klet"
+                }
+            },
+            "name": "Vez\u00e9rl\u00e9si be\u00e1ll\u00edt\u00e1si pont be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_gpio_mode": {
+            "description": "Megv\u00e1ltoztatja a gateway GPIO t\u00fcsk\u00e9inek funkci\u00f3j\u00e1t.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "id": {
+                    "description": "A GPIO pin azonos\u00edt\u00f3ja.",
+                    "name": "Azonos\u00edt\u00f3"
+                },
+                "mode": {
+                    "description": "A GPIO t\u0171re be\u00e1ll\u00edtand\u00f3 m\u00f3d. Mindk\u00e9t GPIO eset\u00e9ben elfogadottak a 0-t\u00f3l 6-ig terjed\u0151 \u00e9rt\u00e9kek, a 7-es \u00e9rt\u00e9k csak a GPIO \"B\" eset\u00e9ben fogadhat\u00f3 el. Az \u00e9rt\u00e9kek magyar\u00e1zat\u00e1t itt tal\u00e1lja: https://www.home-assistant.io/integrations/opentherm_gw/#gpio-modes.",
+                    "name": "M\u00f3d"
+                }
+            },
+            "name": "Gpio \u00fczemm\u00f3d be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_hot_water_ovrd": {
+            "description": "Be\u00e1ll\u00edtja a h\u00e1ztart\u00e1si melegv\u00edz enged\u00e9lyez\u00e9si opci\u00f3t az \u00e1tj\u00e1r\u00f3n.",
+            "fields": {
+                "dhw_override": {
+                    "description": "A h\u00e1ztart\u00e1si melegv\u00edz bekapcsol\u00e1si opci\u00f3j\u00e1nak szab\u00e1lyoz\u00e1sa. Ha a kaz\u00e1nt \u00fagy konfigur\u00e1lt\u00e1k, hogy a szobai egys\u00e9g szab\u00e1lyozza, mikor kell kis mennyis\u00e9g\u0171 vizet el\u0151meleg\u00edteni, ez a parancs befoly\u00e1solhatja azt. Az \u00e9rt\u00e9knek 0-nak vagy 1-nek kell lennie, hogy a fel\u00fclb\u00edr\u00e1l\u00e1s ki- vagy bekapcsolt \u00e1llapotban legyen, vagy \"A\", hogy letiltsa a fel\u00fclb\u00edr\u00e1l\u00e1st.",
+                    "name": "Haszn\u00e1lati melegv\u00edz fel\u00fclb\u00edr\u00e1l\u00e1sa"
+                },
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                }
+            },
+            "name": "Melegv\u00edz fel\u00fclb\u00edr\u00e1l\u00e1s\u00e1nak be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_hot_water_setpoint": {
+            "description": "Be\u00e1ll\u00edtja a haszn\u00e1lati melegv\u00edz alap\u00e9rt\u00e9k\u00e9t az \u00e1tj\u00e1r\u00f3n.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "temperature": {
+                    "description": "A haszn\u00e1lati melegv\u00edz alap\u00e9rt\u00e9ke, amelyet a \u00e1tj\u00e1r\u00f3n be kell \u00e1ll\u00edtani. Nem minden kaz\u00e1n t\u00e1mogatja ezt a funkci\u00f3t. A 0 \u00e9s 90 k\u00f6z\u00f6tti \u00e9rt\u00e9kek elfogadottak, de nem minden kaz\u00e1n t\u00e1mogatja ezt a tartom\u00e1nyt. Ellen\u0151rizze a slave_dhw_min_setp \u00e9s slave_dhw_max_setp \u00e9rz\u00e9kel\u0151k \u00e9rt\u00e9keit, hogy meg\u00e1llap\u00edthassa a kaz\u00e1nja \u00e1ltal t\u00e1mogatott tartom\u00e1nyt.",
+                    "name": "H\u0151m\u00e9rs\u00e9klet"
+                }
+            },
+            "name": "Melegv\u00edz alap\u00e9rt\u00e9k be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_led_mode": {
+            "description": "Megv\u00e1ltoztatja az \u00e1tj\u00e1r\u00f3 LED-jeinek funkci\u00f3j\u00e1t.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "id": {
+                    "description": "A LED azonos\u00edt\u00f3ja.",
+                    "name": "Azonos\u00edt\u00f3"
+                },
+                "mode": {
+                    "description": "A LED-hez rendelend\u0151 funkci\u00f3. Az \u00e9rt\u00e9kek magyar\u00e1zat\u00e1t l\u00e1sd a https://www.home-assistant.io/integrations/opentherm_gw/#led-modes oldalon.",
+                    "name": "M\u00f3d"
+                }
+            },
+            "name": "LED \u00fczemm\u00f3d be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_max_modulation": {
+            "description": "Fel\u00fcl\u00edrja a maxim\u00e1lis relat\u00edv modul\u00e1ci\u00f3s szintet. Csak akkor lesz sz\u00fcks\u00e9ge erre, ha saj\u00e1t szoftveres termoszt\u00e1tot \u00edr.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "level": {
+                    "description": "Az \u00e1tj\u00e1r\u00f3nak biztos\u00edtand\u00f3 modul\u00e1ci\u00f3s szint. Adja meg a -1 \u00e9rt\u00e9ket a fel\u00fclb\u00edr\u00e1l\u00e1s t\u00f6rl\u00e9s\u00e9hez \u00e9s az \u00e9rt\u00e9k \u00fajb\u00f3li tov\u00e1bb\u00edt\u00e1s\u00e1hoz a termoszt\u00e1tb\u00f3l.",
+                    "name": "Szint"
+                }
+            },
+            "name": "Maxim\u00e1lis modul\u00e1ci\u00f3 be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_outside_temperature": {
+            "description": "K\u00fcls\u0151 h\u0151m\u00e9rs\u00e9kletet biztos\u00edt a termoszt\u00e1tnak. Ha a termoszt\u00e1t nem tudja megjelen\u00edteni a k\u00fcls\u0151 h\u0151m\u00e9rs\u00e9kletet \u00e9s nem t\u00e1mogatja az OTC-t (k\u00fcls\u0151 h\u0151m\u00e9rs\u00e9klet-korrekci\u00f3), ennek nincs hat\u00e1sa.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "temperature": {
+                    "description": "A termoszt\u00e1t sz\u00e1m\u00e1ra biztos\u00edtand\u00f3 h\u0151m\u00e9rs\u00e9klet. A -40,0 \u00e9s 64,0 k\u00f6z\u00f6tti \u00e9rt\u00e9kek elfogadhat\u00f3k, de nem minden termoszt\u00e1t k\u00e9pes megjelen\u00edteni a teljes tartom\u00e1nyt. A 64,0 feletti \u00e9rt\u00e9kek t\u00f6rlik a kor\u00e1bban be\u00e1ll\u00edtott \u00e9rt\u00e9keket (javaslat: 99).",
+                    "name": "H\u0151m\u00e9rs\u00e9klet"
+                }
+            },
+            "name": "K\u00fcls\u0151 h\u0151m\u00e9rs\u00e9klet be\u00e1ll\u00edt\u00e1sa"
+        },
+        "set_setback_temperature": {
+            "description": "Be\u00e1ll\u00edtja a vissza\u00e1ll\u00e1si h\u0151m\u00e9rs\u00e9kletet a GPIO t\u00e1voll\u00e9ti m\u00f3d funkci\u00f3hoz.",
+            "fields": {
+                "gateway_id": {
+                    "description": "Az OpenTherm \u00e1tj\u00e1r\u00f3 gateway_id-je.",
+                    "name": "\u00c1tj\u00e1r\u00f3 azonos\u00edt\u00f3"
+                },
+                "temperature": {
+                    "description": "Az \u00e1tj\u00e1r\u00f3n konfigur\u00e1land\u00f3 vissza\u00e1ll\u00e1si h\u0151m\u00e9rs\u00e9klet.",
+                    "name": "H\u0151m\u00e9rs\u00e9klet"
+                }
+            },
+            "name": "Cs\u00f6kkentett h\u0151m\u00e9rs\u00e9klet be\u00e1ll\u00edt\u00e1sa"
+        }
+    }
+}

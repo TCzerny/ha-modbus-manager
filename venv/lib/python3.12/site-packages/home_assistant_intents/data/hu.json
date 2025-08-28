@@ -1,0 +1,4281 @@
+{
+  "language": "hu",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "(<turn_off>;[<area>];<name>)"
+          ],
+          "excludes_context": {
+            "domain": [
+              "binary_sensor",
+              "cover",
+              "lock",
+              "scene",
+              "script",
+              "sensor",
+              "light"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_off>;<area>;<name> [<light>])",
+            "(<turn_off>;<name> [<light>])"
+          ],
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_off>; [<minden>] <light>; <area>)"
+          ],
+          "response": "lights_area",
+          "slots": {
+            "domain": "light",
+            "name": "all"
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_off>; <mindenhol>; [<minden>] <light>)"
+          ],
+          "response": "lights_all",
+          "slots": {
+            "domain": "light",
+            "name": "all"
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_off>; [<minden>] <light>; [<in_here>])",
+            "(<turn_off>; [<minden>] <light>)"
+          ],
+          "response": "lights_area",
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_off>; [<minden>] <light>; <floor>)"
+          ],
+          "response": "lights_floor",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<close> (<name>;[<area>])"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<close> a garázs[t|ajtót|kaput]"
+          ],
+          "slots": {
+            "domain": "cover",
+            "device_class": "garage"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<close> ({cover_classes:device_class};<area>)"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<close> ({cover_classes:device_class};[<in_here>])"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_device_class",
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_off>;[<minden>] <ventilátor>;<area>)",
+            "(<turn_off>;[<minden>] <area> <ventilátor>)"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_area"
+        },
+        {
+          "sentences": [
+            "(<turn_off>;<mindenhol>;[<minden>] <ventilátor>)"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_all"
+        },
+        {
+          "sentences": [
+            "(<in_here>;<turn_off>;[<minden>] <ventilátor>)",
+            "(<turn_off>;[<minden>] <ventilátor>)"
+          ],
+          "response": "fans_area",
+          "slots": {
+            "domain": "fan"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<open>;<name> <zár>)",
+            "(<open>;<name> <zár>;<area>)"
+          ],
+          "requires_context": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "(<open>;[<minden>];<zár>;<area>)",
+            "(<open>;<zár>;<area>)"
+          ],
+          "slots": {
+            "domain": "lock",
+            "name": "all"
+          },
+          "response": "lock_area"
+        },
+        {
+          "sentences": [
+            "(<close_dev>;<name>)"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          },
+          "response": "valve"
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "<where_is> <name>"
+          ],
+          "response": "where",
+          "requires_context": {
+            "domain": "person"
+          },
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "<name> [a[z]] {zone:state}[ zónában| helyen] van"
+          ],
+          "response": "one_yesno_where",
+          "requires_context": {
+            "domain": "person"
+          },
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "<valaki> van [a[z]] {zone:state}[ zónában| helyen]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "Mindenki [a[z]] {zone:state}[ zónában| helyen] van"
+          ],
+          "response": "all_where",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "Ki[k] van[nak] [a[z]] {zone:state}[ zónában| helyen]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> [ember] van[nak] [a[z]] {zone:state}[ zónában| helyen]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "apparent_power"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "apparent_power"
+          },
+          "expansion_rules": {
+            "class": "látszólagos teljesítmény[e]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "aqi"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "aqi"
+          },
+          "expansion_rules": {
+            "class": "(levegőminőség[e] [index[e]])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "atmospheric_pressure"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "atmospheric_pressure"
+          },
+          "expansion_rules": {
+            "class": "(atmoszférikus|lég)[ ]nyomás[a]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "battery"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "battery"
+          },
+          "expansion_rules": {
+            "class": "[maradék ](akkumulátor[a]|töltöttség(e|i))[ szint[je]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "carbon_dioxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "carbon_dioxide"
+          },
+          "expansion_rules": {
+            "class": "(széndioxid|CO2) [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "carbon_monoxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "carbon_monoxide"
+          },
+          "expansion_rules": {
+            "class": "(szénmonoxid|CO) [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "current"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "current"
+          },
+          "expansion_rules": {
+            "class": "áramfogyasztás[a] [mértéke]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "data_rate"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "data_rate"
+          },
+          "expansion_rules": {
+            "class": "[(letöltés[i]|feltöltés[i])] sebesség[e]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "data_size"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "data_size"
+          },
+          "expansion_rules": {
+            "class": "méret[e]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>",
+            "Mikor (lesz|volt|van) <name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "date"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "date"
+          },
+          "expansion_rules": {
+            "class": "dátum[a]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "distance"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "distance"
+          },
+          "expansion_rules": {
+            "class": "(állás[a]|távolság[a])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "duration"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "duration"
+          },
+          "expansion_rules": {
+            "class": "(hossz[a]|id(ő|e)[tartam[a]])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "energy"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "energy"
+          },
+          "expansion_rules": {
+            "class": "energi(a|át)[ ][termel[és|t]|fogyaszt[ás|ott]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "energy_storage"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "energy_storage"
+          },
+          "expansion_rules": {
+            "class": "[tárolt ]energi(a|á)[ja|t tárol]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "frequency"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "frequency"
+          },
+          "expansion_rules": {
+            "class": "frekvenci(a|ája)"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "gas"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "gas"
+          },
+          "expansion_rules": {
+            "class": "[a ]gáz[ ][mennyiség[e|et]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "humidity"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "humidity"
+          },
+          "expansion_rules": {
+            "class": "[levegő] [relatív] páratartal(om|ma)"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "illuminance"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "illuminance"
+          },
+          "expansion_rules": {
+            "class": "(fényer(ő|eje)|fény intenzitás[a])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "irradiance"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "irradiance"
+          },
+          "expansion_rules": {
+            "class": "(sugárzás[a][ intenzitás[a]])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "moisture"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "moisture"
+          },
+          "expansion_rules": {
+            "class": "([relatív] nedvességtartal(om|ma))"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "monetary"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "monetary"
+          },
+          "expansion_rules": {
+            "class": "(ár[a]|összeg[e]|költség[e])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "nitrogen_dioxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "nitrogen_dioxide"
+          },
+          "expansion_rules": {
+            "class": "(nitrogén dioxid|NO2) [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "nitrogen_monoxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "nitrogen_monoxide"
+          },
+          "expansion_rules": {
+            "class": "(nitrogén monoxid|NO) [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "nitrous_oxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "nitrous_oxide"
+          },
+          "expansion_rules": {
+            "class": "(dinitrogén oxid|N2O) [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "ozone"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "ozone"
+          },
+          "expansion_rules": {
+            "class": "(ózon|O3) [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "pm1"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "pm1"
+          },
+          "expansion_rules": {
+            "class": "pm 1 [récske[ék]] [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "pm25"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "pm25"
+          },
+          "expansion_rules": {
+            "class": "pm 2(.|[ ])5 [récske[ék]] [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "pm10"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "pm10"
+          },
+          "expansion_rules": {
+            "class": "pm 10 [récske[ék]] [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "power_factor"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "power_factor"
+          },
+          "expansion_rules": {
+            "class": "teljesítménytényező[je]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "power"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "power"
+          },
+          "expansion_rules": {
+            "class": "(teljesítmény[e]|fogyasztás[a])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "precipitation"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "precipitation"
+          },
+          "expansion_rules": {
+            "class": "[összesített ]csapadék(szint[je]|mennyiség[e])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "precipitation_intensity"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "precipitation_intensity"
+          },
+          "expansion_rules": {
+            "class": "csapadékintenzitás[a]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "pressure"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "pressure"
+          },
+          "expansion_rules": {
+            "class": "nyomás[a]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "reactive_power"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "reactive_power"
+          },
+          "expansion_rules": {
+            "class": "(reaktív|meddő) teljesítmény[e]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "signal_strength"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "signal_strength"
+          },
+          "expansion_rules": {
+            "class": "((jel[ ]erősség[e])|térer(ő|eje))"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "sound_pressure"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "sound_pressure"
+          },
+          "expansion_rules": {
+            "class": "hang(er(ő|eje)|nyomás[a])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "speed"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "speed"
+          },
+          "expansion_rules": {
+            "class": "sebesség[e]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "sulphur_dioxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "sulphur_dioxide"
+          },
+          "expansion_rules": {
+            "class": "(kén dioxid|SO2) [szint[je]|koncentráció[ja]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "temperature"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "temperature"
+          },
+          "expansion_rules": {
+            "class": "hőmérséklet[e]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "volatile_organic_compounds"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "volatile_organic_compounds"
+          },
+          "expansion_rules": {
+            "class": "(VOC|[organikus] vegyület[ek]) koncentráció[ja]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "volatile_organic_compounds_parts"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "volatile_organic_compounds_parts"
+          },
+          "expansion_rules": {
+            "class": "(VOC|[organikus] vegyület[ek]) (koncentráció[ja]|arány[a])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "voltage"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "voltage"
+          },
+          "expansion_rules": {
+            "class": "feszültség[e|esés[e]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "volume"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "volume"
+          },
+          "expansion_rules": {
+            "class": "mennyiség[e]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "volume_storage"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "volume_storage"
+          },
+          "expansion_rules": {
+            "class": "[összes] [[el]tárolt] mennyiség[e]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "water"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "water"
+          },
+          "expansion_rules": {
+            "class": "víz[fogyasztás[i]][ ][mennyiség[e]]"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "weight"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "weight"
+          },
+          "expansion_rules": {
+            "class": "(súly[a]|tömeg[e])"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is_the_class_of_name>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "wind_speed"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "wind_speed"
+          },
+          "expansion_rules": {
+            "class": "szélsebesség[e[t]]"
+          }
+        },
+        {
+          "sentences": [
+            "((<name>;{lock_states:state} [van]);[<area>])"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "lock"
+          },
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "(([<bármelyik>] <zár>;{lock_states:state};[van]);[<area>])"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "((<minden> <zár>;{lock_states:state} [van]);[<area>])"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> (<zár> van {lock_states:state};[<area>])"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> (<zár> van {lock_states:state};[<area>])"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "<what_is> [aktuális|jelenlegi] [állapota|értéke] <name> [<area>]"
+          ],
+          "response": "one",
+          "excludes_context": {
+            "domain": [
+              "scene",
+              "script"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<name> [aktuális|jelenleg[i]] [állapota] {on_off_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "[jelenleg] [<bármelyik>] {on_off_domains:domain} [van[nak]] {on_off_states:state} [<area>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "[jelenleg] (<minden>|a[z]) {on_off_domains:domain} {on_off_states:state} [<area>]"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "[jelenleg] <melyik> {on_off_domains:domain} [van[nak]] {on_off_states:state} [<area>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "[jelenleg] <mennyi> {on_off_domains:domain} [van[nak]] {on_off_states:state} [<area>]"
+          ],
+          "response": "how_many"
+        },
+        {
+          "sentences": [
+            "(<name>;{cover_states:state} [van];[<area_floor>])"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "cover"
+          },
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "((<bármelyik>;{cover_classes:device_class};{cover_states:state} [van]);[<area_floor>])"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "((<minden>;{cover_classes:device_class};{cover_states:state} [van]);[<area_floor>])"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> {cover_classes:device_class} van {cover_states:state} [<area_floor>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> {cover_classes:device_class} van {cover_states:state} [<area_floor>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<name> [<battery>] {bs_battery_states:state} [töltöttségű] [<area>]",
+            "{bs_battery_states:state} [töltöttségű] <name> [<battery>] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "van[nak] {bs_battery_states:state} töltöttségű <battery> [<area>]",
+            "<bármelyik> <battery> {bs_battery_states:state} töltöttségű [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> <battery> {bs_battery_states:state} [töltöttségű] [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <battery> {bs_battery_states:state} [töltöttségű[ek]] [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <battery> {bs_battery_states:state} [töltöttségű] [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_battery_charging_states:state} [jelenleg] <name> [<area>]",
+            "<name> [jelenleg] {bs_battery_charging_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_battery_charging_states:state} [<bármelyik>] <battery> [<area>]",
+            "<bármelyik> <battery> {bs_battery_charging_states:state} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_battery_charging_states:state} <minden> <battery> [<area>]",
+            "<minden> <battery> {bs_battery_charging_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <battery> {bs_battery_charging_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <battery> {bs_battery_charging_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "battery_charging"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_carbon_monoxide_states:state} [<co>] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "(<bármelyik>|a) <co> <szenzor> {bs_carbon_monoxide_states:state} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "Van <co> [jelzés|észlelés] <area>"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> <co> <szenzor> {bs_carbon_monoxide_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <co> <szenzor> {bs_carbon_monoxide_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <co> <szenzor> {bs_carbon_monoxide_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "carbon_monoxide"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_cold_states:state} [állapotú|jelez] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "cold"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "cold"
+          }
+        },
+        {
+          "sentences": [
+            "<vane> [bármilyen] hideg <eszköz> [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "cold",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <eszköz> hideg [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "cold",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <eszköz> hideg [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "cold",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_connectivity_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "<bármelyik> <eszköz> {bs_connectivity_states:state} [van] [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> <eszköz> {bs_connectivity_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <eszköz> {bs_connectivity_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> eszköz {bs_connectivity_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "connectivity"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_door_states:state} van [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "door"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "door"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_garage_door_states:state} van [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "garage_door"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "garage_door"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_gas_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_gas_states:state} [<bármelyik>] gáz <szenzor> [<area>]",
+            "<bármelyik> gáz <szenzor> {bs_gas_states:state} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "Érzékelhető gáz <area>",
+            "Van gáz jelzés <area>"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> gáz <szenzor> {bs_gas_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> gáz <szenzor> {bs_gas_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> gáz <szenzor> {bs_gas_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "gas"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_heat_states:state} [állapotú|jelez] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "heat"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "heat"
+          }
+        },
+        {
+          "sentences": [
+            "<vane> [bármilyen] meleg [<eszköz>] [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "heat",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <eszköz> meleg [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "heat",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <eszköz> meleg [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "heat",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_light_states:state} fény[t] <name> [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_light_states:state} [bárhol] fény [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> fény[ ]<szenzor> {bs_light_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> fény[ ]<szenzor> {bs_light_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> fény[ ]<szenzor> {bs_light_states:state} [in <area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<name> <zár> {bs_lock_states:state} van [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "lock"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "lock"
+          }
+        },
+        {
+          "sentences": [
+            "<name> [állapota] {bs_moisture_states:state} [állapotú] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_moisture_states:state} <bármelyik> ([víz]szivárgás|víz) <szenzor> [<area>]",
+            "<bármelyik> ([víz]szivárgás|víz) <szenzor> {bs_moisture_states:state} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "Van ([víz]szivárgás|víz) [<area>]",
+            "<area> [van] ([víz]szivárgás|víz)"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> ([víz]szivárgás|víz) <szenzor> {bs_moisture_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> ([víz]szivárgás|víz) <szenzor> {bs_moisture_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> ([víz]szivárgás|víz) <szenzor> {bs_moisture_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "moisture"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_motion_states:state} [mozgást] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_motion_states:state} [mozgást] <bármelyik> mozgásérzékelő [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "Érzékelhető mozgás [<area>]",
+            "Van mozgás [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> mozgásérzékelő {bs_motion_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> mozgásérzékelő {bs_motion_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> mozgásérzékelő {bs_motion_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "motion"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_occupancy_states:state} (<foglalt>|jelez) [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_occupancy_states:state} [<foglalt>|jelez] <bármelyik> <foglalt> <szenzor> [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "Érzékelhető <foglalt> [<area>]",
+            "<area> foglalt"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> <foglalt> <szenzor> {bs_occupancy_states:state} [állapotú] [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <foglalt> <szenzor> {bs_occupancy_states:state} [állapotú] [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <foglalt> <szenzor> {bs_occupancy_states:state} [állapotú] [ <area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "occupancy"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_opening_states:state} van [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_opening_states:state} van <bármelyik> nyílás[záró] [<area>]",
+            "<bármelyik> nyílás[záró] {bs_opening_states:state} van [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_opening_states:state} van <minden> nyílás[záró] [<area>]",
+            "<minden> nyílás[záró] {bs_opening_states:state} van [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> nyílás[záró] van {bs_opening_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> nyílás[záró] van {bs_opening_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "opening"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_plug_states:state} [van] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "<bármelyik> <eszköz> {bs_plug_states:state} [van] [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> <eszköz> {bs_plug_states:state} [van] [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <eszköz> van {bs_plug_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <eszköz> van {bs_plug_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "plug"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_power_states:state} [van] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "<bármelyik> [<eszköz>] {bs_power_states:state} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> <eszköz> {bs_power_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <eszköz> {bs_power_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <eszköz> {bs_power_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "power"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_presence_states:state} [van] [<area>]"
+          ],
+          "response": "one_yesno_where",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "<bármelyik> <eszköz> {bs_presence_states:state} [van] [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> <eszköz> {bs_presence_states:state} [van] [<area>]",
+            "<minden> <eszköz> állapota {bs_presence_states:state} [<area>]"
+          ],
+          "response": "all_where",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <eszköz> (állapota|van) {bs_presence_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <eszköz> (állapota|van) {bs_presence_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "presence"
+          }
+        },
+        {
+          "sentences": [
+            "Van [<bármelyik>] probléma <name> <eszköz> [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "problem"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "problem",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<name> [még] {bs_running_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "<bármelyik> <eszköz> {bs_running_states:state} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> <eszköz> {bs_running_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <eszköz> [van] {bs_running_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <eszköz> [van] {bs_running_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "running"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_safety_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "safety"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "safety"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_smoke_states:state} [füstöt] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "{bs_smoke_states:state} <bármelyik> füst <szenzor> [<area>]",
+            "<bármelyik> füst <szenzor> {bs_smoke_states:state} [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "érzékelhető füst <area>",
+            "van füst jelzés <area>"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> füst <szenzor> {bs_smoke_states:state} [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> füst <szenzor> {bs_smoke_states:state} [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> füst <szenzor> {bs_smoke_states:state} [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "smoke"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_sound_states:state} [hangot|zajt] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "<bármelyik> (hang|zaj) <szenzor> {bs_sound_states:state} [hangot|zajt] [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "Van [hang|zaj] <area>"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<minden> (hang|zaj) <szenzor> {bs_sound_states:state} [hangot|zajt] [<area>]"
+          ],
+          "response": "all",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> (hang|zaj) <szenzor> {bs_sound_states:state} [hangot|zajt] [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> (hang|zaj) <szenzor> {bs_sound_states:state} [hangot|zajt] [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "sound"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_tamper_states:state} [van|állapotú] [<area>]",
+            "{bs_tamper_states:state} [van|állapotú] <name> [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "tamper"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "tamper"
+          }
+        },
+        {
+          "sentences": [
+            "<name> [<eszköz>] {bs_update_states:state} [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "update"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "update"
+          }
+        },
+        {
+          "sentences": [
+            "<bármelyik> <eszköz> elérhető [<firmware>] frissítés [<area>]"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "update",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<melyik> <eszköz> [el]érhető[ el] [<firmware>] frissítés [<area>]"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "update",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<mennyi> <eszköz> [el]érhető[ el] [<firmware>] frissítés [<area>]",
+            "<mennyi> [<firmware>] frissítés [el]érhető[ el] [<area>]"
+          ],
+          "response": "how_many",
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "update",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_vibration_states:state} [állapotú] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "vibration"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "vibration"
+          }
+        },
+        {
+          "sentences": [
+            "Vibrál valami [<area>]",
+            "Vibrációt jelez [valami] [<area>]",
+            "<bármelyik> vibrál [<area>]"
+          ],
+          "response": "any",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "vibration"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "vibration",
+            "state": "on"
+          }
+        },
+        {
+          "sentences": [
+            "<name> {bs_window_states:state} [van] [<area>]"
+          ],
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "binary_sensor",
+            "device_class": "window"
+          },
+          "slots": {
+            "domain": "binary_sensor",
+            "device_class": "window"
+          }
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(<timer_cancel>;[az] időzítő[me][t])",
+            "(<timer_cancel>;[a|az] <timer_start> időzítő[me][t])",
+            "(<timer_cancel>;[a|az] {area} időzítő(t|jének))",
+            "(<timer_cancel>;[a|az] {timer_name:name} [nevű] időzítő[me][t])"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "[mi] [az|a] <timer_start> időzítő[m] állapota",
+            "[mi] [az] időzítő[m|im|k] állapota",
+            "[mi] az időzítő[m|im|k] állapota {area}",
+            "[mi] [az|a] {area} időzítő[jének|m|im|k] állapota"
+          ],
+          "required_keywords": [
+            "időzítő",
+            "időzítőm",
+            "időzítőim",
+            "időzítők",
+            "időzítőjének",
+            "állapota"
+          ]
+        },
+        {
+          "sentences": [
+            "mennyi [idő] van hátra az időzítő((n|ből)|m(ön|ből)|im(en|ből)|k(ön|ből))",
+            "mennyi [idő] van hátra a[z] <timer_start> időzítő(n|mön|[m]ből)",
+            "mennyi [idő] van hátra [az|a] {area} [beállított] időzítőjéből",
+            "mennyi [idő] van hátra az időzítő((n|ből)|m(ön|ből)|im(en|ből)|k(ön|ből)) {area}"
+          ],
+          "required_keywords": [
+            "időzítőn",
+            "időzítőből",
+            "időzítőmön",
+            "időzítőmből",
+            "időzítőimen",
+            "időzítőimből",
+            "időzítőkön",
+            "időzítőkből",
+            "időzítőjéből",
+            "hátra"
+          ]
+        },
+        {
+          "sentences": [
+            "[mi] [az|a] {timer_name:name} időzítő[m] állapota",
+            "mennyi [idő] van hátra [az|a] {timer_name:name} időzítő[m]ből",
+            "[az|a] {timer_name:name} időzítő[m] állapota"
+          ],
+          "required_keywords": [
+            "időzítő",
+            "időzítőm",
+            "időzítőből",
+            "időzítőmből"
+          ]
+        }
+      ]
+    },
+    "HassGetWeather": {
+      "data": [
+        {
+          "sentences": [
+            "Milyen idő van [ma|most|kint]",
+            "Milyen az idő [ma|most|kint]"
+          ],
+          "response": "default"
+        },
+        {
+          "sentences": [
+            "(Milyen idő van [ma|most];<name>(<idojarasragok>| <idojarashelyek>))",
+            "(Milyen az idő [ma|most];<name>(<idojarasragok>| <idojarashelyek>))"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          },
+          "response": "default"
+        },
+        {
+          "sentences": [
+            "Milyen az időjárás [ma|most|kint]",
+            "Mondj [részletes] időjárás[t|jelentést]",
+            "Mondd meg a mai [részletes] időjárást"
+          ],
+          "response": "detailed_weather"
+        },
+        {
+          "sentences": [
+            "(Milyen [az] időjárás [van] [ma|most];<name>(<idojarasragok>| <idojarashelyek>))",
+            "(Mondj [részletes] időjárás[t|jelentést];<name>(<idojarasragok>| <idojarashelyek>))",
+            "Mondd meg a mai [részletes] időjárást <name>(<idojarasragok>| <idojarashelyek>)"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          },
+          "response": "detailed_weather"
+        },
+        {
+          "sentences": [
+            "(milyen|mekkora) az UV [index|sugárzás] [ma|most|kint]",
+            "(magas|alacsony) [ma|most] az UV [index|sugárzás]"
+          ],
+          "response": "uv"
+        },
+        {
+          "sentences": [
+            "((milyen|mekkora) az UV [index|sugárzás] [ma|most];<name>(<idojarasragok>| <idojarashelyek>))",
+            "((magas|alacsony) [ma|most] az UV [index|sugárzás];<name>(<idojarasragok>| <idojarashelyek>))"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          },
+          "response": "uv"
+        },
+        {
+          "sentences": [
+            "(milyen|mekkora) a szél[sebesség[e]] [ma|most|kint]",
+            "(milyen|mekkora) sebességgel fúj a szél [ma|most|kint]",
+            "mennyi a szél sebessége [ma|most|jelenleg|kint]"
+          ],
+          "response": "wind"
+        },
+        {
+          "sentences": [
+            "((milyen|mekkora) a szél[sebesség[e]] [ma|most];<name>(<idojarasragok>| <idojarashelyek>))",
+            "((milyen|mekkora) sebességgel fúj a szél [ma|most];<name>(<idojarasragok>| <idojarashelyek>))",
+            "(mennyi a szél sebessége [ma|most|jelenleg];<name>(<idojarasragok>| <idojarashelyek>))"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          },
+          "response": "wind"
+        }
+      ]
+    },
+    "HassGetCurrentTime": {
+      "data": [
+        {
+          "sentences": [
+            "mennyi az idő [most]",
+            "hány óra van [most]",
+            "mondd [meg] az időt"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "(<turn_on>;<area>;<name> [<light>])",
+            "(<turn_on>;<name> [<light>])"
+          ],
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_on>; [<minden>] <light>; <area>)"
+          ],
+          "slots": {
+            "domain": "light",
+            "name": "all"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "(<turn_on>; [<minden>] <light>; <in_here>)",
+            "(<turn_on>; [<minden>] <light>)"
+          ],
+          "response": "lights_area",
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_on>; [<minden>] <light>; <floor>)"
+          ],
+          "response": "lights_floor",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "(<turn_on>;[<minden>] <ventilátor>;<area>)",
+            "(<turn_on>;[<minden>] <area> <ventilátor>)"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          },
+          "response": "fans_area"
+        },
+        {
+          "sentences": [
+            "([<in_here>];<turn_on>;[<minden>] <ventilátor>)"
+          ],
+          "response": "fans_area",
+          "slots": {
+            "domain": "fan"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<futtat>; <name> (parancsot|scriptet|szkriptet))"
+          ],
+          "requires_context": {
+            "domain": "script"
+          },
+          "slots": {
+            "domain": "script"
+          },
+          "response": "script"
+        },
+        {
+          "sentences": [
+            "((<set>|<turn_on>);<name> [a] jelenetet)"
+          ],
+          "requires_context": {
+            "domain": "scene"
+          },
+          "slots": {
+            "domain": "scene"
+          },
+          "response": "scene"
+        },
+        {
+          "sentences": [
+            "((<set>|<turn_on>);<area>;<name> [a] jelenetet)"
+          ],
+          "slots": {
+            "domain": "scene"
+          },
+          "response": "scene"
+        },
+        {
+          "sentences": [
+            "(<open_dev>;<name>)"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          },
+          "response": "valve"
+        },
+        {
+          "sentences": [
+            "(<close_dev>;<name> <zár>;[<area>])"
+          ],
+          "requires_context": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "(<close_dev>;[<minden>];<zár>;<area>)"
+          ],
+          "slots": {
+            "domain": "lock",
+            "name": "all"
+          },
+          "response": "lock_area"
+        },
+        {
+          "sentences": [
+            "(<turn_on>;<area>;<name>)",
+            "(<turn_on>;<name>)"
+          ],
+          "excludes_context": {
+            "domain": [
+              "binary_sensor",
+              "cover",
+              "lock",
+              "scene",
+              "script",
+              "sensor",
+              "light",
+              "valve"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<open> (<name>;<area>)",
+            "<open> <name>"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "response": "cover"
+        },
+        {
+          "sentences": [
+            "<open> a garázs[t|ajtót|kaput]"
+          ],
+          "slots": {
+            "domain": "cover",
+            "device_class": "garage"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<open> ({cover_classes:device_class};<area>)"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_device_class"
+        },
+        {
+          "sentences": [
+            "<open> ({cover_classes:device_class};[<in_here>])"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "response": "cover_device_class",
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        }
+      ]
+    },
+    "HassMediaUnpause": {
+      "data": [
+        {
+          "sentences": [
+            "(indít[ás|sd[ el]];<name>)"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "indít([ás|sd[ el]])"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(indítsd[ el] a (számot|zenét|filmet|dalt|lejátszót);<area>)"
+          ]
+        }
+      ]
+    },
+    "HassShoppingListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "(Tedd|Rakd) a[z] {shopping_list_item:item} (elemet|tételt) a bevásárló[ ]listá[ra|ba|hoz]"
+          ],
+          "response": "item_added"
+        }
+      ]
+    },
+    "HassCancelAllTimers": {
+      "data": [
+        {
+          "sentences": [
+            "(<timer_cancel>;(az összes|minden) időzítő[m|met|t])"
+          ]
+        },
+        {
+          "sentences": [
+            "<timer_cancel> <area> (összes|minden) időzítőjét",
+            "<area> (összes|minden) időzítőjét <timer_cancel>"
+          ],
+          "response": "area"
+        },
+        {
+          "sentences": [
+            "<timer_cancel> (az összes|minden) időzítőt <in_here>",
+            "<in_here> <timer_cancel> [az] (összes|minden) időzítőt"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "mégse[m]",
+            "nem [neked] szóltam",
+            "töröld [a kérést]",
+            "mindegy"
+          ]
+        }
+      ]
+    },
+    "HassSetPosition": {
+      "data": [
+        {
+          "sentences": [
+            "(<numeric_value_set>;<name>;[a ]pozícióját;<position>)",
+            "(<open_close_dev>;<name>;<position>)"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;<name>;[a ]pozícióját;<position>)",
+            "(<open_close_dev>;<name>;<position>)"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;[<minden>] {cover_classes:device_class};<area>;[a ]pozícióját;<position>)",
+            "(<open_close_dev>;[<minden>] {cover_classes:device_class};<area>;<position>)"
+          ],
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;<name>;<area>;[a ]pozícióját;<position>)",
+            "(<open_close_dev>;<name>;<area>;<position>)"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;[<minden>] {cover_classes:device_class};<mindenhol>;[a ]pozícióját;<position>)",
+            "(<open_close_dev>;[<minden>] {cover_classes:device_class};<mindenhol>;<position>)"
+          ],
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;[<minden>] {cover_classes:device_class};<in_here>;[a ]pozícióját;<position>)",
+            "(<open_close_dev>;[<minden>] {cover_classes:device_class};<in_here>;<position>)",
+            "(<numeric_value_set>;[<minden>] {cover_classes:device_class};[a ]pozícióját;<position>)",
+            "(<open_close_dev>;[<minden>] {cover_classes:device_class};<position>)"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        }
+      ]
+    },
+    "HassGetCurrentDate": {
+      "data": [
+        {
+          "sentences": [
+            "Mi a mai dátum",
+            "H(a|á)nyadika van [ma]",
+            "Mondd [meg] a [mai] dátumot"
+          ]
+        }
+      ]
+    },
+    "HassIncreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "adj [hozzá] <timer_duration> az időzítő[m]höz",
+            "adj [hozzá] <timer_duration> [a|az] <timer_start> időzítő[m]höz",
+            "adj [hozzá] <timer_duration> [a|az] {area} időzítő(höz|jéhez)",
+            "adj [hozzá] <timer_duration> [a|az] {timer_name:name} [nevű] időzítő[m]höz"
+          ]
+        },
+        {
+          "sentences": [
+            "növeld [meg] (az időzítő[me]t;<timer_duration>)",
+            "növeld [meg] ([a|az] <timer_start> időzítő[me]t;<timer_duration>)",
+            "növeld [meg] ([a|az] {area} [az] időzítő[jé]t;<timer_duration>)",
+            "növeld [meg] ([a|az] {timer_name:name} [nevű] időzítő[me]t;<timer_duration>)"
+          ]
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "(<numeric_value_set>;<name> [<light>];<fényerő>;<brightness>)",
+            "(<name> [<light>];<fényerő>;<brightness>)"
+          ],
+          "response": "brightness_1",
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<numeric_value_set> <name> [<light>] <brightness>"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "brightness_1"
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;<fényerő>;<area>;<brightness>)",
+            "(<numeric_value_set>;[<minden>] <light>;<area>;<brightness>)",
+            "(<numeric_value_set>;[<minden>] <light>;<fényerő>;<area>;<brightness>)",
+            "([<minden>] <light>;<fényerő>;<area>;<brightness>)",
+            "([<minden>] <light>;<area>;<brightness>)",
+            "(<area>;<brightness>;<fényerő>)"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness_több"
+        },
+        {
+          "sentences": [
+            "(<in_here>;<numeric_value_set>;<fényerő>;<brightness>)",
+            "(<numeric_value_set>;<fényerő>;<brightness>)"
+          ],
+          "response": "brightness_több",
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;<fényerő>;<name> [<light>];[a] {brightness_level:brightness})",
+            "(<fényerő>;<name> [<light>];[a] {brightness_level:brightness})"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "brightness_1"
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;<fényerő>;<area>;[a] {brightness_level:brightness})",
+            "(<fényerő>;<area>;[a] {brightness_level:brightness})"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "brightness_több"
+        },
+        {
+          "sentences": [
+            "(<in_here>;<numeric_value_set>;<fényerő>;[a] {brightness_level:brightness})",
+            "(<numeric_value_set>;<fényerő>;[a] {brightness_level:brightness})"
+          ],
+          "response": "brightness_több",
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;<fényerő>;<floor>;<brightness>)",
+            "(<numeric_value_set>;[<minden>] <light>;<floor>;<brightness>)",
+            "(<numeric_value_set>;[<minden>] <light>;<fényerő>;<floor>;<brightness>)",
+            "([<minden>] <light>;<fényerő>;<floor>;<brightness>)",
+            "(<floor>;<brightness>;<fényerő>)"
+          ],
+          "response": "brightness_több"
+        },
+        {
+          "sentences": [
+            "(<set>;<name> [<light>];szín(űre|e|re|ét);{color})",
+            "(<name> [<light>];szín(űre|e|re|ét);{color})"
+          ],
+          "requires_context": {
+            "domain": "light"
+          },
+          "response": "color_1"
+        },
+        {
+          "sentences": [
+            "(<set>;<area>;[<minden>] [<light>];szín(űre|e|re|ét);{color})",
+            "(<area>;[<minden>] [<light>];szín(űre|e|re|ét);{color})",
+            "(<set>;<area>;[<minden>] <light>;szín(űre|e|re|ét);{color})",
+            "(<area>;szín(űre|e|re|ét);{color})"
+          ],
+          "slots": {
+            "name": "all"
+          },
+          "response": "color_több"
+        },
+        {
+          "sentences": [
+            "(<in_here>;<set>;[<minden>] <light>;szín(űre|e|re|ét);{color})",
+            "(<set>;[<minden>] <light>;szín(űre|e|re|ét);{color})",
+            "([<minden>] <light>;szín(űre|e|re|ét);{color})"
+          ],
+          "response": "color_több",
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<set>;<floor>;[<minden>] [<light>];szín(űre|e|re|ét);{color})"
+          ],
+          "response": "color_több"
+        }
+      ]
+    },
+    "HassMediaNext": {
+      "data": [
+        {
+          "sentences": [
+            "([a] következő[t] [szám[ra|ot]|zené(re|t)|film(re|et)|dal(ra|t)];<name>)",
+            "<name> (játszd [le]|ugorj [előre]|menj) a következő (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t))",
+            "(játszd [le]|ugorj [előre]|menj) a következő (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t)) <name>",
+            "(<name>;ugord át [ezt] a (számot|zenét|filmet|dalt))"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "(játszd [le]|ugorj [előre]|menj) a következő (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t))",
+            "ugord át [ezt] a (számot|zenét|filmet|dalt)"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "<area>  (játszd [le]|ugorj [előre]|menj) a következő (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t))",
+            "(játszd [le]|ugorj [előre]|menj) a következő (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t)) <area>",
+            "(<area>;ugord át [ezt] a (számot|zenét|filmet|dalt))"
+          ]
+        }
+      ]
+    },
+    "HassPauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "szüneteltesd [az] időzítő[me]t",
+            "szüneteltesd [a|az] <timer_start> időzítő[me]t",
+            "szüneteltesd [a|az] {area} időzítő(t|jét)",
+            "szüneteltesd [a|az] {timer_name:name} [nevű] időzítő[me]t"
+          ]
+        }
+      ]
+    },
+    "HassDecreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "vegyél (le|el) <timer_duration> az időzítő[m](r|b)ől",
+            "vegyél (le|el) <timer_duration> [a|az] <timer_start> időzítő[m](r|b)ől",
+            "vegyél (le|el) <timer_duration> [a|az] {area} időzítő[jé](r|b)ől",
+            "vegyél (le|el) <timer_duration> [a|az] {timer_name:name} [nevű] időzítő[m](r|b)ől"
+          ]
+        },
+        {
+          "sentences": [
+            "csökkentsd (az időzítő[me]t;<timer_duration>)",
+            "csökkentsd ([a|az] <timer_start> időzítő[me]t;<timer_duration>)",
+            "csökkentsd ([a|az] {area} időzítő[jé]t;<timer_duration>)",
+            "csökkentsd ([a|az] {timer_name:name} [nevű] időzítő[me]t;<timer_duration>)"
+          ]
+        }
+      ]
+    },
+    "HassMediaPause": {
+      "data": [
+        {
+          "sentences": [
+            "((szünet[eltet[és]]|[le]állít[sd[ meg]]);<name>)"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "(szünet[eltet[és]]|leállít)"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "((szüneteltesd|[állítsd [meg|le]]) [ezt] a (számot|zenét|filmet|dalt|lejátszót);<area>)"
+          ]
+        }
+      ]
+    },
+    "HassUnpauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "folytasd az időzítő[me]t",
+            "folytasd (a|az) <timer_start> időzítő[me][t]",
+            "folytasd [a|az] {area} időzítő(t|jét)",
+            "folytasd [a|az] {timer_name:name} [nevű] időzítő[me]t"
+          ]
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "időzítő <timer_duration>",
+            "időzítő <timer_duration> {timer_name:name} [név(en|re)]",
+            "<timer_duration> időzítő",
+            "<timer_duration> időzítő {timer_name:name} [név(en|re)]",
+            "<timer_set> [egy] <timer_duration> időzítőt",
+            "<timer_set> [egy|az] időzítőt <timer_duration>",
+            "<timer_set> [egy] <timer_duration> időzítőt {timer_name:name} [név(en|re)]",
+            "<timer_set> [egy|az] időzítőt {timer_name:name} [név(en|re)] <timer_duration>",
+            "<timer_set> [egy|az] időzítőt <timer_duration> {timer_name:name} [név(en|re)]"
+          ]
+        },
+        {
+          "sentences": [
+            "(<timer_duration> múlva;{timer_command:conversation_command})"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "<what_is> <temp> [<area>]",
+            "<mennyi> fok[os| van] [<area>]"
+          ]
+        },
+        {
+          "sentences": [
+            "<what_is> <name>[ jelenlegi] <temp>",
+            "<what_is>[ jelenlegi] <temp> <name>",
+            "<mennyi> fokos <name>"
+          ],
+          "requires_context": {
+            "domain": "climate"
+          }
+        }
+      ]
+    },
+    "HassVacuumReturnToBase": {
+      "data": [
+        {
+          "sentences": [
+            "(vissza [a [bázisra|dokk[oló]hoz]];<name>)"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassVacuumStart": {
+      "data": [
+        {
+          "sentences": [
+            "((Indítsd[ el]|indulj|takaríts);<name>)"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassRespond": {
+      "data": [
+        {
+          "sentences": [
+            "(hello|szia) [home assistant]"
+          ],
+          "response": "hello"
+        },
+        {
+          "sentences": [
+            "[Te] mindig (hallgat(sz|ózol)|rögzítesz)"
+          ],
+          "response": "listening"
+        },
+        {
+          "sentences": [
+            "Hová kerülnek az adataim"
+          ],
+          "response": "data"
+        },
+        {
+          "sentences": [
+            "Mit (mondhatok|kérdezhetek|tudsz [csinálni])"
+          ],
+          "response": "commands"
+        },
+        {
+          "sentences": [
+            "Ki készített [téged]"
+          ],
+          "response": "creator"
+        }
+      ]
+    },
+    "HassMediaPrevious": {
+      "data": [
+        {
+          "sentences": [
+            "<name> (játszd [le|újra]|menj [vissza]) az előző (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t))",
+            "(játszd [le|újra]|menj [vissza]) az előző (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t)) <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "(játszd [le|újra]|menj [vissza]) az előző (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t))",
+            "újrajátszás"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "<area> (játszd [le|újra]|menj [vissza]) az előző (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t))",
+            "(játszd [le|újra]|menj [vissza]) az előző (szám(ra|ot)|zené(re|t)|film(re|et)|dal(ra|t)) <area>"
+          ]
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "(Tedd|Rakd) a[z] {shopping_list_item:item} (elemet|tételt) a[z] <name>[<ragok>| listá[ra|ba|hoz]]"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          }
+        }
+      ]
+    },
+    "HassSetVolume": {
+      "data": [
+        {
+          "sentences": [
+            "(<numeric_value_set>;<name>;[a] hanger(ejét|őt);<volume>)"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;[a] hangerőt;<volume>)"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<numeric_value_set>;<area>;[a] hanger(ejét|őt);<volume>)"
+          ]
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Sajnálom, ezt nem értettem.",
+      "handle_error": "Váratlan hiba történt",
+      "no_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"az\" %}\n{% else %}\n  {% set nevelo = \"a\" %}\n{% endif %}\nSajnálom, {{ nevelo }} {{ area }} terület nem található\n",
+      "no_domain": "{% set translations_domains_with_article = {\n  \"button\": \"gombot\",\n  \"camera\": \"kamerát\",\n  \"input_button\": \"gombot\",\n  \"alarm_control_panel\": \"riasztót\",\n  \"automation\": \"automatizálást\",\n  \"fan\": \"ventilátort\",\n  \"climate\": \"hőmérsékletszabályozót\",\n  \"humidifier\": \"párásítót\",\n  \"input_boolean\": \"kapcsolót\",\n  \"siren\": \"szirénát\",\n  \"water_heater\": \"melegvíz tartályt\",\n  \"light\": \"lámpát\",\n  \"switch\": \"kapcsolót\",\n  \"script\": \"szkriptet\",\n  \"remote\": \"távirányítót\",\n  \"lock\": \"zárat\",\n  \"vacuum\": \"porszívót\",\n  \"scene\": \"jelenetet\",\n  \"media_player\": \"médialejátszót\",\n  \"lawn_mower\": \"fűnyírót\",\n  \"valve\": \"szelepet\"\n  } %}\n{% if domain in translations_domains_with_article %}\n  Sajnálom, nem találtam {{ translations_domains_with_article[domain] }}\n{% else %}\n  Sajnálom, nem találtam megfelelő eszközt\n{% endif %}\n",
+      "no_domain_in_area": "{% set translations_domains_with_article = {\n  \"button\": \"gombot\",\n  \"camera\": \"kamerát\",\n  \"input_button\": \"gombot\",\n  \"alarm_control_panel\": \"riasztót\",\n  \"automation\": \"automatizálást\",\n  \"fan\": \"ventilátort\",\n  \"climate\": \"hőmérsékletszabályozót\",\n  \"humidifier\": \"párásítót\",\n  \"input_boolean\": \"kapcsolót\",\n  \"siren\": \"szirénát\",\n  \"water_heater\": \"melegvíz tartályt\",\n  \"light\": \"lámpát\",\n  \"switch\": \"kapcsolót\",\n  \"script\": \"szkriptet\",\n  \"remote\": \"távirányítót\",\n  \"lock\": \"zárat\",\n  \"vacuum\": \"porszívót\",\n  \"scene\": \"jelenetet\",\n  \"media_player\": \"médialejátszót\",\n  \"lawn_mower\": \"fűnyírót\",\n  \"valve\": \"szelepet\"\n  } %}\n{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"az\" %}\n{% else %}\n  {% set nevelo = \"a\" %}\n{% endif %}\n{% if domain in translations_domains_with_article %}\n  Sajnálom, nem találtam {{ translations_domains_with_article[domain] }} {{ nevelo }} {{ area }} területén\n{% else %}\n  Sajnálom, nem találtam megfelelő eszközt {{ nevelo }} {{ area }} területén\n{% endif %}\n",
+      "no_device_class": "{% set translations_cover_device_classes_with_article = {\n  \"awning\": \"napellenzőt\",\n  \"blind\": \"redőnyt\",\n  \"curtain\": \"függönyt\",\n  \"door\": \"ajtót\",\n  \"garage\": \"garázskaput\",\n  \"gate\": \"kaput\",\n  \"shade\": \"árnyékolót\",\n  \"shutter\": \"zsalut\",\n  \"window\": \"ablakot\"\n  } %}\n{% if device_class in translations_cover_device_classes_with_article %}\n  Sajnálom, nem találtam {{ translations_cover_device_classes_with_article[device_class] }}\n{% else %}\n  Sajnálom, nem találtam megfelelő eszközt\n{% endif %}\n",
+      "no_device_class_in_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"az\" %}\n{% else %}\n  {% set nevelo = \"a\" %}\n{% endif %}\n{% set translations_cover_device_classes_with_article = {\n  \"awning\": \"napellenzőt\",\n  \"blind\": \"redőnyt\",\n  \"curtain\": \"függönyt\",\n  \"door\": \"ajtót\",\n  \"garage\": \"garázskaput\",\n  \"gate\": \"kaput\",\n  \"shade\": \"árnyékolót\",\n  \"shutter\": \"zsalut\",\n  \"window\": \"ablakot\"\n  } %}\n{% if device_class in translations_cover_device_classes_with_article %}\n  Sajnálom, nem találtam {{ translations_cover_device_classes_with_article[device_class] }} {{ nevelo }} {{ area }} területén\n{% else %}\n  Sajnálom, nem találtam megfelelő eszközt {{ nevelo }} {{ area }} területén\n{% endif %}\n",
+      "no_entity": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = entity[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"az\" %}\n{% else %}\n  {% set nevelo = \"a\" %}\n{% endif %}\nSajnálom, {{ nevelo }} {{ entity }} nem található\n",
+      "no_entity_in_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = entity[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_device = \"az\" %}\n{% else %}\n  {% set nevelo_device = \"a\" %}\n{% endif %}\n{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_area = \"az\" %}\n{% else %}\n  {% set nevelo_area = \"a\" %}\n{% endif %}\nSajnálom, {{ nevelo_device }} {{ entity }} nem található {{ nevelo_area }} {{ area }} területen\n",
+      "no_floor": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = floor[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_floor = \"az\" %}\n{% else %}\n  {% set nevelo_floor = \"a\" %}\n{% endif %}\nSajnálom, nem ismerem {{ nevelo_floor }} {{ floor }} területet.\n",
+      "no_domain_in_floor": "{% set translations = {\n  \"button\": \"gomb\",\n  \"camera\": \"kamera\",\n  \"input_button\": \"gomb\",\n  \"alarm_control_panel\": \"riasztó\",\n  \"automation\": \"automatizálás\",\n  \"fan\": \"ventilátor\",\n  \"climate\": \"termosztát\",\n  \"humidifier\": \"párásító\",\n  \"input_boolean\": \"kapcsoló\",\n  \"siren\": \"sziréna\",\n  \"water_heater\": \"melegvíz tartály\",\n  \"light\": \"lámpa\",\n  \"switch\": \"kapcsoló\",\n  \"script\": \"szkript\",\n  \"remote\": \"távirányító\",\n  \"lock\": \"zár\",\n  \"vacuum\": \"porszívó\",\n  \"scene\": \"jelenet\",\n  \"media_player\": \"médialejátszó\",\n  \"lawn_mower\": \"fűnyíró\",\n  \"valve\": \"szelep\"\n  } %}\n{% if domain in translations -%}\n  Sajnálom, nem található {{ translations[domain] }} ezen az emeleten.\n{%- else -%}\n  Sajnálom, nem találtam megfelelő eszközt ezen az emeleten.\n{%- endif %}\n",
+      "no_device_class_in_floor": "{% set translations = {\n  \"awning\": \"napellenző\",\n  \"blind\": \"redőny\",\n  \"curtain\": \"függöny\",\n  \"door\": \"ajtó\",\n  \"garage\": \"garázskapu\",\n  \"gate\": \"kapu\",\n  \"shade\": \"árnyékoló\",\n  \"shutter\": \"zsalu\",\n  \"window\": \"ablak\"\n  } %}\n{% if device_class in translations -%}\n  Sajnálom, nem található {{ translations[device_class] }} ezen az emeleten.\n{%- else -%}\n  Sajnálom, nem találtam megfelelő eszközt ezen az emeleten.\n{%- endif %}\n",
+      "no_entity_in_floor": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = floor[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_floor = \"az\" %}\n{% else %}\n  {% set nevelo_floor = \"a\" %}\n{% endif %}\nSajnálom, nem ismerem ezt az eszközt {{ nevelo_floor }} {{ floor }} területén.\n",
+      "entity_wrong_state": "{% set translations = {\n  \"paused\": \"szüneteltett\",\n  \"playing\": \"lejátszás alatt lévő\",\n  } %}\n{% if device_class in translations -%}\n  Sajnálom, nem találtam {{ translations[state] }} eszközt.\n{%- else -%}\n  Sajnálom, nem találtam ilyen állapotú eszközt.\n{%- endif %}\n",
+      "feature_not_supported": "Sajnálom, nem találtam olyan eszközt, ami támogatja ezt a funkciót.",
+      "no_entity_exposed": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = entity[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"az\" %}\n{% else %}\n  {% set nevelo = \"a\" %}\n{% endif %}\nSajnálom, {{ nevelo }} {{ entity }} eszköz nincs engedélyezve az asszisztens számára. Kérjük engedélyezze.\n",
+      "no_entity_in_area_exposed": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = entity[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_device = \"az\" %}\n{% else %}\n  {% set nevelo_device = \"a\" %}\n{% endif %}\n{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_area = \"az\" %}\n{% else %}\n  {% set nevelo_area = \"a\" %}\n{% endif %}\nSajnálom, {{ nevelo_device }} {{ entity }} eszköz nincs engedélyezve az asszisztens számára {{ nevelo_area }} {{ area }} területén. Kérjük engedélyezze.\n",
+      "no_domain_exposed": "{% set translations = {\n  \"button\": \"gomb\",\n  \"camera\": \"kamera\",\n  \"input_button\": \"gomb\",\n  \"alarm_control_panel\": \"riasztó\",\n  \"automation\": \"automatizálás\",\n  \"fan\": \"ventilátor\",\n  \"climate\": \"termosztát\",\n  \"humidifier\": \" párásító\",\n  \"input_boolean\": \"kapcsoló\",\n  \"siren\": \"sziréna\",\n  \"water_heater\": \"vízmelegítő\",\n  \"light\": \"lámpa\",\n  \"switch\": \"kapcsoló\",\n  \"script\": \"szkript\",\n  \"remote\": \"távirányító\",\n  \"lock\": \"zár\",\n  \"vacuum\": \"porszívó\",\n  \"scene\": \"jelenet\",\n  \"media_player\": \"médialejátszó\",\n  \"lawn_mower\": \"fűnyíró\",\n  \"valve\": \"szelep\"\n  } %}\n{% if domain in translations -%}\n  Sajnálom, nincs az asszisztens számára engedélyezett {{ translations[domain] }}. Kérjük engedélyezze.\n{%- else -%}\n  Sajnálom, ez a tartomány nincs engedélyezve az asszisztens számára. Kérjük engedélyezze.\n{%- endif %}\n",
+      "no_domain_in_area_exposed": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_area = \"az\" %}\n{% else %}\n  {% set nevelo_area = \"a\" %}\n{% set translations = {\n  \"button\": \"gomb\",\n  \"camera\": \"kamera\",\n  \"input_button\": \"gomb\",\n  \"alarm_control_panel\": \"riasztó\",\n  \"automation\": \"automatizálás\",\n  \"fan\": \"ventilátor\",\n  \"climate\": \"termosztát\",\n  \"humidifier\": \" párásító\",\n  \"input_boolean\": \"kapcsoló\",\n  \"siren\": \"sziréna\",\n  \"water_heater\": \"vízmelegítő\",\n  \"light\": \"lámpa\",\n  \"switch\": \"kapcsoló\",\n  \"script\": \"szkript\",\n  \"remote\": \"távirányító\",\n  \"lock\": \"zár\",\n  \"vacuum\": \"porszívó\",\n  \"scene\": \"jelenet\",\n  \"media_player\": \"médialejátszó\",\n  \"lawn_mower\": \"fűnyíró\",\n  \"valve\": \"szelep\"\n  } %}\n{% if domain in translations -%}\n  Sajnálom, nincs az asszisztens számra engedélyezett {{ translations[domain] }} {{ nevelo_area }} {{ area }} területén\n{%- else -%}\n  Sajnálom, nincs az asszisztens számára engedélyezve ez a tartomány {{ nevelo_area }} {{ area }} területén.\n{%- endif %}\n",
+      "no_device_class_exposed": "{% set translations = {\n  \"awning\": \"napellenző\",\n  \"blind\": \"redőny\",\n  \"curtain\": \"függöny\",\n  \"door\": \"ajtó\",\n  \"garage\": \"garázsajtó\",\n  \"gate\": \"kapu\",\n  \"shade\": \"árnyékoló\",\n  \"shutter\": \"redőny\",\n  \"window\": \"ablak\"\n  } %}\n{% if device_class in translations -%}\n  Sajnálom, nincs az asszisztens számra engedélyezett {{ translations[device_class] }}\n{%- else -%}\n  Sajnálom, ilyen típusú eszköz nincs az asszisztens számra engedélyezve.\n{%- endif %}\n",
+      "no_device_class_in_area_exposed": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_area = \"az\" %}\n{% else %}\n  {% set nevelo_area = \"a\" %}\n{% set translations = {\n  \"awning\": \"napellenző\",\n  \"blind\": \"redőny\",\n  \"curtain\": \"függöny\",\n  \"door\": \"ajtó\",\n  \"garage\": \"garázsajtó\",\n  \"gate\": \"kapu\",\n  \"shade\": \"árnyékoló\",\n  \"shutter\": \"redőny\",\n  \"window\": \"ablak\"\n  } %}\n{% if device_class in translations -%}\n  Sajnálom, nincs az asszisztens számra engedélyezett {{ translations[device_class] }} {{ nevelo_area }} {{ area }} területén.\n{%- else -%}\n  Sajnálom, ilyen eszköz nincs az asszisztens számra engedélyezve {{ nevelo_area }} {{ area }} területén\n{%- endif %}\n",
+      "no_entity_in_floor_exposed": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = entity[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_device = \"az\" %}\n{% else %}\n  {% set nevelo_device = \"a\" %}\n{% endif %}\n{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = floor[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_floor = \"az\" %}\n{% else %}\n  {% set nevelo_floor = \"a\" %}\n{% endif %}\nSajnálom, {{ nevelo_device }} {{ entity }} eszköz nincs engedélyezve az asszisztens számára {{ nevelo_floor }} {{ floor }} területén. Kérjük engedélyezze.\n",
+      "no_domain_in_floor_exposed": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = floor[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_floor = \"az\" %}\n{% else %}\n  {% set nevelo_floor = \"a\" %}\n{% set translations = {\n  \"button\": \"gomb\",\n  \"camera\": \"kamera\",\n  \"input_button\": \"gomb\",\n  \"alarm_control_panel\": \"riasztó\",\n  \"automation\": \"automatizálás\",\n  \"fan\": \"ventilátor\",\n  \"climate\": \"termosztát\",\n  \"humidifier\": \" párásító\",\n  \"input_boolean\": \"kapcsoló\",\n  \"siren\": \"sziréna\",\n  \"water_heater\": \"vízmelegítő\",\n  \"light\": \"lámpa\",\n  \"switch\": \"kapcsoló\",\n  \"script\": \"szkript\",\n  \"remote\": \"távirányító\",\n  \"lock\": \"zár\",\n  \"vacuum\": \"porszívó\",\n  \"scene\": \"jelenet\",\n  \"media_player\": \"médialejátszó\",\n  \"lawn_mower\": \"fűnyíró\",\n  \"valve\": \"szelep\"\n  } %}\n{% if domain in translations -%}\n  Sajnálom, nincs az asszisztens számra engedélyezett {{ translations[domain] }} {{ nevelo_floor }} {{ area }} területén\n{%- else -%}\n  Sajnálom, nincs az asszisztens számára engedélyezve ez a tartomány {{ nevelo_floor }} {{ floor }} területén.\n{%- endif %}\n",
+      "no_device_class_in_floor_exposed": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = floor[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_floor = \"az\" %}\n{% else %}\n  {% set nevelo_floor = \"a\" %}\n{% set translations = {\n  \"awning\": \"napellenző\",\n  \"blind\": \"redőny\",\n  \"curtain\": \"függöny\",\n  \"door\": \"ajtó\",\n  \"garage\": \"garázsajtó\",\n  \"gate\": \"kapu\",\n  \"shade\": \"árnyékoló\",\n  \"shutter\": \"redőny\",\n  \"window\": \"ablak\"\n  } %}\n{% if device_class in translations -%}\n  Sajnálom, nincs az asszisztens számra engedélyezett {{ translations[device_class] }} {{ nevelo_area }} {{ floor }} területén.\n{%- else -%}\n  Sajnálom, ilyen eszköz nincs az asszisztens számra engedélyezve {{ nevelo_area }} {{ floor }} területén\n{%- endif %}\n",
+      "duplicate_entities": "Sajnálom, több {{ entity }} nevű eszköz is van",
+      "duplicate_entities_in_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_area = \"az\" %}\n{% else %}\n  {% set nevelo_area = \"a\" %}\n{% endif %}\nSajnálom, több {{ entity }} nevű eszköz is van {{ nevelo_area }} {{ area }} területén\n",
+      "duplicate_entities_in_floor": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = floor[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo_floor = \"az\" %}\n{% else %}\n  {% set nevelo_floor = \"a\" %}\n{% endif %}\nSajnálom, több {{ entity }} nevű eszköz is van {{ nevelo_floor }} {{ floor }} területén\n",
+      "timer_not_found": "Sajnálom, nem találtam meg ezt az időzítőt",
+      "multiple_timers_matched": "Sajnálom, több időzítőt is találtam, nem tudom egyértelműen azonosítani",
+      "no_timer_support": "Sajnálom, ez az eszköz nem támogatja az időzítőkkel kapcsolatos funkciókat"
+    },
+    "intents": {
+      "HassGetState": {
+        "default": "{{ state.state_with_unit }}",
+        "one": "{{ slots.name | capitalize }} értéke: {{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\n  Igen\n{% else %}\n  Nem\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Igen, {{ match[:3] | join(\", \") }} és további {{ (match | length - 3) }} db\n  {%- else -%}\n    Igen,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} és {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  Nem\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  Igen\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    Nem, {{ no_match[:3] | join(\", \") }} és további {{ (no_match | length - 3) }} db nincs ebben az állapotban\n  {%- else -%}\n    Nem,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} és {% endif -%}\n      {{ name }}\n    {%- endfor %} {% if no_match | length > 1 %} {% else %} {% endif %} nincs ebben az állapotban\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  Egyik sem\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} és további {{ (match | length - 3) }} db\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} és {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n",
+        "where": "{% if state.state == \"home\" %}\n  {{ slots.name | capitalize }} otthon van\n{% elif state.state == \"not_home\" %}\n  {{ slots.name | capitalize }} távol van\n{% else %}\n  {% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n  {% set state_string = state.state | string %}\n  {% set elso_betu = state_string[0].lower() if state_string not in [\"home\", \"not_home\"] else 'o' %}\n  {% if elso_betu in magyar_maganhangzok %}\n    {% set nevelo = \"az\" %}\n  {% else %}\n    {% set nevelo = \"a\" %}\n  {% endif %}\n  {{ slots.name | capitalize }} {{ nevelo }} {{ state_string }} zónában van\n{% endif %}\n",
+        "one_yesno_where": "{% if query.matched %}\n  Igen\n{% else %}\n  {% if state.state == 'home' %}\n    Nem, otthon van\n  {% elif state.state == 'away' %}\n    Nem, távol van\n  {% else %}\n    {% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n    {% set state_string = state.state | string %}\n    {% set elso_betu = state_string[0].lower() if state_string not in [\"home\", \"not_home\"] else 'o' %}\n    {% if elso_betu in magyar_maganhangzok %}\n      {% set nevelo = \"az\" %}\n    {% else %}\n      {% set nevelo = \"a\" %}\n    {% endif %}\n    Nem, {{ nevelo }} {{ state_string }} zónában van\n  {% endif %}\n{% endif %}\n",
+        "all_where": "{% if not query.unmatched %}\n  Igen\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    Nem, {{ no_match[:3] | join(\", \") }} és további {{ (no_match | length - 3) }} nincs a zónában\n  {%- else -%}\n    Nem,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} és {% endif -%}\n      {{ name }}\n    {%- endfor %}\n    {% if state.state == \"home\" %}\n      otthon van\n    {% elif state.state == \"away\" %}\n      távol van\n    {% else %}\n      {% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n      {% set state_string = state.state | string %}\n      {% set elso_betu = state_string[0].lower() if state_string not in [\"home\", \"not_home\"] else 'o' %}\n      {% if elso_betu in magyar_maganhangzok %}\n        {% set nevelo = \"az\" %}\n      {% else %}\n        {% set nevelo = \"a\" %}\n      {% endif %}\n      {{ nevelo }} {{ state_string }} zónában van\n    {% endif %}\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassTurnOff": {
+        "default": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} kikapcsolva\n",
+        "cover": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} bezárva\n",
+        "lock": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} kinyitva\n",
+        "lock_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.area }} zárai kinyitva\n",
+        "cover_device_class": "{% set input_string = slots.device_class %}\n{% set device_class_translations = {\n  \"garage\": \"A garázskapu\",\n  \"garázs\": \"A garázskapu\",\n  \"napellenző\": \"A napellenző\",\n  \"redőny\": \"A redőny\",\n  \"függöny\": \"A függöny\",\n  \"ajtó\": \"Az ajtó\",\n  \"kapu\": \"A kapu\",\n  \"árnyékoló\": \"Az árnyékoló\",\n  \"zsalu\": \"A zsalu\",\n  \"roló\": \"A roló\",\n  \"ablak\": \"Az ablak\"\n} %}\n{% set responses = [] %}\n{% for key, value in device_class_translations.items() %}\n  {% if key in input_string %}\n    {% set _ = responses.append(value ~ ' bezárva') %}\n  {% endif %}\n{% endfor %}\n{% if responses %}\n  {{ responses[0] }}\n{% else %}\n  Bezárva\n{% endif %}\n",
+        "lights_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.area }} lámpái kikapcsolva\n",
+        "lights_floor": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.floor[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.floor }} lámpái kikapcsolva\n",
+        "lights_all": "Az összes lámpa kikapcsolva",
+        "fans_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.area }} ventilátorok kikapcsolva\n",
+        "fans_all": "Az összes ventilátor kikapcsolva",
+        "valve": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} bezárva\n"
+      },
+      "HassStartTimer": {
+        "default": "{% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %} {% set h_text = h ~ ' óra' if h else '' %} {% set m_text = (30 if m in ['fél', '1/2'] else m) ~ ' perc' if m else '' %} {% set s_text = (30 if s in ['fél', '1/2'] else s) ~ ' másodperc' if s else '' %} {% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list | join(' ') %} {% set name = (slots.name | trim ~ ' néven') if slots.name is defined else '' %} Időzítő beállítva {{ text }} időtartamra {{ name }}\n",
+        "command": "{% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %} {% set h_text = h ~ ' óra' if h else '' %} {% set m_text = (30 if m in ['fél', '1/2'] else m) ~ ' perc' if m else '' %} {% set s_text = (30 if s in ['fél', '1/2'] else s) ~ ' másodperc' if s else '' %} {% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list | join(' ') %} A parancs {{ text }} múlva végrehajtásra kerül\n"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.item[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.item }} hozzáadva a listához\n"
+      },
+      "HassTurnOn": {
+        "default": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} bekapcsolva\n",
+        "cover": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} kinyitva\n",
+        "scene": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} aktiválva\n",
+        "script": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} elindítva\n",
+        "lock": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} bezárva\n",
+        "lock_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.area }} zárai bezárva\n",
+        "cover_device_class": "{% set input_string = slots.device_class %}\n{% set device_class_translations = {\n  \"garage\": \"A garázskapu\",\n  \"garázs\": \"A garázskapu\",\n  \"napellenző\": \"A napellenző\",\n  \"redőny\": \"A redőny\",\n  \"függöny\": \"A függöny\",\n  \"ajtó\": \"Az ajtó\",\n  \"kapu\": \"A kapu\",\n  \"árnyékoló\": \"Az árnyékoló\",\n  \"zsalu\": \"A zsalu\",\n  \"roló\": \"A roló\",\n  \"ablak\": \"Az ablak\"\n} %}\n{% set responses = [] %}\n{% for key, value in device_class_translations.items() %}\n  {% if key in input_string %}\n    {% set _ = responses.append(value ~ ' kinyitva') %}\n  {% endif %}\n{% endfor %}\n{% if responses %}\n  {{ responses[0] }}\n{% else %}\n  Kinyitva\n{% endif %}\n",
+        "lights_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.area }} lámpái bekapcsolva\n",
+        "lights_floor": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.floor[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.floor }} lámpái bekapcsolva\n",
+        "fans_area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.area[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.area }} ventilátorok bekapcsolva\n",
+        "valve": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.name[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.name }} kinyitva\n"
+      },
+      "HassMediaPause": {
+        "default": "Szüneteltetve"
+      },
+      "HassGetCurrentTime": {
+        "default": "{% set minute_str = '{0:02d}'.format(slots.time.minute) %} {{ slots.time.hour }}:{{ minute_str }}\n"
+      },
+      "HassPauseTimer": {
+        "default": "Időzítő szüneteltetve"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  Nincsenek időzítők.\n{% elif num_active_timers == 0: %}\n  {# Nincsenek aktív időzítők #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    Az időzítő szüneteltetve van.\n  {% else: %}\n    {{ num_paused_timers }} szüneteltetett időzítő.\n  {% endif %}\n{% else: %}\n  {# Legalább egy aktív időzítő van #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# A legközelebb lejáró aktív időzítő kiválasztása #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {{ num_active_timers }} futó időzítő.\n  {% endif %}\n\n  {% if num_paused_timers == 1: %}\n    1 szüneteltetett időzítő.\n  {% elif num_paused_timers > 0: %}\n    {{ num_paused_timers }} szüneteltetett időzítő.\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n  {# Legalább egy aktív időzítő van #}\n  {% if (next_timer.rounded_hours_left > 0) and (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_hours_left }} óra {{ next_timer.rounded_minutes_left }} perc\n  {% elif (next_timer.rounded_hours_left > 0): %}\n    {{ next_timer.rounded_hours_left }} óra\n  {% elif (next_timer.rounded_minutes_left > 0) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} perc {{ next_timer.rounded_seconds_left }} másodperc\n  {% elif (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} perc\n  {% elif (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_seconds_left }} másodperc\n  {% endif %}\n\n  {% if num_timers > 1: %}\n    {# További információk a pontosabb megkülönböztetéshez #}\n    van hátra\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0): %}\n      {% if next_timer.start_hours in [1, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59] or next_timer.start_minutes in [1, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59] %}\n        az {{ next_timer.start_hours }} óra {{ next_timer.start_minutes }} perces\n      {% else %}\n        a {{ next_timer.start_hours }} óra {{ next_timer.start_minutes }} perces\n      {% endif %}\n    {% elif (next_timer.start_hours > 0): %}\n      {% if next_timer.start_hours in [1, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59] %}\n        az {{ next_timer.start_hours }} órás\n      {% else %}\n        a {{ next_timer.start_hours }} órás\n      {% endif %}\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {% if next_timer.start_minutes in [1, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59] or next_timer.start_seconds in [1, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59] %}\n        az {{ next_timer.start_minutes }} perc {{ next_timer.start_seconds }} másodperces\n      {% else %}\n        a {{ next_timer.start_minutes }} perc {{ next_timer.start_seconds }} másodperces\n      {% endif %}\n    {% elif (next_timer.start_minutes > 0): %}\n      {% if next_timer.start_minutes in [1, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59] %}\n        az {{ next_timer.start_minutes }} perces\n      {% else %}\n        a {{ next_timer.start_minutes }} perces\n      {% endif %}\n    {% elif (next_timer.start_seconds > 0): %}\n      {% if next_timer.start_seconds in [1, 5, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59] %}\n        az {{ next_timer.start_seconds }} másodperces\n      {% else %}\n        a {{ next_timer.start_seconds }} másodperces\n      {% endif %}\n    {% endif %}\n\n    {% if next_timer.name: %}\n      {{ next_timer.name }} nevű\n    {% elif next_timer.area: %}\n      {{ next_timer.area }} helyen indított\n    {% endif %}\n\n    időzítőből.\n  {% else: %}\n    van hátra.\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %}\n{% set elso_betu = slots.item[0].lower() %}\n{% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"Az\" %}\n{% else %}\n  {% set nevelo = \"A\" %}\n{% endif %}\n{{ nevelo }} {{ slots.item }} hozzáadva a listához\n"
+      },
+      "HassGetCurrentDate": {
+        "default": "{% set months = {\n   1: 'január',\n   2: 'február',\n   3: 'március',\n   4: 'április',\n   5: 'május',\n   6: 'június',\n   7: 'július',\n   8: 'augusztus',\n   9: 'szeptember',\n   10: 'október',\n   11: 'november',\n   12: 'december',\n} %} {% set ordinal = {\n   1: '1.',\n   2: '2.',\n   3: '3.',\n   4: '4.',\n   5: '5.',\n   6: '6.',\n   7: '7.',\n   8: '8.',\n   9: '9.',\n   10: '10.',\n   11: '11.',\n   12: '12.',\n   13: '13.',\n   14: '14.',\n   15: '15.',\n   16: '16.',\n   17: '17.',\n   18: '18.',\n   19: '19.',\n   20: '20.',\n   21: '21.',\n   22: '22.',\n   23: '23.',\n   24: '24.',\n   25: '25.',\n   26: '26.',\n   27: '27.',\n   28: '28.',\n   29: '29.',\n   30: '30.',\n   31: '31.',\n } %}\n{{ slots.date.year }}. {{ months[slots.date.month] }} {{ ordinal[slots.date.day] }}\n"
+      },
+      "HassUnpauseTimer": {
+        "default": "Időzítő folytatva"
+      },
+      "HassMediaPrevious": {
+        "default": "Előző lejátszása"
+      },
+      "HassGetWeather": {
+        "default": "{% set weather_condition = {\n  'Tiszta': 'és derült idő van.',\n  'Csillagos': 'és derült csillagos idő van.',\n  'Felhős': 'és felhős idő van.',\n  'Rendkívüli': 'és rendkívüli az időjárás!',\n  'Ködös': 'és ködös idő van.',\n  'Jégesős': 'és esik a jégeső.',\n  'Viharos': 'és viharos idő van.',\n  'Viharos, esős': 'és viharos esős idő van.',\n  'Részben felhős': 'és részben felhős idő van.',\n  'Szakadó esős': 'és szakadó esős idő van.',\n  'Esős': 'és esős idő van.',\n  'Havas': 'és esik a hó.',\n  'Havas, esős': 'és esik a havas eső.',\n  'Napos': 'és napos idő van.',\n  'Szeles': 'és szeles idő van.',\n  'Szeles, felhős': 'és szeles idő van felhőkkel.'\n} %} {% set temperature = state.attributes.get('temperature') | float %} {% if temperature < 0 %}\n  {% set temperature_string = 'mínusz ' ~ (temperature * -1) | string | replace('.', ',') %}\n{% else %}\n  {% set temperature_string = temperature | string | replace('.', ',') %}\n{% endif %} {{ temperature_string }} {{ state.attributes.get('temperature_unit') }} {{ weather_condition.get(state.state, state.state | string) }}\n",
+        "wind": "{% set wind_bearing = state.attributes.get('wind_bearing') | float %} {% set wind_gust_speed = state.attributes.get('wind_gust_speed') | float %} {% set wind_speed = state.attributes.get('wind_speed') | float %} {% set wind_speed_unit = state.attributes.get('wind_speed_unit') %} {% set wind_bearing_text = '' %} {% if wind_bearing is not none %}\n  {% if 0 <= wind_bearing < 45 %}\n    {% set wind_bearing_text = 'északi' %}\n  {% elif 45 <= wind_bearing < 90 %}\n    {% set wind_bearing_text = 'észak-keleti' %}\n  {% elif 90 <= wind_bearing < 135 %}\n    {% set wind_bearing_text = 'keleti' %}\n  {% elif 135 <= wind_bearing < 180 %}\n    {% set wind_bearing_text = 'dél-keleti' %}\n  {% elif 180 <= wind_bearing < 225 %}\n    {% set wind_bearing_text = 'déli' %}\n  {% elif 225 <= wind_bearing < 270 %}\n    {% set wind_bearing_text = 'dél-nyugati' %}\n  {% elif 270 <= wind_bearing < 315 %}\n    {% set wind_bearing_text = 'nyugati' %}\n  {% elif 315 <= wind_bearing <= 360 %}\n    {% set wind_bearing_text = 'észak-nyugati' %}\n  {% else %}\n    {% set wind_bearing_text = 'ismeretlen irány' %}\n  {% endif %}\n{% endif %} {% set wind_report = [] %} {% if wind_speed is not none %}\n  {% set wind_speed_text = '' %}\n  {% if wind_speed < 1 %}\n    {% set wind_speed_text = 'szélcsend' %}\n  {% elif 1 <= wind_speed < 6 %}\n    {% set wind_speed_text = 'enyhe szél' %}\n  {% elif 6 <= wind_speed < 12 %}\n    {% set wind_speed_text = 'mérsékelt szél' %}\n  {% elif 12 <= wind_speed < 20 %}\n    {% set wind_speed_text = 'élénk szél' %}\n  {% elif 20 <= wind_speed < 29 %}\n    {% set wind_speed_text = 'erős szél' %}\n  {% elif 29 <= wind_speed < 39 %}\n    {% set wind_speed_text = 'viharos szél' %}\n  {% elif 39 <= wind_speed < 50 %}\n    {% set wind_speed_text = 'nagyon erős szél' %}\n  {% else %}\n    {% set wind_speed_text = 'szélsőségesen erős szél' %}\n  {% endif %}\n  {% set wind_report = wind_report + ['A szélsebesség ' ~ (wind_speed | string | replace('.', ',')) ~ ' ' ~ (wind_speed_unit if wind_speed_unit != none else 'km/h') ~ ' - ' ~ wind_speed_text] %}\n{% endif %} {% if wind_bearing_text %}\n  {% set wind_report = wind_report + [', melynek iránya ' ~ wind_bearing_text] %}\n{% endif %} {% if wind_gust_speed is not none %}\n  {% set wind_report = wind_report + [', ' ~ (wind_gust_speed | string | replace('.', ',')) ~ ' ' ~ (wind_speed_unit if wind_speed_unit is not none else 'km/h') ~ ' sebességű széllökésekkel.'] %}\n{% endif %} {{ wind_report | join('') }}\n",
+        "uv": "{% set uv_index = state.attributes.get('uv_index') | float | round(0) | int %} {% if uv_index is not none %}\n  {% set uv_index = uv_index | round(0) %}\n  {% set uv_category = '' %}\n  {% if uv_index <= 2 %}\n    {% set uv_category = ', ami alacsony sugárzási szint.' %}\n  {% elif 3 <= uv_index <= 4 %}\n    {% set uv_category = ', ami közepes sugárzási szint.' %}\n  {% elif 5 <= uv_index <= 7 %}\n    {% set uv_category = ', ami magas sugárzási szint.' %}\n  {% elif 8 <= uv_index <= 10 %}\n    {% set uv_category = ', ami nagyon magas sugárzási szint.' %}\n  {% elif uv_index >= 11 %}\n    {% set uv_category = ', ami extrém uv sugárzási szint.' %}\n  {% endif %}\n  A jelenlegi UV sugárzás: {{ uv_index }}{{ uv_category }}\n{% else %}\n  Az UV sugárzási adatok nem elérhetők.\n{% endif %}\n",
+        "detailed_weather": "{% set report = [] %} {% set temperature = state.attributes.get('temperature') | float %} {% if temperature is not none %}\n  {% if temperature < 0 %}\n    {% set temperature_string = 'mínusz ' ~ (temperature * -1) | string | replace('.', ',') %}\n  {% else %}\n    {% set temperature_string = temperature | string | replace('.', ',') %}\n  {% endif %}\n  {% set temperature_unit = state.attributes.get('temperature_unit', '') %}\n  {% set report = report + ['Jelenleg ' ~ temperature_string ~ ' ' ~ temperature_unit ~ ' '] %}\n{% endif %} {% set weather_condition_dict = {\n  'Tiszta': 'és derült idő van',\n  'Csillagos': 'és derült csillagos idő van',\n  'Felhős': 'és felhős idő van',\n  'Rendkívüli': 'és rendkívüli az időjárás',\n  'Ködös': 'és ködös idő van',\n  'Jégesős': 'és esős idő van jégesővel',\n  'Viharos': 'és viharos idő van',\n  'Viharos, esős': 'és viharos esős idő van',\n  'Részben felhős': 'és részben felhős idő van',\n  'Szakadó esős': 'és szakadó esős idő van',\n  'Esős': 'és esős idő van',\n  'Havas': 'és havazós idő van',\n  'Havas, esős': 'és havas eső idő van',\n  'Napos': 'és napos idő van',\n  'Szeles': 'és szeles idő van',\n  'Szeles, felhős': 'és szeles idő van felhőkkel'\n} %} {% set weather_condition = weather_condition_dict.get(state.state, '') %} {% if weather_condition %}\n  {% set report = report + [weather_condition] %}\n{% endif %}\n{% set humidity = state.attributes.get('humidity') %} {% if humidity is not none %}\n  {% set report = report + [', a páratartalom: ' ~ humidity ~ '%'] %}\n{% endif %} {% set pressure = state.attributes.get('pressure') | float | round(0) | int %} {% if pressure is not none %}\n  {% set pressure = pressure %}        \n  {% set pressure_unit = state.attributes.get('pressure_unit', '') %}\n  {% if pressure_unit == 'hPa' %}\n    {% set pressure_unit = 'hektopaszkál' %}\n  {% endif %}\n  {% set report = report + [', a nyomás: ' ~ pressure ~ ' ' ~ pressure_unit] %}\n{% endif %} {% set wind_speed = state.attributes.get('wind_speed') | float %} {% if wind_speed is not none %}\n  {% set wind_speed_unit = state.attributes.get('wind_speed_unit', 'km/h') %}\n  {% set wind_speed_text = '' %}\n  {% if wind_speed < 1 %}\n    {% set wind_speed_text = 'szélcsend' %}\n  {% elif 1 <= wind_speed < 6 %}\n    {% set wind_speed_text = 'enyhe szél fúj' %}\n  {% elif 6 <= wind_speed < 12 %}\n    {% set wind_speed_text = 'mérsékelt szél fúj' %}\n  {% elif 12 <= wind_speed < 20 %}\n    {% set wind_speed_text = 'élénk szél fúj' %}\n  {% elif 20 <= wind_speed < 29 %}\n    {% set wind_speed_text = 'erős szél fúj' %}\n  {% elif 29 <= wind_speed < 39 %}\n    {% set wind_speed_text = 'viharos szél fúj' %}\n  {% elif 39 <= wind_speed < 50 %}\n    {% set wind_speed_text = 'nagyon erős szél fúj' %}\n  {% else %}\n    {% set wind_speed_text = 'szélsőségesen erős szél fúj' %}\n  {% endif %}\n  {% set report = report + [', a szél sebessége ' ~ (wind_speed | string | replace('.', ',')) ~ ' ' ~ wind_speed_unit ~ ' - ' ~ wind_speed_text] %}\n{% endif %} {% set wind_gust_speed = state.attributes.get('wind_gust_speed') | float %} {% if wind_gust_speed is not none %}\n  {% set wind_speed_unit = state.attributes.get('wind_speed_unit', 'km/h') %}\n  {% set report = report + [', ' ~ (wind_gust_speed | string | replace('.', ',')) ~ ' ' ~ wind_speed_unit  ~ ' sebességű széllökésekkel.'] %}\n{% endif %} {{ report | join('') }}\n"
+      },
+      "HassLightSet": {
+        "brightness_1": "A lámpa fényereje beállítva",
+        "color_1": "A lámpa színe beállítva",
+        "brightness_több": "A lámpák fényereje beállítva",
+        "color_több": "A lámpák színe beállítva"
+      },
+      "HassCancelAllTimers": {
+        "default": "{% if slots.canceled < 1: %} Nem lett egy időzítő sem törölve. {% else: %} {{ slots.canceled }} időzítő lett törölve. {% endif %}\n",
+        "area": "{% set magyar_maganhangzok = \"aáeéiíoóöőuúüű\" %} {% set elso_betu = slots.area[0].lower() %} {% if elso_betu in magyar_maganhangzok %}\n  {% set nevelo = \"az\" %}\n{% else %}\n  {% set nevelo = \"a\" %}\n{% endif %} {% if slots.canceled < 1: %} Nem lett egy időzítő sem törölve {{ nevelo }} {{ slots.area }} területén. {% else: %} {{ slots.canceled }} időzítő lett törölve {{ nevelo }} {{ slots.area }} területén. {% endif %}\n"
+      },
+      "HassVacuumStart": {
+        "default": "Porszívózás elindítva"
+      },
+      "HassMediaUnpause": {
+        "default": "Lejátszás"
+      },
+      "HassSetPosition": {
+        "default": "Pozíció beállítva"
+      },
+      "HassMediaNext": {
+        "default": "Következő lejátszása"
+      },
+      "HassCancelTimer": {
+        "default": "Időzítő törölve"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{% set temperature = state_attr(state.entity_id, 'current_temperature') %} {% if temperature is number %}\n  {% if temperature < 0 %}\n    {% set temperature_string = 'mínusz ' ~ (temperature * -1) | string | replace('.', ',') %}\n  {% else %}\n    {% set temperature_string = temperature | string | replace('.', ',') %}\n  {% endif %}\n  {{ temperature_string }} fok\n{% else %}\n  Nem várt eredmény: {{ temperature }}\n{% endif %}\n"
+      },
+      "HassSetVolume": {
+        "default": "Hangerő beállítva"
+      },
+      "HassDecreaseTimer": {
+        "default": "Időzítő frissítve"
+      },
+      "HassIncreaseTimer": {
+        "default": "Időzítő frissítve"
+      },
+      "HassVacuumReturnToBase": {
+        "default": "Visszatérés a dokklóra"
+      },
+      "HassRespond": {
+        "hello": "Üdvözlet a Home Assistanttól.",
+        "listening": "Nem, csak akkor veszek fel, amikor kimondod az ébresztő szót.",
+        "data": "Az adataid a Home Assistant szerveredre kerülnek.",
+        "commands": "Hogy megtudd, mit kérdezhetsz, látogass el a HOME kötőjel ASSISTANT pont I.O. per VOICE alávonás CONTROL oldalra.",
+        "creator": "Engem a nagyszerű Home Assistant közösség készített, amely lelkes barkácsolókból és kísérletezőkből áll az egész világon."
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "fehér[re]",
+          "out": "white"
+        },
+        {
+          "in": "feket[e|ére]",
+          "out": "black"
+        },
+        {
+          "in": "piros[ra]",
+          "out": "red"
+        },
+        {
+          "in": "narancs[ra|sárg[a|ára]]",
+          "out": "orange"
+        },
+        {
+          "in": "sárg[a|ára]",
+          "out": "yellow"
+        },
+        {
+          "in": "zöld[re]",
+          "out": "green"
+        },
+        {
+          "in": "kék[re]",
+          "out": "blue"
+        },
+        {
+          "in": "lil[a|ára]",
+          "out": "purple"
+        },
+        {
+          "in": "barn[a|ára]",
+          "out": "brown"
+        },
+        {
+          "in": "rózsaszín[re]",
+          "out": "pink"
+        },
+        {
+          "in": "türkiz[re|zöld[re]]",
+          "out": "turquoise"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "volume": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        {
+          "in": "(Celsius|C|celziusz)",
+          "out": "celsius"
+        },
+        {
+          "in": "(Farenheit|F|fárenhejt)",
+          "out": "fahrenheit"
+        }
+      ]
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "(maximum[ra]|legnagyobb[ra])",
+          "out": 100
+        },
+        {
+          "in": "(minimum[ra]|legkisebb[re]|legalacsonyabb[ra])",
+          "out": 1
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "(be[ van[nak] ]kapcsolva)",
+          "out": "on"
+        },
+        {
+          "in": "(ki[ van[nak] ]kapcsolva)",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "fény[t|ek|eket]",
+          "out": "light"
+        },
+        {
+          "in": "lámp[a|át|ák|ákat]",
+          "out": "light"
+        },
+        {
+          "in": "világítás[t|ok|okat]",
+          "out": "light"
+        },
+        {
+          "in": "ventilátor[t|ok|okat]",
+          "out": "fan"
+        },
+        {
+          "in": "kapcsoló[t|k|kat]",
+          "out": "switch"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "nyitva",
+          "out": "open"
+        },
+        {
+          "in": "zárva",
+          "out": "closed"
+        },
+        {
+          "in": "nyílik",
+          "out": "opening"
+        },
+        {
+          "in": "záródik",
+          "out": "closing"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "[a ]napellenző[t|k|ket]",
+          "out": "awning"
+        },
+        {
+          "in": "[a ]redőny[t|ök|öket]",
+          "out": "blind"
+        },
+        {
+          "in": "[a ]függöny[t|ök|öket]",
+          "out": "curtain"
+        },
+        {
+          "in": "[az ]ajtó[t|k|kat]",
+          "out": "door"
+        },
+        {
+          "in": "[a ]garázs[ajtó|kapu][t|k|kat]",
+          "out": "garage"
+        },
+        {
+          "in": "[a ]kapu[t|k|kat]",
+          "out": "gate"
+        },
+        {
+          "in": "[az ]árnyékoló[t|k|kat]",
+          "out": "shade"
+        },
+        {
+          "in": "[a ](zsalu[t|k|kat]|roló[t|k|kat])",
+          "out": "shutter"
+        },
+        {
+          "in": "[az ]ablak[ot|ok|okat]",
+          "out": "window"
+        }
+      ]
+    },
+    "lock_domains": {
+      "values": [
+        {
+          "in": "Zár[t|ak|akat]",
+          "out": "lock"
+        }
+      ]
+    },
+    "lock_states": {
+      "values": [
+        {
+          "in": "[be]zár(va|olva)",
+          "out": "locked"
+        },
+        {
+          "in": "(nyitva|feloldva|nincs bezárva)",
+          "out": "unlocked"
+        }
+      ]
+    },
+    "bs_battery_states": {
+      "values": [
+        {
+          "in": "(alacsony|gyenge)",
+          "out": "on"
+        },
+        {
+          "in": "(normál|megfelelő)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_battery_charging_states": {
+      "values": [
+        {
+          "in": "(tölt[őd][ik|nek])",
+          "out": "on"
+        },
+        {
+          "in": "(nem tölt[őd][ik|nek])",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_carbon_monoxide_states": {
+      "values": [
+        {
+          "in": "(aktív|érzékel|jelez)",
+          "out": "on"
+        },
+        {
+          "in": "(tiszta|rendben|nem érzékel|nem jelez)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_cold_states": {
+      "values": [
+        {
+          "in": "hideg[et]",
+          "out": "on"
+        },
+        {
+          "in": "(normál|nem hideg[et])",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_connectivity_states": {
+      "values": [
+        {
+          "in": "([van ]csatlakoz[tat]va[ van])",
+          "out": "on"
+        },
+        {
+          "in": "(le van választva|nincs csatlakozva)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_door_states": {
+      "values": [
+        {
+          "in": "nyitva",
+          "out": "on"
+        },
+        {
+          "in": "(zárva|csukva)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_garage_door_states": {
+      "values": [
+        {
+          "in": "nyitva",
+          "out": "on"
+        },
+        {
+          "in": "zárva",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_gas_states": {
+      "values": [
+        {
+          "in": "(aktív|érzékel|jelez)",
+          "out": "on"
+        },
+        {
+          "in": "(tiszta|rendben|nem (érzékel|jelez))",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_light_states": {
+      "values": [
+        {
+          "in": "(aktív|érzékel|jelez|észlelhető)",
+          "out": "on"
+        },
+        {
+          "in": "(nincs fény|nem (jelez|érzékel|észlehető))",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_heat_states": {
+      "values": [
+        {
+          "in": "meleg[et]",
+          "out": "on"
+        },
+        {
+          "in": "(normál|nem meleg[et])",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_lock_states": {
+      "values": [
+        {
+          "in": "nyitva",
+          "out": "on"
+        },
+        {
+          "in": "zárva",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_moisture_states": {
+      "values": [
+        {
+          "in": "(aktív|nedves|vizes|jelez|érzékel)",
+          "out": "on"
+        },
+        {
+          "in": "(száraz|nem [aktív|jelez|érzékel])",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_motion_states": {
+      "values": [
+        {
+          "in": "(aktív|érzékel|jelez)",
+          "out": "on"
+        },
+        {
+          "in": "(tiszta|nem (jelez|érzékel))",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_occupancy_states": {
+      "values": [
+        {
+          "in": "(jelez|érzékel|foglalt[ság[ot]|at])",
+          "out": "on"
+        },
+        {
+          "in": "(tiszta|nem (jelez|foglalt|érzékel))",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_opening_states": {
+      "values": [
+        {
+          "in": "nyitva",
+          "out": "on"
+        },
+        {
+          "in": "zárva",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_plug_states": {
+      "values": [
+        {
+          "in": "(csatlakoztva|be[ van ]dugva)",
+          "out": "on"
+        },
+        {
+          "in": "[nincs bedugva|ki[ van ]húzva]",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_power_states": {
+      "values": [
+        {
+          "in": "kap áramot",
+          "out": "on"
+        },
+        {
+          "in": "nem kap áramot",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_presence_states": {
+      "values": [
+        {
+          "in": "([o|i]tthon|jelen)",
+          "out": "on"
+        },
+        {
+          "in": "(távol|nincs [o|i]tthon|nincs jelen)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_problem_states": {
+      "values": [
+        {
+          "in": "Detektálva",
+          "out": "on"
+        },
+        {
+          "in": "ok",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_running_states": {
+      "values": [
+        {
+          "in": "(fut|megy|működik|be[ van ]kapcsolva)",
+          "out": "on"
+        },
+        {
+          "in": "(nem fut|nem (megy|működik)|ki[ van ]kapcsolva)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_safety_states": {
+      "values": [
+        {
+          "in": "nem biztonságos",
+          "out": "on"
+        },
+        {
+          "in": "biztonságos",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_smoke_states": {
+      "values": [
+        {
+          "in": "(aktív|érzékel|jelez)",
+          "out": "on"
+        },
+        {
+          "in": "(tiszta|rendben|nem (érzékel|jelez))",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_sound_states": {
+      "values": [
+        {
+          "in": "(aktív|érzékel|jelez)",
+          "out": "on"
+        },
+        {
+          "in": "(tiszta|nem (érzékel|jelez))",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_tamper_states": {
+      "values": [
+        {
+          "in": "(nincs rendben|manipulált|szabotált)",
+          "out": "on"
+        },
+        {
+          "in": "(tiszta|rendben)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_update_states": {
+      "values": [
+        {
+          "in": "(elérhető frissítés|nem naprakész)",
+          "out": "on"
+        },
+        {
+          "in": "(nincs frissítés|naprakész)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_vibration_states": {
+      "values": [
+        {
+          "in": "(vibráció|vibrál)",
+          "out": "on"
+        },
+        {
+          "in": "(nincs vibráció|nem vibrál)",
+          "out": "off"
+        }
+      ]
+    },
+    "bs_window_states": {
+      "values": [
+        {
+          "in": "nyitva",
+          "out": "on"
+        },
+        {
+          "in": "(zárva|csukva)",
+          "out": "closed"
+        }
+      ]
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    },
+    "zone": {
+      "wildcard": true
+    },
+    "presence_states": {
+      "values": [
+        {
+          "in": "Otthon",
+          "out": "home"
+        },
+        {
+          "in": "Távol",
+          "out": "not_home"
+        }
+      ]
+    },
+    "position_level": {
+      "values": [
+        {
+          "in": "(maximum[ra]|legnagyobb[ra])",
+          "out": 100
+        },
+        {
+          "in": "(minimum[ra]|legkisebb[re]|legalacsonyabb[ra])",
+          "out": 1
+        }
+      ]
+    },
+    "volume_level": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "volume_mapping": {
+      "values": [
+        {
+          "in": "(maximum[ra]|legnagyobb[ra])",
+          "out": 100
+        },
+        {
+          "in": "(minimum[ra]|legkisebb[re]|legalacsonyabb[ra])",
+          "out": 1
+        }
+      ]
+    },
+    "default_areas": {
+      "values": [
+        {
+          "in": "konyh(a[i]|ába[n]|át)",
+          "out": "konyha"
+        },
+        {
+          "in": "mosókonyh(a[i]|ába[n]|át)",
+          "out": "mosőkonyha"
+        },
+        {
+          "in": "kamr(a|ába[n]|át)",
+          "out": "kamra"
+        },
+        {
+          "in": "verand(a|án|át)",
+          "out": "veranda"
+        },
+        {
+          "in": "vécé[ben|t]",
+          "out": "WC"
+        },
+        {
+          "in": "hálószob(a[i]|ába[n]|át)",
+          "out": "hálószoba"
+        },
+        {
+          "in": "gyerekszob(a[i]|ába[n]|át)",
+          "out": "gyerekszoba"
+        },
+        {
+          "in": "dolgozószob(a[i]|ába[n]|át)",
+          "out": "dolgozószoba"
+        },
+        {
+          "in": "vendégszob(a[i]|ába[n]|át)",
+          "out": "vendégszoba"
+        },
+        {
+          "in": "fürdőszob(a[i]|ába[n]|át)",
+          "out": "fürdőszoba"
+        },
+        {
+          "in": "előszob(a[i]|ába[n]|át)",
+          "out": "előszoba"
+        },
+        {
+          "in": "könyvtárszob(a[i]|ába[n]|át)",
+          "out": "könyvtárszoba"
+        },
+        {
+          "in": "játészob(a[i]|ába[n]|át)",
+          "out": "játékszoba"
+        },
+        {
+          "in": "fitneszszob(a[i]|ába[n]|át)",
+          "out": "fitneszszoba"
+        },
+        {
+          "in": "hobby szob(a[i]|ába[n]|át)",
+          "out": "hobby szoba"
+        },
+        {
+          "in": "kamr(a|ába[n]|át)",
+          "out": "kamra"
+        },
+        {
+          "in": "pinc(e|ében|ét)",
+          "out": "pince"
+        }
+      ]
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "fél",
+          "out": 30
+        },
+        {
+          "in": "1/2",
+          "out": 30
+        }
+      ]
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "name": "[a |az ]{name}[<name_ragok>| <name_szavak>]",
+    "name_ragok": "(n(a|e)k|[o|e]t|r(a|e)|[o|e|ö]n)",
+    "name_szavak": "((eszköz|érzékelő)[nek|t|re]|szenzor[nak|t|ra])",
+    "area": "([a |az ]{area}[<area_ragok>|<area_szavak>]|[a |az ]{default_areas:area})",
+    "area_ragok": "(b(a|e)[n]|(o|e|ö)n|t|i)",
+    "area_szavak": "([ ](szob(a[i]|ába[n]|át)|hely[i]ség[be[n]|et]))",
+    "floor": "[a |az ]{floor}[en|i| szint[en]| emelet[en|i]]",
+    "area_floor": "(<area>|<floor>)",
+    "what_is": "((mi|mennyi)[ a| az])",
+    "where_is": "(hol van[ a| az]|hol (a|az))",
+    "brightness": "{brightness}[[ ]%[[-]ra]| százalék[os][ra]]",
+    "position": "{position}[[ ]%[[-]ra|[-]ig]| százalék[os][ra|ig]]",
+    "volume": "{volume:volume_level}[[ ]%[[-]ra]| százalék[os][ra]]",
+    "fényerő": "[a ]fényer(ő(t|re)|ejét)",
+    "light": "[a ](fény(t|nek|ét)|fények(et|nek)|lámp(a|á[t|k[at]|nak|ját])|világítás[t|nak|át])",
+    "turn_on": "(kapcsol(d|j) (be|fel|föl)|oltsd (fel|föl)|be)",
+    "turn_off": "((kapcsol(d|j) (ki|le))|oltsd (el|le)|ki)",
+    "temp": "([a ](hőmérséklet[e|et|ét]|hőfok[a|ot|át]))",
+    "temperature": "{temperature}[ ][°][{temperature_unit}] fok[ra]",
+    "open": "(nyi(sd|ss)[ ki| meg]|emeld[ fel]|húzd( fel| el| szét))",
+    "close": "(csukd[ be]|zár(d|j)[ be]|engedd le|húzd( le| be))",
+    "open_dev": "(nyi(t|sd|ss)[ ki| meg])",
+    "close_dev": "(csukd[ be]|zár(d|j)[ be])",
+    "open_close_dev": "(<open_dev>|<close_dev>)",
+    "set": "(állíts[d][ be]|csináld[ meg]|változta(t|sd)[ meg]|kapcsold|aktiváld)",
+    "numeric_value_set": "(állíts[d][ be]|változta(t|sd)[ meg| át]|növeld[ meg]|csökkentsd[ le]|kapcsol(d|j)[ át])",
+    "battery": "(akkumulátor[a|ok]|akku[ja|k]|elem[e|ek]|eszköz[e|ök])",
+    "in_here": "(itt|ahol vagyok)",
+    "melyik": "(melyik|milyen)",
+    "mennyi": "(mennyi[en]|hány[an])",
+    "bármelyik": "(bárm(i[lyen]|elyik)|valam(i[lyen]|elyik))",
+    "minden": "(minden[t]|[az ]összes)",
+    "valaki": "(valaki|bárki)",
+    "eszköz": "(eszköz[ök[höz]|zel|höz]|érzékelő[k[höz]|vel|höz]|szenzor[ok[hoz]|ral|hoz])",
+    "vane": "van[ ][e]",
+    "co": "(szén[ ]monoxid[ot]|co[t])",
+    "foglalt": "(foglalt[ság[ot]|at])",
+    "jelenlét": "(jelenlét[et])",
+    "szenzor": "(szenzor[ok]|érzékelő[k])",
+    "futtat": "(futtasd|indítsd[ el]|aktiváld|kapcsold be)",
+    "ragok": "((o|e|ö)n|b(a|e)[n]|h(o|e|ö)z)",
+    "idojarasragok": "((o|e|ö)n|r(a|e))",
+    "idojarashelyek": "(város[á]ban|helyen|helységben|településen|faluban)",
+    "zár": "[ajtó|ablak]zár[t|a[t]|akat|át]",
+    "ventilátor": "[a ](ventilátor[t|át|ok[at]]|szellőztetés[t|ét]|(lég|levegő)tisztító[t|ját|kat])",
+    "firmware": "(firmware|förmver|fönn ver|software|szoftver)",
+    "mindenhol": "(minden(hol|ütt))",
+    "otthon": "((o|i)tthon|[a ](házban|lakásban)|jelen)[ van]",
+    "nincs_otthon": "(nincs <otthon>|távol[ van])",
+    "személy": "(személy|ember)",
+    "helyen": "(zónában|helyen)",
+    "what_is_the_class_of_name": "(<what_is> <class> [amit] <name>[a|e|n(a|e)k] [szenzor[a|nak|on]|érzékelő[je|nek|n]] [mér[t]|mutat[ott]] [<area>]|<what_is> (<name> [szenzor[a|on]|érzékelő[je|n]] [által] [mért|mutatott] <class> [értéke] [<area>]))",
+    "timer_set": "(indíts[d][ el]|állíts[d][ be]|hozz létre)",
+    "timer_cancel": "(töröl(j|d)[ ki]|állíts[d] le|törlése)",
+    "timer_duration_seconds": "{timer_seconds:seconds} másodperc[re|es|et|cel]",
+    "timer_duration_minutes": "(({timer_minutes:minutes} perc[re|es|et|cel][ [és ]{timer_seconds:seconds} másodperc[re|es|et|cel]])|({timer_minutes:minutes} és {timer_half:seconds} perc[re|es|et|cel])|({timer_half:seconds} perc[re|es|et|cel]))",
+    "timer_duration_hours": "({timer_hours:hours} ór(a|ás|ára|át|ával)[ [és ]{timer_minutes:minutes} perc[re|es|et|cel]][ [és ]{timer_seconds:seconds} másodperc[re|es|et|cel]])|({timer_hours:hours} és {timer_half:minutes} ór(a|ás|ára|át|ával))|({timer_half:minutes} ór(a|ás|ára|át|ával))",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes>|<timer_duration_hours>",
+    "timer_start_seconds": "{timer_seconds:start_seconds} másodperc[re|es]",
+    "timer_start_minutes": "{timer_minutes:start_minutes} perc[re|es][ [és ]{timer_seconds:start_seconds} másodperc[re|es]]",
+    "timer_start_hours": "{timer_hours:start_hours} ór(a|ás|ára)[ [és ]{timer_minutes:start_minutes} perc[re|es]][ [és ]{timer_seconds:start_seconds} másodperc[re|es]]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes>|<timer_start_hours>"
+  },
+  "skip_words": [
+    "kérem [szépen]",
+    "kérlek [szépen]",
+    "azonnal",
+    "megtennéd"
+  ]
+}

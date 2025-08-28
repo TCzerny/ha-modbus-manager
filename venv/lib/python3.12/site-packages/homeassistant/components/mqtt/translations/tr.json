@@ -1,0 +1,324 @@
+{
+    "config": {
+        "abort": {
+            "addon_connection_failed": "{addon} eklentisine ba\u011flan\u0131lamad\u0131. Eklenti durumunu kontrol edin ve daha sonra tekrar deneyin.",
+            "addon_info_failed": "{addon} eklentisi i\u00e7in bilgi al\u0131namad\u0131.",
+            "addon_install_failed": "{addon} eklentisi y\u00fcklenemedi.",
+            "addon_start_failed": "{addon} eklentisi ba\u015flat\u0131lamad\u0131.",
+            "already_configured": "Hizmet zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu",
+            "reconfigure_successful": "Yeniden yap\u0131land\u0131rma ba\u015far\u0131l\u0131 oldu",
+            "single_instance_allowed": "Zaten yap\u0131land\u0131r\u0131lm\u0131\u015f. Yaln\u0131zca tek bir konfig\u00fcrasyon m\u00fcmk\u00fcnd\u00fcr."
+        },
+        "error": {
+            "bad_birth": "Ge\u00e7ersiz do\u011fum konusu",
+            "bad_certificate": "CA sertifikas\u0131 ge\u00e7ersiz",
+            "bad_client_cert": "Ge\u00e7ersiz m\u00fc\u015fteri sertifikas\u0131, PEM kodlu bir dosyan\u0131n sa\u011fland\u0131\u011f\u0131ndan emin olun",
+            "bad_client_cert_key": "\u0130stemci sertifikas\u0131 ve \u00f6zel anahtar ge\u00e7erli bir \u00e7ift de\u011fil",
+            "bad_client_key": "Ge\u00e7ersiz \u00f6zel anahtar, PEM kodlu bir dosyan\u0131n parola olmadan sa\u011fland\u0131\u011f\u0131ndan emin olun",
+            "bad_discovery_prefix": "Ge\u00e7ersiz ke\u015fif \u00f6neki",
+            "bad_will": "Ge\u00e7ersiz irade konusu",
+            "bad_ws_headers": "JSON nesnesi olarak ge\u00e7erli HTTP ba\u015fl\u0131klar\u0131 sa\u011flay\u0131n",
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "invalid_inclusion": "\u0130stemci sertifikas\u0131 ve \u00f6zel anahtar birlikte yap\u0131land\u0131r\u0131lmal\u0131d\u0131r"
+        },
+        "step": {
+            "broker": {
+                "data": {
+                    "advanced_options": "Geli\u015fmi\u015f se\u00e7enekler",
+                    "broker": "Broker",
+                    "certificate": "\u00d6zel CA sertifika dosyas\u0131 y\u00fckleyin",
+                    "client_cert": "\u0130stemci sertifikas\u0131 dosyas\u0131n\u0131 y\u00fckle",
+                    "client_id": "M\u00fc\u015fteri Kimli\u011fi (rastgele olu\u015fturulmu\u015f olana kadar bo\u015f b\u0131rak\u0131n)",
+                    "client_key": "\u00d6zel anahtar dosyas\u0131n\u0131 y\u00fckleyin",
+                    "keepalive": "Canl\u0131 tutma mesajlar\u0131 g\u00f6nderme aras\u0131ndaki s\u00fcre",
+                    "password": "\u015eifre",
+                    "port": "Port",
+                    "protocol": "MQTT protokol\u00fc",
+                    "set_ca_cert": "Arac\u0131 sertifikas\u0131 do\u011frulama",
+                    "set_client_cert": "\u0130stemci sertifikas\u0131 kullan",
+                    "tls_insecure": "Arac\u0131 sertifika do\u011frulamas\u0131n\u0131 yoksay",
+                    "transport": "MQTT aktar\u0131m\u0131",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131",
+                    "ws_headers": "JSON format\u0131nda WebSocket ba\u015fl\u0131klar\u0131",
+                    "ws_path": "WebSocket yolu"
+                },
+                "data_description": {
+                    "advanced_options": "Geli\u015fmi\u015f se\u00e7enekleri ayarlamak i\u00e7in **\u0130leri**'yi etkinle\u015ftirin ve se\u00e7in.",
+                    "broker": "MQTT arac\u0131n\u0131z\u0131n ana bilgisayar ad\u0131 veya IP adresi.",
+                    "certificate": "MQTT arac\u0131 sertifikan\u0131z\u0131 do\u011frulamak i\u00e7in \u00f6zel CA sertifika dosyas\u0131.",
+                    "client_cert": "MQTT arac\u0131n\u0131za kar\u015f\u0131 kimlik do\u011frulamas\u0131 yap\u0131lacak istemci sertifikas\u0131.",
+                    "client_id": "Home Assistant MQTT API'sini MQTT istemcisi olarak tan\u0131mlayan benzersiz kimlik. Bu se\u00e7ene\u011fin bo\u015f b\u0131rak\u0131lmas\u0131 tavsiye edilir.",
+                    "client_key": "\u0130stemci sertifikan\u0131za ait \u00f6zel anahtar dosyas\u0131.",
+                    "keepalive": "90 saniyeden daha az bir de\u011fer \u00f6nerilir.",
+                    "password": "MQTT arac\u0131n\u0131za giri\u015f yapmak i\u00e7in parola.",
+                    "port": "MQTT arac\u0131n\u0131z\u0131n dinledi\u011fi ba\u011flant\u0131 noktas\u0131. \u00d6rne\u011fin 1883.",
+                    "protocol": "Broker\u0131n\u0131z\u0131n faaliyet g\u00f6sterdi\u011fi MQTT protokol\u00fc. \u00d6rne\u011fin 3.1.1.",
+                    "set_ca_cert": "Otomatik CA do\u011frulamas\u0131 i\u00e7in **Otomatik** se\u00e7ene\u011fini belirleyin veya \u00f6zel bir CA sertifikas\u0131 ayarlamak i\u00e7in **\u00d6zel** se\u00e7ene\u011fini belirleyin ve **\u0130leri** se\u00e7ene\u011fini belirleyin; b\u00f6ylece MQTT broker sertifikan\u0131z\u0131n do\u011frulanmas\u0131na izin verin.",
+                    "set_client_cert": "MQTT broker'\u0131n\u0131za kar\u015f\u0131 kimlik do\u011frulamas\u0131 yapmak i\u00e7in bir istemci sertifikas\u0131 ve \u00f6zel anahtar ayarlamak \u00fczere **\u0130leri**'yi etkinle\u015ftirin ve se\u00e7in.",
+                    "tls_insecure": "MQTT arac\u0131n\u0131z\u0131n sertifikas\u0131n\u0131n do\u011frulamas\u0131n\u0131 g\u00f6z ard\u0131 etme se\u00e7ene\u011fi.",
+                    "transport": "MQTT arac\u0131n\u0131za ba\u011flant\u0131 i\u00e7in kullan\u0131lacak aktar\u0131m.",
+                    "username": "MQTT arac\u0131n\u0131za giri\u015f yapmak i\u00e7in kullan\u0131lan kullan\u0131c\u0131 ad\u0131.",
+                    "ws_headers": "MQTT arac\u0131n\u0131za WebSocket tabanl\u0131 ba\u011flant\u0131 \u00fczerinden ge\u00e7ecek WebSocket \u00fcstbilgileri.",
+                    "ws_path": "MQTT arac\u0131n\u0131za ba\u011flant\u0131 i\u00e7in kullan\u0131lacak WebSocket yolu."
+                },
+                "description": "L\u00fctfen MQTT brokerinizin ba\u011flant\u0131 bilgilerini girin."
+            },
+            "hassio_confirm": {
+                "description": "{addon} taraf\u0131ndan sa\u011flanan MQTT arac\u0131s\u0131na ba\u011flanacak \u015fekilde yap\u0131land\u0131rmak istiyor musunuz?",
+                "title": "Home Assistant eklentisi arac\u0131l\u0131\u011f\u0131yla MQTT Broker"
+            },
+            "install_addon": {
+                "title": "Eklenti kuruluyor"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "\u015eifre",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "data_description": {
+                    "password": "MQTT arac\u0131n\u0131za giri\u015f yapmak i\u00e7in parola.",
+                    "username": "MQTT arac\u0131n\u0131za giri\u015f yapmak i\u00e7in kullan\u0131lan kullan\u0131c\u0131 ad\u0131."
+                },
+                "description": "MQTT arac\u0131s\u0131 bir kimlik do\u011frulama hatas\u0131 bildirdi. L\u00fctfen komisyoncunun do\u011fru kullan\u0131c\u0131 ad\u0131n\u0131 ve \u015fifresini onaylay\u0131n.",
+                "title": "MQTT arac\u0131s\u0131nda yeniden kimlik do\u011frulama gerekiyor"
+            },
+            "start_addon": {
+                "title": "Eklenti ba\u015flat\u0131l\u0131yor"
+            },
+            "user": {
+                "description": "L\u00fctfen MQTT broker'\u0131na nas\u0131l ba\u011flanmak istedi\u011finizi se\u00e7in:",
+                "menu_options": {
+                    "addon": "Resmi {addon} eklentisini kullan\u0131n.",
+                    "broker": "MQTT broker ba\u011flant\u0131 ayr\u0131nt\u0131lar\u0131n\u0131 manuel olarak girin"
+                }
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_subtype": {
+            "button_1": "\u0130lk d\u00fc\u011fme",
+            "button_2": "\u0130kinci d\u00fc\u011fme",
+            "button_3": "\u00dc\u00e7\u00fcnc\u00fc d\u00fc\u011fme",
+            "button_4": "D\u00f6rd\u00fcnc\u00fc d\u00fc\u011fme",
+            "button_5": "Be\u015finci d\u00fc\u011fme",
+            "button_6": "Alt\u0131nc\u0131 d\u00fc\u011fme",
+            "turn_off": "Kapat",
+            "turn_on": "A\u00e7"
+        },
+        "trigger_type": {
+            "button_double_press": "\" {subtype} \" \u00e7ift t\u0131kland\u0131",
+            "button_long_press": "\" {subtype} \" s\u00fcrekli olarak bas\u0131ld\u0131",
+            "button_long_release": "\" {subtype} \" uzun bas\u0131\u015ftan sonra \u00e7\u0131kt\u0131",
+            "button_quadruple_press": "\" {subtype} \" d\u00f6rt kez t\u0131kland\u0131",
+            "button_quintuple_press": "\" {subtype} \" be\u015fli t\u0131kland\u0131",
+            "button_short_press": "\" {subtype} \" bas\u0131ld\u0131",
+            "button_short_release": "\" {subtype} \" yay\u0131nland\u0131",
+            "button_triple_press": "\" {subtype} \" \u00fc\u00e7 kez t\u0131kland\u0131"
+        }
+    },
+    "exceptions": {
+        "addon_start_failed": {
+            "message": "{addon} eklentisi do\u011fru \u015fekilde ba\u015flat\u0131lamad\u0131."
+        },
+        "command_template_error": {
+            "message": "\" {entity_id} {command_template} \" \u015fablonunun ayr\u0131\u015ft\u0131r\u0131lmas\u0131 \u015fu hatayla ba\u015far\u0131s\u0131z oldu: {error} ."
+        },
+        "invalid_platform_config": {
+            "message": "Manuel olarak yap\u0131land\u0131r\u0131lm\u0131\u015f MQTT ` {domain} ` \u00f6\u011fesi i\u00e7in YAML yap\u0131land\u0131rmas\u0131n\u0131n yeniden y\u00fcklenmesi ba\u015far\u0131s\u0131z oldu. Daha fazla ayr\u0131nt\u0131 i\u00e7in g\u00fcnl\u00fcklere bak\u0131n."
+        },
+        "invalid_publish_topic": {
+            "message": "Yay\u0131nlanam\u0131yor: \" {topic_template} \" konu \u015fablonu olu\u015fturulduktan sonra ge\u00e7ersiz bir konu \" {topic} \" \u00fcretti ( {error} )"
+        },
+        "mqtt_broker_error": {
+            "message": "MQTT ile ileti\u015fimde hata olu\u015ftu: {error_message}."
+        },
+        "mqtt_not_setup_cannot_publish": {
+            "message": "\"{topic}\" konusuna yay\u0131nlanam\u0131yor, MQTT'nin do\u011fru \u015fekilde kuruldu\u011fundan emin olun."
+        },
+        "mqtt_not_setup_cannot_subscribe": {
+            "message": "\"{topic}\" konusuna abone olunam\u0131yor, MQTT'nin do\u011fru \u015fekilde ayarland\u0131\u011f\u0131ndan emin olun."
+        },
+        "mqtt_not_setup_cannot_unsubscribe_twice": {
+            "message": "\" {topic} \" konusunun aboneli\u011fi iki kez iptal edilemez."
+        },
+        "mqtt_topic_not_a_string": {
+            "message": "Konunun bir dize olmas\u0131 gerekiyor! Al\u0131nd\u0131: {topic}."
+        },
+        "mqtt_trigger_cannot_remove_twice": {
+            "message": "Teti\u011fi iki kez \u00e7\u0131karamazs\u0131n\u0131z."
+        }
+    },
+    "issues": {
+        "deprecated_color_handling": {
+            "description": "'configuration.yaml' dosyas\u0131nda bulunan bir MQTT light yap\u0131land\u0131rmas\u0131 (\"json\" \u015femas\u0131yla), kullan\u0131mdan kald\u0131r\u0131lm\u0131\u015f renk i\u015fleme bayraklar\u0131n\u0131 kullan\u0131r. \n\n Yap\u0131land\u0131rma bulundu:\n ```yaml\n {config}\n ''''\n Kullan\u0131mdan kald\u0131r\u0131lan i\u015faretler: ** {deprecated_flags} **. \n\n Bunun yerine `supported_color_modes` se\u00e7ene\u011fini kullan\u0131n ve manuel olarak yap\u0131land\u0131r\u0131lan MQTT \u00f6\u011felerini [yeniden y\u00fckleyin](/developer-tools/yaml) veya bu sorunu d\u00fczeltmek i\u00e7in Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+            "title": "MQTT \u0131\u015f\u0131\u011f\u0131 i\u00e7in kullan\u0131mdan kald\u0131r\u0131lan renk i\u015fleme"
+        },
+        "deprecated_color_mode_flag": {
+            "description": "'configuration.yaml' dosyas\u0131nda bulunan bir MQTT light yap\u0131land\u0131rmas\u0131 (\"json\" \u015femas\u0131yla), kullan\u0131mdan kald\u0131r\u0131lm\u0131\u015f bir \"color_mode\" bayra\u011f\u0131n\u0131 kullan\u0131yor. \n\n Yap\u0131land\u0131rma bulundu:\n ```yaml\n {config}\n '''' \n\n Bu se\u00e7ene\u011fi yap\u0131land\u0131rman\u0131zdan kald\u0131r\u0131n ve manuel olarak yap\u0131land\u0131r\u0131lm\u0131\u015f MQTT \u00f6\u011felerini [yeniden y\u00fckleyin](/developer-tools/yaml) veya bu sorunu d\u00fczeltmek i\u00e7in Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+            "title": "MQTT \u0131\u015f\u0131\u011f\u0131 i\u00e7in kullan\u0131lan, kullan\u0131mdan kald\u0131r\u0131lan color_mode se\u00e7enek bayra\u011f\u0131"
+        },
+        "invalid_platform_config": {
+            "description": "Home Assistant, manuel olarak yap\u0131land\u0131r\u0131lm\u0131\u015f bir \u00f6\u011fe i\u00e7in ge\u00e7ersiz bir yap\u0131land\u0131rma alg\u0131lad\u0131.\n\nPlatform etki alan\u0131: **{domain}**\nYap\u0131land\u0131rma dosyas\u0131: **{config_file}**\nYak\u0131n hat: **{line}**\nYap\u0131land\u0131rma bulundu:\n```yaml\n{config}\n```\nHata: **{error}**.\n\nYap\u0131land\u0131rman\u0131n ge\u00e7erli oldu\u011fundan emin olun ve manuel olarak yap\u0131land\u0131r\u0131lm\u0131\u015f MQTT \u00f6\u011felerini [reload](/developer-tools/yaml) yap\u0131n veya bu sorunu gidermek i\u00e7in Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+            "title": "Mqtt {domain} \u00f6\u011fesi i\u00e7in ge\u00e7ersiz yap\u0131land\u0131rma bulundu"
+        },
+        "payload_template_deprecation": {
+            "description": "MQTT yay\u0131n eylem \u00e7a\u011fr\u0131s\u0131nda kullan\u0131lan `payload_template` se\u00e7ene\u011fi, payload \u015fablonu ` {payload_template} `'dan ` {topic} ` konusuna kullan\u0131l\u0131r. Bunun yerine `payload` se\u00e7ene\u011fini kullan\u0131n. Otomasyonlarda \u015fablonlar yerel olarak desteklenir. Bu sorunu d\u00fczeltmek i\u00e7in otomasyonu veya beti\u011fi bunun yerine `payload` se\u00e7ene\u011fini kullanacak \u015fekilde g\u00fcncelleyin ve Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+            "title": "Mqtt yay\u0131mlama eylem \u00e7a\u011fr\u0131s\u0131nda kullan\u0131lan kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131lm\u0131\u015f se\u00e7enek"
+        },
+        "topic_template_deprecation": {
+            "description": "MQTT yay\u0131n eylem \u00e7a\u011fr\u0131s\u0131nda kullan\u0131lan `topic_template` se\u00e7ene\u011fi, ` {topic_template} {topic} ` konusuna kullan\u0131l\u0131yor. Bunun yerine `topic` se\u00e7ene\u011fini kullan\u0131n. Otomasyonlarda \u015fablonlar yerel olarak desteklenir. Bu sorunu d\u00fczeltmek i\u00e7in otomasyonu veya beti\u011fi `topic` se\u00e7ene\u011fini kullanacak \u015fekilde g\u00fcncelleyin ve Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+            "title": "Mqtt yay\u0131mlama eylem \u00e7a\u011fr\u0131s\u0131nda kullan\u0131lan kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131lm\u0131\u015f se\u00e7enek"
+        }
+    },
+    "options": {
+        "error": {
+            "bad_birth": "Ge\u00e7ersiz do\u011fum konusu",
+            "bad_certificate": "CA sertifikas\u0131 ge\u00e7ersiz",
+            "bad_client_cert": "Ge\u00e7ersiz m\u00fc\u015fteri sertifikas\u0131, PEM kodlu bir dosyan\u0131n sa\u011fland\u0131\u011f\u0131ndan emin olun",
+            "bad_client_cert_key": "\u0130stemci sertifikas\u0131 ve \u00f6zel anahtar ge\u00e7erli bir \u00e7ift de\u011fil",
+            "bad_client_key": "Ge\u00e7ersiz \u00f6zel anahtar, PEM kodlu bir dosyan\u0131n parola olmadan sa\u011fland\u0131\u011f\u0131ndan emin olun",
+            "bad_discovery_prefix": "Ge\u00e7ersiz ke\u015fif \u00f6neki",
+            "bad_will": "Ge\u00e7ersiz irade konusu",
+            "bad_ws_headers": "JSON nesnesi olarak ge\u00e7erli HTTP ba\u015fl\u0131klar\u0131 sa\u011flay\u0131n",
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_inclusion": "\u0130stemci sertifikas\u0131 ve \u00f6zel anahtar birlikte yap\u0131land\u0131r\u0131lmal\u0131d\u0131r"
+        },
+        "step": {
+            "broker": {
+                "data": {
+                    "advanced_options": "Geli\u015fmi\u015f se\u00e7enekler",
+                    "broker": "Broker",
+                    "certificate": "\u00d6zel CA sertifika dosyas\u0131 y\u00fckleyin",
+                    "client_cert": "\u0130stemci sertifikas\u0131 dosyas\u0131n\u0131 y\u00fckle",
+                    "client_id": "M\u00fc\u015fteri Kimli\u011fi (rastgele olu\u015fturulmu\u015f olana kadar bo\u015f b\u0131rak\u0131n)",
+                    "client_key": "\u00d6zel anahtar dosyas\u0131n\u0131 y\u00fckleyin",
+                    "keepalive": "Canl\u0131 tutma mesajlar\u0131 g\u00f6nderme aras\u0131ndaki s\u00fcre",
+                    "password": "\u015eifre",
+                    "port": "Port",
+                    "protocol": "MQTT protokol\u00fc",
+                    "set_ca_cert": "Arac\u0131 sertifikas\u0131 do\u011frulama",
+                    "set_client_cert": "\u0130stemci sertifikas\u0131 kullan",
+                    "tls_insecure": "Arac\u0131 sertifika do\u011frulamas\u0131n\u0131 yoksay",
+                    "transport": "MQTT aktar\u0131m\u0131",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131",
+                    "ws_headers": "JSON format\u0131nda WebSocket ba\u015fl\u0131klar\u0131",
+                    "ws_path": "WebSocket yolu"
+                },
+                "data_description": {
+                    "advanced_options": "Geli\u015fmi\u015f se\u00e7enekleri ayarlamak i\u00e7in **\u0130leri**'yi etkinle\u015ftirin ve se\u00e7in.",
+                    "broker": "MQTT arac\u0131n\u0131z\u0131n ana bilgisayar ad\u0131 veya IP adresi.",
+                    "certificate": "MQTT arac\u0131 sertifikan\u0131z\u0131 do\u011frulamak i\u00e7in \u00f6zel CA sertifika dosyas\u0131.",
+                    "client_cert": "MQTT arac\u0131n\u0131za kar\u015f\u0131 kimlik do\u011frulamas\u0131 yap\u0131lacak istemci sertifikas\u0131.",
+                    "client_id": "Home Assistant MQTT API'sini MQTT istemcisi olarak tan\u0131mlayan benzersiz kimlik. Bu se\u00e7ene\u011fin bo\u015f b\u0131rak\u0131lmas\u0131 tavsiye edilir.",
+                    "client_key": "\u0130stemci sertifikan\u0131za ait \u00f6zel anahtar dosyas\u0131.",
+                    "keepalive": "90 saniyeden daha az bir de\u011fer \u00f6nerilir.",
+                    "password": "MQTT arac\u0131n\u0131za giri\u015f yapmak i\u00e7in parola.",
+                    "port": "MQTT arac\u0131n\u0131z\u0131n dinledi\u011fi ba\u011flant\u0131 noktas\u0131. \u00d6rne\u011fin 1883.",
+                    "protocol": "Broker\u0131n\u0131z\u0131n faaliyet g\u00f6sterdi\u011fi MQTT protokol\u00fc. \u00d6rne\u011fin 3.1.1.",
+                    "set_ca_cert": "Otomatik CA do\u011frulamas\u0131 i\u00e7in **Otomatik** se\u00e7ene\u011fini belirleyin veya \u00f6zel bir CA sertifikas\u0131 ayarlamak i\u00e7in **\u00d6zel** se\u00e7ene\u011fini belirleyin ve **\u0130leri** se\u00e7ene\u011fini belirleyin; b\u00f6ylece MQTT broker sertifikan\u0131z\u0131n do\u011frulanmas\u0131na izin verin.",
+                    "set_client_cert": "MQTT broker'\u0131n\u0131za kar\u015f\u0131 kimlik do\u011frulamas\u0131 yapmak i\u00e7in bir istemci sertifikas\u0131 ve \u00f6zel anahtar ayarlamak \u00fczere **\u0130leri**'yi etkinle\u015ftirin ve se\u00e7in.",
+                    "tls_insecure": "MQTT arac\u0131n\u0131z\u0131n sertifikas\u0131n\u0131n do\u011frulamas\u0131n\u0131 g\u00f6z ard\u0131 etme se\u00e7ene\u011fi.",
+                    "transport": "MQTT arac\u0131n\u0131za ba\u011flant\u0131 i\u00e7in kullan\u0131lacak aktar\u0131m.",
+                    "username": "MQTT arac\u0131n\u0131za giri\u015f yapmak i\u00e7in kullan\u0131lan kullan\u0131c\u0131 ad\u0131.",
+                    "ws_headers": "MQTT arac\u0131n\u0131za WebSocket tabanl\u0131 ba\u011flant\u0131 \u00fczerinden ge\u00e7ecek WebSocket \u00fcstbilgileri.",
+                    "ws_path": "MQTT arac\u0131n\u0131za ba\u011flant\u0131 i\u00e7in kullan\u0131lacak WebSocket yolu."
+                },
+                "description": "L\u00fctfen MQTT brokerinizin ba\u011flant\u0131 bilgilerini girin.",
+                "title": "Broker se\u00e7enekleri"
+            },
+            "options": {
+                "data": {
+                    "birth_enable": "Do\u011fum mesaj\u0131n\u0131 etkinle\u015ftir",
+                    "birth_payload": "Do\u011fum mesaj\u0131 y\u00fckl\u00fc",
+                    "birth_qos": "Do\u011fum mesaj\u0131 QoS",
+                    "birth_retain": "Do\u011fum mesaj\u0131 saklama",
+                    "birth_topic": "Do\u011fum mesaj\u0131 konusu",
+                    "discovery": "Ke\u015ffetmeyi etkinle\u015ftir",
+                    "discovery_prefix": "Ke\u015fif \u00f6neki",
+                    "will_enable": "Etkinle\u015ftir iletisi",
+                    "will_payload": "\u0130leti y\u00fckl\u00fc",
+                    "will_qos": "QoS mesaj\u0131 g\u00f6nderecek",
+                    "will_retain": "Mesaj korunacak m\u0131",
+                    "will_topic": "Mesaj konusu olacak"
+                },
+                "data_description": {
+                    "birth_enable": "Ayarland\u0131\u011f\u0131nda Home Assistant, MQTT haz\u0131r oldu\u011funda MQTT arac\u0131n\u0131za \u00e7evrimi\u00e7i bir mesaj yay\u0131nlayacakt\u0131r.",
+                    "birth_payload": "MQTT haz\u0131r ve ba\u011fland\u0131\u011f\u0131nda yay\u0131nlanan 'do\u011fum' mesaj\u0131.",
+                    "birth_qos": "MQTT haz\u0131r ve ba\u011fland\u0131\u011f\u0131nda yay\u0131nlanan 'do\u011fum' mesaj\u0131n\u0131n hizmet kalitesi",
+                    "birth_retain": "Ayarland\u0131\u011f\u0131nda Ev Asistan\u0131, MQTT arac\u0131n\u0131za yay\u0131nlanan 'do\u011fum' mesaj\u0131n\u0131 saklar.",
+                    "birth_topic": "Ev Asistan\u0131n\u0131n bir 'do\u011fum' mesaj\u0131 yay\u0131nlayaca\u011f\u0131 MQTT konusu.",
+                    "discovery": "MQTT otomatik ke\u015ffini etkinle\u015ftirme se\u00e7ene\u011fi.",
+                    "discovery_prefix": "MQTT entegrasyonunun abone olaca\u011f\u0131 yap\u0131land\u0131rma konular\u0131n\u0131n \u00f6neki.",
+                    "will_enable": "Ayarland\u0131\u011f\u0131nda, Home Assistant, MQTT durduruldu\u011funda veya broker'\u0131n\u0131zla olan ba\u011flant\u0131s\u0131n\u0131 kaybetti\u011finde broker'\u0131n\u0131zdan bir `will` mesaj\u0131 yay\u0131nlamas\u0131n\u0131 isteyecektir.",
+                    "will_payload": "MQTT arac\u0131n\u0131z\u0131n, MQTT entegrasyonu durduruldu\u011funda veya ba\u011flant\u0131 kesildi\u011finde \"yay\u0131nlayaca\u011f\u0131\" mesaj.",
+                    "will_qos": "MQTT arac\u0131n\u0131z taraf\u0131ndan yay\u0131nlanan \"irade\" mesaj\u0131n\u0131n hizmet kalitesi.",
+                    "will_retain": "Ayarland\u0131\u011f\u0131nda MQTT arac\u0131n\u0131z \"irade\" mesaj\u0131n\u0131 tutacakt\u0131r.",
+                    "will_topic": "MQTT arac\u0131n\u0131z\u0131n bir \"irade\" mesaj\u0131 yay\u0131nlayaca\u011f\u0131 MQTT konusu."
+                },
+                "description": "Ke\u015fif - Ke\u015fif etkinle\u015ftirilirse (\u00f6nerilir), Home Assistant, yap\u0131land\u0131rmalar\u0131n\u0131 MQTT arac\u0131s\u0131nda yay\u0131nlayan cihazlar\u0131 ve varl\u0131klar\u0131 otomatik olarak ke\u015ffeder. Ke\u015fif devre d\u0131\u015f\u0131 b\u0131rak\u0131l\u0131rsa, t\u00fcm yap\u0131land\u0131rma manuel olarak yap\u0131lmal\u0131d\u0131r.\n Ke\u015fif \u00f6neki - Otomatik ke\u015fif i\u00e7in bir yap\u0131land\u0131rma konusunun ba\u015flamas\u0131 gereken \u00f6nek.\n Do\u011fum mesaj\u0131 - Do\u011fum mesaj\u0131, Home Assistant (yeniden) MQTT arac\u0131s\u0131na her ba\u011fland\u0131\u011f\u0131nda g\u00f6nderilir.\n Will mesaj\u0131 - Will mesaj\u0131, Home Assistant arac\u0131yla olan ba\u011flant\u0131s\u0131n\u0131 her kaybetti\u011finde, hem temizlik durumunda (\u00f6rn. Home Assistant kapan\u0131yor) hem de kirli bir durumda (\u00f6rn. ba\u011flant\u0131y\u0131 kes.",
+                "title": "MQTT se\u00e7enekleri"
+            }
+        }
+    },
+    "selector": {
+        "set_ca_cert": {
+            "options": {
+                "auto": "Otomatik",
+                "custom": "Ki\u015fiselle\u015ftirilmi\u015f",
+                "off": "Kapal\u0131"
+            }
+        }
+    },
+    "services": {
+        "dump": {
+            "description": "Belirli bir konudaki t\u00fcm mesajlar\u0131 yap\u0131land\u0131rma klas\u00f6r\u00fcn\u00fczdeki 'mqtt_dump.txt' dosyas\u0131na yazar.",
+            "fields": {
+                "duration": {
+                    "description": "Saniye cinsinden mesajlar\u0131 ne kadar s\u00fcre dinlemeliyiz.",
+                    "name": "S\u00fcre"
+                },
+                "topic": {
+                    "description": "Dinlenecek konu.",
+                    "name": "Konu"
+                }
+            },
+            "name": "D\u0131\u015fa aktar"
+        },
+        "publish": {
+            "description": "Bir MQTT konusuna mesaj yay\u0131nlar.",
+            "fields": {
+                "evaluate_payload": {
+                    "description": "`payload` bir Python bayt sabiti oldu\u011funda, bayt sabitini de\u011ferlendir ve ham veriyi yay\u0131nla.",
+                    "name": "Y\u00fck\u00fc de\u011ferlendirin"
+                },
+                "payload": {
+                    "description": "Yay\u0131nlanacak y\u00fck.",
+                    "name": "Y\u00fck"
+                },
+                "payload_template": {
+                    "description": "Y\u00fck de\u011feri olarak i\u015flenecek \u015fablon. Bir y\u00fck sa\u011flan\u0131rsa, \u015fablon yoksay\u0131l\u0131r.",
+                    "name": "Y\u00fck \u015fablonu"
+                },
+                "qos": {
+                    "description": "Kullan\u0131lacak Hizmetin Kalitesi. 0: En fazla bir kez. 1: En az bir kez. 2: Tam olarak bir kez.",
+                    "name": "QoS"
+                },
+                "retain": {
+                    "description": "Mesaj\u0131n tutma bayra\u011f\u0131 ayarlanm\u0131\u015f olmas\u0131 gerekiyorsa. Ayarlan\u0131rsa, arac\u0131 bir konudaki en son iletiyi depolar.",
+                    "name": "S\u00fcrd\u00fcrmek"
+                },
+                "topic": {
+                    "description": "Yay\u0131nlanacak konu.",
+                    "name": "Konu"
+                }
+            },
+            "name": "Yay\u0131nla"
+        },
+        "reload": {
+            "description": "YAML yap\u0131land\u0131rmas\u0131ndan MQTT varl\u0131klar\u0131n\u0131 yeniden y\u00fckler.",
+            "name": "Tekrar y\u00fckle"
+        }
+    }
+}

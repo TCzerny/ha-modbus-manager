@@ -1,0 +1,66 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u30b5\u30fc\u30d3\u30b9\u306f\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u3059",
+            "reauth_successful": "\u518d\u8a8d\u8a3c\u306b\u6210\u529f\u3057\u307e\u3057\u305f"
+        },
+        "error": {
+            "cannot_connect": "\u63a5\u7d9a\u306b\u5931\u6557\u3057\u307e\u3057\u305f",
+            "invalid_auth": "\u7121\u52b9\u306a\u8a8d\u8a3c"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "api_key": "API\u30ad\u30fc"
+                },
+                "description": "Tailscale API \u30a2\u30af\u30bb\u30b9 \u30c8\u30fc\u30af\u30f3\u306e\u6709\u52b9\u671f\u9593\u306f 90 \u65e5\u9593\u3067\u3059\u3002 {authkeys_url}\u3067\u65b0\u3057\u3044 Tailscale API \u30a2\u30af\u30bb\u30b9 \u30c8\u30fc\u30af\u30f3\u3092\u4f5c\u6210\u3067\u304d\u307e\u3059\u3002"
+            },
+            "user": {
+                "data": {
+                    "api_key": "API\u30ad\u30fc",
+                    "tailnet": "Tailnet"
+                },
+                "description": "\u3053\u306e\u7d71\u5408\u306f Tailscale \u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u3092\u76e3\u8996\u3057\u307e\u3059\u304c\u3001Home Assistant \u3092 Tailscale VPN \u7d4c\u7531\u3067\u30a2\u30af\u30bb\u30b9\u53ef\u80fd\u306b\u3059\u308b\u308f\u3051\u3067\u306f\u3042\u308a\u307e\u305b\u3093\u3002Tailscale \u3067\u8a8d\u8a3c\u3059\u308b\u306b\u306f\u3001 \n\n{authkeys_url}\u3067 API \u30a2\u30af\u30bb\u30b9 \u30c8\u30fc\u30af\u30f3\u3092\u4f5c\u6210\u3059\u308b\u5fc5\u8981\u304c\u3042\u308a\u307e\u3059\u3002Tailnet \u306f Tailscale \u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u306e\u540d\u524d\u3067\u3059\u3002\n\nTailscale \u7ba1\u7406\u30d1\u30cd\u30eb\u306e\u5de6\u4e0a\u9685 (Tailscale \u30ed\u30b4\u306e\u6a2a) \u306b\u3042\u308a\u307e\u3059\u3002"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "client": {
+                "name": "\u30af\u30e9\u30a4\u30a2\u30f3\u30c8"
+            },
+            "client_supports_hair_pinning": {
+                "name": "\u30d8\u30a2\u30d4\u30cb\u30f3\u30b0\u3092\u30b5\u30dd\u30fc\u30c8"
+            },
+            "client_supports_ipv6": {
+                "name": "IPv6\u3092\u30b5\u30dd\u30fc\u30c8"
+            },
+            "client_supports_pcp": {
+                "name": "PCP\u3092\u30b5\u30dd\u30fc\u30c8"
+            },
+            "client_supports_pmp": {
+                "name": "NAT-PMP\u3092\u30b5\u30dd\u30fc\u30c8"
+            },
+            "client_supports_udp": {
+                "name": "UDP\u3092\u30b5\u30dd\u30fc\u30c8"
+            },
+            "client_supports_upnp": {
+                "name": "UPnP\u3092\u30b5\u30dd\u30fc\u30c8"
+            },
+            "key_expiry_disabled": {
+                "name": "\u30ad\u30fc\u306e\u6709\u52b9\u671f\u9650\u306a\u3057"
+            }
+        },
+        "sensor": {
+            "expires": {
+                "name": "\u6709\u52b9\u671f\u9650\u304c\u5207\u308c\u307e\u3059"
+            },
+            "ip": {
+                "name": "IP\u30a2\u30c9\u30ec\u30b9"
+            },
+            "last_seen": {
+                "name": "\u6700\u5f8c\u306b\u898b\u305f"
+            }
+        }
+    }
+}

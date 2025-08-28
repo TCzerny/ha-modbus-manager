@@ -1,0 +1,54 @@
+{
+    "config": {
+        "abort": {
+            "already_in_progress": "Configuration flow is already in progress",
+            "reconfigure_successful": "Re-configuration was successful",
+            "single_instance_allowed": "Already configured. Only a single configuration possible."
+        },
+        "error": {
+            "cannot_connect": "Failed to connect"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Host name or IP address of a HEOS-capable product (preferrably one connected via wire to the network)."
+                },
+                "description": "Change the host name or IP address of the HEOS-capable product used to access your HEOS System.",
+                "title": "Reconfigure HEOS"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Host name or IP address of a HEOS-capable product (preferrably one connected via wire to the network)."
+                },
+                "description": "Please enter the host name or IP address of a HEOS-capable product to access your HEOS System.",
+                "title": "Connect to HEOS"
+            }
+        }
+    },
+    "services": {
+        "sign_in": {
+            "description": "Signs in to a HEOS account.",
+            "fields": {
+                "password": {
+                    "description": "The password of the HEOS account.",
+                    "name": "Password"
+                },
+                "username": {
+                    "description": "The username or email of the HEOS account.",
+                    "name": "Username"
+                }
+            },
+            "name": "Sign in"
+        },
+        "sign_out": {
+            "description": "Signs out of the HEOS account.",
+            "name": "Sign out"
+        }
+    }
+}

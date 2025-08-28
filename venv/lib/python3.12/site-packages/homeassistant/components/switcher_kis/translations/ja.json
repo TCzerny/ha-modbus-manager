@@ -1,0 +1,90 @@
+{
+    "config": {
+        "abort": {
+            "no_devices_found": "\u30cd\u30c3\u30c8\u30ef\u30fc\u30af\u4e0a\u306b\u30c7\u30d0\u30a4\u30b9\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093",
+            "reauth_successful": "\u518d\u8a8d\u8a3c\u306b\u6210\u529f\u3057\u307e\u3057\u305f",
+            "single_instance_allowed": "\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u3059\u3002\u8a2d\u5b9a\u3067\u304d\u308b\u306e\u306f1\u3064\u3060\u3051\u3067\u3059\u3002"
+        },
+        "error": {
+            "invalid_auth": "\u7121\u52b9\u306a\u8a8d\u8a3c"
+        },
+        "step": {
+            "confirm": {
+                "description": "\u30bb\u30c3\u30c8\u30a2\u30c3\u30d7\u3092\u958b\u59cb\u3057\u307e\u3059\u304b\uff1f"
+            },
+            "credentials": {
+                "data": {
+                    "token": "\u30a2\u30af\u30bb\u30b9\u30c8\u30fc\u30af\u30f3",
+                    "username": "\u30e6\u30fc\u30b6\u30fc\u540d"
+                },
+                "description": "\u30c8\u30fc\u30af\u30f3\u3092\u5fc5\u8981\u3068\u3059\u308b\u30b9\u30a4\u30c3\u30c1\u30e3\u30fc\u30c7\u30d0\u30a4\u30b9\u304c\u898b\u3064\u304b\u308a\u307e\u3057\u305f\u3002\u30e6\u30fc\u30b6\u30fc\u540d\u3068\u30c8\u30fc\u30af\u30f3\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u8a73\u7d30\u306b\u3064\u3044\u3066\u306f\u3001https://www.home-assistant.io/integrations/switcher_kis/#prerequisites \u3092\u53c2\u7167\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "token": "\u30a2\u30af\u30bb\u30b9\u30c8\u30fc\u30af\u30f3",
+                    "username": "\u30e6\u30fc\u30b6\u30fc\u540d"
+                },
+                "description": "\u30c8\u30fc\u30af\u30f3\u3092\u5fc5\u8981\u3068\u3059\u308b\u30b9\u30a4\u30c3\u30c1\u30e3\u30fc\u30c7\u30d0\u30a4\u30b9\u304c\u898b\u3064\u304b\u308a\u307e\u3057\u305f\u3002\u30e6\u30fc\u30b6\u30fc\u540d\u3068\u30c8\u30fc\u30af\u30f3\u3092\u5165\u529b\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u8a73\u7d30\u306b\u3064\u3044\u3066\u306f\u3001https://www.home-assistant.io/integrations/switcher_kis/#prerequisites \u3092\u53c2\u7167\u3057\u3066\u304f\u3060\u3055\u3044\u3002"
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "assume_off": {
+                "name": "\u4eee\u5b9a\u30aa\u30d5"
+            },
+            "assume_on": {
+                "name": "\u4eee\u5b9a\u30aa\u30f3"
+            },
+            "vertical_swing_off": {
+                "name": "\u5782\u76f4\u30b9\u30a4\u30f3\u30b0\u30aa\u30d5"
+            },
+            "vertical_swing_on": {
+                "name": "\u5782\u76f4\u30b9\u30a4\u30f3\u30b0\u30aa\u30f3"
+            }
+        },
+        "cover": {
+            "cover": {
+                "name": "\u30ab\u30d0\u30fc{cover_id}"
+            }
+        },
+        "light": {
+            "light": {
+                "name": "\u30e9\u30a4\u30c8{light_id}"
+            }
+        },
+        "sensor": {
+            "auto_shutdown": {
+                "name": "\u81ea\u52d5\u30b7\u30e3\u30c3\u30c8\u30c0\u30a6\u30f3"
+            },
+            "remaining_time": {
+                "name": "\u6b8b\u308a\u6642\u9593"
+            },
+            "temperature": {
+                "name": "\u73fe\u5728\u306e\u6e29\u5ea6"
+            }
+        }
+    },
+    "services": {
+        "set_auto_off": {
+            "description": "\u30b9\u30a4\u30c3\u30c1\u30e3\u30fc\u30c7\u30d0\u30a4\u30b9\u306e\u30aa\u30fc\u30c8\u30aa\u30d5\u8a2d\u5b9a\u3092\u66f4\u65b0\u3002",
+            "fields": {
+                "auto_off": {
+                    "description": "\u6642\u9593\u3068\u5206\u3092\u542b\u3080\u671f\u9593\u6587\u5b57\u5217\u3002",
+                    "name": "\u30aa\u30fc\u30c8\u30aa\u30d5"
+                }
+            },
+            "name": "\u30aa\u30fc\u30c8\u30aa\u30d5\u8a2d\u5b9a"
+        },
+        "turn_on_with_timer": {
+            "description": "\u30b9\u30a4\u30c3\u30c1\u30e3\u30fc\u30c7\u30d0\u30a4\u30b9\u3092\u30bf\u30a4\u30de\u30fc\u3067\u30aa\u30f3\u306b\u3057\u307e\u3059\u3002",
+            "fields": {
+                "timer_minutes": {
+                    "description": "\u30aa\u30f3\u306b\u3059\u308b\u6642\u9593\u3067\u3059\u3002",
+                    "name": "\u30bf\u30a4\u30de\u30fc"
+                }
+            },
+            "name": "\u30bf\u30a4\u30de\u30fc\u3067\u30aa\u30f3\u306b\u3059\u308b"
+        }
+    }
+}

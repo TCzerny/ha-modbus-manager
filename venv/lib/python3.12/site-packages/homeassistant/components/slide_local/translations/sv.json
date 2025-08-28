@@ -1,0 +1,80 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "discovery_connection_failed": "Installationen av den uppt\u00e4ckta enheten misslyckades med f\u00f6ljande fel: {error}. F\u00f6rs\u00f6k att konfigurera den manuellt.",
+            "reconfigure_successful": "Omkonfigurationen lyckades",
+            "unique_id_mismatch": "MAC-adressen f\u00f6r enheten ({mac}) st\u00e4mmer inte \u00f6verens med den tidigare MAC-adressen."
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r din lokala Slide",
+                    "password": "Enhetskoden f\u00f6r din Slide (inuti Slide eller i l\u00e5dan, l\u00e4ngd 8 tecken). Om din Slide k\u00f6r firmwareversion 2 \u00e4r detta valfritt, eftersom det inte anv\u00e4nds av det lokala API:et."
+                },
+                "description": "Konfigurera om informationen f\u00f6r din Slide-enhet"
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r din lokala Slide",
+                    "password": "Enhetskoden f\u00f6r din Slide (inuti Slide eller i l\u00e5dan, l\u00e4ngd 8 tecken). Om din Slide k\u00f6r firmwareversion 2 \u00e4r detta valfritt, eftersom det inte anv\u00e4nds av det lokala API:et."
+                },
+                "description": "Ange information f\u00f6r att ansluta till Slide-enheten"
+            },
+            "zeroconf_confirm": {
+                "description": "Vill du konfigurera {host}?",
+                "title": "Bekr\u00e4fta inst\u00e4llningen f\u00f6r Slide"
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "calibrate": {
+                "name": "Kalibrera"
+            }
+        },
+        "switch": {
+            "touchgo": {
+                "name": "TouchGo"
+            }
+        }
+    },
+    "exceptions": {
+        "calibration_error": {
+            "message": "Fel vid s\u00e4ndning av kalibreringsbeg\u00e4ran till enheten."
+        },
+        "touchgo_error": {
+            "message": "Fel n\u00e4r beg\u00e4ran om att st\u00e4lla in Touch&Go till {state} skickades till enheten."
+        },
+        "update_error": {
+            "message": "Fel vid uppdatering av data fr\u00e5n API:et."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "invert_position": "Invertera position"
+                },
+                "data_description": {
+                    "invert_position": "Inverterar positionen f\u00f6r ditt Slide-skydd."
+                },
+                "description": "Konfigurera om Slide-enheten",
+                "title": "Konfigurera Slide"
+            }
+        }
+    }
+}

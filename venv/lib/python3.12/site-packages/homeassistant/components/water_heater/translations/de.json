@@ -1,0 +1,102 @@
+{
+    "device_automation": {
+        "action_type": {
+            "turn_off": "Schalte {entity_name} aus",
+            "turn_on": "Schalte {entity_name} ein"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Warmwasserbereiter",
+            "state": {
+                "eco": "Eco",
+                "electric": "Elektrisch",
+                "gas": "Gas",
+                "heat_pump": "W\u00e4rmepumpe",
+                "high_demand": "Hoher Bedarf",
+                "off": "Aus",
+                "performance": "Leistung"
+            },
+            "state_attributes": {
+                "away_mode": {
+                    "name": "Abwesendmodus",
+                    "state": {
+                        "off": "Aus",
+                        "on": "Ein"
+                    }
+                },
+                "current_operation": {
+                    "name": "Aktueller Betrieb"
+                },
+                "current_temperature": {
+                    "name": "Ist-Temperatur"
+                },
+                "max_temp": {
+                    "name": "Maximale Soll-Temperatur"
+                },
+                "min_temp": {
+                    "name": "Minimale Soll-Temperatur"
+                },
+                "target_temp_high": {
+                    "name": "Obere Soll-Temperatur"
+                },
+                "target_temp_low": {
+                    "name": "Untere Soll-Temperatur"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "not_valid_operation_mode": {
+            "message": "Die Betriebsart {operation_mode} ist f\u00fcr {entity_id} ung\u00fcltig. G\u00fcltige Betriebsarten sind: {operation_list}."
+        },
+        "operation_list_not_defined": {
+            "message": "Die Betriebsart {operation_mode} ist f\u00fcr {entity_id} ung\u00fcltig. Die Liste der Betriebsarten ist nicht definiert."
+        }
+    },
+    "services": {
+        "set_away_mode": {
+            "description": "Schaltet den Abwesendmodus ein/aus.",
+            "fields": {
+                "away_mode": {
+                    "description": "Neuer Wert des Abwesendmodus.",
+                    "name": "Abwesendmodus"
+                }
+            },
+            "name": "Abwesendmodus einstellen"
+        },
+        "set_operation_mode": {
+            "description": "Stellt die Betriebsart ein.",
+            "fields": {
+                "operation_mode": {
+                    "description": "Neuer Wert f\u00fcr die Betriebsart. Eine Liste der m\u00f6glichen Werte findest du in der Dokumentation der Integration.",
+                    "name": "Betriebsart"
+                }
+            },
+            "name": "Betriebsart einstellen"
+        },
+        "set_temperature": {
+            "description": "Legt die Soll-Temperatur fest.",
+            "fields": {
+                "operation_mode": {
+                    "description": "Neuer Wert f\u00fcr die Betriebsart. Eine Liste der m\u00f6glichen Werte findest du in der Dokumentation der Integration.",
+                    "name": "Betriebsart"
+                },
+                "temperature": {
+                    "description": "Neue Soll-Temperatur f\u00fcr den Warmwasserbereiter.",
+                    "name": "Temperatur"
+                }
+            },
+            "name": "Temperatur einstellen"
+        },
+        "turn_off": {
+            "description": "Schaltet den Warmwasserbereiter aus.",
+            "name": "Ausschalten"
+        },
+        "turn_on": {
+            "description": "Schaltet den Warmwasserbereiter ein.",
+            "name": "Einschalten"
+        }
+    },
+    "title": "Warmwasserbereiter"
+}

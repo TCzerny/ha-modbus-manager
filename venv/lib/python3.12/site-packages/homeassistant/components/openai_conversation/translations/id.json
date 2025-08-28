@@ -1,0 +1,68 @@
+{
+    "config": {
+        "error": {
+            "cannot_connect": "Gagal terhubung",
+            "invalid_auth": "Autentikasi tidak valid",
+            "unknown": "Kesalahan tak terduga"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "Kunci API"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_config_entry": {
+            "message": "Entri konfigurasi yang diberikan tidak valid. {config_entry} didapatkan"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "chat_model": "Model",
+                    "llm_hass_api": "Kendalikan Home Assistant",
+                    "max_tokens": "Jumlah token maksimum untuk dikembalikan sebagai respons",
+                    "prompt": "Petunjuk",
+                    "recommended": "Pengaturan model yang disarankan",
+                    "temperature": "Suhu",
+                    "top_p": "P Teratas"
+                },
+                "data_description": {
+                    "prompt": "Menginstruksikan cara LLM harus merespons. Ini dapat berupa sebuah templat."
+                }
+            }
+        }
+    },
+    "services": {
+        "generate_image": {
+            "description": "Ubah prompt menjadi gambar",
+            "fields": {
+                "config_entry": {
+                    "description": "Entri konfigurasi yang akan digunakan untuk aksi ini",
+                    "name": "Entri Konfigurasi"
+                },
+                "prompt": {
+                    "description": "Teks untuk diubah ke gambar",
+                    "example": "Foto anjing",
+                    "name": "Perintah"
+                },
+                "quality": {
+                    "description": "Kualitas gambar yang akan dihasilkan",
+                    "name": "Kualitas"
+                },
+                "size": {
+                    "description": "Ukuran gambar yang akan dihasilkan",
+                    "name": "Ukuran"
+                },
+                "style": {
+                    "description": "Gaya gambar yang dihasilkan",
+                    "name": "Gaya"
+                }
+            },
+            "name": "Hasilkan gambar"
+        }
+    }
+}

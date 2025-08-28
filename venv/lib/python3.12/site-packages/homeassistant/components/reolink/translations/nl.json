@@ -1,0 +1,798 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparaat is al geconfigureerd",
+            "reauth_successful": "Herauthenticatie geslaagd",
+            "reconfigure_successful": "Herconfiguratie was succesvol"
+        },
+        "error": {
+            "api_error": "API-fout opgetreden",
+            "cannot_connect": "Verbinding mislukt, controleer het IP-adres van de camera",
+            "invalid_auth": "Ongeldige authenticatie",
+            "not_admin": "Gebruiker moet administrator rechten hebben, gebruiker \"{username}\" heeft autorisatieniveau \"{userlevel}\"",
+            "password_incompatible": "Wachtwoord bevat een niet ondersteund speciaal teken, alleen deze tekens zijn toegestaan: az, AZ, 0-9 of {special_chars}",
+            "unknown": "Onverwachte fout",
+            "update_needed": "Kan niet inloggen vanwege verouderde firmware, update de firmware naar versie {needed_firmware} via het Reolink Download Center: {download_center_url}. Op dit moment is versie {current_firmware} ge\u00efnstalleerd",
+            "webhook_exception": "Home Assistant URL is niet beschikbaar, ga naar Instellingen > Systeem > Netwerk > Home Assistant URL en corrigeer de URL's, zie {more_info}"
+        },
+        "flow_title": "{hostname} ({ip_address})",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "password": "Wachtwoord",
+                    "port": "Poort",
+                    "use_https": "HTTPS inschakelen",
+                    "username": "Gebruikersnaam"
+                },
+                "data_description": {
+                    "host": "De hostnaam of het IP adres van jou Reolink apparaat. Bijvoorbeeld: '192.168.1.25'.",
+                    "password": "Wachtwoord om in the loggen op het Reolink apparaat zelf. Niet het Reolink cloudaccount.",
+                    "port": "De poort om verbinding te maken met het Reolink-apparaat. Normaal gesproken voor HTTP: '80', en voor HTTPS: '443'.",
+                    "use_https": "Gebruik een HTTPS (SSL) verbinding met het Reolink apparaat.",
+                    "username": "Gebruikersnaam om in te loggen op het Reolink-apparaat zelf. Niet het Reolink cloudaccount."
+                },
+                "description": "Zie de [probleem oplossingen]({troubleshooting_link}) als je problemen ondervindt. {error}"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "animal": {
+                "name": "Dier",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "animal_lens_0": {
+                "name": "Dier lens 0",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "animal_lens_1": {
+                "name": "Dier lens 1",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "face": {
+                "name": "Gezicht",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "face_lens_0": {
+                "name": "Gezicht lens 0",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "face_lens_1": {
+                "name": "Gezicht lens 1",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "motion_lens_0": {
+                "name": "Beweging lens 0",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "motion_lens_1": {
+                "name": "Beweging lens 1",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "package": {
+                "name": "Pakket",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "package_lens_0": {
+                "name": "Pakket lens 0",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "package_lens_1": {
+                "name": "Pakket lens 1",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "person": {
+                "name": "Persoon",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "person_lens_0": {
+                "name": "Persoon lens 0",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "person_lens_1": {
+                "name": "Persoon lens 1",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "pet": {
+                "name": "Huisdier",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "pet_lens_0": {
+                "name": "Huisdier lens 0",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "pet_lens_1": {
+                "name": "Huisdier lens 1",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "sleep": {
+                "name": "Slaapstatus",
+                "state": {
+                    "off": "Wakker",
+                    "on": "Slapen"
+                }
+            },
+            "vehicle": {
+                "name": "Voertuig",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "vehicle_lens_0": {
+                "name": "Voertuig lens 0",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "vehicle_lens_1": {
+                "name": "Voertuig lens 1",
+                "state": {
+                    "off": "Niet gedetecteerd",
+                    "on": "Gedetecteerd"
+                }
+            },
+            "visitor": {
+                "name": "Bezoeker"
+            },
+            "visitor_lens_0": {
+                "name": "Bezoeker lens 0"
+            },
+            "visitor_lens_1": {
+                "name": "Bezoeker lens 1"
+            }
+        },
+        "button": {
+            "guard_go_to": {
+                "name": "Bewaak punt ga naar"
+            },
+            "guard_set": {
+                "name": "Bewaak punt zet huidige positie"
+            },
+            "ptz_calibrate": {
+                "name": "PTZ kalibreren"
+            },
+            "ptz_down": {
+                "name": "PTZ omlaag"
+            },
+            "ptz_left": {
+                "name": "PTZ links"
+            },
+            "ptz_right": {
+                "name": "PTZ rechts"
+            },
+            "ptz_stop": {
+                "name": "PTZ stop"
+            },
+            "ptz_up": {
+                "name": "PTZ omhoog"
+            },
+            "ptz_zoom_in": {
+                "name": "PTZ inzoomen"
+            },
+            "ptz_zoom_out": {
+                "name": "PTZ uitzoomen"
+            }
+        },
+        "camera": {
+            "autotrack_snapshots_main": {
+                "name": "Autovolg foto's duidelijk"
+            },
+            "autotrack_snapshots_sub": {
+                "name": "Autovolg foto's vloeiend"
+            },
+            "autotrack_sub": {
+                "name": "Autovolg vloeiend"
+            },
+            "ext": {
+                "name": "Gebalanceerd"
+            },
+            "ext_lens_0": {
+                "name": "Gebalanceerd lens 0"
+            },
+            "ext_lens_1": {
+                "name": "Gebalanceerd lens 1"
+            },
+            "main": {
+                "name": "Duidelijk"
+            },
+            "main_lens_0": {
+                "name": "Duidelijk lens 0"
+            },
+            "main_lens_1": {
+                "name": "Duidelijk lens 1"
+            },
+            "snapshots_main": {
+                "name": "Foto's duidelijk"
+            },
+            "snapshots_main_lens_0": {
+                "name": "Foto's duidelijk lens 0"
+            },
+            "snapshots_main_lens_1": {
+                "name": "Foto's duidelijk lens 1"
+            },
+            "snapshots_sub": {
+                "name": "Foto's vloeiend"
+            },
+            "snapshots_sub_lens_0": {
+                "name": "Foto's vloeiend lens 0"
+            },
+            "snapshots_sub_lens_1": {
+                "name": "Foto's vloeiend lens 1"
+            },
+            "sub": {
+                "name": "Vloeiend"
+            },
+            "sub_lens_0": {
+                "name": "Vloeiend lens 0"
+            },
+            "sub_lens_1": {
+                "name": "Vloeiend lens 1"
+            }
+        },
+        "light": {
+            "floodlight": {
+                "name": "Schijnwerper"
+            },
+            "status_led": {
+                "name": "Status LED"
+            }
+        },
+        "number": {
+            "ai_animal_delay": {
+                "name": "AI dier vertraging"
+            },
+            "ai_animal_sensitivity": {
+                "name": "AI huisdier gevoeligheid"
+            },
+            "ai_face_delay": {
+                "name": "AI gezicht vertraging"
+            },
+            "ai_face_sensitivity": {
+                "name": "AI gezicht gevoeligheid"
+            },
+            "ai_package_delay": {
+                "name": "AI pakket vertraging"
+            },
+            "ai_package_sensitivity": {
+                "name": "AI pakket gevoeligheid"
+            },
+            "ai_person_delay": {
+                "name": "AI persoon vertraging"
+            },
+            "ai_person_sensitivity": {
+                "name": "AI persoon gevoeligheid"
+            },
+            "ai_pet_delay": {
+                "name": "AI huisdier vertraging"
+            },
+            "ai_pet_sensitivity": {
+                "name": "AI huisdier gevoeligheid"
+            },
+            "ai_vehicle_delay": {
+                "name": "AI voertuig vertraging"
+            },
+            "ai_vehicle_sensitivity": {
+                "name": "AI voertuig gevoeligheid"
+            },
+            "alarm_volume": {
+                "name": "Alarmvolume"
+            },
+            "auto_quick_reply_time": {
+                "name": "Automatisch antwoordtijd"
+            },
+            "auto_track_disappear_time": {
+                "name": "Automatisch volgen verdwijn tijd"
+            },
+            "auto_track_limit_left": {
+                "name": "Automatisch volgen linker limiet"
+            },
+            "auto_track_limit_right": {
+                "name": "Automatisch volgen rechter limiet"
+            },
+            "auto_track_stop_time": {
+                "name": "Automatisch volgen stoptijd"
+            },
+            "day_night_switch_threshold": {
+                "name": "Dag-nacht schakeldrempel"
+            },
+            "floodlight_brightness": {
+                "name": "Schijnwerper helderheid bij aanzetten"
+            },
+            "focus": {
+                "name": "Focus"
+            },
+            "guard_return_time": {
+                "name": "Bewaak punt terugkeertijd"
+            },
+            "image_brightness": {
+                "name": "Beeldhelderheid"
+            },
+            "image_contrast": {
+                "name": "Beeldcontrast"
+            },
+            "image_hue": {
+                "name": "Beeldtint"
+            },
+            "image_saturation": {
+                "name": "Beeldverzadiging"
+            },
+            "image_sharpness": {
+                "name": "Beeldscherpte"
+            },
+            "message_volume": {
+                "name": "Berichtvolume"
+            },
+            "motion_sensitivity": {
+                "name": "Beweging gevoeligheid"
+            },
+            "pir_sensitivity": {
+                "name": "PIR gevoeligheid"
+            },
+            "volume": {
+                "name": "Volume"
+            },
+            "zoom": {
+                "name": "Zoom"
+            }
+        },
+        "select": {
+            "auto_quick_reply_message": {
+                "name": "Automatisch antwoordbericht",
+                "state": {
+                    "off": "Uit"
+                }
+            },
+            "auto_track_method": {
+                "name": "Automatische volgmethode",
+                "state": {
+                    "digital": "Digitaal",
+                    "digitalfirst": "Digitaal eerst",
+                    "pantiltfirst": "Draaien/kantelen eerst"
+                }
+            },
+            "binning_mode": {
+                "name": "Binning-modus",
+                "state": {
+                    "auto": "Automatisch",
+                    "off": "Uit",
+                    "on": "Aan"
+                }
+            },
+            "day_night_mode": {
+                "name": "Dag nacht modus",
+                "state": {
+                    "auto": "Automatisch",
+                    "color": "Kleur"
+                }
+            },
+            "doorbell_led": {
+                "name": "Deurbel LED",
+                "state": {
+                    "always": "Altijd aan",
+                    "alwayson": "Altijd aan",
+                    "alwaysonatnight": "Automatisch & 's nachts altijd aan",
+                    "auto": "Automatisch",
+                    "stayoff": "Blijf uit"
+                }
+            },
+            "floodlight_mode": {
+                "name": "Schijnwerper modus",
+                "state": {
+                    "adaptive": "Adaptief",
+                    "autoadaptive": "Automatisch en adaptief",
+                    "off": "Uit",
+                    "onatnight": "'s Nachts ingeschakeld",
+                    "schedule": "Schema"
+                }
+            },
+            "hdr": {
+                "name": "HDR",
+                "state": {
+                    "auto": "Automatisch",
+                    "off": "Uit",
+                    "on": "Aan"
+                }
+            },
+            "hub_alarm_ringtone": {
+                "state": {
+                    "alarm": "Alarm",
+                    "attraction": "Attraction",
+                    "citybird": "City bird",
+                    "goodday": "Good day",
+                    "hophop": "Hop hop",
+                    "loop": "Loop",
+                    "moonlight": "Moonlight",
+                    "operetta": "Operetta",
+                    "originaltune": "Originele melodie",
+                    "pianokey": "Piano key",
+                    "waybackhome": "Way back home"
+                }
+            },
+            "hub_visitor_ringtone": {
+                "name": "Hub-bezoekersbeltoon",
+                "state": {
+                    "alarm": "Alarm",
+                    "attraction": "Attraction",
+                    "citybird": "City bird",
+                    "goodday": "Good day",
+                    "hophop": "Hop hop",
+                    "loop": "Loop",
+                    "moonlight": "Moonlight",
+                    "operetta": "Operetta",
+                    "originaltune": "Originele melodie",
+                    "pianokey": "Piano key",
+                    "waybackhome": "Way back home"
+                }
+            },
+            "main_bit_rate": {
+                "name": "Duidelijke bitrate"
+            },
+            "main_frame_rate": {
+                "name": "Duidelijke framerate"
+            },
+            "motion_tone": {
+                "name": "Beltoon bij beweging",
+                "state": {
+                    "attraction": "Attraction",
+                    "citybird": "City bird",
+                    "goodday": "Good day",
+                    "hophop": "Hop hop",
+                    "loop": "Loop",
+                    "moonlight": "Moonlight",
+                    "off": "Uit",
+                    "operetta": "Operetta",
+                    "originaltune": "Originele melodie",
+                    "pianokey": "Piano key",
+                    "waybackhome": "Way back home"
+                }
+            },
+            "package_tone": {
+                "state": {
+                    "attraction": "Attraction",
+                    "citybird": "City bird",
+                    "goodday": "Good day",
+                    "hophop": "Hop hop",
+                    "loop": "Loop",
+                    "moonlight": "Moonlight",
+                    "off": "Uit",
+                    "operetta": "Operetta",
+                    "originaltune": "Originele melodie",
+                    "pianokey": "Piano key",
+                    "waybackhome": "Way back home"
+                }
+            },
+            "people_tone": {
+                "name": "Beltoon bij persoon",
+                "state": {
+                    "attraction": "Attraction",
+                    "citybird": "City bird",
+                    "goodday": "Good day",
+                    "hophop": "Hop hop",
+                    "loop": "Loop",
+                    "moonlight": "Moonlight",
+                    "off": "Uit",
+                    "operetta": "Operetta",
+                    "originaltune": "Originele melodie",
+                    "pianokey": "Piano key",
+                    "waybackhome": "Way back home"
+                }
+            },
+            "play_quick_reply_message": {
+                "name": "Snel antwoordbericht afspelen"
+            },
+            "ptz_preset": {
+                "name": "PTZ favorieten"
+            },
+            "sub_bit_rate": {
+                "name": "Vloeiende bitrate"
+            },
+            "sub_frame_rate": {
+                "name": "Vloeiende framerate"
+            },
+            "vehicle_tone": {
+                "name": "Beltoon bij voertuig",
+                "state": {
+                    "attraction": "Attraction",
+                    "citybird": "City bird",
+                    "goodday": "Good day",
+                    "hophop": "Hop hop",
+                    "loop": "Loop",
+                    "moonlight": "Moonlight",
+                    "off": "Uit",
+                    "operetta": "Operetta",
+                    "originaltune": "Originele melodie",
+                    "pianokey": "Piano key",
+                    "waybackhome": "Way back home"
+                }
+            },
+            "visitor_tone": {
+                "name": "Beltoon bij bezoeker",
+                "state": {
+                    "attraction": "Attraction",
+                    "citybird": "City bird",
+                    "goodday": "Good day",
+                    "hophop": "Hop hop",
+                    "loop": "Loop",
+                    "moonlight": "Moonlight",
+                    "off": "Uit",
+                    "operetta": "Operetta",
+                    "originaltune": "Originele melodie",
+                    "pianokey": "Piano key",
+                    "waybackhome": "Way back home"
+                }
+            }
+        },
+        "sensor": {
+            "battery_state": {
+                "name": "Batterijstatus",
+                "state": {
+                    "chargecomplete": "Opladen voltooid",
+                    "charging": "Opladen",
+                    "discharging": "Ontladen"
+                }
+            },
+            "battery_temperature": {
+                "name": "Batterijtemperatuur"
+            },
+            "cpu_usage": {
+                "name": "CPU gebruik"
+            },
+            "hdd_storage": {
+                "name": "HDD {hdd_index} opslag"
+            },
+            "ptz_pan_position": {
+                "name": "PTZ draai positie"
+            },
+            "ptz_tilt_position": {
+                "name": "PTZ-kantelpositie"
+            },
+            "sd_storage": {
+                "name": "SD {hdd_index} opslag"
+            },
+            "wifi_signal": {
+                "name": "Wi-Fi signaal"
+            }
+        },
+        "siren": {
+            "siren": {
+                "name": "Sirene"
+            }
+        },
+        "switch": {
+            "auto_focus": {
+                "name": "Automatisch focussen"
+            },
+            "auto_tracking": {
+                "name": "Automatisch volgen"
+            },
+            "doorbell_button_sound": {
+                "name": "Deurbel knop geluid"
+            },
+            "email": {
+                "name": "E-mail bij gebeurtenis"
+            },
+            "ftp_upload": {
+                "name": "FTP uploaden"
+            },
+            "hdr": {
+                "name": "HDR"
+            },
+            "hub_ringtone_on_event": {
+                "name": "Hub-beltoon bij gebeurtenis"
+            },
+            "ir_lights": {
+                "name": "Infraroodverlichting in nachtmodus"
+            },
+            "led": {
+                "name": "LED"
+            },
+            "manual_record": {
+                "name": "Handmatig opnemen"
+            },
+            "pir_enabled": {
+                "name": "PIR ingeschakeld"
+            },
+            "pir_reduce_alarm": {
+                "name": "PIR verminder vals alarm"
+            },
+            "ptz_patrol": {
+                "name": "PTZ-patrouille"
+            },
+            "push_notifications": {
+                "name": "Pushmeldingen"
+            },
+            "record": {
+                "name": "Opnemen"
+            },
+            "record_audio": {
+                "name": "Geluid opnemen"
+            },
+            "siren_on_event": {
+                "name": "Sirene bij gebeurtenis"
+            }
+        }
+    },
+    "exceptions": {
+        "api_error": {
+            "message": "Het apparaat reageerde met een foutmelding: {err}"
+        },
+        "config_entry_not_ready": {
+            "message": "Fout bij het instellen van {host}: {err}"
+        },
+        "connection_error": {
+            "message": "Kon geen verbinding maken met het apparaat: {err}"
+        },
+        "firmware_install_error": {
+            "message": "Fout bij het updaten van de Reolink-firmware: {err}"
+        },
+        "invalid_content_type": {
+            "message": "Een ander content type ontvangen dan verwacht: {err}"
+        },
+        "invalid_credentials": {
+            "message": "Ongeldige inloggegevens: {err}"
+        },
+        "invalid_parameter": {
+            "message": "Ongeldige invoerparameter: {err}"
+        },
+        "login_error": {
+            "message": "Fout tijdens inlogpoging: {err}"
+        },
+        "no_data": {
+            "message": "Apparaat heeft geen gegevens geretourneerd: {err}"
+        },
+        "not_supported": {
+            "message": "Functie wordt niet ondersteund door dit apparaat: {err}"
+        },
+        "service_entry_ex": {
+            "message": "Reolink {service_name} fout: configuratie-item niet gevonden of niet geladen"
+        },
+        "service_not_chime": {
+            "message": "Reolink play_chime-fout: {device_name} is geen gong"
+        },
+        "subscription_error": {
+            "message": "Fout tijdens ONVIF-subscription: {err}"
+        },
+        "timeout": {
+            "message": "Time-out bij wachten op een reactie: {err}"
+        },
+        "unexpected_data": {
+            "message": "Apparaat retourneerde onverwachte gegevens: {err}"
+        }
+    },
+    "issues": {
+        "enable_port": {
+            "description": "Het is niet gelukt om automatisch {ports}poort(en) in te schakelen op {name}. Gebruik de [Reolink-client]({info_link}) om deze handmatig op AAN te zetten",
+            "title": "Reolink poort niet open"
+        },
+        "firmware_update": {
+            "description": "\"{name}\" met model \"{model}\" en hardwareversie \"{hw_version}\" draait een oude firmwareversie \"{current_firmware}\", terwijl ten minste firmwareversie \"{required_firmware}\" vereist is voor een goede werking van de Reolink-integratie. De firmware kan worden bijgewerkt door op \"installeren\" te drukken in het dialoogvenster met meer informatie van de update-entiteit van \"{name}\" vanuit Home Assistant. Je kunt de nieuwste firmware ook downloaden via het [Reolink Download Center]({download_link}).",
+            "title": "Reolink firmware-update vereist"
+        },
+        "hdr_switch_deprecated": {
+            "description": "De Reolink HDR-switchentiteit is verouderd en wordt verwijderd in HA 2025.2.0. Deze is vervangen door een HDR-selectentiteit met opties `aan`, `uit` en `auto`. Om dit probleem te verhelpen, pas je automatiseringen aan en schakel de HDR-schakelaar-entiteit uit.",
+            "title": "Reolink HDR-schakelaar verouderd"
+        },
+        "https_webhook": {
+            "description": "Reolink-producten kunnen geen bewegingsgebeurtenissen naar een HTTPS-adres (SSL) sturen. Configureer daarom een (lokaal) HTTP-adres onder \"Home Assistant URL\" in de [netwerkinstellingen]({network_link}). Het huidige (lokale) adres is: `{base_url}`, een geldig adres zou bijvoorbeeld `http://192.168.1.10:8123` kunnen zijn waarbij `192.168.1.10` het IP adres van Home Assistant is.",
+            "title": "Reolink webhook-URL gebruikt HTTPS (SSL)"
+        },
+        "hub_switch_deprecated": {
+            "description": "De redudante 'Record', 'Email on event', 'FTP upload', 'Push notifications' en 'Buzzer on event' schakelaars op de Reolink Home Hub zijn verouderd omdat de nieuwe firmware deze niet langer ondersteunt. Gebruik in plaats daarvan de schakelaars met dezelfde naam onder elk van de camera-apparaten die zijn aangesloten op de Home Hub. Om dit probleem op te lossen, pas je automatiseringen aan en schakel de genoemde schakelaar-entiteiten uit."
+        },
+        "ssl": {
+            "description": "Globaal SSL-certificaat geconfigureerd in de [configuration.yaml onder http]({ssl_link}) terwijl een lokaal HTTP-adres `{base_url}` is geconfigureerd onder \"Home Assistant URL\" in de [netwerkinstellingen]({network_link}). Daarom kan het Reolink-apparaat Home Assistant niet bereiken om zijn bewegings-/AI-gebeurtenissen te pushen. Zorg ervoor dat het lokale HTTP-adres niet wordt gedekt door het SSL-certificaat, door bijvoorbeeld de [NGINX add-on]({nginx_link}) te gebruiken in plaats van een globaal afgedwongen SSL-certificaat.",
+            "title": "Reolink niet compatibel met globaal SSL-certificaat"
+        },
+        "webhook_url": {
+            "description": "Geen initi\u00eble ONVIF-status ontvangen van {name}. Waarschijnlijk kan de Reolink camera de huidige (lokale) Home Assistant URL `{base_url}` niet bereiken. Configureer een (lokaal) HTTP-adres onder \"Home Assistant URL\" in de [netwerkinstellingen]({network_link}) dat verwijst naar Home Assistant. Bijvoorbeeld `http://192.168.1.10:8123` waarbij `192.168.1.10` het IP-adres is van je Home Assistant-instantie. Zorg er ook voor dat de Reolink camera die URL kan bereiken. Gebruik fast motion/AI state polling totdat de eerste ONVIF push is ontvangen.",
+            "title": "Reolink webhook-URL is niet bereikbaar"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "protocol": "Protocol"
+                },
+                "data_description": {
+                    "protocol": "Streamingprotocol dat moet worden gebruikt voor de camera-entiteiten. RTSP ondersteunt 4K-streams (h265-codering), maar RTMP en FLV ondersteunen dat niet. FLV is het minst veeleisend zijn voor de camera."
+                }
+            }
+        }
+    },
+    "selector": {
+        "ringtone": {
+            "options": {
+                "attraction": "Attraction",
+                "citybird": "City bird",
+                "goodday": "Good day",
+                "hophop": "Hop hop",
+                "loop": "Loop",
+                "moonlight": "Moonlight",
+                "operetta": "Operetta",
+                "originaltune": "Originele melodie",
+                "pianokey": "Piano key",
+                "waybackhome": "Way back home"
+            }
+        }
+    },
+    "services": {
+        "play_chime": {
+            "description": "Speelt een beltoon af op een Reolink gong.",
+            "fields": {
+                "device_id": {
+                    "description": "De Reolink gong om de beltoon op af te spelen.",
+                    "name": "Doel gong"
+                },
+                "ringtone": {
+                    "description": "Beltoon om af te spelen.",
+                    "name": "Beltoon"
+                }
+            },
+            "name": "Gong afspelen"
+        },
+        "ptz_move": {
+            "fields": {
+                "speed": {
+                    "description": "PTZ bewegingssnelheid.",
+                    "name": "Snelheid"
+                }
+            },
+            "name": "PTZ beweging"
+        }
+    }
+}

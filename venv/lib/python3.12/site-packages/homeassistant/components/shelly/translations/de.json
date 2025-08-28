@@ -1,0 +1,187 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "another_device": "Die Neukonfiguration war nicht erfolgreich, es wurde die IP-Adresse/der Hostname eines anderen Shelly-Ger\u00e4ts verwendet.",
+            "ipv6_not_supported": "IPv6 wird nicht unterst\u00fctzt.",
+            "mac_address_mismatch": "Die MAC-Adresse des Ger\u00e4ts stimmt nicht mit der in der Konfiguration \u00fcberein. Bitte starte das Ger\u00e4t neu und versuche es erneut.",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+            "reauth_unsuccessful": "Die erneute Authentifizierung war nicht erfolgreich. Bitte entferne die Integration und richte sie erneut ein.",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "custom_port_not_supported": "Das Gen1-Ger\u00e4t unterst\u00fctzt keinen benutzerdefinierten Port.",
+            "firmware_not_fully_provisioned": "Das Ger\u00e4t ist nicht vollst\u00e4ndig eingebunden. Bitte kontaktiere den Shelly-Support",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "mac_address_mismatch": "Die MAC-Adresse des Ger\u00e4ts stimmt nicht mit der in der Konfiguration \u00fcberein. Bitte starte das Ger\u00e4t neu und versuche es erneut.",
+            "unknown": "Unerwarteter Fehler"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "confirm_discovery": {
+                "description": "M\u00f6chtest du {model} bei {host} einrichten?\n\nBatteriebetriebene Ger\u00e4te, die passwortgesch\u00fctzt sind, m\u00fcssen aufgeweckt werden, bevor du mit dem Einrichten fortf\u00e4hrst.\nBatteriebetriebene Ger\u00e4te, die nicht passwortgesch\u00fctzt sind, werden hinzugef\u00fcgt, wenn das Ger\u00e4t aufwacht. Du kannst es jetzt \u00fcber eine Taste am Ger\u00e4t manuell aufwecken oder auf die n\u00e4chste Datenaktualisierung durch das Ger\u00e4t warten."
+            },
+            "credentials": {
+                "data": {
+                    "password": "Passwort",
+                    "username": "Benutzername"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Passwort",
+                    "username": "Benutzername"
+                }
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host",
+                    "port": "Port"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse des Shelly-Ger\u00e4ts, zu dem eine Verbindung hergestellt werden soll.",
+                    "port": "Der TCP-Port des Shelly-Ger\u00e4ts, mit dem eine Verbindung hergestellt werden soll (Gen2+)."
+                },
+                "description": "Konfiguration f\u00fcr {device_name} aktualisieren.\n\nBatteriebetriebene Ger\u00e4te m\u00fcssen vor der Einrichtung aufgeweckt werden, du kannst es jetzt \u00fcber eine Taste am Ger\u00e4t aufwecken."
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Port"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse des Shelly-Ger\u00e4ts, zu dem eine Verbindung hergestellt werden soll.",
+                    "port": "Der TCP-Port des Shelly-Ger\u00e4ts, mit dem eine Verbindung hergestellt werden soll (Gen2+)."
+                },
+                "description": "Vor der Einrichtung m\u00fcssen batteriebetriebene Ger\u00e4te aufgeweckt werden, mit einer Taste auf dem Ger\u00e4t kannst du es jetzt aufwecken."
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_subtype": {
+            "button": "Taste",
+            "button1": "Taste 1",
+            "button2": "Taste 2",
+            "button3": "Taste 3",
+            "button4": "Taste 4"
+        },
+        "trigger_type": {
+            "btn_down": "Sobald {subtype} gedr\u00fcckt wird",
+            "btn_up": "Sobald {subtype} losgelassen wird",
+            "double": "Sobald {subtype} zweifach gedr\u00fcckt wurde",
+            "double_push": "Sobald {subtype} zweifach gedr\u00fcckt wurde",
+            "long": "Sobald {subtype} lang gedr\u00fcckt wurde",
+            "long_push": "Sobald {subtype} lang gedr\u00fcckt wurde",
+            "long_single": "Sobald {subtype} lang und dann kurz gedr\u00fcckt wurde",
+            "single": "Sobald {subtype} einfach gedr\u00fcckt wurde",
+            "single_long": "Sobald {subtype} kurz und dann lang gedr\u00fcckt wurde",
+            "single_push": "Sobald {subtype} einfach gedr\u00fcckt wurde",
+            "triple": "Sobald {subtype} dreifach gedr\u00fcckt wurde",
+            "triple_push": "Sobald {subtype} dreifach gedr\u00fcckt wurde"
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "gas": {
+                "state_attributes": {
+                    "detected": {
+                        "state": {
+                            "heavy": "Schwer",
+                            "mild": "Leicht",
+                            "none": "Keine",
+                            "test": "Test",
+                            "unknown": "Unbekannt"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "input": {
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "btn_down": "Taste gedr\u00fcckt",
+                            "btn_up": "Taste losgelassen",
+                            "double": "Zweifach-Druck",
+                            "double_push": "Zweifach-Druck",
+                            "long": "Langer Druck",
+                            "long_push": "Langer Druck",
+                            "long_single": "Langer und dann kurzer Druck",
+                            "single": "Einfach-Druck",
+                            "single_long": "Kurzer und dann langer Druck",
+                            "single_push": "Einfach-Druck",
+                            "triple": "Dreifach-Druck",
+                            "triple_push": "Dreifach-Druck"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "operation": {
+                "state": {
+                    "fault": "Fehler",
+                    "normal": "Normal",
+                    "unknown": "Unbekannt",
+                    "warmup": "Aufw\u00e4rmen"
+                },
+                "state_attributes": {
+                    "self_test": {
+                        "state": {
+                            "completed": "Abgeschlossen",
+                            "not_completed": "Nicht abgeschlossen",
+                            "pending": "Anstehend",
+                            "running": "In Betrieb"
+                        }
+                    }
+                }
+            },
+            "valve_status": {
+                "state": {
+                    "checking": "Wird gepr\u00fcft",
+                    "closed": "Geschlossen",
+                    "closing": "Wird geschlossen",
+                    "failure": "Fehler",
+                    "opened": "Ge\u00f6ffnet",
+                    "opening": "Wird ge\u00f6ffnet",
+                    "unknown": "Unbekannt"
+                }
+            }
+        }
+    },
+    "issues": {
+        "device_not_calibrated": {
+            "description": "Das Shelly-Ger\u00e4t {device_name} mit der IP-Adresse {ip_address} erfordert eine Kalibrierung. Um das Ger\u00e4t zu kalibrieren, muss es nach ordnungsgem\u00e4\u00dfer Installation am Ventil neu gestartet werden. Du kannst das Ger\u00e4t in seinem Web-Panel neu starten. Gehe dazu zu \u201eEinstellungen\u201c \u2192 \u201eGer\u00e4teneustart\u201c.",
+            "title": "Das Shelly-Ger\u00e4t {device_name} ist nicht kalibriert"
+        },
+        "push_update_failure": {
+            "description": "Home Assistant empf\u00e4ngt keine Push-Updates vom Shelly-Ger\u00e4t {device_name} mit der IP-Adresse {ip_address}. \u00dcberpr\u00fcfe die CoIoT-Konfiguration im Webpanel des Ger\u00e4ts und deine Netzwerkkonfiguration.",
+            "title": "Shelly-Ger\u00e4t {device_name} Push-Update fehlgeschlagen"
+        },
+        "unsupported_firmware": {
+            "description": "Auf deinem Shelly-Ger\u00e4t {device_name} mit der IP-Adresse {ip_address} wird eine nicht unterst\u00fctzte Firmware ausgef\u00fchrt. Bitte aktualisiere die Firmware. \n\nWenn das Ger\u00e4t kein Update anbietet, \u00fcberpr\u00fcfe die Internetverbindung (Gateway, DNS, Uhrzeit) und starte das Ger\u00e4t neu.",
+            "title": "Nicht unterst\u00fctzte Firmware f\u00fcr Ger\u00e4t {device_name}"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ble_scanner_mode": "Bluetooth-Scannermodus"
+                },
+                "description": "Der Bluetooth-Scannermodus kann aktiv oder passiv sein. Wenn aktiv, fordert der Shelly Daten von Ger\u00e4ten in der N\u00e4he an; wenn passiv, empf\u00e4ngt der Shelly unaufgefordert Daten von Ger\u00e4ten in der N\u00e4he."
+            }
+        }
+    },
+    "selector": {
+        "ble_scanner_mode": {
+            "options": {
+                "active": "Aktiv",
+                "disabled": "Deaktiviert",
+                "passive": "Passiv"
+            }
+        }
+    }
+}

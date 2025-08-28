@@ -1,0 +1,57 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "Chave da API"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_yaml_import_issue_cannot_connect": {
+            "description": "A configura\u00e7\u00e3o de {integration_title} via YAML est\u00e1 a ser removida, mas ocorreu um erro de liga\u00e7\u00e3o ao importar a sua configura\u00e7\u00e3o YAML.\n\nCertifique-se de que a liga\u00e7\u00e3o a {integration_title} funciona e reinicie o Home Assistant para tentar novamente ou remova a configura\u00e7\u00e3o YAML de {integration_title} do seu ficheiro configuration.yaml e continue a [configurar a integra\u00e7\u00e3o] ({url}) manualmente.",
+            "title": "A importa\u00e7\u00e3o da configura\u00e7\u00e3o {integration_title} A importa\u00e7\u00e3o da configura\u00e7\u00e3o YAML falhou"
+        }
+    },
+    "services": {
+        "add_tracking": {
+            "description": "Adiciona um novo n\u00famero de seguimento ao Aftership.",
+            "fields": {
+                "slug": {
+                    "description": "Slug (transportadora) do novo rastreio.",
+                    "name": "Slug"
+                },
+                "title": {
+                    "description": "Um t\u00edtulo personalizado para o novo seguimento.",
+                    "name": "T\u00edtulo"
+                },
+                "tracking_number": {
+                    "description": "N\u00famero de seguimento para o novo seguimento.",
+                    "name": "N\u00famero de rastreio"
+                }
+            },
+            "name": "Adicionar rastreio"
+        },
+        "remove_tracking": {
+            "description": "Remove um n\u00famero de rastreamento do Aftership.",
+            "fields": {
+                "slug": {
+                    "description": "Slug (suporte) do rastreio a remover.",
+                    "name": "Slug"
+                },
+                "tracking_number": {
+                    "description": "N\u00famero do rastreamento a remover.",
+                    "name": "N\u00famero de rastreio"
+                }
+            },
+            "name": "Remover rastreio"
+        }
+    }
+}

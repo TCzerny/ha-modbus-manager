@@ -1,0 +1,131 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Laite on jo m\u00e4\u00e4ritetty",
+            "device_not_supported": "T\u00e4t\u00e4 laitetta ei tueta",
+            "reauth_successful": "API:n k\u00e4ytt\u00f6\u00f6notto onnistui",
+            "reconfigure_successful": "Uudelleenm\u00e4\u00e4ritys onnistui",
+            "unknown_error": "Odottamaton virhe",
+            "wrong_device": "M\u00e4\u00e4ritetty laite ei ole sama, joka l\u00f6ytyy t\u00e4st\u00e4 IP-osoitteesta."
+        },
+        "error": {
+            "network_error": "Laitetta ei tavoiteta, varmista, ett\u00e4 olet sy\u00f6tt\u00e4nyt oikean IP-osoitteen ja ett\u00e4 laite on k\u00e4ytett\u00e4viss\u00e4 verkossa."
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Haluatko m\u00e4\u00e4ritt\u00e4\u00e4 {product_type} ( {serial} ) osoitteessa {ip_address} ?",
+                "title": "Vahvista"
+            },
+            "reauth_confirm": {
+                "description": "Paikallinen API on poistettu k\u00e4yt\u00f6st\u00e4. Siirry HomeWizard Energy -sovellukseen ja ota API k\u00e4ytt\u00f6\u00f6n laitteen asetuksissa."
+            },
+            "reconfigure": {
+                "data": {
+                    "ip_address": "IP-osoite"
+                },
+                "description": "P\u00e4ivit\u00e4 kohteen {title} m\u00e4\u00e4ritys"
+            },
+            "user": {
+                "data": {
+                    "ip_address": "IP-osoite"
+                },
+                "description": "Kirjoita HomeWizard Energy -laitteen IP-osoite, jonka haluat integroida Home Assistantiin.",
+                "title": "M\u00e4\u00e4rit\u00e4 laite"
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "status_light_brightness": {
+                "name": "Tilavalon kirkkaus"
+            }
+        },
+        "sensor": {
+            "active_apparent_power_phase_va": {
+                "name": "N\u00e4enn\u00e4isteho vaihe {phase}"
+            },
+            "active_current_phase_a": {
+                "name": "Virta vaiheessa {phase}"
+            },
+            "active_liter_lpm": {
+                "name": "Veden k\u00e4ytt\u00f6"
+            },
+            "active_power_average_w": {
+                "name": "Keskim\u00e4\u00e4r\u00e4inen kysynt\u00e4"
+            },
+            "active_power_factor_phase": {
+                "name": "Tehokerroin vaihe {phase}"
+            },
+            "active_power_phase_w": {
+                "name": "Teho vaiheessa {phase}"
+            },
+            "active_reactive_power_phase_var": {
+                "name": "Reaktiivisen tehon vaihe {phase}"
+            },
+            "active_tariff": {
+                "name": "Tariffi"
+            },
+            "active_voltage_phase_v": {
+                "name": "J\u00e4nnite vaiheessa {phase}"
+            },
+            "any_power_fail_count": {
+                "name": "S\u00e4hk\u00f6katkoksia havaittu"
+            },
+            "dsmr_version": {
+                "name": "DSMR versio"
+            },
+            "long_power_fail_count": {
+                "name": "Pitk\u00e4t s\u00e4hk\u00f6katkot havaittu"
+            },
+            "meter_model": {
+                "name": "\u00c4lymittarin malli"
+            },
+            "monthly_power_peak_w": {
+                "name": "Kuluvan kuukauden huippukysynt\u00e4"
+            },
+            "total_energy_export_kwh": {
+                "name": "Energian vienti"
+            },
+            "total_energy_export_tariff_kwh": {
+                "name": "Energian vientitariffi {tariff}"
+            },
+            "total_energy_import_kwh": {
+                "name": "Energian tuonti"
+            },
+            "total_energy_import_tariff_kwh": {
+                "name": "Energian tuontitariffi {tariff}"
+            },
+            "total_liter_m3": {
+                "name": "Veden kokonaiskulutus"
+            },
+            "unique_meter_id": {
+                "name": "\u00c4lymittarin tunniste"
+            },
+            "voltage_sag_phase_count": {
+                "name": "J\u00e4nnitteen lasku havaittu vaiheessa {phase}"
+            },
+            "voltage_swell_phase_count": {
+                "name": "J\u00e4nnitteen nousu havaittu vaiheessa {phase}"
+            },
+            "wifi_ssid": {
+                "name": "Wi-Fi SSID"
+            },
+            "wifi_strength": {
+                "name": "Wifi-signaalin voimakkuus"
+            }
+        },
+        "switch": {
+            "cloud_connection": {
+                "name": "Pilviyhteys"
+            },
+            "switch_lock": {
+                "name": "Kytkimen lukko"
+            }
+        }
+    },
+    "exceptions": {
+        "communication_error": {
+            "message": "Virhe kommunikoitaessa HomeWizard -laitteen kanssa"
+        }
+    }
+}

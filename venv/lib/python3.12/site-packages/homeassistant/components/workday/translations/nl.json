@@ -1,0 +1,198 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Workday is al ingesteld met de gekozen configuratie"
+        },
+        "error": {
+            "add_holiday_error": "Onjuist formaat op datum (JJJJ-MM-DD)",
+            "add_holiday_range_error": "Incorrect formaat op datumbereik (YYYY-MM-DD,YYYY-MM-DD)",
+            "remove_holiday_error": "Onjuist formaat op datum (JJJJ-MM-DD) of feestdagnaam niet gevonden",
+            "remove_holiday_range_error": "Incorrect formaat op datumbereik (YYYY-MM-DD,YYYY-MM-DD)"
+        },
+        "step": {
+            "options": {
+                "data": {
+                    "add_holidays": "Feestdagen toevoegen",
+                    "days_offset": "Offset",
+                    "language": "Taal voor feestdagen",
+                    "province": "Landstreek",
+                    "remove_holidays": "Feestdagen verwijderen"
+                },
+                "description": "Extra opties instellen voor {name} geconfigureerd voor land {country}"
+            },
+            "user": {
+                "data": {
+                    "country": "Land",
+                    "name": "Naam"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "workday": {
+                "state_attributes": {
+                    "days_offset": {
+                        "name": "Offset"
+                    },
+                    "excludes": {
+                        "name": "Exclusief"
+                    },
+                    "workdays": {
+                        "name": "Werkdagen"
+                    }
+                }
+            }
+        }
+    },
+    "issues": {
+        "bad_country": {
+            "fix_flow": {
+                "step": {
+                    "country": {
+                        "data": {
+                            "country": "Land"
+                        },
+                        "title": "Selecteer land voor {title}"
+                    },
+                    "province": {
+                        "data": {
+                            "province": "Landstreek"
+                        },
+                        "data_description": {
+                            "province": "Staat, Gebied, Provincie, Regio of Land"
+                        },
+                        "title": "Selecteer provincie voor {title}"
+                    }
+                }
+            }
+        },
+        "bad_date_holiday": {
+            "fix_flow": {
+                "error": {
+                    "remove_holiday_error": "Onjuist formaat op datum (JJJJ-MM-DD) of feestdagnaam niet gevonden"
+                },
+                "step": {
+                    "fix_remove_holiday": {
+                        "data": {
+                            "remove_holidays": "Feestdagen verwijderen"
+                        },
+                        "data_description": {
+                            "remove_holidays": "Verwijder feestdagen als JJJJ-MM-DD of door een deel van de naam te gebruiken"
+                        }
+                    }
+                }
+            }
+        },
+        "bad_named_holiday": {
+            "fix_flow": {
+                "error": {
+                    "remove_holiday_error": "Onjuist formaat op datum (JJJJ-MM-DD) of feestdagnaam niet gevonden"
+                },
+                "step": {
+                    "fix_remove_holiday": {
+                        "data": {
+                            "remove_holidays": "Feestdagen verwijderen"
+                        },
+                        "data_description": {
+                            "remove_holidays": "Verwijder feestdagen als JJJJ-MM-DD of door een deel van de naam te gebruiken"
+                        }
+                    }
+                }
+            }
+        },
+        "bad_province": {
+            "fix_flow": {
+                "step": {
+                    "province": {
+                        "data": {
+                            "province": "Landstreek"
+                        },
+                        "data_description": {
+                            "province": "Staat, Gebied, Provincie, Regio of Land"
+                        },
+                        "title": "Selecteer provincie voor {title}"
+                    }
+                }
+            },
+            "title": "Geconfigureerde provincie in land {country} voor {title} bestaat niet"
+        }
+    },
+    "options": {
+        "error": {
+            "add_holiday_error": "Onjuist formaat op datum (JJJJ-MM-DD)",
+            "add_holiday_range_error": "Incorrect formaat op datumbereik (YYYY-MM-DD,YYYY-MM-DD)",
+            "already_configured": "Dienst is al geconfigureerd",
+            "remove_holiday_error": "Onjuist formaat op datum (JJJJ-MM-DD) of feestdagnaam niet gevonden",
+            "remove_holiday_range_error": "Incorrect formaat op datumbereik (YYYY-MM-DD,YYYY-MM-DD)"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "add_holidays": "Feestdagen toevoegen",
+                    "days_offset": "Offset",
+                    "excludes": "Exclusief",
+                    "language": "Taal voor feestdagen",
+                    "province": "Landstreek",
+                    "remove_holidays": "Feestdagen verwijderen",
+                    "workdays": "Werkdagen"
+                },
+                "data_description": {
+                    "add_holidays": "Voeg aangepaste feestdagen toe als JJJJ-MM-DD",
+                    "days_offset": "Dagen offset",
+                    "excludes": "Uit te sluiten werkdagen",
+                    "language": "Kies de taal die je wilt configureren voor de namen van feestdagen.",
+                    "province": "Staat, Territorium, Provincie, Landstreek of Land",
+                    "remove_holidays": "Verwijder feestdagen als JJJJ-MM-DD of door een deel van de naam te gebruiken",
+                    "workdays": "Werkdagen"
+                },
+                "description": "Aanvullende opties wijzigen voor {name} geconfigureerd voor land {country}"
+            }
+        }
+    },
+    "selector": {
+        "category": {
+            "options": {
+                "armed_forces": "Strijdkrachten",
+                "bank": "Bank",
+                "catholic": "Katholiek",
+                "chinese": "Chinees",
+                "christian": "Christelijk",
+                "government": "Overheid",
+                "hebrew": "Hebreeuws",
+                "hindu": "Hindoe",
+                "islamic": "Islamitisch",
+                "optional": "Optioneel",
+                "school": "School",
+                "workday": "Werkdag"
+            }
+        },
+        "days": {
+            "options": {
+                "fri": "Vrijdag",
+                "holiday": "Feestdagen",
+                "mon": "Maandag",
+                "sat": "Zaterdag",
+                "sun": "Zondag",
+                "thu": "Donderdag",
+                "tue": "Dinsdag",
+                "wed": "Woensdag"
+            }
+        },
+        "province": {
+            "options": {
+                "none": "Geen Onderverdeling"
+            }
+        }
+    },
+    "services": {
+        "check_date": {
+            "fields": {
+                "check_date": {
+                    "name": "Datum"
+                }
+            }
+        }
+    },
+    "title": "Werkdag"
+}

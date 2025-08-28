@@ -1,0 +1,658 @@
+{
+    "common": {
+        "confirmed": "Bevestigd",
+        "present": "Huidig"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "Integratie niet geconfigureerd. Raadpleeg de documentatie.",
+            "no_url_available": "Geen URL beschikbaar. Voor informatie over deze fout, [raadpleeg de documentatie]({docs_url})",
+            "oauth_error": "Ongeldige tokengegevens ontvangen.",
+            "oauth_failed": "Fout bij het verkrijgen van toegangstoken.",
+            "oauth_timeout": "Time-out bij het verkrijgen OAuth token.",
+            "oauth_unauthorized": "OAuth autorisatiefout tijdens het verkrijgen van een toegangstoken."
+        },
+        "create_entry": {
+            "default": "Authenticatie geslaagd"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Kies een authenticatie methode"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "Oplaadstatus batterij"
+            },
+            "charging_connection": {
+                "name": "Oplaadaansluiting"
+            },
+            "chiller_door": {
+                "name": "Koelerdeur"
+            },
+            "dust_box_inserted": {
+                "name": "Stofdoos",
+                "state": {
+                    "off": "Niet ingevoegd",
+                    "on": "Ingevoegd"
+                }
+            },
+            "freezer_door": {
+                "name": "Vriezer deur"
+            },
+            "lifted": {
+                "name": "Opgeheven"
+            },
+            "local_control": {
+                "name": "Lokale controle"
+            },
+            "lost": {
+                "name": "Verloren"
+            },
+            "refrigerator_door": {
+                "name": "Koelkast deur"
+            },
+            "remote_control": {
+                "name": "Afstandsbediening"
+            },
+            "remote_start": {
+                "name": "Start op afstand"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "Flessenkoeler temperatuur"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "Vriezer temperatuur"
+            }
+        },
+        "select": {
+            "active_program": {
+                "state": {
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Koffie",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Heet water",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Melkschuim",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Warme melk",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doppio",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener melange",
+                    "cooking_common_program_hood_automatic": "Automatisch",
+                    "cooking_common_program_hood_delayed_shut_off": "Vertraagde uitschakeling",
+                    "cooking_common_program_hood_venting": "Ontluchten",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Onder verwarmen",
+                    "cooking_oven_program_heating_mode_defrost": "Ontdooien",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Speciale opwarmfunctie voor diepvriesproducten",
+                    "cooking_oven_program_heating_mode_hot_air": "Hete lucht",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Hete lucht + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Hete lucht + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Hete lucht + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Hete lucht + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Hete lucht eco",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Heteluchtgrillen",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intensieve hitte",
+                    "cooking_oven_program_heating_mode_keep_warm": "Warm houden",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pizza-instelling",
+                    "cooking_oven_program_heating_mode_pre_heating": "Voorverwarmen",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Voorverwarmen ovengerei",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Sabbat programma",
+                    "cooking_oven_program_heating_mode_slow_cook": "Slow cook",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "Boven-onder verwarmen",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "Boven-onder verwarmen eco",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watt",
+                    "cooking_oven_program_microwave_max": "Maximaal",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_eco_50": "Eco 50\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Glas 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Glasverzorging",
+                    "dishcare_dishwasher_program_intensiv_45": "Intensief 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intensief 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intensieve kracht",
+                    "dishcare_dishwasher_program_kurz_60": "Kort 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Machineonderhoud",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maximale reiniging",
+                    "dishcare_dishwasher_program_mixed_load": "Gemixte lading",
+                    "dishcare_dishwasher_program_night_wash": "Nachtwas",
+                    "dishcare_dishwasher_program_normal_45": "Normaal 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Normaal 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "Voorspoelen",
+                    "dishcare_dishwasher_program_quick_45": "Snel 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "Snel 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Stoom vers",
+                    "dishcare_dishwasher_program_super_60": "Super 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Anti krimp",
+                    "laundry_care_dryer_program_blankets": "Dekens",
+                    "laundry_care_dryer_program_business_shirts": "Zakelijke overhemden",
+                    "laundry_care_dryer_program_cotton": "Katoen",
+                    "laundry_care_dryer_program_delicates": "Fijne was",
+                    "laundry_care_dryer_program_down_feathers": "Donsveren",
+                    "laundry_care_dryer_program_hygiene": "Hygi\u00ebne",
+                    "laundry_care_dryer_program_in_basket": "In trommel",
+                    "laundry_care_dryer_program_jeans": "Spijkerbroeken",
+                    "laundry_care_dryer_program_mix": "Mix",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Mijn droogtijd",
+                    "laundry_care_dryer_program_outdoor": "Buitenkleding",
+                    "laundry_care_dryer_program_pillow": "Kussen",
+                    "laundry_care_dryer_program_shirts_15": "Shirts 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "Synthetisch",
+                    "laundry_care_dryer_program_synthetic_refresh": "Synthetisch opfrissen",
+                    "laundry_care_dryer_program_time_cold": "Koud (variabele tijd)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Koud (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Koud (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Koud (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Warm (variabele tijd)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Warm (30 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Warm (40 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Warm (60 min)",
+                    "laundry_care_dryer_program_towels": "Handdoeken",
+                    "laundry_care_washer_dryer_program_cotton": "Katoen",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Katoen eco 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Easy care",
+                    "laundry_care_washer_dryer_program_mix": "Mix",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Wassen en drogen (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Wassen en drogen (90 min)",
+                    "laundry_care_washer_program_auto_30": "Automatisch 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Automatisch 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Automatisch 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "Chiffon",
+                    "laundry_care_washer_program_cotton": "Katoen",
+                    "laundry_care_washer_program_cotton_colour": "Katoen kleur",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Katoen eco",
+                    "laundry_care_washer_program_cotton_eco_4060": "Katoen eco 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Gordijnen",
+                    "laundry_care_washer_program_dark_wash": "Donkere was",
+                    "laundry_care_washer_program_delicates_silk": "Fijne zijde",
+                    "laundry_care_washer_program_down_duvet_duvet": "Donzen dekbed",
+                    "laundry_care_washer_program_drum_clean": "Trommelreiniging",
+                    "laundry_care_washer_program_easy_care": "Easy care",
+                    "laundry_care_washer_program_mix": "Mix",
+                    "laundry_care_washer_program_mix_night_wash": "Mix nachtwas",
+                    "laundry_care_washer_program_outdoor": "Buitenkleding",
+                    "laundry_care_washer_program_plush_toy": "Pluchen speelgoed",
+                    "laundry_care_washer_program_sensitive": "Gevoelig",
+                    "laundry_care_washer_program_shirts_blouses": "Overhemdblouses",
+                    "laundry_care_washer_program_sport_fitness": "Sport fitness",
+                    "laundry_care_washer_program_super_153045_super_15": "Super 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "Super 15/30 min",
+                    "laundry_care_washer_program_towels": "Handdoeken",
+                    "laundry_care_washer_program_water_proof": "Waterdicht",
+                    "laundry_care_washer_program_wool": "Wol"
+                }
+            },
+            "selected_program": {
+                "state": {
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "Cappuccino",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "Koffie",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "Espresso",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "Heet water",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "Latte macchiato",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "Melkschuim",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "Warme melk",
+                    "consumer_products_coffee_maker_program_coffee_world_doppio": "Doppio",
+                    "consumer_products_coffee_maker_program_coffee_world_koffie_verkeerd": "Koffie verkeerd",
+                    "consumer_products_coffee_maker_program_coffee_world_wiener_melange": "Wiener melange",
+                    "cooking_common_program_hood_automatic": "Automatisch",
+                    "cooking_common_program_hood_delayed_shut_off": "Vertraagde uitschakeling",
+                    "cooking_common_program_hood_venting": "Ontluchten",
+                    "cooking_oven_program_heating_mode_bottom_heating": "Onder verwarmen",
+                    "cooking_oven_program_heating_mode_defrost": "Ontdooien",
+                    "cooking_oven_program_heating_mode_frozen_heatup_special": "Speciale opwarmfunctie voor diepvriesproducten",
+                    "cooking_oven_program_heating_mode_hot_air": "Hete lucht",
+                    "cooking_oven_program_heating_mode_hot_air_100_steam": "Hete lucht + 100 RH",
+                    "cooking_oven_program_heating_mode_hot_air_30_steam": "Hete lucht + 30 RH",
+                    "cooking_oven_program_heating_mode_hot_air_60_steam": "Hete lucht + 60 RH",
+                    "cooking_oven_program_heating_mode_hot_air_80_steam": "Hete lucht + 80 RH",
+                    "cooking_oven_program_heating_mode_hot_air_eco": "Hete lucht eco",
+                    "cooking_oven_program_heating_mode_hot_air_grilling": "Heteluchtgrillen",
+                    "cooking_oven_program_heating_mode_intensive_heat": "Intensieve hitte",
+                    "cooking_oven_program_heating_mode_keep_warm": "Warm houden",
+                    "cooking_oven_program_heating_mode_pizza_setting": "Pizza-instelling",
+                    "cooking_oven_program_heating_mode_pre_heating": "Voorverwarmen",
+                    "cooking_oven_program_heating_mode_preheat_ovenware": "Voorverwarmen ovengerei",
+                    "cooking_oven_program_heating_mode_sabbath_programme": "Sabbat programma",
+                    "cooking_oven_program_heating_mode_slow_cook": "Slow cook",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "Boven-onder verwarmen",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "Boven-onder verwarmen eco",
+                    "cooking_oven_program_microwave_1000_watt": "1000 Watt",
+                    "cooking_oven_program_microwave_180_watt": "180 Watt",
+                    "cooking_oven_program_microwave_360_watt": "360 Watt",
+                    "cooking_oven_program_microwave_600_watt": "600 Watt",
+                    "cooking_oven_program_microwave_900_watt": "900 Watt",
+                    "cooking_oven_program_microwave_90_watt": "90 Watt",
+                    "cooking_oven_program_microwave_max": "Maximaal",
+                    "dishcare_dishwasher_program_auto_1": "Auto 1",
+                    "dishcare_dishwasher_program_auto_2": "Auto 2",
+                    "dishcare_dishwasher_program_auto_3": "Auto 3",
+                    "dishcare_dishwasher_program_eco_50": "Eco 50\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "Glas 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "Glasverzorging",
+                    "dishcare_dishwasher_program_intensiv_45": "Intensief 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "Intensief 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "Intensieve kracht",
+                    "dishcare_dishwasher_program_kurz_60": "Kort 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "Machineonderhoud",
+                    "dishcare_dishwasher_program_maximum_cleaning": "Maximale reiniging",
+                    "dishcare_dishwasher_program_mixed_load": "Gemixte lading",
+                    "dishcare_dishwasher_program_night_wash": "Nachtwas",
+                    "dishcare_dishwasher_program_normal_45": "Normaal 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "Normaal 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "Voorspoelen",
+                    "dishcare_dishwasher_program_quick_45": "Snel 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "Snel 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "Stoom vers",
+                    "dishcare_dishwasher_program_super_60": "Super 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "Anti krimp",
+                    "laundry_care_dryer_program_blankets": "Dekens",
+                    "laundry_care_dryer_program_business_shirts": "Zakelijke overhemden",
+                    "laundry_care_dryer_program_cotton": "Katoen",
+                    "laundry_care_dryer_program_delicates": "Fijne was",
+                    "laundry_care_dryer_program_down_feathers": "Donsveren",
+                    "laundry_care_dryer_program_hygiene": "Hygi\u00ebne",
+                    "laundry_care_dryer_program_in_basket": "In trommel",
+                    "laundry_care_dryer_program_jeans": "Spijkerbroeken",
+                    "laundry_care_dryer_program_mix": "Mix",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "Mijn droogtijd",
+                    "laundry_care_dryer_program_outdoor": "Buitenkleding",
+                    "laundry_care_dryer_program_pillow": "Kussen",
+                    "laundry_care_dryer_program_shirts_15": "Shirts 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "Super 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "Synthetisch",
+                    "laundry_care_dryer_program_synthetic_refresh": "Synthetisch opfrissen",
+                    "laundry_care_dryer_program_time_cold": "Koud (variabele tijd)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "Koud (20 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "Koud (30 min)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "Koud (60 min)",
+                    "laundry_care_dryer_program_time_warm": "Warm (variabele tijd)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "Warm (30 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "Warm (40 min)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "Warm (60 min)",
+                    "laundry_care_dryer_program_towels": "Handdoeken",
+                    "laundry_care_washer_dryer_program_cotton": "Katoen",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "Katoen eco 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "Easy care",
+                    "laundry_care_washer_dryer_program_mix": "Mix",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "Wassen en drogen (60 min)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "Wassen en drogen (90 min)",
+                    "laundry_care_washer_program_auto_30": "Automatisch 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "Automatisch 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "Automatisch 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "Chiffon",
+                    "laundry_care_washer_program_cotton": "Katoen",
+                    "laundry_care_washer_program_cotton_colour": "Katoen kleur",
+                    "laundry_care_washer_program_cotton_cotton_eco": "Katoen eco",
+                    "laundry_care_washer_program_cotton_eco_4060": "Katoen eco 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "Gordijnen",
+                    "laundry_care_washer_program_dark_wash": "Donkere was",
+                    "laundry_care_washer_program_delicates_silk": "Fijne zijde",
+                    "laundry_care_washer_program_down_duvet_duvet": "Donzen dekbed",
+                    "laundry_care_washer_program_drum_clean": "Trommelreiniging",
+                    "laundry_care_washer_program_easy_care": "Easy care",
+                    "laundry_care_washer_program_mix": "Mix",
+                    "laundry_care_washer_program_mix_night_wash": "Mix nachtwas",
+                    "laundry_care_washer_program_outdoor": "Buitenkleding",
+                    "laundry_care_washer_program_plush_toy": "Pluchen speelgoed",
+                    "laundry_care_washer_program_sensitive": "Gevoelig",
+                    "laundry_care_washer_program_shirts_blouses": "Overhemdblouses",
+                    "laundry_care_washer_program_sport_fitness": "Sport fitness",
+                    "laundry_care_washer_program_super_153045_super_15": "Super 15 min",
+                    "laundry_care_washer_program_super_153045_super_1530": "Super 15/30 min",
+                    "laundry_care_washer_program_towels": "Handdoeken",
+                    "laundry_care_washer_program_water_proof": "Waterdicht",
+                    "laundry_care_washer_program_wool": "Wol"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "Batterijniveau"
+            },
+            "bean_container_empty": {
+                "name": "Bonencontainer leeg",
+                "state": {
+                    "confirmed": "Bevestigd",
+                    "off": "Uit",
+                    "present": "Huidig"
+                }
+            },
+            "camera_state": {
+                "name": "Camera status",
+                "state": {
+                    "disabled": "Uitgeschakeld",
+                    "error": "Fout",
+                    "ready": "Klaar",
+                    "sleeping": "Slapen"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "Koffie- en melkcapsules"
+            },
+            "coffee_counter": {
+                "name": "Koffies"
+            },
+            "door": {
+                "name": "Deur",
+                "state": {
+                    "closed": "Gesloten",
+                    "locked": "Vergrendeld",
+                    "open": "Open"
+                }
+            },
+            "drip_tray_full": {
+                "name": "Lekbak vol",
+                "state": {
+                    "confirmed": "Bevestigd",
+                    "off": "Uit",
+                    "present": "Huidig"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "Vriezer deur alarm",
+                "state": {
+                    "confirmed": "Bevestigd",
+                    "present": "Huidig"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "Vriezer temperatuur alarm",
+                "state": {
+                    "confirmed": "Bevestigd",
+                    "off": "Uit",
+                    "present": "Huidig"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "Opgeschuimde melkcapsules"
+            },
+            "hot_milk_counter": {
+                "name": "Hete melkbekers"
+            },
+            "hot_water_counter": {
+                "name": "Heet water"
+            },
+            "hot_water_cups_counter": {
+                "name": "Heet water kopjes"
+            },
+            "last_selected_map": {
+                "name": "Laatst geselecteerde kaart",
+                "state": {
+                    "map1": "Kaart 1",
+                    "map2": "Kaart 2",
+                    "map3": "Kaart 3",
+                    "tempmap": "Tijdelijke kaart"
+                }
+            },
+            "milk_counter": {
+                "name": "Melk bekers"
+            },
+            "operation_state": {
+                "name": "Status",
+                "state": {
+                    "aborting": "Afbreken",
+                    "actionrequired": "Actie benodigd",
+                    "delayedstart": "Vertraagde start",
+                    "error": "Fout",
+                    "finished": "Voltooid",
+                    "inactive": "Inactief",
+                    "pause": "Gepauzeerd",
+                    "ready": "Klaar",
+                    "run": "Lopend"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "Poederkoffies"
+            },
+            "program_finish_time": {
+                "name": "Programma eindtijd"
+            },
+            "program_progress": {
+                "name": "Programma voortgang"
+            },
+            "refrigerator_door_alarm": {
+                "name": "Koelkastdeur alarm",
+                "state": {
+                    "confirmed": "Bevestigd",
+                    "off": "Uit",
+                    "present": "Huidig"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "state": {
+                    "confirmed": "Bevestigd",
+                    "off": "Uit",
+                    "present": "Huidig"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "Ristretto espresso kopjes"
+            },
+            "salt_nearly_empty": {
+                "state": {
+                    "confirmed": "Bevestigd",
+                    "off": "Uit",
+                    "present": "Huidig"
+                }
+            },
+            "water_tank_empty": {
+                "name": "Watertank leeg",
+                "state": {
+                    "confirmed": "Bevestigd",
+                    "off": "Uit",
+                    "present": "Huidig"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "Kinderslot"
+            },
+            "cup_warmer": {
+                "name": "Kopjeswarmer"
+            },
+            "dispenser_enabled": {
+                "name": "Dispenser",
+                "state": {
+                    "off": "Uitgeschakeld",
+                    "on": "Ingeschakeld"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "Vriezerdeur assistent"
+            },
+            "door_assistant_fridge": {
+                "name": "Koelkastdeur assistent"
+            },
+            "eco_mode": {
+                "name": "Eco modus"
+            },
+            "freezer_super_mode": {
+                "name": "Vriezer supermodus"
+            },
+            "fresh_mode": {
+                "name": "Vers modus"
+            },
+            "power": {
+                "name": "Inschakelen"
+            },
+            "refrigerator_super_mode": {
+                "name": "Koelkast supermodus"
+            },
+            "sabbath_mode": {
+                "name": "Sabbatmodus"
+            },
+            "vacation_mode": {
+                "name": "Vakantiemodus"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "Alarmklok"
+            }
+        }
+    },
+    "exceptions": {
+        "execute_command": {
+            "message": "Fout bij het uitvoeren van opdracht {command}: {description}"
+        },
+        "pause_program": {
+            "message": "Fout bij pauzeren van programma: {description}"
+        },
+        "select_program": {
+            "message": "Fout bij het selecteren van programma {program}: {description}"
+        },
+        "set_options_active_program": {
+            "message": "Opties voor foutinstelling voor het actieve programma: {description}"
+        },
+        "set_options_selected_program": {
+            "message": "Opties voor foutinstelling voor het geselecteerde programma: {description}"
+        },
+        "set_setting_entity": {
+            "message": "Fout bij het toewijzen van de waarde \"{value}\" aan de instelling \"{key}\" voor {entity_id}: {description}"
+        }
+    },
+    "issues": {
+        "deprecated_program_switch": {
+            "description": "Programmaswitches zijn verouderd en {entity_id} wordt gebruikt in de volgende automatiseringen of scripts: \n{items} \n \nJe kan de actieve programmaselectie-entiteit gebruiken om het programma uit te voeren zonder extra opties en het huidige actieve programma op te halen in de bovenstaande automatiseringen of scripts om dit probleem op te lossen.",
+            "title": "Verouderde programmaswitch gedetecteerd in sommige automatiseringen of scripts"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "Wijzigt een instelling.",
+            "fields": {
+                "device_id": {
+                    "description": "ID van het apparaat.",
+                    "name": "Apparaat ID"
+                },
+                "key": {
+                    "description": "Sleutel van de instelling.",
+                    "name": "Sleutel"
+                },
+                "value": {
+                    "description": "Waarde van de instelling.",
+                    "name": "Waarde"
+                }
+            },
+            "name": "Wijzig instelling"
+        },
+        "pause_program": {
+            "description": "Pauzeert het huidig lopende programma.",
+            "fields": {
+                "device_id": {
+                    "description": "ID van het apparaat.",
+                    "name": "Apparaat ID"
+                }
+            },
+            "name": "Pauzeer programma"
+        },
+        "resume_program": {
+            "description": "Hervat een gepauzeerd programma.",
+            "fields": {
+                "device_id": {
+                    "description": "ID van het apparaat.",
+                    "name": "Apparaat ID"
+                }
+            },
+            "name": "Hervat programma"
+        },
+        "select_program": {
+            "description": "Selecteert een programma zonder het te starten.",
+            "fields": {
+                "device_id": {
+                    "description": "ID van het apparaat.",
+                    "name": "Apparaat ID"
+                },
+                "key": {
+                    "description": "Sleutel van de optie.",
+                    "name": "Optiesleutel"
+                },
+                "program": {
+                    "description": "Programma om te selecteren.",
+                    "name": "Programma"
+                },
+                "unit": {
+                    "description": "Eenheid van de optie.",
+                    "name": "Optie eenheid"
+                },
+                "value": {
+                    "description": "Waarde van de optie.",
+                    "name": "Optiewaarde"
+                }
+            },
+            "name": "Selecteer programma"
+        },
+        "set_option_active": {
+            "description": "Stelt een optie in voor het actieve programma.",
+            "fields": {
+                "device_id": {
+                    "description": "ID van het apparaat.",
+                    "name": "Apparaat ID"
+                },
+                "key": {
+                    "description": "Sleutel van de optie.",
+                    "name": "Sleutel"
+                },
+                "value": {
+                    "description": "Waarde van de optie.",
+                    "name": "Waarde"
+                }
+            },
+            "name": "Actief programma optie instellen"
+        },
+        "set_option_selected": {
+            "description": "Instellen optie voor het geselecteerde programma.",
+            "fields": {
+                "device_id": {
+                    "description": "ID van het apparaat.",
+                    "name": "Apparaat ID"
+                },
+                "key": {
+                    "description": "Sleutel van de optie.",
+                    "name": "Sleutel"
+                },
+                "value": {
+                    "description": "Waarde van de optie.",
+                    "name": "Waarde"
+                }
+            },
+            "name": "Stel de geselecteerde programma optie in."
+        },
+        "start_program": {
+            "description": "Selecteert een programma en start het.",
+            "fields": {
+                "device_id": {
+                    "name": "Apparaat ID"
+                },
+                "key": {
+                    "description": "Sleutel van de optie.",
+                    "name": "Optiesleutel"
+                },
+                "program": {
+                    "description": "Programma om te selecteren.",
+                    "name": "Programma"
+                },
+                "unit": {
+                    "description": "Eenheid van de optie.",
+                    "name": "Optie eenheid"
+                },
+                "value": {
+                    "description": "Waarde van de optie.",
+                    "name": "Optiewaarde"
+                }
+            },
+            "name": "Start een programma"
+        }
+    }
+}

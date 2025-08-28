@@ -1,0 +1,395 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "invalid_host": "\u00c9rv\u00e9nytelen g\u00e9pn\u00e9v vagy IP-c\u00edm",
+            "reconfigure_successful": "\u00dajrakonfigur\u00e1l\u00e1s sikeres volt",
+            "unique_id_mismatch": "Az azonos\u00edt\u00f3 nem egyezik meg az el\u0151z\u0151 azonos\u00edt\u00f3val"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "flow_title": "{device}",
+        "step": {
+            "confirm_discovery": {
+                "description": "Szeretn\u00e9 hozz\u00e1adni a(z) {device} eszk\u00f6zt a Home Assistanthoz?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Hoszt"
+                },
+                "data_description": {
+                    "host": "Adja meg a Fronius eszk\u00f6z IP-c\u00edm\u00e9t vagy hosztnev\u00e9t!"
+                },
+                "description": "Friss\u00edtse a(z) {device} konfigur\u00e1ci\u00f3s adatait."
+            },
+            "user": {
+                "data": {
+                    "host": "Hoszt"
+                },
+                "data_description": {
+                    "host": "Adja meg a Fronius eszk\u00f6z IP-c\u00edm\u00e9t vagy hosztnev\u00e9t!"
+                },
+                "description": "Konfigur\u00e1lja a Fronius SolarAPI eszk\u00f6z\u00e9t."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "capacity_designed": {
+                "name": "Tervezett kapacit\u00e1s"
+            },
+            "capacity_maximum": {
+                "name": "Maxim\u00e1lis kapacit\u00e1s"
+            },
+            "cash_factor": {
+                "name": "Visszat\u00e1pl\u00e1l\u00e1si tarifa"
+            },
+            "co2_factor": {
+                "name": "CO\u2082 t\u00e9nyez\u0151"
+            },
+            "current_ac": {
+                "name": "\u00c1ramer\u0151ss\u00e9g AC"
+            },
+            "current_ac_phase_1": {
+                "name": "\u00c1ramer\u0151ss\u00e9g L1"
+            },
+            "current_ac_phase_2": {
+                "name": "\u00c1ramer\u0151ss\u00e9g L2"
+            },
+            "current_ac_phase_3": {
+                "name": "\u00c1ramer\u0151ss\u00e9g L3"
+            },
+            "current_dc": {
+                "name": "\u00c1ramer\u0151ss\u00e9g DC"
+            },
+            "current_dc_2": {
+                "name": "\u00c1ramer\u0151ss\u00e9g DC2"
+            },
+            "delivery_factor": {
+                "name": "V\u00e9telez\u00e9si tarifa"
+            },
+            "energy_day": {
+                "name": "Napi energiamennyis\u00e9g"
+            },
+            "energy_reactive_ac_consumed": {
+                "name": "Felhaszn\u00e1lt reakt\u00edv energia"
+            },
+            "energy_reactive_ac_produced": {
+                "name": "Termelt reakt\u00edv energia"
+            },
+            "energy_real_ac_consumed": {
+                "name": "Felhaszn\u00e1lt energia"
+            },
+            "energy_real_ac_minus": {
+                "name": "Re\u00e1lenergia m\u00ednusz"
+            },
+            "energy_real_ac_plus": {
+                "name": "Re\u00e1lenergia plusz"
+            },
+            "energy_real_consumed": {
+                "name": "Felhaszn\u00e1lt re\u00e1lenergia"
+            },
+            "energy_real_produced": {
+                "name": "Termelt re\u00e1lenergia"
+            },
+            "energy_total": {
+                "name": "Teljes energiamennyis\u00e9g"
+            },
+            "energy_year": {
+                "name": "\u00c9ves energiamennyis\u00e9g"
+            },
+            "error_code": {
+                "name": "Hibak\u00f3d"
+            },
+            "error_message": {
+                "name": "Hiba\u00fczenet",
+                "state": {
+                    "ac_current_sensor_error": "AC \u00e1ram\u00e9rz\u00e9kel\u0151 hiba",
+                    "ac_frequency_too_high": "AC frekvencia t\u00fal magas",
+                    "ac_frequency_too_low": "AC frekvencia t\u00fal alacsony",
+                    "ac_grid_outside_permissible_limits": "AC h\u00e1l\u00f3zat k\u00edv\u00fcl esik a megengedett hat\u00e1r\u00e9rt\u00e9keken",
+                    "ac_module_over_temperature": "AC modul t\u00falmeleged\u00e9s",
+                    "ac_module_temperature_sensor_faulty_l1": "AC modul h\u0151m\u00e9rs\u00e9klet-\u00e9rz\u00e9kel\u0151 hib\u00e1s (L1)",
+                    "ac_module_temperature_sensor_faulty_l2": "AC modul h\u0151m\u00e9rs\u00e9klet-\u00e9rz\u00e9kel\u0151 hib\u00e1s (L2)",
+                    "ac_module_temperature_sensor_faulty_l3": "AC modul h\u0151m\u00e9rs\u00e9klet-\u00e9rz\u00e9kel\u0151 hib\u00e1s (L3)",
+                    "ac_voltage_too_high": "AC fesz\u00fclts\u00e9g t\u00fal magas",
+                    "ac_voltage_too_low": "AC fesz\u00fclts\u00e9g t\u00fal alacsony",
+                    "arc_detection_triggered": "\u00cdvh\u00faz\u00e1s \u00e9szlelve",
+                    "arc_detector_switched_off": "Az \u00edvh\u00faz\u00e1s-\u00e9rz\u00e9kel\u0151 kikapcsolva (pl. k\u00fcls\u0151 \u00edvfigyel\u00e9s sor\u00e1n)",
+                    "can_bus_full": "CAN busz megtelt",
+                    "communication": "Kommunik\u00e1ci\u00f3s hiba",
+                    "compatibility_error_invalid_power_stage_configuration": "Kompatibilit\u00e1si hiba (pl. egy PC panel cser\u00e9je miatt) \u2013 \u00e9rv\u00e9nytelen teljes\u00edtm\u00e9nyfokozat-be\u00e1ll\u00edt\u00e1s konfigur\u00e1ci\u00f3ja",
+                    "current_sensor_calibration_timeout": "Az \u00e1ram\u00e9rz\u00e9kel\u0151 kalibr\u00e1l\u00e1sa id\u0151t\u00fall\u00e9p\u00e9sbe \u00fctk\u00f6z\u00f6tt",
+                    "dc_component_measured_in_grid_too_high": "A h\u00e1l\u00f3zatban m\u00e9rt DC \u00f6sszetev\u0151 t\u00fal magas",
+                    "dc_connection_inverter_battery_interrupted": "A DC kapcsolat a v\u00e1lt\u00f3\u00e1ram\u00fa inverter \u00e9s az akkumul\u00e1tor k\u00f6z\u00f6tt megszakadt",
+                    "dc_input_voltage_mppt_1_too_high": "A DC bemeneti fesz\u00fclts\u00e9g az MPPT 1 eset\u00e9ben t\u00fal magas",
+                    "dc_input_voltage_mppt_2_too_high": "A DC bemeneti fesz\u00fclts\u00e9g az MPPT 2 eset\u00e9ben t\u00fal magas",
+                    "dc_low_string_1": "DC alacsony fesz\u00fclts\u00e9g (1. string)",
+                    "dc_low_string_2": "DC alacsony fesz\u00fclts\u00e9g (2. string)",
+                    "dc_module_over_temperature": "DC modul t\u00falmeleged\u00e9s",
+                    "dc_module_temperature_sensor_faulty": "DC modul h\u0151m\u00e9rs\u00e9klet-\u00e9rz\u00e9kel\u0151 hib\u00e1s",
+                    "derating_caused_by_over_frequency": "Teljes\u00edtm\u00e9nycs\u00f6kkent\u00e9s magas frekvencia miatt",
+                    "different_power_limitation_in_hardware_modules": "Elt\u00e9r\u0151 teljes\u00edtm\u00e9nykorl\u00e1toz\u00e1s a hardvermodulokban",
+                    "eeprom_reinitialised": "Az EEPROM \u00fajraind\u00edt\u00e1sa megt\u00f6rt\u00e9nt",
+                    "emergency_power_derating_activated": "V\u00e9szhelyzeti teljes\u00edtm\u00e9nycs\u00f6kkent\u00e9s aktiv\u00e1lva",
+                    "error_during_logging_data_recording": "Hiba t\u00f6rt\u00e9nt a napl\u00f3z\u00e1si adatok r\u00f6gz\u00edt\u00e9se sor\u00e1n",
+                    "error_during_update_process": "Hiba t\u00f6rt\u00e9nt a friss\u00edt\u00e9si folyamat sor\u00e1n",
+                    "fan_1_error": "Ventil\u00e1tor 1 hiba",
+                    "fan_2_error": "Ventil\u00e1tor 2 hiba",
+                    "file_could_not_be_opened": "A f\u00e1jlt nem siker\u00fclt megnyitni",
+                    "fixed_voltage_mode_out_of_range": "R\u00f6gz\u00edtett fesz\u00fclts\u00e9g \u00fczemm\u00f3d lett kiv\u00e1lasztva az MPP fesz\u00fclts\u00e9g \u00fczemm\u00f3d helyett, de a r\u00f6gz\u00edtett fesz\u00fclts\u00e9g t\u00fal alacsony vagy t\u00fal magas \u00e9rt\u00e9kre lett be\u00e1ll\u00edtva",
+                    "functional_incompatibility_between_pc_boards": "Funkcion\u00e1lis \u00f6sszef\u00e9rhetetlens\u00e9g (egy vagy t\u00f6bb nyomtatott \u00e1ramk\u00f6ri lap az inverterben nem kompatibilis egym\u00e1ssal, p\u00e9ld\u00e1ul egy \u00e1ramk\u00f6ri lap cser\u00e9je ut\u00e1n)",
+                    "grid_frequency_exceeded_limit_reconnecting": "A h\u00e1l\u00f3zati frekvencia t\u00fall\u00e9pte a hat\u00e1r\u00e9rt\u00e9ket \u00fajracsatlakoz\u00e1skor",
+                    "grid_voltage_dependent_power_reduction_active": "A h\u00e1l\u00f3zati fesz\u00fclts\u00e9gt\u0151l f\u00fcgg\u0151 teljes\u00edtm\u00e9nycs\u00f6kkent\u00e9s akt\u00edv",
+                    "guard_cannot_be_found": "A v\u00e9delmi elem nem tal\u00e1lhat\u00f3",
+                    "hardware_id_problem": "Hardverazonos\u00edt\u00f3 probl\u00e9ma",
+                    "hid_range_error": "HID tartom\u00e1nyhiba",
+                    "initialisation_error_file_system_error_on_usb": "Inicializ\u00e1l\u00e1si hiba az USB flash meghajt\u00f3 f\u00e1jlrendszer\u00e9ben",
+                    "initialisation_error_usb_flash_drive_not_supported": "Inicializ\u00e1l\u00e1si hiba \u2013 az USB flash meghajt\u00f3 nem t\u00e1mogatott",
+                    "initialisation_error_usb_stick_over_current": "Inicializ\u00e1l\u00e1si hiba \u2013 T\u00fal\u00e1ram az USB-meghajt\u00f3n",
+                    "insulation_error_on_solar_panels": "Szigetel\u00e9si hiba a napelemeken",
+                    "insulation_fault": "Szigetel\u00e9si hiba",
+                    "insulation_measurement_triggered": "Szigetel\u00e9sm\u00e9r\u00e9s elindult",
+                    "intermediate_circuit_voltage_too_high": "A k\u00f6zbens\u0151 \u00e1ramk\u00f6r fesz\u00fclts\u00e9ge t\u00fal magas",
+                    "intermediate_circuit_voltage_too_low_or_asymmetric": "A k\u00f6zbens\u0151 \u00e1ramk\u00f6r fesz\u00fclts\u00e9ge t\u00fal alacsony vagy aszimmetrikus",
+                    "internal_dsp_malfunction": "Bels\u0151 DSP meghib\u00e1sod\u00e1s",
+                    "internal_hardware_error": "Bels\u0151 hardverhiba",
+                    "internal_processor_status": "Figyelmeztet\u00e9s a bels\u0151 processzor \u00e1llapot\u00e1r\u00f3l. Tov\u00e1bbi inform\u00e1ci\u00f3k\u00e9rt tekintse meg az \u00e1llapotk\u00f3dot",
+                    "interrupt_check_fail": "Megszak\u00edt\u00e1s-ellen\u0151rz\u00e9si hiba",
+                    "invalid_device_type": "\u00c9rv\u00e9nytelen eszk\u00f6zt\u00edpus",
+                    "inverter_required_setup_values_not_received": "Az inverterhez sz\u00fcks\u00e9ges be\u00e1ll\u00edt\u00e1si \u00e9rt\u00e9kek nem \u00e9rkeztek meg",
+                    "inverter_settings_changed_restart_required": "Az inverter be\u00e1ll\u00edt\u00e1sai m\u00f3dosultak, az inverter \u00fajraind\u00edt\u00e1sa sz\u00fcks\u00e9ges",
+                    "log_file_cannot_be_saved": "A napl\u00f3f\u00e1jlt nem lehet menteni (p\u00e9ld\u00e1ul az USB flash meghajt\u00f3 \u00edr\u00e1sv\u00e9dett vagy megtelt)",
+                    "low_pv_voltage_dc_input_voltage_too_low": "Alacsony PV fesz\u00fclts\u00e9g \u2013 Az egyen\u00e1ram\u00fa bemeneti fesz\u00fclts\u00e9g t\u00fal alacsony ahhoz, hogy energi\u00e1t t\u00e1pl\u00e1ljon a h\u00e1l\u00f3zatba",
+                    "mains_voltage_dependent_power_reduction": "H\u00e1l\u00f3zati fesz\u00fclts\u00e9gt\u0151l f\u00fcgg\u0151 teljes\u00edtm\u00e9nycs\u00f6kkent\u00e9s",
+                    "memory_error_detected": "Mem\u00f3riahiba \u00e9szlelve",
+                    "neutral_conductor_not_connected": "A nullavezet\u0151 nincs csatlakoztatva",
+                    "no_communication_between_power_stage_and_control_system": "Nincs kommunik\u00e1ci\u00f3 a teljes\u00edtm\u00e9nyfokozat \u00e9s a vez\u00e9rl\u0151rendszer k\u00f6z\u00f6tt",
+                    "no_communication_with_filter": "Nincs kommunik\u00e1ci\u00f3 a sz\u0171r\u0151vel",
+                    "no_communication_with_hybrid_manager": "Nincs kommunik\u00e1ci\u00f3 a Hybrid Managerrel",
+                    "no_communication_with_power_stage_set": "Nincs kommunik\u00e1ci\u00f3 a teljes\u00edtm\u00e9nyfokozattal",
+                    "no_communication_with_storage_unit": "Nincs kommunik\u00e1ci\u00f3 az energiat\u00e1rol\u00f3 egys\u00e9ggel",
+                    "no_energy_fed_by_mppt1_past_24_hours": "Az MPPT1 az elm\u00falt 24 \u00f3r\u00e1ban nem t\u00e1pl\u00e1lt energi\u00e1t a h\u00e1l\u00f3zatba",
+                    "no_energy_fed_into_grid_past_24_hours": "Az elm\u00falt 24 \u00f3r\u00e1ban nem t\u00f6rt\u00e9nt energiat\u00e1pl\u00e1l\u00e1s a h\u00e1l\u00f3zatba",
+                    "no_error": "Nincs hiba",
+                    "no_power_fed_in_despite_closed_relay": "Nem t\u00f6rt\u00e9nik energiat\u00e1pl\u00e1l\u00e1s, annak ellen\u00e9re, hogy a rel\u00e9 z\u00e1rt \u00e1llapotban van",
+                    "no_usb_flash_drive_connected": "Nincs USB flash meghajt\u00f3 csatlakoztatva",
+                    "overcurrent_ac": "T\u00fal\u00e1ram (AC)",
+                    "overcurrent_dc": "T\u00fal\u00e1ram (DC)",
+                    "overtemperature_in_connection_area": "T\u00falmeleged\u00e9s a csatlakoz\u00e1si ter\u00fcleten",
+                    "pmc_power_stage_set_not_available": "A PMC teljes\u00edtm\u00e9nyfokozat nem \u00e9rhet\u0151 el",
+                    "polarity_of_dc_strings_reversed": "A DC stringek polarit\u00e1s fel van cser\u00e9lve",
+                    "possible_hardware_fault": "Lehets\u00e9ges hardverhiba",
+                    "power_derating_due_to_high_temperature": "Teljes\u00edtm\u00e9nycs\u00f6kkent\u00e9s t\u00fal magas h\u0151m\u00e9rs\u00e9klet miatt",
+                    "power_stage_set_problem": "Teljes\u00edtm\u00e9nyfokozat probl\u00e9ma",
+                    "pv_output_too_low_for_feeding_energy_into_the_grid": "A PV teljes\u00edtm\u00e9ny t\u00fal alacsony ahhoz, hogy energi\u00e1t t\u00e1pl\u00e1ljon a h\u00e1l\u00f3zatba",
+                    "rcmu_error": "RCMU (marad\u00e9k\u00e1ram-fel\u00fcgyeleti egys\u00e9g) hiba",
+                    "real_time_clock_communication_error": "Val\u00f3s idej\u0171 \u00f3ra modul kommunik\u00e1ci\u00f3s hiba",
+                    "real_time_clock_hardware_error": "Hardverhiba a val\u00f3s idej\u0171 \u00f3ra modulban",
+                    "real_time_clock_in_emergency_mode": "Bels\u0151 hiba: A val\u00f3s idej\u0171 \u00f3ra modul v\u00e9sz\u00fczemm\u00f3dban van",
+                    "safety_cut_out_triggered": "Biztons\u00e1gi lekapcsol\u00e1s t\u00f6rt\u00e9nt opcion\u00e1lis k\u00e1rtya vagy RECERBO \u00e1ltal aktiv\u00e1lva",
+                    "software_problem": "Szoftverhiba",
+                    "software_update_invalid_country_setup": "Szoftverfriss\u00edt\u00e9si csoport 0 (\u00e9rv\u00e9nytelen orsz\u00e1gbe\u00e1ll\u00edt\u00e1s)",
+                    "stand_alone_operation_detected": "Sziget\u00fczem \u00e9szlelve",
+                    "storage_unit_not_available": "Az energiat\u00e1rol\u00f3 egys\u00e9g nem \u00e9rhet\u0151 el",
+                    "time_lost": "Az id\u0151 elveszett",
+                    "too_little_dc_power_for_feed_in_operation": "T\u00fal alacsony DC teljes\u00edtm\u00e9ny a bet\u00e1pl\u00e1l\u00e1shoz",
+                    "unique_id_conflict": "Egyedi azonos\u00edt\u00f3 \u00fctk\u00f6z\u00e9s",
+                    "update_file_corrupt": "A friss\u00edt\u00e9si f\u00e1jl s\u00e9r\u00fclt",
+                    "update_file_does_not_match_device": "A friss\u00edt\u00e9si f\u00e1jl nem felel meg az eszk\u00f6znek, a friss\u00edt\u00e9si f\u00e1jl t\u00fal r\u00e9gi",
+                    "update_file_not_recognised_or_missing": "A friss\u00edt\u00e9si f\u00e1jl nem ismerhet\u0151 fel, vagy hi\u00e1nyzik",
+                    "wired_shut_down_triggered": "Vezet\u00e9kes le\u00e1ll\u00edt\u00e1s aktiv\u00e1lva",
+                    "write_or_read_error_occurred": "\u00cdr\u00e1si vagy olvas\u00e1si hiba t\u00f6rt\u00e9nt"
+                }
+            },
+            "frequency_phase_average": {
+                "name": "Frekvencia f\u00e1zis\u00e1tlag"
+            },
+            "inverter_state": {
+                "name": "Inverter \u00e1llapota"
+            },
+            "led_color": {
+                "name": "LED sz\u00edne"
+            },
+            "led_state": {
+                "name": "LED \u00e1llapota"
+            },
+            "meter_location": {
+                "name": "M\u00e9r\u0151 bek\u00f6t\u00e9si hely"
+            },
+            "meter_location_description": {
+                "name": "M\u00e9r\u0151 hely\u00e9nek le\u00edr\u00e1sa",
+                "state": {
+                    "consumption_path": "Fogyaszt\u00e1si \u00fatvonal",
+                    "external_battery": "K\u00fcls\u0151 akkumul\u00e1tor",
+                    "external_generator": "K\u00fcls\u0151 gener\u00e1tor",
+                    "feed_in": "H\u00e1l\u00f3zati \u00f6sszekapcsol\u00e1si pont",
+                    "subload": "R\u00e9szterhel\u00e9s"
+                }
+            },
+            "meter_mode": {
+                "name": "M\u00e9r\u00e9s m\u00f3dja"
+            },
+            "power_ac": {
+                "name": "Teljes\u00edtm\u00e9ny AC"
+            },
+            "power_apparent_phase_1": {
+                "name": "L\u00e1tsz\u00f3lagos teljes\u00edtm\u00e9ny L1"
+            },
+            "power_apparent_phase_2": {
+                "name": "L\u00e1tsz\u00f3lagos teljes\u00edtm\u00e9ny L2"
+            },
+            "power_apparent_phase_3": {
+                "name": "L\u00e1tsz\u00f3lagos teljes\u00edtm\u00e9ny L3"
+            },
+            "power_battery": {
+                "name": "Akku teljes\u00edtm\u00e9ny"
+            },
+            "power_battery_charge": {
+                "name": "Akkumul\u00e1tor teljes\u00edtm\u00e9ny\u00e9nek t\u00f6lt\u00e9s"
+            },
+            "power_battery_discharge": {
+                "name": "Akkumul\u00e1tor teljes\u00edtm\u00e9ny kiv\u00e9tel"
+            },
+            "power_factor_phase_1": {
+                "name": "Teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 L1"
+            },
+            "power_factor_phase_2": {
+                "name": "Teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 L2"
+            },
+            "power_factor_phase_3": {
+                "name": "Teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 L3"
+            },
+            "power_grid": {
+                "name": "K\u00f6z\u00fczemi h\u00e1l\u00f3zatr\u00f3l"
+            },
+            "power_grid_export": {
+                "name": "H\u00e1l\u00f3zati teljes\u00edtm\u00e9ny bet\u00e1pl\u00e1l\u00e1s"
+            },
+            "power_grid_import": {
+                "name": "H\u00e1l\u00f3zati teljes\u00edtm\u00e9ny kiv\u00e9tel"
+            },
+            "power_load": {
+                "name": "Fogyaszt\u00e1s"
+            },
+            "power_load_consumed": {
+                "name": "Felhaszn\u00e1lt teljes\u00edtm\u00e9ny"
+            },
+            "power_load_generated": {
+                "name": "Termelt teljes\u00edtm\u00e9ny"
+            },
+            "power_photovoltaics": {
+                "name": "Napelemr\u0151l"
+            },
+            "power_reactive": {
+                "name": "Reakt\u00edv teljes\u00edtm\u00e9ny"
+            },
+            "power_reactive_phase_1": {
+                "name": "Reakt\u00edv teljes\u00edtm\u00e9ny L1"
+            },
+            "power_reactive_phase_2": {
+                "name": "Reakt\u00edv teljes\u00edtm\u00e9ny L2"
+            },
+            "power_reactive_phase_3": {
+                "name": "Reakt\u00edv teljes\u00edtm\u00e9ny L3"
+            },
+            "power_real": {
+                "name": "Val\u00f3s teljes\u00edtm\u00e9ny"
+            },
+            "power_real_phase_1": {
+                "name": "Val\u00f3s teljes\u00edtm\u00e9ny L1"
+            },
+            "power_real_phase_2": {
+                "name": "Val\u00f3s teljes\u00edtm\u00e9ny L2"
+            },
+            "power_real_phase_3": {
+                "name": "Val\u00f3s teljes\u00edtm\u00e9ny L3"
+            },
+            "relative_autonomy": {
+                "name": "Relat\u00edv auton\u00f3mia"
+            },
+            "relative_self_consumption": {
+                "name": "Relat\u00edv \u00f6nfogyaszt\u00e1s"
+            },
+            "state_code": {
+                "name": "\u00c1llapot k\u00f3d"
+            },
+            "state_message": {
+                "name": "\u00c1llapot \u00fczenet",
+                "state": {
+                    "boost_mode": "Boost \u00fczemm\u00f3d",
+                    "critical_fault": "Kritikus hiba",
+                    "fault": "Hiba",
+                    "keep_minimum_temperature": "Tartsa a minim\u00e1lis h\u0151m\u00e9rs\u00e9kletet",
+                    "legionella_protection": "Legionella elleni v\u00e9delem",
+                    "up_and_running": "M\u0171k\u00f6dik"
+                }
+            },
+            "state_of_charge": {
+                "name": "A t\u00f6lt\u00e9s \u00e1llapota"
+            },
+            "status_code": {
+                "name": "\u00c1llapot k\u00f3d"
+            },
+            "status_message": {
+                "name": "\u00c1llapot\u00fczenet",
+                "state": {
+                    "bootloading": "Rendszerind\u00edt\u00e1s",
+                    "error": "Hiba",
+                    "idle": "T\u00e9tlen",
+                    "ready": "K\u00e9sz",
+                    "running": "M\u0171k\u00f6d\u00e9sben",
+                    "sleeping": "Alv\u00e1s",
+                    "standby": "K\u00e9szenl\u00e9tben",
+                    "startup": "Ind\u00edt\u00e1s"
+                }
+            },
+            "temperature_cell": {
+                "name": "H\u0151m\u00e9rs\u00e9klet"
+            },
+            "voltage_ac": {
+                "name": "Fesz\u00fclts\u00e9g AC"
+            },
+            "voltage_ac_phase_1": {
+                "name": "Fesz\u00fclts\u00e9g L1"
+            },
+            "voltage_ac_phase_2": {
+                "name": "Fesz\u00fclts\u00e9g L2"
+            },
+            "voltage_ac_phase_3": {
+                "name": "Fesz\u00fclts\u00e9g L3"
+            },
+            "voltage_ac_phase_to_phase_12": {
+                "name": "Fesz\u00fclts\u00e9g L1-L2"
+            },
+            "voltage_ac_phase_to_phase_23": {
+                "name": "Fesz\u00fclts\u00e9g L2-L3"
+            },
+            "voltage_ac_phase_to_phase_31": {
+                "name": "Fesz\u00fclts\u00e9g L3-L1"
+            },
+            "voltage_dc": {
+                "name": "Fesz\u00fclts\u00e9g DC"
+            },
+            "voltage_dc_2": {
+                "name": "Fesz\u00fclts\u00e9g DC2"
+            },
+            "voltage_dc_maximum_cell": {
+                "name": "Maxim\u00e1lis cellafesz\u00fclts\u00e9g"
+            },
+            "voltage_dc_minimum_cell": {
+                "name": "Minim\u00e1lis cellafesz\u00fclts\u00e9g"
+            }
+        }
+    },
+    "exceptions": {
+        "entry_cannot_connect": {
+            "message": "Nem siker\u00fclt csatlakozni a Fronius eszk\u00f6zh\u00f6z a(z) {host} c\u00edmen: {fronius_error}"
+        },
+        "update_failed": {
+            "message": "Hiba t\u00f6rt\u00e9nt az adatok lek\u00e9r\u00e9se sor\u00e1n: {fronius_error}"
+        }
+    }
+}

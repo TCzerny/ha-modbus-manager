@@ -1,0 +1,121 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Konto har redan konfigurerats",
+            "no_locations": "Inga platser \u00e4r tillg\u00e4ngliga f\u00f6r den h\u00e4r anv\u00e4ndaren, kontrollera TotalConnect-inst\u00e4llningarna",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "invalid_auth": "Ogiltig autentisering",
+            "usercode": "Anv\u00e4ndarkoden \u00e4r inte giltig f\u00f6r denna anv\u00e4ndare p\u00e5 denna plats"
+        },
+        "step": {
+            "locations": {
+                "data": {
+                    "usercode": "Anv\u00e4ndarkod"
+                },
+                "description": "Ange anv\u00e4ndarkoden f\u00f6r denna anv\u00e4ndare p\u00e5 plats {location_id}",
+                "title": "Anv\u00e4ndarkoder f\u00f6r plats"
+            },
+            "reauth_confirm": {
+                "description": "Total Connect m\u00e5ste autentisera ditt konto igen",
+                "title": "Autentiseringen har upph\u00f6rt att g\u00e4lla f\u00f6r {name}"
+            },
+            "user": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                }
+            }
+        }
+    },
+    "entity": {
+        "alarm_control_panel": {
+            "partition": {
+                "name": "Partition {partition_id}"
+            }
+        },
+        "binary_sensor": {
+            "police": {
+                "name": "N\u00f6dsituation polis",
+                "state": {
+                    "off": "Ingen n\u00f6dsituation",
+                    "on": "N\u00f6dsituation polis"
+                }
+            }
+        },
+        "button": {
+            "bypass": {
+                "name": "F\u00f6rbikoppling"
+            },
+            "bypass_all": {
+                "name": "F\u00f6rbikoppla alla"
+            },
+            "clear_bypass": {
+                "name": "Rensa f\u00f6rbikoppling"
+            }
+        }
+    },
+    "exceptions": {
+        "arm_away_failed": {
+            "message": "Kunde inte aktivera bortal\u00e4ge {device}"
+        },
+        "arm_away_instant_failed": {
+            "message": "Kunde inte aktivera omedelbart bortal\u00e4ge {device}"
+        },
+        "arm_away_instant_invalid_code": {
+            "message": "Anv\u00e4ndarkoden \u00e4r ogiltig, aktiverade inte omedelbart bortal\u00e4ge"
+        },
+        "arm_away_invalid_code": {
+            "message": "Anv\u00e4ndarkoden \u00e4r ogiltig, aktiverade inte p\u00e5 bortal\u00e4ge"
+        },
+        "arm_home_failed": {
+            "message": "Det gick inte att aktivera hemmal\u00e4ge {device}"
+        },
+        "arm_home_instant_failed": {
+            "message": "Kunde inte aktivera omedelbart hemmal\u00e4ge {device}"
+        },
+        "arm_home_instant_invalid_code": {
+            "message": "Anv\u00e4ndarkoden \u00e4r ogiltig, aktiverade inte omedelbart hemmal\u00e4ge"
+        },
+        "arm_home_invalid_code": {
+            "message": "Anv\u00e4ndarkoden \u00e4r ogiltig, aktiverade inte p\u00e5 hemmal\u00e4ge"
+        },
+        "arm_night_failed": {
+            "message": "Det gick inte att aktivera hemmal\u00e4ge {device}"
+        },
+        "arm_night_invalid_code": {
+            "message": "Anv\u00e4ndarkoden \u00e4r ogiltig, aktiverade inte nattl\u00e4ge"
+        },
+        "disarm_failed": {
+            "message": "Det gick inte att avaktivera {device}"
+        },
+        "disarm_invalid_code": {
+            "message": "Anv\u00e4ndarkoden \u00e4r ogiltig, avaktiverades inte"
+        },
+        "invalid_pin": {
+            "message": "Felaktig kod inmatad"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "auto_bypass_low_battery": "Automatisk f\u00f6rbikoppling av l\u00e5gt batteri",
+                    "code_required": "Kr\u00e4ver att anv\u00e4ndaren anger kod f\u00f6r larm\u00e5tg\u00e4rder"
+                },
+                "title": "TotalConnect-alternativ"
+            }
+        }
+    },
+    "services": {
+        "arm_away_instant": {
+            "description": "Larmar Borta-l\u00e4ge med noll entr\u00e9f\u00f6rdr\u00f6jning",
+            "name": "Bortalarma omedelbart"
+        },
+        "arm_home_instant": {
+            "description": "Larmar Hemma-l\u00e4ge med noll entr\u00e9f\u00f6rdr\u00f6jning",
+            "name": "Larmar Hemma-l\u00e4ge omedelbart"
+        }
+    }
+}

@@ -1,0 +1,101 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "old_firmware": "Firmware antigo n\u00e3o suportado no dispositivo Bond - atualize-o antes de continuar",
+            "unknown": "Erro inesperado"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "confirm": {
+                "data": {
+                    "access_token": "Token de Acesso"
+                },
+                "description": "Deseja configurar {name}?"
+            },
+            "user": {
+                "data": {
+                    "access_token": "Token de Acesso",
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "O endere\u00e7o IP do seu hub Bond."
+                }
+            }
+        }
+    },
+    "services": {
+        "set_fan_speed_tracked_state": {
+            "description": "Define a velocidade da ventoinha controlada para uma ventoinha de liga\u00e7\u00e3o.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome(s) das entidades para definir a velocidade da ventoinha monitorizada.",
+                    "name": "Entidade"
+                },
+                "speed": {
+                    "description": "Velocidade da ventoinha em %.",
+                    "name": "Velocidade da Ventoinha"
+                }
+            },
+            "name": "Definir o estado monitorizado da velocidade do ventilador"
+        },
+        "set_light_brightness_tracked_state": {
+            "description": "Define o estado de brilho monitorizado de uma luz de liga\u00e7\u00e3o.",
+            "fields": {
+                "brightness": {
+                    "description": "Brilho.",
+                    "name": "Brilho"
+                },
+                "entity_id": {
+                    "description": "Nome(s) das entidades para definir o estado do brilho monitorizado.",
+                    "name": "Entidade"
+                }
+            },
+            "name": "Definir o estado monitorizado do brilho da luz"
+        },
+        "set_light_power_tracked_state": {
+            "description": "Define o estado de pot\u00eancia monitorizada de uma luz de liga\u00e7\u00e3o.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome(s) das entidades para definir o estado de energia monitorizada.",
+                    "name": "Entidade"
+                },
+                "power_state": {
+                    "description": "Estado de energia.",
+                    "name": "Estado de energia"
+                }
+            },
+            "name": "Definir o estado de monitoriza\u00e7\u00e3o da pot\u00eancia da luz"
+        },
+        "set_switch_power_tracked_state": {
+            "description": "Define o estado de energia monitorizada de um interrutor de liga\u00e7\u00e3o.",
+            "fields": {
+                "entity_id": {
+                    "description": "Nome(s) das entidades para definir o estado de energia monitorizada.",
+                    "name": "Entidade"
+                },
+                "power_state": {
+                    "description": "Estado de energia.",
+                    "name": "Estado de energia"
+                }
+            },
+            "name": "Definir o estado do interruptor de alimenta\u00e7\u00e3o"
+        },
+        "start_decreasing_brightness": {
+            "description": "Come\u00e7a a diminuir o brilho da luz. (obsoleto).",
+            "name": "Come\u00e7ar a diminuir a luminosidade"
+        },
+        "start_increasing_brightness": {
+            "description": "Come\u00e7a a aumentar o brilho da luz. (obsoleto).",
+            "name": "Come\u00e7ar a aumentar a luminosidade"
+        },
+        "stop": {
+            "description": "Para qualquer a\u00e7\u00e3o em curso e esvazia a fila. (obsoleto).",
+            "name": "Parar"
+        }
+    }
+}

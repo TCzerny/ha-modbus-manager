@@ -1,0 +1,85 @@
+{
+    "device_automation": {
+        "action_type": {
+            "toggle": "Basculer {entity_name}",
+            "turn_off": "D\u00e9sactiver {entity_name}",
+            "turn_on": "Activer {entity_name}"
+        },
+        "condition_type": {
+            "is_off": "{entity_name} est d\u00e9sactiv\u00e9",
+            "is_on": "{entity_name} est activ\u00e9"
+        },
+        "trigger_type": {
+            "changed_states": "{entity_name} a \u00e9t\u00e9 activ\u00e9 ou d\u00e9sactiv\u00e9",
+            "turned_off": "{entity_name} a \u00e9t\u00e9 d\u00e9sactiv\u00e9",
+            "turned_on": "{entity_name} a \u00e9t\u00e9 activ\u00e9"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "T\u00e9l\u00e9commande",
+            "state": {
+                "off": "D\u00e9sactiv\u00e9",
+                "on": "Activ\u00e9"
+            }
+        }
+    },
+    "services": {
+        "delete_command": {
+            "fields": {
+                "command": {
+                    "name": "Commande"
+                },
+                "device": {
+                    "description": "Appareil \u00e0 partir duquel les commandes seront supprim\u00e9es.",
+                    "name": "Appareil"
+                }
+            },
+            "name": "Supprimer la commande"
+        },
+        "learn_command": {
+            "fields": {
+                "command": {
+                    "name": "Commande"
+                },
+                "command_type": {
+                    "name": "Type de commande"
+                },
+                "device": {
+                    "name": "Appareil"
+                }
+            }
+        },
+        "send_command": {
+            "fields": {
+                "command": {
+                    "name": "Commande"
+                },
+                "device": {
+                    "name": "Appareil"
+                },
+                "num_repeats": {
+                    "name": "R\u00e9p\u00e9titions"
+                }
+            },
+            "name": "Envoyer la commande"
+        },
+        "toggle": {
+            "description": "Envoie la commande de basculement.",
+            "name": "Basculer"
+        },
+        "turn_off": {
+            "description": "Envoie la commande d\u2019arr\u00eat.",
+            "name": "\u00c9teindre"
+        },
+        "turn_on": {
+            "fields": {
+                "activity": {
+                    "name": "Activit\u00e9"
+                }
+            },
+            "name": "Allumer"
+        }
+    },
+    "title": "T\u00e9l\u00e9commande"
+}

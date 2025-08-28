@@ -1,0 +1,195 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "no_mac_address": "Falta o endere\u00e7o MAC no registo do zeroconf",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "reconfigure_successful": "A reconfigura\u00e7\u00e3o foi bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "missing_data": "Dados em falta: repetir mais tarde ou outra configura\u00e7\u00e3o",
+            "otp_failed": "A autentica\u00e7\u00e3o em duas etapas falhou, tente novamente com um novo c\u00f3digo de acesso",
+            "unknown": "Erro inesperado"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "2sa": {
+                "data": {
+                    "otp_code": "C\u00f3digo"
+                },
+                "title": "Synology DSM: autentica\u00e7\u00e3o em dois passos"
+            },
+            "link": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL",
+                    "username": "Nome de Utilizador",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "description": "Deseja configurar {name} ({host})?"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Palavra-passe",
+                    "username": "Nome de Utilizador"
+                },
+                "title": "Reautenticar o Synology DSM"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "password": "Palavra-passe",
+                    "port": "Porta",
+                    "ssl": "Utiliza um certificado SSL",
+                    "username": "Nome de Utilizador",
+                    "verify_ssl": "Verificar o certificado SSL"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou o endere\u00e7o IP do seu Synology NAS."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "disk_below_remain_life_thr": {
+                "name": "Vida \u00fatil restante inferior a um minuto"
+            },
+            "disk_exceed_bad_sector_thr": {
+                "name": "Excedeu o n\u00famero m\u00e1ximo de sectores danificados"
+            },
+            "status": {
+                "name": "Estado da seguran\u00e7a"
+            }
+        },
+        "sensor": {
+            "cpu_15min_load": {
+                "name": "M\u00e9dia de carga da CPU (15 min)"
+            },
+            "cpu_1min_load": {
+                "name": "M\u00e9dia de carga da CPU (1 min)"
+            },
+            "cpu_5min_load": {
+                "name": "M\u00e9dia de carga da CPU (5 min)"
+            },
+            "cpu_other_load": {
+                "name": "Utiliza\u00e7\u00e3o de CPU (outros)"
+            },
+            "cpu_system_load": {
+                "name": "Utiliza\u00e7\u00e3o de CPU (sistema)"
+            },
+            "cpu_total_load": {
+                "name": "Utiliza\u00e7\u00e3o de CPU (total)"
+            },
+            "cpu_user_load": {
+                "name": "Utiliza\u00e7\u00e3o de CPU (utilizador)"
+            },
+            "disk_smart_status": {
+                "name": "Estado (inteligente)"
+            },
+            "disk_status": {
+                "name": "Estado"
+            },
+            "disk_temp": {
+                "name": "Temperatura"
+            },
+            "memory_available_real": {
+                "name": "Mem\u00f3ria dispon\u00edvel (real)"
+            },
+            "memory_available_swap": {
+                "name": "Mem\u00f3ria dispon\u00edvel (swap)"
+            },
+            "memory_cached": {
+                "name": "Mem\u00f3ria em cache"
+            },
+            "memory_real_usage": {
+                "name": "Utiliza\u00e7\u00e3o de mem\u00f3ria (real)"
+            },
+            "memory_size": {
+                "name": "Tamanho da mem\u00f3ria"
+            },
+            "memory_total_real": {
+                "name": "Mem\u00f3ria total (real)"
+            },
+            "memory_total_swap": {
+                "name": "Total de mem\u00f3ria (swap)"
+            },
+            "network_down": {
+                "name": "Taxa de transfer\u00eancia de download"
+            },
+            "network_up": {
+                "name": "Taxa de transfer\u00eancia de upload"
+            },
+            "temperature": {
+                "name": "Temperatura"
+            },
+            "uptime": {
+                "name": "\u00daltima inicializa\u00e7\u00e3o"
+            },
+            "volume_disk_temp_avg": {
+                "name": "Temperatura m\u00e9dia do disco"
+            },
+            "volume_disk_temp_max": {
+                "name": "Temperatura m\u00e1xima do disco"
+            },
+            "volume_percentage_used": {
+                "name": "Volume usado"
+            },
+            "volume_size_total": {
+                "name": "Tamanho total"
+            },
+            "volume_size_used": {
+                "name": "Espa\u00e7o usado"
+            },
+            "volume_status": {
+                "name": "Estado"
+            }
+        },
+        "switch": {
+            "home_mode": {
+                "name": "Modo Em Casa"
+            }
+        },
+        "update": {
+            "update": {
+                "name": "Atualiza\u00e7\u00e3o do DSM"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "scan_interval": "Minutos entre exames",
+                    "snap_profile_type": "N\u00edvel de qualidade dos instant\u00e2neos da c\u00e2mara (0:alto 1:m\u00e9dio 2:baixo)",
+                    "timeout": "Tempo limite (segundos)"
+                }
+            }
+        }
+    },
+    "services": {
+        "reboot": {
+            "description": "Reinicia o NAS. Esta a\u00e7\u00e3o est\u00e1 obsoleta e ser\u00e1 removida numa vers\u00e3o futura. Utilize a entidade de bot\u00e3o correspondente.",
+            "fields": {
+                "serial": {
+                    "description": "S\u00e9rie do NAS a reiniciar; necess\u00e1rio quando est\u00e3o configurados v\u00e1rios NAS.",
+                    "name": "S\u00e9rie"
+                }
+            },
+            "name": "Reiniciar"
+        },
+        "shutdown": {
+            "description": "Desliga o NAS. Esta a\u00e7\u00e3o est\u00e1 obsoleta e ser\u00e1 removida numa vers\u00e3o futura. Utilize a entidade de bot\u00e3o correspondente.",
+            "fields": {
+                "serial": {
+                    "description": "S\u00e9rie do NAS a encerrar; necess\u00e1rio quando est\u00e3o configurados v\u00e1rios NAS.",
+                    "name": "S\u00e9rie"
+                }
+            },
+            "name": "Encerrar"
+        }
+    }
+}

@@ -1,0 +1,143 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "device_not_supported": "Den h\u00e4r enheten st\u00f6ds inte",
+            "invalid_discovery_parameters": "Ogiltiga identifieringsparametrar",
+            "reauth_successful": "Aktiveringen av API lyckades",
+            "reconfigure_successful": "Omkonfigurationen lyckades",
+            "unknown_error": "Ov\u00e4ntat fel",
+            "unsupported_api_version": "Uppt\u00e4ckte en API-version som inte st\u00f6ds",
+            "wrong_device": "Den konfigurerade enheten \u00e4r inte densamma som finns p\u00e5 den h\u00e4r IP-adressen."
+        },
+        "error": {
+            "api_not_enabled": "Det lokala API:et \u00e4r inaktiverat. G\u00e5 till HomeWizard Energy-appen och aktivera API:t i enhetsinst\u00e4llningarna.",
+            "network_error": "Enheten g\u00e5r inte att n\u00e5, se till att du har angett r\u00e4tt IP-adress och att enheten \u00e4r tillg\u00e4nglig i ditt n\u00e4tverk"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Vill du konfigurera {product_type} ({serial}) p\u00e5 {ip_address} ?",
+                "title": "Bekr\u00e4fta"
+            },
+            "reauth_confirm": {
+                "description": "Det lokala API:et \u00e4r inaktiverat. G\u00e5 till HomeWizard Energy-appen och aktivera API:t i enhetsinst\u00e4llningarna."
+            },
+            "reconfigure": {
+                "data": {
+                    "ip_address": "IP-adress"
+                },
+                "data_description": {
+                    "ip_address": "IP-adressen f\u00f6r din HomeWizard Energy-enhet."
+                },
+                "description": "Uppdatera konfigurationen f\u00f6r {title}."
+            },
+            "user": {
+                "data": {
+                    "ip_address": "IP-adress"
+                },
+                "data_description": {
+                    "ip_address": "IP-adressen f\u00f6r din HomeWizard Energy-enhet."
+                },
+                "description": "Ange IP-adressen f\u00f6r din HomeWizard Energy-enhet f\u00f6r att integrera med Home Assistant.",
+                "title": "Konfigurera enhet"
+            }
+        }
+    },
+    "entity": {
+        "number": {
+            "status_light_brightness": {
+                "name": "Ljusstyrka f\u00f6r statuslampa"
+            }
+        },
+        "sensor": {
+            "active_apparent_power_phase_va": {
+                "name": "Skenbar effekt fas {phase}"
+            },
+            "active_current_phase_a": {
+                "name": "Str\u00f6m fas {phase}"
+            },
+            "active_liter_lpm": {
+                "name": "Vattenanv\u00e4ndning"
+            },
+            "active_power_average_w": {
+                "name": "Genomsnittlig efterfr\u00e5gan"
+            },
+            "active_power_factor_phase": {
+                "name": "Effektfaktor fas {phase}"
+            },
+            "active_power_phase_w": {
+                "name": "Effekt fas {phase}"
+            },
+            "active_reactive_power_phase_var": {
+                "name": "Reaktiv effekt fas {phase}"
+            },
+            "active_tariff": {
+                "name": "Aktiv tariff"
+            },
+            "active_voltage_phase_v": {
+                "name": "Sp\u00e4nning fas {phase}"
+            },
+            "any_power_fail_count": {
+                "name": "Uppt\u00e4ckta str\u00f6mavbrott"
+            },
+            "dsmr_version": {
+                "name": "DSMR version"
+            },
+            "long_power_fail_count": {
+                "name": "Uppt\u00e4ckta l\u00e5ngvariga str\u00f6mavbrott"
+            },
+            "meter_model": {
+                "name": "Modell f\u00f6r smart m\u00e4tare"
+            },
+            "monthly_power_peak_w": {
+                "name": "H\u00f6gsta efterfr\u00e5gan nuvarande m\u00e5nad"
+            },
+            "total_energy_export_kwh": {
+                "name": "Total elexport"
+            },
+            "total_energy_export_tariff_kwh": {
+                "name": "Tariff f\u00f6r export av energi {tariff}"
+            },
+            "total_energy_import_kwh": {
+                "name": "Total elimport"
+            },
+            "total_energy_import_tariff_kwh": {
+                "name": "Tariff f\u00f6r import av energi {tariff}"
+            },
+            "total_liter_m3": {
+                "name": "Total vattenf\u00f6rbrukning"
+            },
+            "unique_meter_id": {
+                "name": "Identifierare f\u00f6r smart m\u00e4tare"
+            },
+            "voltage_sag_phase_count": {
+                "name": "Sp\u00e4nningsfall detekterade fas {phase}"
+            },
+            "voltage_swell_phase_count": {
+                "name": "\u00d6versp\u00e4nning detekterad fas {phase}"
+            },
+            "wifi_ssid": {
+                "name": "Wifi SSID"
+            },
+            "wifi_strength": {
+                "name": "WiFi-styrka"
+            }
+        },
+        "switch": {
+            "cloud_connection": {
+                "name": "Molnanslutning"
+            },
+            "switch_lock": {
+                "name": "Brytarl\u00e5s"
+            }
+        }
+    },
+    "exceptions": {
+        "api_disabled": {
+            "message": "Det lokala API:et \u00e4r inaktiverat."
+        },
+        "communication_error": {
+            "message": "Ett fel uppstod under kommunikationen med HomeWizard-enheten"
+        }
+    }
+}

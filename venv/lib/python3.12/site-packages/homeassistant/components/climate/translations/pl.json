@@ -1,0 +1,249 @@
+{
+    "device_automation": {
+        "action_type": {
+            "set_hvac_mode": "zmie\u0144 tryb pracy dla {entity_name}",
+            "set_preset_mode": "zmie\u0144 ustawienia dla {entity_name}"
+        },
+        "condition_type": {
+            "is_hvac_mode": "na {entity_name} jest ustawiony okre\u015blony tryb HVAC",
+            "is_preset_mode": "na {entity_name} jest okre\u015blone ustawienie"
+        },
+        "extra_fields": {
+            "above": "Powy\u017cej",
+            "below": "Poni\u017cej",
+            "for": "Czas trwania",
+            "to": "Do"
+        },
+        "trigger_type": {
+            "current_humidity_changed": "zmieni si\u0119 zmierzona wilgotno\u015b\u0107 {entity_name}",
+            "current_temperature_changed": "zmieni si\u0119 zmierzona temperatura {entity_name}",
+            "hvac_mode_changed": "zmieni si\u0119 tryb HVAC {entity_name}"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Termostat",
+            "state": {
+                "auto": "auto",
+                "cool": "ch\u0142odzenie",
+                "dry": "osuszanie",
+                "fan_only": "tylko wentylator",
+                "heat": "grzanie",
+                "heat_cool": "grzanie/ch\u0142odzenie",
+                "off": "wy\u0142\u0105czono"
+            },
+            "state_attributes": {
+                "aux_heat": {
+                    "name": "Grza\u0142ka pomocnicza"
+                },
+                "current_humidity": {
+                    "name": "Aktualna wilgotno\u015b\u0107"
+                },
+                "current_temperature": {
+                    "name": "Aktualna temperatura"
+                },
+                "fan_mode": {
+                    "name": "Tryb/bieg wentylatora",
+                    "state": {
+                        "auto": "auto",
+                        "diffuse": "rozproszony nawiew",
+                        "focus": "skupiony nawiew",
+                        "high": "wysoki",
+                        "low": "niski",
+                        "medium": "\u015bredni",
+                        "middle": "po\u015bredni",
+                        "off": "wy\u0142\u0105czono",
+                        "on": "w\u0142\u0105czono",
+                        "top": "nawiew g\u00f3rny"
+                    }
+                },
+                "fan_modes": {
+                    "name": "Tryby/biegi wentylatora"
+                },
+                "humidity": {
+                    "name": "Wilgotno\u015b\u0107 docelowa"
+                },
+                "hvac_action": {
+                    "name": "Bie\u017c\u0105ce dzia\u0142anie",
+                    "state": {
+                        "cooling": "ch\u0142odzenie",
+                        "drying": "osuszanie",
+                        "fan": "wentylator",
+                        "heating": "grzanie",
+                        "idle": "brak aktywno\u015bci",
+                        "off": "wy\u0142\u0105czono"
+                    }
+                },
+                "hvac_modes": {
+                    "name": "Tryby HVAC"
+                },
+                "max_humidity": {
+                    "name": "Maksymalna wilgotno\u015b\u0107 docelowa"
+                },
+                "max_temp": {
+                    "name": "Maksymalna docelowa temperatura"
+                },
+                "min_humidity": {
+                    "name": "Minimalna wilgotno\u015b\u0107 docelowa"
+                },
+                "min_temp": {
+                    "name": "Minimalna docelowa temperatura"
+                },
+                "preset_mode": {
+                    "name": "Ustawienie",
+                    "state": {
+                        "activity": "aktywno\u015b\u0107",
+                        "away": "poza domem",
+                        "boost": "turbo",
+                        "comfort": "komfort",
+                        "eco": "eko",
+                        "home": "w domu",
+                        "none": "brak",
+                        "sleep": "sen"
+                    }
+                },
+                "preset_modes": {
+                    "name": "Ustawienia"
+                },
+                "swing_horizontal_mode": {
+                    "state": {
+                        "off": "wy\u0142\u0105czono",
+                        "on": "w\u0142\u0105czono"
+                    }
+                },
+                "swing_mode": {
+                    "name": "Tryb ruchu nawiewu",
+                    "state": {
+                        "both": "ruch w obu p\u0142aszczyznach",
+                        "horizontal": "ruch poziomy",
+                        "off": "wy\u0142\u0105czono",
+                        "on": "w\u0142\u0105czono",
+                        "vertical": "ruch pionowy"
+                    }
+                },
+                "swing_modes": {
+                    "name": "Tryby ruchu nawiewu"
+                },
+                "target_temp_high": {
+                    "name": "G\u00f3rna docelowa temperatura"
+                },
+                "target_temp_low": {
+                    "name": "Dolna docelowa temperatura"
+                },
+                "target_temp_step": {
+                    "name": "Krok temperatury docelowej"
+                },
+                "temperature": {
+                    "name": "Docelowa temperatura"
+                }
+            }
+        }
+    },
+    "services": {
+        "set_aux_heat": {
+            "description": "W\u0142\u0105cza/wy\u0142\u0105cza ogrzewanie dodatkowe.",
+            "fields": {
+                "aux_heat": {
+                    "description": "Nowa warto\u015b\u0107 ogrzewania dodatkowego.",
+                    "name": "Ogrzewanie dodatkowe"
+                }
+            },
+            "name": "W\u0142\u0105cz/wy\u0142\u0105cz ogrzewanie dodatkowe"
+        },
+        "set_fan_mode": {
+            "description": "Ustawia tryb pracy wentylatora.",
+            "fields": {
+                "fan_mode": {
+                    "description": "Tryb pracy wentylatora.",
+                    "name": "Tryb wentylatora"
+                }
+            },
+            "name": "Ustaw tryb wentylatora"
+        },
+        "set_humidity": {
+            "description": "Ustawia docelow\u0105 wilgotno\u015b\u0107.",
+            "fields": {
+                "humidity": {
+                    "description": "Docelowa wilgotno\u015b\u0107.",
+                    "name": "Wilgotno\u015b\u0107"
+                }
+            },
+            "name": "Ustaw docelow\u0105 wilgotno\u015b\u0107"
+        },
+        "set_hvac_mode": {
+            "description": "Ustawia tryb pracy HVAC.",
+            "fields": {
+                "hvac_mode": {
+                    "description": "Tryb pracy HVAC.",
+                    "name": "Tryb HVAC"
+                }
+            },
+            "name": "Ustaw tryb HVAC"
+        },
+        "set_preset_mode": {
+            "description": "Ustawia tryb predefiniowany.",
+            "fields": {
+                "preset_mode": {
+                    "description": "Tryb predefiniowany.",
+                    "name": "Tryb predefiniowany"
+                }
+            },
+            "name": "Ustaw tryb predefiniowany"
+        },
+        "set_swing_horizontal_mode": {
+            "description": "Ustawia poziomy tryb pracy nawiewu.",
+            "fields": {
+                "swing_horizontal_mode": {
+                    "description": "Poziomy tryb pracy nawiewu.",
+                    "name": "Poziomy tryb nawiewu"
+                }
+            },
+            "name": "Ustaw poziomy tryb nawiewu"
+        },
+        "set_swing_mode": {
+            "description": "Ustawia tryb pracy nawiewu.",
+            "fields": {
+                "swing_mode": {
+                    "description": "Tryb pracy nawiewu.",
+                    "name": "Tryb nawiewu"
+                }
+            },
+            "name": "Ustaw tryb nawiewu"
+        },
+        "set_temperature": {
+            "description": "Ustawia docelow\u0105 temperatur\u0119.",
+            "fields": {
+                "hvac_mode": {
+                    "description": "Tryb pracy HVAC.",
+                    "name": "Tryb HVAC"
+                },
+                "target_temp_high": {
+                    "description": "G\u00f3rny zakres docelowej temperatury.",
+                    "name": "G\u00f3rna docelowa temperatura"
+                },
+                "target_temp_low": {
+                    "description": "Dolny zakres docelowej temperatury.",
+                    "name": "Dolna docelowa temperatura"
+                },
+                "temperature": {
+                    "description": "Docelowa temperatura.",
+                    "name": "Docelowa temperatura"
+                }
+            },
+            "name": "Ustaw docelow\u0105 temperatur\u0119"
+        },
+        "toggle": {
+            "description": "Prze\u0142\u0105cza klimatyzacj\u0119 (w\u0142\u0105cza lub wy\u0142\u0105cza).",
+            "name": "Prze\u0142\u0105cz"
+        },
+        "turn_off": {
+            "description": "Wy\u0142\u0105cza klimatyzacj\u0119.",
+            "name": "Wy\u0142\u0105cz"
+        },
+        "turn_on": {
+            "description": "W\u0142\u0105cza klimatyzacj\u0119.",
+            "name": "W\u0142\u0105cz"
+        }
+    },
+    "title": "Klimat"
+}

@@ -1,0 +1,125 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "M\u00f6chtest du {name} ({host}) zu Home Assistant hinzuf\u00fcgen?"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse der Palazzetti CBox"
+                }
+            }
+        }
+    },
+    "entity": {
+        "climate": {
+            "palazzetti": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Hoch",
+                            "silent": "Leise"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "combustion_power": {
+                "name": "Brennerleistung"
+            }
+        },
+        "sensor": {
+            "air_outlet_temperature": {
+                "name": "Luftaustrittstemperatur"
+            },
+            "pellet_level": {
+                "name": "Pellet-F\u00fcllstand"
+            },
+            "pellet_quantity": {
+                "name": "Pellet-Menge"
+            },
+            "return_water_temperature": {
+                "name": "R\u00fccklauftemperatur"
+            },
+            "room_temperature": {
+                "name": "Raumtemperatur"
+            },
+            "status": {
+                "name": "Status",
+                "state": {
+                    "burning": "In Betrieb",
+                    "burning_mod": "In Betrieb - Modulierend",
+                    "chimney_alarm": "Schornsteinalarm",
+                    "clean_fire": "Reinigung des Brenntopfes",
+                    "cleaning_warning": "Reinigungswarnung",
+                    "cleanup": "Endreinigung",
+                    "cool_fluid": "Stand-by",
+                    "cooling": "Abk\u00fchlung im Gange",
+                    "door_open": "T\u00fcr offen",
+                    "ecomode": "\u00d6komodus",
+                    "exhaust_temp_high": "Abgastemperatur zu hoch",
+                    "fire_stop": "Ausschalten",
+                    "firewood_finished": "Brennholz aufgebraucht",
+                    "flue_probe_failure": "Ausfall der Rauchgassonde",
+                    "fuel_error": "Brennstofffehler",
+                    "fueling": "Z\u00fcndung",
+                    "general_error": "Allgemeiner Fehler",
+                    "grate_error": "Gitterrost-Fehler",
+                    "hatch_door_open": "Einf\u00fcllklappe oder T\u00fcr offen",
+                    "heatup": "Pellet-Zuf\u00fchrung",
+                    "ign_test": "Brennstoff-Check",
+                    "main_probe_failure": "Ausfall des Hauptf\u00fchlers",
+                    "off": "Aus",
+                    "off_timer": "Zeitgesteuerte Abschaltung",
+                    "pellet_finished": "Pellets aufgebraucht oder Z\u00fcndung fehlgeschlagen",
+                    "pellet_water_error": "Fehler bei Pelletsonde oder R\u00fccklaufwasser",
+                    "pressure_error": "Fehler des Sicherheitsdruckschalters",
+                    "t05_error": "Fehler T05: F\u00fchler getrennt oder defekt",
+                    "temp_too_high": "Temperatur zu hoch",
+                    "test_fire": "Z\u00fcndtest",
+                    "unknown": "Unbekannt"
+                }
+            },
+            "t1_hydro": {
+                "name": "Hydrotemperatur 1"
+            },
+            "t2_hydro": {
+                "name": "Hydrotemperatur 2"
+            },
+            "tank_water_temperature": {
+                "name": "Tankwassertemperatur"
+            },
+            "wood_combustion_temperature": {
+                "name": "Temperatur der Holzverbrennung"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Es konnte keine Verbindung zum Ger\u00e4t hergestellt werden."
+        },
+        "invalid_combustion_power": {
+            "message": "Brennerleistung {value} ist ung\u00fcltig."
+        },
+        "invalid_fan_mode": {
+            "message": "L\u00fcftermodus {value} ist ung\u00fcltig."
+        },
+        "invalid_target_temperature": {
+            "message": "Solltemperatur {value} ist ung\u00fcltig."
+        },
+        "on_off_not_available": {
+            "message": "Das Ger\u00e4t kann nicht ein- oder ausgeschaltet werden."
+        }
+    }
+}

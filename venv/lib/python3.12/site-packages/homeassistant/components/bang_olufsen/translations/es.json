@@ -1,0 +1,134 @@
+{
+    "common": {
+        "jid_options_description": "Opciones de agrupaci\u00f3n avanzadas, donde se utilizan directamente los identificadores Beolink \u00fanicos de los dispositivos (denominados JID). Los JID se pueden encontrar en los atributos de estado de la entidad del reproductor multimedia.",
+        "jid_options_name": "Opciones de JID"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "already_in_progress": "El flujo de configuraci\u00f3n ya est\u00e1 en curso"
+        },
+        "error": {
+            "api_exception": "No se pudo conectar",
+            "client_connector_error": "No se pudo conectar",
+            "invalid_ip": "Direcci\u00f3n IPv4 no v\u00e1lida",
+            "timeout_error": "No se pudo conectar"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Direcci\u00f3n IP",
+                    "model": "Modelo"
+                },
+                "description": "Configura manualmente tu dispositivo Bang & Olufsen."
+            },
+            "zeroconf_confirm": {
+                "description": "Confirma la configuraci\u00f3n del {model}-{serial_number} @ {host}.",
+                "title": "Configurar dispositivo Bang & Olufsen"
+            }
+        }
+    },
+    "exceptions": {
+        "invalid_grouping_entity": {
+            "message": "No se puede agregar la entidad con id: {entity_id} a la sesi\u00f3n de Beolink. \u00bfLa entidad es un reproductor multimedia de Bang & Olufsen?"
+        },
+        "invalid_media_type": {
+            "message": "{invalid_media_type} es un tipo no v\u00e1lido. Los valores v\u00e1lidos son: {valid_media_types}."
+        },
+        "invalid_sound_mode": {
+            "message": "{invalid_sound_mode} es un modo de sonido no v\u00e1lido. Los valores v\u00e1lidos son: {valid_sound_modes}."
+        },
+        "invalid_source": {
+            "message": "Fuente no v\u00e1lida: {invalid_source}. Las fuentes v\u00e1lidas son: {valid_sources}"
+        },
+        "m3u_invalid_format": {
+            "message": "No se admiten fuentes multimedia con la extensi\u00f3n .m3u."
+        },
+        "play_media_error": {
+            "message": "Se produjo un error al intentar reproducir {media_type}: {error_message}."
+        }
+    },
+    "selector": {
+        "source_ids": {
+            "options": {
+                "aux_a": "Beolink Converter NL/ML AUX_A",
+                "beoradio": "ASE Beoradio",
+                "cd": "Beolink Converter NL/ML CD",
+                "deezer": "ASE / Mozart Deezer",
+                "ph": "Beolink Converter NL/ML PH",
+                "radio": "Beolink Converter NL/ML RADIO",
+                "spotify": "ASE / Mozart Spotify",
+                "tidal": "Mozart Tidal",
+                "tp1": "Beolink Converter NL/ML TP1",
+                "tp2": "Beolink Converter NL/ML TP2"
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "Pone todos los dispositivos Beolink conectados en modo de espera.",
+            "name": "Todos los Beolink en espera"
+        },
+        "beolink_expand": {
+            "description": "Amplia la experiencia Beolink actual.",
+            "fields": {
+                "all_discovered": {
+                    "description": "Ampl\u00eda la experiencia Beolink a todos los dispositivos descubiertos.",
+                    "name": "Todos los descubiertos"
+                },
+                "beolink_jids": {
+                    "description": "Especificar qu\u00e9 JIDs Beolink se unir\u00e1n a la experiencia Beolink actual.",
+                    "name": "JIDs de Beolink"
+                }
+            },
+            "name": "Ampliar Beolink",
+            "sections": {
+                "jid_options": {
+                    "description": "Opciones de agrupaci\u00f3n avanzadas, donde se utilizan directamente los identificadores Beolink \u00fanicos de los dispositivos (denominados JID). Los JID se pueden encontrar en los atributos de estado de la entidad del reproductor multimedia.",
+                    "name": "Opciones de JID"
+                }
+            }
+        },
+        "beolink_join": {
+            "description": "Unirse a una experiencia Beolink.",
+            "fields": {
+                "beolink_jid": {
+                    "description": "Especificar manualmente un Beolink JID al que unirse.",
+                    "name": "Beolink JID"
+                },
+                "source_id": {
+                    "description": "Especifica a qu\u00e9 fuente quieres unirte; el comportamiento var\u00eda seg\u00fan la plataforma de hardware. Los nombres de fuentes precedidos por el nombre de una plataforma solo se pueden usar al conectarse a esa plataforma. Por ejemplo, \"ASE Beoradio\" solo se puede usar al unirse a un dispositivo ASE, mientras que \"ASE / Mozart Deezer\" se puede usar con dispositivos ASE o Mozart. Se requiere un JID de Beolink definido.",
+                    "name": "Fuente"
+                }
+            },
+            "name": "Unirse a Beolink",
+            "sections": {
+                "jid_options": {
+                    "description": "Opciones de agrupaci\u00f3n avanzadas, donde se utilizan directamente los identificadores Beolink \u00fanicos de los dispositivos (denominados JID). Los JID se pueden encontrar en los atributos de estado de la entidad del reproductor multimedia.",
+                    "name": "Opciones de JID"
+                }
+            }
+        },
+        "beolink_leave": {
+            "description": "Deja una experiencia Beolink.",
+            "name": "Abandono de Beolink"
+        },
+        "beolink_unexpand": {
+            "description": "Contraer la experiencia actual Beolink",
+            "fields": {
+                "beolink_jids": {
+                    "description": "Especifica qu\u00e9 JID de Beolink dejar\u00e1n de formar parte de la experiencia actual de Beolink.",
+                    "name": "JIDs de Beolink"
+                }
+            },
+            "name": "Contraer Beolink",
+            "sections": {
+                "jid_options": {
+                    "description": "Opciones de agrupaci\u00f3n avanzadas, donde se utilizan directamente los identificadores Beolink \u00fanicos de los dispositivos (denominados JID). Los JID se pueden encontrar en los atributos de estado de la entidad del reproductor multimedia.",
+                    "name": "Opciones de JID"
+                }
+            }
+        }
+    }
+}

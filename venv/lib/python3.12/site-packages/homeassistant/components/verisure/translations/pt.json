@@ -1,0 +1,77 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Conta j\u00e1 configurada",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "unknown": "Erro inesperado",
+            "unknown_mfa": "Ocorreu um erro desconhecido durante a configura\u00e7\u00e3o do MFA"
+        },
+        "step": {
+            "installation": {
+                "data": {
+                    "giid": "Instala\u00e7\u00e3o"
+                },
+                "description": "O Home Assistant encontrou v\u00e1rias instala\u00e7\u00f5es Verisure na sua conta Minhas p\u00e1ginas. Selecione a instala\u00e7\u00e3o a adicionar ao Home Assistant."
+            },
+            "mfa": {
+                "data": {
+                    "code": "C\u00f3digo de Verifica\u00e7\u00e3o",
+                    "description": "A sua conta tem a verifica\u00e7\u00e3o em duas etapas ativada. Introduza o c\u00f3digo de verifica\u00e7\u00e3o que a Verisure lhe enviou."
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "description": "Volte a autenticar-se com a sua conta Verisure My Pages.",
+                    "email": "E-mail",
+                    "password": "Palavra-passe"
+                }
+            },
+            "reauth_mfa": {
+                "data": {
+                    "code": "C\u00f3digo de Verifica\u00e7\u00e3o",
+                    "description": "A sua conta tem a verifica\u00e7\u00e3o em duas etapas ativada. Introduza o c\u00f3digo de verifica\u00e7\u00e3o que a Verisure lhe enviou."
+                }
+            },
+            "user": {
+                "data": {
+                    "description": "Inicie sess\u00e3o com a sua conta Verisure My Pages.",
+                    "email": "E-mail",
+                    "password": "Palavra-passe"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "ethernet": {
+                "name": "Estado da Ethernet"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "lock_code_digits": "N\u00famero de d\u00edgitos no c\u00f3digo PIN para fechaduras"
+                }
+            }
+        }
+    },
+    "services": {
+        "capture_smartcam": {
+            "description": "Captura uma nova imagem de uma Verisure SmartCam.",
+            "name": "Capturar imagem SmartCam"
+        },
+        "disable_autolock": {
+            "description": "Desativa o trancar autom\u00e1tico de uma fechadura Verisure Lockguard Smartlock.",
+            "name": "Desativar trancar autom\u00e1tico"
+        },
+        "enable_autolock": {
+            "description": "Ativa o trancar autom\u00e1tico de uma fechadura Verisure Lockguard Smartlock.",
+            "name": "Ativar o auto trancar"
+        }
+    }
+}

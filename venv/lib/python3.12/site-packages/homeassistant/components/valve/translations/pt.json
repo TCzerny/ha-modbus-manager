@@ -1,0 +1,54 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "V\u00e1lvula",
+            "state": {
+                "closed": "Fechada",
+                "closing": "A fechar",
+                "open": "Aberto",
+                "opening": "A abrir",
+                "stopped": "Parado"
+            },
+            "state_attributes": {
+                "current_position": {
+                    "name": "Posi\u00e7\u00e3o"
+                }
+            }
+        },
+        "gas": {
+            "name": "G\u00e1s"
+        },
+        "water": {
+            "name": "\u00c1gua"
+        }
+    },
+    "services": {
+        "close_valve": {
+            "description": "Fecha uma v\u00e1lvula.",
+            "name": "Fechar"
+        },
+        "open_valve": {
+            "description": "Abre uma v\u00e1lvula.",
+            "name": "Abrir"
+        },
+        "set_valve_position": {
+            "description": "Move a v\u00e1lvula para uma posi\u00e7\u00e3o espec\u00edfica.",
+            "fields": {
+                "position": {
+                    "description": "Posi\u00e7\u00e3o alvo.",
+                    "name": "Posi\u00e7\u00e3o"
+                }
+            },
+            "name": "Define posi\u00e7\u00e3o"
+        },
+        "stop_valve": {
+            "description": "Para o movimento da v\u00e1lvula.",
+            "name": "Parar"
+        },
+        "toggle": {
+            "description": "Altera a v\u00e1lvula aberta/fechada.",
+            "name": "Alternar"
+        }
+    },
+    "title": "V\u00e1lvula"
+}

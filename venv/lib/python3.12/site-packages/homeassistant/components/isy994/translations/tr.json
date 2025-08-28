@@ -1,0 +1,163 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "invalid_host": "Ana bilgisayar giri\u015fi tam URL bi\u00e7iminde de\u011fildi, \u00f6r. http://192.168.10.100:80",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu",
+            "unknown": "Beklenmeyen hata"
+        },
+        "flow_title": "{name} ({host})",
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "\u015eifre",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "description": "{host} kimlik bilgileri art\u0131k ge\u00e7erli de\u011fil.",
+                "title": "ISY'nizi yeniden do\u011frulay\u0131n"
+            },
+            "user": {
+                "data": {
+                    "host": "URL",
+                    "password": "\u015eifre",
+                    "tls": "ISY denetleyicisinin TLS s\u00fcr\u00fcm\u00fc.",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "description": "Ana bilgisayar giri\u015fi tam URL bi\u00e7iminde olmal\u0131d\u0131r, \u00f6r. http://192.168.10.100:80",
+                "title": "ISY'nize ba\u011flan\u0131n"
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignore_string": "Dizeyi Yoksay",
+                    "restore_light_state": "I\u015f\u0131k Parlakl\u0131\u011f\u0131n\u0131 Geri Y\u00fckle",
+                    "sensor_string": "D\u00fc\u011f\u00fcm Sens\u00f6r\u00fc Dizisi",
+                    "variable_sensor_string": "De\u011fi\u015fken Sens\u00f6r Dizesi"
+                },
+                "title": "ISY Se\u00e7enekleri"
+            }
+        }
+    },
+    "services": {
+        "delete_zwave_lock_user_code": {
+            "fields": {
+                "user_num": {
+                    "description": "Kilit \u00fczerindeki kullan\u0131c\u0131 yuvas\u0131 numaras\u0131.",
+                    "name": "Kullan\u0131c\u0131 Numaras\u0131"
+                }
+            }
+        },
+        "get_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "Cihazdan al\u0131nacak parametre numaras\u0131.",
+                    "name": "Parametre"
+                }
+            },
+            "name": "Z-Wave Parametresini Al\u0131n"
+        },
+        "rename_node": {
+            "fields": {
+                "name": {
+                    "description": "ISY i\u00e7inde kullan\u0131lacak yeni ad.",
+                    "name": "Yeni \u0130sim"
+                }
+            }
+        },
+        "send_node_command": {
+            "fields": {
+                "command": {
+                    "description": "Cihaza g\u00f6nderilecek komut.",
+                    "name": "Komut"
+                }
+            },
+            "name": "D\u00fc\u011f\u00fcm komutu g\u00f6nder"
+        },
+        "send_program_command": {
+            "description": "Bir ISY program\u0131n\u0131 veya klas\u00f6r\u00fcn\u00fc kontrol etmek i\u00e7in bir komut g\u00f6nderir. Ge\u00e7erli komutlar run, run_then, run_else, stop, enable, disable, enable_run_at_startup ve disable_run_at_startup't\u0131r.",
+            "fields": {
+                "address": {
+                    "description": "Kontrol edilecek program\u0131n adresi (adres ya da isim kullan\u0131n).",
+                    "name": "Adres"
+                },
+                "command": {
+                    "description": "G\u00f6nderilecek ISY Program Komutu.",
+                    "name": "Komuta"
+                },
+                "isy": {
+                    "description": "Birden fazla ISY ba\u011fl\u0131ysa, sorgulanacak ISY'nin ad\u0131n\u0131 sa\u011flay\u0131n (Cihaz Kay\u0131t Defterinde g\u00f6sterildi\u011fi gibi veya ISY Y\u00f6netim Konsolu'ndaki en \u00fcstteki d\u00fc\u011f\u00fcm olarak). Birden fazla ISY'de ayn\u0131 program ad\u0131 veya adresi varsa, bunu atlamak komutu hepsinde \u00e7al\u0131\u015ft\u0131racakt\u0131r.",
+                    "name": "ISY"
+                },
+                "name": {
+                    "description": "Kontrol edilecek program\u0131n ad\u0131 (adres veya ad kullan\u0131n).",
+                    "name": "Ad"
+                }
+            },
+            "name": "Program komutu g\u00f6nder"
+        },
+        "send_raw_node_command": {
+            "description": "ISY Entegrasyonu i\u00e7in se\u00e7enekleri ayarlay\u0131n:\n  \u2022 D\u00fc\u011f\u00fcm Sens\u00f6r\u00fc Dizisi: Ad\u0131nda 'D\u00fc\u011f\u00fcm Sens\u00f6r\u00fc Dizisi' i\u00e7eren herhangi bir cihaz veya klas\u00f6r, bir sens\u00f6r veya ikili sens\u00f6r olarak ele al\u0131nacakt\u0131r.\n  \u2022 Ignore String: Ad\u0131nda 'Ignore String' olan herhangi bir cihaz yoksay\u0131lacakt\u0131r.\n  \u2022 De\u011fi\u015fken Sens\u00f6r Dizisi: 'De\u011fi\u015fken Sens\u00f6r Dizisi' i\u00e7eren herhangi bir de\u011fi\u015fken sens\u00f6r olarak eklenecektir.\n  \u2022 I\u015f\u0131k Parlakl\u0131\u011f\u0131n\u0131 Geri Y\u00fckle: Etkinle\u015ftirilirse, bir \u0131\u015f\u0131k a\u00e7\u0131ld\u0131\u011f\u0131nda cihaz\u0131n yerle\u015fik On-Level yerine \u00f6nceki parlakl\u0131k geri y\u00fcklenir.",
+            "fields": {
+                "command": {
+                    "name": "Komut"
+                },
+                "parameters": {
+                    "description": "Sorgu dizesinde g\u00f6nderilecek parametrelerin bir diktesi (\u00f6rne\u011fin, renkli ampulleri kontrol etmek i\u00e7in).",
+                    "name": "Parametreler"
+                },
+                "unit_of_measurement": {
+                    "name": "\u00d6l\u00e7\u00fc birimi"
+                },
+                "value": {
+                    "description": "Komutla birlikte g\u00f6nderilecek tamsay\u0131 de\u011feri.",
+                    "name": "De\u011fer"
+                }
+            },
+            "name": "Ham d\u00fc\u011f\u00fcm komutu g\u00f6nder"
+        },
+        "set_zwave_lock_user_code": {
+            "fields": {
+                "code": {
+                    "description": "Kullan\u0131c\u0131 i\u00e7in ayarlanacak kod.",
+                    "name": "Kod"
+                },
+                "user_num": {
+                    "description": "Kilit \u00fczerindeki kullan\u0131c\u0131 yuvas\u0131 numaras\u0131.",
+                    "name": "Kullan\u0131c\u0131 Numaras\u0131"
+                }
+            }
+        },
+        "set_zwave_parameter": {
+            "fields": {
+                "parameter": {
+                    "description": "Son cihazda ayarlanacak parametre numaras\u0131.",
+                    "name": "Parametre"
+                },
+                "size": {
+                    "description": "Parametrenin boyutu, 1, 2 veya 4 bayt.",
+                    "name": "Boyut"
+                },
+                "value": {
+                    "description": "Parametre i\u00e7in ayarlanacak de\u011fer. Bir tamsay\u0131 veya bayt dizisi olabilir (\u00f6rn. \"0xFFFF\").",
+                    "name": "De\u011fer"
+                }
+            }
+        }
+    },
+    "system_health": {
+        "info": {
+            "device_connected": "ISY Ba\u011fl\u0131",
+            "host_reachable": "Ana Bilgisayara Ula\u015f\u0131labilir",
+            "last_heartbeat": "Son Kalp At\u0131\u015f\u0131 Zaman\u0131",
+            "websocket_status": "Olay Soketi Durumu"
+        }
+    }
+}

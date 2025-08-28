@@ -1,0 +1,42 @@
+{
+    "config": {
+        "abort": {
+            "server_failure": "RTSPtoWebRTC server tagastas veateate. Lisateabe saamiseks vaata logisid.",
+            "server_unreachable": "RTSPtoWebRTC serveriga ei saa suhelda. Lisateabe saamiseks vaata logisid.",
+            "single_instance_allowed": "Juba seadistatud. Lubatud on ainult \u00fcks sidumine."
+        },
+        "error": {
+            "invalid_url": "Peab olema kehtiv RTSPtoWebRTC serveri URL, nt https://example.com",
+            "server_failure": "RTSPtoWebRTC server tagastas veateate. Lisateabe saamiseks vaata logisid.",
+            "server_unreachable": "RTSPtoWebRTC serveriga ei saa suhelda. Lisateabe saamiseks vaata logisid."
+        },
+        "step": {
+            "hassio_confirm": {
+                "description": "Kas soovid seadistada Home Assistant'i, et luua \u00fchendus lisaseadme pakutava RTSPtoWebRTC serveriga: {addon}?",
+                "title": "RTSPtoWebRTC Home Assistanti lisandmooduli kaudu"
+            },
+            "user": {
+                "data": {
+                    "server_url": "RTSPtoWebRTC serveri URL, nt https://example.com"
+                },
+                "description": "RTSPtoWebRTC sidumine n\u00f5uab serverit mis t\u00f5lgib RTSP voogusid WebRTC-ks. Sisesta RTSPtoWebRTC-serveri URL-aadress.",
+                "title": "RTSPtoWebRTC seadistamine"
+            }
+        }
+    },
+    "issues": {
+        "deprecated": {
+            "description": "RTSPtoWebRTC integratsioon on aegunud ja eemaldatakse. Kasuta selle asemel integratsiooni {go2rtc}, mis on vaikimisi lubatud ja pakub paremat kasutuskogemust. Pead eemaldama ainult RTSPtoWebRTC konfiguratsioonikirje.",
+            "title": "RTSPtoWebRTC integratsioon on aegunud"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "stun_server": "Stun serveri aadress (host:port)"
+                }
+            }
+        }
+    }
+}

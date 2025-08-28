@@ -1,0 +1,104 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Kalender",
+            "state": {
+                "off": "Mati",
+                "on": "Nyala"
+            },
+            "state_attributes": {
+                "all_day": {
+                    "name": "Sepanjang hari",
+                    "state": {
+                        "false": "Tidak",
+                        "true": "Ya"
+                    }
+                },
+                "description": {
+                    "name": "Deskripsi"
+                },
+                "end_time": {
+                    "name": "Waktu berakhir"
+                },
+                "location": {
+                    "name": "Lokasi"
+                },
+                "message": {
+                    "name": "Pesan"
+                },
+                "start_time": {
+                    "name": "Waktu mulai"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_calendar_list_events": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Gunakan `calendar.get_events` sebagai pengganti, yang mendukung beberapa entitas.\n\nSilakan ganti aksi ini dan sesuaikan otomasi dan skrip Anda, lalu pilih **Kirimkan** untuk menutup masalah ini.",
+                        "title": "Terdeteksi penggunaan aksi `calendar.list_events` yang tidak digunakan lagi"
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "create_event": {
+            "description": "Menambahkan acara kalender baru.",
+            "fields": {
+                "description": {
+                    "description": "Deskripsi acara yang lebih lengkap dibandingkan dengan ringkasan.",
+                    "name": "Deskripsi"
+                },
+                "end_date": {
+                    "description": "Tanggal acara sepanjang hari diakhiri (eksklusif).",
+                    "name": "Tanggal akhir"
+                },
+                "end_date_time": {
+                    "description": "Tanggal dan waktu acara diakhiri.",
+                    "name": "Waktu berakhir"
+                },
+                "in": {
+                    "description": "Hari atau pekan mana Anda ingin membuat acara.",
+                    "name": "Di"
+                },
+                "location": {
+                    "description": "Lokasi acara",
+                    "name": "Lokasi"
+                },
+                "start_date": {
+                    "description": "Tanggal acara sepanjang hari dimulai.",
+                    "name": "Tanggal mulai"
+                },
+                "start_date_time": {
+                    "description": "Tanggal dan waktu acara dimulai.",
+                    "name": "Waktu mulai"
+                },
+                "summary": {
+                    "description": "Menentukan ringkasan singkat atau subjek untuk acara.",
+                    "name": "Ringkasan"
+                }
+            },
+            "name": "Buat acara"
+        },
+        "get_events": {
+            "description": "Dapatkan acara di kalender dalam rentang waktu tertentu.",
+            "fields": {
+                "duration": {
+                    "name": "Durasi"
+                },
+                "end_date_time": {
+                    "name": "Waktu berakhir"
+                },
+                "start_date_time": {
+                    "description": "Mengembalikan acara aktif setelah waktu ini (eksklusif). Jika tidak diatur, defaultnya adalah sekarang.",
+                    "name": "Waktu mulai"
+                }
+            },
+            "name": "Dapatkan acara"
+        }
+    },
+    "title": "Kalender"
+}

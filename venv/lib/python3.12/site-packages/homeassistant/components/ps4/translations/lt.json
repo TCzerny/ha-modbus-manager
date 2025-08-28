@@ -1,0 +1,58 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "credential_error": "Gaunant kredencialus \u012fvyko klaida.",
+            "no_devices_found": "Tinkle nerasta joki\u0173 prietais\u0173",
+            "port_987_bind_error": "Nepavyko susieti su 987 prievadu. Daugiau informacijos rasite [dokumentacijoje] (https://www.home-assistant.io/components/ps4/).",
+            "port_997_bind_error": "Nepavyko susieti su 997 prievadu. Daugiau informacijos rasite [dokumentacijoje] (https://www.home-assistant.io/components/ps4/)."
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "credential_timeout": "Baig\u0117si kredencial\u0173 paslaugos skirtasis laikas. Pasirinkite **Pateikti**, kad paleistum\u0117te i\u0161 naujo.",
+            "login_failed": "Nepavyko susieti su PlayStation 4. Patikrinkite, ar teisingas PIN kodas.",
+            "no_ipaddress": "\u012eveskite PlayStation 4, kur\u012f norite konfig\u016bruoti, IP adres\u0105."
+        },
+        "step": {
+            "creds": {
+                "description": "Reikalingi \u012fgaliojimai. Pasirinkite **Pateikti**, tada PS4 2-ojo ekrano programoje atnaujinkite prietaisus ir pasirinkite **Home-Assistant** prietais\u0105, kad t\u0119stum\u0117te."
+            },
+            "link": {
+                "data": {
+                    "code": "PIN kodas",
+                    "ip_address": "IP adresas",
+                    "name": "Vardas",
+                    "region": "Regionas"
+                },
+                "data_description": {
+                    "code": "\u201ePlayStation 4\u201c konsol\u0117je eikite \u012f **Nustatymai**. Tada eikite \u012f **Mobile App Connection Settings** ir pasirinkite **Prid\u0117ti \u012frengin\u012f**, kad gautum\u0117te PIN kod\u0105."
+                }
+            },
+            "mode": {
+                "data": {
+                    "ip_address": "IP adresas",
+                    "mode": "Konfig\u016bracijos re\u017eimas"
+                },
+                "data_description": {
+                    "ip_address": "Palikite tu\u0161\u010di\u0105, jei pasirenkate automatin\u012f atradim\u0105."
+                }
+            }
+        }
+    },
+    "services": {
+        "send_command": {
+            "description": "Imituoja PlayStation 4 mygtuko paspaudim\u0105.",
+            "fields": {
+                "command": {
+                    "description": "Mygtukas paspausti.",
+                    "name": "Komanda"
+                },
+                "entity_id": {
+                    "description": "Subjekto, kuriam reikia si\u0173sti komand\u0105, pavadinimas.",
+                    "name": "Subjektas"
+                }
+            },
+            "name": "Si\u0173sti komand\u0105"
+        }
+    }
+}

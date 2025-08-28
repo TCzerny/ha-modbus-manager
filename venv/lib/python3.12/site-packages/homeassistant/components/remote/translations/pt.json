@@ -1,0 +1,113 @@
+{
+    "device_automation": {
+        "action_type": {
+            "toggle": "Alternar  {entity_name}",
+            "turn_off": "Desligar {entity_name}",
+            "turn_on": "Ligar {entity_name}"
+        },
+        "condition_type": {
+            "is_off": "{entity_name} est\u00e1 desligado",
+            "is_on": "{entity_name} est\u00e1 ligado"
+        },
+        "trigger_type": {
+            "changed_states": "{entity_name} foi ligado ou desligado",
+            "turned_off": "{entity_name} foi desligado",
+            "turned_on": "{entity_name} foi ligado"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Remoto",
+            "state": {
+                "off": "Desligado",
+                "on": "Ligado"
+            }
+        }
+    },
+    "services": {
+        "delete_command": {
+            "description": "Elimina um comando ou uma lista de comandos da base de dados.",
+            "fields": {
+                "command": {
+                    "description": "O comando \u00fanico ou a lista de comandos a eliminar.",
+                    "name": "Comando"
+                },
+                "device": {
+                    "description": "Dispositivo do qual os comandos ser\u00e3o exclu\u00eddos.",
+                    "name": "Dispositivo"
+                }
+            },
+            "name": "Apagar comando"
+        },
+        "learn_command": {
+            "description": "Aprende um comando ou uma lista de comandos de um dispositivo.",
+            "fields": {
+                "alternative": {
+                    "description": "Se o c\u00f3digo tiver de ser armazenado como alternativa. Isto \u00e9 \u00fatil para c\u00f3digos discretos. Os c\u00f3digos discretos s\u00e3o utilizados para comutadores que apenas executam uma fun\u00e7\u00e3o. Por exemplo, um c\u00f3digo para ligar apenas um dispositivo. Se j\u00e1 estiver ligado, o envio do c\u00f3digo n\u00e3o altera o estado.",
+                    "name": "Alternativa"
+                },
+                "command": {
+                    "description": "Um \u00fanico comando ou uma lista de comandos a aprender.",
+                    "name": "Comando"
+                },
+                "command_type": {
+                    "description": "O tipo de comando a ser aprendido.",
+                    "name": "Tipo de comando"
+                },
+                "device": {
+                    "description": "ID do dispositivo a partir do qual o comando deve ser aprendido.",
+                    "name": "Dispositivo"
+                },
+                "timeout": {
+                    "description": "Tempo limite para que o comando seja aprendido.",
+                    "name": "Tempo limite"
+                }
+            },
+            "name": "Aprender comando"
+        },
+        "send_command": {
+            "description": "Envia um comando ou uma lista de comandos para um dispositivo.",
+            "fields": {
+                "command": {
+                    "description": "Um \u00fanico comando ou uma lista de comandos a enviar.",
+                    "name": "Comando"
+                },
+                "delay_secs": {
+                    "description": "O tempo que deseja esperar entre comandos repetidos.",
+                    "name": "Diferir segundos"
+                },
+                "device": {
+                    "description": "ID do dispositivo ao qual enviar o comando.",
+                    "name": "Dispositivo"
+                },
+                "hold_secs": {
+                    "description": "O tempo que pretende que seja retido antes do envio da autoriza\u00e7\u00e3o.",
+                    "name": "Aguardar segundos"
+                },
+                "num_repeats": {
+                    "description": "O n\u00famero de vezes que pretende repetir os comandos.",
+                    "name": "Repeti\u00e7\u00f5es"
+                }
+            },
+            "name": "Enviar comando"
+        },
+        "toggle": {
+            "description": "Envia o comando de alternar.",
+            "name": "Alternar"
+        },
+        "turn_off": {
+            "description": "Envia o comando de desligar.",
+            "name": "Desligar"
+        },
+        "turn_on": {
+            "description": "Envia o comando de ligar.",
+            "fields": {
+                "activity": {
+                    "description": "ID da atividade ou nome da atividade a iniciar.",
+                    "name": "Atividade"
+                }
+            },
+            "name": "Ligar"
+        }
+    }
+}

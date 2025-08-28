@@ -1,0 +1,382 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado",
+            "cannot_connect": "No se pudo conectar",
+            "no_devices_found": "No se encontraron dispositivos en la red",
+            "reauth_successful": "La autenticaci\u00f3n se volvi\u00f3 a realizar correctamente",
+            "reconfigure_successful": "Se volvi\u00f3 a configurar correctamente"
+        },
+        "error": {
+            "camera_creds": "Tienes que configurar tanto el nombre de usuario como la contrase\u00f1a",
+            "cannot_connect": "Error de conexi\u00f3n: {error}",
+            "cannot_connect_camera": "No se puede acceder a la transmisi\u00f3n de la c\u00e1mara, comprueba que hayas configurado la cuenta de la c\u00e1mara: {error}",
+            "invalid_auth": "No se puede autenticar: {error}",
+            "invalid_camera_auth": "Error en la autenticaci\u00f3n de la transmisi\u00f3n de la c\u00e1mara"
+        },
+        "flow_title": "{name} {model} ({host})",
+        "step": {
+            "camera_auth_confirm": {
+                "data": {
+                    "live_view": "Habilitar la vista en vivo de la c\u00e1mara",
+                    "password": "Contrase\u00f1a",
+                    "username": "Nombre de usuario"
+                },
+                "description": "Introduce las credenciales de la cuenta de la c\u00e1mara del dispositivo.",
+                "title": "Establecer las credenciales de la cuenta de la c\u00e1mara"
+            },
+            "discovery_auth_confirm": {
+                "data": {
+                    "password": "Contrase\u00f1a",
+                    "username": "Nombre de usuario"
+                },
+                "description": "El dispositivo requiere autenticaci\u00f3n. Por favor, introduce tus credenciales de TP-Link a continuaci\u00f3n. Ten en cuenta que tanto el correo electr\u00f3nico como la contrase\u00f1a distinguen entre may\u00fasculas y min\u00fasculas.",
+                "title": "Autenticar"
+            },
+            "discovery_confirm": {
+                "description": "\u00bfQuieres configurar {name} {model} ({host})?"
+            },
+            "pick_device": {
+                "data": {
+                    "device": "Dispositivo"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Contrase\u00f1a",
+                    "username": "Nombre de usuario"
+                },
+                "description": "El dispositivo requiere autenticaci\u00f3n. Por favor, introduce tus credenciales de TP-Link a continuaci\u00f3n. Ten en cuenta que tanto el correo electr\u00f3nico como la contrase\u00f1a distinguen entre may\u00fasculas y min\u00fasculas.",
+                "title": "Autenticaci\u00f3n caducada para {name}"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Host"
+                },
+                "description": "Actualiza tu configuraci\u00f3n para el dispositivo {mac}",
+                "title": "Volver a configurar la entrada TPLink"
+            },
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "Nombre de host o direcci\u00f3n IP de tu dispositivo TP-Link."
+                },
+                "description": "Si dejas el host vac\u00edo, se usar\u00e1 el descubrimiento para encontrar dispositivos."
+            },
+            "user_auth_confirm": {
+                "data": {
+                    "password": "Contrase\u00f1a",
+                    "username": "Nombre de usuario"
+                },
+                "description": "El dispositivo requiere autenticaci\u00f3n. Por favor, introduce tus credenciales de TP-Link a continuaci\u00f3n. Ten en cuenta que tanto el correo electr\u00f3nico como la contrase\u00f1a distinguen entre may\u00fasculas y min\u00fasculas.",
+                "title": "Autenticar"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_low": {
+                "name": "Bater\u00eda baja"
+            },
+            "cloud_connection": {
+                "name": "Conexi\u00f3n a la nube"
+            },
+            "humidity_warning": {
+                "name": "Advertencia de humedad"
+            },
+            "is_open": {
+                "name": "Puerta",
+                "state": {
+                    "off": "Cerrado",
+                    "on": "Abierto"
+                }
+            },
+            "overheated": {
+                "name": "Sobrecalentado"
+            },
+            "temperature_warning": {
+                "name": "Advertencia de temperatura"
+            },
+            "update_available": {
+                "name": "Actualizar",
+                "state": {
+                    "off": "Actualizado",
+                    "on": "Actualizaci\u00f3n disponible"
+                }
+            },
+            "water_alert": {
+                "name": "Humedad",
+                "state": {
+                    "off": "Seco",
+                    "on": "H\u00famedo"
+                }
+            }
+        },
+        "button": {
+            "pan_left": {
+                "name": "Girar a la izquierda"
+            },
+            "pan_right": {
+                "name": "Girar a la derecha"
+            },
+            "stop_alarm": {
+                "name": "Detener alarma"
+            },
+            "test_alarm": {
+                "name": "Probar alarma"
+            },
+            "tilt_down": {
+                "name": "Inclinar hacia abajo"
+            },
+            "tilt_up": {
+                "name": "Inclinar hacia arriba"
+            }
+        },
+        "camera": {
+            "live_view": {
+                "name": "Vista en vivo"
+            }
+        },
+        "number": {
+            "auto_off_minutes": {
+                "name": "Apagar en"
+            },
+            "pan_step": {
+                "name": "Grados de giro"
+            },
+            "smooth_transition_off": {
+                "name": "Apagado suave"
+            },
+            "smooth_transition_on": {
+                "name": "Encendido suave"
+            },
+            "temperature_offset": {
+                "name": "Compensaci\u00f3n de temperatura"
+            },
+            "tilt_step": {
+                "name": "Grados de inclinaci\u00f3n"
+            }
+        },
+        "select": {
+            "alarm_sound": {
+                "name": "Sonido de alarma"
+            },
+            "alarm_volume": {
+                "name": "Volumen de alarma"
+            },
+            "light_preset": {
+                "name": "Preajuste de luz"
+            }
+        },
+        "sensor": {
+            "alarm_source": {
+                "name": "Fuente de alarma"
+            },
+            "auto_off_at": {
+                "name": "Apagado autom\u00e1tico a las"
+            },
+            "available_firmware_version": {
+                "name": "Versi\u00f3n de firmware disponible"
+            },
+            "battery_level": {
+                "name": "Nivel de bater\u00eda"
+            },
+            "consumption_this_month": {
+                "name": "Consumo de este mes"
+            },
+            "consumption_today": {
+                "name": "Consumo hoy"
+            },
+            "consumption_total": {
+                "name": "Consumo total"
+            },
+            "current": {
+                "name": "Intensidad de corriente"
+            },
+            "current_consumption": {
+                "name": "Consumo actual"
+            },
+            "current_firmware_version": {
+                "name": "Versi\u00f3n actual del firmware"
+            },
+            "device_time": {
+                "name": "Hora del dispositivo"
+            },
+            "humidity": {
+                "name": "Humedad"
+            },
+            "on_since": {
+                "name": "Encendido desde"
+            },
+            "report_interval": {
+                "name": "Intervalo de informe"
+            },
+            "rssi": {
+                "name": "Intensidad de se\u00f1al"
+            },
+            "signal_level": {
+                "name": "Nivel de se\u00f1al"
+            },
+            "ssid": {
+                "name": "SSID"
+            },
+            "temperature": {
+                "name": "Temperatura"
+            },
+            "voltage": {
+                "name": "Voltaje"
+            },
+            "water_alert_timestamp": {
+                "name": "\u00daltima alerta de fuga de agua"
+            }
+        },
+        "switch": {
+            "auto_off_enabled": {
+                "name": "Apagado autom\u00e1tico habilitado"
+            },
+            "auto_update_enabled": {
+                "name": "Actualizaci\u00f3n autom\u00e1tica habilitada"
+            },
+            "baby_cry_detection": {
+                "name": "Detecci\u00f3n de llanto de beb\u00e9"
+            },
+            "child_lock": {
+                "name": "Bloqueo infantil"
+            },
+            "fan_sleep_mode": {
+                "name": "Modo de reposo del ventilador"
+            },
+            "led": {
+                "name": "LED"
+            },
+            "motion_detection": {
+                "name": "Detecci\u00f3n de movimiento"
+            },
+            "person_detection": {
+                "name": "Detecci\u00f3n de personas"
+            },
+            "pir_enabled": {
+                "name": "Sensor de movimiento"
+            },
+            "smooth_transitions": {
+                "name": "Transiciones suaves"
+            },
+            "tamper_detection": {
+                "name": "Detecci\u00f3n de manipulaci\u00f3n"
+            }
+        }
+    },
+    "exceptions": {
+        "device_authentication": {
+            "message": "Error de autenticaci\u00f3n del dispositivo {func}: {exc}"
+        },
+        "device_error": {
+            "message": "No se puede comunicar con el dispositivo {func}: {exc}"
+        },
+        "device_timeout": {
+            "message": "Tiempo de espera de comunicaci\u00f3n con el dispositivo {func}: {exc}"
+        }
+    },
+    "issues": {
+        "deprecated_entity": {
+            "description": "Detectamos que la entidad `{entity}` se est\u00e1 utilizando en `{info}`\n\nHemos creado una nueva entidad `{new_platform}` y debes migrar `{info}` para usar esta nueva entidad.\n\nCuando hayas terminado de migrar `{info}` y est\u00e9s listo para eliminar la entidad `{entity}` obsoleta, deshabilita la entidad y reinicia Home Assistant.",
+            "title": "Detectado el uso de la entidad {platform} obsoleta"
+        }
+    },
+    "services": {
+        "random_effect": {
+            "description": "Establece un efecto aleatorio.",
+            "fields": {
+                "backgrounds": {
+                    "description": "Lista de secuencias HSV (M\u00e1x 16).",
+                    "name": "Fondos"
+                },
+                "brightness": {
+                    "description": "Brillo inicial.",
+                    "name": "Brillo"
+                },
+                "brightness_range": {
+                    "description": "Rango de luminosidad.",
+                    "name": "Rango de brillo"
+                },
+                "duration": {
+                    "description": "Duraci\u00f3n.",
+                    "name": "Duraci\u00f3n"
+                },
+                "fadeoff": {
+                    "description": "Desvanecimiento.",
+                    "name": "Desvanecimiento"
+                },
+                "hue_range": {
+                    "description": "Rango de tonalidad.",
+                    "name": "Gama de tonos"
+                },
+                "init_states": {
+                    "description": "Secuencia HSV inicial.",
+                    "name": "Estados iniciales"
+                },
+                "random_seed": {
+                    "description": "Semilla aleatoria.",
+                    "name": "Semilla aleatoria"
+                },
+                "saturation_range": {
+                    "description": "Rango de saturaci\u00f3n.",
+                    "name": "Rango de saturaci\u00f3n"
+                },
+                "segments": {
+                    "description": "Lista de segmentos (0 para todos).",
+                    "name": "Segmentos"
+                },
+                "transition": {
+                    "description": "Transici\u00f3n.",
+                    "name": "Transici\u00f3n"
+                },
+                "transition_range": {
+                    "description": "Rango de transici\u00f3n.",
+                    "name": "Rango de transici\u00f3n"
+                }
+            },
+            "name": "Efecto aleatorio"
+        },
+        "sequence_effect": {
+            "description": "Establece un efecto de secuencia.",
+            "fields": {
+                "brightness": {
+                    "description": "Brillo inicial.",
+                    "name": "Brillo"
+                },
+                "direction": {
+                    "description": "Direcci\u00f3n.",
+                    "name": "Direcci\u00f3n"
+                },
+                "duration": {
+                    "description": "Duraci\u00f3n.",
+                    "name": "Duraci\u00f3n"
+                },
+                "repeat_times": {
+                    "description": "Repeticiones (0 para continuo).",
+                    "name": "Repeticiones"
+                },
+                "segments": {
+                    "description": "Lista de Segmentos (0 para todos).",
+                    "name": "Segmentos"
+                },
+                "sequence": {
+                    "description": "Lista de secuencias HSV (M\u00e1x 16).",
+                    "name": "Secuencia"
+                },
+                "spread": {
+                    "description": "Velocidad de propagaci\u00f3n.",
+                    "name": "Propagar"
+                },
+                "transition": {
+                    "description": "Transici\u00f3n.",
+                    "name": "Transici\u00f3n"
+                }
+            },
+            "name": "Efecto de secuencia"
+        }
+    }
+}

@@ -1,0 +1,97 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Apparaat is al geconfigureerd",
+            "reconfigure_successful": "Herconfiguratie was succesvol"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "unknown": "Onverwachte fout"
+        }
+    },
+    "selector": {
+        "album_type": {
+            "options": {
+                "unknown": "Onbekend"
+            }
+        },
+        "media_type": {
+            "options": {
+                "album": "Album",
+                "artist": "Artiest",
+                "playlist": "Afspeellijst",
+                "radio": "Radio",
+                "track": "Nummer"
+            }
+        },
+        "order_by": {
+            "options": {
+                "artist_name": "Naam van artiest"
+            }
+        }
+    },
+    "services": {
+        "play_announcement": {
+            "description": "Speel aankondigingen af op een Music Assistant-speler met verfijnde bedieningsopties.",
+            "fields": {
+                "announce_volume": {
+                    "description": "Gebruik een geforceerd volumeniveau voor de melding. Weglaten om de standaardinstelling te gebruiken.",
+                    "name": "Aankondigingsvolume"
+                },
+                "url": {
+                    "description": "URL van het meldingsgeluid.",
+                    "name": "URL"
+                },
+                "use_pre_announce": {
+                    "description": "Gebruik het vooraankondigingsgeluid voor de aankondiging. Weglaten om de standaardinstelling te gebruiken.",
+                    "name": "Gebruik vooraankondiging"
+                }
+            },
+            "name": "Aankondiging afspelen"
+        },
+        "play_media": {
+            "description": "Speel media af op een Music Assistant-speler met meer verfijnde bedieningsopties.",
+            "fields": {
+                "album": {
+                    "description": "Wanneer je een nummer op naam opgeeft in het veld Media-ID, kan je de resultaten optioneel beperken op deze albumnaam.",
+                    "name": "Albumnaam"
+                },
+                "artist": {
+                    "description": "Wanneer je een nummer of album op naam opgeeft in het veld Media-ID, kan je de resultaten beperken op deze artiestennaam.",
+                    "name": "Naam van artiest"
+                },
+                "enqueue": {
+                    "description": "Of de inhoud nu moet worden afgespeeld of moet worden toegevoegd aan de wachtrij.",
+                    "name": "In de wachtrij plaatsen"
+                },
+                "media_id": {
+                    "description": "URI of naam van het item dat je wilt afspelen. Geef een lijst op als je meerdere items wilt afspelen.",
+                    "name": "Media-ID(s)"
+                },
+                "media_type": {
+                    "description": "Het type inhoud dat moet worden afgespeeld. Zoals artiest, album, nummer of afspeellijst. Wordt automatisch bepaald als dit wordt weggelaten.",
+                    "name": "Mediatype"
+                },
+                "radio_mode": {
+                    "description": "Activeer de radiomodus om automatisch een afspeellijst te genereren op basis van de selectie.",
+                    "name": "Radiomodus inschakelen"
+                }
+            },
+            "name": "Media afspelen"
+        },
+        "transfer_queue": {
+            "description": "De wachtrij van de speler overdragen aan een andere speler.",
+            "fields": {
+                "auto_play": {
+                    "description": "Start het afspelen van de wachtrij op de doelspeler. Weglaten om het standaard gedrag te gebruiken.",
+                    "name": "Automatisch afspelen"
+                },
+                "source_player": {
+                    "description": "De mediaspeler van de bron die de wachtrij heeft die je wilt overdragen. Als dit wordt weggelaten, wordt de speler gebruikt die als eerste afspeelt.",
+                    "name": "Bron mediaspeler"
+                }
+            },
+            "name": "Wachtrij overdragen"
+        }
+    }
+}

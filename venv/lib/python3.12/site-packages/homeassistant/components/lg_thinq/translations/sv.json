@@ -1,0 +1,997 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "already_in_progress": "Konfigurationsfl\u00f6det p\u00e5g\u00e5r redan"
+        },
+        "error": {
+            "exceeded_api_calls": "Antalet API-anrop har \u00f6verskridits.",
+            "exceeded_user_api_calls": "Antalet API-anrop f\u00f6r anv\u00e4ndaren har \u00f6verskridits.",
+            "invalid_token": "Token \u00e4r inte giltig.",
+            "not_acceptable_terms": "Villkoren f\u00f6r tj\u00e4nsten har inte accepterats.",
+            "not_allowed_api_again": "Anv\u00e4ndaren har INTE beh\u00f6righet f\u00f6r API-anropet.",
+            "not_supported_country": "Landet st\u00f6ds inte.",
+            "token_unauthorized": "Token \u00e4r ogiltig eller obeh\u00f6rig."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Personlig \u00e5tkomsttoken",
+                    "country": "Land"
+                },
+                "description": "Ange en ThinQ [PAT(Personlig \u00e5tkomsttoken)]({pat_url}) som skapats med ditt LG ThinQ-konto.",
+                "title": "Anslut till ThinQ"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clean_light_reminder": {
+                "name": "Indikatorlampa f\u00f6r reng\u00f6ring"
+            },
+            "eco_friendly_mode": {
+                "name": "Eco-l\u00e4ge"
+            },
+            "machine_clean_reminder": {
+                "name": "P\u00e5minnelse om maskinreng\u00f6ring"
+            },
+            "one_touch_filter": {
+                "name": "Friskluftfilter"
+            },
+            "operation_mode": {
+                "name": "Str\u00f6m"
+            },
+            "power_save_enabled": {
+                "name": "Energisparl\u00e4ge"
+            },
+            "remote_control_enabled": {
+                "name": "Fj\u00e4rrstart"
+            },
+            "remote_control_enabled_for_location": {
+                "name": "{location} fj\u00e4rrstart"
+            },
+            "rinse_refill": {
+                "name": "P\u00e5fyllning av sk\u00f6ljmedel beh\u00f6vs"
+            },
+            "sabbath_mode": {
+                "name": "Sabbat"
+            },
+            "signal_level": {
+                "name": "Ljud fr\u00e5n klocka"
+            }
+        },
+        "climate": {
+            "climate_air_conditioner": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Automatiskt",
+                            "high": "H\u00f6g",
+                            "low": "L\u00e5g",
+                            "mid": "Medium",
+                            "power": "Effekt",
+                            "slow": "L\u00e5ngsam"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "air_clean": "Luftrening",
+                            "aroma": "Doft",
+                            "energy_saving": "Energibesparing"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "error": {
+                "name": "Fel",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "block_error": "St\u00e4dningen har avbrutits. Kontrollera om det finns hinder",
+                            "brush_error": "Borste i r\u00f6relse har ett problem",
+                            "bubble_error": "Bubbelfel",
+                            "child_lock_active_error": "Barnl\u00e5s",
+                            "cliff_error": "Fallskyddsgivaren har ett fel",
+                            "clutch_error": "Kopplingsfel",
+                            "compressor_error": "Kompressorfel",
+                            "dispensing_error": "Dispenserfel",
+                            "door_close_error": "St\u00e4ngd d\u00f6rr-fel",
+                            "door_lock_error": "D\u00f6rrl\u00e5sfel",
+                            "door_open_error": "D\u00f6rr \u00f6ppen",
+                            "door_sensor_error": "D\u00f6rrsensorfel",
+                            "drainmotor_error": "Dr\u00e4neringsfel",
+                            "dust_full_error": "Dammbeh\u00e5llaren \u00e4r full och m\u00e5ste t\u00f6mmas",
+                            "empty_water_alert_error": "T\u00f6m vatten",
+                            "fan_motor_error": "Fl\u00e4ktl\u00e5sfel",
+                            "filter_clogging_error": "Filterfel",
+                            "frozen_error": "Frysdetekteringsfel",
+                            "heater_circuit_error": "V\u00e4rmekretsfel",
+                            "high_power_supply_error": "Str\u00f6mf\u00f6rs\u00f6rjningsfel",
+                            "high_temperature_detection_error": "H\u00f6gtemperaturfel",
+                            "inner_lid_open_error": "Lock \u00f6ppet-fel",
+                            "ir_sensor_error": "IR-sensorfel",
+                            "le2_error": "LE2-fel",
+                            "le_error": "LE-fel",
+                            "left_wheel_error": "V\u00e4nster hjul har ett problem",
+                            "locked_motor_error": "Drivmotorfel",
+                            "mop_error": "Kan inte fungera korrekt utan monterad mopp",
+                            "motor_error": "Motorproblem",
+                            "motor_lock_error": "Motorl\u00e5sfel",
+                            "move_error": "Hjulen r\u00f6r inte vid golvet",
+                            "need_water_drain": "T\u00f6m vatten",
+                            "need_water_replenishment": "Fyll p\u00e5 vatten",
+                            "no_battery_error": "Robotdammsugarens batteri \u00e4r l\u00e5gt",
+                            "no_dust_bin_error": "Dammbeh\u00e5llaren \u00e4r inte installerad",
+                            "no_filter_error": "Filterfel",
+                            "out_of_balance_error": "Obalanserad belastning",
+                            "overfill_error": "\u00d6verfyllningsfel",
+                            "part_malfunction_error": "AIE-fel",
+                            "power_code_connection_error": "Fel p\u00e5 str\u00f6mkabeln",
+                            "power_fail_error": "Str\u00f6mfel",
+                            "right_wheel_error": "H\u00f6ger hjul har ett problem",
+                            "stack_error": "Fel vid stapling",
+                            "steam_heat_error": "Fel p\u00e5 \u00e5ngv\u00e4rmaren",
+                            "suction_blocked_error": "Sugmotorn \u00e4r igensatt",
+                            "temperature_sensor_error": "Termistorfel",
+                            "time_to_run_the_tub_clean_cycle_error": "Rekommendation f\u00f6r reng\u00f6ring av badkar",
+                            "timeout_error": "Timeout-fel",
+                            "turbidity_sensor_error": "Turbiditetssensorfel",
+                            "unable_to_lock_error": "D\u00f6rrl\u00e5sfel",
+                            "unbalanced_load_error": "Obalanserad belastning",
+                            "unknown_error": "Produkten kr\u00e4ver uppm\u00e4rksamhet",
+                            "vibration_sensor_error": "Vibrationssensorfel",
+                            "water_drain_error": "Vattenavloppsfel",
+                            "water_leakage_error": "Problem med vattenl\u00e4ckage",
+                            "water_leaks_error": "Problem med vattenl\u00e4ckage",
+                            "water_level_sensor_error": "Vattensensorfel",
+                            "water_supply_error": "Vattenf\u00f6rs\u00f6rjningsfel"
+                        }
+                    }
+                }
+            },
+            "notification": {
+                "name": "Avisering",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "charging_is_complete": "Laddningen \u00e4r klar",
+                            "cleaning_is_complete": "Cykeln \u00e4r klar",
+                            "cleaning_is_completed": "Reng\u00f6ring \u00e4r slutf\u00f6rd",
+                            "cleaning_is_failed": "Reng\u00f6ring har misslyckats",
+                            "cooking_is_complete": "Avst\u00e4ngd",
+                            "door_is_open": "D\u00f6rren \u00e4r \u00f6ppen",
+                            "drying_failed": "Ett fel har uppst\u00e5tt i torktumlaren",
+                            "drying_is_complete": "Torkningen \u00e4r avslutad",
+                            "error_during_cleaning": "Reng\u00f6ringen avbr\u00f6ts p\u00e5 grund av ett fel",
+                            "error_during_washing": "Ett fel har uppst\u00e5tt i tv\u00e4ttmaskinen",
+                            "error_has_occurred": "Ett fel har uppst\u00e5tt",
+                            "frozen_is_complete": "Ice plus \u00e4r klart",
+                            "homeguard_is_stopped": "HomeGuard har stoppats",
+                            "lack_of_water": "Det finns inget vatten i vattentanken",
+                            "motion_is_detected": "Bild skickas d\u00e5 r\u00f6relse uppt\u00e4cks under HomeGuard",
+                            "need_to_check_location": "Kontroll av plats kr\u00e4vs",
+                            "pollution_is_high": "Luftstatusen blir snabbt d\u00e5lig",
+                            "preheating_is_complete": "F\u00f6rv\u00e4rmningen \u00e4r klar",
+                            "rinse_is_not_enough": "Tills\u00e4tt sk\u00f6ljmedel f\u00f6r b\u00e4ttre torkprestanda",
+                            "salt_refill_is_needed": "Tills\u00e4tt salt f\u00f6r b\u00e4ttre mjukg\u00f6ringseffekt",
+                            "scheduled_cleaning_starts": "Schemalagd st\u00e4dning startar",
+                            "styling_is_complete": "Stylingen \u00e4r klar",
+                            "time_to_change_filter": "Det \u00e4r dags att byta ut filtret",
+                            "time_to_change_water_filter": "Du m\u00e5ste byta vattenfilter",
+                            "time_to_clean": "Beh\u00f6ver sj\u00e4lvreng\u00f6ra",
+                            "time_to_clean_filter": "Det \u00e4r dags att reng\u00f6ra filtret",
+                            "timer_is_complete": "Timern har slutf\u00f6rts",
+                            "washing_is_complete": "Tv\u00e4tten \u00e4r klar",
+                            "water_is_full": "Vattnet \u00e4r fullt",
+                            "water_leak_has_occurred": "Diskmaskinen har uppt\u00e4ckt en vattenl\u00e4cka"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "fan_speed": {
+                "name": "Fl\u00e4kt"
+            },
+            "lamp_brightness": {
+                "name": "Belysning"
+            },
+            "light_status": {
+                "name": "Belysning"
+            },
+            "relative_hour_to_start": {
+                "name": "Schemalagd p\u00e5slagning"
+            },
+            "relative_hour_to_start_for_location": {
+                "name": "{location} schema p\u00e5slagning"
+            },
+            "relative_hour_to_start_wm": {
+                "name": "F\u00f6rdr\u00f6jningen b\u00f6rjar om"
+            },
+            "relative_hour_to_start_wm_for_location": {
+                "name": "{location} f\u00f6rdr\u00f6jning startar om"
+            },
+            "relative_hour_to_stop": {
+                "name": "Schemalagd avst\u00e4ngning"
+            },
+            "relative_hour_to_stop_for_location": {
+                "name": "{location} schema avst\u00e4ngning"
+            },
+            "relative_hour_to_stop_wm": {
+                "name": "F\u00f6rdr\u00f6jningen slutar om"
+            },
+            "relative_hour_to_stop_wm_for_location": {
+                "name": "{location} f\u00f6rdr\u00f6jningen slutar om"
+            },
+            "sleep_timer_relative_hour_to_stop": {
+                "name": "Insomningstimer"
+            },
+            "sleep_timer_relative_hour_to_stop_for_location": {
+                "name": "{location} insomningstimer"
+            },
+            "target_humidity": {
+                "name": "M\u00e5lfuktighet"
+            },
+            "target_temperature": {
+                "name": "Temperatur"
+            },
+            "target_temperature_for_location": {
+                "name": "{location} temperatur"
+            },
+            "wind_temperature": {
+                "name": "Vindtemperatur"
+            }
+        },
+        "select": {
+            "air_clean_operation_mode": {
+                "name": "Luftrening",
+                "state": {
+                    "start": "Starta",
+                    "stop": "Stoppa"
+                }
+            },
+            "cook_mode": {
+                "name": "Tillagningsl\u00e4ge",
+                "state": {
+                    "bake": "Baka",
+                    "convection_bake": "Konvektion baka",
+                    "convection_roast": "Konvektion rosta",
+                    "crisp_convection": "Krispig konvektion",
+                    "roast": "Steka"
+                }
+            },
+            "cook_mode_for_location": {
+                "name": "{location} tillagningsl\u00e4ge",
+                "state": {
+                    "bake": "Baka",
+                    "convection_bake": "Konvektion baka",
+                    "convection_roast": "Konvektion rosta",
+                    "crisp_convection": "Krispig konvektion",
+                    "roast": "Steka"
+                }
+            },
+            "current_job_mode": {
+                "name": "Driftl\u00e4ge",
+                "state": {
+                    "air_clean": "Rening",
+                    "auto": "Automatiskt",
+                    "baby_care": "Babyv\u00e5rdsl\u00e4ge",
+                    "circulator": "Booster",
+                    "clean": "Enkel",
+                    "direct_clean": "Direkt l\u00e4ge",
+                    "dual_clean": "Dubbel",
+                    "fast": "Turbo",
+                    "heat_pump": "V\u00e4rmepump",
+                    "humidify": "Dimma",
+                    "humidify_and_air_clean": "Dimma & renande",
+                    "humidity": "Fuktig",
+                    "nature_clean": "Naturligt l\u00e4ge",
+                    "pet_clean": "Husdjursl\u00e4ge",
+                    "silent": "Tyst",
+                    "sleep": "Vila",
+                    "smart": "Smart l\u00e4ge",
+                    "space_clean": "Diffusionsl\u00e4ge",
+                    "spot_clean": "Brett l\u00e4ge",
+                    "turbo": "Turbo",
+                    "up_feature": "Ytterligare l\u00e4ge",
+                    "vacation": "Semester"
+                }
+            },
+            "display_light": {
+                "name": "Sk\u00e4rmens ljusstyrka",
+                "state": {
+                    "level_1": "Ljusstyrka 1",
+                    "level_2": "Ljusstyrka 2",
+                    "level_3": "Ljusstyrka 3",
+                    "off": "Av"
+                }
+            },
+            "fresh_air_filter": {
+                "name": "Friskluftfilter",
+                "state": {
+                    "auto": "Automatiskt",
+                    "off": "Av",
+                    "power": "Effekt",
+                    "replace": "Byt ut filtret",
+                    "smart_off": "Av",
+                    "smart_on": "Smart s\u00e4ker f\u00f6rvaring",
+                    "smart_power": "Smart s\u00e4ker f\u00f6rvaring"
+                }
+            },
+            "hygiene_dry_mode": {
+                "name": "Torkningsl\u00e4ge",
+                "state": {
+                    "fast": "Snabb",
+                    "normal": "Handtv\u00e4tt",
+                    "off": "Av",
+                    "silent": "Tyst"
+                }
+            },
+            "light_brightness": {
+                "name": "Ljus"
+            },
+            "monitoring_enabled": {
+                "name": "Luftkvalitetssensor",
+                "state": {
+                    "always": "Alltid p\u00e5",
+                    "on_working": "Sl\u00e5s p\u00e5 med produkten"
+                }
+            },
+            "operation_mode": {
+                "name": "Drift",
+                "state": {
+                    "cancel": "Avbryt",
+                    "power_off": "Str\u00f6m av",
+                    "preheating": "F\u00f6rv\u00e4rmer",
+                    "start": "Starta",
+                    "stop": "Stoppa",
+                    "wake_up": "Vilol\u00e4ge av"
+                }
+            },
+            "operation_mode_for_location": {
+                "name": "{location} drift",
+                "state": {
+                    "cancel": "Avbryt",
+                    "power_off": "Str\u00f6m av",
+                    "preheating": "F\u00f6rv\u00e4rmer",
+                    "start": "Starta",
+                    "stop": "Stoppa",
+                    "wake_up": "Vilol\u00e4ge av"
+                }
+            },
+            "wind_angle": {
+                "name": "Rotation",
+                "state": {
+                    "angle_140": "140\u00b0",
+                    "angle_45": "45\u00b0",
+                    "angle_60": "60\u00b0",
+                    "angle_90": "90\u00b0",
+                    "off": "Av"
+                }
+            },
+            "wind_strength": {
+                "name": "Hastighet",
+                "state": {
+                    "auto": "Automatiskt",
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "mid": "Medium",
+                    "power": "Turbo",
+                    "slow": "L\u00e5ngsam",
+                    "turbo": "Turbo",
+                    "wind_1": "Steg 1",
+                    "wind_10": "Steg 10",
+                    "wind_2": "Steg 2",
+                    "wind_3": "Steg 3",
+                    "wind_4": "Steg 4",
+                    "wind_5": "Steg 5",
+                    "wind_6": "Steg 6",
+                    "wind_7": "Steg 7",
+                    "wind_8": "Steg 8",
+                    "wind_9": "Steg 9"
+                }
+            }
+        },
+        "sensor": {
+            "absolute_to_start": {
+                "name": "Schemalagd p\u00e5slagning"
+            },
+            "absolute_to_start_for_location": {
+                "name": "{location} schema p\u00e5slagning"
+            },
+            "absolute_to_stop": {
+                "name": "Schemalagd avst\u00e4ngning"
+            },
+            "absolute_to_stop_for_location": {
+                "name": "{location} schema avst\u00e4ngning"
+            },
+            "battery_level": {
+                "name": "Batteri",
+                "state": {
+                    "high": "Full",
+                    "low": "L\u00e5g",
+                    "mid": "Medium",
+                    "warning": "Tom"
+                }
+            },
+            "beer_remain": {
+                "name": "F\u00f6rlopp f\u00f6r receptet"
+            },
+            "brightness": {
+                "name": "Ljusintensitet"
+            },
+            "brightness_for_location": {
+                "name": "{location} ljusstyrka"
+            },
+            "cock_state": {
+                "name": "UVnano",
+                "state": {
+                    "cleaning": "P\u00e5g\u00e5r",
+                    "normal": "Vilol\u00e4ge"
+                }
+            },
+            "current_dish_washing_course": {
+                "name": "Aktuell cykel",
+                "state": {
+                    "auto": "Automatiskt",
+                    "delicate": "Handtv\u00e4tt",
+                    "download_cycle": "Nedladdningscykel",
+                    "eco": "Eko",
+                    "express": "Express",
+                    "heavy": "Intensiv",
+                    "machine_clean": "Maskinreng\u00f6ring",
+                    "normal": "Normal",
+                    "quick": "Snabb",
+                    "refresh": "Fr\u00e4scha upp",
+                    "rinse": "Sk\u00f6lj",
+                    "short_mode": "Kort program",
+                    "spray": "Spraya",
+                    "steam": "\u00c5ngsk\u00f6tsel",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_job_mode": {
+                "name": "Driftl\u00e4ge",
+                "state": {
+                    "air_clean": "Rena",
+                    "auto": "Automatiskt",
+                    "clothes_dry": "Tv\u00e4tt",
+                    "edge": "Kantreng\u00f6ring",
+                    "heat_pump": "V\u00e4rmepump",
+                    "high": "Effekt",
+                    "intensive_dry": "Spot",
+                    "macro": "Anpassat l\u00e4ge",
+                    "mop": "Moppa",
+                    "normal": "Normal",
+                    "off": "Av",
+                    "quiet_humidity": "Tyst",
+                    "rapid_humidity": "Jet",
+                    "sector_base": "Cell f\u00f6r cell",
+                    "select": "Mitt utrymme",
+                    "smart_humidity": "Smart",
+                    "spot": "Spiral spot-l\u00e4ge",
+                    "turbo": "Turbo",
+                    "vacation": "Semester",
+                    "zigzag": "Zick-zack"
+                }
+            },
+            "current_job_mode_stick_cleaner": {
+                "name": "Driftl\u00e4ge",
+                "state": {
+                    "auto": "L\u00e5g effekt",
+                    "high": "Effekt",
+                    "mop": "Moppa",
+                    "normal": "Normal",
+                    "off": "Av",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_state": {
+                "name": "Aktuell status",
+                "state": {
+                    "add_drain": "Fyller",
+                    "as_pop_up": "Produkten kr\u00e4ver uppm\u00e4rksamhet",
+                    "cancel": "Avbryt",
+                    "carbonation": "Karbonering",
+                    "change_condition": "\u00c4ndra inst\u00e4llningar",
+                    "charging": "Laddar",
+                    "charging_complete": "Laddning slutf\u00f6rd",
+                    "checking_turbidity": "Detektering av jordniv\u00e5",
+                    "cleaning": "St\u00e4dar",
+                    "cleaning_is_done": "Reng\u00f6ringen \u00e4r klar",
+                    "complete": "F\u00e4rdig",
+                    "cook": "Kokar",
+                    "cook_complete": "F\u00e4rdig",
+                    "cooking_in_progress": "Kokar",
+                    "cool_down": "Nedkylning",
+                    "cooling": "Kyler",
+                    "detecting": "Uppt\u00e4cker",
+                    "detergent_amount": "Ger information om m\u00e4ngden tv\u00e4ttmedel",
+                    "diagnosis": "Smart diagnos p\u00e5g\u00e5r",
+                    "dispensing": "Automatisk dispensering",
+                    "display_loadsize": "Tyngd",
+                    "done": "F\u00e4rdig",
+                    "drying": "Torkar",
+                    "during_aging": "\u00c5ldrar",
+                    "during_fermentation": "Fermentering",
+                    "end": "F\u00e4rdig",
+                    "end_cooling": "Torkar",
+                    "error": "Produkten kr\u00e4ver uppm\u00e4rksamhet",
+                    "extracting_capsule": "Kapselbryggning",
+                    "extraction_mode": "Lagring",
+                    "firmware": "Uppdaterar firmware",
+                    "fota": "Uppdaterar",
+                    "frozen_prevent_initial": "Frysskydd i standby",
+                    "frozen_prevent_pause": "Frysskyddet pausat",
+                    "frozen_prevent_running": "Frysskydd aktivt",
+                    "homing": "R\u00f6r p\u00e5 sig",
+                    "initial": "Vilol\u00e4ge",
+                    "initializing": "Vilol\u00e4ge",
+                    "lock": "Kontrollera l\u00e5s",
+                    "macrosector": "Fj\u00e4rrkontrollen anv\u00e4nds",
+                    "melting": "Uppl\u00f6sning av v\u00f6rt",
+                    "monitoring_detecting": "HomeGuard \u00e4r aktiv",
+                    "monitoring_moving": "G\u00e5r till startpunkten",
+                    "monitoring_positioning": "Inst\u00e4llning av startpunkt f\u00f6r HomeGuard",
+                    "night_dry": "Torkning natt",
+                    "oven_setting": "Spish\u00e4ll ansluten",
+                    "pause": "Pausad",
+                    "paused": "Pausad",
+                    "power_fail": "Str\u00f6mavbrott",
+                    "power_off": "Av",
+                    "power_on": "P\u00e5",
+                    "preference": "Inst\u00e4llning",
+                    "preheat": "F\u00f6rv\u00e4rmer",
+                    "preheat_complete": "F\u00f6rv\u00e4rmningen \u00e4r klar",
+                    "preheating": "F\u00f6rv\u00e4rmer",
+                    "preheating_is_done": "F\u00f6rv\u00e4rmningen \u00e4r klar",
+                    "prepareing_fermentation": "F\u00f6rbereder nu",
+                    "presteam": "Redo att \u00e5nga",
+                    "prewash": "F\u00f6rtv\u00e4ttar",
+                    "proofing": "Proofing",
+                    "refreshing": "Uppfr\u00e4schning",
+                    "reservation": "Fj\u00e4rrkontrollen anv\u00e4nds",
+                    "reserved": "F\u00f6rdr\u00f6jning inst\u00e4lld",
+                    "rinse_hold": "V\u00e4ntar p\u00e5 sk\u00f6ljning",
+                    "rinsing": "Sk\u00f6ljning",
+                    "running": "K\u00f6rs",
+                    "running_end": "F\u00e4rdig",
+                    "setdate": "Fj\u00e4rrkontrollen anv\u00e4nds",
+                    "shoes_module": "Torka skor",
+                    "sleep": "I vilol\u00e4ge",
+                    "smart_grid_run": "Drift smarta n\u00e4t",
+                    "soaking": "Bl\u00f6tl\u00e4gger",
+                    "softening": "Sk\u00f6ljmedel",
+                    "spinning": "Snurrar",
+                    "standby": "Vilol\u00e4ge",
+                    "stay": "Fr\u00e4scha upp",
+                    "steam": "Fr\u00e4scha upp",
+                    "steam_softening": "Mjukg\u00f6rande \u00e5nga",
+                    "sterilize": "Sterilisera",
+                    "temperature_stabilization": "Justering av temperatur",
+                    "working": "St\u00e4dar",
+                    "wrinkle_care": "Strykfritt"
+                }
+            },
+            "current_state_for_location": {
+                "name": "{location} aktuell status",
+                "state": {
+                    "add_drain": "Fyller",
+                    "as_pop_up": "Produkten kr\u00e4ver uppm\u00e4rksamhet",
+                    "cancel": "Avbryt",
+                    "carbonation": "Karbonering",
+                    "change_condition": "\u00c4ndra inst\u00e4llningar",
+                    "charging": "Laddar",
+                    "charging_complete": "Laddning slutf\u00f6rd",
+                    "checking_turbidity": "Detektering av jordniv\u00e5",
+                    "cleaning": "St\u00e4dar",
+                    "cleaning_is_done": "Reng\u00f6ringen \u00e4r klar",
+                    "complete": "F\u00e4rdig",
+                    "cook": "Kokar",
+                    "cook_complete": "F\u00e4rdig",
+                    "cooking_in_progress": "Kokar",
+                    "cool_down": "Nedkylning",
+                    "cooling": "Kyler",
+                    "detecting": "Uppt\u00e4cker",
+                    "detergent_amount": "Ger information om m\u00e4ngden tv\u00e4ttmedel",
+                    "diagnosis": "Smart diagnos p\u00e5g\u00e5r",
+                    "dispensing": "Automatisk dispensering",
+                    "display_loadsize": "Tyngd",
+                    "done": "F\u00e4rdig",
+                    "drying": "Torkar",
+                    "during_aging": "\u00c5ldrar",
+                    "during_fermentation": "Fermentering",
+                    "end": "F\u00e4rdig",
+                    "end_cooling": "Torkar",
+                    "error": "Produkten kr\u00e4ver uppm\u00e4rksamhet",
+                    "extracting_capsule": "Kapselbryggning",
+                    "extraction_mode": "Lagring",
+                    "firmware": "Uppdaterar firmware",
+                    "fota": "Uppdaterar",
+                    "frozen_prevent_initial": "Frysskydd i standby",
+                    "frozen_prevent_pause": "Frysskyddet pausat",
+                    "frozen_prevent_running": "Frysskydd aktivt",
+                    "homing": "R\u00f6r p\u00e5 sig",
+                    "initial": "Vilol\u00e4ge",
+                    "initializing": "Vilol\u00e4ge",
+                    "lock": "Kontrollera l\u00e5s",
+                    "macrosector": "Fj\u00e4rrkontrollen anv\u00e4nds",
+                    "melting": "Uppl\u00f6sning av v\u00f6rt",
+                    "monitoring_detecting": "HomeGuard \u00e4r aktiv",
+                    "monitoring_moving": "G\u00e5r till startpunkten",
+                    "monitoring_positioning": "Inst\u00e4llning av startpunkt f\u00f6r HomeGuard",
+                    "night_dry": "Torkning natt",
+                    "oven_setting": "Spish\u00e4ll ansluten",
+                    "pause": "Pausad",
+                    "paused": "Pausad",
+                    "power_fail": "Str\u00f6mavbrott",
+                    "power_off": "Av",
+                    "power_on": "P\u00e5",
+                    "preference": "Inst\u00e4llning",
+                    "preheat": "F\u00f6rv\u00e4rmer",
+                    "preheat_complete": "F\u00f6rv\u00e4rmningen \u00e4r klar",
+                    "preheating": "F\u00f6rv\u00e4rmer",
+                    "preheating_is_done": "F\u00f6rv\u00e4rmningen \u00e4r klar",
+                    "prepareing_fermentation": "F\u00f6rbereder nu",
+                    "presteam": "Redo att \u00e5nga",
+                    "prewash": "F\u00f6rtv\u00e4ttar",
+                    "proofing": "Proofing",
+                    "refreshing": "Uppfr\u00e4schning",
+                    "reservation": "Fj\u00e4rrkontrollen anv\u00e4nds",
+                    "reserved": "F\u00f6rdr\u00f6jning inst\u00e4lld",
+                    "rinse_hold": "V\u00e4ntar p\u00e5 sk\u00f6ljning",
+                    "rinsing": "Sk\u00f6ljning",
+                    "running": "K\u00f6rs",
+                    "running_end": "F\u00e4rdig",
+                    "setdate": "Fj\u00e4rrkontrollen anv\u00e4nds",
+                    "shoes_module": "Torka skor",
+                    "sleep": "I vilol\u00e4ge",
+                    "smart_grid_run": "Drift smarta n\u00e4t",
+                    "soaking": "Bl\u00f6tl\u00e4gger",
+                    "softening": "Sk\u00f6ljmedel",
+                    "spinning": "Snurrar",
+                    "standby": "Vilol\u00e4ge",
+                    "stay": "Fr\u00e4scha upp",
+                    "steam": "Fr\u00e4scha upp",
+                    "steam_softening": "Mjukg\u00f6rande \u00e5nga",
+                    "sterilize": "Sterilisera",
+                    "temperature_stabilization": "Justering av temperatur",
+                    "working": "St\u00e4dar",
+                    "wrinkle_care": "Strykfritt"
+                }
+            },
+            "current_temperature": {
+                "name": "Aktuell temperatur"
+            },
+            "day_target_temperature": {
+                "name": "Tillv\u00e4xttemperatur dagtid"
+            },
+            "day_target_temperature_for_location": {
+                "name": "{location} tillv\u00e4xttemperatur dagtid"
+            },
+            "duration": {
+                "name": "Belysningens varaktighet"
+            },
+            "duration_for_location": {
+                "name": "{location} belysningens varaktighet"
+            },
+            "elapsed_day_state": {
+                "name": "Bryggningsperiod"
+            },
+            "elapsed_day_total": {
+                "name": "Bryggningstid"
+            },
+            "filter_lifetime": {
+                "name": "\u00c5terst\u00e5ende filterlivsl\u00e4ngd"
+            },
+            "flavor_info": {
+                "name": "Smak"
+            },
+            "fresh_air_filter": {
+                "name": "Friskluftfilter",
+                "state": {
+                    "auto": "Automatiskt",
+                    "off": "Av",
+                    "power": "Effekt",
+                    "replace": "Byt ut filtret",
+                    "smart_off": "Av",
+                    "smart_on": "Smart s\u00e4ker f\u00f6rvaring",
+                    "smart_power": "Smart s\u00e4ker f\u00f6rvaring"
+                }
+            },
+            "growth_mode": {
+                "name": "L\u00e4ge",
+                "state": {
+                    "ext_expert": "Anpassat tillv\u00e4xtl\u00e4ge",
+                    "ext_flower": "Blommor",
+                    "ext_herb": "Kryddor",
+                    "ext_leaf": "Gr\u00f6nsaker",
+                    "standard": "Automatiskt"
+                }
+            },
+            "growth_mode_for_location": {
+                "name": "{location} l\u00e4ge",
+                "state": {
+                    "ext_expert": "Anpassat tillv\u00e4xtl\u00e4ge",
+                    "ext_flower": "Blommor",
+                    "ext_herb": "Kryddor",
+                    "ext_leaf": "Gr\u00f6nsaker",
+                    "standard": "Automatiskt"
+                }
+            },
+            "hop_oil_info": {
+                "name": "Humle"
+            },
+            "light_start": {
+                "name": "T\u00e4ndningstid f\u00f6r lampor"
+            },
+            "light_start_for_location": {
+                "name": "{location} lampor tid"
+            },
+            "monitoring_enabled": {
+                "name": "Luftkvalitetssensor",
+                "state": {
+                    "always": "Alltid p\u00e5",
+                    "on_working": "Sl\u00e5s p\u00e5 med produkten"
+                }
+            },
+            "night_target_temperature": {
+                "name": "Tillv\u00e4xttemperatur nattetid"
+            },
+            "night_target_temperature_for_location": {
+                "name": "{location} tillv\u00e4xttemperatur nattetid"
+            },
+            "odor_level": {
+                "name": "Od\u00f6r",
+                "state": {
+                    "invalid": "Ogiltig",
+                    "normal": "Normal",
+                    "strong": "Stark",
+                    "very_strong": "Mycket stark",
+                    "weak": "Svag"
+                }
+            },
+            "personalization_mode": {
+                "name": "Personligt l\u00e4ge",
+                "state": {
+                    "auto_inside": "Autol\u00e4ge",
+                    "auto_outside": "F\u00f6rreglingsl\u00e4ge",
+                    "baby": "Babyv\u00e5rdsl\u00e4ge",
+                    "cooking": "Matlagningsl\u00e4ge",
+                    "exercise": "Tr\u00e4ningsl\u00e4ge",
+                    "others": "\u00d6vriga",
+                    "pet": "Husdjursl\u00e4ge",
+                    "sick_house": "Nytt heml\u00e4ge",
+                    "sleep": "Vilol\u00e4ge",
+                    "smoke": "R\u00f6kl\u00e4ge"
+                }
+            },
+            "power_level": {
+                "name": "Effektniv\u00e5"
+            },
+            "power_level_for_location": {
+                "name": "{location} effektniv\u00e5"
+            },
+            "recipe_name": {
+                "name": "Recept f\u00f6r hembryggning",
+                "state": {
+                    "ipa": "IPA",
+                    "my_recipe": "Mitt recept",
+                    "pale_ale": "Pale ale",
+                    "pilsner": "Pilsner",
+                    "red_ale": "R\u00f6d ale",
+                    "stout": "Stout",
+                    "wheat": "Vete"
+                }
+            },
+            "relative_to_start": {
+                "name": "Schemalagd p\u00e5slagning"
+            },
+            "relative_to_start_for_location": {
+                "name": "{location} schema p\u00e5slagning"
+            },
+            "relative_to_start_wm": {
+                "name": "F\u00f6rdr\u00f6jningen b\u00f6rjar om"
+            },
+            "relative_to_start_wm_for_location": {
+                "name": "{location} f\u00f6rdr\u00f6jning startar om"
+            },
+            "relative_to_stop": {
+                "name": "Schemalagd avst\u00e4ngning"
+            },
+            "relative_to_stop_for_location": {
+                "name": "{location} schema avst\u00e4ngning"
+            },
+            "relative_to_stop_wm": {
+                "name": "F\u00f6rdr\u00f6jningen slutar om"
+            },
+            "relative_to_stop_wm_for_location": {
+                "name": "{location} f\u00f6rdr\u00f6jningen slutar om"
+            },
+            "remain": {
+                "name": "\u00c5terst\u00e5ende tid"
+            },
+            "remain_for_location": {
+                "name": "{location} \u00e5terst\u00e5ende tid"
+            },
+            "rinse_level": {
+                "name": "Niv\u00e5 i sk\u00f6ljmedelsbeh\u00e5llare",
+                "state": {
+                    "rinselevel_0": "0",
+                    "rinselevel_1": "1",
+                    "rinselevel_2": "2",
+                    "rinselevel_3": "3",
+                    "rinselevel_4": "4"
+                }
+            },
+            "running": {
+                "name": "L\u00f6ptid"
+            },
+            "running_for_location": {
+                "name": "{location} k\u00f6rtid"
+            },
+            "sleep_timer_relative_to_stop": {
+                "name": "Insomningstimer"
+            },
+            "sleep_timer_relative_to_stop_for_location": {
+                "name": "{location} insomningstimer"
+            },
+            "softening_level": {
+                "name": "Sk\u00f6ljmedelsniv\u00e5",
+                "state": {
+                    "softeninglevel_1": "1",
+                    "softeninglevel_2": "2",
+                    "softeninglevel_3": "3",
+                    "softeninglevel_4": "4"
+                }
+            },
+            "sterilizing_state": {
+                "name": "Sterilisering vid h\u00f6g temperatur",
+                "state": {
+                    "cancel": "Avbryt",
+                    "off": "Av",
+                    "on": "Sterilisering"
+                }
+            },
+            "target": {
+                "name": "Tillagningstid"
+            },
+            "target_for_location": {
+                "name": "{location} tillagningstid"
+            },
+            "target_temperature": {
+                "name": "Temperatur",
+                "state": {
+                    "freezer": "Frys",
+                    "fridge": "Kylsk\u00e5p",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "K\u00f6tt & Fisk",
+                    "off": "Av",
+                    "rice_grain": "Ris/spannm\u00e5l",
+                    "storage": "Lagring",
+                    "temperature_number": "Nummer",
+                    "vegetable_fruit": "Frukt & Gr\u00f6nt"
+                }
+            },
+            "target_temperature_for_location": {
+                "name": "{location} temperatur",
+                "state": {
+                    "freezer": "Frys",
+                    "fridge": "Kylsk\u00e5p",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "K\u00f6tt & Fisk",
+                    "off": "Av",
+                    "rice_grain": "Ris/spannm\u00e5l",
+                    "storage": "Lagring",
+                    "temperature_number": "Nummer",
+                    "vegetable_fruit": "Frukt & Gr\u00f6nt"
+                }
+            },
+            "temperature": {
+                "name": "Temperatur"
+            },
+            "temperature_state": {
+                "name": "Temperatur",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "normal": "Bra"
+                }
+            },
+            "temperature_state_for_location": {
+                "name": "{location} temperatur",
+                "state": {
+                    "high": "H\u00f6g",
+                    "low": "L\u00e5g",
+                    "normal": "Bra"
+                }
+            },
+            "total": {
+                "name": "Total tid"
+            },
+            "total_for_location": {
+                "name": "{location} total tid"
+            },
+            "total_pollution_level": {
+                "name": "Generell luftkvalitet",
+                "state": {
+                    "bad": "Oh\u00e4lsosam",
+                    "good": "Bra",
+                    "invalid": "Ogiltig",
+                    "normal": "M\u00e5ttlig",
+                    "very_bad": "D\u00e5lig"
+                }
+            },
+            "used_time": {
+                "name": "Vattenfilter anv\u00e4ndning"
+            },
+            "water_type": {
+                "name": "Typ"
+            },
+            "wind_volume_for_location": {
+                "name": "{location} vindhastighet"
+            },
+            "wort_info": {
+                "name": "V\u00f6rt",
+                "state": {
+                    "dark": "M\u00f6rk",
+                    "deep_gold": "Gyllene",
+                    "hoppy": "Humlig",
+                    "wheat": "Vete"
+                }
+            },
+            "yeast_info": {
+                "name": "J\u00e4st",
+                "state": {
+                    "american_ale": "Amerikansk ale",
+                    "english_ale": "Engelsk ale",
+                    "lager": "Lager",
+                    "weizen": "Vete"
+                }
+            }
+        },
+        "switch": {
+            "auto_mode": {
+                "name": "Autol\u00e4ge"
+            },
+            "express_mode": {
+                "name": "Is plus"
+            },
+            "hot_water_mode": {
+                "name": "Hetvatten"
+            },
+            "humidity_warm_mode": {
+                "name": "Varm dimma"
+            },
+            "hygiene_dry_mode": {
+                "name": "Torkningsl\u00e4ge"
+            },
+            "mood_lamp_state": {
+                "name": "St\u00e4mningsljus"
+            },
+            "operation_power": {
+                "name": "Effekt"
+            },
+            "optimal_humidity": {
+                "name": "Ventilation"
+            },
+            "power_save_enabled": {
+                "name": "Energisparande"
+            },
+            "rapid_freeze": {
+                "name": "Snabb frysning"
+            },
+            "sleep_mode": {
+                "name": "Vilol\u00e4ge"
+            },
+            "uv_nano": {
+                "name": "UVnano"
+            },
+            "warm_mode": {
+                "name": "V\u00e4rmer"
+            }
+        }
+    }
+}

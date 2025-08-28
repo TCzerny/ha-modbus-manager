@@ -1,0 +1,177 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Zariadenie u\u017e je nakonfigurovan\u00e9",
+            "different_device": "Zadan\u00e9 inform\u00e1cie poch\u00e1dzaj\u00fa z inej nab\u00edja\u010dky Peblar EV.",
+            "no_serial_number": "Objaven\u00e9 zariadenie Peblar neposkytlo s\u00e9riov\u00e9 \u010d\u00edslo.",
+            "reauth_successful": "Op\u00e4tovn\u00e9 overenie bolo \u00faspe\u0161n\u00e9",
+            "reconfigure_successful": "Rekonfigur\u00e1cia bola \u00faspe\u0161n\u00e1"
+        },
+        "error": {
+            "cannot_connect": "Nepodarilo sa pripoji\u0165",
+            "invalid_auth": "Neplatn\u00e9 overenie",
+            "unknown": "Neo\u010dak\u00e1van\u00e1 chyba"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "password": "Heslo"
+                },
+                "data_description": {
+                    "password": "Rovnak\u00e9 heslo, ak\u00e9 pou\u017e\u00edvate na prihl\u00e1senie do miestneho webov\u00e9ho rozhrania nab\u00edja\u010dky Peblar EV."
+                },
+                "description": "Znovu sa overte pomocou nab\u00edja\u010dky Peblar EV.\n\nNa tento \u00fa\u010del mus\u00edte zada\u0165 svoje nov\u00e9 heslo, ktor\u00e9 pou\u017e\u00edvate na prihl\u00e1senie do webov\u00e9ho rozhrania nab\u00edja\u010dky Peblar EV."
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Hostite\u013e",
+                    "password": "Heslo"
+                },
+                "data_description": {
+                    "host": "N\u00e1zov hostite\u013ea alebo IP adresa va\u0161ej nab\u00edja\u010dky Peblar EV v dom\u00e1cej sieti.",
+                    "password": "Rovnak\u00e9 heslo, ak\u00e9 pou\u017e\u00edvate na prihl\u00e1senie do miestneho webov\u00e9ho rozhrania nab\u00edja\u010dky Peblar EV."
+                },
+                "description": "Prekonfigurujte svoju nab\u00edja\u010dku Peblar EV.\n\nTo v\u00e1m umo\u017en\u00ed zmeni\u0165 IP adresu va\u0161ej nab\u00edja\u010dky Peblar EV a heslo, ktor\u00e9 pou\u017e\u00edvate na prihl\u00e1senie do jej webov\u00e9ho rozhrania."
+            },
+            "user": {
+                "data": {
+                    "host": "Hostite\u013e",
+                    "password": "Heslo"
+                },
+                "data_description": {
+                    "host": "N\u00e1zov hostite\u013ea alebo IP adresa va\u0161ej nab\u00edja\u010dky Peblar EV v dom\u00e1cej sieti.",
+                    "password": "Rovnak\u00e9 heslo, ak\u00e9 pou\u017e\u00edvate na prihl\u00e1senie do miestneho webov\u00e9ho rozhrania nab\u00edja\u010dky Peblar EV."
+                },
+                "description": "Nastavenie nab\u00edja\u010dky Peblar EV na integr\u00e1ciu s aplik\u00e1ciou Home Assistant.\n\nNa to potrebujete z\u00edska\u0165 IP adresu va\u0161ej nab\u00edja\u010dky Peblar EV a heslo, ktor\u00e9 pou\u017e\u00edvate na prihl\u00e1senie do jej webov\u00e9ho rozhrania.\n\nHome Assistant automaticky nakonfiguruje va\u0161u nab\u00edja\u010dku Peblar EV na pou\u017e\u00edvanie s Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "data": {
+                    "password": "Heslo"
+                },
+                "data_description": {
+                    "password": "Rovnak\u00e9 heslo, ak\u00e9 pou\u017e\u00edvate na prihl\u00e1senie do miestneho webov\u00e9ho rozhrania nab\u00edja\u010dky Peblar EV."
+                },
+                "description": "Nastavenie nab\u00edja\u010dky Peblar EV {hostname}, na IP adrese {host}, na integr\u00e1ciu s aplik\u00e1ciou Home Assistant\n\nNa tento \u00fa\u010del budete potrebova\u0165 heslo, ktor\u00e9 pou\u017e\u00edvate na prihl\u00e1senie do webov\u00e9ho rozhrania nab\u00edja\u010dky Peblar EV.\n\nHome Assistant automaticky nakonfiguruje va\u0161u nab\u00edja\u010dku Peblar EV na pou\u017e\u00edvanie s Home Assistant."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "active_error_codes": {
+                "name": "Akt\u00edvne chyby"
+            },
+            "active_warning_codes": {
+                "name": "Akt\u00edvne varovania"
+            }
+        },
+        "number": {
+            "charge_current_limit": {
+                "name": "Limit nab\u00edjania"
+            }
+        },
+        "select": {
+            "smart_charging": {
+                "name": "Inteligentn\u00e9 nab\u00edjanie",
+                "state": {
+                    "default": "Predvolen\u00fd",
+                    "fast_solar": "R\u00fdchle sol\u00e1rne",
+                    "pure_solar": "\u010cist\u00fd sol\u00e1rny",
+                    "scheduled": "Pl\u00e1novan\u00e9",
+                    "smart_solar": "Chytr\u00e9 sol\u00e1rne"
+                }
+            }
+        },
+        "sensor": {
+            "charge_current_limit_source": {
+                "name": "Obmedzi\u0165 zdroj",
+                "state": {
+                    "charging_cable": "Nab\u00edjac\u00ed k\u00e1bel",
+                    "current_limiter": "Obmedzova\u010d pr\u00fadu",
+                    "dynamic_load_balancing": "Dynamick\u00e9 vyrovn\u00e1vanie z\u00e1\u0165a\u017ee",
+                    "external_power_limit": "Limit extern\u00e9ho v\u00fdkonu",
+                    "group_load_balancing": "Vyrovn\u00e1vanie za\u0165a\u017eenia skupiny",
+                    "hardware_limitation": "Hardv\u00e9rov\u00e9 \u200b\u200bobmedzenie",
+                    "high_temperature": "Vysok\u00e1 teplota",
+                    "household_power_limit": "Limit v\u00fdkonu dom\u00e1cnosti",
+                    "installation_limit": "Limit in\u0161tal\u00e1cie",
+                    "local_modbus_api": "Modbus API",
+                    "local_rest_api": "REST API",
+                    "local_scheduled_charging": "Pl\u00e1novan\u00e9 nab\u00edjanie",
+                    "ocpp_smart_charging": "Inteligentn\u00e9 nab\u00edjanie OCPP",
+                    "overcurrent_protection": "Nadpr\u00fadov\u00e1 ochrana",
+                    "phase_imbalance": "F\u00e1zov\u00e1 nerovnov\u00e1ha",
+                    "power_factor": "\u00da\u010dinn\u00edk",
+                    "solar_charging": "Sol\u00e1rne nab\u00edjanie"
+                }
+            },
+            "cp_state": {
+                "name": "Stav",
+                "state": {
+                    "charging": "Nab\u00edja sa",
+                    "error": "Chyba",
+                    "fault": "Porucha",
+                    "invalid": "Neplatn\u00e9",
+                    "no_ev_connected": "\u017diadny pripojen\u00fd EV",
+                    "suspended": "Pozastaven\u00e9"
+                }
+            },
+            "current_phase_1": {
+                "name": "Pr\u00fad f\u00e1za 1"
+            },
+            "current_phase_2": {
+                "name": "Pr\u00fad f\u00e1za 2"
+            },
+            "current_phase_3": {
+                "name": "Pr\u00fad f\u00e1za 3"
+            },
+            "energy_session": {
+                "name": "Energia rel\u00e1cie"
+            },
+            "energy_total": {
+                "name": "Energia po\u010das celej \u017eivotnosti"
+            },
+            "power_phase_1": {
+                "name": "V\u00fdkon f\u00e1za 1"
+            },
+            "power_phase_2": {
+                "name": "V\u00fdkon f\u00e1za 2"
+            },
+            "power_phase_3": {
+                "name": "V\u00fdkon f\u00e1za 3"
+            },
+            "uptime": {
+                "name": "\u010cas prev\u00e1dzky"
+            },
+            "voltage_phase_1": {
+                "name": "Nap\u00e4tie f\u00e1za 1"
+            },
+            "voltage_phase_2": {
+                "name": "Nap\u00e4tie f\u00e1za 2"
+            },
+            "voltage_phase_3": {
+                "name": "Nap\u00e4tie f\u00e1za 3"
+            }
+        },
+        "switch": {
+            "force_single_phase": {
+                "name": "Sila jednof\u00e1zov\u00e1"
+            }
+        },
+        "update": {
+            "customization": {
+                "name": "Prisp\u00f4sobenie"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Pri komunik\u00e1cii s nab\u00edja\u010dkou Peblar EV do\u0161lo k zlyhaniu overovania."
+        },
+        "communication_error": {
+            "message": "Pri komunik\u00e1cii s nab\u00edja\u010dkou Peblar EV do\u0161lo k chybe: {error}"
+        },
+        "unknown_error": {
+            "message": "Pri komunik\u00e1cii s nab\u00edja\u010dkou Peblar EV do\u0161lo k nezn\u00e1mej chybe: {error}"
+        }
+    }
+}

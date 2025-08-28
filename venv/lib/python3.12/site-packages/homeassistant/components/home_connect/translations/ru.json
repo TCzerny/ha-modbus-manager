@@ -1,0 +1,619 @@
+{
+    "common": {
+        "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+        "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+    },
+    "config": {
+        "abort": {
+            "missing_configuration": "\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0437\u0430\u0432\u0435\u0440\u0448\u0438\u0442\u044c \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0443. \u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u043e\u0437\u043d\u0430\u043a\u043e\u043c\u044c\u0442\u0435\u0441\u044c \u0441 \u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u0446\u0438\u0435\u0439.",
+            "no_url_available": "URL-\u0430\u0434\u0440\u0435\u0441 \u043d\u0435\u0434\u043e\u0441\u0442\u0443\u043f\u0435\u043d. \u041e\u0437\u043d\u0430\u043a\u043e\u043c\u044c\u0442\u0435\u0441\u044c \u0441 [\u0434\u043e\u043a\u0443\u043c\u0435\u043d\u0442\u0430\u0446\u0438\u0435\u0439]({docs_url}) \u0434\u043b\u044f \u043f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u044f \u0438\u043d\u0444\u043e\u0440\u043c\u0430\u0446\u0438\u0438 \u043e\u0431 \u044d\u0442\u043e\u0439 \u043e\u0448\u0438\u0431\u043a\u0435.",
+            "oauth_error": "\u041f\u043e\u043b\u0443\u0447\u0435\u043d\u044b \u043d\u0435\u0434\u043e\u043f\u0443\u0441\u0442\u0438\u043c\u044b\u0435 \u0434\u0430\u043d\u043d\u044b\u0435 \u0442\u043e\u043a\u0435\u043d\u0430.",
+            "oauth_failed": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 \u043f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0438 \u0442\u043e\u043a\u0435\u043d\u0430 \u0434\u043e\u0441\u0442\u0443\u043f\u0430.",
+            "oauth_timeout": "\u0422\u0430\u0439\u043c-\u0430\u0443\u0442 \u0440\u0430\u0441\u043f\u043e\u0437\u043d\u0430\u0432\u0430\u043d\u0438\u044f \u0442\u043e\u043a\u0435\u043d\u0430 OAuth.",
+            "oauth_unauthorized": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u0430\u0446\u0438\u0438 OAuth \u043f\u0440\u0438 \u043f\u043e\u043b\u0443\u0447\u0435\u043d\u0438\u0438 \u0442\u043e\u043a\u0435\u043d\u0430 \u0434\u043e\u0441\u0442\u0443\u043f\u0430."
+        },
+        "create_entry": {
+            "default": "\u0410\u0443\u0442\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0446\u0438\u044f \u043f\u0440\u043e\u0439\u0434\u0435\u043d\u0430 \u0443\u0441\u043f\u0435\u0448\u043d\u043e"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "\u0412\u044b\u0431\u0435\u0440\u0438\u0442\u0435 \u0441\u043f\u043e\u0441\u043e\u0431 \u0430\u0443\u0442\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0446\u0438\u0438"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_charging_state": {
+                "name": "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u0437\u0430\u0440\u044f\u0434\u043a\u0438 \u0431\u0430\u0442\u0430\u0440\u0435\u0438"
+            },
+            "charging_connection": {
+                "name": "\u041f\u043e\u0434\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u0437\u0430\u0440\u044f\u0434\u043a\u0438"
+            },
+            "chiller_door": {
+                "name": "\u0414\u0432\u0435\u0440\u044c \u043e\u0445\u043b\u0430\u0434\u0438\u0442\u0435\u043b\u044f"
+            },
+            "dust_box_inserted": {
+                "name": "\u041f\u044b\u043b\u0435\u0441\u0431\u043e\u0440\u043d\u0438\u043a",
+                "state": {
+                    "off": "\u041d\u0435 \u0432\u0441\u0442\u0430\u0432\u043b\u0435\u043d",
+                    "on": "\u0412\u0441\u0442\u0430\u0432\u043b\u0435\u043d"
+                }
+            },
+            "freezer_door": {
+                "name": "\u0414\u0432\u0435\u0440\u0446\u0430 \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0438"
+            },
+            "lifted": {
+                "name": "\u041f\u043e\u0434\u043d\u044f\u0442"
+            },
+            "local_control": {
+                "name": "\u041b\u043e\u043a\u0430\u043b\u044c\u043d\u043e\u0435 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435"
+            },
+            "refrigerator_door": {
+                "name": "\u0414\u0432\u0435\u0440\u044c \u0445\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a\u0430"
+            },
+            "remote_control": {
+                "name": "\u0414\u0438\u0441\u0442\u0430\u043d\u0446\u0438\u043e\u043d\u043d\u043e\u0435 \u0443\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0438\u0435"
+            },
+            "remote_start": {
+                "name": "\u0414\u0438\u0441\u0442\u0430\u043d\u0446\u0438\u043e\u043d\u043d\u044b\u0439 \u0437\u0430\u043f\u0443\u0441\u043a"
+            }
+        },
+        "light": {
+            "ambient_light": {
+                "name": "\u041e\u043a\u0440\u0443\u0436\u0430\u044e\u0449\u0438\u0439 \u0441\u0432\u0435\u0442"
+            },
+            "cooking_lighting": {
+                "name": "\u0424\u0443\u043d\u043a\u0446\u0438\u043e\u043d\u0430\u043b\u044c\u043d\u044b\u0439 \u0441\u0432\u0435\u0442"
+            },
+            "external_light": {
+                "name": "\u0412\u043d\u0435\u0448\u043d\u0438\u0439 \u0441\u0432\u0435\u0442"
+            },
+            "internal_light": {
+                "name": "\u0412\u043d\u0443\u0442\u0440\u0435\u043d\u043d\u0438\u0439 \u0441\u0432\u0435\u0442"
+            }
+        },
+        "number": {
+            "bottle_cooler_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0445\u043b\u0430\u0434\u0438\u0442\u0435\u043b\u044f \u0431\u0443\u0442\u044b\u043b\u043e\u043a"
+            },
+            "chiller_left_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0445\u043b\u0430\u0434\u0438\u0442\u0435\u043b\u044f \u0441\u043b\u0435\u0432\u0430"
+            },
+            "chiller_right_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0445\u043b\u0430\u0434\u0438\u0442\u0435\u043b\u044f \u0441\u043f\u0440\u0430\u0432\u0430"
+            },
+            "chiller_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0445\u043b\u0430\u0434\u0438\u0442\u0435\u043b\u044f"
+            },
+            "freezer_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u044c\u043d\u043e\u0439 \u043a\u0430\u043c\u0435\u0440\u044b"
+            },
+            "refrigerator_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u0445\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a\u0430"
+            },
+            "wine_compartment_2_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0442\u0434\u0435\u043b\u0435\u043d\u0438\u044f \u0434\u043b\u044f \u0432\u0438\u043d\u0430 2"
+            },
+            "wine_compartment_3_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0442\u0434\u0435\u043b\u0435\u043d\u0438\u044f \u0434\u043b\u044f \u0432\u0438\u043d\u0430 3"
+            },
+            "wine_compartment_setpoint_temperature": {
+                "name": "\u0422\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u0430 \u043e\u0442\u0434\u0435\u043b\u0435\u043d\u0438\u044f \u0434\u043b\u044f \u0432\u0438\u043d\u0430"
+            }
+        },
+        "select": {
+            "active_program": {
+                "state": {
+                    "consumer_products_cleaning_robot_program_basic_go_home": "\u0412\u0435\u0440\u043d\u0443\u0442\u044c\u0441\u044f \u0434\u043e\u043c\u043e\u0439",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0432\u0441\u0435",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u043a\u0430\u0440\u0442\u0443",
+                    "consumer_products_coffee_maker_program_beverage_caffe_latte": "\u041b\u0430\u0442\u0442\u0435",
+                    "consumer_products_coffee_maker_program_beverage_cappuccino": "\u041a\u0430\u043f\u0443\u0447\u0438\u043d\u043e",
+                    "consumer_products_coffee_maker_program_beverage_coffee": "\u041a\u043e\u0444\u0435",
+                    "consumer_products_coffee_maker_program_beverage_espresso": "\u042d\u0441\u043f\u0440\u0435\u0441\u0441\u043e",
+                    "consumer_products_coffee_maker_program_beverage_espresso_doppio": "\u042d\u0441\u043f\u0440\u0435\u0441\u0441\u043e \u0434\u043e\u043f\u043f\u0438\u043e",
+                    "consumer_products_coffee_maker_program_beverage_espresso_macchiato": "\u042d\u0441\u043f\u0440\u0435\u0441\u0441\u043e \u043c\u0430\u043a\u0438\u0430\u0442\u043e",
+                    "consumer_products_coffee_maker_program_beverage_hot_water": "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430",
+                    "consumer_products_coffee_maker_program_beverage_latte_macchiato": "\u041b\u0430\u0442\u0442\u0435 \u043c\u0430\u043a\u0438\u0430\u0442\u043e",
+                    "consumer_products_coffee_maker_program_beverage_milk_froth": "\u0412\u0441\u043f\u0435\u043d\u0435\u043d\u043d\u043e\u0435 \u043c\u043e\u043b\u043e\u043a\u043e",
+                    "consumer_products_coffee_maker_program_beverage_ristretto": "\u0420\u0438\u0441\u0442\u0440\u0435\u0442\u0442\u043e",
+                    "consumer_products_coffee_maker_program_beverage_warm_milk": "\u0413\u043e\u0440\u044f\u0447\u0435\u0435 \u043c\u043e\u043b\u043e\u043a\u043e",
+                    "consumer_products_coffee_maker_program_beverage_x_l_coffee": "\u041a\u043e\u0444\u0435 XL",
+                    "consumer_products_coffee_maker_program_coffee_world_americano": "\u0410\u043c\u0435\u0440\u0438\u043a\u0430\u043d\u043e"
+                }
+            },
+            "selected_program": {
+                "name": "\u0412\u044b\u0431\u0440\u0430\u043d\u043d\u0430\u044f \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430",
+                "state": {
+                    "consumer_products_cleaning_robot_program_cleaning_clean_all": "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u0432\u0441\u0435",
+                    "consumer_products_cleaning_robot_program_cleaning_clean_map": "\u041e\u0447\u0438\u0441\u0442\u0438\u0442\u044c \u043a\u0430\u0440\u0442\u0443",
+                    "cooking_oven_program_heating_mode_slow_cook": "\u041c\u0435\u0434\u043b\u0435\u043d\u043d\u0430\u044f \u0433\u043e\u0442\u043e\u0432\u043a\u0430",
+                    "cooking_oven_program_heating_mode_top_bottom_heating": "\u0412\u0435\u0440\u0445\u043d\u0438\u0439 \u043d\u0438\u0436\u043d\u0438\u0439 \u043f\u043e\u0434\u043e\u0433\u0440\u0435\u0432",
+                    "cooking_oven_program_heating_mode_top_bottom_heating_eco": "\u0412\u0435\u0440\u0445\u043d\u0438\u0439 \u043d\u0438\u0436\u043d\u0438\u0439 \u043f\u043e\u0434\u043e\u0433\u0440\u0435\u0432 \u044d\u043a\u043e",
+                    "cooking_oven_program_heating_mode_warming_drawer": "\u042f\u0449\u0438\u043a \u0434\u043b\u044f \u043f\u043e\u0434\u043e\u0433\u0440\u0435\u0432\u0430",
+                    "cooking_oven_program_microwave_1000_watt": "1000 \u0412\u0430\u0442\u0442",
+                    "cooking_oven_program_microwave_180_watt": "180 \u0412\u0430\u0442\u0442",
+                    "cooking_oven_program_microwave_360_watt": "360 \u0412\u0430\u0442\u0442",
+                    "cooking_oven_program_microwave_600_watt": "600 \u0412\u0430\u0442\u0442",
+                    "cooking_oven_program_microwave_900_watt": "900 \u0412\u0430\u0442\u0442",
+                    "cooking_oven_program_microwave_90_watt": "90 \u0412\u0430\u0442\u0442",
+                    "cooking_oven_program_microwave_max": "\u041c\u0430\u043a\u0441\u0438\u043c\u0443\u043c",
+                    "dishcare_dishwasher_program_auto_1": "\u0410\u0432\u0442\u043e 1",
+                    "dishcare_dishwasher_program_auto_2": "\u0410\u0432\u0442\u043e 2",
+                    "dishcare_dishwasher_program_auto_3": "\u0410\u0432\u0442\u043e 3",
+                    "dishcare_dishwasher_program_auto_half_load": "\u0410\u0432\u0442\u043e \u043f\u043e\u043b\u043e\u0432\u0438\u043d\u043d\u0430\u044f \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0430",
+                    "dishcare_dishwasher_program_eco_50": "\u042d\u043a\u043e 50\u00baC",
+                    "dishcare_dishwasher_program_express_sparkle_65": "\u042d\u043a\u0441\u043f\u0440\u0435\u0441\u0441 \u0431\u043b\u0435\u0441\u043a 65\u00baC",
+                    "dishcare_dishwasher_program_glas_40": "\u0421\u0442\u0435\u043a\u043b\u043e 40\u00baC",
+                    "dishcare_dishwasher_program_glass_care": "\u0423\u0445\u043e\u0434 \u0437\u0430 \u0441\u0442\u0435\u043a\u043b\u043e\u043c",
+                    "dishcare_dishwasher_program_intensiv_45": "\u0418\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u0430\u044f 45\u00baC",
+                    "dishcare_dishwasher_program_intensiv_70": "\u0418\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u0430\u044f 70\u00baC",
+                    "dishcare_dishwasher_program_intensiv_power": "\u0418\u043d\u0442\u0435\u043d\u0441\u0438\u0432\u043d\u0430\u044f \u043c\u043e\u0449\u043d\u043e\u0441\u0442\u044c",
+                    "dishcare_dishwasher_program_kurz_60": "\u041a\u0443\u0440\u0446 60\u00baC",
+                    "dishcare_dishwasher_program_machine_care": "\u0423\u0445\u043e\u0434 \u0437\u0430 \u043c\u0430\u0448\u0438\u043d\u043e\u0439",
+                    "dishcare_dishwasher_program_magic_daily": "\u041c\u0430\u0433\u0438\u044f \u0435\u0436\u0435\u0434\u043d\u0435\u0432\u043d\u0430\u044f",
+                    "dishcare_dishwasher_program_maximum_cleaning": "\u041c\u0430\u043a\u0441\u0438\u043c\u0430\u043b\u044c\u043d\u0430\u044f \u043e\u0447\u0438\u0441\u0442\u043a\u0430",
+                    "dishcare_dishwasher_program_mixed_load": "\u0421\u043c\u0435\u0448\u0430\u043d\u043d\u0430\u044f \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0430",
+                    "dishcare_dishwasher_program_night_wash": "\u041d\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u0438\u0440\u043a\u0430",
+                    "dishcare_dishwasher_program_normal_45": "\u041d\u043e\u0440\u043c\u0430\u043b\u044c\u043d\u0430\u044f 45\u00baC",
+                    "dishcare_dishwasher_program_normal_65": "\u041d\u043e\u0440\u043c\u0430\u043b\u044c\u043d\u0430\u044f 65\u00baC",
+                    "dishcare_dishwasher_program_pre_rinse": "\u041f\u0440\u0435\u0434\u0432\u0430\u0440\u0438\u0442\u0435\u043b\u044c\u043d\u043e\u0435 \u043f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435",
+                    "dishcare_dishwasher_program_quick_45": "\u0411\u044b\u0441\u0442\u0440\u0430\u044f 45\u00baC",
+                    "dishcare_dishwasher_program_quick_65": "\u0411\u044b\u0441\u0442\u0440\u0430\u044f 65\u00baC",
+                    "dishcare_dishwasher_program_steam_fresh": "\u0421\u0432\u0435\u0436\u0438\u0439 \u043f\u0430\u0440",
+                    "dishcare_dishwasher_program_super_60": "\u0421\u0443\u043f\u0435\u0440 60\u00baC",
+                    "laundry_care_dryer_program_anti_shrink": "\u0417\u0430\u0449\u0438\u0442\u0430 \u043e\u0442 \u0443\u0441\u0430\u0434\u043a\u0438",
+                    "laundry_care_dryer_program_blankets": "\u041e\u0434\u0435\u044f\u043b\u0430",
+                    "laundry_care_dryer_program_business_shirts": "\u0414\u0435\u043b\u043e\u0432\u044b\u0435 \u0440\u0443\u0431\u0430\u0448\u043a\u0438",
+                    "laundry_care_dryer_program_cotton": "\u0425\u043b\u043e\u043f\u043e\u043a",
+                    "laundry_care_dryer_program_delicates": "\u0414\u0435\u043b\u0438\u043a\u0430\u0442\u043d\u0430\u044f",
+                    "laundry_care_dryer_program_dessous": "\u041d\u0438\u0436\u043d\u0435\u0435 \u0431\u0435\u043b\u044c\u0435",
+                    "laundry_care_dryer_program_down_feathers": "\u041f\u0443\u0445\u043e\u0432\u044b\u0435 \u043f\u0435\u0440\u044c\u044f",
+                    "laundry_care_dryer_program_hygiene": "\u0413\u0438\u0433\u0438\u0435\u043d\u0430",
+                    "laundry_care_dryer_program_in_basket": "\u0412 \u043a\u043e\u0440\u0437\u0438\u043d\u0435",
+                    "laundry_care_dryer_program_jeans": "\u0414\u0436\u0438\u043d\u0441\u044b",
+                    "laundry_care_dryer_program_mix": "\u041c\u0438\u043a\u0441",
+                    "laundry_care_dryer_program_my_time_my_drying_time": "\u041c\u043e\u0451 \u0432\u0440\u0435\u043c\u044f \u0441\u0443\u0448\u043a\u0438",
+                    "laundry_care_dryer_program_outdoor": "\u0423\u043b\u0438\u0446\u0430",
+                    "laundry_care_dryer_program_pillow": "\u041f\u043e\u0434\u0443\u0448\u043a\u0430",
+                    "laundry_care_dryer_program_shirts_15": "\u0424\u0443\u0442\u0431\u043e\u043b\u043a\u0438 15\u00baC",
+                    "laundry_care_dryer_program_super_40": "\u0421\u0443\u043f\u0435\u0440 40\u00baC",
+                    "laundry_care_dryer_program_synthetic": "\u0421\u0438\u043d\u0442\u0435\u0442\u0438\u043a\u0430",
+                    "laundry_care_dryer_program_synthetic_refresh": "\u041e\u0441\u0432\u0435\u0436\u0438\u0442\u044c \u0441\u0438\u043d\u0442\u0435\u0442\u0438\u043a\u0443",
+                    "laundry_care_dryer_program_time_cold": "\u0425\u043e\u043b\u043e\u0434\u043d\u0430\u044f (\u043f\u0435\u0440\u0435\u043c\u0435\u043d\u043d\u043e\u0435 \u0432\u0440\u0435\u043c\u044f)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_20": "\u0425\u043e\u043b\u043e\u0434\u043d\u0430\u044f (20 \u043c\u0438\u043d)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_30": "\u0425\u043e\u043b\u043e\u0434\u043d\u0430\u044f (30 \u043c\u0438\u043d)",
+                    "laundry_care_dryer_program_time_cold_fix_time_cold_60": "\u0425\u043e\u043b\u043e\u0434\u043d\u0430\u044f (60 \u043c\u0438\u043d)",
+                    "laundry_care_dryer_program_time_warm": "\u0422\u0435\u043f\u043b\u0430\u044f (\u043f\u0435\u0440\u0435\u043c\u0435\u043d\u043d\u043e\u0435 \u0432\u0440\u0435\u043c\u044f)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_30": "\u0422\u0435\u043f\u043b\u0430\u044f (30 \u043c\u0438\u043d)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_40": "\u0422\u0435\u043f\u043b\u0430\u044f (40 \u043c\u0438\u043d)",
+                    "laundry_care_dryer_program_time_warm_fix_time_warm_60": "\u0422\u0435\u043f\u043b\u0430\u044f (60 \u043c\u0438\u043d\u0443\u0442)",
+                    "laundry_care_dryer_program_towels": "\u041f\u043e\u043b\u043e\u0442\u0435\u043d\u0446\u0430",
+                    "laundry_care_washer_dryer_program_cotton": "\u0425\u043b\u043e\u043f\u043e\u043a",
+                    "laundry_care_washer_dryer_program_cotton_eco_4060": "\u0425\u043b\u043e\u043f\u043e\u043a \u044d\u043a\u043e 40/60 \u00baC",
+                    "laundry_care_washer_dryer_program_easy_care": "\u041f\u0440\u043e\u0441\u0442\u043e\u0439 \u0443\u0445\u043e\u0434",
+                    "laundry_care_washer_dryer_program_mix": "\u041c\u0438\u043a\u0441",
+                    "laundry_care_washer_dryer_program_wash_and_dry_60": "\u0421\u0442\u0438\u0440\u043a\u0430 \u0438 \u0441\u0443\u0448\u043a\u0430 (60 \u043c\u0438\u043d)",
+                    "laundry_care_washer_dryer_program_wash_and_dry_90": "\u0421\u0442\u0438\u0440\u043a\u0430 \u0438 \u0441\u0443\u0448\u043a\u0430 (90 \u043c\u0438\u043d)",
+                    "laundry_care_washer_program_auto_30": "\u0410\u0432\u0442\u043e 30\u00baC",
+                    "laundry_care_washer_program_auto_40": "\u0410\u0432\u0442\u043e 40\u00baC",
+                    "laundry_care_washer_program_auto_60": "\u0410\u0432\u0442\u043e 60\u00baC",
+                    "laundry_care_washer_program_chiffon": "\u0428\u0438\u0444\u043e\u043d",
+                    "laundry_care_washer_program_cotton": "\u0425\u043b\u043e\u043f\u043e\u043a",
+                    "laundry_care_washer_program_cotton_colour": "\u0425\u043b\u043e\u043f\u043e\u043a \u0446\u0432\u0435\u0442\u043d\u043e\u0439",
+                    "laundry_care_washer_program_cotton_cotton_eco": "\u0425\u043b\u043e\u043f\u043e\u043a \u044d\u043a\u043e",
+                    "laundry_care_washer_program_cotton_eco_4060": "\u0425\u043b\u043e\u043f\u043e\u043a \u044d\u043a\u043e 40/60\u00baC",
+                    "laundry_care_washer_program_curtains": "\u0428\u0442\u043e\u0440\u044b",
+                    "laundry_care_washer_program_dark_wash": "\u0422\u0435\u043c\u043d\u0430\u044f \u0441\u0442\u0438\u0440\u043a\u0430",
+                    "laundry_care_washer_program_delicates_silk": "\u0414\u0435\u043b\u0438\u043a\u0430\u0442\u043d\u044b\u0439 \u0448\u0435\u043b\u043a",
+                    "laundry_care_washer_program_dessous": "\u041d\u0438\u0436\u043d\u0435\u0435 \u0431\u0435\u043b\u044c\u0435",
+                    "laundry_care_washer_program_down_duvet_duvet": "\u041f\u0443\u0445\u043e\u0432\u043e\u0435 \u043e\u0434\u0435\u044f\u043b\u043e",
+                    "laundry_care_washer_program_drum_clean": "\u041e\u0447\u0438\u0441\u0442\u043a\u0430 \u0431\u0430\u0440\u0430\u0431\u0430\u043d\u0430",
+                    "laundry_care_washer_program_easy_care": "\u041b\u0435\u0433\u043a\u0438\u0439 \u0443\u0445\u043e\u0434",
+                    "laundry_care_washer_program_mix": "\u041c\u0438\u043a\u0441",
+                    "laundry_care_washer_program_mix_night_wash": "\u041c\u0438\u043a\u0441 \u043d\u043e\u0447\u043d\u0430\u044f \u0441\u0442\u0438\u0440\u043a\u0430",
+                    "laundry_care_washer_program_monsoon": "\u041c\u0443\u0441\u0441\u043e\u043d",
+                    "laundry_care_washer_program_outdoor": "\u0423\u043b\u0438\u0446\u0430",
+                    "laundry_care_washer_program_plush_toy": "\u041f\u043b\u044e\u0448\u0435\u0432\u0430\u044f \u0438\u0433\u0440\u0443\u0448\u043a\u0430",
+                    "laundry_care_washer_program_power_speed_59": "\u041c\u043e\u0449\u043d\u043e\u0441\u0442\u044c \u0441\u043a\u043e\u0440\u043e\u0441\u0442\u044c <60 \u043c\u0438\u043d",
+                    "laundry_care_washer_program_rinse_rinse_spin_drain": "\u041f\u043e\u043b\u043e\u0441\u043a\u0430\u043d\u0438\u0435 \u043e\u0442\u0436\u0438\u043c \u0441\u043b\u0438\u0432",
+                    "laundry_care_washer_program_sensitive": "\u0427\u0443\u0432\u0441\u0442\u0432\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u0439",
+                    "laundry_care_washer_program_shirts_blouses": "\u0420\u0443\u0431\u0430\u0448\u043a\u0438 \u0431\u043b\u0443\u0437\u043a\u0438",
+                    "laundry_care_washer_program_sport_fitness": "\u0421\u043f\u043e\u0440\u0442 \u0444\u0438\u0442\u043d\u0435\u0441",
+                    "laundry_care_washer_program_super_153045_super_15": "\u0421\u0443\u043f\u0435\u0440 15 \u043c\u0438\u043d",
+                    "laundry_care_washer_program_super_153045_super_1530": "\u0421\u0443\u043f\u0435\u0440 15/30 \u043c\u0438\u043d",
+                    "laundry_care_washer_program_towels": "\u041f\u043e\u043b\u043e\u0442\u0435\u043d\u0446\u0430",
+                    "laundry_care_washer_program_water_proof": "\u0412\u043e\u0434\u043e\u043d\u0435\u043f\u0440\u043e\u043d\u0438\u0446\u0430\u0435\u043c\u044b\u0439",
+                    "laundry_care_washer_program_wool": "\u0428\u0435\u0440\u0441\u0442\u044c"
+                }
+            }
+        },
+        "sensor": {
+            "battery_level": {
+                "name": "\u0423\u0440\u043e\u0432\u0435\u043d\u044c \u0437\u0430\u0440\u044f\u0434\u0430"
+            },
+            "bean_container_empty": {
+                "name": "\u041a\u043e\u043d\u0442\u0435\u0439\u043d\u0435\u0440 \u0434\u043b\u044f \u0437\u0435\u0440\u0435\u043d \u043f\u0443\u0441\u0442",
+                "state": {
+                    "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+                    "off": "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u043e",
+                    "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+                }
+            },
+            "camera_state": {
+                "name": "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043a\u0430\u043c\u0435\u0440\u044b",
+                "state": {
+                    "disabled": "\u0414\u0435\u0430\u043a\u0442\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u043e",
+                    "error": "\u041e\u0448\u0438\u0431\u043a\u0430",
+                    "ready": "\u0413\u043e\u0442\u043e\u0432",
+                    "sleeping": "\u0421\u043e\u043d",
+                    "streamingcloud": "\u041e\u0431\u043b\u0430\u0447\u043d\u0430\u044f \u043f\u043e\u0442\u043e\u043a\u043e\u0432\u0430\u044f \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0430",
+                    "streaminglocal": "\u041b\u043e\u043a\u0430\u043b\u044c\u043d\u0430\u044f \u043f\u043e\u0442\u043e\u043a\u043e\u0432\u0430\u044f \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0430",
+                    "streaminglocal_and_cloud": "\u041b\u043e\u043a\u0430\u043b\u044c\u043d\u0430\u044f \u0438 \u043e\u0431\u043b\u0430\u0447\u043d\u0430\u044f \u043f\u043e\u0442\u043e\u043a\u043e\u0432\u0430\u044f \u043f\u0435\u0440\u0435\u0434\u0430\u0447\u0430"
+                }
+            },
+            "coffee_and_milk_counter": {
+                "name": "\u0427\u0430\u0448\u043a\u0438 \u0434\u043b\u044f \u043a\u043e\u0444\u0435 \u0438 \u043c\u043e\u043b\u043e\u043a\u0430"
+            },
+            "coffee_counter": {
+                "name": "\u041a\u043e\u0444\u0435"
+            },
+            "door": {
+                "name": "\u0414\u0432\u0435\u0440\u044c",
+                "state": {
+                    "closed": "\u0417\u0430\u043a\u0440\u044b\u0442\u043e",
+                    "locked": "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d\u043e",
+                    "open": "\u041e\u0442\u043a\u0440\u044b\u0442\u043e"
+                }
+            },
+            "drip_tray_full": {
+                "name": "\u041f\u043e\u0434\u0434\u043e\u043d \u0434\u043b\u044f \u043a\u0430\u043f\u0435\u043b\u044c \u043f\u043e\u043b\u043e\u043d",
+                "state": {
+                    "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+                    "off": "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u043e",
+                    "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+                }
+            },
+            "freezer_door_alarm": {
+                "name": "\u0421\u0438\u0433\u043d\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044f \u0434\u0432\u0435\u0440\u0438 \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0438",
+                "state": {
+                    "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+                    "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+                }
+            },
+            "freezer_temperature_alarm": {
+                "name": "\u0421\u0438\u0433\u043d\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044f \u0442\u0435\u043c\u043f\u0435\u0440\u0430\u0442\u0443\u0440\u044b \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0438",
+                "state": {
+                    "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+                    "off": "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u043e",
+                    "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+                }
+            },
+            "frothy_milk_counter": {
+                "name": "\u0427\u0430\u0448\u043a\u0438 \u0441 \u043f\u0435\u043d\u0438\u0441\u0442\u044b\u043c \u043c\u043e\u043b\u043e\u043a\u043e\u043c"
+            },
+            "hot_milk_counter": {
+                "name": "\u0427\u0430\u0448\u043a\u0438 \u0433\u043e\u0440\u044f\u0447\u0435\u0433\u043e \u043c\u043e\u043b\u043e\u043a\u0430"
+            },
+            "hot_water_counter": {
+                "name": "\u0413\u043e\u0440\u044f\u0447\u0430\u044f \u0432\u043e\u0434\u0430"
+            },
+            "hot_water_cups_counter": {
+                "name": "\u0427\u0430\u0448\u043a\u0438 \u0433\u043e\u0440\u044f\u0447\u0435\u0439 \u0432\u043e\u0434\u044b"
+            },
+            "last_selected_map": {
+                "name": "\u041f\u043e\u0441\u043b\u0435\u0434\u043d\u044f\u044f \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u0430\u044f \u043a\u0430\u0440\u0442\u0430",
+                "state": {
+                    "map1": "\u041a\u0430\u0440\u0442\u0430 1",
+                    "map2": "\u041a\u0430\u0440\u0442\u0430 2",
+                    "map3": "\u041a\u0430\u0440\u0442\u0430 3",
+                    "tempmap": "\u0412\u0440\u0435\u043c\u0435\u043d\u043d\u0430\u044f \u043a\u0430\u0440\u0442\u0430"
+                }
+            },
+            "milk_counter": {
+                "name": "\u041c\u043e\u043b\u043e\u0447\u043d\u044b\u0435 \u0447\u0430\u0448\u043a\u0438"
+            },
+            "operation_state": {
+                "name": "\u0421\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u0435 \u043e\u043f\u0435\u0440\u0430\u0446\u0438\u0438",
+                "state": {
+                    "aborting": "\u041e\u0442\u043c\u0435\u043d\u0430",
+                    "actionrequired": "\u0422\u0440\u0435\u0431\u0443\u0435\u0442\u0441\u044f \u0434\u0435\u0439\u0441\u0442\u0432\u0438\u0435",
+                    "delayedstart": "\u041e\u0442\u043b\u043e\u0436\u0435\u043d\u043d\u044b\u0439 \u0441\u0442\u0430\u0440\u0442",
+                    "error": "\u041e\u0448\u0438\u0431\u043a\u0430",
+                    "finished": "\u0417\u0430\u0432\u0435\u0440\u0448\u0435\u043d\u0430",
+                    "inactive": "\u041d\u0435\u0430\u043a\u0442\u0438\u0432\u043d\u043e",
+                    "pause": "\u041f\u0430\u0443\u0437\u0430",
+                    "ready": "\u0413\u043e\u0442\u043e\u0432",
+                    "run": "\u0417\u0430\u043f\u0443\u0441\u043a"
+                }
+            },
+            "powder_coffee_counter": {
+                "name": "\u041f\u043e\u0440\u043e\u0448\u043a\u043e\u0432\u044b\u0439 \u043a\u043e\u0444\u0435"
+            },
+            "program_finish_time": {
+                "name": "\u0412\u0440\u0435\u043c\u044f \u043e\u043a\u043e\u043d\u0447\u0430\u043d\u0438\u044f \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b"
+            },
+            "program_progress": {
+                "name": "\u041f\u0440\u043e\u0433\u0440\u0435\u0441\u0441 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b"
+            },
+            "refrigerator_door_alarm": {
+                "name": "\u0421\u0438\u0433\u043d\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u044f \u0434\u0432\u0435\u0440\u0438 \u0445\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a\u0430",
+                "state": {
+                    "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+                    "off": "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u043e",
+                    "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+                }
+            },
+            "rinse_aid_nearly_empty": {
+                "name": "\u041e\u043f\u043e\u043b\u0430\u0441\u043a\u0438\u0432\u0430\u0442\u0435\u043b\u044c \u043f\u043e\u0447\u0442\u0438 \u0437\u0430\u043a\u043e\u043d\u0447\u0438\u043b\u0441\u044f",
+                "state": {
+                    "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+                    "off": "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u043e",
+                    "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+                }
+            },
+            "ristretto_espresso_counter": {
+                "name": "\u0427\u0430\u0448\u043a\u0438 \u0434\u043b\u044f \u044d\u0441\u043f\u0440\u0435\u0441\u0441\u043e \u0440\u0438\u0441\u0442\u0440\u0435\u0442\u0442\u043e"
+            },
+            "salt_nearly_empty": {
+                "name": "\u0421\u043e\u043b\u044c \u043f\u043e\u0447\u0442\u0438 \u0437\u0430\u043a\u043e\u043d\u0447\u0438\u043b\u0430\u0441\u044c",
+                "state": {
+                    "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+                    "off": "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u043e",
+                    "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+                }
+            },
+            "water_tank_empty": {
+                "name": "\u0411\u0430\u043a \u0434\u043b\u044f \u0432\u043e\u0434\u044b \u043f\u0443\u0441\u0442",
+                "state": {
+                    "confirmed": "\u041f\u043e\u0434\u0442\u0432\u0435\u0440\u0436\u0434\u0435\u043d",
+                    "off": "\u0412\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u043e",
+                    "present": "\u041f\u0440\u0438\u0441\u0443\u0442\u0441\u0442\u0432\u0443\u0435\u0442"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "\u0411\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0430 \u043e\u0442 \u0434\u0435\u0442\u0435\u0439"
+            },
+            "cup_warmer": {
+                "name": "\u041f\u043e\u0434\u043e\u0433\u0440\u0435\u0432\u0430\u0442\u0435\u043b\u044c \u0447\u0430\u0448\u0435\u043a"
+            },
+            "dispenser_enabled": {
+                "name": "\u0414\u0438\u0441\u043f\u0435\u043d\u0441\u0435\u0440",
+                "state": {
+                    "off": "\u0414\u0435\u0430\u043a\u0442\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u043e",
+                    "on": "\u0410\u043a\u0442\u0438\u0432\u0438\u0440\u043e\u0432\u0430\u043d\u043e"
+                }
+            },
+            "door_assistant_freezer": {
+                "name": "\u041f\u043e\u043c\u043e\u0449\u043d\u0438\u043a \u0434\u0432\u0435\u0440\u0446\u044b \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0438"
+            },
+            "door_assistant_fridge": {
+                "name": "\u041f\u043e\u043c\u043e\u0449\u043d\u0438\u043a \u0434\u0432\u0435\u0440\u0446\u044b \u0445\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a\u0430"
+            },
+            "eco_mode": {
+                "name": "\u042d\u043a\u043e\u043d\u043e\u043c\u0438\u0447\u043d\u044b\u0439 \u0440\u0435\u0436\u0438\u043c"
+            },
+            "freezer_super_mode": {
+                "name": "\u0421\u0443\u043f\u0435\u0440 \u0440\u0435\u0436\u0438\u043c \u043c\u043e\u0440\u043e\u0437\u0438\u043b\u043a\u0438"
+            },
+            "fresh_mode": {
+                "name": "\u0420\u0435\u0436\u0438\u043c \u0441\u0432\u0435\u0436\u0435\u0441\u0442\u0438"
+            },
+            "power": {
+                "name": "\u041f\u0438\u0442\u0430\u043d\u0438\u0435"
+            },
+            "refrigerator_super_mode": {
+                "name": "\u0421\u0443\u043f\u0435\u0440 \u0440\u0435\u0436\u0438\u043c \u0445\u043e\u043b\u043e\u0434\u0438\u043b\u044c\u043d\u0438\u043a\u0430"
+            },
+            "sabbath_mode": {
+                "name": "\u0420\u0435\u0436\u0438\u043c \u0448\u0430\u0431\u0431\u0430\u0442\u0430"
+            },
+            "vacation_mode": {
+                "name": "\u0420\u0435\u0436\u0438\u043c \u043e\u0442\u043f\u0443\u0441\u043a\u0430"
+            }
+        },
+        "time": {
+            "alarm_clock": {
+                "name": "\u0411\u0443\u0434\u0438\u043b\u044c\u043d\u0438\u043a"
+            }
+        }
+    },
+    "exceptions": {
+        "execute_command": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u044f \u043a\u043e\u043c\u0430\u043d\u0434\u044b {command}: {description}"
+        },
+        "pause_program": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0438 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b: {description}"
+        },
+        "power_off": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f {appliance_name} \u0441\u043e \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u0435\u043c \"{value}\": {description}"
+        },
+        "power_on": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f {appliance_name}: {description}"
+        },
+        "select_light_custom_color": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c\u0441\u043a\u043e\u0433\u043e \u0446\u0432\u0435\u0442\u0430 \u0434\u043b\u044f {entity_id}: {description}"
+        },
+        "select_program": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 \u0432\u044b\u0431\u043e\u0440\u0435 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b {program}: {description}"
+        },
+        "set_light_brightness": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0438 \u044f\u0440\u043a\u043e\u0441\u0442\u0438 {entity_id}: {description}"
+        },
+        "set_light_color": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0438 \u0446\u0432\u0435\u0442\u0430 {entity_id}: {description}"
+        },
+        "set_options_active_program": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0435 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u043e\u0432 \u0434\u043b\u044f \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0439 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b: {description}"
+        },
+        "set_options_selected_program": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 \u0443\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0435 \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u043e\u0432 \u0434\u043b\u044f \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0439 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b: {description}"
+        },
+        "set_setting": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438\u0441\u0432\u043e\u0435\u043d\u0438\u044f \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \"{value}\" \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0443 \"{key}\": {description}"
+        },
+        "set_setting_entity": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438\u0441\u0432\u043e\u0435\u043d\u0438\u044f \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \"{value}\" \u043f\u0430\u0440\u0430\u043c\u0435\u0442\u0440\u0443 \"{key}\" \u0434\u043b\u044f {entity_id}: {description}"
+        },
+        "start_program": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0437\u0430\u043f\u0443\u0441\u043a\u0430 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b {program}: {description}"
+        },
+        "stop_program": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043a\u0438 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b: {description}"
+        },
+        "turn_off": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f {entity_id} ({key}): {description}"
+        },
+        "turn_off_light": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f {entity_id}: {description}"
+        },
+        "turn_off_not_supported": {
+            "message": "{appliance_name} \u043d\u0435 \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u0438\u0432\u0430\u0435\u0442 \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u0435 \u0438\u043b\u0438 \u043f\u0435\u0440\u0435\u0445\u043e\u0434 \u0432 \u0440\u0435\u0436\u0438\u043c \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u044f."
+        },
+        "turn_on": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f {entity_id} ({key}): {description}"
+        },
+        "turn_on_light": {
+            "message": "\u041e\u0448\u0438\u0431\u043a\u0430 \u0432\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f {entity_id}: {description}"
+        },
+        "unable_to_retrieve_turn_off": {
+            "message": "\u041d\u0435 \u0443\u0434\u0430\u0435\u0442\u0441\u044f \u0432\u044b\u043a\u043b\u044e\u0447\u0438\u0442\u044c {appliance_name}, \u0442\u0430\u043a \u043a\u0430\u043a \u043d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u043e\u043f\u0440\u0435\u0434\u0435\u043b\u0438\u0442\u044c \u0435\u0433\u043e \u043f\u043e\u0434\u0434\u0435\u0440\u0436\u043a\u0443 \u0432\u044b\u043a\u043b\u044e\u0447\u0435\u043d\u0438\u044f \u0438\u043b\u0438 \u043f\u0435\u0440\u0435\u0445\u043e\u0434\u0430 \u0432 \u0440\u0435\u0436\u0438\u043c \u043e\u0436\u0438\u0434\u0430\u043d\u0438\u044f."
+        }
+    },
+    "issues": {
+        "deprecated_binary_common_door_sensor": {
+            "description": "\u0411\u0438\u043d\u0430\u0440\u043d\u044b\u0439 \u0434\u0432\u0435\u0440\u043d\u043e\u0439 \u0441\u0435\u043d\u0441\u043e\u0440 `{entity}`, \u043a\u043e\u0442\u043e\u0440\u044b\u0439 \u0443\u0441\u0442\u0430\u0440\u0435\u043b, \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0435\u0442\u0441\u044f \u0432 \u0441\u043b\u0435\u0434\u0443\u044e\u0449\u0438\u0445 \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u044f\u0445 \u0438\u043b\u0438 \u0441\u043a\u0440\u0438\u043f\u0442\u0430\u0445:\n{items}\n\n\u0414\u043e\u0441\u0442\u0443\u043f\u0435\u043d \u043e\u0431\u044a\u0435\u043a\u0442 \u0441\u0435\u043d\u0441\u043e\u0440\u0430 \u0441 \u0434\u043e\u043f\u043e\u043b\u043d\u0438\u0442\u0435\u043b\u044c\u043d\u044b\u043c\u0438 \u0432\u043e\u0437\u043c\u043e\u0436\u043d\u044b\u043c\u0438 \u0441\u043e\u0441\u0442\u043e\u044f\u043d\u0438\u044f\u043c\u0438, \u0438 \u0435\u0433\u043e \u0441\u043b\u0435\u0434\u0443\u0435\u0442 \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u044c \u0432 \u0434\u0430\u043b\u044c\u043d\u0435\u0439\u0448\u0435\u043c; \u041f\u043e\u0436\u0430\u043b\u0443\u0439\u0441\u0442\u0430, \u0438\u0441\u043f\u043e\u043b\u044c\u0437\u0443\u0439\u0442\u0435 \u0435\u0433\u043e \u0432 \u0432\u044b\u0448\u0435\u0443\u043a\u0430\u0437\u0430\u043d\u043d\u044b\u0445 \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u044f\u0445 \u0438\u043b\u0438 \u0441\u043a\u0440\u0438\u043f\u0442\u0430\u0445, \u0447\u0442\u043e\u0431\u044b \u0438\u0441\u043f\u0440\u0430\u0432\u0438\u0442\u044c \u044d\u0442\u0443 \u043f\u0440\u043e\u0431\u043b\u0435\u043c\u0443.",
+            "title": "\u041e\u0431\u043d\u0430\u0440\u0443\u0436\u0435\u043d \u0443\u0441\u0442\u0430\u0440\u0435\u0432\u0448\u0438\u0439 \u0431\u0438\u043d\u0430\u0440\u043d\u044b\u0439 \u0434\u0432\u0435\u0440\u043d\u043e\u0439 \u0441\u0435\u043d\u0441\u043e\u0440 \u0432 \u043d\u0435\u043a\u043e\u0442\u043e\u0440\u044b\u0445 \u0430\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0437\u0430\u0446\u0438\u044f\u0445 \u0438\u043b\u0438 \u0441\u043a\u0440\u0438\u043f\u0442\u0430\u0445"
+        }
+    },
+    "services": {
+        "change_setting": {
+            "description": "\u0418\u0437\u043c\u0435\u043d\u044f\u0435\u0442 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0443.",
+            "fields": {
+                "device_id": {
+                    "description": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.",
+                    "name": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430"
+                },
+                "key": {
+                    "description": "\u041a\u043b\u044e\u0447 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438.",
+                    "name": "\u041a\u043b\u044e\u0447"
+                },
+                "value": {
+                    "description": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0438.",
+                    "name": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435"
+                }
+            },
+            "name": "\u0418\u0437\u043c\u0435\u043d\u0438\u0442\u044c \u043d\u0430\u0441\u0442\u0440\u043e\u0439\u043a\u0443"
+        },
+        "pause_program": {
+            "description": "\u041f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442 \u0432\u044b\u043f\u043e\u043b\u043d\u0435\u043d\u0438\u0435 \u0442\u0435\u043a\u0443\u0449\u0435\u0439 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b.",
+            "fields": {
+                "device_id": {
+                    "description": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.",
+                    "name": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430"
+                }
+            },
+            "name": "\u041f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443"
+        },
+        "resume_program": {
+            "description": "\u0412\u043e\u0437\u043e\u0431\u043d\u043e\u0432\u043b\u044f\u0435\u0442 \u043f\u0440\u0438\u043e\u0441\u0442\u0430\u043d\u043e\u0432\u043b\u0435\u043d\u043d\u0443\u044e \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443.",
+            "fields": {
+                "device_id": {
+                    "description": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.",
+                    "name": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430"
+                }
+            },
+            "name": "\u0412\u043e\u0437\u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443"
+        },
+        "select_program": {
+            "description": "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u0442 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443, \u043d\u0435 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u044f \u0435\u0451.",
+            "fields": {
+                "device_id": {
+                    "description": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.",
+                    "name": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430"
+                },
+                "key": {
+                    "description": "\u041a\u043b\u044e\u0447 \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u041a\u043b\u044e\u0447 \u043e\u043f\u0446\u0438\u0438"
+                },
+                "program": {
+                    "description": "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430 \u0434\u043b\u044f \u0432\u044b\u0431\u043e\u0440\u0430.",
+                    "name": "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430"
+                },
+                "unit": {
+                    "description": "\u0415\u0434\u0438\u043d\u0438\u0446\u0430 \u0434\u043b\u044f \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u0415\u0434\u0438\u043d\u0438\u0446\u0430 \u043e\u043f\u0446\u0438\u0438"
+                },
+                "value": {
+                    "description": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043e\u043f\u0446\u0438\u0438"
+                }
+            },
+            "name": "\u0412\u044b\u0431\u0440\u0430\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443"
+        },
+        "set_option_active": {
+            "description": "\u0423\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442 \u043e\u043f\u0446\u0438\u044e \u0434\u043b\u044f \u0430\u043a\u0442\u0438\u0432\u043d\u043e\u0439 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b.",
+            "fields": {
+                "device_id": {
+                    "description": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.",
+                    "name": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430"
+                },
+                "key": {
+                    "description": "\u041a\u043b\u044e\u0447 \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u041a\u043b\u044e\u0447"
+                },
+                "value": {
+                    "description": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435"
+                }
+            },
+            "name": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u0430\u043a\u0442\u0438\u0432\u043d\u0443\u044e \u043e\u043f\u0446\u0438\u044e \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b"
+        },
+        "set_option_selected": {
+            "description": "\u0423\u0441\u0442\u0430\u043d\u0430\u0432\u043b\u0438\u0432\u0430\u0435\u0442 \u043e\u043f\u0446\u0438\u044e \u0434\u043b\u044f \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u043e\u0439 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b.",
+            "fields": {
+                "device_id": {
+                    "description": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.",
+                    "name": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430"
+                },
+                "key": {
+                    "description": "\u041a\u043b\u044e\u0447 \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u041a\u043b\u044e\u0447"
+                },
+                "value": {
+                    "description": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435"
+                }
+            },
+            "name": "\u0423\u0441\u0442\u0430\u043d\u043e\u0432\u0438\u0442\u044c \u0432\u044b\u0431\u0440\u0430\u043d\u043d\u0443\u044e \u043e\u043f\u0446\u0438\u044e \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u044b"
+        },
+        "start_program": {
+            "description": "\u0412\u044b\u0431\u0438\u0440\u0430\u0435\u0442 \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443 \u0438 \u0437\u0430\u043f\u0443\u0441\u043a\u0430\u0435\u0442 \u0435\u0451.",
+            "fields": {
+                "device_id": {
+                    "description": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430.",
+                    "name": "\u0418\u0434\u0435\u043d\u0442\u0438\u0444\u0438\u043a\u0430\u0442\u043e\u0440 \u0443\u0441\u0442\u0440\u043e\u0439\u0441\u0442\u0432\u0430"
+                },
+                "key": {
+                    "description": "\u041a\u043b\u044e\u0447 \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u041a\u043b\u044e\u0447 \u043e\u043f\u0446\u0438\u0438"
+                },
+                "program": {
+                    "description": "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430 \u0434\u043b\u044f \u0432\u044b\u0431\u043e\u0440\u0430.",
+                    "name": "\u041f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0430"
+                },
+                "unit": {
+                    "description": "\u0415\u0434\u0438\u043d\u0438\u0446\u0430 \u0434\u043b\u044f \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u0415\u0434\u0438\u043d\u0438\u0446\u0430 \u043e\u043f\u0446\u0438\u0438"
+                },
+                "value": {
+                    "description": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043e\u043f\u0446\u0438\u0438.",
+                    "name": "\u0417\u043d\u0430\u0447\u0435\u043d\u0438\u0435 \u043e\u043f\u0446\u0438\u0438"
+                }
+            },
+            "name": "\u0417\u0430\u043f\u0443\u0441\u0442\u0438\u0442\u044c \u043f\u0440\u043e\u0433\u0440\u0430\u043c\u043c\u0443"
+        }
+    }
+}

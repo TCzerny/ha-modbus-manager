@@ -1,0 +1,141 @@
+{
+    "device_automation": {
+        "action_type": {
+            "toggle": "{entity_name} \ud1a0\uae00",
+            "turn_off": "{entity_name} \ub044\uae30",
+            "turn_on": "{entity_name} \ucf1c\uae30"
+        },
+        "condition_type": {
+            "is_off": "{entity_name} \uaebc\uc838 \uc788\uc73c\uba74",
+            "is_on": "{entity_name} \ucf1c\uc838 \uc788\uc73c\uba74"
+        },
+        "trigger_type": {
+            "changed_states": "{entity_name}: \ucf1c\uc84c\uac70\ub098 \uaebc\uc84c\uc744 \ub54c",
+            "turned_off": "{entity_name}: \uaebc\uc84c\uc744 \ub54c",
+            "turned_on": "{entity_name}: \ucf1c\uc84c\uc744 \ub54c"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "\ud32c",
+            "state": {
+                "off": "\uaebc\uc9d0",
+                "on": "\ucf1c\uc9d0"
+            },
+            "state_attributes": {
+                "direction": {
+                    "name": "\ubc29\ud5a5",
+                    "state": {
+                        "forward": "\uc55e\uc73c\ub85c",
+                        "reverse": "\ubc18\uc804"
+                    }
+                },
+                "oscillating": {
+                    "name": "\ud68c\uc804",
+                    "state": {
+                        "false": "\uc544\ub2c8\uc694",
+                        "true": "\ub124"
+                    }
+                },
+                "percentage": {
+                    "name": "\uc18d\ub3c4"
+                },
+                "percentage_step": {
+                    "name": "\uc18d\ub3c4 \ub2e8\uacc4"
+                },
+                "preset_mode": {
+                    "name": "\ud504\ub9ac\uc14b \ubaa8\ub4dc"
+                },
+                "preset_modes": {
+                    "name": "\uc0ac\uc6a9 \uac00\ub2a5\ud55c \ud504\ub9ac\uc14b \ubaa8\ub4dc"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "not_valid_preset_mode": {
+            "message": "\uc0ac\uc804 \uc124\uc815 \ubaa8\ub4dc {preset_mode} \uc720\ud6a8\ud558\uc9c0 \uc54a\uc2b5\ub2c8\ub2e4. \uc720\ud6a8\ud55c \uc0ac\uc804 \uc124\uc815 \ubaa8\ub4dc\ub294 {preset_modes} \uc785\ub2c8\ub2e4."
+        }
+    },
+    "selector": {
+        "direction": {
+            "options": {
+                "forward": "\uc55e\uc73c\ub85c",
+                "reverse": "\ub4a4\ub85c"
+            }
+        }
+    },
+    "services": {
+        "decrease_speed": {
+            "fields": {
+                "percentage_step": {
+                    "name": "\uac10\uc18c"
+                }
+            },
+            "name": "\uc18d\ub3c4 \uac10\uc18c"
+        },
+        "increase_speed": {
+            "fields": {
+                "percentage_step": {
+                    "name": "\uc99d\uac00"
+                }
+            },
+            "name": "\uc18d\ub3c4 \uc99d\uac00"
+        },
+        "oscillate": {
+            "fields": {
+                "oscillating": {
+                    "name": "\ud68c\uc804"
+                }
+            },
+            "name": "\ud68c\uc804"
+        },
+        "set_direction": {
+            "fields": {
+                "direction": {
+                    "name": "\ubc29\ud5a5"
+                }
+            },
+            "name": "\ubc29\ud5a5 \uc124\uc815"
+        },
+        "set_percentage": {
+            "fields": {
+                "percentage": {
+                    "description": "\ud32c\uc758 \uc18d\ub3c4",
+                    "name": "\ubc31\ubd84\uc728"
+                }
+            },
+            "name": "\uc18d\ub3c4 \uc124\uc815"
+        },
+        "set_preset_mode": {
+            "fields": {
+                "preset_mode": {
+                    "name": "\ud504\ub9ac\uc14b \ubaa8\ub4dc"
+                }
+            },
+            "name": "\ud504\ub9ac\uc14b \ubaa8\ub4dc \uc124\uc815"
+        },
+        "toggle": {
+            "name": "\ud1a0\uae00"
+        },
+        "turn_off": {
+            "description": "\ud32c \ub044\uae30",
+            "name": "\ub044\uae30"
+        },
+        "turn_on": {
+            "description": "\ud32c \ucf1c\uae30",
+            "fields": {
+                "percentage": {
+                    "description": "\ud32c\uc758 \uc18d\ub3c4",
+                    "name": "\ubc31\ubd84\uc728"
+                },
+                "preset_mode": {
+                    "description": "\ud504\ub9ac\uc14b \ubaa8\ub4dc",
+                    "name": "\ud504\ub9ac\uc14b \ubaa8\ub4dc"
+                }
+            },
+            "name": "\ucf1c\uae30"
+        }
+    },
+    "title": "\uc1a1\ud48d\uae30"
+}

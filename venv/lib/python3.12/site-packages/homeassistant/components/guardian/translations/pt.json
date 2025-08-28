@@ -1,0 +1,119 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "step": {
+            "discovery_confirm": {
+                "description": "Pretende configurar este dispositivo Guardi\u00e3o?"
+            },
+            "user": {
+                "data": {
+                    "ip_address": "Endere\u00e7o IP",
+                    "port": "Porta"
+                },
+                "description": "Configurar um dispositivo local do Elexa Guardian."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "leak": {
+                "name": "Fuga detetada"
+            },
+            "moved": {
+                "name": "Mudou-se recentemente"
+            }
+        },
+        "button": {
+            "reset_diagnostics": {
+                "name": "Reiniciar o diagn\u00f3stico da v\u00e1lvula"
+            }
+        },
+        "sensor": {
+            "current": {
+                "name": "Corrente"
+            },
+            "instantaneous_current": {
+                "name": "Corrente instant\u00e2nea"
+            },
+            "instantaneous_current_ddt": {
+                "name": "Corrente instant\u00e2nea (DDT)"
+            },
+            "travel_count": {
+                "name": "Contagem de viagens"
+            },
+            "uptime": {
+                "name": "Tempo de atividade"
+            }
+        },
+        "switch": {
+            "onboard_access_point": {
+                "name": "Ponto de acesso a bordo"
+            },
+            "valve_controller": {
+                "name": "Controlador de v\u00e1lvula"
+            }
+        },
+        "valve": {
+            "valve_controller": {
+                "name": "Controlador de v\u00e1lvula"
+            }
+        }
+    },
+    "services": {
+        "pair_sensor": {
+            "description": "Adiciona um novo sensor emparelhado ao controlador da v\u00e1lvula.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador da v\u00e1lvula ao qual adicionar o sensor."
+                },
+                "uid": {
+                    "description": "O UID do sensor emparelhado.",
+                    "name": "UID"
+                }
+            },
+            "name": "Sensor de pares"
+        },
+        "unpair_sensor": {
+            "description": "Remove um sensor emparelhado do controlador da v\u00e1lvula.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador de v\u00e1lvulas do qual deve ser retirado o sensor.",
+                    "name": "Controlador de v\u00e1lvula"
+                },
+                "uid": {
+                    "description": "O UID do sensor emparelhado.",
+                    "name": "UID"
+                }
+            },
+            "name": "Desemparelhar sensor"
+        },
+        "upgrade_firmware": {
+            "description": "Atualiza o firmware do dispositivo.",
+            "fields": {
+                "device_id": {
+                    "description": "O controlador da v\u00e1lvula cujo firmware deve ser atualizado."
+                },
+                "filename": {
+                    "description": "O nome do ficheiro do firmware.",
+                    "name": "Nome de ficheiro"
+                },
+                "port": {
+                    "description": "A porta em que o ficheiro de firmware \u00e9 servido.",
+                    "name": "Porta"
+                },
+                "url": {
+                    "description": "O URL do servidor que aloja o ficheiro de firmware.",
+                    "name": "URL"
+                }
+            },
+            "name": "Atualizar firmware"
+        }
+    }
+}

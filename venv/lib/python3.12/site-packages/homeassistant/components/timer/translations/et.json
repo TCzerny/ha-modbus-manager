@@ -1,0 +1,72 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Taimer",
+            "state": {
+                "active": "Aktiivne",
+                "idle": "Ootel",
+                "paused": "Peatatud"
+            },
+            "state_attributes": {
+                "duration": {
+                    "name": "Kestus"
+                },
+                "editable": {
+                    "name": "Hallatakse kasutajaliideses",
+                    "state": {
+                        "false": "Ei",
+                        "true": "Jah"
+                    }
+                },
+                "finishes_at": {
+                    "name": "L\u00f5ppeb"
+                },
+                "remaining": {
+                    "name": "J\u00e4\u00e4nud"
+                },
+                "restore": {
+                    "name": "Taasta"
+                }
+            }
+        }
+    },
+    "services": {
+        "cancel": {
+            "description": "L\u00e4htestab taimeri kestuse viimasele teadaolevale algv\u00e4\u00e4rtusele ilma taimeri l\u00f5petatud s\u00fcndmust k\u00e4ivitamata.",
+            "name": "Loobu"
+        },
+        "change": {
+            "description": "Muudab taimerit, lisades v\u00f5i lahutades etteantud kestuse.",
+            "fields": {
+                "duration": {
+                    "description": "Taimerile lisamise v\u00f5i sellest lahutamise kestus.",
+                    "name": "Kestus"
+                }
+            },
+            "name": "Muuda"
+        },
+        "finish": {
+            "description": "L\u00f5petab taimeri plaanitust varem.",
+            "name": "L\u00f5peta"
+        },
+        "pause": {
+            "description": "Peatab t\u00f6\u00f6tava taimeri, s\u00e4ilitades \u00fclej\u00e4\u00e4nud aja hilisemaks j\u00e4tkamiseks.",
+            "name": "Paus"
+        },
+        "reload": {
+            "description": "Taaslaeb taimerid YAML-konfiguratsioonist.",
+            "name": "Taaslae"
+        },
+        "start": {
+            "description": "K\u00e4ivitab taimeri v\u00f5i taask\u00e4ivitab selle etten\u00e4htud kestusega.",
+            "fields": {
+                "duration": {
+                    "description": "Kohandatud kestus taimeri taask\u00e4ivitamiseks.",
+                    "name": "Kestus"
+                }
+            },
+            "name": "K\u00e4ivita"
+        }
+    },
+    "title": "Taimer"
+}

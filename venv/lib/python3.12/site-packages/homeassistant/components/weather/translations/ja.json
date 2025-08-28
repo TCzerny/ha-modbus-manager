@@ -1,0 +1,125 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "\u5929\u6c17",
+            "state": {
+                "clear-night": "\u5feb\u6674\u3001\u591c",
+                "cloudy": "\u66c7\u308a",
+                "exceptional": "\u4f8b\u5916\u7684",
+                "fog": "\u9727",
+                "hail": "\u96f9",
+                "lightning": "\u96f7",
+                "lightning-rainy": "\u96f7\u3001\u96e8",
+                "partlycloudy": "\u6674\u308c\u6642\u3005\u66c7\u308a",
+                "pouring": "\u571f\u7802\u964d\u308a",
+                "rainy": "\u96e8",
+                "snowy": "\u96ea",
+                "snowy-rainy": "\u96ea\u3001\u96e8",
+                "sunny": "\u6674\u308c",
+                "windy": "\u5f37\u98a8",
+                "windy-variant": "\u98a8\u3001\u66c7\u308a"
+            },
+            "state_attributes": {
+                "apparent_temperature": {
+                    "name": "\u4f53\u611f\u6e29\u5ea6"
+                },
+                "cloud_coverage": {
+                    "name": "\u96f2\u306e\u7bc4\u56f2"
+                },
+                "dew_point": {
+                    "name": "\u9732\u70b9\u6e29\u5ea6"
+                },
+                "forecast": {
+                    "name": "\u4e88\u5831"
+                },
+                "humidity": {
+                    "name": "\u6e7f\u5ea6"
+                },
+                "ozone": {
+                    "name": "\u30aa\u30be\u30f3"
+                },
+                "precipitation_unit": {
+                    "name": "\u964d\u6c34\u91cf\u306e\u5358\u4f4d"
+                },
+                "pressure": {
+                    "name": "\u6c17\u5727"
+                },
+                "pressure_unit": {
+                    "name": "\u6c17\u5727\u306e\u5358\u4f4d"
+                },
+                "temperature": {
+                    "name": "\u6e29\u5ea6"
+                },
+                "temperature_unit": {
+                    "name": "\u6e29\u5ea6\u306e\u5358\u4f4d"
+                },
+                "uv_index": {
+                    "name": "UV\u6307\u6570"
+                },
+                "visibility": {
+                    "name": "\u8996\u754c"
+                },
+                "visibility_unit": {
+                    "name": "\u8996\u754c\u306e\u5358\u4f4d"
+                },
+                "wind_bearing": {
+                    "name": "\u98a8\u306e\u65b9\u4f4d"
+                },
+                "wind_gust_speed": {
+                    "name": "\u7a81\u98a8\u901f\u5ea6"
+                },
+                "wind_speed": {
+                    "name": "\u98a8\u901f"
+                },
+                "wind_speed_unit": {
+                    "name": "\u98a8\u901f\u306e\u5358\u4f4d"
+                }
+            }
+        }
+    },
+    "issues": {
+        "deprecated_service_weather_get_forecast": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "\u4ee3\u308f\u308a\u306b\u3001\u8907\u6570\u306e\u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u3092\u30b5\u30dd\u30fc\u30c8\u3059\u308b `weather.get_forecasts` \u3092\u4f7f\u7528\u3057\u3066\u304f\u3060\u3055\u3044\u3002\n\n\u3053\u306e\u30b5\u30fc\u30d3\u30b9\u3092\u7f6e\u304d\u63db\u3048\u3001\u30aa\u30fc\u30c8\u30e1\u30fc\u30b7\u30e7\u30f3\u3068\u30b9\u30af\u30ea\u30d7\u30c8\u3092\u8abf\u6574\u3057\u3001[**\u9001\u4fe1**] \u3092\u9078\u629e\u3057\u3066\u3053\u306e\u554f\u984c\u3092\u89e3\u6c7a\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+                        "title": "\u975e\u63a8\u5968\u306e\u30b5\u30fc\u30d3\u30b9 weather.get_forecast \u306e\u4f7f\u7528\u304c\u691c\u51fa\u3055\u308c\u307e\u3057\u305f"
+                    }
+                }
+            },
+            "title": "\u975e\u63a8\u5968\u306e\u30b5\u30fc\u30d3\u30b9 weather.get_forecast \u306e\u4f7f\u7528\u304c\u691c\u51fa\u3055\u308c\u307e\u3057\u305f"
+        }
+    },
+    "selector": {
+        "forecast_type": {
+            "options": {
+                "daily": "\u65e5\u6bce",
+                "hourly": "1\u6642\u9593\u3054\u3068",
+                "twice_daily": "1\u65e52\u56de"
+            }
+        }
+    },
+    "services": {
+        "get_forecast": {
+            "description": "\u5929\u6c17\u4e88\u5831\u3092\u53d6\u5f97\u3057\u307e\u3059\u3002",
+            "fields": {
+                "type": {
+                    "description": "\u4e88\u5831\u30bf\u30a4\u30d7\uff1a\u6bce\u65e5\u30011\u6642\u9593\u3054\u3068\u30011\u65e52\u56de\u3002",
+                    "name": "\u4e88\u5831\u30bf\u30a4\u30d7"
+                }
+            },
+            "name": "\u4e88\u5831\u3092\u53d6\u5f97"
+        },
+        "get_forecasts": {
+            "description": "\u5929\u6c17\u4e88\u5831\u3092\u53d6\u5f97\u3057\u307e\u3059\u3002",
+            "fields": {
+                "type": {
+                    "description": "\u4e88\u5831\u30bf\u30a4\u30d7\uff1a\u6bce\u65e5\u30011\u6642\u9593\u3054\u3068\u30011\u65e52\u56de\u3002",
+                    "name": "\u4e88\u5831\u30bf\u30a4\u30d7"
+                }
+            },
+            "name": "\u4e88\u5831\u3092\u53d6\u5f97\u3059\u308b"
+        }
+    },
+    "title": "\u5929\u6c17"
+}

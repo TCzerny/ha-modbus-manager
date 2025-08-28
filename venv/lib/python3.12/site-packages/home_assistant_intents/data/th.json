@@ -1,0 +1,170 @@
+{
+  "language": "th",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "ปิด({name}<area>|{name})",
+            "[ปรับ|เปลี่ยน]({name}<area>|{name})[เป็น](ปิด|หยุด[ทำงาน]|ไม่ทำงาน)"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "เปิด({name}<area>|{name})",
+            "[ปรับ|เปลี่ยน]({name}<area>|{name})[เป็น](เปิด|ทำงาน)"
+          ]
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "ไม่เป็นไร"
+          ]
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "ขอโทษด้วย ฉันไม่เข้าใจสิ่งที่คุณต้องการ",
+      "handle_error": "มีข้อผืดพลาดบางอย่างเกิดขึ้น",
+      "no_area": "ขอโทษด้วย ฉันไม่รู้จักพื้นที่ {{ area }}",
+      "no_domain": "ขอโทษด้วย ฉันไม่รู้จักอุปกรณ์ประเภท {{ domain }}",
+      "no_domain_in_area": "ขอโทษด้วย ฉันไม่พบอุปกรณ์ประเภท {{ domain }} อยู่ในพื้นที่ {{ area }}",
+      "no_device_class": "ขอโทษด้วย ฉันไม่รู้จักอุปกรณ์ชนิด {{ device_class }}",
+      "no_device_class_in_area": "ขอโทษด้วย ฉันไม่พบอุปกรณ์ชนิด {{ device_class }} อยู่ในพื้นที่ {{ area }}",
+      "no_entity": "ขอโทษด้วย ฉันไม่รู้จักอุปกรณ์ชื่อ {{ entity }}",
+      "no_entity_in_area": "ขอโทษด้วย ฉันไม่พบอุปกรณ์ชื่อ {{ entity }} อยู่ในพื้นที่ {{ area }}",
+      "no_entity_exposed": "ขอโทษด้วย ฉันไม่สามารถเข้าถึงอุปกรณ์ชื่อ {{ entity }} ได้",
+      "no_entity_in_area_exposed": "ขอโทษด้วย ฉันไม่สามารถเข้าถึงอุปกรณ์ชื่อ {{ entity }} ในพื้นที่ {{ area }} ได้",
+      "no_domain_exposed": "ขอโทษด้วย ฉันไม่สามารถเข้าถึงอุปกรณ์ประเภท {{ domain }} ได้",
+      "no_domain_in_area_exposed": "ขอโทษด้วย ฉันไม่สามารถเข้าถึงอุปกรณ์ประเภท {{ domain }} ในพื้นที่ {{ area }} ได้",
+      "no_device_class_exposed": "ขอโทษด้วย ฉันไม่สามารถเข้าถึงอุปกรณ์ชนิด {{ domain }} ได้",
+      "no_device_class_in_area_exposed": "ขอโทษด้วย ฉันไม่สามารถเข้าถึงอุปกรณ์ชนิด {{ domain }} ในพื้นที่ {{ area }} ได้",
+      "duplicate_entities": "ขอโทษด้วย มีหลายอุปกรณ์ที่เรียกว่า {{ entity }}",
+      "duplicate_entities_in_area": "ขอโทษด้วย มีหลายอุปกรณ์ที่เรียกว่า {{ entity }} ในพื้นที่ {{ area }}"
+    },
+    "intents": {
+      "HassGetState": {
+        "default": "TODO: {{ state.state_with_unit }}",
+        "one": "TODO: {{ slots.name | capitalize }} is {{ state.state_with_unit }}\n",
+        "one_yesno": "TODO: {% if query.matched %}\n  Yes\n{% else %}\n  No, {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "TODO: {% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Yes, {{ match[:3] | join(\", \") }} and {{ (match | length - 3) }} more\n  {%- else -%}\n    Yes,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} and {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  No\n{% endif %}\n",
+        "all": "TODO: {% if not query.unmatched: %}\n  Yes\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    No, {{ no_match[:3] | join(\", \") }} and {{ (no_match | length - 3) }} more are not {{ slots.state }}\n  {%- else -%}\n    No,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} and {% endif -%}\n      {{ name }}\n    {%- endfor %} {% if no_match | length > 1 %}are{% else %}is{% endif %} not {{ slots.state }}\n  {% endif %}\n{% endif %}\n",
+        "which": "TODO: {% if not query.matched %}\n  Not any\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} and {{ (match | length - 3) }} more\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} and {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "TODO: {{ query.matched | length }}\n",
+        "where": "TODO: {% if state == \"not_home\" %}\n  {{ slots.name | capitalize }} is away\n{% else %}\n  {{ slots.name | capitalize }} is at {{ state.state }}\n{% endif %}\n"
+      },
+      "HassTurnOff": {
+        "default": "TODO: Turned off the {{ state.domain }}",
+        "lights_area": "TODO: Turned off the lights",
+        "lights_floor": "TODO: Turned off the lights",
+        "fans_area": "TODO: Turned off the fans",
+        "cover": "TODO: Closed",
+        "light_all": "TODO: Turned off all of the lights",
+        "fan_all": "TODO: Turned off all of the fans",
+        "cover_device_class": "TODO: Closed the {{ slots.device_class }}",
+        "lock": "TODO: Unlocked",
+        "valve": "TODO: Closed"
+      },
+      "HassStartTimer": {
+        "default": "TODO: Timer started",
+        "command": "TODO: Command received"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "TODO: Added {{ slots.item }}"
+      },
+      "HassTurnOn": {
+        "default": "TODO: Turned on the {{ state.domain }}",
+        "lights_area": "TODO: Turned on the lights",
+        "lights_floor": "TODO: Turned on the lights",
+        "light_all": "TODO: Turned on all of the lights",
+        "fans_area": "TODO: Turned on the fans",
+        "cover": "TODO: Opened",
+        "cover_device_class": "TODO: Opened the {{ slots.device_class }}",
+        "scene": "TODO: Activated",
+        "script": "TODO: Started",
+        "lock": "TODO: Locked",
+        "valve": "TODO: Opened"
+      },
+      "HassMediaPause": {
+        "default": "TODO: Paused"
+      },
+      "HassGetCurrentTime": {
+        "default": "TODO: {% set minute_str = '{0:02d}'.format(slots.time.minute) %}\n{% if slots.time.hour <= 12: %} {{ slots.time.hour }}:{{ minute_str }} AM {% else: %} {{ slots.time.hour - 12 }}:{{ minute_str }} PM {% endif %}\n"
+      },
+      "HassPauseTimer": {
+        "default": "TODO: Timer paused"
+      },
+      "HassTimerStatus": {
+        "default": "TODO: {% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  No timers.\n{% elif num_active_timers == 0: %}\n  {# No active timers #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    Timer is paused.\n  {% else: %}\n    {{ num_paused_timers }} paused timers.\n  {% endif %}\n{% else: %}\n  {# At least one active timer #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# Get active timer that will finish soonest #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {{ num_active_timers }} running timers.\n  {% endif %}\n\n  {% if num_paused_timers == 1: %}\n    1 paused timer.\n  {% elif num_paused_timers > 0: %}\n    {{ num_paused_timers }} paused timers.\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n  {# At least one active timer #}\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0): %}\n    1 hour and {{ next_timer.rounded_minutes_left }} minutes\n  {% elif (next_timer.rounded_hours_left == 1): %}\n    1 hour\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_hours_left }} hours and {{ next_timer.rounded_minutes_left }} minutes\n  {% elif (next_timer.rounded_hours_left > 1): %}\n    {{ next_timer.rounded_hours_left }} hours\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0): %}\n    1 minute and {{ next_timer.rounded_seconds_left }} seconds\n  {% elif (next_timer.rounded_minutes_left == 1): %}\n    1 minute\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} minutes and {{ next_timer.rounded_seconds_left }} seconds\n  {% elif (next_timer.rounded_minutes_left > 1): %}\n    {{ next_timer.rounded_minutes_left }} minutes\n  {% elif (next_timer.rounded_seconds_left == 1): %}\n    1 second\n  {% elif (next_timer.rounded_seconds_left > 1): %}\n    {{ next_timer.rounded_seconds_left }} seconds\n  {% endif %}\n\n  {% if num_timers > 1: %}\n    {# Give some extra information to disambiguate #}\n    left on\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_hours }} hour and {{ next_timer.start_minutes }} minute\n    {% elif (next_timer.start_hours > 0): %}\n      {{ next_timer.start_hours }} hour\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_minutes }} minute and {{ next_timer.start_seconds }} second\n    {% elif (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_minutes }} minute\n    {% elif (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_seconds }} second\n    {% endif %}\n\n    {% if next_timer.name: %}\n      {{ next_timer.name }}\n    {% elif next_timer.area: %}\n      {{ next_timer.area }}\n    {% endif %}\n\n    timer.\n  {% else: %}\n    left.\n  {% endif %}\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "TODO: Added {{ slots.item }}"
+      },
+      "HassGetCurrentDate": {
+        "default": "TODO: {% set months = {\n   1: 'January',\n   2: 'February',\n   3: 'March',\n   4: 'April',\n   5: 'May',\n   6: 'June',\n   7: 'July',\n   8: 'August',\n   9: 'September',\n   10: 'October',\n   11: 'November',\n   12: 'December',\n} %} {% set ordinal = {\n   1: '1st',\n   2: '2nd',\n   3: '3rd',\n   4: '4th',\n   5: '5th',\n   6: '6th',\n   7: '7th',\n   8: '8th',\n   9: '9th',\n   10: '10th',\n   11: '11th',\n   12: '12th',\n   13: '13th',\n   14: '14th',\n   15: '15th',\n   16: '16th',\n   17: '17th',\n   18: '18th',\n   19: '19th',\n   20: '20th',\n   21: '21st',\n   22: '22nd',\n   23: '23rd',\n   24: '24th',\n   25: '25th',\n   26: '26th',\n   27: '27th',\n   28: '28th',\n   29: '29th',\n   30: '30th',\n   31: '31st',\n } %}\n{{ months[slots.date.month] }} {{ ordinal[slots.date.day] }}, {{ slots.date.year }}\n"
+      },
+      "HassUnpauseTimer": {
+        "default": "TODO: Timer resumed"
+      },
+      "HassMediaPrevious": {
+        "default": "TODO: Playing previous"
+      },
+      "HassGetWeather": {
+        "default": "TODO: {% set weather_condition = {\n  'clear': 'and clear',\n  'clear-night': 'and clear',\n  'cloudy': 'and cloudy',\n  'exceptional': 'and exceptional',\n  'fog': 'with fog',\n  'hail': 'with hail',\n  'lightning': 'with lightning',\n  'lightning-rainy': 'with lightning and rain',\n  'partlycloudy': 'and partly cloudy',\n  'pouring': 'and pouring rain',\n  'rainy': 'and raining',\n  'snowy': 'and snowing',\n  'snowy-rainy': 'with snow and rain',\n  'sunny': 'and sunny',\n  'windy': 'and windy',\n  'windy-variant': 'with wind and clouds'\n} %} {{ state.attributes.get('temperature') }} {{ state.attributes.get('temperature_unit') }} {{ weather_condition.get((state.state | string).lower(), \"\") }}\n"
+      },
+      "HassLightSet": {
+        "brightness": "TODO: Brightness set",
+        "color": "TODO: Color set"
+      },
+      "HassVacuumStart": {
+        "default": "TODO: Started"
+      },
+      "HassMediaUnpause": {
+        "default": "TODO: Resumed"
+      },
+      "HassSetPosition": {
+        "default": "TODO: Position set"
+      },
+      "HassMediaNext": {
+        "default": "TODO: Playing next"
+      },
+      "HassCancelTimer": {
+        "default": "TODO: Timer cancelled"
+      },
+      "HassClimateGetTemperature": {
+        "default": "TODO: {% set temperature = state_attr(state.entity_id, 'current_temperature') %} {% if temperature == 1: %} {{ temperature }} degree {% else: %} {{ temperature }} degrees {% endif %}\n"
+      },
+      "HassSetVolume": {
+        "default": "TODO: Volume set"
+      },
+      "HassDecreaseTimer": {
+        "default": "TODO: Timer updated"
+      },
+      "HassIncreaseTimer": {
+        "default": "TODO: Timer updated"
+      },
+      "HassVacuumReturnToBase": {
+        "default": "TODO: Returning"
+      }
+    }
+  },
+  "lists": {},
+  "expansion_rules": {
+    "area": "[ใน]{area}",
+    "color": "[สี]{color}"
+  },
+  "skip_words": [
+    "ช่วย",
+    "กรุณา",
+    "ให้หน่อย"
+  ]
+}

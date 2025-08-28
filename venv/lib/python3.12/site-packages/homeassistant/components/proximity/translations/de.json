@@ -1,0 +1,76 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Ger\u00e4t ist bereits konfiguriert",
+            "success": "\u00c4nderungen gespeichert"
+        },
+        "flow_title": "Proximit\u00e4t",
+        "step": {
+            "user": {
+                "data": {
+                    "ignored_zones": "Zu ignorierende Zonen",
+                    "tolerance": "Entfernungstoleranz",
+                    "tracked_entities": "Zu verfolgende Ger\u00e4te oder Personen",
+                    "zone": "Zone, zu der die Entfernung verfolgt werden soll"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "dir_of_travel": {
+                "name": "Bewegung von {tracked_entity}",
+                "state": {
+                    "arrived": "Angekommen",
+                    "away_from": "Entfernt sich",
+                    "stationary": "Station\u00e4r",
+                    "towards": "N\u00e4hert sich"
+                }
+            },
+            "dist_to_zone": {
+                "name": "Entfernung von {tracked_entity}"
+            },
+            "nearest": {
+                "name": "N\u00e4chstgelegenes Ger\u00e4t"
+            },
+            "nearest_dir_of_travel": {
+                "name": "Bewegung des N\u00e4chstgelegenen",
+                "state": {
+                    "arrived": "Angekommen",
+                    "away_from": "Entfernt sich",
+                    "stationary": "Station\u00e4r",
+                    "towards": "N\u00e4hert sich"
+                }
+            },
+            "nearest_dist_to_zone": {
+                "name": "Entfernung des N\u00e4chstgelegenen"
+            }
+        }
+    },
+    "issues": {
+        "tracked_entity_removed": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Die Entit\u00e4t `{entity_id}` wurde aus HA entfernt, wird aber in der Proximit\u00e4t \u201e{name}\u201c verwendet. Bitte entferne `{entity_id}` aus der Liste der verfolgten Entit\u00e4ten. Zugeh\u00f6rige Sensorentit\u00e4ten der Proximit\u00e4t wurden auf nicht verf\u00fcgbar gesetzt und k\u00f6nnen entfernt werden.",
+                        "title": "Die verfolgte Entit\u00e4t wurde entfernt"
+                    }
+                }
+            },
+            "title": "Die verfolgte Entit\u00e4t wurde entfernt"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignored_zones": "Zu ignorierende Zonen",
+                    "tolerance": "Entfernungstoleranz",
+                    "tracked_entities": "Zu verfolgende Ger\u00e4te oder Personen",
+                    "zone": "Zone, zu der die Entfernung verfolgt werden soll"
+                }
+            }
+        }
+    },
+    "title": "Proximit\u00e4t"
+}

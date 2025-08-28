@@ -1,0 +1,88 @@
+{
+    "application_credentials": {
+        "description": "Siga as [instru\u00e7\u00f5es]({more_info_url}) para a [tela de consentimento OAuth]({oauth_consent_url}) para dar ao Home Assistant acesso \u00e0s suas fotos do Google. Tamb\u00e9m precisa de criar Credenciais de Aplica\u00e7\u00e3o vinculadas \u00e0 sua conta:\n1. V\u00e1 para [Credenciais]({oauth_creds_url}) e selecione **Criar Credenciais**.\n1. Na lista suspensa, selecione **ID do cliente OAuth**.\n1. Selecione **Aplica\u00e7\u00e3o Web** para o Tipo de Aplica\u00e7\u00e3o."
+    },
+    "config": {
+        "abort": {
+            "access_not_configured": "N\u00e3o \u00e9 poss\u00edvel aceder \u00e0 API da Google:\n\n{message}",
+            "already_configured": "Conta j\u00e1 configurada",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "authorize_url_timeout": "Excedido o tempo limite para gerar um URL de autoriza\u00e7\u00e3o",
+            "missing_configuration": "O componente n\u00e3o est\u00e1 configurado. Por favor, siga a documenta\u00e7\u00e3o.",
+            "no_url_available": "Nenhum URL est\u00e1 dispon\u00edvel. Para obter informa\u00e7\u00f5es sobre esse erro, [consulte a sec\u00e7\u00e3o de ajuda]({docs_url})",
+            "oauth_error": "Recebido token de autentica\u00e7\u00e3o inv\u00e1lido.",
+            "oauth_failed": "Erro ao obter o token de acesso.",
+            "oauth_timeout": "Excedido o tempo limite para o OAuth token.",
+            "oauth_unauthorized": "Erro de autoriza\u00e7\u00e3o OAuth ao obter o token de acesso.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "unknown": "Erro inesperado",
+            "user_rejected_authorize": "Vincula\u00e7\u00e3o de conta rejeitada: {error}",
+            "wrong_account": "Conta errada: Por favor, autentique-se com a conta certa."
+        },
+        "create_entry": {
+            "default": "Autenticado com sucesso"
+        },
+        "step": {
+            "pick_implementation": {
+                "title": "Escolha o m\u00e9todo de autentica\u00e7\u00e3o"
+            }
+        }
+    },
+    "exceptions": {
+        "albums_failed": {
+            "message": "N\u00e3o foi poss\u00edvel obter \u00e1lbuns da API do Google Photos."
+        },
+        "api_error": {
+            "message": "A API do Google Photos respondeu com erro: {message}"
+        },
+        "create_album_error": {
+            "message": "Erro ao criar \u00e1lbum: {message}"
+        },
+        "file_too_large": {
+            "message": "`{filename}` \u00e9 muito grande ({size} > {limit})"
+        },
+        "filename_does_not_exist": {
+            "message": "`{filename}` n\u00e3o existe"
+        },
+        "filename_is_not_image": {
+            "message": "`{filename}` n\u00e3o \u00e9 uma imagem"
+        },
+        "integration_not_found": {
+            "message": "Integra\u00e7\u00e3o \"{target}\" n\u00e3o encontrada no registo."
+        },
+        "missing_upload_permission": {
+            "message": "O Home Assistant n\u00e3o recebeu permiss\u00e3o para carregar para o Google Fotos"
+        },
+        "no_access_to_path": {
+            "message": "N\u00e3o \u00e9 poss\u00edvel ler {filename}, n\u00e3o h\u00e1 acesso ao caminho; `allowlist_external_dirs` pode ter de ser ajustado em `configuration.yaml`"
+        },
+        "not_loaded": {
+            "message": "{target} n\u00e3o est\u00e1 carregado."
+        },
+        "upload_error": {
+            "message": "Falha ao fazer upload ao conte\u00fado: {message}"
+        }
+    },
+    "services": {
+        "upload": {
+            "description": "Carrega imagens ou v\u00eddeos para o Google Fotos.",
+            "fields": {
+                "album": {
+                    "description": "Nome do \u00e1lbum que \u00e9 o destino do conte\u00fado carregado.",
+                    "example": "Fotos de fam\u00edlia",
+                    "name": "\u00c1lbum"
+                },
+                "config_entry_id": {
+                    "description": "O ID de integra\u00e7\u00e3o do Google Fotos.",
+                    "name": "ID de integra\u00e7\u00e3o"
+                },
+                "filename": {
+                    "description": "Caminho para a imagem ou v\u00eddeo a fazer upload.",
+                    "example": "/config/www/image.jpg",
+                    "name": "Nome de ficheiro"
+                }
+            },
+            "name": "Fazer upload a media"
+        }
+    }
+}

@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Za\u0159\u00edzen\u00ed je ji\u017e nastaveno"
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Hostitel"
+                },
+                "data_description": {
+                    "host": "N\u00e1zev hostitele nebo IP adresa va\u0161eho za\u0159\u00edzen\u00ed Bose SoundTouch."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Chyst\u00e1te se p\u0159idat za\u0159\u00edzen\u00ed SoundTouch s n\u00e1zvem \"{name}\" do Home Assistanta.",
+                "title": "Potvrdit p\u0159id\u00e1n\u00ed za\u0159\u00edzen\u00ed Bose SoundTouch"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "description": "P\u0159id\u00e1 p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed do z\u00f3ny SoundTouch pro v\u00edce m\u00edstnost\u00ed.",
+            "fields": {
+                "master": {
+                    "description": "Entita p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed, kter\u00e1 koordinuje z\u00f3nu s v\u00edce m\u00edstnostmi. Z\u00e1vis\u00ed na platform\u011b.",
+                    "name": "V\u016fdce"
+                },
+                "slaves": {
+                    "description": "Entity p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed, kter\u00e9 se maj\u00ed p\u0159idat do st\u00e1vaj\u00edc\u00ed z\u00f3ny.",
+                    "name": "N\u00e1sledovn\u00edk"
+                }
+            },
+            "name": "P\u0159idat sledov\u00e1n\u00ed z\u00f3ny"
+        },
+        "create_zone": {
+            "description": "Vytvo\u0159\u00ed z\u00f3nu s v\u00edce m\u00edstnostmi SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "Entita p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed, kter\u00e1 bude koordinovat z\u00f3nu s v\u00edce m\u00edstnostmi. Z\u00e1vis\u00ed na platform\u011b.",
+                    "name": "V\u016fdce"
+                },
+                "slaves": {
+                    "description": "Entity p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed, kter\u00e9 se maj\u00ed p\u0159idat do nov\u00e9 z\u00f3ny.",
+                    "name": "N\u00e1sledovn\u00edk"
+                }
+            },
+            "name": "Vytvo\u0159it z\u00f3nu"
+        },
+        "play_everywhere": {
+            "description": "P\u0159ehr\u00e1v\u00e1 na v\u0161ech za\u0159\u00edzen\u00edch Bose SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "Entita p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed, kter\u00e1 bude koordinovat seskupen\u00ed. Z\u00e1vis\u00ed na platform\u011b. Je to zkratka pro vytvo\u0159en\u00ed multiroom z\u00f3ny se v\u0161emi za\u0159\u00edzen\u00edmi.",
+                    "name": "V\u016fdce"
+                }
+            },
+            "name": "P\u0159ehr\u00e1t kdekoli"
+        },
+        "remove_zone_slave": {
+            "description": "Odebere p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed ze z\u00f3ny SoundTouch pro v\u00edce m\u00edstnost\u00ed.",
+            "fields": {
+                "master": {
+                    "description": "Entita p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed, kter\u00e1 koordinuje z\u00f3nu s v\u00edce m\u00edstnostmi. Z\u00e1vis\u00ed na platform\u011b.",
+                    "name": "V\u016fdce"
+                },
+                "slaves": {
+                    "description": "Entity p\u0159ehr\u00e1va\u010de m\u00e9di\u00ed, kter\u00e9 se maj\u00ed odebrat ze st\u00e1vaj\u00edc\u00ed z\u00f3ny.",
+                    "name": "N\u00e1sledovn\u00edk"
+                }
+            },
+            "name": "Odebrat n\u00e1sledovn\u00edka ze z\u00f3ny"
+        }
+    }
+}

@@ -1,0 +1,76 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "pairing_failed": "O emparelhamento falhou; verifique se o controlador Bosch Smart Home est\u00e1 no modo de emparelhamento (LED a piscar) e se a palavra-passe est\u00e1 correta.",
+            "session_error": "Erro de sess\u00e3o: Resultado n\u00e3o OK do retorno da API.",
+            "unknown": "Erro inesperado"
+        },
+        "flow_title": "Bosch SHC: {name}",
+        "step": {
+            "confirm_discovery": {
+                "description": "Controlador dom\u00e9stico inteligente I: Prima o bot\u00e3o frontal at\u00e9 o LED come\u00e7ar a piscar.\nControlador dom\u00e9stico inteligente II: Prima brevemente o bot\u00e3o de fun\u00e7\u00e3o. As luzes da nuvem e da rede come\u00e7am a piscar a laranja.\nO dispositivo est\u00e1 agora pronto para ser emparelhado.\n\nPronto para continuar a configurar {model} @ {host} com o Home Assistant?"
+            },
+            "credentials": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "data_description": {
+                    "password": "Palavra-passe do Controlador Dom\u00e9stico Inteligente (SHC)"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "host": "Host"
+                },
+                "description": "A integra\u00e7\u00e3o bosch_shc precisa de autenticar novamente a sua conta",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "O nome do anfitri\u00e3o ou o endere\u00e7o IP do seu Bosch Smart Home Controller."
+                },
+                "description": "Configure o seu Bosch Smart Home Controller para permitir a monitoriza\u00e7\u00e3o e o controlo com o Home Assistant.",
+                "title": "Par\u00e2metros de autentica\u00e7\u00e3o SHC"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "air_quality": {
+                "name": "Qualidade do ar"
+            },
+            "communication_quality": {
+                "name": "Qualidade da comunica\u00e7\u00e3o"
+            },
+            "humidity_rating": {
+                "name": "Classifica\u00e7\u00e3o da humidade"
+            },
+            "purity": {
+                "name": "Pureza"
+            },
+            "purity_rating": {
+                "name": "Grau de pureza"
+            },
+            "temperature_rating": {
+                "name": "Classifica\u00e7\u00e3o da temperatura"
+            },
+            "valvetappet": {
+                "name": "Valvetappet"
+            }
+        },
+        "switch": {
+            "routing": {
+                "name": "Roteamento"
+            }
+        }
+    }
+}

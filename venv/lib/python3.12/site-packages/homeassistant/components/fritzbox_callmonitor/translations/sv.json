@@ -1,0 +1,113 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "insufficient_permissions": "Anv\u00e4ndaren har otillr\u00e4ckliga beh\u00f6righeter f\u00f6r att komma \u00e5t AVM FRITZ!Box-inst\u00e4llningarna och dess telefonb\u00f6cker.",
+            "no_devices_found": "Inga enheter hittades i n\u00e4tverket",
+            "reauth_successful": "\u00c5terautentisering lyckades"
+        },
+        "error": {
+            "insufficient_permissions": "Anv\u00e4ndaren har otillr\u00e4ckliga beh\u00f6righeter f\u00f6r att komma \u00e5t AVM FRITZ!Box-inst\u00e4llningarna och dess telefonb\u00f6cker.",
+            "invalid_auth": "Ogiltig autentisering"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "phonebook": {
+                "data": {
+                    "phonebook": "Telefonbok"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                }
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "password": "L\u00f6senord",
+                    "port": "Port",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamn eller IP-adress f\u00f6r din FRITZ!Box-router."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "fritzbox_callmonitor": {
+                "name": "\u00d6vervakning av samtal {phonebook_name}",
+                "state": {
+                    "dialing": "Ringer upp",
+                    "idle": "Inaktiv",
+                    "ringing": "Ringer",
+                    "talking": "Pratar"
+                },
+                "state_attributes": {
+                    "accepted": {
+                        "name": "Accepterad"
+                    },
+                    "closed": {
+                        "name": "St\u00e4ngd"
+                    },
+                    "device": {
+                        "name": "Enhet"
+                    },
+                    "duration": {
+                        "name": "Varaktighet"
+                    },
+                    "from": {
+                        "name": "Uppringarens nummer"
+                    },
+                    "from_name": {
+                        "name": "Uppringarens namn"
+                    },
+                    "initiated": {
+                        "name": "Initierad"
+                    },
+                    "prefixes": {
+                        "name": "Prefix"
+                    },
+                    "to": {
+                        "name": "Uppringt nummer"
+                    },
+                    "to_name": {
+                        "name": "Uppringt namn"
+                    },
+                    "type": {
+                        "name": "Typ",
+                        "state": {
+                            "incoming": "Inkommande",
+                            "outgoing": "Utg\u00e5ende"
+                        }
+                    },
+                    "vip": {
+                        "name": "Viktigt"
+                    },
+                    "with": {
+                        "name": "Med nummer"
+                    },
+                    "with_name": {
+                        "name": "Med namn"
+                    }
+                }
+            }
+        }
+    },
+    "options": {
+        "error": {
+            "malformed_prefixes": "Prefix \u00e4r felaktiga, kontrollera deras format."
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "prefixes": "Prefix (kommaseparerad lista)"
+                },
+                "title": "Konfigurera prefix"
+            }
+        }
+    }
+}

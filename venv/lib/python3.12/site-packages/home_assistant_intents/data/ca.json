@@ -1,0 +1,1407 @@
+{
+  "language": "ca",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "<apaga> <name>"
+          ],
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<tanca> <name> [<area>]"
+          ],
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "[<can_you>] (<apaga>|<tanca>) tots els llums [<everywhere>]",
+            "[<can_you>] (<apaga>|<tanca>) totes les llums [<everywhere>]"
+          ],
+          "expansion_rules": {
+            "everywhere": "(de|a) [la] casa"
+          },
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "[<torna_a>|<can_you>] (<apaga>|<tanca>) <pronom_singular> llum",
+            "[<torna_a>|<can_you>] (<apaga>|<tanca>) <pronom_plural> llums",
+            "(<apaga>|<tanca>) <llums_typo>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "[<torna_a>|<can_you>] (<apaga>|<tanca>) <pronom_singular> llum <area>",
+            "[<can_you>] (<apaga>|<tanca>) [tot[e]s] <pronom_plural> llums <area>",
+            "(<apaga>|<tanca>) <llums_typo> <area>"
+          ],
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "(<tanca>|<baixar>) <name> [<area>]"
+          ],
+          "response": "cover",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<tanca>|<baixar>) [<pronom>] {cover_classes:device_class}"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "domain": "cover"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<tanca>|<baixar>) [<pronom>] {cover_classes:device_class} <area>"
+          ],
+          "response": "cover_device_area",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<apaga>|<tanca>) [<pronom_singular>]aire [a][condicionat]",
+            "(<apaga>|<tanca>) [<pronom_singular>] calefacció"
+          ],
+          "slots": {
+            "domain": "climate"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<apaga>|<tanca>) [<pronom_singular>]aire [a][condicionat] <area>",
+            "(<apaga>|<tanca>) [<pronom_singular>] calefacció <area>"
+          ],
+          "slots": {
+            "domain": "climate"
+          }
+        },
+        {
+          "sentences": [
+            "(<apaga>|<tanca>) tots <pronom_plural> aires [a][condicionats] [<area>]",
+            "(<apaga>|<tanca>) tot <pronom_singular>aire [a][condicionat] [<area>]",
+            "(<apaga>|<tanca>) tota <pronom_singular> calefacció [<area>]"
+          ],
+          "slots": {
+            "domain": "climate"
+          }
+        },
+        {
+          "sentences": [
+            "<apaga> el[s] ventilador[s] <area>"
+          ],
+          "slots": {
+            "domain": "fan"
+          }
+        },
+        {
+          "sentences": [
+            "<apaga> tots els ventiladors [<area>]"
+          ],
+          "slots": {
+            "domain": "fan"
+          }
+        },
+        {
+          "sentences": [
+            "(desblo(queja|ca))[r|t] <name> [<area>]"
+          ],
+          "requires_context": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "(desblo(queja|ca))[r|t] tot[e]s <pronom_plural> <objectes_amb_clau> [<area>]"
+          ],
+          "slots": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "[saps] <on> (és|es) [troba] <now> <la_persona>",
+            "[saps] <on> (està|para) <la_persona> <now>",
+            "[saps] <on> puc trobar <la_persona> <now>",
+            "pots localitza[r] <la_persona>"
+          ],
+          "response": "where",
+          "expansion_rules": {
+            "la_persona": "((a|al|el|en|a en|la) |l'){name}",
+            "on": "(on|<on_typo>)",
+            "on_typo": "(or)"
+          },
+          "requires_context": {
+            "domain": "person"
+          },
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "[saps si] <la_persona> (és|es) [troba] [ara|ara mateix] a {zone:state}",
+            "que hi ha <la_persona> a {zone:state}"
+          ],
+          "expansion_rules": {
+            "la_persona": "((a|al|el|en|a en|la) |l'){name}"
+          },
+          "response": "one_yesno",
+          "requires_context": {
+            "domain": "person"
+          },
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "[que] hi ha algú (a|al|en) {zone:state}"
+          ],
+          "response": "any",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "qui hi ha a [el|la] {zone:state}"
+          ],
+          "response": "which",
+          "slots": {
+            "domain": "person"
+          }
+        },
+        {
+          "sentences": [
+            "quin és l'estat [de|del|de la] <name> [<area>]",
+            "com es troba [l'estat] <name> [<area>]"
+          ],
+          "response": "one",
+          "excludes_context": {
+            "domain": [
+              "scene",
+              "script"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "(el|la) [dispositiu] {name} es troba {on_off_states:state} [<area>]",
+            "m'he deixat <name> {on_off_states:state}",
+            "m'he deixat [el|la] {on_off_domains:domain} [<area>] {on_off_states:state}"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "hi ha [cap] {on_off_domains:domain} {on_off_states:state} [<area>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "(tots els|totes les) {on_off_domains:domain} (hi son|es troben) {on_off_states:state} [<area>]"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "quin[e]s {on_off_domains:domain} hi ha {on_off_states:state} [<area>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "quant[e]s {on_off_domains:domain} hi ha {on_off_states:state} [<area>]"
+          ],
+          "response": "how_many"
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel> [el] temporitzador",
+            "<timer_cancel> [el] temporitzador de[ls] <timer_start>",
+            "<timer_cancel> [el] temporitzador [de|en] <area>",
+            "<timer_cancel> [el] temporitzador [de] {timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "<quant_queda> (el|al|de|del|pel) [meu] <temporitzador> [<dades>]",
+            "<quant_queda> perquè [s']acabi el [meu] <temporitzador> [<dades>]",
+            "<quant_queda> per acabar el [meu] <temporitzador> [<dades>]",
+            "com (va|està) el [meu] <temporitzador> [<dades>]"
+          ],
+          "expansion_rules": {
+            "quant_queda": "<how_much> [de] [temps|estona] [li] (queda|resta|falta)",
+            "of": "[de |de la |d']",
+            "dades": "<of>(<timer_start>|{timer_name:name})|<area>"
+          }
+        }
+      ]
+    },
+    "HassGetWeather": {
+      "data": [
+        {
+          "sentences": [
+            "quin temps fa",
+            "com és el temps"
+          ]
+        },
+        {
+          "sentences": [
+            "quin temps [hi] (ha|fa) [<now>] <al_lloc>",
+            "(quin[a]|com) (és|està) [la previsió] (el|del) <temps> [<now>] <al_lloc>",
+            "qu(e|è) diu [la previsió] (el|del) <temps> [<now>] <al_lloc>",
+            "fa bon temps [<now>] <al_lloc>"
+          ],
+          "expansion_rules": {
+            "now": "ara|avui",
+            "temps": "temps|clima",
+            "al_lloc": "(a |al |a l'){name}"
+          },
+          "requires_context": {
+            "domain": "weather"
+          }
+        }
+      ]
+    },
+    "HassGetCurrentTime": {
+      "data": [
+        {
+          "sentences": [
+            "[que ][em ][podries dir[-me]] quina hora és",
+            "[em ][pots (dir|donar)[-me]] (l'|la )hora",
+            "[saps|digues|ara] quina hora és [ara|ara mateix]",
+            "[saps|digues|ara] quina és (l'|la )hora [d'ara]",
+            "(saps|digues) l'hora [d'ara [mateix]]"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "[<can_you>] (<engega>|<obre>) tots els llums [<everywhere>]",
+            "[<can_you>] (<engega>|<obre>) totes les llums [<everywhere>]"
+          ],
+          "expansion_rules": {
+            "everywhere": "(de|a) [la] casa"
+          },
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "[<torna_a>|<can_you>] (<engega>|<obre>) <pronom_singular> llum",
+            "[<torna_a>|<can_you>] (<engega>|<obre>) <pronom_plural> llums",
+            "(<engega>|<obre>) <llums_typo>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "[<torna_a>|<can_you>] (<engega>|<obre>) <pronom_singular> llum <area>",
+            "[<can_you>] (<engega>|<obre>) [tot[e]s] <pronom_plural> llums <area>",
+            "(<engega>|<obre>) <llums_typo> <area>"
+          ],
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<engega> el[s] ventilador[s] <area> [en marxa]"
+          ],
+          "slots": {
+            "domain": "fan"
+          }
+        },
+        {
+          "sentences": [
+            "<engega> tots els ventiladors [<area>]"
+          ],
+          "slots": {
+            "domain": "fan"
+          }
+        },
+        {
+          "sentences": [
+            "<engega> [<pronom_singular>]aire [a][condicionat]",
+            "<engega> [<pronom_singular>] calefacció"
+          ],
+          "slots": {
+            "domain": "climate"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "<engega> [<pronom_singular>]aire [a][condicionat] <area>",
+            "<engega> [<pronom_singular>] calefacció <area>"
+          ],
+          "slots": {
+            "domain": "climate"
+          }
+        },
+        {
+          "sentences": [
+            "<engega> tots <pronom_plural> aires [a][condicionats] [<area>]",
+            "<engega> tot <pronom_singular>aire [a][condicionat] [<area>]",
+            "<engega> tota <pronom_singular> calefacció [<area>]"
+          ],
+          "slots": {
+            "domain": "climate"
+          }
+        },
+        {
+          "sentences": [
+            "<engega> <name> [en marxa]"
+          ],
+          "requires_context": {
+            "domain": "climate"
+          },
+          "slots": {
+            "domain": "climate"
+          }
+        },
+        {
+          "sentences": [
+            "(executa|inicia|arrenca|activa) (l'script|el script) <name>"
+          ],
+          "requires_context": {
+            "domain": "script"
+          },
+          "slots": {
+            "domain": "script"
+          },
+          "response": "script"
+        },
+        {
+          "sentences": [
+            "(<engega>|activa) (la escena|l'escena) <name>"
+          ],
+          "requires_context": {
+            "domain": "scene"
+          },
+          "slots": {
+            "domain": "scene"
+          },
+          "response": "scene"
+        },
+        {
+          "sentences": [
+            "(tanca|bloqueja)[r|t] <name> [<area>]"
+          ],
+          "requires_context": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "(tanca|bloqueja)[r|t] tot[e]s <pronom_plural> <objectes_amb_clau>"
+          ],
+          "slots": {
+            "domain": "lock"
+          },
+          "response": "lock"
+        },
+        {
+          "sentences": [
+            "<engega> <name> [en marxa]"
+          ],
+          "excludes_context": {
+            "domain": [
+              "cover",
+              "lock",
+              "vacuum",
+              "climate"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "<obre> <name> [<area>]"
+          ],
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "(<obre>|<pujar>) <name> [<area>]"
+          ],
+          "response": "cover",
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<obre>|<pujar>) [<pronom>] {cover_classes:device_class}"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "domain": "cover"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "(<obre>|<pujar>) [<pronom>] {cover_classes:device_class} <area>"
+          ],
+          "response": "cover_device_area",
+          "slots": {
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassMediaUnpause": {
+      "data": [
+        {
+          "sentences": [
+            "(<reactiva> [<pronom>] <name>)"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassShoppingListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "<add> <item> (a|en) <my_list>",
+            "<add> (a|en) <my_list_req> <item>"
+          ],
+          "response": "item_added",
+          "expansion_rules": {
+            "my_list": "[la] [meva] llista [de (la compra|compres|comprar)]",
+            "my_list_req": "[la] [meva] llista de (la compra|compres|comprar)",
+            "item": "{shopping_list_item:item}",
+            "add": "(afeg[e]ix|posa)"
+          }
+        }
+      ]
+    },
+    "HassCancelAllTimers": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel> tot[s] els [meus] <temporitzador>s"
+          ]
+        },
+        {
+          "sentences": [
+            "<timer_cancel> tot[s] els [meus] <temporitzador>s <area>"
+          ],
+          "response": "area"
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "<cancela> [la comanda|l'ordre]",
+            "[no|res] res",
+            "no facis (cas|res)",
+            "(deixa|oblida)-ho [tot]"
+          ]
+        }
+      ]
+    },
+    "HassSetPosition": {
+      "data": [
+        {
+          "sentences": [
+            "(<obre>|<configura>) [la posició] [de] <name> a[l] <posició>"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          }
+        },
+        {
+          "sentences": [
+            "(<obre>|<pujar>|<baixar>|<configura>) <name> [<area>] [al] {position}[<percent>]"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<obre>|<pujar>|<baixar>|<configura>) <pronom> {cover_classes:device_class} <area> a[l] <posició>",
+            "(<obre>|<pujar>|<baixar>|<configura>) <pronom> {cover_classes:device_class} a[l] <posició> <area>"
+          ],
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "(<obre>|<pujar>|<baixar>|<configura>) la posició de[ la|l| l'] {cover_classes:device_class} a[l] <posició>",
+            "(<obre>|<pujar>|<baixar>|<configura>) <pronom> {cover_classes:device_class} a[l] <posició>"
+          ],
+          "slots": {
+            "domain": "cover"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        }
+      ]
+    },
+    "HassGetCurrentDate": {
+      "data": [
+        {
+          "sentences": [
+            "[saps] quin dia és [avui]",
+            "avui quin dia és"
+          ]
+        }
+      ]
+    },
+    "HassIncreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(<pujar>|afeg[e]ix|posa)[-li] [uns] <timer_duration> [més] <preposicio_singular_masc> <temporitzador> [(de |d')<timer_start>]",
+            "(<pujar>|afeg[e]ix|posa)[-li] [uns] <timer_duration> [més] <preposicio_singular_masc> <temporitzador> <area>",
+            "(<pujar>|afeg[e]ix|posa)[-li] [uns] <timer_duration> [més] <preposicio_singular_masc> <temporitzador> [anomenat] {timer_name:name}"
+          ]
+        },
+        {
+          "sentences": [
+            "(<pujar>|afeg[e]ix|posa)[-li] <preposicio_singular_masc> <temporitzador> [uns] <timer_duration> [més]",
+            "(<pujar>|afeg[e]ix|posa)[-li] <preposicio_singular_masc> <temporitzador> (de |d')<timer_start> <timer_duration> [més]",
+            "(<pujar>|afeg[e]ix|posa)[-li] <preposicio_singular_masc> <temporitzador> <area> <timer_duration> [més]",
+            "(<pujar>|afeg[e]ix|posa)[-li] <preposicio_singular_masc> <temporitzador> [anomenat] {timer_name:name} [uns] <timer_duration> [més]"
+          ]
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "<configura> <llums> (<area> | <name>) (al|<al_stt_typo>) <lluentor>",
+            "<engega> <llums> (<area> | <name>) (al|<al_stt_typo>) <lluentor>"
+          ],
+          "response": "brightness_area"
+        },
+        {
+          "sentences": [
+            "(<configura>|<engega>) <llums> (al|<al_stt_typo>) <lluentor>"
+          ],
+          "response": "brightness_area",
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        }
+      ]
+    },
+    "HassMediaNext": {
+      "data": [
+        {
+          "sentences": [
+            "<seguent> [<element>] [<preposicio_base_singular>] <name>",
+            "<reproduir> [a|al|a la|la] <seguent> [<element>] [<preposicio_base_singular>] <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "[vull|pots] <reproduir> [a|amb] [<pronom_singular>] <element> <seguent>",
+            "[vull|pots] <reproduir> [a|amb] [<pronom_singular>] <seguent> <element>"
+          ]
+        }
+      ]
+    },
+    "HassPauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(pausa[r]|posa[r] en espera) [el] [meu] temporitzador [[de |d']<timer_start>]",
+            "(pausa[r]|posa[r] en espera) [el] [meu] temporitzador <area>",
+            "(pausa[r]|posa[r] en espera) [el] [meu] temporitzador [de|anomenat|amb nom] {timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassDecreaseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "(<baixar>|treu|resta)[-li] [uns] <timer_duration> <preposicio_singular_masc> <temporitzador> [(de |d')<timer_start>]",
+            "(<baixar>|treu|resta)[-li] [uns] <timer_duration> <preposicio_singular_masc> <temporitzador> <area>",
+            "(<baixar>|treu|resta)[-li] [uns] <timer_duration> <preposicio_singular_masc> <temporitzador> [anomenat] {timer_name:name}"
+          ]
+        },
+        {
+          "sentences": [
+            "(<baixar>|treu|resta)[-li] <preposicio_singular_masc> <temporitzador> [uns] <timer_duration>",
+            "(<baixar>|treu|resta)[-li] <preposicio_singular_masc> <temporitzador> (de |d')<timer_start> <timer_duration>",
+            "(<baixar>|treu|resta)[-li] <preposicio_singular_masc> <temporitzador> <area> <timer_duration>",
+            "(<baixar>|treu|resta)[-li] <preposicio_singular_masc> <temporitzador> [anomenat] {timer_name:name} [uns] <timer_duration>"
+          ]
+        }
+      ]
+    },
+    "HassMediaPause": {
+      "data": [
+        {
+          "sentences": [
+            "(pausa[r]) [<pronom>] <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    },
+    "HassUnpauseTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<reactiva> [amb] [<pronom_singular_temporitzador>] [meu|mon] <temporitzador>",
+            "<reactiva> [amb] [<pronom_singular_temporitzador>] [meu|mon] <temporitzador> {timer_name:name}",
+            "<reactiva> [amb] [<pronom_singular_temporitzador>] [meu|mon] <temporitzador> [per [a] |de |amb |d']<timer_start>",
+            "<reactiva> [amb] [<pronom_singular_temporitzador>] [meu|mon] <temporitzador> <area>",
+            "<reactiva> [amb] [<pronom_singular_temporitzador>] [meu|mon] <temporitzador> (anomenat|amb nom|de nom|amb (<pronom_singular>) nom) {timer_name:name}"
+          ],
+          "expansion_rules": {
+            "pronom_singular_temporitzador": "el|es"
+          }
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<temporitzador> [<of>]<timer_duration>",
+            "<timer_set> [el|un] <temporitzador> [<of>]<timer_duration>",
+            "<timer_set> [el|un] <temporitzador> [<of>]<timer_duration> [amb nom|anomenat|denominat] {timer_name:name}",
+            "<timer_set> [el|un] <temporitzador> [amb nom|anomenat|denominat] {timer_name:name} [<of>]<timer_duration>"
+          ],
+          "expansion_rules": {
+            "of": "en |de |d'"
+          }
+        },
+        {
+          "sentences": [
+            "{timer_command:conversation_command} (en|dintre de) <timer_duration>",
+            "(dintre de|en) <timer_duration> {timer_command:conversation_command}"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "quina <temp> fa [<actual>]",
+            "quina és la <temp> [<actual>]",
+            "(quanta|quina) calor [que] fa [<actual>]"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "quina <temp> fa [<actual>] <area>",
+            "quina és la <temp> [<actual>] <area>",
+            "(quanta|quina) calor [que] fa [<actual>] <area>"
+          ]
+        }
+      ]
+    },
+    "HassVacuumReturnToBase": {
+      "data": [
+        {
+          "sentences": [
+            "(torn(a|i)) <name> [a [la] (base|casa)]",
+            "fes que <name> ([re]torni|vagi) [a [la] (base|casa)]"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassVacuumStart": {
+      "data": [
+        {
+          "sentences": [
+            "<engega> <name> [en marxa]",
+            "(arrenca|pasa)[r] <name> [en marxa]"
+          ],
+          "requires_context": {
+            "domain": "vacuum"
+          }
+        }
+      ]
+    },
+    "HassRespond": {
+      "data": [
+        {
+          "sentences": [
+            "[en] (simó|simo)[n] diu {response}",
+            "(digues|repeteix|repetiu) (després de|amb) mi {response}"
+          ]
+        },
+        {
+          "sentences": [
+            "(hola|salutacions|que passa|que tal) [home assistant|nabu]"
+          ],
+          "response": "hello"
+        },
+        {
+          "sentences": [
+            "(tu|que) [sempre] (graves|registres|enregistres) el que dic",
+            "que m'espies",
+            "que m'estàs (espiant|gravant)"
+          ],
+          "response": "listening"
+        },
+        {
+          "sentences": [
+            "[cap|cap a] on van les [meves] dades"
+          ],
+          "response": "data"
+        },
+        {
+          "sentences": [
+            "que puc (fer|dir|preguntar)[-te] [<now>]"
+          ],
+          "response": "commands"
+        },
+        {
+          "sentences": [
+            "qui t'ha creat",
+            "qui es el teu creador"
+          ],
+          "response": "creator"
+        }
+      ]
+    },
+    "HassMediaPrevious": {
+      "data": [
+        {
+          "sentences": [
+            "torna[r] [a] [<reproduir_again>] <anterior> [<preposicio_singular>] <name>",
+            "<reproduir> <anterior> [<element>] [<preposicio_singular>] <name>",
+            "pista anterior <preposicio> <name>"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        },
+        {
+          "sentences": [
+            "torna[r] a [posar] [la |l']<element> <anterior> [<again>]",
+            "posa[r] <again> <anterior> <element>",
+            "posa[r] <pronom_singular> <element> <anterior>",
+            "[vull] <reproduir> <anterior> <element> [<again>|que sonava]",
+            "[vull] <reproduir> [a] <pronom_singular> <element> <anterior>",
+            "<reproduir> <again>"
+          ]
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "<add> <item> (a|en) la [meva] llista (de|del|de la|amb nom|anomenada) {name}",
+            "<add> <item> (a|en) <my_list>",
+            "<add> <item> al cistell [de|del] {name}",
+            "<add> (a|en) <my_list> [un[a|es]|que] <item>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "my_list": "[la] [meva] llista [de|del|de la] {name}",
+            "item": "{shopping_list_item:item}",
+            "add": "(afeg[e]ix|posa)"
+          }
+        }
+      ]
+    },
+    "HassSetVolume": {
+      "data": [
+        {
+          "sentences": [
+            "(<pujar>|<baixar>|<configura>) ([el] (volum|so)|[la] veu) [<preposicio>] {name} [a|al] {volume:volume_level}[<percent>]"
+          ],
+          "requires_context": {
+            "domain": "media_player"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Ho sento, no entenc això",
+      "no_area": "No hi ha l'àrea {{ area }}",
+      "no_domain_in_area": "No hi ha {{ domain }} a {{ area }}",
+      "no_device_class_in_area": "No hi ha {{ device_class }} a {{ area }}",
+      "no_entity": "No hi ha cap dispositiu o entitat que es digui {{ entity }}",
+      "handle_error": "He trobat un error inesperat mentre feia l'intent"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "L'estat del dispositiu {{ slots.name | capitalize }} és {{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\n  Si\n{% else %}\n  No, és {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Si, {{ match[:3] | join(\", \") }} i uns altres {{ (match | length - 3) }} més\n  {%- else -%}\n    Si,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} i {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  No\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  Si\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    No, ni {{ no_match[:3] | join(\", \") }} ni els altres {{ (no_match | length - 3) }} ho són\n  {% elif no_match | length == 1 %}\n    No, el dispositiu {{ no_match|first }} no\n  {%- else -%}\n    No, ni\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} ni {% endif -%}\n      {{ name }}\n    {%- endfor %}\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  Cap dispositiu\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} i uns altres {{ (match | length - 3) }} més\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} i {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n",
+        "where": "{% if state == \"not_home\" %}\n  {{ slots.name | capitalize }} és a fora\n{% else %}\n  {{ slots.name | capitalize }} es troba a {{ state.state }}\n{% endif %}\n"
+      },
+      "HassTurnOff": {
+        "default": "Apago {{ slots.name }}",
+        "lights_area": "Llums tancades a {{ slots.area }}",
+        "fans_area": "Ventiladors apagats a {{ slots.area }}",
+        "cover": "Tanco {{ slots.name }}",
+        "cover_device_area": "Tanco {{ slots.device_class }} a {{ slots.area }}",
+        "cover_device_class": "Tanco {{ slots.device_class }}",
+        "lock": "Desbloquejo {{ slots.name }}"
+      },
+      "HassStartTimer": {
+        "default": "Començo el temporitzador",
+        "command": "D'acord"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "Poso {{ slots.item }}"
+      },
+      "HassTurnOn": {
+        "default": "Engego {{ slots.name }}",
+        "lights_area": "Llums enceses a {{ slots.area }}",
+        "fans_area": "Ventiladors encesos a {{ slots.area }}",
+        "cover": "Obro {{ slots.name }}",
+        "cover_device_area": "Obro {{ slots.device_class }} a {{ slots.area }}",
+        "cover_device_class": "Obro {{ slots.device_class }}",
+        "scene": "Activat",
+        "script": "Iniciant",
+        "lock": "Tanco {{ slots.name }}"
+      },
+      "HassMediaPause": {
+        "default": "Reproducció en pausa"
+      },
+      "HassGetCurrentTime": {
+        "default": "{% set next_hour = 0 %} {% set minute_str = \"\" %} {% set start_str = \"Son\" %} {% if slots.time.minute > 0: %}\n    {% if slots.time.minute == 15: %}\n        {% set start_str = \"És\" %}\n        {% set minute_str = \"un quart\" %}\n        {% set next_hour = 1 %}\n    {% elif slots.time.minute == 30: %}\n        {% set minute_str = \"dos quarts\" %}\n        {% set next_hour = 1 %}\n    {% elif slots.time.minute == 45: %}\n        {% set minute_str = \"tres quarts\" %}\n        {% set next_hour = 1 %}\n    {% endif %}\n{% endif %} {% if slots.time.hour + next_hour > 12: %}\n    {% set hour12 = slots.time.hour + next_hour - 12 %}\n{% elif slots.time.hour + next_hour == 0: %}\n    {% set hour12 = 12 %}\n{% else: %}\n    {% set hour12 = slots.time.hour + next_hour %}\n{% endif %} {% if minute_str != \"\": %}\n   {{start_str}} {{minute_str}} de {{hour12}}\n{% elif hour12 == 1 : %}\n   Es la {{hour12}}\n   {% if slots.time.minute > 0: %}\n     i {{slots.time.minute}}\n   {% endif %}\n{% else: %}\n   Son les {{hour12}}\n   {% if slots.time.minute > 0: %}\n     i {{slots.time.minute}}\n   {% endif %}\n{% endif %} {% if slots.time.hour == 0: %}\n    de la nit\n{% elif slots.time.hour < 12: %}\n    del matí\n{% elif slots.time.hour == 12: %}\n    del migdia\n{% elif slots.time.hour < 21: %}\n    de la tarda\n{% else: %}\n    de la nit\n{% endif %}\n"
+      },
+      "HassPauseTimer": {
+        "default": "Temporitzador en pausa"
+      },
+      "HassNevermind": {
+        "default": "No res, doncs"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  No hi ha cap temporitzador.\n{% elif num_active_timers == 0: %}\n  {# No active timers #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    El temporitzador és en pausa.\n  {% else: %}\n    {{ num_paused_timers }} temporitzadors en pausa.\n  {% endif %}\n{% else: %}\n  {# At least one active timer #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# Get active timer that will finish soonest #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {{ num_active_timers }} temporitzadors actius.\n  {% endif %}\n\n  {% if num_paused_timers == 1: %}\n    1 temporitzador en pausa.\n  {% elif num_paused_timers > 0: %}\n    {{ num_paused_timers }} temporitzadors en pausa.\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n\n  {% if num_timers > 1: %}\n\n    Al temporitzador\n        \n    {% if next_timer.name: %}\n      {{ next_timer.name }}\n    {% elif next_timer.area: %}\n      de l'àrea {{ next_timer.area }}\n    {% endif %}\n\n    de\n\n    {# Give some extra information to disambiguate #}\n    {% if (next_timer.start_hours == 1) and (next_timer.start_minutes == 1): %}\n      1 hora i 1 minut\n    {% elif (next_timer.start_hours == 1) and (next_timer.start_minutes > 1): %}\n      1 hora i {{ next_timer.start_minutes }} minuts\n    {% elif (next_timer.start_hours > 0) and (next_timer.start_minutes == 1): %}\n      {{ next_timer.start_hours }} hores i 1 minut\n    {% elif (next_timer.start_hours > 0) and (next_timer.start_minutes > 1): %}\n      {{ next_timer.start_hours }} hores i {{ next_timer.start_minutes }} minuts\n    {% elif (next_timer.start_hours == 1): %}\n      {{ next_timer.start_hours }} hora\n    {% elif (next_timer.start_hours > 1): %}\n      {{ next_timer.start_hours }} hores\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_minutes }} minut{{ \"s\" if next_timer.start_minutes != 1 }} i {{ next_timer.start_seconds }} segon{{ \"s\" if next_timer.start_seconds != 1 }}\n    {% elif (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_minutes }} minut{{ \"s\" if next_timer.start_minutes != 1 }}\n    {% elif (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_seconds }} segon{{ \"s\" if next_timer.start_seconds != 1 }}\n    {% endif %}\n\n    hi queden\n  {% else %}\n    Hi queden\n  {% endif %}\n\n  {# At least one active timer #}\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0): %}\n    1 hora i {{ next_timer.rounded_minutes_left }} minuts.\n  {% elif (next_timer.rounded_hours_left == 1): %}\n    1 hora.\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_hours_left }} hores i {{ next_timer.rounded_minutes_left }} minuts.\n  {% elif (next_timer.rounded_hours_left > 1): %}\n    {{ next_timer.rounded_hours_left }} hores.\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0): %}\n    1 minut i {{ next_timer.rounded_seconds_left }} segons.\n  {% elif (next_timer.rounded_minutes_left == 1): %}\n    1 minut.\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} minuts i {{ next_timer.rounded_seconds_left }} segons.\n  {% elif (next_timer.rounded_minutes_left > 1): %}\n    {{ next_timer.rounded_minutes_left }} minuts.\n  {% elif (next_timer.rounded_seconds_left == 1): %}\n    1 segon.\n  {% elif (next_timer.rounded_seconds_left > 1): %}\n    {{ next_timer.rounded_seconds_left }} segons.\n  {% endif %}\n\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "He afegit {{ slots.item }}"
+      },
+      "HassGetCurrentDate": {
+        "default": "{% set months = {\n   1: 'gener',\n   2: 'febrer',\n   3: 'març',\n   4: 'abril',\n   5: 'maig',\n   6: 'juny',\n   7: 'juliol',\n   8: 'agost',\n   9: 'setembre',\n   10: 'octubre',\n   11: 'novembre',\n   12: 'desembre',\n} %} {% set weekday = [ 'dilluns', 'dimarts', 'dimecres', 'dijous', 'divendres', 'dissabte', 'diumenge' ] %} És {{ weekday[slots.date.weekday()] }}, {{slots.date.day}} {% if slots.date.month in [4,8,10]: %}\n  d'{{ months[slots.date.month] }}\n{% else %}\n  de {{ months[slots.date.month] }}\n{% endif %} del {{ slots.date.year }}\n"
+      },
+      "HassUnpauseTimer": {
+        "default": "Segueixo amb el temporizador"
+      },
+      "HassMediaPrevious": {
+        "default": "Reproduint l'anterior"
+      },
+      "HassGetWeather": {
+        "default": "{% set weather_condition = {\n  'clear': 'Cel clar',\n  'clear-night': 'Cel clar',\n  'cloudy': 'Cel ennuvolat',\n  'exceptional': 'Clima excepcionalment advers',\n  'fog': 'Boira',\n  'hail': 'Precipitacions de calamarsa',\n  'lightning': 'Tempesta',\n  'lightning-rainy': 'Pluja i tempesta',\n  'partlycloudy': 'Cels parcialment ennuvolats',\n  'pouring': 'Plugim',\n  'rainy': 'Pluja',\n  'snowy': 'Precipitacions de neu',\n  'snowy-rainy': 'Precipitacions de aiguaneu',\n  'sunny': 'Sol',\n  'windy': 'Vent',\n  'windy-variant': 'Vent i núvols'\n} %}\n {{ weather_condition.get((state.state | string).lower(), \"\") }}, amb una temperatura de {{ state.attributes.get('temperature') }} {{ state.attributes.get('temperature_unit') }}\n"
+      },
+      "HassLightSet": {
+        "brightness": "Brillantor de {{ slots.name }} posat a {{ slots.brightness }}",
+        "brightness_area": "Brillantor a {{ slots.area }} posat a {{ slots.brightness }}",
+        "color": "{{ slots.name }} ara té el color {{ slots.color }}",
+        "color_area": "{{ slots.area }} ara té el color {{ slots.color }}"
+      },
+      "HassCancelAllTimers": {
+        "default": "{% if slots.canceled < 1: %} No hi ha cap temporitzador. {% elif slots.canceled == 1: %} He cancel·lat 1 temporitzador. {% else: %} He cancel·lat {{ slots.canceled }} temporitzadors. {% endif %}\n",
+        "area": "{% if slots.canceled < 1: %} No hi ha temporitzadors a {{ slots.area }}. {% elif slots.canceled == 1: %} He cancel·lat 1 temporitzador a {{ slots.area }}. {% else: %} He cancel·lat {{ slots.canceled }} temporitzadors a {{ slots.area }}. {% endif %}\n"
+      },
+      "HassVacuumStart": {
+        "default": "Comença la neteja"
+      },
+      "HassMediaUnpause": {
+        "default": "Continuant amb la reproducció"
+      },
+      "HassSetPosition": {
+        "default": "Posició establerta"
+      },
+      "HassMediaNext": {
+        "default": "Reproduint el següent"
+      },
+      "HassCancelTimer": {
+        "default": "Temporitzador cancel·lat"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{% set temperature = state_attr(state.entity_id, 'current_temperature') %} {{ temperature | float | abs | round(1) | replace('.0', '') | replace('.',',') }} {{ 'grau' if temperature | float | abs == 1 else 'graus' }} {{ 'sota zero' if temperature | float < 0 else '' }}\n"
+      },
+      "HassSetVolume": {
+        "default": "Volum establert"
+      },
+      "HassDecreaseTimer": {
+        "default": "Canvio el temporitzador"
+      },
+      "HassIncreaseTimer": {
+        "default": "Canvio el temporitzador"
+      },
+      "HassVacuumReturnToBase": {
+        "default": "Tornant a la base"
+      },
+      "HassRespond": {
+        "default": "",
+        "hello": "Salutacions des de Home Assistant.",
+        "listening": "No, jo només enregistro la veu quan em dius la paraula d'activació.",
+        "data": "Les teves dades s'envien al teu servidor de Home Assistant.",
+        "commands": "Per aprendre qué pots preguntar, visita, H, A, punt I, O, barra, vois.",
+        "creator": "Vaig néixer i créixer gràcies a la meravellosa comunitat de Home Assistant, formada per voluntaris talentosos d'arreu del mon."
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "(blanc|blanca|blancs|blanques)",
+          "out": "white"
+        },
+        {
+          "in": "(negre|negra|negres)",
+          "out": "black"
+        },
+        {
+          "in": "(vermell|vermella|vermells|vermelles|roig|roja|roigs|rojos|roges)",
+          "out": "red"
+        },
+        {
+          "in": "(taronja|taronges|carbassa|carbasses|carabassa|carabasses)",
+          "out": "orange"
+        },
+        {
+          "in": "(groc|groga|grocs|grogues)",
+          "out": "yellow"
+        },
+        {
+          "in": "(verd|verda|verds|verdes)",
+          "out": "green"
+        },
+        {
+          "in": "(blau|blava|blaus|blaves)",
+          "out": "blue"
+        },
+        {
+          "in": "(lila|morat|morada|porpra|púrpura|liles|morats|morades|porpres|púrpures)",
+          "out": "purple"
+        },
+        {
+          "in": "(marró|marrona|marrons|marrones)",
+          "out": "brown"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        "celsius",
+        {
+          "in": "c",
+          "out": "celsius"
+        },
+        "fahrenheit",
+        {
+          "in": "f",
+          "out": "fahrenheit"
+        }
+      ]
+    },
+    "brightness_level": {
+      "values": [
+        {
+          "in": "(max|màxim)",
+          "out": 100
+        },
+        {
+          "in": "(min|mínim)",
+          "out": 1
+        }
+      ]
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "engega[t|ts|da|des]",
+          "out": "on"
+        },
+        {
+          "in": "(encés|ences[a|es|os])",
+          "out": "on"
+        },
+        {
+          "in": "atura[t|ts|da|des]",
+          "out": "off"
+        },
+        {
+          "in": "apaga[t|ts|da|des]",
+          "out": "off"
+        },
+        {
+          "in": "desconnecta[t|ts|da|des]",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "llum[s]",
+          "out": "light"
+        },
+        {
+          "in": "ventilador[s]",
+          "out": "fan"
+        },
+        {
+          "in": "interruptor[s]",
+          "out": "switch"
+        },
+        {
+          "in": "pany[s]",
+          "out": "lock"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "obert[a|es]",
+          "out": "open"
+        },
+        {
+          "in": "tanca(t|r|da|des)",
+          "out": "closed"
+        },
+        {
+          "in": "obrint[-se]",
+          "out": "opening"
+        },
+        {
+          "in": "tancant[-se]",
+          "out": "closing"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "tendal[s]",
+          "out": "awning"
+        },
+        {
+          "in": "persian(a|es)",
+          "out": "blind"
+        },
+        {
+          "in": "cortin(a|es)",
+          "out": "curtain"
+        },
+        {
+          "in": "port(a|es) de(l|s) (garatge|pàrquing)",
+          "out": "garage"
+        },
+        {
+          "in": "port(a|es)",
+          "out": "door"
+        },
+        {
+          "in": "reixat",
+          "out": "gate"
+        },
+        {
+          "in": "portic(ó|ons)",
+          "out": "shutter"
+        },
+        {
+          "in": "finestr(a|es)",
+          "out": "window"
+        }
+      ]
+    },
+    "lock_states": {
+      "values": [
+        {
+          "in": "bloqueja(t|da)",
+          "out": "locked"
+        },
+        {
+          "in": "desbloqueja(t|da)",
+          "out": "unlocked"
+        }
+      ]
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    },
+    "zone": {
+      "wildcard": true
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "volume": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "mig",
+          "out": 30
+        },
+        {
+          "in": "mitja",
+          "out": 30
+        },
+        {
+          "in": "1/2",
+          "out": 30
+        },
+        {
+          "in": "[un|1] quart [de |d']",
+          "out": 15
+        },
+        {
+          "in": "(tres|3) quarts [de |d']",
+          "out": 45
+        }
+      ]
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    },
+    "response": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "actual": "(ara|actual[ment])",
+    "pronom_singular": "((el|la|es|sa) |l'|s')",
+    "pronom_plural": "(els|les|es|ses)",
+    "pronom": "(<pronom_singular>|<pronom_plural>)",
+    "preposicio_base": "(<preposicio_base_singular>|<preposicio_base_plural>)",
+    "preposicio_base_singular": "(en|de|del|a|al)",
+    "preposicio_base_plural": "(dels|als)",
+    "preposicio_singular": "<preposicio_base_singular> [<pronom_singular>]",
+    "preposicio_singular_masc": "(de|del|pel|al|a|en|en el)",
+    "preposicio": "<preposicio_base> [<pronom>]",
+    "name": "[<pronom_singular>]{name}",
+    "area": "[<preposicio_singular>]{area}",
+    "quin_es": "(quin|quina|què) és",
+    "lluentor": "{brightness}[<percent>]",
+    "al_stt_typo": "(del|el|en|o)",
+    "engega": "(encén|encendre|engega|posa|activa|<engega_stt_typo>)[r|t]",
+    "engega_stt_typo": "((en|em)[ ](geguen|gendra|llega|sembla))|(Àngela|cosa|posen|posem|General)",
+    "apaga": "(apaga|atura|desconnecta|para)[r|t]|<apaga_stt_typo>",
+    "apaga_stt_typo": "((potser|a) paga[r]|aparga|apaguen|apa ara|a part [de])",
+    "tanca": "tanca[r|t]|<tanca_stt_typo>",
+    "tanca_stt_typo": "(tanquen)",
+    "obre": "(obr(e|i|ir)|obert|òbriga)",
+    "llums": "([el|la|es|sa] llum|[els|les|es|ses] llums|<llums_typo>)",
+    "llums_typo": "[[d]el[s]|la|les] (juny|junta|junts)",
+    "temp": "(temperatura)",
+    "graus": "{temperature} [graus] [{temperature_unit}]",
+    "pujar": "([a]puja|aixeca)[r|t]",
+    "baixar": "[a]baixa[r|t]",
+    "configura": "(posa[r]|puja[r]|configura[r]|ajusta[r]|canvia[r]|establ(ir|eix|ix))",
+    "posició": "{position}[<percent>]",
+    "percent": "(%|per[ ]cent)",
+    "cancela": "cancel[·l]a[r|t]",
+    "seguent": "següent|(proper|pròxim)[a]",
+    "anterior": "[l'|s'](anterior|enrer(e|a)|últim[a])|d'abans",
+    "element": "(element|ítem|pista|peça|música|cançó|tema|tonada|mitjà|canal|recurs|vídeo|clip|film)",
+    "reproduir": "reprodu(ir|eix|ix)|passa[r] [endavant]|(toca|posa|fica|salta|canvia|escolta|continua)[r]",
+    "reproduir_again": "(reproduir|posar|ficar|escoltar)",
+    "reactiva": "(reanuda[r]|reactiva[r]|repr(è|e)n[dre]|continua[r]|segu(ir|eix|ix))",
+    "objectes_amb_clau": "port(a|es)|pany[s]|portic(ó|ons)",
+    "hora": "hor(a|es)",
+    "now": "[ara|ara mateix]",
+    "how_much": "(quan|(quant|quin)[s|a|es]|què)",
+    "again": "([un|una] altr(e|a) (cop|vegada)|de nou)",
+    "torna_a": "(torna[r] a)",
+    "can_you": "[pots|podries]",
+    "temporitzador": "(temporitzador|compte enrere|minuter|cronòmetre)",
+    "timer_set": "(posa|crea|comença|inicia|activa|programa|fixa|estableix|engega|<timer_set_typos>)[r|t|'m]",
+    "timer_set_typos": "(cosa)",
+    "timer_cancel": "(cancel[·l]a|atura|para|deixa|elimina)[r|t]",
+    "timer_duration_seconds": "{timer_seconds:seconds} segon[s]",
+    "timer_duration_minutes": "({timer_minutes:minutes} minut[s][ [i ]{timer_seconds:seconds} segon[s]])|({timer_minutes:minutes} minut[s] i {timer_half:seconds})|({timer_half:seconds} minut[s])",
+    "timer_duration_hours": "({timer_hours:hours} <hora>)|({timer_hours:hours} <hora> [i ]{timer_minutes:minutes} minut[s][ [i ]{timer_seconds:seconds} segon[s]])|({timer_hours:hours} <hora> i {timer_half:minutes}[ [i ]{timer_seconds:seconds} segon[s]])|({timer_half:minutes} <hora>)",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes>|<timer_duration_hours>",
+    "timer_start_seconds": "{timer_seconds:start_seconds} segon[s]",
+    "timer_start_minutes": "{timer_minutes:start_minutes} minut[s][ [i ]{timer_seconds:start_seconds} segon[s]]",
+    "timer_start_hours": "{timer_hours:start_hours} <hora> [[i ]{timer_minutes:start_minutes} minut[s][ [i ]{timer_seconds:start_seconds} segon[s]]]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes>|<timer_start_hours>"
+  },
+  "skip_words": [
+    "si us plau",
+    "vinga",
+    "sisplau",
+    "Per favor",
+    "Gràcies",
+    "Moltes gràcies",
+    "Pots dir-me",
+    "Podries dir-me",
+    "Em pots dir",
+    "Em podries dir",
+    "Que pots dir-me",
+    "Ara bé"
+  ]
+}

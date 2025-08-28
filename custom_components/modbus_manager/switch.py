@@ -6,7 +6,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
@@ -14,7 +13,7 @@ from .logger import ModbusManagerLogger
 _LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
-    """Set up Modbus Manager switches from a config entry."""
+    """Set up Modbus Manager switch entities from a config entry."""
     prefix = entry.data["prefix"]
     template_name = entry.data["template"]
     registers = entry.data.get("registers", [])
@@ -27,7 +26,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         if reg.get("control") == "switch":
             # Unique_ID Format: {prefix}_{template_sensor_name}
             sensor_name = reg.get("name", "unknown")
-            unique_id = f"{prefix}_{sensor_name.lower().replace(' ', '_')}"
+            # Bereinige den Namen für den unique_id
+            clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+            unique_id = f"{prefix}_{clean_name}"
             
             entities.append(ModbusTemplateSwitch(
                 hass=hass,
@@ -78,13 +79,12 @@ class ModbusTemplateSwitch(SwitchEntity):
         
         # Switch-Entity properties
         self._attr_native_unit_of_measurement = register_data.get("unit_of_measurement", "")
-        self._attr_device_class = register_data.get("device_class", "switch")
+        self._attr_device_class = register_data.get("device_class")
         self._attr_state_class = register_data.get("state_class")
         
         # Switch-Konfiguration
-        switch_config = register_data.get("switch", {})
-        self._on_value = switch_config.get("on", 1)
-        self._off_value = switch_config.get("off", 0)
+        self._on_value = register_data.get("on_value", 1)
+        self._off_value = register_data.get("off_value", 0)
         
         # Group for aggregations
         self._group = register_data.get("group")
@@ -112,6 +112,7 @@ class ModbusTemplateSwitch(SwitchEntity):
             
             if result.isError():
                 _LOGGER.warning("Fehler beim Lesen von Holding Register %s: %s", self._address, result)
+                self._attr_is_on = False
                 return
             
             # Wert verarbeiten
@@ -121,36 +122,17 @@ class ModbusTemplateSwitch(SwitchEntity):
                 # Erweiterte Datenverarbeitung anwenden
                 processed_value = self._apply_data_processing(raw_value)
                 
-                # Skalierung anwenden
-                scaled_value = processed_value * self._scale
-                
-                # Offset anwenden
-                final_value = scaled_value + self._offset
-                
                 # Switch-Status bestimmen
-                if abs(final_value - self._on_value) < 0.001:  # Float-Vergleich
-                    self._attr_is_on = True
-                elif abs(final_value - self._off_value) < 0.001:  # Float-Vergleich
-                    self._attr_is_on = False
-                else:
-                    _LOGGER.warning("Unbekannter Wert %s für Switch-Entity %s", final_value, self._attr_name)
-                    self._attr_is_on = False
+                self._attr_is_on = processed_value == self._on_value
             else:
                 self._attr_is_on = False
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Update von Switch-Entity %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Fehler beim Update von Switch %s: %s", self.name, str(e))
+            self._attr_is_on = False
 
     async def async_turn_on(self, **kwargs) -> None:
         """Turn the switch on."""
-        await self._set_switch_state(True)
-
-    async def async_turn_off(self, **kwargs) -> None:
-        """Turn the switch off."""
-        await self._set_switch_state(False)
-
-    async def _set_switch_state(self, turn_on: bool) -> None:
-        """Set the switch state."""
         try:
             if self._hub_name not in self.hass.data.get(DOMAIN, {}):
                 _LOGGER.error("Hub %s nicht gefunden", self._hub_name)
@@ -158,98 +140,109 @@ class ModbusTemplateSwitch(SwitchEntity):
 
             hub = self.hass.data[DOMAIN][self._hub_name]
             
-            # Wert für gewünschten Zustand bestimmen
-            target_value = self._on_value if turn_on else self._off_value
+            # Erweiterte Datenverarbeitung rückwärts anwenden
+            final_value = self._apply_reverse_data_processing(self._on_value)
             
-            # Wert für Modbus vorbereiten
-            # Offset abziehen
-            modbus_value = target_value - self._offset
-            
-            # Skalierung rückgängig machen
-            raw_value = modbus_value / self._scale
-            
-            # Multiplier anwenden
-            raw_value = raw_value / self._multiplier
-            
-            # Wert in Register schreiben
-            if self._count == 1:
-                # 16-bit Wert
-                register_value = int(raw_value)
-                result = await hub.write_register(self._address, register_value, unit=self._slave_id)
-            else:
-                # 32-bit Wert (2 Register)
-                if self._swap:
-                    high_word = int(raw_value >> 16)
-                    low_word = int(raw_value & 0xFFFF)
-                    result = await hub.write_registers(self._address, [low_word, high_word], unit=self._slave_id)
-                else:
-                    high_word = int(raw_value >> 16)
-                    low_word = int(raw_value & 0xFFFF)
-                    result = await hub.write_registers(self._address, [high_word, low_word], unit=self._slave_id)
+            # ON-Wert in Holding Register schreiben
+            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
             
             if result.isError():
-                _LOGGER.error("Fehler beim Schreiben in Register %s: %s", self._address, result)
+                _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
             else:
-                state_text = "EIN" if turn_on else "AUS"
-                _LOGGER.info("Switch %s erfolgreich auf %s gesetzt (Wert %s)", self._attr_name, state_text, target_value)
-                # Sofort aktualisieren
-                await self.async_update()
+                _LOGGER.info("Switch %s erfolgreich eingeschaltet", self.name)
+                self._attr_is_on = True
+                self.async_write_ha_state()
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Setzen des Switch-Zustands für %s: %s", self._attr_name, str(e))
+            _LOGGER.error("Fehler beim Einschalten von Switch %s: %s", self.name, str(e))
+
+    async def async_turn_off(self, **kwargs) -> None:
+        """Turn the switch off."""
+        try:
+            if self._hub_name not in self.hass.data.get(DOMAIN, {}):
+                _LOGGER.error("Hub %s nicht gefunden", self._hub_name)
+                return
+
+            hub = self.hass.data[DOMAIN][self._hub_name]
+            
+            # Erweiterte Datenverarbeitung rückwärts anwenden
+            final_value = self._apply_reverse_data_processing(self._off_value)
+            
+            # OFF-Wert in Holding Register schreiben
+            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
+            
+            if result.isError():
+                _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
+            else:
+                _LOGGER.info("Switch %s erfolgreich ausgeschaltet", self.name)
+                self._attr_is_on = False
+                self.async_write_ha_state()
+                
+        except Exception as e:
+            _LOGGER.error("Fehler beim Ausschalten von Switch %s: %s", self.name, str(e))
 
     def _process_register_value(self, registers):
-        """Process register value based on data type and count."""
+        """Verarbeite Register-Werte basierend auf data_type."""
         try:
-            if self._count == 1:
-                raw_value = registers[0]
-            else:
-                # Für 32-bit Werte (2 Register)
-                if self._swap:
-                    raw_value = (registers[1] << 16) | registers[0]
-                else:
-                    raw_value = (registers[0] << 16) | registers[1]
-            
-            # Konvertierung basierend auf data_type
-            if self._data_type == "int16":
-                raw_value = raw_value if raw_value < 32768 else raw_value - 65536
+            if not registers:
+                return None
+                
+            if self._data_type == "uint16":
+                return registers[0]
+            elif self._data_type == "int16":
+                value = registers[0]
+                if value > 32767:
+                    value -= 65536
+                return value
+            elif self._data_type == "uint32":
+                if len(registers) >= 2:
+                    if self._swap:
+                        return (registers[1] << 16) | registers[0]
+                    else:
+                        return (registers[0] << 16) | registers[1]
             elif self._data_type == "int32":
-                raw_value = raw_value if raw_value < 2147483648 else raw_value - 4294967296
-            
-            return raw_value
-            
-        except (IndexError, ValueError) as e:
-            _LOGGER.error("Fehler bei der Verarbeitung der Register-Werte: %s", str(e))
+                if len(registers) >= 2:
+                    value = (registers[0] << 16) | registers[1]
+                    if value > 2147483647:
+                        value -= 4294967296
+                    return value
+            else:
+                return registers[0]
+                
+        except Exception as e:
+            _LOGGER.error("Fehler bei Register-Verarbeitung: %s", str(e))
             return None
 
-    def _apply_data_processing(self, raw_value):
-        """Apply data processing options."""
+    def _apply_data_processing(self, value):
+        """Wende erweiterte Datenverarbeitung an."""
         try:
-            processed_value = raw_value
-            
             # Multiplier anwenden
-            processed_value = processed_value * self._multiplier
+            if self._multiplier != 1.0:
+                value *= self._multiplier
             
-            return processed_value
+            # Offset anwenden
+            if self._offset != 0.0:
+                value += self._offset
+            
+            return value
             
         except Exception as e:
-            _LOGGER.error("Fehler bei der Datenverarbeitung: %s", str(e))
-            return raw_value
+            _LOGGER.error("Fehler bei Datenverarbeitung: %s", str(e))
+            return value
 
-    @property
-    def extra_state_attributes(self) -> dict:
-        """Return entity specific state attributes."""
-        attrs = {
-            "register_address": self._address,
-            "data_type": self._data_type,
-            "scale": self._scale,
-            "offset": self._offset,
-            "multiplier": self._multiplier,
-            "on_value": self._on_value,
-            "off_value": self._off_value
-        }
-        
-        if self._group:
-            attrs["group"] = self._group
+    def _apply_reverse_data_processing(self, value):
+        """Wende erweiterte Datenverarbeitung rückwärts an."""
+        try:
+            # Offset rückwärts anwenden
+            if self._offset != 0.0:
+                value -= self._offset
             
-        return attrs 
+            # Multiplier rückwärts anwenden
+            if self._multiplier != 1.0:
+                value /= self._multiplier
+            
+            return value
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei rückwärtiger Datenverarbeitung: %s", str(e))
+            return value 

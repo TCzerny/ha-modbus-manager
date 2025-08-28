@@ -1,0 +1,395 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Cihaz zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "invalid_host": "Ge\u00e7ersiz ana bilgisayar ad\u0131 veya IP adresi",
+            "reconfigure_successful": "Yeniden yap\u0131land\u0131rma ba\u015far\u0131l\u0131 oldu",
+            "unique_id_mismatch": "Tan\u0131mlay\u0131c\u0131 \u00f6nceki tan\u0131mlay\u0131c\u0131yla e\u015fle\u015fmiyor"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "unknown": "Beklenmeyen hata"
+        },
+        "flow_title": "{device}",
+        "step": {
+            "confirm_discovery": {
+                "description": "Home Assistant'a {device} eklemek istiyor musunuz?"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Sunucu"
+                },
+                "data_description": {
+                    "host": "Fronius cihaz\u0131n\u0131z\u0131n IP adresi veya ana bilgisayar ad\u0131."
+                },
+                "description": "{device} i\u00e7in yap\u0131land\u0131rma bilgilerinizi g\u00fcncelleyin."
+            },
+            "user": {
+                "data": {
+                    "host": "Sunucu"
+                },
+                "data_description": {
+                    "host": "Fronius cihaz\u0131n\u0131z\u0131n IP adresi veya ana bilgisayar ad\u0131."
+                },
+                "description": "Fronius SolarAPI cihaz\u0131n\u0131z\u0131 yap\u0131land\u0131r\u0131n."
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "capacity_designed": {
+                "name": "Tasarlanm\u0131\u015f kapasite"
+            },
+            "capacity_maximum": {
+                "name": "Maksimum kapasite"
+            },
+            "cash_factor": {
+                "name": "\u015eebeke ihracat tarifesi"
+            },
+            "co2_factor": {
+                "name": "CO\u2082 fakt\u00f6r\u00fc"
+            },
+            "current_ac": {
+                "name": "AC ak\u0131m"
+            },
+            "current_ac_phase_1": {
+                "name": "Mevcut faz 1"
+            },
+            "current_ac_phase_2": {
+                "name": "Mevcut faz 2"
+            },
+            "current_ac_phase_3": {
+                "name": "Mevcut faz 3"
+            },
+            "current_dc": {
+                "name": "DC ak\u0131m"
+            },
+            "current_dc_2": {
+                "name": "DC ak\u0131m 2"
+            },
+            "delivery_factor": {
+                "name": "\u015eebeke ithalat tarifesi"
+            },
+            "energy_day": {
+                "name": "Enerji G\u00fcn\u00fc"
+            },
+            "energy_reactive_ac_consumed": {
+                "name": "T\u00fcketilen reaktif enerji"
+            },
+            "energy_reactive_ac_produced": {
+                "name": "\u00dcretilen reaktif enerji"
+            },
+            "energy_real_ac_consumed": {
+                "name": "T\u00fcketilen enerji"
+            },
+            "energy_real_ac_minus": {
+                "name": "Ger\u00e7ek enerji eksi"
+            },
+            "energy_real_ac_plus": {
+                "name": "Ger\u00e7ek enerji art\u0131"
+            },
+            "energy_real_consumed": {
+                "name": "T\u00fcketilen ger\u00e7ek enerji"
+            },
+            "energy_real_produced": {
+                "name": "\u00dcretilen ger\u00e7ek enerji"
+            },
+            "energy_total": {
+                "name": "Toplam enerji"
+            },
+            "energy_year": {
+                "name": "Enerji y\u0131l\u0131"
+            },
+            "error_code": {
+                "name": "Hata kodu"
+            },
+            "error_message": {
+                "name": "Hata mesaj\u0131",
+                "state": {
+                    "ac_current_sensor_error": "AC ak\u0131m sens\u00f6r\u00fc hatas\u0131",
+                    "ac_frequency_too_high": "AC frekans\u0131 \u00e7ok y\u00fcksek",
+                    "ac_frequency_too_low": "AC frekans\u0131 \u00e7ok d\u00fc\u015f\u00fck",
+                    "ac_grid_outside_permissible_limits": "AC \u015febekesi izin verilen s\u0131n\u0131rlar\u0131n d\u0131\u015f\u0131nda",
+                    "ac_module_over_temperature": "AC mod\u00fcl\u00fc a\u015f\u0131r\u0131 s\u0131cakl\u0131k",
+                    "ac_module_temperature_sensor_faulty_l1": "AC mod\u00fcl s\u0131cakl\u0131k sens\u00f6r\u00fc ar\u0131zal\u0131 (L1)",
+                    "ac_module_temperature_sensor_faulty_l2": "AC mod\u00fcl s\u0131cakl\u0131k sens\u00f6r\u00fc ar\u0131zal\u0131 (L2)",
+                    "ac_module_temperature_sensor_faulty_l3": "AC mod\u00fcl s\u0131cakl\u0131k sens\u00f6r\u00fc ar\u0131zal\u0131 (L3)",
+                    "ac_voltage_too_high": "AC voltaj\u0131 \u00e7ok y\u00fcksek",
+                    "ac_voltage_too_low": "AC voltaj\u0131 \u00e7ok d\u00fc\u015f\u00fck",
+                    "arc_detection_triggered": "Ark alg\u0131lama tetiklendi",
+                    "arc_detector_switched_off": "Ark dedekt\u00f6r\u00fc kapal\u0131 (\u00f6rne\u011fin harici ark izleme s\u0131ras\u0131nda)",
+                    "can_bus_full": "CAN veri yolu dolu",
+                    "communication": "\u0130leti\u015fim hatas\u0131",
+                    "compatibility_error_invalid_power_stage_configuration": "Uyumluluk hatas\u0131 (\u00f6rne\u011fin bir PC kart\u0131n\u0131n de\u011fi\u015ftirilmesi nedeniyle) - ge\u00e7ersiz g\u00fc\u00e7 a\u015famas\u0131 seti yap\u0131land\u0131rmas\u0131",
+                    "current_sensor_calibration_timeout": "Mevcut sens\u00f6r kalibrasyon zaman a\u015f\u0131m\u0131",
+                    "dc_component_measured_in_grid_too_high": "\u015eebekede \u00f6l\u00e7\u00fclen DC bile\u015feni \u00e7ok y\u00fcksek",
+                    "dc_connection_inverter_battery_interrupted": "\u0130nverter ile ak\u00fc aras\u0131ndaki DC ba\u011flant\u0131s\u0131 kesildi",
+                    "dc_input_voltage_mppt_1_too_high": "DC giri\u015f voltaj\u0131 MPPT 1 \u00e7ok y\u00fcksek",
+                    "dc_input_voltage_mppt_2_too_high": "DC giri\u015f voltaj\u0131 MPPT 2 \u00e7ok y\u00fcksek",
+                    "dc_low_string_1": "DC d\u00fc\u015f\u00fck dize 1",
+                    "dc_low_string_2": "DC d\u00fc\u015f\u00fck dize 2",
+                    "dc_module_over_temperature": "DC mod\u00fcl\u00fc a\u015f\u0131r\u0131 s\u0131cakl\u0131k",
+                    "dc_module_temperature_sensor_faulty": "DC mod\u00fcl s\u0131cakl\u0131k sens\u00f6r\u00fc ar\u0131zal\u0131",
+                    "derating_caused_by_over_frequency": "A\u015f\u0131r\u0131 frekans nedeniyle olu\u015fan de\u011fer kayb\u0131",
+                    "different_power_limitation_in_hardware_modules": "Donan\u0131m mod\u00fcllerinde farkl\u0131 g\u00fc\u00e7 s\u0131n\u0131rlamas\u0131",
+                    "eeprom_reinitialised": "EEPROM yeniden ba\u015flat\u0131ld\u0131",
+                    "emergency_power_derating_activated": "Acil g\u00fc\u00e7 azaltma etkinle\u015ftirildi",
+                    "error_during_logging_data_recording": "G\u00fcnl\u00fck verilerinin kaydedilmesi s\u0131ras\u0131nda hata olu\u015ftu",
+                    "error_during_update_process": "G\u00fcncelleme i\u015flemi s\u0131ras\u0131nda hata olu\u015ftu",
+                    "fan_1_error": "Fan 1 hatas\u0131",
+                    "fan_2_error": "Fan 2 hatas\u0131",
+                    "file_could_not_be_opened": "Dosya a\u00e7\u0131lamad\u0131",
+                    "fixed_voltage_mode_out_of_range": "Sabit voltaj modu, MPP voltaj modu yerine se\u00e7ildi ve sabit voltaj \u00e7ok d\u00fc\u015f\u00fck veya \u00e7ok y\u00fcksek bir de\u011fere ayarland\u0131",
+                    "functional_incompatibility_between_pc_boards": "Fonksiyonel uyumsuzluk (inverterdeki bir veya daha fazla PC kart\u0131n\u0131n birbirleriyle uyumlu olmamas\u0131, \u00f6rne\u011fin bir PC kart\u0131 de\u011fi\u015ftirildikten sonra)",
+                    "grid_frequency_exceeded_limit_reconnecting": "Yeniden ba\u011flan\u0131rken \u015febeke frekans\u0131 bir s\u0131n\u0131r de\u011ferini a\u015ft\u0131",
+                    "grid_voltage_dependent_power_reduction_active": "\u015eebeke Voltaj\u0131na Ba\u011fl\u0131 G\u00fc\u00e7 Azaltma etkin",
+                    "guard_cannot_be_found": "Muhaf\u0131z bulunamad\u0131",
+                    "hardware_id_problem": "Donan\u0131m kimli\u011fi sorunu",
+                    "hid_range_error": "HID aral\u0131k hatas\u0131",
+                    "initialisation_error_file_system_error_on_usb": "USB flash s\u00fcr\u00fcc\u00fcdeki dosya sisteminde ba\u015flatma hatas\u0131",
+                    "initialisation_error_usb_flash_drive_not_supported": "Ba\u015flatma hatas\u0131 \u2013 USB flash s\u00fcr\u00fcc\u00fc desteklenmiyor",
+                    "initialisation_error_usb_stick_over_current": "Ba\u015flatma hatas\u0131 \u2013 USB bellekte a\u015f\u0131r\u0131 ak\u0131m",
+                    "insulation_error_on_solar_panels": "G\u00fcne\u015f panellerinde yal\u0131t\u0131m hatas\u0131",
+                    "insulation_fault": "Yal\u0131t\u0131m hatas\u0131",
+                    "insulation_measurement_triggered": "Yal\u0131t\u0131m \u00f6l\u00e7\u00fcm\u00fc tetiklendi",
+                    "intermediate_circuit_voltage_too_high": "Ara devre voltaj\u0131 \u00e7ok y\u00fcksek",
+                    "intermediate_circuit_voltage_too_low_or_asymmetric": "Ara devre voltaj\u0131 \u00e7ok d\u00fc\u015f\u00fck veya asimetrik",
+                    "internal_dsp_malfunction": "Dahili DSP ar\u0131zas\u0131",
+                    "internal_hardware_error": "Dahili donan\u0131m hatas\u0131",
+                    "internal_processor_status": "Dahili i\u015flemci durumu hakk\u0131nda uyar\u0131. Daha fazla bilgi i\u00e7in durum koduna bak\u0131n",
+                    "interrupt_check_fail": "Kesinti Kontrol\u00fc ba\u015far\u0131s\u0131z",
+                    "invalid_device_type": "Ge\u00e7ersiz cihaz t\u00fcr\u00fc",
+                    "inverter_required_setup_values_not_received": "\u0130nverter i\u00e7in gerekli kurulum de\u011ferleri al\u0131namad\u0131",
+                    "inverter_settings_changed_restart_required": "\u0130nverter ayarlar\u0131 de\u011fi\u015ftirildi, inverterin yeniden ba\u015flat\u0131lmas\u0131 gerekiyor",
+                    "log_file_cannot_be_saved": "G\u00fcnl\u00fck dosyas\u0131 kaydedilemiyor (\u00f6rne\u011fin USB flash s\u00fcr\u00fcc\u00fc yazmaya kar\u015f\u0131 korumal\u0131 veya dolu)",
+                    "low_pv_voltage_dc_input_voltage_too_low": "D\u00fc\u015f\u00fck PV voltaj\u0131 - DC giri\u015f voltaj\u0131 \u015febekeye enerji sa\u011flamak i\u00e7in \u00e7ok d\u00fc\u015f\u00fck",
+                    "mains_voltage_dependent_power_reduction": "\u015eebeke gerilimine ba\u011fl\u0131 g\u00fc\u00e7 azaltma",
+                    "memory_error_detected": "Bellek hatas\u0131 alg\u0131land\u0131",
+                    "neutral_conductor_not_connected": "N\u00f6tr iletken ba\u011fl\u0131 de\u011fil",
+                    "no_communication_between_power_stage_and_control_system": "G\u00fc\u00e7 kademesi seti ile kontrol sistemi aras\u0131nda ileti\u015fim m\u00fcmk\u00fcn de\u011fil",
+                    "no_communication_with_filter": "Filtre ile ileti\u015fim m\u00fcmk\u00fcn de\u011fil",
+                    "no_communication_with_hybrid_manager": "Hibrit y\u00f6neticiyle ileti\u015fim m\u00fcmk\u00fcn de\u011fil",
+                    "no_communication_with_power_stage_set": "G\u00fc\u00e7 sahne setiyle ileti\u015fim m\u00fcmk\u00fcn de\u011fil",
+                    "no_communication_with_storage_unit": "Depolama \u00fcnitesiyle ileti\u015fim m\u00fcmk\u00fcn de\u011fil",
+                    "no_energy_fed_by_mppt1_past_24_hours": "Son 24 saatte MPPT1 taraf\u0131ndan \u015febekeye enerji verilmedi",
+                    "no_energy_fed_into_grid_past_24_hours": "Son 24 saatte \u015febekeye enerji verilmedi",
+                    "no_error": "Hata yok",
+                    "no_power_fed_in_despite_closed_relay": "Kapal\u0131 r\u00f6leye ra\u011fmen g\u00fc\u00e7 beslenmiyor",
+                    "no_usb_flash_drive_connected": "Ba\u011fl\u0131 USB flash s\u00fcr\u00fcc\u00fc yok",
+                    "overcurrent_ac": "A\u015f\u0131r\u0131 Ak\u0131m (AC)",
+                    "overcurrent_dc": "A\u015f\u0131r\u0131 ak\u0131m (DC)",
+                    "overtemperature_in_connection_area": "Ba\u011flant\u0131 alan\u0131nda a\u015f\u0131r\u0131 s\u0131cakl\u0131k",
+                    "pmc_power_stage_set_not_available": "PMC g\u00fc\u00e7 a\u015famas\u0131 seti mevcut de\u011fil",
+                    "polarity_of_dc_strings_reversed": "DC tellerinin polaritesi ters \u00e7evrildi",
+                    "possible_hardware_fault": "Olas\u0131 donan\u0131m ar\u0131zas\u0131",
+                    "power_derating_due_to_high_temperature": "\u00c7ok y\u00fcksek s\u0131cakl\u0131k nedeniyle g\u00fc\u00e7 azalmas\u0131",
+                    "power_stage_set_problem": "G\u00fc\u00e7 a\u015famas\u0131 seti sorunu",
+                    "pv_output_too_low_for_feeding_energy_into_the_grid": "\u015eebekeye enerji sa\u011flamak i\u00e7in PV \u00e7\u0131k\u0131\u015f\u0131 \u00e7ok d\u00fc\u015f\u00fck",
+                    "rcmu_error": "RCMU hatas\u0131",
+                    "real_time_clock_communication_error": "Ger\u00e7ek Zamanl\u0131 Saat mod\u00fcl\u00fc ileti\u015fim hatas\u0131",
+                    "real_time_clock_hardware_error": "Ger\u00e7ek Zamanl\u0131 Saat mod\u00fcl\u00fcnde donan\u0131m hatas\u0131",
+                    "real_time_clock_in_emergency_mode": "Dahili hata: Ger\u00e7ek Zamanl\u0131 Saat mod\u00fcl\u00fc acil durum modundad\u0131r",
+                    "safety_cut_out_triggered": "Se\u00e7enek kart\u0131 veya RECERBO arac\u0131l\u0131\u011f\u0131yla g\u00fcvenlik kesintisi tetiklendi",
+                    "software_problem": "Yaz\u0131l\u0131m sorunu",
+                    "software_update_invalid_country_setup": "Yaz\u0131l\u0131m g\u00fcncelleme grubu 0 (ge\u00e7ersiz \u00fclke kurulumu)",
+                    "stand_alone_operation_detected": "Ba\u011f\u0131ms\u0131z \u00e7al\u0131\u015fma alg\u0131land\u0131",
+                    "storage_unit_not_available": "Depolama \u00fcnitesi mevcut de\u011fil",
+                    "time_lost": "Kaybedilen zaman",
+                    "too_little_dc_power_for_feed_in_operation": "Besleme i\u015flemi i\u00e7in \u00e7ok az DC g\u00fcc\u00fc",
+                    "unique_id_conflict": "Benzersiz kimlik \u00e7ak\u0131\u015fmas\u0131",
+                    "update_file_corrupt": "G\u00fcncelleme dosyas\u0131 bozuk",
+                    "update_file_does_not_match_device": "G\u00fcncelleme dosyas\u0131 cihazla e\u015fle\u015fmiyor, g\u00fcncelleme dosyas\u0131 \u00e7ok eski",
+                    "update_file_not_recognised_or_missing": "G\u00fcncelleme dosyas\u0131 tan\u0131nm\u0131yor veya mevcut de\u011fil",
+                    "wired_shut_down_triggered": "Kablolu kapatma tetiklendi",
+                    "write_or_read_error_occurred": "Yazma veya okuma hatas\u0131 olu\u015ftu"
+                }
+            },
+            "frequency_phase_average": {
+                "name": "Frekans faz ortalamas\u0131"
+            },
+            "inverter_state": {
+                "name": "\u0130nvert\u00f6r durumu"
+            },
+            "led_color": {
+                "name": "LED rengi"
+            },
+            "led_state": {
+                "name": "LED durumu"
+            },
+            "meter_location": {
+                "name": "Saya\u00e7 konumu"
+            },
+            "meter_location_description": {
+                "name": "Saya\u00e7 konumu a\u00e7\u0131klamas\u0131",
+                "state": {
+                    "consumption_path": "T\u00fcketim yolu",
+                    "external_battery": "Harici batarya",
+                    "external_generator": "Harici jenerat\u00f6r",
+                    "feed_in": "\u015eebeke ba\u011flant\u0131 noktas\u0131",
+                    "subload": "Alt y\u00fckleme"
+                }
+            },
+            "meter_mode": {
+                "name": "Saya\u00e7 modu"
+            },
+            "power_ac": {
+                "name": "AC g\u00fcc\u00fc"
+            },
+            "power_apparent_phase_1": {
+                "name": "G\u00f6r\u00fcn\u00fcr g\u00fc\u00e7 faz\u0131 1"
+            },
+            "power_apparent_phase_2": {
+                "name": "G\u00f6r\u00fcn\u00fcr g\u00fc\u00e7 faz\u0131 2"
+            },
+            "power_apparent_phase_3": {
+                "name": "G\u00f6r\u00fcn\u00fcr g\u00fc\u00e7 faz\u0131 3"
+            },
+            "power_battery": {
+                "name": "G\u00fc\u00e7 bataryas\u0131"
+            },
+            "power_battery_charge": {
+                "name": "G\u00fc\u00e7 bataryas\u0131 \u015farj\u0131"
+            },
+            "power_battery_discharge": {
+                "name": "G\u00fc\u00e7 pilinin bo\u015falmas\u0131"
+            },
+            "power_factor_phase_1": {
+                "name": "G\u00fc\u00e7 fakt\u00f6r\u00fc faz 1"
+            },
+            "power_factor_phase_2": {
+                "name": "G\u00fc\u00e7 fakt\u00f6r\u00fc faz 2"
+            },
+            "power_factor_phase_3": {
+                "name": "G\u00fc\u00e7 fakt\u00f6r\u00fc faz 3"
+            },
+            "power_grid": {
+                "name": "G\u00fc\u00e7 \u015febekesi"
+            },
+            "power_grid_export": {
+                "name": "Elektrik \u015febekesi ihracat\u0131"
+            },
+            "power_grid_import": {
+                "name": "Elektrik \u015febekesini i\u00e7e aktarma"
+            },
+            "power_load": {
+                "name": "G\u00fc\u00e7 y\u00fck\u00fc"
+            },
+            "power_load_consumed": {
+                "name": "T\u00fcketilen g\u00fc\u00e7 y\u00fck\u00fc"
+            },
+            "power_load_generated": {
+                "name": "\u00dcretilen g\u00fc\u00e7 y\u00fck\u00fc"
+            },
+            "power_photovoltaics": {
+                "name": "G\u00fc\u00e7 fotovoltaikleri"
+            },
+            "power_reactive": {
+                "name": "Reaktif g\u00fc\u00e7"
+            },
+            "power_reactive_phase_1": {
+                "name": "Reaktif g\u00fc\u00e7 faz\u0131 1"
+            },
+            "power_reactive_phase_2": {
+                "name": "Reaktif g\u00fc\u00e7 faz\u0131 2"
+            },
+            "power_reactive_phase_3": {
+                "name": "Reaktif g\u00fc\u00e7 faz\u0131 3"
+            },
+            "power_real": {
+                "name": "Ger\u00e7ek g\u00fc\u00e7"
+            },
+            "power_real_phase_1": {
+                "name": "Ger\u00e7ek g\u00fc\u00e7 faz\u0131 1"
+            },
+            "power_real_phase_2": {
+                "name": "Ger\u00e7ek g\u00fc\u00e7 faz\u0131 2"
+            },
+            "power_real_phase_3": {
+                "name": "Ger\u00e7ek g\u00fc\u00e7 faz\u0131 3"
+            },
+            "relative_autonomy": {
+                "name": "G\u00f6receli \u00f6zerklik"
+            },
+            "relative_self_consumption": {
+                "name": "G\u00f6receli \u00f6z t\u00fcketim"
+            },
+            "state_code": {
+                "name": "Eyalet kodu"
+            },
+            "state_message": {
+                "name": "Durum mesaj\u0131",
+                "state": {
+                    "boost_mode": "G\u00fc\u00e7lendirme modu",
+                    "critical_fault": "Kritik hata",
+                    "fault": "Hata",
+                    "keep_minimum_temperature": "Minimum s\u0131cakl\u0131\u011f\u0131 koruyun",
+                    "legionella_protection": "Lejyonella korumas\u0131",
+                    "up_and_running": "Haz\u0131r ve \u00e7al\u0131\u015f\u0131yor"
+                }
+            },
+            "state_of_charge": {
+                "name": "\u015earj durumu"
+            },
+            "status_code": {
+                "name": "Durum kodu"
+            },
+            "status_message": {
+                "name": "Durum mesaj\u0131",
+                "state": {
+                    "bootloading": "Y\u00fckleniyor",
+                    "error": "Hata",
+                    "idle": "Bo\u015fta",
+                    "ready": "Haz\u0131r",
+                    "running": "\u00c7al\u0131\u015f\u0131yor",
+                    "sleeping": "Uyuyor",
+                    "standby": "Bekleme modu",
+                    "startup": "Ba\u015flang\u0131\u00e7"
+                }
+            },
+            "temperature_cell": {
+                "name": "S\u0131cakl\u0131k"
+            },
+            "voltage_ac": {
+                "name": "AC gerilim"
+            },
+            "voltage_ac_phase_1": {
+                "name": "Gerilim faz\u0131 1"
+            },
+            "voltage_ac_phase_2": {
+                "name": "Gerilim faz\u0131 2"
+            },
+            "voltage_ac_phase_3": {
+                "name": "Gerilim faz\u0131 3"
+            },
+            "voltage_ac_phase_to_phase_12": {
+                "name": "Gerilim faz\u0131 1-2"
+            },
+            "voltage_ac_phase_to_phase_23": {
+                "name": "Gerilim faz\u0131 2-3"
+            },
+            "voltage_ac_phase_to_phase_31": {
+                "name": "Gerilim faz\u0131 3-1"
+            },
+            "voltage_dc": {
+                "name": "DC gerilimi"
+            },
+            "voltage_dc_2": {
+                "name": "DC gerilimi 2"
+            },
+            "voltage_dc_maximum_cell": {
+                "name": "Maksimum h\u00fccre voltaj\u0131"
+            },
+            "voltage_dc_minimum_cell": {
+                "name": "Minimum h\u00fccre voltaj\u0131"
+            }
+        }
+    },
+    "exceptions": {
+        "entry_cannot_connect": {
+            "message": "{host} adresindeki Fronius cihaz\u0131na ba\u011flan\u0131lamad\u0131: {fronius_error}"
+        },
+        "update_failed": {
+            "message": "Veriler al\u0131n\u0131rken bir hata olu\u015ftu: {fronius_error}"
+        }
+    }
+}

@@ -1,0 +1,68 @@
+{
+    "common": {
+        "jid_options_description": "Op\u00e7\u00f5es avan\u00e7adas de agrupamento, onde os IDs Beolink exclusivos dos dispositivos (chamados JIDs) s\u00e3o usados diretamente. Os JIDs podem ser encontrados nos atributos de estado da entidade do media player.",
+        "jid_options_name": "Op\u00e7\u00f5es JID"
+    },
+    "config": {
+        "abort": {
+            "already_in_progress": "O fluxo de configura\u00e7\u00e3o j\u00e1 est\u00e1 em andamento"
+        },
+        "error": {
+            "api_exception": "Falha ao conectar",
+            "client_connector_error": "Falha ao conectar",
+            "timeout_error": "Falha ao conectar"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Endere\u00e7o IP",
+                    "model": "Modelo"
+                }
+            }
+        }
+    },
+    "services": {
+        "beolink_allstandby": {
+            "description": "Coloque todos os dispositivos Beolink conectados em espera.",
+            "name": "Beolink em espera"
+        },
+        "beolink_expand": {
+            "description": "Amplie a experi\u00eancia atual do Beolink.",
+            "fields": {
+                "all_discovered": {
+                    "description": "Expanda a experi\u00eancia Beolink para todos os dispositivos descobertos.",
+                    "name": "Tudo descoberto"
+                },
+                "beolink_jids": {
+                    "description": "Especifique quais JIDs Beolink far\u00e3o parte da experi\u00eancia Beolink atual.",
+                    "name": "JIDs Beolink"
+                }
+            },
+            "name": "Beolink expandir"
+        },
+        "beolink_join": {
+            "description": "Participe de uma experi\u00eancia Beolink.",
+            "fields": {
+                "beolink_jid": {
+                    "description": "Especifique manualmente o Beolink JID para ingressar.",
+                    "name": "Beolink JID"
+                }
+            },
+            "name": "Junte-se ao Beolink"
+        },
+        "beolink_leave": {
+            "description": "Deixe uma experi\u00eancia Beolink.",
+            "name": "Beolink sair"
+        },
+        "beolink_unexpand": {
+            "description": "Desdobre a experi\u00eancia atual com o Beolink.",
+            "fields": {
+                "beolink_jids": {
+                    "description": "Especifique quais JIDs Beolink deixar\u00e3o de existir na experi\u00eancia atual do Beolink.",
+                    "name": "JIDs Beolink"
+                }
+            },
+            "name": "Beolink n\u00e3o expandido"
+        }
+    }
+}

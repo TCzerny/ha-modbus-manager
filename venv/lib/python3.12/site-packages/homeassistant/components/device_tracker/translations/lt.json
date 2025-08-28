@@ -1,0 +1,84 @@
+{
+    "device_automation": {
+        "condition_type": {
+            "is_home": "{entity_name} yra namuose",
+            "is_not_home": "{entity_name} n\u0117ra namuose"
+        },
+        "extra_fields": {
+            "zone": "Zona"
+        },
+        "trigger_type": {
+            "enters": "{entity_name} patenka \u012f zon\u0105",
+            "leaves": "{entity_name} palieka zon\u0105"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Prietaiso sekimo priemon\u0117",
+            "state": {
+                "home": "Namai",
+                "not_home": "I\u0161vyk\u0119s"
+            },
+            "state_attributes": {
+                "battery": {
+                    "name": "Baterija"
+                },
+                "gps_accuracy": {
+                    "name": "GPS tikslumas"
+                },
+                "latitude": {
+                    "name": "Platuma"
+                },
+                "longitude": {
+                    "name": "Ilguma"
+                },
+                "source_type": {
+                    "name": "\u0160altinis",
+                    "state": {
+                        "bluetooth": "Bluetooth",
+                        "bluetooth_le": "Bluetooth LE",
+                        "gps": "GPS",
+                        "router": "Mar\u0161rutizatorius"
+                    }
+                }
+            }
+        }
+    },
+    "services": {
+        "see": {
+            "description": "Rankiniu b\u016bdu atnaujinkite matyto pasenusio \u012frenginio steb\u0117jimo priemon\u0117s \u012fra\u0161us faileknown_devices.yaml.",
+            "fields": {
+                "battery": {
+                    "description": "Prietaiso baterijos lygis.",
+                    "name": "Baterijos lygis"
+                },
+                "dev_id": {
+                    "description": "Prietaiso ID (ID raskite `known_devices.yaml`).",
+                    "name": "Prietaiso ID"
+                },
+                "gps": {
+                    "description": "GPS koordinat\u0117s, kur yra prietaisas, nurodytos pagal platum\u0105 ir ilgum\u0105 (pvz.: [51.513845, -0.100539]).",
+                    "name": "GPS koordinat\u0117s"
+                },
+                "gps_accuracy": {
+                    "description": "GPS koordina\u010di\u0173 tikslumas.",
+                    "name": "GPS tikslumas"
+                },
+                "host_name": {
+                    "description": "Prietaiso pagrindinio kompiuterio pavadinimas.",
+                    "name": "Pagrindinio kompiuterio pavadinimas"
+                },
+                "location_name": {
+                    "description": "Vietos, kurioje yra prietaisas, pavadinimas. Galimos parinktys: \u201enamai\u201c, \u201ene_namai\u201c arba zonos pavadinimas.",
+                    "name": "Vieta"
+                },
+                "mac": {
+                    "description": "Prietaiso MAC adresas.",
+                    "name": "MAC adresas"
+                }
+            },
+            "name": "Matyti"
+        }
+    },
+    "title": "Prietaiso sekimo priemon\u0117"
+}

@@ -1,0 +1,256 @@
+{
+    "common": {
+        "data_description_api_token": "Token API va\u0161\u00ed instance Mealie z va\u0161eho u\u017eivatelsk\u00e9ho profilu v Mealie.",
+        "data_description_host": "Adresa URL va\u0161\u00ed instance Mealie, nap\u0159. http://192.168.1.123:1234",
+        "data_description_verify_ssl": "M\u011bly by b\u00fdt certifik\u00e1ty SSL ov\u011b\u0159eny? Toto by m\u011blo b\u00fdt vypnuto u certifik\u00e1t\u016f s vlastn\u00edm podpisem."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Slu\u017eba je ji\u017e nastavena",
+            "reauth_successful": "Op\u011btovn\u00e9 ov\u011b\u0159en\u00ed bylo \u00fasp\u011b\u0161n\u00e9",
+            "reconfigure_successful": "P\u0159enastaven\u00ed bylo \u00fasp\u011b\u0161n\u00e9",
+            "wrong_account": "Mus\u00edte pou\u017e\u00edt stejn\u00fd \u00fa\u010det, kter\u00fd byl pou\u017eit pro nastaven\u00ed integrace."
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "ingress_url": "Vstupn\u00ed adresy URL se pou\u017e\u00edvaj\u00ed jen pro p\u0159\u00edstup k u\u017eivatelsk\u00e9mu rozhran\u00ed Mealie. Pou\u017eijte IP adresu Home Assistanta a s\u00ed\u0165ov\u00fd port na kart\u011b nastaven\u00ed dopl\u0148ku Mealie.",
+            "invalid_auth": "Neplatn\u00e9 ov\u011b\u0159en\u00ed",
+            "mealie_version": "Minim\u00e1ln\u00ed po\u017eadovan\u00e1 verze je 1.0.0. Aktualizujte Mealie a zkuste to znovu.",
+            "unknown": "Neo\u010dek\u00e1van\u00e1 chyba"
+        },
+        "step": {
+            "reauth_confirm": {
+                "data": {
+                    "api_token": "Token API"
+                },
+                "data_description": {
+                    "api_token": "Token API va\u0161\u00ed instance Mealie z va\u0161eho u\u017eivatelsk\u00e9ho profilu v Mealie."
+                },
+                "description": "Znovu se ov\u011b\u0159te pomoc\u00ed Mealie."
+            },
+            "reconfigure": {
+                "data": {
+                    "api_token": "Token API",
+                    "host": "URL",
+                    "verify_ssl": "Ov\u011b\u0159it certifik\u00e1t SSL"
+                },
+                "data_description": {
+                    "api_token": "Token API va\u0161\u00ed instance Mealie z va\u0161eho u\u017eivatelsk\u00e9ho profilu v Mealie.",
+                    "host": "Adresa URL va\u0161\u00ed instance Mealie, nap\u0159. http://192.168.1.123:1234",
+                    "verify_ssl": "M\u011bly by b\u00fdt certifik\u00e1ty SSL ov\u011b\u0159eny? Toto by m\u011blo b\u00fdt vypnuto u certifik\u00e1t\u016f s vlastn\u00edm podpisem."
+                },
+                "description": "Znovu nastavte pomoc\u00ed Mealie."
+            },
+            "user": {
+                "data": {
+                    "api_token": "Token API",
+                    "host": "URL",
+                    "verify_ssl": "Ov\u011b\u0159it certifik\u00e1t SSL"
+                },
+                "data_description": {
+                    "api_token": "Token API va\u0161\u00ed instance Mealie z va\u0161eho u\u017eivatelsk\u00e9ho profilu v Mealie.",
+                    "host": "Adresa URL va\u0161\u00ed instance Mealie, nap\u0159. http://192.168.1.123:1234",
+                    "verify_ssl": "M\u011bly by b\u00fdt certifik\u00e1ty SSL ov\u011b\u0159eny? Toto by m\u011blo b\u00fdt vypnuto u certifik\u00e1t\u016f s vlastn\u00edm podpisem."
+                }
+            }
+        }
+    },
+    "entity": {
+        "calendar": {
+            "breakfast": {
+                "name": "Sn\u00eddan\u011b"
+            },
+            "dinner": {
+                "name": "Ve\u010de\u0159e"
+            },
+            "lunch": {
+                "name": "Ob\u011bd"
+            },
+            "side": {
+                "name": "Dezert"
+            }
+        },
+        "sensor": {
+            "categories": {
+                "name": "Kategorie",
+                "unit_of_measurement": "kategorie"
+            },
+            "recipes": {
+                "name": "Recepty",
+                "unit_of_measurement": "recepty"
+            },
+            "tags": {
+                "name": "\u0160t\u00edtky",
+                "unit_of_measurement": "\u0161t\u00edtky"
+            },
+            "tools": {
+                "name": "N\u00e1stroje",
+                "unit_of_measurement": "n\u00e1stroje"
+            },
+            "users": {
+                "name": "U\u017eivatel\u00e9",
+                "unit_of_measurement": "u\u017eivatel\u00e9"
+            }
+        }
+    },
+    "exceptions": {
+        "add_item_error": {
+            "message": "P\u0159i p\u0159id\u00e1v\u00e1n\u00ed polo\u017eky do {shopping_list_name} do\u0161lo k chyb\u011b."
+        },
+        "auth_failed": {
+            "message": "Ov\u011b\u0159en\u00ed se nezda\u0159ilo. Znovu se ov\u011b\u0159te."
+        },
+        "connection_error": {
+            "message": "Chyba p\u0159i p\u0159ipojov\u00e1n\u00ed k instanci Mealie."
+        },
+        "could_not_import_recipe": {
+            "message": "Mealie nemohla importovat recept z adresy URL."
+        },
+        "delete_item_error": {
+            "message": "P\u0159i maz\u00e1n\u00ed polo\u017eky v {shopping_list_name} do\u0161lo k chyb\u011b."
+        },
+        "end_date_before_start_date": {
+            "message": "Datum ukon\u010den\u00ed mus\u00ed b\u00fdt pozd\u011bj\u0161\u00ed ne\u017e datum zah\u00e1jen\u00ed."
+        },
+        "integration_not_found": {
+            "message": "Integrace \"{target}\" nebyla nalezena v registru."
+        },
+        "item_not_found_error": {
+            "message": "Polo\u017eka {shopping_list_item} nebyla nalezena."
+        },
+        "not_loaded": {
+            "message": "{target} nen\u00ed na\u010dten."
+        },
+        "recipe_not_found": {
+            "message": "Recept s ID nebo s \"{recipe_id}\" nebyl nalezen."
+        },
+        "setup_failed": {
+            "message": "Nepoda\u0159ilo se p\u0159ipojit k instanci Mealie."
+        },
+        "update_failed_mealplan": {
+            "message": "Nepoda\u0159ilo se na\u010d\u00edst data j\u00eddeln\u00ed\u010dku."
+        },
+        "update_failed_shopping_list": {
+            "message": "Nepoda\u0159ilo se na\u010d\u00edst data n\u00e1kupn\u00edho seznamu."
+        },
+        "update_failed_statistics": {
+            "message": "Nepoda\u0159ilo se na\u010d\u00edst statistick\u00e1 data."
+        },
+        "update_item_error": {
+            "message": "P\u0159i aktualizaci polo\u017eky v {shopping_list_name} do\u0161lo k chyb\u011b."
+        },
+        "version_error": {
+            "message": "Pou\u017e\u00edv\u00e1te verzi {mealie_version}. Minim\u00e1ln\u00ed po\u017eadovan\u00e1 verze je {min_version}. Aktualizujte Mealie a zkuste to znovu."
+        }
+    },
+    "selector": {
+        "mealplan_entry_type": {
+            "options": {
+                "breakfast": "Sn\u00eddan\u011b",
+                "dinner": "Ve\u010de\u0159e",
+                "lunch": "Ob\u011bd",
+                "side": "Dezert"
+            }
+        }
+    },
+    "services": {
+        "get_mealplan": {
+            "description": "Z\u00edskat j\u00eddeln\u00ed\u010dek od Mealie",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Vyberte instanci Mealie, ze kter\u00e9 chcete z\u00edskat j\u00eddeln\u00ed\u010dek",
+                    "name": "Instance Mealie"
+                },
+                "end_date": {
+                    "description": "Kone\u010dn\u00e9 datum na\u010dten\u00ed dat (v\u00fdchoz\u00ed: dnes).",
+                    "name": "Datum ukon\u010den\u00ed"
+                },
+                "start_date": {
+                    "description": "Datum zah\u00e1jen\u00ed z\u00edsk\u00e1v\u00e1n\u00ed dat (v\u00fdchoz\u00ed: dnes).",
+                    "name": "Datum zah\u00e1jen\u00ed"
+                }
+            },
+            "name": "Z\u00edskat j\u00eddeln\u00ed\u010dek"
+        },
+        "get_recipe": {
+            "description": "Z\u00edsk\u00e1 recept od Mealie.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Vyberte instanci Mealie, ze kter\u00e9 chcete z\u00edskat j\u00eddeln\u00ed\u010dek",
+                    "name": "Instance Mealie"
+                },
+                "recipe_id": {
+                    "description": "ID receptu, kter\u00fd chcete z\u00edskat.",
+                    "name": "ID receptu"
+                }
+            },
+            "name": "Z\u00edskat recept"
+        },
+        "import_recipe": {
+            "description": "Importovat recept z adresy URL",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Vyberte instanci Mealie, ze kter\u00e9 chcete z\u00edskat j\u00eddeln\u00ed\u010dek",
+                    "name": "Instance Mealie"
+                },
+                "include_tags": {
+                    "description": "Zahrne do receptu zna\u010dky z webu.",
+                    "name": "Zahrnout zna\u010dky"
+                },
+                "url": {
+                    "description": "Adresa URL receptu k importu.",
+                    "name": "URL k receptu"
+                }
+            },
+            "name": "Importovat recept"
+        },
+        "set_mealplan": {
+            "description": "Nastav\u00ed j\u00eddeln\u00ed\u010dek na konkr\u00e9tn\u00ed datum.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Vyberte instanci Mealie, ze kter\u00e9 chcete z\u00edskat j\u00eddeln\u00ed\u010dek",
+                    "name": "Instance Mealie"
+                },
+                "date": {
+                    "description": "Datum, na kter\u00e9 se m\u00e1 nastavit j\u00eddeln\u00ed\u010dek.",
+                    "name": "Date"
+                },
+                "entry_type": {
+                    "description": "Typ pokrmu, na kter\u00fd se m\u00e1 recept nastavit.",
+                    "name": "Typ vstupu"
+                },
+                "note_text": {
+                    "description": "Text pozn\u00e1mky k j\u00eddlu pro p\u0159i pl\u00e1nov\u00e1n\u00ed bez receptu.",
+                    "name": "Text pozn\u00e1mky"
+                },
+                "note_title": {
+                    "description": "N\u00e1zev pozn\u00e1mky k j\u00eddlu p\u0159i pl\u00e1nov\u00e1n\u00ed bez receptu.",
+                    "name": "N\u00e1zev pozn\u00e1mky k j\u00eddlu"
+                },
+                "recipe_id": {
+                    "description": "ID receptu, kter\u00fd chcete z\u00edskat.",
+                    "name": "ID receptu"
+                }
+            },
+            "name": "Nastavit j\u00eddeln\u00ed\u010dek"
+        },
+        "set_random_mealplan": {
+            "description": "Nastav\u00ed n\u00e1hodn\u00fd j\u00eddeln\u00ed\u010dek na konkr\u00e9tn\u00ed datum.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Vyberte instanci Mealie, ze kter\u00e9 chcete z\u00edskat j\u00eddeln\u00ed\u010dek",
+                    "name": "Instance Mealie"
+                },
+                "date": {
+                    "description": "Datum, na kter\u00e9 se m\u00e1 nastavit j\u00eddeln\u00ed\u010dek.",
+                    "name": "Date"
+                },
+                "entry_type": {
+                    "description": "Typ j\u00eddla k n\u00e1hodn\u00e9mu v\u00fdb\u011bru.",
+                    "name": "Typ vstupu"
+                }
+            },
+            "name": "Nastavit n\u00e1hodn\u00fd j\u00eddeln\u00ed\u010dek"
+        }
+    }
+}

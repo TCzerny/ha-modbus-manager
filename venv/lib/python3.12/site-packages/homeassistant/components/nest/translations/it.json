@@ -1,0 +1,93 @@
+{
+    "application_credentials": {
+        "description": "Segui le [istruzioni]({more_info_url}) per impostare la Cloud Console:\n\n1. Accedi alla [schermata di consenso OAuth]({oauth_consent_url}) e configura\n2. Vai su [Credenziali]({oauth_creds_url}) e seleziona **Crea credenziali**.\n3. Dal menu a tendina, scegli **ID client OAuth**.\n4. Seleziona **Applicazione Web** come Tipo di applicazione.\n5. Inserisci `{redirect_url}` sotto *URI di reindirizzamento autorizzato*."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "L'account \u00e8 gi\u00e0 configurato",
+            "authorize_url_timeout": "Tempo scaduto nel generare l'URL di autorizzazione.",
+            "invalid_access_token": "Token di accesso non valido",
+            "missing_configuration": "Il componente non \u00e8 configurato. Segui la documentazione.",
+            "missing_credentials": "L'integrazione richiede le credenziali dell'applicazione.",
+            "no_url_available": "Nessun URL disponibile. Per informazioni su questo errore, [controlla la sezione della guida]({docs_url})",
+            "oauth_error": "Ricevuti dati token non validi.",
+            "oauth_failed": "Errore durante l'ottenimento del token di accesso.",
+            "oauth_timeout": "Tempo scaduto durante la risoluzione del token OAuth.",
+            "oauth_unauthorized": "Errore di autorizzazione OAuth durante l'ottenimento del token di accesso.",
+            "reauth_successful": "La riautenticazione ha avuto successo",
+            "unknown_authorize_url_generation": "Errore sconosciuto durante la generazione di un URL di autorizzazione."
+        },
+        "create_entry": {
+            "default": "Autenticazione riuscita"
+        },
+        "error": {
+            "bad_project_id": "Inserisci un ID di progetto Cloud valido (controlla Cloud Console)",
+            "subscriber_error": "Errore di abbonato sconosciuto, vedere i registri",
+            "wrong_project_id": "Inserisci un ID progetto cloud valido (uguale all'ID progetto di accesso al dispositivo)"
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "ID progetto Google Cloud"
+                },
+                "description": "Immetti l'ID progetto cloud di seguito, ad esempio *example-project-12345*. Consulta la [Google Cloud Console]({cloud_console_url}) o la documentazione per [maggiori informazioni]({more_info_url}).",
+                "title": "Nest: inserisci l'ID del progetto Cloud"
+            },
+            "create_cloud_project": {
+                "description": "L'integrazione Nest ti permette di collegare i tuoi termostati, videocamere e campanelli Nest utilizzando l'API Smart Device Management. L'API SDM **richiede un costo di configurazione una tantum di 5 $ USD**. Consulta la documentazione per [ulteriori informazioni]({more_info_url}).\n\n1. Accedi a [Google Cloud Console]({cloud_console_url}).\n2. Se \u00e8 il tuo primo progetto, seleziona **Crea progetto** e poi **Nuovo progetto**.\n3. Assegna un nome al tuo progetto cloud e poi seleziona **Crea**.\n4. Salva l'ID del progetto cloud, ad esempio *example-project-12345*, poich\u00e9 ti servir\u00e0 successivamente.\n5. Vai alla Libreria API per [API Smart Device Management]({sdm_api_url}) e seleziona **Abilita**.\n6. Vai alla Libreria API per [Cloud Pub/Sub API]({pubsub_api_url}) e seleziona **Abilita**.\n\nProcedi quando il tuo progetto cloud \u00e8 configurato.",
+                "title": "Nest: crea e configura un progetto cloud"
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "ID progetto di accesso al dispositivo"
+                },
+                "description": "Crea un progetto di accesso al dispositivo Nest, che **richiede il pagamento di una commissione di 5 $ USD** per la configurazione.\n1. Vai alla [Console di accesso al dispositivo]({device_access_console_url}) e segui il flusso di pagamento.\n2. Seleziona **Crea progetto**\n3. Dai un nome al tuo progetto di accesso al dispositivo e seleziona **Avanti**.\n4. Inserisci il tuo ID Client OAuth\n5. Abilita gli eventi cliccando su **Abilita** e **Crea progetto**.\n\nInserisci il tuo ID progetto di accesso al dispositivo qui sotto ([maggiori informazioni]({more_info_url})).",
+                "title": "Nest: crea un progetto di accesso al dispositivo"
+            },
+            "pick_implementation": {
+                "title": "Scegli il metodo di autenticazione"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "ID progetto Google Cloud"
+                }
+            },
+            "reauth_confirm": {
+                "description": "L'integrazione di Nest deve autenticare nuovamente il tuo account",
+                "title": "Autenticazione scaduta per {name}"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "Movimento rilevato",
+            "camera_person": "Persona rilevata",
+            "camera_sound": "Suono rilevato",
+            "doorbell_chime": "Campanello premuto"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "Campanello",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "Campanello"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "Movimento",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "Movimento"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

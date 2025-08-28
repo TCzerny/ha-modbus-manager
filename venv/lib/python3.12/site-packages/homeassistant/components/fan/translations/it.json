@@ -1,0 +1,148 @@
+{
+    "device_automation": {
+        "action_type": {
+            "toggle": "Attiva/disattiva {entity_name}",
+            "turn_off": "Disattiva {entity_name}",
+            "turn_on": "Attiva {entity_name}"
+        },
+        "condition_type": {
+            "is_off": "{entity_name} \u00e8 disattivato",
+            "is_on": "{entity_name} \u00e8 attivo"
+        },
+        "trigger_type": {
+            "changed_states": "{entity_name} attivato o disattivato",
+            "turned_off": "{entity_name} disattivato",
+            "turned_on": "{entity_name} attivato"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Ventilatore",
+            "state": {
+                "off": "Spento/a",
+                "on": "Acceso/a"
+            },
+            "state_attributes": {
+                "direction": {
+                    "name": "Direzione",
+                    "state": {
+                        "forward": "Verso avanti",
+                        "reverse": "Verso dietro"
+                    }
+                },
+                "oscillating": {
+                    "name": "Oscillante",
+                    "state": {
+                        "false": "No",
+                        "true": "S\u00ec"
+                    }
+                },
+                "percentage": {
+                    "name": "Velocit\u00e0"
+                },
+                "percentage_step": {
+                    "name": "Passo di velocit\u00e0"
+                },
+                "preset_mode": {
+                    "name": "Modalit\u00e0 preimpostata"
+                },
+                "preset_modes": {
+                    "name": "Modalit\u00e0 preimpostate disponibili"
+                }
+            }
+        }
+    },
+    "selector": {
+        "direction": {
+            "options": {
+                "forward": "Avanti",
+                "reverse": "Indietro"
+            }
+        }
+    },
+    "services": {
+        "decrease_speed": {
+            "description": "Diminuisce la velocit\u00e0 di un ventilatore.",
+            "fields": {
+                "percentage_step": {
+                    "description": "Passo percentuale di cui la velocit\u00e0 deve essere diminuita.",
+                    "name": "Decrementa"
+                }
+            },
+            "name": "Diminuisci la velocit\u00e0"
+        },
+        "increase_speed": {
+            "description": "Aumenta la velocit\u00e0 di un ventilatore.",
+            "fields": {
+                "percentage_step": {
+                    "description": "Passo percentuale di cui la velocit\u00e0 deve essere aumentata.",
+                    "name": "Incrementa"
+                }
+            },
+            "name": "Aumenta la velocit\u00e0"
+        },
+        "oscillate": {
+            "description": "Controlla l'oscillazione di un ventilatore.",
+            "fields": {
+                "oscillating": {
+                    "description": "Attiva/disattiva l'oscillazione.",
+                    "name": "Oscillante"
+                }
+            },
+            "name": "Oscillazione"
+        },
+        "set_direction": {
+            "description": "Imposta la direzione di rotazione di un ventilatore.",
+            "fields": {
+                "direction": {
+                    "description": "Direzione della rotazione del ventilatore.",
+                    "name": "Direzione"
+                }
+            },
+            "name": "Imposta la direzione"
+        },
+        "set_percentage": {
+            "description": "Imposta la velocit\u00e0 di un ventilatore.",
+            "fields": {
+                "percentage": {
+                    "description": "Velocit\u00e0 del ventilatore.",
+                    "name": "Percentuale"
+                }
+            },
+            "name": "Imposta la velocit\u00e0"
+        },
+        "set_preset_mode": {
+            "description": "Imposta la modalit\u00e0 ventilatore preimpostata.",
+            "fields": {
+                "preset_mode": {
+                    "description": "Modalit\u00e0 ventilatore preimpostata.",
+                    "name": "Modalit\u00e0 preimpostata"
+                }
+            },
+            "name": "Imposta la modalit\u00e0 preimpostata"
+        },
+        "toggle": {
+            "description": "Accende/spegne un ventilatore.",
+            "name": "Commuta"
+        },
+        "turn_off": {
+            "description": "Spegne il ventilatore.",
+            "name": "Spegni"
+        },
+        "turn_on": {
+            "description": "Accende il ventilatore.",
+            "fields": {
+                "percentage": {
+                    "description": "Velocit\u00e0 del ventilatore.",
+                    "name": "Percentuale"
+                },
+                "preset_mode": {
+                    "description": "Modalit\u00e0 ventilatore preimpostata.",
+                    "name": "Modalit\u00e0 preimpostata"
+                }
+            },
+            "name": "Accendi"
+        }
+    },
+    "title": "Ventilatore"
+}

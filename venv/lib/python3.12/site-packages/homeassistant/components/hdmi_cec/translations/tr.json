@@ -1,0 +1,69 @@
+{
+    "services": {
+        "power_on": {
+            "description": "Bu i\u015flevi destekleyen t\u00fcm cihazlar\u0131 a\u00e7ar.",
+            "name": "G\u00fc\u00e7 a\u00e7\u0131k"
+        },
+        "select_device": {
+            "fields": {
+                "device": {
+                    "description": "Se\u00e7ilecek cihaz\u0131n adresi. Bir varl\u0131k kimli\u011fi, fiziksel adres veya yap\u0131land\u0131rmadan gelen takma ad olabilir.",
+                    "name": "Cihaz"
+                }
+            },
+            "name": "Cihaz se\u00e7"
+        },
+        "send_command": {
+            "description": "CEC komutunu HDMI CEC \u00f6zellikli adapt\u00f6re g\u00f6nderir.",
+            "fields": {
+                "att": {
+                    "description": "\u0130ste\u011fe ba\u011fl\u0131 parametreler.",
+                    "name": "Att"
+                },
+                "cmd": {
+                    "description": "Komutun kendisi. Ondal\u0131k say\u0131 veya onalt\u0131l\u0131k g\u00f6sterimli dize olabilir: \"0x10\".",
+                    "name": "Komuta"
+                },
+                "dst": {
+                    "description": "Komut i\u00e7in hedef. Ondal\u0131k say\u0131 veya onalt\u0131l\u0131k g\u00f6sterimli dize olabilir: \"0x10\".",
+                    "name": "Hedef"
+                },
+                "raw": {
+                    "description": "\"00:00:00:00\" bi\u00e7iminde ham CEC komutu; burada ilk iki basamak kaynak ve hedef, ikinci bayt komut ve iste\u011fe ba\u011fl\u0131 di\u011fer baytlar komut parametreleridir. Ham komut belirtilirse, di\u011fer parametreler g\u00f6z ard\u0131 edilir.",
+                    "name": "\u00c7i\u011f"
+                },
+                "src": {
+                    "description": "Komut kayna\u011f\u0131. Ondal\u0131k say\u0131 veya onalt\u0131l\u0131k g\u00f6sterimli dize olabilir: \"0x10\".",
+                    "name": "Kaynak"
+                }
+            },
+            "name": "Komut g\u00f6nder"
+        },
+        "standby": {
+            "description": "Bu fonksiyonu destekleyen t\u00fcm cihazlar\u0131 bekleme moduna al\u0131r.",
+            "name": "Bekleme modu"
+        },
+        "update": {
+            "description": "Cihazlar\u0131n durumunu a\u011fdan g\u00fcnceller.",
+            "name": "G\u00fcncelle"
+        },
+        "volume": {
+            "description": "Sistem sesini art\u0131r\u0131r veya azalt\u0131r.",
+            "fields": {
+                "down": {
+                    "description": "Sesi x seviyelerine kadar azalt\u0131r.",
+                    "name": "A\u015fa\u011f\u0131"
+                },
+                "mute": {
+                    "description": "Ses sistemini sessize al\u0131r.",
+                    "name": "Sessiz"
+                },
+                "up": {
+                    "description": "Sesi x seviyelerine kadar art\u0131r\u0131r.",
+                    "name": "Yukar\u0131"
+                }
+            },
+            "name": "Ses"
+        }
+    }
+}

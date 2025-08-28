@@ -1,0 +1,997 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Za\u0159\u00edzen\u00ed je ji\u017e nastaveno",
+            "already_in_progress": "Nastaven\u00ed ji\u017e prob\u00edh\u00e1"
+        },
+        "error": {
+            "exceeded_api_calls": "Po\u010det vol\u00e1n\u00ed API byl p\u0159ekro\u010den.",
+            "exceeded_user_api_calls": "Po\u010det vol\u00e1n\u00ed u\u017eivatelsk\u00e9ho rozhran\u00ed API byl p\u0159ekro\u010den.",
+            "invalid_token": "Token nen\u00ed platn\u00fd.",
+            "not_acceptable_terms": "Podm\u00ednky slu\u017eby nejsou akceptov\u00e1ny.",
+            "not_allowed_api_again": "U\u017eivatel NEM\u00c1 opr\u00e1vn\u011bn\u00ed k vol\u00e1n\u00ed API.",
+            "not_supported_country": "Zem\u011b nen\u00ed podporov\u00e1na.",
+            "token_unauthorized": "Token je neplatn\u00fd nebo neautorizovan\u00fd."
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "access_token": "Osobn\u00ed p\u0159\u00edstupov\u00fd token",
+                    "country": "Zem\u011b"
+                },
+                "description": "Zadejte ThinQ [PAT(Personal Access Token)]({pat_url}) vytvo\u0159en\u00fd pomoc\u00ed va\u0161eho \u00fa\u010dtu LG ThinQ.",
+                "title": "P\u0159ipojit se k ThinQ"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "clean_light_reminder": {
+                "name": "Kontrolka \u010di\u0161t\u011bn\u00ed"
+            },
+            "eco_friendly_mode": {
+                "name": "\u0160etrn\u00e9 k \u017eivotn\u00edmu prost\u0159ed\u00ed"
+            },
+            "machine_clean_reminder": {
+                "name": "P\u0159ipomenut\u00ed \u010di\u0161t\u011bn\u00ed stroje"
+            },
+            "one_touch_filter": {
+                "name": "Filtr \u010derstv\u00e9ho vzduchu"
+            },
+            "operation_mode": {
+                "name": "V\u00fdkon"
+            },
+            "power_save_enabled": {
+                "name": "Re\u017eim \u00faspory energie"
+            },
+            "remote_control_enabled": {
+                "name": "Vzd\u00e1len\u00fd start"
+            },
+            "remote_control_enabled_for_location": {
+                "name": "Vzd\u00e1len\u00fd start: {location}"
+            },
+            "rinse_refill": {
+                "name": "Je nutn\u00e9 doplnit oplachova\u010d"
+            },
+            "sabbath_mode": {
+                "name": "Sabat"
+            },
+            "signal_level": {
+                "name": "Zvuk zvonku"
+            }
+        },
+        "climate": {
+            "climate_air_conditioner": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "auto": "Auto",
+                            "high": "Vysok\u00fd",
+                            "low": "N\u00edzk\u00fd",
+                            "mid": "St\u0159edn\u00ed",
+                            "power": "V\u00fdkon",
+                            "slow": "Pomal\u00fd"
+                        }
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "air_clean": "\u010ci\u0161t\u011bn\u00ed vzduchu",
+                            "aroma": "V\u016fn\u011b",
+                            "energy_saving": "\u00daspora energie"
+                        }
+                    }
+                }
+            }
+        },
+        "event": {
+            "error": {
+                "name": "Chyba",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "block_error": "\u010ci\u0161t\u011bn\u00ed se zastavilo. Zkontrolujte p\u0159ek\u00e1\u017eky.",
+                            "brush_error": "Pohybliv\u00fd kart\u00e1\u010d m\u00e1 probl\u00e9m",
+                            "bubble_error": "Chyba bubliny",
+                            "child_lock_active_error": "D\u011btsk\u00fd z\u00e1mek",
+                            "cliff_error": "Senzor ochrany proti p\u00e1du m\u00e1 chybu",
+                            "clutch_error": "Chyba spojky",
+                            "compressor_error": "Chyba kompresoru",
+                            "dispensing_error": "Chyba d\u00e1vkova\u010de",
+                            "door_close_error": "Chyba zav\u0159en\u00ed dve\u0159\u00ed",
+                            "door_lock_error": "Chyba z\u00e1mku dve\u0159\u00ed",
+                            "door_open_error": "Dve\u0159e otev\u0159eny",
+                            "door_sensor_error": "Chyba senzoru dve\u0159\u00ed",
+                            "drainmotor_error": "Chyba vypou\u0161t\u011bn\u00ed",
+                            "dust_full_error": "N\u00e1doba na prach je pln\u00e1 a je t\u0159eba ji vypr\u00e1zdnit",
+                            "empty_water_alert_error": "Vypr\u00e1zdnit vodu",
+                            "fan_motor_error": "Chyba z\u00e1mku ventil\u00e1toru",
+                            "filter_clogging_error": "Chyba filtru",
+                            "frozen_error": "Chyba detekce zamrznut\u00ed",
+                            "heater_circuit_error": "Porucha topn\u00e9ho okruhu",
+                            "high_power_supply_error": "Chyba nap\u00e1jen\u00ed",
+                            "high_temperature_detection_error": "Chyba vysok\u00e9 teploty",
+                            "inner_lid_open_error": "Chyba otev\u0159en\u00ed v\u00edka",
+                            "ir_sensor_error": "Chyba IR senzoru",
+                            "le2_error": "Chyba LE2",
+                            "le_error": "Chyba LE",
+                            "left_wheel_error": "Lev\u00e9 kolo m\u00e1 probl\u00e9m",
+                            "locked_motor_error": "Chyba motoru driveru",
+                            "mop_error": "Bez p\u0159ipojen\u00e9ho mopu nelze spr\u00e1vn\u011b pracovat",
+                            "motor_error": "Probl\u00e9m s motorem",
+                            "motor_lock_error": "Chyba z\u00e1mku motoru",
+                            "move_error": "Kola se nedot\u00fdkaj\u00ed podlahy",
+                            "need_water_drain": "Vypr\u00e1zdnit vodu",
+                            "need_water_replenishment": "Naplnit vodu",
+                            "no_battery_error": "Baterie robotick\u00e9ho vysava\u010de je vybit\u00e1",
+                            "no_dust_bin_error": "N\u00e1doba na prach nen\u00ed nainstalov\u00e1na",
+                            "no_filter_error": "Chyba filtru",
+                            "out_of_balance_error": "Nevyv\u00e1\u017een\u00e1 z\u00e1t\u011b\u017e",
+                            "overfill_error": "Chyba p\u0159epln\u011bn\u00ed",
+                            "part_malfunction_error": "Chyba AIE",
+                            "power_code_connection_error": "Chyba p\u0159ipojen\u00ed nap\u00e1jec\u00edho kabelu",
+                            "power_fail_error": "V\u00fdpadek nap\u00e1jen\u00ed",
+                            "right_wheel_error": "Prav\u00e9 kolo m\u00e1 probl\u00e9m",
+                            "stack_error": "Chyba skl\u00e1d\u00e1n\u00ed",
+                            "steam_heat_error": "Chyba parn\u00edho oh\u0159\u00edva\u010de",
+                            "suction_blocked_error": "Sac\u00ed motor je ucpan\u00fd",
+                            "temperature_sensor_error": "Chyba termistoru",
+                            "time_to_run_the_tub_clean_cycle_error": "Doporu\u010den\u00ed k \u010di\u0161t\u011bn\u00ed bubnu",
+                            "timeout_error": "Chyba \u010dasov\u00e9ho limitu",
+                            "turbidity_sensor_error": "Chyba senzoru z\u00e1kalu",
+                            "unable_to_lock_error": "Chyba z\u00e1mku dve\u0159\u00ed",
+                            "unbalanced_load_error": "Nevyv\u00e1\u017een\u00e1 z\u00e1t\u011b\u017e",
+                            "unknown_error": "Produkt vy\u017eaduje pozornost",
+                            "vibration_sensor_error": "Chyba senzoru vibrac\u00ed",
+                            "water_drain_error": "Chyba vypou\u0161t\u011bn\u00ed vody",
+                            "water_leakage_error": "Probl\u00e9m s \u00fanikem vody",
+                            "water_leaks_error": "Probl\u00e9m s \u00fanikem vody",
+                            "water_level_sensor_error": "Chyba vodn\u00edho senzoru",
+                            "water_supply_error": "Chyba dod\u00e1vky vody"
+                        }
+                    }
+                }
+            },
+            "notification": {
+                "name": "Ozn\u00e1men\u00ed",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "charging_is_complete": "Nab\u00edjen\u00ed je dokon\u010deno",
+                            "cleaning_is_complete": "Cyklus je ukon\u010den",
+                            "cleaning_is_completed": "\u010ci\u0161t\u011bn\u00ed je dokon\u010deno",
+                            "cleaning_is_failed": "\u010ci\u0161t\u011bn\u00ed se nezda\u0159ilo",
+                            "cooking_is_complete": "Vypnuto",
+                            "door_is_open": "Dve\u0159e jsou otev\u0159en\u00e9",
+                            "drying_failed": "V su\u0161i\u010dce do\u0161lo k chyb\u011b",
+                            "drying_is_complete": "Su\u0161en\u00ed je dokon\u010deno",
+                            "error_during_cleaning": "\u010ci\u0161t\u011bn\u00ed bylo zastaveno kv\u016fli chyb\u011b",
+                            "error_during_washing": "V pra\u010dce do\u0161lo k chyb\u011b",
+                            "error_has_occurred": "Do\u0161lo k chyb\u011b",
+                            "frozen_is_complete": "Ice plus je hotovo",
+                            "homeguard_is_stopped": "HomeGuard byl zastaven",
+                            "lack_of_water": "V n\u00e1dr\u017ei na vodu nen\u00ed voda",
+                            "motion_is_detected": "Fotografie je odesl\u00e1na, kdy\u017e je b\u011bhem HomeGuard detekov\u00e1n pohyb",
+                            "need_to_check_location": "Je vy\u017eadov\u00e1na kontrola polohy",
+                            "pollution_is_high": "Stav ovzdu\u0161\u00ed se rychle zhor\u0161uje",
+                            "preheating_is_complete": "P\u0159edeh\u0159\u00edv\u00e1n\u00ed je hotovo",
+                            "rinse_is_not_enough": "Pro lep\u0161\u00ed su\u0161en\u00ed p\u0159idejte le\u0161tidlo",
+                            "salt_refill_is_needed": "Pro lep\u0161\u00ed zm\u011bk\u010den\u00ed p\u0159idejte s\u016fl",
+                            "scheduled_cleaning_starts": "Pl\u00e1novan\u00e9 zah\u00e1jen\u00ed \u00faklidu",
+                            "styling_is_complete": "Styling je dokon\u010den",
+                            "time_to_change_filter": "Je \u010das vym\u011bnit filtr",
+                            "time_to_change_water_filter": "Je t\u0159eba vym\u011bnit vodn\u00ed filtr",
+                            "time_to_clean": "Je nutn\u00e9 samo\u010di\u0161t\u011bn\u00ed",
+                            "time_to_clean_filter": "Je \u010das vy\u010distit filtr",
+                            "timer_is_complete": "\u010casova\u010d byl dokon\u010den",
+                            "washing_is_complete": "Myt\u00ed je dokon\u010deno",
+                            "water_is_full": "N\u00e1doba na vodu je pln\u00e1",
+                            "water_leak_has_occurred": "My\u010dka zjistila \u00fanik vody"
+                        }
+                    }
+                }
+            }
+        },
+        "number": {
+            "fan_speed": {
+                "name": "Ventil\u00e1tor"
+            },
+            "lamp_brightness": {
+                "name": "Sv\u011btlo"
+            },
+            "light_status": {
+                "name": "Sv\u011btlo"
+            },
+            "relative_hour_to_start": {
+                "name": "Pl\u00e1novan\u00e9 zapnut\u00ed"
+            },
+            "relative_hour_to_start_for_location": {
+                "name": "Zapnout pl\u00e1n {location}"
+            },
+            "relative_hour_to_start_wm": {
+                "name": "Zpo\u017ed\u011bn\u00ed za\u010d\u00edn\u00e1 v"
+            },
+            "relative_hour_to_start_wm_for_location": {
+                "name": "Zpo\u017ed\u011bn\u00ed {location} za\u010d\u00edn\u00e1 za"
+            },
+            "relative_hour_to_stop": {
+                "name": "Pl\u00e1novan\u00e9 vypnut\u00ed"
+            },
+            "relative_hour_to_stop_for_location": {
+                "name": "Vypnout pl\u00e1n {location}"
+            },
+            "relative_hour_to_stop_wm": {
+                "name": "Zpo\u017ed\u011bn\u00ed kon\u010d\u00ed v"
+            },
+            "relative_hour_to_stop_wm_for_location": {
+                "name": "Zpo\u017ed\u011bn\u00ed {location} kon\u010d\u00ed za"
+            },
+            "sleep_timer_relative_hour_to_stop": {
+                "name": "\u010casova\u010d sp\u00e1nku"
+            },
+            "sleep_timer_relative_hour_to_stop_for_location": {
+                "name": "\u010casova\u010d sp\u00e1nku {location}"
+            },
+            "target_humidity": {
+                "name": "C\u00edlov\u00e1 vlhkost"
+            },
+            "target_temperature": {
+                "name": "Teplota"
+            },
+            "target_temperature_for_location": {
+                "name": "Teplota {location}"
+            },
+            "wind_temperature": {
+                "name": "Teplota v\u011btru"
+            }
+        },
+        "select": {
+            "air_clean_operation_mode": {
+                "name": "\u010ci\u0161t\u011bn\u00ed vzduchu",
+                "state": {
+                    "start": "Spustit",
+                    "stop": "Zastavit"
+                }
+            },
+            "cook_mode": {
+                "name": "Re\u017eim va\u0159en\u00ed",
+                "state": {
+                    "bake": "Pe\u010den\u00ed",
+                    "convection_bake": "Konvek\u010dn\u00ed pe\u010den\u00ed",
+                    "convection_roast": "Konvek\u010dn\u00ed pra\u017een\u00ed",
+                    "crisp_convection": "Konvek\u010dn\u00ed k\u0159upav\u00e9",
+                    "roast": "Pe\u010den\u011b"
+                }
+            },
+            "cook_mode_for_location": {
+                "name": "Re\u017eim va\u0159en\u00ed {location}",
+                "state": {
+                    "bake": "Pe\u010den\u00ed",
+                    "convection_bake": "Konvek\u010dn\u00ed pe\u010den\u00ed",
+                    "convection_roast": "Konvek\u010dn\u00ed pra\u017een\u00ed",
+                    "crisp_convection": "Konvek\u010dn\u00ed k\u0159upav\u00e9",
+                    "roast": "Pe\u010den\u011b"
+                }
+            },
+            "current_job_mode": {
+                "name": "Pracovn\u00ed re\u017eim",
+                "state": {
+                    "air_clean": "\u010ci\u0161t\u011bn\u00ed",
+                    "auto": "Auto",
+                    "baby_care": "Re\u017eim p\u00e9\u010de o d\u00edt\u011b",
+                    "circulator": "Zv\u00fd\u0161en\u00ed v\u00fdkonu",
+                    "clean": "Jedin\u00e9",
+                    "direct_clean": "Re\u017eim Direct",
+                    "dual_clean": "Dual",
+                    "fast": "Turbo",
+                    "heat_pump": "Tepeln\u00e9 \u010derpadlo",
+                    "humidify": "Mlha",
+                    "humidify_and_air_clean": "Mlha a \u010di\u0161t\u011bn\u00ed",
+                    "humidity": "Vlhko",
+                    "nature_clean": "P\u0159irozen\u00fd re\u017eim",
+                    "pet_clean": "Re\u017eim dom\u00e1c\u00edho mazl\u00ed\u010dka",
+                    "silent": "Tich\u00fd",
+                    "sleep": "Sp\u00e1nek",
+                    "smart": "Chytr\u00fd re\u017eim",
+                    "space_clean": "Dif\u00fazn\u00ed re\u017eim",
+                    "spot_clean": "\u0160irok\u00fd re\u017eim",
+                    "turbo": "Turbo",
+                    "up_feature": "Dal\u0161\u00ed re\u017eim",
+                    "vacation": "Dovolen\u00e1"
+                }
+            },
+            "display_light": {
+                "name": "Jas displeje",
+                "state": {
+                    "level_1": "Jas 1",
+                    "level_2": "Jas 2",
+                    "level_3": "Jas 3",
+                    "off": "Vypnuto"
+                }
+            },
+            "fresh_air_filter": {
+                "name": "Filtr \u010derstv\u00e9ho vzduchu",
+                "state": {
+                    "auto": "Auto",
+                    "off": "Vypnuto",
+                    "power": "V\u00fdkon",
+                    "replace": "Vym\u011bnit filtr",
+                    "smart_off": "Vypnuto",
+                    "smart_on": "Chytr\u00e9 bezpe\u010dn\u00e9 \u00falo\u017ei\u0161t\u011b",
+                    "smart_power": "Chytr\u00e9 bezpe\u010dn\u00e9 \u00falo\u017ei\u0161t\u011b"
+                }
+            },
+            "hygiene_dry_mode": {
+                "name": "Re\u017eim su\u0161en\u00ed",
+                "state": {
+                    "fast": "Rychle",
+                    "normal": "Jemn\u00e9",
+                    "off": "Vypnuto",
+                    "silent": "Tich\u00fd"
+                }
+            },
+            "light_brightness": {
+                "name": "Sv\u011btlo"
+            },
+            "monitoring_enabled": {
+                "name": "Senzor kvality vzduchu",
+                "state": {
+                    "always": "V\u017edy zapnuto",
+                    "on_working": "Zapne se s produktem"
+                }
+            },
+            "operation_mode": {
+                "name": "Provoz",
+                "state": {
+                    "cancel": "Zru\u0161it",
+                    "power_off": "Vypnout",
+                    "preheating": "P\u0159edeh\u0159ev",
+                    "start": "Spustit",
+                    "stop": "Zastavit",
+                    "wake_up": "Re\u017eim sp\u00e1nku je vypnut\u00fd"
+                }
+            },
+            "operation_mode_for_location": {
+                "name": "Provoz {location}",
+                "state": {
+                    "cancel": "Zru\u0161it",
+                    "power_off": "Vypnout",
+                    "preheating": "P\u0159edeh\u0159ev",
+                    "start": "Spustit",
+                    "stop": "Zastavit",
+                    "wake_up": "Re\u017eim sp\u00e1nku je vypnut\u00fd"
+                }
+            },
+            "wind_angle": {
+                "name": "Oto\u010den\u00ed",
+                "state": {
+                    "angle_140": "140\u00b0",
+                    "angle_45": "45\u00b0",
+                    "angle_60": "60\u00b0",
+                    "angle_90": "90\u00b0",
+                    "off": "Vypnuto"
+                }
+            },
+            "wind_strength": {
+                "name": "Rychlost",
+                "state": {
+                    "auto": "Auto",
+                    "high": "Vysok\u00fd",
+                    "low": "N\u00edzk\u00fd",
+                    "mid": "St\u0159edn\u00ed",
+                    "power": "Turbo",
+                    "slow": "Pomal\u00fd",
+                    "turbo": "Turbo",
+                    "wind_1": "Krok 1",
+                    "wind_10": "Krok 10",
+                    "wind_2": "Krok 2",
+                    "wind_3": "Krok 3",
+                    "wind_4": "Krok 4",
+                    "wind_5": "Krok 5",
+                    "wind_6": "Krok 6",
+                    "wind_7": "Krok 7",
+                    "wind_8": "Krok 8",
+                    "wind_9": "Krok 9"
+                }
+            }
+        },
+        "sensor": {
+            "absolute_to_start": {
+                "name": "Pl\u00e1novan\u00e9 zapnut\u00ed"
+            },
+            "absolute_to_start_for_location": {
+                "name": "Zapnout pl\u00e1n {location}"
+            },
+            "absolute_to_stop": {
+                "name": "Pl\u00e1novan\u00e9 vypnut\u00ed"
+            },
+            "absolute_to_stop_for_location": {
+                "name": "Vypnout pl\u00e1n {location}"
+            },
+            "battery_level": {
+                "name": "Baterie",
+                "state": {
+                    "high": "Pln\u00e1",
+                    "low": "N\u00edzk\u00e1",
+                    "mid": "St\u0159edn\u00ed",
+                    "warning": "Pr\u00e1zdn\u00e1"
+                }
+            },
+            "beer_remain": {
+                "name": "Pr\u016fb\u011bh receptu"
+            },
+            "brightness": {
+                "name": "Intenzita osv\u011btlen\u00ed"
+            },
+            "brightness_for_location": {
+                "name": "Intenzita osv\u011btlen\u00ed {location}"
+            },
+            "cock_state": {
+                "name": "UVnano",
+                "state": {
+                    "cleaning": "Prob\u00edh\u00e1",
+                    "normal": "P\u0159ipraveno"
+                }
+            },
+            "current_dish_washing_course": {
+                "name": "Aktu\u00e1ln\u00ed cyklus",
+                "state": {
+                    "auto": "Auto",
+                    "delicate": "Jemn\u00e9",
+                    "download_cycle": "St\u00e1hnout cyklus",
+                    "eco": "EKO",
+                    "express": "Expresn\u00ed",
+                    "heavy": "Intenzivn\u00ed",
+                    "machine_clean": "Vy\u010di\u0161t\u011bn\u00ed stroje",
+                    "normal": "Norm\u00e1ln\u00ed",
+                    "quick": "Rychl\u00e9",
+                    "refresh": "Osv\u011b\u017eit",
+                    "rinse": "Oplach",
+                    "short_mode": "Kr\u00e1tk\u00fd re\u017eim",
+                    "spray": "Sprej",
+                    "steam": "Parn\u00ed p\u00e9\u010de",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_job_mode": {
+                "name": "Pracovn\u00ed re\u017eim",
+                "state": {
+                    "air_clean": "Vy\u010distit",
+                    "auto": "Auto",
+                    "clothes_dry": "Pr\u00e1dlo",
+                    "edge": "\u010ci\u0161t\u011bn\u00ed hran",
+                    "heat_pump": "Tepeln\u00e9 \u010derpadlo",
+                    "high": "V\u00fdkon",
+                    "intensive_dry": "M\u00edsto",
+                    "macro": "Vlastn\u00ed re\u017eim",
+                    "mop": "Vyt\u00edr\u00e1n\u00ed",
+                    "normal": "Norm\u00e1ln\u00ed",
+                    "off": "Vypnuto",
+                    "quiet_humidity": "Tich\u00fd",
+                    "rapid_humidity": "Jet",
+                    "sector_base": "Bu\u0148ka po bu\u0148ce",
+                    "select": "M\u016fj prostor",
+                    "smart_humidity": "Chytr\u00fd",
+                    "spot": "Re\u017eim spir\u00e1lov\u00e9ho bodu",
+                    "turbo": "Turbo",
+                    "vacation": "Dovolen\u00e1",
+                    "zigzag": "Sem tam"
+                }
+            },
+            "current_job_mode_stick_cleaner": {
+                "name": "Pracovn\u00ed re\u017eim",
+                "state": {
+                    "auto": "N\u00edzk\u00fd v\u00fdkon",
+                    "high": "V\u00fdkon",
+                    "mop": "Vyt\u00edr\u00e1n\u00ed",
+                    "normal": "Norm\u00e1ln\u00ed",
+                    "off": "Vypnuto",
+                    "turbo": "Turbo"
+                }
+            },
+            "current_state": {
+                "name": "Aktu\u00e1ln\u00ed stav",
+                "state": {
+                    "add_drain": "Pln\u011bn\u00ed",
+                    "as_pop_up": "Produkt vy\u017eaduje pozornost",
+                    "cancel": "Zru\u0161it",
+                    "carbonation": "Karbonizace",
+                    "change_condition": "Zm\u011bna nastaven\u00ed",
+                    "charging": "Nab\u00edjen\u00ed",
+                    "charging_complete": "Nab\u00edjen\u00ed dokon\u010deno",
+                    "checking_turbidity": "Detekov\u00e1n\u00ed \u00farovn\u011b p\u016fdy",
+                    "cleaning": "\u010ci\u0161t\u011bn\u00ed",
+                    "cleaning_is_done": "\u010ci\u0161t\u011bn\u00ed je hotovo",
+                    "complete": "Hotovo",
+                    "cook": "Va\u0159en\u00ed",
+                    "cook_complete": "Hotovo",
+                    "cooking_in_progress": "Va\u0159en\u00ed",
+                    "cool_down": "Ochladit",
+                    "cooling": "Chlazen\u00ed",
+                    "detecting": "Detekov\u00e1n\u00ed",
+                    "detergent_amount": "Poskytov\u00e1n\u00ed informac\u00ed o mno\u017estv\u00ed prac\u00edho prost\u0159edku",
+                    "diagnosis": "Prob\u00edh\u00e1 inteligentn\u00ed diagnostika",
+                    "dispensing": "Automatick\u00e9 d\u00e1vkov\u00e1n\u00ed",
+                    "display_loadsize": "Objem",
+                    "done": "Hotovo",
+                    "drying": "Su\u0161en\u00ed",
+                    "during_aging": "St\u00e1rnut\u00ed",
+                    "during_fermentation": "Kva\u0161en\u00ed",
+                    "end": "Dokon\u010deno",
+                    "end_cooling": "Su\u0161en\u00ed",
+                    "error": "Produkt vy\u017eaduje pozornost",
+                    "extracting_capsule": "Va\u0159en\u00ed kapsl\u00ed",
+                    "extraction_mode": "Ukl\u00e1d\u00e1n\u00ed",
+                    "firmware": "Aktualizov\u00e1n\u00ed firmwaru",
+                    "fota": "Aktualizov\u00e1n\u00ed",
+                    "frozen_prevent_initial": "Pohotovostn\u00ed ochrana proti zamrznut\u00ed",
+                    "frozen_prevent_pause": "Ochrana proti zamrznut\u00ed pozastavena",
+                    "frozen_prevent_running": "Prob\u00edh\u00e1 ochrana proti zamrznut\u00ed",
+                    "homing": "Pohyb",
+                    "initial": "P\u0159ipraveno",
+                    "initializing": "P\u0159ipraveno",
+                    "lock": "Ovl\u00e1dac\u00ed z\u00e1mek",
+                    "macrosector": "D\u00e1lkov\u00e9 ovl\u00e1d\u00e1n\u00ed se pou\u017e\u00edv\u00e1",
+                    "melting": "Rozpou\u0161t\u011bn\u00ed mladiny",
+                    "monitoring_detecting": "HomeGuard je aktivn\u00ed",
+                    "monitoring_moving": "Cesta do v\u00fdchoz\u00edho bodu",
+                    "monitoring_positioning": "Nastaven\u00ed v\u00fdchoz\u00edho bodu HomeGuard",
+                    "night_dry": "No\u010dn\u00ed su\u0161en\u00ed",
+                    "oven_setting": "Varn\u00e1 deska p\u0159ipojena",
+                    "pause": "Pozastaveno",
+                    "paused": "Pozastaveno",
+                    "power_fail": "Selh\u00e1n\u00ed nap\u00e1jen\u00ed",
+                    "power_off": "Vypnuto",
+                    "power_on": "Zapnuto",
+                    "preference": "Nastaven\u00ed",
+                    "preheat": "P\u0159edeh\u0159ev",
+                    "preheat_complete": "P\u0159edeh\u0159\u00edv\u00e1n\u00ed je hotovo",
+                    "preheating": "P\u0159edeh\u0159ev",
+                    "preheating_is_done": "P\u0159edeh\u0159\u00edv\u00e1n\u00ed je hotovo",
+                    "prepareing_fermentation": "Nyn\u00ed se p\u0159ipravuje",
+                    "presteam": "P\u0159ipraveno k napa\u0159ov\u00e1n\u00ed",
+                    "prewash": "P\u0159edp\u00edrka",
+                    "proofing": "Zkou\u0161en\u00ed",
+                    "refreshing": "Osv\u011b\u017eov\u00e1n\u00ed",
+                    "reservation": "D\u00e1lkov\u00e9 ovl\u00e1d\u00e1n\u00ed se pou\u017e\u00edv\u00e1",
+                    "reserved": "Nastaveno zpo\u017ed\u011bn\u00ed",
+                    "rinse_hold": "\u010cek\u00e1n\u00ed na opl\u00e1chnut\u00ed",
+                    "rinsing": "Oplachov\u00e1n\u00ed",
+                    "running": "B\u011b\u017e\u00ed",
+                    "running_end": "Dokon\u010deno",
+                    "setdate": "D\u00e1lkov\u00e9 ovl\u00e1d\u00e1n\u00ed se pou\u017e\u00edv\u00e1",
+                    "shoes_module": "Su\u0161en\u00ed bot",
+                    "sleep": "V re\u017eimu sp\u00e1nku",
+                    "smart_grid_run": "Provozov\u00e1n\u00ed chytr\u00e9 s\u00edt\u011b",
+                    "soaking": "M\u00e1ch\u00e1n\u00ed",
+                    "softening": "Zm\u011bk\u010dova\u010d",
+                    "spinning": "Odst\u0159e\u010fov\u00e1n\u00ed",
+                    "standby": "P\u0159ipraveno",
+                    "stay": "Osv\u011b\u017een\u00ed",
+                    "steam": "Osv\u011b\u017een\u00ed",
+                    "steam_softening": "Zm\u011bk\u010den\u00ed p\u00e1rou",
+                    "sterilize": "Sterilizovat",
+                    "temperature_stabilization": "Regulace teploty",
+                    "working": "\u010ci\u0161t\u011bn\u00ed",
+                    "wrinkle_care": "Nema\u010dkav\u00e9"
+                }
+            },
+            "current_state_for_location": {
+                "name": "Aktu\u00e1ln\u00ed stav {location}",
+                "state": {
+                    "add_drain": "Pln\u011bn\u00ed",
+                    "as_pop_up": "Produkt vy\u017eaduje pozornost",
+                    "cancel": "Zru\u0161it",
+                    "carbonation": "Karbonizace",
+                    "change_condition": "Zm\u011bna nastaven\u00ed",
+                    "charging": "Nab\u00edjen\u00ed",
+                    "charging_complete": "Nab\u00edjen\u00ed dokon\u010deno",
+                    "checking_turbidity": "Detekov\u00e1n\u00ed \u00farovn\u011b p\u016fdy",
+                    "cleaning": "\u010ci\u0161t\u011bn\u00ed",
+                    "cleaning_is_done": "\u010ci\u0161t\u011bn\u00ed je hotovo",
+                    "complete": "Hotovo",
+                    "cook": "Va\u0159en\u00ed",
+                    "cook_complete": "Hotovo",
+                    "cooking_in_progress": "Va\u0159en\u00ed",
+                    "cool_down": "Ochladit",
+                    "cooling": "Chlazen\u00ed",
+                    "detecting": "Detekov\u00e1n\u00ed",
+                    "detergent_amount": "Poskytov\u00e1n\u00ed informac\u00ed o mno\u017estv\u00ed prac\u00edho prost\u0159edku",
+                    "diagnosis": "Prob\u00edh\u00e1 inteligentn\u00ed diagnostika",
+                    "dispensing": "Automatick\u00e9 d\u00e1vkov\u00e1n\u00ed",
+                    "display_loadsize": "Objem",
+                    "done": "Hotovo",
+                    "drying": "Su\u0161en\u00ed",
+                    "during_aging": "St\u00e1rnut\u00ed",
+                    "during_fermentation": "Kva\u0161en\u00ed",
+                    "end": "Dokon\u010deno",
+                    "end_cooling": "Su\u0161en\u00ed",
+                    "error": "Produkt vy\u017eaduje pozornost",
+                    "extracting_capsule": "Va\u0159en\u00ed kapsl\u00ed",
+                    "extraction_mode": "Ukl\u00e1d\u00e1n\u00ed",
+                    "firmware": "Aktualizov\u00e1n\u00ed firmwaru",
+                    "fota": "Aktualizov\u00e1n\u00ed",
+                    "frozen_prevent_initial": "Pohotovostn\u00ed ochrana proti zamrznut\u00ed",
+                    "frozen_prevent_pause": "Ochrana proti zamrznut\u00ed pozastavena",
+                    "frozen_prevent_running": "Prob\u00edh\u00e1 ochrana proti zamrznut\u00ed",
+                    "homing": "Pohyb",
+                    "initial": "P\u0159ipraveno",
+                    "initializing": "P\u0159ipraveno",
+                    "lock": "Ovl\u00e1dac\u00ed z\u00e1mek",
+                    "macrosector": "D\u00e1lkov\u00e9 ovl\u00e1d\u00e1n\u00ed se pou\u017e\u00edv\u00e1",
+                    "melting": "Rozpou\u0161t\u011bn\u00ed mladiny",
+                    "monitoring_detecting": "HomeGuard je aktivn\u00ed",
+                    "monitoring_moving": "Cesta do v\u00fdchoz\u00edho bodu",
+                    "monitoring_positioning": "Nastaven\u00ed v\u00fdchoz\u00edho bodu HomeGuard",
+                    "night_dry": "No\u010dn\u00ed su\u0161en\u00ed",
+                    "oven_setting": "Varn\u00e1 deska p\u0159ipojena",
+                    "pause": "Pozastaveno",
+                    "paused": "Pozastaveno",
+                    "power_fail": "Selh\u00e1n\u00ed nap\u00e1jen\u00ed",
+                    "power_off": "Vypnuto",
+                    "power_on": "Zapnuto",
+                    "preference": "Nastaven\u00ed",
+                    "preheat": "P\u0159edeh\u0159ev",
+                    "preheat_complete": "P\u0159edeh\u0159\u00edv\u00e1n\u00ed je hotovo",
+                    "preheating": "P\u0159edeh\u0159ev",
+                    "preheating_is_done": "P\u0159edeh\u0159\u00edv\u00e1n\u00ed je hotovo",
+                    "prepareing_fermentation": "Nyn\u00ed se p\u0159ipravuje",
+                    "presteam": "P\u0159ipraveno k napa\u0159ov\u00e1n\u00ed",
+                    "prewash": "P\u0159edp\u00edrka",
+                    "proofing": "Zkou\u0161en\u00ed",
+                    "refreshing": "Osv\u011b\u017eov\u00e1n\u00ed",
+                    "reservation": "D\u00e1lkov\u00e9 ovl\u00e1d\u00e1n\u00ed se pou\u017e\u00edv\u00e1",
+                    "reserved": "Nastaveno zpo\u017ed\u011bn\u00ed",
+                    "rinse_hold": "\u010cek\u00e1n\u00ed na opl\u00e1chnut\u00ed",
+                    "rinsing": "Oplachov\u00e1n\u00ed",
+                    "running": "B\u011b\u017e\u00ed",
+                    "running_end": "Dokon\u010deno",
+                    "setdate": "D\u00e1lkov\u00e9 ovl\u00e1d\u00e1n\u00ed se pou\u017e\u00edv\u00e1",
+                    "shoes_module": "Su\u0161en\u00ed bot",
+                    "sleep": "V re\u017eimu sp\u00e1nku",
+                    "smart_grid_run": "Provozov\u00e1n\u00ed chytr\u00e9 s\u00edt\u011b",
+                    "soaking": "M\u00e1ch\u00e1n\u00ed",
+                    "softening": "Zm\u011bk\u010dova\u010d",
+                    "spinning": "Odst\u0159e\u010fov\u00e1n\u00ed",
+                    "standby": "P\u0159ipraveno",
+                    "stay": "Osv\u011b\u017een\u00ed",
+                    "steam": "Osv\u011b\u017een\u00ed",
+                    "steam_softening": "Zm\u011bk\u010den\u00ed p\u00e1rou",
+                    "sterilize": "Sterilizovat",
+                    "temperature_stabilization": "Regulace teploty",
+                    "working": "\u010ci\u0161t\u011bn\u00ed",
+                    "wrinkle_care": "Nema\u010dkav\u00e9"
+                }
+            },
+            "current_temperature": {
+                "name": "Aktu\u00e1ln\u00ed teplota"
+            },
+            "day_target_temperature": {
+                "name": "Denn\u00ed r\u016fst teploty"
+            },
+            "day_target_temperature_for_location": {
+                "name": "Ddenn\u00ed r\u016fst teploty {location}"
+            },
+            "duration": {
+                "name": "Doba sv\u00edcen\u00ed"
+            },
+            "duration_for_location": {
+                "name": "Doba sv\u00edcen\u00ed {location}"
+            },
+            "elapsed_day_state": {
+                "name": "Obdob\u00ed va\u0159en\u00ed"
+            },
+            "elapsed_day_total": {
+                "name": "Doba va\u0159en\u00ed"
+            },
+            "filter_lifetime": {
+                "name": "Zb\u00fdvaj\u00edc\u00ed filtr"
+            },
+            "flavor_info": {
+                "name": "Chu\u0165"
+            },
+            "fresh_air_filter": {
+                "name": "Filtr \u010derstv\u00e9ho vzduchu",
+                "state": {
+                    "auto": "Auto",
+                    "off": "Vypnuto",
+                    "power": "V\u00fdkon",
+                    "replace": "Vym\u011bnit filtr",
+                    "smart_off": "Vypnuto",
+                    "smart_on": "Chytr\u00e9 bezpe\u010dn\u00e9 \u00falo\u017ei\u0161t\u011b",
+                    "smart_power": "Chytr\u00e9 bezpe\u010dn\u00e9 \u00falo\u017ei\u0161t\u011b"
+                }
+            },
+            "growth_mode": {
+                "name": "Re\u017eim",
+                "state": {
+                    "ext_expert": "Vlastn\u00ed re\u017eim p\u011bstov\u00e1n\u00ed",
+                    "ext_flower": "Kv\u011btiny",
+                    "ext_herb": "Byliny",
+                    "ext_leaf": "Zelenina",
+                    "standard": "Auto"
+                }
+            },
+            "growth_mode_for_location": {
+                "name": "Re\u017eim {location}",
+                "state": {
+                    "ext_expert": "Vlastn\u00ed re\u017eim p\u011bstov\u00e1n\u00ed",
+                    "ext_flower": "Kv\u011btiny",
+                    "ext_herb": "Byliny",
+                    "ext_leaf": "Zelenina",
+                    "standard": "Auto"
+                }
+            },
+            "hop_oil_info": {
+                "name": "Chmel"
+            },
+            "light_start": {
+                "name": "Sv\u011btla na \u010das"
+            },
+            "light_start_for_location": {
+                "name": "Sv\u011btla na \u010das {location}"
+            },
+            "monitoring_enabled": {
+                "name": "Senzor kvality vzduchu",
+                "state": {
+                    "always": "V\u017edy zapnuto",
+                    "on_working": "Zapne se s produktem"
+                }
+            },
+            "night_target_temperature": {
+                "name": "No\u010dn\u00ed r\u016fstov\u00e1 teplota"
+            },
+            "night_target_temperature_for_location": {
+                "name": "No\u010dn\u00ed r\u016fstov\u00e1 teplota {location}"
+            },
+            "odor_level": {
+                "name": "Z\u00e1pach",
+                "state": {
+                    "invalid": "Neplatn\u00fd",
+                    "normal": "Norm\u00e1ln\u00ed",
+                    "strong": "Siln\u00fd",
+                    "very_strong": "Velmi siln\u00fd",
+                    "weak": "Slab\u00fd"
+                }
+            },
+            "personalization_mode": {
+                "name": "Osobn\u00ed re\u017eim",
+                "state": {
+                    "auto_inside": "Automatick\u00fd re\u017eim",
+                    "auto_outside": "Re\u017eim blokov\u00e1n\u00ed",
+                    "baby": "Re\u017eim p\u00e9\u010de o d\u00edt\u011b",
+                    "cooking": "Re\u017eim va\u0159en\u00ed",
+                    "exercise": "Re\u017eim cvi\u010den\u00ed",
+                    "others": "Ostatn\u00ed",
+                    "pet": "Re\u017eim dom\u00e1c\u00edho mazl\u00ed\u010dka",
+                    "sick_house": "Re\u017eim nov\u00e9ho domova",
+                    "sleep": "Re\u017eim sp\u00e1nku",
+                    "smoke": "Re\u017eim kou\u0159e"
+                }
+            },
+            "power_level": {
+                "name": "\u00darove\u0148 v\u00fdkonu"
+            },
+            "power_level_for_location": {
+                "name": "\u00darove\u0148 v\u00fdkonu {location}"
+            },
+            "recipe_name": {
+                "name": "Recept na dom\u00e1c\u00ed va\u0159en\u00ed",
+                "state": {
+                    "ipa": "IPA",
+                    "my_recipe": "M\u016fj recept",
+                    "pale_ale": "Sv\u011btl\u00e9 pivo",
+                    "pilsner": "Plze\u0148sk\u00e9",
+                    "red_ale": "\u010cerven\u00e9 pivo",
+                    "stout": "Stout",
+                    "wheat": "P\u0161enice"
+                }
+            },
+            "relative_to_start": {
+                "name": "Pl\u00e1novan\u00e9 zapnut\u00ed"
+            },
+            "relative_to_start_for_location": {
+                "name": "Zapnout pl\u00e1n {location}"
+            },
+            "relative_to_start_wm": {
+                "name": "Zpo\u017ed\u011bn\u00ed za\u010d\u00edn\u00e1 v"
+            },
+            "relative_to_start_wm_for_location": {
+                "name": "Zpo\u017ed\u011bn\u00ed {location} za\u010d\u00edn\u00e1 za"
+            },
+            "relative_to_stop": {
+                "name": "Pl\u00e1novan\u00e9 vypnut\u00ed"
+            },
+            "relative_to_stop_for_location": {
+                "name": "Vypnout pl\u00e1n {location}"
+            },
+            "relative_to_stop_wm": {
+                "name": "Zpo\u017ed\u011bn\u00ed kon\u010d\u00ed v"
+            },
+            "relative_to_stop_wm_for_location": {
+                "name": "Zpo\u017ed\u011bn\u00ed {location} kon\u010d\u00ed za"
+            },
+            "remain": {
+                "name": "Zb\u00fdvaj\u00edc\u00ed \u010das"
+            },
+            "remain_for_location": {
+                "name": "Zb\u00fdvaj\u00edc\u00ed \u010das {location}"
+            },
+            "rinse_level": {
+                "name": "\u00darove\u0148 d\u00e1vkova\u010de oplachovac\u00edho prost\u0159edku",
+                "state": {
+                    "rinselevel_0": "0",
+                    "rinselevel_1": "1",
+                    "rinselevel_2": "2",
+                    "rinselevel_3": "3",
+                    "rinselevel_4": "4"
+                }
+            },
+            "running": {
+                "name": "Doba b\u011bhu"
+            },
+            "running_for_location": {
+                "name": "Doba b\u011bhu {location}"
+            },
+            "sleep_timer_relative_to_stop": {
+                "name": "\u010casova\u010d sp\u00e1nku"
+            },
+            "sleep_timer_relative_to_stop_for_location": {
+                "name": "\u010casova\u010d sp\u00e1nku {location}"
+            },
+            "softening_level": {
+                "name": "\u00darove\u0148 zm\u011bk\u010den\u00ed",
+                "state": {
+                    "softeninglevel_1": "1",
+                    "softeninglevel_2": "2",
+                    "softeninglevel_3": "3",
+                    "softeninglevel_4": "4"
+                }
+            },
+            "sterilizing_state": {
+                "name": "Sterilizace vysokou teplotou",
+                "state": {
+                    "cancel": "Zru\u0161it",
+                    "off": "Vypnuto",
+                    "on": "Sterilizace"
+                }
+            },
+            "target": {
+                "name": "Doba va\u0159en\u00ed"
+            },
+            "target_for_location": {
+                "name": "Doba va\u0159en\u00ed {location}"
+            },
+            "target_temperature": {
+                "name": "Teplota",
+                "state": {
+                    "freezer": "Mraz\u00e1k",
+                    "fridge": "Ledni\u010dka",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "Maso/Ryba",
+                    "off": "Vypnuto",
+                    "rice_grain": "R\u00fd\u017ee/Obil\u00ed",
+                    "storage": "\u00dalo\u017ei\u0161t\u011b",
+                    "temperature_number": "\u010c\u00edslo",
+                    "vegetable_fruit": "Zelenina/Ovoce"
+                }
+            },
+            "target_temperature_for_location": {
+                "name": "Teplota {location}",
+                "state": {
+                    "freezer": "Mraz\u00e1k",
+                    "fridge": "Ledni\u010dka",
+                    "kimchi": "Kimchi",
+                    "meat_fish": "Maso/Ryba",
+                    "off": "Vypnuto",
+                    "rice_grain": "R\u00fd\u017ee/Obil\u00ed",
+                    "storage": "\u00dalo\u017ei\u0161t\u011b",
+                    "temperature_number": "\u010c\u00edslo",
+                    "vegetable_fruit": "Zelenina/Ovoce"
+                }
+            },
+            "temperature": {
+                "name": "Teplota"
+            },
+            "temperature_state": {
+                "name": "Teplota",
+                "state": {
+                    "high": "Vysok\u00e1",
+                    "low": "N\u00edzk\u00e1",
+                    "normal": "Dobr\u00e1"
+                }
+            },
+            "temperature_state_for_location": {
+                "name": "Teplota {location}",
+                "state": {
+                    "high": "Vysok\u00e1",
+                    "low": "N\u00edzk\u00e1",
+                    "normal": "Dobr\u00e1"
+                }
+            },
+            "total": {
+                "name": "Celkov\u00fd \u010das"
+            },
+            "total_for_location": {
+                "name": "Celkov\u00fd \u010das {location}"
+            },
+            "total_pollution_level": {
+                "name": "Celkov\u00e1 kvalita vzduchu",
+                "state": {
+                    "bad": "Nezdrav\u00e1",
+                    "good": "Dobr\u00e1",
+                    "invalid": "Neplatn\u00e1",
+                    "normal": "St\u0159edn\u00ed",
+                    "very_bad": "\u0160patn\u00e1"
+                }
+            },
+            "used_time": {
+                "name": "Pou\u017eit\u00fd vodn\u00ed filtr"
+            },
+            "water_type": {
+                "name": "Typ"
+            },
+            "wind_volume_for_location": {
+                "name": "Rychlost v\u011btru {location}"
+            },
+            "wort_info": {
+                "name": "Mladina",
+                "state": {
+                    "dark": "Tmav\u00e9",
+                    "deep_gold": "DeepGold",
+                    "hoppy": "Chmelov\u00e9",
+                    "wheat": "P\u0161enice"
+                }
+            },
+            "yeast_info": {
+                "name": "Dro\u017ed\u00ed",
+                "state": {
+                    "american_ale": "Americk\u00e9 pivo",
+                    "english_ale": "Anglick\u00e9 pivo",
+                    "lager": "Le\u017e\u00e1k",
+                    "weizen": "Weizen"
+                }
+            }
+        },
+        "switch": {
+            "auto_mode": {
+                "name": "Automatick\u00fd re\u017eim"
+            },
+            "express_mode": {
+                "name": "Ice plus"
+            },
+            "hot_water_mode": {
+                "name": "Hork\u00e1 voda"
+            },
+            "humidity_warm_mode": {
+                "name": "Tepl\u00e1 mlha"
+            },
+            "hygiene_dry_mode": {
+                "name": "Re\u017eim su\u0161en\u00ed"
+            },
+            "mood_lamp_state": {
+                "name": "N\u00e1ladov\u00e9 sv\u011btlo"
+            },
+            "operation_power": {
+                "name": "V\u00fdkon"
+            },
+            "optimal_humidity": {
+                "name": "V\u011btr\u00e1n\u00ed"
+            },
+            "power_save_enabled": {
+                "name": "\u00daspora energie"
+            },
+            "rapid_freeze": {
+                "name": "Rychl\u00e9 zmrazen\u00ed"
+            },
+            "sleep_mode": {
+                "name": "Re\u017eim sp\u00e1nku"
+            },
+            "uv_nano": {
+                "name": "UVnano"
+            },
+            "warm_mode": {
+                "name": "Vyt\u00e1p\u011bn\u00ed"
+            }
+        }
+    }
+}

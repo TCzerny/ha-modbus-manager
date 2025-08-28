@@ -1,0 +1,324 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dienst ist bereits konfiguriert",
+            "anna_with_adam": "Sowohl Anna als auch Adam entdeckt. F\u00fcge deinen Adam anstelle deiner Anna hinzu",
+            "not_the_same_smile": "Die konfigurierte Smile-ID stimmt nicht mit der Smile-ID der angeforderten IP-Adresse \u00fcberein.",
+            "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_auth": "Ung\u00fcltige Authentifizierung",
+            "invalid_setup": "F\u00fcge deinen Adam anstelle deiner Anna hinzu, siehe Dokumentation.",
+            "response_error": "Ung\u00fcltige XML-Daten oder Fehleranzeige empfangen",
+            "unknown": "Unerwarteter Fehler",
+            "unsupported": "Ger\u00e4t mit nicht unterst\u00fctzter Firmware"
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "IP-Adresse",
+                    "port": "Port"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines Smile. Du findest sie in deinem Router oder in der Plugwise-App.",
+                    "port": "Standardm\u00e4\u00dfig verwendet dein Smile den Port 80. Normalerweise solltest du dies nicht \u00e4ndern m\u00fcssen."
+                },
+                "description": "Konfiguration f\u00fcr {title} aktualisieren."
+            },
+            "user": {
+                "data": {
+                    "host": "IP-Adresse",
+                    "password": "Smile ID",
+                    "port": "Port",
+                    "username": "Smile-Benutzername"
+                },
+                "data_description": {
+                    "host": "Der Hostname oder die IP-Adresse deines Smile. Du findest sie in deinem Router oder in der Plugwise-App.",
+                    "password": "Die Smile-ID, die auf dem Etikett auf der R\u00fcckseite deines Adam, Smile-T oder P1 aufgedruckt ist.",
+                    "port": "Standardm\u00e4\u00dfig verwendet dein Smile den Port 80. Normalerweise solltest du dies nicht \u00e4ndern m\u00fcssen.",
+                    "username": "Standard ist `smile` oder `stretch` f\u00fcr den alten Stretch."
+                },
+                "description": "Bitte eingeben",
+                "title": "Verbindung zu Smile herstellen"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "compressor_state": {
+                "name": "Kompressorzustand"
+            },
+            "cooling_enabled": {
+                "name": "K\u00fchlung aktiviert"
+            },
+            "cooling_state": {
+                "name": "K\u00fchlbetrieb"
+            },
+            "dhw_state": {
+                "name": "Warmwasserzustand"
+            },
+            "flame_state": {
+                "name": "Flammenzustand"
+            },
+            "heating_state": {
+                "name": "Heizbetrieb"
+            },
+            "plugwise_notification": {
+                "name": "Plugwise-Benachrichtigung"
+            },
+            "secondary_boiler_state": {
+                "name": "Zustand des Sekund\u00e4rkessels"
+            }
+        },
+        "button": {
+            "reboot": {
+                "name": "Neustart"
+            }
+        },
+        "climate": {
+            "plugwise": {
+                "state_attributes": {
+                    "available_schemas": {
+                        "name": "Verf\u00fcgbare Schemata"
+                    },
+                    "preset_mode": {
+                        "state": {
+                            "asleep": "Nacht",
+                            "away": "Abwesend",
+                            "home": "Zuhause",
+                            "no_frost": "Frostschutz",
+                            "vacation": "Urlaub"
+                        }
+                    },
+                    "selected_schema": {
+                        "name": "Ausgew\u00e4hltes Schema"
+                    }
+                }
+            }
+        },
+        "number": {
+            "max_dhw_temperature": {
+                "name": "Warmwasser-Sollwert"
+            },
+            "maximum_boiler_temperature": {
+                "name": "Maximaler Sollwert der Kesseltemperatur"
+            },
+            "temperature_offset": {
+                "name": "Temperaturoffset"
+            }
+        },
+        "select": {
+            "dhw_mode": {
+                "name": "Warmwasserbetrieb",
+                "state": {
+                    "auto": "Automatisch",
+                    "boost": "Boost",
+                    "comfort": "Komfort",
+                    "off": "Aus"
+                }
+            },
+            "gateway_mode": {
+                "name": "Gateway-Modus",
+                "state": {
+                    "away": "Pause",
+                    "full": "Normal",
+                    "vacation": "Urlaub"
+                }
+            },
+            "regulation_mode": {
+                "name": "Regulierungsmodus",
+                "state": {
+                    "bleeding_cold": "Kalt",
+                    "bleeding_hot": "Hei\u00df",
+                    "cooling": "K\u00fchlbetrieb",
+                    "heating": "Heizbetrieb",
+                    "off": "Aus"
+                }
+            },
+            "select_schedule": {
+                "name": "Thermostat-Zeitplan",
+                "state": {
+                    "off": "Aus"
+                }
+            }
+        },
+        "sensor": {
+            "cooling_setpoint": {
+                "name": "K\u00fchlsollwert"
+            },
+            "dhw_temperature": {
+                "name": "Warmwasser-Isttemperatur"
+            },
+            "domestic_hot_water_setpoint": {
+                "name": "Warmwasser-Solltemperatur"
+            },
+            "electricity_consumed": {
+                "name": "Stromverbrauch"
+            },
+            "electricity_consumed_interval": {
+                "name": "Stromverbrauch im Zeitraum"
+            },
+            "electricity_consumed_off_peak_cumulative": {
+                "name": "Stromverbrauch Niedertarif kumulativ"
+            },
+            "electricity_consumed_off_peak_interval": {
+                "name": "Stromverbrauch Niedertarif im Zeitraum"
+            },
+            "electricity_consumed_off_peak_point": {
+                "name": "Stromverbrauch Niedertarif zum Zeitpunkt"
+            },
+            "electricity_consumed_peak_cumulative": {
+                "name": "Stromverbrauch Hochtarif kumulativ"
+            },
+            "electricity_consumed_peak_interval": {
+                "name": "Stromverbrauch Hochtarif im Zeitraum"
+            },
+            "electricity_consumed_peak_point": {
+                "name": "Stromverbrauch Hochtarif zum Zeitpunkt"
+            },
+            "electricity_consumed_point": {
+                "name": "Stromverbrauch zum Zeitpunkt"
+            },
+            "electricity_phase_one_consumed": {
+                "name": "Stromverbrauch Phase 1"
+            },
+            "electricity_phase_one_produced": {
+                "name": "Stromerzeugung Phase 1"
+            },
+            "electricity_phase_three_consumed": {
+                "name": "Stromverbrauch Phase 3"
+            },
+            "electricity_phase_three_produced": {
+                "name": "Stromerzeugung Phase 3"
+            },
+            "electricity_phase_two_consumed": {
+                "name": "Stromverbrauch Phase 2"
+            },
+            "electricity_phase_two_produced": {
+                "name": "Stromerzeugung Phase 2"
+            },
+            "electricity_produced": {
+                "name": "Stromerzeugung"
+            },
+            "electricity_produced_interval": {
+                "name": "Stromerzeugung im Zeitraum"
+            },
+            "electricity_produced_off_peak_cumulative": {
+                "name": "Stromerzeugung Niedertarif kumulativ"
+            },
+            "electricity_produced_off_peak_interval": {
+                "name": "Stromerzeugung Niedertarif im Zeitraum"
+            },
+            "electricity_produced_off_peak_point": {
+                "name": "Stromerzeugung Niedertarif zum Zeitpunkt"
+            },
+            "electricity_produced_peak_cumulative": {
+                "name": "Stromerzeugung im Hochtarif kumulativ"
+            },
+            "electricity_produced_peak_interval": {
+                "name": "Stromerzeugung im Hochtarif im Zeitraum"
+            },
+            "electricity_produced_peak_point": {
+                "name": "Stromerzeugung im Hochtarif zum Zeitpunkt"
+            },
+            "electricity_produced_point": {
+                "name": "Stromerzeugung zum Zeitpunkt"
+            },
+            "gas_consumed_cumulative": {
+                "name": "Gasverbrauch kumulativ"
+            },
+            "gas_consumed_interval": {
+                "name": "Gasverbrauch im Zeitraum"
+            },
+            "heating_setpoint": {
+                "name": "Heizsollwert"
+            },
+            "intended_boiler_temperature": {
+                "name": "Kesselsolltemperatur"
+            },
+            "maximum_boiler_temperature": {
+                "name": "Maximale Kesseltemperatur"
+            },
+            "modulation_level": {
+                "name": "Modulationsstufe"
+            },
+            "net_electricity_cumulative": {
+                "name": "Nettostrom kumulativ"
+            },
+            "net_electricity_point": {
+                "name": "Nettostrom zum Zeitpunkt"
+            },
+            "outdoor_air_temperature": {
+                "name": "Au\u00dfenlufttemperatur"
+            },
+            "outdoor_temperature": {
+                "name": "Au\u00dfentemperatur"
+            },
+            "return_temperature": {
+                "name": "R\u00fccklauftemperatur"
+            },
+            "setpoint": {
+                "name": "Sollwert"
+            },
+            "temperature_difference": {
+                "name": "Temperaturdifferenz"
+            },
+            "valve_position": {
+                "name": "Ventilposition"
+            },
+            "voltage_phase_one": {
+                "name": "Spannung Phase 1"
+            },
+            "voltage_phase_three": {
+                "name": "Spannung Phase 3"
+            },
+            "voltage_phase_two": {
+                "name": "Spannung Phase 2"
+            },
+            "water_pressure": {
+                "name": "Wasserdruck"
+            },
+            "water_temperature": {
+                "name": "Wassertemperatur"
+            }
+        },
+        "switch": {
+            "cooling_ena_switch": {
+                "name": "K\u00fchlbetrieb"
+            },
+            "dhw_cm_switch": {
+                "name": "Warmwasser-Komfortbetrieb"
+            },
+            "lock": {
+                "name": "Schloss"
+            },
+            "relay": {
+                "name": "Relais"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_failed": {
+            "message": "Ung\u00fcltige Authentifizierung"
+        },
+        "data_incomplete_or_missing": {
+            "message": "Daten unvollst\u00e4ndig oder fehlend."
+        },
+        "error_communicating_with_api": {
+            "message": "Fehler bei Kommunikation mit API: {error}."
+        },
+        "failed_to_connect": {
+            "message": "Verbindung fehlgeschlagen"
+        },
+        "invalid_xml_data": {
+            "message": "Ung\u00fcltige XML-Daten oder Fehleranzeige empfangen"
+        },
+        "unsupported_firmware": {
+            "message": "Ger\u00e4t mit nicht unterst\u00fctzter Firmware"
+        },
+        "unsupported_hvac_mode_requested": {
+            "message": "Nicht unterst\u00fctzte Betriebsart {hvac_mode} angefordert, g\u00fcltige Betriebsarten sind: {hvac_modes}."
+        }
+    }
+}

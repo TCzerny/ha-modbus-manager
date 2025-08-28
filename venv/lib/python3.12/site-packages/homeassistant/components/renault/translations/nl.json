@@ -1,0 +1,145 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Account is al geconfigureerd",
+            "kamereon_no_account": "Kan Kamereon-account niet vinden.",
+            "reauth_successful": "Herauthenticatie geslaagd"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "invalid_credentials": "Ongeldige authenticatie",
+            "unknown": "Onverwachte fout"
+        },
+        "step": {
+            "kamereon": {
+                "data_description": {
+                    "kamereon_account_id": "Het Kamereon-account-ID dat aan je voertuig is gekoppeld"
+                },
+                "description": "Je hebt meerdere Kamereon accounts gekoppeld aan dit e-mailadres, selecteer er alsjeblieft een"
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Wachtwoord"
+                },
+                "data_description": {
+                    "password": "Het wachtwoord van je MyRenault telefoon app"
+                },
+                "description": "Update je wachtwoord voor {username}",
+                "title": "Authenticatie is verlopen voor {name}"
+            },
+            "user": {
+                "data": {
+                    "locale": "Locale",
+                    "password": "Wachtwoord",
+                    "username": "E-mail"
+                },
+                "data_description": {
+                    "locale": "Je landcode",
+                    "password": "Het wachtwoord van je MyRenault telefoon app",
+                    "username": "Het e-mailadres van je MyRenault telefoon app"
+                },
+                "title": "Renault-inloggegevens instellen"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "driver_door_status": {
+                "name": "Bestuurdersdeur"
+            },
+            "passenger_door_status": {
+                "name": "Passagiersdeur"
+            },
+            "rear_left_door_status": {
+                "name": "Linker achterdeur"
+            },
+            "rear_right_door_status": {
+                "name": "Rechter achterdeur"
+            }
+        },
+        "button": {
+            "start_charge": {
+                "name": "Start opladen"
+            },
+            "stop_charge": {
+                "name": "Stop opladen"
+            }
+        },
+        "device_tracker": {
+            "location": {
+                "name": "Locatie"
+            }
+        },
+        "select": {
+            "charge_mode": {
+                "name": "Oplaadmodus",
+                "state": {
+                    "always": "Altijd",
+                    "always_charging": "Always charging",
+                    "schedule_mode": "Schema modus"
+                }
+            }
+        },
+        "sensor": {
+            "battery_temperature": {
+                "name": "Batterijtemperatuur"
+            },
+            "charge_state": {
+                "state": {
+                    "charge_ended": "Opladen be\u00ebindigd",
+                    "charge_error": "Niet opladen of aangesloten",
+                    "charge_in_progress": "Opladen",
+                    "energy_flap_opened": "Energieklep geopend",
+                    "not_in_charge": "Niet aan het opladen",
+                    "unavailable": "Niet beschikbaar",
+                    "waiting_for_a_planned_charge": "Wachten op gepland opladen",
+                    "waiting_for_current_charge": "Huidige oplaadbeurt afwachten"
+                }
+            },
+            "mileage": {
+                "name": "Kilometerstand"
+            },
+            "outside_temperature": {
+                "name": "Buitentemperatuur"
+            },
+            "plug_state": {
+                "state": {
+                    "plug_error": "Stekkerfout",
+                    "plug_unknown": "Stekker onbekend",
+                    "plugged": "Aangesloten",
+                    "unplugged": "Ontkoppeld"
+                }
+            }
+        }
+    },
+    "services": {
+        "ac_cancel": {
+            "fields": {
+                "vehicle": {
+                    "name": "Voertuig"
+                }
+            }
+        },
+        "ac_set_schedules": {
+            "fields": {
+                "vehicle": {
+                    "name": "Voertuig"
+                }
+            }
+        },
+        "ac_start": {
+            "fields": {
+                "temperature": {
+                    "name": "Temperatuur"
+                }
+            }
+        },
+        "charge_set_schedules": {
+            "fields": {
+                "vehicle": {
+                    "name": "Voertuig"
+                }
+            }
+        }
+    }
+}

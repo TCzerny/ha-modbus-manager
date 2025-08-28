@@ -1,0 +1,78 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El dispositivo ya est\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Host"
+                },
+                "data_description": {
+                    "host": "El nombre de host o la direcci\u00f3n IP de tu dispositivo Bose SoundTouch."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Est\u00e1s a punto de a\u00f1adir el dispositivo SoundTouch llamado `{name}` a Home Assistant.",
+                "title": "Confirma la adici\u00f3n del dispositivo Bose SoundTouch"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "description": "A\u00f1ade reproductores multimedia a una zona multi sala SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "La entidad del reproductor multimedia que coordina la zona multi sala. Depende de la plataforma.",
+                    "name": "L\u00edder"
+                },
+                "slaves": {
+                    "description": "Las entidades del reproductor multimedia que se a\u00f1adir\u00e1n a la zona existente.",
+                    "name": "Seguidor"
+                }
+            },
+            "name": "A\u00f1adir seguidor de zona"
+        },
+        "create_zone": {
+            "description": "Crea una zona multisala SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "La entidad del reproductor multimedia que coordinar\u00e1 la zona multi sala. Depende de la plataforma.",
+                    "name": "L\u00edder"
+                },
+                "slaves": {
+                    "description": "Las entidades del reproductor multimedia que se a\u00f1adir\u00e1n a la nueva zona.",
+                    "name": "Seguidor"
+                }
+            },
+            "name": "Crear zona"
+        },
+        "play_everywhere": {
+            "description": "Se reproduce en todos los dispositivos Bose SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "La entidad del reproductor multimedia que coordinar\u00e1 la agrupaci\u00f3n. Depende de la plataforma. Es un acceso directo para crear una zona multi sala con todos los dispositivos.",
+                    "name": "L\u00edder"
+                }
+            },
+            "name": "Reproducir en todas partes"
+        },
+        "remove_zone_slave": {
+            "description": "Elimina los reproductores multimedia de una zona multi sala SoundTouch.",
+            "fields": {
+                "master": {
+                    "description": "La entidad del reproductor multimedia que coordina la zona multi sala. Depende de la plataforma.",
+                    "name": "L\u00edder"
+                },
+                "slaves": {
+                    "description": "Las entidades del reproductor multimedia que se eliminar\u00e1n de la zona existente.",
+                    "name": "Seguidor"
+                }
+            },
+            "name": "Eliminar seguidor de zona"
+        }
+    }
+}

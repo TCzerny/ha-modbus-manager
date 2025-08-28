@@ -1,0 +1,245 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "reauth_successful": "\u00c5terautentisering lyckades",
+            "reconfigure_successful": "Omkonfigurationen lyckades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "machine_not_found": "Den uppt\u00e4ckta maskinen hittades inte i angivet konto",
+            "no_machines": "Inga maskiner hittades i kontot"
+        },
+        "step": {
+            "bluetooth_selection": {
+                "data": {
+                    "mac": "Enhet"
+                },
+                "data_description": {
+                    "mac": "V\u00e4lj den Bluetooth-enhet som \u00e4r din maskin"
+                },
+                "description": "V\u00e4lj din enhet bland tillg\u00e4ngliga Bluetooth-enheter."
+            },
+            "machine_selection": {
+                "data": {
+                    "host": "IP-adress",
+                    "machine": "Maskin"
+                },
+                "data_description": {
+                    "host": "Maskinens lokala IP-adress",
+                    "machine": "V\u00e4lj den maskin som du vill integrera"
+                },
+                "description": "V\u00e4lj den maskin som du vill integrera. St\u00e4ll in \"IP\" f\u00f6r att f\u00e5 \u00e5tkomst till sensorer som \u00e4r relaterade till fotograferingstiden."
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "L\u00f6senord"
+                },
+                "data_description": {
+                    "password": "Ditt l\u00f6senord fr\u00e5n La Marzocco-appen"
+                },
+                "description": "Ny autentisering kr\u00e4vs. V\u00e4nligen ange ditt l\u00f6senord igen."
+            },
+            "reconfigure": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "data_description": {
+                    "password": "Ditt l\u00f6senord fr\u00e5n La Marzocco-appen",
+                    "username": "Ditt anv\u00e4ndarnamn fr\u00e5n La Marzocco-appen"
+                }
+            },
+            "user": {
+                "data": {
+                    "password": "L\u00f6senord",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "data_description": {
+                    "password": "Ditt l\u00f6senord fr\u00e5n La Marzocco-appen",
+                    "username": "Ditt anv\u00e4ndarnamn fr\u00e5n La Marzocco-appen"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "backflush_enabled": {
+                "name": "Backspolning aktiv"
+            },
+            "brew_active": {
+                "name": "Bryggning aktiv"
+            },
+            "water_tank": {
+                "name": "Vattentanken tom"
+            }
+        },
+        "button": {
+            "start_backflush": {
+                "name": "Starta backspolning"
+            }
+        },
+        "calendar": {
+            "auto_on_off_schedule": {
+                "name": "Schema f\u00f6r automatisk p\u00e5/av ({id})"
+            }
+        },
+        "number": {
+            "coffee_temp": {
+                "name": "M\u00e5ltemperatur f\u00f6r kaffe"
+            },
+            "dose_key": {
+                "name": "Doseringsnyckel {key}"
+            },
+            "prebrew_off": {
+                "name": "F\u00f6rbryggning avst\u00e4ngningstid"
+            },
+            "prebrew_off_key": {
+                "name": "F\u00f6rbryggning avst\u00e4ngningstid Nyckel {key}"
+            },
+            "prebrew_on": {
+                "name": "F\u00f6rbryggning p\u00e5slagningstid"
+            },
+            "prebrew_on_key": {
+                "name": "F\u00f6rbryggning p\u00e5slagningstid Nyckel {key}"
+            },
+            "preinfusion_off": {
+                "name": "Tid f\u00f6re infusion"
+            },
+            "preinfusion_off_key": {
+                "name": "Tid f\u00f6re infusion Nyckel {key}"
+            },
+            "scale_target_key": {
+                "name": "Brygg efter viktm\u00e5l {key}"
+            },
+            "smart_standby_time": {
+                "name": "Smart standby-tid"
+            },
+            "steam_temp": {
+                "name": "M\u00e5ltemperatur f\u00f6r \u00e5nga"
+            },
+            "tea_water_duration": {
+                "name": "Tevattnets varaktighet"
+            }
+        },
+        "select": {
+            "active_bbw": {
+                "name": "Aktiv bryggning efter vikt recept",
+                "state": {
+                    "a": "Recept A",
+                    "b": "Recept B"
+                }
+            },
+            "prebrew_infusion_select": {
+                "name": "F\u00f6rbryggning/-infusionsl\u00e4ge",
+                "state": {
+                    "disabled": "Inaktiverad",
+                    "prebrew": "F\u00f6rbryggning",
+                    "preinfusion": "F\u00f6re infusion"
+                }
+            },
+            "smart_standby_mode": {
+                "name": "Smart standby-l\u00e4ge",
+                "state": {
+                    "last_brewing": "Senaste bryggning",
+                    "power_on": "Str\u00f6m p\u00e5"
+                }
+            },
+            "steam_temp_select": {
+                "name": "\u00c5nga niv\u00e5",
+                "state": {
+                    "1": "1",
+                    "2": "2",
+                    "3": "3"
+                }
+            }
+        },
+        "sensor": {
+            "current_temp_coffee": {
+                "name": "Aktuell kaffetemperatur"
+            },
+            "current_temp_steam": {
+                "name": "Aktuell \u00e5ngtemperatur"
+            },
+            "drink_stats_coffee": {
+                "name": "Totalt antal kaffekoppar"
+            },
+            "drink_stats_flushing": {
+                "name": "Totalt antal spolningar"
+            },
+            "shot_timer": {
+                "name": "Shot-timer"
+            }
+        },
+        "switch": {
+            "auto_on_off": {
+                "name": "Automatisk p\u00e5/av ( {id} )"
+            },
+            "smart_standby_enabled": {
+                "name": "Smart standby aktiverat"
+            },
+            "steam_boiler": {
+                "name": "\u00c5ngkokare"
+            }
+        },
+        "update": {
+            "gateway_firmware": {
+                "name": "Gateway firmware"
+            },
+            "machine_firmware": {
+                "name": "Maskinens firmware"
+            }
+        }
+    },
+    "exceptions": {
+        "api_error": {
+            "message": "Fel vid kommunikation med API:et"
+        },
+        "authentication_failed": {
+            "message": "Autentiseringen misslyckades"
+        },
+        "auto_on_off_error": {
+            "message": "Fel vid inst\u00e4llning av automatisk p\u00e5/av till {state} f\u00f6r {id}"
+        },
+        "button_error": {
+            "message": "Fel vid k\u00f6rning av knappen {key}"
+        },
+        "number_exception": {
+            "message": "Fel vid inst\u00e4llning av v\u00e4rde {value} f\u00f6r nummer {key}"
+        },
+        "number_exception_key": {
+            "message": "Fel vid inst\u00e4llning av v\u00e4rde {value} f\u00f6r nummer {key}, nyckel {physical_key}"
+        },
+        "select_option_error": {
+            "message": "Fel vid inst\u00e4llning av valalternativ {option} f\u00f6r {key}"
+        },
+        "switch_off_error": {
+            "message": "Fel vid avst\u00e4ngning av brytaren {key}"
+        },
+        "switch_on_error": {
+            "message": "Fel vid p\u00e5slagning av brytaren {key}"
+        },
+        "update_failed": {
+            "message": "Fel vid uppdatering av {key}"
+        }
+    },
+    "issues": {
+        "unsupported_gateway_firmware": {
+            "description": "Gateway firmware {gateway_version} st\u00f6ds inte l\u00e4ngre av denna integration, v\u00e4nligen uppdatera.",
+            "title": "Firmware f\u00f6r gateway som inte st\u00f6ds"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "use_bluetooth": "Anv\u00e4nd Bluetooth"
+                },
+                "data_description": {
+                    "use_bluetooth": "B\u00f6r integrationen f\u00f6rs\u00f6ka anv\u00e4nda Bluetooth f\u00f6r att styra maskinen?"
+                }
+            }
+        }
+    }
+}

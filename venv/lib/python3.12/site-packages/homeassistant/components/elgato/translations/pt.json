@@ -1,0 +1,57 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "flow_title": "{serial_number}",
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "Nome de anfitri\u00e3o ou endere\u00e7o IP do seu dispositivo Elgato."
+                },
+                "description": "Configure o seu Elgato Light para se integrar com o Home Assistant."
+            },
+            "zeroconf_confirm": {
+                "description": "Deseja adicionar o Elgato Light com o n\u00famero de s\u00e9rie `{serial_number}` ao Home Assistant?",
+                "title": "Descobriu o dispositivo Elgato Light"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "charge_power": {
+                "name": "Pot\u00eancia de carga"
+            },
+            "input_charge_current": {
+                "name": "Corrente de carga"
+            },
+            "input_charge_voltage": {
+                "name": "Tens\u00e3o de carga"
+            },
+            "voltage": {
+                "name": "Tens\u00e3o da bateria"
+            }
+        },
+        "switch": {
+            "bypass": {
+                "name": "Modo de est\u00fadio"
+            },
+            "energy_saving": {
+                "name": "Poupan\u00e7a de energia"
+            }
+        }
+    },
+    "services": {
+        "identify": {
+            "description": "Identifica uma luz Elgato. Pisca a luz, o que pode ser \u00fatil, por exemplo, para uma notifica\u00e7\u00e3o visual.",
+            "name": "Identificar"
+        }
+    }
+}

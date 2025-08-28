@@ -1,0 +1,76 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Lista de tarefas"
+        }
+    },
+    "exceptions": {
+        "update_field_not_supported": {
+            "message": "A entidade n\u00e3o suporta configura\u00e7\u00e3o do campo: {service_field}"
+        }
+    },
+    "services": {
+        "add_item": {
+            "fields": {
+                "description": {
+                    "description": "Uma descri\u00e7\u00e3o mais completa do item do que a fornecida pelo nome do item.",
+                    "name": "Descri\u00e7\u00e3o"
+                },
+                "due_date": {
+                    "description": "A data em que se espera que o item de tarefa seja conclu\u00eddo.",
+                    "name": "Data de vencimento"
+                },
+                "due_datetime": {
+                    "description": "A data e a hora em que se espera que o item de tarefa seja conclu\u00eddo.",
+                    "name": "Data e hora de vencimento"
+                },
+                "item": {
+                    "description": "O nome que representa o item de tarefa.",
+                    "name": "Nome do item"
+                }
+            }
+        },
+        "get_items": {
+            "fields": {
+                "status": {
+                    "description": "Retorna apenas itens de tarefas com os status especificados. Retorna tarefas n\u00e3o conclu\u00eddas por padr\u00e3o.",
+                    "name": "Status"
+                }
+            }
+        },
+        "remove_item": {
+            "fields": {
+                "item": {
+                    "name": "Nome do item"
+                }
+            }
+        },
+        "update_item": {
+            "fields": {
+                "description": {
+                    "description": "Uma descri\u00e7\u00e3o mais completa do item do que a fornecida pelo nome do item.",
+                    "name": "Descri\u00e7\u00e3o"
+                },
+                "due_date": {
+                    "description": "A data em que se espera que o item de tarefa seja conclu\u00eddo.",
+                    "name": "Data de vencimento"
+                },
+                "due_datetime": {
+                    "description": "A data e a hora em que se espera que o item de tarefa seja conclu\u00eddo.",
+                    "name": "Data e hora de vencimento"
+                },
+                "item": {
+                    "name": "Nome do item"
+                },
+                "rename": {
+                    "name": "Renomear item"
+                },
+                "status": {
+                    "description": "Um status ou confirma\u00e7\u00e3o do item de tarefa.",
+                    "name": "Definir status"
+                }
+            }
+        }
+    },
+    "title": "Lista de tarefas"
+}

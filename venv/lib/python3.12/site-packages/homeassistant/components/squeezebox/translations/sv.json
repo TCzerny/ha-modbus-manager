@@ -1,0 +1,107 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Enheten \u00e4r redan konfigurerad",
+            "no_server_found": "Ingen LMS-server hittades"
+        },
+        "error": {
+            "cannot_connect": "Det gick inte att ansluta.",
+            "invalid_auth": "Ogiltig autentisering",
+            "no_server_found": "Kunde inte hitta servern automatiskt.",
+            "unknown": "Ov\u00e4ntat fel"
+        },
+        "flow_title": "{host}",
+        "step": {
+            "edit": {
+                "data": {
+                    "host": "V\u00e4rd",
+                    "https": "Anslut via https (kr\u00e4ver omv\u00e4nd proxy)",
+                    "password": "L\u00f6senord",
+                    "port": "Port",
+                    "username": "Anv\u00e4ndarnamn"
+                },
+                "title": "Redigera anslutningsinformation"
+            },
+            "user": {
+                "data": {
+                    "host": "V\u00e4rd"
+                },
+                "data_description": {
+                    "host": "V\u00e4rdnamnet eller IP-adressen f\u00f6r din Lyrion Media Server."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "needsrestart": {
+                "name": "Beh\u00f6ver startas om"
+            },
+            "rescan": {
+                "name": "Genoms\u00f6k biblioteket igen"
+            }
+        },
+        "sensor": {
+            "info_total_albums": {
+                "name": "Totalt antal album",
+                "unit_of_measurement": "album"
+            },
+            "info_total_artists": {
+                "name": "Totalt antal artister",
+                "unit_of_measurement": "artister"
+            },
+            "info_total_duration": {
+                "name": "Total varaktighet"
+            },
+            "info_total_genres": {
+                "name": "Totalt antal genrer",
+                "unit_of_measurement": "genrer"
+            },
+            "info_total_songs": {
+                "name": "Totalt antal l\u00e5tar",
+                "unit_of_measurement": "s\u00e5nger"
+            },
+            "lastscan": {
+                "name": "Senaste genoms\u00f6kning"
+            },
+            "other_player_count": {
+                "name": "Antal spelare utanf\u00f6r tj\u00e4nst",
+                "unit_of_measurement": "spelare"
+            },
+            "player_count": {
+                "name": "Antal spelare",
+                "unit_of_measurement": "spelare"
+            }
+        }
+    },
+    "services": {
+        "call_method": {
+            "description": "Anropar ett anpassat Squeezebox JSONRPC API.",
+            "fields": {
+                "command": {
+                    "description": "Kommando att skicka till Lyrion Media Server (p0 i CLI-dokumentationen).",
+                    "name": "Kommando"
+                },
+                "parameters": {
+                    "description": "Matris med ytterligare parametrar att skicka till Lyrion Media Server (p1, ..., pN i CLI-dokumentationen).",
+                    "name": "Parametrar"
+                }
+            },
+            "name": "Anropsmetod"
+        },
+        "call_query": {
+            "description": "Anropar ett anpassat Squeezebox JSONRPC API. Resultatet lagras i attributet \"query_result\" f\u00f6r Squeezebox-entiteten.",
+            "fields": {
+                "command": {
+                    "description": "Kommando att skicka till Lyrion Media Server (p0 i CLI-dokumentationen).",
+                    "name": "Kommando"
+                },
+                "parameters": {
+                    "description": "Matris med ytterligare parametrar att skicka till Lyrion Media Server (p1, ..., pN i CLI-dokumentationen).",
+                    "name": "Parametrar"
+                }
+            },
+            "name": "Anropsfr\u00e5ga"
+        }
+    }
+}

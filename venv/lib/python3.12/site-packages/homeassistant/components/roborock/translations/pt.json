@@ -1,0 +1,439 @@
+{
+    "config": {
+        "abort": {
+            "already_configured_account": "Conta j\u00e1 configurada",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida"
+        },
+        "error": {
+            "invalid_code": "O c\u00f3digo que introduziu est\u00e1 incorreto, verifique-o e tente novamente.",
+            "invalid_email": "N\u00e3o existe nenhuma conta associada ao e-mail que introduziu, por favor tente novamente.",
+            "invalid_email_format": "H\u00e1 um problema com a formata\u00e7\u00e3o do seu email - tente novamente.",
+            "too_frequent_code_requests": "Tentou pedir demasiados c\u00f3digos. Tente novamente mais tarde.",
+            "unknown": "Erro inesperado",
+            "unknown_roborock": "Houve uma exce\u00e7\u00e3o desconhecida do roborock - por favor, verifique os seus logs.",
+            "unknown_url": "Houve um problema ao determinar o URL correto para a sua conta roborock - verifique os seus logs."
+        },
+        "step": {
+            "code": {
+                "data": {
+                    "code": "C\u00f3digo de verifica\u00e7\u00e3o"
+                },
+                "description": "Introduza o c\u00f3digo de verifica\u00e7\u00e3o enviado para o seu correio eletr\u00f3nico"
+            },
+            "reauth_confirm": {
+                "description": "A integra\u00e7\u00e3o do Roborock precisa de autenticar novamente a sua conta",
+                "title": "A autentica\u00e7\u00e3o expirou para {name}"
+            },
+            "user": {
+                "data": {
+                    "username": "E-mail"
+                },
+                "description": "Introduza o seu endere\u00e7o de correio eletr\u00f3nico Roborock."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "in_cleaning": {
+                "name": "Em Limpeza"
+            },
+            "mop_attached": {
+                "name": "Esfregona acoplada"
+            },
+            "mop_drying_status": {
+                "name": "Esfregona em secagem"
+            },
+            "water_box_attached": {
+                "name": "Caixa de \u00e1gua acoplada"
+            },
+            "water_shortage": {
+                "name": "Escassez de \u00e1gua"
+            }
+        },
+        "button": {
+            "reset_air_filter_consumable": {
+                "name": "Repor o consum\u00edvel do filtro de ar"
+            },
+            "reset_main_brush_consumable": {
+                "name": "Repor o consum\u00edvel da escova principal"
+            },
+            "reset_sensor_consumable": {
+                "name": "Repor o consum\u00edvel do sensor"
+            },
+            "reset_side_brush_consumable": {
+                "name": "Repor o consum\u00edvel da escova lateral"
+            }
+        },
+        "number": {
+            "volume": {
+                "name": "Volume"
+            }
+        },
+        "select": {
+            "mop_intensity": {
+                "name": "Intensidade da esfregona",
+                "state": {
+                    "custom": "Personalizado",
+                    "custom_water_flow": "Fluxo de \u00e1gua personalizado",
+                    "high": "Alta",
+                    "intense": "Intensa",
+                    "low": "Baixa",
+                    "max": "M\u00e1xima",
+                    "medium": "M\u00e9dia",
+                    "mild": "Suave",
+                    "moderate": "Moderada",
+                    "off": "Desligada",
+                    "smart_mode": "Plano Inteligente"
+                }
+            },
+            "mop_mode": {
+                "name": "Modo esfregona",
+                "state": {
+                    "custom": "Personalizado",
+                    "deep": "Profundo",
+                    "deep_plus": "Profundo+",
+                    "fast": "R\u00e1pido",
+                    "smart_mode": "Plano Inteligente",
+                    "standard": "Padr\u00e3o"
+                }
+            },
+            "selected_map": {
+                "name": "Mapa selecionado"
+            }
+        },
+        "sensor": {
+            "a01_error": {
+                "name": "Erro",
+                "state": {
+                    "battery_temperature_protection": "Prote\u00e7\u00e3o da temperatura da bateria",
+                    "battery_temperature_protection_2": "Prote\u00e7\u00e3o da temperatura da bateria",
+                    "battery_temperature_protection_e0": "Prote\u00e7\u00e3o da temperatura",
+                    "battery_under_10": "Bateria abaixo de 10%",
+                    "clean_head_entangled": "Cabe\u00e7a de limpeza emaranhada",
+                    "clean_head_too_hot": "Cabe\u00e7a de limpeza muito quente.",
+                    "clean_tank_empty": "Dep\u00f3sito de limpeza vazio",
+                    "cleaning_head_blocked": "Cabe\u00e7a de limpeza bloqueada",
+                    "dirty_charging_contacts": "Limpar os contactos de carga",
+                    "dirty_tank_full": "Tanque de \u00e1gua suja cheio",
+                    "fan_protection_e4": "Prote\u00e7\u00e3o da ventoinha",
+                    "fan_protection_e5": "Prote\u00e7\u00e3o da ventoinha",
+                    "fan_protection_e9": "Prote\u00e7\u00e3o da ventoinha",
+                    "low_battery": "Bateria baixa",
+                    "none": "Nenhum",
+                    "power_adapter_error": "Erro no adaptador de energia",
+                    "temperature_protection": "Prote\u00e7\u00e3o da temperatura",
+                    "water_level_sensor_stuck": "Sensor de n\u00edvel de \u00e1gua encravado."
+                }
+            },
+            "a01_status": {
+                "name": "Estado",
+                "state": {
+                    "charging": "Em carga",
+                    "drying": "Secagem",
+                    "dusting_mode": "Modo de limpeza de p\u00f3",
+                    "fetch_failed": "Falha na busca",
+                    "fetching": "Em busca",
+                    "mop_washing": "Lavar a esfregona",
+                    "mop_washing_paused": "Lavagem da esfregona em pausa",
+                    "ready": "Pronto",
+                    "reserving": "Em Reserva",
+                    "self_clean_cleaning": "Em auto-limpeza",
+                    "self_clean_deep_cleaning": "Em auto-limpeza profunda",
+                    "self_clean_dehydrating": "Em auto-secagem",
+                    "self_clean_rinsing": "Em enxagua\u00e7\u00e3o",
+                    "unknown": "Desconhecido",
+                    "updating": "Atualizando",
+                    "ventilating": "Ventila\u00e7\u00e3o",
+                    "washing": "Lavagem"
+                }
+            },
+            "brush_remaining": {
+                "name": "Rolo remanescente"
+            },
+            "clean_percent": {
+                "name": "Progresso da limpeza"
+            },
+            "cleaning_area": {
+                "name": "\u00c1rea de limpeza"
+            },
+            "cleaning_time": {
+                "name": "Tempo de limpeza"
+            },
+            "countdown": {
+                "name": "Contagem decrescente"
+            },
+            "dock_error": {
+                "name": "Erro na doca",
+                "state": {
+                    "cleaning_tank_full_or_blocked": "Tanque de limpeza cheio ou bloqueado",
+                    "dirty_tank_latch_open": "Trinco do tanque aberto",
+                    "duct_blockage": "Bloqueio de conduta",
+                    "no_dustbin": "Sem dep\u00f3sito de lixo",
+                    "ok": "Ok",
+                    "waste_water_tank_full": "Tanque de \u00e1guas residuais cheio",
+                    "water_empty": "Sem \u00e1gua"
+                }
+            },
+            "filter_time_left": {
+                "name": "Tempo restante do filtro"
+            },
+            "last_clean_end": {
+                "name": "\u00daltimo fim de limpeza"
+            },
+            "last_clean_start": {
+                "name": "\u00daltimo in\u00edcio de limpeza"
+            },
+            "main_brush_time_left": {
+                "name": "Tempo restante da escova principal"
+            },
+            "mop_drying_remaining_time": {
+                "name": "Tempo restante de secagem da esfregona"
+            },
+            "sensor_time_left": {
+                "name": "Tempo restante do sensor"
+            },
+            "side_brush_time_left": {
+                "name": "Tempo restante da escova lateral"
+            },
+            "status": {
+                "name": "Estado",
+                "state": {
+                    "air_drying_stopping": "Paragem da secagem com ar",
+                    "charger_disconnected": "Carregador desligado",
+                    "charging": "Em carga",
+                    "charging_complete": "Carregamento conclu\u00eddo",
+                    "charging_problem": "Problema de carregamento",
+                    "cleaning": "A limpar",
+                    "device_offline": "Dispositivo offline",
+                    "docking": "A atracar",
+                    "egg_attack": "Modo Cupido",
+                    "emptying_the_bin": "A esvaziar o dep\u00f3sito",
+                    "error": "Erro",
+                    "going_to_target": "Indo para o alvo",
+                    "going_to_wash_the_mop": "Indo lavar a mopa",
+                    "idle": "Inativo",
+                    "locked": "Bloqueado",
+                    "manual_mode": "Modo manual",
+                    "mapping": "Mapeamento",
+                    "paused": "Em pausa",
+                    "remote_control_active": "Controlo remoto ativo",
+                    "returning_home": "A voltar \u00e0 doca",
+                    "segment_cleaning": "Limpeza de segmento",
+                    "shutting_down": "A encerrar",
+                    "spot_cleaning": "Limpeza local",
+                    "starting": "A iniciar",
+                    "unknown": "Desconhecido",
+                    "updating": "Atualizando",
+                    "washing_the_mop": "A lavar esfregona",
+                    "zoned_cleaning": "Limpeza por zonas"
+                }
+            },
+            "total_cleaning_area": {
+                "name": "\u00c1rea total de limpeza"
+            },
+            "total_cleaning_time": {
+                "name": "Tempo total de limpeza"
+            },
+            "vacuum_error": {
+                "name": "Erro do Aspirador",
+                "state": {
+                    "battery_error": "Erro de bateria",
+                    "bumper_stuck": "Para-choques preso",
+                    "cannot_cross_carpet": "N\u00e3o \u00e9 poss\u00edvel atravessar a alcatifa",
+                    "charging_error": "Erro de carregamento",
+                    "clear_brush_exception": "Verificar se o filtro de \u00e1gua foi corretamente instalado",
+                    "clear_brush_exception_2": "Erro no bot\u00e3o de posicionamento",
+                    "clear_water_box_exception": "Dep\u00f3sito de \u00e1gua limpa vazio",
+                    "clear_water_box_hoare": "Verificar o dep\u00f3sito de \u00e1gua limpa",
+                    "cliff_sensor_error": "Erro do sensor de queda",
+                    "collect_dust_error_3": "Limpar a doca de esvaziamento autom\u00e1tico",
+                    "collect_dust_error_4": "Erro de tens\u00e3o da doca de esvaziamento autom\u00e1tico",
+                    "compass_error": "Detetado um forte campo magn\u00e9tico",
+                    "dirty_water_box_hoare": "Verificar o dep\u00f3sito de \u00e1gua suja",
+                    "dock": "A base n\u00e3o est\u00e1 ligada \u00e0 corrente",
+                    "dock_locator_error": "Erro no localizador de doca",
+                    "fan_error": "Erro na ventoinha",
+                    "filter_blocked": "Filtro bloqueado",
+                    "filter_screen_exception": "Limpe o filtro de \u00e1gua da doca",
+                    "internal_error": "Erro interno",
+                    "invisible_wall_detected": "Parede invis\u00edvel detectada",
+                    "lidar_blocked": "Radar bloqueado",
+                    "light_touch": "Erro no sensor de parede",
+                    "low_battery": "Bateria baixa",
+                    "main_brush_jammed": "Escova principal encravada",
+                    "mopping_roller_1": "O rolo de lavagem pode estar preso",
+                    "mopping_roller_2": "O rolo de lavagem pode estar preso",
+                    "mopping_roller_error_2": "Rolo de lavagem n\u00e3o baixado corretamente",
+                    "no_dustbin": "Sem recipiente de lixo",
+                    "nogo_zone_detected": "Zona interdita detectada",
+                    "none": "Nenhum",
+                    "return_to_dock_fail": "Falha no regresso \u00e0 doca",
+                    "robot_on_carpet": "Rob\u00f4 na alcatifa",
+                    "robot_tilted": "Rob\u00f4 inclinado",
+                    "robot_trapped": "Rob\u00f4 preso",
+                    "side_brush_error": "Erro de escova lateral",
+                    "side_brush_jammed": "Escova lateral encravada",
+                    "sink_strainer_hoare": "Reinstale o filtro de \u00e1gua",
+                    "strainer_error": "O filtro est\u00e1 molhado ou bloqueado",
+                    "temperature_protection": "Prote\u00e7\u00e3o de temperatura da unidade",
+                    "vertical_bumper_pressed": "Para-choques vertical prensado",
+                    "vibrarise_jammed": "VibraRise encravado",
+                    "visual_sensor": "Erro da c\u00e2mara",
+                    "wall_sensor_dirty": "Sensor de parede sujo",
+                    "wheels_jammed": "Rodas encravadas",
+                    "wheels_suspended": "Rodas suspensas"
+                }
+            },
+            "washing_left": {
+                "name": "Lavagem remanescente"
+            },
+            "zeo_error": {
+                "name": "Erro",
+                "state": {
+                    "communication_error": "Erro de comunica\u00e7\u00e3o",
+                    "door_lock_error": "Erro de trava da porta",
+                    "drain_error": "Erro de drenagem",
+                    "drying_error": "Erro de secagem",
+                    "drying_error_e_12": "Erro de secagem E12",
+                    "drying_error_e_13": "Erro de secagem E13",
+                    "drying_error_e_14": "Erro de secagem E14",
+                    "drying_error_e_15": "Erro de secagem E15",
+                    "drying_error_e_16": "Erro de secagem E16",
+                    "drying_error_restart": "Reiniciar a lavadora",
+                    "drying_error_water_flow": "Verificar o fluxo de \u00e1gua",
+                    "heating_error": "Erro de aquecimento",
+                    "inverter_error": "Erro do inversor",
+                    "none": "Nenhum",
+                    "refill_error": "Erro de recarga",
+                    "spin_error": "Reorganizar a roupa",
+                    "temperature_error": "Erro de temperatura",
+                    "water_level_error": "Erro no n\u00edvel da \u00e1gua"
+                }
+            },
+            "zeo_state": {
+                "name": "Estado",
+                "state": {
+                    "cooling": "Arrefecimento",
+                    "done": "Terminado",
+                    "drying": "Secagem",
+                    "rinsing": "Enxaguamento",
+                    "soaking": "Imers\u00e3o",
+                    "spinning": "Centrifuga\u00e7\u00e3o",
+                    "standby": "Em espera",
+                    "under_delay_start": "In\u00edcio retardado",
+                    "washing": "Lavagem",
+                    "weighing": "Pesagem"
+                }
+            }
+        },
+        "switch": {
+            "child_lock": {
+                "name": "Bloqueio para crian\u00e7as"
+            },
+            "dnd_switch": {
+                "name": "N\u00e3o incomodar"
+            },
+            "off_peak_switch": {
+                "name": "Carregamento fora pico"
+            },
+            "status_indicator": {
+                "name": "Luz indicadora de estado"
+            }
+        },
+        "time": {
+            "dnd_end_time": {
+                "name": "Fim de N\u00e3o Incomodar"
+            },
+            "dnd_start_time": {
+                "name": "In\u00edcio de N\u00e3o Incomodar"
+            },
+            "off_peak_end": {
+                "name": "Fim fora de pico"
+            },
+            "off_peak_start": {
+                "name": "In\u00edcio fora de pico"
+            }
+        },
+        "vacuum": {
+            "roborock": {
+                "state_attributes": {
+                    "fan_speed": {
+                        "state": {
+                            "auto": "Autom\u00e1tico",
+                            "balanced": "Equilibrado",
+                            "custom": "Personalizado",
+                            "gentle": "Suave",
+                            "max": "M\u00e1xima",
+                            "max_plus": "M\u00e1ximo +",
+                            "medium": "M\u00e9dio",
+                            "off": "Desligado",
+                            "quiet": "Quieto",
+                            "silent": "Silencioso",
+                            "smart_mode": "Plano Inteligente",
+                            "standard": "Padr\u00e3o",
+                            "turbo": "Turbo"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "command_failed": {
+            "message": "Erro ao chamar {command}"
+        },
+        "home_data_fail": {
+            "message": "Falha ao obter os dados do Roborock"
+        },
+        "invalid_credentials": {
+            "message": "Credenciais inv\u00e1lidas."
+        },
+        "invalid_user_agreement": {
+            "message": "O acordo de utilizador deve ser aceite novamente. Abra a sua aplica\u00e7\u00e3o Roborock e aceite o acordo."
+        },
+        "map_failure": {
+            "message": "Alguma coisa correu mal ao criar o mapa"
+        },
+        "no_coordinators": {
+            "message": "Nenhum dispositivo foi configurado com \u00eaxito"
+        },
+        "no_user_agreement": {
+            "message": "N\u00e3o tem um acordo de utilizador v\u00e1lido. Abra a sua aplica\u00e7\u00e3o Roborock e aceite o acordo."
+        },
+        "update_options_failed": {
+            "message": "Falha ao atualizar as op\u00e7\u00f5es do Roborock"
+        }
+    },
+    "options": {
+        "step": {
+            "drawables": {
+                "data": {
+                    "charger": "Carregador",
+                    "cleaned_area": "\u00c1rea limpa",
+                    "goto_path": "Caminho de destino",
+                    "ignored_obstacles": "Obst\u00e1culos ignorados",
+                    "ignored_obstacles_with_photo": "Obst\u00e1culos ignorados com fotografia",
+                    "mop_path": "Trajeto da esfregona",
+                    "no_carpet_zones": "Zonas de alcatifa",
+                    "no_go_zones": "Zonas interditas",
+                    "no_mopping_zones": "Zonas sem esfregona",
+                    "obstacles": "Obst\u00e1culos",
+                    "obstacles_with_photo": "Obst\u00e1culos com foto",
+                    "path": "Trajet\u00f3ria",
+                    "predicted_path": "Trajet\u00f3ria prevista",
+                    "room_names": "Nomes dos quartos",
+                    "vacuum_position": "Posi\u00e7\u00e3o do Aspirador",
+                    "virtual_walls": "Paredes virtuais",
+                    "zones": "Zonas"
+                },
+                "description": "Especifique as carater\u00edsticas a desenhar no mapa."
+            }
+        }
+    },
+    "services": {
+        "get_maps": {
+            "description": "Obtenha o mapa e as informa\u00e7\u00f5es do quarto do seu dispositivo.",
+            "name": "Obter mapas"
+        }
+    }
+}

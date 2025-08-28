@@ -1,0 +1,79 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El servicio ya est\u00e1 configurado."
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_auth": "Autenticaci\u00f3n inv\u00e1lida",
+            "unknown": "Error inesperado"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "email": "Correo electr\u00f3nico",
+                    "password": "Contrase\u00f1a"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "list_access": {
+                "name": "Acceso a la lista",
+                "state": {
+                    "registered": "Personal",
+                    "shared": "Compartido"
+                }
+            }
+        }
+    },
+    "exceptions": {
+        "setup_authentication_exception": {
+            "message": "Error de autenticaci\u00f3n para {email}, verifica tu e-mail y clave"
+        },
+        "setup_parse_exception": {
+            "message": "No se pudo analizar la respuesta del servidor, int\u00e9ntalo de nuevo"
+        },
+        "setup_request_exception": {
+            "message": "No se pudo conectar al servidor, int\u00e9ntalo de nuevo"
+        },
+        "todo_delete_item_failed": {
+            "message": "No se pudieron eliminar {count} art\u00edculos de la lista Bring!"
+        },
+        "todo_rename_item_failed": {
+            "message": "No se pudo cambiar el nombre del art\u00edculo {name} a la lista Bring!"
+        },
+        "todo_save_item_failed": {
+            "message": "No se pudo guardar el art\u00edculo {name} en la lista Bring!"
+        },
+        "todo_update_item_failed": {
+            "message": "No se pudo actualizar el art\u00edculo {name} a la lista Bring!"
+        }
+    },
+    "selector": {
+        "notification_type_selector": {
+            "options": {
+                "changed_list": "\u00a1Cambi\u00e9 las lista! - Mira los productos",
+                "going_shopping": "\u00a1Me voy de compras! - \u00daltima oportunidad para hacer modificaciones",
+                "shopping_done": "\u00a1Se hicieron las compras! - Nuestro refrigerador est\u00e1 bien equipado",
+                "urgent_message": "\u00a1Atenci\u00f3n! \u00a1Atenci\u00f3n! - A\u00fan necesitamos urgente: [Productos]"
+            }
+        }
+    },
+    "services": {
+        "send_message": {
+            "fields": {
+                "entity_id": {
+                    "description": "Lista Bring! cuyos miembr@s (excepto remitente) ser\u00e1n notificados.",
+                    "name": "Lista"
+                },
+                "message": {
+                    "description": "Tipo de notificaci\u00f3n push para enviar a l@s miembr@s de la lista.",
+                    "name": "Tipo de notificaci\u00f3n"
+                }
+            },
+            "name": "Enviar una notificaci\u00f3n"
+        }
+    }
+}

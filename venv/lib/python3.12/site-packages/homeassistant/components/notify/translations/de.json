@@ -1,0 +1,88 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Benachrichtigung"
+        }
+    },
+    "issues": {
+        "migrate_notify": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Die `notify`-Aktionen von {integration_title} wurden migriert. Eine neue `notify`-Entit\u00e4t ist jetzt verf\u00fcgbar, um jede alte `notify`-Aktion zu ersetzen. \n\nAktualisiere alle Automationen, sodass sie die neue Aktion `notify.send_message` verwenden, die mit dieser neuen Entit\u00e4t verf\u00fcgbar gemacht wird. Sobald dies erledigt ist, behebe dieses Problem und starte Home Assistant neu.",
+                        "title": "Migriere die alte {integration_title} Benachrichtigungsaktion f\u00fcr die Domain `{domain}`."
+                    }
+                }
+            },
+            "title": "Migration der {integration_title}-Benachrichtigungsaktion"
+        },
+        "migrate_notify_service": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "Die Aktion `notify.{service_name}` von {integration_title} wurde migriert, aber es scheint, dass die alte `notify`-Aktion immer noch verwendet wird. \n\nEine neue `notify`-Entit\u00e4t ist jetzt verf\u00fcgbar, um alle bisherigen `notify`-Aktionen zu ersetzen. \n\nAktualisiere alle Automationen oder Skripte, sodass sie die neue Aktion `notify.send_message` verwenden, die mit dieser neuen Entit\u00e4t verf\u00fcgbar gemacht wird. Sobald dies erledigt ist, w\u00e4hle **OK** und starte Home Assistant neu.",
+                        "title": "Veraltete {integration_title} Notify-Aktion f\u00fcr die Domain `{domain}` migrieren"
+                    }
+                }
+            },
+            "title": "Veraltete Aktion notify.{service_name} noch in Verwendung"
+        }
+    },
+    "services": {
+        "notify": {
+            "description": "Sendet eine Benachrichtigung an ausgew\u00e4hlte Ziele.",
+            "fields": {
+                "data": {
+                    "description": "Einige Integrationen bieten erweiterte Funktionalit\u00e4t. Informationen zur Verwendung von _data_ findest du in der Integrationsdokumentation.",
+                    "name": "Daten"
+                },
+                "message": {
+                    "description": "Nachrichtentext der Benachrichtigung.",
+                    "name": "Nachricht"
+                },
+                "target": {
+                    "description": "Bei einigen Integrationen kannst du die Ziele angeben, die die Benachrichtigung erhalten. Weitere Informationen findest du in der Integrationsdokumentation.",
+                    "name": "Ziel"
+                },
+                "title": {
+                    "description": "Titel f\u00fcr deine Benachrichtigung.",
+                    "name": "Titel"
+                }
+            },
+            "name": "Benachrichtigung senden"
+        },
+        "persistent_notification": {
+            "description": "Sendet eine Benachrichtigung, die im Benachrichtigungsfeld zu sehen ist.",
+            "fields": {
+                "data": {
+                    "description": "Einige Integrationen bieten erweiterte Funktionalit\u00e4t. Informationen zur Verwendung von _data_ findest du in der Integrationsdokumentation.",
+                    "name": "Daten"
+                },
+                "message": {
+                    "description": "Nachrichtentext der Benachrichtigung.",
+                    "name": "Nachricht"
+                },
+                "title": {
+                    "description": "Titel der Benachrichtigung.",
+                    "name": "Titel"
+                }
+            },
+            "name": "Anhaltende Benachrichtigung senden"
+        },
+        "send_message": {
+            "description": "Sendet eine Benachrichtigungsmeldung.",
+            "fields": {
+                "message": {
+                    "description": "Deine Benachrichtigungsmeldung.",
+                    "name": "Meldung"
+                },
+                "title": {
+                    "description": "Titel f\u00fcr deine Benachrichtigungsmeldung.",
+                    "name": "Titel"
+                }
+            },
+            "name": "Benachrichtigungsmeldung senden"
+        }
+    },
+    "title": "Benachrichtigung"
+}

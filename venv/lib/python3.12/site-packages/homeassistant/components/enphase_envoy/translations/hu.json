@@ -1,0 +1,386 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Az eszk\u00f6z m\u00e1r konfigur\u00e1lva van",
+            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt",
+            "reconfigure_successful": "\u00dajrakonfigur\u00e1l\u00e1s sikeres volt",
+            "unique_id_mismatch": "Az eszk\u00f6z sorozatsz\u00e1ma nem egyezik meg az el\u0151z\u0151 sorozatsz\u00e1mmal"
+        },
+        "error": {
+            "cannot_connect": "Nem lehet csatlakozni: {reason}",
+            "invalid_auth": "\u00c9rv\u00e9nytelen hiteles\u00edt\u00e9s: {reason}",
+            "unknown": "V\u00e1ratlan hiba"
+        },
+        "flow_title": "{serial} ({host})",
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "host": "Hoszt",
+                    "password": "Jelsz\u00f3",
+                    "username": "Felhaszn\u00e1l\u00f3n\u00e9v"
+                },
+                "data_description": {
+                    "host": "Az Enphase Envoy-\u00e1tj\u00e1r\u00f3 g\u00e9pneve vagy IP-c\u00edme."
+                },
+                "description": "A firmware 7.0 \u00e9s \u00fajabb verzi\u00f3ihoz adja meg az Enphase felh\u0151 hiteles\u00edt\u0151 adatait, a r\u00e9gebbi modellekhez pedig a `installer` felhaszn\u00e1l\u00f3nevet haszn\u00e1lja jelsz\u00f3 n\u00e9lk\u00fcl."
+            },
+            "user": {
+                "data": {
+                    "host": "Hoszt",
+                    "password": "Jelsz\u00f3",
+                    "username": "Felhaszn\u00e1l\u00f3n\u00e9v"
+                },
+                "data_description": {
+                    "host": "Az Enphase Envoy-\u00e1tj\u00e1r\u00f3 g\u00e9pneve vagy IP-c\u00edme."
+                },
+                "description": "A firmware 7.0 \u00e9s \u00fajabb verzi\u00f3ihoz adja meg az Enphase felh\u0151 hiteles\u00edt\u0151 adatait, a r\u00e9gebbi modellekhez pedig a `installer` felhaszn\u00e1l\u00f3nevet haszn\u00e1lja jelsz\u00f3 n\u00e9lk\u00fcl."
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "communicating": {
+                "name": "Kommunik\u00e1ci\u00f3"
+            },
+            "dc_switch": {
+                "name": "DC kapcsol\u00f3"
+            },
+            "grid_status": {
+                "name": "H\u00e1l\u00f3zat \u00e1llapot"
+            }
+        },
+        "number": {
+            "cutoff_battery_level": {
+                "name": "Akkumul\u00e1tor lev\u00e1laszt\u00e1si szintje"
+            },
+            "reserve_soc": {
+                "name": "Tartal\u00e9k akkumul\u00e1tor t\u00f6lt\u00f6tts\u00e9gi szintje"
+            },
+            "restore_battery_level": {
+                "name": "Akkumul\u00e1tor szintj\u00e9nek vissza\u00e1ll\u00edt\u00e1sa"
+            }
+        },
+        "select": {
+            "relay_generator_action": {
+                "name": "Gener\u00e1tor \u00e1llapota",
+                "state": {
+                    "none": "Nincs",
+                    "not_powered": "Nincs \u00e1ramell\u00e1t\u00e1s",
+                    "powered": "\u00c1ramell\u00e1t\u00e1s",
+                    "schedule": "\u00dctemez\u00e9s k\u00f6vet\u00e9s"
+                }
+            },
+            "relay_grid_action": {
+                "name": "H\u00e1l\u00f3zat \u00e1llapota",
+                "state": {
+                    "none": "Nincs",
+                    "not_powered": "Nincs \u00e1ramell\u00e1t\u00e1s",
+                    "powered": "\u00c1ramell\u00e1t\u00e1s",
+                    "schedule": "\u00dctemez\u00e9s k\u00f6vet\u00e9s"
+                }
+            },
+            "relay_microgrid_action": {
+                "name": "Mikroh\u00e1l\u00f3zat \u00e1llapota",
+                "state": {
+                    "none": "Nincs",
+                    "not_powered": "Nincs \u00e1ramell\u00e1t\u00e1s",
+                    "powered": "\u00c1ramell\u00e1t\u00e1s",
+                    "schedule": "\u00dctemez\u00e9s k\u00f6vet\u00e9s"
+                }
+            },
+            "relay_mode": {
+                "name": "M\u00f3d",
+                "state": {
+                    "battery": "Akkumul\u00e1tor szint",
+                    "standard": "Alap\u00e9rtelmezett"
+                }
+            },
+            "storage_mode": {
+                "name": "T\u00e1rol\u00e1si m\u00f3d",
+                "state": {
+                    "backup": "Teljes biztons\u00e1gi ment\u00e9s",
+                    "savings": "Takar\u00e9kos m\u00f3d",
+                    "self_consumption": "Saj\u00e1t fogyaszt\u00e1s"
+                }
+            }
+        },
+        "sensor": {
+            "acb_available_energy": {
+                "name": "El\u00e9rhet\u0151 ACB akkumul\u00e1tor energia"
+            },
+            "acb_battery_state": {
+                "name": "Akkumul\u00e1tor \u00e1llapota",
+                "state": {
+                    "charging": "T\u00f6lt\u00e9s alatt",
+                    "discharging": "Mer\u00edt\u00e9s alatt",
+                    "full": "Tele",
+                    "idle": "T\u00e9tlen"
+                }
+            },
+            "acb_max_capacity": {
+                "name": "ACB akkumul\u00e1tor kapacit\u00e1s"
+            },
+            "aggregated_available_energy": {
+                "name": "\u00d6sszes\u00edtett el\u00e9rhet\u0151 akkumul\u00e1tor energia"
+            },
+            "aggregated_max_capacity": {
+                "name": "\u00d6sszes\u00edtett akkumul\u00e1tor kapacit\u00e1s"
+            },
+            "aggregated_soc": {
+                "name": "\u00d6sszes\u00edtett akkumul\u00e1tor t\u00f6lt\u00f6tts\u00e9gi szint (SoC)"
+            },
+            "available_energy": {
+                "name": "El\u00e9rhet\u0151 akkumul\u00e1tor-energia"
+            },
+            "balanced_net_consumption": {
+                "name": "kiegyens\u00falyozott nett\u00f3 energiafogyaszt\u00e1s"
+            },
+            "balanced_net_consumption_phase": {
+                "name": "kiegyens\u00falyozott nett\u00f3 energiafogyaszt\u00e1s {phase_name}"
+            },
+            "battery_discharge": {
+                "name": "Jelenlegi akkumul\u00e1tor-mer\u00edt\u00e9s"
+            },
+            "battery_discharge_phase": {
+                "name": "Jelenlegi akkumul\u00e1tor-mer\u00edt\u00e9s {phase_name}"
+            },
+            "configured_reserve_soc": {
+                "name": "Be\u00e1ll\u00edtott tartal\u00e9k akkumul\u00e1tor szint"
+            },
+            "current_power_consumption": {
+                "name": "Jelenlegi teljes\u00edtm\u00e9ny fogyaszt\u00e1st"
+            },
+            "current_power_consumption_phase": {
+                "name": "Jelenlegi energiafogyaszt\u00e1s {phase_name}"
+            },
+            "current_power_production": {
+                "name": "Jelenlegi teljes\u00edtm\u00e9ny termel\u00e9s"
+            },
+            "current_power_production_phase": {
+                "name": "Jelenlegi energiatermel\u00e9s {phase_name}"
+            },
+            "daily_consumption": {
+                "name": "Energiafogyaszt\u00e1s ma"
+            },
+            "daily_consumption_phase": {
+                "name": "Energiafogyaszt\u00e1s ma {phase_name}"
+            },
+            "daily_production": {
+                "name": "Energiatermel\u00e9s ma"
+            },
+            "daily_production_phase": {
+                "name": "Energiatermel\u00e9s ma {phase_name}"
+            },
+            "last_reported": {
+                "name": "Utols\u00f3 jelent\u00e9s"
+            },
+            "lifetime_balanced_net_consumption": {
+                "name": "\u00c9lettartamra vonatkoz\u00f3 kiegyens\u00falyozott nett\u00f3 energiafogyaszt\u00e1s"
+            },
+            "lifetime_balanced_net_consumption_phase": {
+                "name": "\u00c9lettartamra vonatkoz\u00f3 kiegyens\u00falyozott nett\u00f3 energiafogyaszt\u00e1s {phase_name}"
+            },
+            "lifetime_battery_charged": {
+                "name": "\u00c9lettartam alatt akkumul\u00e1torba t\u00f6lt\u00f6tt energia"
+            },
+            "lifetime_battery_charged_phase": {
+                "name": "\u00c9lettartam alatt akkumul\u00e1torba t\u00f6lt\u00f6tt energia {phase_name}"
+            },
+            "lifetime_battery_discharged": {
+                "name": "\u00c9lettartam alatt kis\u00fct\u00f6tt akkumul\u00e1tor energia"
+            },
+            "lifetime_battery_discharged_phase": {
+                "name": "\u00c9lettartam alatt kis\u00fct\u00f6tt akkumul\u00e1tor energia {phase_name}"
+            },
+            "lifetime_consumption": {
+                "name": "Teljes energiafogyaszt\u00e1s"
+            },
+            "lifetime_consumption_phase": {
+                "name": "\u00c9lettartam alatti energiafogyaszt\u00e1s {phase_name}"
+            },
+            "lifetime_net_consumption": {
+                "name": "\u00c9lettartamra vet\u00edtett nett\u00f3 energiafogyaszt\u00e1s"
+            },
+            "lifetime_net_consumption_phase": {
+                "name": "\u00c9lettartamra vet\u00edtett nett\u00f3 energiafogyaszt\u00e1s {phase_name}"
+            },
+            "lifetime_net_production": {
+                "name": "\u00c9lettartamra vonatkoz\u00f3 nett\u00f3 energiatermel\u00e9s"
+            },
+            "lifetime_net_production_phase": {
+                "name": "\u00c9lettartamra vonatkoz\u00f3 nett\u00f3 energiatermel\u00e9s {phase_name}"
+            },
+            "lifetime_production": {
+                "name": "Teljes energiatermel\u00e9s"
+            },
+            "lifetime_production_phase": {
+                "name": "\u00c9lettartam alatti energiatermel\u00e9s {phase_name}"
+            },
+            "max_capacity": {
+                "name": "Akkumul\u00e1tor kapacit\u00e1s"
+            },
+            "net_consumption": {
+                "name": "Aktu\u00e1lis nett\u00f3 energiafogyaszt\u00e1s"
+            },
+            "net_consumption_phase": {
+                "name": "Aktu\u00e1lis nett\u00f3 energiafogyaszt\u00e1s {phase_name}"
+            },
+            "net_ct_current": {
+                "name": "Nett\u00f3 fogyaszt\u00e1s CT \u00e1ramer\u0151ss\u00e9g"
+            },
+            "net_ct_current_phase": {
+                "name": "Nett\u00f3 fogyaszt\u00e1s CT \u00e1ramer\u0151ss\u00e9g {phase_name}"
+            },
+            "net_ct_frequency": {
+                "name": "Nett\u00f3 fogyaszt\u00e1s frekvenciam\u00e9r\u00e9se az \u00e1ramv\u00e1lt\u00f3n\u00e1l"
+            },
+            "net_ct_frequency_phase": {
+                "name": "Nett\u00f3 fogyaszt\u00e1s frekvenciam\u00e9r\u00e9se {phase_name} \u00e1ramv\u00e1lt\u00f3n\u00e1l"
+            },
+            "net_ct_metering_status": {
+                "name": "Nett\u00f3 fogyaszt\u00e1si \u00e1ramv\u00e1lt\u00f3 m\u00e9r\u00e9si \u00e1llapota"
+            },
+            "net_ct_metering_status_phase": {
+                "name": "Nett\u00f3 fogyaszt\u00e1si \u00e1ramv\u00e1lt\u00f3 m\u00e9r\u00e9si \u00e1llapota {phase_name}"
+            },
+            "net_ct_powerfactor": {
+                "name": "Teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 nett\u00f3 fogyaszt\u00e1s CT"
+            },
+            "net_ct_powerfactor_phase": {
+                "name": "Teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 nett\u00f3 fogyaszt\u00e1s CT {phase_name}"
+            },
+            "net_ct_status_flags": {
+                "name": "Akt\u00edv nett\u00f3 fogyaszt\u00e1si \u00e1ramv\u00e1lt\u00f3 m\u00e9r\u0151jelz\u0151i"
+            },
+            "net_ct_status_flags_phase": {
+                "name": "Akt\u00edv nett\u00f3 fogyaszt\u00e1si \u00e1ramv\u00e1lt\u00f3 m\u00e9r\u0151jelz\u0151i {phase_name}"
+            },
+            "net_ct_voltage": {
+                "name": "Nett\u00f3 fogyaszt\u00e1s fesz\u00fclts\u00e9gm\u00e9r\u00e9se az \u00e1ramv\u00e1lt\u00f3n\u00e1l"
+            },
+            "net_ct_voltage_phase": {
+                "name": "Nett\u00f3 fogyaszt\u00e1s fesz\u00fclts\u00e9gm\u00e9r\u00e9se {phase_name} \u00e1ramv\u00e1lt\u00f3n\u00e1l"
+            },
+            "production_ct_current": {
+                "name": "Termel\u00e9s CT \u00e1ramer\u0151ss\u00e9g"
+            },
+            "production_ct_current_phase": {
+                "name": "Termel\u00e9s CT \u00e1ramer\u0151ss\u00e9g {phase_name}"
+            },
+            "production_ct_frequency": {
+                "name": "Termel\u00e9s frekvencia CT"
+            },
+            "production_ct_frequency_phase": {
+                "name": "Termel\u00e9s frekvencia CT {phase_name}"
+            },
+            "production_ct_metering_status": {
+                "name": "Termel\u00e9si \u00e1ramv\u00e1lt\u00f3 m\u00e9r\u00e9si \u00e1llapota"
+            },
+            "production_ct_metering_status_phase": {
+                "name": "Termel\u00e9si \u00e1ramv\u00e1lt\u00f3 m\u00e9r\u00e9si \u00e1llapota {phase_name}"
+            },
+            "production_ct_powerfactor": {
+                "name": "Termel\u00e9s teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 CT"
+            },
+            "production_ct_powerfactor_phase": {
+                "name": "Termel\u00e9s teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 CT {phase_name}"
+            },
+            "production_ct_status_flags": {
+                "name": "Akt\u00edv termel\u00e9si \u00e1ramv\u00e1lt\u00f3 m\u00e9r\u0151jelz\u0151i"
+            },
+            "production_ct_status_flags_phase": {
+                "name": "Akt\u00edv termel\u00e9si \u00e1ramv\u00e1lt\u00f3 m\u00e9r\u0151jelz\u0151i {phase_name}"
+            },
+            "production_ct_voltage": {
+                "name": "Fesz\u00fclts\u00e9g termel\u00e9s CT"
+            },
+            "production_ct_voltage_phase": {
+                "name": "Fesz\u00fclts\u00e9g termel\u00e9s CT {phase_name}"
+            },
+            "reserve_energy": {
+                "name": "Tartal\u00e9k akkumul\u00e1tor energia"
+            },
+            "reserve_soc": {
+                "name": "Tartal\u00e9k akkumul\u00e1tor szintje"
+            },
+            "seven_days_consumption": {
+                "name": "Energiafogyaszt\u00e1s elm\u00falt h\u00e9t nap"
+            },
+            "seven_days_consumption_phase": {
+                "name": "Energiafogyaszt\u00e1s az elm\u00falt h\u00e9t napban {phase_name}"
+            },
+            "seven_days_production": {
+                "name": "Energiatermel\u00e9s elm\u00falt h\u00e9t nap"
+            },
+            "seven_days_production_phase": {
+                "name": "Energiatermel\u00e9s az elm\u00falt h\u00e9t napban {phase_name}"
+            },
+            "storage_ct_current": {
+                "name": "T\u00e1rol\u00e1s CT \u00e1ramer\u0151ss\u00e9g"
+            },
+            "storage_ct_current_phase": {
+                "name": "T\u00e1rol\u00e1s CT \u00e1ramer\u0151ss\u00e9g {phase_name}"
+            },
+            "storage_ct_frequency": {
+                "name": "Frekvencia t\u00e1rol\u00e1s CT"
+            },
+            "storage_ct_frequency_phase": {
+                "name": "Frekvencia t\u00e1rol\u00e1s CT {phase_name}"
+            },
+            "storage_ct_metering_status": {
+                "name": "T\u00e1rol\u00f3 CT m\u00e9r\u00e9si \u00e1llapot"
+            },
+            "storage_ct_metering_status_phase": {
+                "name": "T\u00e1rol\u00f3 CT m\u00e9r\u00e9si \u00e1llapot {phase_name}"
+            },
+            "storage_ct_powerfactor": {
+                "name": "Teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 t\u00e1rol\u00e1s CT"
+            },
+            "storage_ct_powerfactor_phase": {
+                "name": "Teljes\u00edtm\u00e9nyt\u00e9nyez\u0151 t\u00e1rol\u00e1s CT {phase_name}"
+            },
+            "storage_ct_status_flags": {
+                "name": "M\u00e9r\u0151\u00e1llapot-jelz\u0151k akt\u00edv t\u00e1rol\u00f3 CT-n"
+            },
+            "storage_ct_status_flags_phase": {
+                "name": "M\u00e9r\u0151\u00e1llapot-jelz\u0151k akt\u00edv t\u00e1rol\u00f3 CT-n {phase_name}"
+            },
+            "storage_ct_voltage": {
+                "name": "Fesz\u00fclts\u00e9g t\u00e1rol\u00f3 CT"
+            },
+            "storage_ct_voltage_phase": {
+                "name": "Fesz\u00fclts\u00e9g t\u00e1rol\u00f3 CT {phase_name}"
+            }
+        },
+        "switch": {
+            "charge_from_grid": {
+                "name": "T\u00f6lt\u00e9s a h\u00e1l\u00f3zatr\u00f3l"
+            },
+            "grid_enabled": {
+                "name": "H\u00e1l\u00f3zat enged\u00e9lyezve"
+            }
+        }
+    },
+    "exceptions": {
+        "authentication_error": {
+            "message": "Envoy hiteles\u00edt\u00e9si hiba a(z) {host}: {args}"
+        },
+        "envoy_error": {
+            "message": "Hiba az Envoy API-val val\u00f3 kommunik\u00e1ci\u00f3 sor\u00e1n a(z) {host}: {args}"
+        },
+        "unexpected_device": {
+            "message": "Nem v\u00e1rt Envoy sorozatsz\u00e1mot tal\u00e1lt a(z) {host} c\u00edmen; a v\u00e1rt {expected_serial}, de a tal\u00e1lt {actual_serial}."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "diagnostics_include_fixtures": "Tesztadatok bevon\u00e1sa a diagnosztikai jelent\u00e9sbe. Ezt az opci\u00f3t akkor haszn\u00e1lja, ha tesztadatokat kell biztos\u00edtani a hibaelh\u00e1r\u00edt\u00e1shoz vagy fejleszt\u00e9si tev\u00e9kenys\u00e9gekhez. Ezzel az opci\u00f3val a diagnosztikai jelent\u00e9s let\u00f6lt\u00e9se t\u00f6bb id\u0151t vehet ig\u00e9nybe. A jelent\u00e9s l\u00e9trehoz\u00e1sa ut\u00e1n a legjobb, ha ism\u00e9t kikapcsolja ezt az opci\u00f3t.",
+                    "disable_keep_alive": "Mindig \u00faj kapcsolatot haszn\u00e1ljon az Envoy-t\u00f3l \u00e9rkez\u0151 adatok lek\u00e9r\u00e9sekor. Ez megoldhatja a kommunik\u00e1ci\u00f3s probl\u00e9m\u00e1kat bizonyos Envoy firmware-ek eset\u00e9n."
+                },
+                "title": "Envoy {serial} {host} be\u00e1ll\u00edt\u00e1sok"
+            }
+        }
+    }
+}

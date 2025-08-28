@@ -1,0 +1,176 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado",
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "device_name": "Nome",
+                    "host": "Anfitri\u00e3o"
+                },
+                "description": "Definir os par\u00e2metros necess\u00e1rios para ligar ao seu dispositivo"
+            },
+            "zeroconf_confirm": {
+                "description": "Pretende adicionar o Lektrico Charger com o n\u00famero de s\u00e9rie `{serial_number}` ao Home Assistant?",
+                "title": "Foi descoberto um dispositivo Lektrico Charger"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "contactor_failure": {
+                "name": "Contactos do rel\u00e9 fundidos"
+            },
+            "cp_diode_failure": {
+                "name": "Curto-circuito no diodo EV"
+            },
+            "critical_temp": {
+                "name": "Sobreaquecimento"
+            },
+            "meter_fault": {
+                "name": "Erro de medi\u00e7\u00e3o"
+            },
+            "overcurrent": {
+                "name": "Sobrecorrente"
+            },
+            "overtemp": {
+                "name": "Thermal throttling"
+            },
+            "overvoltage": {
+                "name": "Sobretens\u00e3o"
+            },
+            "rcd_error": {
+                "name": "Erro Rcd"
+            },
+            "state_e_activated": {
+                "name": "Erro Ev"
+            },
+            "undervoltage": {
+                "name": "Subtens\u00e3o"
+            }
+        },
+        "button": {
+            "charge_start": {
+                "name": "Iniciar carregamento"
+            },
+            "charge_stop": {
+                "name": "Parar carregamento"
+            }
+        },
+        "number": {
+            "dynamic_limit": {
+                "name": "Limite din\u00e2mico"
+            },
+            "led_max_brightness": {
+                "name": "Brilho do LED"
+            }
+        },
+        "select": {
+            "load_balancing_mode": {
+                "name": "Modo de balanceamento de carga",
+                "state": {
+                    "disabled": "Desativado",
+                    "green": "Verde",
+                    "hybrid": "H\u00edbrido",
+                    "power": "Pot\u00eancia"
+                }
+            }
+        },
+        "sensor": {
+            "breaker_current": {
+                "name": "Corrente do disjuntor"
+            },
+            "charging_time": {
+                "name": "Tempo de carregamento"
+            },
+            "current_l1": {
+                "name": "Corrente L1"
+            },
+            "current_l2": {
+                "name": "Corrente L2"
+            },
+            "current_l3": {
+                "name": "Corrente L3"
+            },
+            "installation_current": {
+                "name": "Corrente da instala\u00e7\u00e3o"
+            },
+            "lifetime_energy": {
+                "name": "Energia vital\u00edcia"
+            },
+            "limit_reason": {
+                "name": "Motivo do limite",
+                "state": {
+                    "1p_charging_disabled": "Carregamento 1p desativado",
+                    "dynamic_limit": "Limite din\u00e2mico",
+                    "em": "EM",
+                    "em_offline": "EM offline",
+                    "installation_current": "Corrente da instala\u00e7\u00e3o",
+                    "no_limit": "Sem limite",
+                    "ocpp": "OCPP",
+                    "overtemperature": "Sobreaquecimento",
+                    "schedule": "Agendado",
+                    "switching_phases": "A trocar fases",
+                    "user_limit": "Limite do utilizador"
+                }
+            },
+            "pf_l1": {
+                "name": "Fator de pot\u00eancia L1"
+            },
+            "pf_l2": {
+                "name": "Fator de pot\u00eancia L2"
+            },
+            "pf_l3": {
+                "name": "Fator de pot\u00eancia L3"
+            },
+            "power_l1": {
+                "name": "Pot\u00eancia L1"
+            },
+            "power_l2": {
+                "name": "Pot\u00eancia L2"
+            },
+            "power_l3": {
+                "name": "Pot\u00eancia L3"
+            },
+            "state": {
+                "name": "Estado",
+                "state": {
+                    "available": "Dispon\u00edvel",
+                    "charging": "A carregar",
+                    "connected": "Ligado",
+                    "error": "Erro",
+                    "locked": "Trancada",
+                    "need_auth": "A aguardar autentica\u00e7\u00e3o",
+                    "paused": "Pausado",
+                    "paused_by_scheduler": "Pausado por agenda",
+                    "updating_firmware": "A atualizar firmware"
+                }
+            },
+            "voltage_l1": {
+                "name": "Tens\u00e3o L1"
+            },
+            "voltage_l2": {
+                "name": "Tens\u00e3o L2"
+            },
+            "voltage_l3": {
+                "name": "Tens\u00e3o L3"
+            }
+        },
+        "switch": {
+            "authentication": {
+                "name": "Autentica\u00e7\u00e3o"
+            },
+            "force_single_phase": {
+                "name": "For\u00e7ar fase \u00fanica"
+            },
+            "lock": {
+                "name": "Fechadura"
+            }
+        }
+    }
+}

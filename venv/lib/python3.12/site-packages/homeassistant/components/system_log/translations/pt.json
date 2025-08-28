@@ -1,0 +1,37 @@
+{
+    "selector": {
+        "level": {
+            "options": {
+                "critical": "Cr\u00edtico",
+                "debug": "Depura\u00e7\u00e3o",
+                "error": "Erro",
+                "info": "Info",
+                "warning": "Aviso"
+            }
+        }
+    },
+    "services": {
+        "clear": {
+            "description": "Apaga todos os registos do log.",
+            "name": "Limpar"
+        },
+        "write": {
+            "description": "Escrever registo no log.",
+            "fields": {
+                "level": {
+                    "description": "N\u00edvel do log.",
+                    "name": "N\u00edvel"
+                },
+                "logger": {
+                    "description": "Nome do registo sob o qual registar a mensagem. O padr\u00e3o \u00e9 `system_log.external`.",
+                    "name": "Logger"
+                },
+                "message": {
+                    "description": "Mensagem a registar.",
+                    "name": "Mensagem"
+                }
+            },
+            "name": "Escrever"
+        }
+    }
+}

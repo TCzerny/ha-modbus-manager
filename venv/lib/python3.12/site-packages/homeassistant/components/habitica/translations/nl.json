@@ -1,0 +1,216 @@
+{
+    "common": {
+        "unit_experience_points": "XP",
+        "unit_health_points": "HP",
+        "unit_mana_points": "MP",
+        "unit_tasks": "taken"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Account is al geconfigureerd"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "invalid_auth": "Ongeldige authenticatie",
+            "unknown": "Onverwachte fout"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "API Token",
+                    "url": "URL",
+                    "verify_ssl": "SSL-certificaat verifi\u00ebren"
+                },
+                "data_description": {
+                    "api_key": "API Token van het Habitica account",
+                    "api_user": "Gebruikers-ID van je Habitica account",
+                    "url": "URL van de Habitica-installatie waarmee verbinding moet worden gemaakt. Standaard `{default_url}`"
+                }
+            },
+            "login": {
+                "data": {
+                    "password": "Wachtwoord"
+                },
+                "data_description": {
+                    "password": "Wachtwoord van je account om Home Assistant te verbinden met Habitica",
+                    "username": "E-mail of gebruikersnaam (hoofdlettergevoelig) om Home Assistant te verbinden met je Habitica-account"
+                },
+                "description": "Voer je inloggegevens in om Habitica met Home Assistant te gebruiken \n \n [Wachtwoord vergeten?]({forgot_password})"
+            },
+            "user": {
+                "title": "Habitica - Gamify your life"
+            }
+        }
+    },
+    "entity": {
+        "button": {
+            "brightness": {
+                "name": "Schroeiende Helderheid"
+            },
+            "defensive_stance": {
+                "name": "Defensieve Houding"
+            },
+            "earth": {
+                "name": "Aardbeving"
+            },
+            "frost": {
+                "name": "IJskoude Vorst"
+            },
+            "heal": {
+                "name": "Helend Licht"
+            },
+            "heal_all": {
+                "name": "Zegening"
+            },
+            "intimidate": {
+                "name": "Intimiderende Blik"
+            },
+            "mpheal": {
+                "name": "Golf van Ether"
+            },
+            "protect_aura": {
+                "name": "Beschermende Aura"
+            },
+            "stealth": {
+                "name": "Heimelijkheid"
+            },
+            "tools_of_trade": {
+                "name": "Dievenkneepjes"
+            },
+            "valorous_presence": {
+                "name": "Bemoedigende Aanwezigheid"
+            }
+        },
+        "calendar": {
+            "dailys": {
+                "state_attributes": {
+                    "yesterdaily": {
+                        "state": {
+                            "false": "Nee",
+                            "true": "Ja"
+                        }
+                    }
+                }
+            }
+        },
+        "sensor": {
+            "dailys": {
+                "unit_of_measurement": "taken"
+            },
+            "experience": {
+                "unit_of_measurement": "XP"
+            },
+            "experience_max": {
+                "unit_of_measurement": "XP"
+            },
+            "gems": {
+                "unit_of_measurement": "gems"
+            },
+            "gold": {
+                "unit_of_measurement": "GP"
+            },
+            "habits": {
+                "unit_of_measurement": "taken"
+            },
+            "health": {
+                "unit_of_measurement": "HP"
+            },
+            "health_max": {
+                "unit_of_measurement": "HP"
+            },
+            "mana": {
+                "unit_of_measurement": "MP"
+            },
+            "mana_max": {
+                "unit_of_measurement": "MP"
+            },
+            "rewards": {
+                "unit_of_measurement": "taken"
+            },
+            "todos": {
+                "unit_of_measurement": "taken"
+            },
+            "trinkets": {
+                "name": "Mystieke zandlopers"
+            }
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "Dief: Ruggesteek",
+                "fireball": "Magi\u00ebr: Uiteenspatting van vlammen",
+                "pickpocket": "Dief: Zakkenroller",
+                "smash": "Krijger: Wrede slag"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "Zeeschuim",
+                "snowball": "Sneeuwbal"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "fields": {
+                "config_entry": {
+                    "description": "Choose the Habitica character for which to perform the action."
+                }
+            }
+        },
+        "accept_quest": {
+            "fields": {
+                "config_entry": {
+                    "description": "Choose the Habitica character for which to perform the action."
+                }
+            }
+        },
+        "api_call": {
+            "description": "Roep Habitica API aan.",
+            "fields": {
+                "args": {
+                    "description": "Enige additionele JSON of URL parameterargumenten. Zie apidoc genoemd voor pad. Voorbeeld gebruikt hetzelfde API endpoint.",
+                    "name": "Argumenten"
+                },
+                "name": {
+                    "description": "Habitica's gebruikersnaam om namens aan te roepen.",
+                    "name": "Naam"
+                },
+                "path": {
+                    "description": "Items van API URL in de vorm van een array met de methode toegevoegd aan het einde. Raadpleeg https://habitica.com/apidoc/. Voorbeeld gebruikt https://habitica.com/apidoc/#api-Task-CreateUserTasks.",
+                    "name": "Pad"
+                }
+            },
+            "name": "API-naam"
+        },
+        "cancel_quest": {
+            "fields": {
+                "config_entry": {
+                    "description": "Choose the Habitica character for which to perform the action."
+                }
+            }
+        },
+        "leave_quest": {
+            "fields": {
+                "config_entry": {
+                    "description": "Choose the Habitica character for which to perform the action."
+                }
+            }
+        },
+        "reject_quest": {
+            "fields": {
+                "config_entry": {
+                    "description": "Choose the Habitica character for which to perform the action."
+                }
+            }
+        },
+        "start_quest": {
+            "fields": {
+                "config_entry": {
+                    "description": "Choose the Habitica character for which to perform the action."
+                }
+            }
+        }
+    }
+}

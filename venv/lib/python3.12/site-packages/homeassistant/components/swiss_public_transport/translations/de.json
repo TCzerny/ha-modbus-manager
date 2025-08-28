@@ -1,0 +1,123 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dienst ist bereits konfiguriert",
+            "bad_config": "Anfrage aufgrund fehlerhafter Konfiguration fehlgeschlagen: Schaue unter [Stationboard]({stationboard_url}) nach g\u00fcltigen Haltestellen",
+            "cannot_connect": "Verbindung zum Server nicht m\u00f6glich",
+            "unknown": "Ein unbekannter Fehler wurde von python-opendata-transport ausgel\u00f6st"
+        },
+        "error": {
+            "bad_config": "Anfrage aufgrund fehlerhafter Konfiguration fehlgeschlagen: \u00dcberpr\u00fcfe bei [Stationboard]({stationboard_url}), ob deine Stationsnamen g\u00fcltig sind",
+            "cannot_connect": "Verbindung zum Server nicht m\u00f6glich",
+            "too_many_via_stations": "Zu viele Via-Haltestellen, pro Verbindung sind nur bis zu 5 Via-Haltestellen zul\u00e4ssig.",
+            "unknown": "Ein unbekannter Fehler wurde von python-opendata-transport ausgel\u00f6st"
+        },
+        "step": {
+            "time_fixed": {
+                "data": {
+                    "time_fixed": "Uhrzeit"
+                },
+                "description": "Bitte w\u00e4hle die relevante Uhrzeit f\u00fcr die Verbindung (z. B. 7:12:00 Uhr jeden Morgen).",
+                "title": "\u00d6ffentlicher Verkehr der Schweiz"
+            },
+            "time_offset": {
+                "data": {
+                    "time_offset": "Zeitabstand"
+                },
+                "description": "Bitte w\u00e4hle den notwendigen Zeitabstand f\u00fcr die fr\u00fchestm\u00f6gliche Verbindung aus (z.B. +00:05:00 zur Ber\u00fccksichtigung der Gehzeit zur Haltestelle)",
+                "title": "\u00d6ffentlicher Verkehr der Schweiz"
+            },
+            "user": {
+                "data": {
+                    "from": "Starthaltestelle",
+                    "time_mode": "W\u00e4hle einen Zeitmodus",
+                    "time_station": "W\u00e4hle die relevante Haltestelle aus",
+                    "to": "Zielhaltestelle",
+                    "via": "Via-Haltestellen"
+                },
+                "data_description": {
+                    "time_mode": "Der Zeitmodus erlaubt dir, die Abfahrtszeit zu \u00e4ndern und auf eine bestimmte Zeit festlegen (z. B. jeden Morgen 7:12:00 Uhr) oder einen gleitenden Zeitabstand hinzuf\u00fcgen (z. B. +00:05:00 zur Ber\u00fccksichtigung der Gehzeit zur Haltestelle).",
+                    "time_station": "Normalerweise wird die Abfahrtszeit einer Verbindung erfasst, wenn man die Starthaltestelle verl\u00e4sst. Alternativ kann die Zeit erfasst werden, zu der die Verbindung an ihrer Zielhaltestelle ankommt."
+                },
+                "description": "Gib die Start- und Zielhaltestelle f\u00fcr deine Verbindung an,\nund optional bis zu 5 Via-Haltestellen. \n\nG\u00fcltige Haltestellen findest du auf [Stationboard]({stationboard_url}).",
+                "title": "\u00d6ffentliche Verkehrsmittel der Schweiz"
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delay": {
+                "name": "Versp\u00e4tung"
+            },
+            "departure0": {
+                "name": "Abfahrt"
+            },
+            "departure1": {
+                "name": "Abfahrt +1"
+            },
+            "departure2": {
+                "name": "Abfahrt +2"
+            },
+            "duration": {
+                "name": "Fahrzeit"
+            },
+            "line": {
+                "name": "Linie"
+            },
+            "platform": {
+                "name": "Bahnsteig"
+            },
+            "transfers": {
+                "name": "Umstiege"
+            }
+        }
+    },
+    "exceptions": {
+        "cannot_connect": {
+            "message": "Verbindung zum Server kann nicht hergestellt werden. {error}"
+        },
+        "config_entry_not_found": {
+            "message": "Die Instanz \u201e{target}\u201c der Schweizer \u00d6V-Integration wurde nicht gefunden."
+        },
+        "invalid_data": {
+            "message": "Die Einrichtung des Eintrags {config_title} ist aufgrund ung\u00fcltiger Daten fehlgeschlagen. Schaue auf [Stationboard]({stationboard_url}), ob die Namen deiner Haltestellen korrekt sind.\n{error}"
+        },
+        "not_loaded": {
+            "message": "{target} ist nicht geladen."
+        },
+        "request_timeout": {
+            "message": "Timeout beim Verbindungsaufbau f\u00fcr den Eintrag {config_title}.\n{error}"
+        }
+    },
+    "selector": {
+        "time_mode": {
+            "options": {
+                "fixed": "Zu einer festen Uhrzeit",
+                "now": "Jetzt",
+                "offset": "Mit einem Zeitabstand ab jetzt"
+            }
+        },
+        "time_station": {
+            "options": {
+                "arrival": "Ankunftszeit an Zielhaltestelle anzeigen",
+                "departure": "Abfahrtszeit von Starthaltestelle anzeigen"
+            }
+        }
+    },
+    "services": {
+        "fetch_connections": {
+            "description": "Ruft eine Liste von Verbindungen von Swiss Public Transport ab.",
+            "fields": {
+                "config_entry_id": {
+                    "description": "Integrationseintrag von Swiss Public Transport, f\u00fcr den Verbindungen abgerufen werden sollen.",
+                    "name": "Instanz"
+                },
+                "limit": {
+                    "description": "Anzahl der abzurufenden Verbindungen [1-15]",
+                    "name": "Limit"
+                }
+            },
+            "name": "Verbindungen abrufen"
+        }
+    }
+}

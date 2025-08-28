@@ -1,0 +1,121 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Hesap zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "no_locations": "Bu kullan\u0131c\u0131 i\u00e7in uygun konum yok, TotalConnect ayarlar\u0131n\u0131 kontrol edin",
+            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu"
+        },
+        "error": {
+            "invalid_auth": "Ge\u00e7ersiz kimlik do\u011frulama",
+            "usercode": "Kullan\u0131c\u0131 kodu bu konumdaki kullan\u0131c\u0131 i\u00e7in ge\u00e7erli de\u011fil"
+        },
+        "step": {
+            "locations": {
+                "data": {
+                    "usercode": "Kullan\u0131c\u0131 kodu"
+                },
+                "description": "Bu kullan\u0131c\u0131n\u0131n kullan\u0131c\u0131 kodunu {location_id} konumuna girin",
+                "title": "Konum Kullan\u0131c\u0131 Kodlar\u0131"
+            },
+            "reauth_confirm": {
+                "description": "Total Connect'in hesab\u0131n\u0131z\u0131 yeniden do\u011frulamas\u0131 gerekiyor",
+                "title": "{name} i\u00e7in kimlik do\u011frulaman\u0131n s\u00fcresi doldu"
+            },
+            "user": {
+                "data": {
+                    "password": "Parola",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                }
+            }
+        }
+    },
+    "entity": {
+        "alarm_control_panel": {
+            "partition": {
+                "name": "B\u00f6l\u00fcm {partition_id}"
+            }
+        },
+        "binary_sensor": {
+            "police": {
+                "name": "Polis acil durumu",
+                "state": {
+                    "off": "Acil durum yok",
+                    "on": "Polis acil durumu"
+                }
+            }
+        },
+        "button": {
+            "bypass": {
+                "name": "Atlatma"
+            },
+            "bypass_all": {
+                "name": "T\u00fcm\u00fcn\u00fc atla"
+            },
+            "clear_bypass": {
+                "name": "Bypass'\u0131 temizle"
+            }
+        }
+    },
+    "exceptions": {
+        "arm_away_failed": {
+            "message": "{device} alarm kurulamad\u0131"
+        },
+        "arm_away_instant_failed": {
+            "message": "Anl\u0131k {device} alarm kurulamad\u0131"
+        },
+        "arm_away_instant_invalid_code": {
+            "message": "Kullan\u0131c\u0131 kodu ge\u00e7ersiz, an\u0131nda aktifle\u015ftirilmedi"
+        },
+        "arm_away_invalid_code": {
+            "message": "Kullan\u0131c\u0131 kodu ge\u00e7ersiz, alarm kurulamad\u0131"
+        },
+        "arm_home_failed": {
+            "message": "{device} ana cihaz\u0131 kurulamad\u0131"
+        },
+        "arm_home_instant_failed": {
+            "message": "{device} an\u0131nda ev alar\u0131m kurulumu ba\u015far\u0131s\u0131z oldu"
+        },
+        "arm_home_instant_invalid_code": {
+            "message": "Kullan\u0131c\u0131 kodu ge\u00e7ersiz, eve an\u0131nda ba\u011flanmad\u0131"
+        },
+        "arm_home_invalid_code": {
+            "message": "Kullan\u0131c\u0131 kodu ge\u00e7ersiz, ev kurulmad\u0131"
+        },
+        "arm_night_failed": {
+            "message": "{device} gecesi alarm\u0131 kurulamad\u0131"
+        },
+        "arm_night_invalid_code": {
+            "message": "Kullan\u0131c\u0131 kodu ge\u00e7ersiz, geceyi aktifle\u015ftirmedi"
+        },
+        "disarm_failed": {
+            "message": "{device} devre d\u0131\u015f\u0131 b\u0131rak\u0131lamad\u0131"
+        },
+        "disarm_invalid_code": {
+            "message": "Kullan\u0131c\u0131 kodu ge\u00e7ersiz, alarm kurulamad\u0131"
+        },
+        "invalid_pin": {
+            "message": "Yanl\u0131\u015f kod girildi"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "auto_bypass_low_battery": "D\u00fc\u015f\u00fck pili otomatik atla",
+                    "code_required": "Alarm eylemleri i\u00e7in kullan\u0131c\u0131n\u0131n kod girmesini gerektir"
+                },
+                "title": "Toplam Ba\u011flant\u0131 Se\u00e7enekleri"
+            }
+        }
+    },
+    "services": {
+        "arm_away_instant": {
+            "description": "S\u0131f\u0131r giri\u015f gecikmesi ile Alarm uzakta.",
+            "name": "An\u0131nda alarm devrede"
+        },
+        "arm_home_instant": {
+            "description": "S\u0131f\u0131r giri\u015f gecikmesi ile Alarm Devrede.",
+            "name": "An\u0131nda devreye alma"
+        }
+    }
+}

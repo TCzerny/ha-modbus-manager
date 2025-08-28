@@ -1,0 +1,101 @@
+{
+    "device_automation": {
+        "action_type": {
+            "clean": "Perintahkan {entity_name} untuk bersih-bersih",
+            "dock": "Kembalikan {entity_name} ke dok"
+        },
+        "condition_type": {
+            "is_cleaning": "{entity_name} sedang membersihkan",
+            "is_docked": "{entity_name} berlabuh di dok"
+        },
+        "extra_fields": {
+            "for": "Durasi"
+        },
+        "trigger_type": {
+            "cleaning": "{entity_name} mulai membersihkan",
+            "docked": "{entity_name} berlabuh"
+        }
+    },
+    "entity_component": {
+        "_": {
+            "name": "Vakum",
+            "state": {
+                "cleaning": "Membersihkan",
+                "docked": "Berlabuh",
+                "error": "Kesalahan",
+                "idle": "Siaga",
+                "off": "Mati",
+                "on": "Nyala",
+                "paused": "Jeda",
+                "returning": "Kembali ke dok"
+            }
+        }
+    },
+    "services": {
+        "clean_spot": {
+            "description": "Memberitahukan penyedot debu untuk melakukan pembersihan area tertentu.",
+            "name": "Bersihkan area tertentu"
+        },
+        "locate": {
+            "description": "Menemukan lokasi robot penyedot debu.",
+            "name": "Temukan"
+        },
+        "pause": {
+            "description": "Menjeda tugas pembersihan.",
+            "name": "Jeda"
+        },
+        "return_to_base": {
+            "description": "Memberitahukan penyedot debu untuk kembali ke doknya.",
+            "name": "Kembali ke dock"
+        },
+        "send_command": {
+            "description": "Mengirimkan perintah ke penyedot debu.",
+            "fields": {
+                "command": {
+                    "description": "Perintah untuk dieksekusi. Perintah ini tergantung integrasi.",
+                    "name": "Perintah"
+                },
+                "params": {
+                    "description": "Parameter untuk perintah. Parameter ini tergantung integrasi.",
+                    "name": "Parameter"
+                }
+            },
+            "name": "Kirim perintah"
+        },
+        "set_fan_speed": {
+            "description": "Mengatur kecepatan kipas penyedot debu.",
+            "fields": {
+                "fan_speed": {
+                    "description": "Kecepatan kipas. Nilainya tergantung pada integrasi. Beberapa integrasi memiliki langkah kecepatan, seperti 'sedang'. Beberapa menggunakan persentase, antara 0 dan 100.",
+                    "name": "Kecepatan kipas"
+                }
+            },
+            "name": "Atur kecepatan kipas"
+        },
+        "start": {
+            "description": "Memulai atau melanjutkan tugas pembersihan.",
+            "name": "Mulai"
+        },
+        "start_pause": {
+            "description": "Memulai, menjeda, atau melanjutkan tugas pembersihan.",
+            "name": "Mulai/jeda"
+        },
+        "stop": {
+            "description": "Menghentikan tugas pembersihan saat ini.",
+            "name": "Hentikan"
+        },
+        "toggle": {
+            "description": "Mengaktifkan/menonaktifkan penyedot debu.",
+            "name": "Alihkan"
+        },
+        "turn_off": {
+            "description": "Menghentikan tugas pembersihan saat ini dan kembali ke dok.",
+            "name": "Matikan"
+        },
+        "turn_on": {
+            "description": "Memulai tugas pembersihan baru.",
+            "name": "Nyalakan"
+        }
+    },
+    "title": "Vakum"
+}

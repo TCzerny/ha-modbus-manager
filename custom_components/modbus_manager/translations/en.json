@@ -6,6 +6,7 @@
                 "title": "Modbus Manager Configuration",
                 "description": "Set up a new Modbus Manager connection",
                 "data": {
+                    "template": "Device Template",
                     "name": "Name",
                     "host": "Host",
                     "port": "Port",
@@ -18,6 +19,22 @@
                 "description": "Select the firmware version for your {device_type}",
                 "data": {
                     "firmware_version": "Firmware Version"
+                }
+            },
+            "device_config": {
+                "title": "Device Configuration",
+                "description": "Configure the connection to the Modbus device",
+                "data": {
+                    "prefix": "Device Prefix (e.g. 'sungrow_1')",
+                    "host": "IP Address of Modbus device",
+                    "port": "Modbus TCP Port (Default: 502)",
+                    "slave_id": "Modbus Slave ID (Default: 1)",
+                    "timeout": "Timeout in seconds",
+                    "retries": "Retry attempts on errors",
+                    "delay": "Delay between operations (ms)",
+                    "close_comm_on_error": "Close connection on errors",
+                    "reconnect_delay": "Wait time before reconnection (s)",
+                    "message_wait": "Wait time between messages (ms)"
                 }
             }
         },
@@ -82,4 +99,4 @@
             }
         }
     }
-} 
+}

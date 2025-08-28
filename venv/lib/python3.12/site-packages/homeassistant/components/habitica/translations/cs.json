@@ -1,0 +1,546 @@
+{
+    "common": {
+        "config_entry_name": "Vybrat postavu",
+        "dailies": "Den\u00edky",
+        "todos": "\u00dakoly",
+        "unit_experience_points": "XP",
+        "unit_health_points": "HP",
+        "unit_mana_points": "MP",
+        "unit_tasks": "\u00fakoly"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "\u00da\u010det je ji\u017e nastaven"
+        },
+        "error": {
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "invalid_auth": "Neplatn\u00e9 ov\u011b\u0159en\u00ed",
+            "unknown": "Neo\u010dek\u00e1van\u00e1 chyba"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "Token API",
+                    "api_user": "ID u\u017eivatele",
+                    "url": "URL",
+                    "verify_ssl": "Ov\u011b\u0159it certifik\u00e1t SSL"
+                },
+                "data_description": {
+                    "api_key": "API token \u00fa\u010dtu Habitica",
+                    "api_user": "ID u\u017eivatele va\u0161eho \u00fa\u010dtu Habitica",
+                    "url": "Adresa URL instalace Habitica, ke kter\u00e9 se chcete p\u0159ipojit. V\u00fdchoz\u00ed hodnota je \"{default_url}\""
+                },
+                "description": "Sv\u00e9 \"ID u\u017eivatele\" a \"API token\" m\u016f\u017eete z\u00edskat z [**Settings -> Site Data**]({site_data}) na Habitica nebo instanci, ke kter\u00e9 se chcete p\u0159ipojit.",
+                "title": "P\u0159ihl\u00e1sit se do jin\u00fdch instanc\u00ed"
+            },
+            "login": {
+                "data": {
+                    "password": "Heslo",
+                    "username": "E-mail nebo u\u017eivatelsk\u00e9 jm\u00e9no (rozli\u0161uj\u00ed se mal\u00e1 a velk\u00e1 p\u00edsmena)"
+                },
+                "data_description": {
+                    "password": "Heslo pro \u00fa\u010det k p\u0159ipojen\u00ed Home Assistanta k Habitica.",
+                    "username": "E-mail nebo u\u017eivatelsk\u00e9 jm\u00e9no (rozli\u0161uj\u00ed se mal\u00e1 a velk\u00e1 p\u00edsmena) pro p\u0159ipojen\u00ed Home Assistant k va\u0161emu \u00fa\u010dtu Habitica."
+                },
+                "description": "Zadejte sv\u00e9 p\u0159ihla\u0161ovac\u00ed \u00fadaje, abyste mohli za\u010d\u00edt pou\u017e\u00edvat Habitica s Home Assistantem\n\n[Zapomn\u011bli jste heslo?]({forgot_password})",
+                "title": "P\u0159ihl\u00e1sit se do Habitica"
+            },
+            "user": {
+                "description": "![Habiticans]({habiticans}) P\u0159ipojte sv\u016fj \u00fa\u010det Habitica, abyste m\u011bli p\u0159ehled o statistik\u00e1ch sv\u00e9ho dobrodruha, pokroku a spravovali sv\u00e9 \u00fakoly a ka\u017edodenn\u00ed \u00fakoly.\n\n[Nem\u00e1te \u00fa\u010det Habitica? Zaregistrujte se zde.]({signup})",
+                "menu_options": {
+                    "advanced": "P\u0159ihl\u00e1sit se do jin\u00fdch instanc\u00ed",
+                    "login": "P\u0159ihl\u00e1sit se do Habitica"
+                },
+                "title": "Habitica - Zpest\u0159ete si \u017eivot hrou"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pending_quest": {
+                "name": "\u010cekaj\u00edc\u00ed pozv\u00e1nka k \u00fakolu"
+            }
+        },
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "P\u0159id\u011blit v\u0161echny statistick\u00e9 body"
+            },
+            "brightness": {
+                "name": "Spaluj\u00edc\u00ed z\u00e1\u0159e"
+            },
+            "buy_health_potion": {
+                "name": "Zakoupit lektvar zdrav\u00ed"
+            },
+            "defensive_stance": {
+                "name": "Obrann\u00fd postoj"
+            },
+            "earth": {
+                "name": "Zem\u011bt\u0159esen\u00ed"
+            },
+            "frost": {
+                "name": "Ledov\u00fd mr\u00e1z"
+            },
+            "heal": {
+                "name": "L\u00e9\u010div\u00e9 sv\u011btlo"
+            },
+            "heal_all": {
+                "name": "Po\u017eehn\u00e1n\u00ed"
+            },
+            "intimidate": {
+                "name": "Zastra\u0161uj\u00edc\u00ed pohled"
+            },
+            "mpheal": {
+                "name": "\u00c9terick\u00fd p\u0159\u00edval"
+            },
+            "protect_aura": {
+                "name": "Ochrann\u00e1 aura"
+            },
+            "revive": {
+                "name": "O\u017eivit ze smrti"
+            },
+            "run_cron": {
+                "name": "Za\u010d\u00edt m\u016fj den"
+            },
+            "stealth": {
+                "name": "Pl\u00ed\u017een\u00ed"
+            },
+            "tools_of_trade": {
+                "name": "N\u00e1stroje obchodu"
+            },
+            "valorous_presence": {
+                "name": "Chrabr\u00e1 p\u0159\u00edtomnost"
+            }
+        },
+        "calendar": {
+            "daily_reminders": {
+                "name": "Denn\u00ed p\u0159ipomenut\u00ed"
+            },
+            "dailys": {
+                "name": "Den\u00edky",
+                "state_attributes": {
+                    "yesterdaily": {
+                        "name": "V\u010dera-Denn\u011b",
+                        "state": {
+                            "false": "Ne",
+                            "true": "Ano"
+                        }
+                    }
+                }
+            },
+            "todo_reminders": {
+                "name": "P\u0159ipomenut\u00ed \u00fakol\u016f"
+            },
+            "todos": {
+                "name": "\u00dakoly"
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "T\u0159\u00edda",
+                "state": {
+                    "healer": "L\u00e9\u010ditel",
+                    "rogue": "Dareb\u00e1k",
+                    "warrior": "Bojovn\u00edk",
+                    "wizard": "Kouzeln\u00edk"
+                }
+            },
+            "constitution": {
+                "name": "\u00dastava",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "P\u0159id\u011blen\u00e9 body atribut\u016f"
+                    },
+                    "buffs": {
+                        "name": "Buffy"
+                    },
+                    "class": {
+                        "name": "Bonus za vybaven\u00ed t\u0159\u00eddy"
+                    },
+                    "equipment": {
+                        "name": "Bojov\u00e1 v\u00fdbava"
+                    },
+                    "level": {
+                        "name": "\u00darove\u0148"
+                    }
+                }
+            },
+            "dailys": {
+                "name": "Den\u00edky",
+                "unit_of_measurement": "\u00fakoly"
+            },
+            "display_name": {
+                "name": "Zobrazovan\u00fd n\u00e1zev"
+            },
+            "experience": {
+                "name": "Zku\u0161enost",
+                "unit_of_measurement": "XP"
+            },
+            "experience_max": {
+                "name": "Dal\u0161\u00ed \u00farove\u0148",
+                "unit_of_measurement": "XP"
+            },
+            "gems": {
+                "name": "Drahokamy",
+                "unit_of_measurement": "drahokamy"
+            },
+            "gold": {
+                "name": "Zlato",
+                "unit_of_measurement": "GP"
+            },
+            "habits": {
+                "name": "Zvyky",
+                "unit_of_measurement": "\u00fakoly"
+            },
+            "health": {
+                "name": "Zdrav\u00ed",
+                "unit_of_measurement": "HP"
+            },
+            "health_max": {
+                "name": "Max. zdrav\u00ed",
+                "unit_of_measurement": "HP"
+            },
+            "intelligence": {
+                "name": "Inteligence",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "P\u0159id\u011blen\u00e9 body atribut\u016f"
+                    },
+                    "buffs": {
+                        "name": "Buffy"
+                    },
+                    "class": {
+                        "name": "Bonus za vybaven\u00ed t\u0159\u00eddy"
+                    },
+                    "equipment": {
+                        "name": "Bojov\u00e1 v\u00fdbava"
+                    },
+                    "level": {
+                        "name": "\u00darove\u0148"
+                    }
+                }
+            },
+            "level": {
+                "name": "\u00darove\u0148"
+            },
+            "mana": {
+                "name": "Mana",
+                "unit_of_measurement": "MP"
+            },
+            "mana_max": {
+                "name": "Max. mana",
+                "unit_of_measurement": "MP"
+            },
+            "perception": {
+                "name": "Vn\u00edm\u00e1n\u00ed",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "P\u0159id\u011blen\u00e9 body atribut\u016f"
+                    },
+                    "buffs": {
+                        "name": "Buffy"
+                    },
+                    "class": {
+                        "name": "Bonus za vybaven\u00ed t\u0159\u00eddy"
+                    },
+                    "equipment": {
+                        "name": "Bojov\u00e1 v\u00fdbava"
+                    },
+                    "level": {
+                        "name": "\u00darove\u0148"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "Odm\u011bny",
+                "unit_of_measurement": "\u00fakoly"
+            },
+            "strength": {
+                "name": "S\u00edla",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "P\u0159id\u011blen\u00e9 body atribut\u016f"
+                    },
+                    "buffs": {
+                        "name": "Buffy"
+                    },
+                    "class": {
+                        "name": "Bonus za vybaven\u00ed t\u0159\u00eddy"
+                    },
+                    "equipment": {
+                        "name": "Bojov\u00e1 v\u00fdbava"
+                    },
+                    "level": {
+                        "name": "\u00darove\u0148"
+                    }
+                }
+            },
+            "todos": {
+                "name": "\u00dakoly",
+                "unit_of_measurement": "\u00fakoly"
+            },
+            "trinkets": {
+                "name": "Mystick\u00e9 p\u0159es\u00fdpac\u00ed hodiny"
+            }
+        },
+        "switch": {
+            "sleep": {
+                "name": "Odpo\u010d\u00edvat"
+            }
+        },
+        "todo": {
+            "dailys": {
+                "name": "Den\u00edky"
+            },
+            "todos": {
+                "name": "\u00dakoly"
+            }
+        }
+    },
+    "exceptions": {
+        "create_todos_item_failed": {
+            "message": "Nelze vytvo\u0159it nov\u00fd \u00fakol \"{name}\" pro Habitica, zkuste to znovu"
+        },
+        "delete_completed_todos_failed": {
+            "message": "Nelze smazat dokon\u010den\u00e9 \u00fakoly ze seznamu \u00fakol\u016f Habitica, zkuste to znovu"
+        },
+        "delete_todos_failed": {
+            "message": "Nelze smazat polo\u017eku ze seznamu \u00fakol\u016f Habitica, zkuste to znovu"
+        },
+        "entry_not_found": {
+            "message": "Vybran\u00e1 postava nen\u00ed nastavena v Home Assistantovi."
+        },
+        "entry_not_loaded": {
+            "message": "Vybran\u00e1 postava nen\u00ed aktu\u00e1ln\u011b na\u010dtena nebo je zak\u00e1z\u00e1na v Home Assistantovi."
+        },
+        "item_not_found": {
+            "message": "Nelze pou\u017e\u00edt {item}, tuto polo\u017eku nevlastn\u00edte."
+        },
+        "move_dailys_item_failed": {
+            "message": "Nelze p\u0159esunout denn\u00ed Habitica na pozici {pos}, zkuste to znovu"
+        },
+        "move_todos_item_failed": {
+            "message": "Nelze p\u0159esunout \u00fakol Habitica na pozici {pos}, zkuste to znovu"
+        },
+        "not_enough_gold": {
+            "message": "Nelze koupit odm\u011bnu, nen\u00ed dostatek zlata. Va\u0161e postava m\u00e1 {gold}, ale odm\u011bna stoj\u00ed {cost}."
+        },
+        "not_enough_mana": {
+            "message": "Nelze ses\u00edlat dovednosti, m\u00e1lo many. Va\u0161e postava m\u00e1 {mana}, ale dovednost stoj\u00ed {cost}."
+        },
+        "party_not_found": {
+            "message": "Nelze naj\u00edt c\u00edl, moment\u00e1ln\u011b nejste ve skupin\u011b. M\u016f\u017eete se zam\u011b\u0159it pouze na sebe."
+        },
+        "quest_action_unallowed": {
+            "message": "Akce nen\u00ed povolena; tuto akci m\u016f\u017ee prov\u00e9st pouze vedouc\u00ed questu nebo vedouc\u00ed skupiny"
+        },
+        "quest_not_found": {
+            "message": "Nelze dokon\u010dit akci, \u00fakol nebo skupina nenalezena"
+        },
+        "score_dailys_item_failed": {
+            "message": "Nelze aktualizovat sk\u00f3re pro v\u00e1\u0161 Habitica denn\u011b ` {name} `, zkuste to pros\u00edm znovu"
+        },
+        "score_todos_item_failed": {
+            "message": "Nelze aktualizovat sk\u00f3re pro v\u00e1\u0161 \u00fakol Habitica \"{name}\", zkuste to znovu"
+        },
+        "service_call_exception": {
+            "message": "Nelze se p\u0159ipojit k Habitica: {reason}"
+        },
+        "service_call_unallowed": {
+            "message": "Akci nelze prov\u00e9st, proto\u017ee nejsou spln\u011bny po\u017eadovan\u00e9 podm\u00ednky"
+        },
+        "setup_rate_limit_exception": {
+            "message": "P\u0159ekro\u010den limit sazby, zkuste to znovu za {retry_after} sekund"
+        },
+        "skill_not_found": {
+            "message": "Va\u0161e postava nem\u016f\u017ee ses\u00edlat dovednost, nem\u00e1 dovednost nebo kouzlo {skill}."
+        },
+        "target_not_found": {
+            "message": "Nelze naj\u00edt c\u00edl {target} ve va\u0161\u00ed skupin\u011b"
+        },
+        "task_not_found": {
+            "message": "Nelze dokon\u010dit akci, nepoda\u0159ilo se naj\u00edt \u00fakol {task}"
+        },
+        "update_dailys_item_failed": {
+            "message": "Nelze aktualizovat denn\u00ed Habitica \"{name}\", zkuste to znovu"
+        },
+        "update_todos_item_failed": {
+            "message": "Nelze aktualizovat \u00fakol Habitica \"{name}\", zkuste to znovu"
+        }
+    },
+    "issues": {
+        "deprecated_api_call": {
+            "description": "Akce Habitica \"habitica.api_call\" je zastaral\u00e1 a bude odebr\u00e1na z Home Assistanta ve verzi 2025.5.0.\n\nAktualizujte sv\u00e9 automatizace a skripty, aby mohly pou\u017e\u00edvat jin\u00e9 akce a entity Habitica.",
+            "title": "Akce Habitica \"habitica.api_call\" je zastaral\u00e1"
+        },
+        "deprecated_task_entity": {
+            "description": "Entita Habitica \"{entity}\" je zastaral\u00e1 a v budouc\u00ed verzi bude odebr\u00e1na.\nAktualizujte automatizace a skripty a nahra\u010fte entitu senzoru nov\u011b p\u0159idanou entitou \u00fakolu.\nPo dokon\u010den\u00ed migrace m\u016f\u017eete zak\u00e1zat \"{entity}\".",
+            "title": "Senzor Habitica {task_name} je zastaral\u00fd"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "Rogue: Bodnut\u00ed do zad",
+                "fireball": "M\u00e1g: V\u00fdbuch plamen\u016f",
+                "pickpocket": "Rogue: Kaps\u00e1\u0159",
+                "smash": "V\u00e1le\u010dn\u00edk: Brut\u00e1ln\u00ed sme\u010d"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "Mo\u0159sk\u00e1 p\u011bna",
+                "shiny_seed": "Leskl\u00e9 sem\u00ednko",
+                "snowball": "Sn\u011bhov\u00e1 koule",
+                "spooky_sparkles": "Stra\u0161ideln\u00e9 jiskry"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "description": "Ukon\u010d\u00ed prob\u00edhaj\u00edc\u00ed v\u00fdpravu va\u0161\u00ed party. Ve\u0161ker\u00fd postup bude ztracen a hod na \u00fakol se vr\u00e1t\u00ed do invent\u00e1\u0159e vlastn\u00edka. Tuto akci m\u016f\u017ee prov\u00e9st pouze vedouc\u00ed v\u00fdpravy nebo vedouc\u00ed skupiny.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica, pro kterou chcete akci prov\u00e9st.",
+                    "name": "Vybrat postavu"
+                }
+            },
+            "name": "Zru\u0161it aktivn\u00ed quest"
+        },
+        "accept_quest": {
+            "description": "P\u0159ijme nevy\u0159\u00edzen\u00e9 pozv\u00e1n\u00ed na \u00fakol.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica, pro kterou chcete akci prov\u00e9st.",
+                    "name": "Vybrat postavu"
+                }
+            },
+            "name": "P\u0159ijmout pozv\u00e1nku ke questu"
+        },
+        "api_call": {
+            "description": "Vol\u00e1 API Habitica.",
+            "fields": {
+                "args": {
+                    "description": "Jak\u00e9koli dal\u0161\u00ed argumenty JSON nebo URL. Viz apidoc uveden\u00fd pro cestu. P\u0159\u00edklad pou\u017e\u00edv\u00e1 stejn\u00fd koncov\u00fd bod API.",
+                    "name": "Argumenty"
+                },
+                "name": {
+                    "description": "U\u017eivatelsk\u00e9 jm\u00e9no Habitica, kter\u00e9 chcete zavolat.",
+                    "name": "N\u00e1zev"
+                },
+                "path": {
+                    "description": "Polo\u017eky z API URL ve form\u011b pole s metodou p\u0159ipojenou na konci. Pod\u00edvejte se na https://habitica.com/apidoc/. P\u0159\u00edklad pou\u017e\u00edv\u00e1 https://habitica.com/apidoc/#api-Task-CreateUserTasks.",
+                    "name": "Cesta"
+                }
+            },
+            "name": "N\u00e1zev API"
+        },
+        "cancel_quest": {
+            "description": "Zru\u0161\u00ed \u00fakol, kter\u00fd je\u0161t\u011b neza\u010dal. V\u0161echny p\u0159ijat\u00e9 a \u010dekaj\u00edc\u00ed pozv\u00e1nky budou zru\u0161eny a role s \u00fakoly se vr\u00e1t\u00ed do invent\u00e1\u0159e vlastn\u00edka. Tuto akci m\u016f\u017ee prov\u00e9st pouze vedouc\u00ed v\u00fdpravy nebo vedouc\u00ed skupiny.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica, pro kterou chcete akci prov\u00e9st.",
+                    "name": "Vybrat postavu"
+                }
+            },
+            "name": "Zru\u0161it \u010dekaj\u00edc\u00ed quest"
+        },
+        "cast_skill": {
+            "description": "Pou\u017e\u00edv\u00e1 dovednost nebo kouzlo od va\u0161\u00ed postavy Habitica na konkr\u00e9tn\u00ed \u00fakol, aby ovlivnil jej\u00ed postup nebo stav.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica, na kterou chcete seslat dovednost.",
+                    "name": "Vybrat postavu"
+                },
+                "skill": {
+                    "description": "Vyberte dovednost nebo kouzlo, kter\u00e9 chcete seslat na \u00fakol. Lze pou\u017e\u00edt jen dovednosti odpov\u00eddaj\u00edc\u00ed t\u0159\u00edd\u011b va\u0161\u00ed postavy.",
+                    "name": "Dovednost"
+                },
+                "task": {
+                    "description": "N\u00e1zev (nebo ID \u00falohy) \u00falohy, na kter\u00fd se chcete pomoc\u00ed dovednosti nebo kouzla zam\u011b\u0159it.",
+                    "name": "N\u00e1zev \u00falohy"
+                }
+            },
+            "name": "Seslat dovednost"
+        },
+        "leave_quest": {
+            "description": "Opust\u00ed aktu\u00e1ln\u00ed \u00fakol, kter\u00e9ho se \u00fa\u010dastn\u00edte.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica, pro kterou chcete akci prov\u00e9st.",
+                    "name": "Vybrat postavu"
+                }
+            },
+            "name": "Opustit quest"
+        },
+        "reject_quest": {
+            "description": "Odm\u00edtne \u010dekaj\u00edc\u00ed pozv\u00e1nku na \u00fakol.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica, pro kterou chcete akci prov\u00e9st.",
+                    "name": "Vybrat postavu"
+                }
+            },
+            "name": "Odm\u00edtnout pozv\u00e1nku ke questu"
+        },
+        "score_habit": {
+            "description": "Zvy\u0161uje pozitivn\u00ed nebo negativn\u00ed streak n\u00e1vyku ke sledov\u00e1n\u00ed jeho pokroku.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica sleduj\u00edc\u00ed v\u00e1\u0161 n\u00e1vyk.",
+                    "name": "Vybrat postavu"
+                },
+                "direction": {
+                    "description": "Pozitivn\u00ed nebo negativn\u00ed pokrok, kter\u00fd chcete u sv\u00e9ho zvyku sledovat.",
+                    "name": "Odm\u011bna nebo ztr\u00e1ta"
+                },
+                "task": {
+                    "description": "N\u00e1zev (nebo ID \u00fakolu) n\u00e1vyku Habitica.",
+                    "name": "N\u00e1zev n\u00e1vyku"
+                }
+            },
+            "name": "Sledovat n\u00e1vyk"
+        },
+        "score_reward": {
+            "description": "Kupuje jednu z va\u0161ich vlastn\u00edch odm\u011bn se zlatem z\u00edskan\u00fdm pln\u011bn\u00edm \u00fakol\u016f.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica, kter\u00e1 si koup\u00ed odm\u011bnu.",
+                    "name": "Vybrat postavu"
+                },
+                "task": {
+                    "description": "N\u00e1zev (nebo ID \u00fakolu) vlastn\u00ed odm\u011bny.",
+                    "name": "N\u00e1zev odm\u011bny"
+                }
+            },
+            "name": "Koupit odm\u011bnu"
+        },
+        "start_quest": {
+            "description": "Okam\u017eit\u011b zah\u00e1j\u00ed v\u00fdpravu a obejde v\u0161echny \u010dekaj\u00edc\u00ed pozv\u00e1nky, kter\u00e9 nebyly p\u0159ijaty nebo odm\u00edtnuty. Tuto akci m\u016f\u017ee prov\u00e9st pouze vedouc\u00ed v\u00fdpravy nebo vedouc\u00ed skupiny.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte postavu Habitica, pro kterou chcete akci prov\u00e9st.",
+                    "name": "Vybrat postavu"
+                }
+            },
+            "name": "Vynutit spu\u0161t\u011bn\u00ed \u010dekaj\u00edc\u00edho questu"
+        },
+        "transformation": {
+            "description": "Pou\u017eije transforma\u010dn\u00ed p\u0159edm\u011bt z invent\u00e1\u0159e va\u0161\u00ed postavy Habitica na \u010dlena va\u0161\u00ed skupiny nebo v\u00e1s.",
+            "fields": {
+                "config_entry": {
+                    "description": "Vyberte si postavu Habitica a pou\u017eijte transforma\u010dn\u00ed polo\u017eku.",
+                    "name": "Vybrat postavu"
+                },
+                "item": {
+                    "description": "Vyberte transforma\u010dn\u00ed polo\u017eku, kterou chcete pou\u017e\u00edt. P\u0159edm\u011bt mus\u00ed b\u00fdt v invent\u00e1\u0159i postav.",
+                    "name": "Transforma\u010dn\u00ed polo\u017eka"
+                },
+                "target": {
+                    "description": "Jm\u00e9no postavy, na kterou chcete pou\u017e\u00edt transforma\u010dn\u00ed polo\u017eku. M\u016f\u017eete tak\u00e9 zadat u\u017eivatelsk\u00e9 jm\u00e9no nebo ID u\u017eivatele.",
+                    "name": "C\u00edlov\u00e1 postava"
+                }
+            },
+            "name": "Pou\u017ei\u00edt transforma\u010dn\u00ed polo\u017eku"
+        }
+    }
+}

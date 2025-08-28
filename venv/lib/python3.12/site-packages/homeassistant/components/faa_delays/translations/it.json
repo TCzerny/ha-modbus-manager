@@ -1,0 +1,80 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Questo aeroporto \u00e8 gi\u00e0 configurato."
+        },
+        "error": {
+            "cannot_connect": "Impossibile connettersi",
+            "invalid_airport": "Il codice dell'aeroporto non \u00e8 valido",
+            "unknown": "Errore imprevisto"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "id": "Aeroporto"
+                },
+                "description": "Immettere un codice aeroporto statunitense in formato IATA",
+                "title": "Ritardi FAA"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "arrive_delay": {
+                "name": "Ritardo all'arrivo",
+                "state_attributes": {
+                    "maximum": {
+                        "name": "Massimo"
+                    },
+                    "minimum": {
+                        "name": "Minimo"
+                    },
+                    "reason": {
+                        "name": "Motivo"
+                    },
+                    "trend": {
+                        "name": "Tendenza"
+                    }
+                }
+            },
+            "depart_delay": {
+                "state_attributes": {
+                    "maximum": {
+                        "name": "Massimo"
+                    },
+                    "minimum": {
+                        "name": "Minimo"
+                    },
+                    "reason": {
+                        "name": "Motivo"
+                    },
+                    "trend": {
+                        "name": "Tendenza"
+                    }
+                }
+            },
+            "ground_delay": {
+                "name": "Ritardo a terra",
+                "state_attributes": {
+                    "average": {
+                        "name": "Media"
+                    },
+                    "reason": {
+                        "name": "Motivo"
+                    }
+                }
+            },
+            "ground_stop": {
+                "name": "Arresto a terra",
+                "state_attributes": {
+                    "endtime": {
+                        "name": "Ora di fine"
+                    },
+                    "reason": {
+                        "name": "Motivo"
+                    }
+                }
+            }
+        }
+    }
+}

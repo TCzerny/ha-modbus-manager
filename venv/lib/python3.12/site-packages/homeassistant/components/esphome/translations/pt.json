@@ -1,0 +1,131 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "O dispositivo j\u00e1 est\u00e1 configurado",
+            "already_in_progress": "O processo de configura\u00e7\u00e3o j\u00e1 est\u00e1 a decorrer",
+            "mdns_missing_mac": "Endere\u00e7o MAC ausente nas propriedades MDNS.",
+            "mqtt_missing_api": "Falta a porta da API nas propriedades MQTT.",
+            "mqtt_missing_ip": "Falta o endere\u00e7o IP nas propriedades MQTT.",
+            "mqtt_missing_mac": "Falta o endere\u00e7o MAC nas propriedades MQTT.",
+            "mqtt_missing_payload": "Falta o Payload MQTT.",
+            "reauth_successful": "Reautentica\u00e7\u00e3o bem sucedida",
+            "service_received": "A\u00e7\u00e3o recebida"
+        },
+        "error": {
+            "connection_error": "N\u00e3o \u00e9 poss\u00edvel ligar ao ESP. Por favor, verifique se o seu ficheiro YAML cont\u00e9m uma linha 'api:'.",
+            "invalid_auth": "Autentica\u00e7\u00e3o inv\u00e1lida",
+            "invalid_psk": "A chave de encripta\u00e7\u00e3o de transporte \u00e9 inv\u00e1lida. Certifique-se de que corresponde \u00e0 que tem na sua configura\u00e7\u00e3o",
+            "resolve_error": "N\u00e3o \u00e9 poss\u00edvel resolver o endere\u00e7o do ESP. Se este erro persistir, defina um endere\u00e7o IP est\u00e1tico"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "authenticate": {
+                "data": {
+                    "password": "Palavra-passe"
+                },
+                "description": "Por favor, insira a palavra-passe que colocou na configura\u00e7\u00e3o para {name}"
+            },
+            "discovery_confirm": {
+                "description": "Deseja adicionar um n\u00f3 ESPHome `{name}` ao Home Assistant?",
+                "title": "Nodo ESPHome descoberto"
+            },
+            "encryption_key": {
+                "data": {
+                    "noise_psk": "Chave de encripta\u00e7\u00e3o"
+                },
+                "description": "Introduza a chave de encripta\u00e7\u00e3o para {name}. Pode encontr\u00e1-la no painel de controlo do ESPHome ou na configura\u00e7\u00e3o do seu dispositivo."
+            },
+            "reauth_confirm": {
+                "data": {
+                    "noise_psk": "Chave de encripta\u00e7\u00e3o"
+                },
+                "description": "O dispositivo ESPHome {name} ativou a encripta\u00e7\u00e3o de transporte ou alterou a chave de encripta\u00e7\u00e3o. Introduza a chave atualizada. Pode encontr\u00e1-la no painel de controlo do ESPHome ou na configura\u00e7\u00e3o do seu dispositivo."
+            },
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o",
+                    "port": "Porta"
+                },
+                "description": "Por favor, insira as configura\u00e7\u00f5es de liga\u00e7\u00e3o ao seu n\u00f3 [ESPHome]({esphome_url})."
+            }
+        }
+    },
+    "entity": {
+        "assist_satellite": {
+            "assist_satellite": {
+                "name": "Sat\u00e9lite do Assist"
+            }
+        },
+        "binary_sensor": {
+            "assist_in_progress": {
+                "name": "Assist em curso"
+            }
+        },
+        "climate": {
+            "climate": {
+                "state_attributes": {
+                    "fan_mode": {
+                        "state": {
+                            "quiet": "Sil\u00eancio"
+                        }
+                    }
+                }
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Assistente",
+                "state": {
+                    "preferred": "Preferencial"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Dete\u00e7\u00e3o de fim de fala",
+                "state": {
+                    "aggressive": "Agressivo",
+                    "default": "Predefinido",
+                    "relaxed": "Relaxado"
+                }
+            },
+            "wake_word": {
+                "name": "Palavra de despertar",
+                "state": {
+                    "okay_nabu": "Okay Nabu"
+                }
+            }
+        }
+    },
+    "issues": {
+        "api_password_deprecated": {
+            "description": "A palavra-passe da API para ESPHome est\u00e1 desatualizada e \u00e9 recomendada a utiliza\u00e7\u00e3o de uma chave encriptada da API.  \n\nRemova a palavra-passe da API e adicione uma chave encriptada ao seu dispositivo ESPHome para resolver este problema.",
+            "title": "Palavra-passe da API obsoleta em {name}"
+        },
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "O sensor bin\u00e1rio de {integration_name} em curso `{entity_id}` est\u00e1 desatualizado.\n\nMigre sua configura\u00e7\u00e3o para usar a entidade correspondente `{assist_satellite_domain}` e, em seguida, clique em ENVIAR para desativar o sensor bin\u00e1rio em curso e corrigir este problema."
+                    }
+                }
+            },
+            "title": "sensor bin\u00e1rio de {integration_name} em progresso '{entity_id}' est\u00e1 desatualizado"
+        },
+        "ble_firmware_outdated": {
+            "description": "Para melhorar a fiabilidade e o desempenho do Bluetooth, recomendamos vivamente a atualiza\u00e7\u00e3o do {name} com o ESPHome {version} ou posterior. Ao atualizar o dispositivo a partir do ESPHome antes da vers\u00e3o 2022.12.0, recomenda-se a utiliza\u00e7\u00e3o de um cabo de s\u00e9rie em vez de uma atualiza\u00e7\u00e3o over-the-air para tirar partido do novo esquema de parti\u00e7\u00e3o.",
+            "title": "Atualize {name} com ESPHome {version} ou posterior"
+        },
+        "service_calls_not_allowed": {
+            "description": "O dispositivo ESPHome tentou efetuar uma a\u00e7\u00e3o do Home Assistant, mas esta funcionalidade n\u00e3o est\u00e1 ativada.\n\nSe confiar neste dispositivo e quiser permitir-lhe efetuar a\u00e7\u00f5es do Home Assistant, pode ativar esta funcionalidade no fluxo de op\u00e7\u00f5es.",
+            "title": "{name} n\u00e3o tem permiss\u00e3o para executar a\u00e7\u00f5es do Home Assistant"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "allow_service_calls": "Permitir que o dispositivo execute a\u00e7\u00f5es do Home Assistant."
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,382 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Za\u0159\u00edzen\u00ed je ji\u017e nastaveno",
+            "cannot_connect": "Nepoda\u0159ilo se p\u0159ipojit",
+            "no_devices_found": "V s\u00edti nebyla nalezena \u017e\u00e1dn\u00e1 za\u0159\u00edzen\u00ed",
+            "reauth_successful": "Op\u011btovn\u00e9 ov\u011b\u0159en\u00ed bylo \u00fasp\u011b\u0161n\u00e9",
+            "reconfigure_successful": "P\u0159enastaven\u00ed bylo \u00fasp\u011b\u0161n\u00e9"
+        },
+        "error": {
+            "camera_creds": "Mus\u00edte nastavit u\u017eivatelsk\u00e9 jm\u00e9no i heslo",
+            "cannot_connect": "Chyba p\u0159ipojen\u00ed: {error}",
+            "cannot_connect_camera": "Nelze z\u00edskat p\u0159\u00edstup k proudu kamery. Ov\u011b\u0159te, \u017ee jste nastavili \u00fa\u010det kamery: {error}",
+            "invalid_auth": "Nelze ov\u011b\u0159it: {error}",
+            "invalid_camera_auth": "Ov\u011b\u0159en\u00ed proudu kamery se nezda\u0159ilo"
+        },
+        "flow_title": "{name} {model} ({host})",
+        "step": {
+            "camera_auth_confirm": {
+                "data": {
+                    "live_view": "Povolit \u017eiv\u00fd n\u00e1hled kamery",
+                    "password": "Heslo",
+                    "username": "U\u017eivatelsk\u00e9 jm\u00e9no"
+                },
+                "description": "Zadejte p\u0159ihla\u0161ovac\u00ed \u00fadaje \u00fa\u010dtu kamery.",
+                "title": "Nastavit p\u0159ihla\u0161ovac\u00ed \u00fadaje k \u00fa\u010dtu kamery"
+            },
+            "discovery_auth_confirm": {
+                "data": {
+                    "password": "Heslo",
+                    "username": "U\u017eivatelsk\u00e9 jm\u00e9no"
+                },
+                "description": "Za\u0159\u00edzen\u00ed vy\u017eaduje ov\u011b\u0159en\u00ed, zadejte n\u00ed\u017ee sv\u00e9 p\u0159ihla\u0161ovac\u00ed \u00fadaje TP-Link. Pamatujte, \u017ee e-mail i heslo rozli\u0161uj\u00ed velk\u00e1 a mal\u00e1 p\u00edsmena.",
+                "title": "Ov\u011b\u0159it"
+            },
+            "discovery_confirm": {
+                "description": "Chcete nastavit {name} {model} ({host})?"
+            },
+            "pick_device": {
+                "data": {
+                    "device": "Za\u0159\u00edzen\u00ed"
+                }
+            },
+            "reauth_confirm": {
+                "data": {
+                    "password": "Heslo",
+                    "username": "U\u017eivatelsk\u00e9 jm\u00e9no"
+                },
+                "description": "Za\u0159\u00edzen\u00ed vy\u017eaduje ov\u011b\u0159en\u00ed, zadejte n\u00ed\u017ee sv\u00e9 p\u0159ihla\u0161ovac\u00ed \u00fadaje TP-Link. Pamatujte, \u017ee e-mail i heslo rozli\u0161uj\u00ed velk\u00e1 a mal\u00e1 p\u00edsmena.",
+                "title": "Platnost ov\u011b\u0159en\u00ed pro {name} vypr\u0161ela"
+            },
+            "reconfigure": {
+                "data": {
+                    "host": "Hostitel"
+                },
+                "description": "Aktualizuje nastaven\u00ed pro za\u0159\u00edzen\u00ed {mac}.",
+                "title": "P\u0159enastavit polo\u017eku TP-Link"
+            },
+            "user": {
+                "data": {
+                    "host": "Hostitel"
+                },
+                "data_description": {
+                    "host": "N\u00e1zev hostitele nebo IP adresa va\u0161eho za\u0159\u00edzen\u00ed TP-Link."
+                },
+                "description": "Pokud ponech\u00e1te hostitele pr\u00e1zdn\u00e9, k vyhled\u00e1n\u00ed za\u0159\u00edzen\u00ed bude pou\u017eito zji\u0161\u0165ov\u00e1n\u00ed."
+            },
+            "user_auth_confirm": {
+                "data": {
+                    "password": "Heslo",
+                    "username": "U\u017eivatelsk\u00e9 jm\u00e9no"
+                },
+                "description": "Za\u0159\u00edzen\u00ed vy\u017eaduje ov\u011b\u0159en\u00ed, zadejte n\u00ed\u017ee sv\u00e9 p\u0159ihla\u0161ovac\u00ed \u00fadaje TP-Link. Pamatujte, \u017ee e-mail i heslo rozli\u0161uj\u00ed velk\u00e1 a mal\u00e1 p\u00edsmena.",
+                "title": "Ov\u011b\u0159it"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "battery_low": {
+                "name": "Slab\u00e1 baterie"
+            },
+            "cloud_connection": {
+                "name": "P\u0159ipojen\u00ed ke cloudu"
+            },
+            "humidity_warning": {
+                "name": "Upozorn\u011bn\u00ed na vlhkost"
+            },
+            "is_open": {
+                "name": "Dve\u0159e",
+                "state": {
+                    "off": "Zav\u0159eno",
+                    "on": "Otev\u0159eno"
+                }
+            },
+            "overheated": {
+                "name": "P\u0159eh\u0159\u00e1t\u00e9"
+            },
+            "temperature_warning": {
+                "name": "Upozorn\u011bn\u00ed na teplotu"
+            },
+            "update_available": {
+                "name": "Aktualizace",
+                "state": {
+                    "off": "Aktu\u00e1ln\u00ed",
+                    "on": "Aktualizace k dispozici"
+                }
+            },
+            "water_alert": {
+                "name": "Vlhkost",
+                "state": {
+                    "off": "Sucho",
+                    "on": "Mokro"
+                }
+            }
+        },
+        "button": {
+            "pan_left": {
+                "name": "Panorama vlevo"
+            },
+            "pan_right": {
+                "name": "Panorama vpravo"
+            },
+            "stop_alarm": {
+                "name": "Zastavit alarm"
+            },
+            "test_alarm": {
+                "name": "Otestovat alarm"
+            },
+            "tilt_down": {
+                "name": "Naklonit dol\u016f"
+            },
+            "tilt_up": {
+                "name": "Naklonit nahoru"
+            }
+        },
+        "camera": {
+            "live_view": {
+                "name": "\u017div\u00e9 zobrazen\u00ed"
+            }
+        },
+        "number": {
+            "auto_off_minutes": {
+                "name": "Vypnout za"
+            },
+            "pan_step": {
+                "name": "Stupn\u011b panoramy"
+            },
+            "smooth_transition_off": {
+                "name": "Hladce vypnout"
+            },
+            "smooth_transition_on": {
+                "name": "Hladce zapnout"
+            },
+            "temperature_offset": {
+                "name": "Posun teploty"
+            },
+            "tilt_step": {
+                "name": "Stupn\u011b n\u00e1klonu"
+            }
+        },
+        "select": {
+            "alarm_sound": {
+                "name": "Zvuk alarmu"
+            },
+            "alarm_volume": {
+                "name": "Hlasitost alarmu"
+            },
+            "light_preset": {
+                "name": "P\u0159edvolba sv\u011btla"
+            }
+        },
+        "sensor": {
+            "alarm_source": {
+                "name": "Zdroj alarmu"
+            },
+            "auto_off_at": {
+                "name": "Automaticky vypnout v"
+            },
+            "available_firmware_version": {
+                "name": "Dostupn\u00e1 verze firmwaru"
+            },
+            "battery_level": {
+                "name": "\u00darove\u0148 baterie"
+            },
+            "consumption_this_month": {
+                "name": "Spot\u0159eba tento m\u011bs\u00edc"
+            },
+            "consumption_today": {
+                "name": "Dne\u0161n\u00ed spot\u0159eba"
+            },
+            "consumption_total": {
+                "name": "Celkov\u00e1 spot\u0159eba"
+            },
+            "current": {
+                "name": "Proud"
+            },
+            "current_consumption": {
+                "name": "Aktu\u00e1ln\u00ed spot\u0159eba"
+            },
+            "current_firmware_version": {
+                "name": "Aktu\u00e1ln\u00ed verze firmwaru"
+            },
+            "device_time": {
+                "name": "\u010cas za\u0159\u00edzen\u00ed"
+            },
+            "humidity": {
+                "name": "Vlhkost vzduchu"
+            },
+            "on_since": {
+                "name": "Zapnuto od"
+            },
+            "report_interval": {
+                "name": "Interval hl\u00e1\u0161en\u00ed"
+            },
+            "rssi": {
+                "name": "S\u00edla sign\u00e1lu"
+            },
+            "signal_level": {
+                "name": "\u00darove\u0148 sign\u00e1lu"
+            },
+            "ssid": {
+                "name": "SSID"
+            },
+            "temperature": {
+                "name": "Teplota"
+            },
+            "voltage": {
+                "name": "Nap\u011bt\u00ed"
+            },
+            "water_alert_timestamp": {
+                "name": "Posledn\u00ed upozorn\u011bn\u00ed na \u00fanik vody"
+            }
+        },
+        "switch": {
+            "auto_off_enabled": {
+                "name": "Automatick\u00e9 vypnut\u00ed povoleno"
+            },
+            "auto_update_enabled": {
+                "name": "Automatick\u00e1 aktualizace povolena"
+            },
+            "baby_cry_detection": {
+                "name": "Detekce d\u011btsk\u00e9ho pl\u00e1\u010de"
+            },
+            "child_lock": {
+                "name": "D\u011btsk\u00fd z\u00e1mek"
+            },
+            "fan_sleep_mode": {
+                "name": "Re\u017eim sp\u00e1nku ventil\u00e1toru"
+            },
+            "led": {
+                "name": "LED"
+            },
+            "motion_detection": {
+                "name": "Detekce pohybu"
+            },
+            "person_detection": {
+                "name": "Detekce osob"
+            },
+            "pir_enabled": {
+                "name": "Pohybov\u00fd senzor"
+            },
+            "smooth_transitions": {
+                "name": "Hladk\u00e9 p\u0159echody"
+            },
+            "tamper_detection": {
+                "name": "Detekce naru\u0161en\u00ed"
+            }
+        }
+    },
+    "exceptions": {
+        "device_authentication": {
+            "message": "Chyba ov\u011b\u0159en\u00ed za\u0159\u00edzen\u00ed {func}: {exc}"
+        },
+        "device_error": {
+            "message": "Nelze komunikovat se za\u0159\u00edzen\u00edm {func}: {exc}"
+        },
+        "device_timeout": {
+            "message": "\u010casov\u00fd limit komunikace se za\u0159\u00edzen\u00edm {func}: {exc}"
+        }
+    },
+    "issues": {
+        "deprecated_entity": {
+            "description": "Zjistili jsme, \u017ee entita \"{entity}\" se pou\u017e\u00edv\u00e1 v \"{info}\".\n\nVytvo\u0159ili jsme novou entitu \"{new_platform}\" a m\u011bli byste migrovat \"{info}\", abyste mohli pou\u017e\u00edvat tuto novou entitu.\n\nA\u017e dokon\u010d\u00edte migraci \"{info}\" a budete p\u0159ipraveni odebrat zastaralou entitu \"{entity}\", deaktivujte entitu a restartujte Home Assistanta.",
+            "title": "Bylo zji\u0161t\u011bno pou\u017eit\u00ed zastaral\u00e9 entity {platform}"
+        }
+    },
+    "services": {
+        "random_effect": {
+            "description": "Nastav\u00ed n\u00e1hodn\u00fd efekt.",
+            "fields": {
+                "backgrounds": {
+                    "description": "Seznam sekvenc\u00ed HSV (max. 16).",
+                    "name": "Pozad\u00ed"
+                },
+                "brightness": {
+                    "description": "Po\u010d\u00e1te\u010dn\u00ed jas.",
+                    "name": "Jas"
+                },
+                "brightness_range": {
+                    "description": "Rozsah jasu.",
+                    "name": "Rozsah jasu"
+                },
+                "duration": {
+                    "description": "Doba trv\u00e1n\u00ed.",
+                    "name": "Doba trv\u00e1n\u00ed"
+                },
+                "fadeoff": {
+                    "description": "Postupn\u011b zhasne.",
+                    "name": "Postupn\u011b zhasnout"
+                },
+                "hue_range": {
+                    "description": "Rozsah odst\u00edn\u016f.",
+                    "name": "Rozsah odst\u00edn\u016f"
+                },
+                "init_states": {
+                    "description": "Po\u010d\u00e1te\u010dn\u00ed sekvence HSV.",
+                    "name": "Po\u010d\u00e1te\u010dn\u00ed stavy"
+                },
+                "random_seed": {
+                    "description": "N\u00e1hodn\u011b rozsv\u011bcuje.",
+                    "name": "N\u00e1hodn\u011b rozsv\u00edtit"
+                },
+                "saturation_range": {
+                    "description": "Rozsah nasycen\u00ed.",
+                    "name": "Rozsah nasycen\u00ed"
+                },
+                "segments": {
+                    "description": "Seznam segment\u016f (0 pro v\u0161echny).",
+                    "name": "Segmenty"
+                },
+                "transition": {
+                    "description": "P\u0159echod.",
+                    "name": "P\u0159echod"
+                },
+                "transition_range": {
+                    "description": "Rozsah p\u0159echodu.",
+                    "name": "Rozsah p\u0159echodu"
+                }
+            },
+            "name": "N\u00e1hodn\u00fd efekt"
+        },
+        "sequence_effect": {
+            "description": "Nastav\u00ed efekt sekvence.",
+            "fields": {
+                "brightness": {
+                    "description": "Po\u010d\u00e1te\u010dn\u00ed jas.",
+                    "name": "Jas"
+                },
+                "direction": {
+                    "description": "Sm\u011br.",
+                    "name": "Sm\u011br"
+                },
+                "duration": {
+                    "description": "Doba trv\u00e1n\u00ed.",
+                    "name": "Doba trv\u00e1n\u00ed"
+                },
+                "repeat_times": {
+                    "description": "Opakov\u00e1n\u00ed (0 pro kontinu\u00e1ln\u00ed).",
+                    "name": "Opakov\u00e1n\u00ed"
+                },
+                "segments": {
+                    "description": "Seznam segment\u016f (0 pro v\u0161echny).",
+                    "name": "Segmenty"
+                },
+                "sequence": {
+                    "description": "Seznam sekvenc\u00ed HSV (max. 16).",
+                    "name": "Sekvence"
+                },
+                "spread": {
+                    "description": "Rychlost \u0161\u00ed\u0159en\u00ed.",
+                    "name": "\u0160\u00ed\u0159en\u00ed"
+                },
+                "transition": {
+                    "description": "P\u0159echod.",
+                    "name": "P\u0159echod"
+                }
+            },
+            "name": "Efekt sekvence"
+        }
+    }
+}

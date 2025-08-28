@@ -1,0 +1,546 @@
+{
+    "common": {
+        "config_entry_name": "Pasirinkti persona\u017e\u0105",
+        "dailies": "Kasdien\u0117s u\u017eduotys",
+        "todos": "Darb\u0173 s\u0105ra\u0161as",
+        "unit_experience_points": "XP",
+        "unit_health_points": "HP",
+        "unit_mana_points": "MP",
+        "unit_tasks": "u\u017eduotys"
+    },
+    "config": {
+        "abort": {
+            "already_configured": "Paskyra jau sukonfig\u016bruota"
+        },
+        "error": {
+            "cannot_connect": "Nepavyko prisijungti",
+            "invalid_auth": "Neteisingas autentifikavimas",
+            "unknown": "Netik\u0117ta klaida"
+        },
+        "step": {
+            "advanced": {
+                "data": {
+                    "api_key": "API prieigos raktas",
+                    "api_user": "Naudotojo ID",
+                    "url": "URL",
+                    "verify_ssl": "Patikrinkite SSL sertifikat\u0105"
+                },
+                "data_description": {
+                    "api_key": "\u201eHabitica\u201c paskyros API prieigos raktas",
+                    "api_user": "J\u016bs\u0173 Habitica paskyros vartotojo ID",
+                    "url": "\u201eHabitica\u201c diegimo, prie kurio reikia prisijungti, URL. Numatytoji vert\u0117 yra \u201e{default_url}\u201c"
+                },
+                "description": "\u201eUser ID\u201c ir \u201eAPI Token\u201c galite gauti i\u0161 [**Nustatymai -> Svetain\u0117s duomenys**] ({site_data}) \u201eHabitica\u201c arba egzemplioriaus, prie kurio norite prisijungti.",
+                "title": "Prisijunkite prie kit\u0173 egzempliori\u0173"
+            },
+            "login": {
+                "data": {
+                    "password": "Slapta\u017eodis",
+                    "username": "El. pa\u0161to adresas arba naudotojo vardas (skiriamos did\u017eiosios ir ma\u017eosios raid\u0117s)"
+                },
+                "data_description": {
+                    "password": "Paskyros slapta\u017eodis, norint prijungti nam\u0173 asistent\u0105 prie Habitica",
+                    "username": "El. pa\u0161to adresas arba vartotojo vardas (skiriamos did\u017eiosios ir ma\u017eosios raid\u0117s), kad prijungtum\u0117te nam\u0173 pad\u0117j\u0117j\u0105 prie \u201eHabitica\u201c paskyros"
+                },
+                "description": "\u012eveskite savo prisijungimo duomenis, kad prad\u0117tum\u0117te naudoti Habitica su nam\u0173 asistentu \n \n [Pamir\u0161ote slapta\u017eod\u012f?]({forgot_password})",
+                "title": "Prisijunkite prie Habitica"
+            },
+            "user": {
+                "description": "![Habiticans]({habiticans}) Prijunkite savo Habitica paskyr\u0105, kad gal\u0117tum\u0117te steb\u0117ti nuotyki\u0173 ie\u0161kotojo statistik\u0105, pa\u017eang\u0105 ir tvarkyti savo u\u017eduotis bei kasdienes u\u017eduotis. \n \n [Neturite Habitica paskyros? Prisiregistruokite \u010dia.]({signup})",
+                "menu_options": {
+                    "advanced": "Prisijunkite prie kit\u0173 egzempliori\u0173",
+                    "login": "Prisijunkite prie Habitica"
+                },
+                "title": "Habitica \u2013 \u017eaiskite savo gyvenim\u0105"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "pending_quest": {
+                "name": "Laukiantis u\u017eduoties kvietimas"
+            }
+        },
+        "button": {
+            "allocate_all_stat_points": {
+                "name": "Paskirstykite visus statistinius ta\u0161kus"
+            },
+            "brightness": {
+                "name": "Deginantis ry\u0161kumas"
+            },
+            "buy_health_potion": {
+                "name": "Pirkti sveikatos eliksyr\u0105"
+            },
+            "defensive_stance": {
+                "name": "Gynybin\u0117 poza"
+            },
+            "earth": {
+                "name": "\u017dem\u0117s dreb\u0117jimas"
+            },
+            "frost": {
+                "name": "Stingdantis \u0161erk\u0161nas"
+            },
+            "heal": {
+                "name": "Gydomoji \u0161viesa"
+            },
+            "heal_all": {
+                "name": "Palaiminimas"
+            },
+            "intimidate": {
+                "name": "Bauginantis \u017evilgsnis"
+            },
+            "mpheal": {
+                "name": "Ne\u017eemi\u0161kas antpl\u016bdis"
+            },
+            "protect_aura": {
+                "name": "Apsaugin\u0117 aura"
+            },
+            "revive": {
+                "name": "Atgaivinti i\u0161 mirties"
+            },
+            "run_cron": {
+                "name": "Prad\u0117ti mano dien\u0105"
+            },
+            "stealth": {
+                "name": "Slaptumas"
+            },
+            "tools_of_trade": {
+                "name": "Amato \u012frankiai"
+            },
+            "valorous_presence": {
+                "name": "Narsi b\u016btis"
+            }
+        },
+        "calendar": {
+            "daily_reminders": {
+                "name": "Kasdieniniai priminimai"
+            },
+            "dailys": {
+                "name": "Kasdien\u0117s u\u017eduotys",
+                "state_attributes": {
+                    "yesterdaily": {
+                        "name": "Vakaryk\u0161t\u0117 kasdien\u0117 u\u017eduotis",
+                        "state": {
+                            "false": "Ne",
+                            "true": "Taip"
+                        }
+                    }
+                }
+            },
+            "todo_reminders": {
+                "name": "Atlikt\u0173 darb\u0173 priminimai"
+            },
+            "todos": {
+                "name": "Darb\u0173 s\u0105ra\u0161as"
+            }
+        },
+        "sensor": {
+            "class": {
+                "name": "Klas\u0117",
+                "state": {
+                    "healer": "Gydytojas",
+                    "rogue": "Klaj\u016bnas",
+                    "warrior": "Karys",
+                    "wizard": "Magas"
+                }
+            },
+            "constitution": {
+                "name": "Sud\u0117jimas",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Priskirti atribut\u0173 ta\u0161kai"
+                    },
+                    "buffs": {
+                        "name": "Pagerinimai"
+                    },
+                    "class": {
+                        "name": "Klas\u0117s \u012frangos premija"
+                    },
+                    "equipment": {
+                        "name": "Kovos \u012franga"
+                    },
+                    "level": {
+                        "name": "Lygis"
+                    }
+                }
+            },
+            "dailys": {
+                "name": "Kasdien\u0117s u\u017eduotys",
+                "unit_of_measurement": "u\u017eduotys"
+            },
+            "display_name": {
+                "name": "Rodomas pavadinimas"
+            },
+            "experience": {
+                "name": "Patirtis",
+                "unit_of_measurement": "XP"
+            },
+            "experience_max": {
+                "name": "Kitas lygis",
+                "unit_of_measurement": "XP"
+            },
+            "gems": {
+                "name": "Brangakmeniai",
+                "unit_of_measurement": "brangakmeniai"
+            },
+            "gold": {
+                "name": "Auksas",
+                "unit_of_measurement": "GP"
+            },
+            "habits": {
+                "name": "\u012epro\u010diai",
+                "unit_of_measurement": "u\u017eduotys"
+            },
+            "health": {
+                "name": "Sveikata",
+                "unit_of_measurement": "HP"
+            },
+            "health_max": {
+                "name": "Maks. sveikata",
+                "unit_of_measurement": "HP"
+            },
+            "intelligence": {
+                "name": "Intelektas",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Priskirti atribut\u0173 ta\u0161kai"
+                    },
+                    "buffs": {
+                        "name": "Pagerinimai"
+                    },
+                    "class": {
+                        "name": "Klas\u0117s \u012frangos premija"
+                    },
+                    "equipment": {
+                        "name": "Kovos \u012franga"
+                    },
+                    "level": {
+                        "name": "Lygis"
+                    }
+                }
+            },
+            "level": {
+                "name": "Lygis"
+            },
+            "mana": {
+                "name": "Mana",
+                "unit_of_measurement": "MP"
+            },
+            "mana_max": {
+                "name": "Maks. mana",
+                "unit_of_measurement": "MP"
+            },
+            "perception": {
+                "name": "\u012e\u017evalgumas",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Priskirti atribut\u0173 ta\u0161kai"
+                    },
+                    "buffs": {
+                        "name": "Pagerinimai"
+                    },
+                    "class": {
+                        "name": "Klas\u0117s \u012frangos premija"
+                    },
+                    "equipment": {
+                        "name": "Kovos \u012franga"
+                    },
+                    "level": {
+                        "name": "Lygis"
+                    }
+                }
+            },
+            "rewards": {
+                "name": "Apdovanojimai",
+                "unit_of_measurement": "u\u017eduotys"
+            },
+            "strength": {
+                "name": "Stipryb\u0117",
+                "state_attributes": {
+                    "allocated": {
+                        "name": "Priskirti atribut\u0173 ta\u0161kai"
+                    },
+                    "buffs": {
+                        "name": "Pagerinimai"
+                    },
+                    "class": {
+                        "name": "Klas\u0117s \u012frangos premija"
+                    },
+                    "equipment": {
+                        "name": "Kovos \u012franga"
+                    },
+                    "level": {
+                        "name": "Lygis"
+                    }
+                }
+            },
+            "todos": {
+                "name": "Darb\u0173 s\u0105ra\u0161as",
+                "unit_of_measurement": "u\u017eduotys"
+            },
+            "trinkets": {
+                "name": "Misti\u0161ki sm\u0117lio laikrod\u017eiai"
+            }
+        },
+        "switch": {
+            "sleep": {
+                "name": "Pails\u0117ti u\u017eeigoje"
+            }
+        },
+        "todo": {
+            "dailys": {
+                "name": "Kasdien\u0117s u\u017eduotys"
+            },
+            "todos": {
+                "name": "Darb\u0173 s\u0105ra\u0161as"
+            }
+        }
+    },
+    "exceptions": {
+        "create_todos_item_failed": {
+            "message": "Nepavyko sukurti naujo Habitica darbo \u201e{name}\u201c, bandykite dar kart\u0105"
+        },
+        "delete_completed_todos_failed": {
+            "message": "Nepavyko i\u0161trinti u\u017ebaigt\u0173 darb\u0173 i\u0161 Habitica darb\u0173 s\u0105ra\u0161o, bandykite dar kart\u0105"
+        },
+        "delete_todos_failed": {
+            "message": "Nepavyko i\u0161trinti elemento i\u0161 Habitica darb\u0173 s\u0105ra\u0161o, bandykite dar kart\u0105"
+        },
+        "entry_not_found": {
+            "message": "Pasirinktas persona\u017eas nesukonfig\u016bruotas \u201eHome Assistant\u201c."
+        },
+        "entry_not_loaded": {
+            "message": "Pasirinktas persona\u017eas \u0161iuo metu n\u0117ra \u012fkeltas arba atjungtas \u201eHome Assistant\u201c."
+        },
+        "item_not_found": {
+            "message": "Negalite naudoti {item}, \u0161is elementas jums nepriklauso."
+        },
+        "move_dailys_item_failed": {
+            "message": "Nepavyko perkelti Habitica kasdien\u0117s u\u017eduoties \u012f pad\u0117t\u012f {pos}, bandykite dar kart\u0105"
+        },
+        "move_todos_item_failed": {
+            "message": "Nepavyko perkelti Habitica darbo \u012f {pos} pad\u0117t\u012f, bandykite dar kart\u0105"
+        },
+        "not_enough_gold": {
+            "message": "Negalima nusipirkti atlygio, nepakanka aukso. J\u016bs\u0173 persona\u017eas turi {gold}, bet atlygis kainuoja {cost}."
+        },
+        "not_enough_mana": {
+            "message": "Nepavyko panaudoti \u012fg\u016bd\u017eio, nepakanka manos. J\u016bs\u0173 persona\u017eas turi {mana} , bet \u012fg\u016bdis kainuoja {cost} ."
+        },
+        "party_not_found": {
+            "message": "Negalite rasti tikslo, \u0161iuo metu nesate vakar\u0117lyje. Galite nukreipti tik \u012f save"
+        },
+        "quest_action_unallowed": {
+            "message": "Veiksmas neleistinas, tik u\u017eduoties lyderis ar grup\u0117s lyderis gali atlikti \u0161\u012f veiksm\u0105"
+        },
+        "quest_not_found": {
+            "message": "Nepavyko atlikti veiksmo, u\u017eduotis ar grup\u0117 nerasta"
+        },
+        "score_dailys_item_failed": {
+            "message": "Nepavyko atnaujinti j\u016bs\u0173 Habitica kasdien\u0117s u\u017eduoties \u201e{name}\u201c balo, bandykite dar kart\u0105"
+        },
+        "score_todos_item_failed": {
+            "message": "Nepavyko atnaujinti j\u016bs\u0173 Habitica u\u017eduoties \u201e{name}\u201c balo, bandykite dar kart\u0105"
+        },
+        "service_call_exception": {
+            "message": "Nepavyko prisijungti prie Habitica: {reason}"
+        },
+        "service_call_unallowed": {
+            "message": "Ne\u012fmanoma u\u017ebaigti veiksm\u0173, netenkinamos b\u016btinos s\u0105lygos"
+        },
+        "setup_rate_limit_exception": {
+            "message": "Vir\u0161ytas normos limitas, bandykite dar kart\u0105 po {retry_after} sek"
+        },
+        "skill_not_found": {
+            "message": "Negalite skirti \u012fg\u016bd\u017eio, j\u016bs\u0173 persona\u017eas neturi \u012fg\u016bd\u017eio ar burt\u0173 {skill} ."
+        },
+        "target_not_found": {
+            "message": "Nepavyko rasti tikslo {target} j\u016bs\u0173 partijoje"
+        },
+        "task_not_found": {
+            "message": "Nepavyko atlikti veiksmo, nepavyko rasti u\u017eduoties {task}"
+        },
+        "update_dailys_item_failed": {
+            "message": "Nepavyko atnaujinti Habitica kasdien\u0117s u\u017eduoties \u201e{name}\u201c, pabandykite dar kart\u0105"
+        },
+        "update_todos_item_failed": {
+            "message": "Nepavyko atnaujinti Habitica darbo \u201e{name}\u201c, bandykite dar kart\u0105"
+        }
+    },
+    "issues": {
+        "deprecated_api_call": {
+            "description": "\u201eHabitica\u201c veiksmas \u201ehabitica.api_call\u201c nebenaudojamas ir bus pa\u0161alintas naudojant \u201eHome Assistant\u201c 2025.5.0.\n\nAtnaujinkite savo automatizavim\u0105 ir scenarijus, kad gal\u0117tum\u0117te naudoti kitus Habitica veiksmus ir subjektus.",
+            "title": "Habitica veiksmas habitica.api_call nebenaudojamas"
+        },
+        "deprecated_task_entity": {
+            "description": "Habitica subjektas \u201e{entity}\u201c nebenaudojamas ir bus pa\u0161alintas b\u016bsimoje versijoje.\n Atnaujinkite savo automatizavim\u0105 ir scenarijus, kad pakeistum\u0117te jutiklio subjekt\u0105 naujai prid\u0117tu todo subjektu.\n Kai baigsite perk\u0117lim\u0105, galite i\u0161jungti \u201e{entity}\u201c.",
+            "title": "Habitica {task_name} jutiklis nebenaudojamas"
+        }
+    },
+    "selector": {
+        "skill_select": {
+            "options": {
+                "backstab": "Klaj\u016bnas: d\u016bris \u012f nugar\u0105",
+                "fireball": "Magas: liepsnos pli\u016bpsnis",
+                "pickpocket": "Suk\u010dius: ki\u0161envagis",
+                "smash": "Karys: \u017eiaurus sumu\u0161imas"
+            }
+        },
+        "transformation_item_select": {
+            "options": {
+                "seafoam": "J\u016bros putos",
+                "shiny_seed": "Blizganti s\u0117kla",
+                "snowball": "Sniego gni\u016b\u017et\u0117",
+                "spooky_sparkles": "Bais\u016bs blizgu\u010diai"
+            }
+        }
+    },
+    "services": {
+        "abort_quest": {
+            "description": "At\u0161aukia j\u016bs\u0173 grup\u0117s vykstan\u010di\u0105 u\u017eduot\u012f. Visa pa\u017eanga bus prarasta ir u\u017eduoties rankra\u0161tis bus gr\u0105\u017eintas savininkui. Tik u\u017eduoties lyderis ar grup\u0117s lyderis gali atlikti \u0161\u012f veiksm\u0105.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite persona\u017e\u0105 su kuriuo atlikti veiksm\u0105",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                }
+            },
+            "name": "At\u0161aukti aktyvi\u0105 u\u017eduot\u012f"
+        },
+        "accept_quest": {
+            "description": "Priima kvietim\u0105 u\u017eduo\u010diai atlikti.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite persona\u017e\u0105 su kuriuo atlikti veiksm\u0105",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                }
+            },
+            "name": "Priimti kvietim\u0105 u\u017eduo\u010diai"
+        },
+        "api_call": {
+            "description": "\u0160aukia Habitica API.",
+            "fields": {
+                "args": {
+                    "description": "Bet kokie papildomi JSON arba URL parametro argumentai. \u017dr. apidoc nurodyt\u0105 keli\u0105. Pavyzdyje naudojamas tas pats API galutinis ta\u0161kas.",
+                    "name": "Args"
+                },
+                "name": {
+                    "description": "Habitica naudotojo vardas \u0161aukimui.",
+                    "name": "Vardas"
+                },
+                "path": {
+                    "description": "Elementai i\u0161 API URL masyvo forma, kurio pabaigoje pridedamas metodas. Kreipkit\u0117s \u012f https://habitica.com/apidoc/. Pavyzdys naudoja https://habitica.com/apidoc/#api-Task-CreateUserTasks.",
+                    "name": "Kelias"
+                }
+            },
+            "name": "API pavadinimas"
+        },
+        "cancel_quest": {
+            "description": "At\u0161aukia u\u017eduot\u012f, kuri dar nebuvo prad\u0117ta. Visi priimti ar laukiantys kvietimai bus at\u0161aukti ir u\u017eduoties rankra\u0161tis bus gr\u0105\u017einas savininkui. Tik u\u017eduoties lyderis ar grup\u0117s lyderis gali atlikti \u0161\u012f veiksm\u0105.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite persona\u017e\u0105 su kuriuo atlikti veiksm\u0105",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                }
+            },
+            "name": "At\u0161aukti laukian\u010di\u0105 u\u017eduot\u012f"
+        },
+        "cast_skill": {
+            "description": "Atliekant konkre\u010di\u0105 u\u017eduot\u012f naudoja savo Habitica persona\u017eo \u012fg\u016bd\u017eius ar burtus, kad paveikt\u0173 jos eig\u0105 ar b\u016bsen\u0105.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite Habitica persona\u017e\u0105, kuriam skirti \u012fg\u016bd\u012f.",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                },
+                "skill": {
+                    "description": "Pasirinkite \u012fg\u016bd\u017eius ar burtus, kuriuos norite atlikti atliekant u\u017eduot\u012f. Gali b\u016bti naudojami tik j\u016bs\u0173 persona\u017eo klas\u0119 atitinkantys \u012fg\u016bd\u017eiai.",
+                    "name": "\u012eg\u016bdis"
+                },
+                "task": {
+                    "description": "U\u017eduoties, kuriai norite taikyti \u012fg\u016bd\u012f ar burt\u0105, pavadinimas (arba u\u017eduoties ID).",
+                    "name": "U\u017eduoties pavadinimas"
+                }
+            },
+            "name": "Skirti \u012fg\u016bd\u012f"
+        },
+        "leave_quest": {
+            "description": "Palieka u\u017eduot\u012f, kurioje dabar dalyvaujate.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite persona\u017e\u0105 su kuriuo atlikti veiksm\u0105",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                }
+            },
+            "name": "Palikti u\u017eduot\u012f"
+        },
+        "reject_quest": {
+            "description": "Atmeta laukiant\u012f kvietim\u0105 u\u017eduo\u010diai atlikti.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite persona\u017e\u0105 su kuriuo atlikti veiksm\u0105",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                }
+            },
+            "name": "Atmesti u\u017eduoties kvietim\u0105"
+        },
+        "score_habit": {
+            "description": "Padidina teigiam\u0105 arba neigiam\u0105 \u012fpro\u010dio sek\u0105, kad gal\u0117tum\u0117te steb\u0117ti jo progres\u0105.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite Habitica persona\u017e\u0105, sekant\u012f j\u016bs\u0173 \u012fprot\u012f.",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                },
+                "direction": {
+                    "description": "Ar tai yra teigiama, ar neigiama pa\u017eanga, kuri\u0105 norite steb\u0117ti d\u0117l savo \u012fpro\u010dio.",
+                    "name": "Atlygis ar praradimas"
+                },
+                "task": {
+                    "description": "Habitica \u012fpro\u010dio pavadinimas (arba u\u017eduoties ID).",
+                    "name": "\u012epro\u010dio pavadinimas"
+                }
+            },
+            "name": "Steb\u0117kite \u012fprot\u012f"
+        },
+        "score_reward": {
+            "description": "Nuperka vien\u0105 i\u0161 pasirinktini\u0173 apdovanojim\u0173 u\u017e auks\u0105, u\u017edirbt\u0105 vykdant u\u017eduotis.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite Habitica persona\u017e\u0105, perkant\u012f atlyg\u012f.",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                },
+                "task": {
+                    "description": "Tinkinto atlygio pavadinimas (arba u\u017eduoties ID).",
+                    "name": "Atlygio vardas"
+                }
+            },
+            "name": "Pirkite atlyg\u012f"
+        },
+        "start_quest": {
+            "description": "Pradeda u\u017eduot\u012f nedelsiant, apeinant bet kokius laukian\u010dius kvietimus kurie nebuvo patvirtinti ar atmesti. Tik u\u017eduoties lyderis ar grupp\u0117s lyderis gali atlikti \u0161\u012f veiksm\u0105.",
+            "fields": {
+                "config_entry": {
+                    "description": "Pasirinkite persona\u017e\u0105 su kuriuo atlikti veiksm\u0105",
+                    "name": "Pasirinkti persona\u017e\u0105"
+                }
+            },
+            "name": "Priverstinai prad\u0117ti laukian\u010di\u0105 u\u017eduot\u012f"
+        },
+        "transformation": {
+            "description": "Naudoja transformacijos element\u0105 i\u0161 savo Habitica persona\u017eo inventoriaus savo partijos nariui arba sau.",
+            "fields": {
+                "config_entry": {
+                    "description": "Nor\u0117dami naudoti transformacijos element\u0105, pasirinkite Habitica simbol\u012f.",
+                    "name": "Pasirinkite simbol\u012f"
+                },
+                "item": {
+                    "description": "Pasirinkite transformacijos element\u0105, kur\u012f norite naudoti. Prek\u0117 turi b\u016bti simboli\u0173 s\u0105ra\u0161e.",
+                    "name": "Transformacijos elementas"
+                },
+                "target": {
+                    "description": "Simbolio, kuriam norite naudoti transformacijos element\u0105, pavadinimas. Taip pat galite nurodyti grotuvo vartotojo vard\u0105 arba vartotojo ID.",
+                    "name": "Tikslinis persona\u017eas"
+                }
+            },
+            "name": "Naudokite transformacijos element\u0105"
+        }
+    }
+}

@@ -1,0 +1,54 @@
+{
+    "services": {
+        "get": {
+            "description": "Descarrega o ficheiro a partir do Minio.",
+            "fields": {
+                "bucket": {
+                    "description": "Balde a utilizar.",
+                    "name": "Balde"
+                },
+                "file_path": {
+                    "description": "Caminho do ficheiro no sistema de ficheiros local.",
+                    "name": "Caminho do ficheiro"
+                },
+                "key": {
+                    "description": "Chave de objeto do ficheiro.",
+                    "name": "Chave"
+                }
+            },
+            "name": "Obter"
+        },
+        "put": {
+            "description": "Carrega o ficheiro para o Minio.",
+            "fields": {
+                "bucket": {
+                    "description": "Balde a utilizar.",
+                    "name": "Balde"
+                },
+                "file_path": {
+                    "description": "Caminho do ficheiro no sistema de ficheiros local.",
+                    "name": "Caminho para o ficheiro"
+                },
+                "key": {
+                    "description": "Chave de objeto do ficheiro.",
+                    "name": "Chave"
+                }
+            },
+            "name": "Colocar"
+        },
+        "remove": {
+            "description": "Apaga o ficheiro do Minio.",
+            "fields": {
+                "bucket": {
+                    "description": "Balde a utilizar.",
+                    "name": "Balde"
+                },
+                "key": {
+                    "description": "Chave de objeto do ficheiro.",
+                    "name": "Chave"
+                }
+            },
+            "name": "Remover"
+        }
+    }
+}

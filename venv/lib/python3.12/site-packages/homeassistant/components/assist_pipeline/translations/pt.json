@@ -1,0 +1,37 @@
+{
+    "entity": {
+        "binary_sensor": {
+            "assist_in_progress": {
+                "name": "Assist em curso"
+            }
+        },
+        "select": {
+            "pipeline": {
+                "name": "Assistente",
+                "state": {
+                    "preferred": "Preferencial"
+                }
+            },
+            "vad_sensitivity": {
+                "name": "Dete\u00e7\u00e3o de fim de fala",
+                "state": {
+                    "aggressive": "Agressivo",
+                    "default": "Predefinido",
+                    "relaxed": "Relaxado"
+                }
+            }
+        }
+    },
+    "issues": {
+        "assist_in_progress_deprecated": {
+            "fix_flow": {
+                "step": {
+                    "confirm_disable_entity": {
+                        "description": "O sensor bin\u00e1rio de {integration_name} em curso `{entity_id}` est\u00e1 desatualizado.\n\nMigre sua configura\u00e7\u00e3o para usar a entidade correspondente `{assist_satellite_domain}` e, em seguida, clique em ENVIAR para desativar o sensor bin\u00e1rio em curso e corrigir este problema."
+                    }
+                }
+            },
+            "title": "sensor bin\u00e1rio de {integration_name} em progresso '{entity_id}' est\u00e1 desatualizado"
+        }
+    }
+}

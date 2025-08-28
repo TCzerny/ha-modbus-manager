@@ -1,0 +1,233 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Seade on juba h\u00e4\u00e4lestatud",
+            "reauth_successful": "Taastuvastamine \u00f5nnestus"
+        },
+        "error": {
+            "invalid_auth": "Tuvastamine nurjus"
+        },
+        "step": {
+            "reauth": {
+                "data": {
+                    "api_key": "API v\u00f5ti"
+                },
+                "description": "Sisesta konto jaoks uus tellimisv\u00f5ti aadressilt https://portal.osoenergy.no/.",
+                "title": "OSO Energy tuvastamine"
+            },
+            "user": {
+                "data": {
+                    "api_key": "API v\u00f5ti"
+                },
+                "description": "Sisesta oma konto jaoks liitumisv\u00f5ti aadressilt\"https://portal.osoenergy.no/\"",
+                "title": "OSO Energy tuvastamine"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "extra_energy": {
+                "name": "Lisaenergia"
+            },
+            "heating": {
+                "name": "K\u00fctmine"
+            },
+            "power_save": {
+                "name": "Energias\u00e4\u00e4st"
+            }
+        },
+        "sensor": {
+            "capacity_mixed_water_40": {
+                "name": "Mahutavus segatud vesi 40\u00b0C"
+            },
+            "heater_mode": {
+                "name": "K\u00fctte re\u017eiim",
+                "state": {
+                    "auto": "Automaatne",
+                    "extraenergy": "Lisaenergia",
+                    "ffr": "Kiire sagedusreserv",
+                    "legionella": "Legionella",
+                    "manual": "K\u00e4sitsi",
+                    "off": "V\u00e4ljas",
+                    "powersave": "Energias\u00e4\u00e4st",
+                    "voltage": "Pinge"
+                }
+            },
+            "optimization_mode": {
+                "name": "Optimeerimisre\u017eiim",
+                "state": {
+                    "advanced": "T\u00e4psem",
+                    "gridcompany": "V\u00f5rguettev\u00f5te",
+                    "off": "V\u00e4ljas",
+                    "oso": "OSO",
+                    "smartcompany": "Nutikas ettev\u00f5te"
+                }
+            },
+            "profile": {
+                "name": "Kohalik profiil"
+            },
+            "tapping_capacity": {
+                "name": "Koputusv\u00f5imsus"
+            },
+            "temperature_low": {
+                "name": "Temperatuur all"
+            },
+            "temperature_mid": {
+                "name": "Temperatuur keskel"
+            },
+            "temperature_one": {
+                "name": "Temperatuur kohal"
+            },
+            "temperature_top": {
+                "name": "Temperatuur \u00fcleval"
+            },
+            "v40_level_max": {
+                "name": "Seguvee maksimaalne tase 40 \u00b0C juures"
+            },
+            "v40_level_min": {
+                "name": "Segavee minimaalne tase temperatuuril 40\u00b0C"
+            },
+            "v40_min": {
+                "name": "Segatud vesi temperatuuril 40 \u00b0 C"
+            }
+        }
+    },
+    "services": {
+        "get_profile": {
+            "description": "Hangib veesoojendi temperatuuriprofiili",
+            "name": "Hangi k\u00fcttekeha profiil"
+        },
+        "set_profile": {
+            "description": "M\u00e4\u00e4rab veesoojendi temperatuuriprofiili",
+            "fields": {
+                "hour_00": {
+                    "description": "00:00",
+                    "name": "00:00"
+                },
+                "hour_01": {
+                    "description": "01:00",
+                    "name": "01:00"
+                },
+                "hour_02": {
+                    "description": "02:00",
+                    "name": "02:00"
+                },
+                "hour_03": {
+                    "description": "03:00",
+                    "name": "03:00"
+                },
+                "hour_04": {
+                    "description": "04:00",
+                    "name": "04:00"
+                },
+                "hour_05": {
+                    "description": "05:00",
+                    "name": "05:00"
+                },
+                "hour_06": {
+                    "description": "06:00",
+                    "name": "06:00"
+                },
+                "hour_07": {
+                    "description": "07:00",
+                    "name": "07:00"
+                },
+                "hour_08": {
+                    "description": "08:00",
+                    "name": "08:00"
+                },
+                "hour_09": {
+                    "description": "09:00",
+                    "name": "09:00"
+                },
+                "hour_10": {
+                    "description": "10:00",
+                    "name": "10:00"
+                },
+                "hour_11": {
+                    "description": "11:00",
+                    "name": "11:00"
+                },
+                "hour_12": {
+                    "description": "12:00",
+                    "name": "12:00"
+                },
+                "hour_13": {
+                    "description": "13:00",
+                    "name": "13:00"
+                },
+                "hour_14": {
+                    "description": "14:00",
+                    "name": "14:00"
+                },
+                "hour_15": {
+                    "description": "15:00",
+                    "name": "15:00"
+                },
+                "hour_16": {
+                    "description": "16:00",
+                    "name": "16:00"
+                },
+                "hour_17": {
+                    "description": "17:00",
+                    "name": "17:00"
+                },
+                "hour_18": {
+                    "description": "18:00",
+                    "name": "18:00"
+                },
+                "hour_19": {
+                    "description": "19:00",
+                    "name": "19:00"
+                },
+                "hour_20": {
+                    "description": "20:00",
+                    "name": "20:00"
+                },
+                "hour_21": {
+                    "description": "21:00",
+                    "name": "21:00"
+                },
+                "hour_22": {
+                    "description": "22:00",
+                    "name": "22:00"
+                },
+                "hour_23": {
+                    "description": "23:00",
+                    "name": "23:00"
+                }
+            },
+            "name": "Seadista k\u00fctteprofiil"
+        },
+        "set_v40_min": {
+            "description": "Seab k\u00fctteseadme minimaalse veekoguse temperatuurile 40 \u00b0C",
+            "fields": {
+                "v40_min": {
+                    "description": "Vee miinimumkogus temperatuuril 40 \u00b0C (200-350 SAGA S200 puhul, 300-550 SAGA S300 puhul)",
+                    "name": "V40 Min"
+                }
+            },
+            "name": "M\u00e4\u00e4ra v40 min"
+        },
+        "turn_off": {
+            "description": "L\u00fclitab k\u00fctte \u00fcheks tunniks v\u00e4lja v\u00f5i kuni minimaalne temperatuur on saavutatud",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "Vali kas k\u00fcte peaks olema v\u00e4lja l\u00fclitatud kuni saavutatakse minimaalne temperatuur (True) v\u00f5i \u00fcks tund (False)",
+                    "name": "Kuni temperatuuripiiranguni"
+                }
+            },
+            "name": "L\u00fclita k\u00fcte v\u00e4lja"
+        },
+        "turn_on": {
+            "description": "L\u00fclitab k\u00fctmise sisse \u00fcheks tunniks v\u00f5i kuni maksimaalse temperatuuri saavutamiseni",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "Vali kas k\u00fcte peaks olema sisse l\u00fclitatud kuni maksimaalse temperatuuri saavutamiseni (True) v\u00f5i \u00fche tunni (False)",
+                    "name": "Kuni temperatuuripiiranguni"
+                }
+            },
+            "name": "L\u00fclita k\u00fcte sisse"
+        }
+    }
+}

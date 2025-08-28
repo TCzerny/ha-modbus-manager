@@ -1,0 +1,548 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Thi\u1ebft b\u1ecb \u0111\u00e3 \u0111\u01b0\u1ee3c c\u1ea5u h\u00ecnh",
+            "already_in_progress": "Lu\u1ed3ng c\u1ea5u h\u00ecnh \u0111ang \u0111\u01b0\u1ee3c ti\u1ebfn h\u00e0nh",
+            "cannot_connect": "K\u1ebft n\u1ed1i th\u1ea5t b\u1ea1i",
+            "discovery_requires_supervisor": "Kh\u00e1m ph\u00e1 c\u1ea7n c\u00f3 supervisor.",
+            "not_zwave_device": "Thi\u1ebft b\u1ecb \u0111\u01b0\u1ee3c ph\u00e1t hi\u1ec7n kh\u00f4ng ph\u1ea3i l\u00e0 thi\u1ebft b\u1ecb Z-Wave."
+        },
+        "error": {
+            "cannot_connect": "K\u1ebft n\u1ed1i th\u1ea5t b\u1ea1i",
+            "invalid_ws_url": "URL websocket kh\u00f4ng h\u1ee3p l\u1ec7",
+            "unknown": "L\u1ed7i kh\u00f4ng mong \u0111\u1ee3i"
+        },
+        "flow_title": "{name}",
+        "step": {
+            "configure_addon": {
+                "data": {
+                    "s0_legacy_key": "Kh\u00f3a S0 (C\u0169)",
+                    "s2_access_control_key": "Kh\u00f3a ki\u1ec3m so\u00e1t truy c\u1eadp S2",
+                    "s2_authenticated_key": "Kh\u00f3a x\u00e1c th\u1ef1c S2",
+                    "s2_unauthenticated_key": "Kh\u00f3a ch\u01b0a x\u00e1c th\u1ef1c S2",
+                    "usb_path": "\u0110\u01b0\u1eddng d\u1eabn thi\u1ebft b\u1ecb USB"
+                },
+                "description": "Ti\u1ec7n \u00edch b\u1ed5 sung s\u1ebd t\u1ea1o kh\u00f3a b\u1ea3o m\u1eadt n\u1ebfu c\u00e1c tr\u01b0\u1eddng \u0111\u00f3 b\u1ecb tr\u1ed1ng."
+            },
+            "manual": {
+                "data": {
+                    "url": "URL"
+                }
+            },
+            "on_supervisor": {
+                "title": "Ch\u1ecdn ph\u01b0\u01a1ng th\u1ee9c k\u1ebft n\u1ed1i"
+            }
+        }
+    },
+    "device_automation": {
+        "action_type": {
+            "clear_lock_usercode": "X\u00f3a m\u00e3 ng\u01b0\u1eddi d\u00f9ng t\u1ea1i {entity_name}",
+            "ping": "Ping thi\u1ebft b\u1ecb",
+            "refresh_value": "L\u00e0m m\u1edbi (c\u00e1c) gi\u00e1 tr\u1ecb cho {entity_name}",
+            "reset_meter": "\u0110\u1eb7t l\u1ea1i \u0111\u1ed3ng h\u1ed3 \u0111o t\u1ea1i {subtype}",
+            "set_config_parameter": "\u0110\u1eb7t gi\u00e1 tr\u1ecb c\u1ee7a tham s\u1ed1 c\u1ea5u h\u00ecnh {subtype}",
+            "set_lock_usercode": "\u0110\u1eb7t m\u00e3 ng\u01b0\u1eddi d\u00f9ng t\u1ea1i {entity_name}",
+            "set_value": "\u0110\u1eb7t gi\u00e1 tr\u1ecb cho Gi\u00e1 tr\u1ecb Z-Wave"
+        },
+        "condition_type": {
+            "config_parameter": "Gi\u00e1 tr\u1ecb tham s\u1ed1 c\u1ea5u h\u00ecnh {subtype}",
+            "node_status": "Tr\u1ea1ng th\u00e1i n\u00fat",
+            "value": "Gi\u00e1 tr\u1ecb hi\u1ec7n t\u1ea1i c\u1ee7a Gi\u00e1 tr\u1ecb Z-Wave"
+        },
+        "extra_fields": {
+            "code_slot": "Khe m\u00e3",
+            "command_class": "L\u1edbp l\u1ec7nh",
+            "data_type": "Ki\u1ec3u d\u1eef li\u1ec7u",
+            "endpoint": "\u0110i\u1ec3m cu\u1ed1i",
+            "event": "S\u1ef1 ki\u1ec7n",
+            "event_label": "Nh\u00e3n s\u1ef1 ki\u1ec7n",
+            "event_type": "Ki\u1ec3u s\u1ef1 ki\u1ec7n",
+            "for": "Trong v\u00f2ng",
+            "from": "T\u1eeb",
+            "label": "Nh\u00e3n",
+            "property": "Thu\u1ed9c t\u00ednh",
+            "property_key": "Kh\u00f3a thu\u1ed9c t\u00ednh",
+            "refresh_all_values": "L\u00e0m m\u1edbi t\u1ea5t c\u1ea3 gi\u00e1 tr\u1ecb",
+            "status": "Tr\u1ea1ng th\u00e1i",
+            "to": "Th\u00e0nh",
+            "type.": "Ki\u1ec3u",
+            "usercode": "M\u00e3 ng\u01b0\u1eddi d\u00f9ng",
+            "value": "Gi\u00e1 tr\u1ecb",
+            "wait_for_result": "Ch\u1edd k\u1ebft qu\u1ea3"
+        },
+        "trigger_type": {
+            "event.notification.entry_control": "\u0110\u00e3 g\u1eedi th\u00f4ng b\u00e1o Ki\u1ec3m so\u00e1t m\u1ee5c nh\u1eadp",
+            "event.notification.notification": "\u0110\u00e3 g\u1eedi th\u00f4ng b\u00e1o",
+            "event.value_notification.basic": "S\u1ef1 ki\u1ec7n CC c\u01a1 b\u1ea3n t\u1ea1i {subtype}",
+            "event.value_notification.central_scene": "H\u00e0nh \u0111\u1ed9ng C\u1ea3nh trung t\u00e2m t\u1ea1i {subtype}",
+            "event.value_notification.scene_activation": "K\u00edch ho\u1ea1t c\u1ea3nh t\u1ea1i {subtype}",
+            "state.node_status": "Tr\u1ea1ng th\u00e1i n\u00fat \u0111\u00e3 thay \u0111\u1ed5i",
+            "zwave_js.value_updated.config_parameter": "Thay \u0111\u1ed5i gi\u00e1 tr\u1ecb trong tham s\u1ed1 c\u1ea5u h\u00ecnh {subtype}"
+        }
+    },
+    "entity": {
+        "button": {
+            "ping": {
+                "name": "Ping"
+            }
+        },
+        "sensor": {
+            "average_background_rssi": {
+                "name": "RSSI n\u1ec1n trung b\u00ecnh (k\u00eanh {channel})"
+            },
+            "can": {
+                "name": "Va ch\u1ea1m"
+            },
+            "commands_dropped": {
+                "name": "C\u00e1c l\u1ec7nh b\u1ecb b\u1ecf ({direction})"
+            },
+            "controller_status": {
+                "name": "Tr\u1ea1ng th\u00e1i",
+                "state": {
+                    "jammed": "B\u1ecb k\u1eb9t",
+                    "ready": "S\u1eb5n s\u00e0ng",
+                    "unresponsive": "Kh\u00f4ng ph\u1ea3n h\u1ed3i"
+                }
+            },
+            "current_background_rssi": {
+                "name": "RSSI n\u1ec1n hi\u1ec7n t\u1ea1i (k\u00eanh {channel})"
+            },
+            "last_seen": {
+                "name": "Nh\u00ecn th\u1ea5y l\u1ea7n cu\u1ed1i"
+            },
+            "messages_dropped": {
+                "name": "Tin nh\u1eafn b\u1ecb b\u1ecf ({direction})"
+            },
+            "nak": {
+                "name": "Tin nh\u1eafn kh\u00f4ng \u0111\u01b0\u1ee3c ch\u1ea5p nh\u1eadn"
+            },
+            "node_status": {
+                "name": "Tr\u1ea1ng th\u00e1i n\u00fat",
+                "state": {
+                    "alive": "S\u1ed1ng",
+                    "asleep": "Ng\u1ee7",
+                    "awake": "Th\u1ee9c",
+                    "dead": "Ch\u1ebft",
+                    "unknown": "Kh\u00f4ng x\u00e1c \u0111\u1ecbnh"
+                }
+            },
+            "rssi": {
+                "name": "RSSI"
+            },
+            "rtt": {
+                "name": "Th\u1eddi gian kh\u1ee9 h\u1ed3i"
+            },
+            "successful_commands": {
+                "name": "C\u00e1c l\u1ec7nh th\u00e0nh c\u00f4ng ({direction})"
+            },
+            "successful_messages": {
+                "name": "Tin nh\u1eafn th\u00e0nh c\u00f4ng ({direction})"
+            },
+            "timeout_ack": {
+                "name": "Thi\u1ebfu ACK"
+            },
+            "timeout_callback": {
+                "name": "G\u1ecdi l\u1ea1i \u0111\u00e3 h\u1ebft th\u1eddi gian"
+            },
+            "timeout_response": {
+                "name": "Ph\u1ea3n h\u1ed3i h\u1ebft th\u1eddi gian"
+            }
+        }
+    },
+    "issues": {
+        "device_config_file_changed": {
+            "fix_flow": {
+                "abort": {
+                    "cannot_connect": "Kh\u00f4ng th\u1ec3 k\u1ebft n\u1ed1i v\u1edbi {device_name}. Vui l\u00f2ng th\u1eed l\u1ea1i sau sau khi x\u00e1c nh\u1eadn r\u1eb1ng m\u1ea1ng Z-Wave c\u1ee7a b\u1ea1n \u0111\u00e3 ho\u1ea1t \u0111\u1ed9ng v\u00e0 \u0111\u01b0\u1ee3c k\u1ebft n\u1ed1i v\u1edbi Home Assistant.",
+                    "issue_ignored": "C\u1eadp nh\u1eadt t\u1eadp tin c\u1ea5u h\u00ecnh thi\u1ebft b\u1ecb cho {device_name} b\u1ecb b\u1ecf qua."
+                },
+                "step": {
+                    "init": {
+                        "menu_options": {
+                            "confirm": "Ph\u1ecfng v\u1ea5n l\u1ea1i thi\u1ebft b\u1ecb",
+                            "ignore": "B\u1ecf qua c\u1eadp nh\u1eadt c\u1ea5u h\u00ecnh thi\u1ebft b\u1ecb"
+                        },
+                        "title": "T\u1eadp tin c\u1ea5u h\u00ecnh thi\u1ebft b\u1ecb \u0111\u00e3 thay \u0111\u1ed5i: {device_name}"
+                    }
+                }
+            },
+            "title": "T\u1eadp tin c\u1ea5u h\u00ecnh thi\u1ebft b\u1ecb \u0111\u00e3 thay \u0111\u1ed5i: {device_name}"
+        }
+    },
+    "options": {
+        "abort": {
+            "addon_get_discovery_info_failed": "Kh\u00f4ng l\u1ea5y \u0111\u01b0\u1ee3c th\u00f4ng tin kh\u00e1m ph\u00e1 ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS.",
+            "addon_info_failed": "Kh\u00f4ng nh\u1eadn \u0111\u01b0\u1ee3c th\u00f4ng tin ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS.",
+            "addon_install_failed": "Kh\u00f4ng th\u1ec3 c\u00e0i \u0111\u1eb7t ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS.",
+            "addon_set_config_failed": "Kh\u00f4ng \u0111\u1eb7t \u0111\u01b0\u1ee3c c\u1ea5u h\u00ecnh Z-Wave JS.",
+            "addon_start_failed": "Kh\u00f4ng kh\u1edfi \u0111\u1ed9ng \u0111\u01b0\u1ee3c ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS.",
+            "already_configured": "Thi\u1ebft b\u1ecb \u0111\u00e3 \u0111\u01b0\u1ee3c c\u1ea5u h\u00ecnh",
+            "cannot_connect": "K\u1ebft n\u1ed1i th\u1ea5t b\u1ea1i",
+            "different_device": "Thi\u1ebft b\u1ecb USB \u0111\u01b0\u1ee3c k\u1ebft n\u1ed1i kh\u00f4ng gi\u1ed1ng v\u1edbi thi\u1ebft b\u1ecb \u0111\u00e3 \u0111\u01b0\u1ee3c \u0111\u1ecbnh c\u1ea5u h\u00ecnh tr\u01b0\u1edbc \u0111\u00f3 cho m\u1ee5c c\u1ea5u h\u00ecnh n\u00e0y. Thay v\u00e0o \u0111\u00f3, vui l\u00f2ng t\u1ea1o m\u1ee5c c\u1ea5u h\u00ecnh m\u1edbi cho thi\u1ebft b\u1ecb m\u1edbi."
+        },
+        "error": {
+            "cannot_connect": "K\u1ebft n\u1ed1i th\u1ea5t b\u1ea1i",
+            "invalid_ws_url": "URL websocket kh\u00f4ng h\u1ee3p l\u1ec7",
+            "unknown": "L\u1ed7i kh\u00f4ng mong \u0111\u1ee3i"
+        },
+        "progress": {
+            "install_addon": "Vui l\u00f2ng \u0111\u1ee3i trong khi qu\u00e1 tr\u00ecnh c\u00e0i \u0111\u1eb7t ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS ho\u00e0n t\u1ea5t. Vi\u1ec7c n\u00e0y c\u00f3 th\u1ec3 m\u1ea5t v\u00e0i ph\u00fat.",
+            "start_addon": "Vui l\u00f2ng \u0111\u1ee3i trong khi qu\u00e1 tr\u00ecnh kh\u1edfi \u0111\u1ed9ng ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS ho\u00e0n t\u1ea5t. Vi\u1ec7c n\u00e0y c\u00f3 th\u1ec3 m\u1ea5t v\u00e0i gi\u00e2y."
+        },
+        "step": {
+            "configure_addon": {
+                "data": {
+                    "emulate_hardware": "M\u00f4 ph\u1ecfng ph\u1ea7n c\u1ee9ng",
+                    "log_level": "M\u1ee9c nh\u1eadt k\u00fd",
+                    "s0_legacy_key": "Kh\u00f3a S0 (C\u0169)",
+                    "s2_access_control_key": "Kh\u00f3a ki\u1ec3m so\u00e1t truy c\u1eadp S2",
+                    "s2_authenticated_key": "Kh\u00f3a x\u00e1c th\u1ef1c S2",
+                    "s2_unauthenticated_key": "Kh\u00f3a ch\u01b0a x\u00e1c th\u1ef1c S2",
+                    "usb_path": "\u0110\u01b0\u1eddng d\u1eabn thi\u1ebft b\u1ecb USB"
+                },
+                "description": "Ti\u1ec7n \u00edch b\u1ed5 sung s\u1ebd t\u1ea1o kh\u00f3a b\u1ea3o m\u1eadt n\u1ebfu c\u00e1c tr\u01b0\u1eddng \u0111\u00f3 b\u1ecb tr\u1ed1ng.",
+                "title": "Nh\u1eadp c\u1ea5u h\u00ecnh ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS"
+            },
+            "install_addon": {
+                "title": "Qu\u00e1 tr\u00ecnh c\u00e0i \u0111\u1eb7t ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS \u0111\u00e3 b\u1eaft \u0111\u1ea7u"
+            },
+            "manual": {
+                "data": {
+                    "url": "URL"
+                }
+            },
+            "on_supervisor": {
+                "data": {
+                    "use_addon": "S\u1eed d\u1ee5ng ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS Supervisor"
+                },
+                "description": "B\u1ea1n c\u00f3 mu\u1ed1n s\u1eed d\u1ee5ng ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS Supervisor kh\u00f4ng?",
+                "title": "Ch\u1ecdn ph\u01b0\u01a1ng th\u1ee9c k\u1ebft n\u1ed1i"
+            },
+            "start_addon": {
+                "title": "Ti\u1ec7n \u00edch b\u1ed5 sung Z-Wave JS \u0111ang kh\u1edfi \u0111\u1ed9ng."
+            }
+        }
+    },
+    "services": {
+        "bulk_set_partial_config_parameters": {
+            "description": "Cho ph\u00e9p c\u00e0i \u0111\u1eb7t h\u00e0ng lo\u1ea1t c\u00e1c tham s\u1ed1 t\u1eebng ph\u1ea7n. H\u1eefu \u00edch khi ph\u1ea3i \u0111\u1eb7t nhi\u1ec1u tham s\u1ed1 t\u1eebng ph\u1ea7n c\u00f9ng m\u1ed9t l\u00fac.",
+            "fields": {
+                "area_id": {
+                    "description": "(C\u00e1c) khu v\u1ef1c \u0111\u1ec3 nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y. N\u1ebfu m\u1ed9t khu v\u1ef1c \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh, t\u1ea5t c\u1ea3 c\u00e1c thi\u1ebft b\u1ecb v\u00e0 th\u1ef1c th\u1ec3 zwave_js trong khu v\u1ef1c \u0111\u00f3 s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y.",
+                    "name": "ID khu v\u1ef1c"
+                },
+                "device_id": {
+                    "description": "(C\u00e1c) thi\u1ebft b\u1ecb nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "endpoint": {
+                    "description": "\u0110i\u1ec3m cu\u1ed1i c\u1ee7a tham s\u1ed1 c\u1ea5u h\u00ecnh.",
+                    "name": "\u0110i\u1ec3m cu\u1ed1i"
+                },
+                "entity_id": {
+                    "description": "ID th\u1ef1c th\u1ec3 c\u1ea7n nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID th\u1ef1c th\u1ec3"
+                },
+                "parameter": {
+                    "description": "T\u00ean (ho\u1eb7c ID) c\u1ee7a tham s\u1ed1 c\u1ea5u h\u00ecnh b\u1ea1n mu\u1ed1n \u0111\u1ecbnh c\u1ea5u h\u00ecnh.",
+                    "name": "Tham s\u1ed1"
+                },
+                "value": {
+                    "description": "(C\u00e1c) gi\u00e1 tr\u1ecb m\u1edbi c\u1ea7n \u0111\u1eb7t cho tham s\u1ed1 c\u1ea5u h\u00ecnh n\u00e0y. C\u00f3 th\u1ec3 l\u00e0 gi\u00e1 tr\u1ecb s\u1ed1 nguy\u00ean th\u00f4 \u0111\u1ec3 bi\u1ec3u th\u1ecb thay \u0111\u1ed5i h\u00e0ng lo\u1ea1t ho\u1eb7c \u00e1nh x\u1ea1 trong \u0111\u00f3 kh\u00f3a l\u00e0 m\u1eb7t n\u1ea1 bit (\u1edf d\u1ea1ng hex ho\u1eb7c s\u1ed1 nguy\u00ean) v\u00e0 gi\u00e1 tr\u1ecb l\u00e0 gi\u00e1 tr\u1ecb m\u1edbi m\u00e0 b\u1ea1n mu\u1ed1n \u0111\u1eb7t cho tham s\u1ed1 m\u1ed9t ph\u1ea7n \u0111\u00f3.",
+                    "name": "Gi\u00e1 tr\u1ecb"
+                }
+            }
+        },
+        "clear_lock_usercode": {
+            "description": "X\u00f3a m\u00e3 ng\u01b0\u1eddi d\u00f9ng kh\u1ecfi kh\u00f3a.",
+            "fields": {
+                "code_slot": {
+                    "description": "Khe m\u00e3 \u0111\u1ec3 x\u00f3a m\u00e3.",
+                    "name": "Khe m\u00e3"
+                }
+            },
+            "name": "X\u00f3a m\u00e3 ng\u01b0\u1eddi d\u00f9ng kh\u00f3a"
+        },
+        "invoke_cc_api": {
+            "description": "G\u1ecdi API L\u1edbp l\u1ec7nh tr\u00ean m\u1ed9t n\u00fat. M\u1ed9t s\u1ed1 L\u1edbp l\u1ec7nh kh\u00f4ng th\u1ec3 \u0111\u01b0\u1ee3c ki\u1ec3m so\u00e1t ho\u00e0n to\u00e0n th\u00f4ng qua h\u00e0nh \u0111\u1ed9ng `set_value` v\u00e0 y\u00eau c\u1ea7u g\u1ecdi tr\u1ef1c ti\u1ebfp \u0111\u1ebfn API L\u1edbp l\u1ec7nh.",
+            "fields": {
+                "area_id": {
+                    "name": "ID khu v\u1ef1c"
+                },
+                "command_class": {
+                    "description": "ID c\u1ee7a l\u1edbp l\u1ec7nh m\u00e0 b\u1ea1n mu\u1ed1n ra l\u1ec7nh.",
+                    "name": "L\u1edbp l\u1ec7nh"
+                },
+                "device_id": {
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "endpoint": {
+                    "description": "\u0110i\u1ec3m cu\u1ed1i \u0111\u1ec3 g\u1ecdi API. N\u1ebfu \u0111i\u1ec3m cu\u1ed1i \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh, \u0111i\u1ec3m cu\u1ed1i \u0111\u00f3 s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm \u0111\u1ebfn cho t\u1ea5t c\u1ea3 c\u00e1c n\u00fat \u0111\u01b0\u1ee3c li\u00ean k\u1ebft v\u1edbi khu v\u1ef1c, thi\u1ebft b\u1ecb v\u00e0/ho\u1eb7c th\u1ef1c th\u1ec3 m\u1ee5c ti\u00eau. N\u1ebfu \u0111i\u1ec3m cu\u1ed1i kh\u00f4ng \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh, \u0111i\u1ec3m cu\u1ed1i g\u1ed1c (0) s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm m\u1ee5c ti\u00eau cho c\u00e1c n\u00fat \u0111\u01b0\u1ee3c li\u00ean k\u1ebft v\u1edbi khu v\u1ef1c v\u00e0 thi\u1ebft b\u1ecb m\u1ee5c ti\u00eau v\u00e0 \u0111i\u1ec3m cu\u1ed1i cho gi\u00e1 tr\u1ecb ch\u00ednh c\u1ee7a t\u1eebng th\u1ef1c th\u1ec3 s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm m\u1ee5c ti\u00eau.",
+                    "name": "\u0110i\u1ec3m cu\u1ed1i"
+                },
+                "entity_id": {
+                    "name": "ID th\u1ef1c th\u1ec3"
+                },
+                "method_name": {
+                    "name": "T\u00ean ph\u01b0\u01a1ng th\u1ee9c"
+                },
+                "parameters": {
+                    "name": "Tham s\u1ed1"
+                }
+            },
+            "name": "G\u1ecdi API l\u1edbp l\u1ec7nh tr\u00ean m\u1ed9t n\u00fat (n\u00e2ng cao)"
+        },
+        "multicast_set_value": {
+            "fields": {
+                "area_id": {
+                    "description": "(C\u00e1c) khu v\u1ef1c \u0111\u1ec3 nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y. N\u1ebfu m\u1ed9t khu v\u1ef1c \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh, t\u1ea5t c\u1ea3 c\u00e1c thi\u1ebft b\u1ecb v\u00e0 th\u1ef1c th\u1ec3 zwave_js trong khu v\u1ef1c \u0111\u00f3 s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y.",
+                    "name": "ID khu v\u1ef1c"
+                },
+                "broadcast": {
+                    "description": "Li\u1ec7u l\u1ec7nh c\u00f3 n\u00ean \u0111\u01b0\u1ee3c ph\u00e1t t\u1edbi t\u1ea5t c\u1ea3 c\u00e1c thi\u1ebft b\u1ecb tr\u00ean m\u1ea1ng hay kh\u00f4ng.",
+                    "name": "Ph\u00e1t tin?"
+                },
+                "command_class": {
+                    "description": "ID c\u1ee7a l\u1edbp l\u1ec7nh cho gi\u00e1 tr\u1ecb.",
+                    "name": "L\u1edbp l\u1ec7nh"
+                },
+                "device_id": {
+                    "description": "(C\u00e1c) thi\u1ebft b\u1ecb nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "endpoint": {
+                    "description": "\u0110i\u1ec3m cu\u1ed1i c\u1ee7a gi\u00e1 tr\u1ecb.",
+                    "name": "\u0110i\u1ec3m cu\u1ed1i"
+                },
+                "entity_id": {
+                    "description": "ID th\u1ef1c th\u1ec3 c\u1ea7n nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID th\u1ef1c th\u1ec3"
+                },
+                "options": {
+                    "description": "\u0110\u1eb7t b\u1ea3n tham chi\u1ebfu t\u00f9y ch\u1ecdn gi\u00e1 tr\u1ecb. Tham kh\u1ea3o t\u00e0i li\u1ec7u Z-Wave JS \u0111\u1ec3 bi\u1ebft th\u00eam th\u00f4ng tin v\u1ec1 nh\u1eefng t\u00f9y ch\u1ecdn c\u00f3 th\u1ec3 \u0111\u01b0\u1ee3c \u0111\u1eb7t.",
+                    "name": "T\u00f9y ch\u1ecdn"
+                },
+                "property": {
+                    "description": "ID c\u1ee7a thu\u1ed9c t\u00ednh cho gi\u00e1 tr\u1ecb.",
+                    "name": "Thu\u1ed9c t\u00ednh"
+                },
+                "property_key": {
+                    "description": "ID c\u1ee7a kh\u00f3a thu\u1ed9c t\u00ednh cho gi\u00e1 tr\u1ecb.",
+                    "name": "Kh\u00f3a thu\u1ed9c t\u00ednh"
+                },
+                "value": {
+                    "description": "Gi\u00e1 tr\u1ecb m\u1edbi c\u1ea7n \u0111\u1eb7t.",
+                    "name": "Gi\u00e1 tr\u1ecb"
+                }
+            },
+            "name": "\u0110\u1eb7t gi\u00e1 tr\u1ecb tr\u00ean nhi\u1ec1u thi\u1ebft b\u1ecb th\u00f4ng qua ph\u00e1t \u0111a h\u01b0\u1edbng (n\u00e2ng cao)"
+        },
+        "ping": {
+            "fields": {
+                "area_id": {
+                    "description": "(C\u00e1c) khu v\u1ef1c \u0111\u1ec3 nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y. N\u1ebfu m\u1ed9t khu v\u1ef1c \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh, t\u1ea5t c\u1ea3 c\u00e1c thi\u1ebft b\u1ecb v\u00e0 th\u1ef1c th\u1ec3 zwave_js trong khu v\u1ef1c \u0111\u00f3 s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y.",
+                    "name": "ID khu v\u1ef1c"
+                },
+                "device_id": {
+                    "description": "(C\u00e1c) thi\u1ebft b\u1ecb nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "entity_id": {
+                    "description": "ID th\u1ef1c th\u1ec3 c\u1ea7n nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID th\u1ef1c th\u1ec3"
+                }
+            },
+            "name": "Ping m\u1ed9t n\u00fat"
+        },
+        "refresh_notifications": {
+            "description": "L\u00e0m m\u1edbi th\u00f4ng b\u00e1o tr\u00ean n\u00fat d\u1ef1a tr\u00ean lo\u1ea1i th\u00f4ng b\u00e1o v\u00e0 s\u1ef1 ki\u1ec7n th\u00f4ng b\u00e1o t\u00f9y ch\u1ecdn.",
+            "fields": {
+                "area_id": {
+                    "description": "(C\u00e1c) khu v\u1ef1c \u0111\u1ec3 nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y. N\u1ebfu m\u1ed9t khu v\u1ef1c \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh, t\u1ea5t c\u1ea3 c\u00e1c thi\u1ebft b\u1ecb v\u00e0 th\u1ef1c th\u1ec3 zwave_js trong khu v\u1ef1c \u0111\u00f3 s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y.",
+                    "name": "ID khu v\u1ef1c"
+                },
+                "device_id": {
+                    "description": "(C\u00e1c) thi\u1ebft b\u1ecb nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "entity_id": {
+                    "description": "ID th\u1ef1c th\u1ec3 c\u1ea7n nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID th\u1ef1c th\u1ec3"
+                },
+                "notification_event": {
+                    "description": "S\u1ed1 S\u1ef1 ki\u1ec7n th\u00f4ng b\u00e1o nh\u01b0 \u0111\u01b0\u1ee3c x\u00e1c \u0111\u1ecbnh trong th\u00f4ng s\u1ed1 k\u1ef9 thu\u1eadt Z-Wave.",
+                    "name": "S\u1ef1 ki\u1ec7n th\u00f4ng b\u00e1o"
+                },
+                "notification_type": {
+                    "description": "S\u1ed1 Lo\u1ea1i th\u00f4ng b\u00e1o nh\u01b0 \u0111\u01b0\u1ee3c x\u00e1c \u0111\u1ecbnh trong th\u00f4ng s\u1ed1 k\u1ef9 thu\u1eadt Z-Wave.",
+                    "name": "Lo\u1ea1i th\u00f4ng b\u00e1o"
+                }
+            },
+            "name": "L\u00e0m m\u1edbi th\u00f4ng b\u00e1o tr\u00ean m\u1ed9t n\u00fat (n\u00e2ng cao)"
+        },
+        "refresh_value": {
+            "description": "Bu\u1ed9c c\u1eadp nh\u1eadt c\u00e1c gi\u00e1 tr\u1ecb c\u1ee7a th\u1ef1c th\u1ec3 Z-Wave.",
+            "fields": {
+                "entity_id": {
+                    "description": "Th\u1ef1c th\u1ec3 c\u1ea7n l\u00e0m m\u1edbi.",
+                    "name": "Th\u1ef1c th\u1ec3"
+                },
+                "refresh_all_values": {
+                    "description": "L\u00e0m m\u1edbi t\u1ea5t c\u1ea3 c\u00e1c gi\u00e1 tr\u1ecb (true) hay ch\u1ec9 gi\u00e1 tr\u1ecb ch\u00ednh (false).",
+                    "name": "L\u00e0m m\u1edbi t\u1ea5t c\u1ea3 gi\u00e1 tr\u1ecb?"
+                }
+            },
+            "name": "L\u00e0m m\u1edbi gi\u00e1 tr\u1ecb"
+        },
+        "reset_meter": {
+            "description": "\u0110\u1eb7t l\u1ea1i \u0111\u1ed3ng h\u1ed3 \u0111o tr\u00ean m\u1ed9t n\u00fat.",
+            "fields": {
+                "area_id": {
+                    "description": "(C\u00e1c) khu v\u1ef1c \u0111\u1ec3 nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y. N\u1ebfu m\u1ed9t khu v\u1ef1c \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh, t\u1ea5t c\u1ea3 c\u00e1c thi\u1ebft b\u1ecb v\u00e0 th\u1ef1c th\u1ec3 zwave_js trong khu v\u1ef1c \u0111\u00f3 s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y.",
+                    "name": "ID khu v\u1ef1c"
+                },
+                "device_id": {
+                    "description": "(C\u00e1c) thi\u1ebft b\u1ecb nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "entity_id": {
+                    "description": "ID th\u1ef1c th\u1ec3 c\u1ea7n nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID th\u1ef1c th\u1ec3"
+                },
+                "meter_type": {
+                    "description": "Lo\u1ea1i \u0111\u1ed3ng h\u1ed3 \u0111o c\u1ea7n thi\u1ebft l\u1eadp l\u1ea1i. Kh\u00f4ng ph\u1ea3i t\u1ea5t c\u1ea3 c\u00e1c \u0111\u1ed3ng h\u1ed3 \u0111o \u0111\u1ec1u h\u1ed7 tr\u1ee3 kh\u1ea3 n\u0103ng ch\u1ecdn lo\u1ea1i \u0111\u1ed3ng h\u1ed3 \u0111o \u0111\u1ec3 \u0111\u1eb7t l\u1ea1i.",
+                    "name": "Lo\u1ea1i \u0111\u1ed3ng h\u1ed3 \u0111o"
+                },
+                "value": {
+                    "description": "Gi\u00e1 tr\u1ecb m\u00e0 \u0111\u1ed3ng h\u1ed3 \u0111o ph\u1ea3i \u0111\u01b0\u1ee3c \u0111\u1eb7t l\u1ea1i. Kh\u00f4ng ph\u1ea3i t\u1ea5t c\u1ea3 c\u00e1c \u0111\u1ed3ng h\u1ed3 \u0111o \u0111\u1ec1u h\u1ed7 tr\u1ee3 kh\u1ea3 n\u0103ng \u0111\u1eb7t l\u1ea1i v\u1ec1 m\u1ed9t gi\u00e1 tr\u1ecb c\u1ee5 th\u1ec3.",
+                    "name": "Gi\u00e1 tr\u1ecb m\u1ee5c ti\u00eau"
+                }
+            },
+            "name": "\u0110\u1eb7t l\u1ea1i \u0111\u1ed3ng h\u1ed3 \u0111o tr\u00ean m\u1ed9t n\u00fat"
+        },
+        "set_config_parameter": {
+            "description": "Thay \u0111\u1ed5i c\u00e1c tham s\u1ed1 c\u1ea5u h\u00ecnh c\u1ee7a thi\u1ebft b\u1ecb Z-Wave c\u1ee7a b\u1ea1n.",
+            "fields": {
+                "area_id": {
+                    "description": "(C\u00e1c) khu v\u1ef1c \u0111\u1ec3 nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y. N\u1ebfu m\u1ed9t khu v\u1ef1c \u0111\u01b0\u1ee3c ch\u1ec9 \u0111\u1ecbnh, t\u1ea5t c\u1ea3 c\u00e1c thi\u1ebft b\u1ecb v\u00e0 th\u1ef1c th\u1ec3 zwave_js trong khu v\u1ef1c \u0111\u00f3 s\u1ebd \u0111\u01b0\u1ee3c nh\u1eafm m\u1ee5c ti\u00eau cho h\u00e0nh \u0111\u1ed9ng n\u00e0y.",
+                    "name": "ID khu v\u1ef1c"
+                },
+                "bitmask": {
+                    "name": "M\u1eb7t n\u1ea1 bit"
+                },
+                "device_id": {
+                    "description": "(C\u00e1c) thi\u1ebft b\u1ecb nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "endpoint": {
+                    "description": "\u0110i\u1ec3m cu\u1ed1i c\u1ee7a tham s\u1ed1 c\u1ea5u h\u00ecnh.",
+                    "name": "\u0110i\u1ec3m cu\u1ed1i"
+                },
+                "entity_id": {
+                    "description": "ID th\u1ef1c th\u1ec3 c\u1ea7n nh\u1eafm m\u1ee5c ti\u00eau cho d\u1ecbch v\u1ee5 n\u00e0y.",
+                    "name": "ID th\u1ef1c th\u1ec3"
+                },
+                "parameter": {
+                    "description": "T\u00ean (ho\u1eb7c ID) c\u1ee7a tham s\u1ed1 c\u1ea5u h\u00ecnh b\u1ea1n mu\u1ed1n \u0111\u1ecbnh c\u1ea5u h\u00ecnh.",
+                    "name": "Tham s\u1ed1"
+                },
+                "value": {
+                    "description": "Gi\u00e1 tr\u1ecb m\u1edbi \u0111\u1ec3 \u0111\u1eb7t cho tham s\u1ed1 c\u1ea5u h\u00ecnh n\u00e0y.",
+                    "name": "Gi\u00e1 tr\u1ecb"
+                },
+                "value_format": {
+                    "name": "\u0110\u1ecbnh d\u1ea1ng gi\u00e1 tr\u1ecb"
+                },
+                "value_size": {
+                    "name": "K\u00edch th\u01b0\u1edbc gi\u00e1 tr\u1ecb"
+                }
+            },
+            "name": "\u0110\u1eb7t tham s\u1ed1 c\u1ea5u h\u00ecnh thi\u1ebft b\u1ecb"
+        },
+        "set_lock_configuration": {
+            "description": "\u0110\u1eb7t c\u1ea5u h\u00ecnh cho kh\u00f3a.",
+            "fields": {
+                "auto_relock_time": {
+                    "description": "Th\u1eddi l\u01b0\u1ee3ng t\u00ednh b\u1eb1ng gi\u00e2y cho \u0111\u1ebfn khi kh\u00f3a tr\u1edf v\u1ec1 tr\u1ea1ng th\u00e1i an to\u00e0n. Ch\u1ec9 \u0111\u01b0\u1ee3c thi h\u00e0nh khi lo\u1ea1i ho\u1ea1t \u0111\u1ed9ng l\u00e0 `kh\u00f4ng \u0111\u1ed5i`.",
+                    "name": "Th\u1eddi gian t\u1ef1 \u0111\u1ed9ng kh\u00f3a l\u1ea1i"
+                },
+                "block_to_block": {
+                    "description": "B\u1eadt ch\u1ee9c n\u0103ng kh\u1ed1i-\u0111\u1ebfn-kh\u1ed1i.",
+                    "name": "Kh\u1ed1i \u0111\u1ebfn kh\u1ed1i"
+                },
+                "hold_and_release_time": {
+                    "description": "Th\u1eddi l\u01b0\u1ee3ng t\u00ednh b\u1eb1ng gi\u00e2y ch\u1ed1t v\u1eabn \u0111\u01b0\u1ee3c r\u00fat l\u1ea1i.",
+                    "name": "Th\u1eddi gian gi\u1eef v\u00e0 th\u1ea3 ra"
+                },
+                "lock_timeout": {
+                    "description": "S\u1ed1 gi\u00e2y cho \u0111\u1ebfn khi ch\u1ebf \u0111\u1ed9 kh\u00f3a h\u1ebft th\u1eddi gian. Ch\u1ec9 n\u00ean s\u1eed d\u1ee5ng n\u1ebfu lo\u1ea1i thao t\u00e1c l\u00e0 `timed`.",
+                    "name": "Th\u1eddi gian ch\u1edd kh\u00f3a"
+                },
+                "operation_type": {
+                    "description": "Lo\u1ea1i ho\u1ea1t \u0111\u1ed9ng c\u1ee7a kh\u00f3a.",
+                    "name": "Lo\u1ea1i ho\u1ea1t \u0111\u1ed9ng"
+                },
+                "twist_assist": {
+                    "description": "B\u1eadt Twist Assist.",
+                    "name": "Twist assist"
+                }
+            },
+            "name": "\u0110\u1eb7t c\u1ea5u h\u00ecnh kh\u00f3a"
+        },
+        "set_lock_usercode": {
+            "description": "\u0110\u1eb7t m\u00e3 ng\u01b0\u1eddi d\u00f9ng tr\u00ean kh\u00f3a.",
+            "fields": {
+                "code_slot": {
+                    "description": "Khe m\u00e3 \u0111\u1ec3 \u0111\u1eb7t m\u00e3.",
+                    "name": "Khe m\u00e3"
+                },
+                "usercode": {
+                    "description": "Kh\u00f3a m\u00e3 s\u1ebd thi\u1ebft l\u1eadp.",
+                    "name": "M\u00e3"
+                }
+            },
+            "name": "\u0110\u1eb7t m\u00e3 kh\u00f3a ng\u01b0\u1eddi d\u00f9ng"
+        },
+        "set_value": {
+            "fields": {
+                "area_id": {
+                    "name": "ID khu v\u1ef1c"
+                },
+                "command_class": {
+                    "description": "ID c\u1ee7a l\u1edbp l\u1ec7nh cho gi\u00e1 tr\u1ecb.",
+                    "name": "L\u1edbp l\u1ec7nh"
+                },
+                "device_id": {
+                    "name": "ID thi\u1ebft b\u1ecb"
+                },
+                "endpoint": {
+                    "description": "\u0110i\u1ec3m cu\u1ed1i c\u1ee7a gi\u00e1 tr\u1ecb.",
+                    "name": "\u0110i\u1ec3m cu\u1ed1i"
+                },
+                "entity_id": {
+                    "name": "ID th\u1ef1c th\u1ec3"
+                },
+                "options": {
+                    "name": "T\u00f9y ch\u1ecdn"
+                },
+                "property": {
+                    "description": "ID c\u1ee7a thu\u1ed9c t\u00ednh cho gi\u00e1 tr\u1ecb.",
+                    "name": "Thu\u1ed9c t\u00ednh"
+                },
+                "property_key": {
+                    "description": "ID c\u1ee7a kh\u00f3a thu\u1ed9c t\u00ednh cho gi\u00e1 tr\u1ecb.",
+                    "name": "Kh\u00f3a thu\u1ed9c t\u00ednh"
+                },
+                "value": {
+                    "description": "Gi\u00e1 tr\u1ecb m\u1edbi c\u1ea7n \u0111\u1eb7t.",
+                    "name": "Gi\u00e1 tr\u1ecb"
+                },
+                "wait_for_result": {
+                    "description": "C\u00f3 n\u00ean ch\u1edd ph\u1ea3n h\u1ed3i t\u1eeb n\u00fat hay kh\u00f4ng. N\u1ebfu kh\u00f4ng \u0111\u01b0\u1ee3c bao g\u1ed3m trong t\u1ea3i tr\u1ecdng, t\u00edch h\u1ee3p s\u1ebd quy\u1ebft \u0111\u1ecbnh c\u00f3 n\u00ean ch\u1edd hay kh\u00f4ng. N\u1ebfu \u0111\u1eb7t th\u00e0nh `true`, l\u01b0u \u00fd r\u1eb1ng h\u00e0nh \u0111\u1ed9ng c\u00f3 th\u1ec3 m\u1ea5t m\u1ed9t l\u00fac n\u1ebfu \u0111\u1eb7t gi\u00e1 tr\u1ecb tr\u00ean thi\u1ebft b\u1ecb pin \u0111ang ng\u1ee7.",
+                    "name": "Ch\u1edd k\u1ebft qu\u1ea3?"
+                }
+            },
+            "name": "\u0110\u1eb7t gi\u00e1 tr\u1ecb (n\u00e2ng cao)"
+        }
+    }
+}

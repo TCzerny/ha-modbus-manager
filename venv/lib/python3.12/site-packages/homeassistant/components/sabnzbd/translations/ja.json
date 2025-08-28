@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u30b5\u30fc\u30d3\u30b9\u306f\u3059\u3067\u306b\u8a2d\u5b9a\u3055\u308c\u3066\u3044\u307e\u3059",
+            "reconfigure_successful": "\u518d\u8a2d\u5b9a\u306b\u6210\u529f\u3057\u307e\u3057\u305f"
+        },
+        "error": {
+            "cannot_connect": "\u63a5\u7d9a\u306b\u5931\u6557\u3057\u307e\u3057\u305f",
+            "invalid_api_key": "\u7121\u52b9\u306aAPI\u30ad\u30fc"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API\u30ad\u30fc",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "SABnzbd \u30b5\u30fc\u30d0\u30fc\u306e API \u30ad\u30fc\u3002\u3053\u308c\u306f\u3001SABnzbd Web \u30a4\u30f3\u30bf\u30fc\u30d5\u30a7\u30fc\u30b9\u306e [Config cog (\u53f3\u4e0a)] > [General] > [Security] \u306b\u3042\u308a\u307e\u3059\u3002",
+                    "url": "SABnzbd \u30b5\u30fc\u30d0\u30fc\u306e\u30dd\u30fc\u30c8\u3092\u542b\u3080\u5b8c\u5168\u306a URL\u3002\u4f8b: \u30a2\u30c9\u30aa\u30f3\u3092\u4f7f\u7528\u3057\u3066\u3044\u308b\u5834\u5408\u306f\u3001`http://localhost:8080` \u307e\u305f\u306f `http://a02368d7-sabnzbd:8080`"
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "warnings": {
+                "name": "\u8b66\u544a"
+            }
+        },
+        "button": {
+            "pause": {
+                "name": "\u4e00\u6642\u505c\u6b62"
+            },
+            "resume": {
+                "name": "\u518d\u958b\u3059\u308b"
+            }
+        },
+        "number": {
+            "speedlimit": {
+                "name": "\u5236\u9650\u901f\u5ea6"
+            }
+        },
+        "sensor": {
+            "daily_total": {
+                "name": "\u65e5\u6b21\u5408\u8a08"
+            },
+            "free_disk_space": {
+                "name": "\u7a7a\u304d\u30c7\u30a3\u30b9\u30af\u5bb9\u91cf"
+            },
+            "left": {
+                "name": "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u7d9a\u3051\u308b"
+            },
+            "monthly_total": {
+                "name": "\u6708\u9593\u5408\u8a08"
+            },
+            "overall_total": {
+                "name": "\u5168\u4f53\u306e\u5408\u8a08"
+            },
+            "queue": {
+                "name": "\u30ad\u30e5\u30fc"
+            },
+            "queue_count": {
+                "name": "\u30ad\u30e5\u30fc\u6570"
+            },
+            "speed": {
+                "name": "\u30b9\u30d4\u30fc\u30c9"
+            },
+            "status": {
+                "name": "\u30b9\u30c6\u30fc\u30bf\u30b9"
+            },
+            "total_disk_space": {
+                "name": "\u5408\u8a08\u30c7\u30a3\u30b9\u30af\u5bb9\u91cf"
+            },
+            "weekly_total": {
+                "name": "\u9031\u9593\u5408\u8a08"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_exception": {
+            "message": "\u63a5\u7d9a\u30a8\u30e9\u30fc\u306e\u305f\u3081 SABnzbd \u306b\u30b3\u30de\u30f3\u30c9\u3092\u9001\u4fe1\u3067\u304d\u307e\u305b\u3093\u3002\u3057\u3070\u3089\u304f\u3057\u3066\u304b\u3089\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002"
+        }
+    },
+    "issues": {
+        "pause_action_deprecated": {
+            "description": "\u300c\u4e00\u6642\u505c\u6b62\u300d\u30a2\u30af\u30b7\u30e7\u30f3\u306f\u975e\u63a8\u5968\u3067\u3042\u308a\u3001\u5c06\u6765\u306e\u30d0\u30fc\u30b8\u30e7\u30f3\u3067\u306f\u524a\u9664\u3055\u308c\u308b\u4e88\u5b9a\u3067\u3059\u3002\u4ee3\u308f\u308a\u306b\u300c\u4e00\u6642\u505c\u6b62\u300d\u30dc\u30bf\u30f3\u3092\u4f7f\u7528\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u3053\u306e\u554f\u984c\u3092\u89e3\u6d88\u3059\u308b\u306b\u306f\u3001\u30aa\u30fc\u30c8\u30e1\u30fc\u30b7\u30e7\u30f3\u3092\u9069\u5207\u306b\u8abf\u6574\u3057\u3001Home Assistant \u3092\u518d\u8d77\u52d5\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "title": "SABnzbd \u4e00\u6642\u505c\u6b62\u30a2\u30af\u30b7\u30e7\u30f3\u306f\u975e\u63a8\u5968"
+        },
+        "resume_action_deprecated": {
+            "description": "\u300c\u518d\u958b\u300d\u30a2\u30af\u30b7\u30e7\u30f3\u306f\u975e\u63a8\u5968\u3067\u3042\u308a\u3001\u5c06\u6765\u306e\u30d0\u30fc\u30b8\u30e7\u30f3\u3067\u306f\u524a\u9664\u3055\u308c\u308b\u4e88\u5b9a\u3067\u3059\u3002\u4ee3\u308f\u308a\u306b\u300c\u518d\u958b\u300d\u30dc\u30bf\u30f3\u3092\u4f7f\u7528\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u3053\u306e\u554f\u984c\u3092\u89e3\u6d88\u3059\u308b\u306b\u306f\u3001\u30aa\u30fc\u30c8\u30e1\u30fc\u30b7\u30e7\u30f3\u3092\u9069\u5207\u306b\u8abf\u6574\u3057\u3001Home Assistant \u3092\u518d\u8d77\u52d5\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "title": "SABnzbd \u518d\u958b\u30a2\u30af\u30b7\u30e7\u30f3\u306f\u975e\u63a8\u5968"
+        },
+        "set_speed_action_deprecated": {
+            "description": "\u300c\u901f\u5ea6\u8a2d\u5b9a\u300d\u30a2\u30af\u30b7\u30e7\u30f3\u306f\u975e\u63a8\u5968\u3067\u3042\u308a\u3001\u5c06\u6765\u306e\u30d0\u30fc\u30b8\u30e7\u30f3\u3067\u524a\u9664\u3055\u308c\u308b\u4e88\u5b9a\u3067\u3059\u3002\u4ee3\u308f\u308a\u306b\u300c\u901f\u5ea6\u5236\u9650\u300d\u6570\u5024\u30a8\u30f3\u30c6\u30a3\u30c6\u30a3\u3092\u4f7f\u7528\u3057\u3066\u304f\u3060\u3055\u3044\u3002\u3053\u306e\u554f\u984c\u3092\u89e3\u6d88\u3059\u308b\u306b\u306f\u3001\u30aa\u30fc\u30c8\u30e1\u30fc\u30b7\u30e7\u30f3\u3092\u9069\u5207\u306b\u8abf\u6574\u3057\u3001Home Assistant \u3092\u518d\u8d77\u52d5\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
+            "title": "SABnzbd set_speed \u30a2\u30af\u30b7\u30e7\u30f3\u306f\u975e\u63a8\u5968"
+        }
+    },
+    "services": {
+        "pause": {
+            "description": "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u4e00\u6642\u505c\u6b62\u3057\u307e\u3059\u3002",
+            "fields": {
+                "api_key": {
+                    "description": "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u4e00\u6642\u505c\u6b62\u3059\u308b\u305f\u3081\u306e SABnzbd API \u30ad\u30fc\u3002",
+                    "name": "SABnzbd API\u30ad\u30fc"
+                }
+            },
+            "name": "\u4e00\u6642\u505c\u6b62"
+        },
+        "resume": {
+            "description": "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u518d\u958b\u3057\u307e\u3059\u3002",
+            "fields": {
+                "api_key": {
+                    "description": "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u3092\u518d\u958b\u3059\u308b\u305f\u3081\u306e SABnzbd API \u30ad\u30fc\u3002",
+                    "name": "SABnzbd API\u30ad\u30fc"
+                }
+            },
+            "name": "\u518d\u958b\u3059\u308b"
+        },
+        "set_speed": {
+            "description": "\u30c0\u30a6\u30f3\u30ed\u30fc\u30c9\u901f\u5ea6\u5236\u9650\u3092\u8a2d\u5b9a\u3057\u307e\u3059\u3002",
+            "fields": {
+                "api_key": {
+                    "description": "\u901f\u5ea6\u5236\u9650\u3092\u8a2d\u5b9a\u3059\u308b\u305f\u3081\u306e SABnzbd API \u30ad\u30fc\u3002",
+                    "name": "SABnzbd API\u30ad\u30fc"
+                },
+                "speed": {
+                    "description": "\u5236\u9650\u901f\u5ea6\u3002\u5358\u4f4d\u306e\u306a\u3044\u6570\u5024\u3068\u3057\u3066\u6307\u5b9a\u3057\u305f\u5834\u5408\u3001\u30d1\u30fc\u30bb\u30f3\u30c8\u3068\u3057\u3066\u89e3\u91c8\u3055\u308c\u307e\u3059\u3002\u5358\u4f4d\u304c\u6307\u5b9a\u3055\u308c\u3066\u3044\u308b\u5834\u5408 (500K \u306a\u3069) \u306f\u7d76\u5bfe\u7684\u306b\u89e3\u91c8\u3055\u308c\u307e\u3059\u3002",
+                    "name": "\u30b9\u30d4\u30fc\u30c9"
+                }
+            },
+            "name": "\u8a2d\u5b9a\u901f\u5ea6"
+        }
+    }
+}

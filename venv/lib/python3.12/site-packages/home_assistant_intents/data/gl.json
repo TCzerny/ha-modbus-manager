@@ -1,0 +1,1738 @@
+{
+  "language": "gl",
+  "intents": {
+    "HassTurnOff": {
+      "data": [
+        {
+          "sentences": [
+            "apaga <nome> <area>",
+            "desactiva <nome> <area>"
+          ]
+        },
+        {
+          "sentences": [
+            "<apaga> [[a|as|o|os] (luz|luces|(interruptor[es]|chave[s] de [a luz]))] [de|do|da] <nome>"
+          ],
+          "response": "light",
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<apaga> [<todos>] <luces> <area>",
+            "<apaga> <area>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<apaga> [<todos>] <luces> <todas_partes>",
+            "<apaga> <todos> <luces>"
+          ],
+          "response": "light_all",
+          "slots": {
+            "domain": "light",
+            "name": "all"
+          }
+        },
+        {
+          "sentences": [
+            "<apaga> [<todos>] <luces> <de_aqui>",
+            "<apaga> <luces>"
+          ],
+          "response": "lights_area",
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "<apaga> [<todos>] <luces> <planta>",
+            "<apaga> <planta>"
+          ],
+          "response": "lights_floor",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "pecha [a] porta do garaxe"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "garage",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "pecha [a|as] <nome> [<area>]"
+          ],
+          "response": "cover_area",
+          "slots": {
+            "device_class": [
+              "blind",
+              "curtain",
+              "shutter"
+            ]
+          },
+          "requires_context": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "apaga [todos] [os] ventiladores <area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          }
+        }
+      ]
+    },
+    "HassCancelTimer": {
+      "data": [
+        {
+          "sentences": [
+            "<timer_cancel> [<meu>] <temporizador>",
+            "<timer_cancel> [<meu>] <timer_start> <temporizador>",
+            "<timer_cancel> [<meu>] <temporizador> [de|<para>] <timer_start>",
+            "<timer_cancel> [<meu>] {area} <temporizador>",
+            "<timer_cancel> [<meu>] <temporizador> <area>",
+            "<timer_cancel> [<meu>] {timer_name:name} <temporizador>",
+            "<timer_cancel> [<meu>] <temporizador> [de|<para>] {timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassTimerStatus": {
+      "data": [
+        {
+          "sentences": [
+            "([<cal_e> ](estado[s]|tempo restante)|<cal_e>)[ d[e|o|os]| para][ meu[s]] <temporizadores>",
+            "(c(a|á)nto|qu(e|é)) [tempo ][lle[s] ](falta|queda|resta) (para|a|ao|ó|os|aos|d[e|o])[ meu[s]] <temporizadores>",
+            "([<cal_e> ](estado|tempo restante)|<cal_e>)[ d[e|o|a]| para][[o|a] (meu|miña)] <temporizador> [de ]<timer_start>",
+            "(c(a|á)nto|qu(é|e)) [tempo restante][lle[s] ](falta|queda|resta) (para|a|ao|ó|d[e|o])[ meu] <temporizador> [d[e|o|a] ]<timer_start>",
+            "([<cal_e> ](estado|tempo restante)|<cal_e>)[ d[e|o|a]| para][( o meu)|( a miña)] <temporizador> <area>",
+            "(c(a|á)nto|qu(é|e)) [tempo ][lle[s] ](falta|queda|resta) (para|a|ao|ó|os|aos|d[e|o])[ meu] <temporizador> <area>",
+            "([<cal_e> ](estado| tempo restante)|<cal_e>)[ d[e|o|a] [(meu|miña)| para[o meu|a miña]]] <temporizador>[ de| con nome| chamad(o|a)| denominad(o|a)| para][ o| a| os| as] {timer_name:name}",
+            "(c(a|á)nto|qu(é|e)) [tempo ][lle[s] ](falta|queda|resta) (para|a|ao|ó|os|aos|d[e|o])[ meu] <temporizador>[ de| con nome| chamad(o|a)| denominad(o|a)| para][ o| a| os| as] {timer_name:name}"
+          ]
+        }
+      ]
+    },
+    "HassGetWeather": {
+      "data": [
+        {
+          "sentences": [
+            "que tempo (vai|fai|quedou)"
+          ]
+        },
+        {
+          "sentences": [
+            "que tempo (vai|fai|quedou) (en|na|no) <nome>"
+          ],
+          "requires_context": {
+            "domain": "weather"
+          }
+        }
+      ]
+    },
+    "HassGetCurrentTime": {
+      "data": [
+        {
+          "sentences": [
+            "[<dime> ]qué hora é[ agora]",
+            "<dime> a hora[ actual]"
+          ]
+        }
+      ]
+    },
+    "HassTurnOn": {
+      "data": [
+        {
+          "sentences": [
+            "<acende> <nome>"
+          ],
+          "response": "light",
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<acende> <luces> [d(o|a)[s]] <nome>"
+          ],
+          "response": "light",
+          "requires_context": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<acende> [<todos>] <luces> <area>",
+            "<acende> <area>"
+          ],
+          "slots": {
+            "domain": "light"
+          },
+          "response": "lights_area"
+        },
+        {
+          "sentences": [
+            "<acende> [<todos>] <luces> <todas_partes>",
+            "<acende> <todos> <luces>"
+          ],
+          "response": "light_all",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "<acende> [<todos>] <luces> <de_aqui>",
+            "<acende> <luces>"
+          ],
+          "response": "lights_area",
+          "slots": {
+            "domain": "light"
+          },
+          "requires_context": {
+            "area": {
+              "slot": true
+            }
+          }
+        },
+        {
+          "sentences": [
+            "<acende> [<todos>] <luces> <planta>",
+            "<acende> <planta>"
+          ],
+          "response": "lights_floor",
+          "slots": {
+            "domain": "light"
+          }
+        },
+        {
+          "sentences": [
+            "acende [todos] [os] ventiladores <area>"
+          ],
+          "slots": {
+            "domain": "fan",
+            "name": "all"
+          }
+        },
+        {
+          "sentences": [
+            "acende <nome>",
+            "activa <nome>"
+          ]
+        },
+        {
+          "sentences": [
+            "abre [a] porta do garaxe"
+          ],
+          "response": "cover_device_class",
+          "slots": {
+            "device_class": "garage",
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "abre [a | as] (cortinas | persianas) <area>"
+          ],
+          "response": "cover_area",
+          "slots": {
+            "device_class": [
+              "blind",
+              "curtain",
+              "shutter"
+            ],
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassShoppingListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "<engadir> <item> á <lista>",
+            "<poñer> <item> na <lista>"
+          ],
+          "response": "item_added",
+          "expansion_rules": {
+            "lista": "[miña ]lista[ da compra]",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    },
+    "HassNevermind": {
+      "data": [
+        {
+          "sentences": [
+            "esquéceo",
+            "déixao [estar]",
+            "cancela[r]",
+            "nada",
+            "nin caso",
+            "non [me] fagas [nin] caso"
+          ]
+        }
+      ]
+    },
+    "HassSetPosition": {
+      "data": [
+        {
+          "sentences": [
+            "<establece_abre_pecha> [[a ]posición [d[e|a|o]]] <nome> (ao|ó) <posición>"
+          ],
+          "requires_context": {
+            "domain": "valve"
+          },
+          "slots": {
+            "domain": "valve"
+          }
+        },
+        {
+          "sentences": [
+            "<establece_abre_pecha> [[a ]posición [d[e|o|a]]] <nome> (ao|ó) <posición>"
+          ],
+          "requires_context": {
+            "domain": "cover"
+          },
+          "slots": {
+            "domain": "cover"
+          }
+        },
+        {
+          "sentences": [
+            "<establece_abre_pecha> [[a ]posición [do[s]|da[s] ]][o[s]|a[s]] {cover_classes:device_class} ((ao|ó) <posición>;<area>)",
+            "<establece_abre_pecha> [[a ]posición [do[s]|da[s] ]][o[s]|a[s]] {cover_classes:device_class} (<area>;(ao|ó) <posición>)",
+            "<establece_abre_pecha> <area> [[a ]posición [do[s]|da[s]]] {cover_classes:device_class} (ao|ó) <posición>"
+          ],
+          "slots": {
+            "domain": "cover"
+          }
+        }
+      ]
+    },
+    "HassGetState": {
+      "data": [
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "apparent_power"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "apparent_power"
+          },
+          "expansion_rules": {
+            "class": "Potencia aparente"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "aqi"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "aqi"
+          },
+          "expansion_rules": {
+            "class": "(AQI|[Índice d(a|e)] calidade do aire)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "atmospheric_pressure"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "atmospheric_pressure"
+          },
+          "expansion_rules": {
+            "class": "Presión (atmosférica| do aire)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>",
+            "canta batería (ten|lle queda (a|ao|á)) <nome>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "battery"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "battery"
+          },
+          "expansion_rules": {
+            "class": "[nivel de] batería [restante]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "carbon_dioxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "carbon_dioxide"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) de] (dióxido de carbono|CO2)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "carbon_monoxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "carbon_monoxide"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) de] (monóxido de carbono|CO)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "current"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "current"
+          },
+          "expansion_rules": {
+            "class": "[cantidade de] corrente [eléctrica]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "data_rate"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "data_rate"
+          },
+          "expansion_rules": {
+            "class": "(ratio|velocidade) de [(descarga|subida)] [de] [datos]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "data_size"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "data_size"
+          },
+          "expansion_rules": {
+            "class": "(cantidade|tamaño) [(de|dos) datos]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>",
+            "cando (é|era|será|sucedeu|sucederá) <nome>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "date"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "date"
+          },
+          "expansion_rules": {
+            "class": "data [do calendario]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "distance"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "distance"
+          },
+          "expansion_rules": {
+            "class": "distancia"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "duration"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "duration"
+          },
+          "expansion_rules": {
+            "class": "duración"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "energy"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "energy"
+          },
+          "expansion_rules": {
+            "class": "[cantidade de] enerxía"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "energy_storage"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "energy_storage"
+          },
+          "expansion_rules": {
+            "class": "[cantidade de] enerxía [total] [hai] almacenada"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "frequency"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "frequency"
+          },
+          "expansion_rules": {
+            "class": "frecuencia"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "gas"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "gas"
+          },
+          "expansion_rules": {
+            "class": "[(cantidade de|volume d(e|o))] gas"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "humidity"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "humidity"
+          },
+          "expansion_rules": {
+            "class": "humidade [relativa] [(do aire|da atmosfera|atmosférica)]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "illuminance"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "illuminance"
+          },
+          "expansion_rules": {
+            "class": "[(cantidade|nivel) de] (refulxencia|luz|brillo)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "irradiance"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "irradiance"
+          },
+          "expansion_rules": {
+            "class": "[(cantidade|nivel) de] ([ir]radiación)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "moisture"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "moisture"
+          },
+          "expansion_rules": {
+            "class": "(humidade|(porcentaxe|proporción|ratio) de auga)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "monetary"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "monetary"
+          },
+          "expansion_rules": {
+            "class": "(valor|coste)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "nitrogen_dioxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "nitrogen_dioxide"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) de] (dióxido de nitróxeno|NO2)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "nitrogen_monoxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "nitrogen_monoxide"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) de] (monóxido de nitróxeno|NO)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "nitrous_oxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "nitrous_oxide"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) de] (óxido nitroso|N2O)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "ozone"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "ozone"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) de] (ozono|O3)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "pm1"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "pm1"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) de] [partículas] [de] ([menos de] 1 (micrón|micrómetro)|PM1)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "pm25"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "pm25"
+          },
+          "expansion_rules": {
+            "class_type": "(25|2.5|2,5)",
+            "class": "[(nivel|concentración) de] [partículas] [de] (<class_type> (micróns|micrómetros)|PM<class_type>)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "pm10"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "pm10"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) de] [partículas] [de] (10 (micróns|micrómetros)|PM10)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "power_factor"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "power_factor"
+          },
+          "expansion_rules": {
+            "class": "factor de potencia"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "power"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "power"
+          },
+          "expansion_rules": {
+            "class": "potencia"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "precipitation"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "precipitation"
+          },
+          "expansion_rules": {
+            "class": "[nivel de|cantidade de] (precipitación|chuvia|neve) [acumulada|caída]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "precipitation_intensity"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "precipitation_intensity"
+          },
+          "expansion_rules": {
+            "class": "intensidade da (precipitación|chuvia|neve) [caída]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "pressure"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "pressure"
+          },
+          "expansion_rules": {
+            "class": "presión"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "reactive_power"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "reactive_power"
+          },
+          "expansion_rules": {
+            "class": "potencia reactiva"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "signal_strength"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "signal_strength"
+          },
+          "expansion_rules": {
+            "class": "Intensidade d(e|o) sinal"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "sound_pressure"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "sound_pressure"
+          },
+          "expansion_rules": {
+            "class": "presión (sonora|acústica)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "speed"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "speed"
+          },
+          "expansion_rules": {
+            "class": "velocidade"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "sulphur_dioxide"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "sulphur_dioxide"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) d(e|o)] (dióxido de xofre|SO2)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "temperature"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "temperature"
+          },
+          "expansion_rules": {
+            "class": "temperatura"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "volatile_organic_compounds"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "volatile_organic_compounds"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) d(e|o[s])] (COV[s]|composto[s] orgánico[s] [volátil[es]])"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "volatile_organic_compounds_parts"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "volatile_organic_compounds_parts"
+          },
+          "expansion_rules": {
+            "class": "[(nivel|concentración) d(e|o[s])] (COV[s]|composto[s] orgánico[s] [volátil[es]])"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "voltage"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "voltage"
+          },
+          "expansion_rules": {
+            "class": "[caída da] (tensión|voltaxe)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "volume"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "volume"
+          },
+          "expansion_rules": {
+            "class": "volume"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "volume_storage"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "volume_storage"
+          },
+          "expansion_rules": {
+            "class": "Volume [total] [almacenado]"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "water"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "water"
+          },
+          "expansion_rules": {
+            "class": "[(cantidade [total] de|total de)] (auga [total] [consumida]|consumo de auga)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "weight"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "weight"
+          },
+          "expansion_rules": {
+            "class": "(peso|masa)"
+          }
+        },
+        {
+          "sentences": [
+            "<cal_e_a_medida_do_sensor>"
+          ],
+          "response": "one",
+          "requires_context": {
+            "domain": "sensor",
+            "device_class": "wind_speed"
+          },
+          "slots": {
+            "domain": "sensor",
+            "device_class": "wind_speed"
+          },
+          "expansion_rules": {
+            "class": "velocidade [do viento]"
+          }
+        },
+        {
+          "sentences": [
+            "[<dime> ]<cal> é [o estado] [do|da] <nome> [<area>]",
+            "en que estado <esta> <nome> [<area>]",
+            "como <esta> <nome> [<area>]"
+          ],
+          "response": "one",
+          "excludes_context": {
+            "domain": [
+              "scene",
+              "script"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "[se] <esta> <nome> {on_off_states:state} [<area>]",
+            "[se] <esta> <nome> [<area>] {on_off_states:state}"
+          ],
+          "response": "one_yesno",
+          "excludes_context": {
+            "domain": [
+              "cover"
+            ]
+          }
+        },
+        {
+          "sentences": [
+            "[se] <esta> <algun> {on_off_domains:domain} {on_off_states:state} [<area>]"
+          ],
+          "response": "any"
+        },
+        {
+          "sentences": [
+            "[se] <todos> [os|as] {on_off_domains:domain} [<esta>] {on_off_states:state} [<area>]",
+            "[se] están <todos> [os|as] {on_off_domains:domain} [<area>] {on_off_states:state}"
+          ],
+          "response": "all"
+        },
+        {
+          "sentences": [
+            "[<dime> ]<cal> {on_off_domains:domain} <esta> {on_off_states:state} [<area>]"
+          ],
+          "response": "which"
+        },
+        {
+          "sentences": [
+            "[<dime> ](cantos|cantas) {on_off_domains:domain} <esta> {on_off_states:state} [<area>]"
+          ],
+          "response": "how_many"
+        }
+      ]
+    },
+    "HassGetCurrentDate": {
+      "data": [
+        {
+          "sentences": [
+            "[<dime> ]qué (día|fecha|data) é[ hoxe]",
+            "[<dime> ](a|en) qué (día|fecha|data) estamos[ hoxe]",
+            "<dime> a (fecha|data)[ actual| de hoxe]"
+          ]
+        }
+      ]
+    },
+    "HassLightSet": {
+      "data": [
+        {
+          "sentences": [
+            "pon [o] brillo (de | da | do) <nome> (a | ó) <brightness>",
+            "pon <nome> (ó | a) brillo <brightness>",
+            "pon <nome> a <brightness>"
+          ],
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "pon [o] brillo <area> [ó] <brightness>",
+            "pon [o | la] <area> a brillo <brightness>",
+            "pon <area> [ó] <brightness>"
+          ],
+          "response": "brightness_area"
+        },
+        {
+          "sentences": [
+            "pon [o] brillo [de] <nome> [ó] <brightness>"
+          ],
+          "response": "brightness"
+        },
+        {
+          "sentences": [
+            "pon <nome> [a | en] [cor] {color}",
+            "pon [[a] cor de] <nome> (a | en) {color}"
+          ],
+          "response": "color"
+        }
+      ]
+    },
+    "HassStartTimer": {
+      "data": [
+        {
+          "sentences": [
+            "[<timer_set> ][un[ha] |<meu>]<temporizador>[[ dentro] de| en| para] <timer_duration>",
+            "[<timer_set> ][un[ha] |<meu>]<temporizador>[ de| con nome| chamad(o|a)| denominad(o|a)| para] {timer_name:name}[[ dentro] de| en| para] <timer_duration>",
+            "[<timer_set> ][un[ha] |<meu>]<temporizador>[[ dentro] de| en| para] <timer_duration>[ de| con nome| chamad(o|a)| denominad(o|a)| para] {timer_name:name}"
+          ],
+          "requires_context": {
+            "area": {
+              "slot": false
+            }
+          }
+        },
+        {
+          "sentences": [
+            "{timer_command:conversation_command} (en|dentro de) <timer_duration>",
+            "(dentro de|en) <timer_duration> {timer_command:conversation_command}"
+          ],
+          "response": "command"
+        }
+      ]
+    },
+    "HassClimateGetTemperature": {
+      "data": [
+        {
+          "sentences": [
+            "cal é [a] <temp>",
+            "qué <temp> fai",
+            "qué <temp> vai",
+            "cal é [a] <temp> <area>",
+            "qué <temp> fai (en | na | no) <area>",
+            "qué <temp> vai (en | na | no) <area>"
+          ]
+        }
+      ]
+    },
+    "HassRespond": {
+      "data": [
+        {
+          "sentences": [
+            "(ola) [home assistant]"
+          ],
+          "response": "hello"
+        },
+        {
+          "sentences": [
+            "(escoit(a|as)|(grav(a|as|a))|estás (escoitando|gravando) sempre)"
+          ],
+          "response": "listening"
+        },
+        {
+          "sentences": [
+            "onde (van|se envían) (os meus|os) datos"
+          ],
+          "response": "data"
+        },
+        {
+          "sentences": [
+            "que (podo|se pode) (dicir|preguntar)"
+          ],
+          "response": "commands"
+        },
+        {
+          "sentences": [
+            "quen te (fixo|creou|fixo|creou)"
+          ],
+          "response": "creator"
+        }
+      ]
+    },
+    "HassListAddItem": {
+      "data": [
+        {
+          "sentences": [
+            "<engadir> <item> á <lista>",
+            "<poñer> <item> na <lista>"
+          ],
+          "response": "item_added",
+          "requires_context": {
+            "domain": "todo"
+          },
+          "expansion_rules": {
+            "lista": "[miña ]lista [de ]{name}",
+            "item": "{shopping_list_item:item}"
+          }
+        }
+      ]
+    }
+  },
+  "responses": {
+    "errors": {
+      "no_intent": "Síntoo, non che entendín",
+      "no_area": "Non existe ningunha área chamada {{ area }}",
+      "no_domain_in_area": "{{ area }} non ten {{ domain }}",
+      "no_device_class_in_area": "{{ area }} non ten {{ device_class }}",
+      "no_entity": "Non existe dispositivo ou entidade chamado {{ entity }}",
+      "handle_error": "Un erro inesperado ocurreu intentando procesar a instrucción"
+    },
+    "intents": {
+      "HassGetState": {
+        "one": "{{ state.state_with_unit }}\n",
+        "one_yesno": "{% if query.matched %}\n  Si\n{% else %}\n  Non, {{ state.state_with_unit }}\n{% endif %}\n",
+        "any": "{% if query.matched %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    Si, {{ match[:3] | join(\", \") }} e {{ (match | length - 3) }} máis\n  {%- else -%}\n    Si,\n    {% for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} e {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% else %}\n  Non\n{% endif %}\n",
+        "all": "{% if not query.unmatched: %}\n  Si\n{% else %}\n  {% set no_match = query.unmatched | map(attribute=\"name\") | sort | list %}\n  {% if no_match | length > 4 %}\n    Non, {{ no_match[:3] | join(\", \") }} e {{ (no_match | length - 3) }} máis non están {{ slots.state }}\n  {%- else -%}\n    Non,\n    {% for name in no_match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} e {% endif -%}\n      {{ name }}\n    {%- endfor %} non {% if no_match | length > 1 %}están{% else %}está{% endif %} {{ slots.state }}\n  {% endif %}\n{% endif %}\n",
+        "which": "{% if not query.matched %}\n  (Ningunha|Ningún)\n{% else: %}\n  {% set match = query.matched | map(attribute=\"name\") | sort | list %}\n  {% if match | length > 4 %}\n    {{ match[:3] | join(\", \") }} e {{ (match | length - 3) }} máis\n  {% else %}\n    {%- for name in match -%}\n      {% if not loop.first and not loop.last %}, {% elif loop.last and not loop.first %} e {% endif -%}\n      {{ name }}\n    {%- endfor -%}\n  {% endif %}\n{% endif %}\n",
+        "how_many": "{{ query.matched | length }}\n",
+        "where": "{% if state == \"not_home\" %}\n  {{ slots.name | capitalize }} está fora\n{% else %}\n  {{ slots.name | capitalize }} está en {{ state.state }}\n{% endif %}\n"
+      },
+      "HassTurnOff": {
+        "default": "{% set translations = {\n  \"button\": \"o botón\",\n  \"camera\": \"a cámara\",\n  \"input_button\": \"o botón\",\n  \"alarm_control_panel\": \"a alarma\",\n  \"automation\": \"a automatización\",\n  \"fan\": \"o ventilador\",\n  \"climate\": \"o termostato\",\n  \"humidifier\": \"o humidificador\",\n  \"input_boolean\": \"o interruptor\",\n  \"siren\": \"a sirena\",\n  \"water_heater\": \"o quentador de auga\",\n  \"light\": \"a luz\",\n  \"switch\": \"o interruptor\",\n  \"remote\": \"o control remoto\",\n  \"vacuum\": \"a aspiradora\",\n  \"media_player\": \"o reprodutor\",\n  \"lawn_mower\": \"o cortacéspede\"\n} %} Apagouse {{ translations.get(state.domain) }}",
+        "light": "{{ slots.name }} apagada",
+        "lights_area": "Luces apagadas",
+        "lights_floor": "Luces apagadas",
+        "fans_area": "Ventiladores apagados",
+        "cover": "{{ slots.name }} pechouse",
+        "cover_area": "{{ slots.area }} pechouse",
+        "light_all": "Todas as luces apagadas",
+        "cover_device_class": "Peche completado",
+        "lock": "{{ slots.name }} abriuse",
+        "lock_area": "Apertura completada",
+        "valve": "{{ slots.name }} pechouse"
+      },
+      "HassStartTimer": {
+        "default": "{% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %} {% set h_text = (1 ~ ' hora'  if h in [ \"1\", 'unha', 'dunha'] else h ~' horas') if h else '' %} {% set m_text = (30 if m in ['media', 'medio', '1/2'] else m) ~ (' minuto' if m in [ \"1\", 'un'] else ' minutos') if m else '' %} {% set s_text = (30 if s in ['media', 'media', '1/2'] else s) ~ (' segundo' if s in [ \"1\", 'un'] else ' segundos') if s else '' %} {% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list[:-1] | join(', ') ~ ' e ' ~ text_list[-1] if text_list | count > 2 else text_list | join(' e ') %} {% set name = (' chamado ' ~ slots.name | trim) if slots.name is defined else '' %} Temporizador configurado para {{ text }}{{ name }}\n",
+        "command": "{% set h = slots.hours if slots.hours is defined else none %} {% set m = slots.minutes if slots.minutes is defined else none %} {% set s = slots.seconds if slots.seconds is defined else none %} {% set h_text = h ~ (' hora'  if h in [ \"1\", 'unha', 'dunha'] else ' horas') if h else '' %} {% set m_text = (30 if m in ['media', '1/2'] else m) ~ (' minuto' if m in [ \"1\", 'un'] else ' minutos') if m else '' %} {% set s_text = (30 if s in ['media', '1/2'] else s) ~ (' segundo' if s in [ \"1\", 'un'] else ' segundos') if s else '' %} {% set text_list = [ h_text, m_text, s_text] | select() | list %} {% set text = text_list[:-1] | join(', ') ~ ' e ' ~ text_list[-1] if text_list | count > 2 else text_list | join(' e ') %} O comando executarase en {{ text }}\n"
+      },
+      "HassShoppingListAddItem": {
+        "item_added": "Engadín {{ slots.item }}"
+      },
+      "HassTurnOn": {
+        "default": "{% set translations = {\n  \"button\": \"o botón\",\n  \"camera\": \"a cámara\",\n  \"input_button\": \"o botón\",\n  \"alarm_control_panel\": \"a alarma\",\n  \"automation\": \"a automatización\",\n  \"fan\": \"o ventilador\",\n  \"climate\": \"o termostato\",\n  \"humidifier\": \"o humidificador\",\n  \"input_boolean\": \"o interruptor\",\n  \"siren\": \"a sirena\",\n  \"water_heater\": \"o quentador de auga\",\n  \"light\": \"a luz\",\n  \"switch\": \"o interruptor\",\n  \"remote\": \"o control remoto\",\n  \"vacuum\": \"a aspiradora\",\n  \"media_player\": \"o reprodutor\",\n  \"lawn_mower\": \"o cortacéspede\"\n} %} Activouse {{ translations.get(state.domain) }}",
+        "light": "{{ slots.name }} acendida",
+        "lights_area": "Luces acendidas",
+        "lights_floor": "Luces acendidas",
+        "light_all": "Acendéronse todas as luces",
+        "fan": "{{ slots.name }} acendeuse",
+        "fans_area": "Ventiladores acendidos",
+        "cover": "{{ slots.name }} abriuse",
+        "cover_area": "Apertura completada",
+        "cover_device_class": "Apertura completada",
+        "scene": "Escena {{ slots.name }} activada",
+        "script": "Script iniciado",
+        "lock": "{{ slots.name }} pechouse",
+        "lock_area": "Peche efectuado",
+        "valve": "{{ slots.name }} abriuse"
+      },
+      "HassGetCurrentTime": {
+        "default": "{% set next_hour = 0 %} {% set minute_str = \"\" %} {% if slots.time.minute > 0: %}\n    {% if slots.time.minute == 15: %}\n        {% set minute_str = \"e cuarto\" %}\n    {% elif slots.time.minute == 30: %}\n        {% set minute_str = \"e media\" %}\n    {% elif slots.time.minute < 30: %}\n        {% set minute_str = 'e {0:01d}'.format(slots.time.minute) %}\n    {% else: %}\n        {% set next_hour = 1 %}\n        {% if slots.time.minute == 45: %}\n           {% set minute_str = \"menos cuarto\" %}\n        {% else: %}\n            {% set minute_str = 'menos {0:01d}'.format(60 - slots.time.minute) %}\n        {% endif %}\n    {% endif %}\n{% endif %} {% if slots.time.hour + next_hour > 12: %}\n    {% set hour12 = slots.time.hour + next_hour - 12 %}\n{% elif slots.time.hour + next_hour == 0: %}\n    {% set hour12 = 12 %}\n{% else: %}\n    {% set hour12 = slots.time.hour + next_hour %}\n{% endif %} {% if hour12 == 1 : %}\n   É a\n{% else: %}\n   Son as\n{% endif %} {{hour12}} {{minute_str}} {% if slots.time.hour == 0: %}\n    da medianoite\n{% elif slots.time.hour < 4: %}\n    da madrugada\n{% elif slots.time.hour < 12: %}\n    da mañá\n{% elif slots.time.hour == 12: %}\n    di mediodía\n{% elif slots.time.hour < 21: %}\n    da tarde\n{% else: %}\n    da noite\n{% endif %}\n"
+      },
+      "HassTimerStatus": {
+        "default": "{% set num_timers = slots.timers | length %}\n{% set active_timers = slots.timers | selectattr('is_active') | list %}\n{% set num_active_timers = active_timers | length %}\n{% set paused_timers = slots.timers | rejectattr('is_active') | list %}\n{% set num_paused_timers = paused_timers | length %}\n{% set next_timer = None %}\n\n{% if num_timers == 0: %}\n  Non hai temporizadores.\n{% elif num_active_timers == 0: %}\n  {# No active timers #}\n  {% if num_paused_timers == 1: %}\n    {% set next_timer = paused_timers[0] %}\n    O temporizador está en pausa.\n  {% else: %}\n    {{ num_paused_timers }} temporizadores en pausa.\n  {% endif %}\n{% else: %}\n  {# At least one active timer #}\n  {% if num_active_timers == 1: %}\n    {% set next_timer = active_timers[0] %}\n  {% else: %}\n    {# Get active timer that will finish soonest #}\n    {% set sorted_timers = active_timers | sort(attribute='total_seconds_left') %}\n    {% set next_timer = sorted_timers[0] %}\n    {{ num_active_timers }} temporizadores activos.\n  {% endif %}\n\n  {% if num_paused_timers == 1: %}\n    1 temporizador en pausa.\n  {% elif num_paused_timers > 0: %}\n    {{ num_paused_timers }} temporizadores en pausa.\n  {% endif %}\n{% endif %}\n\n{% if next_timer: %}\n\n  {% if num_timers > 1: %}\n\n    Ao temporizador\n\n    {% if next_timer.name: %}\n      {{ next_timer.name }}\n    {% elif next_timer.area: %}\n      da área {{ next_timer.area }}\n    {% endif %}\n\n    de\n\n    {# Give some extra information to disambiguate #}\n    {% if (next_timer.start_hours > 0) and (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_hours }} hora{{ \"s\" if next_timer.start_hours != 1 }} e {{ next_timer.start_minutes }} minuto{{ \"s\" if next_timer.start_minutes != 1 }}\n    {% elif (next_timer.start_hours > 0): %}\n      {{ next_timer.start_hours }} hora{{ \"s\" if next_timer.start_hours != 1 }}\n    {% elif (next_timer.start_minutes > 0) and (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_minutes }} minuto{{ \"s\" if next_timer.start_minutes != 1 }} e {{ next_timer.start_seconds }} segundo{{ \"s\" if next_timer.start_seconds != 1 }}\n    {% elif (next_timer.start_minutes > 0): %}\n      {{ next_timer.start_minutes }} minuto{{ \"s\" if next_timer.start_minutes != 1 }}\n    {% elif (next_timer.start_seconds > 0): %}\n      {{ next_timer.start_seconds }} segundo{{ \"s\" if next_timer.start_seconds != 1 }}\n    {% endif %}\n\n    quédanlle\n  {% else %}\n    Quédanlle\n  {% endif %}\n\n  {# At least one active timer #}\n  {% if (next_timer.rounded_hours_left == 1) and (next_timer.rounded_minutes_left > 0): %}\n    1 hora e {{ next_timer.rounded_minutes_left }} minutos.\n  {% elif (next_timer.rounded_hours_left == 1): %}\n    1 hora.\n  {% elif (next_timer.rounded_hours_left > 1) and (next_timer.rounded_minutes_left > 0): %}\n    {{ next_timer.rounded_hours_left }} horas e {{ next_timer.rounded_minutes_left }} minutos.\n  {% elif (next_timer.rounded_hours_left > 1): %}\n    {{ next_timer.rounded_hours_left }} horas.\n  {% elif (next_timer.rounded_minutes_left == 1) and (next_timer.rounded_seconds_left > 0): %}\n    1 minuto e {{ next_timer.rounded_seconds_left }} segundos.\n  {% elif (next_timer.rounded_minutes_left == 1): %}\n    1 minuto.\n  {% elif (next_timer.rounded_minutes_left > 1) and (next_timer.rounded_seconds_left > 0): %}\n    {{ next_timer.rounded_minutes_left }} minutos e {{ next_timer.rounded_seconds_left }} segundos.\n  {% elif (next_timer.rounded_minutes_left > 1): %}\n    {{ next_timer.rounded_minutes_left }} minutos.\n  {% elif (next_timer.rounded_seconds_left == 1): %}\n    1 segundo.\n  {% elif (next_timer.rounded_seconds_left > 1): %}\n    {{ next_timer.rounded_seconds_left }} segundos.\n  {% endif %}\n\n{% endif %}\n"
+      },
+      "HassListAddItem": {
+        "item_added": "Engadín {{ slots.item }}"
+      },
+      "HassGetCurrentDate": {
+        "default": "{% set months = {\n   1: 'xaneiro',\n   2: 'febreiro',\n   3: 'marzo',\n   4: 'abril',\n   5: 'maio',\n   6: 'xuño',\n   7: 'xullo',\n   8: 'agosto',\n   9: 'septembro',\n   10: 'outubro',\n   11: 'novembro',\n   12: 'decembro',\n} %} {% set weekday = [ 'luns', 'martes', 'mércoles', 'xoves', 'venres', 'sábado', 'domingo' ] %} É {{ weekday[slots.date.weekday()] }}, {{slots.date.day}} de {{ months[slots.date.month] }} de {{ slots.date.year }}\n"
+      },
+      "HassGetWeather": {
+        "default": "{% set weather_condition = {\n  'clear': 'Despexado',\n  'clear-night': 'Noite despexada',\n  'cloudy': 'Anubrado',\n  'exceptional': 'Condicións excepcionalmente adversas',\n  'fog': 'Néboa',\n  'hail': 'Sarabia',\n  'lightning': 'Lóstregos',\n  'lightning-rainy': 'Chuvia e lóstregos',\n  'partlycloudy': 'Ceo parcialmente anubrado',\n  'pouring': 'Ballón',\n  'rainy': 'Chuvia',\n  'snowy': 'Neve',\n  'snowy-rainy': 'Chuvia e neve',\n  'sunny': 'Sol',\n  'windy': 'Vento',\n  'windy-variant': 'Vento e ceo anubrado'\n} %}\n {{ weather_condition.get((state.state | string).lower(), \"\") }}, con {{ state.attributes.get('temperature') }} {{ state.attributes.get('temperature_unit') }} de temperatura\n"
+      },
+      "HassLightSet": {
+        "brightness": "{{ slots.name }} brillo configurado a {{ slots.brightness }}",
+        "brightness_area": "Brillo en {{ slots.area }} configurado a {{ slots.brightness }}",
+        "color": "{{ slots.name }} cor configurada a {{ slots.color }}",
+        "color_area": "Cor en {{ slots.area }} configurada a {{ slots.color }}"
+      },
+      "HassSetPosition": {
+        "default": "Posición establecida"
+      },
+      "HassCancelTimer": {
+        "default": "Temporizador cancelado"
+      },
+      "HassClimateGetTemperature": {
+        "default": "{% set temperature = state_attr(state.entity_id, 'current_temperature') %} {{ temperature | float | abs | round(1) | replace('.0', '') | replace('.',',') }} {{ 'grao' if temperature | float | abs == 1 else 'graos' }} {{ 'baixo cero' if temperature | float < 0 else '' }}\n"
+      },
+      "HassRespond": {
+        "hello": "Saúdos dende Home Assistant.",
+        "listening": "Non, só gravo cando escoito a palabra de activación.",
+        "data": "Os teus datos envíanse ao servidor de Home Assistant.",
+        "commands": "Para saber o que podes preguntar, visita H.A. punto I.O. barra voice.",
+        "creator": "Fun creado pola marabillosa comunidade de Home Assistant, conformada por multitude de entusiastas de todo o mundo."
+      }
+    }
+  },
+  "lists": {
+    "color": {
+      "values": [
+        {
+          "in": "blanco",
+          "out": "white"
+        },
+        {
+          "in": "negro",
+          "out": "black"
+        },
+        {
+          "in": "(vermello|vermella)",
+          "out": "red"
+        },
+        {
+          "in": "laranxa",
+          "out": "orange"
+        },
+        {
+          "in": "amarelo",
+          "out": "yellow"
+        },
+        {
+          "in": "verde",
+          "out": "green"
+        },
+        {
+          "in": "azul",
+          "out": "blue"
+        },
+        {
+          "in": "(lila|morado|púrpura)",
+          "out": "purple"
+        },
+        {
+          "in": "marrón",
+          "out": "brown"
+        }
+      ]
+    },
+    "brightness": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "on_off_states": {
+      "values": [
+        {
+          "in": "(acendido|acendida|acendidos|acendidas)",
+          "out": "on"
+        },
+        {
+          "in": "(apagado|apagada|apagados|apagadas)",
+          "out": "off"
+        }
+      ]
+    },
+    "on_off_domains": {
+      "values": [
+        {
+          "in": "(luz|luces|lámpada|lámpadas)",
+          "out": "light"
+        },
+        {
+          "in": "(ventilador|ventiladores)",
+          "out": "fan"
+        },
+        {
+          "in": "(interrutor|interrutores)",
+          "out": "switch"
+        }
+      ]
+    },
+    "cover_states": {
+      "values": [
+        {
+          "in": "abert(o|a)[s]",
+          "out": "open"
+        },
+        {
+          "in": "pechad(o|a)[s]",
+          "out": "closed"
+        },
+        {
+          "in": "abréndose",
+          "out": "opening"
+        },
+        {
+          "in": "pechándose",
+          "out": "closing"
+        }
+      ]
+    },
+    "cover_classes": {
+      "values": [
+        {
+          "in": "toldo[s]",
+          "out": "awning"
+        },
+        {
+          "in": "persiana[s]",
+          "out": "blind"
+        },
+        {
+          "in": "cortina[s]",
+          "out": "curtain"
+        },
+        {
+          "in": "porta[s]",
+          "out": "door"
+        },
+        {
+          "in": "(porta[s]|cancela[s]|portón|portons) de garaxe",
+          "out": "garage"
+        },
+        {
+          "in": "verxa[s]|cancela[s]|portón|portons",
+          "out": "gate"
+        },
+        {
+          "in": "estor[es]",
+          "out": "shade"
+        },
+        {
+          "in": "(contraventá[s]|veneciana[s])",
+          "out": "shutter"
+        },
+        {
+          "in": "ventá[s]",
+          "out": "window"
+        }
+      ]
+    },
+    "shopping_list_item": {
+      "wildcard": true
+    },
+    "position": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature": {
+      "range": {
+        "type": "temperature",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "temperature_unit": {
+      "values": [
+        "celsius",
+        {
+          "in": "c",
+          "out": "celsius"
+        },
+        "fahrenheit",
+        {
+          "in": "f",
+          "out": "fahrenheit"
+        }
+      ]
+    },
+    "volume": {
+      "range": {
+        "type": "percentage",
+        "from": 0,
+        "to": 100
+      }
+    },
+    "timer_seconds": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_words_seconds": {
+      "values": [
+        {
+          "in": "un",
+          "out": 1
+        }
+      ]
+    },
+    "timer_minutes": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_words_minutes": {
+      "values": [
+        {
+          "in": "un",
+          "out": 1
+        }
+      ]
+    },
+    "timer_hours": {
+      "range": {
+        "from": 1,
+        "to": 100
+      }
+    },
+    "timer_words_hours": {
+      "values": [
+        {
+          "in": "[d]unha",
+          "out": 1
+        }
+      ]
+    },
+    "timer_half": {
+      "values": [
+        {
+          "in": "medi(o|a)",
+          "out": 30
+        },
+        {
+          "in": "1/2",
+          "out": 30
+        },
+        {
+          "in": "[un |1 ]cuarto[ de]",
+          "out": 15
+        },
+        {
+          "in": "(tres|3) cuartos[ de]",
+          "out": 45
+        },
+        {
+          "in": "1/4",
+          "out": 15
+        },
+        {
+          "in": "3/4",
+          "out": 45
+        }
+      ]
+    },
+    "timer_name": {
+      "wildcard": true
+    },
+    "timer_command": {
+      "wildcard": true
+    }
+  },
+  "expansion_rules": {
+    "abre": "(abr(e|ir)|<sube>)",
+    "acende": "(enciende[r]|acende[r]|prende[r]|activa[r])",
+    "apaga": "(apag(a|ar)|desconect(a|ar)|desactiv(a|ar))",
+    "algun": "(algún|algunha|algúns|algunhas)",
+    "area": "[en | no | na | de | do | da | o | a ]{area}",
+    "baixa": "([a]baix(a|ar)|redu(ce|cir)|decrement(a|ar)|disminu(e|ir))",
+    "brightness": "{brightness}[%| porcento]",
+    "cal_e_a_medida_do_sensor": "([dime ]<cal> [é (a|o)] [(cantidade|medida)|nivel (de|da|do)] | cant(o|a)[s]) <class> (de|do|da|en|no|na|dende|<que_marca>) <nome> [<area>]",
+    "cal_e": "([<dime> ]cal é [o |a ]|[<dime> ]cales son [os |as ]|[<dime> ]c(o|ó)mo (vai|está|marcha|se atopa)[n] [o |a |os |as ])",
+    "cal": "(qu[e|é]|cal|cales)",
+    "casa": "[d(e|o|a) | n(o|a) ](casa|apartamento|piso)",
+    "cancela": "cancel(a[r])",
+    "pecha": "((p|f)echa[r]|cerra[r]|<baixa>)",
+    "crea": "(cre(a|ar))",
+    "de_aqui": "[de ](aquí|acá|(n(o|a)) <habitación>)",
+    "dime": "(d(í|i)[s|ga]me|sabes[ me][ d(e|i)cir])",
+    "elimina": "(elimin(a|ar)|borr(a|ar))",
+    "engadir": "(engada | engade)",
+    "esta": "(está|están|existe|existen|hai)",
+    "establece": "(pon|establec(e|er)|axust(a|ar)|configur(a|ar)|cambi(a[r]))",
+    "establece_abre_pecha": "(<establece>|<abre>|<pecha>)",
+    "establece_sube_baixa": "(<establece>|<enciende>|<sube>|<baixa>)",
+    "inicia": "(inici(a|ar)|come[n](za|zar)|emp[i]e(za|zar))",
+    "luces": "[(a|o)[s] ](luz|luces|lámpada[s]|bombilla[s]|foco[s]|interruptor[es][ da luz])",
+    "meu": "(o meu|a miña|os meus|as miñas)",
+    "nome": "[o | a | os | as]{name}",
+    "planta": "[n(o|a) |d(o|a) ][[a ]planta |[o ]piso ]{floor}[ planta| piso]",
+    "para": "(para|pra)",
+    "poñer": "(poña | pon | meta | mete)",
+    "por": "(por | pol(o|a)[s])",
+    "que_marca": "([que] (marca|indica|mide) | (indicad|medid|marcad)(a|o) <por> |[que] está (a (indicar | medir | marcar)|(indicando|medindo|marcando)))",
+    "temp": "[a] (temperatura)",
+    "temperature": "{temperature} [graos] [{temperature_unit}]",
+    "todos": "(todos[ os]|todas[ as]|tódolos|tódalas|cada un d(o|a)s)",
+    "habitación": "(habitaci(ón|ons)|cuarto[s]|sala[s])",
+    "posición": "{position}[ ][%|por[ ]cen[to]]",
+    "todas_partes": "[en |de ][todas partes ][d(o|a) ]<casa>",
+    "sube": "(sub(e|ir)|levant(a|ar)|aument(a|ar)|increment(a|ar))",
+    "temporizador": "[o |a ](temporizador|conta atrás)",
+    "temporizadores": "[o |a |(o|a)s ](temporizador[es]|conta[s] atrás)",
+    "timer_set": "(<establece>|<inicia>|<crea>)",
+    "timer_cancel": "(<cancela>|<elimina>)",
+    "nb_seconds": "({timer_seconds:seconds}|{timer_words_seconds:seconds})",
+    "nb_minutes": "({timer_minutes:minutes}|{timer_words_minutes:minutes})",
+    "nb_hours": "({timer_hours:hours}|{timer_words_hours:hours})",
+    "nb_start_seconds": "({timer_seconds:start_seconds}|{timer_words_seconds:start_seconds})",
+    "nb_start_minutes": "({timer_minutes:start_minutes}|{timer_words_minutes:start_minutes})",
+    "nb_start_hours": "({timer_hours:start_hours}|{timer_words_hours:start_hours})",
+    "timer_duration_seconds": "<nb_seconds> segundo[s]",
+    "timer_duration_minutes": "((<nb_minutes> minuto[s][[,] [e ]<timer_duration_seconds>])|(<nb_minutes> minuto[s] e {timer_half:seconds})|({timer_half:seconds} minuto))",
+    "timer_duration_hours": "(<nb_hours> hora[s][[,] [e ]<timer_duration_minutes>]|(<nb_hours> hora[s] e {timer_half:minutes}[[,] e (<timer_duration_seconds>|{timer_half:seconds} minuto)])|({timer_half:minutes} hora[[,] e (<timer_duration_seconds>|{timer_half:seconds} minuto)]))",
+    "timer_duration": "<timer_duration_seconds>|<timer_duration_minutes>|<timer_duration_hours>",
+    "timer_start_seconds": "[o |os ]<nb_start_seconds> segundo[s]",
+    "timer_start_minutes": "[o |os ]<nb_start_minutes> minuto[s][[,] [e ]<nb_start_seconds> segundo[s]]",
+    "timer_start_hours": "[o |os ]<nb_start_hours> hora[s][[,] [e ]<nb_start_minutes> minuto[s]][[,] [e ]<nb_start_seconds> segundo[s]]",
+    "timer_start": "<timer_start_seconds>|<timer_start_minutes>|<timer_start_hours>"
+  },
+  "skip_words": [
+    "por favor",
+    "gracias",
+    "grazas",
+    "graciñas",
+    "podes",
+    "podería",
+    "poderías"
+  ]
+}

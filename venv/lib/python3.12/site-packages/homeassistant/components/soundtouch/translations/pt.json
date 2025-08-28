@@ -1,0 +1,51 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dispositivo j\u00e1 configurado"
+        },
+        "error": {
+            "cannot_connect": "A liga\u00e7\u00e3o falhou"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "host": "Anfitri\u00e3o"
+                },
+                "data_description": {
+                    "host": "O nome do host ou endere\u00e7o IP do dispositivo Bose SoundTouch."
+                }
+            },
+            "zeroconf_confirm": {
+                "description": "Est\u00e1 prestes a adicionar o dispositivo SoundTouch com o nome `{name}` ao Home Assistant.",
+                "title": "Confirmar a adi\u00e7\u00e3o do dispositivo Bose SoundTouch"
+            }
+        }
+    },
+    "services": {
+        "add_zone_slave": {
+            "fields": {
+                "slaves": {
+                    "name": "Escravos"
+                }
+            }
+        },
+        "create_zone": {
+            "description": "Cria uma zona SoundTouch com v\u00e1rias divis\u00f5es.",
+            "name": "Criar zona"
+        },
+        "play_everywhere": {
+            "description": "Reproduz em todos os dispositivos Bose SoundTouch.",
+            "name": "Jogar em todo o lado"
+        },
+        "remove_zone_slave": {
+            "fields": {
+                "master": {
+                    "description": "Nome da entidade principal que est\u00e1 a coordenar a zona de v\u00e1rias salas. Depende da plataforma."
+                },
+                "slaves": {
+                    "name": "Escravos"
+                }
+            }
+        }
+    }
+}

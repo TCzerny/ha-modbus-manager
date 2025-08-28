@@ -1,0 +1,113 @@
+{
+    "application_credentials": {
+        "description": "Pri konfigur\u00e1cii konzoly Cloud postupujte pod\u013ea [pokynov]({more_info_url}):\n\n1. Prejdite na obrazovku [S\u00fahlas OAuth]({oauth_consent_url}) a nakonfigurujte\n2. Prejdite na polo\u017eku [Poverenia]({oauth_creds_url}) a vyberte mo\u017enos\u0165 **Vytvori\u0165 poverenia**.\n3. Z rozba\u013eovacieho zoznamu vyberte polo\u017eku **OAuth client ID**.\n4. Ako typ aplik\u00e1cie vyberte **Webov\u00e1 aplik\u00e1cia**.\n5. Pridajte `{redirect_url}` do polo\u017eky *Opr\u00e1vnen\u00e9 presmerovanie URI*."
+    },
+    "config": {
+        "abort": {
+            "already_configured": "\u00da\u010det je u\u017e nakonfigurovan\u00fd",
+            "authorize_url_timeout": "\u010casov\u00fd limit generovania autorizovanej adresy URL.",
+            "invalid_access_token": "Neplatn\u00fd pr\u00edstupov\u00fd token",
+            "missing_configuration": "Komponent nie je nakonfigurovan\u00fd. Postupujte pod\u013ea dokument\u00e1cie.",
+            "missing_credentials": "Integr\u00e1cia si vy\u017eaduje poverenia aplik\u00e1cie.",
+            "no_url_available": "Nie je k dispoz\u00edcii \u017eiadna adresa URL. Inform\u00e1cie o tejto chybe n\u00e1jdete [pozrite si sekciu pomocn\u00edka]({docs_url})",
+            "oauth_error": "Prijat\u00e9 neplatn\u00e9 \u00fadaje tokenu.",
+            "oauth_failed": "Chyba pri z\u00edskavan\u00ed pr\u00edstupov\u00e9ho tokenu.",
+            "oauth_timeout": "\u010casov\u00fd limit na vyrie\u0161enie tokenu OAuth.",
+            "oauth_unauthorized": "Chyba autoriz\u00e1cie OAuth pri z\u00edskavan\u00ed pr\u00edstupov\u00e9ho tokenu.",
+            "reauth_successful": "Op\u00e4tovn\u00e9 overenie bolo \u00faspe\u0161n\u00e9",
+            "unknown_authorize_url_generation": "Nezn\u00e1ma chyba pri generovan\u00ed autorizovanej adresy URL."
+        },
+        "create_entry": {
+            "default": "\u00daspe\u0161ne overen\u00e9"
+        },
+        "error": {
+            "bad_project_id": "Zadajte platn\u00e9 ID cloudov\u00e9ho projektu (skontrolujte Cloud Console)",
+            "no_pubsub_topics": "Nena\u0161li sa \u017eiadne vhodn\u00e9 t\u00e9my Pub/Sub, uistite sa, \u017ee konzola Device Access Console m\u00e1 t\u00e9mu Pub/Sub.",
+            "pubsub_api_error": "Nezn\u00e1ma chyba pri komunik\u00e1cii so slu\u017ebou Cloud Pub/Sub, pozri protokoly",
+            "subscriber_error": "Nezn\u00e1ma chyba odberate\u013ea, pozrite si denn\u00edky",
+            "wrong_project_id": "Zadajte platn\u00e9 ID cloudov\u00e9ho projektu (bolo rovnak\u00e9 ako ID projektu pr\u00edstupu k zariadeniu)"
+        },
+        "step": {
+            "cloud_project": {
+                "data": {
+                    "cloud_project_id": "ID projektu Google Cloud"
+                },
+                "description": "Ni\u017e\u0161ie zadajte ID cloudov\u00e9ho projektu, napr. *example-project-12345*. Pozrite si [Google Cloud Console]({cloud_console_url}) alebo dokument\u00e1ciu pre [\u010fal\u0161ie inform\u00e1cie]({more_info_url}).",
+                "title": "Hniezdo: Zadajte ID projektu Cloud"
+            },
+            "create_cloud_project": {
+                "description": "Integr\u00e1cia Nest umo\u017e\u0148uje integrova\u0165 termostaty, kamery a zvon\u010deky Nest pomocou rozhrania API pre spr\u00e1vu inteligentn\u00fdch zariaden\u00ed. SDM API **vy\u017eaduje jednorazov\u00fd in\u0161tala\u010dn\u00fd poplatok 5 USD**. Viac inform\u00e1ci\u00ed n\u00e1jdete v dokument\u00e1cii [viac inform\u00e1ci\u00ed]({more_info_url}).\n\n1. Prejdite na [Google Cloud Console]({cloud_console_url}).\n2. Ak ide o v\u00e1\u0161 prv\u00fd projekt, vyberte polo\u017eku **Vytvori\u0165 projekt** a potom **Nov\u00fd projekt**.\n3. Pridajte svojmu cloudov\u00e9mu projektu n\u00e1zov a potom vyberte mo\u017enos\u0165 **Vytvori\u0165**.\n4. Ulo\u017ete si ID projektu Cloud, napr. *example-project-12345*, preto\u017ee ho budete potrebova\u0165 nesk\u00f4r\n5. Prejdite do kni\u017enice API pre [Smart Device Management API]({sdm_api_url}) a vyberte mo\u017enos\u0165 **Povoli\u0165**.\n6. Prejdite do kni\u017enice API pre [Cloud Pub/Sub API]({pubsub_api_url}) a vyberte mo\u017enos\u0165 **Povoli\u0165**.\n\nPokra\u010dujte, ke\u010f je v\u00e1\u0161 cloudov\u00fd projekt nastaven\u00fd.",
+                "title": "Nest: Vytvorte a nakonfigurujte cloudov\u00fd projekt"
+            },
+            "device_project": {
+                "data": {
+                    "project_id": "ID projektu pr\u00edstupu k zariadeniu"
+                },
+                "description": "Vytvorte projekt Nest Device Access, ktor\u00e9ho **zalo\u017eenie si vy\u017eaduje zaplatenie poplatku spolo\u010dnosti Google vo v\u00fd\u0161ke 5 USD**.\n1. Prejdite na [Device Access Console]({device_access_console_url}) a cez platobn\u00fd tok.\n2. Vyberte mo\u017enos\u0165 **Vytvori\u0165 projekt**\n3. Pridajte svojmu projektu Device Access n\u00e1zov a vyberte polo\u017eku **\u010ealej**.\n4. Zadajte ID klienta OAuth\n5. Povo\u013ete udalosti kliknut\u00edm na **Povolenie** a **Vytvori\u0165 projekt**.\n\nNi\u017e\u0161ie zadajte ID projektu pr\u00edstupu k zariadeniu ([viac inform\u00e1ci\u00ed]({more_info_url})).",
+                "title": "Nest: Vytvorte projekt pr\u00edstupu k zariadeniu"
+            },
+            "pick_implementation": {
+                "title": "Vyberte met\u00f3du overenia"
+            },
+            "pubsub": {
+                "data": {
+                    "cloud_project_id": "ID projektu Google Cloud"
+                },
+                "description": "Asistent dom\u00e1cnosti vyu\u017e\u00edva slu\u017ebu Cloud Pub/Sub na prij\u00edmanie aktualiz\u00e1ci\u00ed zariadenia Nest v re\u00e1lnom \u010dase. Servery Nest publikuj\u00fa aktualiz\u00e1cie do t\u00e9my Pub/Sub a Home Assistant prij\u00edma aktualiz\u00e1cie prostredn\u00edctvom odberu Pub/Sub.\n\n1. Nav\u0161t\u00edvte [Device Access Console]({device_access_console_url}) a uistite sa, \u017ee je nakonfigurovan\u00e1 t\u00e9ma Pub/Sub.\n2. Nav\u0161t\u00edvte [Cloud Console]({url}) a n\u00e1jdite svoje Google Cloud Project ID a potvr\u010fte, \u017ee je spr\u00e1vne, ako je uveden\u00e9 ni\u017e\u0161ie.\n3. V \u010fal\u0161om kroku sa pok\u00fasite o automatick\u00e9 objavenie t\u00e9m Pub/Sub a odberov.\n\nViac inform\u00e1ci\u00ed n\u00e1jdete v integra\u010dnej dokument\u00e1cii [viac inform\u00e1ci\u00ed]({more_info_url}).",
+                "title": "Nakonfigurujte Google Cloud Pub/Sub"
+            },
+            "pubsub_subscription": {
+                "data": {
+                    "subscription_name": "Meno predplatn\u00e9ho pub/sub"
+                },
+                "description": "Home Assistant dost\u00e1va aktualiz\u00e1cie zariadenia Nest v re\u00e1lnom \u010dase pomocou predplatn\u00e9ho Cloud Pub/Sub pre t\u00e9mu `{topic}`.\n\nVyberte existuj\u00faci odber ni\u017e\u0161ie, ak u\u017e existuje, alebo v \u010fal\u0161om kroku vytvorte nov\u00fd. Pozrite si dokument\u00e1ciu k integr\u00e1cii, kde n\u00e1jdete [viac inform\u00e1ci\u00ed]({more_info_url}).",
+                "title": "Nakonfigurujte predplatn\u00e9 Cloud Pub/Sub"
+            },
+            "pubsub_topic": {
+                "data": {
+                    "topic_name": "N\u00e1zov Pub/Sub t\u00e9my"
+                },
+                "description": "Zariadenia Nest publikuj\u00fa aktualiz\u00e1cie v t\u00e9me Cloud Pub/Sub. Vyberte ni\u017e\u0161ie uveden\u00fa t\u00e9mu Pub/Sub, ktor\u00e1 je rovnak\u00e1 ako [Device Access Console]({device_access_console_url}). Viac inform\u00e1ci\u00ed n\u00e1jdete v dokument\u00e1cii k integr\u00e1cii [viac info]({more_info_url}).",
+                "title": "Konfigur\u00e1cia t\u00e9my Cloud Pub/Sub"
+            },
+            "reauth_confirm": {
+                "description": "Integr\u00e1cia Nest potrebuje op\u00e4tovn\u00e9 overenie v\u00e1\u0161ho konta",
+                "title": "Vypr\u0161ala platnos\u0165 overenia pre {name}"
+            }
+        }
+    },
+    "device_automation": {
+        "trigger_type": {
+            "camera_motion": "Zisten\u00fd pohyb",
+            "camera_person": "Zisten\u00e1 osoba",
+            "camera_sound": "Rozpoznan\u00fd zvuk",
+            "doorbell_chime": "Zvon\u010dek stla\u010den\u00fd"
+        }
+    },
+    "entity": {
+        "event": {
+            "chime": {
+                "name": "Zvon\u010dek",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "doorbell_chime": "Zvon\u010dek"
+                        }
+                    }
+                }
+            },
+            "motion": {
+                "name": "Pohyb",
+                "state_attributes": {
+                    "event_type": {
+                        "state": {
+                            "camera_motion": "Pohyb",
+                            "camera_person": "Osoba",
+                            "camera_sound": "Zvuk"
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

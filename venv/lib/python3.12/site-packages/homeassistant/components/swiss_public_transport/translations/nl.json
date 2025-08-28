@@ -1,0 +1,76 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Dienst is al geconfigureerd"
+        },
+        "step": {
+            "time_fixed": {
+                "data": {
+                    "time_fixed": "Tijdstip van de dag"
+                },
+                "description": "Kies het tijdstip voor de verbinding (bijv. 07:12:00 uur elke ochtend).",
+                "title": "Zwitsers openbaar vervoer"
+            },
+            "time_offset": {
+                "data": {
+                    "time_offset": "Tijdsverschil"
+                },
+                "description": "Kies het tijdsverschil om toe te voegen aan de vroegst mogelijke verbinding (voeg bijvoorbeeld +00:05:00 toe, rekening houdend met de tijd om naar het station te lopen)",
+                "title": "Zwitsers openbaar vervoer"
+            },
+            "user": {
+                "data": {
+                    "time_mode": "Selecteer een tijdmodus",
+                    "time_station": "Selecteer het betreffende station"
+                },
+                "data_description": {
+                    "time_mode": "Met de vaste tijdmodus kun je de vertrektijd wijzigen en vastzetten op een specifieke tijd (bijv. om 07:12:00 uur elke ochtend) of een tijdsverschil toevoegen (bijv. +00:05:00 rekening houdend met de tijd om naar het station te lopen).",
+                    "time_station": "Meestal wordt de vertrektijd van een verbinding bij het verlaten van het startstation bijgehouden. Je kunt ook de tijd bijhouden waarop de verbinding aankomt op het eindstation."
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "delay": {
+                "name": "Vertraging"
+            },
+            "departure0": {
+                "name": "Vertrek"
+            },
+            "departure1": {
+                "name": "Vertrek +1"
+            },
+            "departure2": {
+                "name": "Vertrek +2"
+            },
+            "duration": {
+                "name": "Duur"
+            },
+            "line": {
+                "name": "Lijn"
+            },
+            "platform": {
+                "name": "Perron"
+            },
+            "transfers": {
+                "name": "Overstappen"
+            }
+        }
+    },
+    "selector": {
+        "time_mode": {
+            "options": {
+                "fixed": "Op een vast tijdstip",
+                "now": "Nu",
+                "offset": "Met een tijdsverschil vanaf nu"
+            }
+        },
+        "time_station": {
+            "options": {
+                "arrival": "Toon aankomsttijd op eindstation",
+                "departure": "Toon vertrektijd vanaf startstation"
+            }
+        }
+    }
+}

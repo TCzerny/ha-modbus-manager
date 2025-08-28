@@ -1,0 +1,99 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "\u0160is serveris jau sukonfig\u016bruotas"
+        },
+        "error": {
+            "api_error": "\u201epyemoncms\u201c API \u012fvyko klaida: {details}"
+        },
+        "step": {
+            "choose_feeds": {
+                "data": {
+                    "include_only_feed_id": "Pasirinkite kanalus, kuriuos norite \u012ftraukti"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API raktas",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "J\u016bs\u0173 32 bit\u0173 API raktas",
+                    "url": "Serverio URL, prasidedantis protokolu (http arba https)"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "apparent_power": {
+                "name": "Tariama galia {emoncms_details}"
+            },
+            "concentration": {
+                "name": "Koncentracija {emoncms_details}"
+            },
+            "current": {
+                "name": "Srov\u0117 {emoncms_details}"
+            },
+            "decibel": {
+                "name": "Decibelai {emoncms_details}"
+            },
+            "energy": {
+                "name": "Energija {emoncms_details}"
+            },
+            "flow": {
+                "name": "Srauto greitis {emoncms_details}"
+            },
+            "frequency": {
+                "name": "Da\u017enis {emoncms_details}"
+            },
+            "percent": {
+                "name": "Procentin\u0117 dalis {emoncms_details}"
+            },
+            "power": {
+                "name": "Galia {emoncms_details}"
+            },
+            "pressure": {
+                "name": "Sl\u0117gis {emoncms_details}"
+            },
+            "speed": {
+                "name": "Greitis {emoncms_details}"
+            },
+            "temperature": {
+                "name": "Temperat\u016bra {emoncms_details}"
+            },
+            "voltage": {
+                "name": "\u012etampa {emoncms_details}"
+            },
+            "volume": {
+                "name": "Apimtis {emoncms_details}"
+            }
+        }
+    },
+    "issues": {
+        "migrate_database": {
+            "description": "J\u016bs\u0173 [emoncms]( {url} ) nepateikia unikalaus identifikatoriaus. \n \n Atnaujinkite bent iki 11.5.7 versijos ir perkelkite savo emoncms duomen\u0173 baz\u0119. \n \n Daugiau informacijos rasite [emoncms dokumentacijoje] ( {doc_url} )",
+            "title": "Atnaujinkite savo emoncms versij\u0105"
+        },
+        "missing_include_only_feed_id": {
+            "description": "{domain} konfig\u016bravimas naudojant YAML pa\u0161alinamas. Neautomati\u0161kai prid\u0117kite kanalus, kuriuos norite sinchronizuoti, naudodami integracijos mygtuk\u0105 \u201ekonfig\u016bruoti\u201c.",
+            "title": "Su {domain} jutikliu nesinchronizuotas joks sklaidos kanalas"
+        },
+        "remove_value_template": {
+            "description": "{domain} konfig\u016bravimas naudojant YAML pa\u0161alinamas ir parametro \u201e{parameter}\u201c importuoti negalima. Pa\u0161alinkite \u201e{parameter}\u201c i\u0161 savo \u201e{domain}\u201c yaml konfig\u016bracijos ir i\u0161 naujo paleiskite Home Assistant Arba galite visi\u0161kai pa\u0161alinti \u201e{domain}\u201c konfig\u016bracij\u0105 i\u0161 configuration.yaml, i\u0161 naujo paleisti Home Assistant ir prid\u0117ti {domain} integracij\u0105 rankiniu b\u016bdu.",
+            "title": "Negalima prad\u0117ti {domain} integracijos"
+        }
+    },
+    "options": {
+        "error": {
+            "api_error": "\u201epyemoncms\u201c API \u012fvyko klaida: {details}"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "include_only_feed_id": "Pasirinkite kanalus, kuriuos norite \u012ftraukti"
+                }
+            }
+        }
+    }
+}

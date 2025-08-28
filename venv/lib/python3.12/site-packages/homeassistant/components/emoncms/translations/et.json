@@ -1,0 +1,99 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "See server on juba seadistatud"
+        },
+        "error": {
+            "api_error": "Pyemoncms API-s ilmnes t\u00f5rge: {details}"
+        },
+        "step": {
+            "choose_feeds": {
+                "data": {
+                    "include_only_feed_id": "Vali kaasatavad vood"
+                }
+            },
+            "user": {
+                "data": {
+                    "api_key": "API v\u00f5ti",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "32-bitine API-v\u00f5ti",
+                    "url": "Serveri URL mis algab protokolliga (http v\u00f5i https)"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "apparent_power": {
+                "name": "N\u00e4iv v\u00f5imsus {emoncms_details}"
+            },
+            "concentration": {
+                "name": "Kontsentratsioon {emoncms_details}"
+            },
+            "current": {
+                "name": "Voolutugevus {emoncms_details}"
+            },
+            "decibel": {
+                "name": "Helir\u00f5hk {emoncms_details}"
+            },
+            "energy": {
+                "name": "Energia {emoncms_details}"
+            },
+            "flow": {
+                "name": "Voolukiirus {emoncms_details}"
+            },
+            "frequency": {
+                "name": "Sagedus {emoncms_details}"
+            },
+            "percent": {
+                "name": "Protsent {emoncms_details}"
+            },
+            "power": {
+                "name": "V\u00f5imsus {emoncms_details}"
+            },
+            "pressure": {
+                "name": "R\u00f5hk {emoncms_details}"
+            },
+            "speed": {
+                "name": "Kiirus {emoncms_details}"
+            },
+            "temperature": {
+                "name": "Temperatuur {emoncms_details}"
+            },
+            "voltage": {
+                "name": "Pinge {emoncms_details}"
+            },
+            "volume": {
+                "name": "Helitugevus {emoncms_details}"
+            }
+        }
+    },
+    "issues": {
+        "migrate_database": {
+            "description": "[emoncms]({url}) ei saada unikaalset identifikaatorit.\n\nUuenda v\u00e4hemalt versioonile 11.5.7 ja migreeri oma emoncms andmebaas.\n\n Lisateave [emoncms documentation]({doc_url})",
+            "title": "Uuenda oma emoncms versiooni"
+        },
+        "missing_include_only_feed_id": {
+            "description": "{domain} seadistamine YAML-i abil eemaldatakse. Lisa k\u00e4sitsi sidumisse nupuga \"Seadista\" kanalid, mida soovid s\u00fcnkroonida.",
+            "title": "Anduriga {domain} ei ole s\u00fcnkroonitud \u00fchtegi voogu"
+        },
+        "remove_value_template": {
+            "description": "{domain} seadistamine YAML-iga eemaldatakse ja parameetrit ` {parameter} ` ei saa importida. Palun eemalda ` {parameter} ` oma ` {domain} ` yamli seadistustest ja taask\u00e4ivita Home Assistant. Teise v\u00f5imalusena v\u00f5id konfiguratsiooni ` {domain} ` oma configuration.yaml-ist t\u00e4ielikult eemaldada, taask\u00e4ivitada Home Assistant ja lisada sidumine {domain} k\u00e4sitsi.",
+            "title": "{domain} sidumist ei saa k\u00e4ivitada"
+        }
+    },
+    "options": {
+        "error": {
+            "api_error": "Pyemoncms API-s ilmnes t\u00f5rge: {details}"
+        },
+        "step": {
+            "init": {
+                "data": {
+                    "include_only_feed_id": "Vali kaasatavad vood"
+                }
+            }
+        }
+    }
+}

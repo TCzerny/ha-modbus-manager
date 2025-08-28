@@ -1,0 +1,411 @@
+{
+    "config": {
+        "abort": {
+            "reconfigure_successful": "Yeniden yap\u0131land\u0131rma ba\u015far\u0131l\u0131 oldu"
+        },
+        "error": {
+            "already_configured": "Ayn\u0131 IP adresi/portunu kullanan PCHK ba\u011flant\u0131s\u0131 zaten yap\u0131land\u0131r\u0131lm\u0131\u015f.",
+            "authentication_error": "Kimlik do\u011frulama ba\u015far\u0131s\u0131z. Hatal\u0131 kullan\u0131c\u0131 ad\u0131 veya \u015fifre.",
+            "connection_refused": "PCHK'ye ba\u011flan\u0131lam\u0131yor. IP ve portu kontrol edin.",
+            "license_error": "Maksimum ba\u011flant\u0131 say\u0131s\u0131na ula\u015f\u0131ld\u0131. Ek bir lisans anahtar\u0131 gerekiyor."
+        },
+        "step": {
+            "reconfigure": {
+                "data": {
+                    "acknowledge": "Mod\u00fcllerden onay iste\u011fi",
+                    "dim_mode": "K\u0131sma modu",
+                    "ip_address": "IP Adresi",
+                    "password": "\u015eifre",
+                    "port": "Port",
+                    "sk_num_tries": "Segment kupl\u00f6r tarama giri\u015fimleri",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "data_description": {
+                    "acknowledge": "Cevap al\u0131namazsa komut g\u00f6ndermeyi tekrar deneyin (veri yolu trafi\u011fini art\u0131r\u0131r).",
+                    "dim_mode": "\u00c7\u0131k\u0131\u015flar\u0131 karartmak i\u00e7in kullan\u0131lan ad\u0131m say\u0131s\u0131."
+                },
+                "description": "LCN ana bilgisayar\u0131na ba\u011flant\u0131y\u0131 yeniden yap\u0131land\u0131r\u0131n.",
+                "title": "LCN ana bilgisayar\u0131n\u0131 yeniden yap\u0131land\u0131r\u0131n"
+            },
+            "user": {
+                "data": {
+                    "acknowledge": "Mod\u00fcllerden onay iste\u011fi",
+                    "dim_mode": "K\u0131sma modu",
+                    "host": "Ad",
+                    "ip_address": "IP Adresi",
+                    "password": "\u015eifre",
+                    "port": "Port",
+                    "sk_num_tries": "Segment kupl\u00f6r tarama giri\u015fimleri",
+                    "username": "Kullan\u0131c\u0131 Ad\u0131"
+                },
+                "description": "LCN ana bilgisayar\u0131na yeni ba\u011flant\u0131 kurun."
+            }
+        }
+    },
+    "device_automation": {
+        "extra_fields": {
+            "action": "Eylem",
+            "code": "Kod",
+            "key": "Anahtar",
+            "level": "Seviye"
+        },
+        "trigger_type": {
+            "codelock": "Kod kilit kodu al\u0131nd\u0131",
+            "fingerprint": "Parmak izi kodu al\u0131nd\u0131",
+            "send_keys": "Al\u0131nan anahtarlar\u0131 g\u00f6nder",
+            "transmitter": "Verici kodu al\u0131nd\u0131",
+            "transponder": "Transponder kodu al\u0131nd\u0131"
+        }
+    },
+    "exceptions": {
+        "invalid_address": {
+            "message": "Verilen adres i\u00e7in LCN ayg\u0131t\u0131 yap\u0131land\u0131r\u0131lmad\u0131."
+        },
+        "invalid_device_id": {
+            "message": "Belirtilen cihaz kimli\u011fi i\u00e7in LCN cihaz\u0131 yap\u0131land\u0131r\u0131lmad\u0131."
+        },
+        "no_device_identifier": {
+            "message": "Hi\u00e7bir cihaz tan\u0131mlay\u0131c\u0131s\u0131 sa\u011flanmad\u0131. L\u00fctfen cihaz kimli\u011fini sa\u011flay\u0131n."
+        }
+    },
+    "issues": {
+        "deprecated_address_parameter": {
+            "title": "Kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131lan 'adres' parametresi"
+        },
+        "deprecated_keylock_sensor": {
+            "title": "Kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131lm\u0131\u015f LCN anahtar kilidi ikili sens\u00f6r\u00fc"
+        },
+        "deprecated_regulatorlock_sensor": {
+            "title": "Kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131lm\u0131\u015f LCN reg\u00fclat\u00f6r kilidi ikili sens\u00f6r\u00fc"
+        }
+    },
+    "services": {
+        "address_to_device_id": {
+            "description": "LCN adresini cihaz kimli\u011fine d\u00f6n\u00fc\u015ft\u00fcr.",
+            "fields": {
+                "host": {
+                    "description": "Entegrasyon panelinde belirtilen host ad\u0131.",
+                    "name": "Ana bilgisayar ad\u0131"
+                },
+                "id": {
+                    "description": "Hedef mod\u00fcl veya grup kimli\u011fi.",
+                    "name": "Mod\u00fcl veya grup kimli\u011fi"
+                },
+                "segment_id": {
+                    "description": "Hedef segment kimli\u011fi.",
+                    "name": "Segment Kimli\u011fi"
+                },
+                "type": {
+                    "description": "Hedef t\u00fcr\u00fc.",
+                    "name": "Tip"
+                }
+            },
+            "name": "Ayg\u0131t kimli\u011fine adres"
+        },
+        "dyn_text": {
+            "description": "LCN-GTxD ekranlara dinamik metin g\u00f6nderir.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "row": {
+                    "description": "Metin sat\u0131r\u0131.",
+                    "name": "S\u0131ra"
+                },
+                "text": {
+                    "description": "G\u00f6nderilecek metin (UTF-8 olarak kodlanm\u0131\u015f en fazla 60 karakter).",
+                    "name": "Metin"
+                }
+            },
+            "name": "Dinamik metin"
+        },
+        "led": {
+            "description": "LED durumunu ayarlar.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "led": {
+                    "description": "Cihaz\u0131n LED portu.",
+                    "name": "LED"
+                },
+                "state": {
+                    "description": "Ayarlanacak LED durumu.",
+                    "name": "Durum"
+                }
+            },
+            "name": "LED"
+        },
+        "lock_keys": {
+            "description": "Anahtarlar\u0131 kilitler.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "state": {
+                    "description": "Tu\u015f kilidi dize olarak belirtir (1=a\u00e7\u0131k, 2=kapal\u0131, T=ge\u00e7i\u015f, -=de\u011fi\u015fme yok).",
+                    "name": "Durum"
+                },
+                "table": {
+                    "description": "Kilitlenecek tu\u015flar\u0131n bulundu\u011fu tablo (aral\u0131k i\u00e7in A olmal\u0131d\u0131r).",
+                    "name": "Tablo"
+                },
+                "time": {
+                    "description": "Kilit aral\u0131\u011f\u0131.",
+                    "name": "Zaman"
+                },
+                "time_unit": {
+                    "description": "Kilit aral\u0131\u011f\u0131n\u0131n zaman birimi.",
+                    "name": "Zaman birimi"
+                }
+            },
+            "name": "Kilit tu\u015flar\u0131"
+        },
+        "lock_regulator": {
+            "description": "Bir reg\u00fclat\u00f6r ayar noktas\u0131n\u0131 kilitler.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "setpoint": {
+                    "description": "Ayar noktas\u0131 ad\u0131.",
+                    "name": "Ayar Noktas\u0131"
+                },
+                "state": {
+                    "description": "Yeni ayar noktas\u0131 durumu.",
+                    "name": "Durum"
+                }
+            },
+            "name": "Kilit reg\u00fclat\u00f6r\u00fc"
+        },
+        "output_abs": {
+            "description": "\u00c7\u0131k\u0131\u015f ba\u011flant\u0131 noktas\u0131n\u0131n mutlak parlakl\u0131\u011f\u0131n\u0131 y\u00fczde olarak ayarlar.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "brightness": {
+                    "description": "Mutlak parlakl\u0131k.",
+                    "name": "Parlakl\u0131k"
+                },
+                "device_id": {
+                    "name": "Cihaz"
+                },
+                "output": {
+                    "description": "\u00c7\u0131k\u0131\u015f ba\u011flant\u0131 noktas\u0131.",
+                    "name": "\u00c7\u0131k\u0131\u015f"
+                },
+                "transition": {
+                    "description": "Ge\u00e7i\u015f s\u00fcresi.",
+                    "name": "Ge\u00e7i\u015f"
+                }
+            },
+            "name": "\u00c7\u0131k\u0131\u015f mutlak parlakl\u0131\u011f\u0131"
+        },
+        "output_rel": {
+            "description": "\u00c7\u0131k\u0131\u015f ba\u011flant\u0131 noktas\u0131n\u0131n g\u00f6reli parlakl\u0131\u011f\u0131n\u0131 y\u00fczde olarak ayarlar.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "brightness": {
+                    "description": "Ba\u011f\u0131l parlakl\u0131k.",
+                    "name": "Parlakl\u0131k"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "output": {
+                    "description": "\u00c7\u0131k\u0131\u015f ba\u011flant\u0131 noktas\u0131.",
+                    "name": "\u00c7\u0131k\u0131\u015f"
+                }
+            },
+            "name": "\u00c7\u0131k\u0131\u015f ba\u011f\u0131l parlakl\u0131\u011f\u0131"
+        },
+        "output_toggle": {
+            "description": "\u00c7\u0131k\u0131\u015f portunu de\u011fi\u015ftirir.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "output": {
+                    "description": "\u00c7\u0131k\u0131\u015f ba\u011flant\u0131 noktas\u0131.",
+                    "name": "\u00c7\u0131k\u0131\u015f"
+                },
+                "transition": {
+                    "description": "Ge\u00e7i\u015f s\u00fcresi.",
+                    "name": "Ge\u00e7i\u015f"
+                }
+            },
+            "name": "\u00c7\u0131k\u0131\u015f\u0131 de\u011fi\u015ftir"
+        },
+        "pck": {
+            "description": "\u0130ste\u011fe ba\u011fl\u0131 PCK komutu g\u00f6nderir.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "pck": {
+                    "description": "PCK komutu (adres ba\u015fl\u0131\u011f\u0131 olmadan).",
+                    "name": "PCK"
+                }
+            },
+            "name": "PCK"
+        },
+        "relays": {
+            "description": "R\u00f6le durumunu ayarlar.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "state": {
+                    "description": "R\u00f6leler dizi olarak durumu belirtir (1=a\u00e7\u0131k, 2=kapal\u0131, t=de\u011fi\u015ftir, -=de\u011fi\u015fim yok).",
+                    "name": "Durum"
+                }
+            },
+            "name": "R\u00f6leler"
+        },
+        "send_keys": {
+            "description": "Anahtarlar\u0131 g\u00f6nderir (ba\u011fl\u0131 komutlar\u0131 y\u00fcr\u00fct\u00fcr).",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "keys": {
+                    "description": "G\u00f6nderilecek anahtarlar.",
+                    "name": "Anahtarlar"
+                },
+                "state": {
+                    "description": "G\u00f6nderme s\u0131ras\u0131nda anahtar durumu (erteleme i\u00e7in bas\u0131lmal\u0131d\u0131r).",
+                    "name": "Durum"
+                },
+                "time": {
+                    "description": "Gecikme g\u00f6nder.",
+                    "name": "Zaman"
+                },
+                "time_unit": {
+                    "description": "G\u00f6nderme gecikmesinin zaman birimi.",
+                    "name": "Zaman birimi"
+                }
+            },
+            "name": "Anahtarlar\u0131 g\u00f6nder"
+        },
+        "var_abs": {
+            "description": "Bir de\u011fi\u015fkenin veya ayar noktas\u0131n\u0131n mutlak de\u011ferini ayarlar.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "unit_of_measurement": {
+                    "description": "De\u011fer birimi.",
+                    "name": "\u00d6l\u00e7\u00fc birimi"
+                },
+                "value": {
+                    "description": "Ayarlanacak de\u011fer.",
+                    "name": "De\u011fer"
+                },
+                "variable": {
+                    "description": "De\u011fi\u015fken veya ayar noktas\u0131 ad\u0131.",
+                    "name": "De\u011fi\u015fken"
+                }
+            },
+            "name": "Mutlak de\u011fi\u015fken ayarla"
+        },
+        "var_rel": {
+            "description": "Bir de\u011fi\u015fkenin, ayar noktas\u0131n\u0131n veya e\u015fi\u011fin kayd\u0131rma de\u011feri.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "unit_of_measurement": {
+                    "description": "De\u011fer birimi.",
+                    "name": "\u00d6l\u00e7\u00fc birimi"
+                },
+                "value": {
+                    "description": "Kayd\u0131rma de\u011feri.",
+                    "name": "De\u011fer"
+                },
+                "value_reference": {
+                    "description": "Ayar noktas\u0131 ve e\u015fik i\u00e7in referans de\u011feri.",
+                    "name": "Referans de\u011feri"
+                },
+                "variable": {
+                    "description": "De\u011fi\u015fken veya ayar noktas\u0131 ad\u0131.",
+                    "name": "De\u011fi\u015fken"
+                }
+            },
+            "name": "Kayd\u0131rma de\u011fi\u015fkeni"
+        },
+        "var_reset": {
+            "description": "De\u011fi\u015fkenin veya ayar noktas\u0131n\u0131n de\u011ferini s\u0131f\u0131rlar.",
+            "fields": {
+                "address": {
+                    "description": "Mod\u00fcl adresi.",
+                    "name": "Adres"
+                },
+                "device_id": {
+                    "description": "LCN mod\u00fcl\u00fcn\u00fcn veya grubunun device_id'si.",
+                    "name": "Cihaz"
+                },
+                "variable": {
+                    "description": "De\u011fi\u015fken veya ayar noktas\u0131 ad\u0131.",
+                    "name": "De\u011fi\u015fken"
+                }
+            },
+            "name": "De\u011fi\u015fkeni s\u0131f\u0131rla"
+        }
+    }
+}

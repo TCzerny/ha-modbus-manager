@@ -1,0 +1,68 @@
+{
+    "config": {
+        "abort": {
+            "success": "Cambios gardados"
+        },
+        "flow_title": "Proximidade",
+        "step": {
+            "user": {
+                "data": {
+                    "ignored_zones": "Zonas para ignorar",
+                    "tolerance": "Distancia de tolerancia",
+                    "tracked_entities": "Dispositivos ou persoas para rastrexar",
+                    "zone": "Zona para rastrexar a distancia a"
+                }
+            }
+        }
+    },
+    "entity": {
+        "sensor": {
+            "dir_of_travel": {
+                "state": {
+                    "arrived": "Chegou",
+                    "towards": "En direcci\u00f3n a"
+                }
+            },
+            "dist_to_zone": {
+                "name": "Distancia de {tracked_entity}"
+            },
+            "nearest_dir_of_travel": {
+                "name": "Direcci\u00f3n de viaxe m\u00e1is pr\u00f3xima",
+                "state": {
+                    "arrived": "Chegou",
+                    "away_from": "Lonxe de",
+                    "stationary": "Parado",
+                    "towards": "En direcci\u00f3n a"
+                }
+            },
+            "nearest_dist_to_zone": {
+                "name": "Distancia m\u00e1is pr\u00f3xima"
+            }
+        }
+    },
+    "issues": {
+        "tracked_entity_removed": {
+            "fix_flow": {
+                "step": {
+                    "confirm": {
+                        "description": "A entidade `{entity_id}` foi eliminada de HA, pero \u00e9 usada na proximidade {name}. Elimina `{entity_id}` da lista de entidades rastreadas. As entidades do sensor de proximidade relacionadas foron establecidas como non dispo\u00f1ibles e poden ser eliminadas.",
+                        "title": "A entidade rastreada foi eliminada"
+                    }
+                }
+            },
+            "title": "A entidade rastreada foi eliminada"
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "ignored_zones": "Zonas para ignorar",
+                    "tolerance": "Distancia de tolerancia",
+                    "tracked_entities": "Dispositivos ou persoas para rastrexar",
+                    "zone": "Zona para rastrexar a distancia a"
+                }
+            }
+        }
+    }
+}

@@ -1,0 +1,102 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Teend\u0151k list\u00e1ja"
+        }
+    },
+    "exceptions": {
+        "item_not_found": {
+            "message": "Nem tal\u00e1lhat\u00f3 a teend\u0151lista eleme: {item}"
+        },
+        "update_field_not_supported": {
+            "message": "Az entit\u00e1s nem t\u00e1mogatja a k\u00f6vetkez\u0151 be\u00e1ll\u00edt\u00e1smez\u0151t: {service_field}"
+        }
+    },
+    "selector": {
+        "status": {
+            "options": {
+                "completed": "Befejezve",
+                "needs_action": "Nincs k\u00e9sz"
+            }
+        }
+    },
+    "services": {
+        "add_item": {
+            "description": "\u00daj teend\u0151lista elem hozz\u00e1ad\u00e1sa.",
+            "fields": {
+                "description": {
+                    "description": "A teend\u0151 elem teljesebb le\u00edr\u00e1sa, mint amit a t\u00e9tel neve tartalmaz.",
+                    "name": "Le\u00edr\u00e1s"
+                },
+                "due_date": {
+                    "description": "A teend\u0151 v\u00e1rhat\u00f3 befejez\u00e9s\u00e9nek d\u00e1tuma.",
+                    "name": "Hat\u00e1rid\u0151"
+                },
+                "due_datetime": {
+                    "description": "A teend\u0151 v\u00e1rhat\u00f3 befejez\u00e9s\u00e9nek d\u00e1tuma \u00e9s id\u0151pontja.",
+                    "name": "Esed\u00e9kess\u00e9g d\u00e1tuma \u00e9s id\u0151pontja"
+                },
+                "item": {
+                    "description": "A teend\u0151t jel\u00f6l\u0151 n\u00e9v.",
+                    "name": "T\u00e9tel neve"
+                }
+            },
+            "name": "Elem hozz\u00e1ad\u00e1sa"
+        },
+        "get_items": {
+            "description": "Lek\u00e9ri a teend\u0151lista elemeit.",
+            "fields": {
+                "status": {
+                    "description": "Csak a megadott \u00e1llapot\u00fa teend\u0151ket adja vissza. Alap\u00e9rtelmez\u00e9s szerint nem befejezett m\u0171veleteket jelen\u00edti meg.",
+                    "name": "\u00c1llapot"
+                }
+            },
+            "name": "Elemek lek\u00e9r\u00e9se"
+        },
+        "remove_completed_items": {
+            "description": "Elt\u00e1vol\u00edtja az \u00f6sszes teljes\u00edtett teend\u0151lista elemet.",
+            "name": "Teljes\u00edtett elemek elt\u00e1vol\u00edt\u00e1sa"
+        },
+        "remove_item": {
+            "description": "Egy megl\u00e9v\u0151 teend\u0151lista elem elt\u00e1vol\u00edt\u00e1sa a neve alapj\u00e1n.",
+            "fields": {
+                "item": {
+                    "description": "A teend\u0151lista t\u00e9tel\u00e9nek neve.",
+                    "name": "T\u00e9tel neve"
+                }
+            },
+            "name": "Elem elt\u00e1vol\u00edt\u00e1sa"
+        },
+        "update_item": {
+            "description": "Egy megl\u00e9v\u0151 teend\u0151lista elem friss\u00edt\u00e9se a neve alapj\u00e1n.",
+            "fields": {
+                "description": {
+                    "description": "A teend\u0151 elem teljesebb le\u00edr\u00e1sa, mint amit a t\u00e9tel neve tartalmaz.",
+                    "name": "Le\u00edr\u00e1s"
+                },
+                "due_date": {
+                    "description": "A teend\u0151 v\u00e1rhat\u00f3 befejez\u00e9s\u00e9nek d\u00e1tuma.",
+                    "name": "Hat\u00e1rid\u0151"
+                },
+                "due_datetime": {
+                    "description": "A teend\u0151 v\u00e1rhat\u00f3 befejez\u00e9s\u00e9nek d\u00e1tuma \u00e9s id\u0151pontja.",
+                    "name": "Esed\u00e9kess\u00e9g d\u00e1tuma \u00e9s id\u0151pontja"
+                },
+                "item": {
+                    "description": "A teend\u0151 elem jelenlegi neve.",
+                    "name": "T\u00e9tel neve"
+                },
+                "rename": {
+                    "description": "Az \u00faj n\u00e9v a teend\u0151 elemhez",
+                    "name": "T\u00e9tel \u00e1tnevez\u00e9se"
+                },
+                "status": {
+                    "description": "A teend\u0151 t\u00e9tel \u00e1llapota vagy meger\u0151s\u00edt\u00e9se.",
+                    "name": "\u00c1llapot be\u00e1ll\u00edt\u00e1sa"
+                }
+            },
+            "name": "Elem friss\u00edt\u00e9se"
+        }
+    },
+    "title": "Teend\u0151k list\u00e1ja"
+}

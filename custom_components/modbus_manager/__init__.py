@@ -1,101 +1,176 @@
-"""The Modbus Manager Integration."""
-from __future__ import annotations
-
+"""Modbus Manager Integration."""
 import asyncio
+import logging
 from typing import Any
 
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import Platform
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.typing import ConfigType
-from homeassistant.components.modbus.hub import ModbusHub
-from homeassistant.components.modbus.const import CONF_TYPE, CONF_HOST, CONF_PORT
+from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TYPE
+from homeassistant.components.modbus import ModbusHub
+from homeassistant.components.sensor.const import CONF_STATE_CLASS
 
 from .const import DOMAIN, PLATFORMS
-from .logger import ModbusManagerLogger
-from .performance_monitor import PerformanceMonitor
+from .template_loader import get_template_by_name
+from .aggregates import AggregationManager
 from .register_optimizer import RegisterOptimizer
-
-PLATFORMS = [
-    Platform.BINARY_SENSOR,
-    Platform.BUTTON,
-    Platform.NUMBER,
-    Platform.SELECT,
-    Platform.SENSOR,
-    Platform.SWITCH
-]
+from .performance_monitor import PerformanceMonitor
+from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
 
-async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
+PLATFORM = "modbus_manager"
+
+async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Set up the Modbus Manager component."""
+    hass.data.setdefault(DOMAIN, {})
     return True
-
-
-async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
-    """Unload a config entry."""
-    # Cleanup Hub
-    hub_name = f"modbus_manager_{entry.data['prefix']}"
-    if DOMAIN in hass.data and hub_name in hass.data[DOMAIN]:
-        hub = hass.data[DOMAIN][hub_name]
-        await hub.async_shutdown()
-        del hass.data[DOMAIN][hub_name]
-    
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
-
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Modbus Manager from a config entry."""
     try:
+        _LOGGER.info("Setup von Modbus Manager gestartet für %s", entry.data.get("prefix", "unbekannt"))
+        
+        # Template-Register laden
+        template_name = entry.data.get("template")
+        if not template_name:
+            _LOGGER.error("Kein Template in der Konfiguration gefunden")
+            return False
+        
+        registers = get_template_by_name(template_name)
+        if not registers:
+            _LOGGER.error("Template %s konnte nicht geladen werden", template_name)
+            return False
+        
+        _LOGGER.info("Template %s geladen mit %d Registern", template_name, len(registers))
+        
+        # Modbus-Hub über Standard Home Assistant API erstellen
         hub_name = f"modbus_manager_{entry.data['prefix']}"
         
-        # Erzeuge ModbusHub-Instanz mit Standard Home Assistant API
-        hub = ModbusHub(
-            hass=hass,
-            name=hub_name,
-            client_type="tcp",
-            host=entry.data["host"],
-            port=entry.data.get("port", 502),
-            delay=entry.data.get("delay", 0),
-            timeout=entry.data.get("timeout", 3),
-            retries=entry.data.get("retries", 3),
-            # Erweiterte Konfiguration
-            close_comm_on_error=entry.data.get("close_comm_on_error", True),
-            reconnect_delay=entry.data.get("reconnect_delay", 10),
-            message_wait_milliseconds=entry.data.get("message_wait", 0),
-        )
-
-        # Registriere Hub in hass.data
-        if DOMAIN not in hass.data:
-            hass.data[DOMAIN] = {}
-        hass.data[DOMAIN][hub_name] = hub
+        # Modbus-Konfiguration - alle erforderlichen Parameter
+        modbus_config = {
+            "name": hub_name,           # ← ModbusHub erwartet 'name' Key!
+            "type": "tcp",              # ← TCP-Verbindung
+            "host": entry.data["host"], # ← Host-IP
+            "port": entry.data.get("port", 502), # ← Port
+            "delay": 0,                 # ← Erforderlich: Verzögerung zwischen Anfragen
+            "timeout": 10,              # ← Erforderlich: Timeout in Sekunden
+        }
         
-        # Performance-Monitoring und Register-Optimierung initialisieren
-        performance_monitor = PerformanceMonitor()
-        register_optimizer = RegisterOptimizer()
+        _LOGGER.info("Modbus-Konfiguration: %s", modbus_config)
         
-        # In hass.data speichern
-        hass.data[DOMAIN][f"{hub_name}_performance"] = performance_monitor
-        hass.data[DOMAIN][f"{hub_name}_optimizer"] = register_optimizer
+        # Modbus-Hub direkt erstellen
+        try:
+            hub = ModbusHub(hass, modbus_config)
+            _LOGGER.info("Modbus-Hub %s erfolgreich erstellt", hub_name)
+            
+            # Modbus-Hub einrichten und verbinden
+            try:
+                await hub.async_setup()
+                _LOGGER.info("Modbus-Hub %s erfolgreich eingerichtet", hub_name)
+                
+                # Modbus-Hub verbinden
+                try:
+                    await hub.async_pb_connect()
+                    _LOGGER.info("Modbus-Hub %s erfolgreich verbunden", hub_name)
+                except Exception as e:
+                    _LOGGER.error("Fehler beim Verbinden des Modbus-Hubs: %s", str(e))
+                    return False
+                    
+            except Exception as e:
+                _LOGGER.error("Fehler beim Einrichten des Modbus-Hubs: %s", str(e))
+                return False
+                
+        except Exception as e:
+            _LOGGER.error("Fehler beim Erstellen des Modbus-Hubs: %s", str(e))
+            return False
         
-        _LOGGER.info("Performance-Monitoring und Register-Optimierung für %s initialisiert", hub_name)
-
-        # Starte Hub
-        await hub.async_setup()
+        # Daten für alle Plattformen vorbereiten
+        prefix = entry.data["prefix"]
+        _LOGGER.info("Präfix aus Config Entry: %s", prefix)
+        _LOGGER.info("Template: %s, Register: %d", template_name, len(registers))
         
-        _LOGGER.info("Modbus Hub %s erfolgreich gestartet für %s", hub_name, entry.data["host"])
-
-        # Alle Entity-Typen hinzufügen
-        await hass.config_entries.async_forward_entry_setup(entry, "sensor")
-        await hass.config_entries.async_forward_entry_setup(entry, "number")
-        await hass.config_entries.async_forward_entry_setup(entry, "select")
-        await hass.config_entries.async_forward_entry_setup(entry, "switch")
-        await hass.config_entries.async_forward_entry_setup(entry, "binary_sensor")
-        await hass.config_entries.async_forward_entry_setup(entry, "button")
-        await hass.config_entries.async_forward_entry_setup(entry, "text")
+        hass.data[DOMAIN][entry.entry_id] = {
+            "hub": hub,
+            "registers": registers,
+            "prefix": prefix,
+            "template": template_name,
+            "host": entry.data["host"],
+            "port": entry.data.get("port", 502),
+            "slave_id": entry.data.get("slave_id", 1),
+        }
         
+        _LOGGER.info("Konfigurationsdaten gespeichert: prefix=%s, template=%s", prefix, template_name)
+        
+        # Alle Plattformen einrichten
+        for platform in PLATFORMS:
+            try:
+                await hass.config_entries.async_forward_entry_setup(entry, platform)
+                _LOGGER.info("Plattform %s erfolgreich eingerichtet", platform)
+            except Exception as e:
+                _LOGGER.error("Fehler beim Einrichten der Plattform %s: %s", platform, str(e))
+                return False
+        
+        # Performance-Monitor und Register-Optimizer initialisieren
+        try:
+            performance_monitor = PerformanceMonitor()
+            register_optimizer = RegisterOptimizer(registers)
+            
+            hass.data[DOMAIN][entry.entry_id]["performance_monitor"] = performance_monitor
+            hass.data[DOMAIN][entry.entry_id]["register_optimizer"] = register_optimizer
+            
+            _LOGGER.info("Performance-Monitor und Register-Optimizer initialisiert")
+        except Exception as e:
+            _LOGGER.warning("Performance-Monitor konnte nicht initialisiert werden: %s", str(e))
+        
+        # Aggregation-Manager initialisieren
+        try:
+            aggregation_manager = AggregationManager(hass, entry.data["prefix"])
+            hass.data[DOMAIN][entry.entry_id]["aggregation_manager"] = aggregation_manager
+            
+            # Bestehende Gruppen entdecken
+            await aggregation_manager.discover_existing_groups()
+            _LOGGER.info("Aggregation-Manager initialisiert")
+        except Exception as e:
+            _LOGGER.warning("Aggregation-Manager konnte nicht initialisiert werden: %s", str(e))
+        
+        _LOGGER.info("Modbus Manager erfolgreich eingerichtet für %s", entry.data.get("prefix", "unbekannt"))
         return True
         
     except Exception as e:
         _LOGGER.error("Fehler beim Setup von Modbus Manager: %s", str(e))
+        import traceback
+        _LOGGER.error("Traceback: %s", traceback.format_exc())
+        return False
+
+async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Unload a config entry."""
+    try:
+        _LOGGER.info("Unload von Modbus Manager für %s", entry.data.get("prefix", "unbekannt"))
+        
+        # Alle Plattformen entladen
+        for platform in PLATFORMS:
+            try:
+                await hass.config_entries.async_forward_entry_unload(entry, platform)
+                _LOGGER.info("Plattform %s erfolgreich entladen", platform)
+            except Exception as e:
+                _LOGGER.error("Fehler beim Entladen der Plattform %s: %s", platform, str(e))
+        
+        # Modbus-Hub schließen
+        if entry.entry_id in hass.data[DOMAIN]:
+            hub_data = hass.data[DOMAIN][entry.entry_id]
+            if "hub" in hub_data:
+                try:
+                    await hub_data["hub"].async_close()
+                    _LOGGER.info("Modbus-Hub erfolgreich geschlossen")
+                except Exception as e:
+                    _LOGGER.warning("Fehler beim Schließen des Modbus-Hubs: %s", str(e))
+            
+            # Daten löschen
+            del hass.data[DOMAIN][entry.entry_id]
+        
+        _LOGGER.info("Modbus Manager erfolgreich entladen für %s", entry.data.get("prefix", "unbekannt"))
+        return True
+        
+    except Exception as e:
+        _LOGGER.error("Fehler beim Unload von Modbus Manager: %s", str(e))
         return False

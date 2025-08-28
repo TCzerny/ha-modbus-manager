@@ -1,0 +1,134 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Hizmet zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
+            "reconfigure_successful": "Yeniden yap\u0131land\u0131rma ba\u015far\u0131l\u0131 oldu"
+        },
+        "error": {
+            "cannot_connect": "Ba\u011flanma hatas\u0131",
+            "invalid_api_key": "Ge\u00e7ersiz API anahtar\u0131"
+        },
+        "step": {
+            "user": {
+                "data": {
+                    "api_key": "API Anahtar\u0131",
+                    "url": "URL"
+                },
+                "data_description": {
+                    "api_key": "SABnzbd sunucusunun API anahtar\u0131. Bu, SABnzbd web aray\u00fcz\u00fcnde Config cog (sa\u011f \u00fcst) > General > Security alt\u0131nda bulunabilir.",
+                    "url": "SABnzbd sunucusunun port dahil tam URL'si. \u00d6rnek: `http://localhost:8080` veya eklentiyi kullan\u0131yorsan\u0131z `http://a02368d7-sabnzbd:8080`."
+                }
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "warnings": {
+                "name": "Uyar\u0131lar"
+            }
+        },
+        "button": {
+            "pause": {
+                "name": "Duraklat"
+            },
+            "resume": {
+                "name": "Devam et"
+            }
+        },
+        "number": {
+            "speedlimit": {
+                "name": "H\u0131z s\u0131n\u0131r\u0131"
+            }
+        },
+        "sensor": {
+            "daily_total": {
+                "name": "G\u00fcnl\u00fck toplam"
+            },
+            "free_disk_space": {
+                "name": "Bo\u015f disk alan\u0131"
+            },
+            "left": {
+                "name": "\u0130ndirmek i\u00e7in kalan s\u00fcre"
+            },
+            "monthly_total": {
+                "name": "Ayl\u0131k toplam"
+            },
+            "overall_total": {
+                "name": "Genel toplam"
+            },
+            "queue": {
+                "name": "S\u0131ra"
+            },
+            "queue_count": {
+                "name": "Kuyruk say\u0131s\u0131"
+            },
+            "speed": {
+                "name": "H\u0131z"
+            },
+            "status": {
+                "name": "Durum"
+            },
+            "total_disk_space": {
+                "name": "Toplam disk alan\u0131"
+            },
+            "weekly_total": {
+                "name": "Haftal\u0131k toplam"
+            }
+        }
+    },
+    "exceptions": {
+        "service_call_exception": {
+            "message": "Ba\u011flant\u0131 hatas\u0131 nedeniyle SABnzbd'ye komut g\u00f6nderilemiyor, daha sonra tekrar deneyin"
+        }
+    },
+    "issues": {
+        "pause_action_deprecated": {
+            "description": "'Duraklat' eylemi kullan\u0131m d\u0131\u015f\u0131d\u0131r ve gelecekteki bir s\u00fcr\u00fcmde kald\u0131r\u0131lacakt\u0131r. L\u00fctfen bunun yerine 'Duraklat' d\u00fc\u011fmesini kullan\u0131n. Bu sorunu gidermek i\u00e7in l\u00fctfen otomasyonlar\u0131 buna g\u00f6re ayarlay\u0131n ve Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+            "title": "SABnzbd duraklatma eylemi kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131ld\u0131"
+        },
+        "resume_action_deprecated": {
+            "description": "'Devam Et' eylemi kullan\u0131m d\u0131\u015f\u0131d\u0131r ve gelecekteki bir s\u00fcr\u00fcmde kald\u0131r\u0131lacakt\u0131r. L\u00fctfen bunun yerine 'Devam Et' d\u00fc\u011fmesini kullan\u0131n. Bu sorunu gidermek i\u00e7in l\u00fctfen otomasyonlar\u0131 buna g\u00f6re ayarlay\u0131n ve Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+            "title": "SABnzbd devam ettirme eylemi kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131ld\u0131"
+        },
+        "set_speed_action_deprecated": {
+            "description": "'H\u0131z\u0131 ayarla' eylemi kullan\u0131m d\u0131\u015f\u0131d\u0131r ve gelecekteki bir s\u00fcr\u00fcmde kald\u0131r\u0131lacakt\u0131r. L\u00fctfen bunun yerine 'H\u0131z s\u0131n\u0131r\u0131' say\u0131 varl\u0131\u011f\u0131n\u0131 kullan\u0131n. Bu sorunu gidermek i\u00e7in l\u00fctfen otomasyonlar\u0131 buna g\u00f6re ayarlay\u0131n ve Home Assistant'\u0131 yeniden ba\u015flat\u0131n.",
+            "title": "SABnzbd set_speed eylemi kullan\u0131m d\u0131\u015f\u0131 b\u0131rak\u0131ld\u0131"
+        }
+    },
+    "services": {
+        "pause": {
+            "description": "\u0130ndirmeleri duraklat\u0131r.",
+            "fields": {
+                "api_key": {
+                    "description": "\u0130ndirmeleri duraklatmak i\u00e7in SABnzbd API anahtar\u0131.",
+                    "name": "SABnzbd API anahtar\u0131"
+                }
+            },
+            "name": "Duraklat"
+        },
+        "resume": {
+            "description": "\u0130ndirmeleri devam ettirir.",
+            "fields": {
+                "api_key": {
+                    "description": "\u0130ndirmeleri s\u00fcrd\u00fcrmek i\u00e7in SABnzbd API anahtar\u0131.",
+                    "name": "SABnzbd API anahtar\u0131"
+                }
+            },
+            "name": "Devam et"
+        },
+        "set_speed": {
+            "description": "\u0130ndirme h\u0131z\u0131 s\u0131n\u0131r\u0131n\u0131 ayarlar.",
+            "fields": {
+                "api_key": {
+                    "description": "H\u0131z s\u0131n\u0131r\u0131n\u0131 ayarlamak i\u00e7in SABnzbd API anahtar\u0131.",
+                    "name": "SABnzbd API anahtar\u0131"
+                },
+                "speed": {
+                    "description": "H\u0131z s\u0131n\u0131r\u0131. Birimsiz bir say\u0131 olarak belirtilirse, y\u00fczde olarak yorumlanacakt\u0131r. Birimler belirtilmi\u015fse (\u00f6rn. 500K) kesinlikle yorumlanacakt\u0131r.",
+                    "name": "H\u0131z"
+                }
+            },
+            "name": "H\u0131z ayarla"
+        }
+    }
+}

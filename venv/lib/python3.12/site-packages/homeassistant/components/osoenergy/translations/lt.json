@@ -1,0 +1,233 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Prietaisas jau sukonfig\u016bruotas",
+            "reauth_successful": "Pakartotinis autentifikavimas buvo s\u0117kmingas"
+        },
+        "error": {
+            "invalid_auth": "Neteisingas autentifikavimas"
+        },
+        "step": {
+            "reauth": {
+                "data": {
+                    "api_key": "API raktas"
+                },
+                "description": "\u012eveskite nauj\u0105 paskyros 'Prenumeratos rakt\u0105', sugeneruot\u0105 adresu 'https://portal.osoenergy.no/'.",
+                "title": "OSO Energy auth"
+            },
+            "user": {
+                "data": {
+                    "api_key": "API raktas"
+                },
+                "description": "\u012eveskite paskyros, sukurtos adresu 'https://portal.osoenergy.no/', 'Prenumeratos rakt\u0105'.",
+                "title": "OSO Energy auth"
+            }
+        }
+    },
+    "entity": {
+        "binary_sensor": {
+            "extra_energy": {
+                "name": "Papildoma energija"
+            },
+            "heating": {
+                "name": "\u0160ildymas"
+            },
+            "power_save": {
+                "name": "Energijos taupymo"
+            }
+        },
+        "sensor": {
+            "capacity_mixed_water_40": {
+                "name": "Mi\u0161raus vandens talpa 40\u00b0C"
+            },
+            "heater_mode": {
+                "name": "\u0160ildytuvo re\u017eimas",
+                "state": {
+                    "auto": "Automatinis",
+                    "extraenergy": "Papildoma energija",
+                    "ffr": "Greito da\u017enio rezervas",
+                    "legionella": "Legionel\u0117s",
+                    "manual": "Rankinis",
+                    "off": "I\u0161jungta",
+                    "powersave": "Energijos taupymas",
+                    "voltage": "\u012etampa"
+                }
+            },
+            "optimization_mode": {
+                "name": "Optimizavimo re\u017eimas",
+                "state": {
+                    "advanced": "I\u0161pl\u0117stin\u0117",
+                    "gridcompany": "Tinklo \u012fmon\u0117",
+                    "off": "I\u0161jungta",
+                    "oso": "OSO",
+                    "smartcompany": "Protinga kompanija"
+                }
+            },
+            "profile": {
+                "name": "Profilis vietinis"
+            },
+            "tapping_capacity": {
+                "name": "Bakstel\u0117jimo paj\u0117gumas"
+            },
+            "temperature_low": {
+                "name": "Temperat\u016bros dugnas"
+            },
+            "temperature_mid": {
+                "name": "Vidutin\u0117 temperat\u016bra"
+            },
+            "temperature_one": {
+                "name": "Viena temperat\u016bra"
+            },
+            "temperature_top": {
+                "name": "Temperat\u016bros vir\u0161us"
+            },
+            "v40_level_max": {
+                "name": "Maksimalus sumai\u0161yto vandens lygis esant 40\u00b0C"
+            },
+            "v40_level_min": {
+                "name": "Minimalus sumai\u0161yto vandens lygis 40\u00b0C temperat\u016broje"
+            },
+            "v40_min": {
+                "name": "Sumai\u0161ytas 40 \u00b0C temperat\u016bros vanduo"
+            }
+        }
+    },
+    "services": {
+        "get_profile": {
+            "description": "Gauna vandens \u0161ildytuvo temperat\u016bros profil\u012f",
+            "name": "Gaukite \u0161ildytuvo profil\u012f"
+        },
+        "set_profile": {
+            "description": "Nustato vandens \u0161ildytuvo temperat\u016bros profil\u012f",
+            "fields": {
+                "hour_00": {
+                    "description": "00:00 val.",
+                    "name": "00:00"
+                },
+                "hour_01": {
+                    "description": "01:00 val.",
+                    "name": "01:00"
+                },
+                "hour_02": {
+                    "description": "02:00 val.",
+                    "name": "02:00"
+                },
+                "hour_03": {
+                    "description": "03:00 val.",
+                    "name": "03:00"
+                },
+                "hour_04": {
+                    "description": "04:00 val.",
+                    "name": "04:00"
+                },
+                "hour_05": {
+                    "description": "05:00 val.",
+                    "name": "05:00"
+                },
+                "hour_06": {
+                    "description": "06:00 val.",
+                    "name": "06:00"
+                },
+                "hour_07": {
+                    "description": "07:00 val.",
+                    "name": "07:00"
+                },
+                "hour_08": {
+                    "description": "08:00 val.",
+                    "name": "08:00"
+                },
+                "hour_09": {
+                    "description": "09:00 val.",
+                    "name": "09:00"
+                },
+                "hour_10": {
+                    "description": "10:00 val.",
+                    "name": "10:00"
+                },
+                "hour_11": {
+                    "description": "11:00 val.",
+                    "name": "11:00"
+                },
+                "hour_12": {
+                    "description": "12:00 val.",
+                    "name": "12:00"
+                },
+                "hour_13": {
+                    "description": "13:00 val.",
+                    "name": "13:00"
+                },
+                "hour_14": {
+                    "description": "14:00 val.",
+                    "name": "14:00"
+                },
+                "hour_15": {
+                    "description": "15:00 val.",
+                    "name": "15:00"
+                },
+                "hour_16": {
+                    "description": "16:00 val.",
+                    "name": "16:00"
+                },
+                "hour_17": {
+                    "description": "17:00 val.",
+                    "name": "17:00"
+                },
+                "hour_18": {
+                    "description": "18:00 val.",
+                    "name": "18:00"
+                },
+                "hour_19": {
+                    "description": "19:00 val.",
+                    "name": "19:00"
+                },
+                "hour_20": {
+                    "description": "20:00 val.",
+                    "name": "20:00"
+                },
+                "hour_21": {
+                    "description": "21:00 val.",
+                    "name": "21:00"
+                },
+                "hour_22": {
+                    "description": "22:00 val.",
+                    "name": "22:00"
+                },
+                "hour_23": {
+                    "description": "23:00 val.",
+                    "name": "23:00"
+                }
+            },
+            "name": "Nustatykite \u0161ildytuvo profil\u012f"
+        },
+        "set_v40_min": {
+            "description": "Nustato minimal\u0173 40\u00b0C vandens kiek\u012f \u0161ildytuvui",
+            "fields": {
+                "v40_min": {
+                    "description": "Minimalus vandens kiekis 40\u00b0C temperat\u016broje (200-350 SAGA S200, 300-550 SAGA S300)",
+                    "name": "V40 min"
+                }
+            },
+            "name": "Nustatyti v40 min"
+        },
+        "turn_off": {
+            "description": "I\u0161jungia \u0161ildym\u0105 vienai valandai arba tol, kol pasiekiama minimali temperat\u016bra",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "Pasirinkite, ar \u0161ildymas turi b\u016bti i\u0161jungtas, kol pasiekiama minimali temperat\u016bra (tiesa), ar vien\u0105 valand\u0105 (klaidinga)",
+                    "name": "Iki temperat\u016bros ribos"
+                }
+            },
+            "name": "I\u0161junkite \u0161ildym\u0105"
+        },
+        "turn_on": {
+            "description": "\u012ejungia \u0161ildym\u0105 vienai valandai arba tol, kol pasiekiama maksimali temperat\u016bra",
+            "fields": {
+                "until_temp_limit": {
+                    "description": "Pasirinkite, ar \u0161ildymas turi b\u016bti \u012fjungtas, kol pasiekiama maksimali temperat\u016bra (tiesa), ar vien\u0105 valand\u0105 (klaidinga)",
+                    "name": "Iki temperat\u016bros ribos"
+                }
+            },
+            "name": "\u012ejunkite \u0161ildym\u0105"
+        }
+    }
+}

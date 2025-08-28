@@ -1,0 +1,66 @@
+{
+    "entity_component": {
+        "_": {
+            "name": "Zeitpunkt-Eingabe",
+            "state_attributes": {
+                "day": {
+                    "name": "Tag"
+                },
+                "editable": {
+                    "name": "Verwaltet \u00fcber UI",
+                    "state": {
+                        "false": "Nein",
+                        "true": "Ja"
+                    }
+                },
+                "hour": {
+                    "name": "Stunde"
+                },
+                "minute": {
+                    "name": "Minute"
+                },
+                "month": {
+                    "name": "Monat"
+                },
+                "second": {
+                    "name": "Sekunde"
+                },
+                "timestamp": {
+                    "name": "Zeitstempel"
+                },
+                "year": {
+                    "name": "Jahr"
+                }
+            }
+        }
+    },
+    "services": {
+        "reload": {
+            "description": "L\u00e4dt Helfer aus der YAML-Konfiguration neu.",
+            "name": "Neu laden"
+        },
+        "set_datetime": {
+            "description": "Legt Datum und/oder Uhrzeit fest.",
+            "fields": {
+                "date": {
+                    "description": "Das Datum f\u00fcr das Ziel.",
+                    "name": "Datum"
+                },
+                "datetime": {
+                    "description": "Das Datum und die Uhrzeit f\u00fcr das Ziel.",
+                    "name": "Datum & Uhrzeit"
+                },
+                "time": {
+                    "description": "Die Uhrzeit f\u00fcr das Ziel.",
+                    "name": "Uhrzeit"
+                },
+                "timestamp": {
+                    "description": "Das Datum und die Uhrzeit f\u00fcr das Ziel, ausgedr\u00fcckt durch einen UNIX-Zeitstempel.",
+                    "name": "Zeitstempel"
+                }
+            },
+            "name": "Einstellen"
+        }
+    },
+    "title": "Zeitpunkt-Eingabe"
+}
