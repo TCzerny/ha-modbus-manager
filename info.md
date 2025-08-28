@@ -1,6 +1,6 @@
 # Modbus Manager
 
-A comprehensive Modbus integration for Home Assistant with support for multiple device types and advanced features.
+A comprehensive Modbus integration for Home Assistant with support for multiple device types and advanced features. This integration provides a template-based, UI-configurable platform that replaces manual maintenance of `configuration.yaml` and offers a scalable solution for managing multiple Modbus-TCP devices.
 
 ## ⚠️ Disclaimer
 
@@ -12,36 +12,148 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 4. You are responsible for ensuring compliance with your device manufacturer's warranty terms and conditions
 5. Always verify the correct operation of your system after making any changes
 
-## Features
+## 🔧 Current Features
 
-- 🔌 Support for multiple Modbus devices
-- 📊 Optimized register reading with intelligent grouping
-- 🛠 Easy configuration through UI with advanced options
-- 📝 Extensive device definitions with YAML templates
-- 📈 Comprehensive performance monitoring and metrics
-- 🔄 Automatic retry mechanisms and connection management
-- 🎛️ Full entity type support (sensor, number, select, switch, binary_sensor, button, text)
-- 🔄 Real-time aggregation with live updates
-- ⚡ Advanced data processing (bit operations, enum mapping, flags)
-- 🚀 Performance optimization with configurable batch reading
+### Core Functionality
+- 🔌 **Multi-Device Support**: Manage multiple Modbus devices simultaneously
+- 📊 **Template-Based Configuration**: YAML templates for easy device setup
+- 🛠 **UI-Driven Setup**: Complete configuration through Home Assistant UI
+- 🔄 **Automatic Entity Generation**: Sensors, switches, numbers, and more created automatically
 
-## Configuration
+### Advanced Data Processing
+- ⚡ **Bit Operations**: Shift bits, bit masking, and bit field extraction
+- 🗺️ **Enum Mapping**: Convert numeric values to human-readable text
+- 🏁 **Bit Flags**: Extract individual bit status as separate attributes
+- 🔢 **Mathematical Operations**: Offset, multiplier, and sum_scale support
+- 📏 **Data Type Support**: uint16, int16, uint32, int32, string, float, boolean
 
-1. Add the integration through the Home Assistant UI
-2. Configure your Modbus device settings
-3. Select your device type
-4. Enjoy your new Modbus integration!
+### Entity Types
+- 📊 **Sensors**: Comprehensive sensor support with all data types
+- 🔘 **Binary Sensors**: Boolean sensors with configurable true/false values
+- 🔢 **Numbers**: Read/write numeric entities with min/max/step validation
+- 📋 **Selects**: Dropdown selection with predefined options
+- 🔌 **Switches**: On/off control with custom on/off values
+- 🔘 **Buttons**: Action triggers for device control
+- 📝 **Text**: String input/output entities
 
-## Need Help?
+### Aggregation & Monitoring
+- 📈 **Real-time Aggregation**: Sum, average, max, min, and count sensors
+- 🔍 **Group Discovery**: Automatic detection of entity groups from templates
+- 📊 **Performance Monitoring**: Comprehensive metrics and operation tracking
+- ⚡ **Register Optimization**: Intelligent grouping and batch reading
 
-- [Documentation](https://github.com/TCzerny/ha-modbus-manager/wiki)
-- [Bug Reports](https://github.com/TCzerny/ha-modbus-manager/issues)
-- [Discord Community](https://discord.gg/your-discord)
+### Device Templates
+- ☀️ **Sungrow SHx Inverter**: Complete support with 100+ sensors
+- 🔋 **Compleo EBox Professional**: Wallbox integration template
+- 🧪 **Advanced Example**: Demonstrates all advanced features
 
-## Support
+## 🚀 Planned Features
 
-If you like this integration, consider:
-- ⭐ Starring the repository
-- 🐛 Reporting issues
-- 💡 Contributing to the code
-- 📖 Improving documentation
+### High Priority
+- 🌊 **Float Conversion**: Automatic 32-bit IEEE 754 float handling
+- 📝 **String Processing**: Enhanced string validation and encoding
+- 🏷️ **Entity Categories**: Config, diagnostic, and system categories
+- 📊 **Status Aggregation**: Combined status from multiple entities
+- 🧮 **Template Sensors**: Mathematical calculations (MPPT Power, Phase Power)
+- 🔍 **Advanced Binary Sensors**: Bit-based status with direct register operations
+
+### Medium Priority
+- 🎨 **Custom Icons**: Template-based icon configuration
+- 🎛️ **Advanced Controls**: Sophisticated control entity types
+- ⏰ **Aggregation Scheduling**: Configurable update intervals
+- ✅ **Template Validation**: Enhanced YAML validation and error reporting
+- 🔧 **Input Entity Integration**: Native input support for configuration
+- 🧹 **Data Filtering**: Time-based filtering and data validation
+
+### Low Priority
+- 🤖 **AI Optimization**: Performance improvement suggestions
+- 🧬 **Template Inheritance**: Base templates with overrides
+- 🔄 **Dynamic Templates**: Runtime template generation
+- 📊 **Advanced Metrics**: Detailed performance analytics
+- 🤖 **Automation Templates**: Predefined automation support
+- 📜 **Script Execution**: Built-in script capabilities
+
+## 📋 Configuration
+
+### Quick Setup
+1. **Add Integration**: Go to Configuration → Devices & Services → + Add Integration
+2. **Select Template**: Choose from available device templates
+3. **Configure Device**: Enter IP, port, slave ID, and prefix
+4. **Enjoy**: Entities are automatically created and ready to use
+
+### Advanced Configuration
+- **Custom Templates**: Create your own device definitions
+- **Aggregation Setup**: Configure group-based aggregation sensors
+- **Performance Tuning**: Adjust batch sizes and polling intervals
+- **Error Handling**: Configure retry mechanisms and timeouts
+
+## 🔍 Device Support
+
+### Currently Supported
+- **Sungrow SHx Inverters**: Full template with energy, power, and battery sensors
+- **Compleo EBox Professional**: Wallbox charging station integration
+- **Generic Devices**: Advanced example template for custom implementations
+
+### Template Development
+- **YAML-Based**: Simple and readable template format
+- **Extensible**: Add new devices easily with template system
+- **Documented**: Comprehensive examples and documentation
+- **Community**: Share and contribute templates
+
+## 📚 Documentation & Support
+
+### Getting Started
+- [📖 README](https://github.com/TCzerny/ha-modbus-manager/blob/main/README.md): Complete feature overview and setup guide
+- [📋 TODO](https://github.com/TCzerny/ha-modbus-manager/blob/main/TODO.md): Development roadmap and planned features
+- [🤝 Contributing](https://github.com/TCzerny/ha-modbus-manager/blob/main/CONTRIBUTING.md): How to contribute to the project
+
+### Community Support
+- [🐛 Bug Reports](https://github.com/TCzerny/ha-modbus-manager/issues): Report issues and request features
+- [💬 Discussions](https://github.com/TCzerny/ha-modbus-manager/discussions): Community discussions and help
+- [📚 Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki): Extended documentation and examples
+
+## 🎯 Roadmap
+
+### Version 1.x (Current)
+- ✅ Core Modbus integration with template system
+- ✅ Advanced data processing and entity types
+- ✅ Aggregation and performance monitoring
+- ✅ Comprehensive device templates
+
+### Version 2.x (Planned)
+- 🚧 Template sensors and mathematical calculations
+- 🚧 Advanced binary sensors with bit operations
+- 🚧 Input entity integration and automation support
+- 🚧 Enhanced data filtering and validation
+
+### Version 3.x (Future)
+- 🔮 AI-powered optimization suggestions
+- 🔮 Template inheritance and dynamic generation
+- 🔮 Advanced automation and script execution
+- 🔮 Enterprise features and scalability
+
+## 🤝 Contributing
+
+We welcome contributions! Whether you're a developer, tester, or documentation writer:
+
+- **🐛 Report Bugs**: Help improve reliability
+- **💡 Suggest Features**: Share your ideas for improvement
+- **🔧 Code Contributions**: Implement new features or fix bugs
+- **📖 Documentation**: Improve guides and examples
+- **🧪 Testing**: Test with different devices and configurations
+
+## ⭐ Support the Project
+
+If you find this integration useful, please consider:
+
+- ⭐ **Star the repository** to show your support
+- 🐛 **Report issues** to help improve reliability
+- 💡 **Contribute code** to add new features
+- 📖 **Improve documentation** to help other users
+- 🔗 **Share with the community** to help others discover it
+
+---
+
+**Made with ❤️ for the Home Assistant community**
+
+*This integration is designed to be a modern, scalable alternative to traditional Modbus configurations, providing the power and flexibility needed for complex home automation setups.*
