@@ -36,7 +36,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             _LOGGER.error("Kein Template in der Konfiguration gefunden")
             return False
         
-        registers = get_template_by_name(template_name)
+        registers = await get_template_by_name(template_name)
         if not registers:
             _LOGGER.error("Template %s konnte nicht geladen werden", template_name)
             return False

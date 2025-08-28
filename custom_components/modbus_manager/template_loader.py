@@ -1,14 +1,18 @@
 """Template Loader for Modbus Manager."""
+import asyncio
 import os
 import yaml
-from typing import Dict, List, Any
+from typing import Dict, Any, List, Optional
+from homeassistant.core import HomeAssistant
+from homeassistant.util.async_ import run_callback_threadsafe
+import logging
 from .const import (
     DEFAULT_UPDATE_INTERVAL, DEFAULT_MAX_REGISTER_READ, DEFAULT_PRECISION,
     DEFAULT_MIN_VALUE, DEFAULT_MAX_VALUE, DataType, RegisterType, ControlType
 )
 from .logger import ModbusManagerLogger
 
-_LOGGER = ModbusManagerLogger(__name__)
+_LOGGER = logging.getLogger(__name__)
 
 # Template-Verzeichnis relativ zum Projekt-Root
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "device_templates")
@@ -49,38 +53,40 @@ OPTIONAL_FIELDS = {
     "icon": None
 }
 
-def load_templates() -> Dict[str, List[Dict[str, Any]]]:
-    """Load all device templates from the templates directory."""
-    templates = {}
-    
-    if not os.path.exists(TEMPLATE_DIR):
-        _LOGGER.warning("Template-Verzeichnis %s existiert nicht", TEMPLATE_DIR)
-        return templates
-    
-    for filename in os.listdir(TEMPLATE_DIR):
-        if filename.endswith(".yaml"):
-            template_path = os.path.join(TEMPLATE_DIR, filename)
-            try:
-                template_data = load_single_template(template_path)
-                if template_data:
-                    templates[template_data["name"]] = template_data["registers"]
-                    _LOGGER.info("Template %s erfolgreich geladen mit %d Registern", template_data["name"], len(template_data["registers"]))
-                    
-                    # Debug: Template-Struktur anzeigen
-                    _LOGGER.debug("Template %s: name=%s, registers=%d", template_data["name"], template_data["name"], len(template_data["registers"]))
-                    
-            except Exception as e:
-                _LOGGER.error("Fehler beim Laden von Template %s: %s", filename, str(e))
-                continue
-    
-    _LOGGER.info("Insgesamt %d Templates geladen", len(templates))
-    return templates
-
-def load_single_template(template_path: str) -> Dict[str, Any]:
-    """Load a single template file."""
+async def load_templates() -> List[Dict[str, Any]]:
+    """Load all template files asynchronously."""
     try:
-        with open(template_path, "r", encoding="utf-8") as f:
-            data = yaml.safe_load(f)
+        # Get template directory
+        template_dir = os.path.join(os.path.dirname(__file__), "device_templates")
+        if not os.path.exists(template_dir):
+            _LOGGER.error("Template-Verzeichnis %s existiert nicht", template_dir)
+            return []
+        
+        # List files in thread-safe way
+        loop = asyncio.get_event_loop()
+        filenames = await loop.run_in_executor(None, os.listdir, template_dir)
+        
+        templates = []
+        for filename in filenames:
+            if filename.endswith(('.yaml', '.yml')):
+                template_path = os.path.join(template_dir, filename)
+                template_data = await load_single_template(template_path)
+                if template_data:
+                    templates.append(template_data)
+        
+        _LOGGER.info("Insgesamt %d Templates geladen", len(templates))
+        return templates
+        
+    except Exception as e:
+        _LOGGER.error("Fehler beim Laden der Templates: %s", str(e))
+        return []
+
+async def load_single_template(template_path: str) -> Optional[Dict[str, Any]]:
+    """Load a single template file asynchronously."""
+    try:
+        # Read file in thread-safe way
+        loop = asyncio.get_event_loop()
+        data = await loop.run_in_executor(None, _read_template_file, template_path)
         
         if not data:
             _LOGGER.error("Template %s ist leer", template_path)
@@ -135,6 +141,15 @@ def load_single_template(template_path: str) -> Dict[str, Any]:
         return None
     except Exception as e:
         _LOGGER.error("Unerwarteter Fehler beim Laden von Template %s: %s", template_path, str(e))
+        return None
+
+def _read_template_file(template_path: str) -> Optional[Dict[str, Any]]:
+    """Read template file synchronously (called in executor)."""
+    try:
+        with open(template_path, "r", encoding="utf-8") as f:
+            return yaml.safe_load(f)
+    except Exception as e:
+        _LOGGER.error("Fehler beim Lesen von Template %s: %s", template_path, str(e))
         return None
 
 def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Dict[str, Any]:
@@ -279,12 +294,15 @@ def validate_control_settings(reg: Dict[str, Any], template_name: str) -> bool:
         _LOGGER.error("Fehler bei der Control-Validierung in Template %s: %s", template_name, str(e))
         return False
 
-def get_template_names() -> List[str]:
+async def get_template_names() -> List[str]:
     """Get list of available template names."""
-    templates = load_templates()
-    return list(templates.keys())
+    templates = await load_templates()
+    return [template["name"] for template in templates]
 
-def get_template_by_name(template_name: str) -> List[Dict[str, Any]]:
+async def get_template_by_name(template_name: str) -> List[Dict[str, Any]]:
     """Get a specific template by name."""
-    templates = load_templates()
-    return templates.get(template_name, []) 
+    templates = await load_templates()
+    for template in templates:
+        if template["name"] == template_name:
+            return template["registers"]
+    return [] 

@@ -217,9 +217,10 @@ class ModbusAggregateSensor(SensorEntity):
 class AggregationManager:
     """Manager for creating and managing aggregate sensors."""
     
-    def __init__(self, hass: HomeAssistant):
+    def __init__(self, hass: HomeAssistant, prefix: str):
         """Initialize the aggregation manager."""
         self.hass = hass
+        self.prefix = prefix
         self._aggregate_sensors = {}
         self._group_discovery_done = False
     
@@ -245,6 +246,10 @@ class AggregationManager:
         except Exception as e:
             _LOGGER.error("Fehler bei der Gruppen-Entdeckung: %s", str(e))
             return []
+    
+    async def discover_existing_groups(self) -> List[str]:
+        """Discover existing groups (alias for discover_groups)."""
+        return await self.discover_groups()
     
     async def create_aggregate_sensors(self, group_tag: str, methods: List[str] = None) -> List[ModbusAggregateSensor]:
         """Create aggregate sensors for a specific group."""
