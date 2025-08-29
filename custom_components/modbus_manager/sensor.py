@@ -8,6 +8,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
+from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
 from homeassistant.const import (
     CONF_NAME, CONF_UNIT_OF_MEASUREMENT, CONF_DEVICE_CLASS
 )
@@ -46,6 +47,13 @@ async def async_setup_entry(
         
         _LOGGER.info("Erstelle %d Sensoren für Template %s mit Präfix %s", len(registers), template_name, prefix)
         
+        # Entity Registry abrufen für Duplikat-Check
+        registry = async_get_entity_registry(hass)
+        existing_entities = {
+            entity.entity_id for entity in registry.entities.values()
+            if entity.entity_id.startswith(f"sensor.{prefix}_")
+        }
+        
         # Nur Sensor-Entitäten erstellen
         sensor_registers = [reg for reg in registers if reg.get("entity_type") == "sensor"]
         _LOGGER.info("Gefundene Sensor-Register: %d", len(sensor_registers))
@@ -58,6 +66,12 @@ async def async_setup_entry(
                 # Bereinige den Namen für den unique_id
                 clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
                 unique_id = f"{prefix}_{clean_name}"
+                entity_id = f"sensor.{prefix}_{clean_name}"
+                
+                # Prüfen ob Entity bereits existiert
+                if entity_id in existing_entities:
+                    _LOGGER.debug("Sensor %s existiert bereits, überspringe", entity_id)
+                    continue
                 
                 _LOGGER.info("Erstelle Sensor: name=%s, prefix=%s, unique_id=%s", 
                              sensor_name, prefix, unique_id)

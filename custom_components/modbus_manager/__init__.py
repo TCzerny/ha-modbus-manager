@@ -41,6 +41,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             _LOGGER.error("Template %s konnte nicht geladen werden", template_name)
             return False
         
+        # Template-Version prüfen
+        current_version = registers.get("version", 1)
+        stored_version = entry.data.get("template_version", 1)
+        
+        if current_version > stored_version:
+            _LOGGER.info("Template %s aktualisiert: v%s → v%s", template_name, stored_version, current_version)
+            # Version in Config Entry aktualisieren
+            entry.data["template_version"] = current_version
+        
         _LOGGER.info("Template %s geladen mit %d Registern", template_name, len(registers))
         
         # Modbus-Hub über Standard Home Assistant API erstellen

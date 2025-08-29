@@ -2,6 +2,168 @@
 
 This document tracks planned features that are described in the README but not yet implemented in the code.
 
+## 🧠 Modbus Manager Refactor – Architecture & Feature Summary
+
+### 👤 Developer: TCzerny  
+### 📦 Project: [ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)  
+### 📅 Status: August 2025  
+
+---
+
+## 🧱 Architecture Overview
+
+Goal: A modular, template-driven platform for managing Modbus devices in Home Assistant – scalable for PV inverters, heat pumps, wallboxes, HVAC systems, heating systems, and more.
+
+### 🔧 Components
+- `template_loader.py`: Parser for `registers`, `calculated`, `controls`
+- `entity_factory.py`: Creates entities from template data
+- `controls.py`: Direct Modbus control (`number`, `select`, `button`)
+- `calculated.py`: Calculated sensors via Jinja2
+- `async_setup_entry()`: Setup + version comparison + addition of new entities
+
+### 📁 Template Structure
+
+Templates are located under `device_definitions/*.yaml` and contain:
+
+- `registers:` → Modbus sensors  
+- `calculated:` → Calculated sensors via Jinja2  
+- `controls:` → Direct Modbus control (`number`, `select`, `button`)  
+- `version:` → Template versioning for update detection  
+- `type:` → Device type (e.g. `inverter`, `heatpump`, `wallbox`)  
+
+### 🧩 Modules
+
+| File                   | Function                                           |
+|------------------------|----------------------------------------------------|
+| `template_loader.py`   | Loads and validates templates                      |
+| `entity_factory.py`    | Creates entities from template data                |
+| `controls.py`          | Direct Modbus control                              |
+| `calculated.py`        | Calculated sensors with Jinja2                     |
+| `modbus_device.py`     | Central device class                               |
+| `config_flow.py`       | UI setup for devices                               |
+
+---
+
+## 📘 Modbus Standards & Mapping Architecture – Summary
+
+## 🧱 Base Strategy
+
+- Goal: Unified standardization of Modbus devices through base templates
+- Approach:
+  - One `*_base.yaml` per device type with complete register structure and advanced processing
+  - Manufacturer/model mappings attach themselves via `extends:` to the appropriate base
+  - All registers from source (e.g. mkaiser, own YAMLs) are fully adopted
+
+---
+
+## 📦 Available Base Standards
+
+| Base File                  | Device Type / Industry                     |
+|----------------------------|-----------------------------------------|
+| `sunspec_base.yaml`        | PV inverters, storage, smart meters, wallboxes (SunSpec)  
+| `dlms_base.yaml`           | Energy meters (DLMS/COSEM)  
+| `vdma24247_base.yaml`      | Heat pumps / heating systems  
+| `hvac_base.yaml`           | HVAC / refrigeration systems  
+| `ocpp_evse_base.yaml`      | Wallboxes with OCPP mapping  
+| `ups_base.yaml`            | UPS systems  
+| `iec61131_base.yaml`       | PLC / I/O modules  
+| `bhkw_base.yaml`           | Combined heat and power / generators  
+| `bms_base.yaml`            | Battery management systems  
+| `mbus_meter_base.yaml`     | Water, gas, heat meters via M-Bus  
+| `pq_analyzer_base.yaml`    | Power quality analyzers  
+
+---
+
+## ⚙️ Advanced Data Processing Features (integrated in all bases)
+
+```yaml
+offset: 0.0
+multiplier: 1.0
+sum_scale: []
+shift_bits: 0
+bits: []
+float: false
+string: false
+control: "none"
+min_value: 0.0
+max_value: 100.0
+step: 1.0
+options: {}
+```
+
+---
+
+## 🏭 Manufacturer Mapping Examples
+
+### 📋 Manufacturer-Map (Excerpt)
+
+| Manufacturer / Model | Base File | Mapping File |
+|----------------------|-----------|--------------|
+| Fronius GEN24 | `sunspec_base.yaml` | `map_gen24.yaml` |
+| SMA Sunny Boy | `sunspec_base.yaml` | `map_sunnyboy.yaml` |
+| Sungrow SH10RT | `sunspec_base.yaml` | `map_sh10rt.yaml` |
+| BYD BatteryBox | `sunspec_base.yaml` | `map_byd.yaml` |
+| Pylontech US | `bms_base.yaml` | `map_pylontech.yaml` |
+| Viessmann Vitocal | `vdma24247_base.yaml` | `map_vitocal.yaml` |
+| Kamstrup Multical | `mbus_meter_base.yaml` | `map_multical.yaml` |
+| APC Smart-UPS | `ups_base.yaml` | `map_smartups.yaml` |
+| WAGO PFC | `iec61131_base.yaml` | `map_pfc.yaml` |
+
+---
+
+## 🧩 Missing / Optional Base Standards
+
+| Suggestion | Description / Device Examples |
+|------------|-------------------------------|
+| `drive_base.yaml` | Frequency converters (ABB, Siemens, Danfoss) |
+| `rtu_base.yaml` | Remote terminal units / SCADA-RTUs |
+| `sensor_base.yaml` | Process sensors (pressure, flow, level) |
+| `fire_base.yaml` | Fire alarm and safety systems |
+| `dali_base.yaml` | Lighting control / DALI gateways |
+| `tank_base.yaml` | Tank/silo management systems |
+| `lab_base.yaml` | Laboratory/analysis devices (pH, conductivity) |
+
+---
+
+## 📌 Next Steps for Base Standards
+
+- [ ] Generate mapping files for all mkaiser devices completely
+- [ ] Add Solvis heating as mapping on `vdma24247_base.yaml`
+- [ ] Create base standards for missing device types
+- [ ] Update `manufacturer_map.md` regularly
+- [ ] Optional: Import script for automatic mapping creation from external YAMLs
+
+---
+
+## ✅ ToDo List
+
+### 🔧 Parsing & Structure
+- [x] Modular template parser (`template_loader.py`)
+- [x] Prefix placeholder `{prefix}` in `calculated.template`
+- [x] Support for `data_type`, `length`, `bitmask`
+- [ ] Template versioning (`version:`) + comparison
+
+### 🧠 Entities
+- [x] `ModbusRegisterSensor`
+- [x] `CalculatedSensor`
+- [x] `ModbusNumberEntity`, `ModbusSelectEntity`, `ModbusButtonEntity`
+
+### 🚀 Setup & Update
+- [x] Check Entity Registry → no duplicates
+- [x] Add new entities on version jump
+- [ ] Save `template_version` in `config_entry`
+
+### 📁 Templates
+- [x] `heatpump_generic.yaml`
+- [ ] `wallbox_generic.yaml`
+- [ ] `hvac_generic.yaml`
+
+### 🧠 UI & Options
+- [ ] Display template version in `config_flow.py`
+- [ ] UI option "Update template"
+
+---
+
 ## 🚧 Advanced Data Processing
 
 ### Float Conversion
@@ -286,200 +448,189 @@ The MKaiser integration provides excellent examples of advanced Home Assistant f
 
 ---
 
-**Last Updated**: $(date)
-**Version**: 1.1.0 
+## 🔧 Missing Modbus Parameters (Home Assistant Standard)
 
+Based on the [Home Assistant Modbus Integration](https://www.home-assistant.io/integrations/modbus/) documentation, the following parameters are missing from our template-based implementation:
 
+### 📊 **Sensor & Entity Parameters**
+- [ ] **`input_type`**: Specify register type (`input`, `holding`, `coil`, `discrete`)
+- [ ] **`count`**: Number of registers to read (for multi-register values)
+- [ ] **`slave_count`**: Alternative to `count` for 32/64-bit values
+- [ ] **`virtual_count`**: Virtual register count for complex data types
+- [ ] **`structure`**: Custom data structure for complex data types
+- [ ] **`scan_interval`**: Custom update interval per entity (overrides global)
+- [ ] **`verify`**: Verification after write operations
+- [ ] **`command_on` / `command_off`**: Commands for switch entities
+- [ ] **`state_on` / `state_off`**: State values for binary sensors
 
-# 🧠 Modbus Manager Refactor – Architektur & Feature-Zusammenfassung
+### 🔄 **Data Processing Parameters**
+- [ ] **`swap: byte`**: Byte swapping for 16-bit values
+- [ ] **`swap: word`**: Word swapping for 32/64-bit values  
+- [ ] **`swap: word_byte`**: Combined word and byte swapping
+- [ ] **`precision`**: Decimal precision for float values
+- [ ] **`write_type`**: Specify write method (`coil`, `register`)
 
-## 👤 Entwickler: TCzerny  
-## 📦 Projekt: [ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)  
-## 📅 Stand: August 2025  
+### 🎛️ **Control & Validation Parameters**
+- [ ] **`verify`**: Verification configuration for write operations
+- [ ] **`input_type`**: Input register type for verification
+- [ ] **`state_on` / `state_off`**: Expected states after operations
+- [ ] **`command_on` / `command_off`**: Commands for control operations
 
----
+### 📈 **Advanced Parameters**
+- [ ] **`message_wait_milliseconds`**: Delay between Modbus requests
+- [ ] **`delay`**: Connection delay for device preparation
+- [ ] **`timeout`**: Per-entity timeout settings
+- [ ] **`retry_on_empty`**: Retry logic for empty responses
+- [ ] **`retries`**: Number of retry attempts
+- [ ] **`retry_delay`**: Delay between retries
 
-## 🧱 Architekturüberblick
+### 🧩 **Template Structure Updates**
+- [ ] **`registers` section**: Rename from `sensors` to match HA standard
+- [ ] **`calculated` section**: Add support for complex Jinja2 expressions
+- [ ] **`controls` section**: Add verification and command parameters
+- [ ] **`binary_sensors` section**: Add dedicated binary sensor support
+- [ ] **`climates` section**: Add climate entity support
+- [ ] **`covers` section**: Add cover entity support
+- [ ] **`fans` section**: Add fan entity support
+- [ ] **`lights` section**: Add light entity support
 
-Ziel: Eine modulare, template-gesteuerte Plattform zur Verwaltung von Modbus-Geräten in Home Assistant – skalierbar für PV-Wechselrichter, Wärmepumpen, Wallboxen, Klimageräte, Heizungen u.v.m.
+### 🔗 **Home Assistant Modbus Actions**
+- [ ] **`modbus.write_register`**: Generic register write action
+- [ ] **`modbus.write_coil`**: Generic coil write action
+- [ ] **`modbus.set_temperature`**: Temperature setting action
+- [ ] **`modbus.set_hvac_mode`**: HVAC mode setting action
 
-### 🔧 Komponenten
-- `template_loader.py`: Parser für `registers`, `calculated`, `controls`
-- `entity_factory.py`: Erzeugt Entitäten aus Template-Daten
-- `controls.py`: Direkte Modbus-Steuerung (`number`, `select`, `button`)
-- `calculated.py`: Berechnete Sensoren via Jinja2
-- `async_setup_entry()`: Setup + Versionsvergleich + Ergänzung neuer Entitäten
+### 📋 **Implementation Strategy & Phases**
 
----
+#### **Phase 1: Parameter Extension (Low Risk)**
+- [ ] **`input_type`**: Add register type support (`input`, `holding`, `coil`, `discrete`)
+- [ ] **`count`**: Add multi-register support for 32/64-bit values
+- [ ] **`swap` options**: Add byte/word swapping support
+- [ ] **`scan_interval`**: Add per-entity update intervals
+- [ ] **`precision`**: Add decimal precision for float values
 
-## ✅ ToDo-Liste
+#### **Phase 2: Enhanced Parameters (Medium Risk)**
+- [ ] **`verify`**: Add verification for write operations
+- [ ] **`command_on/off`**: Add switch control commands
+- [ ] **`state_on/off`**: Add binary sensor state values
+- [ ] **`write_type`**: Specify write method (`coil`, `register`)
+- [ ] **`retry_on_empty`**: Add retry logic for empty responses
 
-### 🔧 Parsing & Struktur
-- [x] Modularer Template-Parser (`template_loader.py`)
-- [x] Präfix-Platzhalter `{prefix}` in `calculated.template`
-- [x] Unterstützung für `data_type`, `length`, `bitmask`
-- [ ] Template-Versionierung (`version:`) + Vergleich
+#### **Phase 3: Advanced Parameters (Low Risk)**
+- [ ] **`message_wait_milliseconds`**: Add delay between Modbus requests
+- [ ] **`delay`**: Add connection delay for device preparation
+- [ ] **`timeout`**: Add per-entity timeout settings
+- [ ] **`retries`**: Add number of retry attempts
+- [ ] **`retry_delay`**: Add delay between retries
 
-### 🧠 Entitäten
-- [x] `ModbusRegisterSensor`
-- [x] `CalculatedSensor`
-- [x] `ModbusNumberEntity`, `ModbusSelectEntity`, `ModbusButtonEntity`
+### 🔧 **Implementation Approach**
 
-### 🚀 Setup & Update
-- [x] Entity Registry prüfen → keine Duplikate
-- [x] Ergänzung neuer Entitäten bei Versionssprung
-- [ ] Speichern von `template_version` im `config_entry`
+#### **Backward Compatibility Strategy**
+- **Keep Existing Structure**: No new sections, only parameter extensions
+- **Optional Parameters**: All new parameters are optional
+- **Default Values**: Sensible defaults for missing parameters
+- **No Migration Needed**: Existing templates work unchanged
 
-### 📁 Templates
-- [x] `heatpump_generic.yaml`
-- [ ] `wallbox_generic.yaml`
-- [ ] `hvac_generic.yaml`
-
-### 🧠 UI & Optionen
-- [ ] Anzeige von Template-Version in `config_flow.py`
-- [ ] UI-Option „Template aktualisieren“
-
----
-
-## 📁 Beispiel-Template: `heatpump_generic.yaml`
-
+#### **Template Evolution Example**
 ```yaml
-name: Generic Heatpump
-type: heatpump
-version: 2
-slave_id: 1
-
-registers:
-  - name: "Flow Temperature"
-    address: 30010
-    unit: "°C"
+# Phase 1: Extended parameters (existing templates work unchanged)
+sensors:  # ← Existing structure remains
+  - name: "Temperature"
+    address: 100
     scale: 0.1
-    device_class: temperature
-    state_class: measurement
-    group: heat_flow
+    input_type: "holding"        # ← New optional parameter
+    count: 1                     # ← New optional parameter
 
-  - name: "Return Temperature"
-    address: 30012
-    unit: "°C"
+# Phase 2: Enhanced parameters (optional)
+sensors:  # ← Same structure, more options
+  - name: "Temperature"
+    address: 100
     scale: 0.1
-    device_class: temperature
-    state_class: measurement
-    group: heat_return
+    input_type: "holding"
+    count: 1
+    verify:                       # ← New verification parameter
+      input_type: "input"
+      address: 101
+    command_on: 1                # ← New control parameter
+    command_off: 0               # ← New control parameter
+```
 
-  - name: "Compressor Status"
-    address: 30020
-    data_type: bitfield
-    bitmask: 0x01
-    device_class: running
-    group: heat_status
-
-  - name: "Total Heat Energy"
-    address: 30030
-    length: 2
-    data_type: uint32
-    unit: "kWh"
-    scale: 0.01
-    device_class: energy
-    state_class: total
-    group: heat_energy
-
-calculated:
-  - name: "Delta Temperature"
-    type: sensor
-    template: "{{ states('sensor.{prefix}_flow_temperature') | float - states('sensor.{prefix}_return_temperature') | float }}"
-    unit: "°C"
-    device_class: temperature
-    state_class: measurement
-    group: heat_delta
-
-controls:
-  - type: number
-    name: "Target Temperature"
-    address: 40010
-    scale: 0.1
-    unit: "°C"
-    min: 30
-    max: 60
-    step: 0.5
-    group: heat_control
-
-  - type: select
-    name: "Operation Mode"
-    address: 40020
-    options:
-      Auto: 1
-      Eco: 2
-      Boost: 3
-    group: heat_control
-
-  - type: button
-    name: "Restart Heatpump"
-    address: 40030
-    value: 1
-    group: heat_control
-
-# 🧠 Entscheidungsgrundlagen & Architekturübersicht – Modbus Manager
-
-## ✅ Entscheidungsgrundlagen
-
-- **Template-gesteuerte Architektur**: Geräte werden über YAML-Templates beschrieben (`registers`, `calculated`, `controls`)
-- **Direkte Modbus-Steuerung**: UI-Entitäten wie `number`, `select`, `button` ersetzen `input_*` + `automation`
-- **Berechnete Sensoren via Jinja2**: Template-Sensoren mit `{prefix}`-Platzhalter ermöglichen Mehrgeräte-Support
-- **Versionierung im Template**: `version:`-Feld erkennt Änderungen und ermöglicht halbautomatische Updates
-- **Keine YAML-Konfiguration nötig**: Alle Geräte werden über UI (`config_flow`) eingerichtet
-- **Modularer Aufbau**: Jede Komponente ist unabhängig erweiterbar (Sensoren, Steuerung, Aggregation)
-- **Statistikdaten bleiben erhalten**: Bestehende Entitäten werden nicht gelöscht, sondern nur ergänzt
+#### **Risk Mitigation**
+- **Parameter Validation**: Strict validation of new parameters
+- **Graceful Degradation**: Fallback to defaults on invalid parameters
+- **Comprehensive Testing**: Test each phase before proceeding
+- **User Documentation**: Clear examples for new parameters
+- **No Breaking Changes**: Existing templates work without modification
 
 ---
 
-## 🔗 Relevante Links
+## 🧠 Decision Basis & Architecture Overview
 
-- 🔧 Projekt-Repo: [github.com/TCzerny/ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)
+### ✅ Decision Basis
+
+- **Template-driven architecture**: Devices are described via YAML templates (`registers`, `calculated`, `controls`)
+- **Direct Modbus control**: UI entities like `number`, `select`, `button` replace `input_*` + `automation`
+- **Calculated sensors via Jinja2**: Template sensors with `{prefix}` placeholder enable multi-device support
+- **Versioning in template**: `version:` field detects changes and enables semi-automatic updates
+- **No YAML configuration needed**: All devices are set up via UI (`config_flow`)
+- **Modular structure**: Each component is independently extensible (sensors, control, aggregation)
+- **Statistics data preserved**: Existing entities are not deleted, only supplemented
+
+---
+
+## 🔗 Relevant Links
+
+- 🔧 Project Repo: [github.com/TCzerny/ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)
 - 📚 Home Assistant Dev Docs: [developers.home-assistant.io](https://developers.home-assistant.io/)
-- 🧪 Jinja2 Template-Editor: [HA Entwicklerwerkzeuge → Vorlagen](http://homeassistant.local:8123/developer-tools/template)
-- 🧠 MKaiser Vergleich: [github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant)
+- 🧪 Jinja2 Template Editor: [HA Developer Tools → Templates](http://homeassistant.local:8123/developer-tools/template)
+- 🧠 MKaiser Comparison: [github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant)
 
 ---
 
-## 🧩 Architektur-Schritte
+## 🧩 Architecture Steps
 
-### 🔧 Parsing & Struktur
-- `template_loader.py`: Lädt `registers`, `calculated`, `controls`
-- Platzhalter `{prefix}` im Template → dynamisch ersetzt
-- Unterstützung für `data_type`, `length`, `bitmask`
+### 🔧 Parsing & Structure
+- `template_loader.py`: Loads `registers`, `calculated`, `controls`
+- Placeholder `{prefix}` in template → dynamically replaced
+- Support for `data_type`, `length`, `bitmask`
 
-### 🧠 Entitäten
-- `ModbusRegisterSensor`: Register mit Skalierung & Datentyp
-- `CalculatedSensor`: Berechnete Sensoren via Jinja2
-- `ModbusNumberEntity`, `ModbusSelectEntity`, `ModbusButtonEntity`: direkte Steuerung
+### 🧠 Entities
+- `ModbusRegisterSensor`: Register with scaling & data type
+- `CalculatedSensor`: Calculated sensors via Jinja2
+- `ModbusNumberEntity`, `ModbusSelectEntity`, `ModbusButtonEntity`: direct control
 
 ### 🚀 Setup & Update
-- `async_setup_entry()` prüft `template_version`
-- Ergänzt neue Entitäten → keine Löschung
-- Statistikdaten bleiben erhalten
+- `async_setup_entry()` checks `template_version`
+- Adds new entities → no deletion
+- Statistics data preserved
 
 ### 📁 Templates
-- Beispiel: `heatpump_generic.yaml`
-- Weitere geplant: `wallbox_generic.yaml`, `hvac_generic.yaml`
+- Example: `heatpump_generic.yaml`
+- Further planned: `wallbox_generic.yaml`, `hvac_generic.yaml`
 
 ---
 
-## 📋 Hinweise zur Umsetzung
+## 📋 Implementation Notes
 
-- Templates sollten `{prefix}` verwenden, um auf eigene Sensoren zuzugreifen
-- Template-Version wird im `config_entry` gespeichert
-- Entity Registry wird geprüft → keine Duplikate
-- UI-Hinweis bei Versionssprung möglich („Template aktualisiert“)
-- Aggregation über `group:`-Feld möglich (z. B. `pv_power`, `heat_energy`)
+- Templates should use `{prefix}` to access their own sensors
+- Template version is saved in `config_entry`
+- Entity Registry is checked → no duplicates
+- UI hint possible on version jump ("Template updated")
+- Aggregation possible via `group:` field (e.g. `pv_power`, `heat_energy`)
 
 ---
 
-## 📦 Nächste Schritte
+## 📦 Next Steps
 
-- [ ] Branch `feature/template_refactor` erstellen  
-- [ ] Alle neuen Dateien integrieren (`template_loader.py`, `controls.py`, `calculated.py`, etc.)  
-- [ ] README erweitern mit Template-Schema  
-- [ ] UI-Funktion „Template aktualisieren“ ergänzen  
-- [ ] Weitere Templates schreiben
+- [ ] Create branch `feature/template_refactor`  
+- [ ] Integrate all new files (`template_loader.py`, `controls.py`, `calculated.py`, etc.)  
+- [ ] Extend README with template schema  
+- [ ] Add UI function "Update template"  
+- [ ] Write additional templates
+
+---
+
+**Last Updated**: August 2025
+**Version**: 2.0.0
 
 

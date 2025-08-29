@@ -6,6 +6,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
@@ -19,6 +20,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     registers = entry.data.get("registers", [])
     hub_name = f"modbus_manager_{prefix}"
 
+    # Entity Registry abrufen für Duplikat-Check
+    registry = async_get_entity_registry(hass)
+    existing_entities = {
+        entity.entity_id for entity in registry.entities.values()
+        if entity.entity_id.startswith(f"number.{prefix}_")
+    }
+
     entities = []
 
     for reg in registers:
@@ -29,6 +37,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
             # Bereinige den Namen für den unique_id
             clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
             unique_id = f"{prefix}_{clean_name}"
+            entity_id = f"number.{prefix}_{clean_name}"
+            
+            # Prüfen ob Entity bereits existiert
+            if entity_id in existing_entities:
+                _LOGGER.debug("Number Entity %s existiert bereits, überspringe", entity_id)
+                continue
             
             entities.append(ModbusTemplateNumber(
                 hass=hass,

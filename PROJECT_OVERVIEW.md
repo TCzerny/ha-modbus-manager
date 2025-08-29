@@ -1,56 +1,56 @@
-# 🔧 Projektbeschreibung: Home Assistant Modbus Manager
+# 🔧 Project Description: Home Assistant Modbus Manager
 
-## 👤 Autor: TCzerny  
+## 👤 Author: TCzerny  
 ## 📦 Repository: [github.com/TCzerny/ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)  
-## 📅 Stand: August 2025  
-## 🧠 Ziel: Eine universelle, template-gesteuerte Modbus-Integration für Home Assistant
+## 📅 Status: August 2025  
+## 🧠 Goal: A universal, template-driven Modbus integration for Home Assistant
 
 ---
 
-## 🧱 Projektziel
+## 🧱 Project Goal
 
-Der Modbus Manager soll eine modulare, skalierbare und wartbare Plattform zur Verwaltung von Modbus-Geräten in Home Assistant bieten. Ziel ist es, beliebige Geräte wie PV-Wechselrichter, Wärmepumpen, Wallboxen, Klimageräte oder Heizungen über ein einheitliches Template-System zu integrieren — ohne manuelle YAML-Konfiguration oder Automationen.
+The Modbus Manager aims to provide a modular, scalable and maintainable platform for managing Modbus devices in Home Assistant. The goal is to integrate any devices such as PV inverters, heat pumps, wallboxes, HVAC systems or heating systems through a unified template system — without manual YAML configuration or automations.
 
 ---
 
-## 🔧 Architekturüberblick
+## 🔧 Architecture Overview
 
-### 📁 Template-Struktur
+### 📁 Template Structure
 
-Templates befinden sich unter `device_definitions/*.yaml` und enthalten:
+Templates are located under `device_definitions/*.yaml` and contain:
 
-- `registers:` → Modbus-Sensoren  
-- `calculated:` → Berechnete Sensoren via Jinja2  
-- `controls:` → Direkte Modbus-Steuerung (`number`, `select`, `button`)  
-- `version:` → Template-Versionierung zur Update-Erkennung  
-- `type:` → Gerätetyp (z. B. `inverter`, `heatpump`, `wallbox`)  
+- `registers:` → Modbus sensors  
+- `calculated:` → Calculated sensors via Jinja2  
+- `controls:` → Direct Modbus control (`number`, `select`, `button`)  
+- `version:` → Template versioning for update detection  
+- `type:` → Device type (e.g. `inverter`, `heatpump`, `wallbox`)  
 
-### 🧩 Module
+### 🧩 Modules
 
-| Datei                  | Funktion                                           |
+| File                   | Function                                           |
 |------------------------|----------------------------------------------------|
-| `template_loader.py`   | Lädt und validiert Templates                      |
-| `entity_factory.py`    | Erzeugt Entitäten aus Template-Daten              |
-| `controls.py`          | Direkte Modbus-Steuerung                          |
-| `calculated.py`        | Berechnete Sensoren mit Jinja2                    |
-| `modbus_device.py`     | Zentrale Geräteklasse                             |
-| `config_flow.py`       | UI-Setup für Geräte                               |
+| `template_loader.py`   | Loads and validates templates                      |
+| `entity_factory.py`    | Creates entities from template data                |
+| `controls.py`          | Direct Modbus control                              |
+| `calculated.py`        | Calculated sensors with Jinja2                    |
+| `modbus_device.py`     | Central device class                               |
+| `config_flow.py`       | UI setup for devices                               |
 
 ---
 
 ## ✅ Features
 
-- Dynamisches Laden von Templates
-- Direkte Steuerung ohne Automationen (`ModbusNumberEntity`, `ModbusSelectEntity`, `ModbusButtonEntity`)
-- Berechnete Sensoren mit `{prefix}`-Platzhalter
-- Unterstützung für `data_type`, `length`, `bitmask`
-- Halbautomatische Template-Updates mit Versionsvergleich
-- Aggregation über `group:`-Feld
-- UI-kompatibel, keine YAML nötig
+- Dynamic loading of templates
+- Direct control without automations (`ModbusNumberEntity`, `ModbusSelectEntity`, `ModbusButtonEntity`)
+- Calculated sensors with `{prefix}` placeholder
+- Support for `data_type`, `length`, `bitmask`
+- Semi-automatic template updates with version comparison
+- Aggregation via `group:` field
+- UI-compatible, no YAML needed
 
 ---
 
-## 📋 Beispiel-Template: `heatpump_generic.yaml`
+## 📋 Example Template: `heatpump_generic.yaml`
 
 ```yaml
 name: Generic Heatpump
@@ -93,3 +93,5 @@ controls:
     max: 60
     step: 0.5
     group: heat_control
+
+```
