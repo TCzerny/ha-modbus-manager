@@ -100,40 +100,47 @@ async def load_single_template(template_path: str) -> Optional[Dict[str, Any]]:
         
         _LOGGER.info("Template %s wird verarbeitet", template_name)
         
-        # Register validieren und verarbeiten
+        # Process sensors section
         raw_registers = data.get("sensors", [])
         if not raw_registers:
-            _LOGGER.warning("Template %s hat keine Sensoren definiert", template_name)
+            _LOGGER.warning("Template %s has no sensors defined", template_name)
             return None
         
-        _LOGGER.info("Template %s: %d Sensoren gefunden", template_name, len(raw_registers))
+        _LOGGER.info("Template %s: %d sensors found", template_name, len(raw_registers))
         
-        # Debug: Erste Register anzeigen
+        # Debug: Show first register
         if raw_registers:
-            _LOGGER.debug("Erstes Register: %s", raw_registers[0])
+            _LOGGER.debug("First register: %s", raw_registers[0])
         
         validated_registers = []
         for reg in raw_registers:
             validated_reg = validate_and_process_register(reg, template_name)
             if validated_reg:
-                # Template-Name zu jedem Register hinzufügen
+                # Add template name to each register
                 validated_reg["template"] = template_name
                 validated_registers.append(validated_reg)
             else:
-                _LOGGER.warning("Register %s in Template %s konnte nicht validiert werden", reg.get("name", "unbekannt"), template_name)
+                _LOGGER.warning("Register %s in Template %s could not be validated", reg.get("name", "unknown"), template_name)
         
         if not validated_registers:
-            _LOGGER.error("Template %s hat keine gültigen Register", template_name)
+            _LOGGER.error("Template %s has no valid registers", template_name)
             return None
         
-        _LOGGER.info("Template %s: %d gültige Register verarbeitet", template_name, len(validated_registers))
+        _LOGGER.info("Template %s: %d valid registers processed", template_name, len(validated_registers))
         
-        # Debug: Template-Struktur anzeigen
-        _LOGGER.debug("Template %s Struktur: name=%s, registers=%d", template_name, template_name, len(validated_registers))
+        # Process calculated section if present
+        calculated_entities = data.get("calculated", [])
+        if calculated_entities:
+            _LOGGER.info("Template %s: %d calculated entities found", template_name, len(calculated_entities))
+        
+        # Debug: Template structure
+        _LOGGER.debug("Template %s structure: name=%s, sensors=%d, calculated=%d", 
+                      template_name, template_name, len(validated_registers), len(calculated_entities))
         
         return {
             "name": template_name,
-            "registers": validated_registers
+            "sensors": validated_registers,
+            "calculated": calculated_entities
         }
         
     except yaml.YAMLError as e:
@@ -304,5 +311,7 @@ async def get_template_by_name(template_name: str) -> List[Dict[str, Any]]:
     templates = await load_templates()
     for template in templates:
         if template["name"] == template_name:
-            return template["registers"]
+            # Return the full template data, not just registers
+            # This allows access to both sensors and calculated sections
+            return template
     return [] 

@@ -100,7 +100,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Handle final configuration and create entry."""
         try:
             # Template-Daten abrufen
-            template_registers = self._templates[self._selected_template]
+            template_data = self._templates[self._selected_template]
+            template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
             _LOGGER.info("Template %s geladen mit %d Registern", self._selected_template, len(template_registers) if template_registers else 0)
             
             # Template-Daten validieren

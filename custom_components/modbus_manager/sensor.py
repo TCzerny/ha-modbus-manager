@@ -88,9 +88,38 @@ async def async_setup_entry(
                 _LOGGER.error("Fehler beim Erstellen des Sensors %s: %s", reg.get("name", "unbekannt"), str(e))
                 continue
         
-        if entities:
-            async_add_entities(entities)
-            _LOGGER.info("%d Modbus Template Sensoren erfolgreich erstellt", len(entities))
+        # Create calculated entities if available
+        calculated_entities = []
+        calculated_data = config_data.get("calculated_entities", [])
+        
+        if calculated_data:
+            _LOGGER.info("Erstelle %d berechnete Sensoren für Template %s", len(calculated_data), template_name)
+            
+            for calc_config in calculated_data:
+                try:
+                    # Create calculated sensor using the same logic as calculated.py
+                    from .calculated import ModbusCalculatedSensor
+                    
+                    entity = ModbusCalculatedSensor(
+                        hass=hass,
+                        config=calc_config,
+                        prefix=prefix,
+                        template_name=template_name
+                    )
+                    calculated_entities.append(entity)
+                    
+                except Exception as e:
+                    _LOGGER.error("Fehler beim Erstellen des berechneten Sensors %s: %s", 
+                                 calc_config.get("name", "unbekannt"), str(e))
+                    continue
+        
+        # Add all entities (regular sensors + calculated sensors)
+        all_entities = entities + calculated_entities
+        
+        if all_entities:
+            async_add_entities(all_entities)
+            _LOGGER.info("%d Modbus Template Sensoren und %d berechnete Sensoren erfolgreich erstellt", 
+                         len(entities), len(calculated_entities))
         else:
             _LOGGER.warning("Keine Sensoren erstellt")
             
@@ -111,23 +140,42 @@ class ModbusTemplateSensor(SensorEntity):
         self._prefix = prefix
         self._unique_id = unique_id
         
-        # Register-Eigenschaften
+        # Register properties
         self._name = register.get("name", "Unknown Sensor")
         self._address = register.get("address", 0)
         self._data_type = register.get("data_type", "uint16")
-        self._count = register.get("count", 1)
+        
+        # Auto-set count for 32-bit data types
+        base_count = register.get("count", 1)
+        if self._data_type in ["uint32", "int32", "float"]:
+            self._count = 2  # 32-bit types always need 2 registers
+            if base_count != 2:
+                _LOGGER.debug("Auto-corrected count from %s to 2 for %s (%s)", 
+                             base_count, self._name, self._data_type)
+        else:
+            self._count = base_count
+        
         self._scale = register.get("scale", 1.0)
         self._offset = register.get("offset", 0.0)
         self._unit = register.get("unit_of_measurement", "")
         self._device_class = register.get("device_class")
         self._state_class = register.get("state_class")
         self._precision = register.get("precision", 0)
+        self._swap = register.get("swap", False)
         
-        # Modbus-spezifische Eigenschaften
+        # Modbus-specific properties
         self._input_type = register.get("input_type", "input")
         self._slave_id = register.get("device_address", 1)
+        self._verify = register.get("verify", False)
+        self._retries = register.get("retries", 3)
         
-        # Entity-Attribute setzen
+        # Value processing (map, flags, options)
+        self._map = register.get("map", {})
+        self._flags = register.get("flags", {})
+        self._options = register.get("options", {})
+        self._bitmask = register.get("bitmask", None)
+        
+        # Set entity attributes
         self._attr_name = f"{prefix}_{self._name}"
         self._attr_unique_id = unique_id
         self._attr_device_class = self._device_class
@@ -135,11 +183,14 @@ class ModbusTemplateSensor(SensorEntity):
         self._attr_native_unit_of_measurement = self._unit
         self._attr_should_poll = True
         
-        # Für String-Sensoren device_class und state_class explizit auf None setzen
-        if self._data_type == "string":
+        # For string sensors and sensors with map/flags/options, set device_class and state_class to None
+        if (self._data_type == "string" or 
+            self._map or 
+            self._flags or 
+            self._options):
             self._attr_device_class = None
             self._attr_state_class = None
-            # String-Sensoren sollten keine numerischen Werte haben
+            # These sensors should not have numeric values
             self._attr_native_unit_of_measurement = None
         
         # Device-Info
@@ -152,7 +203,7 @@ class ModbusTemplateSensor(SensorEntity):
             via_device=(DOMAIN, entry.entry_id),
         )
         
-        _LOGGER.info("Sensor %s initialisiert (Adresse: %d, Typ: %s, Präfix: %s, Name: %s, Unique-ID: %s)", 
+        _LOGGER.info("Sensor %s initialized (Address: %d, Type: %s, Prefix: %s, Name: %s, Unique-ID: %s)", 
                      self._name, self._address, self._data_type, prefix, self._attr_name, unique_id)
 
     @property
@@ -163,45 +214,45 @@ class ModbusTemplateSensor(SensorEntity):
     async def async_update(self) -> None:
         """Update the sensor value."""
         try:
-            # Modbus-Hub aus der Konfiguration abrufen
+            # Get Modbus-Hub from configuration
             if self._entry.entry_id not in self._hass.data[DOMAIN]:
-                _LOGGER.error("Keine Konfigurationsdaten für Entry %s gefunden", self._entry.entry_id)
+                _LOGGER.error("No configuration data found for Entry %s", self._entry.entry_id)
                 return
             
             config_data = self._hass.data[DOMAIN][self._entry.entry_id]
             hub = config_data.get("hub")
             
             if not hub:
-                _LOGGER.error("Modbus-Hub nicht gefunden")
+                _LOGGER.error("Modbus-Hub not found")
                 return
             
-            # Modbus-Operation basierend auf input_type
+            # Modbus operation based on input_type
             if self._input_type == "input":
-                # Input Register lesen
+                # Read input registers
                 result = await self._read_input_registers(hub)
             elif self._input_type == "holding":
-                # Holding Register lesen
+                # Read holding registers
                 result = await self._read_holding_registers(hub)
             elif self._input_type == "coil":
-                # Coil lesen
+                # Read coils
                 result = await self._read_coils(hub)
             elif self._input_type == "discrete":
-                # Discrete Input lesen
+                # Read discrete inputs
                 result = await self._read_discrete_inputs(hub)
             else:
-                _LOGGER.warning("Unbekannter input_type: %s", self._input_type)
+                _LOGGER.warning("Unknown input_type: %s", self._input_type)
                 return
             
             if result is not None:
-                # Wert verarbeiten
+                # Process value
                 processed_value = self._process_value(result)
                 self._attr_native_value = processed_value
-                _LOGGER.debug("Sensor %s aktualisiert: %s", self._name, processed_value)
+                _LOGGER.debug("Sensor %s updated: %s", self._name, processed_value)
             else:
-                _LOGGER.warning("Keine Daten für Sensor %s empfangen", self._name)
+                _LOGGER.warning("No data received for sensor %s", self._name)
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Update von Sensor %s: %s", self._name, str(e))
+            _LOGGER.error("Error updating sensor %s: %s", self._name, str(e))
 
     async def _read_input_registers(self, hub) -> Optional[Any]:
         """Read input registers from Modbus device."""
@@ -291,87 +342,165 @@ class ModbusTemplateSensor(SensorEntity):
             if raw_value is None:
                 return None
             
+            # Sicherstellen, dass raw_value eine Liste ist
+            if not isinstance(raw_value, list):
+                raw_value = [raw_value]
+            
             # Wert basierend auf data_type verarbeiten
             if self._data_type == "uint16":
-                if isinstance(raw_value, list) and len(raw_value) > 0:
-                    value = raw_value[0]
+                if len(raw_value) > 0:
+                    value = int(raw_value[0])
                 else:
-                    value = raw_value
+                    return None
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "int16":
-                if isinstance(raw_value, list) and len(raw_value) > 0:
-                    value = raw_value[0]
+                if len(raw_value) > 0:
+                    value = int(raw_value[0])
                     if value > 32767:  # Negative Zahl in 16-bit
                         value = value - 65536
                 else:
-                    value = raw_value
+                    return None
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "uint32":
-                if isinstance(raw_value, list) and len(raw_value) >= 2:
-                    value = (raw_value[0] << 16) | raw_value[1]
+                if len(raw_value) >= 2:
+                    # Handle word swap if configured
+                    if hasattr(self, '_swap') and self._swap == "word":
+                        # Swap word order: [high_word, low_word] -> [low_word, high_word]
+                        value = (int(raw_value[1]) << 16) | int(raw_value[0])
+                    else:
+                        # Standard order: [high_word, low_word]
+                        value = (int(raw_value[0]) << 16) | int(raw_value[1])
                 else:
-                    value = raw_value
+                    _LOGGER.error("uint32 requires at least 2 registers, got %d for %s", 
+                                 len(raw_value), self._name)
+                    return None
+                
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "int32":
-                if isinstance(raw_value, list) and len(raw_value) >= 2:
-                    value = (raw_value[0] << 16) | raw_value[1]
+                if len(raw_value) >= 2:
+                    # Handle word swap if configured
+                    if hasattr(self, '_swap') and self._swap == "word":
+                        # Swap word order: [high_word, low_word] -> [low_word, high_word]
+                        value = (int(raw_value[1]) << 16) | int(raw_value[0])
+                    else:
+                        # Standard order: [high_word, low_word]
+                        value = (int(raw_value[0]) << 16) | int(raw_value[1])
+                    
                     if value > 2147483647:  # Negative Zahl in 32-bit
                         value = value - 4294967296
                 else:
-                    value = raw_value
+                    _LOGGER.error("int32 requires at least 2 registers, got %d for %s", 
+                                 len(raw_value), self._name)
+                    return None
+                
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "float":
-                if isinstance(raw_value, list) and len(raw_value) >= 2:
+                if len(raw_value) >= 2:
                     import struct
-                    # 32-bit Float aus zwei 16-bit Registern
-                    raw_bytes = struct.pack('>HH', raw_value[0], raw_value[1])
+                    # Handle word swap if configured
+                    if hasattr(self, '_swap') and self._swap == "word":
+                        # Swap word order: [high_word, low_word] -> [low_word, high_word]
+                        raw_bytes = struct.pack('>HH', int(raw_value[1]), int(raw_value[0]))
+                    else:
+                        # Standard order: [high_word, low_word]
+                        raw_bytes = struct.pack('>HH', int(raw_value[0]), int(raw_value[1]))
                     value = struct.unpack('>f', raw_bytes)[0]
                 else:
-                    value = raw_value
+                    return None
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "string":
-                if isinstance(raw_value, list):
+                if len(raw_value) > 0:
                     # String aus Registern extrahieren
                     string_value = ""
                     for reg in raw_value:
                         if reg == 0:  # Null-Terminator
                             break
-                        string_value += chr((reg >> 8) & 0xFF) + chr(reg & 0xFF)
+                        reg_int = int(reg)
+                        string_value += chr((reg_int >> 8) & 0xFF) + chr(reg_int & 0xFF)
                     value = string_value.strip('\x00')
                 else:
-                    value = str(raw_value)
+                    value = ""
                 processed_value = value
                 
-                # Für String-Sensoren sicherstellen, dass der Wert ein String ist
-                if not isinstance(processed_value, str):
-                    processed_value = str(processed_value)
-                
             elif self._data_type == "boolean":
-                if isinstance(raw_value, list) and len(raw_value) > 0:
-                    value = bool(raw_value[0])
+                if len(raw_value) > 0:
+                    value = bool(int(raw_value[0]))
                 else:
-                    value = bool(raw_value)
+                    return None
                 processed_value = value
                 
             else:
                 # Fallback für unbekannte Typen
-                if isinstance(raw_value, list) and len(raw_value) > 0:
-                    value = raw_value[0]
+                if len(raw_value) > 0:
+                    value = int(raw_value[0])
                 else:
-                    value = raw_value
+                    return None
                 processed_value = (value * self._scale) + self._offset
             
             # Präzision anwenden
             if isinstance(processed_value, (int, float)) and self._precision > 0:
                 processed_value = round(processed_value, self._precision)
             
+            # Wertverarbeitung anwenden (map, flags, options, bitmask)
+            processed_value = self._apply_value_processing(processed_value)
+            
             return processed_value
             
         except Exception as e:
             _LOGGER.error("Fehler bei der Wertverarbeitung für %s: %s", self._name, str(e))
+            _LOGGER.debug("Raw value: %s, data_type: %s, scale: %s, offset: %s", 
+                         raw_value, self._data_type, self._scale, self._offset)
             return None
+
+    def _apply_value_processing(self, value: Any) -> Any:
+        """Apply value processing like map, flags, options, and bitmask."""
+        try:
+            if value is None:
+                return None
+            
+            # 1. Bitmask anwenden (falls definiert)
+            if self._bitmask is not None:
+                if isinstance(value, (int, float)):
+                    value = int(value) & self._bitmask
+                    _LOGGER.debug("Applied bitmask 0x%X to %s: result = %s", 
+                                 self._bitmask, value, value)
+            
+            # 2. Map anwenden (falls definiert)
+            if self._map and isinstance(value, (int, float)):
+                int_value = int(value)
+                if int_value in self._map:
+                    mapped_value = self._map[int_value]
+                    _LOGGER.debug("Mapped value %s to '%s'", int_value, mapped_value)
+                    return mapped_value
+            
+            # 3. Flags anwenden (falls definiert)
+            if self._flags and isinstance(value, (int, float)):
+                int_value = int(value)
+                flag_list = []
+                for bit, flag_name in self._flags.items():
+                    if int_value & (1 << int(bit)):
+                        flag_list.append(flag_name)
+                
+                if flag_list:
+                    _LOGGER.debug("Extracted flags from %s: %s", int_value, flag_list)
+                    return ", ".join(flag_list)
+            
+            # 4. Options anwenden (falls definiert)
+            if self._options and isinstance(value, (int, float)):
+                int_value = int(value)
+                if int_value in self._options:
+                    option_value = self._options[int_value]
+                    _LOGGER.debug("Found option for %s: '%s'", int_value, option_value)
+                    return option_value
+            
+            # Keine Verarbeitung angewendet
+            return value
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Wertverarbeitung für %s: %s", self._name, str(e))
+            return value

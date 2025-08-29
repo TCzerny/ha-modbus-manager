@@ -36,13 +36,28 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             _LOGGER.error("Kein Template in der Konfiguration gefunden")
             return False
         
-        registers = await get_template_by_name(template_name)
-        if not registers:
+        template_data = await get_template_by_name(template_name)
+        if not template_data:
             _LOGGER.error("Template %s konnte nicht geladen werden", template_name)
             return False
         
+        # Extract template metadata
+        if isinstance(template_data, dict):
+            # Template with metadata
+            registers = template_data.get("sensors", [])
+            calculated_entities = template_data.get("calculated", [])
+            current_version = template_data.get("version", 1)
+        else:
+            # Fallback: Direct register list
+            registers = template_data
+            calculated_entities = []
+            current_version = 1
+        
+        if not registers:
+            _LOGGER.error("Template %s has no registers defined", template_name)
+            return False
+        
         # Template-Version prüfen
-        current_version = registers.get("version", 1)
         stored_version = entry.data.get("template_version", 1)
         
         if current_version > stored_version:
@@ -101,6 +116,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         hass.data[DOMAIN][entry.entry_id] = {
             "hub": hub,
             "registers": registers,
+            "calculated_entities": calculated_entities,
             "prefix": prefix,
             "template": template_name,
             "host": entry.data["host"],

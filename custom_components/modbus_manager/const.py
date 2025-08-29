@@ -39,7 +39,7 @@ EVENT_MODBUS_MANAGER_REGISTER_UPDATED = "modbus_manager_register_updated"
 EVENT_MODBUS_MANAGER_DEVICE_UPDATED = "modbus_manager_device_updated"
 EVENT_MODBUS_MANAGER_ERROR = "modbus_manager_error"
 
-# Plattformen, die diese Integration nutzt
+# Platforms used by this integration
 PLATFORMS = [
     Platform.SENSOR, 
     Platform.NUMBER, 

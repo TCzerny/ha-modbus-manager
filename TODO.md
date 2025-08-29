@@ -139,7 +139,7 @@ options: {}
 
 ### 🔧 Parsing & Structure
 - [x] Modular template parser (`template_loader.py`)
-- [x] Prefix placeholder `{prefix}` in `calculated.template`
+- [x] Prefix placeholder `{PREFIX}` in `calculated.template`
 - [x] Support for `data_type`, `length`, `bitmask`
 - [ ] Template versioning (`version:`) + comparison
 
@@ -445,6 +445,7 @@ The MKaiser integration provides excellent examples of advanced Home Assistant f
 - **Testing**: All features require comprehensive testing
 - **Documentation**: Features must be documented before merging
 - **MKaiser Compatibility**: Consider how our features complement or replace MKaiser approaches
+- **Code Language**: **ALWAYS use English for code and comments** - German only for user-facing documentation
 
 ---
 
@@ -570,7 +571,7 @@ sensors:  # ← Same structure, more options
 
 - **Template-driven architecture**: Devices are described via YAML templates (`registers`, `calculated`, `controls`)
 - **Direct Modbus control**: UI entities like `number`, `select`, `button` replace `input_*` + `automation`
-- **Calculated sensors via Jinja2**: Template sensors with `{prefix}` placeholder enable multi-device support
+- **Calculated sensors via Jinja2**: Template sensors with `{PREFIX}` placeholder enable multi-device support
 - **Versioning in template**: `version:` field detects changes and enables semi-automatic updates
 - **No YAML configuration needed**: All devices are set up via UI (`config_flow`)
 - **Modular structure**: Each component is independently extensible (sensors, control, aggregation)
