@@ -1166,9 +1166,10 @@ sensors:
     data_type: "uint16"
     scan_interval: 10
     map:
-      0: "Disabled"
-      1: "Enabled"
-      2: "Auto"
+      0: "Timing"
+      1: "ON/OFF"
+      2: "Power optimization"
+      3: "Disabled"
     group: "modes"
 
 
@@ -1713,9 +1714,10 @@ controls:
     data_type: "uint16"
     scan_interval: 30
     options:
-      0: "Disabled"
-      1: "Enabled"
-      2: "Auto"
+      0: "Timing"
+      1: "ON/OFF"
+      2: "Power optimization"
+      3: "Disabled"
     group: "modes"
 
   - type: "number"
@@ -1807,6 +1809,18 @@ controls:
     address: 33046
     input_type: "holding"
     data_type: "uint16"
+
+  - type: "select"
+    name: "Load Adjustment Mode ON/OFF"
+    unique_id: "sg_load_adjustment_mode_on_off_rw"
+    address: 13010
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0x55: "OFF"
+      0xAA: "ON"
+    group: "modes"
     precision: 0
     unit_of_measurement: "W"
     min_value: 0
