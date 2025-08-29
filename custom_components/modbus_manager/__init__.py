@@ -46,11 +46,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             # Template with metadata
             registers = template_data.get("sensors", [])
             calculated_entities = template_data.get("calculated", [])
+            controls = template_data.get("controls", [])
             current_version = template_data.get("version", 1)
         else:
             # Fallback: Direct register list
             registers = template_data
             calculated_entities = []
+            controls = []
             current_version = 1
         
         if not registers:
@@ -62,10 +64,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         if current_version > stored_version:
             _LOGGER.info("Template %s aktualisiert: v%s → v%s", template_name, stored_version, current_version)
-            # Version in Config Entry aktualisieren
-            entry.data["template_version"] = current_version
+            # Version in Config Entry aktualisieren - entry.data ist immutable, daher update_entry verwenden
+            new_data = dict(entry.data)
+            new_data["template_version"] = current_version
+            hass.config_entries.async_update_entry(entry, data=new_data)
         
-        _LOGGER.info("Template %s geladen mit %d Registern", template_name, len(registers))
+        _LOGGER.info("Template %s geladen mit %d Registern, %d Controls", template_name, len(registers), len(controls))
         
         # Modbus-Hub über Standard Home Assistant API erstellen
         hub_name = f"modbus_manager_{entry.data['prefix']}"
@@ -117,6 +121,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             "hub": hub,
             "registers": registers,
             "calculated_entities": calculated_entities,
+            "controls": controls,
             "prefix": prefix,
             "template": template_name,
             "host": entry.data["host"],
@@ -124,7 +129,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             "slave_id": entry.data.get("slave_id", 1),
         }
         
-        _LOGGER.info("Konfigurationsdaten gespeichert: prefix=%s, template=%s", prefix, template_name)
+        # Template-Daten global verfügbar machen für Controls
+        hass.data[DOMAIN]["template_data"] = template_data
+        
+        _LOGGER.info("Konfigurationsdaten gespeichert: prefix=%s, template=%s, controls=%d", prefix, template_name, len(controls))
         
         # Alle Plattformen einrichten
         try:

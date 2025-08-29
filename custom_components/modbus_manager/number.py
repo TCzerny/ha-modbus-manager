@@ -15,10 +15,23 @@ _LOGGER = ModbusManagerLogger(__name__)
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback):
     """Set up Modbus Manager number entities from a config entry."""
-    prefix = entry.data["prefix"]
-    template_name = entry.data["template"]
-    registers = entry.data.get("registers", [])
-    hub_name = f"modbus_manager_{prefix}"
+    # Daten aus hass.data holen, nicht aus entry.data
+    domain_data = hass.data.get(DOMAIN, {})
+    entry_data = domain_data.get(entry.entry_id, {})
+    
+    prefix = entry_data.get("prefix", entry.data["prefix"])
+    template_name = entry_data.get("template", entry.data["template"])
+    registers = entry_data.get("registers", [])
+    controls = entry_data.get("controls", [])
+    hub = entry_data.get("hub")
+    
+    _LOGGER.info("Number Setup: prefix=%s, template=%s, registers=%d, controls=%d", 
+                prefix, template_name, len(registers), len(controls))
+    _LOGGER.debug("Controls: %s", controls)
+    
+    if not hub:
+        _LOGGER.error("Hub nicht gefunden für Entry %s", entry.entry_id)
+        return
 
     # Entity Registry abrufen für Duplikat-Check
     registry = async_get_entity_registry(hass)
@@ -29,8 +42,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     entities = []
 
+    # Number-Entities aus Registern mit control: "number" erstellen
     for reg in registers:
-        # Nur Number-Entities aus Registern mit control: "number" erstellen
         if reg.get("control") == "number":
             # Unique_ID Format: {prefix}_{template_sensor_name}
             sensor_name = reg.get("name", "unknown")
@@ -48,15 +61,56 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                 hass=hass,
                 name=sensor_name,
                 unique_id=unique_id,
-                hub_name=hub_name,
-                slave_id=entry.data.get("slave_id", 1),
+                hub=hub,
+                slave_id=entry_data.get("slave_id", entry.data.get("slave_id", 1)),
                 register_data=reg,
                 device_info={
                     "identifiers": {(DOMAIN, f"{prefix}_{template_name}")},
                     "name": f"{prefix} {template_name}",
                     "manufacturer": "Modbus Manager",
+                    "model": template_name
+                }
+            ))
+
+    # Number-Entities aus Controls-Abschnitt erstellen
+    _LOGGER.info("Verarbeite %d Controls für Number-Entities", len(controls))
+    for control in controls:
+        if control.get("type") == "number":
+            control_name = control.get("name", "unknown")
+            # Stelle sicher, dass der name den Prefix enthält
+            if not control_name.startswith(f"{prefix} "):
+                display_name = f"{prefix} {control_name}"
+            else:
+                display_name = control_name
+            
+            # Stelle sicher, dass der unique_id den Prefix enthält
+            base_unique_id = control.get("unique_id", control_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', ''))
+            # Wenn der unique_id bereits den Prefix hat, verwende ihn direkt
+            if base_unique_id.startswith(f"{prefix}_"):
+                unique_id = base_unique_id
+            else:
+                # Ansonsten füge den Prefix hinzu
+                unique_id = f"{prefix}_{base_unique_id}"
+            entity_id = f"number.{unique_id}"
+            
+            # Prüfen ob Entity bereits existiert
+            if entity_id in existing_entities:
+                _LOGGER.debug("Number Control Entity %s existiert bereits, überspringe", entity_id)
+                continue
+            
+            entities.append(ModbusTemplateNumber(
+                hass=hass,
+                name=display_name,
+                unique_id=unique_id,
+                hub=hub,
+                slave_id=entry_data.get("slave_id", entry.data.get("slave_id", 1)),
+                register_data=control,
+                device_info={
+                    "identifiers": {(DOMAIN, f"{prefix}_{template_name}")},
+                    "name": f"{prefix} {template_name}",
+                    "manufacturer": "Modbus Manager",
                     "model": template_name,
-                    "via_device": (DOMAIN, hub_name)
+
                 }
             ))
 
@@ -68,13 +122,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 class ModbusTemplateNumber(NumberEntity):
     """Representation of a Modbus Template Number Entity."""
 
-    def __init__(self, hass: HomeAssistant, name: str, unique_id: str, hub_name: str, 
+    def __init__(self, hass: HomeAssistant, name: str, unique_id: str, hub, 
                  slave_id: int, register_data: dict, device_info: dict):
         """Initialize the number entity."""
         self.hass = hass
         self._attr_name = name
         self._attr_unique_id = unique_id
-        self._hub_name = hub_name
+        self._hub = hub
         self._slave_id = slave_id
         self._register_data = register_data
         self._attr_device_info = DeviceInfo(**device_info)
@@ -120,17 +174,30 @@ class ModbusTemplateNumber(NumberEntity):
     async def async_update(self):
         """Update the number entity state."""
         try:
-            if self._hub_name not in self.hass.data.get(DOMAIN, {}):
-                _LOGGER.error("Hub %s nicht gefunden", self._hub_name)
+            if not self._hub:
+                _LOGGER.error("Hub nicht verfügbar")
                 return
-
-            hub = self.hass.data[DOMAIN][self._hub_name]
             
-            # Holding Register lesen (read/write)
-            result = await hub.read_holding_registers(self._address, self._count, unit=self._slave_id)
+            # Holding Register lesen (read/write) über den Hub
+            if self._input_type == "holding":
+                from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
+                result = await self._hub.async_pb_call(
+                    self._slave_id,
+                    self._address,
+                    self._count,
+                    CALL_TYPE_REGISTER_HOLDING
+                )
+            else:
+                from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_INPUT
+                result = await self._hub.async_pb_call(
+                    self._slave_id,
+                    self._address,
+                    self._count,
+                    CALL_TYPE_REGISTER_INPUT
+                )
             
-            if result.isError():
-                _LOGGER.warning("Fehler beim Lesen von Holding Register %s: %s", self._address, result)
+            if not result or not hasattr(result, 'registers'):
+                _LOGGER.warning("Fehler beim Lesen von Register %s: %s", self._address, result)
                 self._attr_native_value = None
                 return
             
@@ -162,20 +229,29 @@ class ModbusTemplateNumber(NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         """Set the number value."""
         try:
-            if self._hub_name not in self.hass.data.get(DOMAIN, {}):
-                _LOGGER.error("Hub %s nicht gefunden", self._hub_name)
+            if not self._hub:
+                _LOGGER.error("Hub nicht verfügbar")
                 return
-
-            hub = self.hass.data[DOMAIN][self._hub_name]
             
             # Erweiterte Datenverarbeitung rückwärts anwenden
             final_value = self._apply_reverse_data_processing(value)
             
-            # Wert in Holding Register schreiben
-            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
+            # Wert in Holding Register schreiben über den Hub
+            if self._input_type == "holding":
+                from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
+                result = await self._hub.async_pb_call(
+                    self._slave_id,
+                    self._address,
+                    int(final_value),
+                    CALL_TYPE_REGISTER_HOLDING,
+                    write=True
+                )
+            else:
+                _LOGGER.warning("Kann nicht in %s Register schreiben: %d", self._input_type, self._address)
+                return
             
             if result.isError():
-                _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
+                _LOGGER.error("Fehler beim Schreiben in Register %s: %s", self._address, result)
             else:
                 _LOGGER.info("Number %s erfolgreich auf %s gesetzt", self.name, value)
                 self._attr_native_value = value

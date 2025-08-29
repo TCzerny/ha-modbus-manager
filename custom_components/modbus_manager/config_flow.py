@@ -102,7 +102,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Template-Daten abrufen
             template_data = self._templates[self._selected_template]
             template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
-            _LOGGER.info("Template %s geladen mit %d Registern", self._selected_template, len(template_registers) if template_registers else 0)
+            template_version = template_data.get("version", 1) if isinstance(template_data, dict) else 1
+            _LOGGER.info("Template %s (Version %s) geladen mit %d Registern", 
+                        self._selected_template, 
+                        template_version,
+                        len(template_registers) if template_registers else 0)
             
             # Template-Daten validieren
             if not template_registers:
@@ -127,6 +131,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 title=f"{user_input['prefix']} ({self._selected_template})",
                 data={
                     "template": self._selected_template,
+                    "template_version": template_version,
                     "prefix": user_input["prefix"],
                     "host": user_input["host"],
                     "port": user_input.get("port", 502),
@@ -216,40 +221,51 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             if "configure_aggregations" in user_input:
                 return await self.async_step_aggregation_config()
+            elif "update_template" in user_input and user_input["update_template"]:
+                return await self.async_step_update_template()
             else:
                 # Update basic settings
                 return self.async_create_entry(title="", data=user_input)
 
-                    # Basic options form
-            return self.async_show_form(
-                step_id="init",
-                data_schema=vol.Schema({
-                    vol.Optional(
-                        "timeout",
-                        default=self.config_entry.data.get("timeout", 3)
-                    ): int,
-                    vol.Optional(
-                        "retries",
-                        default=self.config_entry.data.get("retries", 3)
-                    ): int,
-                    vol.Optional(
-                        "delay",
-                        default=self.config_entry.data.get("delay", 0)
-                    ): int,
-                    vol.Optional(
-                        "close_comm_on_error",
-                        default=self.config_entry.data.get("close_comm_on_error", True)
-                    ): bool,
-                    vol.Optional(
-                        "reconnect_delay",
-                        default=self.config_entry.data.get("reconnect_delay", 10)
-                    ): int,
-                    vol.Optional(
-                        "message_wait",
-                        default=self.config_entry.data.get("message_wait", 0)
-                    ): int,
-                    vol.Optional("configure_aggregations"): bool,
-                })
+        # Template-Informationen für Anzeige vorbereiten
+        template_name = self.config_entry.data.get("template", "Unbekannt")
+        template_version = self.config_entry.data.get("template_version", 1)
+        
+        # Basic options form
+        return self.async_show_form(
+            step_id="init",
+            data_schema=vol.Schema({
+                vol.Optional(
+                    "timeout",
+                    default=self.config_entry.data.get("timeout", 3)
+                ): int,
+                vol.Optional(
+                    "retries",
+                    default=self.config_entry.data.get("retries", 3)
+                ): int,
+                vol.Optional(
+                    "delay",
+                    default=self.config_entry.data.get("delay", 0)
+                ): int,
+                vol.Optional(
+                    "close_comm_on_error",
+                    default=self.config_entry.data.get("close_comm_on_error", True)
+                ): bool,
+                vol.Optional(
+                    "reconnect_delay",
+                    default=self.config_entry.data.get("reconnect_delay", 10)
+                ): int,
+                vol.Optional(
+                    "message_wait",
+                    default=self.config_entry.data.get("message_wait", 0)
+                ): int,
+                vol.Optional("configure_aggregations"): bool,
+                vol.Optional("update_template"): bool,
+            }),
+            description_placeholders={
+                "template_name": template_name,
+                "template_version": str(template_version)
+            }
             )
 
     async def async_step_aggregation_config(self, user_input: dict = None) -> FlowResult:
@@ -315,5 +331,76 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             _LOGGER.error("Fehler bei der Aggregations-Konfiguration: %s", str(e))
             return self.async_abort(
                 reason="aggregation_error",
+                description_placeholders={"error": str(e)}
+            )
+            
+    async def async_step_update_template(self, user_input: dict = None) -> FlowResult:
+        """Update the template to the latest version."""
+        try:
+            # Aktuelle Template-Informationen abrufen
+            template_name = self.config_entry.data.get("template", "Unbekannt")
+            stored_version = self.config_entry.data.get("template_version", 1)
+            
+            # Neues Template laden
+            template_data = await get_template_by_name(template_name)
+            if not template_data:
+                return self.async_abort(
+                    reason="template_not_found",
+                    description_placeholders={"template_name": template_name}
+                )
+            
+            # Template-Version und Register extrahieren
+            if isinstance(template_data, dict):
+                current_version = template_data.get("version", 1)
+                template_registers = template_data.get("sensors", [])
+                calculated_entities = template_data.get("calculated", [])
+            else:
+                current_version = 1
+                template_registers = template_data
+                calculated_entities = []
+            
+            if not template_registers:
+                return self.async_abort(
+                    reason="no_registers",
+                    description_placeholders={"template_name": template_name}
+                )
+            
+            if user_input is not None:
+                # Template aktualisieren
+                new_data = dict(self.config_entry.data)
+                new_data["template_version"] = current_version
+                new_data["registers"] = template_registers
+                
+                # Wenn das neue Template calculated_entities hat, diese auch aktualisieren
+                if calculated_entities:
+                    new_data["calculated_entities"] = calculated_entities
+                
+                # Config Entry aktualisieren
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry,
+                    data=new_data
+                )
+                
+                _LOGGER.info("Template %s aktualisiert: v%s → v%s", 
+                            template_name, stored_version, current_version)
+                
+                # Zurück zur Hauptansicht
+                return self.async_create_entry(title="", data={})
+            
+            # Bestätigungsdialog anzeigen
+            return self.async_show_form(
+                step_id="update_template",
+                data_schema=vol.Schema({}),
+                description_placeholders={
+                    "template_name": template_name,
+                    "stored_version": str(stored_version),
+                    "current_version": str(current_version)
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Aktualisieren des Templates: %s", str(e))
+            return self.async_abort(
+                reason="update_error",
                 description_placeholders={"error": str(e)}
             )

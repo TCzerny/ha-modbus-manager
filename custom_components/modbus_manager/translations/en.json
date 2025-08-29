@@ -49,7 +49,10 @@
         },
         "abort": {
             "no_device_definitions": "No device definitions found. Please make sure at least one YAML file exists in the device_definitions directory.",
-            "already_configured": "Device is already configured"
+            "already_configured": "Device is already configured",
+            "template_not_found": "Template {template_name} not found.",
+            "no_registers": "Template {template_name} has no registers defined.",
+            "update_error": "Error updating template: {error}"
         },
         "progress": {
             "firmware_detect": "Attempting to detect firmware version..."
@@ -59,10 +62,17 @@
         "step": {
             "init": {
                 "title": "Device Options",
+                "description": "Template: {template_name} (Version {template_version})",
                 "data": {
                     "firmware_version": "Firmware Version",
-                    "auto_detect_firmware": "Auto-detect firmware version"
+                    "auto_detect_firmware": "Auto-detect firmware version",
+                    "configure_aggregations": "Configure Aggregations",
+                    "update_template": "Update Template to Latest Version"
                 }
+            },
+            "update_template": {
+                "title": "Update Template",
+                "description": "Update template {template_name} from version {stored_version} to {current_version}. This will add new entities if available."
             }
         }
     },

@@ -1,0 +1,384 @@
+# VDMA 24247 Heat Pump Implementation
+# Based on VDMA 24247 Standard for Heat Pumps
+
+name: "VDMA24247 Base"
+type: "base_template"
+version: 1
+description: "VDMA 24247 Standard Implementation for Heat Pumps"
+
+# Standard Register nach VDMA 24247-Spezifikation
+sensors:
+  # Device Information
+  - name: "Manufacturer"
+    address: 40000
+    data_type: "string"
+    count: 16
+    scan_interval: 3600
+    description: "Manufacturer Name"
+    
+  - name: "Model"
+    address: 40016
+    data_type: "string"
+    count: 16
+    scan_interval: 3600
+    description: "Model Name"
+    
+  - name: "Serial Number"
+    address: 40032
+    data_type: "string"
+    count: 16
+    scan_interval: 3600
+    description: "Serial Number"
+    
+  - name: "Firmware Version"
+    address: 40048
+    data_type: "string"
+    count: 8
+    scan_interval: 3600
+    description: "Firmware Version"
+    
+  # Operating Status
+  - name: "Operating State"
+    address: 40100
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    description: "Current Operating State"
+    map:
+      0: "Off"
+      1: "Standby"
+      2: "Heating"
+      3: "Cooling"
+      4: "Domestic Hot Water"
+      5: "Defrost"
+      6: "Error"
+      7: "Service"
+    
+  - name: "Error Code"
+    address: 40101
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    description: "Error Code"
+    
+  - name: "Warning Code"
+    address: 40102
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    description: "Warning Code"
+    
+  # Temperature Sensors
+  - name: "Outdoor Temperature"
+    address: 40200
+    data_type: "int16"
+    count: 1
+    scan_interval: 30
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    description: "Outdoor Temperature"
+    
+  - name: "Flow Temperature"
+    address: 40201
+    data_type: "int16"
+    count: 1
+    scan_interval: 10
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    description: "Flow Temperature"
+    
+  - name: "Return Temperature"
+    address: 40202
+    data_type: "int16"
+    count: 1
+    scan_interval: 10
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    description: "Return Temperature"
+    
+  - name: "Hot Water Temperature"
+    address: 40203
+    data_type: "int16"
+    count: 1
+    scan_interval: 10
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    description: "Hot Water Temperature"
+    
+  - name: "Room Temperature"
+    address: 40204
+    data_type: "int16"
+    count: 1
+    scan_interval: 30
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    description: "Room Temperature"
+    
+  # Setpoints
+  - name: "Heating Setpoint"
+    address: 40300
+    data_type: "int16"
+    count: 1
+    scan_interval: 30
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    description: "Heating Setpoint"
+    
+  - name: "Cooling Setpoint"
+    address: 40301
+    data_type: "int16"
+    count: 1
+    scan_interval: 30
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    description: "Cooling Setpoint"
+    
+  - name: "Hot Water Setpoint"
+    address: 40302
+    data_type: "int16"
+    count: 1
+    scan_interval: 30
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    description: "Hot Water Setpoint"
+    
+  # Compressor
+  - name: "Compressor Speed"
+    address: 40400
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    scale: 1.0
+    unit_of_measurement: "%"
+    state_class: "measurement"
+    description: "Compressor Speed"
+    
+  - name: "Compressor Frequency"
+    address: 40401
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    scale: 0.1
+    unit_of_measurement: "Hz"
+    device_class: "frequency"
+    state_class: "measurement"
+    description: "Compressor Frequency"
+    
+  - name: "Compressor Runtime"
+    address: 40402
+    data_type: "uint32"
+    count: 2
+    scan_interval: 60
+    scale: 1.0
+    unit_of_measurement: "h"
+    state_class: "total_increasing"
+    description: "Compressor Runtime"
+    
+  # Energy
+  - name: "Electrical Power"
+    address: 40500
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    scale: 1.0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    description: "Current Electrical Power Consumption"
+    
+  - name: "Thermal Power"
+    address: 40501
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    scale: 1.0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    description: "Current Thermal Power Output"
+    
+  - name: "Daily Energy Consumption"
+    address: 40502
+    data_type: "uint32"
+    count: 2
+    scan_interval: 60
+    scale: 0.1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    description: "Daily Electrical Energy Consumption"
+    
+  - name: "Total Energy Consumption"
+    address: 40504
+    data_type: "uint32"
+    count: 2
+    scan_interval: 300
+    scale: 0.1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    description: "Total Electrical Energy Consumption"
+    
+  - name: "Daily Thermal Energy"
+    address: 40506
+    data_type: "uint32"
+    count: 2
+    scan_interval: 60
+    scale: 0.1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    description: "Daily Thermal Energy Production"
+    
+  - name: "Total Thermal Energy"
+    address: 40508
+    data_type: "uint32"
+    count: 2
+    scan_interval: 300
+    scale: 0.1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    description: "Total Thermal Energy Production"
+    
+  # Flow Rates
+  - name: "Flow Rate"
+    address: 40600
+    data_type: "uint16"
+    count: 1
+    scan_interval: 10
+    scale: 0.1
+    unit_of_measurement: "l/min"
+    state_class: "measurement"
+    description: "Water Flow Rate"
+
+# Calculated entities based on VDMA data
+calculated:
+  - name: "Delta Temperature"
+    unique_id: "delta_temperature"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_flow_temperature', 'unavailable') and
+      not is_state('sensor.{PREFIX}_return_temperature', 'unavailable')
+      }}
+    template: "{{ (states('sensor.{PREFIX}_flow_temperature') | float(0) - states('sensor.{PREFIX}_return_temperature') | float(0)) | round(1) }}"
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    group: "temperature"
+
+  - name: "COP"
+    unique_id: "cop"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_thermal_power', 'unavailable') and
+      not is_state('sensor.{PREFIX}_electrical_power', 'unavailable') and
+      states('sensor.{PREFIX}_electrical_power') | float(0) > 100
+      }}
+    template: >-
+      {% set thermal = states('sensor.{PREFIX}_thermal_power') | float(0) %}
+      {% set electrical = states('sensor.{PREFIX}_electrical_power') | float(0) %}
+      {% if electrical > 0 %}{{ (thermal / electrical) | round(2) }}{% else %}0{% endif %}
+    unit_of_measurement: ""
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "efficiency"
+
+  - name: "Heating Active"
+    unique_id: "heating_active"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_operating_state', 'unavailable') }}
+    template: "{{ is_state('sensor.{PREFIX}_operating_state', 'Heating') }}"
+    device_class: "heat"
+    group: "status"
+
+  - name: "Cooling Active"
+    unique_id: "cooling_active"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_operating_state', 'unavailable') }}
+    template: "{{ is_state('sensor.{PREFIX}_operating_state', 'Cooling') }}"
+    device_class: "cold"
+    group: "status"
+
+  - name: "Hot Water Active"
+    unique_id: "hot_water_active"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_operating_state', 'unavailable') }}
+    template: "{{ is_state('sensor.{PREFIX}_operating_state', 'Domestic Hot Water') }}"
+    device_class: "moisture"
+    group: "status"
+
+  - name: "Error Active"
+    unique_id: "error_active"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_operating_state', 'unavailable') }}
+    template: "{{ is_state('sensor.{PREFIX}_operating_state', 'Error') }}"
+    device_class: "problem"
+    group: "status"
+
+# Controls for VDMA standard controls
+controls:
+  - type: "select"
+    name: "Operating Mode"
+    address: 41000
+    input_type: "holding"
+    data_type: "uint16"
+    options:
+      0: "Off"
+      1: "Auto"
+      2: "Heating Only"
+      3: "Cooling Only"
+      4: "Hot Water Only"
+    group: "control"
+
+  - type: "number"
+    name: "Heating Temperature Setpoint"
+    address: 41001
+    input_type: "holding"
+    data_type: "int16"
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scale: 0.1
+    min_value: 15.0
+    max_value: 55.0
+    step: 0.5
+    group: "control"
+
+  - type: "number"
+    name: "Hot Water Temperature Setpoint"
+    address: 41002
+    input_type: "holding"
+    data_type: "int16"
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scale: 0.1
+    min_value: 35.0
+    max_value: 65.0
+    step: 0.5
+    group: "control"

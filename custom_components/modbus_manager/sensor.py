@@ -145,12 +145,17 @@ class ModbusTemplateSensor(SensorEntity):
         self._address = register.get("address", 0)
         self._data_type = register.get("data_type", "uint16")
         
-        # Auto-set count for 32-bit data types
+        # Auto-set count for 32-bit and 64-bit data types
         base_count = register.get("count", 1)
         if self._data_type in ["uint32", "int32", "float"]:
             self._count = 2  # 32-bit types always need 2 registers
             if base_count != 2:
                 _LOGGER.debug("Auto-corrected count from %s to 2 for %s (%s)", 
+                             base_count, self._name, self._data_type)
+        elif self._data_type == "float64":
+            self._count = 4  # 64-bit types always need 4 registers
+            if base_count != 4:
+                _LOGGER.debug("Auto-corrected count from %s to 4 for %s (%s)", 
                              base_count, self._name, self._data_type)
         else:
             self._count = base_count
@@ -162,6 +167,11 @@ class ModbusTemplateSensor(SensorEntity):
         self._state_class = register.get("state_class")
         self._precision = register.get("precision", 0)
         self._swap = register.get("swap", False)
+        self._byte_order = register.get("byte_order", "big")
+        
+        # String-spezifische Parameter
+        self._encoding = register.get("encoding", "utf-8")
+        self._max_length = register.get("max_length", None)
         
         # Modbus-specific properties
         self._input_type = register.get("input_type", "input")
@@ -173,7 +183,13 @@ class ModbusTemplateSensor(SensorEntity):
         self._map = register.get("map", {})
         self._flags = register.get("flags", {})
         self._options = register.get("options", {})
+        
+        # Bit-Operationen
         self._bitmask = register.get("bitmask", None)
+        self._bit_position = register.get("bit_position", None)
+        self._bit_shift = register.get("bit_shift", 0)
+        self._bit_rotate = register.get("bit_rotate", 0)
+        self._bit_range = register.get("bit_range", None)
         
         # Set entity attributes
         self._attr_name = f"{prefix}_{self._name}"
@@ -401,28 +417,131 @@ class ModbusTemplateSensor(SensorEntity):
             elif self._data_type == "float":
                 if len(raw_value) >= 2:
                     import struct
-                    # Handle word swap if configured
-                    if hasattr(self, '_swap') and self._swap == "word":
-                        # Swap word order: [high_word, low_word] -> [low_word, high_word]
-                        raw_bytes = struct.pack('>HH', int(raw_value[1]), int(raw_value[0]))
-                    else:
-                        # Standard order: [high_word, low_word]
+                    
+                    # Byte-Reihenfolge bestimmen
+                    byte_order = self._byte_order if hasattr(self, '_byte_order') else "big"
+                    
+                    # Format-String für struct basierend auf Byte-Reihenfolge
+                    if byte_order == "big":
+                        # ABCD - Standard Big Endian
                         raw_bytes = struct.pack('>HH', int(raw_value[0]), int(raw_value[1]))
-                    value = struct.unpack('>f', raw_bytes)[0]
+                        value = struct.unpack('>f', raw_bytes)[0]
+                    elif byte_order == "little":
+                        # DCBA - Little Endian
+                        raw_bytes = struct.pack('<HH', int(raw_value[1]), int(raw_value[0]))
+                        value = struct.unpack('<f', raw_bytes)[0]
+                    elif byte_order == "big_swap":
+                        # BADC - Big Endian mit Wortvertauschung
+                        raw_bytes = struct.pack('>HH', int(raw_value[1]), int(raw_value[0]))
+                        value = struct.unpack('>f', raw_bytes)[0]
+                    elif byte_order == "little_swap":
+                        # CDAB - Little Endian mit Wortvertauschung
+                        raw_bytes = struct.pack('<HH', int(raw_value[0]), int(raw_value[1]))
+                        value = struct.unpack('<f', raw_bytes)[0]
+                    else:
+                        # Fallback auf alte Logik mit swap
+                        if hasattr(self, '_swap') and self._swap == "word":
+                            # Swap word order: [high_word, low_word] -> [low_word, high_word]
+                            raw_bytes = struct.pack('>HH', int(raw_value[1]), int(raw_value[0]))
+                        else:
+                            # Standard order: [high_word, low_word]
+                            raw_bytes = struct.pack('>HH', int(raw_value[0]), int(raw_value[1]))
+                        value = struct.unpack('>f', raw_bytes)[0]
+                    
+                    _LOGGER.debug("Float conversion for %s: byte_order=%s, raw=%s, value=%s", 
+                                 self._name, byte_order, raw_value, value)
                 else:
+                    return None
+                processed_value = (value * self._scale) + self._offset
+                
+            elif self._data_type == "float64":
+                if len(raw_value) >= 4:
+                    import struct
+                    
+                    # Byte-Reihenfolge bestimmen
+                    byte_order = self._byte_order if hasattr(self, '_byte_order') else "big"
+                    
+                    # Format-String für struct basierend auf Byte-Reihenfolge
+                    if byte_order == "big":
+                        # ABCDEFGH - Standard Big Endian
+                        raw_bytes = struct.pack('>HHHH', 
+                                              int(raw_value[0]), int(raw_value[1]),
+                                              int(raw_value[2]), int(raw_value[3]))
+                        value = struct.unpack('>d', raw_bytes)[0]
+                    elif byte_order == "little":
+                        # HGFEDCBA - Little Endian
+                        raw_bytes = struct.pack('<HHHH', 
+                                              int(raw_value[3]), int(raw_value[2]),
+                                              int(raw_value[1]), int(raw_value[0]))
+                        value = struct.unpack('<d', raw_bytes)[0]
+                    elif byte_order == "big_swap":
+                        # BADCFEHG - Big Endian mit Wortvertauschung
+                        raw_bytes = struct.pack('>HHHH', 
+                                              int(raw_value[1]), int(raw_value[0]),
+                                              int(raw_value[3]), int(raw_value[2]))
+                        value = struct.unpack('>d', raw_bytes)[0]
+                    elif byte_order == "little_swap":
+                        # GHEFCDAB - Little Endian mit Wortvertauschung
+                        raw_bytes = struct.pack('<HHHH', 
+                                              int(raw_value[2]), int(raw_value[3]),
+                                              int(raw_value[0]), int(raw_value[1]))
+                        value = struct.unpack('<d', raw_bytes)[0]
+                    else:
+                        # Fallback auf alte Logik mit swap
+                        if hasattr(self, '_swap') and self._swap == "word":
+                            # Swap word order for 64-bit float
+                            raw_bytes = struct.pack('>HHHH', 
+                                                  int(raw_value[3]), int(raw_value[2]),
+                                                  int(raw_value[1]), int(raw_value[0]))
+                        else:
+                            # Standard order for 64-bit float
+                            raw_bytes = struct.pack('>HHHH', 
+                                                  int(raw_value[0]), int(raw_value[1]),
+                                                  int(raw_value[2]), int(raw_value[3]))
+                        value = struct.unpack('>d', raw_bytes)[0]
+                    
+                    _LOGGER.debug("Float64 conversion for %s: byte_order=%s, raw=%s, value=%s", 
+                                 self._name, byte_order, raw_value, value)
+                else:
+                    _LOGGER.error("float64 requires at least 4 registers, got %d for %s", 
+                                 len(raw_value), self._name)
                     return None
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "string":
                 if len(raw_value) > 0:
+                    # String-Encoding bestimmen (Standard: UTF-8)
+                    encoding = getattr(self, '_encoding', 'utf-8')
+                    max_length = getattr(self, '_max_length', None)
+                    
                     # String aus Registern extrahieren
                     string_value = ""
+                    bytes_array = bytearray()
+                    
                     for reg in raw_value:
                         if reg == 0:  # Null-Terminator
                             break
                         reg_int = int(reg)
-                        string_value += chr((reg_int >> 8) & 0xFF) + chr(reg_int & 0xFF)
-                    value = string_value.strip('\x00')
+                        # Zwei Bytes pro Register (Big-Endian)
+                        bytes_array.extend([(reg_int >> 8) & 0xFF, reg_int & 0xFF])
+                    
+                    try:
+                        # String dekodieren
+                        string_value = bytes_array.decode(encoding, errors='replace')
+                        
+                        # Null-Bytes und Whitespace am Ende entfernen
+                        string_value = string_value.strip('\x00').rstrip()
+                        
+                        # Länge begrenzen, falls erforderlich
+                        if max_length and len(string_value) > max_length:
+                            string_value = string_value[:max_length]
+                            _LOGGER.debug("String for %s truncated to %d characters", 
+                                         self._name, max_length)
+                    except Exception as e:
+                        _LOGGER.error("Error decoding string for %s: %s", self._name, str(e))
+                        string_value = ""
+                    
+                    value = string_value
                 else:
                     value = ""
                 processed_value = value
@@ -458,17 +577,74 @@ class ModbusTemplateSensor(SensorEntity):
             return None
 
     def _apply_value_processing(self, value: Any) -> Any:
-        """Apply value processing like map, flags, options, and bitmask."""
+        """Apply value processing like map, flags, options, and bit operations."""
         try:
             if value is None:
                 return None
             
-            # 1. Bitmask anwenden (falls definiert)
-            if self._bitmask is not None:
-                if isinstance(value, (int, float)):
-                    value = int(value) & self._bitmask
+            # Nur numerische Werte verarbeiten
+            if isinstance(value, (int, float)):
+                # Zu int konvertieren für Bit-Operationen
+                int_value = int(value)
+                
+                # 1. Bit-Operationen anwenden
+                
+                # 1.1 Bit-Position extrahieren (einzelnes Bit)
+                if self._bit_position is not None:
+                    bit_pos = int(self._bit_position)
+                    if 0 <= bit_pos <= 31:  # 32-bit Werte unterstützen
+                        bit_value = (int_value >> bit_pos) & 1
+                        _LOGGER.debug("Extracted bit at position %d from %s: result = %s", 
+                                     bit_pos, int_value, bit_value)
+                        int_value = bit_value
+                
+                # 1.2 Bit-Bereich extrahieren
+                elif self._bit_range is not None:
+                    if isinstance(self._bit_range, list) and len(self._bit_range) == 2:
+                        start_bit, end_bit = self._bit_range
+                        if 0 <= start_bit <= end_bit <= 31:
+                            # Maske erstellen für den Bereich
+                            mask = ((1 << (end_bit - start_bit + 1)) - 1) << start_bit
+                            # Bits extrahieren und nach rechts verschieben
+                            range_value = (int_value & mask) >> start_bit
+                            _LOGGER.debug("Extracted bit range [%d:%d] from %s: result = %s", 
+                                         start_bit, end_bit, int_value, range_value)
+                            int_value = range_value
+                
+                # 1.3 Bitmask anwenden
+                if self._bitmask is not None:
+                    int_value = int_value & self._bitmask
                     _LOGGER.debug("Applied bitmask 0x%X to %s: result = %s", 
-                                 self._bitmask, value, value)
+                                 self._bitmask, value, int_value)
+                
+                # 1.4 Bit-Shift anwenden (links/rechts verschieben)
+                if self._bit_shift != 0:
+                    if self._bit_shift > 0:
+                        # Links verschieben
+                        int_value = int_value << self._bit_shift
+                    else:
+                        # Rechts verschieben
+                        int_value = int_value >> abs(self._bit_shift)
+                    _LOGGER.debug("Applied bit shift %d to %s: result = %s", 
+                                 self._bit_shift, value, int_value)
+                
+                # 1.5 Bit-Rotation anwenden
+                if self._bit_rotate != 0:
+                    # Wir nehmen an, dass wir mit 32-bit Werten arbeiten
+                    bits = 32
+                    rotate_amount = self._bit_rotate % bits
+                    if rotate_amount > 0:
+                        # Links rotieren
+                        int_value = ((int_value << rotate_amount) | (int_value >> (bits - rotate_amount))) & ((1 << bits) - 1)
+                    elif rotate_amount < 0:
+                        # Rechts rotieren
+                        rotate_amount = abs(rotate_amount)
+                        int_value = ((int_value >> rotate_amount) | (int_value << (bits - rotate_amount))) & ((1 << bits) - 1)
+                    _LOGGER.debug("Applied bit rotation %d to %s: result = %s", 
+                                 self._bit_rotate, value, int_value)
+                
+                # Aktualisierter Wert für weitere Verarbeitung
+                value = int_value
             
             # 2. Map anwenden (falls definiert)
             if self._map and isinstance(value, (int, float)):

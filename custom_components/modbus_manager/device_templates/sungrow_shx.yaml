@@ -1242,7 +1242,7 @@ sensors:
 
   # this value returns a positive value when exporting and a negative value when importing power
   - name: Export power raw
-    unique_id: battery_export_power_raw
+    unique_id: export_power_raw
 
     address: 13009 # reg 13010
     input_type: input
@@ -1604,69 +1604,15 @@ sensors:
     state_class: measurement
     scan_interval: 10
 
-  - name: Max SoC
-    unique_id: max_soc
 
-    address: 13057 # reg 13058
-    input_type: holding
-    data_type: uint16
-    precision: 1
-    unit_of_measurement: "%"
-    device_class: battery
-    state_class: measurement
-    scale: 0.1
-    scan_interval: 10
 
-  - name: Min SoC
-    unique_id: min_soc
 
-    address: 13058 # reg 13059
-    input_type: holding
-    data_type: uint16
-    precision: 1
-    unit_of_measurement: "%"
-    device_class: battery
-    state_class: measurement
-    scale: 0.1
-    scan_interval: 10
 
-  # Called "Feed-in limitation value" in spec
-  - name: Export power limit
-    unique_id: export_power_limit
 
-    address: 13073 # reg 13074
-    input_type: holding
-    data_type: uint16
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: power
-    state_class: measurement
-    scale: 1
-    scan_interval: 10
 
-  - name: "Backup Mode"
-    unique_id: "backup_mode"
-    address: 13074
-    input_type: "holding"
-    data_type: "uint16"
-    scan_interval: 10
-    map:
-      0x55: "Disabled"
-      0xAA: "Enabled"
-    group: "modes"
 
-  # called "Feed-in limitation" in spec
-  # reg 13087 U16 0xAA: Enable 0x55: Disable
-  - name: "Export Power Limit Mode"
-    unique_id: "export_power_limit_mode"
-    address: 13086
-    input_type: "holding"
-    data_type: "uint16"
-    scan_interval: 10
-    map:
-      0x55: "Disabled"
-      0xAA: "Enabled"
-    group: "modes"
+
+
 
   #undocumented sensor (reverse engineered by some guys of photovoltaikforum.com and forum.iobroker.net )
   - name: Reserved SoC for backup
@@ -1788,6 +1734,87 @@ controls:
     scan_interval: 30
     group: "control"
 
+  - type: "number"
+    name: "Max SoC"
+    unique_id: "sg_max_soc_rw"
+    address: 13057
+    input_type: "holding"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "%"
+    min_value: 10
+    max_value: 100
+    step: 1
+    scan_interval: 30
+    group: "battery_control"
+
+  - type: "number"
+    name: "Min SoC"
+    unique_id: "sg_min_soc_rw"
+    address: 13058
+    input_type: "holding"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 90
+    step: 1
+    scan_interval: 30
+    group: "battery_control"
+
+  - type: "select"
+    name: "Backup Mode"
+    unique_id: "sg_backup_mode_rw"
+    address: 13074
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0x55: "Disabled"
+      0xAA: "Enabled"
+    group: "modes"
+
+  - type: "select"
+    name: "Export Power Limit Mode"
+    unique_id: "sg_export_power_limit_mode_rw"
+    address: 13086
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0x55: "Disabled"
+      0xAA: "Enabled"
+    group: "modes"
+
+  - type: "number"
+    name: "Reserved SoC for Backup"
+    unique_id: "sg_reserved_soc_backup_rw"
+    address: 13099
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 1
+    scan_interval: 30
+    group: "battery_control"
+
+  - type: "number"
+    name: "Battery Max Charge Power"
+    unique_id: "sg_battery_max_charge_power_rw"
+    address: 33046
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "W"
+    min_value: 0
+    max_value: 10000
+    step: 100
+    scan_interval: 30
+    group: "battery_control"
+
 # Calculated Sensors (based on mkaiser power calculations)
 calculated:
 
@@ -1882,38 +1909,7 @@ calculated:
     state_class: "measurement"
     group: "grid_power"
 
-  # Battery Power Calculations
-  - name: "Battery Charge Power"
-    unique_id: "battery_charge_power"
-    type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable') }}
-    state: >-
-      {% if states('sensor.{PREFIX}_battery_power_raw') | default(0) | float > 0 %}
-        {{ states('sensor.{PREFIX}_battery_power_raw') | default(0) | float }}
-      {% else %}
-        0
-      {% endif %}
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "battery_power"
-
-  - name: "Battery Discharge Power"
-    unique_id: "battery_discharge_power"
-    type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable') }}
-    state: >-
-      {% if states('sensor.{PREFIX}_battery_power_raw') | default(0) | float < 0 %}
-        {{ (states('sensor.{PREFIX}_battery_power_raw') | default(0) | float) | abs }}
-      {% else %}
-        0
-      {% endif %}
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "battery_power"
+  
 
   # Load Power Calculations
   - name: "Total Load Power"
@@ -2051,6 +2047,7 @@ calculated:
     state_class: "measurement"
     group: "battery_power"
 
+  # Battery Power Calculations
   - name: "Battery Charging Power"
     unique_id: "battery_charging_power"
     type: "sensor"

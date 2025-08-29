@@ -49,7 +49,10 @@
         },
         "abort": {
             "no_device_definitions": "Es wurden keine Gerätedefinitionen gefunden. Bitte stellen Sie sicher, dass mindestens eine YAML-Datei im device_definitions Verzeichnis existiert.",
-            "already_configured": "Gerät ist bereits konfiguriert"
+            "already_configured": "Gerät ist bereits konfiguriert",
+            "template_not_found": "Template {template_name} nicht gefunden.",
+            "no_registers": "Template {template_name} hat keine Register definiert.",
+            "update_error": "Fehler beim Aktualisieren des Templates: {error}"
         },
         "progress": {
             "firmware_detect": "Versuche Firmware-Version zu erkennen..."
@@ -59,11 +62,18 @@
         "step": {
             "init": {
                 "title": "Geräteoptionen",
+                "description": "Template: {template_name} (Version {template_version})",
                 "data": {
                     "firmware_version": "Firmware-Version",
                     "allow_battery_car_charging": "Batterie-zu-Auto-Ladung erlauben",
-                    "auto_detect_firmware": "Firmware-Version automatisch erkennen"
+                    "auto_detect_firmware": "Firmware-Version automatisch erkennen",
+                    "configure_aggregations": "Aggregationen konfigurieren",
+                    "update_template": "Template auf neueste Version aktualisieren"
                 }
+            },
+            "update_template": {
+                "title": "Template aktualisieren",
+                "description": "Template {template_name} von Version {stored_version} auf {current_version} aktualisieren. Dies fügt neue Entitäten hinzu, falls verfügbar."
             }
         }
     },

@@ -13,6 +13,20 @@ CONF_MIN: Final = "min"
 CONF_MAX: Final = "max"
 CONF_STEP: Final = "step"
 CONF_OPTIONS: Final = "options"
+CONF_HUB: Final = "hub"
+CONF_SLAVE_ID: Final = "slave_id"
+CONF_ADDRESS: Final = "address"
+CONF_DATA_TYPE: Final = "data_type"
+CONF_SCALE: Final = "scale"
+CONF_PRECISION: Final = "precision"
+CONF_MIN_VALUE: Final = "min_value"
+CONF_MAX_VALUE: Final = "max_value"
+CONF_GROUP: Final = "group"
+CONF_SCAN_INTERVAL: Final = "scan_interval"
+CONF_INPUT_TYPE: Final = "input_type"
+CONF_UNIT_OF_MEASUREMENT: Final = "unit_of_measurement"
+CONF_DEVICE_CLASS: Final = "device_class"
+CONF_STATE_CLASS: Final = "state_class"
 
 # Service types
 SERVICE_TYPE_NUMBER: Final = "number"
@@ -70,6 +84,19 @@ class DataProcessingType(Enum):
     MULTIPLIER = "multiplier"
     PRECISION = "precision"
     SWAP = "swap"
+    BIT_MASK = "bitmask"
+    BIT_POSITION = "bit_position"
+    BIT_SHIFT = "bit_shift"
+    BIT_ROTATE = "bit_rotate"
+    BIT_RANGE = "bit_range"
+
+# Byte-Reihenfolge für Float-Werte
+class ByteOrder(Enum):
+    """Definiert die verschiedenen Byte-Reihenfolgen."""
+    BIG_ENDIAN = "big"           # ABCD - Standard
+    LITTLE_ENDIAN = "little"     # DCBA - Umgekehrte Reihenfolge
+    BIG_ENDIAN_SWAP = "big_swap" # BADC - Big Endian mit Wortvertauschung
+    LITTLE_ENDIAN_SWAP = "little_swap" # CDAB - Little Endian mit Wortvertauschung
 
 # Control-Typen für read/write Register
 class ControlType(Enum):
@@ -87,7 +114,8 @@ class DataType(Enum):
     INT16 = "int16"
     UINT32 = "uint32"
     INT32 = "int32"
-    FLOAT = "float"
+    FLOAT = "float"        # IEEE 754 32-bit float
+    FLOAT64 = "float64"    # IEEE 754 64-bit float
     STRING = "string"
     BOOLEAN = "boolean"
 
