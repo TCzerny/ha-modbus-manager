@@ -26,9 +26,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         if reg.get("data_type") == "boolean" or reg.get("control") == "switch":
             # Unique_ID Format: {prefix}_{template_sensor_name}
             sensor_name = reg.get("name", "unknown")
-            # Bereinige den Namen für den unique_id
-            clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
-            unique_id = f"{prefix}_{clean_name}"
+            # Use unique_id from template if available, otherwise use cleaned name
+            template_unique_id = reg.get("unique_id")
+            if template_unique_id:
+                unique_id = f"{prefix}_{template_unique_id}"
+            else:
+                # Fallback: Bereinige den Namen für den unique_id
+                clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+                unique_id = f"{prefix}_{clean_name}"
             
             entities.append(ModbusTemplateBinarySensor(
                 hass=hass,

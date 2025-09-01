@@ -6,7 +6,7 @@ from typing import Dict, List, Any, Optional
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
-from homeassistant.helpers.event import async_track_state_change
+from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.const import CONF_NAME, CONF_UNIT_OF_MEASUREMENT
 
 from .const import DOMAIN
@@ -104,56 +104,44 @@ class ModbusAggregateSensor(SensorEntity):
     def _setup_tracking(self):
         """Setup state change tracking for entities in this group."""
         try:
-            # Schedule delayed entity search to allow other sensors to be created first
-            self._schedule_delayed_entity_search()
+            # Immediate search for existing entities
+            self._find_group_entities()
             
-            _LOGGER.info("Verzögerte Suche für Gruppe %s geplant", self._group_tag)
-            self._tracking_setup = True
+            if self._tracked_entities:
+                # Found entities, setup tracking immediately
+                self._unsubscribe = async_track_state_change_event(
+                    self.hass,
+                    self._tracked_entities,
+                    self._state_changed
+                )
+                
+                _LOGGER.info("Tracking für %d Entitäten in Gruppe %s eingerichtet (sofort)", 
+                            len(self._tracked_entities), self._group_tag)
+                self._tracking_setup = True
+                
+                # Initial update
+                self._update_aggregate_value()
+            else:
+                # No entities found yet, setup global state change listener
+                self._setup_global_listener()
+                _LOGGER.info("Keine Entitäten für Gruppe %s gefunden, globaler Listener eingerichtet", self._group_tag)
             
         except Exception as e:
             _LOGGER.error("Fehler beim Einrichten des Trackings für Gruppe %s: %s", 
                          self._group_tag, str(e))
 
-    def _schedule_delayed_entity_search(self):
-        """Schedule a delayed search for entities to allow other sensors to be created first."""
-        
-        async def delayed_search():
-            # Wait for other sensors to be created and registered
-            max_attempts = 10
-            attempt = 0
-            
-            while attempt < max_attempts:
-                await self.hass.async_block_till_done()
-                await asyncio.sleep(3)  # Wait longer for sensors to be registered
-                
-                # Search for entities
-                self._find_group_entities()
-                
-                if self._tracked_entities:
-                    # Found entities, setup tracking
-                    self._unsubscribe = async_track_state_change(
-                        self.hass,
-                        self._tracked_entities,
-                        self._state_changed
-                    )
-                    
-                    _LOGGER.info("Tracking für %d Entitäten in Gruppe %s eingerichtet (verzögert, Versuch %d)", 
-                                len(self._tracked_entities), self._group_tag, attempt + 1)
-                    self._tracking_setup = True
-                    
-                    # Initial update
-                    self._update_aggregate_value()
-                    return
-                
-                attempt += 1
-                _LOGGER.debug("Keine Entitäten für Gruppe %s gefunden (Versuch %d/%d)", 
-                             self._group_tag, attempt, max_attempts)
-            
-            _LOGGER.warning("Keine Entitäten für Gruppe %s gefunden nach %d Versuchen", 
-                           self._group_tag, max_attempts)
-        
-        # Schedule the delayed search
-        self.hass.async_create_task(delayed_search())
+    def _setup_global_listener(self):
+        """Setup a global state change listener to catch new entities."""
+        try:
+            # Listen to all sensor state changes
+            self._unsubscribe = async_track_state_change_event(
+                self.hass,
+                "sensor",  # Listen to all sensors
+                self._global_state_changed
+            )
+            _LOGGER.debug("Globaler Listener für Gruppe %s eingerichtet", self._group_tag)
+        except Exception as e:
+            _LOGGER.error("Fehler beim Einrichten des globalen Listeners: %s", str(e))
 
     def _find_group_entities(self):
         """Find all entities that belong to this group across all Modbus Manager devices."""
@@ -164,18 +152,37 @@ class ModbusAggregateSensor(SensorEntity):
             _LOGGER.info("Suche nach Entitäten für Gruppe %s mit Präfixen: %s", 
                          self._group_tag, modbus_prefixes)
             
+            # Debug: Log all sensors with group attributes
+            sensors_with_groups = []
+            for state in all_states:
+                if state.domain == "sensor":
+                    attributes = state.attributes
+                    group_attr = attributes.get("group")
+                    if group_attr:
+                        sensors_with_groups.append(f"{state.entity_id} (group: {group_attr})")
+            
+            _LOGGER.info("Alle Sensoren mit Gruppen: %s", sensors_with_groups)
+            
             for state in all_states:
                 if state.domain == "sensor":
                     attributes = state.attributes
                     group_attr = attributes.get("group")
                     
                     if group_attr == self._group_tag:
-                        _LOGGER.debug("Gefunden: %s mit Gruppe '%s'", state.entity_id, group_attr)
+                        # First check: Exclude aggregate sensors themselves (exclude MM_* and any _aggregate_ entities)
+                        is_aggregate_entity = (
+                            "mm_" in state.entity_id.lower() or 
+                            "_aggregate_" in state.entity_id.lower() or
+                            any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes)
+                        )
+                        
+                        if is_aggregate_entity:
+                            _LOGGER.debug("Überspringe %s - ist Aggregate-Sensor", state.entity_id)
+                            continue
                         
                         # Check if it's a Modbus Manager entity
                         # 1. Entities with prefixes (normal sensors)
                         # 2. Calculated sensors (no prefix but have group attribute)
-                        # 3. Exclude aggregate sensors themselves
                         is_modbus_entity = (
                             any(
                                 prefix.lower() in state.entity_id.lower() or 
@@ -184,8 +191,7 @@ class ModbusAggregateSensor(SensorEntity):
                             ) or (
                                 # Include calculated sensors (they have group attribute but no prefix)
                                 state.entity_id.startswith("sensor.") and 
-                                group_attr is not None and
-                                not any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes)
+                                group_attr is not None
                             )
                         )
                         
@@ -193,14 +199,35 @@ class ModbusAggregateSensor(SensorEntity):
                                      state.entity_id, is_modbus_entity, modbus_prefixes)
                         
                         if is_modbus_entity:
-                            # Don't track aggregate sensors themselves
-                            if not any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes):
-                                self._tracked_entities.append(state.entity_id)
-                                _LOGGER.debug("Hinzugefügt zu Tracking: %s", state.entity_id)
-                            else:
-                                _LOGGER.debug("Überspringe %s - ist Aggregate-Sensor", state.entity_id)
+                            self._tracked_entities.append(state.entity_id)
+                            _LOGGER.info("Gefunden: %s mit Gruppe '%s'", state.entity_id, group_attr)
                         else:
                             _LOGGER.debug("Überspringe %s - kein Modbus Manager Entity", state.entity_id)
+            
+            # If no entities found, try a more relaxed search
+            if not self._tracked_entities:
+                _LOGGER.warning("Keine Entitäten mit Gruppe '%s' gefunden, versuche erweiterte Suche", self._group_tag)
+                
+                # Look for any sensor with the group attribute, regardless of prefix
+                for state in all_states:
+                    if state.domain == "sensor":
+                        attributes = state.attributes
+                        group_attr = attributes.get("group")
+                        
+                        if group_attr == self._group_tag:
+                            # First check: Exclude aggregate sensors themselves (exclude MM_* and any _aggregate_ entities)
+                            is_aggregate_entity = (
+                                "mm_" in state.entity_id.lower() or 
+                                "_aggregate_" in state.entity_id.lower() or
+                                any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes)
+                            )
+                            
+                            if is_aggregate_entity:
+                                _LOGGER.debug("Erweiterte Suche: Überspringe %s - ist Aggregate-Sensor", state.entity_id)
+                                continue
+                            
+                            self._tracked_entities.append(state.entity_id)
+                            _LOGGER.info("Erweiterte Suche: Hinzugefügt zu Tracking: %s", state.entity_id)
             
             _LOGGER.info("Gefundene Entitäten für Gruppe %s: %s", self._group_tag, self._tracked_entities)
             
@@ -221,9 +248,14 @@ class ModbusAggregateSensor(SensorEntity):
             return []
 
     @callback
-    def _state_changed(self, entity_id: str, old_state, new_state):
+    def _state_changed(self, event):
         """Handle state changes of tracked entities."""
         try:
+            # Extract entity_id, old_state, and new_state from event
+            entity_id = event.data.get("entity_id")
+            old_state = event.data.get("old_state")
+            new_state = event.data.get("new_state")
+            
             if new_state is None:
                 return
             
@@ -235,6 +267,77 @@ class ModbusAggregateSensor(SensorEntity):
             
         except Exception as e:
             _LOGGER.error("Fehler bei State-Change für Gruppe %s: %s", 
+                         self._group_tag, str(e))
+
+    @callback
+    def _global_state_changed(self, event):
+        """Handle global state changes to discover new entities."""
+        try:
+            # Extract entity_id, old_state, and new_state from event
+            entity_id = event.data.get("entity_id")
+            old_state = event.data.get("old_state")
+            new_state = event.data.get("new_state")
+            
+            if new_state is None:
+                return
+            
+            # Check if this entity belongs to our group
+            attributes = new_state.attributes
+            group_attr = attributes.get("group")
+            
+            # Debug: Log all sensor state changes with groups
+            if group_attr:
+                _LOGGER.debug("State-Change: %s (group: %s, state: %s)", entity_id, group_attr, new_state.state)
+            
+            if group_attr == self._group_tag:
+                # First check: Exclude aggregate sensors themselves
+                modbus_prefixes = self._get_modbus_prefixes()
+                is_aggregate_entity = (
+                    "mm_" in entity_id.lower() or 
+                    "_aggregate_" in entity_id.lower() or
+                    any(f"{prefix}_aggregate_" in entity_id for prefix in modbus_prefixes)
+                )
+                
+                if is_aggregate_entity:
+                    _LOGGER.debug("Global State-Change: Überspringe %s - ist Aggregate-Sensor", entity_id)
+                    return
+                
+                # Check if it's a Modbus Manager entity
+                is_modbus_entity = (
+                    any(
+                        prefix.lower() in entity_id.lower() or 
+                        f"sensor.{prefix.lower()}_" in entity_id.lower()
+                        for prefix in modbus_prefixes
+                    ) or (
+                        entity_id.startswith("sensor.") and 
+                        group_attr is not None
+                    )
+                )
+                
+                if is_modbus_entity and entity_id not in self._tracked_entities:
+                    # New entity found, add to tracking
+                    self._tracked_entities.append(entity_id)
+                    _LOGGER.info("Neue Entität für Gruppe %s gefunden: %s", self._group_tag, entity_id)
+                        
+                        # Switch from global listener to specific entity tracking
+                        if self._unsubscribe:
+                            self._unsubscribe()
+                        
+                        self._unsubscribe = async_track_state_change_event(
+                            self.hass,
+                            self._tracked_entities,
+                            self._state_changed
+                        )
+                        
+                        _LOGGER.info("Tracking für %d Entitäten in Gruppe %s aktualisiert", 
+                                    len(self._tracked_entities), self._group_tag)
+                        
+                        # Initial update
+                        self._update_aggregate_value()
+                        self.async_write_ha_state()
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei globalem State-Change für Gruppe %s: %s", 
                          self._group_tag, str(e))
 
     def _update_aggregate_value(self):
@@ -328,13 +431,52 @@ class ModbusAggregateSensor(SensorEntity):
         """Entity added to hass."""
         await super().async_added_to_hass()
         
-        # Setup tracking after being added to hass
+        # Setup tracking immediately after being added to hass
         if not self._tracking_setup:
             self._setup_tracking()
         
-        # Initial update
-        self._update_aggregate_value()
-        self.async_write_ha_state()
+        # Initial update (only if we have tracked entities)
+        if self._tracked_entities:
+            self._update_aggregate_value()
+            self.async_write_ha_state()
+        
+        # Schedule a delayed re-search to catch entities that were created after us
+        self.hass.async_create_task(self._delayed_entity_search())
+
+    async def _delayed_entity_search(self):
+        """Perform a delayed search for entities that might have been created after us."""
+        try:
+            # Wait a bit for other entities to be created
+            await asyncio.sleep(5)
+            
+            # Re-search for entities
+            old_count = len(self._tracked_entities)
+            self._find_group_entities()
+            new_count = len(self._tracked_entities)
+            
+            if new_count > old_count:
+                _LOGGER.info("Verzögerte Suche: %d neue Entitäten für Gruppe %s gefunden", 
+                            new_count - old_count, self._group_tag)
+                
+                # Setup tracking for new entities
+                if self._unsubscribe:
+                    self._unsubscribe()
+                
+                self._unsubscribe = async_track_state_change_event(
+                    self.hass,
+                    self._tracked_entities,
+                    self._state_changed
+                )
+                
+                # Initial update
+                self._update_aggregate_value()
+                self.async_write_ha_state()
+            else:
+                _LOGGER.debug("Verzögerte Suche: Keine neuen Entitäten für Gruppe %s gefunden", self._group_tag)
+                
+        except Exception as e:
+            _LOGGER.error("Fehler bei verzögerter Entity-Suche für Gruppe %s: %s", 
+                         self._group_tag, str(e))
 
     async def async_will_remove_from_hass(self):
         """Entity will be removed from hass."""
@@ -422,7 +564,7 @@ class AggregationManager:
             
             for method in methods:
                 sensor_name = f"ModbusManager_{group_tag}_{method}"
-                unique_id = f"modbus_manager_aggregate_{group_tag}_{method}"  # Global unique ID with meaningful prefix
+                unique_id = f"MM_aggregate_{group_tag}_{method}"  # Global unique ID with meaningful prefix
                 
                 device_info = {
                     "identifiers": {(DOMAIN, f"modbus_manager_aggregate_{group_tag}")},

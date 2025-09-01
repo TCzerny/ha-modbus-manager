@@ -128,16 +128,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.debug("Präfix aus Config Entry: %s", prefix)
         _LOGGER.debug("Template: %s, Register: %d", template_name, len(registers))
         
-        # Device zuerst erstellen, damit Sensoren es als via_device referenzieren können
-        from homeassistant.helpers import device_registry as dr
-        device_registry = dr.async_get(hass)
-        device_registry.async_get_or_create(
-            config_entry_id=entry.entry_id,
-            identifiers={(DOMAIN, entry.entry_id)},
-            name=f"{prefix} ({template_name})",
-            manufacturer="Modbus Manager",
-            model=template_name,
-        )
+        # Device wird von der Sensor-Plattform erstellt
         
         hass.data[DOMAIN][entry.entry_id] = {
             "hub": hub,
@@ -168,7 +159,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Performance-Monitor und Register-Optimizer initialisieren
         try:
             performance_monitor = PerformanceMonitor()
-            register_optimizer = RegisterOptimizer(registers)
+            register_optimizer = RegisterOptimizer(max_read_size=8)
             
             hass.data[DOMAIN][entry.entry_id]["performance_monitor"] = performance_monitor
             hass.data[DOMAIN][entry.entry_id]["register_optimizer"] = register_optimizer

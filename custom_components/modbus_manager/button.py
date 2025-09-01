@@ -35,10 +35,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         if reg.get("control") == "button":
             # Unique_ID Format: {prefix}_{template_sensor_name}
             sensor_name = reg.get("name", "unknown")
-            # Bereinige den Namen für den unique_id
-            clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
-            unique_id = f"{prefix}_{clean_name}"
-            entity_id = f"button.{prefix}_{clean_name}"
+            # Use unique_id from template if available, otherwise use cleaned name
+            template_unique_id = reg.get("unique_id")
+            if template_unique_id:
+                unique_id = f"{prefix}_{template_unique_id}"
+            else:
+                # Fallback: Bereinige den Namen für den unique_id
+                clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+                unique_id = f"{prefix}_{clean_name}"
+            # Use same logic for entity_id
+            if template_unique_id:
+                entity_id = f"button.{prefix}_{template_unique_id}"
+            else:
+                entity_id = f"button.{prefix}_{clean_name}"
             
             # Prüfen ob Entity bereits existiert
             if entity_id in existing_entities:
