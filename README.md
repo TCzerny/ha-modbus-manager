@@ -258,9 +258,10 @@ entities:
 
 ## 📚 Documentation
 
-- **[Aggregate Sensors](wiki/AGGREGATES.md)** - Complete guide to aggregate sensors
-- **[Compleo eBox](wiki/COMPLEO_EEBOX.md)** - EV charger setup and configuration
-- **[Language Policy](wiki/LANGUAGE_POLICY.md)** - English documentation standards
+- **[GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)** - Complete documentation
+- **[Aggregate Sensors](https://github.com/TCzerny/ha-modbus-manager/wiki/Aggregate-Sensors)** - Complete guide to aggregate sensors
+- **[Compleo eBox](https://github.com/TCzerny/ha-modbus-manager/wiki/Compleo-eBox-Professional)** - EV charger setup and configuration
+- **[Sungrow SHx](https://github.com/TCzerny/ha-modbus-manager/wiki/Sungrow-SHx-Series)** - Solar inverter documentation
 
 ## 📄 License
 
