@@ -127,10 +127,22 @@ class ModbusAggregateSensor(SensorEntity):
                         
                         # Only include sensors from Modbus Manager devices
                         # Check if entity_id contains any of the modbus prefixes (case insensitive)
-                        is_modbus_entity = any(prefix.lower() in state.entity_id.lower() for prefix in modbus_prefixes)
+                        # Also check for entity_id pattern like "sensor.prefix_name"
+                        is_modbus_entity = any(
+                            prefix.lower() in state.entity_id.lower() or 
+                            f"sensor.{prefix.lower()}_" in state.entity_id.lower()
+                            for prefix in modbus_prefixes
+                        )
                         
                         _LOGGER.info("Prüfe %s: is_modbus_entity=%s, prefixes=%s", 
                                      state.entity_id, is_modbus_entity, modbus_prefixes)
+                        
+                        # Debug: Zeige jeden Präfix-Check
+                        for prefix in modbus_prefixes:
+                            prefix_in_entity = prefix.lower() in state.entity_id.lower()
+                            sensor_prefix_pattern = f"sensor.{prefix.lower()}_" in state.entity_id.lower()
+                            _LOGGER.info("  Präfix '%s' in '%s': %s (sensor pattern: %s)", 
+                                         prefix, state.entity_id, prefix_in_entity, sensor_prefix_pattern)
                         
                         if is_modbus_entity:
                             # Don't track aggregate sensors themselves
