@@ -80,7 +80,7 @@ class ModbusAggregateSensor(SensorEntity):
         self._unsubscribe = None
         self._tracking_setup = False
         
-        _LOGGER.info("Aggregate sensor %s initialized (Group: %s, Method: %s)", 
+        _LOGGER.debug("Aggregate sensor %s initialized (Group: %s, Method: %s)", 
                      self._name, self._group, self._method)
 
     def _setup_tracking(self):
@@ -114,20 +114,20 @@ class ModbusAggregateSensor(SensorEntity):
             all_states = self.hass.states.async_all()
             modbus_prefixes = self._get_modbus_prefixes()
             
-            _LOGGER.info("Suche nach Gruppe '%s' in %d Entitäten", self._group, len(all_states))
-            _LOGGER.info("Modbus-Präfixe: %s", modbus_prefixes)
+            _LOGGER.debug("Suche nach Gruppe '%s' in %d Entitäten", self._group, len(all_states))
+            _LOGGER.debug("Modbus-Präfixe: %s", modbus_prefixes)
             
             for state in all_states:
                 if state.domain == "sensor":
                     attributes = state.attributes
                     group_attr = attributes.get("group")
                     
-                    # Debug: Zeige alle Sensoren mit group Attribut
+                    # Debug: Zeige alle Sensoren mit group Attribut (reduziert)
                     if group_attr:
-                        _LOGGER.info("Sensor mit Gruppe gefunden: %s -> Gruppe '%s'", state.entity_id, group_attr)
+                        _LOGGER.debug("Sensor mit Gruppe gefunden: %s -> Gruppe '%s'", state.entity_id, group_attr)
                     
                     if group_attr == self._group:
-                        _LOGGER.info("Gefunden: %s mit Gruppe '%s'", state.entity_id, group_attr)
+                        _LOGGER.debug("Gefunden: %s mit Gruppe '%s'", state.entity_id, group_attr)
                         
                         # Only include sensors from Modbus Manager devices
                         # Check if entity_id contains any of the modbus prefixes (case insensitive)
@@ -138,21 +138,14 @@ class ModbusAggregateSensor(SensorEntity):
                             for prefix in modbus_prefixes
                         )
                         
-                        _LOGGER.info("Prüfe %s: is_modbus_entity=%s, prefixes=%s", 
+                        _LOGGER.debug("Prüfe %s: is_modbus_entity=%s, prefixes=%s", 
                                      state.entity_id, is_modbus_entity, modbus_prefixes)
-                        
-                        # Debug: Zeige jeden Präfix-Check
-                        for prefix in modbus_prefixes:
-                            prefix_in_entity = prefix.lower() in state.entity_id.lower()
-                            sensor_prefix_pattern = f"sensor.{prefix.lower()}_" in state.entity_id.lower()
-                            _LOGGER.info("  Präfix '%s' in '%s': %s (sensor pattern: %s)", 
-                                         prefix, state.entity_id, prefix_in_entity, sensor_prefix_pattern)
                         
                         if is_modbus_entity:
                             # Don't track aggregate sensors themselves
                             if not any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes):
                                 self._tracked_entities.append(state.entity_id)
-                                _LOGGER.info("Hinzugefügt zu Tracking: %s", state.entity_id)
+                                _LOGGER.debug("Hinzugefügt zu Tracking: %s", state.entity_id)
                             else:
                                 _LOGGER.debug("Überspringe %s - ist Aggregate-Sensor", state.entity_id)
                         else:
@@ -271,7 +264,7 @@ class ModbusAggregateSensor(SensorEntity):
         self._update_aggregate_value()
         self.async_write_ha_state()
         
-        _LOGGER.info("Aggregate-Sensor %s zu Home Assistant hinzugefügt", self._attr_name)
+        _LOGGER.debug("Aggregate-Sensor %s zu Home Assistant hinzugefügt", self._attr_name)
 
     async def async_will_remove_from_hass(self):
         """Entity will be removed from hass."""

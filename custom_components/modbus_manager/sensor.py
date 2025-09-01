@@ -97,11 +97,20 @@ async def async_setup_entry(
         calculated_entities = []
         calculated_data = config_data.get("calculated_entities", [])
         
-        _LOGGER.info("Debug: calculated_data aus config_data: %s", calculated_data)
-        _LOGGER.info("Debug: config_data keys: %s", list(config_data.keys()))
+        # Debug: calculated_data aus config_data (reduziert)
+        _LOGGER.debug("calculated_data aus config_data: %d items", len(calculated_data))
         
         if calculated_data:
             _LOGGER.info("Erstelle %d berechnete Sensoren für Template %s", len(calculated_data), template_name)
+        
+        # Debug: Zeige Gruppen der berechneten Sensoren
+        groups = set()
+        for calc_config in calculated_data:
+            group = calc_config.get("group")
+            if group:
+                groups.add(group)
+        if groups:
+            _LOGGER.info("Berechnete Sensoren haben Gruppen: %s", list(groups))
             
             for calc_config in calculated_data:
                 try:
