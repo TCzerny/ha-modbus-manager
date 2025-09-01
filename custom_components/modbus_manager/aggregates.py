@@ -74,18 +74,38 @@ class ModbusAggregateSensor(SensorEntity):
             all_states = self.hass.states.async_all()
             modbus_prefixes = self._get_modbus_prefixes()
             
+            _LOGGER.debug("Suche nach Entitäten für Gruppe %s mit Präfixen: %s", 
+                         self._group_tag, modbus_prefixes)
+            
             for state in all_states:
                 if state.domain == "sensor":
                     attributes = state.attributes
-                    if attributes.get("group") == self._group_tag:
-                        # Only include sensors from Modbus Manager devices
-                        if any(prefix in state.entity_id for prefix in modbus_prefixes):
+                    group_attr = attributes.get("group")
+                    
+                    if group_attr == self._group_tag:
+                        _LOGGER.debug("Gefunden: %s mit Gruppe '%s'", state.entity_id, group_attr)
+                        
+                        # Check if it's a Modbus Manager entity (case insensitive)
+                        is_modbus_entity = any(
+                            prefix.lower() in state.entity_id.lower() or 
+                            f"sensor.{prefix.lower()}_" in state.entity_id.lower()
+                            for prefix in modbus_prefixes
+                        )
+                        
+                        _LOGGER.debug("Prüfe %s: is_modbus_entity=%s, prefixes=%s", 
+                                     state.entity_id, is_modbus_entity, modbus_prefixes)
+                        
+                        if is_modbus_entity:
                             # Don't track aggregate sensors themselves
                             if not any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes):
                                 self._tracked_entities.append(state.entity_id)
+                                _LOGGER.debug("Hinzugefügt zu Tracking: %s", state.entity_id)
+                            else:
+                                _LOGGER.debug("Überspringe %s - ist Aggregate-Sensor", state.entity_id)
+                        else:
+                            _LOGGER.debug("Überspringe %s - kein Modbus Manager Entity", state.entity_id)
             
-            _LOGGER.debug("Gefundene Entitäten für Gruppe %s über alle Modbus Manager Geräte: %s", 
-                         self._group_tag, self._tracked_entities)
+            _LOGGER.info("Gefundene Entitäten für Gruppe %s: %s", self._group_tag, self._tracked_entities)
             
         except Exception as e:
             _LOGGER.error("Fehler beim Finden der Gruppen-Entitäten: %s", str(e))
