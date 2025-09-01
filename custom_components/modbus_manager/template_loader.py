@@ -700,7 +700,7 @@ async def load_mapping_template(mapping_path: str, base_templates: Dict[str, Dic
         _LOGGER.error("Error loading mapping template %s: %s", mapping_path, str(e))
         return None
 
-async def get_template_by_name(template_name: str) -> List[Dict[str, Any]]:
+async def get_template_by_name(template_name: str) -> Optional[Dict[str, Any]]:
     """Get a specific template by name."""
     templates = await load_templates()
     for template in templates:
@@ -708,7 +708,7 @@ async def get_template_by_name(template_name: str) -> List[Dict[str, Any]]:
             # Return the full template data, not just registers
             # This allows access to both sensors and calculated sections
             return template
-    return []
+    return None
 
 async def get_base_template_by_name(base_name: str) -> Optional[Dict[str, Any]]:
     """Get a specific base template by name."""
