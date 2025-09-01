@@ -37,15 +37,19 @@ async def async_setup_entry(
         registers = config_data.get("registers", [])
         prefix = config_data.get("prefix", "unknown")
         template_name = config_data.get("template", "unknown")
+        is_aggregates_template = config_data.get("is_aggregates_template", False)
         
-        _LOGGER.info("Konfigurationsdaten abgerufen: prefix=%s, template=%s, register=%d", 
-                     prefix, template_name, len(registers))
+        _LOGGER.info("Konfigurationsdaten abgerufen: prefix=%s, template=%s, register=%d, is_aggregates=%s", 
+                     prefix, template_name, len(registers), is_aggregates_template)
         
-        if not registers:
+        if not registers and not is_aggregates_template:
             _LOGGER.warning("Keine Register für Template %s gefunden", template_name)
             return
         
-        _LOGGER.info("Erstelle %d Sensoren für Template %s mit Präfix %s", len(registers), template_name, prefix)
+        if is_aggregates_template:
+            _LOGGER.info("Aggregates Template erkannt - überspringe normale Sensor-Erstellung")
+        else:
+            _LOGGER.info("Erstelle %d Sensoren für Template %s mit Präfix %s", len(registers), template_name, prefix)
         
         # Entity Registry abrufen für Duplikat-Check
         registry = async_get_entity_registry(hass)
@@ -54,39 +58,40 @@ async def async_setup_entry(
             if entity.entity_id.startswith(f"sensor.{prefix}_")
         }
         
-        # Nur Sensor-Entitäten erstellen
-        sensor_registers = [reg for reg in registers if reg.get("entity_type") == "sensor"]
-        _LOGGER.info("Gefundene Sensor-Register: %d", len(sensor_registers))
-        
+        # Nur Sensor-Entitäten erstellen (nicht für Aggregates Templates)
         entities = []
-        for reg in sensor_registers:
-            try:
-                # Unique_ID Format: {prefix}_{template_sensor_name}
-                sensor_name = reg.get("name", "unknown")
-                # Bereinige den Namen für den unique_id
-                clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
-                unique_id = f"{prefix}_{clean_name}"
-                entity_id = f"sensor.{prefix}_{clean_name}"
+        if not is_aggregates_template:
+            sensor_registers = [reg for reg in registers if reg.get("entity_type") == "sensor"]
+            _LOGGER.info("Gefundene Sensor-Register: %d", len(sensor_registers))
+            
+            for reg in sensor_registers:
+                try:
+                    # Unique_ID Format: {prefix}_{template_sensor_name}
+                    sensor_name = reg.get("name", "unknown")
+                    # Bereinige den Namen für den unique_id
+                    clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+                    unique_id = f"{prefix}_{clean_name}"
+                    entity_id = f"sensor.{prefix}_{clean_name}"
+                    
+                    # Prüfen ob Entity bereits existiert
+                    if entity_id in existing_entities:
+                        _LOGGER.debug("Sensor %s existiert bereits, überspringe", entity_id)
+                        continue
+                    
+                    _LOGGER.info("Erstelle Sensor: name=%s, prefix=%s, unique_id=%s", 
+                                 sensor_name, prefix, unique_id)
+                    
+                    entities.append(ModbusTemplateSensor(
+                        hass=hass,
+                        entry=entry,
+                        register=reg,
+                        prefix=prefix,
+                        unique_id=unique_id
+                    ))
                 
-                # Prüfen ob Entity bereits existiert
-                if entity_id in existing_entities:
-                    _LOGGER.debug("Sensor %s existiert bereits, überspringe", entity_id)
+                except Exception as e:
+                    _LOGGER.error("Fehler beim Erstellen des Sensors %s: %s", reg.get("name", "unbekannt"), str(e))
                     continue
-                
-                _LOGGER.info("Erstelle Sensor: name=%s, prefix=%s, unique_id=%s", 
-                             sensor_name, prefix, unique_id)
-                
-                entities.append(ModbusTemplateSensor(
-                    hass=hass,
-                    entry=entry,
-                    register=reg,
-                    prefix=prefix,
-                    unique_id=unique_id
-                ))
-                
-            except Exception as e:
-                _LOGGER.error("Fehler beim Erstellen des Sensors %s: %s", reg.get("name", "unbekannt"), str(e))
-                continue
         
         # Create calculated entities if available
         calculated_entities = []
