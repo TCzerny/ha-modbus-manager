@@ -118,30 +118,39 @@ class ModbusAggregateSensor(SensorEntity):
         """Schedule a delayed search for entities to allow other sensors to be created first."""
         
         async def delayed_search():
-            # Wait a bit for other sensors to be created
-            await self.hass.async_block_till_done()
-            await asyncio.sleep(2)  # Give other sensors time to be created
+            # Wait for other sensors to be created and registered
+            max_attempts = 10
+            attempt = 0
             
-            # Now search for entities
-            self._find_group_entities()
+            while attempt < max_attempts:
+                await self.hass.async_block_till_done()
+                await asyncio.sleep(3)  # Wait longer for sensors to be registered
+                
+                # Search for entities
+                self._find_group_entities()
+                
+                if self._tracked_entities:
+                    # Found entities, setup tracking
+                    self._unsubscribe = async_track_state_change(
+                        self.hass,
+                        self._tracked_entities,
+                        self._state_changed
+                    )
+                    
+                    _LOGGER.info("Tracking für %d Entitäten in Gruppe %s eingerichtet (verzögert, Versuch %d)", 
+                                len(self._tracked_entities), self._group_tag, attempt + 1)
+                    self._tracking_setup = True
+                    
+                    # Initial update
+                    self._update_aggregate_value()
+                    return
+                
+                attempt += 1
+                _LOGGER.debug("Keine Entitäten für Gruppe %s gefunden (Versuch %d/%d)", 
+                             self._group_tag, attempt, max_attempts)
             
-            if not self._tracked_entities:
-                _LOGGER.warning("Keine Entitäten für Gruppe %s gefunden (nach verzögerter Suche)", self._group_tag)
-                return
-            
-            # Setup state change tracking using STANDARD Home Assistant API
-            self._unsubscribe = async_track_state_change(
-                self.hass,
-                self._tracked_entities,
-                self._state_changed
-            )
-            
-            _LOGGER.info("Tracking für %d Entitäten in Gruppe %s eingerichtet (verzögert)", 
-                        len(self._tracked_entities), self._group_tag)
-            self._tracking_setup = True
-            
-            # Initial update
-            self._update_aggregate_value()
+            _LOGGER.warning("Keine Entitäten für Gruppe %s gefunden nach %d Versuchen", 
+                           self._group_tag, max_attempts)
         
         # Schedule the delayed search
         self.hass.async_create_task(delayed_search())
