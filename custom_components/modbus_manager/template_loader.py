@@ -434,9 +434,9 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             
         else:
             # Standard template processing
-            raw_registers = data.get("sensors", [])
-            if not raw_registers:
-                _LOGGER.warning("Template %s has no sensors defined", template_name)
+        raw_registers = data.get("sensors", [])
+        if not raw_registers:
+            _LOGGER.warning("Template %s has no sensors defined", template_name)
                 # Allow empty base templates and aggregate-only templates
                 if "type" in data and data["type"] == "base_template":
                     raw_registers = []
@@ -444,7 +444,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
                     _LOGGER.info("Template %s is aggregate-only template", template_name)
                     raw_registers = []
                 else:
-                    return None
+            return None
             
             calculated_entities = data.get("calculated", [])
             controls = data.get("controls", [])
@@ -596,7 +596,7 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
         if data_type not in valid_data_types:
             _LOGGER.error("Ungültiger data_type in Template %s: %s", template_name, data_type)
             return False
-            
+        
         # Count validieren
         count = reg.get("count")
         if not isinstance(count, int) or count < 1:
@@ -610,7 +610,7 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
             if count < min_count:
                 _LOGGER.error("Float-Typ %s in Template %s benötigt mindestens %d Register, aber count=%d", 
                              data_type, template_name, min_count, count)
-                return False
+            return False
         
         # Scale validieren
         scale = reg.get("scale")
