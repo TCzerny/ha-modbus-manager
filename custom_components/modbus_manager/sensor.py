@@ -113,24 +113,25 @@ async def async_setup_entry(
             _LOGGER.info("Berechnete Sensoren haben Gruppen: %s", list(groups))
         else:
             _LOGGER.warning("Berechnete Sensoren haben KEINE Gruppen!")
-            
-            for calc_config in calculated_data:
-                try:
-                    # Create calculated sensor using the same logic as calculated.py
-                    from .calculated import ModbusCalculatedSensor
-                    
-                    entity = ModbusCalculatedSensor(
-                        hass=hass,
-                        config=calc_config,
-                        prefix=prefix,
-                        template_name=template_name
-                    )
-                    calculated_entities.append(entity)
-                    
-                except Exception as e:
-                    _LOGGER.error("Fehler beim Erstellen des berechneten Sensors %s: %s", 
-                                 calc_config.get("name", "unbekannt"), str(e))
-                    continue
+        
+        # Erstelle berechnete Sensoren (immer, unabhängig von Gruppen)
+        for calc_config in calculated_data:
+            try:
+                # Create calculated sensor using the same logic as calculated.py
+                from .calculated import ModbusCalculatedSensor
+                
+                entity = ModbusCalculatedSensor(
+                    hass=hass,
+                    config=calc_config,
+                    prefix=prefix,
+                    template_name=template_name
+                )
+                calculated_entities.append(entity)
+                
+            except Exception as e:
+                _LOGGER.error("Fehler beim Erstellen des berechneten Sensors %s: %s", 
+                             calc_config.get("name", "unbekannt"), str(e))
+                continue
         
         # Add aggregate sensors if available (from template aggregates section)
         aggregate_entities = []
