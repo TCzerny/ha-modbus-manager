@@ -113,13 +113,21 @@ async def async_setup_entry(
                                  calc_config.get("name", "unbekannt"), str(e))
                     continue
         
-        # Add all entities (regular sensors + calculated sensors)
-        all_entities = entities + calculated_entities
+        # Add aggregate sensors if available
+        aggregate_entities = []
+        aggregate_sensors = config_data.get("aggregate_sensors", [])
+        
+        if aggregate_sensors:
+            _LOGGER.info("Füge %d Aggregate-Sensoren hinzu", len(aggregate_sensors))
+            aggregate_entities.extend(aggregate_sensors)
+        
+        # Add all entities (regular sensors + calculated sensors + aggregate sensors)
+        all_entities = entities + calculated_entities + aggregate_entities
         
         if all_entities:
             async_add_entities(all_entities)
-            _LOGGER.info("%d Modbus Template Sensoren und %d berechnete Sensoren erfolgreich erstellt", 
-                         len(entities), len(calculated_entities))
+            _LOGGER.info("%d Modbus Template Sensoren, %d berechnete Sensoren und %d Aggregate-Sensoren erfolgreich erstellt", 
+                         len(entities), len(calculated_entities), len(aggregate_entities))
         else:
             _LOGGER.warning("Keine Sensoren erstellt")
             

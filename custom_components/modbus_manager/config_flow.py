@@ -299,9 +299,6 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     
                     # Add sensors to Home Assistant
                     self.hass.data[DOMAIN][self.config_entry.entry_id]["aggregate_sensors"] = sensors
-                    
-                    # Trigger platform reload to add new sensors
-                    await self.hass.config_entries.async_reload(self.config_entry.entry_id)
                 
                 if created_sensors:
                     _LOGGER.info("%d Aggregat-Sensoren erstellt", len(created_sensors))
