@@ -33,8 +33,12 @@ class RegisterOptimizer:
     
     def __init__(self, max_read_size: int = 8):
         """Initialize the optimizer."""
-        self.max_read_size = max_read_size
-        _LOGGER.info("Register-Optimizer initialisiert mit max_read_size: %d", max_read_size)
+        # Ensure max_read_size is an integer
+        if isinstance(max_read_size, list):
+            self.max_read_size = max_read_size[0] if max_read_size else 8
+        else:
+            self.max_read_size = max_read_size
+        _LOGGER.info("Register-Optimizer initialisiert mit max_read_size: %d", self.max_read_size)
     
     def optimize_registers(self, registers: List[Dict[str, Any]]) -> List[RegisterRange]:
         """Group registers into optimal reading ranges."""
