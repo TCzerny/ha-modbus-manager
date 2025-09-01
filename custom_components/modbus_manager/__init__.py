@@ -201,7 +201,7 @@ async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bo
         }
         
         # Forward to sensor platform
-        await entry.async_forward_entry_setup(hass, "sensor")
+        await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
         
         _LOGGER.info("Aggregates Template erfolgreich eingerichtet")
         return True
