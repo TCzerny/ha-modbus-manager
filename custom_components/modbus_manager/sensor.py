@@ -95,7 +95,7 @@ async def async_setup_entry(
         
         # Create calculated entities if available
         calculated_entities = []
-        calculated_data = config_data.get("calculated_entities", [])
+        calculated_data = config_data.get("calculated", [])
         
         if calculated_data:
             _LOGGER.info("Erstelle %d berechnete Sensoren für Template %s", len(calculated_data), template_name)
