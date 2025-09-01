@@ -35,6 +35,9 @@ class ModbusCalculatedSensor(SensorEntity):
         clean_unique_id = config.get('unique_id', config.get('name', 'unknown')).lower().replace(' ', '_')
         self._attr_entity_id = f"sensor.{prefix}_{clean_unique_id}"
         
+        # Force entity_id to be used (prevent Home Assistant from overriding)
+        self._attr_has_entity_name = False
+        
         # Template processing - support both 'template' and 'state' parameters
         template_str = config.get("template", config.get("state", ""))
         if not template_str:
