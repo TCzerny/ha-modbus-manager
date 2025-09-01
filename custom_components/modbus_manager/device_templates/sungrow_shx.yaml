@@ -16,7 +16,7 @@ sensors:
     data_type: string
     count: 10
     scan_interval: 600
-    group: "device_count"
+    group: "PV_device_count"
 
   - name: Sungrow device type code
     unique_id: dev_code
@@ -196,7 +196,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    group: "total_dc_power"
+    group: "PV_total_dc_power"
 
   - name: Phase A voltage
     unique_id: phase_a_voltage
@@ -249,7 +249,7 @@ sensors:
     offset: 0
     scan_interval: 10
     # Debug: Add validation for int32 values
-    group: "power_measurement"
+    group: "PV_power_measurement"
 
   - name: Power factor
     unique_id: power_factor
@@ -1157,7 +1157,7 @@ sensors:
       5: "Discharging"
       6: "Error Active"
       7: "Maintenance Mode"
-    group: "status"
+    group: "PV_status"
 
 
 
@@ -1172,7 +1172,7 @@ sensors:
       1: "ON/OFF"
       2: "Power optimization"
       3: "Disabled"
-    group: "modes"
+    group: "PV_modes"
 
 
   - name: Daily PV generation
@@ -1579,7 +1579,7 @@ sensors:
       1: "Forced mode"
       2: "Backup mode"
       3: "Emergency mode"
-    group: "modes"
+    group: "PV_modes"
 
   - name: Battery forced charge discharge cmd raw
     unique_id: battery_forced_charge_discharge_cmd_raw
@@ -1707,7 +1707,7 @@ controls:
       1: "Forced mode"
       2: "Backup mode"
       3: "Emergency mode"
-    group: "modes"
+    group: "PV_modes"
 
   - type: "select"
     name: "Load Adjustment Mode"
@@ -1720,7 +1720,7 @@ controls:
       1: "ON/OFF"
       2: "Power optimization"
       3: "Disabled"
-    group: "modes"
+    group: "PV_modes"
 
   - type: "number"
     name: "Export Power Limit"
@@ -1736,7 +1736,7 @@ controls:
     max_value: 10000
     step: 100
     scan_interval: 30
-    group: "control"
+    group: "PV_control"
 
   - type: "number"
     name: "Max SoC"
@@ -1751,7 +1751,7 @@ controls:
     max_value: 100
     step: 1
     scan_interval: 30
-    group: "battery_control"
+    group: "PV_battery_control"
 
   - type: "number"
     name: "Min SoC"
@@ -1766,7 +1766,7 @@ controls:
     max_value: 90
     step: 1
     scan_interval: 30
-    group: "battery_control"
+    group: "PV_battery_control"
 
   - type: "select"
     name: "Backup Mode"
@@ -1778,7 +1778,7 @@ controls:
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
-    group: "modes"
+    group: "PV_modes"
 
   - type: "select"
     name: "Export Power Limit Mode"
@@ -1790,7 +1790,7 @@ controls:
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
-    group: "modes"
+    group: "PV_modes"
 
   - type: "number"
     name: "Reserved SoC for Backup"
@@ -1803,7 +1803,7 @@ controls:
     max_value: 100
     step: 1
     scan_interval: 30
-    group: "battery_control"
+    group: "PV_battery_control"
 
   - type: "number"
     name: "Battery Max Charge Power"
@@ -1822,14 +1822,14 @@ controls:
     options:
       0x55: "OFF"
       0xAA: "ON"
-    group: "modes"
+    group: "PV_modes"
     precision: 0
     unit_of_measurement: "W"
     min_value: 0
     max_value: 10000
     step: 100
     scan_interval: 30
-    group: "battery_control"
+    group: "PV_battery_control"
 
 # Calculated Sensors (based on mkaiser power calculations)
 calculated:
@@ -1847,7 +1847,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "mppt_power"
+    group: "PV_mppt_power"
 
 
   - name: "MPPT2 Power"
@@ -1862,7 +1862,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "mppt_power"
+    group: "PV_mppt_power"
 
   # Total Power Calculations
   - name: "Total MPPT Power"
@@ -1879,7 +1879,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "total_power"
+    group: "PV_total_power"
 
   # Net Power Calculations (based on mkaiser logic)
   - name: "Net Grid Power"
@@ -1891,7 +1891,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "grid_power"
+    group: "PV_grid_power"
 
   - name: "Grid Import Power"
     unique_id: "grid_import_power"
@@ -1907,7 +1907,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "grid_power"
+    group: "PV_grid_power"
 
   - name: "Grid Export Power"
     unique_id: "grid_export_power"
@@ -1923,7 +1923,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "grid_power"
+    group: "PV_grid_power"
 
   
 
@@ -1937,7 +1937,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "load_power"
+    group: "PV_load_power"
 
   # System Efficiency Calculations
   - name: "Solar to Grid Efficiency"
@@ -1952,7 +1952,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
-    group: "efficiency"
+    group: "PV_efficiency"
 
   - name: "Battery to Load Efficiency"
     unique_id: "battery_to_load_efficiency"
@@ -1966,7 +1966,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
-    group: "efficiency"
+    group: "PV_efficiency"
 
   # Power Balance Calculations
   - name: "Power Balance"
@@ -1983,7 +1983,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "power_balance"
+    group: "PV_power_balance"
 
   # Phase Power Calculations
   - name: "Total Phase Power"
@@ -1999,7 +1999,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "phase_power"
+    group: "PV_phase_power"
 
   # Individual Phase Power Calculations (based on mkaiser)
   - name: "Phase A Power"
@@ -2014,7 +2014,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "phase_power"
+    group: "PV_phase_power"
 
   - name: "Phase B Power"
     unique_id: "phase_b_power"
@@ -2028,7 +2028,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "phase_power"
+    group: "PV_phase_power"
 
   - name: "Phase C Power"
     unique_id: "phase_c_power"
@@ -2042,7 +2042,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "phase_power"
+    group: "PV_phase_power"
 
   # Enhanced Battery Power Calculations (based on mkaiser)
   - name: "Signed Battery Power"
@@ -2061,7 +2061,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "battery_power"
+    group: "PV_battery_power"
 
   # Battery Power Calculations
   - name: "Battery Charging Power"
@@ -2078,7 +2078,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "battery_charging"
+    group: "PV_battery_charging"
 
   - name: "Battery Discharging Power"
     unique_id: "battery_discharging_power"
@@ -2094,7 +2094,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "battery_discharging"
+    group: "PV_battery_discharging"
 
   # Enhanced Grid Power Calculations (based on mkaiser)
   - name: "Import Power"
@@ -2111,7 +2111,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "grid_import"
+    group: "PV_grid_import"
 
   - name: "Export Power"
     unique_id: "export_power"
@@ -2127,7 +2127,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "grid_export"
+    group: "PV_grid_export"
 
   # calculated sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
   - name: "Meter Active Power"
@@ -2161,7 +2161,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "meter_power"
+    group: "PV_meter_power"
 
   - name: "Meter Phase B Active Power"
     unique_id: "meter_phase_b_active_power"
@@ -2181,7 +2181,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "meter_power"
+    group: "PV_meter_power"
 
   - name: "Meter Phase C Active Power"
     unique_id: "meter_phase_c_active_power"
@@ -2201,4 +2201,4 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "meter_power"
+    group: "PV_meter_power"

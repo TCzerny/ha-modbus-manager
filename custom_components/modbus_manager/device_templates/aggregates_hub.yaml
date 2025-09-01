@@ -8,7 +8,7 @@ sensors: []
 # Aggregates configuration
 aggregates:
   - name: "Total Grid Power"
-    group: "grid_power"
+    group: "PV_grid_power"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -16,7 +16,7 @@ aggregates:
     icon: "mdi:transmission-tower"
     
   - name: "Total Grid Import Power"
-    group: "grid_import"
+    group: "PV_grid_import"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -24,7 +24,7 @@ aggregates:
     icon: "mdi:transmission-tower-import"
     
   - name: "Total Grid Export Power"
-    group: "grid_export"
+    group: "PV_grid_export"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -32,7 +32,7 @@ aggregates:
     icon: "mdi:transmission-tower-export"
     
   - name: "Total Battery Power"
-    group: "battery_power"
+    group: "PV_battery_power"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -40,7 +40,7 @@ aggregates:
     icon: "mdi:battery"
     
   - name: "Total Solar Power"
-    group: "mppt_power"
+    group: "PV_mppt_power"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -48,7 +48,7 @@ aggregates:
     icon: "mdi:solar-power"
     
   - name: "Total DC Power"
-    group: "total_dc_power"
+    group: "PV_total_dc_power"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -56,7 +56,7 @@ aggregates:
     icon: "mdi:lightning-bolt"
     
   - name: "Total Load Power"
-    group: "load_power"
+    group: "PV_load_power"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -64,7 +64,7 @@ aggregates:
     icon: "mdi:home-lightning-bolt"
     
   - name: "Average Efficiency"
-    group: "efficiency"
+    group: "PV_efficiency"
     method: "average"
     unit_of_measurement: "%"
     device_class: "power_factor"
@@ -73,7 +73,7 @@ aggregates:
     
     
   - name: "Total Battery Charging Power"
-    group: "battery_charging"
+    group: "PV_battery_charging"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -81,7 +81,7 @@ aggregates:
     icon: "mdi:battery-plus"
     
   - name: "Total Battery Discharging Power"
-    group: "battery_discharging"
+    group: "PV_battery_discharging"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -89,7 +89,7 @@ aggregates:
     icon: "mdi:battery-minus"
     
   - name: "Total Power Measurement"
-    group: "power_measurement"
+    group: "PV_power_measurement"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -97,7 +97,7 @@ aggregates:
     icon: "mdi:lightning-bolt"
     
   - name: "Total Power Balance"
-    group: "power_balance"
+    group: "PV_power_balance"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -105,7 +105,7 @@ aggregates:
     icon: "mdi:scale-balance"
     
   - name: "Total Phase Power"
-    group: "phase_power"
+    group: "PV_phase_power"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -113,7 +113,7 @@ aggregates:
     icon: "mdi:flash"
     
   - name: "Total Meter Power"
-    group: "meter_power"
+    group: "PV_meter_power"
     method: "sum"
     unit_of_measurement: "W"
     device_class: "power"
@@ -121,9 +121,58 @@ aggregates:
     icon: "mdi:meter-electric"
     
   - name: "Device Count"
-    group: "device_count"
+    group: "PV_device_count"
     method: "count"
     unit_of_measurement: ""
     device_class: null
     state_class: "measurement"
     icon: "mdi:counter"
+    
+  # EV Charger Aggregates
+  - name: "Total EV Charging Power"
+    group: "EV_charging_power"
+    method: "sum"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    icon: "mdi:ev-station"
+    
+  - name: "Total EV Current"
+    group: "EV_current_measurement"
+    method: "sum"
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    icon: "mdi:lightning-bolt"
+    
+  - name: "Total EV Max Current"
+    group: "EV_max_current_setting"
+    method: "sum"
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    icon: "mdi:gauge"
+    
+  - name: "Total EV Max Charging Power"
+    group: "EV_max_charging_power"
+    method: "sum"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    icon: "mdi:ev-station"
+    
+  - name: "Average EV Charging Efficiency"
+    group: "EV_efficiency"
+    method: "average"
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    icon: "mdi:gauge"
+    
+  - name: "Active EV Chargers"
+    group: "EV_charging_status"
+    method: "count"
+    unit_of_measurement: ""
+    device_class: null
+    state_class: "measurement"
+    icon: "mdi:ev-station"

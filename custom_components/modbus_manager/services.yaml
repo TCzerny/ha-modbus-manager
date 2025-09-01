@@ -1,0 +1,70 @@
+# Modbus Manager Services
+# Services for controlling devices
+
+set_ev_charger_current:
+  name: "Set EV Charger Current"
+  description: "Set the maximum current for all phases of an EV charger"
+  fields:
+    entity_id:
+      name: "Entity ID"
+      description: "The EV charger entity ID"
+      required: true
+      selector:
+        entity:
+          domain: sensor
+          device_class: current
+    current:
+      name: "Current"
+      description: "Maximum current in Amperes (0-16)"
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 16
+          step: 1
+          unit_of_measurement: "A"
+    phases:
+      name: "Phases"
+      description: "Number of phases to set (1, 2, or 3)"
+      required: false
+      default: 3
+      selector:
+        select:
+          options:
+            - 1
+            - 2
+            - 3
+
+set_ev_charger_fallback_current:
+  name: "Set EV Charger Fallback Current"
+  description: "Set the fallback current for all phases of an EV charger"
+  fields:
+    entity_id:
+      name: "Entity ID"
+      description: "The EV charger entity ID"
+      required: true
+      selector:
+        entity:
+          domain: sensor
+          device_class: current
+    current:
+      name: "Fallback Current"
+      description: "Fallback current in Amperes (0-16)"
+      required: true
+      selector:
+        number:
+          min: 0
+          max: 16
+          step: 1
+          unit_of_measurement: "A"
+    phases:
+      name: "Phases"
+      description: "Number of phases to set (1, 2, or 3)"
+      required: false
+      default: 3
+      selector:
+        select:
+          options:
+            - 1
+            - 2
+            - 3
