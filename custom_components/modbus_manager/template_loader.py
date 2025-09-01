@@ -332,14 +332,14 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             _LOGGER.error("Template %s hat keinen Namen", template_path)
             return None
         
-        _LOGGER.info("Template %s wird verarbeitet", template_name)
+        _LOGGER.debug("Template %s wird verarbeitet", template_name)
         
         # Check if template extends a base template
         extends_name = data.get("extends")
         if extends_name and base_templates and extends_name in base_templates:
             # Extend from base template
             base_template = base_templates[extends_name]
-            _LOGGER.info("Template %s erweitert BASE-Template %s", template_name, extends_name)
+            _LOGGER.debug("Template %s erweitert BASE-Template %s", template_name, extends_name)
             
             # Validate SunSpec template if it extends SunSpec Standard
             if "SunSpec" in extends_name:
@@ -349,7 +349,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             
             # Check if this is a SunSpec template with model structure
             if "model_addresses" in data:
-                _LOGGER.info("Template %s verwendet SunSpec-Modellstruktur", template_name)
+                _LOGGER.debug("Template %s verwendet SunSpec-Modellstruktur", template_name)
                 
                 # Process SunSpec model structure
                 model_registers = process_sunspec_model_structure(base_template, data["model_addresses"])
@@ -357,7 +357,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
                 # Apply register mappings if present
                 register_mapping = data.get("register_mapping", {})
                 if register_mapping:
-                    _LOGGER.info("Wende Register-Mappings für Template %s an", template_name)
+                    _LOGGER.debug("Wende Register-Mappings für Template %s an", template_name)
                     for reg in model_registers:
                         reg_name = reg.get("name")
                         if reg_name in register_mapping:
@@ -398,7 +398,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             # Add custom registers if present
             custom_registers = data.get("custom_registers", [])
             if custom_registers:
-                _LOGGER.info("Adding %d custom registers to template %s", 
+                _LOGGER.debug("Adding %d custom registers to template %s", 
                             len(custom_registers), template_name)
                 raw_registers.extend(custom_registers)
             
@@ -441,7 +441,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
                 if "type" in data and data["type"] == "base_template":
                     raw_registers = []
                 elif "aggregates" in data and data["aggregates"]:
-                    _LOGGER.info("Template %s is aggregate-only template", template_name)
+                    _LOGGER.debug("Template %s is aggregate-only template", template_name)
                     raw_registers = []
                 else:
                     return None
@@ -449,7 +449,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             calculated_entities = data.get("calculated", [])
             controls = data.get("controls", [])
         
-        _LOGGER.info("Template %s: %d sensors found", template_name, len(raw_registers))
+        _LOGGER.debug("Template %s: %d sensors found", template_name, len(raw_registers))
         
         # Debug: Show first register
         if raw_registers:
@@ -470,15 +470,15 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             _LOGGER.error("Template %s has no valid registers", template_name)
             return None
         
-        _LOGGER.info("Template %s: %d valid registers processed", template_name, len(validated_registers))
+        _LOGGER.debug("Template %s: %d valid registers processed", template_name, len(validated_registers))
         
         # Process calculated section if present
         if calculated_entities:
-            _LOGGER.info("Template %s: %d calculated entities found", template_name, len(calculated_entities))
+            _LOGGER.debug("Template %s: %d calculated entities found", template_name, len(calculated_entities))
         
         # Process controls section if present
         if controls:
-            _LOGGER.info("Template %s: %d controls found", template_name, len(controls))
+            _LOGGER.debug("Template %s: %d controls found", template_name, len(controls))
         
         # Debug: Template structure
         _LOGGER.debug("Template %s structure: name=%s, sensors=%d, calculated=%d, controls=%d", 
@@ -488,7 +488,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
         # Process aggregates section if present
         aggregates = data.get("aggregates", [])
         if aggregates:
-            _LOGGER.info("Template %s: %d aggregates found", template_name, len(aggregates))
+            _LOGGER.debug("Template %s: %d aggregates found", template_name, len(aggregates))
         
         # Include all template metadata
         result = {
@@ -689,7 +689,7 @@ async def load_mapping_template(mapping_path: str, base_templates: Dict[str, Dic
         mapping_data = await load_single_template(mapping_path, base_templates)
         
         if mapping_data and "extends" in mapping_data:
-            _LOGGER.info("Loaded mapping template %s extending %s", 
+            _LOGGER.debug("Loaded mapping template %s extending %s", 
                         mapping_data.get("name"), mapping_data.get("extends"))
             return mapping_data
         else:
