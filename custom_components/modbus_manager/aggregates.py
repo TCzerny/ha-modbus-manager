@@ -24,7 +24,7 @@ class ModbusAggregateSensor(SensorEntity):
         self._method = method
         self._prefix = prefix
         
-        # Generate proper entity_id (global, not device-specific)
+        # Generate proper entity_id with meaningful prefix
         clean_name = name.lower().replace(' ', '_').replace('-', '_')
         entity_id = f"sensor.{clean_name}"
         self._attr_name = name
@@ -304,12 +304,12 @@ class AggregationManager:
             sensors = []
             
             for method in methods:
-                sensor_name = f"{group_tag}_{method}"
-                unique_id = f"aggregate_{group_tag}_{method}"  # Global unique ID without prefix
+                sensor_name = f"ModbusManager_{group_tag}_{method}"
+                unique_id = f"modbus_manager_aggregate_{group_tag}_{method}"  # Global unique ID with meaningful prefix
                 
                 device_info = {
-                    "identifiers": {(DOMAIN, f"aggregate_{group_tag}")},
-                    "name": f"Aggregate {group_tag}",
+                    "identifiers": {(DOMAIN, f"modbus_manager_aggregate_{group_tag}")},
+                    "name": f"Modbus Manager Aggregate {group_tag}",
                     "manufacturer": "Modbus Manager",
                     "model": "Aggregation Sensor"
                 }

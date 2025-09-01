@@ -328,7 +328,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                                     domain="sensor",
                                     platform=DOMAIN,
                                     unique_id=sensor.unique_id,
-                                    suggested_object_id=sensor.unique_id.replace("aggregate_", ""),
+                                    suggested_object_id=sensor.unique_id.replace("modbus_manager_aggregate_", ""),
                                     config_entry=self.config_entry,
                                     device_id=modbus_device.id if modbus_device else None,
                                     disabled_by=None
