@@ -118,6 +118,9 @@ async def async_setup_entry(
         aggregates_config = config_data.get("aggregates", [])
         is_aggregates_template = config_data.get("is_aggregates_template", False)
         
+        _LOGGER.info("Sensor Platform Debug: aggregates_config=%s, is_aggregates_template=%s", 
+                     len(aggregates_config) if aggregates_config else "None", is_aggregates_template)
+        
         if aggregates_config:
             _LOGGER.info("Erstelle %d Aggregate-Sensoren aus Template", len(aggregates_config))
             

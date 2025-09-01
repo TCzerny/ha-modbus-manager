@@ -192,13 +192,16 @@ async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bo
         _LOGGER.info("Setup Aggregates Template mit %d Aggregationen", len(aggregates))
         
         # Store aggregates data for sensor platform
-        hass.data[DOMAIN][entry.entry_id] = {
+        config_data = {
             "aggregates": aggregates,
             "prefix": prefix,
             "template": entry.data.get("template", "Modbus Manager Aggregates"),
             "template_version": entry.data.get("template_version", 1),
             "is_aggregates_template": True
         }
+        
+        _LOGGER.info("Integration Debug: Speichere config_data=%s", config_data)
+        hass.data[DOMAIN][entry.entry_id] = config_data
         
         # Forward to sensor platform
         await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
