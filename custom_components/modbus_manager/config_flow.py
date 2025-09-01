@@ -364,6 +364,21 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
     async def async_step_init(self, user_input: dict = None) -> FlowResult:
         """Manage the options."""
+        # Check if this is an aggregates template
+        is_aggregates_template = self.config_entry.data.get("is_aggregates_template", False)
+        
+        if is_aggregates_template:
+            # Aggregates templates don't need options - just show info
+            return self.async_show_form(
+                step_id="aggregates_info",
+                data_schema=vol.Schema({}),
+                description_placeholders={
+                    "template_name": self.config_entry.data.get("template", "Modbus Manager Aggregates"),
+                    "template_version": str(self.config_entry.data.get("template_version", 1)),
+                    "aggregate_count": str(len(self.config_entry.data.get("aggregates", [])))
+                }
+            )
+        
         if user_input is not None:
             if "update_template" in user_input and user_input["update_template"]:
                 return await self.async_step_update_template()
