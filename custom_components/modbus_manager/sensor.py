@@ -192,6 +192,9 @@ class ModbusTemplateSensor(SensorEntity):
         self._flags = register.get("flags", {})
         self._options = register.get("options", {})
         
+        # Group attribute for aggregation
+        self._group = register.get("group", None)
+        
         # Bit-Operationen
         self._bitmask = register.get("bitmask", None)
         self._bit_position = register.get("bit_position", None)
@@ -227,13 +230,21 @@ class ModbusTemplateSensor(SensorEntity):
             via_device=(DOMAIN, entry.entry_id),
         )
         
-        _LOGGER.info("Sensor %s initialized (Address: %d, Type: %s, Prefix: %s, Name: %s, Unique-ID: %s)", 
-                     self._name, self._address, self._data_type, prefix, self._attr_name, unique_id)
+        _LOGGER.info("Sensor %s initialized (Address: %d, Type: %s, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)", 
+                     self._name, self._address, self._data_type, prefix, self._attr_name, unique_id, self._group)
 
     @property
     def template_name(self) -> str:
         """Return the template name."""
         return self._register.get("template", "unknown")
+    
+    @property
+    def extra_state_attributes(self) -> dict:
+        """Return entity specific state attributes."""
+        attributes = {}
+        if self._group:
+            attributes["group"] = self._group
+        return attributes
 
     async def async_update(self) -> None:
         """Update the sensor value."""

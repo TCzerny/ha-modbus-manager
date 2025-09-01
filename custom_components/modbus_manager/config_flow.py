@@ -1,5 +1,6 @@
 """Config Flow for Modbus Manager."""
 import voluptuous as vol
+from typing import List
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
@@ -215,6 +216,19 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         """Initialize options flow."""
         self.config_entry = config_entry
         self._aggregation_manager = None
+    
+    def _get_modbus_prefixes(self) -> List[str]:
+        """Get all Modbus Manager prefixes from config entries."""
+        try:
+            prefixes = []
+            for entry in self.hass.config_entries.async_entries(DOMAIN):
+                prefix = entry.data.get("prefix", "")
+                if prefix:
+                    prefixes.append(prefix)
+            return prefixes
+        except Exception as e:
+            _LOGGER.error("Fehler beim Abrufen der Modbus-Präfixe: %s", str(e))
+            return []
 
     async def async_step_init(self, user_input: dict = None) -> FlowResult:
         """Manage the options."""
@@ -279,11 +293,19 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             available_groups = await self._aggregation_manager.discover_groups()
             
             if not available_groups:
+                _LOGGER.warning("Keine Gruppen für Aggregation gefunden. Verfügbare Sensoren:")
+                all_states = self.hass.states.async_all()
+                for state in all_states:
+                    if state.domain == "sensor" and any(
+                        prefix in state.entity_id for prefix in self._get_modbus_prefixes()
+                    ):
+                        _LOGGER.warning("Sensor: %s, Attributes: %s", state.entity_id, state.attributes)
+                
                 return self.async_show_form(
                     step_id="aggregation_config",
                     data_schema=vol.Schema({}),
                     description_placeholders={
-                        "message": "Keine Gruppen gefunden. Stellen Sie sicher, dass Sensoren mit group-Tags konfiguriert sind."
+                        "message": "Keine Gruppen gefunden. Stellen Sie sicher, dass Sensoren mit group-Tags konfiguriert sind. Siehe Logs für Details."
                     }
                 )
 
