@@ -111,6 +111,8 @@ async def async_setup_entry(
                 groups.add(group)
         if groups:
             _LOGGER.info("Berechnete Sensoren haben Gruppen: %s", list(groups))
+        else:
+            _LOGGER.warning("Berechnete Sensoren haben KEINE Gruppen!")
             
             for calc_config in calculated_data:
                 try:

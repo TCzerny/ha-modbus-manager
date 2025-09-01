@@ -77,8 +77,8 @@ class ModbusCalculatedSensor(SensorEntity):
         # State
         self._attr_native_value = None
         
-        _LOGGER.debug("Created calculated sensor: %s (state: %s)", 
-                      self._attr_name, processed_template)
+        _LOGGER.info("Created calculated sensor: %s (entity_id: %s, group: %s)", 
+                      self._attr_name, self._attr_entity_id, self._group)
     
     def _process_template_with_prefix(self, template_str: str) -> str:
         """Process template string to inject prefix into sensor references."""
