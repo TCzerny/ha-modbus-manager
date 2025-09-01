@@ -272,7 +272,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         """Configure aggregations for discovered groups."""
         try:
             if not self._aggregation_manager:
-                self._aggregation_manager = AggregationManager(self.hass)
+                prefix = self.config_entry.data.get("prefix", "unknown")
+                self._aggregation_manager = AggregationManager(self.hass, prefix)
             
             # Discover available groups
             available_groups = await self._aggregation_manager.discover_groups()
@@ -288,13 +289,19 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
             if user_input is not None:
                 # Create aggregate sensors for selected groups
-                selected_groups = user_input.get("groups", [])
-                methods = user_input.get("methods", ["sum", "average"])
+                selected_group = user_input.get("groups")
+                selected_method = user_input.get("methods", "sum")
                 
                 created_sensors = []
-                for group in selected_groups:
-                    sensors = await self._aggregation_manager.create_aggregate_sensors(group, methods)
+                if selected_group:
+                    sensors = await self._aggregation_manager.create_aggregate_sensors(selected_group, [selected_method])
                     created_sensors.extend(sensors)
+                    
+                    # Add sensors to Home Assistant
+                    self.hass.data[DOMAIN][self.config_entry.entry_id]["aggregate_sensors"] = sensors
+                    
+                    # Trigger platform reload to add new sensors
+                    await self.hass.config_entries.async_reload(self.config_entry.entry_id)
                 
                 if created_sensors:
                     _LOGGER.info("%d Aggregat-Sensoren erstellt", len(created_sensors))
@@ -303,8 +310,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     title="",
                     data={
                         "aggregations_configured": True,
-                        "groups": selected_groups,
-                        "methods": methods
+                        "groups": [selected_group] if selected_group else [],
+                        "methods": [selected_method]
                     }
                 )
 
@@ -312,14 +319,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             return self.async_show_form(
                 step_id="aggregation_config",
                 data_schema=vol.Schema({
-                    vol.Required("groups"): vol.All(
-                        vol.In(available_groups),
-                        vol.Length(min=1, msg="Mindestens eine Gruppe auswählen")
-                    ),
-                    vol.Optional("methods", default=["sum", "average"]): vol.All(
-                        vol.In(["sum", "average", "max", "min", "count"]),
-                        vol.Length(min=1, msg="Mindestens eine Methode auswählen")
-                    ),
+                    vol.Required("groups"): vol.In(available_groups),
+                    vol.Optional("methods", default=["sum", "average"]): vol.In(["sum", "average", "max", "min", "count"]),
                 }),
                 description_placeholders={
                     "available_groups": ", ".join(available_groups),

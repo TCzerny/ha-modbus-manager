@@ -60,7 +60,8 @@ PLATFORMS = [
     Platform.SWITCH, 
     Platform.SELECT,
     Platform.BINARY_SENSOR,
-    Platform.BUTTON
+    Platform.BUTTON,
+    "aggregate_sensor"
 ]
 
 # Neue Entity-Typen basierend auf modbus_connect

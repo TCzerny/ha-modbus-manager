@@ -127,6 +127,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             "host": entry.data["host"],
             "port": entry.data.get("port", 502),
             "slave_id": entry.data.get("slave_id", 1),
+            "aggregate_sensors": [],
         }
         
         # Template-Daten global verfügbar machen für Controls
