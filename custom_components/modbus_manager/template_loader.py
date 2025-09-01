@@ -482,12 +482,18 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
                      template_name, template_name, len(validated_registers), 
                      len(calculated_entities), len(controls))
         
+        # Process aggregates section if present
+        aggregates = data.get("aggregates", [])
+        if aggregates:
+            _LOGGER.info("Template %s: %d aggregates found", template_name, len(aggregates))
+        
         # Include all template metadata
         result = {
             "name": template_name,
             "sensors": validated_registers,
             "calculated": calculated_entities,
             "controls": controls,
+            "aggregates": aggregates,
             "type": data.get("type", "device_template"),
             "version": data.get("version", 1),
             "description": data.get("description", ""),

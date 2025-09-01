@@ -113,13 +113,34 @@ async def async_setup_entry(
                                  calc_config.get("name", "unbekannt"), str(e))
                     continue
         
-        # Add aggregate sensors if available
+        # Add aggregate sensors if available (from template aggregates section)
         aggregate_entities = []
-        aggregate_sensors = config_data.get("aggregate_sensors", [])
+        aggregates_config = config_data.get("aggregates", [])
         
-        if aggregate_sensors:
-            _LOGGER.info("Füge %d Aggregate-Sensoren hinzu", len(aggregate_sensors))
-            aggregate_entities.extend(aggregate_sensors)
+        if aggregates_config:
+            _LOGGER.info("Erstelle %d Aggregate-Sensoren aus Template", len(aggregates_config))
+            
+            for aggregate_config in aggregates_config:
+                try:
+                    from .aggregate_sensor import ModbusAggregateSensor
+                    
+                    entity = ModbusAggregateSensor(
+                        hass=hass,
+                        aggregate_config=aggregate_config,
+                        prefix=prefix
+                    )
+                    aggregate_entities.append(entity)
+                    
+                except Exception as e:
+                    _LOGGER.error("Fehler beim Erstellen des Aggregate-Sensors %s: %s", 
+                                 aggregate_config.get("name", "unbekannt"), str(e))
+                    continue
+        
+        # Legacy: Add aggregate sensors from config data (for backward compatibility)
+        legacy_aggregate_sensors = config_data.get("aggregate_sensors", [])
+        if legacy_aggregate_sensors:
+            _LOGGER.info("Füge %d Legacy Aggregate-Sensoren hinzu", len(legacy_aggregate_sensors))
+            aggregate_entities.extend(legacy_aggregate_sensors)
         
         # Add all entities (regular sensors + calculated sensors + aggregate sensors)
         all_entities = entities + calculated_entities + aggregate_entities

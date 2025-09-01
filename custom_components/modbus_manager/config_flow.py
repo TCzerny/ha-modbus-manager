@@ -8,7 +8,7 @@ from homeassistant.const import CONF_HOST, CONF_PORT
 
 from .const import DOMAIN
 from .template_loader import get_template_names, get_template_by_name
-from .aggregates import AggregationManager
+
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -215,27 +215,11 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     def __init__(self, config_entry: config_entries.ConfigEntry):
         """Initialize options flow."""
         self.config_entry = config_entry
-        self._aggregation_manager = None
-    
-    def _get_modbus_prefixes(self) -> List[str]:
-        """Get all Modbus Manager prefixes from config entries."""
-        try:
-            prefixes = []
-            for entry in self.hass.config_entries.async_entries(DOMAIN):
-                prefix = entry.data.get("prefix", "")
-                if prefix:
-                    prefixes.append(prefix)
-            return prefixes
-        except Exception as e:
-            _LOGGER.error("Fehler beim Abrufen der Modbus-Präfixe: %s", str(e))
-            return []
 
     async def async_step_init(self, user_input: dict = None) -> FlowResult:
         """Manage the options."""
         if user_input is not None:
-            if "configure_aggregations" in user_input:
-                return await self.async_step_aggregation_config()
-            elif "update_template" in user_input and user_input["update_template"]:
+            if "update_template" in user_input and user_input["update_template"]:
                 return await self.async_step_update_template()
             else:
                 # Update basic settings
@@ -273,7 +257,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     "message_wait",
                     default=self.config_entry.data.get("message_wait", 0)
                 ): int,
-                vol.Optional("configure_aggregations"): bool,
+
                 vol.Optional("update_template"): bool,
             }),
             description_placeholders={
@@ -282,119 +266,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             }
             )
 
-    async def async_step_aggregation_config(self, user_input: dict = None) -> FlowResult:
-        """Configure aggregations for discovered groups."""
-        try:
-            if not self._aggregation_manager:
-                prefix = self.config_entry.data.get("prefix", "unknown")
-                self._aggregation_manager = AggregationManager(self.hass, prefix)
-            
-            # Discover available groups
-            available_groups = await self._aggregation_manager.discover_groups()
-            
-            if not available_groups:
-                _LOGGER.warning("Keine Gruppen für Aggregation gefunden. Verfügbare Sensoren:")
-                all_states = self.hass.states.async_all()
-                for state in all_states:
-                    if state.domain == "sensor" and any(
-                        prefix in state.entity_id for prefix in self._get_modbus_prefixes()
-                    ):
-                        _LOGGER.warning("Sensor: %s, Attributes: %s", state.entity_id, state.attributes)
-                
-                return self.async_show_form(
-                    step_id="aggregation_config",
-                    data_schema=vol.Schema({}),
-                    description_placeholders={
-                        "message": "Keine Gruppen gefunden. Stellen Sie sicher, dass Sensoren mit group-Tags konfiguriert sind. Siehe Logs für Details."
-                    }
-                )
 
-            if user_input is not None:
-                # Create aggregate sensors for selected groups
-                selected_group = user_input.get("groups")
-                selected_method = user_input.get("methods", "sum")
-                
-                created_sensors = []
-                if selected_group:
-                    sensors = await self._aggregation_manager.create_aggregate_sensors(selected_group, [selected_method])
-                    created_sensors.extend(sensors)
-                    
-                    # Add sensors to Home Assistant
-                    self.hass.data[DOMAIN][self.config_entry.entry_id]["aggregate_sensors"] = sensors
-                    
-                    # Add sensors to Home Assistant entity registry
-                    try:
-                        # Get the entity registry
-                        from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
-                        registry = async_get_entity_registry(self.hass)
-                        
-                        # Get the device registry to find the Modbus Manager device
-                        from homeassistant.helpers.device_registry import async_get as async_get_device_registry
-                        device_registry = async_get_device_registry(self.hass)
-                        
-                        # Find the Modbus Manager device for this config entry
-                        modbus_device = None
-                        for device in device_registry.devices.values():
-                            if device.config_entries and self.config_entry.entry_id in device.config_entries:
-                                modbus_device = device
-                                break
-                        
-                        if not modbus_device:
-                            _LOGGER.warning("Modbus Manager Gerät nicht gefunden für Config Entry %s", self.config_entry.entry_id)
-                        
-                        # Add each sensor to the registry
-                        for sensor in sensors:
-                            try:
-                                # Add entity to registry with correct device_id
-                                registry.async_get_or_create(
-                                    domain="sensor",
-                                    platform=DOMAIN,
-                                    unique_id=sensor.unique_id,
-                                    suggested_object_id=sensor.unique_id.replace("modbus_manager_aggregate_", ""),
-                                    config_entry=self.config_entry,
-                                    device_id=modbus_device.id if modbus_device else None,
-                                    disabled_by=None
-                                )
-                                _LOGGER.info("Aggregate-Sensor %s zur Entity Registry hinzugefügt (Device: %s)", 
-                                            sensor.unique_id, modbus_device.id if modbus_device else "None")
-                            except Exception as e:
-                                _LOGGER.error("Fehler beim Hinzufügen des Sensors %s: %s", sensor.unique_id, str(e))
-                        
-                        _LOGGER.info("Aggregate-Sensoren zur Entity Registry hinzugefügt")
-                    except Exception as e:
-                        _LOGGER.error("Fehler beim Hinzufügen der Aggregate-Sensoren zur Registry: %s", str(e))
-                
-                if created_sensors:
-                    _LOGGER.info("%d Aggregat-Sensoren erstellt", len(created_sensors))
-                
-                return self.async_create_entry(
-                    title="",
-                    data={
-                        "aggregations_configured": True,
-                        "groups": [selected_group] if selected_group else [],
-                        "methods": [selected_method]
-                    }
-                )
-
-            # Show aggregation configuration form
-            return self.async_show_form(
-                step_id="aggregation_config",
-                data_schema=vol.Schema({
-                    vol.Required("groups"): vol.In(available_groups),
-                    vol.Optional("methods", default=["sum", "average"]): vol.In(["sum", "average", "max", "min", "count"]),
-                }),
-                description_placeholders={
-                    "available_groups": ", ".join(available_groups),
-                    "group_count": str(len(available_groups))
-                }
-            )
-
-        except Exception as e:
-            _LOGGER.error("Fehler bei der Aggregations-Konfiguration: %s", str(e))
-            return self.async_abort(
-                reason="aggregation_error",
-                description_placeholders={"error": str(e)}
-            )
             
     async def async_step_update_template(self, user_input: dict = None) -> FlowResult:
         """Update the template to the latest version."""
