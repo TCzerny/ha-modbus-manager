@@ -38,14 +38,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
             # Use unique_id from template if available, otherwise use cleaned name
             template_unique_id = reg.get("unique_id")
             if template_unique_id:
-                unique_id = f"{prefix}_{template_unique_id}"
+                # Check if template_unique_id already has prefix
+                if template_unique_id.startswith(f"{prefix}_"):
+                    unique_id = template_unique_id
+                else:
+                    unique_id = f"{prefix}_{template_unique_id}"
             else:
                 # Fallback: Bereinige den Namen für den unique_id
                 clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
                 unique_id = f"{prefix}_{clean_name}"
             # Use same logic for entity_id
             if template_unique_id:
-                entity_id = f"button.{prefix}_{template_unique_id}"
+                if template_unique_id.startswith(f"{prefix}_"):
+                    entity_id = f"button.{template_unique_id}"
+                else:
+                    entity_id = f"button.{prefix}_{template_unique_id}"
             else:
                 entity_id = f"button.{prefix}_{clean_name}"
             
@@ -72,7 +79,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("%d Button-Entities für Template %s erstellt", len(entities), template_name)
+        _LOGGER.info("Modbus Manager Buttons erstellt: %d Button-Entities", len(entities))
+        _LOGGER.debug("Erstellte Button-Entities: %s", [e.entity_id for e in entities])
 
 
 class ModbusTemplateButton(ButtonEntity):
@@ -127,7 +135,7 @@ class ModbusTemplateButton(ButtonEntity):
             if result.isError():
                 _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
             else:
-                _LOGGER.info("Button %s erfolgreich gedrückt", self.name)
+                _LOGGER.debug("Button %s erfolgreich gedrückt", self.name)
                 
                 # Optional: Nach duration Sekunden zurücksetzen
                 if self._duration > 0:
@@ -155,7 +163,7 @@ class ModbusTemplateButton(ButtonEntity):
             if result.isError():
                 _LOGGER.error("Fehler beim Zurücksetzen von Button %s: %s", self.name, result)
             else:
-                _LOGGER.info("Button %s erfolgreich zurückgesetzt", self.name)
+                _LOGGER.debug("Button %s erfolgreich zurückgesetzt", self.name)
                 
         except Exception as e:
             _LOGGER.error("Fehler beim Zurücksetzen von Button %s: %s", self.name, str(e))

@@ -100,7 +100,7 @@ async def load_templates() -> List[Dict[str, Any]]:
                     if mapping_data:
                         templates.append(mapping_data)
         
-        _LOGGER.info("Insgesamt %d Templates geladen (inkl. %d BASE-Templates)", 
+        _LOGGER.debug("Insgesamt %d Templates geladen (inkl. %d BASE-Templates)", 
                      len(templates), len(base_templates))
         return templates
         
@@ -114,7 +114,7 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
         # Create base templates directory if it doesn't exist
         if not os.path.exists(BASE_TEMPLATE_DIR):
             os.makedirs(BASE_TEMPLATE_DIR)
-            _LOGGER.info("BASE-Template-Verzeichnis %s erstellt", BASE_TEMPLATE_DIR)
+            _LOGGER.debug("BASE-Template-Verzeichnis %s erstellt", BASE_TEMPLATE_DIR)
             return {}
         
         # List files in thread-safe way
@@ -130,9 +130,9 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
                     base_name = template_data.get("name")
                     if base_name:
                         base_templates[base_name] = template_data
-                        _LOGGER.info("BASE-Template %s geladen", base_name)
+                        _LOGGER.debug("BASE-Template %s geladen", base_name)
         
-        _LOGGER.info("Insgesamt %d BASE-Templates geladen", len(base_templates))
+        _LOGGER.debug("Insgesamt %d BASE-Templates geladen", len(base_templates))
         return base_templates
         
     except Exception as e:
@@ -177,7 +177,7 @@ def process_sunspec_model_structure(base_template: Dict[str, Any], model_address
                 _LOGGER.debug("Register %s: Offset %d + Basis %d = Adresse %d", 
                              reg.get("name"), offset, model_base_address, absolute_address)
         
-        _LOGGER.info("SunSpec-Modellstruktur verarbeitet: %d Register erstellt", len(processed_registers))
+        _LOGGER.debug("SunSpec-Modellstruktur verarbeitet: %d Register erstellt", len(processed_registers))
         return processed_registers
         
     except Exception as e:
@@ -187,7 +187,7 @@ def process_sunspec_model_structure(base_template: Dict[str, Any], model_address
 def validate_sunspec_template(template_data: Dict[str, Any], template_name: str) -> bool:
     """Validate SunSpec template structure and data."""
     try:
-        _LOGGER.info("Validiere SunSpec-Template %s", template_name)
+        _LOGGER.debug("Validiere SunSpec-Template %s", template_name)
         
         # Check if template extends SunSpec Standard
         extends_name = template_data.get("extends")
@@ -227,7 +227,7 @@ def validate_sunspec_template(template_data: Dict[str, Any], template_name: str)
             if not validate_custom_control(ctrl, template_name):
                 return False
         
-        _LOGGER.info("Template %s erfolgreich validiert", template_name)
+        _LOGGER.debug("Template %s erfolgreich validiert", template_name)
         return True
         
     except Exception as e:
@@ -436,14 +436,18 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             # Standard template processing
             raw_registers = data.get("sensors", [])
             if not raw_registers:
-                _LOGGER.warning("Template %s has no sensors defined", template_name)
                 # Allow empty base templates and aggregate-only templates
                 if "type" in data and data["type"] == "base_template":
+                    _LOGGER.debug("Template %s is base template (no sensors expected)", template_name)
                     raw_registers = []
                 elif "aggregates" in data and data["aggregates"]:
-                    _LOGGER.debug("Template %s is aggregate-only template", template_name)
+                    _LOGGER.debug("Template %s is aggregate-only template (no sensors expected)", template_name)
+                    raw_registers = []
+                elif template_name in ["SunSpec Standard", "Modbus Manager Aggregates"]:
+                    _LOGGER.debug("Template %s is special template (no sensors expected)", template_name)
                     raw_registers = []
                 else:
+                    _LOGGER.warning("Template %s has no sensors defined", template_name)
                     return None
                 
             calculated_entities = data.get("calculated", [])

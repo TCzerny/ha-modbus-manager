@@ -29,7 +29,7 @@ class ModbusCalculatedSensor(SensorEntity):
         # Extract configuration
         base_name = config.get("name", "Unknown Calculated Sensor")
         self._attr_name = f"{prefix} {base_name}"
-        self._attr_unique_id = f"{prefix}_{config.get('unique_id', config.get('name', 'unknown')).lower().replace(' ', '_')}"
+        self._attr_unique_id = f"sensor.{prefix}_{config.get('unique_id', config.get('name', 'unknown')).lower().replace(' ', '_')}"
         
         # Set explicit entity_id for proper tracking
         clean_unique_id = config.get('unique_id', config.get('name', 'unknown')).lower().replace(' ', '_')
@@ -65,8 +65,9 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_state_class = config.get("state_class")
         self._attr_entity_registry_enabled_default = True
         
-        # Group for organization
+        # Group for organization - set as attribute so Home Assistant can access it
         self._group = config.get("group", "calculated")
+        self._attr_group = self._group
         
         # Device info for proper grouping
         self._device_info = {
@@ -130,6 +131,11 @@ class ModbusCalculatedSensor(SensorEntity):
             "prefix": self._prefix,
             "calculation_type": "state"
         }
+    
+    @property
+    def group(self) -> str:
+        """Return the group this sensor belongs to."""
+        return self._group
     
     async def async_update(self) -> None:
         """Update the calculated sensor value."""

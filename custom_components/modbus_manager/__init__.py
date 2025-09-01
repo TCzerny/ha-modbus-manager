@@ -28,7 +28,7 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Modbus Manager from a config entry."""
     try:
-        _LOGGER.info("Setup von Modbus Manager gestartet für %s", entry.data.get("prefix", "unbekannt"))
+        _LOGGER.debug("Setup von Modbus Manager gestartet für %s", entry.data.get("prefix", "unbekannt"))
         
         # Check if this is an aggregates template
         is_aggregates_template = entry.data.get("is_aggregates_template", False)
@@ -38,16 +38,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         if is_aggregates_template:
             # Handle aggregates template - no Modbus connection needed
-            _LOGGER.info("Aggregates Template erkannt - überspringe Modbus-Verbindung")
-            return await _setup_aggregates_entry(hass, entry)
+            _LOGGER.debug("Aggregates Template erkannt - überspringe Modbus-Verbindung")
+            # Use asyncio.create_task to avoid blocking the event loop
+            setup_task = asyncio.create_task(_setup_aggregates_entry(hass, entry))
+            return await setup_task
         
-        # Template-Register laden
+        # Template-Register laden (in separatem Task um Asyncio-Warnings zu vermeiden)
         template_name = entry.data.get("template")
         if not template_name:
             _LOGGER.error("Kein Template in der Konfiguration gefunden")
             return False
         
-        template_data = await get_template_by_name(template_name)
+        # Use asyncio.create_task to avoid blocking the event loop
+        template_task = asyncio.create_task(get_template_by_name(template_name))
+        template_data = await template_task
+        
         if not template_data:
             _LOGGER.error("Template %s konnte nicht geladen werden", template_name)
             return False
@@ -110,7 +115,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 # Modbus-Hub verbinden
                 try:
                     await hub.async_pb_connect()
-                    _LOGGER.info("Modbus-Hub %s erfolgreich verbunden", hub_name)
+                    _LOGGER.debug("Modbus-Hub %s erfolgreich verbunden", hub_name)
                 except Exception as e:
                     _LOGGER.error("Fehler beim Verbinden des Modbus-Hubs: %s", str(e))
                     return False
@@ -148,9 +153,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         _LOGGER.debug("Konfigurationsdaten gespeichert: prefix=%s, template=%s, controls=%d", prefix, template_name, len(controls))
         
-        # Alle Plattformen einrichten
+        # Alle Plattformen einrichten (in separatem Task um Asyncio-Warnings zu vermeiden)
         try:
-            await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+            platform_task = asyncio.create_task(hass.config_entries.async_forward_entry_setups(entry, PLATFORMS))
+            await platform_task
             _LOGGER.debug("Alle Plattformen erfolgreich eingerichtet: %s", PLATFORMS)
         except Exception as e:
             _LOGGER.error("Fehler beim Einrichten der Plattformen: %s", str(e))
@@ -172,7 +178,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Automatisch erstellte Aggregate-Sensoren sind deaktiviert - nur Template-basierte werden verwendet
         _LOGGER.debug("Aggregation-Manager deaktiviert - nur Template-basierte Aggregate-Sensoren werden verwendet")
         
-        _LOGGER.info("Modbus Manager erfolgreich eingerichtet für %s", entry.data.get("prefix", "unbekannt"))
+        _LOGGER.debug("Modbus Manager erfolgreich eingerichtet für %s", entry.data.get("prefix", "unbekannt"))
         return True
         
     except Exception as e:
@@ -201,8 +207,9 @@ async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bo
         _LOGGER.debug("Integration Debug: Speichere config_data=%s", config_data)
         hass.data[DOMAIN][entry.entry_id] = config_data
         
-        # Forward to sensor platform
-        await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
+        # Forward to sensor platform (in separatem Task um Asyncio-Warnings zu vermeiden)
+        sensor_task = asyncio.create_task(hass.config_entries.async_forward_entry_setups(entry, ["sensor"]))
+        await sensor_task
         
         _LOGGER.debug("Aggregates Template erfolgreich eingerichtet")
         return True
@@ -216,12 +223,29 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     try:
         _LOGGER.debug("Unload von Modbus Manager für %s", entry.data.get("prefix", "unbekannt"))
         
-        # Alle Plattformen entladen
-        try:
-            await hass.config_entries.async_forward_entry_unloads(entry, PLATFORMS)
-            _LOGGER.info("Alle Plattformen erfolgreich entladen: %s", PLATFORMS)
-        except Exception as e:
-            _LOGGER.error("Fehler beim Entladen der Plattformen: %s", str(e))
+        # Check if this is an aggregates template
+        is_aggregates_template = entry.data.get("is_aggregates_template", False)
+        
+        if is_aggregates_template:
+            # For aggregates templates, only unload sensor platform
+            try:
+                unload_ok = await hass.config_entries.async_unload_platforms(entry, ["sensor"])
+                if unload_ok:
+                    _LOGGER.debug("Sensor-Plattform für Aggregate-Template erfolgreich entladen")
+                else:
+                    _LOGGER.warning("Sensor-Plattform für Aggregate-Template konnte nicht entladen werden")
+            except Exception as e:
+                _LOGGER.error("Fehler beim Entladen der Sensor-Plattform für Aggregate-Template: %s", str(e))
+        else:
+            # Alle Plattformen entladen
+            try:
+                unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+                if unload_ok:
+                    _LOGGER.debug("Alle Plattformen erfolgreich entladen: %s", PLATFORMS)
+                else:
+                    _LOGGER.warning("Nicht alle Plattformen konnten entladen werden")
+            except Exception as e:
+                _LOGGER.error("Fehler beim Entladen der Plattformen: %s", str(e))
         
         # Modbus-Hub schließen
         if entry.entry_id in hass.data[DOMAIN]:
@@ -229,14 +253,14 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             if "hub" in hub_data:
                 try:
                     await hub_data["hub"].async_close()
-                    _LOGGER.info("Modbus-Hub erfolgreich geschlossen")
+                    _LOGGER.debug("Modbus-Hub erfolgreich geschlossen")
                 except Exception as e:
                     _LOGGER.warning("Fehler beim Schließen des Modbus-Hubs: %s", str(e))
             
             # Daten löschen
             del hass.data[DOMAIN][entry.entry_id]
         
-        _LOGGER.info("Modbus Manager erfolgreich entladen für %s", entry.data.get("prefix", "unbekannt"))
+        _LOGGER.debug("Modbus Manager erfolgreich entladen für %s", entry.data.get("prefix", "unbekannt"))
         return True
         
     except Exception as e:

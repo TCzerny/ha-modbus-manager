@@ -75,7 +75,7 @@ class PerformanceMonitor:
         self.max_history = max_history
         self.devices: Dict[str, DeviceMetrics] = {}
         self.global_metrics = DeviceMetrics(device_id="global")
-        _LOGGER.info("Performance-Monitor initialisiert mit max_history: %d", max_history)
+        _LOGGER.debug("Performance-Monitor initialisiert mit max_history: %d", max_history)
     
     def start_operation(self, device_id: str, operation_type: str, 
                        register_count: int = 0, bytes_transferred: int = 0) -> str:
@@ -251,11 +251,11 @@ class PerformanceMonitor:
             if device_id:
                 if device_id in self.devices:
                     self.devices[device_id] = DeviceMetrics(device_id=device_id)
-                    _LOGGER.info("Metriken für Device %s zurückgesetzt", device_id)
+                    _LOGGER.debug("Metriken für Device %s zurückgesetzt", device_id)
             else:
                 self.devices.clear()
                 self.global_metrics = DeviceMetrics(device_id="global")
-                _LOGGER.info("Alle Metriken zurückgesetzt")
+                _LOGGER.debug("Alle Metriken zurückgesetzt")
                 
         except Exception as e:
             _LOGGER.error("Fehler beim Zurücksetzen der Metriken: %s", str(e)) 

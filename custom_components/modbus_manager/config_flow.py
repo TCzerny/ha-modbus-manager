@@ -37,7 +37,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     template_data = await get_template_by_name(name)
                     if template_data:
                         self._templates[name] = template_data
-                _LOGGER.info("Templates geladen: %s", list(self._templates.keys()))
+                _LOGGER.debug("Templates geladen: %s", list(self._templates.keys()))
             
             if not self._templates:
                 return self.async_abort(
@@ -221,7 +221,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     description_placeholders={"error": "Keine Aggregationen ausgewählt"}
                 )
             
-            _LOGGER.info("Aggregates Template %s (Version %s) mit %d ausgewählten Aggregationen", 
+            _LOGGER.debug("Aggregates Template %s (Version %s) mit %d ausgewählten Aggregationen", 
                         self._selected_template, template_version, len(filtered_aggregates))
             
             # Create config entry
@@ -250,7 +250,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Register aus Template extrahieren
             template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
             
-            _LOGGER.info("Template %s (Version %s) geladen mit %d Registern", 
+            _LOGGER.debug("Template %s (Version %s) geladen mit %d Registern", 
                         self._selected_template, 
                         template_version,
                         len(template_registers) if template_registers else 0)
@@ -353,15 +353,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     @callback
     def async_get_options_flow(config_entry: config_entries.ConfigEntry) -> config_entries.OptionsFlow:
         """Get the options flow for this handler."""
-        return ModbusManagerOptionsFlow(config_entry)
+        return ModbusManagerOptionsFlow()
 
 
 class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     """Handle options flow for Modbus Manager."""
-
-    def __init__(self, config_entry: config_entries.ConfigEntry):
-        """Initialize options flow."""
-        self.config_entry = config_entry
 
     async def async_step_init(self, user_input: dict = None) -> FlowResult:
         """Manage the options."""
@@ -369,16 +365,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         is_aggregates_template = self.config_entry.data.get("is_aggregates_template", False)
         
         if is_aggregates_template:
-            # Aggregates templates don't need options - just show info
-            return self.async_show_form(
-                step_id="aggregates_info",
-                data_schema=vol.Schema({}),
-                description_placeholders={
-                    "template_name": self.config_entry.data.get("template", "Modbus Manager Aggregates"),
-                    "template_version": str(self.config_entry.data.get("template_version", 1)),
-                    "aggregate_count": str(len(self.config_entry.data.get("aggregates", [])))
-                }
-            )
+            # Show aggregates selection options
+            return await self.async_step_aggregates_options()
         
         if user_input is not None:
             if "update_template" in user_input and user_input["update_template"]:
@@ -428,6 +416,97 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             }
             )
 
+    async def async_step_aggregates_options(self, user_input: dict = None) -> FlowResult:
+        """Handle aggregates options for existing aggregate hubs."""
+        try:
+            # Get current template data
+            template_name = self.config_entry.data.get("template", "Modbus Manager Aggregates")
+            template_data = await get_template_by_name(template_name)
+            
+            if not template_data:
+                return self.async_abort(
+                    reason="template_not_found",
+                    description_placeholders={"template_name": template_name}
+                )
+            
+            available_aggregates = template_data.get("aggregates", [])
+            if not available_aggregates:
+                return self.async_abort(
+                    reason="no_aggregates",
+                    description_placeholders={"template_name": template_name}
+                )
+            
+            # Get currently selected aggregates
+            current_aggregates = self.config_entry.data.get("aggregates", [])
+            current_selected = self.config_entry.data.get("selected_aggregates", [])
+            
+            if user_input is not None:
+                # Update the configuration
+                selected_aggregates = user_input.get("selected_aggregates", [])
+                
+                if not selected_aggregates:
+                    return self.async_show_form(
+                        step_id="aggregates_options",
+                        data_schema=self._get_aggregates_options_schema(available_aggregates, current_selected),
+                        errors={"base": "select_aggregates"}
+                    )
+                
+                # Filter aggregates based on selection
+                filtered_aggregates = []
+                for i, aggregate in enumerate(available_aggregates):
+                    if str(i) in selected_aggregates:
+                        filtered_aggregates.append(aggregate)
+                
+                # Update config entry
+                new_data = dict(self.config_entry.data)
+                new_data["aggregates"] = filtered_aggregates
+                new_data["selected_aggregates"] = selected_aggregates
+                
+                self.hass.config_entries.async_update_entry(
+                    self.config_entry,
+                    data=new_data
+                )
+                
+                _LOGGER.debug("Aggregate-Optionen aktualisiert: %d von %d Aggregaten ausgewählt", 
+                            len(filtered_aggregates), len(available_aggregates))
+                
+                return self.async_create_entry(title="", data={})
+            
+            # Show aggregates selection form
+            return self.async_show_form(
+                step_id="aggregates_options",
+                data_schema=self._get_aggregates_options_schema(available_aggregates, current_selected),
+                description_placeholders={
+                    "template_name": template_name,
+                    "template_version": str(self.config_entry.data.get("template_version", 1)),
+                    "current_count": str(len(current_aggregates)),
+                    "available_count": str(len(available_aggregates))
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Aggregate-Optionen-Konfiguration: %s", str(e))
+            return self.async_abort(
+                reason="aggregates_options_error",
+                description_placeholders={"error": str(e)}
+            )
+
+    def _get_aggregates_options_schema(self, available_aggregates: List[dict], current_selected: List[str]) -> vol.Schema:
+        """Generate schema for aggregates options configuration."""
+        # Create options for aggregate selection
+        aggregate_options = {}
+        for i, aggregate in enumerate(available_aggregates):
+            name = aggregate.get("name", f"Aggregate {i+1}")
+            group = aggregate.get("group", "unknown")
+            method = aggregate.get("method", "sum")
+            aggregate_options[f"{i}"] = f"{name} ({group} - {method})"
+        
+        return vol.Schema({
+            vol.Required("selected_aggregates", default=current_selected): vol.All(
+                cv.multi_select(aggregate_options),
+                vol.Length(min=1, msg="Mindestens eine Aggregation auswählen")
+            )
+        })
 
             
     async def async_step_update_template(self, user_input: dict = None) -> FlowResult:
@@ -477,7 +556,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     data=new_data
                 )
                 
-                _LOGGER.info("Template %s aktualisiert: v%s → v%s", 
+                _LOGGER.debug("Template %s aktualisiert: v%s → v%s", 
                             template_name, stored_version, current_version)
                 
                 # Zurück zur Hauptansicht

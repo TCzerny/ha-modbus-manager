@@ -10,6 +10,9 @@ Ein modularer, template-basierter Modbus-Manager für Home Assistant mit Unterst
 - **Automatische Validierung**: SunSpec-Templates werden automatisch validiert
 - **Modulare Architektur**: Einfach erweiterbar für neue Gerätetypen
 - **Home Assistant Integration**: Vollständig in die HA-UI integriert
+- **Aggregate-Sensoren**: Automatische Aggregation von Sensoren über mehrere Geräte hinweg
+- **Berechnete Sensoren**: Template-basierte Berechnungen mit Jinja2
+- **Options Flow**: Nachträgliche Konfiguration von Aggregate-Hubs über die UI
 
 ## 📚 SunSpec-Standard
 
@@ -158,6 +161,18 @@ Der Template-Loader validiert automatisch alle SunSpec-Templates:
 - Modbus-Kommunikationsfehler bei Sungrow-Geräten (nicht SunSpec-konform)
 - Langsame Entity-Updates bei einigen Geräten
 - Duplizierte Unique IDs (behoben)
+- Aggregate-Sensoren zeigen Doppelzählung bei mehreren Wechselrichtern (erwartetes Verhalten)
+
+## ✅ Behobene Probleme
+
+- **IndentationError** in aggregates.py (behoben)
+- **Logger-Verbosity** reduziert (INFO → DEBUG)
+- **Unique ID Prefixes** für alle Entity-Typen implementiert
+- **Self-Referencing** in Aggregate-Berechnungen verhindert
+- **Options Flow** für Aggregate-Hubs implementiert
+- **Deprecation Warnings** für Home Assistant 2025.12 behoben
+- **Asyncio Blocking Warnings** durch Task-Optimierung behoben
+- **Template Warnings** für erwartete Fälle auf DEBUG reduziert
 
 ## 🤝 Beitragen
 
@@ -190,6 +205,6 @@ Dieses Projekt ist unter der MIT-Lizenz lizenziert - siehe [LICENSE](LICENSE) Da
 
 ---
 
-**Letzte Aktualisierung**: Dezember 2025  
-**Version**: 2.0.0  
-**Status**: Beta (SunSpec-Implementierung abgeschlossen) 
+**Letzte Aktualisierung**: Januar 2025  
+**Version**: 2.1.0  
+**Status**: Stable (Aggregate-Sensoren und Options Flow implementiert) 

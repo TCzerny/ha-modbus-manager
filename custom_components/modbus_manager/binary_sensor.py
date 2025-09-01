@@ -29,7 +29,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
             # Use unique_id from template if available, otherwise use cleaned name
             template_unique_id = reg.get("unique_id")
             if template_unique_id:
-                unique_id = f"{prefix}_{template_unique_id}"
+                # Check if template_unique_id already has prefix
+                if template_unique_id.startswith(f"{prefix}_"):
+                    unique_id = template_unique_id
+                else:
+                    unique_id = f"{prefix}_{template_unique_id}"
             else:
                 # Fallback: Bereinige den Namen für den unique_id
                 clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
@@ -53,7 +57,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("%d Binary-Sensor-Entities für Template %s erstellt", len(entities), template_name)
+        _LOGGER.info("Modbus Manager Binary Sensors erstellt: %d Binary-Sensor-Entities", len(entities))
+        _LOGGER.debug("Erstellte Binary-Sensor-Entities: %s", [e.entity_id for e in entities])
 
 
 class ModbusTemplateBinarySensor(BinarySensorEntity):

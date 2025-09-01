@@ -25,7 +25,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     controls = entry_data.get("controls", [])
     hub = entry_data.get("hub")
     
-    _LOGGER.info("Number Setup: prefix=%s, template=%s, registers=%d, controls=%d", 
+    _LOGGER.debug("Number Setup: prefix=%s, template=%s, registers=%d, controls=%d", 
                 prefix, template_name, len(registers), len(controls))
     _LOGGER.debug("Controls: %s", controls)
     
@@ -50,14 +50,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
             # Use unique_id from template if available, otherwise use cleaned name
             template_unique_id = reg.get("unique_id")
             if template_unique_id:
-                unique_id = f"{prefix}_{template_unique_id}"
+                # Check if template_unique_id already has prefix
+                if template_unique_id.startswith(f"{prefix}_"):
+                    unique_id = template_unique_id
+                else:
+                    unique_id = f"{prefix}_{template_unique_id}"
             else:
                 # Fallback: Bereinige den Namen für den unique_id
                 clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
                 unique_id = f"{prefix}_{clean_name}"
             # Use same logic for entity_id
             if template_unique_id:
-                entity_id = f"number.{prefix}_{template_unique_id}"
+                if template_unique_id.startswith(f"{prefix}_"):
+                    entity_id = f"number.{template_unique_id}"
+                else:
+                    entity_id = f"number.{prefix}_{template_unique_id}"
             else:
                 entity_id = f"number.{prefix}_{clean_name}"
             
@@ -82,7 +89,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
             ))
 
     # Number-Entities aus Controls-Abschnitt erstellen
-    _LOGGER.info("Verarbeite %d Controls für Number-Entities", len(controls))
+    _LOGGER.debug("Verarbeite %d Controls für Number-Entities", len(controls))
     for control in controls:
         if control.get("type") == "number":
             control_name = control.get("name", "unknown")
@@ -125,7 +132,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("%d Number-Entities für Template %s erstellt", len(entities), template_name)
+        _LOGGER.info("Modbus Manager Numbers erstellt: %d Number-Entities", len(entities))
+        _LOGGER.debug("Erstellte Number-Entities: %s", [e.entity_id for e in entities])
 
 
 class ModbusTemplateNumber(NumberEntity):
@@ -262,7 +270,7 @@ class ModbusTemplateNumber(NumberEntity):
             if result.isError():
                 _LOGGER.error("Fehler beim Schreiben in Register %s: %s", self._address, result)
             else:
-                _LOGGER.info("Number %s erfolgreich auf %s gesetzt", self.name, value)
+                _LOGGER.debug("Number %s erfolgreich auf %s gesetzt", self.name, value)
                 self._attr_native_value = value
                 self.async_write_ha_state()
                 

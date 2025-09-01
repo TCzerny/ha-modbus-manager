@@ -16,6 +16,7 @@ sensors:
     data_type: string
     count: 10
     scan_interval: 600
+    group: "device_count"
 
   - name: Sungrow device type code
     unique_id: dev_code
@@ -195,6 +196,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
+    group: "total_dc_power"
 
   - name: Phase A voltage
     unique_id: phase_a_voltage
@@ -2076,7 +2078,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "battery_power"
+    group: "battery_charging"
 
   - name: "Battery Discharging Power"
     unique_id: "battery_discharging_power"
@@ -2092,40 +2094,40 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "battery_power"
+    group: "battery_discharging"
 
   # Enhanced Grid Power Calculations (based on mkaiser)
   - name: "Import Power"
     unique_id: "import_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable') }}
+      {{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}
     state: >-
-      {% if states('sensor.{PREFIX}_export_power_raw') | default(0) | float < 0 %}
-        {{ (states('sensor.{PREFIX}_export_power_raw') | default(0) | float) | abs }}
+      {% if states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float > 0 %}
+        {{ states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float }}
       {% else %}
         0
       {% endif %}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "grid_power"
+    group: "grid_import"
 
   - name: "Export Power"
     unique_id: "export_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable') }}
+      {{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}
     state: >-
-      {% if states('sensor.{PREFIX}_export_power_raw') | default(0) | float > 0 %}
-        {{ states('sensor.{PREFIX}_export_power_raw') | default(0) | float }}
+      {% if states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float < 0 %}
+        {{ (states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float) | abs }}
       {% else %}
         0
       {% endif %}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "grid_power"
+    group: "grid_export"
 
   # calculated sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
   - name: "Meter Active Power"

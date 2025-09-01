@@ -38,7 +38,7 @@ class RegisterOptimizer:
             self.max_read_size = max_read_size[0] if max_read_size else 8
         else:
             self.max_read_size = max_read_size
-        _LOGGER.info("Register-Optimizer initialisiert mit max_read_size: %d", self.max_read_size)
+        _LOGGER.debug("Register-Optimizer initialisiert mit max_read_size: %d", self.max_read_size)
     
     def optimize_registers(self, registers: List[Dict[str, Any]]) -> List[RegisterRange]:
         """Group registers into optimal reading ranges."""
@@ -84,7 +84,7 @@ class RegisterOptimizer:
             if current_range:
                 ranges.append(current_range)
             
-            _LOGGER.info("Register in %d optimierte Bereiche gruppiert", len(ranges))
+            _LOGGER.debug("Register in %d optimierte Bereiche gruppiert", len(ranges))
             for i, range_obj in enumerate(ranges):
                 _LOGGER.debug("Bereich %d: Adresse %d-%d (%d Register)", 
                              i, range_obj.start_address, range_obj.end_address, range_obj.register_count)
@@ -169,7 +169,7 @@ class RegisterOptimizer:
                 "optimized_ranges": len(optimized_ranges)
             }
             
-            _LOGGER.info("Optimierungs-Statistiken: %s", stats)
+            _LOGGER.debug("Optimierungs-Statistiken: %s", stats)
             return stats
             
         except Exception as e:

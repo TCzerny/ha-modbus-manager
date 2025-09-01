@@ -26,7 +26,7 @@ async def async_setup_entry(
 ) -> None:
     """Set up Modbus Template Sensors from a config entry."""
     try:
-        _LOGGER.info("Setup von Modbus Template Sensoren für %s", entry.data.get("prefix", "unbekannt"))
+        _LOGGER.debug("Setup von Modbus Template Sensoren für %s", entry.data.get("prefix", "unbekannt"))
         
         # Daten aus der Konfiguration abrufen
         if entry.entry_id not in hass.data[DOMAIN]:
@@ -39,7 +39,7 @@ async def async_setup_entry(
         template_name = config_data.get("template", "unknown")
         is_aggregates_template = config_data.get("is_aggregates_template", False)
         
-        _LOGGER.info("Konfigurationsdaten abgerufen: prefix=%s, template=%s, register=%d, is_aggregates=%s", 
+        _LOGGER.debug("Konfigurationsdaten abgerufen: prefix=%s, template=%s, register=%d, is_aggregates=%s", 
                      prefix, template_name, len(registers), is_aggregates_template)
         
         if not registers and not is_aggregates_template:
@@ -47,9 +47,9 @@ async def async_setup_entry(
             return
         
         if is_aggregates_template:
-            _LOGGER.info("Aggregates Template erkannt - überspringe normale Sensor-Erstellung")
+            _LOGGER.debug("Aggregates Template erkannt - überspringe normale Sensor-Erstellung")
         else:
-            _LOGGER.info("Erstelle %d Sensoren für Template %s mit Präfix %s", len(registers), template_name, prefix)
+            _LOGGER.debug("Erstelle %d Sensoren für Template %s mit Präfix %s", len(registers), template_name, prefix)
         
         # Entity Registry abrufen für Duplikat-Check
         registry = async_get_entity_registry(hass)
@@ -62,7 +62,7 @@ async def async_setup_entry(
         entities = []
         if not is_aggregates_template:
             sensor_registers = [reg for reg in registers if reg.get("entity_type") == "sensor"]
-            _LOGGER.info("Gefundene Sensor-Register: %d", len(sensor_registers))
+            _LOGGER.debug("Gefundene Sensor-Register: %d", len(sensor_registers))
             
             for reg in sensor_registers:
                 try:
@@ -110,7 +110,7 @@ async def async_setup_entry(
         _LOGGER.debug("calculated_data aus config_data: %d items", len(calculated_data))
         
         if calculated_data:
-            _LOGGER.info("Erstelle %d berechnete Sensoren für Template %s", len(calculated_data), template_name)
+            _LOGGER.debug("Erstelle %d berechnete Sensoren für Template %s", len(calculated_data), template_name)
         
         # Debug: Zeige Gruppen der berechneten Sensoren
         groups = set()
@@ -119,9 +119,9 @@ async def async_setup_entry(
             if group:
                 groups.add(group)
         if groups:
-            _LOGGER.info("Berechnete Sensoren haben Gruppen: %s", list(groups))
+            _LOGGER.debug("Berechnete Sensoren haben Gruppen: %s", list(groups))
         else:
-            _LOGGER.warning("Berechnete Sensoren haben KEINE Gruppen!")
+            _LOGGER.debug("Berechnete Sensoren haben keine expliziten Gruppen (verwenden Standard-Gruppe)")
         
         # Erstelle berechnete Sensoren (immer, unabhängig von Gruppen)
         for calc_config in calculated_data:
@@ -147,11 +147,11 @@ async def async_setup_entry(
         aggregates_config = config_data.get("aggregates", [])
         is_aggregates_template = config_data.get("is_aggregates_template", False)
         
-        _LOGGER.info("Sensor Platform Debug: aggregates_config=%s, is_aggregates_template=%s", 
+        _LOGGER.debug("Sensor Platform Debug: aggregates_config=%s, is_aggregates_template=%s", 
                      len(aggregates_config) if aggregates_config else "None", is_aggregates_template)
         
         if aggregates_config:
-            _LOGGER.info("Erstelle %d Aggregate-Sensoren aus Template", len(aggregates_config))
+            _LOGGER.debug("Erstelle %d Aggregate-Sensoren aus Template", len(aggregates_config))
             
             for aggregate_config in aggregates_config:
                 try:
@@ -172,7 +172,7 @@ async def async_setup_entry(
         # For aggregates-only templates, only add aggregate entities
         if is_aggregates_template:
             all_entities = aggregate_entities
-            _LOGGER.info("Aggregates-only Template: %d Aggregate-Sensoren erstellt", len(aggregate_entities))
+            _LOGGER.debug("Aggregates-only Template: %d Aggregate-Sensoren erstellt", len(aggregate_entities))
         else:
             # Regular template: add all entities
             all_entities = entities + calculated_entities + aggregate_entities
@@ -181,13 +181,21 @@ async def async_setup_entry(
         if not is_aggregates_template:
             legacy_aggregate_sensors = config_data.get("aggregate_sensors", [])
             if legacy_aggregate_sensors:
-                _LOGGER.info("Füge %d Legacy Aggregate-Sensoren hinzu", len(legacy_aggregate_sensors))
+                _LOGGER.debug("Füge %d Legacy Aggregate-Sensoren hinzu", len(legacy_aggregate_sensors))
                 all_entities.extend(legacy_aggregate_sensors)
         
         if all_entities:
             async_add_entities(all_entities)
-            _LOGGER.info("%d Modbus Template Sensoren, %d berechnete Sensoren und %d Aggregate-Sensoren erfolgreich erstellt", 
+            _LOGGER.info("Modbus Manager Sensoren erstellt: %d Sensoren, %d berechnete Sensoren, %d Aggregate-Sensoren (Details im Debug-Log)", 
                          len(entities), len(calculated_entities), len(aggregate_entities))
+            
+            # Debug: List all created entities
+            if entities:
+                _LOGGER.debug("Erstellte Sensoren: %s", [e.entity_id for e in entities])
+            if calculated_entities:
+                _LOGGER.debug("Erstellte berechnete Sensoren: %s", [e.entity_id for e in calculated_entities])
+            if aggregate_entities:
+                _LOGGER.debug("Erstellte Aggregate-Sensoren: %s", [e.entity_id for e in aggregate_entities])
         else:
             _LOGGER.warning("Keine Sensoren erstellt")
             
