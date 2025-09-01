@@ -299,6 +299,22 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     
                     # Add sensors to Home Assistant
                     self.hass.data[DOMAIN][self.config_entry.entry_id]["aggregate_sensors"] = sensors
+                    
+                    # Add sensors to Home Assistant entity registry
+                    from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
+                    from homeassistant.helpers.entity_platform import async_get_platform
+                    
+                    try:
+                        # Get the sensor platform
+                        sensor_platform = async_get_platform(self.hass, DOMAIN, "sensor")
+                        if sensor_platform:
+                            # Add entities to the platform
+                            await sensor_platform.async_add_entities(sensors)
+                            _LOGGER.info("Aggregate-Sensoren direkt zu Home Assistant hinzugefügt")
+                        else:
+                            _LOGGER.warning("Sensor-Plattform nicht gefunden")
+                    except Exception as e:
+                        _LOGGER.error("Fehler beim Hinzufügen der Aggregate-Sensoren: %s", str(e))
                 
                 if created_sensors:
                     _LOGGER.info("%d Aggregat-Sensoren erstellt", len(created_sensors))
