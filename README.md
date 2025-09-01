@@ -133,10 +133,9 @@ custom_components/modbus_manager/
 │   ├── compleo_ebox_professional.yaml  # Compleo eBox template
 │   ├── aggregates_hub.yaml       # Aggregate sensors template
 │   └── base_templates/           # Future SunSpec templates
-└── wiki/                       # Documentation
-    ├── AGGREGATES.md
-    ├── COMPLEO_EEBOX.md
-    └── README.md
+└── translations/               # UI translations
+    ├── de.json
+    └── en.json
 ```
 
 ## 🧪 Usage
@@ -244,7 +243,7 @@ entities:
 
 1. **Fork** the repository
 2. **Create device template** in `device_templates/`
-3. **Add documentation** in `wiki/`
+3. **Add documentation** in the [GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)
 4. **Test with real device**
 5. **Create Pull Request**
 
