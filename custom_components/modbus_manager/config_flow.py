@@ -306,20 +306,35 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
                         registry = async_get_entity_registry(self.hass)
                         
+                        # Get the device registry to find the Modbus Manager device
+                        from homeassistant.helpers.device_registry import async_get as async_get_device_registry
+                        device_registry = async_get_device_registry(self.hass)
+                        
+                        # Find the Modbus Manager device for this config entry
+                        modbus_device = None
+                        for device in device_registry.devices.values():
+                            if device.config_entries and self.config_entry.entry_id in device.config_entries:
+                                modbus_device = device
+                                break
+                        
+                        if not modbus_device:
+                            _LOGGER.warning("Modbus Manager Gerät nicht gefunden für Config Entry %s", self.config_entry.entry_id)
+                        
                         # Add each sensor to the registry
                         for sensor in sensors:
                             try:
-                                # Add entity to registry
+                                # Add entity to registry with correct device_id
                                 registry.async_get_or_create(
                                     domain="sensor",
                                     platform=DOMAIN,
                                     unique_id=sensor.unique_id,
-                                    suggested_object_id=sensor.unique_id.replace(f"{self.config_entry.data.get('prefix', 'unknown')}_", ""),
+                                    suggested_object_id=sensor.unique_id.replace("aggregate_", ""),
                                     config_entry=self.config_entry,
-                                    device_id=None,  # Will be created automatically
+                                    device_id=modbus_device.id if modbus_device else None,
                                     disabled_by=None
                                 )
-                                _LOGGER.info("Aggregate-Sensor %s zur Entity Registry hinzugefügt", sensor.unique_id)
+                                _LOGGER.info("Aggregate-Sensor %s zur Entity Registry hinzugefügt (Device: %s)", 
+                                            sensor.unique_id, modbus_device.id if modbus_device else "None")
                             except Exception as e:
                                 _LOGGER.error("Fehler beim Hinzufügen des Sensors %s: %s", sensor.unique_id, str(e))
                         

@@ -24,14 +24,10 @@ class ModbusAggregateSensor(SensorEntity):
         self._method = method
         self._prefix = prefix
         
-        # Generate proper entity_id
+        # Generate proper entity_id (global, not device-specific)
         clean_name = name.lower().replace(' ', '_').replace('-', '_')
-        if prefix:
-            entity_id = f"sensor.{prefix}_{clean_name}"
-            self._attr_name = f"{prefix}_{name}"
-        else:
-            entity_id = f"sensor.{clean_name}"
-            self._attr_name = name
+        entity_id = f"sensor.{clean_name}"
+        self._attr_name = name
         
         self._attr_unique_id = unique_id
         self._attr_device_info = DeviceInfo(**device_info)
@@ -73,23 +69,39 @@ class ModbusAggregateSensor(SensorEntity):
                          self._group_tag, str(e))
 
     def _find_group_entities(self):
-        """Find all entities that belong to this group."""
+        """Find all entities that belong to this group across all Modbus Manager devices."""
         try:
             all_states = self.hass.states.async_all()
+            modbus_prefixes = self._get_modbus_prefixes()
             
             for state in all_states:
                 if state.domain == "sensor":
                     attributes = state.attributes
                     if attributes.get("group") == self._group_tag:
-                        # Don't track aggregate sensors themselves
-                        if not state.entity_id.startswith(f"sensor.{self._prefix}_aggregate_"):
-                            self._tracked_entities.append(state.entity_id)
+                        # Only include sensors from Modbus Manager devices
+                        if any(prefix in state.entity_id for prefix in modbus_prefixes):
+                            # Don't track aggregate sensors themselves
+                            if not any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes):
+                                self._tracked_entities.append(state.entity_id)
             
-            _LOGGER.debug("Gefundene Entitäten für Gruppe %s: %s", 
+            _LOGGER.debug("Gefundene Entitäten für Gruppe %s über alle Modbus Manager Geräte: %s", 
                          self._group_tag, self._tracked_entities)
             
         except Exception as e:
             _LOGGER.error("Fehler beim Finden der Gruppen-Entitäten: %s", str(e))
+    
+    def _get_modbus_prefixes(self) -> List[str]:
+        """Get all Modbus Manager prefixes from config entries."""
+        try:
+            prefixes = []
+            for entry in self.hass.config_entries.async_entries(DOMAIN):
+                prefix = entry.data.get("prefix", "")
+                if prefix:
+                    prefixes.append(prefix)
+            return prefixes
+        except Exception as e:
+            _LOGGER.error("Fehler beim Abrufen der Modbus-Präfixe: %s", str(e))
+            return []
 
     @callback
     def _state_changed(self, entity_id: str, old_state, new_state):
@@ -240,7 +252,7 @@ class AggregationManager:
         self._group_discovery_done = False
     
     async def discover_groups(self) -> List[str]:
-        """Discover all available groups from existing sensors."""
+        """Discover all available groups from existing sensors across all Modbus Manager devices."""
         try:
             groups = set()
             all_states = self.hass.states.async_all()
@@ -250,16 +262,33 @@ class AggregationManager:
                     attributes = state.attributes
                     group = attributes.get("group")
                     if group:
-                        groups.add(group)
+                        # Only include sensors from Modbus Manager devices
+                        if state.entity_id.startswith("sensor.") and any(
+                            prefix in state.entity_id for prefix in self._get_modbus_prefixes()
+                        ):
+                            groups.add(group)
             
             discovered_groups = list(groups)
-            _LOGGER.info("Entdeckte Gruppen: %s", discovered_groups)
+            _LOGGER.info("Entdeckte Gruppen über alle Modbus Manager Geräte: %s", discovered_groups)
             
             self._group_discovery_done = True
             return discovered_groups
             
         except Exception as e:
             _LOGGER.error("Fehler bei der Gruppen-Entdeckung: %s", str(e))
+            return []
+    
+    def _get_modbus_prefixes(self) -> List[str]:
+        """Get all Modbus Manager prefixes from config entries."""
+        try:
+            prefixes = []
+            for entry in self.hass.config_entries.async_entries(DOMAIN):
+                prefix = entry.data.get("prefix", "")
+                if prefix:
+                    prefixes.append(prefix)
+            return prefixes
+        except Exception as e:
+            _LOGGER.error("Fehler beim Abrufen der Modbus-Präfixe: %s", str(e))
             return []
     
     async def discover_existing_groups(self) -> List[str]:
@@ -276,11 +305,11 @@ class AggregationManager:
             
             for method in methods:
                 sensor_name = f"{group_tag}_{method}"
-                unique_id = f"{self.prefix}_aggregate_{group_tag}_{method}"
+                unique_id = f"aggregate_{group_tag}_{method}"  # Global unique ID without prefix
                 
                 device_info = {
-                    "identifiers": {(DOMAIN, f"{self.prefix}_aggregate_{group_tag}")},
-                    "name": f"{self.prefix} Aggregate {group_tag}",
+                    "identifiers": {(DOMAIN, f"aggregate_{group_tag}")},
+                    "name": f"Aggregate {group_tag}",
                     "manufacturer": "Modbus Manager",
                     "model": "Aggregation Sensor"
                 }
