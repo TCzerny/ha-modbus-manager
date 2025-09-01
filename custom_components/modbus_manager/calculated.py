@@ -31,6 +31,10 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_name = f"{prefix} {base_name}"
         self._attr_unique_id = f"{prefix}_{config.get('unique_id', config.get('name', 'unknown')).lower().replace(' ', '_')}"
         
+        # Set explicit entity_id for proper tracking
+        clean_unique_id = config.get('unique_id', config.get('name', 'unknown')).lower().replace(' ', '_')
+        self._attr_entity_id = f"sensor.{prefix}_{clean_unique_id}"
+        
         # Template processing - support both 'template' and 'state' parameters
         template_str = config.get("template", config.get("state", ""))
         if not template_str:
