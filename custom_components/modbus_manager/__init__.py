@@ -171,9 +171,15 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             aggregation_manager = AggregationManager(hass, entry.data["prefix"])
             hass.data[DOMAIN][entry.entry_id]["aggregation_manager"] = aggregation_manager
             
-            # Bestehende Gruppen entdecken
-            await aggregation_manager.discover_existing_groups()
-            _LOGGER.info("Aggregation-Manager initialisiert")
+            # Verzögerte Gruppen-Entdeckung nach Registrierung der berechneten Sensoren
+            async def delayed_group_discovery():
+                await hass.async_block_till_done()  # Warten bis alle Sensoren registriert sind
+                await aggregation_manager.discover_existing_groups()
+                _LOGGER.info("Aggregation-Manager initialisiert (verzögert)")
+            
+            # Verzögerte Ausführung
+            hass.async_create_task(delayed_group_discovery())
+            
         except Exception as e:
             _LOGGER.warning("Aggregation-Manager konnte nicht initialisiert werden: %s", str(e))
         
