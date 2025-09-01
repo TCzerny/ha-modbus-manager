@@ -97,6 +97,9 @@ async def async_setup_entry(
         calculated_entities = []
         calculated_data = config_data.get("calculated", [])
         
+        _LOGGER.info("Debug: calculated_data aus config_data: %s", calculated_data)
+        _LOGGER.info("Debug: config_data keys: %s", list(config_data.keys()))
+        
         if calculated_data:
             _LOGGER.info("Erstelle %d berechnete Sensoren für Template %s", len(calculated_data), template_name)
             
