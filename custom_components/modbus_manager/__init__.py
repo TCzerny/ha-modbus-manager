@@ -166,22 +166,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         except Exception as e:
             _LOGGER.warning("Performance-Monitor konnte nicht initialisiert werden: %s", str(e))
         
-        # Aggregation-Manager initialisieren
-        try:
-            aggregation_manager = AggregationManager(hass, entry.data["prefix"])
-            hass.data[DOMAIN][entry.entry_id]["aggregation_manager"] = aggregation_manager
-            
-            # Verzögerte Gruppen-Entdeckung nach Registrierung der berechneten Sensoren
-            async def delayed_group_discovery():
-                await hass.async_block_till_done()  # Warten bis alle Sensoren registriert sind
-                await aggregation_manager.discover_existing_groups()
-                _LOGGER.info("Aggregation-Manager initialisiert (verzögert)")
-            
-            # Verzögerte Ausführung
-            hass.async_create_task(delayed_group_discovery())
-            
-        except Exception as e:
-            _LOGGER.warning("Aggregation-Manager konnte nicht initialisiert werden: %s", str(e))
+        # Aggregation-Manager initialisieren (nur für Template-basierte Aggregate-Sensoren)
+        # Automatisch erstellte Aggregate-Sensoren sind deaktiviert - nur Template-basierte werden verwendet
+        _LOGGER.info("Aggregation-Manager deaktiviert - nur Template-basierte Aggregate-Sensoren werden verwendet")
         
         _LOGGER.info("Modbus Manager erfolgreich eingerichtet für %s", entry.data.get("prefix", "unbekannt"))
         return True
