@@ -17,13 +17,23 @@ class ModbusAggregateSensor(SensorEntity):
     """Representation of a Modbus Aggregate Sensor."""
 
     def __init__(self, hass: HomeAssistant, name: str, unique_id: str, 
-                 group_tag: str, method: str, device_info: dict):
+                 group_tag: str, method: str, device_info: dict, prefix: str = ""):
         """Initialize the aggregate sensor."""
         self.hass = hass
-        self._attr_name = name
-        self._attr_unique_id = unique_id
         self._group_tag = group_tag
         self._method = method
+        self._prefix = prefix
+        
+        # Generate proper entity_id
+        clean_name = name.lower().replace(' ', '_').replace('-', '_')
+        if prefix:
+            entity_id = f"sensor.{prefix}_{clean_name}"
+            self._attr_name = f"{prefix}_{name}"
+        else:
+            entity_id = f"sensor.{clean_name}"
+            self._attr_name = name
+        
+        self._attr_unique_id = unique_id
         self._attr_device_info = DeviceInfo(**device_info)
         
         # Entity properties
@@ -35,9 +45,7 @@ class ModbusAggregateSensor(SensorEntity):
         # Tracking
         self._tracked_entities = []
         self._unsubscribe = None
-        
-        # Initialize tracking
-        self._setup_tracking()
+        self._tracking_setup = False
 
     def _setup_tracking(self):
         """Setup state change tracking for entities in this group."""
@@ -58,6 +66,7 @@ class ModbusAggregateSensor(SensorEntity):
             
             _LOGGER.info("Tracking für %d Entitäten in Gruppe %s eingerichtet", 
                         len(self._tracked_entities), self._group_tag)
+            self._tracking_setup = True
             
         except Exception as e:
             _LOGGER.error("Fehler beim Einrichten des Trackings für Gruppe %s: %s", 
@@ -72,7 +81,9 @@ class ModbusAggregateSensor(SensorEntity):
                 if state.domain == "sensor":
                     attributes = state.attributes
                     if attributes.get("group") == self._group_tag:
-                        self._tracked_entities.append(state.entity_id)
+                        # Don't track aggregate sensors themselves
+                        if not state.entity_id.startswith(f"sensor.{self._prefix}_aggregate_"):
+                            self._tracked_entities.append(state.entity_id)
             
             _LOGGER.debug("Gefundene Entitäten für Gruppe %s: %s", 
                          self._group_tag, self._tracked_entities)
@@ -188,6 +199,10 @@ class ModbusAggregateSensor(SensorEntity):
         """Entity added to hass."""
         await super().async_added_to_hass()
         
+        # Setup tracking after being added to hass
+        if not self._tracking_setup:
+            self._setup_tracking()
+        
         # Initial update
         self._update_aggregate_value()
         self.async_write_ha_state()
@@ -261,14 +276,13 @@ class AggregationManager:
             
             for method in methods:
                 sensor_name = f"{group_tag}_{method}"
-                unique_id = f"aggregate_{group_tag}_{method}"
+                unique_id = f"{self.prefix}_aggregate_{group_tag}_{method}"
                 
                 device_info = {
-                    "identifiers": {(DOMAIN, f"aggregate_{group_tag}")},
-                    "name": f"Aggregate {group_tag}",
+                    "identifiers": {(DOMAIN, f"{self.prefix}_aggregate_{group_tag}")},
+                    "name": f"{self.prefix} Aggregate {group_tag}",
                     "manufacturer": "Modbus Manager",
-                    "model": "Aggregation Sensor",
-                    "via_device": (DOMAIN, "modbus_manager")
+                    "model": "Aggregation Sensor"
                 }
                 
                 sensor = ModbusAggregateSensor(
@@ -277,7 +291,8 @@ class AggregationManager:
                     unique_id=unique_id,
                     group_tag=group_tag,
                     method=method,
-                    device_info=device_info
+                    device_info=device_info,
+                    prefix=self.prefix
                 )
                 
                 sensors.append(sensor)
