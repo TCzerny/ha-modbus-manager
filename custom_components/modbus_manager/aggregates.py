@@ -1,6 +1,7 @@
 """Aggregations Module for Modbus Manager."""
 from __future__ import annotations
 
+import asyncio
 from typing import Dict, List, Any, Optional
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.core import HomeAssistant, callback
@@ -103,11 +104,29 @@ class ModbusAggregateSensor(SensorEntity):
     def _setup_tracking(self):
         """Setup state change tracking for entities in this group."""
         try:
-            # Find all entities with matching group tag
+            # Schedule delayed entity search to allow other sensors to be created first
+            self._schedule_delayed_entity_search()
+            
+            _LOGGER.info("Verzögerte Suche für Gruppe %s geplant", self._group_tag)
+            self._tracking_setup = True
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Einrichten des Trackings für Gruppe %s: %s", 
+                         self._group_tag, str(e))
+
+    def _schedule_delayed_entity_search(self):
+        """Schedule a delayed search for entities to allow other sensors to be created first."""
+        
+        async def delayed_search():
+            # Wait a bit for other sensors to be created
+            await self.hass.async_block_till_done()
+            await asyncio.sleep(2)  # Give other sensors time to be created
+            
+            # Now search for entities
             self._find_group_entities()
             
             if not self._tracked_entities:
-                _LOGGER.warning("Keine Entitäten für Gruppe %s gefunden", self._group_tag)
+                _LOGGER.warning("Keine Entitäten für Gruppe %s gefunden (nach verzögerter Suche)", self._group_tag)
                 return
             
             # Setup state change tracking using STANDARD Home Assistant API
@@ -117,13 +136,15 @@ class ModbusAggregateSensor(SensorEntity):
                 self._state_changed
             )
             
-            _LOGGER.info("Tracking für %d Entitäten in Gruppe %s eingerichtet", 
+            _LOGGER.info("Tracking für %d Entitäten in Gruppe %s eingerichtet (verzögert)", 
                         len(self._tracked_entities), self._group_tag)
             self._tracking_setup = True
             
-        except Exception as e:
-            _LOGGER.error("Fehler beim Einrichten des Trackings für Gruppe %s: %s", 
-                         self._group_tag, str(e))
+            # Initial update
+            self._update_aggregate_value()
+        
+        # Schedule the delayed search
+        self.hass.async_create_task(delayed_search())
 
     def _find_group_entities(self):
         """Find all entities that belong to this group across all Modbus Manager devices."""
@@ -142,11 +163,21 @@ class ModbusAggregateSensor(SensorEntity):
                     if group_attr == self._group_tag:
                         _LOGGER.debug("Gefunden: %s mit Gruppe '%s'", state.entity_id, group_attr)
                         
-                        # Check if it's a Modbus Manager entity (case insensitive)
-                        is_modbus_entity = any(
-                            prefix.lower() in state.entity_id.lower() or 
-                            f"sensor.{prefix.lower()}_" in state.entity_id.lower()
-                            for prefix in modbus_prefixes
+                        # Check if it's a Modbus Manager entity
+                        # 1. Entities with prefixes (normal sensors)
+                        # 2. Calculated sensors (no prefix but have group attribute)
+                        # 3. Exclude aggregate sensors themselves
+                        is_modbus_entity = (
+                            any(
+                                prefix.lower() in state.entity_id.lower() or 
+                                f"sensor.{prefix.lower()}_" in state.entity_id.lower()
+                                for prefix in modbus_prefixes
+                            ) or (
+                                # Include calculated sensors (they have group attribute but no prefix)
+                                state.entity_id.startswith("sensor.") and 
+                                group_attr is not None and
+                                not any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes)
+                            )
                         )
                         
                         _LOGGER.debug("Prüfe %s: is_modbus_entity=%s, prefixes=%s", 
