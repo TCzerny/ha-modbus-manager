@@ -78,7 +78,7 @@ async def async_setup_entry(
                         _LOGGER.debug("Sensor %s existiert bereits, überspringe", entity_id)
                         continue
                     
-                    _LOGGER.info("Erstelle Sensor: name=%s, prefix=%s, unique_id=%s", 
+                    _LOGGER.debug("Erstelle Sensor: name=%s, prefix=%s, unique_id=%s", 
                                  sensor_name, prefix, unique_id)
                     
                     entities.append(ModbusTemplateSensor(
@@ -281,7 +281,7 @@ class ModbusTemplateSensor(SensorEntity):
             via_device=(DOMAIN, entry.entry_id),
         )
         
-        _LOGGER.info("Sensor %s initialized (Address: %d, Type: %s, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)", 
+        _LOGGER.debug("Sensor %s initialized (Address: %d, Type: %s, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)", 
                      self._name, self._address, self._data_type, prefix, self._attr_name, unique_id, self._group)
 
     @property
