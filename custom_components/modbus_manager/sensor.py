@@ -146,7 +146,7 @@ async def async_setup_entry(
             
             for aggregate_config in aggregates_config:
                 try:
-                    from .aggregate_sensor import ModbusAggregateSensor
+                    from .aggregates import ModbusAggregateSensor
                     
                     entity = ModbusAggregateSensor(
                         hass=hass,

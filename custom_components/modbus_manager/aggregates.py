@@ -16,27 +16,84 @@ _LOGGER = ModbusManagerLogger(__name__)
 class ModbusAggregateSensor(SensorEntity):
     """Representation of a Modbus Aggregate Sensor."""
 
-    def __init__(self, hass: HomeAssistant, name: str, unique_id: str, 
-                 group_tag: str, method: str, device_info: dict, prefix: str = ""):
-        """Initialize the aggregate sensor."""
+    def __init__(self, hass: HomeAssistant, name: str = None, unique_id: str = None, 
+                 group_tag: str = None, method: str = None, device_info: dict = None, 
+                 prefix: str = "", aggregate_config: dict = None):
+        """Initialize the aggregate sensor.
+        
+        Args:
+            hass: Home Assistant instance
+            name: Sensor name (for auto-created sensors)
+            unique_id: Unique ID (for auto-created sensors)
+            group_tag: Group tag (for auto-created sensors)
+            method: Aggregation method (for auto-created sensors)
+            device_info: Device info (for auto-created sensors)
+            prefix: Device prefix
+            aggregate_config: Configuration dict (for template-based sensors)
+        """
         self.hass = hass
-        self._group_tag = group_tag
-        self._method = method
         self._prefix = prefix
         
-        # Generate proper entity_id with meaningful prefix
-        clean_name = name.lower().replace(' ', '_').replace('-', '_')
-        entity_id = f"sensor.{clean_name}"
-        self._attr_name = name
+        # Support both auto-created and template-based sensors
+        if aggregate_config:
+            # Template-based sensor
+            self._name = aggregate_config.get("name", "Unknown Aggregate")
+            self._group_tag = aggregate_config.get("group", "")
+            self._method = aggregate_config.get("method", "sum")
+            self._unit = aggregate_config.get("unit_of_measurement", "")
+            self._device_class = aggregate_config.get("device_class")
+            self._state_class = aggregate_config.get("state_class")
+            self._icon = aggregate_config.get("icon")
+            
+            # Generate unique ID and entity ID with better naming
+            clean_name = self._name.lower().replace(' ', '_').replace('-', '_')
+            self._attr_unique_id = f"MM_aggregate_{clean_name}"
+            
+            # Better name: remove prefixes and make it shorter
+            display_name = self._name
+            if display_name.startswith("Total "):
+                display_name = display_name[6:]  # Remove "Total "
+            if display_name.startswith("Average "):
+                display_name = display_name[8:]  # Remove "Average "
+            if display_name.startswith("Max "):
+                display_name = display_name[4:]  # Remove "Max "
+            if display_name.startswith("Min "):
+                display_name = display_name[4:]  # Remove "Min "
+            
+            self._attr_name = display_name
+            
+            # Device info for template-based sensors
+            device_info = {
+                "identifiers": {(DOMAIN, f"modbus_manager_aggregate_{clean_name}")},
+                "name": f"Modbus Manager Aggregate {display_name}",
+                "manufacturer": "Modbus Manager",
+                "model": "Aggregation Sensor"
+            }
+            
+        else:
+            # Auto-created sensor
+            self._name = name
+            self._group_tag = group_tag
+            self._method = method
+            self._unit = ""
+            self._device_class = None
+            self._state_class = "measurement"
+            self._icon = None
+            
+            # Generate proper entity_id with meaningful prefix
+            clean_name = name.lower().replace(' ', '_').replace('-', '_')
+            self._attr_name = name
+            self._attr_unique_id = unique_id
         
-        self._attr_unique_id = unique_id
         self._attr_device_info = DeviceInfo(**device_info)
         
         # Entity properties
         self._attr_native_value = None
-        self._attr_native_unit_of_measurement = ""
-        self._attr_device_class = None
-        self._attr_state_class = "measurement"
+        self._attr_native_unit_of_measurement = self._unit
+        self._attr_device_class = self._device_class
+        self._attr_state_class = self._state_class
+        if self._icon:
+            self._attr_icon = self._icon
         
         # Tracking
         self._tracked_entities = []
