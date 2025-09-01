@@ -301,20 +301,31 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     self.hass.data[DOMAIN][self.config_entry.entry_id]["aggregate_sensors"] = sensors
                     
                     # Add sensors to Home Assistant entity registry
-                    from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
-                    from homeassistant.helpers.entity_platform import async_get_platform
-                    
                     try:
-                        # Get the sensor platform
-                        sensor_platform = async_get_platform(self.hass, DOMAIN, "sensor")
-                        if sensor_platform:
-                            # Add entities to the platform
-                            await sensor_platform.async_add_entities(sensors)
-                            _LOGGER.info("Aggregate-Sensoren direkt zu Home Assistant hinzugefügt")
-                        else:
-                            _LOGGER.warning("Sensor-Plattform nicht gefunden")
+                        # Get the entity registry
+                        from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
+                        registry = async_get_entity_registry(self.hass)
+                        
+                        # Add each sensor to the registry
+                        for sensor in sensors:
+                            try:
+                                # Add entity to registry
+                                registry.async_get_or_create(
+                                    domain="sensor",
+                                    platform=DOMAIN,
+                                    unique_id=sensor.unique_id,
+                                    suggested_object_id=sensor.unique_id.replace(f"{self.config_entry.data.get('prefix', 'unknown')}_", ""),
+                                    config_entry=self.config_entry,
+                                    device_id=None,  # Will be created automatically
+                                    disabled_by=None
+                                )
+                                _LOGGER.info("Aggregate-Sensor %s zur Entity Registry hinzugefügt", sensor.unique_id)
+                            except Exception as e:
+                                _LOGGER.error("Fehler beim Hinzufügen des Sensors %s: %s", sensor.unique_id, str(e))
+                        
+                        _LOGGER.info("Aggregate-Sensoren zur Entity Registry hinzugefügt")
                     except Exception as e:
-                        _LOGGER.error("Fehler beim Hinzufügen der Aggregate-Sensoren: %s", str(e))
+                        _LOGGER.error("Fehler beim Hinzufügen der Aggregate-Sensoren zur Registry: %s", str(e))
                 
                 if created_sensors:
                     _LOGGER.info("%d Aggregat-Sensoren erstellt", len(created_sensors))
