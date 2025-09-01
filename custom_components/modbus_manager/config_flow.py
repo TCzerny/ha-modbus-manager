@@ -1,10 +1,12 @@
 """Config Flow for Modbus Manager."""
 import voluptuous as vol
+import voluptuous_serialize as vs
 from typing import List
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT
+from homeassistant.helpers import config_validation as cv
 
 from .const import DOMAIN
 from .template_loader import get_template_names, get_template_by_name
@@ -48,7 +50,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Template auswählen
                 if "template" in user_input:
                     self._selected_template = user_input["template"]
-                    return await self.async_step_device_config()
+                    
+                    # Check if this is an aggregates template
+                    template_data = self._templates.get(self._selected_template, {})
+                    if template_data.get("aggregates"):
+                        return await self.async_step_aggregates_config()
+                    else:
+                        return await self.async_step_device_config()
                 
                 # Geräte-Konfiguration
                 return await self.async_step_final_config(user_input)
@@ -72,6 +80,80 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 reason="unknown_error",
                 description_placeholders={"error": str(e)}
             )
+
+    async def async_step_aggregates_config(self, user_input: dict = None) -> FlowResult:
+        """Configure aggregates for the selected template."""
+        try:
+            if not self._selected_template:
+                return self.async_abort(reason="no_template_selected")
+            
+            template_data = self._templates.get(self._selected_template, {})
+            available_aggregates = template_data.get("aggregates", [])
+            
+            if not available_aggregates:
+                return self.async_abort(
+                    reason="no_aggregates",
+                    description_placeholders={
+                        "template": self._selected_template
+                    }
+                )
+            
+            if user_input is not None:
+                # Process selected aggregates
+                selected_aggregates = user_input.get("selected_aggregates", [])
+                
+                if not selected_aggregates:
+                    return self.async_show_form(
+                        step_id="aggregates_config",
+                        data_schema=self._get_aggregates_schema(available_aggregates),
+                        errors={"base": "select_aggregates"}
+                    )
+                
+                # Create final config with selected aggregates
+                final_config = {
+                    "template": self._selected_template,
+                    "template_version": template_data.get("version", 1),
+                    "prefix": user_input.get("prefix", "aggregates"),
+                    "selected_aggregates": selected_aggregates,
+                    "aggregates_config": user_input
+                }
+                
+                return await self.async_step_final_config(final_config)
+            
+            # Show aggregates configuration form
+            return self.async_show_form(
+                step_id="aggregates_config",
+                data_schema=self._get_aggregates_schema(available_aggregates),
+                description_placeholders={
+                    "template_name": self._selected_template,
+                    "aggregate_count": str(len(available_aggregates))
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Aggregates-Konfiguration: %s", str(e))
+            return self.async_abort(
+                reason="aggregates_error",
+                description_placeholders={"error": str(e)}
+            )
+
+    def _get_aggregates_schema(self, available_aggregates: List[dict]) -> vol.Schema:
+        """Generate schema for aggregates configuration."""
+        # Create options for aggregate selection
+        aggregate_options = {}
+        for i, aggregate in enumerate(available_aggregates):
+            name = aggregate.get("name", f"Aggregate {i+1}")
+            group = aggregate.get("group", "unknown")
+            method = aggregate.get("method", "sum")
+            aggregate_options[f"{i}"] = f"{name} ({group} - {method})"
+        
+        return vol.Schema({
+            vol.Required("prefix", default="aggregates"): str,
+            vol.Required("selected_aggregates"): vol.All(
+                cv.multi_select(aggregate_options),
+                vol.Length(min=1, msg="Mindestens eine Aggregation auswählen")
+            )
+        })
 
     async def async_step_device_config(self, user_input: dict = None) -> FlowResult:
         """Handle device configuration step."""
@@ -102,8 +184,71 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             # Template-Daten abrufen
             template_data = self._templates[self._selected_template]
-            template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
             template_version = template_data.get("version", 1) if isinstance(template_data, dict) else 1
+            
+            # Check if this is an aggregates template
+            if isinstance(template_data, dict) and template_data.get("aggregates"):
+                # Handle aggregates template
+                return self._create_aggregates_entry(user_input, template_data, template_version)
+            else:
+                # Handle regular template
+                return self._create_regular_entry(user_input, template_data, template_version)
+                
+        except Exception as e:
+            _LOGGER.error("Fehler beim Erstellen der Konfiguration: %s", str(e))
+            return self.async_abort(
+                reason="config_error",
+                description_placeholders={"error": str(e)}
+            )
+
+    def _create_aggregates_entry(self, user_input: dict, template_data: dict, template_version: int) -> FlowResult:
+        """Create config entry for aggregates template."""
+        try:
+            # Get selected aggregates
+            selected_aggregates = user_input.get("selected_aggregates", [])
+            available_aggregates = template_data.get("aggregates", [])
+            
+            # Filter aggregates based on selection
+            filtered_aggregates = []
+            for i, aggregate in enumerate(available_aggregates):
+                if str(i) in selected_aggregates:
+                    filtered_aggregates.append(aggregate)
+            
+            if not filtered_aggregates:
+                return self.async_abort(
+                    reason="no_aggregates_selected",
+                    description_placeholders={"error": "Keine Aggregationen ausgewählt"}
+                )
+            
+            _LOGGER.info("Aggregates Template %s (Version %s) mit %d ausgewählten Aggregationen", 
+                        self._selected_template, template_version, len(filtered_aggregates))
+            
+            # Create config entry
+            return self.async_create_entry(
+                title=f"{user_input['prefix']} ({self._selected_template})",
+                data={
+                    "template": self._selected_template,
+                    "template_version": template_version,
+                    "prefix": user_input["prefix"],
+                    "aggregates": filtered_aggregates,
+                    "selected_aggregates": selected_aggregates,
+                    "is_aggregates_template": True
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Erstellen der Aggregates-Konfiguration: %s", str(e))
+            return self.async_abort(
+                reason="aggregates_config_error",
+                description_placeholders={"error": str(e)}
+            )
+
+    def _create_regular_entry(self, user_input: dict, template_data: dict, template_version: int) -> FlowResult:
+        """Create config entry for regular template."""
+        try:
+            # Register aus Template extrahieren
+            template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
+            
             _LOGGER.info("Template %s (Version %s) geladen mit %d Registern", 
                         self._selected_template, 
                         template_version,
@@ -143,14 +288,15 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "close_comm_on_error": user_input.get("close_comm_on_error", True),
                     "reconnect_delay": user_input.get("reconnect_delay", 10),
                     "message_wait": user_input.get("message_wait", 0),
-                    "registers": template_registers
+                    "registers": template_registers,
+                    "is_aggregates_template": False
                 }
             )
-
+            
         except Exception as e:
-            _LOGGER.error("Fehler beim Erstellen der Konfiguration: %s", str(e))
+            _LOGGER.error("Fehler beim Erstellen der regulären Konfiguration: %s", str(e))
             return self.async_abort(
-                reason="config_error",
+                reason="regular_config_error",
                 description_placeholders={"error": str(e)}
             )
 

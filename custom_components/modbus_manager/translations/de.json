@@ -36,6 +36,14 @@
                     "reconnect_delay": "Wartezeit vor Wiederverbindung (s)",
                     "message_wait": "Wartezeit zwischen Nachrichten (ms)"
                 }
+            },
+            "aggregates_config": {
+                "title": "Aggregations-Konfiguration",
+                "description": "Wähle die Aggregationen aus, die erstellt werden sollen",
+                "data": {
+                    "prefix": "Präfix für Aggregate-Sensoren",
+                    "selected_aggregates": "Ausgewählte Aggregationen"
+                }
             }
         },
         "error": {
@@ -45,7 +53,8 @@
             "firmware_not_detected": "Firmware-Version konnte nicht erkannt werden",
             "invalid_firmware": "Ungültige Firmware-Version",
             "device_exists": "Ein Gerät mit diesem Namen existiert bereits",
-            "no_device_definitions": "Keine Gerätedefinitionen gefunden"
+            "no_device_definitions": "Keine Gerätedefinitionen gefunden",
+            "select_aggregates": "Mindestens eine Aggregation auswählen"
         },
         "abort": {
             "no_device_definitions": "Es wurden keine Gerätedefinitionen gefunden. Bitte stellen Sie sicher, dass mindestens eine YAML-Datei im device_definitions Verzeichnis existiert.",
@@ -53,7 +62,12 @@
             "template_not_found": "Template {template_name} nicht gefunden.",
             "no_registers": "Template {template_name} hat keine Register definiert.",
             "update_error": "Fehler beim Aktualisieren des Templates: {error}",
-            "aggregation_error": "Fehler bei der Aggregations-Konfiguration: {error}"
+            "aggregation_error": "Fehler bei der Aggregations-Konfiguration: {error}",
+            "no_template_selected": "Kein Template ausgewählt",
+            "no_aggregates": "Keine Aggregationen im Template gefunden",
+            "no_aggregates_selected": "Keine Aggregationen ausgewählt",
+            "aggregates_error": "Fehler bei der Aggregations-Konfiguration: {error}",
+            "aggregates_config_error": "Fehler beim Erstellen der Aggregates-Konfiguration: {error}"
         },
         "progress": {
             "firmware_detect": "Versuche Firmware-Version zu erkennen..."

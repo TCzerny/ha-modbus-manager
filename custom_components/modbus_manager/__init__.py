@@ -30,6 +30,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     try:
         _LOGGER.info("Setup von Modbus Manager gestartet für %s", entry.data.get("prefix", "unbekannt"))
         
+        # Check if this is an aggregates template
+        is_aggregates_template = entry.data.get("is_aggregates_template", False)
+        
+        if is_aggregates_template:
+            # Handle aggregates template - no Modbus connection needed
+            _LOGGER.info("Aggregates Template erkannt - überspringe Modbus-Verbindung")
+            return await _setup_aggregates_entry(hass, entry)
+        
         # Template-Register laden
         template_name = entry.data.get("template")
         if not template_name:
@@ -173,6 +181,33 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.error("Fehler beim Setup von Modbus Manager: %s", str(e))
         import traceback
         _LOGGER.error("Traceback: %s", traceback.format_exc())
+        return False
+
+async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Set up aggregates template entry."""
+    try:
+        prefix = entry.data.get("prefix", "aggregates")
+        aggregates = entry.data.get("aggregates", [])
+        
+        _LOGGER.info("Setup Aggregates Template mit %d Aggregationen", len(aggregates))
+        
+        # Store aggregates data for sensor platform
+        hass.data[DOMAIN][entry.entry_id] = {
+            "aggregates": aggregates,
+            "prefix": prefix,
+            "template": entry.data.get("template", "Modbus Manager Aggregates"),
+            "template_version": entry.data.get("template_version", 1),
+            "is_aggregates_template": True
+        }
+        
+        # Forward to sensor platform
+        await hass.config_entries.async_forward_entry_setup(entry, "sensor")
+        
+        _LOGGER.info("Aggregates Template erfolgreich eingerichtet")
+        return True
+        
+    except Exception as e:
+        _LOGGER.error("Fehler beim Setup des Aggregates Templates: %s", str(e))
         return False
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

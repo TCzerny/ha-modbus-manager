@@ -116,6 +116,7 @@ async def async_setup_entry(
         # Add aggregate sensors if available (from template aggregates section)
         aggregate_entities = []
         aggregates_config = config_data.get("aggregates", [])
+        is_aggregates_template = config_data.get("is_aggregates_template", False)
         
         if aggregates_config:
             _LOGGER.info("Erstelle %d Aggregate-Sensoren aus Template", len(aggregates_config))
@@ -136,14 +137,20 @@ async def async_setup_entry(
                                  aggregate_config.get("name", "unbekannt"), str(e))
                     continue
         
-        # Legacy: Add aggregate sensors from config data (for backward compatibility)
-        legacy_aggregate_sensors = config_data.get("aggregate_sensors", [])
-        if legacy_aggregate_sensors:
-            _LOGGER.info("Füge %d Legacy Aggregate-Sensoren hinzu", len(legacy_aggregate_sensors))
-            aggregate_entities.extend(legacy_aggregate_sensors)
+        # For aggregates-only templates, only add aggregate entities
+        if is_aggregates_template:
+            all_entities = aggregate_entities
+            _LOGGER.info("Aggregates-only Template: %d Aggregate-Sensoren erstellt", len(aggregate_entities))
+        else:
+            # Regular template: add all entities
+            all_entities = entities + calculated_entities + aggregate_entities
         
-        # Add all entities (regular sensors + calculated sensors + aggregate sensors)
-        all_entities = entities + calculated_entities + aggregate_entities
+        # Legacy: Add aggregate sensors from config data (for backward compatibility)
+        if not is_aggregates_template:
+            legacy_aggregate_sensors = config_data.get("aggregate_sensors", [])
+            if legacy_aggregate_sensors:
+                _LOGGER.info("Füge %d Legacy Aggregate-Sensoren hinzu", len(legacy_aggregate_sensors))
+                all_entities.extend(legacy_aggregate_sensors)
         
         if all_entities:
             async_add_entities(all_entities)
