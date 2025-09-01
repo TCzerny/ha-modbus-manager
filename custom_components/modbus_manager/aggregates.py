@@ -131,7 +131,7 @@ class ModbusAggregateSensor(SensorEntity):
             all_states = self.hass.states.async_all()
             modbus_prefixes = self._get_modbus_prefixes()
             
-            _LOGGER.debug("Suche nach Entitäten für Gruppe %s mit Präfixen: %s", 
+            _LOGGER.info("Suche nach Entitäten für Gruppe %s mit Präfixen: %s", 
                          self._group_tag, modbus_prefixes)
             
             for state in all_states:
