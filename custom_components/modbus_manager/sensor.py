@@ -95,7 +95,7 @@ async def async_setup_entry(
         
         # Create calculated entities if available
         calculated_entities = []
-        calculated_data = config_data.get("calculated", [])
+        calculated_data = config_data.get("calculated_entities", [])
         
         _LOGGER.info("Debug: calculated_data aus config_data: %s", calculated_data)
         _LOGGER.info("Debug: config_data keys: %s", list(config_data.keys()))

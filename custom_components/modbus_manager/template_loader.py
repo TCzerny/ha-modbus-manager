@@ -434,9 +434,9 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             
         else:
             # Standard template processing
-        raw_registers = data.get("sensors", [])
-        if not raw_registers:
-            _LOGGER.warning("Template %s has no sensors defined", template_name)
+            raw_registers = data.get("sensors", [])
+            if not raw_registers:
+                _LOGGER.warning("Template %s has no sensors defined", template_name)
                 # Allow empty base templates and aggregate-only templates
                 if "type" in data and data["type"] == "base_template":
                     raw_registers = []
@@ -444,8 +444,8 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
                     _LOGGER.info("Template %s is aggregate-only template", template_name)
                     raw_registers = []
                 else:
-            return None
-            
+                    return None
+                
             calculated_entities = data.get("calculated", [])
             controls = data.get("controls", [])
         
