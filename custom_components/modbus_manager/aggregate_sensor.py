@@ -33,7 +33,7 @@ class ModbusAggregateSensor(SensorEntity):
         
         # Generate unique ID and entity ID with better naming
         clean_name = self._name.lower().replace(' ', '_').replace('-', '_')
-        self._attr_unique_id = f"{prefix}_aggregate_{clean_name}"
+        self._attr_unique_id = f"MM_aggregate_{clean_name}"
         
         # Better name: remove "Total" prefix and make it shorter
         display_name = self._name
@@ -58,7 +58,7 @@ class ModbusAggregateSensor(SensorEntity):
         elif self._method == "count":
             display_name = f"{display_name} (Count)"
         
-        self._attr_name = f"{prefix}_{display_name}"
+        self._attr_name = f"MM_{display_name}"
         
         # Entity properties
         self._attr_native_value = None
@@ -69,8 +69,8 @@ class ModbusAggregateSensor(SensorEntity):
         
         # Device info
         self._attr_device_info = DeviceInfo(
-            identifiers={(DOMAIN, f"{prefix}_aggregates")},
-            name=f"{prefix} Modbus Manager Aggregates",
+            identifiers={(DOMAIN, "MM_aggregates")},
+            name="MM Modbus Manager Aggregates",
             manufacturer="Modbus Manager",
             model="Aggregation Hub"
         )
