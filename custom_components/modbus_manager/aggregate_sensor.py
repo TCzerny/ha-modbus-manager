@@ -157,11 +157,16 @@ class ModbusAggregateSensor(SensorEntity):
             if new_state is None:
                 return
             
+            _LOGGER.info("State-Change erkannt: %s von %s zu %s", 
+                        entity_id, old_state.state if old_state else "None", new_state.state)
+            
             # Update aggregate value
             self._update_aggregate_value()
             
             # Notify Home Assistant about the change
             self.async_write_ha_state()
+            
+            _LOGGER.info("Aggregate-Sensor %s aktualisiert: %s", self._attr_name, self._attr_native_value)
             
         except Exception as e:
             _LOGGER.error("Fehler bei State-Change für Gruppe %s: %s", 
@@ -239,6 +244,8 @@ class ModbusAggregateSensor(SensorEntity):
         # Initial update
         self._update_aggregate_value()
         self.async_write_ha_state()
+        
+        _LOGGER.info("Aggregate-Sensor %s zu Home Assistant hinzugefügt", self._attr_name)
 
     async def async_will_remove_from_hass(self):
         """Entity will be removed from hass."""
