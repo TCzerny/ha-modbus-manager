@@ -122,6 +122,10 @@ class ModbusAggregateSensor(SensorEntity):
                     attributes = state.attributes
                     group_attr = attributes.get("group")
                     
+                    # Debug: Zeige alle Sensoren mit group Attribut
+                    if group_attr:
+                        _LOGGER.info("Sensor mit Gruppe gefunden: %s -> Gruppe '%s'", state.entity_id, group_attr)
+                    
                     if group_attr == self._group:
                         _LOGGER.info("Gefunden: %s mit Gruppe '%s'", state.entity_id, group_attr)
                         
