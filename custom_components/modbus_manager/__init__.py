@@ -33,6 +33,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Check if this is an aggregates template
         is_aggregates_template = entry.data.get("is_aggregates_template", False)
         
+        _LOGGER.info("Setup Entry Debug: is_aggregates_template=%s, entry.data=%s", 
+                     is_aggregates_template, entry.data)
+        
         if is_aggregates_template:
             # Handle aggregates template - no Modbus connection needed
             _LOGGER.info("Aggregates Template erkannt - überspringe Modbus-Verbindung")
