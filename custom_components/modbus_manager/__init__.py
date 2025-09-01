@@ -33,7 +33,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Check if this is an aggregates template
         is_aggregates_template = entry.data.get("is_aggregates_template", False)
         
-        _LOGGER.info("Setup Entry Debug: is_aggregates_template=%s, entry.data=%s", 
+        _LOGGER.debug("Setup Entry Debug: is_aggregates_template=%s, entry.data=%s", 
                      is_aggregates_template, entry.data)
         
         if is_aggregates_template:
@@ -74,13 +74,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         stored_version = entry.data.get("template_version", 1)
         
         if current_version > stored_version:
-            _LOGGER.info("Template %s aktualisiert: v%s → v%s", template_name, stored_version, current_version)
+            _LOGGER.debug("Template %s aktualisiert: v%s → v%s", template_name, stored_version, current_version)
             # Version in Config Entry aktualisieren - entry.data ist immutable, daher update_entry verwenden
             new_data = dict(entry.data)
             new_data["template_version"] = current_version
             hass.config_entries.async_update_entry(entry, data=new_data)
         
-        _LOGGER.info("Template %s geladen mit %d Registern, %d Controls", template_name, len(registers), len(controls))
+        _LOGGER.debug("Template %s geladen mit %d Registern, %d Controls", template_name, len(registers), len(controls))
         
         # Modbus-Hub über Standard Home Assistant API erstellen
         hub_name = f"modbus_manager_{entry.data['prefix']}"
@@ -95,17 +95,17 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             "timeout": 10,              # ← Erforderlich: Timeout in Sekunden
         }
         
-        _LOGGER.info("Modbus-Konfiguration: %s", modbus_config)
+        _LOGGER.debug("Modbus-Konfiguration: %s", modbus_config)
         
         # Modbus-Hub direkt erstellen
         try:
             hub = ModbusHub(hass, modbus_config)
-            _LOGGER.info("Modbus-Hub %s erfolgreich erstellt", hub_name)
+            _LOGGER.debug("Modbus-Hub %s erfolgreich erstellt", hub_name)
             
             # Modbus-Hub einrichten und verbinden
             try:
                 await hub.async_setup()
-                _LOGGER.info("Modbus-Hub %s erfolgreich eingerichtet", hub_name)
+                _LOGGER.debug("Modbus-Hub %s erfolgreich eingerichtet", hub_name)
                 
                 # Modbus-Hub verbinden
                 try:
@@ -125,8 +125,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         # Daten für alle Plattformen vorbereiten
         prefix = entry.data["prefix"]
-        _LOGGER.info("Präfix aus Config Entry: %s", prefix)
-        _LOGGER.info("Template: %s, Register: %d", template_name, len(registers))
+        _LOGGER.debug("Präfix aus Config Entry: %s", prefix)
+        _LOGGER.debug("Template: %s, Register: %d", template_name, len(registers))
+        
+        # Device zuerst erstellen, damit Sensoren es als via_device referenzieren können
+        from homeassistant.helpers import device_registry as dr
+        device_registry = dr.async_get(hass)
+        device_registry.async_get_or_create(
+            config_entry_id=entry.entry_id,
+            identifiers={(DOMAIN, entry.entry_id)},
+            name=f"{prefix} ({template_name})",
+            manufacturer="Modbus Manager",
+            model=template_name,
+        )
         
         hass.data[DOMAIN][entry.entry_id] = {
             "hub": hub,
@@ -144,12 +155,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Template-Daten global verfügbar machen für Controls
         hass.data[DOMAIN]["template_data"] = template_data
         
-        _LOGGER.info("Konfigurationsdaten gespeichert: prefix=%s, template=%s, controls=%d", prefix, template_name, len(controls))
+        _LOGGER.debug("Konfigurationsdaten gespeichert: prefix=%s, template=%s, controls=%d", prefix, template_name, len(controls))
         
         # Alle Plattformen einrichten
         try:
             await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
-            _LOGGER.info("Alle Plattformen erfolgreich eingerichtet: %s", PLATFORMS)
+            _LOGGER.debug("Alle Plattformen erfolgreich eingerichtet: %s", PLATFORMS)
         except Exception as e:
             _LOGGER.error("Fehler beim Einrichten der Plattformen: %s", str(e))
             return False
@@ -162,13 +173,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             hass.data[DOMAIN][entry.entry_id]["performance_monitor"] = performance_monitor
             hass.data[DOMAIN][entry.entry_id]["register_optimizer"] = register_optimizer
             
-            _LOGGER.info("Performance-Monitor und Register-Optimizer initialisiert")
+            _LOGGER.debug("Performance-Monitor und Register-Optimizer initialisiert")
         except Exception as e:
             _LOGGER.warning("Performance-Monitor konnte nicht initialisiert werden: %s", str(e))
         
         # Aggregation-Manager initialisieren (nur für Template-basierte Aggregate-Sensoren)
         # Automatisch erstellte Aggregate-Sensoren sind deaktiviert - nur Template-basierte werden verwendet
-        _LOGGER.info("Aggregation-Manager deaktiviert - nur Template-basierte Aggregate-Sensoren werden verwendet")
+        _LOGGER.debug("Aggregation-Manager deaktiviert - nur Template-basierte Aggregate-Sensoren werden verwendet")
         
         _LOGGER.info("Modbus Manager erfolgreich eingerichtet für %s", entry.data.get("prefix", "unbekannt"))
         return True
@@ -185,7 +196,7 @@ async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bo
         prefix = entry.data.get("prefix", "aggregates")
         aggregates = entry.data.get("aggregates", [])
         
-        _LOGGER.info("Setup Aggregates Template mit %d Aggregationen", len(aggregates))
+        _LOGGER.debug("Setup Aggregates Template mit %d Aggregationen", len(aggregates))
         
         # Store aggregates data for sensor platform
         config_data = {
@@ -196,13 +207,13 @@ async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bo
             "is_aggregates_template": True
         }
         
-        _LOGGER.info("Integration Debug: Speichere config_data=%s", config_data)
+        _LOGGER.debug("Integration Debug: Speichere config_data=%s", config_data)
         hass.data[DOMAIN][entry.entry_id] = config_data
         
         # Forward to sensor platform
         await hass.config_entries.async_forward_entry_setups(entry, ["sensor"])
         
-        _LOGGER.info("Aggregates Template erfolgreich eingerichtet")
+        _LOGGER.debug("Aggregates Template erfolgreich eingerichtet")
         return True
         
     except Exception as e:
@@ -212,7 +223,7 @@ async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bo
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     try:
-        _LOGGER.info("Unload von Modbus Manager für %s", entry.data.get("prefix", "unbekannt"))
+        _LOGGER.debug("Unload von Modbus Manager für %s", entry.data.get("prefix", "unbekannt"))
         
         # Alle Plattformen entladen
         try:
