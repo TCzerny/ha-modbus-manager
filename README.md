@@ -1,5 +1,7 @@
 # Home Assistant Modbus Manager
 
+> **⚠️ Work in Progress**: This project is currently under active development. Some features may be incomplete or subject to change.
+
 A modular, template-based Modbus Manager for Home Assistant with predefined device templates for popular energy devices.
 
 ## 🚀 Features
