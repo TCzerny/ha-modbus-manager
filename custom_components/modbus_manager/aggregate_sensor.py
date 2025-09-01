@@ -31,10 +31,34 @@ class ModbusAggregateSensor(SensorEntity):
         self._state_class = aggregate_config.get("state_class")
         self._icon = aggregate_config.get("icon")
         
-        # Generate unique ID and entity ID
+        # Generate unique ID and entity ID with better naming
         clean_name = self._name.lower().replace(' ', '_').replace('-', '_')
         self._attr_unique_id = f"{prefix}_aggregate_{clean_name}"
-        self._attr_name = f"{prefix}_{self._name}"
+        
+        # Better name: remove "Total" prefix and make it shorter
+        display_name = self._name
+        if display_name.startswith("Total "):
+            display_name = display_name[6:]  # Remove "Total "
+        if display_name.startswith("Average "):
+            display_name = display_name[8:]  # Remove "Average "
+        if display_name.startswith("Max "):
+            display_name = display_name[4:]  # Remove "Max "
+        if display_name.startswith("Min "):
+            display_name = display_name[4:]  # Remove "Min "
+        
+        # Add method suffix for clarity
+        if self._method == "sum":
+            display_name = f"{display_name} (Sum)"
+        elif self._method == "average":
+            display_name = f"{display_name} (Avg)"
+        elif self._method == "max":
+            display_name = f"{display_name} (Max)"
+        elif self._method == "min":
+            display_name = f"{display_name} (Min)"
+        elif self._method == "count":
+            display_name = f"{display_name} (Count)"
+        
+        self._attr_name = f"{prefix}_{display_name}"
         
         # Entity properties
         self._attr_native_value = None
@@ -90,18 +114,25 @@ class ModbusAggregateSensor(SensorEntity):
             all_states = self.hass.states.async_all()
             modbus_prefixes = self._get_modbus_prefixes()
             
+            _LOGGER.info("Suche nach Gruppe '%s' in %d Entitäten", self._group, len(all_states))
+            _LOGGER.info("Modbus-Präfixe: %s", modbus_prefixes)
+            
             for state in all_states:
                 if state.domain == "sensor":
                     attributes = state.attributes
-                    if attributes.get("group") == self._group:
+                    group_attr = attributes.get("group")
+                    
+                    if group_attr == self._group:
+                        _LOGGER.info("Gefunden: %s mit Gruppe '%s'", state.entity_id, group_attr)
+                        
                         # Only include sensors from Modbus Manager devices
                         if any(prefix in state.entity_id for prefix in modbus_prefixes):
                             # Don't track aggregate sensors themselves
                             if not any(f"{prefix}_aggregate_" in state.entity_id for prefix in modbus_prefixes):
                                 self._tracked_entities.append(state.entity_id)
+                                _LOGGER.info("Hinzugefügt zu Tracking: %s", state.entity_id)
             
-            _LOGGER.debug("Gefundene Entitäten für Gruppe %s über alle Modbus Manager Geräte: %s", 
-                         self._group, self._tracked_entities)
+            _LOGGER.info("Gefundene Entitäten für Gruppe %s: %s", self._group, self._tracked_entities)
             
         except Exception as e:
             _LOGGER.error("Fehler beim Finden der Gruppen-Entitäten: %s", str(e))
