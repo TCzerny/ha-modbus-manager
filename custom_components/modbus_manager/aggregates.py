@@ -62,12 +62,12 @@ class ModbusAggregateSensor(SensorEntity):
             
             self._attr_name = display_name
             
-            # Device info for template-based sensors
+            # Device info for template-based sensors - ALL use the same device
             device_info = {
-                "identifiers": {(DOMAIN, f"modbus_manager_aggregate_{clean_name}")},
-                "name": f"Modbus Manager Aggregate {display_name}",
+                "identifiers": {(DOMAIN, "modbus_manager_aggregation_hub")},
+                "name": "MM Modbus Manager Aggregates",
                 "manufacturer": "Modbus Manager",
-                "model": "Aggregation Sensor"
+                "model": "Aggregation Hub"
             }
             
         else:
