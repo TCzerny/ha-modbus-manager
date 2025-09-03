@@ -68,3 +68,33 @@ set_ev_charger_fallback_current:
             - 1
             - 2
             - 3
+
+modbus_manager_optimize_registers:
+  name: "Optimize Modbus Registers"
+  description: "Optimize register reading for a specific device"
+  fields:
+    device_id:
+      name: "Device ID"
+      description: "The device ID to optimize registers for"
+      required: true
+      example: "modbus_manager_SG2"
+
+modbus_manager_get_performance:
+  name: "Get Performance Metrics"
+  description: "Get performance metrics for a device or globally"
+  fields:
+    device_id:
+      name: "Device ID"
+      description: "The device ID to get metrics for (optional for global metrics)"
+      required: false
+      example: "modbus_manager_SG2"
+
+modbus_manager_reset_performance:
+  name: "Reset Performance Metrics"
+  description: "Reset performance metrics for a device or globally"
+  fields:
+    device_id:
+      name: "Device ID"
+      description: "The device ID to reset metrics for (optional for global reset)"
+      required: false
+      example: "modbus_manager_SG2"
