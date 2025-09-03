@@ -254,24 +254,24 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Phase configuration
         if "phases" in dynamic_config:
             _LOGGER.debug("Adding phases field to schema")
-            schema_fields[vol.Optional("phases", default=1)] = vol.In([1, 3])  # Only 1 or 3 phases supported
+            schema_fields[vol.Optional("phases", description="Anzahl Phasen (1 oder 3)", default=1)] = vol.In([1, 3])
         
         # MPPT configuration
         if "mppt_count" in dynamic_config:
             mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
             _LOGGER.debug("Adding mppt_count field to schema with options: %s", mppt_options)
-            schema_fields[vol.Optional("mppt_count", default=1)] = vol.In(mppt_options)
+            schema_fields[vol.Optional("mppt_count", description="Anzahl MPPT-Tracker", default=1)] = vol.In(mppt_options)
         
         # Battery configuration
         if "battery" in dynamic_config:
             _LOGGER.debug("Adding battery_enabled field to schema")
-            schema_fields[vol.Optional("battery_enabled", default=False)] = bool
+            schema_fields[vol.Optional("battery_enabled", description="Batterie-Unterstützung aktiviert", default=False)] = bool
         
         # Firmware version
         if "firmware_version" in dynamic_config:
             _LOGGER.debug("Adding firmware_version field to schema")
             default_firmware = dynamic_config["firmware_version"].get("default", "1.0.0")
-            schema_fields[vol.Optional("firmware_version", default=default_firmware)] = str
+            schema_fields[vol.Optional("firmware_version", description="Firmware-Version", default=default_firmware)] = str
         
         # String count - removed as no string-specific sensors exist in current templates
         
@@ -279,7 +279,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if "connection_type" in dynamic_config:
             conn_options = dynamic_config["connection_type"].get("options", ["LAN", "WINET"])
             _LOGGER.debug("Adding connection_type field to schema with options: %s", conn_options)
-            schema_fields[vol.Optional("connection_type", default="LAN")] = vol.In(conn_options)
+            schema_fields[vol.Optional("connection_type", description="Verbindungstyp", default="LAN")] = vol.In(conn_options)
         
         _LOGGER.debug("Final schema fields: %s", list(schema_fields.keys()))
         return schema_fields
