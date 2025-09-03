@@ -287,11 +287,16 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         _LOGGER.debug("Final schema fields: %s", list(schema_fields.keys()))
         return schema_fields
 
-    def _process_dynamic_config(self, user_input: dict, template_data: dict) -> list:
+    def _process_dynamic_config(self, user_input: dict, template_data: dict) -> dict:
         """Process template based on dynamic configuration parameters."""
         original_sensors = template_data.get("sensors", [])
+        original_calculated = template_data.get("calculated", [])
+        original_controls = template_data.get("controls", [])
         dynamic_config = template_data.get("dynamic_config", {})
+        
         processed_sensors = []
+        processed_calculated = []
+        processed_controls = []
         
         # Get user configuration
         phases = user_input.get("phases", 1)
@@ -304,6 +309,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         _LOGGER.debug("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, strings=%d, conn=%s", 
                      phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type)
         
+        # Process sensors
         for sensor in original_sensors:
             # Check if sensor should be included based on configuration
             if self._should_include_sensor(sensor, phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type, dynamic_config):
@@ -311,8 +317,28 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 modified_sensor = self._apply_firmware_modifications(sensor, firmware_version, dynamic_config)
                 processed_sensors.append(modified_sensor)
         
-        _LOGGER.debug("Processed %d sensors from %d original sensors", len(processed_sensors), len(original_sensors))
-        return processed_sensors
+        # Process calculated sensors
+        for calculated in original_calculated:
+            # Check if calculated sensor should be included based on configuration
+            if self._should_include_sensor(calculated, phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type, dynamic_config):
+                processed_calculated.append(calculated)
+        
+        # Process controls
+        for control in original_controls:
+            # Check if control should be included based on configuration
+            if self._should_include_sensor(control, phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type, dynamic_config):
+                processed_controls.append(control)
+        
+        _LOGGER.debug("Processed %d sensors, %d calculated, %d controls from %d original sensors, %d calculated, %d controls", 
+                     len(processed_sensors), len(processed_calculated), len(processed_controls),
+                     len(original_sensors), len(original_calculated), len(original_controls))
+        
+        # Return processed template data
+        return {
+            "sensors": processed_sensors,
+            "calculated": processed_calculated,
+            "controls": processed_controls
+        }
 
     def _should_include_sensor(self, sensor: dict, phases: int, mppt_count: int, battery_enabled: bool, 
                                firmware_version: str, string_count: int, connection_type: str, dynamic_config: dict) -> bool:
@@ -320,32 +346,41 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         sensor_name = sensor.get("name", "").lower()
         unique_id = sensor.get("unique_id", "").lower()
         
+        # Check both sensor_name and unique_id for filtering
+        search_text = f"{sensor_name} {unique_id}".lower()
+        
         # Phase-specific sensors
         if phases == 1:
             # Exclude phase B and C sensors for single phase
-            if any(phase in sensor_name for phase in ["phase b", "phase c", "phase_b", "phase_c"]):
+            if any(phase in search_text for phase in ["phase_b", "phase_c", "phase b", "phase c"]):
+                _LOGGER.debug("Excluding sensor due to single phase config: %s", sensor.get("name", "unknown"))
                 return False
         elif phases == 3:
             # Include all phase sensors
             pass
         
         # MPPT-specific sensors
-        if "mppt" in sensor_name:
-            # Extract MPPT number from sensor name
-            mppt_number = self._extract_mppt_number(sensor_name)
+        if "mppt" in search_text:
+            # Extract MPPT number from sensor name or unique_id
+            mppt_number = self._extract_mppt_number(search_text)
             if mppt_number and mppt_number > mppt_count:
+                _LOGGER.debug("Excluding sensor due to MPPT count config: %s (MPPT %d > %d)", 
+                             sensor.get("name", "unknown"), mppt_number, mppt_count)
                 return False
         
         # Battery-specific sensors
         if not battery_enabled:
             battery_keywords = ["battery", "bms", "soc", "charge", "discharge", "backup"]
-            if any(keyword in sensor_name for keyword in battery_keywords):
+            if any(keyword in search_text for keyword in battery_keywords):
+                _LOGGER.debug("Excluding sensor due to battery disabled: %s", sensor.get("name", "unknown"))
                 return False
         
         # String-specific sensors
-        if "string" in sensor_name:
-            string_number = self._extract_string_number(sensor_name)
+        if "string" in search_text:
+            string_number = self._extract_string_number(search_text)
             if string_number and string_number > string_count:
+                _LOGGER.debug("Excluding sensor due to string count config: %s (String %d > %d)", 
+                             sensor.get("name", "unknown"), string_number, string_count)
                 return False
         
         # Connection type specific sensors
@@ -354,25 +389,27 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Exclude WINET-only sensors
             winet_only_sensors = connection_config.get("winet_only_sensors", [])
             if unique_id in winet_only_sensors:
+                _LOGGER.debug("Excluding sensor due to LAN connection: %s", sensor.get("name", "unknown"))
                 return False
         elif connection_type == "WINET":
             # Exclude LAN-only sensors
             lan_only_sensors = connection_config.get("lan_only_sensors", [])
             if unique_id in lan_only_sensors:
+                _LOGGER.debug("Excluding sensor due to WINET connection: %s", sensor.get("name", "unknown"))
                 return False
         
         return True
 
-    def _extract_mppt_number(self, sensor_name: str) -> int:
-        """Extract MPPT number from sensor name."""
+    def _extract_mppt_number(self, search_text: str) -> int:
+        """Extract MPPT number from sensor name or unique_id."""
         import re
-        match = re.search(r'mppt(\d+)', sensor_name.lower())
+        match = re.search(r'mppt(\d+)', search_text.lower())
         return int(match.group(1)) if match else None
 
-    def _extract_string_number(self, sensor_name: str) -> int:
-        """Extract string number from sensor name."""
+    def _extract_string_number(self, search_text: str) -> int:
+        """Extract string number from sensor name or unique_id."""
         import re
-        match = re.search(r'string(\d+)', sensor_name.lower())
+        match = re.search(r'string(\d+)', search_text.lower())
         return int(match.group(1)) if match else None
 
     def _apply_firmware_modifications(self, sensor: dict, firmware_version: str, dynamic_config: dict) -> dict:
@@ -517,10 +554,15 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             
             # Process dynamic configuration if supported
             if self._supports_dynamic_config(template_data):
-                template_registers = self._process_dynamic_config(user_input, template_data)
+                processed_data = self._process_dynamic_config(user_input, template_data)
+                template_registers = processed_data.get("sensors", [])
+                template_calculated = processed_data.get("calculated", [])
+                template_controls = processed_data.get("controls", [])
             else:
                 # Extract registers from template
                 template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
+                template_calculated = template_data.get("calculated", []) if isinstance(template_data, dict) else []
+                template_controls = template_data.get("controls", []) if isinstance(template_data, dict) else []
             
             _LOGGER.debug("Template %s (Version %s) loaded with %d registers", 
                         self._selected_template, 
@@ -558,6 +600,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "timeout": user_input.get("timeout", 5),
                     "delay": user_input.get("delay", 0),
                     "registers": template_registers,
+                    "calculated_entities": template_calculated,
+                    "controls": template_controls,
                     "is_aggregates_template": False
                 }
             )
@@ -572,7 +616,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def _create_simple_template_entry(self, user_input: dict, template_data: dict, template_version: int) -> FlowResult:
         """Create config entry for simple template."""
         try:
-            _LOGGER.debug("Erstelle vereinfachtes Template Entry: %s", self._selected_template)
+            _LOGGER.debug("Creating simple template entry: %s", self._selected_template)
             
             # Check if this is a SunSpec Standard Configuration template
             if "SunSpec Standard Configuration" in self._selected_template:
@@ -582,10 +626,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if not self._validate_simple_config(user_input):
                 return self.async_abort(
                     reason="invalid_simple_config",
-                    description_placeholders={"error": "Ungültige Konfiguration für vereinfachtes Template"}
+                    description_placeholders={"error": "Invalid configuration for simple template"}
                 )
             
-            # Config Entry erstellen für vereinfachtes Template
+            # Create config entry for simple template
             return self.async_create_entry(
                 title=f"{user_input['prefix']} ({self._selected_template})",
                 data={
@@ -600,7 +644,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
             
         except Exception as e:
-            _LOGGER.error("Fehler beim Erstellen der vereinfachten Template-Konfiguration: %s", str(e))
+            _LOGGER.error("Error creating simple template configuration: %s", str(e))
             return self.async_abort(
                 reason="simple_config_error",
                 description_placeholders={"error": str(e)}
