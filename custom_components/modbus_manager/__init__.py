@@ -142,6 +142,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Load template for version checking only
         template_task = asyncio.create_task(get_template_by_name(template_name))
         template_data = await template_task
+        _LOGGER.info("Loaded template for device %s: %s", entry.data.get("name", "unknown"), template_name)
         
         if not template_data:
             _LOGGER.error("Template %s could not be loaded", template_name)

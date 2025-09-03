@@ -56,7 +56,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Template auswählen
                 if "template" in user_input:
                     self._selected_template = user_input["template"]
-                    _LOGGER.debug("Selected template: %s", self._selected_template)
+                    _LOGGER.info("Selected template: %s", self._selected_template)
                     
                     # Check if this is an aggregates template
                     template_data = self._templates.get(self._selected_template, {})
