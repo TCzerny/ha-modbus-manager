@@ -1,7 +1,5 @@
 # Home Assistant Modbus Manager
 
-> **✅ Production Ready**: This project is now stable and ready for production use with comprehensive device support.
-
 A modular, template-based Modbus Manager for Home Assistant with predefined device templates for popular energy devices.
 
 ## 🚀 Features
@@ -39,7 +37,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 
 ### 🔮 Future Support
 
-#### SunSpec Standard (Planned)
+#### SunSpec Standard (Planned/To be tested)
 - **SMA** - Sunny Boy, Tripower, Home Storage
 - **Fronius** - GEN24, Tauro
 - **Huawei** - Luna, FusionSolar
