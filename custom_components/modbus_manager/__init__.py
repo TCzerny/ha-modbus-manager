@@ -28,7 +28,7 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Modbus Manager from a config entry."""
     try:
-        _LOGGER.debug("Setup von Modbus Manager gestartet für %s", entry.data.get("prefix", "unbekannt"))
+        _LOGGER.debug("Setup of Modbus Manager started for %s", entry.data.get("prefix", "unknown"))
         
         # Check if this is an aggregates template
         is_aggregates_template = entry.data.get("is_aggregates_template", False)
@@ -38,37 +38,34 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         if is_aggregates_template:
             # Handle aggregates template - no Modbus connection needed
-            _LOGGER.debug("Aggregates Template erkannt - überspringe Modbus-Verbindung")
+            _LOGGER.debug("Aggregates Template detected - skipping Modbus connection")
             # Use asyncio.create_task to avoid blocking the event loop
             setup_task = asyncio.create_task(_setup_aggregates_entry(hass, entry))
             return await setup_task
         
-        # Template-Register laden (in separatem Task um Asyncio-Warnings zu vermeiden)
+        # Use registers from config entry (already filtered by dynamic config)
+        registers = entry.data.get("registers", [])
+        calculated_entities = entry.data.get("calculated_entities", [])
+        controls = entry.data.get("controls", [])
+        
+        # Get template name for version checking
         template_name = entry.data.get("template")
         if not template_name:
-            _LOGGER.error("Kein Template in der Konfiguration gefunden")
+            _LOGGER.error("No template found in configuration")
             return False
         
-        # Use asyncio.create_task to avoid blocking the event loop
+        # Load template for version checking only
         template_task = asyncio.create_task(get_template_by_name(template_name))
         template_data = await template_task
         
         if not template_data:
-            _LOGGER.error("Template %s konnte nicht geladen werden", template_name)
+            _LOGGER.error("Template %s could not be loaded", template_name)
             return False
         
-        # Extract template metadata
+        # Extract current version from template
         if isinstance(template_data, dict):
-            # Template with metadata
-            registers = template_data.get("sensors", [])
-            calculated_entities = template_data.get("calculated", [])
-            controls = template_data.get("controls", [])
             current_version = template_data.get("version", 1)
         else:
-            # Fallback: Direct register list
-            registers = template_data
-            calculated_entities = []
-            controls = []
             current_version = 1
         
         if not registers:
