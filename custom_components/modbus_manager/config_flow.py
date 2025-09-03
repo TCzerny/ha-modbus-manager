@@ -241,7 +241,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Check if template supports dynamic configuration."""
         # Check if template has dynamic_config section
         has_dynamic = "dynamic_config" in template_data
-        _LOGGER.debug("_supports_dynamic_config: template_data keys=%s, has_dynamic=%s", 
+        _LOGGER.info("_supports_dynamic_config: template_data keys=%s, has_dynamic=%s", 
                      list(template_data.keys()), has_dynamic)
         return has_dynamic
 
@@ -306,7 +306,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         string_count = user_input.get("string_count", 1)
         connection_type = user_input.get("connection_type", "LAN")
         
-        _LOGGER.debug("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, strings=%d, conn=%s", 
+        _LOGGER.info("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, strings=%d, conn=%s", 
                      phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type)
         
         # Process sensors
@@ -329,7 +329,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if self._should_include_sensor(control, phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type, dynamic_config):
                 processed_controls.append(control)
         
-        _LOGGER.debug("Processed %d sensors, %d calculated, %d controls from %d original sensors, %d calculated, %d controls", 
+        _LOGGER.info("Processed %d sensors, %d calculated, %d controls from %d original sensors, %d calculated, %d controls", 
                      len(processed_sensors), len(processed_calculated), len(processed_controls),
                      len(original_sensors), len(original_calculated), len(original_controls))
         
@@ -357,7 +357,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if phases == 1:
             # Exclude phase B and C sensors for single phase
             if any(phase in search_text for phase in ["phase_b", "phase_c", "phase b", "phase c"]):
-                _LOGGER.debug("Excluding sensor due to single phase config: %s (unique_id: %s)", 
+                _LOGGER.info("Excluding sensor due to single phase config: %s (unique_id: %s)", 
                              sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         elif phases == 3:
@@ -369,7 +369,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Extract MPPT number from sensor name or unique_id
             mppt_number = self._extract_mppt_number(search_text)
             if mppt_number and mppt_number > mppt_count:
-                _LOGGER.debug("Excluding sensor due to MPPT count config: %s (unique_id: %s, MPPT %d > %d)", 
+                _LOGGER.info("Excluding sensor due to MPPT count config: %s (unique_id: %s, MPPT %d > %d)", 
                              sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), mppt_number, mppt_count)
                 return False
         
@@ -377,7 +377,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if not battery_enabled:
             battery_keywords = ["battery", "bms", "soc", "charge", "discharge", "backup"]
             if any(keyword in search_text for keyword in battery_keywords):
-                _LOGGER.debug("Excluding sensor due to battery disabled: %s (unique_id: %s)", 
+                _LOGGER.info("Excluding sensor due to battery disabled: %s (unique_id: %s)", 
                              sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         
@@ -385,7 +385,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if "string" in search_text:
             string_number = self._extract_string_number(search_text)
             if string_number and string_number > string_count:
-                _LOGGER.debug("Excluding sensor due to string count config: %s (unique_id: %s, String %d > %d)", 
+                _LOGGER.info("Excluding sensor due to string count config: %s (unique_id: %s, String %d > %d)", 
                              sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), string_number, string_count)
                 return False
         
@@ -395,14 +395,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Exclude WINET-only sensors
             winet_only_sensors = connection_config.get("winet_only_sensors", [])
             if unique_id in winet_only_sensors:
-                _LOGGER.debug("Excluding sensor due to LAN connection: %s (unique_id: %s)", 
+                _LOGGER.info("Excluding sensor due to LAN connection: %s (unique_id: %s)", 
                              sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         elif connection_type == "WINET":
             # Exclude LAN-only sensors
             lan_only_sensors = connection_config.get("lan_only_sensors", [])
             if unique_id in lan_only_sensors:
-                _LOGGER.debug("Excluding sensor due to WINET connection: %s (unique_id: %s)", 
+                _LOGGER.info("Excluding sensor due to WINET connection: %s (unique_id: %s)", 
                              sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         
