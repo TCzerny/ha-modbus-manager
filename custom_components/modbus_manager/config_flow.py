@@ -4,6 +4,7 @@ import voluptuous_serialize as vs
 from typing import List
 import json
 import os
+import asyncio
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
@@ -27,10 +28,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         super().__init__()
         self._templates = {}
         self._selected_template = None
-        self._translations = self._load_translations()
+        self._translations = {}
 
-    def _load_translations(self) -> dict:
-        """Load translations from JSON files."""
+    async def _load_translations(self) -> dict:
+        """Load translations from JSON files asynchronously."""
         translations = {}
         try:
             # Get the directory of this file
@@ -40,20 +41,27 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Load German translations
             de_file = os.path.join(translations_dir, "de.json")
             if os.path.exists(de_file):
-                with open(de_file, 'r', encoding='utf-8') as f:
-                    translations['de'] = json.load(f)
+                loop = asyncio.get_event_loop()
+                content = await loop.run_in_executor(None, self._read_file_sync, de_file)
+                translations['de'] = json.loads(content)
             
             # Load English translations
             en_file = os.path.join(translations_dir, "en.json")
             if os.path.exists(en_file):
-                with open(en_file, 'r', encoding='utf-8') as f:
-                    translations['en'] = json.load(f)
+                loop = asyncio.get_event_loop()
+                content = await loop.run_in_executor(None, self._read_file_sync, en_file)
+                translations['en'] = json.loads(content)
                     
         except Exception as e:
             _LOGGER.error("Error loading translations: %s", str(e))
             translations = {}
         
         return translations
+
+    def _read_file_sync(self, file_path: str) -> str:
+        """Read file synchronously (to be run in executor)."""
+        with open(file_path, 'r', encoding='utf-8') as f:
+            return f.read()
 
     def _get_translation(self, key: str, language: str = 'de') -> str:
         """Get translation for a key."""
@@ -75,6 +83,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input: dict = None) -> FlowResult:
         """Handle the initial step."""
         try:
+            # Load translations if not loaded yet
+            if not self._translations:
+                _LOGGER.debug("Loading translations...")
+                self._translations = await self._load_translations()
+                _LOGGER.debug("Translations loaded: %s", list(self._translations.keys()))
+            
             # Templates nur einmal laden (caching)
             if not self._templates:
                 _LOGGER.debug("Loading templates for the first time...")
