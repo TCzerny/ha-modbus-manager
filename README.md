@@ -1,6 +1,6 @@
 # Home Assistant Modbus Manager
 
-> **⚠️ Work in Progress**: This project is currently under active development. Some features may be incomplete or subject to change.
+> **✅ Production Ready**: This project is now stable and ready for production use with comprehensive device support.
 
 A modular, template-based Modbus Manager for Home Assistant with predefined device templates for popular energy devices.
 
@@ -28,6 +28,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
   - **Full Modbus register mapping**: Based on mkaiser's comprehensive implementation
   - **Firmware compatibility**: Automatic sensor parameter adjustment
   - **Connection types**: LAN and WINET support with register filtering
+  - **Float conversion**: Full IEEE 754 32-bit and 64-bit floating-point support
 
 #### EV Chargers
 - **Compleo eBox Professional** - Complete EV charger template
@@ -233,20 +234,19 @@ entities:
 
 ## 🚧 Known Issues
 
-- Modbus communication errors with some devices
-- Slow entity updates with large configurations
 - Aggregate sensors show double counting with multiple devices (expected behavior)
 
 ## ✅ Recent Fixes
 
-- **IndentationError** in aggregates.py (fixed)
-- **Logger Verbosity** reduced (INFO → DEBUG)
-- **Unique ID Prefixes** implemented for all entity types
-- **Self-Referencing** prevented in aggregate calculations
-- **Options Flow** implemented for aggregate hubs
+- **Dynamic Configuration**: Fully functional with automatic sensor filtering
+- **Float Conversion**: Complete IEEE 754 32-bit and 64-bit floating-point support
+- **Services & Diagnostics**: Performance monitoring and register optimization
+- **Template Filtering**: Automatic exclusion of irrelevant sensors based on device configuration
+- **Firmware Compatibility**: Automatic sensor parameter adjustment for different firmware versions
+- **Connection Type Filtering**: LAN/WINET register availability filtering
+- **Performance Optimization**: Register grouping and operation monitoring
 - **Deprecation Warnings** for Home Assistant 2025.12 fixed
 - **Asyncio Blocking Warnings** fixed through task optimization
-- **Template Warnings** reduced to DEBUG for expected cases
 
 ## 🤝 Contributing
 

@@ -16,6 +16,12 @@ We are actively seeking **new device templates** for various Modbus-compatible d
 - **Smart Meters**: Landis+Gyr, Kamstrup, Itron
 - **Industrial Equipment**: PLCs, HMIs, SCADA systems
 
+### Template Features to Include
+- **Dynamic Configuration**: Automatic filtering based on device parameters
+- **Float Conversion**: Support for IEEE 754 32-bit and 64-bit floating-point
+- **Firmware Compatibility**: Sensor parameter adjustment for different firmware versions
+- **Connection Types**: LAN/WINET support with register filtering
+
 ### Template Types
 1. **Dynamic Templates**: Like Sungrow SHx Dynamic (preferred)
 2. **Static Templates**: Simple device-specific templates
@@ -429,7 +435,7 @@ sensors:
 # Enable debug logging
 logger:
   default: info
-  custom_components.modbus_manager: debug
+    custom_components.modbus_manager: debug
 
 # Test template
 modbus_manager:

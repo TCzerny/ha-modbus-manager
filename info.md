@@ -25,7 +25,8 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - 🗺️ **Enum Mapping**: Convert numeric values to human-readable text
 - 🏁 **Bit Flags**: Extract individual bit status as separate attributes
 - 🔢 **Mathematical Operations**: Offset, multiplier, and sum_scale support
-- 📏 **Data Type Support**: uint16, int16, uint32, int32, string, float, boolean
+- 📏 **Data Type Support**: uint16, int16, uint32, int32, string, float32, float64, boolean
+- 🌊 **Float Conversion**: Complete IEEE 754 32-bit and 64-bit floating-point support
 
 ### Entity Types
 - 📊 **Sensors**: Comprehensive sensor support with all data types
@@ -41,16 +42,22 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - 🔍 **Group Discovery**: Automatic detection of entity groups from templates
 - 📊 **Performance Monitoring**: Comprehensive metrics and operation tracking
 - ⚡ **Register Optimization**: Intelligent grouping and batch reading
+- 🔧 **Services & Diagnostics**: Built-in services for optimization and monitoring
 
 ### Device Templates
 - ☀️ **Sungrow SHx Dynamic**: Complete support for all 36 SHx models with dynamic configuration
+  - **Automatic Filtering**: Based on phases (1/3), MPPT count (1-3), battery support
+  - **Firmware Compatibility**: Automatic sensor parameter adjustment
+  - **Connection Types**: LAN/WINET support with register filtering
 - 🔋 **Compleo EBox Professional**: Wallbox integration template
 - 🧪 **Advanced Example**: Demonstrates all advanced features
 
 ## 🚀 Planned Features
 
 ### High Priority
-- 🌊 **Float Conversion**: Automatic 32-bit IEEE 754 float handling (fully implemented)
+- ✅ **Float Conversion**: Automatic 32-bit and 64-bit IEEE 754 float handling (fully implemented)
+- ✅ **Dynamic Configuration**: Automatic sensor filtering based on device parameters (fully implemented)
+- ✅ **Services & Diagnostics**: Performance monitoring and register optimization (fully implemented)
 - 📝 **String Processing**: Enhanced string validation and encoding
 - 🏷️ **Entity Categories**: Config, diagnostic, and system categories
 - 📊 **Status Aggregation**: Combined status from multiple entities

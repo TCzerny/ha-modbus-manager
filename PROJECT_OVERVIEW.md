@@ -92,7 +92,8 @@ dynamic_config:
 - **Enum Mapping**: Convert numeric values to human-readable text
 - **Bit Flags**: Extract individual bit status as separate attributes
 - **Mathematical Operations**: Offset, multiplier, and sum_scale support
-- **Data Type Support**: uint16, int16, uint32, int32, float32, string, boolean
+- **Data Type Support**: uint16, int16, uint32, int32, float32, float64, string, boolean
+- **Float Conversion**: Complete IEEE 754 32-bit and 64-bit floating-point support
 
 ### 🎛️ Entity Types
 - **Sensors**: Comprehensive sensor support with all data types
@@ -245,6 +246,8 @@ calculated:
 - **Error Reporting**: Detailed error logging and reporting
 - **Resource Usage**: Track memory and CPU usage
 - **Health Monitoring**: Device connection health status
+- **Built-in Services**: Performance monitoring and register optimization services
+- **Diagnostics Panel**: Comprehensive diagnostics via Home Assistant UI
 
 ---
 

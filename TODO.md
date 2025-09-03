@@ -8,23 +8,32 @@
 - [x] SunSpec-Mappings für SMA, Fronius, Huawei und SolarEdge
 - [x] Template-Loader für SunSpec-Modellstruktur erweitern
 - [x] SunSpec-Template-Validierung implementieren
-
-## 🔄 In Bearbeitung
-- [x] Modbus-Kommunikationsprobleme identifizieren und beheben
-- [ ] SunSpec-Template-Tests implementieren
-- [x] Vereinfachte SunSpec-Templates implementieren (Fronius GEN24 Simple)
 - [x] **Dynamic Template Configuration implementiert**
   - [x] ConfigFlow erweitert für dynamische Parameter
   - [x] Template-Filterung basierend auf Konfiguration
   - [x] Firmware-Kompatibilität (SAPPHIRE-H_03011.95.01)
   - [x] Sungrow SHx Dynamic Template v1.0.0 erstellt
+- [x] **Float Conversion vollständig implementiert**
+  - [x] IEEE 754 32-bit (float32) Support
+  - [x] IEEE 754 64-bit (float64) Support
+  - [x] Automatische count=2 für float32
+  - [x] Byte-Order-Handling
+- [x] **Services & Diagnostics implementiert**
+  - [x] Performance Monitoring
+  - [x] Register Optimization
+  - [x] Built-in Services
+  - [x] Diagnostics Panel
+
+## 🔄 In Bearbeitung
+- [x] Modbus-Kommunikationsprobleme identifizieren und beheben
+- [ ] SunSpec-Template-Tests implementieren
+- [x] Vereinfachte SunSpec-Templates implementieren (Fronius GEN24 Simple)
 
 ## 📋 Geplant
 - [ ] Weitere BASE Templates (VDMA24247 für Wärmepumpen, etc.)
 - [ ] UI-Verbesserungen für Template-Verwaltung
 - [ ] Template-Versionierung und Update-Mechanismus
 - [ ] Erweiterte Datenverarbeitung und Aggregation
-- [ ] Performance-Monitoring und Optimierung
 - [ ] SunSpec-Template-Validierung in der UI
 - [ ] **Dynamic Template Configuration erweitern**
   - [ ] Weitere Templates mit dynamischer Konfiguration
@@ -79,8 +88,6 @@
 - **Rückwärtskompatibilität**: Bestehende Templates funktionieren weiterhin
 
 ## 🚨 Bekannte Probleme
-- Modbus-Kommunikationsfehler bei Sungrow-Geräten
-- Langsame Entity-Updates
 - Duplizierte Unique IDs (behoben)
 
 ## 📝 Nächste Schritte
