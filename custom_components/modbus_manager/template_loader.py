@@ -570,7 +570,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             _LOGGER.error("Template %s hat keinen Namen", template_path)
             return None
         
-        _LOGGER.debug("Template %s wird verarbeitet", template_name)
+        _LOGGER.debug("Processing template %s", template_name)
         
         # Check if template extends a base template
         extends_name = data.get("extends")
@@ -705,10 +705,6 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
         
         _LOGGER.debug("Template %s: %d sensors found", template_name, len(raw_registers))
         
-        # Debug: Show first register
-        if raw_registers:
-            _LOGGER.debug("First register: %s", raw_registers[0])
-        
         validated_registers = []
         for reg in raw_registers:
             validated_reg = validate_and_process_register(reg, template_name)
@@ -734,15 +730,15 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
         if controls:
             _LOGGER.debug("Template %s: %d controls found", template_name, len(controls))
         
-        # Debug: Template structure
-        _LOGGER.debug("Template %s structure: name=%s, sensors=%d, calculated=%d, controls=%d", 
-                     template_name, template_name, len(validated_registers), 
-                     len(calculated_entities), len(controls))
-        
         # Process aggregates section if present
         aggregates = data.get("aggregates", [])
         if aggregates:
             _LOGGER.debug("Template %s: %d aggregates found", template_name, len(aggregates))
+        
+        # Debug: Template structure summary
+        _LOGGER.debug("Template %s: sensors=%d, calculated=%d, controls=%d, aggregates=%d", 
+                     template_name, len(validated_registers), len(calculated_entities), 
+                     len(controls), len(aggregates))
         
         # Include all template metadata
         result = {

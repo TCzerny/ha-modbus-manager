@@ -29,8 +29,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input: dict = None) -> FlowResult:
         """Handle the initial step."""
         try:
-            # Templates laden
+            # Templates nur einmal laden (caching)
             if not self._templates:
+                _LOGGER.info("Loading templates for the first time...")
                 template_names = await get_template_names()
                 self._templates = {}
                 for name in template_names:
@@ -40,6 +41,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         _LOGGER.info("Loaded template %s: has_dynamic_config=%s", 
                                    name, "dynamic_config" in template_data)
                 _LOGGER.info("Templates loaded: %s", list(self._templates.keys()))
+            else:
+                _LOGGER.debug("Using cached templates: %s", list(self._templates.keys()))
             
             if not self._templates:
                 return self.async_abort(
