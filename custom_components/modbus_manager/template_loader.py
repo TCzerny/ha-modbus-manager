@@ -789,14 +789,27 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
             _LOGGER.warning("Register in Template %s fehlt Pflichtfelder: %s", template_name, missing_fields)
             return None
         
-        # Standardwerte für optionale Felder setzen
-        processed_reg = {}
-        for field, default_value in OPTIONAL_FIELDS.items():
-            processed_reg[field] = reg.get(field, default_value)
-        
         # Pflichtfelder hinzufügen
+        processed_reg = {}
         for field in REQUIRED_FIELDS:
             processed_reg[field] = reg[field]
+        
+        # Auto-set count for Float types (BEFORE setting defaults)
+        data_type = reg.get("data_type")
+        if data_type in ["float", "float32"]:
+            processed_reg["count"] = 2
+            _LOGGER.debug("Auto-set count=2 for %s in Template %s", data_type, template_name)
+        elif data_type == "float64":
+            processed_reg["count"] = 4
+            _LOGGER.debug("Auto-set count=4 for %s in Template %s", data_type, template_name)
+        else:
+            # Use default count=1 for other types
+            processed_reg["count"] = 1
+        
+        # Standardwerte für optionale Felder setzen (skip count if already set)
+        for field, default_value in OPTIONAL_FIELDS.items():
+            if field not in processed_reg:
+                processed_reg[field] = reg.get(field, default_value)
         
         # Zusätzliche Felder aus dem Template übernehmen
         for field, value in reg.items():
@@ -805,21 +818,6 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
         
         # Entity-Typ bestimmen
         processed_reg["entity_type"] = determine_entity_type(processed_reg)
-        
-        # Auto-set count for Float types (before validation)
-        count = processed_reg.get("count")
-        data_type = processed_reg.get("data_type")
-        
-        if count is None:
-            if data_type in ["float", "float32"]:
-                processed_reg["count"] = 2
-                _LOGGER.debug("Auto-set count=2 for %s in Template %s", data_type, template_name)
-            elif data_type == "float64":
-                processed_reg["count"] = 4
-                _LOGGER.debug("Auto-set count=4 for %s in Template %s", data_type, template_name)
-            else:
-                processed_reg["count"] = 1
-                _LOGGER.debug("Auto-set count=1 for %s in Template %s", data_type, template_name)
         
         # Validate register
         if not validate_register_data(processed_reg, template_name):
