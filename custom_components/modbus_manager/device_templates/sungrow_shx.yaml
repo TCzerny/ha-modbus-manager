@@ -1148,17 +1148,42 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 10
-    # Flags are bitmask - multiple flags can be active simultaneously
-    # Value 6 = 0b00000110 = Battery Active (bit 1) + Solar Active (bit 2)
-    flags:
-      0: "Grid Connected"
-      1: "Battery Active"
-      2: "Solar Active"
-      3: "Load Active"
-      4: "Charging"
-      5: "Discharging"
-      6: "Error Active"
-      7: "Maintenance Mode"
+    # System state mapping based on mkaiser implementation
+    # Value 64 (0x0040) = Running (normal operation)
+    map:
+      0x0000: "Running"
+      0x0040: "Running"
+      0x0410: "Off-grid Charge"
+      0x0200: "Update Failed"
+      0x0400: "Maintain mode"
+      0x0800: "Forced mode"
+      0x1000: "Off-grid mode"
+      0x1111: "Un-Initialized"
+      0x0010: "Initial Standby"
+      0x12000: "Initial Standby"
+      0x1300: "Shutdown"
+      0x0002: "Shutdown"
+      0x1400: "Standby"
+      0x0008: "Standby"
+      0x1500: "Emergency Stop"
+      0x0004: "Emergency Stop"
+      0x1600: "Startup"
+      0x0020: "Startup"
+      0x1700: "AFCI self test shutdown"
+      0x1800: "Intelligent Station Building Status"
+      0x1900: "Safe Mode"
+      0x2000: "Open Loop"
+      0x2501: "Restarting"
+      0x4000: "External EMS mode"
+      0x4001: "Emergency Battery Charging"
+      0x5500: "Fault"
+      0x0100: "Fault"
+      0x8000: "Stop"
+      0x0001: "Stop"
+      0x8100: "De-rating Running"
+      0x0080: "De-rating Running"
+      0x8200: "Dispatch Run"
+      0x9100: "Warn Running"
     group: "PV_status"
 
 
