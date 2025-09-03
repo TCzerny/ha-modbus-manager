@@ -253,7 +253,6 @@ class ModbusTemplateSensor(SensorEntity):
         self._input_type = register.get("input_type", "input")
         self._slave_id = register.get("device_address", 1)
         self._verify = register.get("verify", False)
-        self._retries = register.get("retries", 3)
         
         # Value processing (map, flags, options)
         self._map = register.get("map", {})

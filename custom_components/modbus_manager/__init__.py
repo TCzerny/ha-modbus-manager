@@ -90,14 +90,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Modbus-Hub über Standard Home Assistant API erstellen
         hub_name = f"modbus_manager_{entry.data['prefix']}"
         
-        # Modbus-Konfiguration - alle erforderlichen Parameter
+        # Modbus-Konfiguration - HA Modbus Standard Parameter
         modbus_config = {
             "name": hub_name,           # ← ModbusHub erwartet 'name' Key!
             "type": "tcp",              # ← TCP-Verbindung
             "host": entry.data["host"], # ← Host-IP
             "port": entry.data.get("port", 502), # ← Port
-            "delay": 0,                 # ← Erforderlich: Verzögerung zwischen Anfragen
-            "timeout": 10,              # ← Erforderlich: Timeout in Sekunden
+            "delay": entry.data.get("delay", 0),      # ← HA Modbus Standard
+            "timeout": entry.data.get("timeout", 5),   # ← HA Modbus Standard
         }
         
         _LOGGER.debug("Modbus-Konfiguration: %s", modbus_config)

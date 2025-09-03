@@ -21,6 +21,20 @@
 - [ ] Erweiterte Datenverarbeitung und Aggregation
 - [ ] Performance-Monitoring und Optimierung
 - [ ] SunSpec-Template-Validierung in der UI
+- [ ] **🔤 Convert remaining German log messages and comments to English**
+  - [ ] template_loader.py: ~15 more German error messages
+  - [ ] config_flow.py: German messages and comments
+  - [ ] sensor.py: German messages and comments
+  - [ ] switch.py: German messages and comments
+  - [ ] number.py: German messages and comments
+  - [ ] select.py: German messages and comments
+  - [ ] button.py: German messages and comments
+  - [ ] text.py: German messages and comments
+  - [ ] binary_sensor.py: German messages and comments
+  - [ ] calculated.py: German messages and comments
+  - [ ] aggregates.py: German messages and comments
+  - [ ] performance_monitor.py: German messages and comments
+  - [ ] register_optimizer.py: German messages and comments
 
 ## 📚 SunSpec-Implementierung
 

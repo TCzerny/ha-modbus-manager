@@ -204,12 +204,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required("host"): str,
                     vol.Optional("port", default=502): int,
                     vol.Optional("slave_id", default=1): int,
-                    vol.Optional("timeout", default=3): int,
-                    vol.Optional("retries", default=3): int,
+                    vol.Optional("timeout", default=5): int,
                     vol.Optional("delay", default=0): int,
-                    vol.Optional("close_comm_on_error", default=True): bool,
-                    vol.Optional("reconnect_delay", default=10): int,
-                    vol.Optional("message_wait", default=0): int,
                 }),
                 description_placeholders={
                     "template": self._selected_template
@@ -323,12 +319,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "host": user_input["host"],
                     "port": user_input.get("port", 502),
                     "slave_id": user_input.get("slave_id", 1),
-                    "timeout": user_input.get("timeout", 3),
-                    "retries": user_input.get("retries", 3),
+                    "timeout": user_input.get("timeout", 5),
                     "delay": user_input.get("delay", 0),
-                    "close_comm_on_error": user_input.get("close_comm_on_error", True),
-                    "reconnect_delay": user_input.get("reconnect_delay", 10),
-                    "message_wait": user_input.get("message_wait", 0),
                     "registers": template_registers,
                     "is_aggregates_template": False
                 }
@@ -508,24 +500,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if not isinstance(timeout, int) or timeout < 1:
                 return False
             
-            # Retries validieren
-            retries = user_input.get("retries", 3)
-            if not isinstance(retries, int) or retries < 0:
-                return False
-            
             # Delay validieren
             delay = user_input.get("delay", 0)
             if not isinstance(delay, int) or delay < 0:
-                return False
-            
-            # Reconnect delay validieren
-            reconnect_delay = user_input.get("reconnect_delay", 10)
-            if not isinstance(reconnect_delay, int) or reconnect_delay < 0:
-                return False
-            
-            # Message wait validieren
-            message_wait = user_input.get("message_wait", 0)
-            if not isinstance(message_wait, int) or message_wait < 0:
                 return False
             
             return True
@@ -569,27 +546,11 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             data_schema=vol.Schema({
                 vol.Optional(
                     "timeout",
-                    default=self.config_entry.data.get("timeout", 3)
-                ): int,
-                vol.Optional(
-                    "retries",
-                    default=self.config_entry.data.get("retries", 3)
+                    default=self.config_entry.data.get("timeout", 5)
                 ): int,
                 vol.Optional(
                     "delay",
                     default=self.config_entry.data.get("delay", 0)
-                ): int,
-                vol.Optional(
-                    "close_comm_on_error",
-                    default=self.config_entry.data.get("close_comm_on_error", True)
-                ): bool,
-                vol.Optional(
-                    "reconnect_delay",
-                    default=self.config_entry.data.get("reconnect_delay", 10)
-                ): int,
-                vol.Optional(
-                    "message_wait",
-                    default=self.config_entry.data.get("message_wait", 0)
                 ): int,
 
                 vol.Optional("update_template"): bool,
