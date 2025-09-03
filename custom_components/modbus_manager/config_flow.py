@@ -272,11 +272,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             _LOGGER.debug("Adding firmware_version field to schema")
             schema_fields[vol.Optional("firmware_version", default="1.0.0")] = str
         
-        # String count
-        if "string_count" in dynamic_config:
-            string_options = dynamic_config["string_count"].get("options", [1, 2, 3, 4, 6, 8, 12, 16, 20, 24])
-            _LOGGER.debug("Adding string_count field to schema with options: %s", string_options)
-            schema_fields[vol.Optional("string_count", default=1)] = vol.In(string_options)
+        # String count - removed as no string-specific sensors exist in current templates
         
         # Connection type
         if "connection_type" in dynamic_config:
@@ -303,16 +299,15 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         mppt_count = user_input.get("mppt_count", 1)
         battery_enabled = user_input.get("battery_enabled", False)
         firmware_version = user_input.get("firmware_version", "1.0.0")
-        string_count = user_input.get("string_count", 1)
         connection_type = user_input.get("connection_type", "LAN")
         
-        _LOGGER.info("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, strings=%d, conn=%s", 
-                     phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type)
+        _LOGGER.info("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, conn=%s", 
+                     phases, mppt_count, battery_enabled, firmware_version, connection_type)
         
         # Process sensors
         for sensor in original_sensors:
             # Check if sensor should be included based on configuration
-            if self._should_include_sensor(sensor, phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type, dynamic_config):
+            if self._should_include_sensor(sensor, phases, mppt_count, battery_enabled, firmware_version, connection_type, dynamic_config):
                 # Apply firmware-specific modifications
                 modified_sensor = self._apply_firmware_modifications(sensor, firmware_version, dynamic_config)
                 processed_sensors.append(modified_sensor)
@@ -320,13 +315,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Process calculated sensors
         for calculated in original_calculated:
             # Check if calculated sensor should be included based on configuration
-            if self._should_include_sensor(calculated, phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type, dynamic_config):
+            if self._should_include_sensor(calculated, phases, mppt_count, battery_enabled, firmware_version, connection_type, dynamic_config):
                 processed_calculated.append(calculated)
         
         # Process controls
         for control in original_controls:
             # Check if control should be included based on configuration
-            if self._should_include_sensor(control, phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type, dynamic_config):
+            if self._should_include_sensor(control, phases, mppt_count, battery_enabled, firmware_version, connection_type, dynamic_config):
                 processed_controls.append(control)
         
         _LOGGER.info("Processed %d sensors, %d calculated, %d controls from %d original sensors, %d calculated, %d controls", 
@@ -341,7 +336,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         }
 
     def _should_include_sensor(self, sensor: dict, phases: int, mppt_count: int, battery_enabled: bool, 
-                               firmware_version: str, string_count: int, connection_type: str, dynamic_config: dict) -> bool:
+                               firmware_version: str, connection_type: str, dynamic_config: dict) -> bool:
         """Check if sensor should be included based on configuration."""
         sensor_name = sensor.get("name", "").lower()
         unique_id = sensor.get("unique_id", "").lower()
@@ -381,13 +376,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                              sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         
-        # String-specific sensors
-        if "string" in search_text:
-            string_number = self._extract_string_number(search_text)
-            if string_number and string_number > string_count:
-                _LOGGER.info("Excluding sensor due to string count config: %s (unique_id: %s, String %d > %d)", 
-                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), string_number, string_count)
-                return False
+        # String-specific sensors - removed as no string sensors exist in current templates
         
         # Connection type specific sensors
         connection_config = dynamic_config.get("connection_type", {}).get("sensor_availability", {})
@@ -414,11 +403,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         match = re.search(r'mppt(\d+)', search_text.lower())
         return int(match.group(1)) if match else None
 
-    def _extract_string_number(self, search_text: str) -> int:
-        """Extract string number from sensor name or unique_id."""
-        import re
-        match = re.search(r'string(\d+)', search_text.lower())
-        return int(match.group(1)) if match else None
+    # _extract_string_number function removed - no string sensors exist in current templates
 
     def _apply_firmware_modifications(self, sensor: dict, firmware_version: str, dynamic_config: dict) -> dict:
         """Apply firmware-specific modifications to sensor based on unique_id."""
