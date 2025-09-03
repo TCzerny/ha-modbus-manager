@@ -846,7 +846,7 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
         
         # Data type validieren
         data_type = reg.get("data_type")
-        valid_data_types = {"uint16", "int16", "uint32", "int32", "string", "float", "float64", "boolean"}
+        valid_data_types = {"uint16", "int16", "uint32", "int32", "string", "float", "float32", "float64", "boolean"}
         if data_type not in valid_data_types:
             _LOGGER.error("Ungültiger data_type in Template %s: %s", template_name, data_type)
             return False
@@ -858,13 +858,13 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
             return False
             
         # Float-spezifische Validierung
-        if data_type in ["float", "float64"]:
+        if data_type in ["float", "float32", "float64"]:
             # Float-Typ benötigt mindestens 2 Register für 32-bit und 4 Register für 64-bit
-            min_count = 2 if data_type == "float" else 4
+            min_count = 2 if data_type in ["float", "float32"] else 4
             if count < min_count:
                 _LOGGER.error("Float-Typ %s in Template %s benötigt mindestens %d Register, aber count=%d", 
                              data_type, template_name, min_count, count)
-            return False
+                return False
         
         # Scale validieren
         scale = reg.get("scale")
@@ -874,7 +874,7 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
         
         # Scan interval validieren
         scan_interval = reg.get("scan_interval")
-        if not isinstance(scan_interval, int) or scan_interval < 1:
+        if not isinstance(scan_interval, int) or scan_interval < 0:
             _LOGGER.error("Ungültiger scan_interval in Template %s: %s", template_name, scan_interval)
             return False
         
