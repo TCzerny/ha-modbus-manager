@@ -806,6 +806,21 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
         # Entity-Typ bestimmen
         processed_reg["entity_type"] = determine_entity_type(processed_reg)
         
+        # Count automatisch setzen für Float-Typen (vor Validierung)
+        count = processed_reg.get("count")
+        data_type = processed_reg.get("data_type")
+        
+        if count is None:
+            if data_type in ["float", "float32"]:
+                processed_reg["count"] = 2
+                _LOGGER.debug("Automatisch count=2 für %s in Template %s gesetzt", data_type, template_name)
+            elif data_type == "float64":
+                processed_reg["count"] = 4
+                _LOGGER.debug("Automatisch count=4 für %s in Template %s gesetzt", data_type, template_name)
+            else:
+                processed_reg["count"] = 1
+                _LOGGER.debug("Automatisch count=1 für %s in Template %s gesetzt", data_type, template_name)
+        
         # Register validieren
         if not validate_register_data(processed_reg, template_name):
             return None
@@ -851,25 +866,8 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
             _LOGGER.error("Ungültiger data_type in Template %s: %s", template_name, data_type)
             return False
         
-        # Count validieren und automatisch setzen für Float-Typen
-        count = reg.get("count")
-        
-        # Wenn kein count angegeben ist, automatisch setzen basierend auf data_type
-        if count is None:
-            if data_type in ["float", "float32"]:
-                count = 2
-                reg["count"] = count  # Setze count im Register
-                _LOGGER.debug("Automatisch count=2 für %s in Template %s gesetzt", data_type, template_name)
-            elif data_type == "float64":
-                count = 4
-                reg["count"] = count  # Setze count im Register
-                _LOGGER.debug("Automatisch count=4 für %s in Template %s gesetzt", data_type, template_name)
-            else:
-                count = 1  # Standard für andere Typen
-                reg["count"] = count  # Setze count im Register
-                _LOGGER.debug("Automatisch count=1 für %s in Template %s gesetzt", data_type, template_name)
-        
         # Count validieren
+        count = reg.get("count")
         if not isinstance(count, int) or count < 1:
             _LOGGER.error("Ungültiger count in Template %s: %s", template_name, count)
             return False
