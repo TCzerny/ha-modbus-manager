@@ -300,28 +300,28 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Phase configuration
         if "phases" in dynamic_config:
             _LOGGER.debug("Adding phases field to schema")
-            description = self._get_translation("config.step.device_config.data.phases")
-            schema_fields[vol.Optional("phases", description=description, default=1)] = vol.In([1, 3])
+            label = self._get_translation("config.step.device_config.data.phases")
+            schema_fields[label] = vol.In([1, 3])
         
         # MPPT configuration
         if "mppt_count" in dynamic_config:
             mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
             _LOGGER.debug("Adding mppt_count field to schema with options: %s", mppt_options)
-            description = self._get_translation("config.step.device_config.data.mppt_count")
-            schema_fields[vol.Optional("mppt_count", description=description, default=1)] = vol.In(mppt_options)
+            label = self._get_translation("config.step.device_config.data.mppt_count")
+            schema_fields[label] = vol.In(mppt_options)
         
         # Battery configuration
         if "battery" in dynamic_config:
             _LOGGER.debug("Adding battery_enabled field to schema")
-            description = self._get_translation("config.step.device_config.data.battery_enabled")
-            schema_fields[vol.Optional("battery_enabled", description=description, default=False)] = bool
+            label = self._get_translation("config.step.device_config.data.battery_enabled")
+            schema_fields[label] = bool
         
         # Firmware version
         if "firmware_version" in dynamic_config:
             _LOGGER.debug("Adding firmware_version field to schema")
             default_firmware = dynamic_config["firmware_version"].get("default", "1.0.0")
-            description = self._get_translation("config.step.device_config.data.firmware_version")
-            schema_fields[vol.Optional("firmware_version", description=description, default=default_firmware)] = str
+            label = self._get_translation("config.step.device_config.data.firmware_version")
+            schema_fields[label] = str
         
         # String count - removed as no string-specific sensors exist in current templates
         
@@ -329,8 +329,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if "connection_type" in dynamic_config:
             conn_options = dynamic_config["connection_type"].get("options", ["LAN", "WINET"])
             _LOGGER.debug("Adding connection_type field to schema with options: %s", conn_options)
-            description = self._get_translation("config.step.device_config.data.connection_type")
-            schema_fields[vol.Optional("connection_type", description=description, default="LAN")] = vol.In(conn_options)
+            label = self._get_translation("config.step.device_config.data.connection_type")
+            schema_fields[label] = vol.In(conn_options)
         
         _LOGGER.debug("Final schema fields: %s", list(schema_fields.keys()))
         return schema_fields
@@ -346,12 +346,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         processed_calculated = []
         processed_controls = []
         
-        # Get user configuration
-        phases = user_input.get("phases", 1)
-        mppt_count = user_input.get("mppt_count", 1)
-        battery_enabled = user_input.get("battery_enabled", False)
-        firmware_version = user_input.get("firmware_version", "1.0.0")
-        connection_type = user_input.get("connection_type", "LAN")
+        # Map translated field names back to internal names
+        phases = user_input.get(self._get_translation("config.step.device_config.data.phases"), 1)
+        mppt_count = user_input.get(self._get_translation("config.step.device_config.data.mppt_count"), 1)
+        battery_enabled = user_input.get(self._get_translation("config.step.device_config.data.battery_enabled"), False)
+        firmware_version = user_input.get(self._get_translation("config.step.device_config.data.firmware_version"), "1.0.0")
+        connection_type = user_input.get(self._get_translation("config.step.device_config.data.connection_type"), "LAN")
         
         _LOGGER.info("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, conn=%s", 
                      phases, mppt_count, battery_enabled, firmware_version, connection_type)
