@@ -758,6 +758,11 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             "model": data.get("model", "")
         }
         
+        # Include dynamic_config if present
+        if "dynamic_config" in data:
+            result["dynamic_config"] = data["dynamic_config"]
+            _LOGGER.debug("Template %s includes dynamic_config", template_name)
+        
         # Add extends information if present
         if extends_name:
             result["extends"] = extends_name
