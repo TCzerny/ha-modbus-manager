@@ -164,18 +164,37 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Check if this is a simple template
         template_data = self._templates.get(self._selected_template, {})
         if template_data.get("is_simple_template"):
-            # Simple template - only requires prefix and name
-            return self.async_show_form(
-                step_id="device_config",
-                data_schema=vol.Schema({
-                    vol.Required("prefix"): str,
-                    vol.Optional("name"): str,
-                }),
-                description_placeholders={
-                    "template": self._selected_template,
-                    "description": template_data.get("description", "Vereinfachtes Template")
-                }
-            )
+            # Check if this is a SunSpec Standard Configuration template
+            if "SunSpec Standard Configuration" in self._selected_template:
+                # SunSpec Standard Configuration - requires model addresses
+                return self.async_show_form(
+                    step_id="device_config",
+                    data_schema=vol.Schema({
+                        vol.Required("prefix"): str,
+                        vol.Optional("name"): str,
+                        vol.Required("common_model_address", default=40001): int,
+                        vol.Required("inverter_model_address", default=40069): int,
+                        vol.Optional("storage_model_address"): int,
+                        vol.Optional("meter_model_address"): int,
+                    }),
+                    description_placeholders={
+                        "template": self._selected_template,
+                        "description": "SunSpec Standard - Modell-Adressen angeben"
+                    }
+                )
+            else:
+                # Simple template - only requires prefix and name
+                return self.async_show_form(
+                    step_id="device_config",
+                    data_schema=vol.Schema({
+                        vol.Required("prefix"): str,
+                        vol.Optional("name"): str,
+                    }),
+                    description_placeholders={
+                        "template": self._selected_template,
+                        "description": template_data.get("description", "Vereinfachtes Template")
+                    }
+                )
         else:
             # Regular template - requires full Modbus configuration
             return self.async_show_form(
@@ -327,6 +346,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         try:
             _LOGGER.debug("Erstelle vereinfachtes Template Entry: %s", self._selected_template)
             
+            # Check if this is a SunSpec Standard Configuration template
+            if "SunSpec Standard Configuration" in self._selected_template:
+                return self._create_sunspec_config_entry(user_input, template_data, template_version)
+            
             # Validate simple template input
             if not self._validate_simple_config(user_input):
                 return self.async_abort(
@@ -372,6 +395,94 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             
         except Exception as e:
             _LOGGER.error("Fehler bei der Validierung der vereinfachten Konfiguration: %s", str(e))
+            return False
+
+    def _create_sunspec_config_entry(self, user_input: dict, template_data: dict, template_version: int) -> FlowResult:
+        """Create config entry for SunSpec Standard Configuration template."""
+        try:
+            _LOGGER.debug("Erstelle SunSpec Standard Configuration Entry: %s", self._selected_template)
+            
+            # Validate SunSpec configuration input
+            if not self._validate_sunspec_config(user_input):
+                return self.async_abort(
+                    reason="invalid_sunspec_config",
+                    description_placeholders={"error": "Ungültige SunSpec-Konfiguration"}
+                )
+            
+            # Build model addresses from user input
+            model_addresses = {
+                "common_model": user_input["common_model_address"],
+                "inverter_model": user_input["inverter_model_address"],
+            }
+            
+            # Add optional model addresses
+            if user_input.get("storage_model_address"):
+                model_addresses["storage_model"] = user_input["storage_model_address"]
+            
+            if user_input.get("meter_model_address"):
+                model_addresses["meter_model"] = user_input["meter_model_address"]
+            
+            # Config Entry erstellen für SunSpec Standard Configuration
+            return self.async_create_entry(
+                title=f"{user_input['prefix']} ({self._selected_template})",
+                data={
+                    "template": self._selected_template,
+                    "template_version": template_version,
+                    "prefix": user_input["prefix"],
+                    "name": user_input.get("name", user_input["prefix"]),
+                    "template_data": template_data,
+                    "model_addresses": model_addresses,
+                    "is_simple_template": True,
+                    "is_sunspec_config": True,
+                    "is_aggregates_template": False
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Erstellen der SunSpec-Konfiguration: %s", str(e))
+            return self.async_abort(
+                reason="sunspec_config_error",
+                description_placeholders={"error": str(e)}
+            )
+
+    def _validate_sunspec_config(self, user_input: dict) -> bool:
+        """Validate SunSpec Standard Configuration."""
+        try:
+            # Pflichtfelder prüfen
+            required_fields = ["prefix", "common_model_address", "inverter_model_address"]
+            if not all(field in user_input for field in required_fields):
+                return False
+            
+            # Prefix validieren (alphanumeric, lowercase, underscore)
+            prefix = user_input.get("prefix", "")
+            if not prefix or not prefix.replace("_", "").isalnum() or not prefix.islower():
+                return False
+            
+            # Modell-Adressen validieren
+            common_addr = user_input.get("common_model_address")
+            inverter_addr = user_input.get("inverter_model_address")
+            
+            if not isinstance(common_addr, int) or common_addr < 1 or common_addr > 65535:
+                return False
+            
+            if not isinstance(inverter_addr, int) or inverter_addr < 1 or inverter_addr > 65535:
+                return False
+            
+            # Optional: Storage und Meter Adressen validieren
+            if "storage_model_address" in user_input and user_input["storage_model_address"]:
+                storage_addr = user_input["storage_model_address"]
+                if not isinstance(storage_addr, int) or storage_addr < 1 or storage_addr > 65535:
+                    return False
+            
+            if "meter_model_address" in user_input and user_input["meter_model_address"]:
+                meter_addr = user_input["meter_model_address"]
+                if not isinstance(meter_addr, int) or meter_addr < 1 or meter_addr > 65535:
+                    return False
+            
+            return True
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Validierung der SunSpec-Konfiguration: %s", str(e))
             return False
 
     def _validate_config(self, user_input: dict) -> bool:

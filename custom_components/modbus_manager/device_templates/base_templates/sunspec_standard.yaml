@@ -1,15 +1,15 @@
-# SunSpec Standard Implementation
+# SunSpec Standard Definition
 # Basierend auf den offiziellen SunSpec Alliance Spezifikationen
 # https://sunspec.org/sunspec-specifications/
 
 name: "SunSpec Standard"
 type: "base_template"
 version: 1
-description: "SunSpec Alliance Standard-Implementierung mit Modellstruktur"
+description: "SunSpec Alliance Standard-Definition mit Modellstrukturen"
 
-# SunSpec-Modellstruktur
-# Jedes Modell hat eine ID, eine Länge und definierte Register
-# Die tatsächlichen Adressen werden durch das Mapping bestimmt
+# SunSpec-Modellstrukturen
+# Jedes Modell definiert seine Register mit Offsets
+# Die tatsächlichen Adressen werden durch Modellbasis-Adressen + Offset berechnet
 
 # Common Model (1) - Allgemeine Geräteinformationen
 common_model:
@@ -73,7 +73,7 @@ common_model:
 
 # Inverter Model (101/102/103) - Wechselrichter-Daten
 inverter_model:
-  id: 101  # oder 102 für Split-Phase, 103 für Drei-Phasen
+  id: 103  # Drei-Phasen Inverter
   length: 50
   registers:
     - name: "I_AC_Current"
@@ -203,21 +203,20 @@ inverter_model:
     - name: "I_AC_PF"
       offset: 14
       data_type: "int16"
-      scale_factor: 0.01
-      unit_of_measurement: "%"
+      scale_factor: 0.001
+      unit_of_measurement: ""
       device_class: "power_factor"
       state_class: "measurement"
       description: "AC Power Factor"
       
     - name: "I_AC_Energy_WH"
       offset: 15
-      length: 2
       data_type: "uint32"
-      scale_factor: 1
+      count: 2
       unit_of_measurement: "Wh"
       device_class: "energy"
       state_class: "total_increasing"
-      description: "AC Lifetime Energy Production"
+      description: "AC Energy"
       
     - name: "I_DC_Current"
       offset: 17
@@ -247,7 +246,7 @@ inverter_model:
       description: "DC Power"
       
     - name: "I_Temp_Sink"
-      offset: 29
+      offset: 20
       data_type: "int16"
       scale_factor: 0.1
       unit_of_measurement: "°C"
@@ -255,242 +254,315 @@ inverter_model:
       state_class: "measurement"
       description: "Heat Sink Temperature"
       
-    - name: "I_Status"
-      offset: 35
-      data_type: "uint16"
-      description: "Operating State"
-      map:
-        1: "Off"
-        2: "Sleeping"
-        3: "Starting"
-        4: "MPPT"
-        5: "Throttled"
-        6: "Shutting Down"
-        7: "Fault"
-        8: "Standby"
-      
-    - name: "I_Status_Vendor"
-      offset: 36
-      data_type: "uint16"
-      description: "Vendor-Defined Operating State"
-
-# Storage Model (124) - Speicher-Daten
-storage_model:
-  id: 124
-  length: 24
-  registers:
-    - name: "S_ChaSt"
-      offset: 0
-      data_type: "uint16"
-      description: "Battery Charge Status"
-      map:
-        1: "Off"
-        2: "Empty"
-        3: "Discharging"
-        4: "Charging"
-        5: "Full"
-        6: "Holding"
-        7: "Testing"
-      
-    - name: "S_SoC"
-      offset: 1
-      data_type: "uint16"
-      scale_factor: 0.1
-      unit_of_measurement: "%"
-      device_class: "battery"
-      state_class: "measurement"
-      description: "Battery State of Charge"
-      
-    - name: "S_DoD"
-      offset: 2
-      data_type: "uint16"
-      scale_factor: 0.1
-      unit_of_measurement: "%"
-      state_class: "measurement"
-      description: "Battery Depth of Discharge"
-      
-    - name: "S_SoH"
-      offset: 3
-      data_type: "uint16"
-      scale_factor: 0.1
-      unit_of_measurement: "%"
-      state_class: "measurement"
-      description: "Battery State of Health"
-      
-    - name: "S_A"
-      offset: 4
-      data_type: "int16"
-      scale_factor: 0.1
-      unit_of_measurement: "A"
-      device_class: "current"
-      state_class: "measurement"
-      description: "Battery Current"
-      
-    - name: "S_V"
-      offset: 5
-      data_type: "uint16"
-      scale_factor: 0.1
-      unit_of_measurement: "V"
-      device_class: "voltage"
-      state_class: "measurement"
-      description: "Battery Voltage"
-      
-    - name: "S_Tmp"
-      offset: 6
+    - name: "I_Temp_Trans"
+      offset: 21
       data_type: "int16"
       scale_factor: 0.1
       unit_of_measurement: "°C"
       device_class: "temperature"
       state_class: "measurement"
-      description: "Battery Temperature"
+      description: "Transformer Temperature"
       
-    - name: "S_ChaPwr"
-      offset: 7
+    - name: "I_Temp_Other"
+      offset: 22
       data_type: "int16"
-      scale_factor: 1
-      unit_of_measurement: "W"
-      device_class: "power"
+      scale_factor: 0.1
+      unit_of_measurement: "°C"
+      device_class: "temperature"
       state_class: "measurement"
-      description: "Battery Charge Power"
+      description: "Other Temperature"
       
-    - name: "S_ChAMax"
+    - name: "I_Status"
+      offset: 23
+      data_type: "uint16"
+      description: "Operating Status"
+      
+    - name: "I_Status_Vendor"
+      offset: 24
+      data_type: "uint16"
+      description: "Vendor Operating Status"
+
+# Storage Model (124) - Batterie-Daten
+storage_model:
+  id: 124
+  length: 40
+  registers:
+    - name: "S_Status"
+      offset: 0
+      data_type: "uint16"
+      description: "Storage Status"
+      
+    - name: "S_Status_Vendor"
+      offset: 1
+      data_type: "uint16"
+      description: "Vendor Storage Status"
+      
+    - name: "S_Charge_Limit"
+      offset: 2
+      data_type: "uint16"
+      scale_factor: 0.1
+      unit_of_measurement: "%"
+      device_class: "power_factor"
+      state_class: "measurement"
+      description: "Storage Charge Limit"
+      
+    - name: "S_Discharge_Limit"
+      offset: 3
+      data_type: "uint16"
+      scale_factor: 0.1
+      unit_of_measurement: "%"
+      device_class: "power_factor"
+      state_class: "measurement"
+      description: "Storage Discharge Limit"
+      
+    - name: "S_Charge_Status"
+      offset: 4
+      data_type: "uint16"
+      description: "Storage Charge Status"
+      
+    - name: "S_Charge_Status_Vendor"
+      offset: 5
+      data_type: "uint16"
+      description: "Vendor Storage Charge Status"
+      
+    - name: "S_Available_Energy"
+      offset: 6
+      data_type: "uint16"
+      scale_factor: 0.1
+      unit_of_measurement: "kWh"
+      device_class: "energy"
+      state_class: "measurement"
+      description: "Available Energy"
+      
+    - name: "S_Available_Capacity"
+      offset: 7
+      data_type: "uint16"
+      scale_factor: 0.1
+      unit_of_measurement: "%"
+      device_class: "power_factor"
+      state_class: "measurement"
+      description: "Available Capacity"
+      
+    - name: "S_Total_Capacity"
       offset: 8
       data_type: "uint16"
       scale_factor: 0.1
-      unit_of_measurement: "A"
-      device_class: "current"
+      unit_of_measurement: "kWh"
+      device_class: "energy"
       state_class: "measurement"
-      description: "Battery Maximum Charge Current"
+      description: "Total Capacity"
       
-    - name: "S_DiChAMax"
+    - name: "S_Total_Capacity_Vendor"
       offset: 9
       data_type: "uint16"
       scale_factor: 0.1
-      unit_of_measurement: "A"
-      device_class: "current"
+      unit_of_measurement: "kWh"
+      device_class: "energy"
       state_class: "measurement"
-      description: "Battery Maximum Discharge Current"
+      description: "Vendor Total Capacity"
       
-    - name: "S_DiChPwr"
+    - name: "S_Charge_Power"
       offset: 10
       data_type: "int16"
       scale_factor: 1
       unit_of_measurement: "W"
       device_class: "power"
       state_class: "measurement"
-      description: "Battery Discharge Power"
+      description: "Storage Charge Power"
       
-    - name: "S_WhCha"
+    - name: "S_Discharge_Power"
       offset: 11
-      length: 2
-      data_type: "uint32"
+      data_type: "int16"
       scale_factor: 1
-      unit_of_measurement: "Wh"
-      device_class: "energy"
-      state_class: "total_increasing"
-      description: "Battery Charge Energy"
+      unit_of_measurement: "W"
+      device_class: "power"
+      state_class: "measurement"
+      description: "Storage Discharge Power"
       
-    - name: "S_WhDiCha"
-      offset: 13
-      length: 2
+    - name: "S_Charge_Energy"
+      offset: 12
       data_type: "uint32"
-      scale_factor: 1
+      count: 2
       unit_of_measurement: "Wh"
       device_class: "energy"
       state_class: "total_increasing"
-      description: "Battery Discharge Energy"
+      description: "Storage Charge Energy"
+      
+    - name: "S_Discharge_Energy"
+      offset: 14
+      data_type: "uint32"
+      count: 2
+      unit_of_measurement: "Wh"
+      device_class: "energy"
+      state_class: "total_increasing"
+      description: "Storage Discharge Energy"
+      
+    - name: "S_Charge_Energy_Vendor"
+      offset: 16
+      data_type: "uint32"
+      count: 2
+      unit_of_measurement: "Wh"
+      device_class: "energy"
+      state_class: "total_increasing"
+      description: "Vendor Storage Charge Energy"
+      
+    - name: "S_Discharge_Energy_Vendor"
+      offset: 18
+      data_type: "uint32"
+      count: 2
+      unit_of_measurement: "Wh"
+      device_class: "energy"
+      state_class: "total_increasing"
+      description: "Vendor Storage Discharge Energy"
 
 # Meter Model (201/202/203) - Zähler-Daten
 meter_model:
-  id: 203  # 201 für Single-Phase, 202 für Split-Phase, 203 für Drei-Phasen
-  length: 105
+  id: 203  # Drei-Phasen Meter
+  length: 60
   registers:
-    - name: "M_AC_Current"
+    - name: "M_Status"
       offset: 0
+      data_type: "uint16"
+      description: "Meter Status"
+      
+    - name: "M_Status_Vendor"
+      offset: 1
+      data_type: "uint16"
+      description: "Vendor Meter Status"
+      
+    - name: "M_AC_Current"
+      offset: 2
       data_type: "uint16"
       scale_factor: 0.1
       unit_of_measurement: "A"
       device_class: "current"
       state_class: "measurement"
-      description: "Meter AC Total Current"
+      description: "AC Total Current"
       
-    - name: "M_AC_Voltage_LN"
-      offset: 1
+    - name: "M_AC_Current_A"
+      offset: 3
+      data_type: "uint16"
+      scale_factor: 0.1
+      unit_of_measurement: "A"
+      device_class: "current"
+      state_class: "measurement"
+      description: "AC Phase A Current"
+      
+    - name: "M_AC_Current_B"
+      offset: 4
+      data_type: "uint16"
+      scale_factor: 0.1
+      unit_of_measurement: "A"
+      device_class: "current"
+      state_class: "measurement"
+      description: "AC Phase B Current"
+      
+    - name: "M_AC_Current_C"
+      offset: 5
+      data_type: "uint16"
+      scale_factor: 0.1
+      unit_of_measurement: "A"
+      device_class: "current"
+      state_class: "measurement"
+      description: "AC Phase C Current"
+      
+    - name: "M_AC_Voltage_AN"
+      offset: 6
       data_type: "uint16"
       scale_factor: 0.1
       unit_of_measurement: "V"
       device_class: "voltage"
       state_class: "measurement"
-      description: "Meter AC Line to Neutral Voltage"
+      description: "AC Voltage Phase A to N"
       
-    - name: "M_AC_Voltage_LL"
-      offset: 2
+    - name: "M_AC_Voltage_BN"
+      offset: 7
       data_type: "uint16"
       scale_factor: 0.1
       unit_of_measurement: "V"
       device_class: "voltage"
       state_class: "measurement"
-      description: "Meter AC Line to Line Voltage"
+      description: "AC Voltage Phase B to N"
+      
+    - name: "M_AC_Voltage_CN"
+      offset: 8
+      data_type: "uint16"
+      scale_factor: 0.1
+      unit_of_measurement: "V"
+      device_class: "voltage"
+      state_class: "measurement"
+      description: "AC Voltage Phase C to N"
+      
+    - name: "M_AC_Power"
+      offset: 9
+      data_type: "int16"
+      scale_factor: 1
+      unit_of_measurement: "W"
+      device_class: "power"
+      state_class: "measurement"
+      description: "AC Power"
       
     - name: "M_AC_Frequency"
-      offset: 3
+      offset: 10
       data_type: "uint16"
       scale_factor: 0.01
       unit_of_measurement: "Hz"
       device_class: "frequency"
       state_class: "measurement"
-      description: "Meter AC Frequency"
-      
-    - name: "M_AC_Power"
-      offset: 4
-      data_type: "int16"
-      scale_factor: 1
-      unit_of_measurement: "W"
-      device_class: "power"
-      state_class: "measurement"
-      description: "Meter AC Power"
+      description: "AC Frequency"
       
     - name: "M_AC_VA"
-      offset: 5
+      offset: 11
       data_type: "int16"
       scale_factor: 1
       unit_of_measurement: "VA"
       state_class: "measurement"
-      description: "Meter AC Apparent Power"
+      description: "AC Apparent Power"
       
     - name: "M_AC_VAR"
-      offset: 6
+      offset: 12
       data_type: "int16"
       scale_factor: 1
       unit_of_measurement: "var"
       state_class: "measurement"
-      description: "Meter AC Reactive Power"
+      description: "AC Reactive Power"
       
     - name: "M_AC_PF"
-      offset: 7
+      offset: 13
       data_type: "int16"
-      scale_factor: 0.01
-      unit_of_measurement: "%"
+      scale_factor: 0.001
+      unit_of_measurement: ""
       device_class: "power_factor"
       state_class: "measurement"
-      description: "Meter AC Power Factor"
+      description: "AC Power Factor"
       
-    - name: "M_Exported"
-      offset: 8
-      length: 2
+    - name: "M_AC_Energy_WH"
+      offset: 14
       data_type: "uint32"
-      scale_factor: 1
+      count: 2
       unit_of_measurement: "Wh"
       device_class: "energy"
       state_class: "total_increasing"
-      description: "Meter Exported Energy"
+      description: "AC Energy"
       
-    - name: "M_Imported"
-      offset: 10
-      length: 2
+    - name: "M_AC_Energy_WH_Vendor"
+      offset: 16
       data_type: "uint32"
-      scale_factor: 1
+      count: 2
       unit_of_measurement: "Wh"
       device_class: "energy"
       state_class: "total_increasing"
-      description: "Meter Imported Energy"
+      description: "Vendor AC Energy"
+
+# Template-Metadaten
+template_info:
+  author: "SunSpec Alliance"
+  version: "1.0.0"
+  last_updated: "2025-01-20"
+  description: |
+    SunSpec Alliance Standard-Definition.
+    Enthält die Standard-Modellstrukturen für Common, Inverter, Storage und Meter.
+    Die tatsächlichen Register-Adressen werden durch Modellbasis-Adressen + Offset berechnet.
+  notes: |
+    Dies ist eine Standard-Definition, keine spezifische Implementierung.
+    Hersteller-spezifische Templates erweitern diese Definition mit konkreten Modell-Adressen.

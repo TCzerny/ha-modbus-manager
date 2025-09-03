@@ -408,6 +408,10 @@ async def process_simple_template_with_config(template_info: Dict[str, Any], use
             _LOGGER.error("Ungültige Template-Informationen für vereinfachtes Template")
             return None
         
+        # Check if this is a SunSpec Standard Configuration
+        if template_data.get("name") == "SunSpec Standard Configuration":
+            return await process_sunspec_config_template(template_data, base_template, user_config)
+        
         # Process the simple template with user config
         processed_template = process_simple_template(template_data, base_template, user_config)
         
@@ -431,6 +435,122 @@ async def process_simple_template_with_config(template_info: Dict[str, Any], use
         
     except Exception as e:
         _LOGGER.error("Fehler bei der Verarbeitung des vereinfachten Templates mit Konfiguration: %s", str(e))
+        return None
+
+async def process_sunspec_config_template(template_data: Dict[str, Any], base_template: Dict[str, Any], user_config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Process SunSpec Standard Configuration template."""
+    try:
+        _LOGGER.debug("Verarbeite SunSpec Standard Configuration Template")
+        
+        # Extract required fields from user configuration
+        prefix = user_config.get("prefix")
+        device_name = user_config.get("name", prefix)
+        
+        if not prefix:
+            _LOGGER.error("Prefix ist erforderlich für SunSpec-Konfiguration")
+            return None
+        
+        # Get model addresses from user config
+        model_addresses = {
+            "common_model": user_config.get("common_model_address"),
+            "inverter_model": user_config.get("inverter_model_address"),
+        }
+        
+        # Add optional model addresses
+        if user_config.get("storage_model_address"):
+            model_addresses["storage_model"] = user_config["storage_model_address"]
+        
+        if user_config.get("meter_model_address"):
+            model_addresses["meter_model"] = user_config["meter_model_address"]
+        
+        # Validate model addresses
+        for model_name, address in model_addresses.items():
+            if not address or not isinstance(address, int) or address < 1:
+                _LOGGER.error("Ungültige Adresse für Modell %s: %s", model_name, address)
+                return None
+        
+        # Process SunSpec model structure
+        model_registers = process_sunspec_model_structure(base_template, model_addresses)
+        
+        # Get auto-generated sensor configuration
+        auto_config = template_data.get("auto_generated_sensors", {})
+        
+        # Filter registers based on auto-generated configuration
+        filtered_registers = []
+        for reg in model_registers:
+            model_key = reg.get("model")
+            if model_key in auto_config:
+                model_config = auto_config[model_key]
+                if model_config.get("enabled", True):
+                    # Add prefix to unique_id
+                    reg_name = reg.get("name", "").lower()
+                    reg["unique_id"] = f"{prefix}_{reg_name}"
+                    
+                    # Add groups from auto-config
+                    groups = model_config.get("groups", [])
+                    if groups:
+                        reg["group"] = groups[0]  # Use first group as primary
+                        reg["groups"] = groups  # Store all groups for later use
+                    
+                    filtered_registers.append(reg)
+        
+        # Process calculated sensors
+        calculated_sensors = template_data.get("calculated_sensors", [])
+        for calc_sensor in calculated_sensors:
+            # Replace {PREFIX} placeholder with actual prefix
+            if "state" in calc_sensor:
+                calc_sensor["state"] = calc_sensor["state"].replace("{PREFIX}", prefix)
+            
+            # Add prefix to unique_id
+            calc_name = calc_sensor.get("name", "").lower().replace(" ", "_")
+            calc_sensor["unique_id"] = f"{prefix}_{calc_name}"
+        
+        # Process controls
+        controls = template_data.get("controls", [])
+        for control in controls:
+            # Replace address placeholders
+            if "address" in control:
+                address = control["address"]
+                if "{STORAGE_MODEL_ADDRESS_PLUS_2}" in str(address):
+                    if "storage_model" in model_addresses:
+                        storage_addr = model_addresses["storage_model"]
+                        control["address"] = storage_addr + 2
+                    else:
+                        _LOGGER.warning("Storage Model nicht verfügbar, Control %s wird übersprungen", control.get("name"))
+                        continue
+                
+                if "{STORAGE_MODEL_ADDRESS_PLUS_3}" in str(address):
+                    if "storage_model" in model_addresses:
+                        storage_addr = model_addresses["storage_model"]
+                        control["address"] = storage_addr + 3
+                    else:
+                        _LOGGER.warning("Storage Model nicht verfügbar, Control %s wird übersprungen", control.get("name"))
+                        continue
+            
+            # Add prefix to unique_id
+            ctrl_name = control.get("name", "").lower().replace(" ", "_")
+            control["unique_id"] = f"{prefix}_{ctrl_name}"
+        
+        # Create final template data
+        processed_template = {
+            "name": device_name,
+            "prefix": prefix,
+            "sensors": filtered_registers,
+            "calculated_sensors": calculated_sensors,
+            "controls": controls,
+            "template_info": template_data.get("template_info", {}),
+            "model_addresses": model_addresses,
+            "auto_generated_sensors": auto_config,
+            "is_sunspec_config": True
+        }
+        
+        _LOGGER.debug("SunSpec Standard Configuration verarbeitet: %d Sensoren, %d berechnete Sensoren, %d Steuerelemente", 
+                     len(filtered_registers), len(calculated_sensors), len(controls))
+        
+        return processed_template
+        
+    except Exception as e:
+        _LOGGER.error("Fehler bei der Verarbeitung der SunSpec-Konfiguration: %s", str(e))
         return None
 
 async def load_single_template(template_path: str, base_templates: Dict[str, Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
