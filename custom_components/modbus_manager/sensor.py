@@ -743,19 +743,13 @@ class ModbusTemplateSensor(SensorEntity):
             if self._flags and isinstance(value, (int, float)):
                 int_value = int(value)
                 flag_list = []
-                _LOGGER.info("Processing flags for %s: raw_value=%s, int_value=%s, flags=%s", 
-                            self._name, value, int_value, self._flags)
                 for bit, flag_name in self._flags.items():
-                    bit_mask = 1 << int(bit)
-                    is_set = int_value & bit_mask
-                    _LOGGER.info("  Bit %s (%s): mask=0x%X, is_set=%s", bit, flag_name, bit_mask, is_set)
-                    if is_set:
+                    if int_value & (1 << int(bit)):
                         flag_list.append(flag_name)
                 
                 if flag_list:
-                    result = ", ".join(flag_list)
-                    _LOGGER.info("Final flags result for %s: %s", self._name, result)
-                    return result
+                    _LOGGER.debug("Extracted flags from %s: %s", int_value, flag_list)
+                    return ", ".join(flag_list)
             
             # 4. Options anwenden (falls definiert)
             if self._options and isinstance(value, (int, float)):
