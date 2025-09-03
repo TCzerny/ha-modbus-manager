@@ -270,7 +270,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Firmware version
         if "firmware_version" in dynamic_config:
             _LOGGER.debug("Adding firmware_version field to schema")
-            schema_fields[vol.Optional("firmware_version", default="1.0.0")] = str
+            default_firmware = dynamic_config["firmware_version"].get("default", "1.0.0")
+            schema_fields[vol.Optional("firmware_version", default=default_firmware)] = str
         
         # String count - removed as no string-specific sensors exist in current templates
         
