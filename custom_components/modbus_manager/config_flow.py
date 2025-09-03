@@ -254,7 +254,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Phase configuration
         if "phases" in dynamic_config:
             _LOGGER.debug("Adding phases field to schema")
-            schema_fields[vol.Optional("phases", default=1)] = vol.In([1, 3])
+            schema_fields[vol.Optional("phases", default=1)] = vol.In([1, 3])  # Only 1 or 3 phases supported
         
         # MPPT configuration
         if "mppt_count" in dynamic_config:
