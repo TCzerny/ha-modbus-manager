@@ -23,6 +23,91 @@ PLATFORM = "modbus_manager"
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Set up the Modbus Manager component."""
     hass.data.setdefault(DOMAIN, {})
+    
+    # Register services
+    async def async_optimize_registers(call):
+        """Optimize registers for a specific device."""
+        device_id = call.data.get("device_id")
+        if not device_id:
+            _LOGGER.error("Device ID is required for register optimization")
+            return
+        
+        # Find the device in our data
+        for entry_id, data in hass.data[DOMAIN].items():
+            if data.get("prefix") == device_id.replace("modbus_manager_", ""):
+                register_optimizer = data.get("register_optimizer")
+                if register_optimizer:
+                    registers = data.get("registers", [])
+                    optimized_ranges = register_optimizer.optimize_registers(registers)
+                    _LOGGER.info("Optimized %d registers into %d ranges for device %s", 
+                                len(registers), len(optimized_ranges), device_id)
+                    return
+                else:
+                    _LOGGER.error("Register optimizer not available for device %s", device_id)
+                    return
+        
+        _LOGGER.error("Device %s not found", device_id)
+    
+    async def async_get_performance(call):
+        """Get performance metrics for a device or globally."""
+        device_id = call.data.get("device_id")
+        
+        if device_id:
+            # Get metrics for specific device
+            for entry_id, data in hass.data[DOMAIN].items():
+                if data.get("prefix") == device_id.replace("modbus_manager_", ""):
+                    performance_monitor = data.get("performance_monitor")
+                    if performance_monitor:
+                        metrics = performance_monitor.get_global_metrics()
+                        _LOGGER.info("Performance metrics for %s: %s", device_id, metrics.__dict__)
+                        return
+                    else:
+                        _LOGGER.error("Performance monitor not available for device %s", device_id)
+                        return
+            
+            _LOGGER.error("Device %s not found", device_id)
+        else:
+            # Get global metrics
+            global_metrics = {}
+            for entry_id, data in hass.data[DOMAIN].items():
+                performance_monitor = data.get("performance_monitor")
+                if performance_monitor:
+                    global_metrics[entry_id] = performance_monitor.get_global_metrics().__dict__
+            
+            _LOGGER.info("Global performance metrics: %s", global_metrics)
+    
+    async def async_reset_performance(call):
+        """Reset performance metrics for a device or globally."""
+        device_id = call.data.get("device_id")
+        
+        if device_id:
+            # Reset metrics for specific device
+            for entry_id, data in hass.data[DOMAIN].items():
+                if data.get("prefix") == device_id.replace("modbus_manager_", ""):
+                    performance_monitor = data.get("performance_monitor")
+                    if performance_monitor:
+                        performance_monitor.reset_metrics()
+                        _LOGGER.info("Reset performance metrics for device %s", device_id)
+                        return
+                    else:
+                        _LOGGER.error("Performance monitor not available for device %s", device_id)
+                        return
+            
+            _LOGGER.error("Device %s not found", device_id)
+        else:
+            # Reset global metrics
+            for entry_id, data in hass.data[DOMAIN].items():
+                performance_monitor = data.get("performance_monitor")
+                if performance_monitor:
+                    performance_monitor.reset_metrics()
+            
+            _LOGGER.info("Reset performance metrics for all devices")
+    
+    # Register the services
+    hass.services.async_register(DOMAIN, "optimize_registers", async_optimize_registers)
+    hass.services.async_register(DOMAIN, "get_performance", async_get_performance)
+    hass.services.async_register(DOMAIN, "reset_performance", async_reset_performance)
+    
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
