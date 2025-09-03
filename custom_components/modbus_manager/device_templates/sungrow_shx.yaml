@@ -1148,6 +1148,8 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 10
+    # Flags are bitmask - multiple flags can be active simultaneously
+    # Value 6 = 0b00000110 = Battery Active (bit 1) + Solar Active (bit 2)
     flags:
       0: "Grid Connected"
       1: "Battery Active"
