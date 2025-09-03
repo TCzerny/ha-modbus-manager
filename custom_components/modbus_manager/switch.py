@@ -57,8 +57,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("Modbus Manager Switches erstellt: %d Switch-Entities", len(entities))
-        _LOGGER.debug("Erstellte Switch-Entities: %s", [e.entity_id for e in entities])
+        _LOGGER.info("Modbus Manager: Created %d switch entities", len(entities))
+        _LOGGER.debug("Created switch entities: %s", [e.entity_id for e in entities])
 
 
 class ModbusTemplateSwitch(SwitchEntity):

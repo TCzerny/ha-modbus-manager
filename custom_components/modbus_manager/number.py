@@ -132,8 +132,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("Modbus Manager Numbers erstellt: %d Number-Entities", len(entities))
-        _LOGGER.debug("Erstellte Number-Entities: %s", [e.entity_id for e in entities])
+        _LOGGER.info("Modbus Manager: Created %d number entities", len(entities))
+        _LOGGER.debug("Created number entities: %s", [e.entity_id for e in entities])
 
 
 class ModbusTemplateNumber(NumberEntity):

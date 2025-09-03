@@ -129,8 +129,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("Modbus Manager Selects erstellt: %d Select-Entities", len(entities))
-        _LOGGER.debug("Erstellte Select-Entities: %s", [e.entity_id for e in entities])
+        _LOGGER.info("Modbus Manager: Created %d select entities", len(entities))
+        _LOGGER.debug("Created select entities: %s", [e.entity_id for e in entities])
 
 
 class ModbusTemplateSelect(SelectEntity):

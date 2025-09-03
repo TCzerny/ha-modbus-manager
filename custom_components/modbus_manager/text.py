@@ -57,8 +57,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("Modbus Manager Text Entities erstellt: %d Text-Entities", len(entities))
-        _LOGGER.debug("Erstellte Text-Entities: %s", [e.entity_id for e in entities])
+        _LOGGER.info("Modbus Manager: Created %d text entities", len(entities))
+        _LOGGER.debug("Created text entities: %s", [e.entity_id for e in entities])
 
 
 class ModbusTemplateText(TextEntity):

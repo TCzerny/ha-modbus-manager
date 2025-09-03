@@ -186,16 +186,16 @@ async def async_setup_entry(
         
         if all_entities:
             async_add_entities(all_entities)
-            _LOGGER.info("Modbus Manager Sensoren erstellt: %d Sensoren, %d berechnete Sensoren, %d Aggregate-Sensoren (Details im Debug-Log)", 
+            _LOGGER.info("Modbus Manager: Created %d sensors, %d calculated sensors, %d aggregate sensors", 
                          len(entities), len(calculated_entities), len(aggregate_entities))
             
             # Debug: List all created entities
             if entities:
-                _LOGGER.debug("Erstellte Sensoren: %s", [e.entity_id for e in entities])
+                _LOGGER.debug("Created sensors: %s", [e.entity_id for e in entities])
             if calculated_entities:
-                _LOGGER.debug("Erstellte berechnete Sensoren: %s", [e.entity_id for e in calculated_entities])
+                _LOGGER.debug("Created calculated sensors: %s", [e.entity_id for e in calculated_entities])
             if aggregate_entities:
-                _LOGGER.debug("Erstellte Aggregate-Sensoren: %s", [e.entity_id for e in aggregate_entities])
+                _LOGGER.debug("Created aggregate sensors: %s", [e.entity_id for e in aggregate_entities])
         else:
             _LOGGER.warning("Keine Sensoren erstellt")
             
