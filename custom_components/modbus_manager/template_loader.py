@@ -806,29 +806,29 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
         # Entity-Typ bestimmen
         processed_reg["entity_type"] = determine_entity_type(processed_reg)
         
-        # Count automatisch setzen für Float-Typen (vor Validierung)
+        # Auto-set count for Float types (before validation)
         count = processed_reg.get("count")
         data_type = processed_reg.get("data_type")
         
         if count is None:
             if data_type in ["float", "float32"]:
                 processed_reg["count"] = 2
-                _LOGGER.debug("Automatisch count=2 für %s in Template %s gesetzt", data_type, template_name)
+                _LOGGER.debug("Auto-set count=2 for %s in Template %s", data_type, template_name)
             elif data_type == "float64":
                 processed_reg["count"] = 4
-                _LOGGER.debug("Automatisch count=4 für %s in Template %s gesetzt", data_type, template_name)
+                _LOGGER.debug("Auto-set count=4 for %s in Template %s", data_type, template_name)
             else:
                 processed_reg["count"] = 1
-                _LOGGER.debug("Automatisch count=1 für %s in Template %s gesetzt", data_type, template_name)
+                _LOGGER.debug("Auto-set count=1 for %s in Template %s", data_type, template_name)
         
-        # Register validieren
+        # Validate register
         if not validate_register_data(processed_reg, template_name):
             return None
         
         return processed_reg
         
     except Exception as e:
-        _LOGGER.error("Fehler bei der Register-Verarbeitung in Template %s: %s", template_name, str(e))
+        _LOGGER.error("Error processing register in Template %s: %s", template_name, str(e))
         return None
 
 def determine_entity_type(register_data: Dict[str, Any]) -> str:
@@ -853,68 +853,68 @@ def determine_entity_type(register_data: Dict[str, Any]) -> str:
 def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
     """Validate register data for consistency."""
     try:
-        # Address validieren
+        # Validate address
         address = reg.get("address")
         if not isinstance(address, int) or address < 0:
-            _LOGGER.error("Ungültige Adresse in Template %s: %s", template_name, address)
+            _LOGGER.error("Invalid address in Template %s: %s", template_name, address)
             return False
         
-        # Data type validieren
+        # Validate data type
         data_type = reg.get("data_type")
         valid_data_types = {"uint16", "int16", "uint32", "int32", "string", "float", "float32", "float64", "boolean"}
         if data_type not in valid_data_types:
-            _LOGGER.error("Ungültiger data_type in Template %s: %s", template_name, data_type)
+            _LOGGER.error("Invalid data_type in Template %s: %s", template_name, data_type)
             return False
         
-        # Count validieren
+        # Validate count
         count = reg.get("count")
         if not isinstance(count, int) or count < 1:
-            _LOGGER.error("Ungültiger count in Template %s: %s", template_name, count)
+            _LOGGER.error("Invalid count in Template %s: %s", template_name, count)
             return False
             
-        # Float-spezifische Validierung
+        # Float-specific validation
         if data_type in ["float", "float32", "float64"]:
-            # Float-Typ benötigt mindestens 2 Register für 32-bit und 4 Register für 64-bit
+            # Float type requires at least 2 registers for 32-bit and 4 registers for 64-bit
             min_count = 2 if data_type in ["float", "float32"] else 4
             if count < min_count:
-                _LOGGER.error("Float-Typ %s in Template %s benötigt mindestens %d Register, aber count=%d", 
+                _LOGGER.error("Float type %s in Template %s requires at least %d registers, but count=%d", 
                              data_type, template_name, min_count, count)
                 return False
         
-        # Scale validieren
+        # Validate scale
         scale = reg.get("scale")
         if not isinstance(scale, (int, float)) or scale <= 0:
-            _LOGGER.error("Ungültiger scale in Template %s: %s", template_name, scale)
+            _LOGGER.error("Invalid scale in Template %s: %s", template_name, scale)
             return False
         
-        # Scan interval validieren
+        # Validate scan interval
         scan_interval = reg.get("scan_interval")
         if not isinstance(scan_interval, int) or scan_interval < 0:
-            _LOGGER.error("Ungültiger scan_interval in Template %s: %s", template_name, scan_interval)
+            _LOGGER.error("Invalid scan_interval in Template %s: %s", template_name, scan_interval)
             return False
         
-        # Control-spezifische Validierung
+        # Control-specific validation
         if not validate_control_settings(reg, template_name):
             return False
         
-        # Sum_scale Validierung
+        # Validate sum_scale
         sum_scale = reg.get("sum_scale")
         if sum_scale is not None:
             if not isinstance(sum_scale, list) or not all(isinstance(x, (int, float)) for x in sum_scale):
-                _LOGGER.error("Ungültiger sum_scale in Template %s: %s", template_name, sum_scale)
+                _LOGGER.error("Invalid sum_scale in Template %s: %s", template_name, sum_scale)
                 return False
         
-        # Options Validierung für Select-Entitäten
+        # Validate options for Select entities
         if reg.get("control") == "select":
             options = reg.get("options", {})
             if not isinstance(options, dict) or not options:
-                _LOGGER.error("Select-Entität in Template %s benötigt gültige options", template_name)
+                _LOGGER.error("Select entity in Template %s requires valid options", template_name)
                 return False
         
         return True
         
     except Exception as e:
-        _LOGGER.error("Fehler bei der Datenvalidierung in Template %s: %s", template_name, str(e))
+        _LOGGER.error("Error in data validation in Template %s: %s", template_name, str(e))
         return False
 
 def validate_control_settings(reg: Dict[str, Any], template_name: str) -> bool:
@@ -927,7 +927,7 @@ def validate_control_settings(reg: Dict[str, Any], template_name: str) -> bool:
             max_val = reg.get("max_value")
             if min_val is not None and max_val is not None:
                 if min_val >= max_val:
-                    _LOGGER.error("Ungültige min/max Werte in Template %s: min=%s, max=%s", 
+                    _LOGGER.error("Invalid min/max values in Template %s: min=%s, max=%s", 
                                  template_name, min_val, max_val)
                     return False
         
@@ -937,13 +937,13 @@ def validate_control_settings(reg: Dict[str, Any], template_name: str) -> bool:
                 on_val = switch_config.get("on", 1)
                 off_val = switch_config.get("off", 0)
                 if on_val == off_val:
-                    _LOGGER.error("Switch on/off Werte müssen unterschiedlich sein in Template %s", template_name)
+                    _LOGGER.error("Switch on/off values must be different in Template %s", template_name)
                     return False
         
         return True
         
     except Exception as e:
-        _LOGGER.error("Fehler bei der Control-Validierung in Template %s: %s", template_name, str(e))
+        _LOGGER.error("Error in control validation in Template %s: %s", template_name, str(e))
         return False
 
 async def get_template_names() -> List[str]:
