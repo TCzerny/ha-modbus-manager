@@ -2,6 +2,8 @@
 import voluptuous as vol
 import voluptuous_serialize as vs
 from typing import List
+import json
+import os
 from homeassistant import config_entries
 from homeassistant.core import callback
 from homeassistant.data_entry_flow import FlowResult
@@ -25,6 +27,50 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         super().__init__()
         self._templates = {}
         self._selected_template = None
+        self._translations = self._load_translations()
+
+    def _load_translations(self) -> dict:
+        """Load translations from JSON files."""
+        translations = {}
+        try:
+            # Get the directory of this file
+            current_dir = os.path.dirname(os.path.abspath(__file__))
+            translations_dir = os.path.join(current_dir, "translations")
+            
+            # Load German translations
+            de_file = os.path.join(translations_dir, "de.json")
+            if os.path.exists(de_file):
+                with open(de_file, 'r', encoding='utf-8') as f:
+                    translations['de'] = json.load(f)
+            
+            # Load English translations
+            en_file = os.path.join(translations_dir, "en.json")
+            if os.path.exists(en_file):
+                with open(en_file, 'r', encoding='utf-8') as f:
+                    translations['en'] = json.load(f)
+                    
+        except Exception as e:
+            _LOGGER.error("Error loading translations: %s", str(e))
+            translations = {}
+        
+        return translations
+
+    def _get_translation(self, key: str, language: str = 'de') -> str:
+        """Get translation for a key."""
+        try:
+            if language in self._translations:
+                # Navigate through the nested structure
+                keys = key.split('.')
+                value = self._translations[language]
+                for k in keys:
+                    if isinstance(value, dict) and k in value:
+                        value = value[k]
+                    else:
+                        return key  # Return key if translation not found
+                return value if isinstance(value, str) else key
+            return key
+        except Exception:
+            return key
 
     async def async_step_user(self, user_input: dict = None) -> FlowResult:
         """Handle the initial step."""
@@ -254,24 +300,28 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Phase configuration
         if "phases" in dynamic_config:
             _LOGGER.debug("Adding phases field to schema")
-            schema_fields[vol.Optional("phases", description="Anzahl Phasen (1 oder 3)", default=1)] = vol.In([1, 3])
+            description = self._get_translation("config.step.device_config.data.phases")
+            schema_fields[vol.Optional("phases", description=description, default=1)] = vol.In([1, 3])
         
         # MPPT configuration
         if "mppt_count" in dynamic_config:
             mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
             _LOGGER.debug("Adding mppt_count field to schema with options: %s", mppt_options)
-            schema_fields[vol.Optional("mppt_count", description="Anzahl MPPT-Tracker", default=1)] = vol.In(mppt_options)
+            description = self._get_translation("config.step.device_config.data.mppt_count")
+            schema_fields[vol.Optional("mppt_count", description=description, default=1)] = vol.In(mppt_options)
         
         # Battery configuration
         if "battery" in dynamic_config:
             _LOGGER.debug("Adding battery_enabled field to schema")
-            schema_fields[vol.Optional("battery_enabled", description="Batterie-Unterstützung aktiviert", default=False)] = bool
+            description = self._get_translation("config.step.device_config.data.battery_enabled")
+            schema_fields[vol.Optional("battery_enabled", description=description, default=False)] = bool
         
         # Firmware version
         if "firmware_version" in dynamic_config:
             _LOGGER.debug("Adding firmware_version field to schema")
             default_firmware = dynamic_config["firmware_version"].get("default", "1.0.0")
-            schema_fields[vol.Optional("firmware_version", description="Firmware-Version", default=default_firmware)] = str
+            description = self._get_translation("config.step.device_config.data.firmware_version")
+            schema_fields[vol.Optional("firmware_version", description=description, default=default_firmware)] = str
         
         # String count - removed as no string-specific sensors exist in current templates
         
@@ -279,7 +329,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if "connection_type" in dynamic_config:
             conn_options = dynamic_config["connection_type"].get("options", ["LAN", "WINET"])
             _LOGGER.debug("Adding connection_type field to schema with options: %s", conn_options)
-            schema_fields[vol.Optional("connection_type", description="Verbindungstyp", default="LAN")] = vol.In(conn_options)
+            description = self._get_translation("config.step.device_config.data.connection_type")
+            schema_fields[vol.Optional("connection_type", description=description, default="LAN")] = vol.In(conn_options)
         
         _LOGGER.debug("Final schema fields: %s", list(schema_fields.keys()))
         return schema_fields
