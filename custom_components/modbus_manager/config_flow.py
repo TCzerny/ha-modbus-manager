@@ -410,20 +410,37 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         from packaging import version
         
         try:
+            # Try to parse as semantic version first
             current_ver = version.parse(current_version)
             applicable_versions = []
             
             for ver_str in available_versions:
-                ver = version.parse(ver_str)
-                if ver <= current_ver:
-                    applicable_versions.append(ver)
+                try:
+                    ver = version.parse(ver_str)
+                    if ver <= current_ver:
+                        applicable_versions.append(ver)
+                except version.InvalidVersion:
+                    # Skip invalid semantic versions
+                    continue
             
             if applicable_versions:
                 # Return the highest applicable version
                 return str(max(applicable_versions))
             
         except version.InvalidVersion:
-            _LOGGER.warning("Invalid firmware version format: %s", current_version)
+            # For non-semantic versions (like SAPPHIRE-H_03011.95.01), 
+            # try exact match first, then fallback to string comparison
+            _LOGGER.debug("Non-semantic firmware version format detected: %s", current_version)
+            
+            # Check for exact match
+            if current_version in available_versions:
+                return current_version
+            
+            # Try string comparison for similar formats
+            for ver_str in available_versions:
+                if ver_str == current_version:
+                    return ver_str
+                # For similar formats, we could add more sophisticated comparison logic here
         
         return None
 
@@ -443,7 +460,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return self._create_regular_entry(user_input, template_data, template_version)
                 
         except Exception as e:
-            _LOGGER.error("Fehler beim Erstellen der Konfiguration: %s", str(e))
+            _LOGGER.error("Error creating configuration: %s", str(e))
             return self.async_abort(
                 reason="config_error",
                 description_placeholders={"error": str(e)}
@@ -465,10 +482,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if not filtered_aggregates:
                 return self.async_abort(
                     reason="no_aggregates_selected",
-                    description_placeholders={"error": "Keine Aggregationen ausgewählt"}
+                    description_placeholders={"error": "No aggregates selected"}
                 )
             
-            _LOGGER.debug("Aggregates Template %s (Version %s) mit %d ausgewählten Aggregationen", 
+            _LOGGER.debug("Aggregates Template %s (Version %s) with %d selected aggregates", 
                         self._selected_template, template_version, len(filtered_aggregates))
             
             # Create config entry
@@ -485,7 +502,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
             
         except Exception as e:
-            _LOGGER.error("Fehler beim Erstellen der Aggregates-Konfiguration: %s", str(e))
+            _LOGGER.error("Error creating aggregates configuration: %s", str(e))
             return self.async_abort(
                 reason="aggregates_config_error",
                 description_placeholders={"error": str(e)}
@@ -502,33 +519,33 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if self._supports_dynamic_config(template_data):
                 template_registers = self._process_dynamic_config(user_input, template_data)
             else:
-                # Register aus Template extrahieren
+                # Extract registers from template
                 template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
             
-            _LOGGER.debug("Template %s (Version %s) geladen mit %d Registern", 
+            _LOGGER.debug("Template %s (Version %s) loaded with %d registers", 
                         self._selected_template, 
                         template_version,
                         len(template_registers) if template_registers else 0)
             
-            # Template-Daten validieren
+            # Validate template data
             if not template_registers:
-                _LOGGER.error("Template %s hat keine Register", self._selected_template)
+                _LOGGER.error("Template %s has no registers", self._selected_template)
                 return self.async_abort(
                     reason="no_registers",
-                    description_placeholders={"error": f"Template {self._selected_template} hat keine Register"}
+                    description_placeholders={"error": f"Template {self._selected_template} has no registers"}
                 )
             
-            # Debug: Template-Struktur anzeigen
-            _LOGGER.debug("Template-Struktur: %s", template_registers[:2] if template_registers else "Keine Register")
+            # Debug: Show template structure
+            _LOGGER.debug("Template structure: %s", template_registers[:2] if template_registers else "No registers")
             
-            # Konfiguration validieren
+            # Validate configuration
             if not self._validate_config(user_input):
                 return self.async_abort(
                     reason="invalid_config",
-                    description_placeholders={"error": "Ungültige Konfiguration"}
+                    description_placeholders={"error": "Invalid configuration"}
                 )
 
-            # Config Entry erstellen
+            # Create config entry
             return self.async_create_entry(
                 title=f"{user_input['prefix']} ({self._selected_template})",
                 data={
@@ -546,7 +563,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
             
         except Exception as e:
-            _LOGGER.error("Fehler beim Erstellen der regulären Konfiguration: %s", str(e))
+            _LOGGER.error("Error creating regular configuration: %s", str(e))
             return self.async_abort(
                 reason="regular_config_error",
                 description_placeholders={"error": str(e)}
