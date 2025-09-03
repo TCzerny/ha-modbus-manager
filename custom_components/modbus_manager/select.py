@@ -81,7 +81,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                     "name": f"{prefix} {template_name}",
                     "manufacturer": "Modbus Manager",
                     "model": template_name,
-                    "via_device": (DOMAIN, hub_name)
+        
                 }
             ))
 

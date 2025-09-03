@@ -75,7 +75,6 @@ class ModbusCalculatedSensor(SensorEntity):
             "name": f"{prefix} {template_name}",
             "manufacturer": "Modbus Manager",
             "model": template_name,
-            "via_device": (DOMAIN, f"modbus_manager_{prefix}")
         }
         
         # State
