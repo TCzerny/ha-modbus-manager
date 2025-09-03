@@ -5,7 +5,74 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0] - 2025-01-XX
+## [0.5.0] - 2025-01
+
+### 🎉 Major Release: Dynamic Configuration & Float Conversion
+
+#### ✨ Added
+- **Dynamic Template Configuration (Fully Functional)**
+  - Automatic sensor filtering based on device parameters
+  - Phase filtering (1/3 phases) with automatic exclusion
+  - MPPT filtering (1-3 trackers) with intelligent detection
+  - Battery filtering with comprehensive keyword detection
+  - Firmware version compatibility with sensor replacements
+  - Connection type filtering (LAN/WINET register availability)
+  - Debug logging for filtering decisions
+
+- **Complete Float Conversion Support**
+  - IEEE 754 32-bit (float32) floating-point conversion
+  - IEEE 754 64-bit (float64) floating-point conversion
+  - Automatic count=2 assignment for float32 data types
+  - Byte order handling for different endianness
+  - Error handling for invalid float values
+
+- **Services & Diagnostics**
+  - `modbus_manager_optimize_registers` service for register optimization
+  - `modbus_manager_get_performance` service for performance metrics
+  - `modbus_manager_reset_performance` service for metrics reset
+  - Comprehensive diagnostics panel via Home Assistant UI
+  - Performance monitoring with success rates and operation tracking
+  - Register optimization statistics and batch reading analysis
+
+#### 🔧 Enhanced
+- **Template Processing**
+  - Use filtered registers from config entry instead of reloading template
+  - Process calculated sensors and controls with dynamic filtering
+  - Improved firmware version handling for non-semantic versions
+  - Enhanced debug logging for troubleshooting
+
+- **Performance Optimization**
+  - Register grouping for efficient batch reading
+  - Performance monitoring with detailed metrics
+  - Connection pooling and error recovery
+  - Intelligent polling based on data type
+
+#### 🧹 Refactored
+- **String Count Parameter Removal**
+  - Removed unnecessary string_count parameter from dynamic config
+  - Eliminated string filtering logic (no string-specific sensors exist)
+  - Simplified function signatures and reduced complexity
+  - Updated template structure and documentation
+
+#### 📚 Documentation
+- Updated README.md: Marked as production ready
+- Updated info.md: Added float conversion and services features
+- Updated TODO.md: Marked major features as completed
+- Updated PROJECT_OVERVIEW.md: Added diagnostics and float64 support
+- Updated CONTRIBUTING.md: Added template feature requirements
+
+#### 🏗️ Technical
+- Fixed dynamic filtering to work with both sensor_name and unique_id
+- Improved error handling for firmware version parsing
+- Enhanced logging levels (INFO for important messages, DEBUG for details)
+- Converted remaining German comments and messages to English
+
+#### 🙏 Acknowledgments
+- **mkaiser**: Outstanding Sungrow SHx Modbus implementation
+- **Home Assistant Community**: Great platform and support
+- **Community Contributors**: Device testing and feedback
+
+## [0.4.0] - 2025-08
 
 ### 🎉 Major Release: Sungrow SHx Dynamic Template
 
@@ -42,7 +109,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **photovoltaikforum.com**: Reverse-engineering efforts
 - **forum.iobroker.net**: Community contributions
 
-## [2.1.0] - 2024-12-XX
+## [0.3.0] - 2024-12
 
 ### 🔧 Fixed
 - **Home Assistant 2025.12.0 Compatibility**
@@ -62,7 +129,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Improved validation for `scan_interval: 0`
   - Better error handling and warnings
 
-## [2.0.0] - 2024-11-XX
+## [0.2.0] - 2024-11
 
 ### ✨ Added
 - **Compleo eBox Professional Template**
@@ -82,7 +149,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Device-specific documentation
 - Aggregate sensors guide
 
-## [1.0.0] - 2024-10-XX
+## [0.1.0] - 2024-10
 
 ### 🎉 Initial Release
 - **Core Modbus Manager Integration**
@@ -111,10 +178,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## Version History
 
-- **v3.0.0**: Sungrow SHx Dynamic Template (Current)
-- **v2.1.0**: Home Assistant 2025.12.0 compatibility
-- **v2.0.0**: Compleo eBox Professional template
-- **v1.0.0**: Initial release with core functionality
+- **v0.4.0**: Sungrow SHx Dynamic Template (Current)
+- **v0.3.0**: Home Assistant 2025.12.0 compatibility
+- **v0.2.0**: Compleo eBox Professional template
+- **v0.1.0**: Initial release with core functionality
 
 ## Contributing
 
