@@ -349,11 +349,16 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Check both sensor_name and unique_id for filtering
         search_text = f"{sensor_name} {unique_id}".lower()
         
+        # Debug: Log what we're checking
+        _LOGGER.debug("Checking sensor: name='%s', unique_id='%s', search_text='%s'", 
+                     sensor_name, unique_id, search_text)
+        
         # Phase-specific sensors
         if phases == 1:
             # Exclude phase B and C sensors for single phase
             if any(phase in search_text for phase in ["phase_b", "phase_c", "phase b", "phase c"]):
-                _LOGGER.debug("Excluding sensor due to single phase config: %s", sensor.get("name", "unknown"))
+                _LOGGER.debug("Excluding sensor due to single phase config: %s (unique_id: %s)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         elif phases == 3:
             # Include all phase sensors
@@ -364,23 +369,24 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Extract MPPT number from sensor name or unique_id
             mppt_number = self._extract_mppt_number(search_text)
             if mppt_number and mppt_number > mppt_count:
-                _LOGGER.debug("Excluding sensor due to MPPT count config: %s (MPPT %d > %d)", 
-                             sensor.get("name", "unknown"), mppt_number, mppt_count)
+                _LOGGER.debug("Excluding sensor due to MPPT count config: %s (unique_id: %s, MPPT %d > %d)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), mppt_number, mppt_count)
                 return False
         
         # Battery-specific sensors
         if not battery_enabled:
             battery_keywords = ["battery", "bms", "soc", "charge", "discharge", "backup"]
             if any(keyword in search_text for keyword in battery_keywords):
-                _LOGGER.debug("Excluding sensor due to battery disabled: %s", sensor.get("name", "unknown"))
+                _LOGGER.debug("Excluding sensor due to battery disabled: %s (unique_id: %s)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         
         # String-specific sensors
         if "string" in search_text:
             string_number = self._extract_string_number(search_text)
             if string_number and string_number > string_count:
-                _LOGGER.debug("Excluding sensor due to string count config: %s (String %d > %d)", 
-                             sensor.get("name", "unknown"), string_number, string_count)
+                _LOGGER.debug("Excluding sensor due to string count config: %s (unique_id: %s, String %d > %d)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), string_number, string_count)
                 return False
         
         # Connection type specific sensors
@@ -389,13 +395,15 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Exclude WINET-only sensors
             winet_only_sensors = connection_config.get("winet_only_sensors", [])
             if unique_id in winet_only_sensors:
-                _LOGGER.debug("Excluding sensor due to LAN connection: %s", sensor.get("name", "unknown"))
+                _LOGGER.debug("Excluding sensor due to LAN connection: %s (unique_id: %s)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         elif connection_type == "WINET":
             # Exclude LAN-only sensors
             lan_only_sensors = connection_config.get("lan_only_sensors", [])
             if unique_id in lan_only_sensors:
-                _LOGGER.debug("Excluding sensor due to WINET connection: %s", sensor.get("name", "unknown"))
+                _LOGGER.debug("Excluding sensor due to WINET connection: %s (unique_id: %s)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
         
         return True
