@@ -1,0 +1,157 @@
+# Fronius GEN24 Simple Template
+# Minimales Template für Fronius GEN24 Wechselrichter
+# Erweitert automatisch den SunSpec-Standard
+
+name: "Fronius GEN24 Simple"
+extends: "SunSpec Standard"
+version: 1
+description: "Vereinfachtes Template für Fronius GEN24 Wechselrichter"
+manufacturer: "Fronius"
+model: "GEN24"
+
+# SunSpec-Modellbasis-Adressen für Fronius GEN24
+# Diese werden automatisch für alle SunSpec-Register verwendet
+model_addresses:
+  common_model: 40001   # Common Model (1) beginnt bei 40001
+  inverter_model: 40069  # Inverter Model (103) beginnt bei 40069
+  storage_model: 40187   # Storage Model (124) beginnt bei 40187
+  meter_model: 40277     # Meter Model (203) beginnt bei 40277
+
+# Erforderliche Konfigurationsfelder
+# Diese müssen vom Benutzer angegeben werden
+required_fields:
+  - prefix      # Eindeutiger Prefix für alle Entities
+  - name        # Anzeigename für das Gerät (optional, falls nicht angegeben wird Prefix verwendet)
+
+# Automatisch generierte Sensoren basierend auf SunSpec-Standard
+# Alle SunSpec-Register werden automatisch als Sensoren erstellt
+auto_generated_sensors:
+  # Common Model (1) - Geräteinformationen
+  common_model:
+    enabled: true
+    groups:
+      - "device_info"
+    
+  # Inverter Model (103) - Wechselrichter-Daten
+  inverter_model:
+    enabled: true
+    groups:
+      - "PV_inverter_power"
+      - "PV_inverter_current"
+      - "PV_inverter_voltage"
+      - "PV_inverter_frequency"
+    
+  # Storage Model (124) - Batterie-Daten (falls vorhanden)
+  storage_model:
+    enabled: true
+    groups:
+      - "PV_battery_power"
+      - "PV_battery_soc"
+      - "PV_battery_voltage"
+      - "PV_battery_current"
+    
+  # Meter Model (203) - Zähler-Daten (falls vorhanden)
+  meter_model:
+    enabled: true
+    groups:
+      - "PV_grid_power"
+      - "PV_grid_energy"
+      - "PV_grid_frequency"
+
+# Berechnete Sensoren (automatisch generiert)
+calculated_sensors:
+  - name: "Inverter Efficiency"
+    type: "sensor"
+    state: >-
+      {% set ac_power = states('sensor.{PREFIX}_ac_power') | default(0) | float %}
+      {% set dc_power = states('sensor.{PREFIX}_dc_power') | default(0) | float %}
+      {% if dc_power > 0 %}
+        {{ (ac_power / dc_power * 100) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_inverter_efficiency"
+    scan_interval: 60
+
+  - name: "Grid Power Balance"
+    type: "sensor"
+    state: >-
+      {% set inverter_power = states('sensor.{PREFIX}_ac_power') | default(0) | float %}
+      {% set grid_power = states('sensor.{PREFIX}_grid_power') | default(0) | float %}
+      {{ inverter_power - grid_power }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_power_balance"
+    scan_interval: 60
+
+  - name: "Battery Charging Power"
+    type: "sensor"
+    state: >-
+      {% if states('sensor.{PREFIX}_battery_power') | default(0) | float > 0 %}
+        {{ states('sensor.{PREFIX}_battery_power') | default(0) | float }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_battery_charging"
+    scan_interval: 60
+
+  - name: "Battery Discharging Power"
+    type: "sensor"
+    state: >-
+      {% if states('sensor.{PREFIX}_battery_power') | default(0) | float < 0 %}
+        {{ (states('sensor.{PREFIX}_battery_power') | default(0) | float * -1) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_battery_discharging"
+    scan_interval: 60
+
+# Steuerelemente (falls verfügbar)
+controls:
+  # Batterie-Steuerung (falls Storage Model verfügbar)
+  - name: "Battery Charge Limit"
+    unique_id: "battery_charge_limit"
+    address: 40189  # Storage Model + 2 (Charge Limit Register)
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 0
+    max_value: 100
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    group: "PV_battery_control"
+    description: "Battery Charge Limit"
+
+  - name: "Battery Discharge Limit"
+    unique_id: "battery_discharge_limit"
+    address: 40190  # Storage Model + 3 (Discharge Limit Register)
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 0
+    max_value: 100
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    group: "PV_battery_control"
+    description: "Battery Discharge Limit"
+
+# Template-Metadaten
+template_info:
+  author: "HA-Modbus-Manager"
+  version: "1.0.0"
+  last_updated: "2025-01-20"
+  compatibility:
+    - "Fronius GEN24"
+    - "Fronius Tauro"
+  notes: |
+    Dieses Template erweitert automatisch den SunSpec-Standard.
+    Alle SunSpec-Register werden automatisch als Sensoren erstellt.
+    Nur Prefix und optional Name müssen angegeben werden.

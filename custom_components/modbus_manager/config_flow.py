@@ -161,24 +161,41 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             return await self.async_step_final_config(user_input)
 
-        return self.async_show_form(
-            step_id="device_config",
-            data_schema=vol.Schema({
-                vol.Required("prefix"): str,
-                vol.Required("host"): str,
-                vol.Optional("port", default=502): int,
-                vol.Optional("slave_id", default=1): int,
-                vol.Optional("timeout", default=3): int,
-                vol.Optional("retries", default=3): int,
-                vol.Optional("delay", default=0): int,
-                vol.Optional("close_comm_on_error", default=True): bool,
-                vol.Optional("reconnect_delay", default=10): int,
-                vol.Optional("message_wait", default=0): int,
-            }),
-            description_placeholders={
-                "template": self._selected_template
-            }
-        )
+        # Check if this is a simple template
+        template_data = self._templates.get(self._selected_template, {})
+        if template_data.get("is_simple_template"):
+            # Simple template - only requires prefix and name
+            return self.async_show_form(
+                step_id="device_config",
+                data_schema=vol.Schema({
+                    vol.Required("prefix"): str,
+                    vol.Optional("name"): str,
+                }),
+                description_placeholders={
+                    "template": self._selected_template,
+                    "description": template_data.get("description", "Vereinfachtes Template")
+                }
+            )
+        else:
+            # Regular template - requires full Modbus configuration
+            return self.async_show_form(
+                step_id="device_config",
+                data_schema=vol.Schema({
+                    vol.Required("prefix"): str,
+                    vol.Required("host"): str,
+                    vol.Optional("port", default=502): int,
+                    vol.Optional("slave_id", default=1): int,
+                    vol.Optional("timeout", default=3): int,
+                    vol.Optional("retries", default=3): int,
+                    vol.Optional("delay", default=0): int,
+                    vol.Optional("close_comm_on_error", default=True): bool,
+                    vol.Optional("reconnect_delay", default=10): int,
+                    vol.Optional("message_wait", default=0): int,
+                }),
+                description_placeholders={
+                    "template": self._selected_template
+                }
+            )
 
     async def async_step_final_config(self, user_input: dict) -> FlowResult:
         """Handle final configuration and create entry."""
@@ -247,6 +264,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def _create_regular_entry(self, user_input: dict, template_data: dict, template_version: int) -> FlowResult:
         """Create config entry for regular template."""
         try:
+            # Check if this is a simple template
+            if template_data.get("is_simple_template"):
+                return self._create_simple_template_entry(user_input, template_data, template_version)
+            
             # Register aus Template extrahieren
             template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
             
@@ -300,6 +321,58 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 reason="regular_config_error",
                 description_placeholders={"error": str(e)}
             )
+
+    def _create_simple_template_entry(self, user_input: dict, template_data: dict, template_version: int) -> FlowResult:
+        """Create config entry for simple template."""
+        try:
+            _LOGGER.debug("Erstelle vereinfachtes Template Entry: %s", self._selected_template)
+            
+            # Validate simple template input
+            if not self._validate_simple_config(user_input):
+                return self.async_abort(
+                    reason="invalid_simple_config",
+                    description_placeholders={"error": "Ungültige Konfiguration für vereinfachtes Template"}
+                )
+            
+            # Config Entry erstellen für vereinfachtes Template
+            return self.async_create_entry(
+                title=f"{user_input['prefix']} ({self._selected_template})",
+                data={
+                    "template": self._selected_template,
+                    "template_version": template_version,
+                    "prefix": user_input["prefix"],
+                    "name": user_input.get("name", user_input["prefix"]),
+                    "template_data": template_data,
+                    "is_simple_template": True,
+                    "is_aggregates_template": False
+                }
+            )
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Erstellen der vereinfachten Template-Konfiguration: %s", str(e))
+            return self.async_abort(
+                reason="simple_config_error",
+                description_placeholders={"error": str(e)}
+            )
+
+    def _validate_simple_config(self, user_input: dict) -> bool:
+        """Validate simple template configuration."""
+        try:
+            # Pflichtfelder prüfen
+            required_fields = ["prefix"]
+            if not all(field in user_input for field in required_fields):
+                return False
+            
+            # Prefix validieren (alphanumeric, lowercase, underscore)
+            prefix = user_input.get("prefix", "")
+            if not prefix or not prefix.replace("_", "").isalnum() or not prefix.islower():
+                return False
+            
+            return True
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Validierung der vereinfachten Konfiguration: %s", str(e))
+            return False
 
     def _validate_config(self, user_input: dict) -> bool:
         """Validate user input configuration."""

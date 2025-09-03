@@ -315,6 +315,124 @@ def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
                      template_name, str(e))
         return False
 
+def process_simple_template(template_data: Dict[str, Any], base_template: Dict[str, Any], user_config: Dict[str, Any]) -> Dict[str, Any]:
+    """Process a simple template that only requires prefix and name."""
+    try:
+        _LOGGER.debug("Verarbeite vereinfachtes Template: %s", template_data.get("name"))
+        
+        # Extract required fields from user configuration
+        prefix = user_config.get("prefix")
+        device_name = user_config.get("name", prefix)  # Use prefix as fallback
+        
+        if not prefix:
+            _LOGGER.error("Prefix ist erforderlich für vereinfachte Templates")
+            return {}
+        
+        # Get model addresses from template
+        model_addresses = template_data.get("model_addresses", {})
+        if not model_addresses:
+            _LOGGER.error("Template muss model_addresses definieren")
+            return {}
+        
+        # Process SunSpec model structure
+        model_registers = process_sunspec_model_structure(base_template, model_addresses)
+        
+        # Get auto-generated sensor configuration
+        auto_config = template_data.get("auto_generated_sensors", {})
+        
+        # Filter registers based on auto-generated configuration
+        filtered_registers = []
+        for reg in model_registers:
+            model_key = reg.get("model")
+            if model_key in auto_config:
+                model_config = auto_config[model_key]
+                if model_config.get("enabled", True):
+                    # Add prefix to unique_id
+                    reg_name = reg.get("name", "").lower()
+                    reg["unique_id"] = f"{prefix}_{reg_name}"
+                    
+                    # Add groups from auto-config
+                    groups = model_config.get("groups", [])
+                    if groups:
+                        reg["group"] = groups[0]  # Use first group as primary
+                        reg["groups"] = groups  # Store all groups for later use
+                    
+                    filtered_registers.append(reg)
+        
+        # Process calculated sensors
+        calculated_sensors = template_data.get("calculated_sensors", [])
+        for calc_sensor in calculated_sensors:
+            # Replace {PREFIX} placeholder with actual prefix
+            if "state" in calc_sensor:
+                calc_sensor["state"] = calc_sensor["state"].replace("{PREFIX}", prefix)
+            
+            # Add prefix to unique_id
+            calc_name = calc_sensor.get("name", "").lower().replace(" ", "_")
+            calc_sensor["unique_id"] = f"{prefix}_{calc_name}"
+        
+        # Process controls
+        controls = template_data.get("controls", [])
+        for control in controls:
+            # Add prefix to unique_id
+            ctrl_name = control.get("name", "").lower().replace(" ", "_")
+            control["unique_id"] = f"{prefix}_{ctrl_name}"
+        
+        # Create final template data
+        processed_template = {
+            "name": device_name,
+            "prefix": prefix,
+            "sensors": filtered_registers,
+            "calculated_sensors": calculated_sensors,
+            "controls": controls,
+            "template_info": template_data.get("template_info", {}),
+            "model_addresses": model_addresses,
+            "auto_generated_sensors": auto_config
+        }
+        
+        _LOGGER.debug("Vereinfachtes Template verarbeitet: %d Sensoren, %d berechnete Sensoren, %d Steuerelemente", 
+                     len(filtered_registers), len(calculated_sensors), len(controls))
+        
+        return processed_template
+        
+    except Exception as e:
+        _LOGGER.error("Fehler bei der Verarbeitung des vereinfachten Templates: %s", str(e))
+        return {}
+
+async def process_simple_template_with_config(template_info: Dict[str, Any], user_config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+    """Process a simple template with user configuration."""
+    try:
+        template_data = template_info.get("template_data")
+        base_template = template_info.get("base_template")
+        
+        if not template_data or not base_template:
+            _LOGGER.error("Ungültige Template-Informationen für vereinfachtes Template")
+            return None
+        
+        # Process the simple template with user config
+        processed_template = process_simple_template(template_data, base_template, user_config)
+        
+        if not processed_template:
+            _LOGGER.error("Fehler bei der Verarbeitung des vereinfachten Templates")
+            return None
+        
+        # Validate and process registers
+        validated_registers = []
+        for reg in processed_template.get("sensors", []):
+            validated_reg = validate_and_process_register(reg, processed_template.get("name"))
+            if validated_reg:
+                validated_reg["template"] = processed_template.get("name")
+                validated_registers.append(validated_reg)
+        
+        # Update processed template with validated registers
+        processed_template["sensors"] = validated_registers
+        
+        _LOGGER.debug("Vereinfachtes Template erfolgreich verarbeitet: %s", processed_template.get("name"))
+        return processed_template
+        
+    except Exception as e:
+        _LOGGER.error("Fehler bei der Verarbeitung des vereinfachten Templates mit Konfiguration: %s", str(e))
+        return None
+
 async def load_single_template(template_path: str, base_templates: Dict[str, Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
     """Load a single template file asynchronously."""
     try:
@@ -340,6 +458,18 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             # Extend from base template
             base_template = base_templates[extends_name]
             _LOGGER.debug("Template %s erweitert BASE-Template %s", template_name, extends_name)
+            
+            # Check if this is a simple template (requires only prefix and name)
+            if "required_fields" in data and "auto_generated_sensors" in data:
+                _LOGGER.debug("Template %s ist ein vereinfachtes Template", template_name)
+                # Simple templates are processed later when user config is available
+                # For now, just return the template data for later processing
+                return {
+                    "name": template_name,
+                    "template_data": data,
+                    "base_template": base_template,
+                    "is_simple_template": True
+                }
             
             # Validate SunSpec template if it extends SunSpec Standard
             if "SunSpec" in extends_name:

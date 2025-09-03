@@ -10,8 +10,9 @@
 - [x] SunSpec-Template-Validierung implementieren
 
 ## 🔄 In Bearbeitung
-- [ ] Modbus-Kommunikationsprobleme identifizieren und beheben
+- [x] Modbus-Kommunikationsprobleme identifizieren und beheben
 - [ ] SunSpec-Template-Tests implementieren
+- [x] Vereinfachte SunSpec-Templates implementieren (Fronius GEN24 Simple)
 
 ## 📋 Geplant
 - [ ] Weitere BASE Templates (VDMA24247 für Wärmepumpen, etc.)
@@ -62,9 +63,9 @@
 ## 📝 Nächste Schritte
 1. ✅ Template-Loader für SunSpec-Modellstruktur aktualisiert
 2. ✅ SunSpec-Template-Validierung implementiert
-3. SunSpec-Template-Tests implementieren
-4. Weitere SunSpec-konforme Hersteller hinzufügen
-5. Modbus-Kommunikation optimieren
+3. ✅ Vereinfachte SunSpec-Templates implementiert (Fronius GEN24 Simple)
+4. SunSpec-Template-Tests implementieren
+5. Weitere SunSpec-konforme Hersteller hinzufügen
 6. Performance-Monitoring implementieren
 
 ## 🔧 Technische Details
@@ -114,6 +115,47 @@ custom_registers:
     unique_id: "custom_register"
     address: 40093
     # ... weitere Eigenschaften
+```
+
+### Vereinfachtes Template-Format (Neu)
+```yaml
+# Fronius GEN24 Simple Template
+name: "Fronius GEN24 Simple"
+extends: "SunSpec Standard"
+model_addresses:
+  common_model: 40001
+  inverter_model: 40069
+  storage_model: 40187
+  meter_model: 40277
+
+# Erforderliche Konfigurationsfelder
+required_fields:
+  - prefix      # Eindeutiger Prefix für alle Entities
+  - name        # Anzeigename für das Gerät (optional)
+
+# Automatisch generierte Sensoren basierend auf SunSpec-Standard
+auto_generated_sensors:
+  common_model:
+    enabled: true
+    groups: ["device_info"]
+  inverter_model:
+    enabled: true
+    groups: ["PV_inverter_power", "PV_inverter_current"]
+  storage_model:
+    enabled: true
+    groups: ["PV_battery_power", "PV_battery_soc"]
+
+# Berechnete Sensoren (automatisch generiert)
+calculated_sensors:
+  - name: "Inverter Efficiency"
+    state: >-
+      {% set ac_power = states('sensor.{PREFIX}_ac_power') | default(0) | float %}
+      {% set dc_power = states('sensor.{PREFIX}_dc_power') | default(0) | float %}
+      {% if dc_power > 0 %}
+        {{ (ac_power / dc_power * 100) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
 ```
 
 
