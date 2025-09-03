@@ -37,7 +37,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     template_data = await get_template_by_name(name)
                     if template_data:
                         self._templates[name] = template_data
-                _LOGGER.debug("Templates geladen: %s", list(self._templates.keys()))
+                        _LOGGER.info("Loaded template %s: has_dynamic_config=%s", 
+                                   name, "dynamic_config" in template_data)
+                _LOGGER.info("Templates loaded: %s", list(self._templates.keys()))
             
             if not self._templates:
                 return self.async_abort(
@@ -51,9 +53,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Template auswählen
                 if "template" in user_input:
                     self._selected_template = user_input["template"]
+                    _LOGGER.info("Selected template: %s", self._selected_template)
                     
                     # Check if this is an aggregates template
                     template_data = self._templates.get(self._selected_template, {})
+                    _LOGGER.info("Template data for %s: keys=%s, has_dynamic_config=%s", 
+                               self._selected_template, list(template_data.keys()), 
+                               "dynamic_config" in template_data)
                     if template_data.get("aggregates"):
                         return await self.async_step_aggregates_config()
                     else:
@@ -198,8 +204,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         else:
             # Regular template - requires full Modbus configuration
             # Check if this template supports dynamic configuration
-            _LOGGER.debug("Template data keys: %s", list(template_data.keys()))
-            _LOGGER.debug("Has dynamic_config: %s", "dynamic_config" in template_data)
+            _LOGGER.info("Template data keys: %s", list(template_data.keys()))
+            _LOGGER.info("Has dynamic_config: %s", "dynamic_config" in template_data)
+            _LOGGER.info("Template name: %s", template_data.get("name", "Unknown"))
             
             schema_fields = {
                 vol.Required("prefix"): str,
@@ -212,12 +219,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             
             # Add dynamic template parameters if supported
             if self._supports_dynamic_config(template_data):
-                _LOGGER.debug("Template supports dynamic config, adding schema fields")
+                _LOGGER.info("Template supports dynamic config, adding schema fields")
                 dynamic_schema = self._get_dynamic_config_schema(template_data)
-                _LOGGER.debug("Dynamic schema fields: %s", list(dynamic_schema.keys()))
+                _LOGGER.info("Dynamic schema fields: %s", list(dynamic_schema.keys()))
                 schema_fields.update(dynamic_schema)
             else:
-                _LOGGER.debug("Template does not support dynamic config")
+                _LOGGER.info("Template does not support dynamic config")
             
             return self.async_show_form(
                 step_id="device_config",
@@ -231,7 +238,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Check if template supports dynamic configuration."""
         # Check if template has dynamic_config section
         has_dynamic = "dynamic_config" in template_data
-        _LOGGER.debug("_supports_dynamic_config: template_data keys=%s, has_dynamic=%s", 
+        _LOGGER.info("_supports_dynamic_config: template_data keys=%s, has_dynamic=%s", 
                      list(template_data.keys()), has_dynamic)
         return has_dynamic
 
