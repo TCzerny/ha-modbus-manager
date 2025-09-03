@@ -278,7 +278,7 @@ class ModbusTemplateNumber(NumberEntity):
             _LOGGER.error("Fehler beim Setzen des Number-Wertes %s: %s", value, str(e))
 
     def _process_register_value(self, registers):
-        """Verarbeite Register-Werte basierend auf data_type."""
+        """Process register values based on data_type."""
         try:
             if not registers:
                 return None
@@ -302,11 +302,67 @@ class ModbusTemplateNumber(NumberEntity):
                     if value > 2147483647:
                         value -= 4294967296
                     return value
+            elif self._data_type in ["float", "float32"]:
+                # Float32 conversion (2 registers)
+                if len(registers) >= 2:
+                    import struct
+                    # Combine two 16-bit registers into 32-bit float
+                    if self._swap:
+                        # Swap byte order if needed
+                        combined = (registers[1] << 16) | registers[0]
+                    else:
+                        combined = (registers[0] << 16) | registers[1]
+                    
+                    # Convert to float using struct
+                    try:
+                        # Pack as 32-bit unsigned integer, then unpack as float
+                        packed = struct.pack('>I', combined)
+                        value = struct.unpack('>f', packed)[0]
+                        _LOGGER.debug("Float32 conversion for %s: byte_order=%s, raw=%s, value=%s",
+                                    self.name, "big" if not self._swap else "little", 
+                                    [registers[0], registers[1]], value)
+                        return value
+                    except Exception as e:
+                        _LOGGER.error("Error in float32 conversion for %s: %s", self.name, str(e))
+                        return None
+                else:
+                    _LOGGER.error("float32 requires at least 2 registers, got %d for %s",
+                                len(registers), self.name)
+                    return None
+            elif self._data_type == "float64":
+                # Float64 conversion (4 registers)
+                if len(registers) >= 4:
+                    import struct
+                    # Combine four 16-bit registers into 64-bit float
+                    if self._swap:
+                        # Swap byte order if needed
+                        combined = ((registers[3] << 48) | (registers[2] << 32) | 
+                                  (registers[1] << 16) | registers[0])
+                    else:
+                        combined = ((registers[0] << 48) | (registers[1] << 32) | 
+                                  (registers[2] << 16) | registers[3])
+                    
+                    # Convert to float using struct
+                    try:
+                        # Pack as 64-bit unsigned integer, then unpack as double
+                        packed = struct.pack('>Q', combined)
+                        value = struct.unpack('>d', packed)[0]
+                        _LOGGER.debug("Float64 conversion for %s: byte_order=%s, raw=%s, value=%s",
+                                    self.name, "big" if not self._swap else "little", 
+                                    registers, value)
+                        return value
+                    except Exception as e:
+                        _LOGGER.error("Error in float64 conversion for %s: %s", self.name, str(e))
+                        return None
+                else:
+                    _LOGGER.error("float64 requires at least 4 registers, got %d for %s",
+                                len(registers), self.name)
+                    return None
             else:
                 return registers[0]
                 
         except Exception as e:
-            _LOGGER.error("Fehler bei Register-Verarbeitung: %s", str(e))
+            _LOGGER.error("Error in register processing: %s", str(e))
             return None
 
     def _apply_data_processing(self, value):
