@@ -198,6 +198,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         else:
             # Regular template - requires full Modbus configuration
             # Check if this template supports dynamic configuration
+            _LOGGER.debug("Template data keys: %s", list(template_data.keys()))
+            _LOGGER.debug("Has dynamic_config: %s", "dynamic_config" in template_data)
+            
             schema_fields = {
                 vol.Required("prefix"): str,
                 vol.Required("host"): str,
@@ -209,7 +212,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             
             # Add dynamic template parameters if supported
             if self._supports_dynamic_config(template_data):
-                schema_fields.update(self._get_dynamic_config_schema(template_data))
+                _LOGGER.debug("Template supports dynamic config, adding schema fields")
+                dynamic_schema = self._get_dynamic_config_schema(template_data)
+                _LOGGER.debug("Dynamic schema fields: %s", list(dynamic_schema.keys()))
+                schema_fields.update(dynamic_schema)
+            else:
+                _LOGGER.debug("Template does not support dynamic config")
             
             return self.async_show_form(
                 step_id="device_config",
@@ -222,40 +230,51 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def _supports_dynamic_config(self, template_data: dict) -> bool:
         """Check if template supports dynamic configuration."""
         # Check if template has dynamic_config section
-        return "dynamic_config" in template_data
+        has_dynamic = "dynamic_config" in template_data
+        _LOGGER.debug("_supports_dynamic_config: template_data keys=%s, has_dynamic=%s", 
+                     list(template_data.keys()), has_dynamic)
+        return has_dynamic
 
     def _get_dynamic_config_schema(self, template_data: dict) -> dict:
         """Generate dynamic configuration schema based on template."""
         dynamic_config = template_data.get("dynamic_config", {})
+        _LOGGER.debug("_get_dynamic_config_schema: dynamic_config keys=%s", list(dynamic_config.keys()))
         schema_fields = {}
         
         # Phase configuration
         if "phases" in dynamic_config:
+            _LOGGER.debug("Adding phases field to schema")
             schema_fields[vol.Optional("phases", default=1)] = vol.In([1, 3])
         
         # MPPT configuration
         if "mppt_count" in dynamic_config:
             mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
+            _LOGGER.debug("Adding mppt_count field to schema with options: %s", mppt_options)
             schema_fields[vol.Optional("mppt_count", default=1)] = vol.In(mppt_options)
         
         # Battery configuration
         if "battery" in dynamic_config:
+            _LOGGER.debug("Adding battery_enabled field to schema")
             schema_fields[vol.Optional("battery_enabled", default=False)] = bool
         
         # Firmware version
         if "firmware_version" in dynamic_config:
+            _LOGGER.debug("Adding firmware_version field to schema")
             schema_fields[vol.Optional("firmware_version", default="1.0.0")] = str
         
         # String count
         if "string_count" in dynamic_config:
             string_options = dynamic_config["string_count"].get("options", [1, 2, 3, 4, 6, 8, 12, 16, 20, 24])
+            _LOGGER.debug("Adding string_count field to schema with options: %s", string_options)
             schema_fields[vol.Optional("string_count", default=1)] = vol.In(string_options)
         
         # Connection type
         if "connection_type" in dynamic_config:
             conn_options = dynamic_config["connection_type"].get("options", ["LAN", "WINET"])
+            _LOGGER.debug("Adding connection_type field to schema with options: %s", conn_options)
             schema_fields[vol.Optional("connection_type", default="LAN")] = vol.In(conn_options)
         
+        _LOGGER.debug("Final schema fields: %s", list(schema_fields.keys()))
         return schema_fields
 
     def _process_dynamic_config(self, user_input: dict, template_data: dict) -> list:
