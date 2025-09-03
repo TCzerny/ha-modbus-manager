@@ -197,20 +197,206 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
         else:
             # Regular template - requires full Modbus configuration
+            # Check if this template supports dynamic configuration
+            schema_fields = {
+                vol.Required("prefix"): str,
+                vol.Required("host"): str,
+                vol.Optional("port", default=502): int,
+                vol.Optional("slave_id", default=1): int,
+                vol.Optional("timeout", default=5): int,
+                vol.Optional("delay", default=0): int,
+            }
+            
+            # Add dynamic template parameters if supported
+            if self._supports_dynamic_config(template_data):
+                schema_fields.update(self._get_dynamic_config_schema(template_data))
+            
             return self.async_show_form(
                 step_id="device_config",
-                data_schema=vol.Schema({
-                    vol.Required("prefix"): str,
-                    vol.Required("host"): str,
-                    vol.Optional("port", default=502): int,
-                    vol.Optional("slave_id", default=1): int,
-                    vol.Optional("timeout", default=5): int,
-                    vol.Optional("delay", default=0): int,
-                }),
+                data_schema=vol.Schema(schema_fields),
                 description_placeholders={
                     "template": self._selected_template
                 }
             )
+
+    def _supports_dynamic_config(self, template_data: dict) -> bool:
+        """Check if template supports dynamic configuration."""
+        # Check if template has dynamic_config section
+        return "dynamic_config" in template_data
+
+    def _get_dynamic_config_schema(self, template_data: dict) -> dict:
+        """Generate dynamic configuration schema based on template."""
+        dynamic_config = template_data.get("dynamic_config", {})
+        schema_fields = {}
+        
+        # Phase configuration
+        if "phases" in dynamic_config:
+            schema_fields[vol.Optional("phases", default=1)] = vol.In([1, 3])
+        
+        # MPPT configuration
+        if "mppt_count" in dynamic_config:
+            mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
+            schema_fields[vol.Optional("mppt_count", default=1)] = vol.In(mppt_options)
+        
+        # Battery configuration
+        if "battery" in dynamic_config:
+            schema_fields[vol.Optional("battery_enabled", default=False)] = bool
+        
+        # Firmware version
+        if "firmware_version" in dynamic_config:
+            schema_fields[vol.Optional("firmware_version", default="1.0.0")] = str
+        
+        # String count
+        if "string_count" in dynamic_config:
+            string_options = dynamic_config["string_count"].get("options", [1, 2, 3, 4, 6, 8, 12, 16, 20, 24])
+            schema_fields[vol.Optional("string_count", default=1)] = vol.In(string_options)
+        
+        # Connection type
+        if "connection_type" in dynamic_config:
+            conn_options = dynamic_config["connection_type"].get("options", ["LAN", "WINET"])
+            schema_fields[vol.Optional("connection_type", default="LAN")] = vol.In(conn_options)
+        
+        return schema_fields
+
+    def _process_dynamic_config(self, user_input: dict, template_data: dict) -> list:
+        """Process template based on dynamic configuration parameters."""
+        original_sensors = template_data.get("sensors", [])
+        dynamic_config = template_data.get("dynamic_config", {})
+        processed_sensors = []
+        
+        # Get user configuration
+        phases = user_input.get("phases", 1)
+        mppt_count = user_input.get("mppt_count", 1)
+        battery_enabled = user_input.get("battery_enabled", False)
+        firmware_version = user_input.get("firmware_version", "1.0.0")
+        string_count = user_input.get("string_count", 1)
+        connection_type = user_input.get("connection_type", "LAN")
+        
+        _LOGGER.debug("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, strings=%d, conn=%s", 
+                     phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type)
+        
+        for sensor in original_sensors:
+            # Check if sensor should be included based on configuration
+            if self._should_include_sensor(sensor, phases, mppt_count, battery_enabled, firmware_version, string_count, connection_type, dynamic_config):
+                # Apply firmware-specific modifications
+                modified_sensor = self._apply_firmware_modifications(sensor, firmware_version, dynamic_config)
+                processed_sensors.append(modified_sensor)
+        
+        _LOGGER.debug("Processed %d sensors from %d original sensors", len(processed_sensors), len(original_sensors))
+        return processed_sensors
+
+    def _should_include_sensor(self, sensor: dict, phases: int, mppt_count: int, battery_enabled: bool, 
+                               firmware_version: str, string_count: int, connection_type: str, dynamic_config: dict) -> bool:
+        """Check if sensor should be included based on configuration."""
+        sensor_name = sensor.get("name", "").lower()
+        unique_id = sensor.get("unique_id", "").lower()
+        
+        # Phase-specific sensors
+        if phases == 1:
+            # Exclude phase B and C sensors for single phase
+            if any(phase in sensor_name for phase in ["phase b", "phase c", "phase_b", "phase_c"]):
+                return False
+        elif phases == 3:
+            # Include all phase sensors
+            pass
+        
+        # MPPT-specific sensors
+        if "mppt" in sensor_name:
+            # Extract MPPT number from sensor name
+            mppt_number = self._extract_mppt_number(sensor_name)
+            if mppt_number and mppt_number > mppt_count:
+                return False
+        
+        # Battery-specific sensors
+        if not battery_enabled:
+            battery_keywords = ["battery", "bms", "soc", "charge", "discharge", "backup"]
+            if any(keyword in sensor_name for keyword in battery_keywords):
+                return False
+        
+        # String-specific sensors
+        if "string" in sensor_name:
+            string_number = self._extract_string_number(sensor_name)
+            if string_number and string_number > string_count:
+                return False
+        
+        # Connection type specific sensors
+        connection_config = dynamic_config.get("connection_type", {}).get("sensor_availability", {})
+        if connection_type == "LAN":
+            # Exclude WINET-only sensors
+            winet_only_sensors = connection_config.get("winet_only_sensors", [])
+            if unique_id in winet_only_sensors:
+                return False
+        elif connection_type == "WINET":
+            # Exclude LAN-only sensors
+            lan_only_sensors = connection_config.get("lan_only_sensors", [])
+            if unique_id in lan_only_sensors:
+                return False
+        
+        return True
+
+    def _extract_mppt_number(self, sensor_name: str) -> int:
+        """Extract MPPT number from sensor name."""
+        import re
+        match = re.search(r'mppt(\d+)', sensor_name.lower())
+        return int(match.group(1)) if match else None
+
+    def _extract_string_number(self, sensor_name: str) -> int:
+        """Extract string number from sensor name."""
+        import re
+        match = re.search(r'string(\d+)', sensor_name.lower())
+        return int(match.group(1)) if match else None
+
+    def _apply_firmware_modifications(self, sensor: dict, firmware_version: str, dynamic_config: dict) -> dict:
+        """Apply firmware-specific modifications to sensor based on unique_id."""
+        modified_sensor = sensor.copy()
+        
+        # Get sensor replacements configuration
+        sensor_replacements = dynamic_config.get("firmware_version", {}).get("sensor_replacements", {})
+        
+        # Get sensor unique_id
+        unique_id = sensor.get("unique_id", "")
+        
+        # Check if this sensor has firmware-specific replacements
+        if unique_id in sensor_replacements:
+            replacements = sensor_replacements[unique_id]
+            
+            # Find the highest firmware version that matches or is lower than current
+            applicable_version = self._find_applicable_firmware_version(firmware_version, replacements.keys())
+            
+            if applicable_version:
+                replacement_config = replacements[applicable_version]
+                _LOGGER.debug("Applying firmware %s replacement for sensor %s", applicable_version, unique_id)
+                
+                # Apply all replacement parameters
+                for param, value in replacement_config.items():
+                    if param != "description":  # Skip description, it's just for documentation
+                        modified_sensor[param] = value
+                        _LOGGER.debug("Replaced %s=%s for sensor %s (firmware %s)", 
+                                     param, value, unique_id, applicable_version)
+        
+        return modified_sensor
+
+    def _find_applicable_firmware_version(self, current_version: str, available_versions: list) -> str:
+        """Find the highest firmware version that matches or is lower than current version."""
+        from packaging import version
+        
+        try:
+            current_ver = version.parse(current_version)
+            applicable_versions = []
+            
+            for ver_str in available_versions:
+                ver = version.parse(ver_str)
+                if ver <= current_ver:
+                    applicable_versions.append(ver)
+            
+            if applicable_versions:
+                # Return the highest applicable version
+                return str(max(applicable_versions))
+            
+        except version.InvalidVersion:
+            _LOGGER.warning("Invalid firmware version format: %s", current_version)
+        
+        return None
 
     async def async_step_final_config(self, user_input: dict) -> FlowResult:
         """Handle final configuration and create entry."""
@@ -283,8 +469,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if template_data.get("is_simple_template"):
                 return self._create_simple_template_entry(user_input, template_data, template_version)
             
-            # Register aus Template extrahieren
-            template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
+            # Process dynamic configuration if supported
+            if self._supports_dynamic_config(template_data):
+                template_registers = self._process_dynamic_config(user_input, template_data)
+            else:
+                # Register aus Template extrahieren
+                template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
             
             _LOGGER.debug("Template %s (Version %s) geladen mit %d Registern", 
                         self._selected_template, 

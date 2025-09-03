@@ -1,4 +1,4 @@
-# Modbus Manager
+# HA-Modbus-Manager
 
 A comprehensive Modbus integration for Home Assistant with support for multiple device types and advanced features. This integration provides a template-based, UI-configurable platform that replaces manual maintenance of `configuration.yaml` and offers a scalable solution for managing multiple Modbus-TCP devices.
 
@@ -43,14 +43,14 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - ⚡ **Register Optimization**: Intelligent grouping and batch reading
 
 ### Device Templates
-- ☀️ **Sungrow SHx Inverter**: Complete support with 100+ sensors
+- ☀️ **Sungrow SHx Dynamic**: Complete support for all 36 SHx models with dynamic configuration
 - 🔋 **Compleo EBox Professional**: Wallbox integration template
 - 🧪 **Advanced Example**: Demonstrates all advanced features
 
 ## 🚀 Planned Features
 
 ### High Priority
-- 🌊 **Float Conversion**: Automatic 32-bit IEEE 754 float handling
+- 🌊 **Float Conversion**: Automatic 32-bit IEEE 754 float handling (partially implemented)
 - 📝 **String Processing**: Enhanced string validation and encoding
 - 🏷️ **Entity Categories**: Config, diagnostic, and system categories
 - 📊 **Status Aggregation**: Combined status from multiple entities
@@ -90,8 +90,9 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 ## 🔍 Device Support
 
 ### Currently Supported
-- **Sungrow SHx Inverters**: Full template with energy, power, and battery sensors
+- **Sungrow SHx Inverters**: Complete dynamic template supporting all 36 SHx models with automatic filtering
 - **Compleo EBox Professional**: Wallbox charging station integration
+- **SunSpec Devices**: Universal template for all SunSpec-compliant devices
 - **Generic Devices**: Advanced example template for custom implementations
 
 ### Template Development
@@ -157,3 +158,10 @@ If you find this integration useful, please consider:
 **Made with ❤️ for the Home Assistant community**
 
 *This integration is designed to be a modern, scalable alternative to traditional Modbus configurations, providing the power and flexibility needed for complex home automation setups.*
+
+---
+
+**Version**: 3.0.0  
+**Status**: Stable (Sungrow SHx Dynamic, Compleo templates implemented)  
+**Home Assistant**: 2025.1.0+  
+**Last Updated**: January 2025

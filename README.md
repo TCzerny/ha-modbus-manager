@@ -20,9 +20,14 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 
 #### Solar Inverters
 - **Sungrow SHx Series** - Complete template with all sensors and controls
-  - Battery management, MPPT tracking, grid interaction
-  - Calculated sensors for efficiency and power balance
-  - Full Modbus register mapping
+  - **Dynamic Configuration**: Supports all 36 SHx models with automatic filtering
+  - **Battery management**: SOC, charging/discharging, temperature monitoring
+  - **MPPT tracking**: 1-3 MPPT trackers with power calculations
+  - **Grid interaction**: Import/export, phase monitoring, frequency
+  - **Calculated sensors**: Efficiency, power balance, signed battery power
+  - **Full Modbus register mapping**: Based on mkaiser's comprehensive implementation
+  - **Firmware compatibility**: Automatic sensor parameter adjustment
+  - **Connection types**: LAN and WINET support with register filtering
 
 #### EV Chargers
 - **Compleo eBox Professional** - Complete EV charger template
@@ -182,14 +187,18 @@ entities:
 ## 📊 Available Templates
 
 ### Sungrow SHx Series
-- **File**: `sungrow_shx.yaml`
-- **Devices**: SH5K, SH10K, SH15K, SH20K series
+- **File**: `sungrow_shx_dynamic.yaml`
+- **Devices**: All 36 SHx models (SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL)
 - **Features**:
-  - Battery management (SOC, charging/discharging)
-  - MPPT tracking (solar power)
-  - Grid interaction (import/export)
-  - Load management
-  - Efficiency calculations
+  - **Dynamic Configuration**: 6 configurable parameters (phases, MPPT, battery, firmware, strings, connection)
+  - **Automatic Filtering**: Register filtering based on device configuration
+  - **Battery management**: SOC, charging/discharging, temperature, health monitoring
+  - **MPPT tracking**: 1-3 MPPT trackers with individual power calculations
+  - **Grid interaction**: Import/export, phase monitoring, frequency, meter data
+  - **Load management**: Load power, backup power, direct consumption
+  - **Calculated sensors**: Efficiency, power balance, signed battery power, phase power
+  - **Firmware compatibility**: Automatic sensor parameter adjustment for different firmware versions
+  - **Connection support**: LAN (full access) and WINET (limited access) with register filtering
 
 ### Compleo eBox Professional
 - **File**: `compleo_ebox_professional.yaml`
@@ -260,9 +269,11 @@ entities:
 ## 📚 Documentation
 
 - **[GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)** - Complete documentation
-- **[Aggregate Sensors](https://github.com/TCzerny/ha-modbus-manager/wiki/Aggregate-Sensors)** - Complete guide to aggregate sensors
-- **[Compleo eBox](https://github.com/TCzerny/ha-modbus-manager/wiki/Compleo-eBox-Professional)** - EV charger setup and configuration
-- **[Sungrow SHx](https://github.com/TCzerny/ha-modbus-manager/wiki/Sungrow-SHx-Series)** - Solar inverter documentation
+- **[📚 Template Documentation](docs/README.md)** - Complete template documentation overview
+- **[Sungrow SHx Dynamic](docs/README_sungrow_shx_dynamic.md)** - Complete dynamic template documentation
+- **[Sungrow SHx (Legacy)](docs/README_sungrow_shx.md)** - Legacy template documentation
+- **[SunSpec Standard Config](docs/README_sunspec_standard_config.md)** - Universal SunSpec template
+- **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template
 
 ## 📄 License
 
@@ -273,6 +284,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Home Assistant Community** for the great platform
 - **Device Manufacturers** for Modbus documentation
 - **Community Contributors** for device testing
+- **[mkaiser](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant)** for the outstanding Sungrow SHx Modbus implementation
+- **photovoltaikforum.com** and **forum.iobroker.net** communities for reverse-engineering efforts
 
 ## 📞 Support
 
@@ -283,5 +296,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Last Updated**: January 2025  
-**Version**: 2.1.0  
-**Status**: Stable (Sungrow and Compleo templates implemented)
+**Version**: 3.0.0  
+**Status**: Stable (Sungrow SHx Dynamic, Compleo templates implemented)

@@ -13,6 +13,11 @@
 - [x] Modbus-Kommunikationsprobleme identifizieren und beheben
 - [ ] SunSpec-Template-Tests implementieren
 - [x] Vereinfachte SunSpec-Templates implementieren (Fronius GEN24 Simple)
+- [x] **Dynamic Template Configuration implementiert**
+  - [x] ConfigFlow erweitert für dynamische Parameter
+  - [x] Template-Filterung basierend auf Konfiguration
+  - [x] Firmware-Kompatibilität (SAPPHIRE-H_03011.95.01)
+  - [x] Sungrow SHx Dynamic Template v1.0.0 erstellt
 
 ## 📋 Geplant
 - [ ] Weitere BASE Templates (VDMA24247 für Wärmepumpen, etc.)
@@ -21,6 +26,10 @@
 - [ ] Erweiterte Datenverarbeitung und Aggregation
 - [ ] Performance-Monitoring und Optimierung
 - [ ] SunSpec-Template-Validierung in der UI
+- [ ] **Dynamic Template Configuration erweitern**
+  - [ ] Weitere Templates mit dynamischer Konfiguration
+  - [ ] Tests für verschiedene Parameter-Kombinationen
+  - [ ] UI-Verbesserungen für dynamische Parameter
 - [ ] **🔤 Convert remaining German log messages and comments to English**
   - [ ] template_loader.py: ~15 more German error messages
   - [ ] config_flow.py: German messages and comments
@@ -45,7 +54,7 @@
 - **SolarEdge** - HD Wave, StorEdge ✅
 
 ### ❌ Nicht SunSpec-konforme Hersteller (eigene Register)
-- **Sungrow** - Eigene Modbus-Register (bereits implementiert in `sungrow_shx.yaml`)
+- **Sungrow** - Eigene Modbus-Register (bereits implementiert in `sungrow_shx_dynamic.yaml` v1.0.0)
 - **Kostal** - Eigene Register
 - **Growatt** - Eigene Register
 
