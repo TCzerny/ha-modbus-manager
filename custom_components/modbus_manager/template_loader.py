@@ -781,6 +781,32 @@ def _read_template_file(template_path: str) -> Optional[Dict[str, Any]]:
         _LOGGER.error("Fehler beim Lesen von Template %s: %s", template_path, str(e))
         return None
 
+async def process_template_registers(template_data: Dict[str, Any], dynamic_config: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+    """Process template registers with current processing logic."""
+    try:
+        template_name = template_data.get("name", "unknown")
+        _LOGGER.debug("Processing template registers for %s", template_name)
+        
+        # Get registers from template
+        registers = template_data.get("registers", [])
+        if not registers:
+            _LOGGER.warning("No registers found in template %s", template_name)
+            return []
+        
+        # Process each register with current validation logic
+        processed_registers = []
+        for reg in registers:
+            processed_reg = validate_and_process_register(reg, template_name)
+            if processed_reg:
+                processed_registers.append(processed_reg)
+        
+        _LOGGER.info("Processed %d registers for template %s", len(processed_registers), template_name)
+        return processed_registers
+        
+    except Exception as e:
+        _LOGGER.error("Error processing template registers: %s", str(e))
+        return []
+
 def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Dict[str, Any]:
     """Validate and process a single register definition."""
     try:
@@ -795,17 +821,26 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
         for field in REQUIRED_FIELDS:
             processed_reg[field] = reg[field]
         
-        # Auto-set count for Float types (BEFORE setting defaults)
+        # Handle count parameter: use template value if set, otherwise set based on data type
         data_type = reg.get("data_type")
-        if data_type in ["float", "float32"]:
-            processed_reg["count"] = 2
-            _LOGGER.debug("Auto-set count=2 for %s in Template %s", data_type, template_name)
-        elif data_type == "float64":
-            processed_reg["count"] = 4
-            _LOGGER.debug("Auto-set count=4 for %s in Template %s", data_type, template_name)
+        template_count = reg.get("count")
+        
+        if template_count is not None:
+            # Use count from template if explicitly set
+            processed_reg["count"] = template_count
+            _LOGGER.debug("Using count=%d from template for %s in Template %s", 
+                         template_count, data_type, template_name)
         else:
-            # Use default count=1 for other types
-            processed_reg["count"] = 1
+            # Set default count based on data type
+            if data_type in ["float", "float32"]:
+                processed_reg["count"] = 2
+                _LOGGER.debug("Auto-set count=2 for %s in Template %s", data_type, template_name)
+            elif data_type == "float64":
+                processed_reg["count"] = 4
+                _LOGGER.debug("Auto-set count=4 for %s in Template %s", data_type, template_name)
+            else:
+                # Default to 1 for other types
+                processed_reg["count"] = 1
         
         # Standardwerte für optionale Felder setzen (skip count if already set)
         for field, default_value in OPTIONAL_FIELDS.items():

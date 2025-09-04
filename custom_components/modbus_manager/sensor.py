@@ -259,6 +259,7 @@ class ModbusTemplateSensor(SensorEntity):
         self._flags = register.get("flags", {})
         self._options = register.get("options", {})
         
+        
         # Group attribute for aggregation
         self._group = register.get("group", None)
         
@@ -315,6 +316,7 @@ class ModbusTemplateSensor(SensorEntity):
     async def async_update(self) -> None:
         """Update the sensor value."""
         try:
+            
             # Get Modbus-Hub from configuration
             if self._entry.entry_id not in self._hass.data[DOMAIN]:
                 _LOGGER.error("No configuration data found for Entry %s", self._entry.entry_id)
@@ -370,7 +372,15 @@ class ModbusTemplateSensor(SensorEntity):
             )
             
             if result and hasattr(result, 'registers'):
-                return result.registers
+                # For string data type, return all registers as list
+                if self._data_type == "string":
+                    return result.registers
+                else:
+                    # For other data types, return single value or list as appropriate
+                    if len(result.registers) == 1:
+                        return result.registers[0]
+                    else:
+                        return result.registers
             return None
             
         except Exception as e:
@@ -390,7 +400,15 @@ class ModbusTemplateSensor(SensorEntity):
             )
             
             if result and hasattr(result, 'registers'):
-                return result.registers
+                # For string data type, return all registers as list
+                if self._data_type == "string":
+                    return result.registers
+                else:
+                    # For other data types, return single value or list as appropriate
+                    if len(result.registers) == 1:
+                        return result.registers[0]
+                    else:
+                        return result.registers
             return None
             
         except Exception as e:
@@ -443,8 +461,10 @@ class ModbusTemplateSensor(SensorEntity):
             if raw_value is None:
                 return None
             
-            # Sicherstellen, dass raw_value eine Liste ist
-            if not isinstance(raw_value, list):
+            
+            # For string data type, raw_value should already be a list of registers
+            # For other data types, ensure it's a list
+            if self._data_type != "string" and not isinstance(raw_value, list):
                 raw_value = [raw_value]
             
             # Wert basierend auf data_type verarbeiten
@@ -499,12 +519,13 @@ class ModbusTemplateSensor(SensorEntity):
                 
                 processed_value = (value * self._scale) + self._offset
                 
-            elif self._data_type == "float":
+            elif self._data_type in ["float", "float32"]:
                 if len(raw_value) >= 2:
                     import struct
                     
                     # Byte-Reihenfolge bestimmen
                     byte_order = self._byte_order if hasattr(self, '_byte_order') else "big"
+                    
                     
                     # Format-String für struct basierend auf Byte-Reihenfolge
                     if byte_order == "big":
@@ -537,6 +558,8 @@ class ModbusTemplateSensor(SensorEntity):
                                  self._name, byte_order, raw_value, value)
                 else:
                     return None
+                
+                
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "float64":
@@ -595,6 +618,7 @@ class ModbusTemplateSensor(SensorEntity):
                 
             elif self._data_type == "string":
                 if len(raw_value) > 0:
+                    
                     # String-Encoding bestimmen (Standard: UTF-8)
                     encoding = getattr(self, '_encoding', 'utf-8')
                     max_length = getattr(self, '_max_length', None)
@@ -609,6 +633,9 @@ class ModbusTemplateSensor(SensorEntity):
                         reg_int = int(reg)
                         # Zwei Bytes pro Register (Big-Endian)
                         bytes_array.extend([(reg_int >> 8) & 0xFF, reg_int & 0xFF])
+                    
+                    _LOGGER.debug("String processing for %s: bytes_array=%s", 
+                                 self._name, bytes_array.hex())
                     
                     try:
                         # String dekodieren
@@ -732,12 +759,34 @@ class ModbusTemplateSensor(SensorEntity):
                 value = int_value
             
             # 2. Map anwenden (falls definiert)
-            if self._map and isinstance(value, (int, float)):
-                int_value = int(value)
-                if int_value in self._map:
-                    mapped_value = self._map[int_value]
-                    _LOGGER.debug("Mapped value %s to '%s'", int_value, mapped_value)
-                    return mapped_value
+            if self._map:
+                if isinstance(value, (int, float)):
+                    # Numerische Werte - prüfe sowohl int als auch string keys
+                    int_value = int(value)
+                    if int_value in self._map:
+                        mapped_value = self._map[int_value]
+                        _LOGGER.info("Mapped value %s to '%s' for %s", int_value, mapped_value, self._name)
+                        return mapped_value
+                    elif str(int_value) in self._map:
+                        # Fallback: prüfe string key
+                        mapped_value = self._map[str(int_value)]
+                        _LOGGER.info("Mapped value %s (as string) to '%s' for %s", int_value, mapped_value, self._name)
+                        return mapped_value
+                    else:
+                        _LOGGER.debug("Value %s not found in map for %s", int_value, self._name)
+                elif isinstance(value, str):
+                    # String-Werte - prüfe sowohl string als auch int keys
+                    if value in self._map:
+                        mapped_value = self._map[value]
+                        _LOGGER.info("Mapped string '%s' to '%s' for %s", value, mapped_value, self._name)
+                        return mapped_value
+                    elif value.isdigit() and int(value) in self._map:
+                        # Fallback: prüfe int key
+                        mapped_value = self._map[int(value)]
+                        _LOGGER.info("Mapped string '%s' (as int) to '%s' for %s", value, mapped_value, self._name)
+                        return mapped_value
+                    else:
+                        _LOGGER.debug("String '%s' not found in map for %s", value, self._name)
             
             # 3. Flags anwenden (falls definiert)
             if self._flags and isinstance(value, (int, float)):

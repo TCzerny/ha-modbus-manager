@@ -153,6 +153,38 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         else:
             current_version = 1
         
+        # Check if template has changed and reload register data if necessary
+        stored_version = entry.data.get("template_version", 1)
+        template_changed = False
+        
+        # Check version change
+        if current_version != stored_version:
+            _LOGGER.info("Template version changed from %d to %d", stored_version, current_version)
+            template_changed = True
+        
+                    # Check if we need to reload due to processing logic changes
+            # This happens when the template processing logic has been updated
+            if not template_changed:
+                # Check if any float32 registers have count=1 (old processing) vs count=2 (new processing)
+                float32_registers = [r for r in registers if r.get("data_type") in ["float", "float32"]]
+                if any(r.get("count", 1) == 1 for r in float32_registers):
+                    _LOGGER.info("Detected float32 registers with count=1, reloading with updated processing logic")
+                    template_changed = True
+        
+        if template_changed:
+            _LOGGER.info("Reloading register data with updated template processing")
+            
+            # Reload template with current processing logic
+            from .template_loader import process_template_registers
+            processed_registers = process_template_registers(template_data, entry.data.get("dynamic_config", {}))
+            
+            if processed_registers:
+                # Update registers with new data
+                registers = processed_registers
+                _LOGGER.info("Reloaded %d registers with updated template processing", len(registers))
+            else:
+                _LOGGER.warning("Failed to reload registers, using stored data")
+        
         if not registers:
             _LOGGER.error("Template %s has no registers defined", template_name)
             return False

@@ -22,10 +22,24 @@ class RegisterRange:
     @property
     def register_count(self) -> int:
         """Return the actual register count needed for reading."""
-        # Für 32-bit Werte (count > 1) müssen wir die tatsächliche Anzahl berücksichtigen
+        # For string registers and other multi-register types, consider the actual count
         total_count = 0
         for reg in self.registers:
-            total_count += reg.get("count", 1)
+            data_type = reg.get("data_type", "uint16")
+            count = reg.get("count", 1)
+            
+            if data_type == "string":
+                # String registers: count is the number of registers to read
+                total_count += count
+            elif data_type in ["uint32", "int32", "float"]:
+                # 32-bit values: always 2 registers
+                total_count += 2
+            elif data_type == "float64":
+                # 64-bit values: always 4 registers
+                total_count += 4
+            else:
+                # Standard: 1 register
+                total_count += 1
         return total_count
 
 class RegisterOptimizer:
@@ -38,7 +52,7 @@ class RegisterOptimizer:
             self.max_read_size = max_read_size[0] if max_read_size else 8
         else:
             self.max_read_size = max_read_size
-        _LOGGER.debug("Register-Optimizer initialisiert mit max_read_size: %d", self.max_read_size)
+        _LOGGER.debug("Register optimizer initialized with max_read_size: %d", self.max_read_size)
     
     def optimize_registers(self, registers: List[Dict[str, Any]]) -> List[RegisterRange]:
         """Group registers into optimal reading ranges."""
@@ -46,7 +60,7 @@ class RegisterOptimizer:
             if not registers:
                 return []
             
-            # Register nach Adresse sortieren
+            # Sort registers by address
             sorted_registers = sorted(registers, key=lambda x: x.get("address", 0))
             
             ranges = []
@@ -58,21 +72,21 @@ class RegisterOptimizer:
                 end_address = address + count - 1
                 
                 if current_range is None:
-                    # Neuen Bereich starten
+                    # Start new range
                     current_range = RegisterRange(
                         start_address=address,
                         end_address=end_address,
                         registers=[reg]
                     )
                 else:
-                    # Prüfen ob Register an den aktuellen Bereich angehängt werden kann
+                    # Check if register can be appended to current range
                     if (address <= current_range.end_address + 1 and 
                         current_range.register_count + count <= self.max_read_size):
-                        # Bereich erweitern
+                        # Extend range
                         current_range.end_address = max(current_range.end_address, end_address)
                         current_range.registers.append(reg)
                     else:
-                        # Aktuellen Bereich abschließen und neuen starten
+                        # Finish current range and start new one
                         ranges.append(current_range)
                         current_range = RegisterRange(
                             start_address=address,
@@ -80,20 +94,20 @@ class RegisterOptimizer:
                             registers=[reg]
                         )
             
-            # Letzten Bereich hinzufügen
+            # Add last range
             if current_range:
                 ranges.append(current_range)
             
-            _LOGGER.debug("Register in %d optimierte Bereiche gruppiert", len(ranges))
+            _LOGGER.debug("Registers grouped into %d optimized ranges", len(ranges))
             for i, range_obj in enumerate(ranges):
-                _LOGGER.debug("Bereich %d: Adresse %d-%d (%d Register)", 
+                _LOGGER.debug("Range %d: Address %d-%d (%d registers)", 
                              i, range_obj.start_address, range_obj.end_address, range_obj.register_count)
             
             return ranges
             
         except Exception as e:
-            _LOGGER.error("Fehler bei der Register-Optimierung: %s", str(e))
-            # Fallback: Jedes Register einzeln
+            _LOGGER.error("Error during register optimization: %s", str(e))
+            # Fallback: Each register individually
             return [RegisterRange(
                 start_address=reg.get("address", 0),
                 end_address=reg.get("address", 0) + reg.get("count", 1) - 1,
@@ -109,29 +123,32 @@ class RegisterOptimizer:
             count = register.get("count", 1)
             data_type = register.get("data_type", "uint16")
             
-            # Relative Position im gelesenen Bereich berechnen
+            # Calculate relative position in read range
             relative_start = address - range_start
             relative_end = relative_start + count
             
             if relative_end > len(register_data):
-                _LOGGER.error("Register-Daten zu kurz für Register %s", address)
+                _LOGGER.error("Register data too short for register %s", address)
                 return None
             
-            # Register-Daten extrahieren
+            # Extract register data
             if count == 1:
                 raw_value = register_data[relative_start]
+            elif data_type == "string":
+                # For string registers: return all registers as list
+                raw_value = register_data[relative_start:relative_end]
             else:
-                # Für 32-bit Werte (2 Register)
+                # For 32-bit values (2 registers)
                 if relative_start + 1 < len(register_data):
                     if register.get("swap", False):
                         raw_value = (register_data[relative_start + 1] << 16) | register_data[relative_start]
                     else:
                         raw_value = (register_data[relative_start] << 16) | register_data[relative_start + 1]
                 else:
-                    _LOGGER.error("Nicht genügend Register-Daten für 32-bit Wert")
+                    _LOGGER.error("Insufficient register data for 32-bit value")
                     return None
             
-            # Daten-Typ-Konvertierung
+            # Data type conversion (only for numeric values)
             if data_type == "int16":
                 raw_value = raw_value if raw_value < 32768 else raw_value - 65536
             elif data_type == "int32":
@@ -140,7 +157,7 @@ class RegisterOptimizer:
             return raw_value
             
         except Exception as e:
-            _LOGGER.error("Fehler beim Extrahieren des Register-Wertes: %s", str(e))
+            _LOGGER.error("Error extracting register value: %s", str(e))
             return None
     
     def calculate_optimization_stats(self, registers: List[Dict[str, Any]]) -> Dict[str, Any]:
@@ -149,14 +166,14 @@ class RegisterOptimizer:
             total_registers = len(registers)
             total_addresses = sum(reg.get("count", 1) for reg in registers)
             
-            # Ohne Optimierung: Jedes Register einzeln lesen
+            # Without optimization: read each register individually
             reads_without_optimization = total_registers
             
-            # Mit Optimierung
+            # With optimization
             optimized_ranges = self.optimize_registers(registers)
             reads_with_optimization = len(optimized_ranges)
             
-            # Performance-Verbesserung berechnen
+            # Calculate performance improvement
             improvement = ((reads_without_optimization - reads_with_optimization) / 
                          reads_without_optimization * 100) if reads_without_optimization > 0 else 0
             
@@ -169,9 +186,9 @@ class RegisterOptimizer:
                 "optimized_ranges": len(optimized_ranges)
             }
             
-            _LOGGER.debug("Optimierungs-Statistiken: %s", stats)
+            _LOGGER.debug("Optimization statistics: %s", stats)
             return stats
             
         except Exception as e:
-            _LOGGER.error("Fehler bei der Berechnung der Optimierungs-Statistiken: %s", str(e))
+            _LOGGER.error("Error calculating optimization statistics: %s", str(e))
             return {} 

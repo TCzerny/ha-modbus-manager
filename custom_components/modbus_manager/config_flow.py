@@ -89,20 +89,17 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 self._translations = await self._load_translations()
                 _LOGGER.debug("Translations loaded: %s", list(self._translations.keys()))
             
-            # Templates nur einmal laden (caching)
-            if not self._templates:
-                _LOGGER.debug("Loading templates for the first time...")
-                template_names = await get_template_names()
-                self._templates = {}
-                for name in template_names:
-                    template_data = await get_template_by_name(name)
-                    if template_data:
-                        self._templates[name] = template_data
-                        _LOGGER.debug("Loaded template %s: has_dynamic_config=%s", 
-                                   name, "dynamic_config" in template_data)
-                _LOGGER.debug("Templates loaded: %s", list(self._templates.keys()))
-            else:
-                _LOGGER.debug("Using cached templates: %s", list(self._templates.keys()))
+            # Templates laden (always reload for now to pick up changes)
+            _LOGGER.debug("Loading templates...")
+            template_names = await get_template_names()
+            self._templates = {}
+            for name in template_names:
+                template_data = await get_template_by_name(name)
+                if template_data:
+                    self._templates[name] = template_data
+                    _LOGGER.debug("Loaded template %s: has_dynamic_config=%s", 
+                               name, "dynamic_config" in template_data)
+            _LOGGER.debug("Templates loaded: %s", list(self._templates.keys()))
             
             if not self._templates:
                 return self.async_abort(

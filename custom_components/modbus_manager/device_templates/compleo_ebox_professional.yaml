@@ -68,6 +68,16 @@ sensors:
     scan_interval: 120
     group: "EV_charging_status"
     icon: "mdi:ev-station"
+    map:
+      A: "not connected"
+      B1: "Connected but not ready for charging"
+      B2: "Connected ready for charging"
+      C1: "Charging without ventilation - not ready"
+      C2: "Charging without ventilation - ready"
+      D1: "Charging with ventilation - not ready"
+      D2: "Charging with ventilation - ready"
+      E: "Error"
+      F: "EVSE not available"
 
   - name: "eBox Cable Status"
     unique_id: "ebox_cable_status"
@@ -77,6 +87,11 @@ sensors:
     scan_interval: 120
     group: "EV_charging_status"
     icon: "mdi:cable-data"
+    map:
+      0: "no cable"
+      1: "cable without car"
+      2: "cable unlocked without car"
+      3: "cable locked with car"
 
   # Current measurements
   - name: "eBox Current Phase 1"
