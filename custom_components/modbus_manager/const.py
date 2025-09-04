@@ -137,7 +137,7 @@ class NameType(Enum):
     SERVICE_NAME = "service_name"    # Für Service-Namen (z.B. set_battery_level)
 
 # Standard-Werte für neue Features
-DEFAULT_UPDATE_INTERVAL = 30  # Sekunden
+DEFAULT_UPDATE_INTERVAL = 10  # Sekunden - Reduced for better control responsiveness
 DEFAULT_MAX_REGISTER_READ = 8  # Maximale Register pro Read
 DEFAULT_PRECISION = 2  # Standard-Präzision
 DEFAULT_MIN_VALUE = 0.0  # Standard-Minimum

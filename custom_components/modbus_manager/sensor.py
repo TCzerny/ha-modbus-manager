@@ -221,20 +221,15 @@ class ModbusTemplateSensor(SensorEntity):
         self._address = register.get("address", 0)
         self._data_type = register.get("data_type", "uint16")
         
-        # Auto-set count for 32-bit and 64-bit data types
-        base_count = register.get("count", 1)
-        if self._data_type in ["uint32", "int32", "float"]:
-            self._count = 2  # 32-bit types always need 2 registers
-            if base_count != 2:
-                _LOGGER.debug("Auto-corrected count from %s to 2 for %s (%s)", 
-                             base_count, self._name, self._data_type)
+        # Always set correct count based on data type, regardless of template
+        if self._data_type in ["uint32", "int32", "float", "float32"]:
+            self._count = 2  # 32-bit types need 2 registers
         elif self._data_type == "float64":
-            self._count = 4  # 64-bit types always need 4 registers
-            if base_count != 4:
-                _LOGGER.debug("Auto-corrected count from %s to 4 for %s (%s)", 
-                             base_count, self._name, self._data_type)
+            self._count = 4  # 64-bit types need 4 registers
         else:
-            self._count = base_count
+            # For other types, use template count or default to 1
+            template_count = register.get("count")
+            self._count = template_count if template_count is not None else 1
         
         self._scale = register.get("scale", 1.0)
         self._offset = register.get("offset", 0.0)
@@ -297,8 +292,8 @@ class ModbusTemplateSensor(SensorEntity):
             model=template_name,
         )
         
-        _LOGGER.debug("Sensor %s initialized (Address: %d, Type: %s, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)", 
-                     self._name, self._address, self._data_type, prefix, self._attr_name, unique_id, self._group)
+        _LOGGER.debug("Sensor %s initialized (Address: %d, Type: %s, Count: %d, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)", 
+                     self._name, self._address, self._data_type, self._count, prefix, self._attr_name, unique_id, self._group)
 
     @property
     def template_name(self) -> str:
@@ -673,11 +668,55 @@ class ModbusTemplateSensor(SensorEntity):
                     return None
                 processed_value = (value * self._scale) + self._offset
             
-            # Präzision anwenden
+            # Bit-Operationen anwenden (vor der Präzision)
+            if isinstance(processed_value, (int, float)) and (self._bitmask is not None or self._bit_position is not None or self._bit_range is not None or self._bit_shift != 0 or self._bit_rotate != 0):
+                int_value = int(processed_value)
+                
+                # Bit-Position extrahieren (einzelnes Bit)
+                if self._bit_position is not None:
+                    bit_pos = int(self._bit_position)
+                    if 0 <= bit_pos <= 31:
+                        int_value = (int_value >> bit_pos) & 1
+                
+                # Bit-Bereich extrahieren
+                elif self._bit_range is not None:
+                    if isinstance(self._bit_range, list) and len(self._bit_range) == 2:
+                        start_bit, end_bit = self._bit_range
+                        if 0 <= start_bit <= end_bit <= 31:
+                            mask = ((1 << (end_bit - start_bit + 1)) - 1) << start_bit
+                            int_value = (int_value & mask) >> start_bit
+                
+                # Bitmask anwenden
+                if self._bitmask is not None:
+                    int_value = int_value & self._bitmask
+                
+                # Bit-Shift anwenden
+                if self._bit_shift != 0:
+                    if self._bit_shift > 0:
+                        int_value = int_value << self._bit_shift
+                    else:
+                        int_value = int_value >> abs(self._bit_shift)
+                
+                # Bit-Rotation anwenden
+                if self._bit_rotate != 0:
+                    bits = 32
+                    rotate_amount = self._bit_rotate % bits
+                    if rotate_amount > 0:
+                        int_value = ((int_value << rotate_amount) | (int_value >> (bits - rotate_amount))) & ((1 << bits) - 1)
+                    elif rotate_amount < 0:
+                        rotate_amount = abs(rotate_amount)
+                        int_value = ((int_value >> rotate_amount) | (int_value << (bits - rotate_amount))) & ((1 << bits) - 1)
+                
+                processed_value = int_value
+            
+            # Präzision anwenden (nach den Bit-Operationen)
             if isinstance(processed_value, (int, float)) and self._precision > 0:
+                # Stelle sicher, dass der Wert als Float behandelt wird
+                if isinstance(processed_value, int):
+                    processed_value = float(processed_value)
                 processed_value = round(processed_value, self._precision)
             
-            # Wertverarbeitung anwenden (map, flags, options, bitmask)
+            # Wertverarbeitung anwenden (nur map, flags, options)
             processed_value = self._apply_value_processing(processed_value)
             
             return processed_value
@@ -689,74 +728,14 @@ class ModbusTemplateSensor(SensorEntity):
             return None
 
     def _apply_value_processing(self, value: Any) -> Any:
-        """Apply value processing like map, flags, options, and bit operations."""
+        """Apply value processing like map, flags, and options."""
         try:
             if value is None:
                 return None
             
             # Nur numerische Werte verarbeiten
             if isinstance(value, (int, float)):
-                # Zu int konvertieren für Bit-Operationen
                 int_value = int(value)
-                
-                # 1. Bit-Operationen anwenden
-                
-                # 1.1 Bit-Position extrahieren (einzelnes Bit)
-                if self._bit_position is not None:
-                    bit_pos = int(self._bit_position)
-                    if 0 <= bit_pos <= 31:  # 32-bit Werte unterstützen
-                        bit_value = (int_value >> bit_pos) & 1
-                        _LOGGER.debug("Extracted bit at position %d from %s: result = %s", 
-                                     bit_pos, int_value, bit_value)
-                        int_value = bit_value
-                
-                # 1.2 Bit-Bereich extrahieren
-                elif self._bit_range is not None:
-                    if isinstance(self._bit_range, list) and len(self._bit_range) == 2:
-                        start_bit, end_bit = self._bit_range
-                        if 0 <= start_bit <= end_bit <= 31:
-                            # Maske erstellen für den Bereich
-                            mask = ((1 << (end_bit - start_bit + 1)) - 1) << start_bit
-                            # Bits extrahieren und nach rechts verschieben
-                            range_value = (int_value & mask) >> start_bit
-                            _LOGGER.debug("Extracted bit range [%d:%d] from %s: result = %s", 
-                                         start_bit, end_bit, int_value, range_value)
-                            int_value = range_value
-                
-                # 1.3 Bitmask anwenden
-                if self._bitmask is not None:
-                    int_value = int_value & self._bitmask
-                    _LOGGER.debug("Applied bitmask 0x%X to %s: result = %s", 
-                                 self._bitmask, value, int_value)
-                
-                # 1.4 Bit-Shift anwenden (links/rechts verschieben)
-                if self._bit_shift != 0:
-                    if self._bit_shift > 0:
-                        # Links verschieben
-                        int_value = int_value << self._bit_shift
-                    else:
-                        # Rechts verschieben
-                        int_value = int_value >> abs(self._bit_shift)
-                    _LOGGER.debug("Applied bit shift %d to %s: result = %s", 
-                                 self._bit_shift, value, int_value)
-                
-                # 1.5 Bit-Rotation anwenden
-                if self._bit_rotate != 0:
-                    # Wir nehmen an, dass wir mit 32-bit Werten arbeiten
-                    bits = 32
-                    rotate_amount = self._bit_rotate % bits
-                    if rotate_amount > 0:
-                        # Links rotieren
-                        int_value = ((int_value << rotate_amount) | (int_value >> (bits - rotate_amount))) & ((1 << bits) - 1)
-                    elif rotate_amount < 0:
-                        # Rechts rotieren
-                        rotate_amount = abs(rotate_amount)
-                        int_value = ((int_value >> rotate_amount) | (int_value << (bits - rotate_amount))) & ((1 << bits) - 1)
-                    _LOGGER.debug("Applied bit rotation %d to %s: result = %s", 
-                                 self._bit_rotate, value, int_value)
-                
-                # Aktualisierter Wert für weitere Verarbeitung
-                value = int_value
             
             # 2. Map anwenden (falls definiert)
             if self._map:
@@ -765,12 +744,12 @@ class ModbusTemplateSensor(SensorEntity):
                     int_value = int(value)
                     if int_value in self._map:
                         mapped_value = self._map[int_value]
-                        _LOGGER.info("Mapped value %s to '%s' for %s", int_value, mapped_value, self._name)
+                        _LOGGER.debug("Mapped value %s to '%s' for %s", int_value, mapped_value, self._name)
                         return mapped_value
                     elif str(int_value) in self._map:
                         # Fallback: prüfe string key
                         mapped_value = self._map[str(int_value)]
-                        _LOGGER.info("Mapped value %s (as string) to '%s' for %s", int_value, mapped_value, self._name)
+                        _LOGGER.debug("Mapped value %s (as string) to '%s' for %s", int_value, mapped_value, self._name)
                         return mapped_value
                     else:
                         _LOGGER.debug("Value %s not found in map for %s", int_value, self._name)
@@ -778,12 +757,12 @@ class ModbusTemplateSensor(SensorEntity):
                     # String-Werte - prüfe sowohl string als auch int keys
                     if value in self._map:
                         mapped_value = self._map[value]
-                        _LOGGER.info("Mapped string '%s' to '%s' for %s", value, mapped_value, self._name)
+                        _LOGGER.debug("Mapped string '%s' to '%s' for %s", value, mapped_value, self._name)
                         return mapped_value
                     elif value.isdigit() and int(value) in self._map:
                         # Fallback: prüfe int key
                         mapped_value = self._map[int(value)]
-                        _LOGGER.info("Mapped string '%s' (as int) to '%s' for %s", value, mapped_value, self._name)
+                        _LOGGER.debug("Mapped string '%s' (as int) to '%s' for %s", value, mapped_value, self._name)
                         return mapped_value
                     else:
                         _LOGGER.debug("String '%s' not found in map for %s", value, self._name)

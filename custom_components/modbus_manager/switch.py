@@ -1,5 +1,6 @@
 """Modbus Manager Switch Platform."""
 from __future__ import annotations
+from typing import Any
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -87,6 +88,11 @@ class ModbusTemplateSwitch(SwitchEntity):
         self._offset = register_data.get("offset", 0.0)
         self._multiplier = register_data.get("multiplier", 1.0)
         
+        # Value processing (map, flags, options) - same as sensors
+        self._map = register_data.get("map", {})
+        self._flags = register_data.get("flags", {})
+        self._options = register_data.get("options", {})
+        
         # Switch-Entity properties
         self._attr_native_unit_of_measurement = register_data.get("unit_of_measurement", "")
         self._attr_device_class = register_data.get("device_class")
@@ -129,11 +135,17 @@ class ModbusTemplateSwitch(SwitchEntity):
             raw_value = self._process_register_value(result.registers)
             
             if raw_value is not None:
-                # Erweiterte Datenverarbeitung anwenden
-                processed_value = self._apply_data_processing(raw_value)
+                # Apply value processing (same logic as sensors: map -> flags -> options)
+                processed_value = self._apply_value_processing(raw_value)
                 
-                # Switch-Status bestimmen
-                self._attr_is_on = processed_value == self._on_value
+                if processed_value is not None:
+                    # Erweiterte Datenverarbeitung anwenden
+                    processed_value = self._apply_data_processing(processed_value)
+                    
+                    # Switch-Status bestimmen
+                    self._attr_is_on = processed_value == self._on_value
+                else:
+                    self._attr_is_on = False
             else:
                 self._attr_is_on = False
                 
@@ -278,6 +290,73 @@ class ModbusTemplateSwitch(SwitchEntity):
         except Exception as e:
             _LOGGER.error("Error in register processing: %s", str(e))
             return None
+
+    def _apply_value_processing(self, value: Any) -> Any:
+        """Apply value processing like map, flags, and options (same as sensors)."""
+        try:
+            if value is None:
+                return None
+            
+            # Nur numerische Werte verarbeiten
+            if isinstance(value, (int, float)):
+                int_value = int(value)
+            
+            # 1. Map anwenden (falls definiert)
+            if self._map:
+                if isinstance(value, (int, float)):
+                    # Numerische Werte - prüfe sowohl int als auch string keys
+                    int_value = int(value)
+                    if int_value in self._map:
+                        mapped_value = self._map[int_value]
+                        _LOGGER.debug("Mapped value %s to '%s' for %s", int_value, mapped_value, self.name)
+                        return mapped_value
+                    elif str(int_value) in self._map:
+                        # Fallback: prüfe string key
+                        mapped_value = self._map[str(int_value)]
+                        _LOGGER.debug("Mapped value %s (as string) to '%s' for %s", int_value, mapped_value, self.name)
+                        return mapped_value
+                    else:
+                        _LOGGER.debug("Value %s not found in map for %s", int_value, self.name)
+                elif isinstance(value, str):
+                    # String-Werte - prüfe sowohl string als auch int keys
+                    if value in self._map:
+                        mapped_value = self._map[value]
+                        _LOGGER.debug("Mapped string '%s' to '%s' for %s", value, mapped_value, self.name)
+                        return mapped_value
+                    elif value.isdigit() and int(value) in self._map:
+                        # Fallback: prüfe int key
+                        mapped_value = self._map[int(value)]
+                        _LOGGER.debug("Mapped string '%s' (as int) to '%s' for %s", value, mapped_value, self.name)
+                        return mapped_value
+                    else:
+                        _LOGGER.debug("String '%s' not found in map for %s", value, self.name)
+            
+            # 2. Flags anwenden (falls definiert)
+            if self._flags and isinstance(value, (int, float)):
+                int_value = int(value)
+                flag_list = []
+                for bit, flag_name in self._flags.items():
+                    if int_value & (1 << int(bit)):
+                        flag_list.append(flag_name)
+                
+                if flag_list:
+                    _LOGGER.debug("Extracted flags from %s: %s", int_value, flag_list)
+                    return ", ".join(flag_list)
+            
+            # 3. Options anwenden (falls definiert)
+            if self._options and isinstance(value, (int, float)):
+                int_value = int(value)
+                if int_value in self._options:
+                    option_value = self._options[int_value]
+                    _LOGGER.debug("Found option for %s: '%s'", int_value, option_value)
+                    return option_value
+            
+            # Keine Verarbeitung angewendet
+            return value
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Wertverarbeitung für %s: %s", self.name, str(e))
+            return value
 
     def _apply_data_processing(self, value):
         """Wende erweiterte Datenverarbeitung an."""

@@ -821,7 +821,7 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
         for field in REQUIRED_FIELDS:
             processed_reg[field] = reg[field]
         
-        # Handle count parameter: use template value if set, otherwise set based on data type
+        # Handle count parameter: only use template value if explicitly set
         data_type = reg.get("data_type")
         template_count = reg.get("count")
         
@@ -831,20 +831,15 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
             _LOGGER.debug("Using count=%d from template for %s in Template %s", 
                          template_count, data_type, template_name)
         else:
-            # Set default count based on data type
-            if data_type in ["float", "float32"]:
-                processed_reg["count"] = 2
-                _LOGGER.debug("Auto-set count=2 for %s in Template %s", data_type, template_name)
-            elif data_type == "float64":
-                processed_reg["count"] = 4
-                _LOGGER.debug("Auto-set count=4 for %s in Template %s", data_type, template_name)
-            else:
-                # Default to 1 for other types
-                processed_reg["count"] = 1
+            # Don't set count here - let sensor init handle defaults
+            # Just pass through the data_type for sensor init to use
+            processed_reg["count"] = None
+            _LOGGER.debug("No count specified in template for %s in Template %s - will use defaults in sensor init", 
+                         data_type, template_name)
         
-        # Standardwerte für optionale Felder setzen (skip count if already set)
+        # Standardwerte für optionale Felder setzen (skip count - handled above)
         for field, default_value in OPTIONAL_FIELDS.items():
-            if field not in processed_reg:
+            if field not in processed_reg and field != "count":
                 processed_reg[field] = reg.get(field, default_value)
         
         # Zusätzliche Felder aus dem Template übernehmen
@@ -900,14 +895,14 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
             _LOGGER.error("Invalid data_type in Template %s: %s", template_name, data_type)
             return False
         
-        # Validate count
+        # Validate count (allow None for sensor init to handle defaults)
         count = reg.get("count")
-        if not isinstance(count, int) or count < 1:
+        if count is not None and (not isinstance(count, int) or count < 1):
             _LOGGER.error("Invalid count in Template %s: %s", template_name, count)
             return False
             
-        # Float-specific validation
-        if data_type in ["float", "float32", "float64"]:
+        # Float-specific validation (only if count is specified)
+        if data_type in ["float", "float32", "float64"] and count is not None:
             # Float type requires at least 2 registers for 32-bit and 4 registers for 64-bit
             min_count = 2 if data_type in ["float", "float32"] else 4
             if count < min_count:

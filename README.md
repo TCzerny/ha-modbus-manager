@@ -50,6 +50,56 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 
 ## 🏗️ Template Structure
 
+### Value Processing (Map, Flags, Options)
+
+The Modbus Manager supports three types of value processing for converting raw register values to human-readable text:
+
+#### 1. **Map** (Highest Priority)
+Direct 1:1 mapping of numeric values to text strings. Used for status codes, error codes, and operating modes.
+
+```yaml
+# Example: Operating mode mapping
+map:
+  0: "Off"
+  1: "On"
+  2: "Standby"
+  3: "Error"
+  64: "Running (normal operation)"
+```
+
+#### 2. **Flags** (Medium Priority)
+Bit-based evaluation where multiple flags can be active simultaneously. Used for status registers with multiple bits or alarm flags.
+
+```yaml
+# Example: Status register with multiple flags
+flags:
+  0: "Alarm 1"
+  1: "Alarm 2" 
+  2: "Warning"
+  3: "Maintenance"
+  4: "System OK"
+```
+
+**Result**: If register value = 5 (binary: 101), the result would be: "Alarm 1, Warning"
+
+#### 3. **Options** (Lowest Priority)
+Dropdown options for Select controls. Used for configuration options and selection menus.
+
+```yaml
+# Example: Configuration options
+options:
+  0: "Auto"
+  1: "Manual"
+  2: "Schedule"
+  3: "Emergency"
+```
+
+#### Processing Order
+All entity types (Sensors, Select, Number, Switch, Binary Sensor) process values in this order:
+1. **Map** (if defined)
+2. **Flags** (if no map defined)
+3. **Options** (if no map or flags defined)
+
 ### Device Templates
 Each device template includes:
 

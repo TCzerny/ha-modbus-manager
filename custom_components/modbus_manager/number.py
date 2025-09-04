@@ -1,5 +1,6 @@
 """Modbus Manager Number Platform."""
 from __future__ import annotations
+from typing import Any
 
 from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -154,7 +155,17 @@ class ModbusTemplateNumber(NumberEntity):
         self._address = register_data.get("address", 0)
         self._data_type = register_data.get("data_type", "uint16")
         self._input_type = register_data.get("input_type", "holding")
-        self._count = register_data.get("count", 1)
+        
+        # Always set correct count based on data type, regardless of template
+        if self._data_type in ["uint32", "int32", "float", "float32"]:
+            self._count = 2  # 32-bit types need 2 registers
+        elif self._data_type == "float64":
+            self._count = 4  # 64-bit types need 4 registers
+        else:
+            # For other types, use template count or default to 1
+            template_count = register_data.get("count")
+            self._count = template_count if template_count is not None else 1
+        
         self._scale = register_data.get("scale", 1.0)
         self._precision = register_data.get("precision", 0)
         self._swap = register_data.get("swap", False)
@@ -162,6 +173,11 @@ class ModbusTemplateNumber(NumberEntity):
         # Neue Datenverarbeitungsoptionen
         self._offset = register_data.get("offset", 0.0)
         self._multiplier = register_data.get("multiplier", 1.0)
+        
+        # Value processing (map, flags, options) - same as sensors
+        self._map = register_data.get("map", {})
+        self._flags = register_data.get("flags", {})
+        self._options = register_data.get("options", {})
         
         # Number-Entity properties
         self._attr_native_unit_of_measurement = register_data.get("unit_of_measurement", "")
@@ -195,6 +211,7 @@ class ModbusTemplateNumber(NumberEntity):
                 _LOGGER.error("Hub nicht verfügbar")
                 return
             
+            
             # Holding Register lesen (read/write) über den Hub
             if self._input_type == "holding":
                 from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
@@ -222,20 +239,26 @@ class ModbusTemplateNumber(NumberEntity):
             raw_value = self._process_register_value(result.registers)
             
             if raw_value is not None:
-                # Erweiterte Datenverarbeitung anwenden
-                processed_value = self._apply_data_processing(raw_value)
+                # Apply value processing (same logic as sensors: map -> flags -> options)
+                processed_value = self._apply_value_processing(raw_value)
                 
-                # Skalierung anwenden
-                scaled_value = processed_value * self._scale
-                
-                # Offset anwenden
-                final_value = scaled_value + self._offset
-                
-                # Präzision anwenden
-                if self._precision > 0:
-                    final_value = round(final_value, self._precision)
-                
-                self._attr_native_value = final_value
+                if processed_value is not None:
+                    # Erweiterte Datenverarbeitung anwenden
+                    processed_value = self._apply_data_processing(processed_value)
+                    
+                    # Skalierung anwenden
+                    scaled_value = processed_value * self._scale
+                    
+                    # Offset anwenden
+                    final_value = scaled_value + self._offset
+                    
+                    # Präzision anwenden
+                    if self._precision > 0:
+                        final_value = round(final_value, self._precision)
+                    
+                    self._attr_native_value = final_value
+                else:
+                    self._attr_native_value = None
             else:
                 self._attr_native_value = None
                 
@@ -364,6 +387,73 @@ class ModbusTemplateNumber(NumberEntity):
         except Exception as e:
             _LOGGER.error("Error in register processing: %s", str(e))
             return None
+
+    def _apply_value_processing(self, value: Any) -> Any:
+        """Apply value processing like map, flags, and options (same as sensors)."""
+        try:
+            if value is None:
+                return None
+            
+            # Nur numerische Werte verarbeiten
+            if isinstance(value, (int, float)):
+                int_value = int(value)
+            
+            # 1. Map anwenden (falls definiert)
+            if self._map:
+                if isinstance(value, (int, float)):
+                    # Numerische Werte - prüfe sowohl int als auch string keys
+                    int_value = int(value)
+                    if int_value in self._map:
+                        mapped_value = self._map[int_value]
+                        _LOGGER.debug("Mapped value %s to '%s' for %s", int_value, mapped_value, self.name)
+                        return mapped_value
+                    elif str(int_value) in self._map:
+                        # Fallback: prüfe string key
+                        mapped_value = self._map[str(int_value)]
+                        _LOGGER.debug("Mapped value %s (as string) to '%s' for %s", int_value, mapped_value, self.name)
+                        return mapped_value
+                    else:
+                        _LOGGER.debug("Value %s not found in map for %s", int_value, self.name)
+                elif isinstance(value, str):
+                    # String-Werte - prüfe sowohl string als auch int keys
+                    if value in self._map:
+                        mapped_value = self._map[value]
+                        _LOGGER.debug("Mapped string '%s' to '%s' for %s", value, mapped_value, self.name)
+                        return mapped_value
+                    elif value.isdigit() and int(value) in self._map:
+                        # Fallback: prüfe int key
+                        mapped_value = self._map[int(value)]
+                        _LOGGER.debug("Mapped string '%s' (as int) to '%s' for %s", value, mapped_value, self.name)
+                        return mapped_value
+                    else:
+                        _LOGGER.debug("String '%s' not found in map for %s", value, self.name)
+            
+            # 2. Flags anwenden (falls definiert)
+            if self._flags and isinstance(value, (int, float)):
+                int_value = int(value)
+                flag_list = []
+                for bit, flag_name in self._flags.items():
+                    if int_value & (1 << int(bit)):
+                        flag_list.append(flag_name)
+                
+                if flag_list:
+                    _LOGGER.debug("Extracted flags from %s: %s", int_value, flag_list)
+                    return ", ".join(flag_list)
+            
+            # 3. Options anwenden (falls definiert)
+            if self._options and isinstance(value, (int, float)):
+                int_value = int(value)
+                if int_value in self._options:
+                    option_value = self._options[int_value]
+                    _LOGGER.debug("Found option for %s: '%s'", int_value, option_value)
+                    return option_value
+            
+            # Keine Verarbeitung angewendet
+            return value
+            
+        except Exception as e:
+            _LOGGER.error("Fehler bei der Wertverarbeitung für %s: %s", self.name, str(e))
+            return value
 
     def _apply_data_processing(self, value):
         """Wende erweiterte Datenverarbeitung an."""

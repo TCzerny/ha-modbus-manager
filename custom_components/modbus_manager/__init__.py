@@ -133,6 +133,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         calculated_entities = entry.data.get("calculated_entities", [])
         controls = entry.data.get("controls", [])
         
+        # Debug: Check current register counts
+        bit32_registers = [r for r in registers if r.get("data_type") in ["uint32", "int32", "float", "float32"]]
+        _LOGGER.info("Current 32-bit registers in config: %d total, counts: %s", 
+                     len(bit32_registers), 
+                     [(r.get("name", "unknown"), r.get("data_type"), r.get("count", 1)) for r in bit32_registers[:5]])
+        
         # Get template name for version checking
         template_name = entry.data.get("template")
         if not template_name:
@@ -165,10 +171,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     # Check if we need to reload due to processing logic changes
             # This happens when the template processing logic has been updated
             if not template_changed:
-                # Check if any float32 registers have count=1 (old processing) vs count=2 (new processing)
-                float32_registers = [r for r in registers if r.get("data_type") in ["float", "float32"]]
-                if any(r.get("count", 1) == 1 for r in float32_registers):
-                    _LOGGER.info("Detected float32 registers with count=1, reloading with updated processing logic")
+                # Check if any 32-bit registers have count=1 (old processing) vs count=2 (new processing)
+                bit32_registers = [r for r in registers if r.get("data_type") in ["uint32", "int32", "float", "float32"]]
+                _LOGGER.info("Checking %d 32-bit registers for count=1: %s", 
+                             len(bit32_registers), 
+                             [(r.get("name", "unknown"), r.get("data_type"), r.get("count", 1)) for r in bit32_registers[:5]])
+                if any(r.get("count", 1) == 1 for r in bit32_registers):
+                    _LOGGER.info("Detected 32-bit registers with count=1, reloading with updated processing logic")
                     template_changed = True
         
         if template_changed:
@@ -176,12 +185,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             
             # Reload template with current processing logic
             from .template_loader import process_template_registers
-            processed_registers = process_template_registers(template_data, entry.data.get("dynamic_config", {}))
+            processed_registers = await process_template_registers(template_data, entry.data.get("dynamic_config", {}))
             
             if processed_registers:
                 # Update registers with new data
                 registers = processed_registers
                 _LOGGER.info("Reloaded %d registers with updated template processing", len(registers))
+                
+                # Update the config entry with new register data
+                new_data = dict(entry.data)
+                new_data["registers"] = registers
+                new_data["template_version"] = current_version
+                hass.config_entries.async_update_entry(entry, data=new_data)
+                _LOGGER.info("Updated config entry with new register data")
             else:
                 _LOGGER.warning("Failed to reload registers, using stored data")
         
