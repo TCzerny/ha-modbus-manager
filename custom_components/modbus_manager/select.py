@@ -25,9 +25,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     controls = entry_data.get("controls", [])
     hub_name = f"modbus_manager_{prefix}"
     
-    _LOGGER.info("Select Setup: prefix=%s, template=%s, registers=%d, controls=%d", 
+    _LOGGER.debug("Select Setup: prefix=%s, template=%s, registers=%d, controls=%d", 
                 prefix, template_name, len(registers), len(controls))
-    _LOGGER.info("Controls: %s", controls)
+    _LOGGER.debug("Controls: %s", controls)
 
     # Entity Registry abrufen für Duplikat-Check
     registry = async_get_entity_registry(hass)
@@ -81,14 +81,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                     "name": f"{prefix} {template_name}",
                     "manufacturer": "Modbus Manager",
                     "model": template_name,
-        
+                    "sw_version": f"Firmware: {entry.data.get('firmware_version', '1.0.0')}",
                 }
             ))
 
     # Select-Entities aus Controls-Abschnitt erstellen
     _LOGGER.debug("Verarbeite %d Controls für Select-Entities", len(controls))
     for control in controls:
-        if control.get("type") == "select":
+        # Auto-detect select controls based on properties
+        has_select_properties = (
+            "map" in control or 
+            "options" in control or 
+            "flags" in control
+        )
+        is_explicit_select = control.get("type") == "select"
+        
+        if is_explicit_select or has_select_properties:
             control_name = control.get("name", "unknown")
             # Stelle sicher, dass der name den Prefix enthält
             if not control_name.startswith(f"{prefix} "):
@@ -123,14 +131,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                     "name": f"{prefix} {template_name}",
                     "manufacturer": "Modbus Manager",
                     "model": template_name,
-
+                    "sw_version": f"Firmware: {entry.data.get('firmware_version', '1.0.0')}",
                 }
             ))
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("Modbus Manager: Created %d select entities", len(entities))
-        _LOGGER.info("Created select entities: %s", [e.entity_id for e in entities])
+        _LOGGER.debug("Modbus Manager: Created %d select entities", len(entities))
+        _LOGGER.debug("Created select entities: %s", [e.entity_id for e in entities])
     else:
         _LOGGER.warning("No select entities created!")
 
@@ -146,7 +154,7 @@ class ModbusTemplateSelect(SelectEntity):
         self._attr_name = name
         self._attr_unique_id = unique_id
         self._slave_id = slave_id
-        _LOGGER.info("Select %s: Initialized with entry_id=%s", name, entry.entry_id)
+        _LOGGER.debug("Select %s: Initialized with entry_id=%s", name, entry.entry_id)
         self._register_data = register_data
         self._attr_device_info = DeviceInfo(**device_info)
         
@@ -235,7 +243,7 @@ class ModbusTemplateSelect(SelectEntity):
     async def async_update(self):
         """Update the select entity state."""
         try:
-            _LOGGER.info("Select %s: Starting update", self.name)
+            _LOGGER.debug("Select %s: Starting update", self.name)
             
             # Get Modbus-Hub from configuration (same as sensors)
             if self._entry.entry_id not in self.hass.data[DOMAIN]:
@@ -377,25 +385,23 @@ class ModbusTemplateSelect(SelectEntity):
             
             # Wert in Holding Register schreiben über den Hub
             if self._input_type == "holding":
-                from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
+                from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
                 result = await hub.async_pb_call(
                     self._slave_id,
                     self._address,
-                    int(final_value),
-                    CALL_TYPE_REGISTER_HOLDING,
-                    write=True
+                    [int(final_value)],
+                    CALL_TYPE_WRITE_REGISTERS
                 )
+                
+                if result.isError():
+                    _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
+                else:
+                    _LOGGER.debug("Option %s erfolgreich in Register %s geschrieben", option, self._address)
+                    self._attr_current_option = option
+                    self.async_write_ha_state()
             else:
                 _LOGGER.warning("Kann nicht in %s Register schreiben: %d", self._input_type, self._address)
                 return
-            
-            if result.isError():
-                _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
-            else:
-                _LOGGER.debug("Option %s erfolgreich in Register %s geschrieben", option, self._address)
-                # Lokalen Wert aktualisieren
-                self._attr_current_option = option
-                self.async_write_ha_state()
                 
         except Exception as e:
             _LOGGER.error("Fehler beim Setzen der Option %s: %s", option, str(e))

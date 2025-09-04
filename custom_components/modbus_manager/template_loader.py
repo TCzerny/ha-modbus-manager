@@ -570,18 +570,18 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             _LOGGER.error("Template %s hat keinen Namen", template_path)
             return None
         
-        _LOGGER.debug("Processing template %s", template_name)
+        # _LOGGER.debug("Processing template %s", template_name)
         
         # Check if template extends a base template
         extends_name = data.get("extends")
         if extends_name and base_templates and extends_name in base_templates:
             # Extend from base template
             base_template = base_templates[extends_name]
-            _LOGGER.debug("Template %s erweitert BASE-Template %s", template_name, extends_name)
+            # _LOGGER.debug("Template %s erweitert BASE-Template %s", template_name, extends_name)
             
             # Check if this is a simple template (requires only prefix and name)
             if "required_fields" in data and "auto_generated_sensors" in data:
-                _LOGGER.debug("Template %s ist ein vereinfachtes Template", template_name)
+                # _LOGGER.debug("Template %s ist ein vereinfachtes Template", template_name)
                 # Simple templates are processed later when user config is available
                 # For now, just return the template data for later processing
                 return {
@@ -703,7 +703,7 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             calculated_entities = data.get("calculated", [])
             controls = data.get("controls", [])
         
-        _LOGGER.debug("Template %s: %d sensors found", template_name, len(raw_registers))
+        # _LOGGER.debug("Template %s: %d sensors found", template_name, len(raw_registers))
         
         validated_registers = []
         for reg in raw_registers:
@@ -720,11 +720,11 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             _LOGGER.error("Template %s has no valid registers", template_name)
             return None
         
-        _LOGGER.debug("Template %s: %d valid registers processed", template_name, len(validated_registers))
+        # _LOGGER.debug("Template %s: %d valid registers processed", template_name, len(validated_registers))
         
         # Process calculated section if present
         if calculated_entities:
-            _LOGGER.debug("Template %s: %d calculated entities found", template_name, len(calculated_entities))
+            pass  # _LOGGER.debug("Template %s: %d calculated entities found", template_name, len(calculated_entities))
         
         # Process controls section if present
         if controls:
@@ -751,7 +751,10 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             "version": data.get("version", 1),
             "description": data.get("description", ""),
             "manufacturer": data.get("manufacturer", ""),
-            "model": data.get("model", "")
+            "model": data.get("model", ""),
+            "default_prefix": data.get("default_prefix", "device"),
+            "firmware_version": data.get("firmware_version", "1.0.0"),
+            "available_firmware_versions": data.get("available_firmware_versions", [])
         }
         
         # Include dynamic_config if present

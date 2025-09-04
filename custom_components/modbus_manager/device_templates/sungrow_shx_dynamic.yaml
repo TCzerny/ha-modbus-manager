@@ -8,6 +8,10 @@ description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx mo
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
 version: 1.0.0
+type: "PV_inverter"
+firmware_version: "SAPPHIRE-H_03011.95.01"
+default_prefix: "sg"
+available_firmware_versions: ["SAPPHIRE-H_03011.95.01", "Latest"]
 
 # Dynamic configuration support
 dynamic_config:
@@ -26,7 +30,7 @@ dynamic_config:
     default: false
   
   firmware_version:
-    description: "Firmware version string (e.g., 'SAPPHIRE-H_03011.95.01', '2.1.5')"
+    description: "Firmware version string (e.g., 'SAPPHIRE-H_03011.95.01')"
     default: "SAPPHIRE-H_03011.95.01"
     sensor_replacements:
       # Battery current sensor replacement for firmware v2+

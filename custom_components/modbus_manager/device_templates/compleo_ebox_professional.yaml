@@ -1,15 +1,24 @@
 name: "Compleo eBox Professional"
-version: 1
+version: 2
 description: "Compleo eBox Professional EV Charger (Innogy eBox)"
 manufacturer: "Compleo"
 model: "eBox Professional"
 type: "ev_charger"
+firmware_version: "1.0.0"  # Default firmware version
+default_prefix: "eBox"  # Default prefix for entity names
+
+# Available firmware versions for user selection
+available_firmware_versions:
+  - "1.0.0"    # Basic functionality
+  - "1.1.18"   # Added voltage sensors and current meter reading
+  - "1.2.0"    
+  - "Latest"   
 
 # Device information sensors
 sensors:
   # Device identification
-  - name: "eBox ID"
-    unique_id: "ebox_id"
+  - name: "ID"
+    unique_id: "id"
     address: 0
     input_type: "input"
     data_type: "string"
@@ -18,8 +27,8 @@ sensors:
     group: "EV_device_info"
     icon: "mdi:identifier"
 
-  - name: "eBox Serial Number"
-    unique_id: "ebox_serial_number"
+  - name: "Serial Number"
+    unique_id: "serial_number"
     address: 25
     input_type: "input"
     data_type: "string"
@@ -28,8 +37,8 @@ sensors:
     group: "EV_device_info"
     icon: "mdi:barcode"
 
-  - name: "eBox Active Protocol"
-    unique_id: "ebox_active_protocol"
+  - name: "Active Protocol"
+    unique_id: "active_protocol"
     address: 50
     input_type: "input"
     data_type: "string"
@@ -38,8 +47,8 @@ sensors:
     group: "EV_device_info"
     icon: "mdi:protocol"
 
-  - name: "eBox Manufacturer"
-    unique_id: "ebox_manufacturer"
+  - name: "Manufacturer"
+    unique_id: "manufacturer"
     address: 100
     input_type: "input"
     data_type: "string"
@@ -48,8 +57,8 @@ sensors:
     group: "EV_device_info"
     icon: "mdi:factory"
 
-  - name: "eBox Firmware"
-    unique_id: "ebox_firmware"
+  - name: "Firmware"
+    unique_id: "firmware"
     address: 200
     input_type: "input"
     data_type: "string"
@@ -59,8 +68,8 @@ sensors:
     icon: "mdi:chip"
 
   # Charging status
-  - name: "eBox Status"
-    unique_id: "ebox_status"
+  - name: "Status"
+    unique_id: "status"
     address: 275
     input_type: "input"
     data_type: "string"
@@ -79,8 +88,8 @@ sensors:
       E: "Error"
       F: "EVSE not available"
 
-  - name: "eBox Cable Status"
-    unique_id: "ebox_cable_status"
+  - name: "Cable Status"
+    unique_id: "cable_status"
     address: 300
     input_type: "input"
     data_type: "uint16"
@@ -94,8 +103,8 @@ sensors:
       3: "cable locked with car"
 
   # Current measurements
-  - name: "eBox Current Phase 1"
-    unique_id: "ebox_current_phase_1"
+  - name: "Current Phase 1"
+    unique_id: "current_phase_1"
     address: 1006
     input_type: "input"
     data_type: "float32"
@@ -106,8 +115,8 @@ sensors:
     group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
-  - name: "eBox Current Phase 2"
-    unique_id: "ebox_current_phase_2"
+  - name: "Current Phase 2"
+    unique_id: "current_phase_2"
     address: 1008
     input_type: "input"
     data_type: "float32"
@@ -118,8 +127,8 @@ sensors:
     group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
-  - name: "eBox Current Phase 3"
-    unique_id: "ebox_current_phase_3"
+  - name: "Current Phase 3"
+    unique_id: "current_phase_3"
     address: 1010
     input_type: "input"
     data_type: "float32"
@@ -131,8 +140,8 @@ sensors:
     icon: "mdi:lightning-bolt"
 
   # Actual max current (read-only)
-  - name: "eBox Actual Max Current Phase 1"
-    unique_id: "ebox_actual_max_current_phase_1"
+  - name: "Actual Max Current Phase 1"
+    unique_id: "actual_max_current_phase_1"
     address: 1000
     input_type: "input"
     data_type: "float32"
@@ -143,8 +152,8 @@ sensors:
     group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
-  - name: "eBox Actual Max Current Phase 2"
-    unique_id: "ebox_actual_max_current_phase_2"
+  - name: "Actual Max Current Phase 2"
+    unique_id: "actual_max_current_phase_2"
     address: 1002
     input_type: "input"
     data_type: "float32"
@@ -155,8 +164,8 @@ sensors:
     group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
-  - name: "eBox Actual Max Current Phase 3"
-    unique_id: "ebox_actual_max_current_phase_3"
+  - name: "Actual Max Current Phase 3"
+    unique_id: "actual_max_current_phase_3"
     address: 1004
     input_type: "input"
     data_type: "float32"
@@ -167,11 +176,65 @@ sensors:
     group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
+  # Voltage measurements (firmware >= 1.1.18)
+  - name: "Voltage Phase 1"
+    unique_id: "voltage_phase_1"
+    address: 301
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "1.1.18"
+
+  - name: "Voltage Phase 2"
+    unique_id: "voltage_phase_2"
+    address: 303
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "1.1.18"
+
+  - name: "Voltage Phase 3"
+    unique_id: "voltage_phase_3"
+    address: 305
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "1.1.18"
+
+  # Current meter reading (firmware >= 1.1.18, not validated)
+  - name: "Current Meter Reading"
+    unique_id: "current_meter_reading"
+    address: 307
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_meter_reading"
+    icon: "mdi:meter-electric"
+    firmware_min_version: "1.1.18"
+
 # Controls (holding registers - read/write)
 controls:
   # Max current settings (holding registers)
-  - name: "eBox Max Current Phase 1"
-    unique_id: "ebox_max_current_phase_1"
+  - name: "Max Current Phase 1"
+    unique_id: "max_current_phase_1"
     address: 1012
     input_type: "holding"
     data_type: "float32"
@@ -185,8 +248,8 @@ controls:
     max_value: 16
     step: 1
 
-  - name: "eBox Max Current Phase 2"
-    unique_id: "ebox_max_current_phase_2"
+  - name: "Max Current Phase 2"
+    unique_id: "max_current_phase_2"
     address: 1014
     input_type: "holding"
     data_type: "float32"
@@ -200,8 +263,8 @@ controls:
     max_value: 16
     step: 1
 
-  - name: "eBox Max Current Phase 3"
-    unique_id: "ebox_max_current_phase_3"
+  - name: "Max Current Phase 3"
+    unique_id: "max_current_phase_3"
     address: 1016
     input_type: "holding"
     data_type: "float32"
@@ -216,8 +279,8 @@ controls:
     step: 1
 
   # Fallback max current settings
-  - name: "eBox Fallback Max Current Phase 1"
-    unique_id: "ebox_fallback_max_current_phase_1"
+  - name: "Fallback Max Current Phase 1"
+    unique_id: "fallback_max_current_phase_1"
     address: 1018
     input_type: "holding"
     data_type: "float32"
@@ -231,8 +294,8 @@ controls:
     max_value: 16
     step: 1
 
-  - name: "eBox Fallback Max Current Phase 2"
-    unique_id: "ebox_fallback_max_current_phase_2"
+  - name: "Fallback Max Current Phase 2"
+    unique_id: "fallback_max_current_phase_2"
     address: 1020
     input_type: "holding"
     data_type: "float32"
@@ -246,8 +309,8 @@ controls:
     max_value: 16
     step: 1
 
-  - name: "eBox Fallback Max Current Phase 3"
-    unique_id: "ebox_fallback_max_current_phase_3"
+  - name: "Fallback Max Current Phase 3"
+    unique_id: "fallback_max_current_phase_3"
     address: 1022
     input_type: "holding"
     data_type: "float32"
@@ -262,22 +325,28 @@ controls:
     step: 1
 
   # Fallback timer
-  - name: "eBox Remaining Time Before Fallback"
-    unique_id: "ebox_remaining_time_before_fallback"
+  - name: "Remaining Time Before Fallback"
+    unique_id: "remaining_time_before_fallback"
     address: 1024
     input_type: "holding"
     data_type: "uint16"
-    scan_interval: 10
+    precision: 0
     unit_of_measurement: "min"
     device_class: "duration"
     state_class: "measurement"
+    scale: 1
+    min_value: 0
+    max_value: 120
+    step: 1
+    scan_interval: 10
     group: "EV_fallback_timer"
     icon: "mdi:timer"
 
+
 # Calculated sensors
 calculated_sensors:
-  - name: "eBox Total Current"
-    unique_id: "ebox_total_current"
+  - name: "Total Current"
+    unique_id: "total_current"
     type: "sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') and
@@ -293,8 +362,8 @@ calculated_sensors:
     group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
-  - name: "eBox Charging Power"
-    unique_id: "ebox_charging_power"
+  - name: "Charging Power"
+    unique_id: "charging_power"
     type: "sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') and
@@ -305,7 +374,7 @@ calculated_sensors:
       {% set current2 = states('sensor.{PREFIX}_current_phase_2') | default(0) | float %}
       {% set current3 = states('sensor.{PREFIX}_current_phase_3') | default(0) | float %}
       {% if current1 > 0.11 or current2 > 0.11 or current3 > 0.11 %}
-        {{ ((current1 + current2 + current3) - 0.27) * 220 | round(0) }}
+        {{ ((current1 + current2 + current3) - 0.27) * 230 | round(0) }}
       {% else %}
         0
       {% endif %}
@@ -315,8 +384,8 @@ calculated_sensors:
     group: "EV_charging_power"
     icon: "mdi:ev-station"
 
-  - name: "eBox Max Total Current"
-    unique_id: "ebox_max_total_current"
+  - name: "Max Total Current"
+    unique_id: "max_total_current"
     type: "sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_max_current_phase_1', 'unavailable') and
@@ -332,8 +401,8 @@ calculated_sensors:
     group: "EV_max_current_setting"
     icon: "mdi:gauge"
 
-  - name: "eBox Max Charging Power"
-    unique_id: "ebox_max_charging_power"
+  - name: "Max Charging Power"
+    unique_id: "max_charging_power"
     type: "sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_max_current_phase_1', 'unavailable') and
@@ -342,15 +411,15 @@ calculated_sensors:
     state: >-
       {{ (states('sensor.{PREFIX}_max_current_phase_1') | default(0) | float +
           states('sensor.{PREFIX}_max_current_phase_2') | default(0) | float +
-          states('sensor.{PREFIX}_max_current_phase_3') | default(0) | float) * 220 | round(0) }}
+          states('sensor.{PREFIX}_max_current_phase_3') | default(0) | float) * 230 | round(0) }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
     group: "EV_max_charging_power"
     icon: "mdi:ev-station"
 
-  - name: "eBox Charging Efficiency"
-    unique_id: "ebox_charging_efficiency"
+  - name: "Charging Efficiency"
+    unique_id: "charging_efficiency"
     type: "sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_charging_power', 'unavailable') and
@@ -365,10 +434,49 @@ calculated_sensors:
     group: "EV_efficiency"
     icon: "mdi:gauge"
 
+  # Voltage calculations (firmware >= 1.1.18)
+  - name: "Average Voltage"
+    unique_id: "average_voltage"
+    type: "sensor"
+    firmware_min_version: "1.1.18"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') and
+         not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
+         not is_state('sensor.{PREFIX}_voltage_phase_3', 'unavailable') }}
+    state: >-
+      {{ ((states('sensor.{PREFIX}_voltage_phase_1') | default(0) | float +
+          states('sensor.{PREFIX}_voltage_phase_2') | default(0) | float +
+          states('sensor.{PREFIX}_voltage_phase_3') | default(0) | float) / 3) | round(1) }}
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Voltage Imbalance"
+    unique_id: "voltage_imbalance"
+    type: "sensor"
+    firmware_min_version: "1.1.18"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') and
+         not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
+         not is_state('sensor.{PREFIX}_voltage_phase_3', 'unavailable') }}
+    state: >-
+      {% set v1 = states('sensor.{PREFIX}_voltage_phase_1') | default(0) | float %}
+      {% set v2 = states('sensor.{PREFIX}_voltage_phase_2') | default(0) | float %}
+      {% set v3 = states('sensor.{PREFIX}_voltage_phase_3') | default(0) | float %}
+      {% set avg = (v1 + v2 + v3) / 3 %}
+      {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
+    unit_of_measurement: "%"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:gauge"
+
 # Binary sensors for status
 binary_sensors:
-  - name: "eBox Charging Active"
-    unique_id: "ebox_charging_active"
+  - name: "Charging Active"
+    unique_id: "charging_active"
     type: "binary_sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_charging_power', 'unavailable') }}
@@ -378,8 +486,8 @@ binary_sensors:
     group: "EV_charging_status"
     icon: "mdi:ev-station"
 
-  - name: "eBox Cable Connected"
-    unique_id: "ebox_cable_connected"
+  - name: "Cable Connected"
+    unique_id: "cable_connected"
     type: "binary_sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_cable_status', 'unavailable') }}
@@ -391,8 +499,8 @@ binary_sensors:
 
 # Numbers for current control
 numbers:
-  - name: "eBox Set Max Current"
-    unique_id: "ebox_set_max_current"
+  - name: "Set Max Current"
+    unique_id: "set_max_current"
     type: "number"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_cable_status', 'unavailable') }}

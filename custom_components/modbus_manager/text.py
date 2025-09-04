@@ -51,7 +51,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                     "name": f"{prefix} {template_name}",
                     "manufacturer": "Modbus Manager",
                     "model": template_name,
-        
+                    "sw_version": f"Firmware: {entry.data.get('firmware_version', '1.0.0')}",
                 }
             ))
 
@@ -150,10 +150,13 @@ class ModbusTemplateText(TextEntity):
             register_values = self._string_to_registers(value)
             
             # Werte in Holding Register schreiben
-            if len(register_values) == 1:
-                result = await hub.write_register(self._address, register_values[0], unit=self._slave_id)
-            else:
-                result = await hub.write_registers(self._address, register_values, unit=self._slave_id)
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                register_values,
+                CALL_TYPE_WRITE_REGISTERS
+            )
             
             if result.isError():
                 _LOGGER.error("Fehler beim Schreiben in Register %s: %s", self._address, result)

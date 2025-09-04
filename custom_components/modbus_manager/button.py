@@ -73,6 +73,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                     "name": f"{prefix} {template_name}",
                     "manufacturer": "Modbus Manager",
                     "model": template_name,
+                    "sw_version": f"Firmware: {entry.data.get('firmware_version', '1.0.0')}",
                 }
             ))
 
@@ -129,7 +130,13 @@ class ModbusTemplateButton(ButtonEntity):
             final_value = self._apply_reverse_data_processing(self._press_value)
             
             # Press-Wert in Holding Register schreiben
-            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                [int(final_value)],
+                CALL_TYPE_WRITE_REGISTERS
+            )
             
             if result.isError():
                 _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
@@ -157,7 +164,13 @@ class ModbusTemplateButton(ButtonEntity):
             final_value = self._apply_reverse_data_processing(self._reset_value)
             
             # Reset-Wert in Holding Register schreiben
-            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                [int(final_value)],
+                CALL_TYPE_WRITE_REGISTERS
+            )
             
             if result.isError():
                 _LOGGER.error("Fehler beim Zurücksetzen von Button %s: %s", self.name, result)

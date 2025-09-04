@@ -233,10 +233,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Check if this is a SunSpec Standard Configuration template
             if "SunSpec Standard Configuration" in self._selected_template:
                 # SunSpec Standard Configuration - requires model addresses
+                default_prefix = template_data.get("default_prefix", "device")
                 return self.async_show_form(
                     step_id="device_config",
                     data_schema=vol.Schema({
-                        vol.Required("prefix"): str,
+                        vol.Required("prefix", default=default_prefix): str,
                         vol.Optional("name"): str,
                         vol.Required("common_model_address", default=40001): int,
                         vol.Required("inverter_model_address", default=40069): int,
@@ -250,10 +251,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
             else:
                 # Simple template - only requires prefix and name
+                default_prefix = template_data.get("default_prefix", "device")
                 return self.async_show_form(
                     step_id="device_config",
                     data_schema=vol.Schema({
-                        vol.Required("prefix"): str,
+                        vol.Required("prefix", default=default_prefix): str,
                         vol.Optional("name"): str,
                     }),
                     description_placeholders={
@@ -268,8 +270,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             _LOGGER.debug("Has dynamic_config: %s", "dynamic_config" in template_data)
             _LOGGER.debug("Template name: %s", template_data.get("name", "Unknown"))
             
+            default_prefix = template_data.get("default_prefix", "device")
             schema_fields = {
-                vol.Required("prefix"): str,
+                vol.Required("prefix", default=default_prefix): str,
                 vol.Required("host"): str,
                 vol.Optional("port", default=502): int,
                 vol.Optional("slave_id", default=1): int,
@@ -285,6 +288,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 schema_fields.update(dynamic_schema)
             else:
                 _LOGGER.debug("Template does not support dynamic config")
+            
+            # Add firmware version selection for all templates that have available_firmware_versions
+            available_firmware = template_data.get("available_firmware_versions", [])
+            if available_firmware:
+                _LOGGER.debug("Adding firmware_version field to schema with options: %s", available_firmware)
+                label = self._get_translation("config.step.device_config.data.firmware_version")
+                schema_fields[label] = vol.In(available_firmware)
             
             return self.async_show_form(
                 step_id="device_config",
@@ -327,8 +337,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             label = self._get_translation("config.step.device_config.data.battery_enabled")
             schema_fields[label] = bool
         
-        # Firmware version
-        if "firmware_version" in dynamic_config:
+        # Firmware version - use available_firmware_versions if present
+        available_firmware = template_data.get("available_firmware_versions", [])
+        if available_firmware:
+            _LOGGER.debug("Adding firmware_version field to schema with options: %s", available_firmware)
+            label = self._get_translation("config.step.device_config.data.firmware_version")
+            schema_fields[label] = vol.In(available_firmware)
+        elif "firmware_version" in dynamic_config:
             _LOGGER.debug("Adding firmware_version field to schema")
             default_firmware = dynamic_config["firmware_version"].get("default", "1.0.0")
             label = self._get_translation("config.step.device_config.data.firmware_version")
@@ -361,8 +376,26 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         phases = user_input.get(self._get_translation("config.step.device_config.data.phases"), 1)
         mppt_count = user_input.get(self._get_translation("config.step.device_config.data.mppt_count"), 1)
         battery_enabled = user_input.get(self._get_translation("config.step.device_config.data.battery_enabled"), False)
-        firmware_version = user_input.get(self._get_translation("config.step.device_config.data.firmware_version"), "1.0.0")
+        firmware_version = user_input.get(self._get_translation("config.step.device_config.data.firmware_version"), template_data.get("firmware_version", "1.0.0"))
         connection_type = user_input.get(self._get_translation("config.step.device_config.data.connection_type"), "LAN")
+        
+        # Handle "Latest" firmware version - use the highest available version
+        if firmware_version == "Latest":
+            available_firmware = template_data.get("available_firmware_versions", [])
+            if available_firmware:
+                # Find the highest version (excluding "Latest")
+                numeric_versions = [v for v in available_firmware if v != "Latest"]
+                if numeric_versions:
+                    from packaging import version
+                    try:
+                        # Sort by version and take the highest
+                        sorted_versions = sorted(numeric_versions, key=lambda x: version.parse(x))
+                        firmware_version = sorted_versions[-1]
+                        _LOGGER.debug("Using latest firmware version: %s", firmware_version)
+                    except version.InvalidVersion:
+                        # Fallback to first numeric version
+                        firmware_version = numeric_versions[0]
+                        _LOGGER.debug("Using fallback firmware version: %s", firmware_version)
         
         _LOGGER.info("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, conn=%s", 
                      phases, mppt_count, battery_enabled, firmware_version, connection_type)
@@ -440,6 +473,27 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return False
         
         # String-specific sensors - removed as no string sensors exist in current templates
+        
+        # Firmware version specific sensors
+        sensor_firmware_min = sensor.get("firmware_min_version")
+        if sensor_firmware_min:
+            from packaging import version
+            try:
+                # Compare firmware versions
+                current_ver = version.parse(firmware_version)
+                min_ver = version.parse(sensor_firmware_min)
+                if current_ver < min_ver:
+                    _LOGGER.info("Excluding sensor due to firmware version: %s (unique_id: %s, requires: %s, current: %s)", 
+                                 sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), 
+                                 sensor_firmware_min, firmware_version)
+                    return False
+            except version.InvalidVersion:
+                # Fallback to string comparison for non-semantic versions
+                if firmware_version < sensor_firmware_min:
+                    _LOGGER.info("Excluding sensor due to firmware version (string): %s (unique_id: %s, requires: %s, current: %s)", 
+                                 sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), 
+                                 sensor_firmware_min, firmware_version)
+                    return False
         
         # Connection type specific sensors
         connection_config = dynamic_config.get("connection_type", {}).get("sensor_availability", {})
@@ -643,6 +697,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     description_placeholders={"error": "Invalid configuration"}
                 )
 
+            # Get firmware version from user input or template default
+            firmware_version = user_input.get(self._get_translation("config.step.device_config.data.firmware_version"), template_data.get("firmware_version", "1.0.0"))
+            
             # Create config entry
             return self.async_create_entry(
                 title=f"{user_input['prefix']} ({self._selected_template})",
@@ -655,6 +712,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "slave_id": user_input.get("slave_id", 1),
                     "timeout": user_input.get("timeout", 5),
                     "delay": user_input.get("delay", 0),
+                    "firmware_version": firmware_version,
                     "registers": template_registers,
                     "calculated_entities": template_calculated,
                     "controls": template_controls,
@@ -868,6 +926,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             if "update_template" in user_input and user_input["update_template"]:
                 return await self.async_step_update_template()
+            elif "firmware_version" in user_input:
+                # Update firmware version
+                return await self.async_step_firmware_update(user_input)
             else:
                 # Update basic settings
                 return self.async_create_entry(title="", data=user_input)
@@ -876,21 +937,35 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         template_name = self.config_entry.data.get("template", "Unbekannt")
         template_version = self.config_entry.data.get("template_version", 1)
         
+        # Load template to get available firmware versions
+        template_data = await get_template_by_name(template_name)
+        available_firmware = []
+        if template_data and isinstance(template_data, dict):
+            available_firmware = template_data.get("available_firmware_versions", [])
+        
+        # Build schema fields
+        schema_fields = {
+            vol.Optional(
+                "timeout",
+                default=self.config_entry.data.get("timeout", 5)
+            ): int,
+            vol.Optional(
+                "delay",
+                default=self.config_entry.data.get("delay", 0)
+            ): int,
+            vol.Optional("update_template"): bool,
+        }
+        
+        # Add firmware version selection if available
+        if available_firmware:
+            current_firmware = self.config_entry.data.get("firmware_version", "1.0.0")
+            schema_fields["firmware_version"] = vol.In(available_firmware)
+            schema_fields["firmware_version"].default = current_firmware
+        
         # Basic options form
         return self.async_show_form(
             step_id="init",
-            data_schema=vol.Schema({
-                vol.Optional(
-                    "timeout",
-                    default=self.config_entry.data.get("timeout", 5)
-                ): int,
-                vol.Optional(
-                    "delay",
-                    default=self.config_entry.data.get("delay", 0)
-                ): int,
-
-                vol.Optional("update_template"): bool,
-            }),
+            data_schema=vol.Schema(schema_fields),
             description_placeholders={
                 "template_name": template_name,
                 "template_version": str(template_version)
@@ -1010,10 +1085,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 current_version = template_data.get("version", 1)
                 template_registers = template_data.get("sensors", [])
                 calculated_entities = template_data.get("calculated", [])
+                template_controls = template_data.get("controls", [])
             else:
                 current_version = 1
                 template_registers = template_data
                 calculated_entities = []
+                template_controls = []
             
             if not template_registers:
                 return self.async_abort(
@@ -1030,6 +1107,10 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 # Wenn das neue Template calculated_entities hat, diese auch aktualisieren
                 if calculated_entities:
                     new_data["calculated_entities"] = calculated_entities
+                
+                # Wenn das neue Template controls hat, diese auch aktualisieren
+                if template_controls:
+                    new_data["controls"] = template_controls
                 
                 # Config Entry aktualisieren
                 self.hass.config_entries.async_update_entry(
@@ -1058,5 +1139,72 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             _LOGGER.error("Fehler beim Aktualisieren des Templates: %s", str(e))
             return self.async_abort(
                 reason="update_error",
+                description_placeholders={"error": str(e)}
+            )
+
+    async def async_step_firmware_update(self, user_input: dict = None) -> FlowResult:
+        """Update firmware version and reapply filtering."""
+        try:
+            template_name = self.config_entry.data.get("template", "Unbekannt")
+            new_firmware_version = user_input.get("firmware_version", "1.0.0")
+            current_firmware_version = self.config_entry.data.get("firmware_version", "1.0.0")
+            
+            _LOGGER.debug("Firmware update: %s -> %s", current_firmware_version, new_firmware_version)
+            
+            if new_firmware_version == current_firmware_version:
+                _LOGGER.debug("Firmware version unchanged, no update needed")
+                return self.async_create_entry(title="", data={})
+            
+            # Load template data
+            template_data = await get_template_by_name(template_name)
+            if not template_data:
+                return self.async_abort(
+                    reason="template_not_found",
+                    description_placeholders={"template_name": template_name}
+                )
+            
+            # Get all entities from template
+            if isinstance(template_data, dict):
+                all_sensors = template_data.get("sensors", [])
+                all_calculated = template_data.get("calculated", [])
+                all_controls = template_data.get("controls", [])
+            else:
+                all_sensors = template_data
+                all_calculated = []
+                all_controls = []
+            
+            # Apply firmware filtering
+            from .__init__ import _filter_by_firmware_version
+            filtered_sensors = _filter_by_firmware_version(all_sensors, new_firmware_version)
+            filtered_calculated = _filter_by_firmware_version(all_calculated, new_firmware_version)
+            filtered_controls = _filter_by_firmware_version(all_controls, new_firmware_version)
+            
+            _LOGGER.info("Firmware filtering applied: %d sensors, %d calculated, %d controls (from %d, %d, %d)", 
+                        len(filtered_sensors), len(filtered_calculated), len(filtered_controls),
+                        len(all_sensors), len(all_calculated), len(all_controls))
+            
+            # Update config entry
+            new_data = dict(self.config_entry.data)
+            new_data["firmware_version"] = new_firmware_version
+            new_data["registers"] = filtered_sensors
+            new_data["calculated_entities"] = filtered_calculated
+            new_data["controls"] = filtered_controls
+            
+            self.hass.config_entries.async_update_entry(
+                self.config_entry,
+                data=new_data
+            )
+            
+            _LOGGER.info("Firmware version updated to %s, entities filtered accordingly", new_firmware_version)
+            
+            # Reload the integration to update DeviceInfo with new firmware version
+            await self.hass.config_entries.async_reload(self.config_entry.entry_id)
+            
+            return self.async_create_entry(title="", data={})
+            
+        except Exception as e:
+            _LOGGER.error("Fehler beim Aktualisieren der Firmware-Version: %s", str(e))
+            return self.async_abort(
+                reason="firmware_update_error",
                 description_placeholders={"error": str(e)}
             )

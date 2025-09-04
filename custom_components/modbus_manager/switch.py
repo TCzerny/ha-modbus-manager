@@ -52,7 +52,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                     "name": f"{prefix} {template_name}",
                     "manufacturer": "Modbus Manager",
                     "model": template_name,
-        
+                    "sw_version": f"Firmware: {entry.data.get('firmware_version', '1.0.0')}",
                 }
             ))
 
@@ -166,7 +166,13 @@ class ModbusTemplateSwitch(SwitchEntity):
             final_value = self._apply_reverse_data_processing(self._on_value)
             
             # ON-Wert in Holding Register schreiben
-            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                [int(final_value)],
+                CALL_TYPE_WRITE_REGISTERS
+            )
             
             if result.isError():
                 _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)
@@ -191,7 +197,13 @@ class ModbusTemplateSwitch(SwitchEntity):
             final_value = self._apply_reverse_data_processing(self._off_value)
             
             # OFF-Wert in Holding Register schreiben
-            result = await hub.write_register(self._address, int(final_value), unit=self._slave_id)
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
+            result = await hub.async_pb_call(
+                self._slave_id,
+                self._address,
+                [int(final_value)],
+                CALL_TYPE_WRITE_REGISTERS
+            )
             
             if result.isError():
                 _LOGGER.error("Fehler beim Schreiben in Holding Register %s: %s", self._address, result)

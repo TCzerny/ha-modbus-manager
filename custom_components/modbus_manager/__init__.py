@@ -133,12 +133,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         calculated_entities = entry.data.get("calculated_entities", [])
         controls = entry.data.get("controls", [])
         
-        # Debug: Check current register counts
-        bit32_registers = [r for r in registers if r.get("data_type") in ["uint32", "int32", "float", "float32"]]
-        _LOGGER.info("Current 32-bit registers in config: %d total, counts: %s", 
-                     len(bit32_registers), 
-                     [(r.get("name", "unknown"), r.get("data_type"), r.get("count", 1)) for r in bit32_registers[:5]])
-        
         # Get template name for version checking
         template_name = entry.data.get("template")
         if not template_name:
@@ -152,6 +146,23 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if not template_data:
             _LOGGER.error("Template %s could not be loaded", template_name)
             return False
+        
+        # Apply firmware filtering for existing configurations
+        # Get firmware version from template or use default
+        template_firmware_version = template_data.get("firmware_version", "1.0.0") if isinstance(template_data, dict) else "1.0.0"
+        firmware_version = entry.data.get("firmware_version", template_firmware_version)
+        
+        # Always apply firmware filtering if we have entities with firmware_min_version
+        entities_with_firmware_req = [e for e in registers + calculated_entities + controls if e.get("firmware_min_version")]
+        if entities_with_firmware_req:
+            _LOGGER.debug("Applying firmware filtering for version: %s (found %d entities with firmware requirements)", 
+                         firmware_version, len(entities_with_firmware_req))
+            registers = _filter_by_firmware_version(registers, firmware_version)
+            calculated_entities = _filter_by_firmware_version(calculated_entities, firmware_version)
+            controls = _filter_by_firmware_version(controls, firmware_version)
+            _LOGGER.info("Firmware filtering applied: %d registers, %d calculated, %d controls", 
+                        len(registers), len(calculated_entities), len(controls))
+        
         
         # Extract current version from template
         if isinstance(template_data, dict):
@@ -173,11 +184,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             if not template_changed:
                 # Check if any 32-bit registers have count=1 (old processing) vs count=2 (new processing)
                 bit32_registers = [r for r in registers if r.get("data_type") in ["uint32", "int32", "float", "float32"]]
-                _LOGGER.info("Checking %d 32-bit registers for count=1: %s", 
-                             len(bit32_registers), 
-                             [(r.get("name", "unknown"), r.get("data_type"), r.get("count", 1)) for r in bit32_registers[:5]])
                 if any(r.get("count", 1) == 1 for r in bit32_registers):
-                    _LOGGER.info("Detected 32-bit registers with count=1, reloading with updated processing logic")
+                    _LOGGER.debug("Detected 32-bit registers with count=1, reloading with updated processing logic")
                     template_changed = True
         
         if template_changed:
@@ -215,7 +223,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             new_data["template_version"] = current_version
             hass.config_entries.async_update_entry(entry, data=new_data)
         
-        _LOGGER.debug("Template %s geladen mit %d Registern, %d Controls", template_name, len(registers), len(controls))
         
         # Modbus-Hub über Standard Home Assistant API erstellen
         hub_name = f"modbus_manager_{entry.data['prefix']}"
@@ -260,8 +267,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         
         # Daten für alle Plattformen vorbereiten
         prefix = entry.data["prefix"]
-        _LOGGER.debug("Präfix aus Config Entry: %s", prefix)
-        _LOGGER.debug("Template: %s, Register: %d", template_name, len(registers))
         
         # Device wird von der Sensor-Plattform erstellt
         
@@ -278,10 +283,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             "aggregate_sensors": [],
         }
         
+        # Hub auch unter Hub-Namen speichern für einheitlichen Zugriff
+        hass.data[DOMAIN][hub_name] = hub
+        
         # Template-Daten global verfügbar machen für Controls
         hass.data[DOMAIN]["template_data"] = template_data
-        
-        _LOGGER.debug("Konfigurationsdaten gespeichert: prefix=%s, template=%s, controls=%d", prefix, template_name, len(controls))
         
         # Alle Plattformen einrichten (in separatem Task um Asyncio-Warnings zu vermeiden)
         try:
@@ -396,3 +402,35 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     except Exception as e:
         _LOGGER.error("Fehler beim Unload von Modbus Manager: %s", str(e))
         return False
+
+def _filter_by_firmware_version(entities: list, firmware_version: str) -> list:
+    """Filter entities based on firmware version requirements."""
+    try:
+        from packaging import version
+        
+        filtered_entities = []
+        for entity in entities:
+            firmware_min_version = entity.get("firmware_min_version")
+            if firmware_min_version:
+                try:
+                    # Compare firmware versions
+                    current_ver = version.parse(firmware_version)
+                    min_ver = version.parse(firmware_min_version)
+                    if current_ver < min_ver:
+                        _LOGGER.debug("Excluding entity due to firmware version: %s (requires: %s, current: %s)", 
+                                     entity.get("name", "unknown"), firmware_min_version, firmware_version)
+                        continue
+                except version.InvalidVersion:
+                    # Fallback to string comparison for non-semantic versions
+                    if firmware_version < firmware_min_version:
+                        _LOGGER.debug("Excluding entity due to firmware version (string): %s (requires: %s, current: %s)", 
+                                     entity.get("name", "unknown"), firmware_min_version, firmware_version)
+                        continue
+            
+            filtered_entities.append(entity)
+        
+        return filtered_entities
+        
+    except Exception as e:
+        _LOGGER.error("Error in firmware filtering: %s", str(e))
+        return entities

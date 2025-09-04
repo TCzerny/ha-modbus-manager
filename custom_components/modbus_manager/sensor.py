@@ -216,6 +216,11 @@ class ModbusTemplateSensor(SensorEntity):
         self._prefix = prefix
         self._unique_id = unique_id
         
+        # Smart error handling - stop trying after multiple failures
+        self._consecutive_failures = 0
+        self._max_failures = 5  # Stop trying after 5 consecutive failures
+        self._disabled = False
+        
         # Register properties
         self._name = register.get("name", "Unknown Sensor")
         self._address = register.get("address", 0)
@@ -285,15 +290,20 @@ class ModbusTemplateSensor(SensorEntity):
         
         # Device-Info
         template_name = self._register.get("template", "unknown")
+        
+        # Get firmware version from config entry
+        firmware_version = self._entry.data.get("firmware_version", "1.0.0")
+        
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, f"{prefix}_{template_name}")},
             name=f"{prefix} ({template_name})",
             manufacturer="Modbus Manager",
             model=template_name,
+            sw_version=f"Firmware: {firmware_version}",
         )
         
-        _LOGGER.debug("Sensor %s initialized (Address: %d, Type: %s, Count: %d, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)", 
-                     self._name, self._address, self._data_type, self._count, prefix, self._attr_name, unique_id, self._group)
+                # _LOGGER.debug("Sensor %s initialized (Address: %d, Type: %s, Count: %d, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)", 
+        #                self._name, self._address, self._data_type, self._count, prefix, self._attr_name, unique_id, self._group)
 
     @property
     def template_name(self) -> str:
@@ -311,6 +321,9 @@ class ModbusTemplateSensor(SensorEntity):
     async def async_update(self) -> None:
         """Update the sensor value."""
         try:
+            # Skip update if sensor is disabled due to repeated failures
+            if self._disabled:
+                return
             
             # Get Modbus-Hub from configuration
             if self._entry.entry_id not in self._hass.data[DOMAIN]:
@@ -345,12 +358,30 @@ class ModbusTemplateSensor(SensorEntity):
                 # Process value
                 processed_value = self._process_value(result)
                 self._attr_native_value = processed_value
-                _LOGGER.debug("Sensor %s updated: %s", self._name, processed_value)
+                # Reset failure counter on successful read
+                self._consecutive_failures = 0
+                # _LOGGER.debug("Sensor %s updated: %s", self._name, processed_value)
             else:
-                _LOGGER.warning("No data received for sensor %s", self._name)
+                self._consecutive_failures += 1
+                _LOGGER.warning("No data received for sensor %s (failure %d/%d)", 
+                              self._name, self._consecutive_failures, self._max_failures)
+                
+                # Disable sensor after too many consecutive failures
+                if self._consecutive_failures >= self._max_failures:
+                    self._disabled = True
+                    _LOGGER.warning("Sensor %s disabled after %d consecutive failures - register may not be available", 
+                                  self._name, self._consecutive_failures)
                 
         except Exception as e:
-            _LOGGER.error("Error updating sensor %s: %s", self._name, str(e))
+            self._consecutive_failures += 1
+            _LOGGER.error("Error updating sensor %s: %s (failure %d/%d)", 
+                         self._name, str(e), self._consecutive_failures, self._max_failures)
+            
+            # Disable sensor after too many consecutive failures
+            if self._consecutive_failures >= self._max_failures:
+                self._disabled = True
+                _LOGGER.warning("Sensor %s disabled after %d consecutive failures", 
+                              self._name, self._consecutive_failures)
 
     async def _read_input_registers(self, hub) -> Optional[Any]:
         """Read input registers from Modbus device."""
@@ -723,8 +754,6 @@ class ModbusTemplateSensor(SensorEntity):
             
         except Exception as e:
             _LOGGER.error("Fehler bei der Wertverarbeitung für %s: %s", self._name, str(e))
-            _LOGGER.debug("Raw value: %s, data_type: %s, scale: %s, offset: %s", 
-                         raw_value, self._data_type, self._scale, self._offset)
             return None
 
     def _apply_value_processing(self, value: Any) -> Any:
