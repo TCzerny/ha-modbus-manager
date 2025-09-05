@@ -1,13 +1,12 @@
-# Sungrow SHx Inverter Template für Modbus Manager
-# BASIEREND AUF: https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
-# WICHTIG: ALLE Register wurden 100% exakt übernommen - keine Änderungen an den Register-Definitionen
-# Nur das Format wurde an Modbus Manager angepasst
+# Sungrow SHx Template for Modbus Manager
+# BASED ON: https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
 
 name: "Sungrow SHx Inverter"
-description: "Template für Sungrow SHx Wechselrichter über Modbus TCP - KOMPLETT übernommen von mkaiser"
+description: "Template for Sungrow SHx Wechselrichter"
 manufacturer: "Sungrow"
 model: "SHx Series"
-default_prefix: "sg"  # Default prefix for entity names
+version: 1.0.0
+default_prefix: "SG" 
 type: "PV_inverter"
 firmware_version: "SAPPHIRE-H_03011.95.01"
 available_firmware_versions: ["SAPPHIRE-H_03011.95.01", "Latest"]
@@ -1771,7 +1770,7 @@ controls:
 
   - type: "number"
     name: "Max SoC"
-    unique_id: "sg_max_soc_rw"
+    unique_id: "max_soc_rw"
     address: 13057
     input_type: "holding"
     data_type: "uint16"
@@ -1786,7 +1785,7 @@ controls:
 
   - type: "number"
     name: "Min SoC"
-    unique_id: "sg_min_soc_rw"
+    unique_id: "min_soc_rw"
     address: 13058
     input_type: "holding"
     data_type: "uint16"
@@ -1801,7 +1800,7 @@ controls:
 
   - type: "select"
     name: "Backup Mode"
-    unique_id: "sg_backup_mode_rw"
+    unique_id: "backup_mode_rw"
     address: 13074
     input_type: "holding"
     data_type: "uint16"
@@ -1813,7 +1812,7 @@ controls:
 
   - type: "select"
     name: "Export Power Limit Mode"
-    unique_id: "sg_export_power_limit_mode_rw"
+    unique_id: "export_power_limit_mode_rw"
     address: 13086
     input_type: "holding"
     data_type: "uint16"
@@ -1825,7 +1824,7 @@ controls:
 
   - type: "number"
     name: "Reserved SoC for Backup"
-    unique_id: "sg_reserved_soc_backup_rw"
+    unique_id: "reserved_soc_backup_rw"
     address: 13099
     input_type: "holding"
     data_type: "uint16"
@@ -1838,14 +1837,14 @@ controls:
 
   - type: "number"
     name: "Battery Max Charge Power"
-    unique_id: "sg_battery_max_charge_power_rw"
+    unique_id: "battery_max_charge_power_rw"
     address: 33046
     input_type: "holding"
     data_type: "uint16"
 
   - type: "select"
     name: "Load Adjustment Mode ON/OFF"
-    unique_id: "sg_load_adjustment_mode_on_off_rw"
+    unique_id: "load_adjustment_mode_on_off_rw"
     address: 13010
     input_type: "holding"
     data_type: "uint16"
@@ -1903,10 +1902,20 @@ calculated:
       {{ 
       not is_state('sensor.{PREFIX}_mppt1_voltage', 'unavailable') 
       and not is_state('sensor.{PREFIX}_mppt1_current', 'unavailable')
-      and not is_state('sensor.{PREFIX}_mppt2_voltage', 'unavailable') 
-      and not is_state('sensor.{PREFIX}_mppt2_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt1_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt1_current') | default(0) | float) + (states('sensor.{PREFIX}_mppt2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt2_current') | default(0) | float) }}"
+    state: >-
+      {% set mppt1_voltage = states('sensor.{PREFIX}_mppt1_power_mppt1_voltage') %}
+      {% set mppt1_current = states('sensor.{PREFIX}_mppt1_current') %}
+      {% set mppt2_voltage = states('sensor.{PREFIX}_mppt2_voltage') %}
+      {% set mppt2_current = states('sensor.{PREFIX}_mppt2_current') %}
+      {% set mppt3_voltage = states('sensor.{PREFIX}_mppt3_voltage') %}
+      {% set mppt3_current = states('sensor.{PREFIX}_mppt3_current') %}
+
+      {% set mppt1_power = (mppt1_voltage | float(0)) * (mppt1_current | float(0)) %}
+      {% set mppt2_power = (mppt2_voltage | float(0)) * (mppt2_current | float(0)) %}
+      {% set mppt3_power = (mppt3_voltage | float(0)) * (mppt3_current | float(0)) %}
+
+      {{ mppt1_power + mppt2_power + mppt3_power }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
