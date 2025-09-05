@@ -135,9 +135,6 @@ async def async_setup_entry(
                     _LOGGER.debug("Generated entity_id: %s for sensor: %s (unique_id: %s)", 
                                  entity_id, sensor_name, unique_id)
                     
-                    _LOGGER.debug("Erstelle Sensor: name=%s, prefix=%s, unique_id=%s", 
-                                 sensor_name, prefix, unique_id)
-                    
                     entities.append(ModbusTemplateSensor(
                         hass=hass,
                         entry=entry,
@@ -276,15 +273,18 @@ class ModbusTemplateSensor(SensorEntity):
         self._address = register.get("address", 0)
         self._data_type = register.get("data_type", "uint16")
         
-        # Always set correct count based on data type, regardless of template
-        if self._data_type in ["uint32", "int32", "float", "float32"]:
+        # Priority 1: Count from template
+        template_count = register.get("count")
+        if template_count is not None:
+            self._count = template_count
+        # Priority 2: Based on data type
+        elif self._data_type in ["uint32", "int32", "float", "float32"]:
             self._count = 2  # 32-bit types need 2 registers
         elif self._data_type == "float64":
             self._count = 4  # 64-bit types need 4 registers
+        # Priority 3: Default to 1
         else:
-            # For other types, use template count or default to 1
-            template_count = register.get("count")
-            self._count = template_count if template_count is not None else 1
+            self._count = 1
         
         self._scale = register.get("scale", 1.0)
         self._offset = register.get("offset", 0.0)
@@ -301,7 +301,18 @@ class ModbusTemplateSensor(SensorEntity):
         
         # Modbus-specific properties
         self._input_type = register.get("input_type", "input")
-        self._slave_id = register.get("device_address", 1)
+        
+        # Get slave_id from config entry, not from template
+        # For battery sensors, use battery_slave_id from config entry
+        if "battery" in self._name.lower() and "SBR_battery" in (register.get("group") or ""):
+            # SBR Battery sensors use battery_slave_id from config entry
+            self._slave_id = entry.data.get("battery_slave_id", 200)
+            _LOGGER.debug("SBR Battery sensor %s using battery_slave_id: %s from config entry", self._name, self._slave_id)
+        else:
+            # Regular sensors use slave_id from config entry
+            self._slave_id = entry.data.get("slave_id", register.get("slave_id",  1))
+            _LOGGER.debug("Regular sensor %s using slave_id: %s", self._name, self._slave_id)
+        
         self._verify = register.get("verify", False)
         self._scan_interval = register.get("scan_interval", 30)  # Default 30 seconds
         if self._scan_interval == 0:
@@ -417,22 +428,18 @@ class ModbusTemplateSensor(SensorEntity):
             _LOGGER.debug("Reading %s register at address %d (count: %d) for sensor %s", 
                          self._input_type, self._address, self._count, self._name)
             
-            # Try to use register optimizer if available
-            if register_optimizer and self._input_type in ["input", "holding"]:
-                result = await self._read_optimized_register(hub, register_optimizer)
+            # Register optimizer disabled - use individual register reading
+            if self._input_type == "input":
+                result = await self._read_input_registers(hub)
+            elif self._input_type == "holding":
+                result = await self._read_holding_registers(hub)
+            elif self._input_type == "coil":
+                result = await self._read_coils(hub)
+            elif self._input_type == "discrete":
+                result = await self._read_discrete_inputs(hub)
             else:
-                # Fallback to individual register reading
-                if self._input_type == "input":
-                    result = await self._read_input_registers(hub)
-                elif self._input_type == "holding":
-                    result = await self._read_holding_registers(hub)
-                elif self._input_type == "coil":
-                    result = await self._read_coils(hub)
-                elif self._input_type == "discrete":
-                    result = await self._read_discrete_inputs(hub)
-                else:
-                    _LOGGER.warning("Unknown input_type: %s", self._input_type)
-                    return
+                _LOGGER.warning("Unknown input_type: %s", self._input_type)
+                return
             
             if result is not None:
                 # Process value
@@ -440,7 +447,7 @@ class ModbusTemplateSensor(SensorEntity):
                 self._attr_native_value = processed_value
                 # Reset failure counter on successful read
                 self._consecutive_failures = 0
-                _LOGGER.info("Successfully updated sensor %s with value: %s (raw: %s)", self._name, processed_value, result)
+                _LOGGER.debug("Successfully updated sensor %s with value: %s (raw: %s)", self._name, processed_value, result)
             else:
                 self._consecutive_failures += 1
                 _LOGGER.warning("No data received for sensor %s (failure %d/%d)", 
@@ -557,9 +564,6 @@ class ModbusTemplateSensor(SensorEntity):
             # Verwende die korrekte Home Assistant Modbus API
             from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_INPUT
             
-            _LOGGER.info("Calling async_pb_call for input register %d (slave_id: %d, count: %d)", 
-                         self._address, self._slave_id, self._count)
-            
             # Modbus-Call über Standard API
             result = await hub.async_pb_call(
                 self._slave_id,
@@ -567,9 +571,7 @@ class ModbusTemplateSensor(SensorEntity):
                 self._count,
                 CALL_TYPE_REGISTER_INPUT
             )
-            
-            _LOGGER.info("Modbus call result: %s", result)
-            
+                        
             if result and hasattr(result, 'registers'):
                 # For string data type, return all registers as list
                 if self._data_type == "string":
