@@ -11,7 +11,11 @@ from homeassistant.data_entry_flow import FlowResult
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.helpers import config_validation as cv
 
-from .const import DOMAIN
+from .const import (
+    DOMAIN, DEFAULT_TIMEOUT, MIN_TIMEOUT, MAX_TIMEOUT,
+    DEFAULT_DELAY, MIN_DELAY,
+    DEFAULT_MESSAGE_WAIT_MS, MIN_MESSAGE_WAIT_MS, MAX_MESSAGE_WAIT_MS
+)
 from .template_loader import get_template_names, get_template_by_name
 
 from .logger import ModbusManagerLogger
@@ -271,13 +275,27 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             _LOGGER.debug("Template name: %s", template_data.get("name", "Unknown"))
             
             default_prefix = template_data.get("default_prefix", "device")
+            
+            # Import constants for device config
+            from .const import (
+                DEFAULT_TIMEOUT, MIN_TIMEOUT, MAX_TIMEOUT,
+                DEFAULT_DELAY, MIN_DELAY,
+                DEFAULT_MESSAGE_WAIT_MS, MAX_MESSAGE_WAIT_MS
+            )
+            
+            # Use direct translations for field descriptions
+            timeout_desc = "Timeout in Sekunden"
+            delay_desc = "Verzögerung nach Verbindung (Sekunden)"
+            message_wait_desc = "Wartezeit zwischen Requests (Millisekunden)"
+            
             schema_fields = {
                 vol.Required("prefix", default=default_prefix): str,
                 vol.Required("host"): str,
                 vol.Optional("port", default=502): int,
                 vol.Optional("slave_id", default=1): int,
-                vol.Optional("timeout", default=5): int,
-                vol.Optional("delay", default=0): int,
+                vol.Optional("timeout", default=DEFAULT_TIMEOUT, description=timeout_desc): vol.All(vol.Coerce(int), vol.Range(min=MIN_TIMEOUT, max=MAX_TIMEOUT)),
+                vol.Optional("delay", default=DEFAULT_DELAY, description=delay_desc): vol.All(vol.Coerce(int), vol.Range(min=MIN_DELAY, max=10)),
+                vol.Optional("message_wait_milliseconds", default=DEFAULT_MESSAGE_WAIT_MS, description=message_wait_desc): vol.All(vol.Coerce(int), vol.Range(min=MIN_MESSAGE_WAIT_MS, max=MAX_MESSAGE_WAIT_MS)),
             }
             
             # Add dynamic template parameters if supported
@@ -310,6 +328,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         has_dynamic = "dynamic_config" in template_data
         _LOGGER.info("_supports_dynamic_config: template_data keys=%s, has_dynamic=%s", 
                      list(template_data.keys()), has_dynamic)
+        
+        # Debug: Show dynamic_config content if it exists
+        if has_dynamic:
+            dynamic_config = template_data.get("dynamic_config", {})
+            _LOGGER.info("Dynamic config found: %s", list(dynamic_config.keys()))
+        else:
+            _LOGGER.warning("No dynamic_config found in template!")
+            
         return has_dynamic
 
     def _get_dynamic_config_schema(self, template_data: dict) -> dict:
@@ -320,22 +346,42 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         
         # Phase configuration
         if "phases" in dynamic_config:
-            _LOGGER.debug("Adding phases field to schema")
+            phase_options = dynamic_config["phases"].get("options", [1, 3])
+            phase_default = dynamic_config["phases"].get("default", 3)
+            _LOGGER.debug("Adding phases field to schema with options: %s, default: %s", phase_options, phase_default)
             label = self._get_translation("config.step.device_config.data.phases")
-            schema_fields[label] = vol.In([1, 3])
+            schema_fields[label] = vol.In(phase_options)
         
         # MPPT configuration
         if "mppt_count" in dynamic_config:
             mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
-            _LOGGER.debug("Adding mppt_count field to schema with options: %s", mppt_options)
+            mppt_default = dynamic_config["mppt_count"].get("default", 1)
+            _LOGGER.debug("Adding mppt_count field to schema with options: %s, default: %s", mppt_options, mppt_default)
             label = self._get_translation("config.step.device_config.data.mppt_count")
             schema_fields[label] = vol.In(mppt_options)
         
-        # Battery configuration
-        if "battery" in dynamic_config:
-            _LOGGER.debug("Adding battery_enabled field to schema")
-            label = self._get_translation("config.step.device_config.data.battery_enabled")
-            schema_fields[label] = bool
+        # Battery configuration (single combo box)
+        if "battery_config" in dynamic_config:
+            battery_config_options = dynamic_config["battery_config"].get("options", ["none", "standard_battery", "sbr_battery"])
+            battery_default = dynamic_config["battery_config"].get("default", "none")
+            option_labels = dynamic_config["battery_config"].get("option_labels", {})
+            
+            # Create options dict with labels
+            battery_options = {}
+            for option in battery_config_options:
+                display_label = option_labels.get(option, option.replace("_", " ").title())
+                battery_options[option] = display_label
+            
+            _LOGGER.debug("Adding battery_config field to schema with options: %s, default: %s", battery_options, battery_default)
+            label = self._get_translation("config.step.device_config.data.battery_config")
+            schema_fields[label] = vol.In(battery_options)
+        
+        # Battery Slave ID (only needed for SBR Battery)
+        if "battery_slave_id" in dynamic_config:
+            battery_slave_id_default = dynamic_config["battery_slave_id"].get("default", 200)
+            _LOGGER.debug("Adding battery_slave_id field to schema with default: %s", battery_slave_id_default)
+            label = self._get_translation("config.step.device_config.data.battery_slave_id")
+            schema_fields[label] = vol.All(vol.Coerce(int), vol.Range(min=1, max=255))
         
         # Firmware version - use available_firmware_versions if present
         available_firmware = template_data.get("available_firmware_versions", [])
@@ -347,7 +393,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             _LOGGER.debug("Adding firmware_version field to schema")
             default_firmware = dynamic_config["firmware_version"].get("default", "1.0.0")
             label = self._get_translation("config.step.device_config.data.firmware_version")
-            schema_fields[label] = str
+            schema_fields[label] = vol.Str()
         
         # String count - removed as no string-specific sensors exist in current templates
         
@@ -372,12 +418,25 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         processed_calculated = []
         processed_controls = []
         
-        # Map translated field names back to internal names
-        phases = user_input.get(self._get_translation("config.step.device_config.data.phases"), 1)
-        mppt_count = user_input.get(self._get_translation("config.step.device_config.data.mppt_count"), 1)
-        battery_enabled = user_input.get(self._get_translation("config.step.device_config.data.battery_enabled"), False)
+        # Map translated field names back to internal names with defaults from template
+        phases_default = dynamic_config.get("phases", {}).get("default", 3)
+        phases = user_input.get(self._get_translation("config.step.device_config.data.phases"), phases_default)
+        
+        mppt_default = dynamic_config.get("mppt_count", {}).get("default", 1)
+        mppt_count = user_input.get(self._get_translation("config.step.device_config.data.mppt_count"), mppt_default)
+        
+        battery_default = dynamic_config.get("battery_config", {}).get("default", "none")
+        battery_config = user_input.get(self._get_translation("config.step.device_config.data.battery_config"), battery_default)
+        
+        battery_slave_id_default = dynamic_config.get("battery_slave_id", {}).get("default", 200)
+        battery_slave_id = user_input.get(self._get_translation("config.step.device_config.data.battery_slave_id"), battery_slave_id_default)
+        
         firmware_version = user_input.get(self._get_translation("config.step.device_config.data.firmware_version"), template_data.get("firmware_version", "1.0.0"))
         connection_type = user_input.get(self._get_translation("config.step.device_config.data.connection_type"), "LAN")
+        
+        # Derive battery settings from battery_config
+        battery_enabled = battery_config != "none"
+        battery_type = battery_config
         
         # Handle "Latest" firmware version - use the highest available version
         if firmware_version == "Latest":
@@ -397,13 +456,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         firmware_version = numeric_versions[0]
                         _LOGGER.debug("Using fallback firmware version: %s", firmware_version)
         
-        _LOGGER.info("Processing dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s, conn=%s", 
-                     phases, mppt_count, battery_enabled, firmware_version, connection_type)
+        _LOGGER.info("Processing dynamic config: phases=%d, mppt=%d, battery=%s, battery_type=%s, fw=%s, conn=%s", 
+                     phases, mppt_count, battery_enabled, battery_type, firmware_version, connection_type)
         
         # Process sensors
         for sensor in original_sensors:
             # Check if sensor should be included based on configuration
-            if self._should_include_sensor(sensor, phases, mppt_count, battery_enabled, firmware_version, connection_type, dynamic_config):
+            if self._should_include_sensor(sensor, phases, mppt_count, battery_enabled, battery_type, battery_slave_id, firmware_version, connection_type, dynamic_config):
                 # Apply firmware-specific modifications
                 modified_sensor = self._apply_firmware_modifications(sensor, firmware_version, dynamic_config)
                 processed_sensors.append(modified_sensor)
@@ -411,13 +470,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Process calculated sensors
         for calculated in original_calculated:
             # Check if calculated sensor should be included based on configuration
-            if self._should_include_sensor(calculated, phases, mppt_count, battery_enabled, firmware_version, connection_type, dynamic_config):
+            if self._should_include_sensor(calculated, phases, mppt_count, battery_enabled, battery_type, battery_slave_id, firmware_version, connection_type, dynamic_config):
                 processed_calculated.append(calculated)
         
         # Process controls
         for control in original_controls:
             # Check if control should be included based on configuration
-            if self._should_include_sensor(control, phases, mppt_count, battery_enabled, firmware_version, connection_type, dynamic_config):
+            if self._should_include_sensor(control, phases, mppt_count, battery_enabled, battery_type, battery_slave_id, firmware_version, connection_type, dynamic_config):
                 processed_controls.append(control)
         
         _LOGGER.info("Processed %d sensors, %d calculated, %d controls from %d original sensors, %d calculated, %d controls", 
@@ -432,7 +491,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         }
 
     def _should_include_sensor(self, sensor: dict, phases: int, mppt_count: int, battery_enabled: bool, 
-                               firmware_version: str, connection_type: str, dynamic_config: dict) -> bool:
+                               battery_type: str, battery_slave_id: int, firmware_version: str, connection_type: str, dynamic_config: dict) -> bool:
         """Check if sensor should be included based on configuration."""
         sensor_name = sensor.get("name", "").lower()
         unique_id = sensor.get("unique_id", "").lower()
@@ -471,6 +530,27 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 _LOGGER.info("Excluding sensor due to battery disabled: %s (unique_id: %s)", 
                              sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
                 return False
+        
+        # Battery type specific sensors (SBR Battery)
+        sensor_group = sensor.get("group", "")
+        if battery_type == "none":
+            # No battery selected - exclude all battery sensors
+            battery_keywords = ["battery", "bms", "soc", "charge", "discharge", "backup"]
+            if any(keyword in search_text for keyword in battery_keywords) or sensor_group == "SBR_battery":
+                _LOGGER.info("Excluding sensor due to no battery selected: %s (unique_id: %s)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+                return False
+        elif battery_type == "standard_battery":
+            # Standard Battery selected - exclude SBR battery sensors, include standard battery sensors
+            if sensor_group == "SBR_battery":
+                _LOGGER.info("Excluding sensor due to standard battery selected: %s (unique_id: %s)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+                return False
+        elif battery_type == "sbr_battery":
+            # SBR Battery selected - include both SBR battery sensors and standard battery sensors
+            # SBR battery sensors are included via group filtering
+            # Standard battery sensors are included via keyword filtering
+            pass
         
         # String-specific sensors - removed as no string sensors exist in current templates
         
@@ -701,23 +781,35 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             firmware_version = user_input.get(self._get_translation("config.step.device_config.data.firmware_version"), template_data.get("firmware_version", "1.0.0"))
             
             # Create config entry
+            config_data = {
+                "template": self._selected_template,
+                "template_version": template_version,
+                "prefix": user_input["prefix"],
+                "host": user_input["host"],
+                "port": user_input.get("port", 502),
+                "slave_id": user_input.get("slave_id", 1),
+                "timeout": user_input.get("timeout", 1),  # PDF requirement: 1000ms
+                "delay": user_input.get("delay", 0),
+                "firmware_version": firmware_version,
+                "registers": template_registers,
+                "calculated_entities": template_calculated,
+                "controls": template_controls,
+                "is_aggregates_template": False
+            }
+            
+            # Add dynamic configuration parameters if available
+            if self._supports_dynamic_config(template_data):
+                config_data.update({
+                    "phases": user_input.get(self._get_translation("config.step.device_config.data.phases"), 1),
+                    "mppt_count": user_input.get(self._get_translation("config.step.device_config.data.mppt_count"), 1),
+                    "battery_config": user_input.get(self._get_translation("config.step.device_config.data.battery_config"), "none"),
+                    "battery_slave_id": user_input.get(self._get_translation("config.step.device_config.data.battery_slave_id"), 200),
+                    "connection_type": user_input.get(self._get_translation("config.step.device_config.data.connection_type"), "LAN")
+                })
+            
             return self.async_create_entry(
                 title=f"{user_input['prefix']} ({self._selected_template})",
-                data={
-                    "template": self._selected_template,
-                    "template_version": template_version,
-                    "prefix": user_input["prefix"],
-                    "host": user_input["host"],
-                    "port": user_input.get("port", 502),
-                    "slave_id": user_input.get("slave_id", 1),
-                    "timeout": user_input.get("timeout", 5),
-                    "delay": user_input.get("delay", 0),
-                    "firmware_version": firmware_version,
-                    "registers": template_registers,
-                    "calculated_entities": template_calculated,
-                    "controls": template_controls,
-                    "is_aggregates_template": False
-                }
+                data=config_data
             )
             
         except Exception as e:
@@ -890,7 +982,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return False
             
             # Timeout validieren
-            timeout = user_input.get("timeout", 3)
+            timeout = user_input.get("timeout", 1)  # PDF requirement: 1000ms
             if not isinstance(timeout, int) or timeout < 1:
                 return False
             
@@ -944,15 +1036,33 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             available_firmware = template_data.get("available_firmware_versions", [])
         
         # Build schema fields
+        from .const import (
+            DEFAULT_TIMEOUT, MIN_TIMEOUT, MAX_TIMEOUT,
+            DEFAULT_DELAY, MIN_DELAY,
+            DEFAULT_MESSAGE_WAIT_MS, MIN_MESSAGE_WAIT_MS, MAX_MESSAGE_WAIT_MS
+        )
+        
+        # Use direct translations for field descriptions
+        timeout_desc = "Timeout in seconds"
+        delay_desc = "Delay after Connection (seconds)"
+        message_wait_desc = "Wait between Requests (milliseconds)"
+        
         schema_fields = {
             vol.Optional(
                 "timeout",
-                default=self.config_entry.data.get("timeout", 5)
-            ): int,
+                default=self.config_entry.data.get("timeout", DEFAULT_TIMEOUT),
+                description=timeout_desc
+            ): vol.All(vol.Coerce(int), vol.Range(min=MIN_TIMEOUT, max=MAX_TIMEOUT)),
             vol.Optional(
                 "delay",
-                default=self.config_entry.data.get("delay", 0)
-            ): int,
+                default=self.config_entry.data.get("delay", DEFAULT_DELAY),
+                description=delay_desc
+            ): vol.All(vol.Coerce(int), vol.Range(min=MIN_DELAY, max=10)),  # 0-10 seconds
+            vol.Optional(
+                "message_wait_milliseconds",
+                default=self.config_entry.data.get("message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS),
+                description=message_wait_desc
+            ): vol.All(vol.Coerce(int), vol.Range(min=MIN_MESSAGE_WAIT_MS, max=MAX_MESSAGE_WAIT_MS)),
             vol.Optional("update_template"): bool,
         }
         
@@ -1083,20 +1193,50 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             # Template-Version und Register extrahieren
             if isinstance(template_data, dict):
                 current_version = template_data.get("version", 1)
-                template_registers = template_data.get("sensors", [])
-                calculated_entities = template_data.get("calculated", [])
-                template_controls = template_data.get("controls", [])
+                original_sensors = template_data.get("sensors", [])
+                original_calculated = template_data.get("calculated", [])
+                original_controls = template_data.get("controls", [])
+                dynamic_config = template_data.get("dynamic_config", {})
             else:
                 current_version = 1
-                template_registers = template_data
-                calculated_entities = []
-                template_controls = []
+                original_sensors = template_data
+                original_calculated = []
+                original_controls = []
+                dynamic_config = {}
             
-            if not template_registers:
+            if not original_sensors:
                 return self.async_abort(
                     reason="no_registers",
                     description_placeholders={"template_name": template_name}
                 )
+            
+            # Dynamische Konfiguration anwenden (wichtig für MPPT-Filterung!)
+            if dynamic_config:
+                # Aktuelle Konfiguration aus dem Config Entry verwenden
+                current_phases = self.config_entry.data.get("phases", 1)
+                current_mppt_count = self.config_entry.data.get("mppt_count", 2)
+                current_battery_enabled = self.config_entry.data.get("battery_enabled", False)
+                current_firmware_version = self.config_entry.data.get("firmware_version", "1.0.0")
+                current_connection_type = self.config_entry.data.get("connection_type", "LAN")
+                
+                _LOGGER.info("Applying dynamic config during template update: phases=%d, mppt=%d, battery=%s, fw=%s", 
+                             current_phases, current_mppt_count, current_battery_enabled, current_firmware_version)
+                
+                # Template mit aktueller Konfiguration verarbeiten
+                processed_data = self._process_dynamic_template(
+                    original_sensors, original_calculated, original_controls, 
+                    dynamic_config, current_phases, current_mppt_count, 
+                    current_battery_enabled, current_firmware_version, current_connection_type
+                )
+                
+                template_registers = processed_data["sensors"]
+                calculated_entities = processed_data["calculated"]
+                template_controls = processed_data["controls"]
+            else:
+                # Keine dynamische Konfiguration - Original verwenden
+                template_registers = original_sensors
+                calculated_entities = original_calculated
+                template_controls = original_controls
             
             if user_input is not None:
                 # Template aktualisieren

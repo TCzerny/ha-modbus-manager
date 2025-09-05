@@ -16,6 +16,7 @@ from homeassistant.components.sensor.const import CONF_STATE_CLASS
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
+import asyncio
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -58,10 +59,41 @@ async def async_setup_entry(
             if entity.entity_id.startswith(f"sensor.{prefix}_")
         }
         
+        # Log existing entities for debugging
+        if existing_entities:
+            _LOGGER.info("Found %d existing entities with prefix %s: %s", 
+                        len(existing_entities), prefix, list(existing_entities))
+        
+        # Check for orphaned entities (entities that exist in registry but not in current template)
+        current_entity_ids = set()
+        for reg in registers:
+            sensor_name = reg.get("name", "Unknown")
+            template_unique_id = reg.get("unique_id")
+            if template_unique_id:
+                entity_id = f"sensor.{prefix}_{template_unique_id}"
+            else:
+                clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+                entity_id = f"sensor.{prefix}_{clean_name}"
+            current_entity_ids.add(entity_id)
+        
+        # Find orphaned entities
+        orphaned_entities = existing_entities - current_entity_ids
+        if orphaned_entities:
+            _LOGGER.warning("Found %d orphaned entities that will be removed: %s", 
+                           len(orphaned_entities), list(orphaned_entities))
+            # Remove orphaned entities from registry
+            for entity_id in orphaned_entities:
+                try:
+                    registry.async_remove(entity_id)
+                    _LOGGER.info("Removed orphaned entity: %s", entity_id)
+                except Exception as e:
+                    _LOGGER.error("Failed to remove orphaned entity %s: %s", entity_id, str(e))
+        
         # Nur Sensor-Entitäten erstellen (nicht für Aggregates Templates)
         entities = []
         if not is_aggregates_template:
-            sensor_registers = [reg for reg in registers if reg.get("entity_type") == "sensor"]
+            # Alle Register als Sensoren behandeln, außer explizit andere entity_types
+            sensor_registers = [reg for reg in registers if reg.get("entity_type") != "binary_sensor" and reg.get("entity_type") != "switch" and reg.get("entity_type") != "number" and reg.get("entity_type") != "select" and reg.get("entity_type") != "button" and reg.get("entity_type") != "text"]
             _LOGGER.debug("Gefundene Sensor-Register: %d", len(sensor_registers))
             
             for reg in sensor_registers:
@@ -84,8 +116,24 @@ async def async_setup_entry(
                     
                     # Prüfen ob Entity bereits existiert
                     if entity_id in existing_entities:
-                        _LOGGER.debug("Sensor %s existiert bereits, überspringe", entity_id)
-                        continue
+                        # Check if entity is properly linked to this integration
+                        entity_entry = registry.async_get(entity_id)
+                        if entity_entry and entity_entry.platform == DOMAIN:
+                            _LOGGER.info("Sensor %s existiert bereits und ist korrekt verknüpft, überspringe", entity_id)
+                            continue
+                        else:
+                            _LOGGER.warning("Sensor %s existiert aber ist nicht korrekt verknüpft, entferne und erstelle neu", entity_id)
+                            try:
+                                registry.async_remove(entity_id)
+                                _LOGGER.info("Entfernte nicht verknüpfte Entity: %s", entity_id)
+                            except Exception as e:
+                                _LOGGER.error("Fehler beim Entfernen der Entity %s: %s", entity_id, str(e))
+                    else:
+                        _LOGGER.debug("Sensor %s existiert nicht, erstelle neu", entity_id)
+                    
+                    # Debug: Log Entity ID generation
+                    _LOGGER.debug("Generated entity_id: %s for sensor: %s (unique_id: %s)", 
+                                 entity_id, sensor_name, unique_id)
                     
                     _LOGGER.debug("Erstelle Sensor: name=%s, prefix=%s, unique_id=%s", 
                                  sensor_name, prefix, unique_id)
@@ -156,6 +204,8 @@ async def async_setup_entry(
             for aggregate_config in aggregates_config:
                 try:
                     from .aggregates import ModbusAggregateSensor
+                    
+                    _LOGGER.debug("Creating aggregate sensor from config: %s", aggregate_config)
                     
                     entity = ModbusAggregateSensor(
                         hass=hass,
@@ -253,6 +303,11 @@ class ModbusTemplateSensor(SensorEntity):
         self._input_type = register.get("input_type", "input")
         self._slave_id = register.get("device_address", 1)
         self._verify = register.get("verify", False)
+        self._scan_interval = register.get("scan_interval", 30)  # Default 30 seconds
+        if self._scan_interval == 0:
+            _LOGGER.debug("Sensor %s initialized with scan_interval: 0 (never auto-update)", self._name)
+        else:
+            _LOGGER.debug("Sensor %s initialized with scan_interval: %d seconds", self._name, self._scan_interval)
         
         # Value processing (map, flags, options)
         self._map = register.get("map", {})
@@ -277,6 +332,8 @@ class ModbusTemplateSensor(SensorEntity):
         self._attr_state_class = self._state_class
         self._attr_native_unit_of_measurement = self._unit
         self._attr_should_poll = True
+        # Set scan_interval for HA polling
+        self._attr_scan_interval = self._scan_interval
         
         # For string sensors and sensors with map/flags/options, set device_class and state_class to None
         if (self._data_type == "string" or 
@@ -300,6 +357,7 @@ class ModbusTemplateSensor(SensorEntity):
             manufacturer="Modbus Manager",
             model=template_name,
             sw_version=f"Firmware: {firmware_version}",
+            via_device=(DOMAIN, f"{prefix}_{template_name}"),
         )
         
                 # _LOGGER.debug("Sensor %s initialized (Address: %d, Type: %s, Count: %d, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)", 
@@ -311,20 +369,37 @@ class ModbusTemplateSensor(SensorEntity):
         return self._register.get("template", "unknown")
     
     @property
+    def scan_interval(self) -> int:
+        """Return the scan interval in seconds."""
+        return self._scan_interval
+    
+    @property
     def extra_state_attributes(self) -> dict:
         """Return entity specific state attributes."""
         attributes = {}
         if self._group:
             attributes["group"] = self._group
+        attributes["scan_interval"] = self._scan_interval
         return attributes
 
     async def async_update(self) -> None:
         """Update the sensor value."""
         try:
+            _LOGGER.debug("Starting update for sensor %s (scan_interval: %d)", self._name, self._scan_interval)
+            
             # Skip update if sensor is disabled due to repeated failures
             if self._disabled:
+                _LOGGER.debug("Sensor %s is disabled, skipping update", self._name)
                 return
             
+            # Skip update if scan_interval is 0 (never auto-update)
+            if self._scan_interval == 0:
+                _LOGGER.debug("Skipping update for sensor %s (scan_interval: 0)", self._name)
+                return
+            
+            # HA Modbus handles timing automatically via hub configuration
+            # No manual delays needed - they cause performance warnings
+
             # Get Modbus-Hub from configuration
             if self._entry.entry_id not in self._hass.data[DOMAIN]:
                 _LOGGER.error("No configuration data found for Entry %s", self._entry.entry_id)
@@ -332,27 +407,32 @@ class ModbusTemplateSensor(SensorEntity):
             
             config_data = self._hass.data[DOMAIN][self._entry.entry_id]
             hub = config_data.get("hub")
+            register_optimizer = config_data.get("register_optimizer")
             
             if not hub:
                 _LOGGER.error("Modbus-Hub not found")
                 return
             
             # Modbus operation based on input_type
-            if self._input_type == "input":
-                # Read input registers
-                result = await self._read_input_registers(hub)
-            elif self._input_type == "holding":
-                # Read holding registers
-                result = await self._read_holding_registers(hub)
-            elif self._input_type == "coil":
-                # Read coils
-                result = await self._read_coils(hub)
-            elif self._input_type == "discrete":
-                # Read discrete inputs
-                result = await self._read_discrete_inputs(hub)
+            _LOGGER.debug("Reading %s register at address %d (count: %d) for sensor %s", 
+                         self._input_type, self._address, self._count, self._name)
+            
+            # Try to use register optimizer if available
+            if register_optimizer and self._input_type in ["input", "holding"]:
+                result = await self._read_optimized_register(hub, register_optimizer)
             else:
-                _LOGGER.warning("Unknown input_type: %s", self._input_type)
-                return
+                # Fallback to individual register reading
+                if self._input_type == "input":
+                    result = await self._read_input_registers(hub)
+                elif self._input_type == "holding":
+                    result = await self._read_holding_registers(hub)
+                elif self._input_type == "coil":
+                    result = await self._read_coils(hub)
+                elif self._input_type == "discrete":
+                    result = await self._read_discrete_inputs(hub)
+                else:
+                    _LOGGER.warning("Unknown input_type: %s", self._input_type)
+                    return
             
             if result is not None:
                 # Process value
@@ -360,7 +440,7 @@ class ModbusTemplateSensor(SensorEntity):
                 self._attr_native_value = processed_value
                 # Reset failure counter on successful read
                 self._consecutive_failures = 0
-                # _LOGGER.debug("Sensor %s updated: %s", self._name, processed_value)
+                _LOGGER.info("Successfully updated sensor %s with value: %s (raw: %s)", self._name, processed_value, result)
             else:
                 self._consecutive_failures += 1
                 _LOGGER.warning("No data received for sensor %s (failure %d/%d)", 
@@ -382,12 +462,103 @@ class ModbusTemplateSensor(SensorEntity):
                 self._disabled = True
                 _LOGGER.warning("Sensor %s disabled after %d consecutive failures", 
                               self._name, self._consecutive_failures)
+    
+    def _get_hub(self):
+        """Get the Modbus hub for this sensor."""
+        if self._entry.entry_id not in self._hass.data[DOMAIN]:
+            _LOGGER.error("No configuration data found for Entry %s", self._entry.entry_id)
+            return None
+        
+        config_data = self._hass.data[DOMAIN][self._entry.entry_id]
+        hub = config_data.get("hub")
+        
+        if not hub:
+            _LOGGER.error("Modbus-Hub not found")
+            return None
+            
+        return hub
+
+    async def _read_optimized_register(self, hub, register_optimizer) -> Optional[Any]:
+        """Read register using optimized approach."""
+        try:
+            # Get all registers for this device
+            config_data = self._hass.data[DOMAIN][self._entry.entry_id]
+            all_registers = config_data.get("registers", [])
+            
+            if not all_registers:
+                _LOGGER.warning("No registers available for optimization")
+                return await self._read_input_registers(hub) if self._input_type == "input" else await self._read_holding_registers(hub)
+            
+            # Get registers with the same scan_interval as this sensor
+            same_scan_interval_registers = [
+                reg for reg in all_registers 
+                if reg.get("scan_interval", 30) == self._scan_interval
+            ]
+            
+            _LOGGER.info("Found %d registers with scan_interval %d for sensor %s", 
+                        len(same_scan_interval_registers), self._scan_interval, self._name)
+            
+            if not same_scan_interval_registers:
+                _LOGGER.info("No registers with scan_interval %d found, using individual reading for %s", 
+                             self._scan_interval, self._name)
+                return await self._read_input_registers(hub) if self._input_type == "input" else await self._read_holding_registers(hub)
+            
+            # Optimize registers with the same scan_interval
+            optimized_ranges = register_optimizer.optimize_registers(same_scan_interval_registers)
+            
+            # Find the range that contains our register
+            for range_obj in optimized_ranges:
+                if range_obj.start_address <= self._address <= range_obj.end_address:
+                    _LOGGER.info("Using optimized range %d-%d for sensor %s (scan_interval: %d)", 
+                                 range_obj.start_address, range_obj.end_address, self._name, self._scan_interval)
+                    
+                    # Read the optimized range
+                    if self._input_type == "input":
+                        from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_INPUT
+                        result = await hub.async_pb_call(
+                            self._slave_id,
+                            range_obj.start_address,
+                            range_obj.register_count,
+                            CALL_TYPE_REGISTER_INPUT
+                        )
+                    else:  # holding
+                        from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
+                        result = await hub.async_pb_call(
+                            self._slave_id,
+                            range_obj.start_address,
+                            range_obj.register_count,
+                            CALL_TYPE_REGISTER_HOLDING
+                        )
+                    
+                    if result and hasattr(result, 'registers'):
+                        # Extract our specific register value from the range
+                        register_data = result.registers
+                        _LOGGER.info("Read %d registers from range %d-%d for sensor %s", 
+                                     len(register_data), range_obj.start_address, range_obj.end_address, self._name)
+                        extracted_value = register_optimizer.get_register_value(self._register, register_data, range_obj.start_address)
+                        _LOGGER.info("Extracted value for sensor %s: %s", self._name, extracted_value)
+                        return extracted_value
+                    else:
+                        _LOGGER.warning("Failed to read optimized range for sensor %s", self._name)
+                        return None
+            
+            # If no optimized range found, fallback to individual reading
+            _LOGGER.debug("No optimized range found for sensor %s, using individual reading", self._name)
+            return await self._read_input_registers(hub) if self._input_type == "input" else await self._read_holding_registers(hub)
+            
+        except Exception as e:
+            _LOGGER.error("Error in optimized register reading for %s: %s", self._name, str(e))
+            # Fallback to individual reading
+            return await self._read_input_registers(hub) if self._input_type == "input" else await self._read_holding_registers(hub)
 
     async def _read_input_registers(self, hub) -> Optional[Any]:
         """Read input registers from Modbus device."""
         try:
             # Verwende die korrekte Home Assistant Modbus API
             from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_INPUT
+            
+            _LOGGER.info("Calling async_pb_call for input register %d (slave_id: %d, count: %d)", 
+                         self._address, self._slave_id, self._count)
             
             # Modbus-Call über Standard API
             result = await hub.async_pb_call(
@@ -396,6 +567,8 @@ class ModbusTemplateSensor(SensorEntity):
                 self._count,
                 CALL_TYPE_REGISTER_INPUT
             )
+            
+            _LOGGER.info("Modbus call result: %s", result)
             
             if result and hasattr(result, 'registers'):
                 # For string data type, return all registers as list
@@ -418,12 +591,17 @@ class ModbusTemplateSensor(SensorEntity):
         try:
             from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
             
+            _LOGGER.debug("Calling async_pb_call for holding register %d (slave_id: %d, count: %d)", 
+                         self._address, self._slave_id, self._count)
+            
             result = await hub.async_pb_call(
                 self._slave_id,
                 self._address,
                 self._count,
                 CALL_TYPE_REGISTER_HOLDING
             )
+            
+            _LOGGER.debug("Modbus call result: %s", result)
             
             if result and hasattr(result, 'registers'):
                 # For string data type, return all registers as list
@@ -822,3 +1000,23 @@ class ModbusTemplateSensor(SensorEntity):
         except Exception as e:
             _LOGGER.error("Fehler bei der Wertverarbeitung für %s: %s", self._name, str(e))
             return value
+    
+    async def async_added_to_hass(self) -> None:
+        """Called when entity is added to Home Assistant."""
+        # Ensure entity registry is properly linked to this integration
+        registry = async_get_entity_registry(self._hass)
+        if registry:
+            entity_entry = registry.async_get(self.entity_id)
+            if entity_entry and entity_entry.platform != DOMAIN:
+                _LOGGER.warning("Entity %s is not properly linked to %s platform", 
+                               self.entity_id, DOMAIN)
+                # Try to update the platform
+                try:
+                    registry.async_update_entity(
+                        self.entity_id,
+                        platform=DOMAIN,
+                        config_entry_id=self._entry.entry_id
+                    )
+                    _LOGGER.info("Updated entity %s platform to %s", self.entity_id, DOMAIN)
+                except Exception as e:
+                    _LOGGER.error("Failed to update entity %s platform: %s", self.entity_id, str(e))

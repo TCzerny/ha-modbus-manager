@@ -3,7 +3,7 @@ version: 1
 description: "Aggregate sensors across all Modbus Manager devices"
 default_prefix: "aggregates"  # Default prefix for entity names
 type: "aggregates"
-firmware_version: "1.0.0"
+
 
 # No regular sensors needed - this template only provides aggregates
 sensors: []
@@ -11,6 +11,7 @@ sensors: []
 # Aggregates configuration
 aggregates:
   - name: "Total Grid Power"
+    unique_id: "aggregate_total_grid_power"
     group: "PV_grid_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -19,6 +20,7 @@ aggregates:
     icon: "mdi:transmission-tower"
     
   - name: "Total Grid Import Power"
+    unique_id: "aggregate_total_grid_import_power"
     group: "PV_grid_import"
     method: "sum"
     unit_of_measurement: "W"
@@ -27,6 +29,7 @@ aggregates:
     icon: "mdi:transmission-tower-import"
     
   - name: "Total Grid Export Power"
+    unique_id: "aggregate_total_grid_export_power"
     group: "PV_grid_export"
     method: "sum"
     unit_of_measurement: "W"
@@ -35,6 +38,7 @@ aggregates:
     icon: "mdi:transmission-tower-export"
     
   - name: "Total Battery Power"
+    unique_id: "aggregate_total_battery_power"
     group: "PV_battery_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -43,6 +47,7 @@ aggregates:
     icon: "mdi:battery"
     
   - name: "Total Solar Power"
+    unique_id: "aggregate_total_solar_power"
     group: "PV_mppt_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -51,6 +56,7 @@ aggregates:
     icon: "mdi:solar-power"
     
   - name: "Total DC Power"
+    unique_id: "aggregate_total_dc_power"
     group: "PV_total_dc_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -59,6 +65,7 @@ aggregates:
     icon: "mdi:lightning-bolt"
     
   - name: "Total Load Power"
+    unique_id: "aggregate_total_load_power"
     group: "PV_load_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -67,6 +74,7 @@ aggregates:
     icon: "mdi:home-lightning-bolt"
     
   - name: "Average Efficiency"
+    unique_id: "aggregate_average_efficiency"
     group: "PV_efficiency"
     method: "average"
     unit_of_measurement: "%"
@@ -76,6 +84,7 @@ aggregates:
     
     
   - name: "Total Battery Charging Power"
+    unique_id: "aggregate_total_battery_charging_power"
     group: "PV_battery_charging"
     method: "sum"
     unit_of_measurement: "W"
@@ -84,6 +93,7 @@ aggregates:
     icon: "mdi:battery-plus"
     
   - name: "Total Battery Discharging Power"
+    unique_id: "aggregate_total_battery_discharging_power"
     group: "PV_battery_discharging"
     method: "sum"
     unit_of_measurement: "W"
@@ -92,6 +102,7 @@ aggregates:
     icon: "mdi:battery-minus"
     
   - name: "Total Power Measurement"
+    unique_id: "aggregate_total_power_measurement"
     group: "PV_power_measurement"
     method: "sum"
     unit_of_measurement: "W"
@@ -100,6 +111,7 @@ aggregates:
     icon: "mdi:lightning-bolt"
     
   - name: "Total Power Balance"
+    unique_id: "aggregate_total_power_balance"
     group: "PV_power_balance"
     method: "sum"
     unit_of_measurement: "W"
@@ -108,6 +120,7 @@ aggregates:
     icon: "mdi:scale-balance"
     
   - name: "Total Phase Power"
+    unique_id: "aggregate_total_phase_power"
     group: "PV_phase_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -116,6 +129,7 @@ aggregates:
     icon: "mdi:flash"
     
   - name: "Total Meter Power"
+    unique_id: "aggregate_total_meter_power"
     group: "PV_meter_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -124,6 +138,7 @@ aggregates:
     icon: "mdi:meter-electric"
     
   - name: "Device Count"
+    unique_id: "aggregate_device_count"
     group: "PV_device_count"
     method: "count"
     unit_of_measurement: ""
@@ -133,6 +148,7 @@ aggregates:
     
   # EV Charger Aggregates
   - name: "Total EV Charging Power"
+    unique_id: "aggregate_total_ev_charging_power"
     group: "EV_charging_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -141,6 +157,7 @@ aggregates:
     icon: "mdi:ev-station"
     
   - name: "Total EV Current"
+    unique_id: "aggregate_total_ev_current"
     group: "EV_current_measurement"
     method: "sum"
     unit_of_measurement: "A"
@@ -149,6 +166,7 @@ aggregates:
     icon: "mdi:lightning-bolt"
     
   - name: "Total EV Max Current"
+    unique_id: "aggregate_total_ev_max_current"
     group: "EV_max_current_setting"
     method: "sum"
     unit_of_measurement: "A"
@@ -157,6 +175,7 @@ aggregates:
     icon: "mdi:gauge"
     
   - name: "Total EV Max Charging Power"
+    unique_id: "aggregate_total_ev_max_charging_power"
     group: "EV_max_charging_power"
     method: "sum"
     unit_of_measurement: "W"
@@ -165,6 +184,7 @@ aggregates:
     icon: "mdi:ev-station"
     
   - name: "Average EV Charging Efficiency"
+    unique_id: "aggregate_average_ev_charging_efficiency"
     group: "EV_efficiency"
     method: "average"
     unit_of_measurement: "%"
@@ -173,6 +193,7 @@ aggregates:
     icon: "mdi:gauge"
     
   - name: "Active EV Chargers"
+    unique_id: "aggregate_active_ev_chargers"
     group: "EV_charging_status"
     method: "count"
     unit_of_measurement: ""

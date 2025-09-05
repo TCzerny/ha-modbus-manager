@@ -46,36 +46,25 @@ class ModbusAggregateSensor(SensorEntity):
             self._state_class = aggregate_config.get("state_class")
             self._icon = aggregate_config.get("icon")
             
-            # Generate unique ID and entity ID with better naming
-            clean_name = self._name.lower().replace(' ', '_').replace('-', '_')
-            # Include user prefix in unique_id if provided
-            if self._prefix:
-                self._attr_unique_id = f"{self._prefix}_{clean_name}"
+            # Use unique_id from template if provided, otherwise generate one
+            if "unique_id" in aggregate_config:
+                self._attr_unique_id = aggregate_config["unique_id"]
+                _LOGGER.debug("Aggregate Sensor %s: Using template unique_id: %s", self._name, self._attr_unique_id)
             else:
-                self._attr_unique_id = f"aggregate_{clean_name}"
+                # Generate unique ID and entity ID with better naming
+                clean_name = self._name.lower().replace(' ', '_').replace('-', '_')
+                # Include user prefix in unique_id if provided
+                if self._prefix:
+                    self._attr_unique_id = f"{self._prefix}_{clean_name}"
+                else:
+                    self._attr_unique_id = f"aggregate_{clean_name}"
+                _LOGGER.debug("Aggregate Sensor %s: Generated unique_id: %s", self._name, self._attr_unique_id)
             
-            # Set entity_id with sensor prefix and user prefix if provided
-            if self._prefix:
-                self._attr_entity_id = f"sensor.{self._prefix}_{clean_name}"
-            else:
-                self._attr_entity_id = f"sensor.{clean_name}"
+            # Set entity_id based on unique_id
+            self._attr_entity_id = f"sensor.{self._attr_unique_id}"
             
-            # Better name: integrate aggregation function into the name
-            display_name = self._name
-            method_display = self._method.capitalize()
-            
-            # Remove common prefixes and add aggregation function
-            if display_name.startswith("Total "):
-                display_name = display_name[6:]  # Remove "Total "
-            if display_name.startswith("Average "):
-                display_name = display_name[8:]  # Remove "Average "
-            if display_name.startswith("Max "):
-                display_name = display_name[4:]  # Remove "Max "
-            if display_name.startswith("Min "):
-                display_name = display_name[4:]  # Remove "Min "
-            
-            # Add aggregation function to the name
-            self._attr_name = f"{display_name} {method_display}"
+            # Use the name from template directly, don't modify it
+            self._attr_name = self._name
             
             # Device info for template-based sensors - ALL use the same device
             device_name = f"{self._prefix} Modbus Manager Aggregates" if self._prefix else "MM Modbus Manager Aggregates"

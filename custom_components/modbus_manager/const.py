@@ -35,6 +35,13 @@ SERVICE_TYPE_BUTTON: Final = "button"
 
 # Default values
 DEFAULT_TIMEOUT: Final = 3  # Sekunden
+MIN_TIMEOUT: Final = 1  # Minimum timeout in seconds
+MAX_TIMEOUT: Final = 30  # Maximum timeout in seconds
+DEFAULT_DELAY: Final = 0  # Default delay in seconds
+MIN_DELAY: Final = 0  # Minimum delay in seconds
+DEFAULT_MESSAGE_WAIT_MS: Final = 100  # Default message wait in milliseconds
+MIN_MESSAGE_WAIT_MS: Final = 10  # Minimum message wait in milliseconds
+MAX_MESSAGE_WAIT_MS: Final = 1000  # Maximum message wait in milliseconds
 DEFAULT_RETRY_ON_EMPTY: Final = True
 DEFAULT_RETRIES: Final = 3
 DEFAULT_RETRY_DELAY: Final = 0.1

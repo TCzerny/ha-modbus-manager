@@ -28,15 +28,16 @@ class RegisterRange:
             data_type = reg.get("data_type", "uint16")
             count = reg.get("count", 1)
             
-            if data_type == "string":
-                # String registers: count is the number of registers to read
-                total_count += count
-            elif data_type in ["uint32", "int32", "float"]:
+            # Always set correct count based on data type, regardless of template
+            if data_type in ["uint32", "int32", "float", "float32"]:
                 # 32-bit values: always 2 registers
                 total_count += 2
             elif data_type == "float64":
                 # 64-bit values: always 4 registers
                 total_count += 4
+            elif data_type == "string":
+                # String registers: count is the number of registers to read
+                total_count += count if count is not None else 1
             else:
                 # Standard: 1 register
                 total_count += 1
@@ -69,6 +70,8 @@ class RegisterOptimizer:
             for reg in sorted_registers:
                 address = reg.get("address", 0)
                 count = reg.get("count", 1)
+                if count is None:
+                    count = 1
                 end_address = address + count - 1
                 
                 if current_range is None:
@@ -81,7 +84,7 @@ class RegisterOptimizer:
                 else:
                     # Check if register can be appended to current range
                     if (address <= current_range.end_address + 1 and 
-                        current_range.register_count + count <= self.max_read_size):
+                        current_range.register_count + (count or 1) <= self.max_read_size):
                         # Extend range
                         current_range.end_address = max(current_range.end_address, end_address)
                         current_range.registers.append(reg)
@@ -110,7 +113,7 @@ class RegisterOptimizer:
             # Fallback: Each register individually
             return [RegisterRange(
                 start_address=reg.get("address", 0),
-                end_address=reg.get("address", 0) + reg.get("count", 1) - 1,
+                end_address=reg.get("address", 0) + (reg.get("count", 1) or 1) - 1,
                 registers=[reg]
             ) for reg in registers]
     
@@ -121,7 +124,15 @@ class RegisterOptimizer:
         try:
             address = register.get("address", 0)
             count = register.get("count", 1)
+            if count is None:
+                count = 1
             data_type = register.get("data_type", "uint16")
+            
+            # Always set correct count based on data type, regardless of template
+            if data_type in ["uint32", "int32", "float", "float32"]:
+                count = 2  # 32-bit types need 2 registers
+            elif data_type == "float64":
+                count = 4  # 64-bit types need 4 registers
             
             # Calculate relative position in read range
             relative_start = address - range_start
@@ -132,21 +143,26 @@ class RegisterOptimizer:
                 return None
             
             # Extract register data
-            if count == 1:
-                raw_value = register_data[relative_start]
-            elif data_type == "string":
+            if data_type == "string":
                 # For string registers: return all registers as list
                 raw_value = register_data[relative_start:relative_end]
-            else:
-                # For 32-bit values (2 registers)
+            elif data_type in ["uint32", "int32", "float", "float32"]:
+                # For 32-bit values (2 registers) - return raw register data as list
                 if relative_start + 1 < len(register_data):
-                    if register.get("swap", False):
-                        raw_value = (register_data[relative_start + 1] << 16) | register_data[relative_start]
-                    else:
-                        raw_value = (register_data[relative_start] << 16) | register_data[relative_start + 1]
+                    raw_value = register_data[relative_start:relative_start + 2]
                 else:
                     _LOGGER.error("Insufficient register data for 32-bit value")
                     return None
+            elif data_type == "float64":
+                # For 64-bit values (4 registers)
+                if relative_start + 3 < len(register_data):
+                    raw_value = register_data[relative_start:relative_end]
+                else:
+                    _LOGGER.error("Insufficient register data for 64-bit value")
+                    return None
+            else:
+                # Standard: 1 register
+                raw_value = register_data[relative_start]
             
             # Data type conversion (only for numeric values)
             if data_type == "int16":
@@ -164,7 +180,7 @@ class RegisterOptimizer:
         """Calculate optimization statistics."""
         try:
             total_registers = len(registers)
-            total_addresses = sum(reg.get("count", 1) for reg in registers)
+            total_addresses = sum(reg.get("count", 1) or 1 for reg in registers)
             
             # Without optimization: read each register individually
             reads_without_optimization = total_registers

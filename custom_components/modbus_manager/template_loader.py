@@ -370,6 +370,14 @@ def process_simple_template(template_data: Dict[str, Any], base_template: Dict[s
             calc_name = calc_sensor.get("name", "").lower().replace(" ", "_")
             calc_sensor["unique_id"] = f"{prefix}_{calc_name}"
         
+        # Process sensors for placeholder replacement
+        sensors = template_data.get("sensors", [])
+        for sensor in sensors:
+            # Replace {BATTERY_SLAVE_ID} placeholder with actual battery_slave_id
+            if "slave_id" in sensor and "{BATTERY_SLAVE_ID}" in str(sensor["slave_id"]):
+                battery_slave_id = user_config.get("battery_slave_id", 200)
+                sensor["slave_id"] = sensor["slave_id"].replace("{BATTERY_SLAVE_ID}", str(battery_slave_id))
+        
         # Process controls
         controls = template_data.get("controls", [])
         for control in controls:
@@ -504,6 +512,14 @@ async def process_sunspec_config_template(template_data: Dict[str, Any], base_te
             # Add prefix to unique_id
             calc_name = calc_sensor.get("name", "").lower().replace(" ", "_")
             calc_sensor["unique_id"] = f"{prefix}_{calc_name}"
+        
+        # Process sensors for placeholder replacement
+        sensors = template_data.get("sensors", [])
+        for sensor in sensors:
+            # Replace {BATTERY_SLAVE_ID} placeholder with actual battery_slave_id
+            if "slave_id" in sensor and "{BATTERY_SLAVE_ID}" in str(sensor["slave_id"]):
+                battery_slave_id = user_config.get("battery_slave_id", 200)
+                sensor["slave_id"] = sensor["slave_id"].replace("{BATTERY_SLAVE_ID}", str(battery_slave_id))
         
         # Process controls
         controls = template_data.get("controls", [])
@@ -791,10 +807,37 @@ async def process_template_registers(template_data: Dict[str, Any], dynamic_conf
         _LOGGER.debug("Processing template registers for %s", template_name)
         
         # Get registers from template
-        registers = template_data.get("registers", [])
+        registers = template_data.get("sensors", [])
         if not registers:
             _LOGGER.warning("No registers found in template %s", template_name)
             return []
+        
+        # Apply dynamic config filtering if dynamic_config is provided
+        if dynamic_config:
+            _LOGGER.debug("Applying dynamic config filtering to %d registers", len(registers))
+            filtered_registers = []
+            
+            # Extract dynamic config parameters
+            phases = dynamic_config.get("phases", 3)
+            mppt_count = dynamic_config.get("mppt_count", 2)
+            battery_config = dynamic_config.get("battery_config", "none")
+            battery_enabled = battery_config != "none"
+            battery_type = battery_config
+            battery_slave_id = dynamic_config.get("battery_slave_id", 200)
+            firmware_version = dynamic_config.get("firmware_version", "SAPPHIRE-H_03011.95.01")
+            connection_type = dynamic_config.get("connection_type", "LAN")
+            
+            _LOGGER.info("Dynamic config: phases=%d, mppt=%d, battery_config=%s, battery_slave_id=%d, fw=%s, conn=%s", 
+                        phases, mppt_count, battery_config, battery_slave_id, firmware_version, connection_type)
+            
+            # Apply filtering logic (same as in config_flow.py)
+            for reg in registers:
+                if _should_include_sensor(reg, phases, mppt_count, battery_enabled, battery_type, battery_slave_id, firmware_version, connection_type, dynamic_config):
+                    filtered_registers.append(reg)
+            
+            _LOGGER.info("Dynamic config filtering: %d registers passed filter from %d original", 
+                        len(filtered_registers), len(registers))
+            registers = filtered_registers
         
         # Process each register with current validation logic
         processed_registers = []
@@ -809,6 +852,110 @@ async def process_template_registers(template_data: Dict[str, Any], dynamic_conf
     except Exception as e:
         _LOGGER.error("Error processing template registers: %s", str(e))
         return []
+
+def _should_include_sensor(sensor: dict, phases: int, mppt_count: int, battery_enabled: bool, 
+                           battery_type: str, battery_slave_id: int, firmware_version: str, connection_type: str, dynamic_config: dict) -> bool:
+    """Check if sensor should be included based on configuration."""
+    sensor_name = sensor.get("name", "").lower()
+    unique_id = sensor.get("unique_id", "").lower()
+    
+    # Check both sensor_name and unique_id for filtering
+    search_text = f"{sensor_name} {unique_id}".lower()
+    
+    # Debug: Log what we're checking
+    _LOGGER.debug("Checking sensor: name='%s', unique_id='%s', search_text='%s'", 
+                 sensor_name, unique_id, search_text)
+    
+    # Phase-specific sensors
+    if phases == 1:
+        # Exclude phase B and C sensors for single phase
+        if any(phase in search_text for phase in ["phase_b", "phase_c", "phase b", "phase c"]):
+            _LOGGER.info("Excluding sensor due to single phase config: %s (unique_id: %s)", 
+                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            return False
+    elif phases == 3:
+        # Include all phase sensors
+        pass
+    
+    # MPPT-specific sensors
+    if "mppt" in search_text:
+        # Extract MPPT number from sensor name or unique_id
+        mppt_number = _extract_mppt_number(search_text)
+        if mppt_number and mppt_number > mppt_count:
+            _LOGGER.info("Excluding sensor due to MPPT count config: %s (unique_id: %s, MPPT %d > %d)", 
+                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), mppt_number, mppt_count)
+            return False
+    
+    # Battery-specific sensors (general keywords)
+    if not battery_enabled:
+        battery_keywords = ["battery", "bms", "soc", "charge", "discharge", "backup"]
+        if any(keyword in search_text for keyword in battery_keywords):
+            _LOGGER.info("Excluding sensor due to battery disabled: %s (unique_id: %s)", 
+                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            return False
+    
+    # Battery type specific sensors (SBR Battery)
+    sensor_group = sensor.get("group", "")
+    if battery_type == "none":
+        # No battery selected - exclude all battery sensors (already handled by battery_enabled check above)
+        pass 
+    elif battery_type == "standard_battery":
+        # Standard Battery selected - exclude SBR battery sensors
+        if sensor_group == "SBR_battery":
+            _LOGGER.info("Excluding sensor due to standard battery selected: %s (unique_id: %s)", 
+                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            return False
+    elif battery_type == "sbr_battery":
+        # SBR Battery selected - include both SBR battery sensors and standard battery sensors
+        # SBR battery sensors are included via group filtering
+        # Standard battery sensors are included via keyword filtering
+        pass
+    
+    # Firmware version specific sensors
+    sensor_firmware_min = sensor.get("firmware_min_version")
+    if sensor_firmware_min:
+        from packaging import version
+        try:
+            # Compare firmware versions
+            current_ver = version.parse(firmware_version)
+            min_ver = version.parse(sensor_firmware_min)
+            if current_ver < min_ver:
+                _LOGGER.info("Excluding sensor due to firmware version: %s (unique_id: %s, requires: %s, current: %s)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), 
+                             sensor_firmware_min, firmware_version)
+                return False
+        except version.InvalidVersion:
+            # Fallback to string comparison for non-semantic versions
+            if firmware_version < sensor_firmware_min:
+                _LOGGER.info("Excluding sensor due to firmware version (string): %s (unique_id: %s, requires: %s, current: %s)", 
+                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), 
+                             sensor_firmware_min, firmware_version)
+                return False
+    
+    # Connection type specific sensors
+    connection_config = dynamic_config.get("connection_type", {}).get("sensor_availability", {})
+    if connection_type == "LAN":
+        # Exclude WINET-only sensors
+        winet_only_sensors = connection_config.get("winet_only_sensors", [])
+        if unique_id in winet_only_sensors:
+            _LOGGER.info("Excluding sensor due to LAN connection: %s (unique_id: %s)", 
+                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            return False
+    elif connection_type == "WINET":
+        # Exclude LAN-only sensors
+        lan_only_sensors = connection_config.get("lan_only_sensors", [])
+        if unique_id in lan_only_sensors:
+            _LOGGER.info("Excluding sensor due to WINET connection: %s (unique_id: %s)", 
+                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            return False
+    
+    return True
+
+def _extract_mppt_number(search_text: str) -> int:
+    """Extract MPPT number from sensor name or unique_id."""
+    import re
+    match = re.search(r'mppt(\d+)', search_text.lower())
+    return int(match.group(1)) if match else None
 
 def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Dict[str, Any]:
     """Validate and process a single register definition."""
@@ -834,10 +981,10 @@ def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Di
             _LOGGER.debug("Using count=%d from template for %s in Template %s", 
                          template_count, data_type, template_name)
         else:
-            # Don't set count here - let sensor init handle defaults
-            # Just pass through the data_type for sensor init to use
+            # Don't set count here - let sensor init handle defaults based on data_type
+            # This allows the sensor to determine the correct count based on data_type
             processed_reg["count"] = None
-            _LOGGER.debug("No count specified in template for %s in Template %s - will use defaults in sensor init", 
+            _LOGGER.debug("No count specified in template for %s in Template %s - will use data_type-based defaults in sensor init", 
                          data_type, template_name)
         
         # Standardwerte für optionale Felder setzen (skip count - handled above)
@@ -924,6 +1071,18 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
         if not isinstance(scan_interval, int) or scan_interval < 0:
             _LOGGER.error("Invalid scan_interval in Template %s: %s", template_name, scan_interval)
             return False
+        
+        # Validate scan interval range (0 = never update, 1-3600 = normal range)
+        register_name = reg.get("name", "unknown")
+        if scan_interval == 0:
+            _LOGGER.debug("Register %s in Template %s has scan_interval: 0 (never auto-update)", 
+                         register_name, template_name)
+        elif scan_interval < 1 or scan_interval > 3600:
+            _LOGGER.warning("scan_interval %d in Template %s for register %s is outside recommended range (1-3600 seconds)", 
+                          scan_interval, template_name, register_name)
+        else:
+            _LOGGER.debug("Register %s in Template %s has scan_interval: %d seconds", 
+                         register_name, template_name, scan_interval)
         
         # Control-specific validation
         if not validate_control_settings(reg, template_name):
