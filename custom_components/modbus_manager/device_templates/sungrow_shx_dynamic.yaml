@@ -128,6 +128,7 @@ dynamic_config:
         - "yearly_export_2027"
         - "yearly_export_2028"
         - "yearly_export_2029"
+
       # Some registers are only available via WINET connection
       winet_only_sensors:
         - "basic_status"
@@ -146,7 +147,7 @@ sensors:
     group: "PV_device_count"
 
   - name: Sungrow device type code
-    unique_id: dev_code
+    unique_id: sungrow_device_type_code
     address: 4999 # reg 5000
     input_type: input
     data_type: uint16
@@ -620,6 +621,579 @@ sensors:
     scale: 0.01
     scan_interval: 10
 
+  # following statistic sensors only work on some SH*RT inverters
+  # (only LAN attached devices)
+  # Therefore commenting them here
+  # # Start monthly PV generation
+  - name: Monthly PV generation (01 January)
+    unique_id: monthly_pv_generation_01_january
+    address: 6226 # reg 6227
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (02 February)
+    unique_id: monthly_pv_generation_02_february
+    address: 6227 # reg 6228
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (03 March)
+    unique_id: monthly_pv_generation_03_march
+    address: 6228 # reg 6229
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (04 April)
+    unique_id: monthly_pv_generation_04_april
+    address: 6229 # reg 6230
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (05 May)
+    unique_id: monthly_pv_generation_05_may
+    address: 6230 # reg 6231
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (06 June)
+    unique_id: monthly_pv_generation_06_june
+    address: 6231 # reg 6232
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (07 July)
+    unique_id: monthly_pv_generation_07_july
+    address: 6232 # reg 6233
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (08 August)
+    unique_id: monthly_pv_generation_08_august
+    address: 6233 # reg 6234
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (09 September)
+    unique_id: monthly_pv_generation_09_september
+    address: 6234 # reg 6235
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (10 October)
+    unique_id: monthly_pv_generation_10_october
+    address: 6235 # reg 6236
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (11 November)
+    unique_id: monthly_pv_generation_11_november
+    address: 6236 # reg 6237
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly PV generation (12 December)
+    unique_id: monthly_pv_generation_12_december
+    address: 6237 # reg 6238
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+  # End monthly PV generation
+
+  # Start yearly pv generation
+  - name: Yearly PV generation (2019)
+    unique_id: yearly_pv_generation_2019
+    address: 6257 # reg 6258
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2020)
+    unique_id: yearly_pv_generation_2020
+    address: 6259 # reg 6260
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2021)
+    unique_id: yearly_pv_generation_2021
+    address: 6261 # reg 6262
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2022)
+    unique_id: yearly_pv_generation_2022
+    address: 6263 # reg 6264
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2023)
+    unique_id: yearly_pv_generation_2023
+    address: 6265 # reg 6266
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2024)
+    unique_id: yearly_pv_generation_2024
+    address: 6267 # reg 6268
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2025)
+    unique_id: yearly_pv_generation_2025
+    address: 6269 # reg 6270
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2026)
+    unique_id: yearly_pv_generation_2026
+    address: 6271 # reg 6272
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2027)
+    unique_id: yearly_pv_generation_2027
+    address: 6273 # reg 6274
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2028)
+    unique_id: yearly_pv_generation_2028
+    address: 6275 # reg 6276
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly PV generation (2029)
+    unique_id: yearly_pv_generation_2029e
+    address: 6277 # reg 6278
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+  # End yearly pv generation
+
+  # Start monthly export
+  - name: Monthly export (01 January)
+    unique_id: monthly_export_01_january
+    address: 6595 # reg 6596
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (02 February)
+    unique_id: monthly_export_02_february
+    address: 6596 # reg 6597
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (03 March)
+    unique_id: monthly_export_03_march
+    address: 6597 # reg 6598
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (04 April)
+    unique_id: monthly_export_04_april
+    address: 6598 # reg 6599
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (05 May)
+    unique_id: monthly_export_05_may
+    address: 6599 # reg 6600
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (06 June)
+    unique_id: monthly_export_06_june
+    address: 6600 # reg 6601
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (07 July)
+    unique_id: monthly_export_07_july
+    address: 6601 # reg 6602
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (08 August)
+    unique_id: monthly_export_08_august
+    address: 6602 # reg 6603
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (09 September)
+    unique_id: monthly_export_09_september
+    address: 6603 # reg 6604
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (10 October)
+    unique_id: monthly_export_10_october
+    address: 6604 # reg 6605
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (11 November)
+    unique_id: monthly_export_11_november
+    address: 6605 # reg 6606
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Monthly export (12 December)
+    unique_id: monthly_export_12_december
+    address: 6606 # reg 6607
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+  # End monthly export
+
+  # Start yearly export energy from PV
+  - name: Yearly Export (2019)
+    unique_id: yearly_export_2019
+    address: 6615 # reg 6616
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2020)
+    unique_id: yearly_export_2020
+    address: 6617 # reg 6618
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2021)
+    unique_id: yearly_export_2021
+    address: 6619 # reg 6620
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2022)
+    unique_id: yearly_export_2022 
+    address: 6621 # reg 6622
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2023)
+    unique_id: yearly_export_2023
+    address: 6623 # reg 6624
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2024)
+    unique_id: yearly_export_2024
+    address: 6625 # reg 6626
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2025)
+    unique_id: yearly_export_2025
+    address: 6627 # reg 6628
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2026)
+    unique_id: yearly_export_2026
+    address: 6629 # reg 6630
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2027)
+    unique_id: yearly_export_2027
+    address: 6631 # reg 6632
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+
+  - name: Yearly Export (2028)
+    unique_id: yearly_export_2028
+    address: 6633 # reg 6634
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    unit_of_measurement: kWh
+    device_class: energy
+    state_class: total
+    scale: 0.1
+    scan_interval: 600
+  # # End yearly export energy from PV
+
+
   # System state and status sensors
   - name: "System state"
     unique_id: "system_state"
@@ -665,8 +1239,29 @@ sensors:
       0x9100: "Warn Running"
     group: "PV_status"
 
+  - name: "Running state"
+    unique_id: "running_state"
+    address: 13000 # reg 13001
+    input_type: input
+    data_type: uint16
+    precision: 0
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    group: "PV_status"
+    # Flags for individual bit interpretation
+    flags:
+      0x1: "PV Generating"
+      0x2: "Battery Charging" 
+      0x4: "Battery Discharging"
+      0x8: "Load Active"
+      0x10: "Exporting Power"
+      0x20: "Importing Power"
+      0x80: "Negative Load Power"
+
+
   - name: "Load Adjustment Mode"
-    unique_id: "load_adjustment_mode"
+    unique_id: "load_adjustment_mode_selection_raw"
     address: 13001
     input_type: "holding"
     data_type: "uint16"
@@ -1037,7 +1632,7 @@ sensors:
 
   # EMS Mode sensor
   - name: "EMS Mode"
-    unique_id: "ems_mode"
+    unique_id: "ems_mode_selection_raw"
     address: 13049
     input_type: "holding"
     data_type: "uint16"
@@ -1071,16 +1666,17 @@ sensors:
     scan_interval: 10
 
   # Undocumented sensors (reverse engineered)
-  - name: Reserved SoC for backup
-    unique_id: reserved_soc_for_backup
-    address: 13099 # reg 13100
-    input_type: holding
-    data_type: uint16
-    unit_of_measurement: "%"
-    device_class: battery
-    state_class: measurement
-    scale: 1
-    scan_interval: 10
+  # use number sensor instead - direct write
+  # - name: Reserved SoC for backup
+  #   unique_id: reserved_soc_for_backup
+  #   address: 13099 # reg 13100
+  #   input_type: holding
+  #   data_type: uint16
+  #   unit_of_measurement: "%"
+  #   device_class: battery
+  #   state_class: measurement
+  #   scale: 1
+  #   scan_interval: 10
 
   - name: Global mpp scan manual raw
     unique_id: global_mpp_scan_manual_raw
@@ -1089,18 +1685,6 @@ sensors:
     data_type: uint16
     precision: 0
     state_class: measurement
-    scan_interval: 10
-
-  - name: Battery max charge power
-    unique_id: battery_max_charge_power
-    address: 33046 # reg 33047
-    input_type: holding
-    data_type: uint16
-    precision: 0
-    unit_of_measurement: W
-    device_class: power
-    state_class: measurement
-    scale: 10
     scan_interval: 10
 
   - name: Battery max discharge power
@@ -1596,15 +2180,16 @@ sensors:
 #        precision: 0
 #        scan_interval: 60
 
-#      - name: Battery 1 Serial Array
-#        unique_id: battery_1_serial_array
-#        slave: !secret sungrow_modbus_slave_battery
-#        address: 10710 # reg 10711- 10720; Batt. Serial; S....
-#        input_type: input
-#        data_type: uint16
-#        #structure: ">10H"  #https://docs.python.org/3/library/struct.html
-#        structure: ">20B"  #https://docs.python.org/3/library/struct.html
-#        scan_interval: 120
+  # for Sungrow batteries only
+  - name: Sungrow battery serial
+    unique_id: battery_serial
+    slave_id: "{BATTERY_SLAVE_ID}"
+    address: 10710 # reg 10711
+    input_type: input
+    data_type: string
+    count: 10
+    scan_interval: 0
+    group: "SBR_battery"
 
 #      - name: Battery 1 Firmware Array
 #        unique_id: battery_1_firmware_array
@@ -1648,7 +2233,7 @@ controls:
 
   - type: "number"
     name: "Export Power Limit"
-    unique_id: "export_power_limit_rw"
+    unique_id: "export_power_limit"
     address: 13073
     input_type: "holding"
     data_type: "uint16"
@@ -1665,7 +2250,7 @@ controls:
 
   - type: "number"
     name: "Max SoC"
-    unique_id: "max_soc_rw"
+    unique_id: "max_soc"
     address: 13057
     input_type: "holding"
     data_type: "uint16"
@@ -1680,7 +2265,7 @@ controls:
 
   - type: "number"
     name: "Min SoC"
-    unique_id: "min_soc_rw"
+    unique_id: "min_soc"
     address: 13058
     input_type: "holding"
     data_type: "uint16"
@@ -1695,7 +2280,7 @@ controls:
 
   - type: "select"
     name: "Backup Mode"
-    unique_id: "backup_mode_selection"
+    unique_id: "backup_mode"
     address: 13074
     input_type: "holding"
     data_type: "uint16"
@@ -1707,7 +2292,7 @@ controls:
 
   - type: "select"
     name: "Export Power Limit Mode"
-    unique_id: "export_power_limit_mode_selection"
+    unique_id: "export_power_limit_mode"
     address: 13086
     input_type: "holding"
     data_type: "uint16"
@@ -1719,7 +2304,7 @@ controls:
 
   - type: "number"
     name: "Reserved SoC for Backup"
-    unique_id: "reserved_soc_backup_rw"
+    unique_id: "reserved_soc_for_backup"
     address: 13099
     input_type: "holding"
     data_type: "uint16"
@@ -1732,7 +2317,7 @@ controls:
 
   - type: "number"
     name: "Battery Max Charge Power"
-    unique_id: "battery_max_charge_power_rw"
+    unique_id: "battery_max_charge_power"
     address: 33046
     input_type: "holding"
     data_type: "uint16"
@@ -1840,14 +2425,13 @@ calculated:
     state_class: "measurement"
     group: "PV_grid_power"
 
-  - name: "Grid Import Power"
-    unique_id: "grid_import_power"
+  - name: "Import Power"
+    unique_id: "import_power"
     type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}
+    availability: "{{ not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable') }}"
     state: >-
-      {% if states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float > 0 %}
-        {{ states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float }}
+      {% if states('sensor.{PREFIX}_export_power_raw')|int < 0 %}
+        {{ states('sensor.{PREFIX}_export_power_raw')|int *-1 }}
       {% else %}
         0
       {% endif %}
@@ -1856,14 +2440,13 @@ calculated:
     state_class: "measurement"
     group: "PV_grid_power"
 
-  - name: "Grid Export Power"
-    unique_id: "grid_export_power"
+  - name: "Export Power"
+    unique_id: "export_power"
     type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}
+    availability: "{{states('sensor.{PREFIX}_export_power_raw')|is_number }}"
     state: >-
-      {% if states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float < 0 %}
-        {{ (states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float) | abs }}
+      {% if states('sensor.{PREFIX}_export_power_raw')|int > 0 %}
+        {{ states('sensor.{PREFIX}_export_power_raw') }}
       {% else %}
         0
       {% endif %}
@@ -2042,37 +2625,7 @@ calculated:
     group: "PV_battery_discharging"
 
   # Enhanced Grid Power Calculations (based on mkaiser)
-  - name: "Import Power"
-    unique_id: "import_power"
-    type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}
-    state: >-
-      {% if states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float > 0 %}
-        {{ states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float }}
-      {% else %}
-        0
-      {% endif %}
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_grid_import"
-
-  - name: "Export Power"
-    unique_id: "export_power"
-    type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}
-    state: >-
-      {% if states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float < 0 %}
-        {{ (states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float) | abs }}
-      {% else %}
-        0
-      {% endif %}
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_grid_export"
+  # Note: Import/Export Power sensors moved to calculated_power group for better organization
 
   # calculated sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
   - name: "Meter Active Power"
@@ -2147,3 +2700,525 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     group: "PV_meter_power"
+
+  # Calculated Energy Summary Sensors
+  - name: "Monthly PV generation (current)"
+    unique_id: "monthly_pv_generation_current"
+    type: "sensor"
+    availability: >-
+      {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
+      {{ states('sensor.{PREFIX}_' ~ currMonth)|is_number }}
+    state: >
+      {% set currMonth = 'monthly_pv_generation_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
+      {{ states('sensor.{PREFIX}_' ~ currMonth) }}
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    group: "calculated_energy"
+
+  - name: "Yearly PV generation (current)"
+    unique_id: "yearly_pv_generation_current"
+    type: "sensor"
+    availability: >-
+      {% set currYear = 'yearly_pv_generation_' ~ now().year %}
+      {{ states('sensor.{PREFIX}_' ~ currYear)|is_number }}
+    state: >
+      {% set currYear = 'yearly_pv_generation_' ~ now().year %}
+      {{ states('sensor.{PREFIX}_' ~ currYear) }}
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    group: "calculated_energy"
+
+  - name: "Monthly export (current)"
+    unique_id: "monthly_export_current"
+    type: "sensor"
+    availability: >-
+      {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
+      {{ states('sensor.{PREFIX}_' ~ currMonth)|is_number }}
+    state: >
+      {% set currMonth = 'monthly_export_' ~ '%0.2d' % now().month ~ '_' ~ now().timestamp() | timestamp_custom('%B') | lower %}
+      {{ states('sensor.{PREFIX}_' ~ currMonth) }}
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    group: "calculated_energy"
+
+  - name: "Yearly export (current)"
+    unique_id: "yearly_export_current"
+    type: "sensor"
+    availability: >-
+      {% set currYear = 'yearly_export_' ~ now().year %}
+      {{ states('sensor.{PREFIX}_' ~ currYear)|is_number }}
+    state: >
+      {% set currYear = 'yearly_export_' ~ now().year %}
+      {{ states('sensor.{PREFIX}_' ~ currYear) }}
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    group: "calculated_energy"
+
+  # Battery Level and Charge Calculations
+  - name: "Battery level (nominal)"
+    unique_id: "battery_level_nom"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_battery_level', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_min_soc', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_max_soc', 'unavailable') 
+      }}
+    state: >-
+      {% set soc_min = states('sensor.{PREFIX}_min_soc') | float %}
+      {% set soc_max = states('sensor.{PREFIX}_max_soc') | float %}
+      {% set soc_cur = states('sensor.{PREFIX}_battery_level') | float %}
+      {{
+        (soc_min + ((soc_max - soc_min) * (soc_cur / 100))) | round(1)
+      }}
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: "measurement"
+    group: "calculated_battery"
+
+  - name: "Battery charge (nominal)"
+    unique_id: "battery_charge_nom"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_battery_capacity', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_level_nominal', 'unavailable')
+      }}
+    state: >-
+      {{
+        ( states('sensor.{PREFIX}_battery_capacity') | float *
+        states('sensor.{PREFIX}_battery_level_nominal') | float / 100 )| round(1)
+      }}
+    unit_of_measurement: "kWh"
+    device_class: "energy_storage"
+    state_class: "measurement"
+    group: "calculated_battery"
+
+  - name: "Battery charge"
+    unique_id: "battery_charge"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_battery_capacity', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_battery_level', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_min_soc', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_max_soc', 'unavailable') 
+      }}
+    state: >-
+      {{ 
+        ( states('sensor.{PREFIX}_battery_capacity')|float 
+        * ( states('sensor.{PREFIX}_max_soc')|float - states('sensor.{PREFIX}_min_soc')|float ) /100 
+        * states('sensor.{PREFIX}_battery_level')|float /100 
+        ) |round(2)
+      }}
+    unit_of_measurement: "kWh"
+    device_class: "energy_storage"
+    state_class: "measurement"
+    group: "calculated_battery"
+
+  - name: "Battery charge (health-rated)"
+    unique_id: "battery_charge_health_rated"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_battery_charge', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_battery_state_of_health', 'unavailable') 
+      }}
+    state: >-
+      {{ 
+        ( states('sensor.{PREFIX}_battery_charge')|float 
+        * states('sensor.{PREFIX}_battery_state_of_health')|float / 100 
+        ) |round(2)
+      }}
+    unit_of_measurement: "kWh"
+    device_class: "energy_storage"
+    state_class: "measurement"
+    group: "calculated_battery"
+
+  # Energy Consumption Calculations
+  - name: "Daily consumed energy"
+    unique_id: "daily_consumed_energy"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_daily_pv_generation', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_daily_exported_energy', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_daily_imported_energy', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_daily_battery_charge', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_daily_battery_discharge', 'unavailable') 
+      }}
+    state: >-
+      {{ 
+        (
+          states('sensor.{PREFIX}_daily_pv_generation')|float 
+          - states('sensor.{PREFIX}_daily_exported_energy')|float 
+          + states('sensor.{PREFIX}_daily_imported_energy')|float 
+          - states('sensor.{PREFIX}_daily_battery_charge')|float 
+          + states('sensor.{PREFIX}_daily_battery_discharge')|float
+        ) 
+      }}
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    group: "calculated_energy"
+
+  - name: "Total consumed energy"
+    unique_id: "total_consumed_energy"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_total_pv_generation', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_total_exported_energy', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_total_imported_energy', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_total_battery_charge', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_total_battery_discharge', 'unavailable') 
+      }}
+    state: >-
+      {{ 
+        (
+          states('sensor.{PREFIX}_total_pv_generation')|float 
+          - states('sensor.{PREFIX}_total_exported_energy')|float 
+          + states('sensor.{PREFIX}_total_imported_energy')|float 
+          - states('sensor.{PREFIX}_total_battery_charge')|float 
+          + states('sensor.{PREFIX}_total_battery_discharge')|float
+        )
+      }}
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    group: "calculated_energy"
+
+  # Power Flow Calculations
+  - name: "Signed battery power"
+    unique_id: "signed_battery_power"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('binary_sensor.{PREFIX}_battery_charging', 'unavailable') 
+      and not is_state('binary_sensor.{PREFIX}_battery_discharging', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+      }}
+    state: >-
+      {% if is_state('binary_sensor.{PREFIX}_battery_charging', 'on') %}
+        {{ (states('sensor.{PREFIX}_battery_power_raw') |float |abs)}} 
+      {% elif is_state('binary_sensor.{PREFIX}_battery_discharging', 'on') %} 
+        {{ (states('sensor.{PREFIX}_battery_power_raw') |float |abs * -1)}} 
+      {% else %} 
+        0 
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "calculated_power"
+
+  - name: "Battery charging power"
+    unique_id: "battery_charging_power"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('binary_sensor.{PREFIX}_battery_charging', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+      }}
+    state: >-
+      {% if is_state('binary_sensor.{PREFIX}_battery_charging', 'on') %}
+        {{ states('sensor.{PREFIX}_battery_power_raw')|int |abs }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "calculated_power"
+
+  - name: "Battery discharging power"
+    unique_id: "battery_discharging_power"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('binary_sensor.{PREFIX}_battery_discharging', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable') 
+      }}
+    state: >-
+      {% if is_state('binary_sensor.{PREFIX}_battery_discharging', 'on') %}
+        {{ states('sensor.{PREFIX}_battery_power_raw')|int |abs }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "calculated_power"
+
+
+binary_sensors:
+  # Power Generation and Flow Status
+  - name: "PV generating"
+    unique_id: "pv_generating"
+    type: "binary_sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable') 
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int |bitwise_and(0x1)) > 0 }}
+      {% else %} 
+        {# workaround for SH*RS inverters without working running_state #}
+        {% if states('sensor.{PREFIX}_total_dc_power')|int > 0 %}
+          1
+        {% else %} 
+          0 
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "calculated_binary"
+
+  - name: "PV generating (delay)"
+    unique_id: "pv_generating_delay"
+    type: "binary_sensor"
+    availability: "{{ not is_state('binary_sensor.{PREFIX}_pv_generating', 'unavailable') }}"
+    delay_on:
+      seconds: 60
+    state: "{{ states('binary_sensor.{PREFIX}_pv_generating') }}"
+    device_class: "power"
+    group: "calculated_binary"
+
+  - name: "Battery charging"
+    unique_id: "battery_charging"
+    type: "binary_sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      or
+        (   not is_state('sensor.{PREFIX}_ems_mode_selection_raw', 'unavailable')
+        and not is_state('sensor.{PREFIX}_battery_forced_charge_discharge_cmd_raw', 'unavailable') 
+        and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable') 
+        and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+        and not is_state('sensor.{PREFIX}_load_power', 'unavailable') 
+        )
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {% if (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x2)) > 0 %}
+          on
+        {% else %}
+          off
+        {% endif %}
+      {% else %}
+        {# workaround for SH*RS inverters without working running_state #}
+        {% if (states('sensor.{PREFIX}_ems_mode_selection') ) in ["Forced mode", "VPP"] %}
+          {# EMS forced mode #}
+          {% if (states('sensor.{PREFIX}_battery_forced_charge_discharge_cmd') == "Forced charge") %}
+            {# in mode Forced charge #}
+            {% if (states('sensor.{PREFIX}_battery_power_raw')|int > 0 ) %} 
+              {# power flow from/to battery #}
+              on
+            {% else %} 
+              {# no power flow from/to battery #}
+              off
+            {% endif %}
+          {% else %}
+            {# in EMS mode, but not in mode Forced charge #}
+            off
+          {% endif %}
+        {% else %} 
+          {# not in EMS forced mode, assuming self consumption mode #}
+          {% if states('sensor.{PREFIX}_total_dc_power')|int > states('sensor.{PREFIX}_load_power')|int %}
+            {# more power generated than consumed. assuming battery charging #}
+            on
+          {% else %} 
+            off
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    device_class: "battery_charging"
+    group: "calculated_binary"
+
+  - name: "Battery charging (delay)"
+    unique_id: "battery_charging_delay"
+    type: "binary_sensor"
+    availability: "{{ not is_state('binary_sensor.{PREFIX}_battery_charging', 'unavailable') }}"
+    delay_on:
+      seconds: 60
+    state: "{{ states('binary_sensor.{PREFIX}_battery_charging') }}"
+    device_class: "battery_charging"
+    group: "calculated_binary"
+
+  - name: "Battery discharging"
+    unique_id: "battery_discharging"
+    type: "binary_sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      or
+        (   not is_state('sensor.{PREFIX}_ems_mode_selection_raw', 'unavailable')
+        and not is_state('sensor.{PREFIX}_battery_forced_charge_discharge_cmd_raw', 'unavailable')
+        and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+        and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable') 
+        and not is_state('sensor.{PREFIX}_load_power', 'unavailable') 
+        )
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {% if (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x4)) > 0 %}
+          on
+        {% else %}
+          off
+        {% endif %}
+      {% else %}
+        {# workaround for SH*RS inverters without working running_state #}
+        {% if (states('sensor.{PREFIX}_ems_mode_selection') ) in ["Forced mode", "VPP"] %}
+          {# EMS forced mode #}
+          {% if (states('sensor.{PREFIX}_battery_forced_charge_discharge_cmd') == "Forced discharge") %}
+            {# in mode Forced discharge #}
+            {% if (states('sensor.{PREFIX}_battery_power_raw')|int > 0 ) %}
+              {# power flow from/to battery #}
+              on
+            {% else %} 
+              {# no power flow from/to battery #}
+              off
+            {% endif %}
+          {% else %} 
+            {# in EMS mode, but not in mode Forced charge #}
+            off
+          {% endif %}
+        {% else %} 
+          {# not in EMS forced mode, assuming self consumption mode #}
+          {% if ( ( states('sensor.{PREFIX}_total_dc_power')|int < states('sensor.{PREFIX}_load_power')|int ) ) and states('sensor.{PREFIX}_battery_power_raw')|int > 0 %}  
+            {# more power consumed than generated and some battery power --> assuming battery discharging #}
+            on
+          {% else %} 
+            off
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    device_class: "battery"
+    group: "calculated_binary"
+
+  - name: "Battery discharging (delay)"
+    unique_id: "battery_discharging_delay"
+    type: "binary_sensor"
+    availability: "{{ not is_state('binary_sensor.{PREFIX}_battery_discharging', 'unavailable') }}"
+    delay_on:
+      seconds: 60
+    state: "{{ states('binary_sensor.{PREFIX}_battery_discharging') }}"
+    device_class: "battery"
+    group: "calculated_binary"
+
+  - name: "Exporting power"
+    unique_id: "exporting_power"
+    type: "binary_sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable') 
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x10)) > 0 }}
+      {% else %} 
+        {# workaround for SH*RS inverters without working running_state #}
+        {% if states('sensor.{PREFIX}_export_power_raw')|int > 0 %}
+          1
+        {% else %} 
+          0 
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "calculated_binary"
+
+  - name: "Exporting power (delay)"
+    unique_id: "exporting_power_delay"
+    type: "binary_sensor"
+    availability: "{{ not is_state('binary_sensor.{PREFIX}_exporting_power', 'unavailable') }}"
+    delay_on:
+      seconds: 60
+    state: "{{ states('binary_sensor.{PREFIX}_exporting_power') }}"
+    device_class: "power"
+    group: "calculated_binary"
+
+  - name: "Importing power"
+    unique_id: "importing_power"
+    type: "binary_sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x20)) > 0 }}
+      {% else %} 
+        {# workaround for SH*RS inverters without working running_state #}
+        {% if states('sensor.{PREFIX}_export_power_raw')|int < 0 %}
+          1
+        {% else %}
+          0
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "calculated_binary"
+
+  - name: "Importing power (delay)"
+    unique_id: "importing_power_delay"
+    type: "binary_sensor"
+    availability: "{{ not is_state('binary_sensor.{PREFIX}_importing_power', 'unavailable') }}"
+    delay_on:
+      seconds: 60
+    state: "{{ states('binary_sensor.{PREFIX}_importing_power') }}"
+    device_class: "power"
+    group: "calculated_binary"
+
+  - name: "Positive load power"
+    unique_id: "positive_load_power"
+    type: "binary_sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable') 
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x8)) > 0 }}
+      {% else %} 
+        {# workaround for SH*RS inverters without working running_state #}
+        {% if states('sensor.{PREFIX}_load_power')|int > 0 %}
+          1
+        {% else %} 
+          0 
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "calculated_binary"
+
+  - name: "Negative load power"
+    unique_id: "negative_load_power"
+    type: "binary_sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable') 
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x80)) > 0 }}
+      {% else %} 
+        {# workaround for SH*RS inverters without working running_state #}
+        {% if states('sensor.{PREFIX}_load_power')|int < 0 %}
+          1
+        {% else %} 
+          0 
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "calculated_binary"
