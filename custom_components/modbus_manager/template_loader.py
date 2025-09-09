@@ -751,16 +751,19 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
         if aggregates:
             _LOGGER.debug("Template %s: %d aggregates found", template_name, len(aggregates))
         
-        # Debug: Template structure summary
-        _LOGGER.debug("Template %s: sensors=%d, calculated=%d, controls=%d, aggregates=%d", 
-                     template_name, len(validated_registers), len(calculated_entities), 
-                     len(controls), len(aggregates))
+        # Process binary sensors if present
+        binary_sensors = data.get("binary_sensors", [])
         
-        # Include all template metadata
+        # Debug: Template structure summary
+        _LOGGER.debug("Template %s: sensors=%d, calculated=%d, binary_sensors=%d, controls=%d, aggregates=%d", 
+                     template_name, len(validated_registers), len(calculated_entities), 
+                     len(binary_sensors), len(controls), len(aggregates))
+        
         result = {
             "name": template_name,
             "sensors": validated_registers,
             "calculated": calculated_entities,
+            "binary_sensors": binary_sensors,
             "controls": controls,
             "aggregates": aggregates,
             "type": data.get("type", "device_template"),

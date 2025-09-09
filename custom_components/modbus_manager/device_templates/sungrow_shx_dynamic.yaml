@@ -2160,25 +2160,25 @@ sensors:
     scan_interval: 600
     group: "SBR_battery"
 
-#      - name: Battery 1 Status
-#        unique_id: battery_1_status
-#        slave: !secret sungrow_modbus_slave_battery
-#        address: ???????????
-#        input_type: input
-#        data_type: uint16
-#        scale: 1
-#        precision: 0
-#        scan_interval: 60
+  #      - name: Battery 1 Status
+  #        unique_id: battery_1_status
+  #        slave: !secret sungrow_modbus_slave_battery
+  #        address: ???????????
+  #        input_type: input
+  #        data_type: uint16
+  #        scale: 1
+  #        precision: 0
+  #        scan_interval: 60
 
-#      - name: Battery 1 Integrity Status
-#        unique_id: battery_1_integrity_status
-#        slave: !secret sungrow_modbus_slave_battery
-#        address: ???????????
-#        input_type: input
-#        data_type: uint16
-#        scale: 1
-#        precision: 0
-#        scan_interval: 60
+  #      - name: Battery 1 Integrity Status
+  #        unique_id: battery_1_integrity_status
+  #        slave: !secret sungrow_modbus_slave_battery
+  #        address: ???????????
+  #        input_type: input
+  #        data_type: uint16
+  #        scale: 1
+  #        precision: 0
+  #        scan_interval: 60
 
   # for Sungrow batteries only
   - name: Sungrow battery serial
@@ -2191,17 +2191,16 @@ sensors:
     scan_interval: 0
     group: "SBR_battery"
 
-#      - name: Battery 1 Firmware Array
-#        unique_id: battery_1_firmware_array
-#        slave: !secret sungrow_modbus_slave_battery
-#        address: 10720 # reg 10721 - 10730; Batt FW; SBRBCU-S_22011.01.19
-#        input_type: input
-#        data_type: uint16
-#        structure: ">20B"  #https://docs.python.org/3/library/struct.html
-#        scan_interval: 120
+  #      - name: Battery 1 Firmware Array
+  #        unique_id: battery_1_firmware_array
+  #        slave: !secret sungrow_modbus_slave_battery
+  #        address: 10720 # reg 10721 - 10730; Batt FW; SBRBCU-S_22011.01.19
+  #        input_type: input
+  #        data_type: uint16
+  #        structure: ">20B"  #https://docs.python.org/3/library/struct.html
+  #        scan_interval: 120
 
-
-# Controls für Schreibzugriff
+# Controls for write access
 controls:
   - type: "select"
     name: "EMS Mode Selection"
@@ -2341,7 +2340,7 @@ controls:
       0xAA: "ON"
     group: "PV_modes"
 
-# Calculated Sensors (based on mkaiser power calculations)
+# Calculated Sensors
 calculated:
   # MPPT Power Calculations
   - name: "MPPT1 Power"
@@ -2386,7 +2385,6 @@ calculated:
     state_class: "measurement"
     group: "PV_mppt_power"
 
-  # Total Power Calculations
   - name: "Total MPPT Power"
     unique_id: "total_mppt_power"
     type: "sensor"
@@ -2413,7 +2411,6 @@ calculated:
     state_class: "measurement"
     group: "PV_total_power"
 
-  # Net Power Calculations (based on mkaiser logic)
   - name: "Net Grid Power"
     unique_id: "net_grid_power"
     type: "sensor"
@@ -2430,8 +2427,11 @@ calculated:
     type: "sensor"
     availability: "{{ not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable') }}"
     state: >-
-      {% if states('sensor.{PREFIX}_export_power_raw')|int < 0 %}
-        {{ states('sensor.{PREFIX}_export_power_raw')|int *-1 }}
+      {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
+      {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
+        0
+      {% elif (export_power|int) < 0 %}
+        {{ (export_power|int) *-1 }}
       {% else %}
         0
       {% endif %}
@@ -2455,7 +2455,6 @@ calculated:
     state_class: "measurement"
     group: "PV_grid_power"
 
-  # Load Power Calculations
   - name: "Total Load Power"
     unique_id: "total_load_power"
     type: "sensor"
@@ -2529,7 +2528,7 @@ calculated:
     state_class: "measurement"
     group: "PV_phase_power"
 
-  # Individual Phase Power Calculations (based on mkaiser)
+  # Individual Phase Power Calculations
   - name: "Phase A Power"
     unique_id: "phase_a_power"
     type: "sensor"
@@ -2571,61 +2570,6 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     group: "PV_phase_power"
-
-  # Enhanced Battery Power Calculations (based on mkaiser)
-  - name: "Signed Battery Power"
-    unique_id: "signed_battery_power"
-    type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable') }}
-    state: >-
-      {% if states('sensor.{PREFIX}_battery_power_raw') | default(0) | float > 0 %}
-        {{ (states('sensor.{PREFIX}_battery_power_raw') | default(0) | float) | abs }}
-      {% elif states('sensor.{PREFIX}_battery_power_raw') | default(0) | float < 0 %}
-        {{ (states('sensor.{PREFIX}_battery_power_raw') | default(0) | float) | abs * -1 }}
-      {% else %}
-        0
-      {% endif %}
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_battery_power"
-
-  # Battery Power Calculations
-  - name: "Battery Charging Power"
-    unique_id: "battery_charging_power"
-    type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable') }}
-    state: >-
-      {% if states('sensor.{PREFIX}_battery_power_raw') | default(0) | float > 0 %}
-        {{ (states('sensor.{PREFIX}_battery_power_raw') | default(0) | float) | abs }}
-      {% else %}
-        0
-      {% endif %}
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_battery_charging"
-
-  - name: "Battery Discharging Power"
-    unique_id: "battery_discharging_power"
-    type: "sensor"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable') }}
-    state: >-
-      {% if states('sensor.{PREFIX}_battery_power_raw') | default(0) | float < 0 %}
-        {{ (states('sensor.{PREFIX}_battery_power_raw') | default(0) | float) | abs }}
-      {% else %}
-        0
-      {% endif %}
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_battery_discharging"
-
-  # Enhanced Grid Power Calculations (based on mkaiser)
-  # Note: Import/Export Power sensors moved to calculated_power group for better organization
 
   # calculated sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
   - name: "Meter Active Power"
@@ -2953,9 +2897,9 @@ calculated:
     state_class: "measurement"
     group: "calculated_power"
 
-
+# Binary Sensors
 binary_sensors:
-  # Power Generation and Flow Status
+  # Binary Sensors for Status Monitoring
   - name: "PV generating"
     unique_id: "pv_generating"
     type: "binary_sensor"
@@ -2970,7 +2914,10 @@ binary_sensors:
         {{ (states('sensor.{PREFIX}_running_state')|int |bitwise_and(0x1)) > 0 }}
       {% else %} 
         {# workaround for SH*RS inverters without working running_state #}
-        {% if states('sensor.{PREFIX}_total_dc_power')|int > 0 %}
+        {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
+        {% if total_dc_power in ['unknown', 'unavailable', 'none'] or total_dc_power is none %}
+          0
+        {% elif (total_dc_power|int) > 0 %}
           1
         {% else %} 
           0 
@@ -3030,7 +2977,11 @@ binary_sensors:
           {% endif %}
         {% else %} 
           {# not in EMS forced mode, assuming self consumption mode #}
-          {% if states('sensor.{PREFIX}_total_dc_power')|int > states('sensor.{PREFIX}_load_power')|int %}
+          {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
+          {% set load_power = states('sensor.{PREFIX}_load_power') %}
+          {% if (total_dc_power in ['unknown', 'unavailable', 'none'] or total_dc_power is none) or (load_power in ['unknown', 'unavailable', 'none'] or load_power is none) %}
+            off
+          {% elif (total_dc_power|int) > (load_power|int) %}
             {# more power generated than consumed. assuming battery charging #}
             on
           {% else %} 
@@ -3092,7 +3043,12 @@ binary_sensors:
           {% endif %}
         {% else %} 
           {# not in EMS forced mode, assuming self consumption mode #}
-          {% if ( ( states('sensor.{PREFIX}_total_dc_power')|int < states('sensor.{PREFIX}_load_power')|int ) ) and states('sensor.{PREFIX}_battery_power_raw')|int > 0 %}  
+          {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
+          {% set load_power = states('sensor.{PREFIX}_load_power') %}
+          {% set battery_power = states('sensor.{PREFIX}_battery_power_raw') %}
+          {% if ( (total_dc_power in ['unknown', 'unavailable', 'none'] or total_dc_power is none) or (load_power in ['unknown', 'unavailable', 'none'] or load_power is none) or (battery_power in ['unknown', 'unavailable', 'none'] or battery_power is none) ) %}
+            off
+          {% elif ( (total_dc_power|int < load_power|int) ) and (battery_power|int) > 0 %}  
             {# more power consumed than generated and some battery power --> assuming battery discharging #}
             on
           {% else %} 
@@ -3127,7 +3083,10 @@ binary_sensors:
         {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x10)) > 0 }}
       {% else %} 
         {# workaround for SH*RS inverters without working running_state #}
-        {% if states('sensor.{PREFIX}_export_power_raw')|int > 0 %}
+        {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
+        {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
+          0
+        {% elif (export_power|int) > 0 %}
           1
         {% else %} 
           0 
@@ -3160,7 +3119,10 @@ binary_sensors:
         {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x20)) > 0 }}
       {% else %} 
         {# workaround for SH*RS inverters without working running_state #}
-        {% if states('sensor.{PREFIX}_export_power_raw')|int < 0 %}
+        {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
+        {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
+          0
+        {% elif (export_power|int) < 0 %}
           1
         {% else %}
           0
@@ -3192,7 +3154,10 @@ binary_sensors:
         {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x8)) > 0 }}
       {% else %} 
         {# workaround for SH*RS inverters without working running_state #}
-        {% if states('sensor.{PREFIX}_load_power')|int > 0 %}
+        {% set load_power = states('sensor.{PREFIX}_load_power') %}
+        {% if load_power in ['unknown', 'unavailable', 'none'] or load_power is none %}
+          0
+        {% elif (load_power|int) > 0 %}
           1
         {% else %} 
           0 
@@ -3214,10 +3179,13 @@ binary_sensors:
         {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x80)) > 0 }}
       {% else %} 
         {# workaround for SH*RS inverters without working running_state #}
-        {% if states('sensor.{PREFIX}_load_power')|int < 0 %}
+        {% set load_power = states('sensor.{PREFIX}_load_power') %}
+        {% if load_power in ['unknown', 'unavailable', 'none'] or load_power is none %}
+          0
+        {% elif (load_power|int) < 0 %}
           1
-        {% else %} 
-          0 
+        {% else %}
+          0
         {% endif %}
       {% endif %}
     device_class: "power"

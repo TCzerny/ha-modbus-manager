@@ -7,6 +7,8 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.core import HomeAssistant
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.template import Template
+from homeassistant.exceptions import TemplateError
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
@@ -18,10 +20,46 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
     prefix = entry.data["prefix"]
     template_name = entry.data["template"]
     registers = entry.data.get("registers", [])
+    binary_sensors = entry.data.get("binary_sensors", [])
     hub_name = f"modbus_manager_{prefix}"
 
     entities = []
 
+    # Process binary sensors from binary_sensors section
+    _LOGGER.debug("Processing %d binary sensors", len(binary_sensors))
+    for binary_sensor in binary_sensors:
+        _LOGGER.debug("Processing binary sensor: %s (type: %s)", binary_sensor.get("name"), binary_sensor.get("type"))
+        if binary_sensor.get("type") == "binary_sensor":
+            # Unique_ID Format: {prefix}_{template_sensor_name}
+            sensor_name = binary_sensor.get("name", "unknown")
+            # Use unique_id from template if available, otherwise use cleaned name
+            template_unique_id = binary_sensor.get("unique_id")
+            if template_unique_id:
+                # Check if template_unique_id already has prefix
+                if template_unique_id.startswith(f"{prefix}_"):
+                    unique_id = template_unique_id
+                else:
+                    unique_id = f"{prefix}_{template_unique_id}"
+            else:
+                # Fallback: Bereinige den Namen für den unique_id
+                clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
+                unique_id = f"{prefix}_{clean_name}"
+            
+            entities.append(TemplateBinarySensor(
+                hass=hass,
+                name=sensor_name,
+                unique_id=unique_id,
+                template_data=binary_sensor,
+                device_info={
+                    "identifiers": {(DOMAIN, f"{prefix}_{template_name}")},
+                    "name": f"Modbus Manager {prefix}",
+                    "manufacturer": "Modbus Manager",
+                    "model": template_name,
+                },
+                prefix=prefix,
+            ))
+
+    # Process binary sensors from registers section (legacy support)
     for reg in registers:
         # Binary-Sensor-Entities aus Registern mit data_type: "boolean" oder control: "switch" erstellen
         if reg.get("data_type") == "boolean" or reg.get("control") == "switch":
@@ -40,20 +78,19 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
                 clean_name = sensor_name.lower().replace(' ', '_').replace('-', '_').replace('(', '').replace(')', '')
                 unique_id = f"{prefix}_{clean_name}"
             
-            entities.append(ModbusTemplateBinarySensor(
+            entities.append(TemplateBinarySensor(
                 hass=hass,
                 name=sensor_name,
                 unique_id=unique_id,
-                hub_name=hub_name,
-                slave_id=entry.data.get("slave_id", 1),
-                register_data=reg,
+                template_data=reg,
                 device_info={
                     "identifiers": {(DOMAIN, f"{prefix}_{template_name}")},
                     "name": f"{prefix} {template_name}",
                     "manufacturer": "Modbus Manager",
                     "model": template_name,
                     "sw_version": f"Firmware: {entry.data.get('firmware_version', '1.0.0')}",
-                }
+                },
+                prefix=prefix,
             ))
 
     if entities:
@@ -62,57 +99,65 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry, async_add_e
         _LOGGER.debug("Created binary sensor entities: %s", [e.entity_id for e in entities])
 
 
-class ModbusTemplateBinarySensor(BinarySensorEntity):
-    """Representation of a Modbus Template Binary Sensor Entity."""
+class TemplateBinarySensor(BinarySensorEntity):
+    """Representation of a Template Binary Sensor Entity."""
 
-    def __init__(self, hass: HomeAssistant, name: str, unique_id: str, hub_name: str, 
-                 slave_id: int, register_data: dict, device_info: dict):
-        """Initialize the binary sensor entity."""
+    def __init__(self, hass: HomeAssistant, name: str, unique_id: str, 
+                 template_data: dict, device_info: dict, prefix: str = None):
+        """Initialize the template binary sensor entity."""
         self.hass = hass
         self._attr_name = name
         self._attr_unique_id = unique_id
-        self._hub_name = hub_name
-        self._slave_id = slave_id
-        self._register_data = register_data
+        self._template_data = template_data
         self._attr_device_info = DeviceInfo(**device_info)
+        self._prefix = prefix or "SG"  # Default prefix if not provided
         
-        # Register properties
-        self._address = register_data.get("address", 0)
-        self._data_type = register_data.get("data_type", "boolean")
-        self._input_type = register_data.get("input_type", "input")
-        self._count = register_data.get("count", 1)
-        self._scale = register_data.get("scale", 1.0)
-        self._swap = register_data.get("swap", False)
-        
-        # Neue Datenverarbeitungsoptionen
-        self._offset = register_data.get("offset", 0.0)
-        self._multiplier = register_data.get("multiplier", 1.0)
-        self._shift_bits = register_data.get("shift_bits", 0)
-        self._bits = register_data.get("bits")
-        
-        # Value processing (map, flags, options) - same as sensors
-        self._map = register_data.get("map", {})
-        self._flags = register_data.get("flags", {})
-        self._options = register_data.get("options", {})
+        # Template properties
+        self._state_template = None
+        self._availability_template = None
+        self._delay_on = template_data.get("delay_on", {})
+        self._delay_off = template_data.get("delay_off", {})
         
         # Binary-Sensor properties
-        self._attr_native_unit_of_measurement = register_data.get("unit_of_measurement", "")
-        self._attr_device_class = register_data.get("device_class", "problem")
-        self._attr_state_class = register_data.get("state_class")
-        
-        # Boolean-Konfiguration
-        self._true_value = register_data.get("true_value", 1)
-        self._false_value = register_data.get("false_value", 0)
-        
-        # Bit-spezifische Konfiguration
-        self._bit_position = register_data.get("bit_position", 0)
+        self._attr_device_class = template_data.get("device_class", "problem")
         
         # Group for aggregations
-        self._group = register_data.get("group")
+        self._group = template_data.get("group")
         if self._group:
             self._attr_extra_state_attributes = {"group": self._group}
         
         self._attr_is_on = False
+        
+        # Initialize templates
+        self._init_templates()
+
+    def _init_templates(self):
+        """Initialize template objects."""
+        # State template
+        state_template_str = self._template_data.get("state")
+        if state_template_str:
+            processed_state = self._process_template_with_prefix(state_template_str)
+            self._state_template = Template(processed_state, self.hass)
+        
+        # Availability template
+        availability_template_str = self._template_data.get("availability")
+        if availability_template_str:
+            processed_availability = self._process_template_with_prefix(availability_template_str)
+            self._availability_template = Template(processed_availability, self.hass)
+
+    def _process_template_with_prefix(self, template_str: str) -> str:
+        """Process template string to inject prefix into sensor references."""
+        try:
+            # Replace {PREFIX} placeholder with actual prefix (uppercase for sensor names)
+            # This allows templates to use {PREFIX} as a placeholder
+            processed_template = template_str.replace("{PREFIX}", self._prefix)
+            
+            _LOGGER.debug("Template processing: %s -> %s", template_str, processed_template)
+            return processed_template
+            
+        except Exception as e:
+            _LOGGER.error("Error processing template for %s: %s", self._attr_name, str(e))
+            return template_str
 
     @property
     def should_poll(self) -> bool:
@@ -122,251 +167,53 @@ class ModbusTemplateBinarySensor(BinarySensorEntity):
     async def async_update(self):
         """Update the binary sensor entity state."""
         try:
-            if self._hub_name not in self.hass.data.get(DOMAIN, {}):
-                _LOGGER.error("Hub %s nicht gefunden", self._hub_name)
-                return
-
-            hub = self.hass.data[DOMAIN][self._hub_name]
-            
-            # Register lesen basierend auf input_type
-            if self._input_type == "input":
-                result = await hub.read_input_registers(self._address, self._count, unit=self._slave_id)
-            elif self._input_type == "holding":
-                result = await hub.read_holding_registers(self._address, self._count, unit=self._slave_id)
-            elif self._input_type == "coil":
-                result = await hub.read_coils(self._address, self._count, unit=self._slave_id)
-            elif self._input_type == "discrete":
-                result = await hub.read_discrete_inputs(self._address, self._count, unit=self._slave_id)
-            else:
-                _LOGGER.warning("Unbekannter input_type: %s", self._input_type)
-                return
-            
-            if result.isError():
-                _LOGGER.warning("Fehler beim Lesen von Register %s: %s", self._address, result)
-                self._attr_is_on = False
-                return
-            
-            # Wert verarbeiten
-            raw_value = self._process_register_value(result.registers)
-            
-            if raw_value is not None:
-                # Apply value processing (same logic as sensors: map -> flags -> options)
-                processed_value = self._apply_value_processing(raw_value)
-                
-                if processed_value is not None:
-                    # Erweiterte Datenverarbeitung anwenden
-                    processed_value = self._apply_data_processing(processed_value)
-                    
-                    # Boolean-Wert bestimmen
-                    if self._bits:
-                        # Bit-spezifische Auswertung
-                        bit_value = (processed_value >> self._bit_position) & 1
-                        self._attr_is_on = bit_value == 1
-                    else:
-                        # Standard Boolean-Auswertung
-                        self._attr_is_on = processed_value == self._true_value
-                else:
+            # Check availability first
+            if self._availability_template:
+                try:
+                    availability_result = self._availability_template.async_render()
+                    if not availability_result:
+                        self._attr_is_on = False
+                        return
+                except TemplateError as e:
+                    _LOGGER.warning("Template error in availability for %s: %s", self.name, e)
                     self._attr_is_on = False
+                    return
+            
+            # Update state from template
+            if self._state_template:
+                try:
+                    state_result = self._state_template.async_render()
+                    
+                    # Handle 'unknown' and 'unavailable' values gracefully
+                    if isinstance(state_result, str):
+                        if state_result.lower() in ['unknown', 'unavailable', 'none']:
+                            self._attr_is_on = False
+                            return
+                    
+                    # Convert template result to boolean
+                    if isinstance(state_result, bool):
+                        self._attr_is_on = state_result
+                    elif isinstance(state_result, str):
+                        self._attr_is_on = state_result.lower() in ['true', 'on', '1', 'yes']
+                    elif isinstance(state_result, (int, float)):
+                        self._attr_is_on = bool(state_result)
+                    else:
+                        self._attr_is_on = False
+                        
+                except TemplateError as e:
+                    # Check if it's a template error with 'unknown' input
+                    if "int got invalid input 'unknown'" in str(e):
+                        _LOGGER.debug("Binary sensor %s has 'unknown' value, setting to False", self.name)
+                        self._attr_is_on = False
+                    elif "float got invalid input 'unknown'" in str(e):
+                        _LOGGER.debug("Binary sensor %s has 'unknown' value, setting to False", self.name)
+                        self._attr_is_on = False
+                    else:
+                        _LOGGER.warning("Template error in state for %s: %s", self.name, e)
+                        self._attr_is_on = False
             else:
                 self._attr_is_on = False
                 
         except Exception as e:
             _LOGGER.error("Fehler beim Update von Binary Sensor %s: %s", self.name, str(e))
             self._attr_is_on = False
-
-    def _process_register_value(self, registers):
-        """Verarbeite Register-Werte basierend auf data_type."""
-        try:
-            if not registers:
-                return None
-                
-            if self._data_type == "boolean":
-                # Boolean-Wert aus Register extrahieren
-                value = registers[0]
-                if self._swap and len(registers) > 1:
-                    # Byte-Swap für 32-bit Werte
-                    value = (registers[1] << 16) | registers[0]
-                return value
-            else:
-                # Standard-Register-Verarbeitung
-                return self._process_standard_register(registers)
-                
-        except Exception as e:
-            _LOGGER.error("Fehler bei Register-Verarbeitung: %s", str(e))
-            return None
-
-    def _process_standard_register(self, registers):
-        """Standard register processing."""
-        try:
-            if self._data_type == "uint16":
-                return registers[0]
-            elif self._data_type == "int16":
-                value = registers[0]
-                if value > 32767:
-                    value -= 65536
-                return value
-            elif self._data_type == "uint32":
-                if len(registers) >= 2:
-                    if self._swap:
-                        return (registers[1] << 16) | registers[0]
-                    else:
-                        return (registers[0] << 16) | registers[1]
-            elif self._data_type == "int32":
-                if len(registers) >= 2:
-                    value = (registers[0] << 16) | registers[1]
-                    if value > 2147483647:
-                        value -= 4294967296
-                    return value
-            elif self._data_type in ["float", "float32"]:
-                # Float32 conversion (2 registers)
-                if len(registers) >= 2:
-                    import struct
-                    # Combine two 16-bit registers into 32-bit float
-                    if self._swap:
-                        # Swap byte order if needed
-                        combined = (registers[1] << 16) | registers[0]
-                    else:
-                        combined = (registers[0] << 16) | registers[1]
-                    
-                    # Convert to float using struct
-                    try:
-                        # Pack as 32-bit unsigned integer, then unpack as float
-                        packed = struct.pack('>I', combined)
-                        value = struct.unpack('>f', packed)[0]
-                        _LOGGER.debug("Float32 conversion for %s: byte_order=%s, raw=%s, value=%s",
-                                    self.name, "big" if not self._swap else "little", 
-                                    [registers[0], registers[1]], value)
-                        return value
-                    except Exception as e:
-                        _LOGGER.error("Error in float32 conversion for %s: %s", self.name, str(e))
-                        return None
-                else:
-                    _LOGGER.error("float32 requires at least 2 registers, got %d for %s",
-                                len(registers), self.name)
-                    return None
-            elif self._data_type == "float64":
-                # Float64 conversion (4 registers)
-                if len(registers) >= 4:
-                    import struct
-                    # Combine four 16-bit registers into 64-bit float
-                    if self._swap:
-                        # Swap byte order if needed
-                        combined = ((registers[3] << 48) | (registers[2] << 32) | 
-                                  (registers[1] << 16) | registers[0])
-                    else:
-                        combined = ((registers[0] << 48) | (registers[1] << 32) | 
-                                  (registers[2] << 16) | registers[3])
-                    
-                    # Convert to float using struct
-                    try:
-                        # Pack as 64-bit unsigned integer, then unpack as double
-                        packed = struct.pack('>Q', combined)
-                        value = struct.unpack('>d', packed)[0]
-                        _LOGGER.debug("Float64 conversion for %s: byte_order=%s, raw=%s, value=%s",
-                                    self.name, "big" if not self._swap else "little", 
-                                    registers, value)
-                        return value
-                    except Exception as e:
-                        _LOGGER.error("Error in float64 conversion for %s: %s", self.name, str(e))
-                        return None
-                else:
-                    _LOGGER.error("float64 requires at least 4 registers, got %d for %s",
-                                len(registers), self.name)
-                    return None
-            else:
-                return registers[0]
-                
-        except Exception as e:
-            _LOGGER.error("Error in standard register processing: %s", str(e))
-            return None
-
-    def _apply_value_processing(self, value: Any) -> Any:
-        """Apply value processing like map, flags, and options (same as sensors)."""
-        try:
-            if value is None:
-                return None
-            
-            # Nur numerische Werte verarbeiten
-            if isinstance(value, (int, float)):
-                int_value = int(value)
-            
-            # 1. Map anwenden (falls definiert)
-            if self._map:
-                if isinstance(value, (int, float)):
-                    # Numerische Werte - prüfe sowohl int als auch string keys
-                    int_value = int(value)
-                    if int_value in self._map:
-                        mapped_value = self._map[int_value]
-                        _LOGGER.debug("Mapped value %s to '%s' for %s", int_value, mapped_value, self.name)
-                        return mapped_value
-                    elif str(int_value) in self._map:
-                        # Fallback: prüfe string key
-                        mapped_value = self._map[str(int_value)]
-                        _LOGGER.debug("Mapped value %s (as string) to '%s' for %s", int_value, mapped_value, self.name)
-                        return mapped_value
-                    else:
-                        _LOGGER.debug("Value %s not found in map for %s", int_value, self.name)
-                elif isinstance(value, str):
-                    # String-Werte - prüfe sowohl string als auch int keys
-                    if value in self._map:
-                        mapped_value = self._map[value]
-                        _LOGGER.debug("Mapped string '%s' to '%s' for %s", value, mapped_value, self.name)
-                        return mapped_value
-                    elif value.isdigit() and int(value) in self._map:
-                        # Fallback: prüfe int key
-                        mapped_value = self._map[int(value)]
-                        _LOGGER.debug("Mapped string '%s' (as int) to '%s' for %s", value, mapped_value, self.name)
-                        return mapped_value
-                    else:
-                        _LOGGER.debug("String '%s' not found in map for %s", value, self.name)
-            
-            # 2. Flags anwenden (falls definiert)
-            if self._flags and isinstance(value, (int, float)):
-                int_value = int(value)
-                flag_list = []
-                for bit, flag_name in self._flags.items():
-                    if int_value & (1 << int(bit)):
-                        flag_list.append(flag_name)
-                
-                if flag_list:
-                    _LOGGER.debug("Extracted flags from %s: %s", int_value, flag_list)
-                    return ", ".join(flag_list)
-            
-            # 3. Options anwenden (falls definiert)
-            if self._options and isinstance(value, (int, float)):
-                int_value = int(value)
-                if int_value in self._options:
-                    option_value = self._options[int_value]
-                    _LOGGER.debug("Found option for %s: '%s'", int_value, option_value)
-                    return option_value
-            
-            # Keine Verarbeitung angewendet
-            return value
-            
-        except Exception as e:
-            _LOGGER.error("Fehler bei der Wertverarbeitung für %s: %s", self.name, str(e))
-            return value
-
-    def _apply_data_processing(self, value):
-        """Wende erweiterte Datenverarbeitung an."""
-        try:
-            # Multiplier anwenden
-            if self._multiplier != 1.0:
-                value *= self._multiplier
-            
-            # Offset anwenden
-            if self._offset != 0.0:
-                value += self._offset
-            
-            # Bit-Shifting
-            if self._shift_bits != 0:
-                if self._shift_bits > 0:
-                    value >>= self._shift_bits
-                else:
-                    value <<= abs(self._shift_bits)
-            
-            return value
-            
-        except Exception as e:
-            _LOGGER.error("Fehler bei Datenverarbeitung: %s", str(e))
-            return value 

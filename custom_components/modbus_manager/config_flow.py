@@ -473,20 +473,28 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if self._should_include_sensor(calculated, phases, mppt_count, battery_enabled, battery_type, battery_slave_id, firmware_version, connection_type, dynamic_config):
                 processed_calculated.append(calculated)
         
+        # Process binary sensors
+        original_binary_sensors = template_data.get("binary_sensors", [])
+        processed_binary_sensors = []
+        for binary_sensor in original_binary_sensors:
+            # Binary sensors are always included (they don't depend on hardware config)
+            processed_binary_sensors.append(binary_sensor)
+        
         # Process controls
         for control in original_controls:
             # Check if control should be included based on configuration
             if self._should_include_sensor(control, phases, mppt_count, battery_enabled, battery_type, battery_slave_id, firmware_version, connection_type, dynamic_config):
                 processed_controls.append(control)
         
-        _LOGGER.info("Processed %d sensors, %d calculated, %d controls from %d original sensors, %d calculated, %d controls", 
-                     len(processed_sensors), len(processed_calculated), len(processed_controls),
-                     len(original_sensors), len(original_calculated), len(original_controls))
+        _LOGGER.info("Processed %d sensors, %d calculated, %d binary_sensors, %d controls from %d original sensors, %d calculated, %d binary_sensors, %d controls", 
+                     len(processed_sensors), len(processed_calculated), len(processed_binary_sensors), len(processed_controls),
+                     len(original_sensors), len(original_calculated), len(original_binary_sensors), len(original_controls))
         
         # Return processed template data
         return {
             "sensors": processed_sensors,
             "calculated": processed_calculated,
+            "binary_sensors": processed_binary_sensors,
             "controls": processed_controls
         }
 
@@ -747,11 +755,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 processed_data = self._process_dynamic_config(user_input, template_data)
                 template_registers = processed_data.get("sensors", [])
                 template_calculated = processed_data.get("calculated", [])
+                template_binary_sensors = processed_data.get("binary_sensors", [])
                 template_controls = processed_data.get("controls", [])
             else:
                 # Extract registers from template
                 template_registers = template_data.get("sensors", []) if isinstance(template_data, dict) else template_data
                 template_calculated = template_data.get("calculated", []) if isinstance(template_data, dict) else []
+                template_binary_sensors = template_data.get("binary_sensors", []) if isinstance(template_data, dict) else []
                 template_controls = template_data.get("controls", []) if isinstance(template_data, dict) else []
             
             _LOGGER.debug("Template %s (Version %s) loaded with %d registers", 
@@ -793,9 +803,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "firmware_version": firmware_version,
                 "registers": template_registers,
                 "calculated_entities": template_calculated,
+                "binary_sensors": template_binary_sensors,
                 "controls": template_controls,
                 "is_aggregates_template": False
             }
+            
+            _LOGGER.info("Config data created with %d binary_sensors", len(template_binary_sensors))
             
             # Add dynamic configuration parameters if available
             if self._supports_dynamic_config(template_data):
