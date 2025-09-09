@@ -11,6 +11,7 @@ from homeassistant.helpers.entity_registry import async_get as async_get_entity_
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
+from .error_handling import is_unavailable_register_value, handle_unavailable_register, log_register_error
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -330,23 +331,41 @@ class ModbusTemplateNumber(NumberEntity):
                 return None
                 
             if self._data_type == "uint16":
-                return registers[0]
+                value = registers[0]
+                # Check for unavailable register (PDF requirement 5)
+                if is_unavailable_register_value(value, self._data_type, registers):
+                    log_register_error(self.name, self._data_type, value)
+                    return handle_unavailable_register(self._data_type, self.name)
+                return value
             elif self._data_type == "int16":
                 value = registers[0]
                 if value > 32767:
                     value -= 65536
+                # Check for unavailable register (PDF requirement 5)
+                if is_unavailable_register_value(value, self._data_type, registers):
+                    log_register_error(self.name, self._data_type, value)
+                    return handle_unavailable_register(self._data_type, self.name)
                 return value
             elif self._data_type == "uint32":
                 if len(registers) >= 2:
                     if self._swap:
-                        return (registers[1] << 16) | registers[0]
+                        value = (registers[1] << 16) | registers[0]
                     else:
-                        return (registers[0] << 16) | registers[1]
+                        value = (registers[0] << 16) | registers[1]
+                    # Check for unavailable register (PDF requirement 5)
+                    if is_unavailable_register_value(value, self._data_type, registers):
+                        log_register_error(self.name, self._data_type, value)
+                        return handle_unavailable_register(self._data_type, self.name)
+                    return value
             elif self._data_type == "int32":
                 if len(registers) >= 2:
                     value = (registers[0] << 16) | registers[1]
                     if value > 2147483647:
                         value -= 4294967296
+                    # Check for unavailable register (PDF requirement 5)
+                    if is_unavailable_register_value(value, self._data_type, registers):
+                        log_register_error(self.name, self._data_type, value)
+                        return handle_unavailable_register(self._data_type, self.name)
                     return value
             elif self._data_type in ["float", "float32"]:
                 # Float32 conversion (2 registers)

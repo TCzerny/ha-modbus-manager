@@ -16,6 +16,7 @@ from homeassistant.components.sensor.const import CONF_STATE_CLASS
 
 from .const import DOMAIN
 from .logger import ModbusManagerLogger
+from .error_handling import is_unavailable_register_value, handle_unavailable_register, log_register_error
 import asyncio
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -679,6 +680,12 @@ class ModbusTemplateSensor(SensorEntity):
                     value = int(raw_value[0])
                 else:
                     return None
+                
+                # Check for unavailable register (PDF requirement 5)
+                if is_unavailable_register_value(value, self._data_type, raw_value):
+                    log_register_error(self._name, self._data_type, value)
+                    return handle_unavailable_register(self._data_type, self._name)
+                
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "int16":
@@ -688,6 +695,12 @@ class ModbusTemplateSensor(SensorEntity):
                         value = value - 65536
                 else:
                     return None
+                
+                # Check for unavailable register (PDF requirement 5)
+                if is_unavailable_register_value(value, self._data_type, raw_value):
+                    log_register_error(self._name, self._data_type, value)
+                    return handle_unavailable_register(self._data_type, self._name)
+                
                 processed_value = (value * self._scale) + self._offset
                 
             elif self._data_type == "uint32":
@@ -703,6 +716,11 @@ class ModbusTemplateSensor(SensorEntity):
                     _LOGGER.error("uint32 requires at least 2 registers, got %d for %s", 
                                  len(raw_value), self._name)
                     return None
+                
+                # Check for unavailable register (PDF requirement 5)
+                if is_unavailable_register_value(value, self._data_type, raw_value):
+                    log_register_error(self._name, self._data_type, value)
+                    return handle_unavailable_register(self._data_type, self._name)
                 
                 processed_value = (value * self._scale) + self._offset
                 
@@ -722,6 +740,11 @@ class ModbusTemplateSensor(SensorEntity):
                     _LOGGER.error("int32 requires at least 2 registers, got %d for %s", 
                                  len(raw_value), self._name)
                     return None
+                
+                # Check for unavailable register (PDF requirement 5)
+                if is_unavailable_register_value(value, self._data_type, raw_value):
+                    log_register_error(self._name, self._data_type, value)
+                    return handle_unavailable_register(self._data_type, self._name)
                 
                 processed_value = (value * self._scale) + self._offset
                 
@@ -862,6 +885,12 @@ class ModbusTemplateSensor(SensorEntity):
                     value = string_value
                 else:
                     value = ""
+                
+                # Check for unavailable register (PDF requirement 5)
+                if is_unavailable_register_value(value, self._data_type, raw_value):
+                    log_register_error(self._name, self._data_type, value)
+                    return handle_unavailable_register(self._data_type, self._name)
+                
                 processed_value = value
                 
             elif self._data_type == "boolean":
