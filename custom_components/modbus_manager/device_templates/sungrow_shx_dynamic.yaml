@@ -1620,6 +1620,7 @@ sensors:
 controls:
   - type: "select"
     name: "EMS Mode Selection"
+    unique_id: "ems_mode_selection"
     address: 13049
     input_type: "holding"
     data_type: "uint16"
@@ -1633,6 +1634,7 @@ controls:
 
   - type: "select"
     name: "Load Adjustment Mode"
+    unique_id: "load_adjustment_mode_selection"
     address: 13001
     input_type: "holding"
     data_type: "uint16"
@@ -1646,6 +1648,7 @@ controls:
 
   - type: "number"
     name: "Export Power Limit"
+    unique_id: "export_power_limit_rw"
     address: 13073
     input_type: "holding"
     data_type: "uint16"
@@ -1692,7 +1695,7 @@ controls:
 
   - type: "select"
     name: "Backup Mode"
-    unique_id: "backup_mode_rw"
+    unique_id: "backup_mode_selection"
     address: 13074
     input_type: "holding"
     data_type: "uint16"
@@ -1704,7 +1707,7 @@ controls:
 
   - type: "select"
     name: "Export Power Limit Mode"
-    unique_id: "export_power_limit_mode_rw"
+    unique_id: "export_power_limit_mode_selection"
     address: 13086
     input_type: "holding"
     data_type: "uint16"
@@ -1743,7 +1746,7 @@ controls:
 
   - type: "select"
     name: "Load Adjustment Mode ON/OFF"
-    unique_id: "load_adjustment_mode_on_off_rw"
+    unique_id: "load_adjustment_mode_on_off_selection"
     address: 13010
     input_type: "holding"
     data_type: "uint16"
