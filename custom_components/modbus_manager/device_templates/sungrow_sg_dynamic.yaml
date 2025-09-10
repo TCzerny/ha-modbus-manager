@@ -635,6 +635,455 @@ sensors:
     scale: 0.1
     scan_interval: 300
 
+  # Additional SG-specific timing and status sensors
+  - name: Daily running time
+    unique_id: daily_running_time
+    address: 5113 # reg 5113
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "min"
+    device_class: "duration"
+    state_class: "total_increasing"
+    scale: 1
+    scan_interval: 300
+
+  - name: Present country
+    unique_id: present_country
+    address: 5114 # reg 5114
+    input_type: input
+    data_type: uint16
+    scan_interval: 600
+
+  # Extended MPPT sensors (4-12) - will be filtered based on mppt_count
+  - name: MPPT4 voltage
+    unique_id: mppt4_voltage
+    address: 5115 # reg 5115
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT4 current
+    unique_id: mppt4_current
+    address: 5116 # reg 5116
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT5 voltage
+    unique_id: mppt5_voltage
+    address: 5117 # reg 5117
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT5 current
+    unique_id: mppt5_current
+    address: 5118 # reg 5118
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT6 voltage
+    unique_id: mppt6_voltage
+    address: 5119 # reg 5119
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT6 current
+    unique_id: mppt6_current
+    address: 5120 # reg 5120
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Monthly power yields
+    unique_id: monthly_power_yields
+    address: 5128 # reg 5128-5129
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scale: 0.1
+    scan_interval: 300
+
+  # MPPT 7-12 sensors (continuation)
+  - name: MPPT7 voltage
+    unique_id: mppt7_voltage
+    address: 5121 # reg 5121
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT7 current
+    unique_id: mppt7_current
+    address: 5122 # reg 5122
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT8 voltage
+    unique_id: mppt8_voltage
+    address: 5123 # reg 5123
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT8 current
+    unique_id: mppt8_current
+    address: 5124 # reg 5124
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT9 voltage
+    unique_id: mppt9_voltage
+    address: 5130 # reg 5130
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT9 current
+    unique_id: mppt9_current
+    address: 5131 # reg 5131
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT10 voltage
+    unique_id: mppt10_voltage
+    address: 5132 # reg 5132
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT10 current
+    unique_id: mppt10_current
+    address: 5133 # reg 5133
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT11 voltage
+    unique_id: mppt11_voltage
+    address: 5134 # reg 5134
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT11 current
+    unique_id: mppt11_current
+    address: 5135 # reg 5135
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT12 voltage
+    unique_id: mppt12_voltage
+    address: 5136 # reg 5136
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT12 current
+    unique_id: mppt12_current
+    address: 5137 # reg 5137
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  # Work Status registers
+  - name: Work status 1
+    unique_id: work_status_1
+    address: 5140 # reg 5140
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    map:
+      0: "Standby"
+      1: "Running"
+      2: "Derating"
+      3: "Quota"
+      4: "Scheduled outage"
+      5: "Limit outage"
+      6: "Error outage"
+
+  - name: Work status 2
+    unique_id: work_status_2
+    address: 5141 # reg 5141
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    map:
+      1: "Running"
+      2: "Shut down"
+      3: "Overhaul"
+      4: "Standby"
+
+  - name: Heart beat
+    unique_id: heart_beat
+    address: 5143 # reg 5143
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+
+  - name: Total power yields (high precision)
+    unique_id: total_power_yields_hp
+    address: 5144 # reg 5144-5145
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    scale: 0.1
+    scan_interval: 300
+
+  - name: Negative voltage to ground
+    unique_id: negative_voltage_ground
+    address: 5146 # reg 5146
+    input_type: input
+    data_type: int16
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 30
+
+  - name: Bus voltage
+    unique_id: bus_voltage
+    address: 5147 # reg 5147
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Grid frequency (high precision)
+    unique_id: grid_frequency_hp
+    address: 5148 # reg 5148
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "Hz"
+    device_class: "frequency"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 10
+
+  - name: PID work state
+    unique_id: pid_work_state
+    address: 5150 # reg 5150
+    input_type: input
+    data_type: uint16
+    scan_interval: 60
+    map:
+      2: "PID Recover Operation"
+      4: "Anti-PID Operation"
+      8: "PID Abnormity"
+
+  - name: PID alarm code
+    unique_id: pid_alarm_code
+    address: 5151 # reg 5151
+    input_type: input
+    data_type: uint16
+    scan_interval: 60
+    map:
+      432: "PID resistance abnormal"
+      433: "PID function abnormal"
+      434: "PID overvoltage/overcurrent protection"
+
+  # String Current sensors (7013-7044) - Important for diagnostics
+  - name: String 1 current
+    unique_id: string_1_current
+    address: 7013 # reg 7013
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+
+  - name: String 2 current
+    unique_id: string_2_current
+    address: 7014 # reg 7014
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+
+  - name: String 3 current
+    unique_id: string_3_current
+    address: 7015 # reg 7015
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+
+  - name: String 4 current
+    unique_id: string_4_current
+    address: 7016 # reg 7016
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+
+  - name: String 5 current
+    unique_id: string_5_current
+    address: 7017 # reg 7017
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+
+  - name: String 6 current
+    unique_id: string_6_current
+    address: 7018 # reg 7018
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+
+  - name: String 7 current
+    unique_id: string_7_current
+    address: 7019 # reg 7019
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+
+  - name: String 8 current
+    unique_id: string_8_current
+    address: 7020 # reg 7020
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+
   # Meter Data (will be filtered based on phases)
   - name: Meter active power raw
     unique_id: meter_active_power_raw
@@ -2482,6 +2931,111 @@ controls:
     scan_interval: 30
     group: "SG_control"
 
+  # Additional SG-specific control registers
+  - type: "select"
+    name: "Export Power Limitation"
+    unique_id: "export_power_limitation"
+    address: 5010 # reg 5010
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "SG_control"
+
+  - type: "number"
+    name: "Export Power Limitation Value"
+    unique_id: "export_power_limitation_value"
+    address: 5011 # reg 5011
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "W"
+    min: 0
+    max: 50000
+    step: 100
+    scan_interval: 30
+    group: "SG_control"
+
+  - type: "number"
+    name: "Current Transformer Output Current"
+    unique_id: "ct_output_current"
+    address: 5012 # reg 5012
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "A"
+    min: 1
+    max: 100
+    step: 1
+    scan_interval: 60
+    group: "SG_control"
+
+  - type: "number"
+    name: "Current Transformer Range"
+    unique_id: "ct_range"
+    address: 5013 # reg 5013
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "A"
+    min: 1
+    max: 10000
+    step: 1
+    scan_interval: 60
+    group: "SG_control"
+
+  - type: "select"
+    name: "Current Transformer Type"
+    unique_id: "ct_type"
+    address: 5014 # reg 5014
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    options:
+      0: "Internal"
+      1: "External"
+    group: "SG_control"
+
+  - type: "number"
+    name: "Export Power Limitation Percentage"
+    unique_id: "export_power_limitation_percentage"
+    address: 5015 # reg 5015
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "%"
+    scale: 0.1
+    min: 0
+    max: 100
+    step: 0.1
+    scan_interval: 30
+    group: "SG_control"
+
+  - type: "number"
+    name: "Installed PV Power"
+    unique_id: "installed_pv_power"
+    address: 5016 # reg 5016
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "kW"
+    scale: 0.01
+    min: 0
+    max: 300
+    step: 0.01
+    scan_interval: 300
+    group: "SG_control"
+
+  - type: "number"
+    name: "Power Factor Setting"
+    unique_id: "power_factor_setting"
+    address: 5019 # reg 5019
+    input_type: "holding"
+    data_type: "int16"
+    scale: 0.001
+    min: -1.0
+    max: 1.0
+    step: 0.001
+    scan_interval: 30
+    group: "SG_control"
+
   - type: "select"
     name: "EMS Mode Selection"
     unique_id: "ems_mode_selection"
@@ -2646,6 +3200,49 @@ calculated:
       and not is_state('sensor.{PREFIX}_mppt2_current', 'unavailable') 
       }}
     state: "{{ (states('sensor.{PREFIX}_mppt2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt2_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  # Extended MPPT Power calculations (4-12)
+  - name: "MPPT4 Power"
+    unique_id: "mppt4_power"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_mppt4_voltage', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_mppt4_current', 'unavailable') 
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt4_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt4_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT5 Power"
+    unique_id: "mppt5_power"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_mppt5_voltage', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_mppt5_current', 'unavailable') 
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt5_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt5_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT6 Power"
+    unique_id: "mppt6_power"
+    type: "sensor"
+    availability: >-
+      {{ 
+      not is_state('sensor.{PREFIX}_mppt6_voltage', 'unavailable') 
+      and not is_state('sensor.{PREFIX}_mppt6_current', 'unavailable') 
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt6_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt6_current') | default(0) | float) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
