@@ -65,6 +65,16 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_state_class = config.get("state_class")
         self._attr_entity_registry_enabled_default = True
         
+        # Icon support
+        self._static_icon = config.get("icon")
+        self._icon_template = config.get("icon_template")
+        if self._static_icon:
+            self._attr_icon = self._static_icon
+            _LOGGER.debug("Static icon set for calculated sensor %s: %s", self._attr_name, self._static_icon)
+        elif self._icon_template:
+            # Icon template will be processed during updates
+            _LOGGER.debug("Dynamic icon template set for calculated sensor %s", self._attr_name)
+        
         # Group for organization - set as attribute so Home Assistant can access it
         self._group = config.get("group", "calculated")
         self._attr_group = self._group
@@ -199,6 +209,24 @@ class ModbusCalculatedSensor(SensorEntity):
             else:
                 # Direct numeric value
                 self._attr_native_value = rendered_value
+            
+            # Update dynamic icon if template is configured
+            if self._icon_template and self._attr_native_value is not None:
+                try:
+                    # Process icon template with prefix injection
+                    processed_icon_template = self._process_template_with_prefix(self._icon_template)
+                    icon_template = Template(processed_icon_template, self.hass)
+                    rendered_icon = await self.hass.async_add_executor_job(
+                        icon_template.render
+                    )
+                    if rendered_icon and isinstance(rendered_icon, str):
+                        self._attr_icon = rendered_icon.strip()
+                        _LOGGER.debug("Dynamic icon updated for %s: %s", self._attr_name, self._attr_icon)
+                except Exception as icon_error:
+                    _LOGGER.debug("Error updating dynamic icon for %s: %s", self._attr_name, str(icon_error))
+                    # Keep existing icon or use static icon as fallback
+                    if self._static_icon:
+                        self._attr_icon = self._static_icon
                 
         except Exception as e:
             # Check if it's a template error with 'unknown' input

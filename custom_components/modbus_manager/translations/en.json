@@ -21,6 +21,21 @@
                     "firmware_version": "Firmware Version"
                 }
             },
+            "aggregates_config": {
+                "title": "Aggregates Configuration",
+                "description": "Select the aggregates to be created",
+                "data": {
+                    "prefix": "Prefix for aggregate sensors",
+                    "selected_aggregates": "Selected aggregates"
+                }
+            },
+            "battery_slave_id": {
+                "title": "SBR Battery Configuration",
+                "description": "Configure the Slave ID for the SBR Battery",
+                "data": {
+                    "battery_slave_id": "Battery Slave ID (Default: 200)"
+                }
+            },
             "device_config": {
                 "title": "Device Configuration",
                 "description": "Configure the connection to the Modbus device",
@@ -31,6 +46,7 @@
                     "slave_id": "Modbus Slave ID (Default: 1)",
                     "timeout": "Timeout in seconds",
                     "delay": "Delay between operations (ms)",
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)",
                     "phases": "Number of phases (1 or 3)",
                     "mppt_count": "Number of MPPT trackers",
                                        "battery_config": "Battery Configuration",
@@ -52,7 +68,8 @@
             "firmware_not_detected": "Could not detect firmware version",
             "invalid_firmware": "Invalid firmware version",
             "device_exists": "A device with this name already exists",
-            "no_device_definitions": "No device definitions found"
+            "no_device_definitions": "No device definitions found",
+            "select_aggregates": "Select at least one aggregate"
         },
         "abort": {
             "no_device_definitions": "No device definitions found. Please make sure at least one YAML file exists in the device_definitions directory.",
@@ -61,6 +78,11 @@
             "no_registers": "Template {template_name} has no registers defined.",
             "update_error": "Error updating template: {error}",
             "aggregation_error": "Error configuring aggregations: {error}",
+            "no_template_selected": "No template selected",
+            "no_aggregates": "No aggregates found in template",
+            "no_aggregates_selected": "No aggregates selected",
+            "aggregates_error": "Error configuring aggregations: {error}",
+            "aggregates_config_error": "Error creating aggregates configuration: {error}",
             "aggregates_options_error": "Error configuring aggregate options: {error}"
         },
         "progress": {
@@ -71,13 +93,24 @@
         "step": {
             "init": {
                 "title": "Device Options",
-                "description": "Template: {template_name} (Version {template_version})",
+                "description": "Template: {template_name} (Version {template_version})\nLast Updated: {last_updated}\n\nCurrent Entities: {current_sensors} sensors, {current_calculated} calculated, {current_controls} controls",
                 "data": {
+                    "timeout": "Timeout (seconds)",
+                    "delay": "Delay after Connection (seconds)",
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "phases": "Number of Phases (1 or 3)",
+                    "mppt_count": "Number of MPPT Trackers",
+                    "battery_config": "Battery Configuration",
+                    "connection_type": "Connection Type",
                     "firmware_version": "Firmware Version",
+                    "update_template": "Reload Template (even without version change)",
                     "auto_detect_firmware": "Auto-detect firmware version",
-                    "configure_aggregations": "Configure Aggregations",
-                    "update_template": "Update Template to Latest Version"
+                    "configure_aggregations": "Configure Aggregations"
                 }
+            },
+            "aggregates_info": {
+                "title": "Aggregates Template",
+                "description": "Template: {template_name} (Version {template_version})\n\nThis template creates {aggregate_count} aggregate sensors.\n\nNo additional configuration options available."
             },
             "aggregates_options": {
                 "title": "Configure Aggregate Sensors",
@@ -87,8 +120,15 @@
                 }
             },
             "update_template": {
-                "title": "Update Template",
-                "description": "Update template {template_name} from version {stored_version} to {current_version}. This will add new entities if available."
+                "title": "Reload Template",
+                "description": "Reload template {template_name}:\n\nVersion: {stored_version} → {current_version} (Changed: {version_changed})\nContent changed: {content_changed}\n\nNew Entities: {current_sensors} sensors, {current_calculated} calculated, {current_controls} controls\n\nThe integration will be automatically reloaded after the update."
+            },
+            "battery_config": {
+                "title": "SBR Battery Configuration",
+                "description": "Configure the Slave ID for the SBR Battery ({battery_config})",
+                "data": {
+                    "battery_slave_id": "Battery Slave ID (Default: 200)"
+                }
             }
         }
     },

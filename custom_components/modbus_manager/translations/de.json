@@ -31,6 +31,7 @@
                     "slave_id": "Modbus Slave ID (Standard: 1)",
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung zwischen Operationen (ms)",
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
                     "phases": "Anzahl Phasen (1 oder 3)",
                     "mppt_count": "Anzahl MPPT-Tracker",
                                        "battery_config": "Batterie-Konfiguration",
@@ -50,6 +51,13 @@
                 "data": {
                     "prefix": "Präfix für Aggregate-Sensoren",
                     "selected_aggregates": "Ausgewählte Aggregationen"
+                }
+            },
+            "battery_slave_id": {
+                "title": "SBR Batterie Konfiguration",
+                "description": "Konfiguriere die Slave ID für die SBR Batterie",
+                "data": {
+                    "battery_slave_id": "Batterie Slave ID (Standard: 200)"
                 }
             }
         },
@@ -85,13 +93,20 @@
         "step": {
             "init": {
                 "title": "Geräteoptionen",
-                "description": "Template: {template_name} (Version {template_version})",
+                "description": "Template: {template_name} (Version {template_version})\nLetzte Aktualisierung: {last_updated}\n\nAktuelle Entitäten: {current_sensors} Sensoren, {current_calculated} berechnete, {current_controls} Controls",
                 "data": {
+                    "timeout": "Timeout in Sekunden",
+                    "delay": "Verzögerung nach Verbindung (Sekunden)",
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "phases": "Anzahl Phasen (1 oder 3)",
+                    "mppt_count": "Anzahl MPPT-Tracker",
+                    "battery_config": "Batterie-Konfiguration",
+                    "connection_type": "Verbindungstyp",
                     "firmware_version": "Firmware-Version",
+                    "update_template": "Template neu laden (auch ohne Versions-Änderung)",
                     "allow_battery_car_charging": "Batterie-zu-Auto-Ladung erlauben",
                     "auto_detect_firmware": "Firmware-Version automatisch erkennen",
-                    "configure_aggregations": "Aggregationen konfigurieren",
-                    "update_template": "Template auf neueste Version aktualisieren"
+                    "configure_aggregations": "Aggregationen konfigurieren"
                 }
             },
             "aggregates_info": {
@@ -106,8 +121,15 @@
                 }
             },
             "update_template": {
-                "title": "Template aktualisieren",
-                "description": "Template {template_name} von Version {stored_version} auf {current_version} aktualisieren. Dies fügt neue Entitäten hinzu, falls verfügbar."
+                "title": "Template neu laden",
+                "description": "Template {template_name} neu laden:\n\nVersion: {stored_version} → {current_version} (Geändert: {version_changed})\nInhalt geändert: {content_changed}\n\nNeue Entitäten: {current_sensors} Sensoren, {current_calculated} berechnete, {current_controls} Controls\n\nDie Integration wird nach der Aktualisierung automatisch neu geladen."
+            },
+            "battery_config": {
+                "title": "SBR Batterie Konfiguration",
+                "description": "Konfiguriere die Slave ID für die SBR Batterie ({battery_config})",
+                "data": {
+                    "battery_slave_id": "Batterie Slave ID (Standard: 200)"
+                }
             }
         }
     },

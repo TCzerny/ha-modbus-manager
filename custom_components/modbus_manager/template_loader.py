@@ -806,6 +806,11 @@ def _read_template_file(template_path: str) -> Optional[Dict[str, Any]]:
 async def process_template_registers(template_data: Dict[str, Any], dynamic_config: Dict[str, Any] = None) -> List[Dict[str, Any]]:
     """Process template registers with current processing logic."""
     try:
+        # Validate template_data is a dictionary
+        if not isinstance(template_data, dict):
+            _LOGGER.error("Template data is not a dictionary, got type: %s", type(template_data))
+            return []
+        
         template_name = template_data.get("name", "unknown")
         _LOGGER.debug("Processing template registers for %s", template_name)
         

@@ -191,27 +191,167 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if template_changed:
             _LOGGER.info("Reloading register data with updated template processing")
             
-            # Reload template with current processing logic
-            from .template_loader import process_template_registers
-            processed_registers = await process_template_registers(template_data, entry.data.get("dynamic_config", {}))
-            
-            if processed_registers:
-                # Update registers with new data
-                registers = processed_registers
-                _LOGGER.info("Reloaded %d registers with updated template processing", len(registers))
-                
-                # Update the config entry with new register data
-                new_data = dict(entry.data)
-                new_data["registers"] = registers
-                new_data["template_version"] = current_version
-                hass.config_entries.async_update_entry(entry, data=new_data)
-                _LOGGER.info("Updated config entry with new register data")
-            else:
+            # Reload template with current processing logic and apply dynamic filtering
+            try:
+                if isinstance(template_data, dict):
+                    # Apply dynamic configuration filtering if the template supports it
+                    dynamic_config = template_data.get("dynamic_config", {})
+                    if dynamic_config:
+                        _LOGGER.info("Applying dynamic config filtering during template reload")
+                        
+                        # Use the same logic as in config_flow.py
+                        from .config_flow import ModbusManagerConfigFlow
+                        config_flow = ModbusManagerConfigFlow()
+                        
+                        # Create a mock user_input with current configuration values
+                        mock_user_input = {}
+                        
+                        # Map config entry values back to user input format
+                        phases = entry.data.get("phases", 3)
+                        mppt_count = entry.data.get("mppt_count", 2)
+                        battery_config = entry.data.get("battery_config", "none")
+                        battery_slave_id = entry.data.get("battery_slave_id", 200)
+                        firmware_version = entry.data.get("firmware_version", "1.0.0")
+                        connection_type = entry.data.get("connection_type", "LAN")
+                        
+                        # Use direct field names (same as config_flow)
+                        mock_user_input["phases"] = phases
+                        mock_user_input["mppt_count"] = mppt_count
+                        mock_user_input["battery_config"] = battery_config
+                        mock_user_input["battery_slave_id"] = battery_slave_id
+                        mock_user_input["firmware_version"] = firmware_version
+                        mock_user_input["connection_type"] = connection_type
+                        
+                        _LOGGER.info("Dynamic config values: phases=%d, mppt=%d, battery=%s, fw=%s", 
+                                   phases, mppt_count, battery_config, firmware_version)
+                        
+                        # Process template with dynamic config
+                        processed_data = config_flow._process_dynamic_config(mock_user_input, template_data)
+                        
+                        template_sensors = processed_data["sensors"]
+                        template_calculated = processed_data["calculated"]
+                        template_controls = processed_data["controls"]
+                        template_binary_sensors = processed_data.get("binary_sensors", [])
+                        
+                        _LOGGER.info("Dynamic filtering applied: %d sensors, %d calculated, %d controls (from %d, %d, %d original)", 
+                                   len(template_sensors), len(template_calculated), len(template_controls),
+                                   len(template_data.get("sensors", [])), len(template_data.get("calculated", [])), len(template_data.get("controls", [])))
+                    else:
+                        # No dynamic config, use template as-is
+                        template_sensors = template_data.get("sensors", [])
+                        template_calculated = template_data.get("calculated", [])
+                        template_controls = template_data.get("controls", [])
+                        template_binary_sensors = template_data.get("binary_sensors", [])
+                        _LOGGER.info("No dynamic config found, using full template")
+                    
+                    if template_sensors:
+                        # Update registers with new data
+                        registers = template_sensors
+                        calculated_entities = template_calculated
+                        controls = template_controls
+                        binary_sensors = template_binary_sensors
+                        _LOGGER.info("Reloaded %d sensors, %d calculated, %d controls, %d binary_sensors from template", 
+                                   len(registers), len(calculated_entities), len(controls), len(binary_sensors))
+                        
+                        # Update the config entry with new register data
+                        new_data = dict(entry.data)
+                        new_data["registers"] = registers
+                        new_data["calculated_entities"] = calculated_entities
+                        new_data["controls"] = controls
+                        if binary_sensors:
+                            new_data["binary_sensors"] = binary_sensors
+                        new_data["template_version"] = current_version
+                        hass.config_entries.async_update_entry(entry, data=new_data)
+                        _LOGGER.info("Updated config entry with new template data")
+                    else:
+                        _LOGGER.warning("Template has no sensors section")
+                else:
+                    _LOGGER.warning("Template data is not a dictionary")
+            except Exception as e:
+                _LOGGER.error("Error reloading template data: %s", str(e))
                 _LOGGER.warning("Failed to reload registers, using stored data")
         
         if not registers:
-            _LOGGER.error("Template %s has no registers defined", template_name)
-            return False
+            # Try to load registers directly from template as fallback with dynamic filtering
+            _LOGGER.warning("No registers found in config entry, trying to load from template with dynamic filtering")
+            if isinstance(template_data, dict):
+                try:
+                    # Apply dynamic configuration filtering if available
+                    dynamic_config = template_data.get("dynamic_config", {})
+                    if dynamic_config:
+                        _LOGGER.info("Applying dynamic config filtering in fallback")
+                        
+                        # Use the same logic as above
+                        from .config_flow import ModbusManagerConfigFlow
+                        config_flow = ModbusManagerConfigFlow()
+                        
+                        # Create mock user_input with current configuration values
+                        phases = entry.data.get("phases", 3)
+                        mppt_count = entry.data.get("mppt_count", 2)
+                        battery_config = entry.data.get("battery_config", "none")
+                        battery_slave_id = entry.data.get("battery_slave_id", 200)
+                        firmware_version = entry.data.get("firmware_version", "1.0.0")
+                        connection_type = entry.data.get("connection_type", "LAN")
+                        
+                        mock_user_input = {
+                            "phases": phases,
+                            "mppt_count": mppt_count,
+                            "battery_config": battery_config,
+                            "battery_slave_id": battery_slave_id,
+                            "firmware_version": firmware_version,
+                            "connection_type": connection_type
+                        }
+                        
+                        _LOGGER.info("Fallback dynamic config: phases=%d, mppt=%d, battery=%s, fw=%s", 
+                                   phases, mppt_count, battery_config, firmware_version)
+                        
+                        # Process template with dynamic config
+                        processed_data = config_flow._process_dynamic_config(mock_user_input, template_data)
+                        
+                        registers = processed_data["sensors"]
+                        calculated_entities = processed_data["calculated"]
+                        controls = processed_data["controls"]
+                        binary_sensors = processed_data.get("binary_sensors", [])
+                        
+                        _LOGGER.info("Fallback dynamic filtering applied: %d sensors, %d calculated, %d controls, %d binary_sensors", 
+                                   len(registers), len(calculated_entities), len(controls), len(binary_sensors))
+                    else:
+                        # No dynamic config, use template as-is
+                        registers = template_data.get("sensors", [])
+                        calculated_entities = template_data.get("calculated", [])
+                        controls = template_data.get("controls", [])
+                        binary_sensors = template_data.get("binary_sensors", [])
+                        _LOGGER.info("Fallback: No dynamic config, using full template")
+                    
+                    if registers:
+                        # Update config entry with filtered template data
+                        new_data = dict(entry.data)
+                        new_data["registers"] = registers
+                        new_data["calculated_entities"] = calculated_entities
+                        new_data["controls"] = controls
+                        if binary_sensors:
+                            new_data["binary_sensors"] = binary_sensors
+                        hass.config_entries.async_update_entry(entry, data=new_data)
+                        _LOGGER.info("Updated config entry with filtered template data as fallback")
+                    else:
+                        _LOGGER.error("Template %s has no sensors after filtering", template_name)
+                        return False
+                        
+                except Exception as e:
+                    _LOGGER.error("Error in fallback template processing: %s", str(e))
+                    # Last resort: use template as-is without filtering
+                    template_sensors = template_data.get("sensors", [])
+                    if template_sensors:
+                        registers = template_sensors
+                        calculated_entities = template_data.get("calculated", [])
+                        controls = template_data.get("controls", [])
+                        _LOGGER.warning("Using unfiltered template as last resort: %d sensors", len(registers))
+                    else:
+                        _LOGGER.error("Template %s has no sensors section", template_name)
+                        return False
+            else:
+                _LOGGER.error("Template %s has no registers defined", template_name)
+                return False
         
         # Template-Version prüfen
         stored_version = entry.data.get("template_version", 1)

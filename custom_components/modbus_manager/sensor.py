@@ -347,6 +347,12 @@ class ModbusTemplateSensor(SensorEntity):
         # Set scan_interval for HA polling
         self._attr_scan_interval = self._scan_interval
         
+        # Icon support
+        icon = register.get("icon")
+        if icon:
+            self._attr_icon = icon
+            _LOGGER.debug("Icon set for sensor %s: %s", self._attr_name, icon)
+        
         # For string sensors and sensors with map/flags/options, set device_class and state_class to None
         if (self._data_type == "string" or 
             self._map or 
