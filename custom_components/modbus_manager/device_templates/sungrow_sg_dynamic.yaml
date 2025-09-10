@@ -20,8 +20,8 @@ dynamic_config:
   
   mppt_count:
     description: "Number of MPPT trackers"
-    options: [1, 2, 3]
-    default: 1
+    options: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    default: 2
   
   battery_config:
     description: "Battery configuration"
@@ -35,6 +35,11 @@ dynamic_config:
   battery_slave_id:
     description: "Battery Slave ID (only needed for SBR Battery)"
     default: 200
+  
+  string_count:
+    description: "Number of DC strings for current monitoring"
+    options: [0, 2, 4, 6, 8, 10, 12, 16, 20, 24]
+    default: 0
   
   firmware_version:
     description: "Firmware version string (e.g., 'SAPPHIRE-H_03011.95.01')"
@@ -133,6 +138,40 @@ dynamic_config:
       winet_only_sensors:
         - "basic_status"
         - "simple_energy_data"
+
+  # Filtering rules for dynamic register inclusion/exclusion
+  filter_rules:
+    # MPPT filtering - include only up to configured mppt_count
+    mppt_sensors:
+      - pattern: "mppt(\\d+)_.*"
+        max_number: "mppt_count"
+        exclude_above: true
+    
+    # String current filtering - include only up to configured string_count
+    string_sensors:
+      - pattern: "string_(\\d+)_current"
+        max_number: "string_count"
+        exclude_above: true
+        exclude_if_zero: true  # Don't include any string sensors if string_count = 0
+    
+    # Phase filtering - exclude phase B/C for single phase
+    phase_sensors:
+      - pattern: "phase_[bc]_.*"
+        exclude_if: "phases == 1"
+      - pattern: "meter_phase_[bc]_.*" 
+        exclude_if: "phases == 1"
+    
+    # Battery filtering - exclude battery sensors if no battery configured
+    battery_sensors:
+      - pattern: "battery.*"
+        exclude_if: "battery_config == 'none'"
+      - pattern: ".*battery.*"
+        exclude_if: "battery_config == 'none'"
+    
+    # SBR Battery specific filtering
+    sbr_battery_sensors:
+      - pattern: "battery_1_.*"
+        exclude_if: "battery_config != 'sbr_battery'"
 
 # Base sensors (will be filtered based on configuration)
 sensors:
@@ -666,6 +705,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    group: "PV_mppt"
 
   - name: MPPT4 current
     unique_id: mppt4_current
@@ -678,6 +718,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    group: "PV_mppt"
 
   - name: MPPT5 voltage
     unique_id: mppt5_voltage
@@ -690,6 +731,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    group: "PV_mppt"
 
   - name: MPPT5 current
     unique_id: mppt5_current
@@ -702,6 +744,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    group: "PV_mppt"
 
   - name: MPPT6 voltage
     unique_id: mppt6_voltage
@@ -714,6 +757,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    group: "PV_mppt"
 
   - name: MPPT6 current
     unique_id: mppt6_current
@@ -726,6 +770,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    group: "PV_mppt"
 
   - name: Monthly power yields
     unique_id: monthly_power_yields
@@ -999,6 +1044,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 30
+    group: "PV_strings"
 
   - name: String 2 current
     unique_id: string_2_current
@@ -1011,6 +1057,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 30
+    group: "PV_strings"
 
   - name: String 3 current
     unique_id: string_3_current
@@ -1023,6 +1070,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 30
+    group: "PV_strings"
 
   - name: String 4 current
     unique_id: string_4_current
@@ -1035,6 +1083,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 30
+    group: "PV_strings"
 
   - name: String 5 current
     unique_id: string_5_current
@@ -1047,6 +1096,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 30
+    group: "PV_strings"
 
   - name: String 6 current
     unique_id: string_6_current
@@ -1059,6 +1109,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 30
+    group: "PV_strings"
 
   - name: String 7 current
     unique_id: string_7_current
@@ -1071,6 +1122,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 30
+    group: "PV_strings"
 
   - name: String 8 current
     unique_id: string_8_current
@@ -1083,6 +1135,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 30
+    group: "PV_strings"
 
   # Meter Data (will be filtered based on phases)
   - name: Meter active power raw
