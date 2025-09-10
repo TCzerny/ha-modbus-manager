@@ -320,8 +320,8 @@ sensors:
       2: "3P3L"
     group: "PV_device_count"
 
-  - name: Daily power yields
-    unique_id: daily_power_yields
+  - name: Daily PV generation
+    unique_id: daily_pv_generation
     address: 5003 # reg 5003
     input_type: input
     data_type: uint16
@@ -332,8 +332,8 @@ sensors:
     scan_interval: 60
     icon: "mdi:solar-power"
 
-  - name: Total power yields
-    unique_id: total_power_yields
+  - name: Total PV generation
+    unique_id: total_pv_generation
     address: 5004 # reg 5004-5005
     input_type: input
     data_type: uint32
@@ -382,8 +382,8 @@ sensors:
     scale: 0.1
     scan_interval: 600
 
-  - name: Internal temperature
-    unique_id: internal_temperature
+  - name: Inverter temperature
+    unique_id: inverter_temperature
     address: 5008 # reg 5008
     input_type: input
     data_type: int16
@@ -2014,8 +2014,8 @@ sensors:
     group: "PV_modes"
 
   # Energy and power sensors
-  - name: Daily PV generation
-    unique_id: daily_pv_generation
+  - name: Daily PV generation (Alternative)
+    unique_id: daily_pv_generation_alt
     address: 13001 # reg 13002
     input_type: input
     data_type: uint16
@@ -2026,8 +2026,8 @@ sensors:
     scale: 0.1
     scan_interval: 600
 
-  - name: Total PV generation
-    unique_id: total_pv_generation
+  - name: Total PV generation (Alternative)
+    unique_id: total_pv_generation_alt
     address: 13002 # reg 13003
     input_type: input
     data_type: uint32
@@ -2246,8 +2246,8 @@ sensors:
     scan_interval: 600
 
   # Phase current sensors (will be filtered based on phases)
-  - name: Phase A current
-    unique_id: phase_a_current
+  - name: Phase A current (Alternative)
+    unique_id: phase_a_current_alt
     address: 13030 # reg 13031
     input_type: input
     data_type: int16
@@ -2258,8 +2258,8 @@ sensors:
     scale: 0.1
     scan_interval: 10
 
-  - name: Phase B current
-    unique_id: phase_b_current
+  - name: Phase B current (Alternative)
+    unique_id: phase_b_current_alt
     address: 13031 # reg 13032
     input_type: input
     data_type: int16
@@ -2270,8 +2270,8 @@ sensors:
     scale: 0.1
     scan_interval: 10
 
-  - name: Phase C current
-    unique_id: phase_c_current
+  - name: Phase C current (Alternative)
+    unique_id: phase_c_current_alt
     address: 13032 # reg 13033
     input_type: input
     data_type: int16
@@ -2282,8 +2282,8 @@ sensors:
     scale: 0.1
     scan_interval: 10
 
-  - name: Total active power
-    unique_id: total_active_power
+  - name: Total active power (Alternative)
+    unique_id: total_active_power_alt
     address: 13033 # reg 13034
     input_type: input
     data_type: int32
