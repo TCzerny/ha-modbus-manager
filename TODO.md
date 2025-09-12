@@ -187,5 +187,3 @@ calculated_sensors:
         0
       {% endif %}
 ```
-
-

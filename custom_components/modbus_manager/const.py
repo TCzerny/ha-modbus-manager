@@ -1,6 +1,7 @@
 """Constants for the Modbus Manager integration."""
-from typing import Final
 from enum import Enum
+from typing import Final
+
 from homeassistant.const import Platform
 
 DOMAIN: Final = "modbus_manager"
@@ -62,17 +63,19 @@ EVENT_MODBUS_MANAGER_ERROR = "modbus_manager_error"
 
 # Platforms used by this integration
 PLATFORMS = [
-    Platform.SENSOR, 
-    Platform.NUMBER, 
-    Platform.SWITCH, 
+    Platform.SENSOR,
+    Platform.NUMBER,
+    Platform.SWITCH,
     Platform.SELECT,
     Platform.BINARY_SENSOR,
-    Platform.BUTTON
+    Platform.BUTTON,
 ]
+
 
 # Neue Entity-Typen basierend auf modbus_connect
 class EntityType(Enum):
     """Definiert die verschiedenen Entity-Typen."""
+
     SENSOR = "sensor"
     NUMBER = "number"
     SWITCH = "switch"
@@ -80,9 +83,11 @@ class EntityType(Enum):
     BINARY_SENSOR = "binary_sensor"
     BUTTON = "button"
 
+
 # Erweiterte Datenverarbeitungsoptionen
 class DataProcessingType(Enum):
     """Definiert die verschiedenen Datenverarbeitungsoptionen."""
+
     SCALE = "scale"
     OFFSET = "offset"
     SUM_SCALE = "sum_scale"
@@ -97,51 +102,64 @@ class DataProcessingType(Enum):
     BIT_ROTATE = "bit_rotate"
     BIT_RANGE = "bit_range"
 
+
 # Byte-Reihenfolge für Float-Werte
 class ByteOrder(Enum):
     """Definiert die verschiedenen Byte-Reihenfolgen."""
-    BIG_ENDIAN = "big"           # ABCD - Standard
-    LITTLE_ENDIAN = "little"     # DCBA - Umgekehrte Reihenfolge
-    BIG_ENDIAN_SWAP = "big_swap" # BADC - Big Endian mit Wortvertauschung
-    LITTLE_ENDIAN_SWAP = "little_swap" # CDAB - Little Endian mit Wortvertauschung
+
+    BIG_ENDIAN = "big"  # ABCD - Standard
+    LITTLE_ENDIAN = "little"  # DCBA - Umgekehrte Reihenfolge
+    BIG_ENDIAN_SWAP = "big_swap"  # BADC - Big Endian mit Wortvertauschung
+    LITTLE_ENDIAN_SWAP = "little_swap"  # CDAB - Little Endian mit Wortvertauschung
+
 
 # Control-Typen für read/write Register
 class ControlType(Enum):
     """Definiert die verschiedenen Control-Typen."""
+
     NONE = "none"
     NUMBER = "number"
     SELECT = "select"
     SWITCH = "switch"
     TEXT = "text"
 
+
 # Daten-Typen
 class DataType(Enum):
     """Definiert die verschiedenen Daten-Typen."""
+
     UINT16 = "uint16"
     INT16 = "int16"
     UINT32 = "uint32"
     INT32 = "int32"
-    FLOAT = "float"        # IEEE 754 32-bit float
-    FLOAT64 = "float64"    # IEEE 754 64-bit float
+    FLOAT = "float"  # IEEE 754 32-bit float
+    FLOAT64 = "float64"  # IEEE 754 64-bit float
     STRING = "string"
     BOOLEAN = "boolean"
+
 
 # Register-Typen
 class RegisterType(Enum):
     """Definiert die verschiedenen Register-Typen."""
+
     INPUT = "input"
     HOLDING = "holding"
     COIL = "coil"
     DISCRETE = "discrete"
 
+
 class NameType(Enum):
     """Definiert die verschiedenen Typen von Namen/IDs."""
-    ENTITY_ID = "entity_id"          # Für Entity IDs (z.B. sensor.sungrow_inverter_battery_level)
-    UNIQUE_ID = "unique_id"          # Für eindeutige IDs (z.B. sungrow_inverter_battery_level)
-    DISPLAY_NAME = "display_name"    # Für UI-Anzeigenamen (z.B. Sungrow Battery Level)
-    BASE_NAME = "base_name"          # Für interne Referenzen (z.B. sungrow_battery_level)
-    REGISTER = "register"            # Für Register-Namen (z.B. battery_level)
-    SERVICE_NAME = "service_name"    # Für Service-Namen (z.B. set_battery_level)
+
+    ENTITY_ID = (
+        "entity_id"  # Für Entity IDs (z.B. sensor.sungrow_inverter_battery_level)
+    )
+    UNIQUE_ID = "unique_id"  # Für eindeutige IDs (z.B. sungrow_inverter_battery_level)
+    DISPLAY_NAME = "display_name"  # Für UI-Anzeigenamen (z.B. Sungrow Battery Level)
+    BASE_NAME = "base_name"  # Für interne Referenzen (z.B. sungrow_battery_level)
+    REGISTER = "register"  # Für Register-Namen (z.B. battery_level)
+    SERVICE_NAME = "service_name"  # Für Service-Namen (z.B. set_battery_level)
+
 
 # Standard-Werte für neue Features
 DEFAULT_UPDATE_INTERVAL = 10  # Sekunden - Reduced for better control responsiveness

@@ -85,11 +85,11 @@ dynamic_config:
     description: "Number of phases"
     options: [1, 3]
     default: 1
-  
+
   battery_enabled:
     description: "Battery support enabled"
     default: false
-  
+
   firmware_version:
     description: "Firmware version string"
     default: "1.0.0"
@@ -360,11 +360,11 @@ dynamic_config:
     description: "Number of phases"
     options: [1, 3]
     default: 1
-  
+
   battery_enabled:
     description: "Battery support enabled"
     default: false
-  
+
   firmware_version:
     description: "Firmware version"
     default: "1.0.0"

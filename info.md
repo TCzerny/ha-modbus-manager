@@ -168,7 +168,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 3.0.0  
-**Status**: Stable (Sungrow SHx Dynamic, Compleo templates implemented)  
-**Home Assistant**: 2025.1.0+  
+**Version**: 3.0.0
+**Status**: Stable (Sungrow SHx Dynamic, Compleo templates implemented)
+**Home Assistant**: 2025.1.0+
 **Last Updated**: January 2025

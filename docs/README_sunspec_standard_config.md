@@ -187,7 +187,7 @@ modbus:
    ```bash
    # Test Common Model (40001)
    modbus read [IP_ADDRESS] 502 1 40001 10
-   
+
    # Test Inverter Model (40069)
    modbus read [IP_ADDRESS] 502 1 40069 10
    ```
@@ -202,9 +202,9 @@ modbus:
 
 ## 📋 Version
 
-**Version:** 1.0.0  
-**Last Update:** 2024  
-**Status:** Stable  
+**Version:** 1.0.0
+**Last Update:** 2024
+**Status:** Stable
 **Compatibility:** All SunSpec-Compliant Devices
 
 ## 🔗 Related Documentation

@@ -74,7 +74,7 @@ Bit-based evaluation where multiple flags can be active simultaneously. Used for
 # Example: Status register with multiple flags
 flags:
   0: "Alarm 1"
-  1: "Alarm 2" 
+  1: "Alarm 2"
   2: "Warning"
   3: "Maintenance"
   4: "System OK"
@@ -226,7 +226,7 @@ entities:
   # Individual devices
   - sensor.sg1_battery_level
   - sensor.ebox1_charging_power
-  
+
   # Aggregates
   - sensor.total_pv_battery_power_sum
   - sensor.total_ev_charging_power_sum
@@ -343,6 +343,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Last Updated**: January 2025  
-**Version**: 3.0.0  
+**Last Updated**: January 2025
+**Version**: 3.0.0
 **Status**: Stable (Sungrow SHx Dynamic, Compleo templates implemented)

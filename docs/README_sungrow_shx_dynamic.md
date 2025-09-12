@@ -230,6 +230,6 @@ Special thanks to the **photovoltaikforum.com** and **forum.iobroker.net** commu
 
 ## 📋 Version
 
-**Version:** 1.0.0  
-**Last Update:** 2025  
+**Version:** 1.0.0
+**Last Update:** 2025
 **Compatibility:** All 36 Sungrow SHx Models

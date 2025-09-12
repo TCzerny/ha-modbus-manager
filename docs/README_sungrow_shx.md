@@ -130,9 +130,9 @@ For new installations, use the **[Sungrow SHx Dynamic Template](README_sungrow_s
 
 ## 📋 Version
 
-**Version:** 1.0.0  
-**Last Update:** 2024  
-**Status:** Legacy (Use Dynamic Template Instead)  
+**Version:** 1.0.0
+**Last Update:** 2024
+**Status:** Legacy (Use Dynamic Template Instead)
 **Compatibility:** All 36 Sungrow SHx Models
 
 ## 🔗 Related Documentation

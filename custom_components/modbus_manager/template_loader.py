@@ -1,14 +1,22 @@
 """Template Loader for Modbus Manager."""
 import asyncio
+import logging
 import os
+from typing import Any, Dict, List, Optional
+
 import yaml
-from typing import Dict, Any, List, Optional
 from homeassistant.core import HomeAssistant
 from homeassistant.util.async_ import run_callback_threadsafe
-import logging
+
 from .const import (
-    DEFAULT_UPDATE_INTERVAL, DEFAULT_MAX_REGISTER_READ, DEFAULT_PRECISION,
-    DEFAULT_MIN_VALUE, DEFAULT_MAX_VALUE, DataType, RegisterType, ControlType
+    DEFAULT_MAX_REGISTER_READ,
+    DEFAULT_MAX_VALUE,
+    DEFAULT_MIN_VALUE,
+    DEFAULT_PRECISION,
+    DEFAULT_UPDATE_INTERVAL,
+    ControlType,
+    DataType,
+    RegisterType,
 )
 from .logger import ModbusManagerLogger
 
@@ -42,15 +50,15 @@ OPTIONAL_FIELDS = {
     "sum_scale": None,
     "shift_bits": 0,
     "bits": None,
-    "bitmask": None,           # Bitmaske (z.B. 0xFF für die unteren 8 Bits)
-    "bit_position": None,      # Einzelnes Bit an Position extrahieren (0-31)
-    "bit_shift": 0,            # Bits nach links/rechts verschieben (positiv=links, negativ=rechts)
-    "bit_rotate": 0,           # Bits rotieren (positiv=links, negativ=rechts)
-    "bit_range": None,         # Bereich von Bits extrahieren [start, end]
+    "bitmask": None,  # Bitmaske (z.B. 0xFF für die unteren 8 Bits)
+    "bit_position": None,  # Einzelnes Bit an Position extrahieren (0-31)
+    "bit_shift": 0,  # Bits nach links/rechts verschieben (positiv=links, negativ=rechts)
+    "bit_rotate": 0,  # Bits rotieren (positiv=links, negativ=rechts)
+    "bit_range": None,  # Bereich von Bits extrahieren [start, end]
     "float": False,
     "string": False,
-    "encoding": "utf-8",     # String-Encoding (utf-8, ascii, latin1, etc.)
-    "max_length": None,      # Maximale String-Länge (None = unbegrenzt)
+    "encoding": "utf-8",  # String-Encoding (utf-8, ascii, latin1, etc.)
+    "max_length": None,  # Maximale String-Länge (None = unbegrenzt)
     "control": "none",
     "min_value": DEFAULT_MIN_VALUE,
     "max_value": DEFAULT_MAX_VALUE,
@@ -60,53 +68,62 @@ OPTIONAL_FIELDS = {
     "flags": {},
     "never_resets": False,
     "entity_category": None,
-    "icon": None
+    "icon": None,
 }
+
 
 async def load_templates() -> List[Dict[str, Any]]:
     """Load all template files asynchronously."""
     try:
         # Load base templates first
         base_templates = await load_base_templates()
-        
+
         # Get device template directory
         if not os.path.exists(TEMPLATE_DIR):
             _LOGGER.error("Template-Verzeichnis %s existiert nicht", TEMPLATE_DIR)
             return []
-        
+
         # List files in thread-safe way
         loop = asyncio.get_event_loop()
         filenames = await loop.run_in_executor(None, os.listdir, TEMPLATE_DIR)
-        
+
         templates = []
         for filename in filenames:
-            if filename.endswith(('.yaml', '.yml')):
+            if filename.endswith((".yaml", ".yml")):
                 # Skip directories
                 if os.path.isdir(os.path.join(TEMPLATE_DIR, filename)):
                     continue
-                    
+
                 template_path = os.path.join(TEMPLATE_DIR, filename)
-                template_data = await load_single_template(template_path, base_templates)
+                template_data = await load_single_template(
+                    template_path, base_templates
+                )
                 if template_data:
                     templates.append(template_data)
-        
+
         # Load manufacturer mappings
         if os.path.exists(MAPPING_DIR):
             mapping_files = await loop.run_in_executor(None, os.listdir, MAPPING_DIR)
             for filename in mapping_files:
-                if filename.endswith(('.yaml', '.yml')):
+                if filename.endswith((".yaml", ".yml")):
                     mapping_path = os.path.join(MAPPING_DIR, filename)
-                    mapping_data = await load_mapping_template(mapping_path, base_templates)
+                    mapping_data = await load_mapping_template(
+                        mapping_path, base_templates
+                    )
                     if mapping_data:
                         templates.append(mapping_data)
-        
-        _LOGGER.debug("Insgesamt %d Templates geladen (inkl. %d BASE-Templates)", 
-                     len(templates), len(base_templates))
+
+        _LOGGER.debug(
+            "Insgesamt %d Templates geladen (inkl. %d BASE-Templates)",
+            len(templates),
+            len(base_templates),
+        )
         return templates
-        
+
     except Exception as e:
         _LOGGER.error("Fehler beim Laden der Templates: %s", str(e))
         return []
+
 
 async def load_base_templates() -> Dict[str, Dict[str, Any]]:
     """Load all base template files asynchronously."""
@@ -116,14 +133,14 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
             os.makedirs(BASE_TEMPLATE_DIR)
             _LOGGER.debug("BASE-Template-Verzeichnis %s erstellt", BASE_TEMPLATE_DIR)
             return {}
-        
+
         # List files in thread-safe way
         loop = asyncio.get_event_loop()
         filenames = await loop.run_in_executor(None, os.listdir, BASE_TEMPLATE_DIR)
-        
+
         base_templates = {}
         for filename in filenames:
-            if filename.endswith(('.yaml', '.yml')):
+            if filename.endswith((".yaml", ".yml")):
                 template_path = os.path.join(BASE_TEMPLATE_DIR, filename)
                 template_data = await load_single_template(template_path, {})
                 if template_data:
@@ -131,108 +148,140 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
                     if base_name:
                         base_templates[base_name] = template_data
                         _LOGGER.debug("BASE-Template %s geladen", base_name)
-        
+
         _LOGGER.debug("Insgesamt %d BASE-Templates geladen", len(base_templates))
         return base_templates
-        
+
     except Exception as e:
         _LOGGER.error("Fehler beim Laden der BASE-Templates: %s", str(e))
         return {}
 
-def process_sunspec_model_structure(base_template: Dict[str, Any], model_addresses: Dict[str, int]) -> List[Dict[str, Any]]:
+
+def process_sunspec_model_structure(
+    base_template: Dict[str, Any], model_addresses: Dict[str, int]
+) -> List[Dict[str, Any]]:
     """Process SunSpec model structure with offsets and model base addresses."""
     try:
         processed_registers = []
-        
+
         # Process each model in the base template
         for model_key, model_data in base_template.items():
             if not isinstance(model_data, dict) or "registers" not in model_data:
                 continue
-                
+
             # Get the base address for this model
             model_base_address = model_addresses.get(model_key)
             if model_base_address is None:
                 _LOGGER.warning("Keine Basisadresse für Modell %s gefunden", model_key)
                 continue
-                
-            _LOGGER.debug("Verarbeite Modell %s mit Basisadresse %d", model_key, model_base_address)
-            
+
+            _LOGGER.debug(
+                "Verarbeite Modell %s mit Basisadresse %d",
+                model_key,
+                model_base_address,
+            )
+
             # Process registers in this model
             for reg in model_data.get("registers", []):
                 # Create a copy of the register
                 processed_reg = dict(reg)
-                
+
                 # Calculate absolute address from offset and base address
                 offset = reg.get("offset", 0)
                 absolute_address = model_base_address + offset
                 processed_reg["address"] = absolute_address
-                
+
                 # Add model information
                 processed_reg["model"] = model_key
                 processed_reg["model_offset"] = offset
-                
+
                 # Add to processed registers
                 processed_registers.append(processed_reg)
-                
-                _LOGGER.debug("Register %s: Offset %d + Basis %d = Adresse %d", 
-                             reg.get("name"), offset, model_base_address, absolute_address)
-        
-        _LOGGER.debug("SunSpec-Modellstruktur verarbeitet: %d Register erstellt", len(processed_registers))
+
+                _LOGGER.debug(
+                    "Register %s: Offset %d + Basis %d = Adresse %d",
+                    reg.get("name"),
+                    offset,
+                    model_base_address,
+                    absolute_address,
+                )
+
+        _LOGGER.debug(
+            "SunSpec-Modellstruktur verarbeitet: %d Register erstellt",
+            len(processed_registers),
+        )
         return processed_registers
-        
+
     except Exception as e:
-        _LOGGER.error("Fehler bei der Verarbeitung der SunSpec-Modellstruktur: %s", str(e))
+        _LOGGER.error(
+            "Fehler bei der Verarbeitung der SunSpec-Modellstruktur: %s", str(e)
+        )
         return []
 
-def validate_sunspec_template(template_data: Dict[str, Any], template_name: str) -> bool:
+
+def validate_sunspec_template(
+    template_data: Dict[str, Any], template_name: str
+) -> bool:
     """Validate SunSpec template structure and data."""
     try:
         _LOGGER.debug("Validiere SunSpec-Template %s", template_name)
-        
+
         # Check if template extends SunSpec Standard
         extends_name = template_data.get("extends")
         if not extends_name or "SunSpec" not in extends_name:
-            _LOGGER.error("Template %s muss 'SunSpec Standard' erweitern", template_name)
+            _LOGGER.error(
+                "Template %s muss 'SunSpec Standard' erweitern", template_name
+            )
             return False
-        
+
         # Check for required model_addresses
         model_addresses = template_data.get("model_addresses")
         if not model_addresses:
             _LOGGER.error("Template %s muss model_addresses definieren", template_name)
             return False
-        
+
         # Validate model addresses
         required_models = ["common_model", "inverter_model"]
         for model in required_models:
             if model not in model_addresses:
-                _LOGGER.warning("Template %s definiert nicht alle erforderlichen Modelle: %s fehlt", 
-                               template_name, model)
-        
+                _LOGGER.warning(
+                    "Template %s definiert nicht alle erforderlichen Modelle: %s fehlt",
+                    template_name,
+                    model,
+                )
+
         # Validate address values
         for model_name, address in model_addresses.items():
             if not isinstance(address, int) or address < 1:
-                _LOGGER.error("Template %s: Ungültige Adresse für Modell %s: %s", 
-                             template_name, model_name, address)
+                _LOGGER.error(
+                    "Template %s: Ungültige Adresse für Modell %s: %s",
+                    template_name,
+                    model_name,
+                    address,
+                )
                 return False
-        
+
         # Validate custom registers if present
         custom_registers = template_data.get("custom_registers", [])
         for reg in custom_registers:
             if not validate_custom_register(reg, template_name):
                 return False
-        
+
         # Validate custom controls if present
         custom_controls = template_data.get("custom_controls", [])
         for ctrl in custom_controls:
             if not validate_custom_control(ctrl, template_name):
                 return False
-        
+
         _LOGGER.debug("Template %s erfolgreich validiert", template_name)
         return True
-        
+
     except Exception as e:
-        _LOGGER.error("Fehler bei der Validierung von Template %s: %s", template_name, str(e))
+        _LOGGER.error(
+            "Fehler bei der Validierung von Template %s: %s", template_name, str(e)
+        )
         return False
+
 
 def validate_custom_register(reg: Dict[str, Any], template_name: str) -> bool:
     """Validate a custom register in a SunSpec template."""
@@ -241,30 +290,55 @@ def validate_custom_register(reg: Dict[str, Any], template_name: str) -> bool:
         required_fields = ["name", "unique_id", "address"]
         for field in required_fields:
             if field not in reg:
-                _LOGGER.error("Template %s: Custom Register fehlt Pflichtfeld %s", template_name, field)
+                _LOGGER.error(
+                    "Template %s: Custom Register fehlt Pflichtfeld %s",
+                    template_name,
+                    field,
+                )
                 return False
-        
+
         # Validate address
         address = reg.get("address")
         if not isinstance(address, int) or address < 1:
-            _LOGGER.error("Template %s: Ungültige Adresse für Register %s: %s", 
-                         template_name, reg.get("name"), address)
+            _LOGGER.error(
+                "Template %s: Ungültige Adresse für Register %s: %s",
+                template_name,
+                reg.get("name"),
+                address,
+            )
             return False
-        
+
         # Validate data type
         data_type = reg.get("data_type")
-        valid_data_types = {"uint16", "int16", "uint32", "int32", "string", "float", "float64", "boolean"}
+        valid_data_types = {
+            "uint16",
+            "int16",
+            "uint32",
+            "int32",
+            "string",
+            "float",
+            "float64",
+            "boolean",
+        }
         if data_type not in valid_data_types:
-            _LOGGER.error("Template %s: Ungültiger data_type für Register %s: %s", 
-                         template_name, reg.get("name"), data_type)
+            _LOGGER.error(
+                "Template %s: Ungültiger data_type für Register %s: %s",
+                template_name,
+                reg.get("name"),
+                data_type,
+            )
             return False
-        
+
         return True
-        
+
     except Exception as e:
-        _LOGGER.error("Fehler bei der Validierung des Custom Registers in Template %s: %s", 
-                     template_name, str(e))
+        _LOGGER.error(
+            "Fehler bei der Validierung des Custom Registers in Template %s: %s",
+            template_name,
+            str(e),
+        )
         return False
+
 
 def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
     """Validate a custom control in a SunSpec template."""
@@ -273,73 +347,105 @@ def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
         required_fields = ["type", "name", "address"]
         for field in required_fields:
             if field not in ctrl:
-                _LOGGER.error("Template %s: Custom Control fehlt Pflichtfeld %s", template_name, field)
+                _LOGGER.error(
+                    "Template %s: Custom Control fehlt Pflichtfeld %s",
+                    template_name,
+                    field,
+                )
                 return False
-        
+
         # Validate control type
         ctrl_type = ctrl.get("type")
         valid_control_types = {"select", "number", "button", "switch"}
         if ctrl_type not in valid_control_types:
-            _LOGGER.error("Template %s: Ungültiger Control-Typ für %s: %s", 
-                         template_name, ctrl.get("name"), ctrl_type)
+            _LOGGER.error(
+                "Template %s: Ungültiger Control-Typ für %s: %s",
+                template_name,
+                ctrl.get("name"),
+                ctrl_type,
+            )
             return False
-        
+
         # Validate address
         address = ctrl.get("address")
         if not isinstance(address, int) or address < 1:
-            _LOGGER.error("Template %s: Ungültige Adresse für Control %s: %s", 
-                         template_name, ctrl.get("name"), address)
+            _LOGGER.error(
+                "Template %s: Ungültige Adresse für Control %s: %s",
+                template_name,
+                ctrl.get("name"),
+                address,
+            )
             return False
-        
+
         # Type-specific validation
         if ctrl_type == "select":
             options = ctrl.get("options", {})
             if not isinstance(options, dict) or not options:
-                _LOGGER.error("Template %s: Select-Control %s benötigt gültige options", 
-                             template_name, ctrl.get("name"))
+                _LOGGER.error(
+                    "Template %s: Select-Control %s benötigt gültige options",
+                    template_name,
+                    ctrl.get("name"),
+                )
                 return False
-        
+
         elif ctrl_type == "number":
             min_val = ctrl.get("min_value")
             max_val = ctrl.get("max_value")
             if min_val is not None and max_val is not None:
                 if min_val >= max_val:
-                    _LOGGER.error("Template %s: Ungültige min/max Werte für Control %s: min=%s, max=%s", 
-                                 template_name, ctrl.get("name"), min_val, max_val)
+                    _LOGGER.error(
+                        "Template %s: Ungültige min/max Werte für Control %s: min=%s, max=%s",
+                        template_name,
+                        ctrl.get("name"),
+                        min_val,
+                        max_val,
+                    )
                     return False
-        
+
         return True
-        
+
     except Exception as e:
-        _LOGGER.error("Fehler bei der Validierung des Custom Controls in Template %s: %s", 
-                     template_name, str(e))
+        _LOGGER.error(
+            "Fehler bei der Validierung des Custom Controls in Template %s: %s",
+            template_name,
+            str(e),
+        )
         return False
 
-def process_simple_template(template_data: Dict[str, Any], base_template: Dict[str, Any], user_config: Dict[str, Any]) -> Dict[str, Any]:
+
+def process_simple_template(
+    template_data: Dict[str, Any],
+    base_template: Dict[str, Any],
+    user_config: Dict[str, Any],
+) -> Dict[str, Any]:
     """Process a simple template that only requires prefix and name."""
     try:
-        _LOGGER.debug("Verarbeite vereinfachtes Template: %s", template_data.get("name"))
-        
+        _LOGGER.debug(
+            "Verarbeite vereinfachtes Template: %s", template_data.get("name")
+        )
+
         # Extract required fields from user configuration
         prefix = user_config.get("prefix")
         device_name = user_config.get("name", prefix)  # Use prefix as fallback
-        
+
         if not prefix:
             _LOGGER.error("Prefix ist erforderlich für vereinfachte Templates")
             return {}
-        
+
         # Get model addresses from template
         model_addresses = template_data.get("model_addresses", {})
         if not model_addresses:
             _LOGGER.error("Template muss model_addresses definieren")
             return {}
-        
+
         # Process SunSpec model structure
-        model_registers = process_sunspec_model_structure(base_template, model_addresses)
-        
+        model_registers = process_sunspec_model_structure(
+            base_template, model_addresses
+        )
+
         # Get auto-generated sensor configuration
         auto_config = template_data.get("auto_generated_sensors", {})
-        
+
         # Filter registers based on auto-generated configuration
         filtered_registers = []
         for reg in model_registers:
@@ -350,41 +456,43 @@ def process_simple_template(template_data: Dict[str, Any], base_template: Dict[s
                     # Add prefix to unique_id
                     reg_name = reg.get("name", "").lower()
                     reg["unique_id"] = f"{prefix}_{reg_name}"
-                    
+
                     # Add groups from auto-config
                     groups = model_config.get("groups", [])
                     if groups:
                         reg["group"] = groups[0]  # Use first group as primary
                         reg["groups"] = groups  # Store all groups for later use
-                    
+
                     filtered_registers.append(reg)
-        
+
         # Process calculated sensors
         calculated_sensors = template_data.get("calculated_sensors", [])
         for calc_sensor in calculated_sensors:
             # Replace {PREFIX} placeholder with actual prefix
             if "state" in calc_sensor:
                 calc_sensor["state"] = calc_sensor["state"].replace("{PREFIX}", prefix)
-            
+
             # Add prefix to unique_id
             calc_name = calc_sensor.get("name", "").lower().replace(" ", "_")
             calc_sensor["unique_id"] = f"{prefix}_{calc_name}"
-        
+
         # Process sensors for placeholder replacement
         sensors = template_data.get("sensors", [])
         for sensor in sensors:
             # Replace {BATTERY_SLAVE_ID} placeholder with actual battery_slave_id
             if "slave_id" in sensor and "{BATTERY_SLAVE_ID}" in str(sensor["slave_id"]):
                 battery_slave_id = user_config.get("battery_slave_id", 200)
-                sensor["slave_id"] = sensor["slave_id"].replace("{BATTERY_SLAVE_ID}", str(battery_slave_id))
-        
+                sensor["slave_id"] = sensor["slave_id"].replace(
+                    "{BATTERY_SLAVE_ID}", str(battery_slave_id)
+                )
+
         # Process controls
         controls = template_data.get("controls", [])
         for control in controls:
             # Add prefix to unique_id
             ctrl_name = control.get("name", "").lower().replace(" ", "_")
             control["unique_id"] = f"{prefix}_{ctrl_name}"
-        
+
         # Create final template data
         processed_template = {
             "name": device_name,
@@ -394,95 +502,125 @@ def process_simple_template(template_data: Dict[str, Any], base_template: Dict[s
             "controls": controls,
             "template_info": template_data.get("template_info", {}),
             "model_addresses": model_addresses,
-            "auto_generated_sensors": auto_config
+            "auto_generated_sensors": auto_config,
         }
-        
-        _LOGGER.debug("Vereinfachtes Template verarbeitet: %d Sensoren, %d berechnete Sensoren, %d Steuerelemente", 
-                     len(filtered_registers), len(calculated_sensors), len(controls))
-        
+
+        _LOGGER.debug(
+            "Vereinfachtes Template verarbeitet: %d Sensoren, %d berechnete Sensoren, %d Steuerelemente",
+            len(filtered_registers),
+            len(calculated_sensors),
+            len(controls),
+        )
+
         return processed_template
-        
+
     except Exception as e:
-        _LOGGER.error("Fehler bei der Verarbeitung des vereinfachten Templates: %s", str(e))
+        _LOGGER.error(
+            "Fehler bei der Verarbeitung des vereinfachten Templates: %s", str(e)
+        )
         return {}
 
-async def process_simple_template_with_config(template_info: Dict[str, Any], user_config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+
+async def process_simple_template_with_config(
+    template_info: Dict[str, Any], user_config: Dict[str, Any]
+) -> Optional[Dict[str, Any]]:
     """Process a simple template with user configuration."""
     try:
         template_data = template_info.get("template_data")
         base_template = template_info.get("base_template")
-        
+
         if not template_data or not base_template:
             _LOGGER.error("Ungültige Template-Informationen für vereinfachtes Template")
             return None
-        
+
         # Check if this is a SunSpec Standard Configuration
         if template_data.get("name") == "SunSpec Standard Configuration":
-            return await process_sunspec_config_template(template_data, base_template, user_config)
-        
+            return await process_sunspec_config_template(
+                template_data, base_template, user_config
+            )
+
         # Process the simple template with user config
-        processed_template = process_simple_template(template_data, base_template, user_config)
-        
+        processed_template = process_simple_template(
+            template_data, base_template, user_config
+        )
+
         if not processed_template:
             _LOGGER.error("Fehler bei der Verarbeitung des vereinfachten Templates")
             return None
-        
+
         # Validate and process registers
         validated_registers = []
         for reg in processed_template.get("sensors", []):
-            validated_reg = validate_and_process_register(reg, processed_template.get("name"))
+            validated_reg = validate_and_process_register(
+                reg, processed_template.get("name")
+            )
             if validated_reg:
                 validated_reg["template"] = processed_template.get("name")
                 validated_registers.append(validated_reg)
-        
+
         # Update processed template with validated registers
         processed_template["sensors"] = validated_registers
-        
-        _LOGGER.debug("Vereinfachtes Template erfolgreich verarbeitet: %s", processed_template.get("name"))
+
+        _LOGGER.debug(
+            "Vereinfachtes Template erfolgreich verarbeitet: %s",
+            processed_template.get("name"),
+        )
         return processed_template
-        
+
     except Exception as e:
-        _LOGGER.error("Fehler bei der Verarbeitung des vereinfachten Templates mit Konfiguration: %s", str(e))
+        _LOGGER.error(
+            "Fehler bei der Verarbeitung des vereinfachten Templates mit Konfiguration: %s",
+            str(e),
+        )
         return None
 
-async def process_sunspec_config_template(template_data: Dict[str, Any], base_template: Dict[str, Any], user_config: Dict[str, Any]) -> Optional[Dict[str, Any]]:
+
+async def process_sunspec_config_template(
+    template_data: Dict[str, Any],
+    base_template: Dict[str, Any],
+    user_config: Dict[str, Any],
+) -> Optional[Dict[str, Any]]:
     """Process SunSpec Standard Configuration template."""
     try:
         _LOGGER.debug("Verarbeite SunSpec Standard Configuration Template")
-        
+
         # Extract required fields from user configuration
         prefix = user_config.get("prefix")
         device_name = user_config.get("name", prefix)
-        
+
         if not prefix:
             _LOGGER.error("Prefix ist erforderlich für SunSpec-Konfiguration")
             return None
-        
+
         # Get model addresses from user config
         model_addresses = {
             "common_model": user_config.get("common_model_address"),
             "inverter_model": user_config.get("inverter_model_address"),
         }
-        
+
         # Add optional model addresses
         if user_config.get("storage_model_address"):
             model_addresses["storage_model"] = user_config["storage_model_address"]
-        
+
         if user_config.get("meter_model_address"):
             model_addresses["meter_model"] = user_config["meter_model_address"]
-        
+
         # Validate model addresses
         for model_name, address in model_addresses.items():
             if not address or not isinstance(address, int) or address < 1:
-                _LOGGER.error("Ungültige Adresse für Modell %s: %s", model_name, address)
+                _LOGGER.error(
+                    "Ungültige Adresse für Modell %s: %s", model_name, address
+                )
                 return None
-        
+
         # Process SunSpec model structure
-        model_registers = process_sunspec_model_structure(base_template, model_addresses)
-        
+        model_registers = process_sunspec_model_structure(
+            base_template, model_addresses
+        )
+
         # Get auto-generated sensor configuration
         auto_config = template_data.get("auto_generated_sensors", {})
-        
+
         # Filter registers based on auto-generated configuration
         filtered_registers = []
         for reg in model_registers:
@@ -493,34 +631,36 @@ async def process_sunspec_config_template(template_data: Dict[str, Any], base_te
                     # Add prefix to unique_id
                     reg_name = reg.get("name", "").lower()
                     reg["unique_id"] = f"{prefix}_{reg_name}"
-                    
+
                     # Add groups from auto-config
                     groups = model_config.get("groups", [])
                     if groups:
                         reg["group"] = groups[0]  # Use first group as primary
                         reg["groups"] = groups  # Store all groups for later use
-                    
+
                     filtered_registers.append(reg)
-        
+
         # Process calculated sensors
         calculated_sensors = template_data.get("calculated_sensors", [])
         for calc_sensor in calculated_sensors:
             # Replace {PREFIX} placeholder with actual prefix
             if "state" in calc_sensor:
                 calc_sensor["state"] = calc_sensor["state"].replace("{PREFIX}", prefix)
-            
+
             # Add prefix to unique_id
             calc_name = calc_sensor.get("name", "").lower().replace(" ", "_")
             calc_sensor["unique_id"] = f"{prefix}_{calc_name}"
-        
+
         # Process sensors for placeholder replacement
         sensors = template_data.get("sensors", [])
         for sensor in sensors:
             # Replace {BATTERY_SLAVE_ID} placeholder with actual battery_slave_id
             if "slave_id" in sensor and "{BATTERY_SLAVE_ID}" in str(sensor["slave_id"]):
                 battery_slave_id = user_config.get("battery_slave_id", 200)
-                sensor["slave_id"] = sensor["slave_id"].replace("{BATTERY_SLAVE_ID}", str(battery_slave_id))
-        
+                sensor["slave_id"] = sensor["slave_id"].replace(
+                    "{BATTERY_SLAVE_ID}", str(battery_slave_id)
+                )
+
         # Process controls
         controls = template_data.get("controls", [])
         for control in controls:
@@ -532,21 +672,27 @@ async def process_sunspec_config_template(template_data: Dict[str, Any], base_te
                         storage_addr = model_addresses["storage_model"]
                         control["address"] = storage_addr + 2
                     else:
-                        _LOGGER.warning("Storage Model nicht verfügbar, Control %s wird übersprungen", control.get("name"))
+                        _LOGGER.warning(
+                            "Storage Model nicht verfügbar, Control %s wird übersprungen",
+                            control.get("name"),
+                        )
                         continue
-                
+
                 if "{STORAGE_MODEL_ADDRESS_PLUS_3}" in str(address):
                     if "storage_model" in model_addresses:
                         storage_addr = model_addresses["storage_model"]
                         control["address"] = storage_addr + 3
                     else:
-                        _LOGGER.warning("Storage Model nicht verfügbar, Control %s wird übersprungen", control.get("name"))
+                        _LOGGER.warning(
+                            "Storage Model nicht verfügbar, Control %s wird übersprungen",
+                            control.get("name"),
+                        )
                         continue
-            
+
             # Add prefix to unique_id
             ctrl_name = control.get("name", "").lower().replace(" ", "_")
             control["unique_id"] = f"{prefix}_{ctrl_name}"
-        
+
         # Create final template data
         processed_template = {
             "name": device_name,
@@ -557,44 +703,53 @@ async def process_sunspec_config_template(template_data: Dict[str, Any], base_te
             "template_info": template_data.get("template_info", {}),
             "model_addresses": model_addresses,
             "auto_generated_sensors": auto_config,
-            "is_sunspec_config": True
+            "is_sunspec_config": True,
         }
-        
-        _LOGGER.debug("SunSpec Standard Configuration verarbeitet: %d Sensoren, %d berechnete Sensoren, %d Steuerelemente", 
-                     len(filtered_registers), len(calculated_sensors), len(controls))
-        
+
+        _LOGGER.debug(
+            "SunSpec Standard Configuration verarbeitet: %d Sensoren, %d berechnete Sensoren, %d Steuerelemente",
+            len(filtered_registers),
+            len(calculated_sensors),
+            len(controls),
+        )
+
         return processed_template
-        
+
     except Exception as e:
-        _LOGGER.error("Fehler bei der Verarbeitung der SunSpec-Konfiguration: %s", str(e))
+        _LOGGER.error(
+            "Fehler bei der Verarbeitung der SunSpec-Konfiguration: %s", str(e)
+        )
         return None
 
-async def load_single_template(template_path: str, base_templates: Dict[str, Dict[str, Any]] = None) -> Optional[Dict[str, Any]]:
+
+async def load_single_template(
+    template_path: str, base_templates: Dict[str, Dict[str, Any]] = None
+) -> Optional[Dict[str, Any]]:
     """Load a single template file asynchronously."""
     try:
         # Read file in thread-safe way
         loop = asyncio.get_event_loop()
         data = await loop.run_in_executor(None, _read_template_file, template_path)
-        
+
         if not data:
             _LOGGER.error("Template %s ist leer", template_path)
             return None
-        
+
         # Template-Metadaten extrahieren
         template_name = data.get("name")
         if not template_name:
             _LOGGER.error("Template %s hat keinen Namen", template_path)
             return None
-        
+
         # _LOGGER.debug("Processing template %s", template_name)
-        
+
         # Check if template extends a base template
         extends_name = data.get("extends")
         if extends_name and base_templates and extends_name in base_templates:
             # Extend from base template
             base_template = base_templates[extends_name]
             # _LOGGER.debug("Template %s erweitert BASE-Template %s", template_name, extends_name)
-            
+
             # Check if this is a simple template (requires only prefix and name)
             if "required_fields" in data and "auto_generated_sensors" in data:
                 # _LOGGER.debug("Template %s ist ein vereinfachtes Template", template_name)
@@ -604,123 +759,168 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
                     "name": template_name,
                     "template_data": data,
                     "base_template": base_template,
-                    "is_simple_template": True
+                    "is_simple_template": True,
                 }
-            
+
             # Validate SunSpec template if it extends SunSpec Standard
             if "SunSpec" in extends_name:
                 if not validate_sunspec_template(data, template_name):
-                    _LOGGER.error("Template %s konnte nicht validiert werden", template_name)
+                    _LOGGER.error(
+                        "Template %s konnte nicht validiert werden", template_name
+                    )
                     return None
-            
+
             # Check if this is a SunSpec template with model structure
             if "model_addresses" in data:
-                _LOGGER.debug("Template %s verwendet SunSpec-Modellstruktur", template_name)
-                
+                _LOGGER.debug(
+                    "Template %s verwendet SunSpec-Modellstruktur", template_name
+                )
+
                 # Process SunSpec model structure
-                model_registers = process_sunspec_model_structure(base_template, data["model_addresses"])
-                
+                model_registers = process_sunspec_model_structure(
+                    base_template, data["model_addresses"]
+                )
+
                 # Apply register mappings if present
                 register_mapping = data.get("register_mapping", {})
                 if register_mapping:
-                    _LOGGER.debug("Wende Register-Mappings für Template %s an", template_name)
+                    _LOGGER.debug(
+                        "Wende Register-Mappings für Template %s an", template_name
+                    )
                     for reg in model_registers:
                         reg_name = reg.get("name")
                         if reg_name in register_mapping:
                             mapped_address = register_mapping[reg_name]
-                            _LOGGER.debug("Mapping register %s von Adresse %s zu %s", 
-                                         reg_name, reg.get("address"), mapped_address)
+                            _LOGGER.debug(
+                                "Mapping register %s von Adresse %s zu %s",
+                                reg_name,
+                                reg.get("address"),
+                                mapped_address,
+                            )
                             reg["address"] = mapped_address
-                
+
                 # Use the processed model registers
                 raw_registers = model_registers
-                
+
             else:
                 # Process register mappings if present (legacy approach)
                 register_mapping = data.get("register_mapping", {})
-                
+
                 # Start with base template registers
                 base_registers = base_template.get("sensors", [])
-                
+
                 # Apply mappings to base registers
                 mapped_registers = []
                 for reg in base_registers:
                     # Create a copy of the register to avoid modifying the original
                     mapped_reg = dict(reg)
-                    
+
                     # Apply address mapping if present
                     reg_name = reg.get("name")
                     if reg_name in register_mapping:
                         mapped_address = register_mapping[reg_name]
-                        _LOGGER.debug("Mapping register %s from address %s to %s", 
-                                     reg_name, mapped_reg.get("address"), mapped_address)
+                        _LOGGER.debug(
+                            "Mapping register %s from address %s to %s",
+                            reg_name,
+                            mapped_reg.get("address"),
+                            mapped_address,
+                        )
                         mapped_reg["address"] = mapped_address
-                    
+
                     mapped_registers.append(mapped_reg)
-                
+
                 # Use the combined registers
                 raw_registers = mapped_registers
-            
+
             # Add custom registers if present
             custom_registers = data.get("custom_registers", [])
             if custom_registers:
-                _LOGGER.debug("Adding %d custom registers to template %s", 
-                            len(custom_registers), template_name)
+                _LOGGER.debug(
+                    "Adding %d custom registers to template %s",
+                    len(custom_registers),
+                    template_name,
+                )
                 raw_registers.extend(custom_registers)
-            
+
             # Include calculated entities from base template
             base_calculated = base_template.get("calculated", [])
             custom_calculated = data.get("calculated", [])
-            
+
             # Combine calculated entities, avoiding duplicates by unique_id
-            calculated_entities = list(base_calculated)  # Make a copy to avoid modifying the original
-            custom_calculated_ids = {calc.get("unique_id") for calc in custom_calculated if "unique_id" in calc}
-            
+            calculated_entities = list(
+                base_calculated
+            )  # Make a copy to avoid modifying the original
+            custom_calculated_ids = {
+                calc.get("unique_id")
+                for calc in custom_calculated
+                if "unique_id" in calc
+            }
+
             # Remove base calculated entities that are overridden by custom ones
-            calculated_entities = [calc for calc in calculated_entities 
-                                 if "unique_id" not in calc or calc["unique_id"] not in custom_calculated_ids]
-            
+            calculated_entities = [
+                calc
+                for calc in calculated_entities
+                if "unique_id" not in calc
+                or calc["unique_id"] not in custom_calculated_ids
+            ]
+
             # Add custom calculated entities
             calculated_entities.extend(custom_calculated)
-            
+
             # Include controls from base template
             base_controls = base_template.get("controls", [])
             custom_controls = data.get("custom_controls", [])
-            
+
             # Combine controls, avoiding duplicates by name
-            controls = list(base_controls)  # Make a copy to avoid modifying the original
-            custom_control_names = {ctrl.get("name") for ctrl in custom_controls if "name" in ctrl}
-            
+            controls = list(
+                base_controls
+            )  # Make a copy to avoid modifying the original
+            custom_control_names = {
+                ctrl.get("name") for ctrl in custom_controls if "name" in ctrl
+            }
+
             # Remove base controls that are overridden by custom ones
-            controls = [ctrl for ctrl in controls 
-                      if "name" not in ctrl or ctrl["name"] not in custom_control_names]
-            
+            controls = [
+                ctrl
+                for ctrl in controls
+                if "name" not in ctrl or ctrl["name"] not in custom_control_names
+            ]
+
             # Add custom controls
             controls.extend(custom_controls)
-            
+
         else:
             # Standard template processing
             raw_registers = data.get("sensors", [])
             if not raw_registers:
                 # Allow empty base templates and aggregate-only templates
                 if "type" in data and data["type"] == "base_template":
-                    _LOGGER.debug("Template %s is base template (no sensors expected)", template_name)
+                    _LOGGER.debug(
+                        "Template %s is base template (no sensors expected)",
+                        template_name,
+                    )
                     raw_registers = []
                 elif "aggregates" in data and data["aggregates"]:
-                    _LOGGER.debug("Template %s is aggregate-only template (no sensors expected)", template_name)
+                    _LOGGER.debug(
+                        "Template %s is aggregate-only template (no sensors expected)",
+                        template_name,
+                    )
                     raw_registers = []
                 elif template_name in ["SunSpec Standard", "Modbus Manager Aggregates"]:
-                    _LOGGER.debug("Template %s is special template (no sensors expected)", template_name)
+                    _LOGGER.debug(
+                        "Template %s is special template (no sensors expected)",
+                        template_name,
+                    )
                     raw_registers = []
                 else:
                     _LOGGER.warning("Template %s has no sensors defined", template_name)
                     return None
-                
+
             calculated_entities = data.get("calculated", [])
             controls = data.get("controls", [])
-        
+
         # _LOGGER.debug("Template %s: %d sensors found", template_name, len(raw_registers))
-        
+
         validated_registers = []
         for reg in raw_registers:
             validated_reg = validate_and_process_register(reg, template_name)
@@ -729,36 +929,54 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
                 validated_reg["template"] = template_name
                 validated_registers.append(validated_reg)
             else:
-                _LOGGER.warning("Register %s in Template %s could not be validated", reg.get("name", "unknown"), template_name)
-        
+                _LOGGER.warning(
+                    "Register %s in Template %s could not be validated",
+                    reg.get("name", "unknown"),
+                    template_name,
+                )
+
         # For base templates and aggregate-only templates, allow empty register lists
-        if not validated_registers and not ("type" in data and data["type"] == "base_template") and not ("aggregates" in data and data["aggregates"]):
+        if (
+            not validated_registers
+            and not ("type" in data and data["type"] == "base_template")
+            and not ("aggregates" in data and data["aggregates"])
+        ):
             _LOGGER.error("Template %s has no valid registers", template_name)
             return None
-        
+
         # _LOGGER.debug("Template %s: %d valid registers processed", template_name, len(validated_registers))
-        
+
         # Process calculated section if present
         if calculated_entities:
             pass  # _LOGGER.debug("Template %s: %d calculated entities found", template_name, len(calculated_entities))
-        
+
         # Process controls section if present
         if controls:
-            _LOGGER.debug("Template %s: %d controls found", template_name, len(controls))
-        
+            _LOGGER.debug(
+                "Template %s: %d controls found", template_name, len(controls)
+            )
+
         # Process aggregates section if present
         aggregates = data.get("aggregates", [])
         if aggregates:
-            _LOGGER.debug("Template %s: %d aggregates found", template_name, len(aggregates))
-        
+            _LOGGER.debug(
+                "Template %s: %d aggregates found", template_name, len(aggregates)
+            )
+
         # Process binary sensors if present
         binary_sensors = data.get("binary_sensors", [])
-        
+
         # Debug: Template structure summary
-        _LOGGER.debug("Template %s: sensors=%d, calculated=%d, binary_sensors=%d, controls=%d, aggregates=%d", 
-                     template_name, len(validated_registers), len(calculated_entities), 
-                     len(binary_sensors), len(controls), len(aggregates))
-        
+        _LOGGER.debug(
+            "Template %s: sensors=%d, calculated=%d, binary_sensors=%d, controls=%d, aggregates=%d",
+            template_name,
+            len(validated_registers),
+            len(calculated_entities),
+            len(binary_sensors),
+            len(controls),
+            len(aggregates),
+        )
+
         result = {
             "name": template_name,
             "sensors": validated_registers,
@@ -773,26 +991,29 @@ async def load_single_template(template_path: str, base_templates: Dict[str, Dic
             "model": data.get("model", ""),
             "default_prefix": data.get("default_prefix", "device"),
             "firmware_version": data.get("firmware_version", "1.0.0"),
-            "available_firmware_versions": data.get("available_firmware_versions", [])
+            "available_firmware_versions": data.get("available_firmware_versions", []),
         }
-        
+
         # Include dynamic_config if present
         if "dynamic_config" in data:
             result["dynamic_config"] = data["dynamic_config"]
             _LOGGER.debug("Template %s includes dynamic_config", template_name)
-        
+
         # Add extends information if present
         if extends_name:
             result["extends"] = extends_name
-            
+
         return result
-        
+
     except yaml.YAMLError as e:
         _LOGGER.error("YAML-Fehler in Template %s: %s", template_path, str(e))
         return None
     except Exception as e:
-        _LOGGER.error("Unerwarteter Fehler beim Laden von Template %s: %s", template_path, str(e))
+        _LOGGER.error(
+            "Unerwarteter Fehler beim Laden von Template %s: %s", template_path, str(e)
+        )
         return None
+
 
 def _read_template_file(template_path: str) -> Optional[Dict[str, Any]]:
     """Read template file synchronously (called in executor)."""
@@ -803,28 +1024,35 @@ def _read_template_file(template_path: str) -> Optional[Dict[str, Any]]:
         _LOGGER.error("Fehler beim Lesen von Template %s: %s", template_path, str(e))
         return None
 
-async def process_template_registers(template_data: Dict[str, Any], dynamic_config: Dict[str, Any] = None) -> List[Dict[str, Any]]:
+
+async def process_template_registers(
+    template_data: Dict[str, Any], dynamic_config: Dict[str, Any] = None
+) -> List[Dict[str, Any]]:
     """Process template registers with current processing logic."""
     try:
         # Validate template_data is a dictionary
         if not isinstance(template_data, dict):
-            _LOGGER.error("Template data is not a dictionary, got type: %s", type(template_data))
+            _LOGGER.error(
+                "Template data is not a dictionary, got type: %s", type(template_data)
+            )
             return []
-        
+
         template_name = template_data.get("name", "unknown")
         _LOGGER.debug("Processing template registers for %s", template_name)
-        
+
         # Get registers from template
         registers = template_data.get("sensors", [])
         if not registers:
             _LOGGER.warning("No registers found in template %s", template_name)
             return []
-        
+
         # Apply dynamic config filtering if dynamic_config is provided
         if dynamic_config:
-            _LOGGER.debug("Applying dynamic config filtering to %d registers", len(registers))
+            _LOGGER.debug(
+                "Applying dynamic config filtering to %d registers", len(registers)
+            )
             filtered_registers = []
-            
+
             # Extract dynamic config parameters
             phases = dynamic_config.get("phases", 3)
             mppt_count = dynamic_config.get("mppt_count", 2)
@@ -832,196 +1060,289 @@ async def process_template_registers(template_data: Dict[str, Any], dynamic_conf
             battery_enabled = battery_config != "none"
             battery_type = battery_config
             battery_slave_id = dynamic_config.get("battery_slave_id", 200)
-            firmware_version = dynamic_config.get("firmware_version", "SAPPHIRE-H_03011.95.01")
+            firmware_version = dynamic_config.get(
+                "firmware_version", "SAPPHIRE-H_03011.95.01"
+            )
             connection_type = dynamic_config.get("connection_type", "LAN")
-            
-            _LOGGER.info("Dynamic config: phases=%d, mppt=%d, battery_config=%s, battery_slave_id=%d, fw=%s, conn=%s", 
-                        phases, mppt_count, battery_config, battery_slave_id, firmware_version, connection_type)
-            
+
+            _LOGGER.info(
+                "Dynamic config: phases=%d, mppt=%d, battery_config=%s, battery_slave_id=%d, fw=%s, conn=%s",
+                phases,
+                mppt_count,
+                battery_config,
+                battery_slave_id,
+                firmware_version,
+                connection_type,
+            )
+
             # Apply filtering logic (same as in config_flow.py)
             for reg in registers:
-                if _should_include_sensor(reg, phases, mppt_count, battery_enabled, battery_type, battery_slave_id, firmware_version, connection_type, dynamic_config):
+                if _should_include_sensor(
+                    reg,
+                    phases,
+                    mppt_count,
+                    battery_enabled,
+                    battery_type,
+                    battery_slave_id,
+                    firmware_version,
+                    connection_type,
+                    dynamic_config,
+                ):
                     filtered_registers.append(reg)
-            
-            _LOGGER.info("Dynamic config filtering: %d registers passed filter from %d original", 
-                        len(filtered_registers), len(registers))
+
+            _LOGGER.info(
+                "Dynamic config filtering: %d registers passed filter from %d original",
+                len(filtered_registers),
+                len(registers),
+            )
             registers = filtered_registers
-        
+
         # Process each register with current validation logic
         processed_registers = []
         for reg in registers:
             processed_reg = validate_and_process_register(reg, template_name)
             if processed_reg:
                 processed_registers.append(processed_reg)
-        
-        _LOGGER.info("Processed %d registers for template %s", len(processed_registers), template_name)
+
+        _LOGGER.info(
+            "Processed %d registers for template %s",
+            len(processed_registers),
+            template_name,
+        )
         return processed_registers
-        
+
     except Exception as e:
         _LOGGER.error("Error processing template registers: %s", str(e))
         return []
 
-def _should_include_sensor(sensor: dict, phases: int, mppt_count: int, battery_enabled: bool, 
-                           battery_type: str, battery_slave_id: int, firmware_version: str, connection_type: str, dynamic_config: dict) -> bool:
+
+def _should_include_sensor(
+    sensor: dict,
+    phases: int,
+    mppt_count: int,
+    battery_enabled: bool,
+    battery_type: str,
+    battery_slave_id: int,
+    firmware_version: str,
+    connection_type: str,
+    dynamic_config: dict,
+) -> bool:
     """Check if sensor should be included based on configuration."""
     sensor_name = sensor.get("name", "").lower()
     unique_id = sensor.get("unique_id", "").lower()
-    
+
     # Check both sensor_name and unique_id for filtering
     search_text = f"{sensor_name} {unique_id}".lower()
-    
+
     # Debug: Log what we're checking
-    _LOGGER.debug("Checking sensor: name='%s', unique_id='%s', search_text='%s'", 
-                 sensor_name, unique_id, search_text)
-    
+    _LOGGER.debug(
+        "Checking sensor: name='%s', unique_id='%s', search_text='%s'",
+        sensor_name,
+        unique_id,
+        search_text,
+    )
+
     # Phase-specific sensors
     if phases == 1:
         # Exclude phase B and C sensors for single phase
-        if any(phase in search_text for phase in ["phase_b", "phase_c", "phase b", "phase c"]):
-            _LOGGER.info("Excluding sensor due to single phase config: %s (unique_id: %s)", 
-                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+        if any(
+            phase in search_text
+            for phase in ["phase_b", "phase_c", "phase b", "phase c"]
+        ):
+            _LOGGER.info(
+                "Excluding sensor due to single phase config: %s (unique_id: %s)",
+                sensor.get("name", "unknown"),
+                sensor.get("unique_id", "unknown"),
+            )
             return False
     elif phases == 3:
         # Include all phase sensors
         pass
-    
+
     # MPPT-specific sensors
     if "mppt" in search_text:
         # Extract MPPT number from sensor name or unique_id
         mppt_number = _extract_mppt_number(search_text)
         if mppt_number and mppt_number > mppt_count:
-            _LOGGER.info("Excluding sensor due to MPPT count config: %s (unique_id: %s, MPPT %d > %d)", 
-                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), mppt_number, mppt_count)
+            _LOGGER.info(
+                "Excluding sensor due to MPPT count config: %s (unique_id: %s, MPPT %d > %d)",
+                sensor.get("name", "unknown"),
+                sensor.get("unique_id", "unknown"),
+                mppt_number,
+                mppt_count,
+            )
             return False
-    
+
     # Battery-specific sensors (general keywords)
     if not battery_enabled:
         battery_keywords = ["battery", "bms", "soc", "charge", "discharge", "backup"]
         if any(keyword in search_text for keyword in battery_keywords):
-            _LOGGER.info("Excluding sensor due to battery disabled: %s (unique_id: %s)", 
-                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            _LOGGER.info(
+                "Excluding sensor due to battery disabled: %s (unique_id: %s)",
+                sensor.get("name", "unknown"),
+                sensor.get("unique_id", "unknown"),
+            )
             return False
-    
+
     # Battery type specific sensors (SBR Battery)
     sensor_group = sensor.get("group", "")
     if battery_type == "none":
         # No battery selected - exclude all battery sensors (already handled by battery_enabled check above)
-        pass 
+        pass
     elif battery_type == "standard_battery":
         # Standard Battery selected - exclude SBR battery sensors
         if sensor_group == "SBR_battery":
-            _LOGGER.info("Excluding sensor due to standard battery selected: %s (unique_id: %s)", 
-                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            _LOGGER.info(
+                "Excluding sensor due to standard battery selected: %s (unique_id: %s)",
+                sensor.get("name", "unknown"),
+                sensor.get("unique_id", "unknown"),
+            )
             return False
     elif battery_type == "sbr_battery":
         # SBR Battery selected - include both SBR battery sensors and standard battery sensors
         # SBR battery sensors are included via group filtering
         # Standard battery sensors are included via keyword filtering
         pass
-    
+
     # Firmware version specific sensors
     sensor_firmware_min = sensor.get("firmware_min_version")
     if sensor_firmware_min:
         from packaging import version
+
         try:
             # Compare firmware versions
             current_ver = version.parse(firmware_version)
             min_ver = version.parse(sensor_firmware_min)
             if current_ver < min_ver:
-                _LOGGER.info("Excluding sensor due to firmware version: %s (unique_id: %s, requires: %s, current: %s)", 
-                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), 
-                             sensor_firmware_min, firmware_version)
+                _LOGGER.info(
+                    "Excluding sensor due to firmware version: %s (unique_id: %s, requires: %s, current: %s)",
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                    sensor_firmware_min,
+                    firmware_version,
+                )
                 return False
         except version.InvalidVersion:
             # Fallback to string comparison for non-semantic versions
             if firmware_version < sensor_firmware_min:
-                _LOGGER.info("Excluding sensor due to firmware version (string): %s (unique_id: %s, requires: %s, current: %s)", 
-                             sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"), 
-                             sensor_firmware_min, firmware_version)
+                _LOGGER.info(
+                    "Excluding sensor due to firmware version (string): %s (unique_id: %s, requires: %s, current: %s)",
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                    sensor_firmware_min,
+                    firmware_version,
+                )
                 return False
-    
+
     # Connection type specific sensors
-    connection_config = dynamic_config.get("connection_type", {}).get("sensor_availability", {})
+    connection_config = dynamic_config.get("connection_type", {}).get(
+        "sensor_availability", {}
+    )
     if connection_type == "LAN":
         # Exclude WINET-only sensors
         winet_only_sensors = connection_config.get("winet_only_sensors", [])
         if unique_id in winet_only_sensors:
-            _LOGGER.info("Excluding sensor due to LAN connection: %s (unique_id: %s)", 
-                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            _LOGGER.info(
+                "Excluding sensor due to LAN connection: %s (unique_id: %s)",
+                sensor.get("name", "unknown"),
+                sensor.get("unique_id", "unknown"),
+            )
             return False
     elif connection_type == "WINET":
         # Exclude LAN-only sensors
         lan_only_sensors = connection_config.get("lan_only_sensors", [])
         if unique_id in lan_only_sensors:
-            _LOGGER.info("Excluding sensor due to WINET connection: %s (unique_id: %s)", 
-                         sensor.get("name", "unknown"), sensor.get("unique_id", "unknown"))
+            _LOGGER.info(
+                "Excluding sensor due to WINET connection: %s (unique_id: %s)",
+                sensor.get("name", "unknown"),
+                sensor.get("unique_id", "unknown"),
+            )
             return False
-    
+
     return True
+
 
 def _extract_mppt_number(search_text: str) -> int:
     """Extract MPPT number from sensor name or unique_id."""
     import re
-    match = re.search(r'mppt(\d+)', search_text.lower())
+
+    match = re.search(r"mppt(\d+)", search_text.lower())
     return int(match.group(1)) if match else None
 
-def validate_and_process_register(reg: Dict[str, Any], template_name: str) -> Dict[str, Any]:
+
+def validate_and_process_register(
+    reg: Dict[str, Any], template_name: str
+) -> Dict[str, Any]:
     """Validate and process a single register definition."""
     try:
         # Pflichtfelder prüfen
         if not all(field in reg for field in REQUIRED_FIELDS):
             missing_fields = REQUIRED_FIELDS - set(reg.keys())
-            _LOGGER.warning("Register in Template %s fehlt Pflichtfelder: %s", template_name, missing_fields)
+            _LOGGER.warning(
+                "Register in Template %s fehlt Pflichtfelder: %s",
+                template_name,
+                missing_fields,
+            )
             return None
-        
+
         # Pflichtfelder hinzufügen
         processed_reg = {}
         for field in REQUIRED_FIELDS:
             processed_reg[field] = reg[field]
-        
+
         # Handle count parameter: only use template value if explicitly set
         data_type = reg.get("data_type")
         template_count = reg.get("count")
-        
+
         if template_count is not None:
             # Use count from template if explicitly set
             processed_reg["count"] = template_count
-            _LOGGER.debug("Using count=%d from template for %s in Template %s", 
-                         template_count, data_type, template_name)
+            _LOGGER.debug(
+                "Using count=%d from template for %s in Template %s",
+                template_count,
+                data_type,
+                template_name,
+            )
         else:
             # Don't set count here - let sensor init handle defaults based on data_type
             # This allows the sensor to determine the correct count based on data_type
             processed_reg["count"] = None
-            _LOGGER.debug("No count specified in template for %s in Template %s - will use data_type-based defaults in sensor init", 
-                         data_type, template_name)
-        
+            _LOGGER.debug(
+                "No count specified in template for %s in Template %s - will use data_type-based defaults in sensor init",
+                data_type,
+                template_name,
+            )
+
         # Standardwerte für optionale Felder setzen (skip count - handled above)
         for field, default_value in OPTIONAL_FIELDS.items():
             if field not in processed_reg and field != "count":
                 processed_reg[field] = reg.get(field, default_value)
-        
+
         # Zusätzliche Felder aus dem Template übernehmen
         for field, value in reg.items():
             if field not in processed_reg:
                 processed_reg[field] = value
-        
+
         # Entity-Typ bestimmen
         processed_reg["entity_type"] = determine_entity_type(processed_reg)
-        
+
         # Validate register
         if not validate_register_data(processed_reg, template_name):
             return None
-        
+
         return processed_reg
-        
+
     except Exception as e:
-        _LOGGER.error("Error processing register in Template %s: %s", template_name, str(e))
+        _LOGGER.error(
+            "Error processing register in Template %s: %s", template_name, str(e)
+        )
         return None
+
 
 def determine_entity_type(register_data: Dict[str, Any]) -> str:
     """Determine the appropriate entity type based on register configuration."""
     control = register_data.get("control", "none")
-    
+
     if control == "number":
         return "number"
     elif control == "select":
@@ -1037,6 +1358,7 @@ def determine_entity_type(register_data: Dict[str, Any]) -> str:
     else:
         return "sensor"
 
+
 def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
     """Validate register data for consistency."""
     try:
@@ -1045,128 +1367,186 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
         if not isinstance(address, int) or address < 0:
             _LOGGER.error("Invalid address in Template %s: %s", template_name, address)
             return False
-        
+
         # Validate data type
         data_type = reg.get("data_type")
-        valid_data_types = {"uint16", "int16", "uint32", "int32", "string", "float", "float32", "float64", "boolean"}
+        valid_data_types = {
+            "uint16",
+            "int16",
+            "uint32",
+            "int32",
+            "string",
+            "float",
+            "float32",
+            "float64",
+            "boolean",
+        }
         if data_type not in valid_data_types:
-            _LOGGER.error("Invalid data_type in Template %s: %s", template_name, data_type)
+            _LOGGER.error(
+                "Invalid data_type in Template %s: %s", template_name, data_type
+            )
             return False
-        
+
         # Validate count (allow None for sensor init to handle defaults)
         count = reg.get("count")
         if count is not None and (not isinstance(count, int) or count < 1):
             _LOGGER.error("Invalid count in Template %s: %s", template_name, count)
             return False
-            
+
         # Float-specific validation (only if count is specified)
         if data_type in ["float", "float32", "float64"] and count is not None:
             # Float type requires at least 2 registers for 32-bit and 4 registers for 64-bit
             min_count = 2 if data_type in ["float", "float32"] else 4
             if count < min_count:
-                _LOGGER.error("Float type %s in Template %s requires at least %d registers, but count=%d", 
-                             data_type, template_name, min_count, count)
+                _LOGGER.error(
+                    "Float type %s in Template %s requires at least %d registers, but count=%d",
+                    data_type,
+                    template_name,
+                    min_count,
+                    count,
+                )
                 return False
-        
+
         # Validate scale
         scale = reg.get("scale")
         if not isinstance(scale, (int, float)) or scale <= 0:
             _LOGGER.error("Invalid scale in Template %s: %s", template_name, scale)
             return False
-        
+
         # Validate scan interval
         scan_interval = reg.get("scan_interval")
         if not isinstance(scan_interval, int) or scan_interval < 0:
-            _LOGGER.error("Invalid scan_interval in Template %s: %s", template_name, scan_interval)
+            _LOGGER.error(
+                "Invalid scan_interval in Template %s: %s", template_name, scan_interval
+            )
             return False
-        
+
         # Validate scan interval range (0 = never update, 1-3600 = normal range)
         register_name = reg.get("name", "unknown")
         if scan_interval == 0:
-            _LOGGER.debug("Register %s in Template %s has scan_interval: 0 (never auto-update)", 
-                         register_name, template_name)
+            _LOGGER.debug(
+                "Register %s in Template %s has scan_interval: 0 (never auto-update)",
+                register_name,
+                template_name,
+            )
         elif scan_interval < 1 or scan_interval > 3600:
-            _LOGGER.warning("scan_interval %d in Template %s for register %s is outside recommended range (1-3600 seconds)", 
-                          scan_interval, template_name, register_name)
+            _LOGGER.warning(
+                "scan_interval %d in Template %s for register %s is outside recommended range (1-3600 seconds)",
+                scan_interval,
+                template_name,
+                register_name,
+            )
         else:
-            _LOGGER.debug("Register %s in Template %s has scan_interval: %d seconds", 
-                         register_name, template_name, scan_interval)
-        
+            _LOGGER.debug(
+                "Register %s in Template %s has scan_interval: %d seconds",
+                register_name,
+                template_name,
+                scan_interval,
+            )
+
         # Control-specific validation
         if not validate_control_settings(reg, template_name):
             return False
-        
+
         # Validate sum_scale
         sum_scale = reg.get("sum_scale")
         if sum_scale is not None:
-            if not isinstance(sum_scale, list) or not all(isinstance(x, (int, float)) for x in sum_scale):
-                _LOGGER.error("Invalid sum_scale in Template %s: %s", template_name, sum_scale)
+            if not isinstance(sum_scale, list) or not all(
+                isinstance(x, (int, float)) for x in sum_scale
+            ):
+                _LOGGER.error(
+                    "Invalid sum_scale in Template %s: %s", template_name, sum_scale
+                )
                 return False
-        
+
         # Validate options for Select entities
         if reg.get("control") == "select":
             options = reg.get("options", {})
             if not isinstance(options, dict) or not options:
-                _LOGGER.error("Select entity in Template %s requires valid options", template_name)
+                _LOGGER.error(
+                    "Select entity in Template %s requires valid options", template_name
+                )
                 return False
-        
+
         return True
-        
+
     except Exception as e:
-        _LOGGER.error("Error in data validation in Template %s: %s", template_name, str(e))
+        _LOGGER.error(
+            "Error in data validation in Template %s: %s", template_name, str(e)
+        )
         return False
+
 
 def validate_control_settings(reg: Dict[str, Any], template_name: str) -> bool:
     """Validate control-specific settings."""
     try:
         control = reg.get("control", "none")
-        
+
         if control == "number":
             min_val = reg.get("min_value")
             max_val = reg.get("max_value")
             if min_val is not None and max_val is not None:
                 if min_val >= max_val:
-                    _LOGGER.error("Invalid min/max values in Template %s: min=%s, max=%s", 
-                                 template_name, min_val, max_val)
+                    _LOGGER.error(
+                        "Invalid min/max values in Template %s: min=%s, max=%s",
+                        template_name,
+                        min_val,
+                        max_val,
+                    )
                     return False
-        
+
         elif control == "switch":
             switch_config = reg.get("switch", {})
             if switch_config:
                 on_val = switch_config.get("on", 1)
                 off_val = switch_config.get("off", 0)
                 if on_val == off_val:
-                    _LOGGER.error("Switch on/off values must be different in Template %s", template_name)
+                    _LOGGER.error(
+                        "Switch on/off values must be different in Template %s",
+                        template_name,
+                    )
                     return False
-        
+
         return True
-        
+
     except Exception as e:
-        _LOGGER.error("Error in control validation in Template %s: %s", template_name, str(e))
+        _LOGGER.error(
+            "Error in control validation in Template %s: %s", template_name, str(e)
+        )
         return False
+
 
 async def get_template_names() -> List[str]:
     """Get list of available template names."""
     templates = await load_templates()
     return [template["name"] for template in templates]
 
-async def load_mapping_template(mapping_path: str, base_templates: Dict[str, Dict[str, Any]]) -> Optional[Dict[str, Any]]:
+
+async def load_mapping_template(
+    mapping_path: str, base_templates: Dict[str, Dict[str, Any]]
+) -> Optional[Dict[str, Any]]:
     """Load a manufacturer mapping template file."""
     try:
         # Use the standard template loader with base templates
         mapping_data = await load_single_template(mapping_path, base_templates)
-        
+
         if mapping_data and "extends" in mapping_data:
-            _LOGGER.debug("Loaded mapping template %s extending %s", 
-                        mapping_data.get("name"), mapping_data.get("extends"))
+            _LOGGER.debug(
+                "Loaded mapping template %s extending %s",
+                mapping_data.get("name"),
+                mapping_data.get("extends"),
+            )
             return mapping_data
         else:
-            _LOGGER.warning("Mapping template %s does not extend a base template", mapping_path)
+            _LOGGER.warning(
+                "Mapping template %s does not extend a base template", mapping_path
+            )
             return None
-    
+
     except Exception as e:
         _LOGGER.error("Error loading mapping template %s: %s", mapping_path, str(e))
         return None
+
 
 async def get_template_by_name(template_name: str) -> Optional[Dict[str, Any]]:
     """Get a specific template by name."""
@@ -1178,7 +1558,8 @@ async def get_template_by_name(template_name: str) -> Optional[Dict[str, Any]]:
             return template
     return None
 
+
 async def get_base_template_by_name(base_name: str) -> Optional[Dict[str, Any]]:
     """Get a specific base template by name."""
     base_templates = await load_base_templates()
-    return base_templates.get(base_name) 
+    return base_templates.get(base_name)

@@ -21,51 +21,51 @@ common_model:
       length: 2
       data_type: "uint32"
       description: "SunSpec Common Model ID (0x53756E53)"
-      
+
     - name: "C_Model_ID"
       offset: 2
       data_type: "uint16"
       description: "SunSpec Model ID"
-      
+
     - name: "C_Length"
       offset: 3
       data_type: "uint16"
       description: "Model Length"
-      
+
     - name: "C_Manufacturer"
       offset: 4
       length: 16
       data_type: "string"
       description: "Manufacturer"
-      
+
     - name: "C_Model"
       offset: 20
       length: 16
       data_type: "string"
       description: "Model"
-      
+
     - name: "C_Serial"
       offset: 36
       length: 16
       data_type: "string"
       description: "Serial Number"
-      
+
     - name: "C_Version"
       offset: 52
       length: 8
       data_type: "string"
       description: "Firmware Version"
-      
+
     - name: "C_DeviceAddress"
       offset: 60
       data_type: "uint16"
       description: "Modbus Device Address"
-      
+
     - name: "C_SunSpec_DID"
       offset: 61
       data_type: "uint16"
       description: "SunSpec Device ID"
-      
+
     - name: "C_SunSpec_Length"
       offset: 62
       data_type: "uint16"
@@ -84,7 +84,7 @@ inverter_model:
       device_class: "current"
       state_class: "measurement"
       description: "AC Total Current"
-      
+
     - name: "I_AC_Current_A"
       offset: 1
       data_type: "uint16"
@@ -93,7 +93,7 @@ inverter_model:
       device_class: "current"
       state_class: "measurement"
       description: "AC Phase A Current"
-      
+
     - name: "I_AC_Current_B"
       offset: 2
       data_type: "uint16"
@@ -102,7 +102,7 @@ inverter_model:
       device_class: "current"
       state_class: "measurement"
       description: "AC Phase B Current"
-      
+
     - name: "I_AC_Current_C"
       offset: 3
       data_type: "uint16"
@@ -111,7 +111,7 @@ inverter_model:
       device_class: "current"
       state_class: "measurement"
       description: "AC Phase C Current"
-      
+
     - name: "I_AC_Voltage_AB"
       offset: 4
       data_type: "uint16"
@@ -120,7 +120,7 @@ inverter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase AB"
-      
+
     - name: "I_AC_Voltage_BC"
       offset: 5
       data_type: "uint16"
@@ -129,7 +129,7 @@ inverter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase BC"
-      
+
     - name: "I_AC_Voltage_CA"
       offset: 6
       data_type: "uint16"
@@ -138,7 +138,7 @@ inverter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase CA"
-      
+
     - name: "I_AC_Voltage_AN"
       offset: 7
       data_type: "uint16"
@@ -147,7 +147,7 @@ inverter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase A to N"
-      
+
     - name: "I_AC_Voltage_BN"
       offset: 8
       data_type: "uint16"
@@ -156,7 +156,7 @@ inverter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase B to N"
-      
+
     - name: "I_AC_Voltage_CN"
       offset: 9
       data_type: "uint16"
@@ -165,7 +165,7 @@ inverter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase C to N"
-      
+
     - name: "I_AC_Power"
       offset: 10
       data_type: "int16"
@@ -174,7 +174,7 @@ inverter_model:
       device_class: "power"
       state_class: "measurement"
       description: "AC Power"
-      
+
     - name: "I_AC_Frequency"
       offset: 11
       data_type: "uint16"
@@ -183,7 +183,7 @@ inverter_model:
       device_class: "frequency"
       state_class: "measurement"
       description: "AC Frequency"
-      
+
     - name: "I_AC_VA"
       offset: 12
       data_type: "int16"
@@ -191,7 +191,7 @@ inverter_model:
       unit_of_measurement: "VA"
       state_class: "measurement"
       description: "AC Apparent Power"
-      
+
     - name: "I_AC_VAR"
       offset: 13
       data_type: "int16"
@@ -199,7 +199,7 @@ inverter_model:
       unit_of_measurement: "var"
       state_class: "measurement"
       description: "AC Reactive Power"
-      
+
     - name: "I_AC_PF"
       offset: 14
       data_type: "int16"
@@ -208,7 +208,7 @@ inverter_model:
       device_class: "power_factor"
       state_class: "measurement"
       description: "AC Power Factor"
-      
+
     - name: "I_AC_Energy_WH"
       offset: 15
       data_type: "uint32"
@@ -217,7 +217,7 @@ inverter_model:
       device_class: "energy"
       state_class: "total_increasing"
       description: "AC Energy"
-      
+
     - name: "I_DC_Current"
       offset: 17
       data_type: "uint16"
@@ -226,7 +226,7 @@ inverter_model:
       device_class: "current"
       state_class: "measurement"
       description: "DC Current"
-      
+
     - name: "I_DC_Voltage"
       offset: 18
       data_type: "uint16"
@@ -235,7 +235,7 @@ inverter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "DC Voltage"
-      
+
     - name: "I_DC_Power"
       offset: 19
       data_type: "int16"
@@ -244,7 +244,7 @@ inverter_model:
       device_class: "power"
       state_class: "measurement"
       description: "DC Power"
-      
+
     - name: "I_Temp_Sink"
       offset: 20
       data_type: "int16"
@@ -253,7 +253,7 @@ inverter_model:
       device_class: "temperature"
       state_class: "measurement"
       description: "Heat Sink Temperature"
-      
+
     - name: "I_Temp_Trans"
       offset: 21
       data_type: "int16"
@@ -262,7 +262,7 @@ inverter_model:
       device_class: "temperature"
       state_class: "measurement"
       description: "Transformer Temperature"
-      
+
     - name: "I_Temp_Other"
       offset: 22
       data_type: "int16"
@@ -271,12 +271,12 @@ inverter_model:
       device_class: "temperature"
       state_class: "measurement"
       description: "Other Temperature"
-      
+
     - name: "I_Status"
       offset: 23
       data_type: "uint16"
       description: "Operating Status"
-      
+
     - name: "I_Status_Vendor"
       offset: 24
       data_type: "uint16"
@@ -291,12 +291,12 @@ storage_model:
       offset: 0
       data_type: "uint16"
       description: "Storage Status"
-      
+
     - name: "S_Status_Vendor"
       offset: 1
       data_type: "uint16"
       description: "Vendor Storage Status"
-      
+
     - name: "S_Charge_Limit"
       offset: 2
       data_type: "uint16"
@@ -305,7 +305,7 @@ storage_model:
       device_class: "power_factor"
       state_class: "measurement"
       description: "Storage Charge Limit"
-      
+
     - name: "S_Discharge_Limit"
       offset: 3
       data_type: "uint16"
@@ -314,17 +314,17 @@ storage_model:
       device_class: "power_factor"
       state_class: "measurement"
       description: "Storage Discharge Limit"
-      
+
     - name: "S_Charge_Status"
       offset: 4
       data_type: "uint16"
       description: "Storage Charge Status"
-      
+
     - name: "S_Charge_Status_Vendor"
       offset: 5
       data_type: "uint16"
       description: "Vendor Storage Charge Status"
-      
+
     - name: "S_Available_Energy"
       offset: 6
       data_type: "uint16"
@@ -333,7 +333,7 @@ storage_model:
       device_class: "energy"
       state_class: "measurement"
       description: "Available Energy"
-      
+
     - name: "S_Available_Capacity"
       offset: 7
       data_type: "uint16"
@@ -342,7 +342,7 @@ storage_model:
       device_class: "power_factor"
       state_class: "measurement"
       description: "Available Capacity"
-      
+
     - name: "S_Total_Capacity"
       offset: 8
       data_type: "uint16"
@@ -351,7 +351,7 @@ storage_model:
       device_class: "energy"
       state_class: "measurement"
       description: "Total Capacity"
-      
+
     - name: "S_Total_Capacity_Vendor"
       offset: 9
       data_type: "uint16"
@@ -360,7 +360,7 @@ storage_model:
       device_class: "energy"
       state_class: "measurement"
       description: "Vendor Total Capacity"
-      
+
     - name: "S_Charge_Power"
       offset: 10
       data_type: "int16"
@@ -369,7 +369,7 @@ storage_model:
       device_class: "power"
       state_class: "measurement"
       description: "Storage Charge Power"
-      
+
     - name: "S_Discharge_Power"
       offset: 11
       data_type: "int16"
@@ -378,7 +378,7 @@ storage_model:
       device_class: "power"
       state_class: "measurement"
       description: "Storage Discharge Power"
-      
+
     - name: "S_Charge_Energy"
       offset: 12
       data_type: "uint32"
@@ -387,7 +387,7 @@ storage_model:
       device_class: "energy"
       state_class: "total_increasing"
       description: "Storage Charge Energy"
-      
+
     - name: "S_Discharge_Energy"
       offset: 14
       data_type: "uint32"
@@ -396,7 +396,7 @@ storage_model:
       device_class: "energy"
       state_class: "total_increasing"
       description: "Storage Discharge Energy"
-      
+
     - name: "S_Charge_Energy_Vendor"
       offset: 16
       data_type: "uint32"
@@ -405,7 +405,7 @@ storage_model:
       device_class: "energy"
       state_class: "total_increasing"
       description: "Vendor Storage Charge Energy"
-      
+
     - name: "S_Discharge_Energy_Vendor"
       offset: 18
       data_type: "uint32"
@@ -424,12 +424,12 @@ meter_model:
       offset: 0
       data_type: "uint16"
       description: "Meter Status"
-      
+
     - name: "M_Status_Vendor"
       offset: 1
       data_type: "uint16"
       description: "Vendor Meter Status"
-      
+
     - name: "M_AC_Current"
       offset: 2
       data_type: "uint16"
@@ -438,7 +438,7 @@ meter_model:
       device_class: "current"
       state_class: "measurement"
       description: "AC Total Current"
-      
+
     - name: "M_AC_Current_A"
       offset: 3
       data_type: "uint16"
@@ -447,7 +447,7 @@ meter_model:
       device_class: "current"
       state_class: "measurement"
       description: "AC Phase A Current"
-      
+
     - name: "M_AC_Current_B"
       offset: 4
       data_type: "uint16"
@@ -456,7 +456,7 @@ meter_model:
       device_class: "current"
       state_class: "measurement"
       description: "AC Phase B Current"
-      
+
     - name: "M_AC_Current_C"
       offset: 5
       data_type: "uint16"
@@ -465,7 +465,7 @@ meter_model:
       device_class: "current"
       state_class: "measurement"
       description: "AC Phase C Current"
-      
+
     - name: "M_AC_Voltage_AN"
       offset: 6
       data_type: "uint16"
@@ -474,7 +474,7 @@ meter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase A to N"
-      
+
     - name: "M_AC_Voltage_BN"
       offset: 7
       data_type: "uint16"
@@ -483,7 +483,7 @@ meter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase B to N"
-      
+
     - name: "M_AC_Voltage_CN"
       offset: 8
       data_type: "uint16"
@@ -492,7 +492,7 @@ meter_model:
       device_class: "voltage"
       state_class: "measurement"
       description: "AC Voltage Phase C to N"
-      
+
     - name: "M_AC_Power"
       offset: 9
       data_type: "int16"
@@ -501,7 +501,7 @@ meter_model:
       device_class: "power"
       state_class: "measurement"
       description: "AC Power"
-      
+
     - name: "M_AC_Frequency"
       offset: 10
       data_type: "uint16"
@@ -510,7 +510,7 @@ meter_model:
       device_class: "frequency"
       state_class: "measurement"
       description: "AC Frequency"
-      
+
     - name: "M_AC_VA"
       offset: 11
       data_type: "int16"
@@ -518,7 +518,7 @@ meter_model:
       unit_of_measurement: "VA"
       state_class: "measurement"
       description: "AC Apparent Power"
-      
+
     - name: "M_AC_VAR"
       offset: 12
       data_type: "int16"
@@ -526,7 +526,7 @@ meter_model:
       unit_of_measurement: "var"
       state_class: "measurement"
       description: "AC Reactive Power"
-      
+
     - name: "M_AC_PF"
       offset: 13
       data_type: "int16"
@@ -535,7 +535,7 @@ meter_model:
       device_class: "power_factor"
       state_class: "measurement"
       description: "AC Power Factor"
-      
+
     - name: "M_AC_Energy_WH"
       offset: 14
       data_type: "uint32"
@@ -544,7 +544,7 @@ meter_model:
       device_class: "energy"
       state_class: "total_increasing"
       description: "AC Energy"
-      
+
     - name: "M_AC_Energy_WH_Vendor"
       offset: 16
       data_type: "uint32"

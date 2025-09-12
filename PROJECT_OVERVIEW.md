@@ -1,8 +1,8 @@
 # 🔧 Project Description: HA-Modbus-Manager
 
-## 👤 Author: TCzerny  
-## 📦 Repository: [github.com/TCzerny/ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)  
-## 📅 Status: January 2025  
+## 👤 Author: TCzerny
+## 📦 Repository: [github.com/TCzerny/ha-modbus-manager](https://github.com/TCzerny/ha-modbus-manager)
+## 📅 Status: January 2025
 ## 🧠 Goal: A universal, template-driven Modbus integration for Home Assistant
 
 ---
@@ -62,11 +62,11 @@ dynamic_config:
     description: "Number of phases"
     options: [1, 3]
     default: 1
-  
+
   battery_enabled:
     description: "Battery support enabled"
     default: false
-  
+
   firmware_version:
     description: "Firmware version string"
     default: "1.0.0"
@@ -138,12 +138,12 @@ dynamic_config:
     description: "Number of phases"
     options: [1, 3]
     default: 1
-  
+
   mppt_count:
     description: "Number of MPPT trackers"
     options: [1, 2, 3]
     default: 1
-  
+
   battery_enabled:
     description: "Battery support enabled"
     default: false
@@ -279,7 +279,7 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines.
 
 ---
 
-**Version**: 3.0.0  
-**Status**: Stable (Sungrow SHx Dynamic, Compleo templates implemented)  
-**Home Assistant**: 2025.1.0+  
+**Version**: 3.0.0
+**Status**: Stable (Sungrow SHx Dynamic, Compleo templates implemented)
+**Home Assistant**: 2025.1.0+
 **Last Updated**: January 2025

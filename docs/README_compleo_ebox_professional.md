@@ -154,9 +154,9 @@ unit_id: 1
 
 ## 📋 Version
 
-**Version:** 1.0.0  
-**Last Update:** 2024  
-**Status:** Stable  
+**Version:** 1.0.0
+**Last Update:** 2024
+**Status:** Stable
 **Compatibility:** Compleo eBox Professional Series
 
 ## 🔗 Related Documentation
