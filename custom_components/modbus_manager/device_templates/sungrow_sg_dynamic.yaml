@@ -153,7 +153,7 @@ sensors:
   # Device Information
   - name: Sungrow inverter serial
     unique_id: inverter_serial
-    group: "PV_device_count"
+    group: "PV_device_info"
     address: 4989 # reg 4990
     input_type: input
     data_type: string
@@ -162,7 +162,7 @@ sensors:
 
   - name: Sungrow device type code
     unique_id: sungrow_device_type_code
-    group: "PV_device_count"
+    group: "PV_device_info"
     address: 4999 # reg 5000
     input_type: input
     data_type: uint16
@@ -281,12 +281,12 @@ sensors:
       0x2C36: "SG36CX-P2"
       0x2C37: "SG40CX-P2"
       0x2C32: "SG50CX-P2"
-    group: "PV_device_count"
+    group: "PV_device_info"
 
   # SG-specific Basic Registers
   - name: Output type
     unique_id: output_type
-    group: "PV_device_count"
+    group: "PV_device_info"
     address: 5001 # reg 5002
     input_type: input
     data_type: uint16
@@ -295,7 +295,6 @@ sensors:
       0: "Two phase"
       1: "3P4L"
       2: "3P3L"
-    group: "PV_device_count"
 
   - name: Daily PV generation
     unique_id: daily_pv_generation
