@@ -6,9 +6,13 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 
 - **Predefined Device Templates**: Ready-to-use templates for popular devices
 - **Template-based Configuration**: Devices are defined via YAML templates
+- **Multi-Step Configuration Flow**: Intuitive step-by-step device setup
+- **Dynamic Template Configuration**: Automatic sensor filtering based on device parameters
+- **Model Selection**: Automatic configuration based on device model selection
 - **Aggregate Sensors**: Automatic aggregation of sensors across multiple devices
 - **Calculated Sensors**: Template-based calculations with Jinja2
 - **Options Flow**: Post-configuration of aggregate hubs via the UI
+- **Template Reload**: Update templates without losing configuration
 - **Modular Architecture**: Easily extensible for new device types
 - **Home Assistant Integration**: Fully integrated into the HA UI
 
@@ -19,14 +23,25 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 #### Solar Inverters
 - **Sungrow SHx Series** - Complete template with all sensors and controls
   - **Dynamic Configuration**: Supports all 36 SHx models with automatic filtering
+  - **Multi-Step Setup**: Connection parameters → Dynamic configuration
+  - **Battery Options**: None, Standard Battery, SBR Battery
   - **Battery management**: SOC, charging/discharging, temperature monitoring
   - **MPPT tracking**: 1-3 MPPT trackers with power calculations
+  - **String tracking**: 0-4 strings with individual monitoring
   - **Grid interaction**: Import/export, phase monitoring, frequency
   - **Calculated sensors**: Efficiency, power balance, signed battery power
   - **Full Modbus register mapping**: Based on mkaiser's comprehensive implementation
   - **Firmware compatibility**: Automatic sensor parameter adjustment
   - **Connection types**: LAN and WINET support with register filtering
   - **Float conversion**: Full IEEE 754 32-bit and 64-bit floating-point support
+
+- **Sungrow SG Series** - Dynamic template with model selection
+  - **2-Step Configuration**: Connection parameters → Model selection
+  - **Model Selection**: Automatic configuration based on selected model
+  - **Supported Models**: SG3.0RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS, SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT
+  - **Automatic Filtering**: Phases, MPPT, Strings configured automatically
+  - **Firmware Support**: SAPPHIRE-H firmware compatibility
+  - **Connection Types**: LAN and WINET support
 
 #### EV Chargers
 - **Compleo eBox Professional** - Complete EV charger template
@@ -201,13 +216,20 @@ custom_components/modbus_manager/
 1. **Open Home Assistant** → Configuration → Integrations
 2. **Click "Add Integration"** → "Modbus Manager"
 3. **Select your device template**:
-   - **Sungrow SHx Inverter** for solar inverters
+   - **Sungrow SHx Dynamic Inverter** for SHx series solar inverters
+   - **Sungrow SG Dynamic Inverter** for SG series solar inverters
    - **Compleo eBox Professional** for EV chargers
-4. **Configure connection**:
+4. **Configure connection** (Step 1):
    - **Host**: Device IP address
    - **Port**: Modbus port (usually 502)
    - **Slave ID**: Modbus slave address
-   - **Prefix**: Unique prefix for this device
+   - **Timeout**: Connection timeout (default: 5s)
+   - **Delay**: Delay between operations (default: 0ms)
+   - **Message Wait**: Wait time between requests (default: 100ms)
+5. **Configure device parameters** (Step 2):
+   - **Dynamic Templates**: Configure phases, MPPT, strings, battery, firmware, connection type
+   - **Model Selection**: Select device model for automatic configuration
+   - **Battery Configuration**: Choose battery type and slave ID if applicable
 
 ### 2. Add Aggregate Hub
 
@@ -239,15 +261,31 @@ entities:
 - **File**: `sungrow_shx_dynamic.yaml`
 - **Devices**: All 36 SHx models (SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL)
 - **Features**:
+  - **Multi-Step Configuration**: Connection parameters → Dynamic configuration
   - **Dynamic Configuration**: 6 configurable parameters (phases, MPPT, battery, firmware, strings, connection)
+  - **Battery Options**: None, Standard Battery, SBR Battery
   - **Automatic Filtering**: Register filtering based on device configuration
   - **Battery management**: SOC, charging/discharging, temperature, health monitoring
   - **MPPT tracking**: 1-3 MPPT trackers with individual power calculations
+  - **String tracking**: 0-4 strings with individual monitoring
   - **Grid interaction**: Import/export, phase monitoring, frequency, meter data
   - **Load management**: Load power, backup power, direct consumption
   - **Calculated sensors**: Efficiency, power balance, signed battery power, phase power
   - **Firmware compatibility**: Automatic sensor parameter adjustment for different firmware versions
   - **Connection support**: LAN (full access) and WINET (limited access) with register filtering
+
+### Sungrow SG Series
+- **File**: `sungrow_sg_dynamic.yaml`
+- **Devices**: SG3.0RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS, SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT
+- **Features**:
+  - **2-Step Configuration**: Connection parameters → Model selection
+  - **Model Selection**: Automatic configuration based on selected model
+  - **Automatic Filtering**: Phases, MPPT, Strings configured automatically
+  - **Firmware Support**: SAPPHIRE-H firmware compatibility
+  - **Connection Types**: LAN and WINET support
+  - **MPPT tracking**: 2-3 MPPT trackers based on model
+  - **Phase support**: 1-phase (RS) and 3-phase (RT) models
+  - **String tracking**: 1 string per model
 
 ### Compleo eBox Professional
 - **File**: `compleo_ebox_professional.yaml`
@@ -284,17 +322,6 @@ entities:
 
 - Aggregate sensors show double counting with multiple devices (expected behavior)
 
-## ✅ Recent Fixes
-
-- **Dynamic Configuration**: Fully functional with automatic sensor filtering
-- **Float Conversion**: Complete IEEE 754 32-bit and 64-bit floating-point support
-- **Services & Diagnostics**: Performance monitoring and register optimization
-- **Template Filtering**: Automatic exclusion of irrelevant sensors based on device configuration
-- **Firmware Compatibility**: Automatic sensor parameter adjustment for different firmware versions
-- **Connection Type Filtering**: LAN/WINET register availability filtering
-- **Performance Optimization**: Register grouping and operation monitoring
-- **Deprecation Warnings** for Home Assistant 2025.12 fixed
-- **Asyncio Blocking Warnings** fixed through task optimization
 
 ## 🤝 Contributing
 
@@ -345,4 +372,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **Last Updated**: January 2025
 **Version**: 3.0.0
-**Status**: Stable (Sungrow SHx Dynamic, Compleo templates implemented)
+**Status**: Stable (Multi-step configuration, Model selection implemented)
