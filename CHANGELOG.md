@@ -5,6 +5,50 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.0.0-beta] - 2025-01-15
+
+### 🚀 Early Beta Release: SG Dynamic Template
+
+#### ⚠️ Beta Warning
+- **SG Dynamic Template is now available as Early Beta for testing and fine-tuning**
+- **Controls are NOT TESTED** - Use with caution in production environments
+- **Please report any issues** encountered during testing
+
+#### ✨ Added
+- **Sungrow SG Dynamic Template** (`sungrow_sg_dynamic.yaml`)
+  - **2-Step Configuration**: Connection parameters → Model selection
+  - **Model Selection**: Automatic configuration based on selected model
+  - **Supported Models**: SG3.0RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS, SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT
+  - **Automatic Filtering**: Phases, MPPT, Strings configured automatically
+  - **Firmware Support**: SAPPHIRE-H firmware compatibility
+  - **Connection Types**: LAN and WINET support
+  - **MPPT tracking**: 2-3 MPPT trackers based on model
+  - **Phase support**: 1-phase (RS) and 3-phase (RT) models
+  - **String tracking**: 1 string per model
+
+- **Multi-Step Configuration Flow**
+  - Intuitive step-by-step device setup
+  - Connection parameters configuration
+  - Dynamic device parameter configuration
+
+- **Template Reload Functionality**
+  - Update templates without losing configuration
+  - Correct sensor filtering during template reload
+  - Preserve all current configuration values
+
+#### 🔧 Technical Improvements
+- **String Number Extraction**: Improved regex for string sensor filtering (`string[_\s]*(\d+)`)
+- **Template Update Filtering**: Correct sensor filtering during template reload
+- **NoneType Error Fixes**: Comprehensive error handling for all edge cases
+- **Translation Keys**: Added support for `string_count` and `selected_model`
+- **Code Quality**: Removed unnecessary debug logging
+
+#### 🐛 Fixed
+- **String Sensor Filtering**: Correctly filters string sensors based on `string_count`
+- **Template Update**: Uses all current configuration values (phases, mppt_count, string_count, battery_config, etc.)
+- **Model Selection**: Properly processes selected model and applies automatic configuration
+- **Error Handling**: Comprehensive NoneType error prevention throughout the codebase
+
 ## [0.5.0] - 2025-01
 
 ### 🎉 Major Release: Dynamic Configuration & Float Conversion

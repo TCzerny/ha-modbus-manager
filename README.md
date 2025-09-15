@@ -1,5 +1,8 @@
 # Home Assistant Modbus Manager
 
+> **⚠️ BETA - Use at your own risk!**
+> This integration is currently in beta testing. Some features may not work as expected. Please report any issues you encounter.
+
 A modular, template-based Modbus Manager for Home Assistant with predefined device templates for popular energy devices.
 
 ## 🚀 Features
@@ -9,7 +12,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **Multi-Step Configuration Flow**: Intuitive step-by-step device setup
 - **Dynamic Template Configuration**: Automatic sensor filtering based on device parameters
 - **Model Selection**: Automatic configuration based on device model selection
-- **Aggregate Sensors**: Automatic aggregation of sensors across multiple devices
+- **Aggregate Sensors**: Aggregation of sensors across multiple devices
 - **Calculated Sensors**: Template-based calculations with Jinja2
 - **Options Flow**: Post-configuration of aggregate hubs via the UI
 - **Template Reload**: Update templates without losing configuration
