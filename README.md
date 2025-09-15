@@ -5,6 +5,51 @@
 
 A modular, template-based Modbus Manager for Home Assistant with predefined device templates for popular energy devices.
 
+## 📦 Installation
+
+### Using HACS (Recommended)
+
+1. **Install HACS** (if not already installed):
+   - Go to [HACS](https://hacs.xyz/) and follow the installation instructions
+   - Restart Home Assistant after installation
+
+2. **Add this repository to HACS**:
+   - Open HACS in your Home Assistant sidebar
+   - Go to **Integrations**
+   - Click the three dots menu (⋮) in the top right
+   - Select **Custom repositories**
+   - Add repository URL: `https://github.com/TCzerny/ha-modbus-manager`
+   - Set category to **Integration**
+   - Click **Add**
+
+3. **Install the integration**:
+   - Search for "Modbus Manager" in HACS Integrations
+   - Click **Install**
+   - Restart Home Assistant
+
+4. **Add the integration**:
+   - Go to **Settings** → **Devices & Services**
+   - Click **Add Integration**
+   - Search for "Modbus Manager"
+   - Follow the configuration wizard
+
+### Manual Installation
+
+1. **Download the latest release** from the [Releases page](https://github.com/TCzerny/ha-modbus-manager/releases)
+
+2. **Copy the integration**:
+   - Extract the downloaded file
+   - Copy the `modbus_manager` folder to your `custom_components` directory
+   - Your structure should look like: `config/custom_components/modbus_manager/`
+
+3. **Restart Home Assistant**
+
+4. **Add the integration**:
+   - Go to **Settings** → **Devices & Services**
+   - Click **Add Integration**
+   - Search for "Modbus Manager"
+   - Follow the configuration wizard
+
 ## 🚀 Features
 
 - **Predefined Device Templates**: Ready-to-use templates for popular devices
