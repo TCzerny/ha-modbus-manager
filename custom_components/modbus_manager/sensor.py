@@ -501,7 +501,7 @@ class ModbusTemplateSensor(SensorEntity):
             manufacturer="Modbus Manager",
             model=template_name,
             sw_version=f"Firmware: {firmware_version}",
-            via_device=(DOMAIN, f"{prefix}_{template_name}"),
+            # Remove via_device to avoid self-referencing
         )
 
         # _LOGGER.debug("Sensor %s initialized (Address: %d, Type: %s, Count: %d, Prefix: %s, Name: %s, Unique-ID: %s, Group: %s)",

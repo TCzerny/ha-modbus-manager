@@ -111,10 +111,6 @@ class ModbusCalculatedSensor(SensorEntity):
             # Replace {PREFIX} placeholder with actual prefix
             # This allows templates to use {PREFIX} as a placeholder
             processed_template = template_str.replace("{PREFIX}", self._prefix)
-
-            _LOGGER.debug(
-                "Template processing: %s -> %s", template_str, processed_template
-            )
             return processed_template
 
         except Exception as e:

@@ -1423,26 +1423,6 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
 
         # Validate scan interval range (0 = never update, 1-3600 = normal range)
         register_name = reg.get("name", "unknown")
-        if scan_interval == 0:
-            _LOGGER.debug(
-                "Register %s in Template %s has scan_interval: 0 (never auto-update)",
-                register_name,
-                template_name,
-            )
-        elif scan_interval < 1 or scan_interval > 3600:
-            _LOGGER.warning(
-                "scan_interval %d in Template %s for register %s is outside recommended range (1-3600 seconds)",
-                scan_interval,
-                template_name,
-                register_name,
-            )
-        else:
-            _LOGGER.debug(
-                "Register %s in Template %s has scan_interval: %d seconds",
-                register_name,
-                template_name,
-                scan_interval,
-            )
 
         # Control-specific validation
         if not validate_control_settings(reg, template_name):
