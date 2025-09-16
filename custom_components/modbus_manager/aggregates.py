@@ -58,9 +58,10 @@ class ModbusAggregateSensor(SensorEntity):
 
             # Use unique_id from template if provided, otherwise generate one
             if "unique_id" in aggregate_config:
+                # The unique_id is already processed with prefix in _setup_aggregates_entry
                 self._attr_unique_id = aggregate_config["unique_id"]
                 _LOGGER.debug(
-                    "Aggregate Sensor %s: Using template unique_id: %s",
+                    "Aggregate Sensor %s: Using processed unique_id: %s",
                     self._name,
                     self._attr_unique_id,
                 )
@@ -81,7 +82,7 @@ class ModbusAggregateSensor(SensorEntity):
             # Set entity_id based on unique_id
             self._attr_entity_id = f"sensor.{self._attr_unique_id}"
 
-            # Use the name from template directly, don't modify it
+            # The name is already processed with prefix in _setup_aggregates_entry
             self._attr_name = self._name
 
             # Device info for template-based sensors - ALL use the same device
@@ -214,6 +215,9 @@ class ModbusAggregateSensor(SensorEntity):
 
             _LOGGER.debug("Alle Sensoren mit Gruppen: %s", sensors_with_groups)
 
+            # Use a set to avoid duplicates
+            found_entities = set(self._tracked_entities)
+
             for state in all_states:
                 if state.domain == "sensor":
                     attributes = state.attributes
@@ -286,7 +290,7 @@ class ModbusAggregateSensor(SensorEntity):
                                 )
                                 continue
 
-                            self._tracked_entities.append(state.entity_id)
+                            found_entities.add(state.entity_id)
                             _LOGGER.debug(
                                 "Gefunden: %s mit Gruppe '%s'",
                                 state.entity_id,
@@ -341,11 +345,14 @@ class ModbusAggregateSensor(SensorEntity):
                                 )
                                 continue
 
-                            self._tracked_entities.append(state.entity_id)
+                            found_entities.add(state.entity_id)
                             _LOGGER.debug(
                                 "Erweiterte Suche: Hinzugefügt zu Tracking: %s",
                                 state.entity_id,
                             )
+
+            # Update the tracked entities list with found entities
+            self._tracked_entities = list(found_entities)
 
             _LOGGER.debug(
                 "Gefundene Entitäten für Gruppe %s: %s",
@@ -609,9 +616,15 @@ class ModbusAggregateSensor(SensorEntity):
             # Wait a bit for other entities to be created
             await asyncio.sleep(5)
 
+            # Store current entities to avoid duplicates
+            current_entities = set(self._tracked_entities)
+
             # Re-search for entities
             old_count = len(self._tracked_entities)
             self._find_group_entities()
+
+            # Remove duplicates by converting to set and back to list
+            self._tracked_entities = list(set(self._tracked_entities))
             new_count = len(self._tracked_entities)
 
             if new_count > old_count:

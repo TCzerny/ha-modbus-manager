@@ -1,7 +1,7 @@
 # Sungrow SG Dynamic Template for Modbus Manager
 # BASED ON: TI_20230117_Communication.Protocol.of.Residential.and.Commerical.PV.Grid-connected.Inverter_V1.1.53_EN.pdf
 
-name: "Sungrow SG Dynamic Inverter"
+name: "Sungrow SG Series Inverter"
 description: "Dynamic template for Sungrow SG series residential and commercial PV grid-connected inverters. Based on Communication Protocol V1.1.53. (RS, RT, HX, KTL, KTL-MT, HV/BF, CX Series)"
 manufacturer: "Sungrow"
 model: "SG Series Dynamic"
@@ -10,7 +10,6 @@ default_prefix: "SG"
 type: "PV_inverter"
 firmware_version: "SAPPHIRE-H_xxxx"
 available_firmware_versions: ["SAPPHIRE-H_xxxx", "Latest"]
-
 
 # Dynamic configuration support
 dynamic_config:
@@ -68,10 +67,10 @@ dynamic_config:
     "SG15KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x28"}
     "SG20KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x2A"}
 
-
   firmware_version:
     description: "Firmware version string (e.g., 'SAPPHIRE-H_xxx')"
     default: "SAPPHIRE-H_xxx"
+
   connection_type:
     description: "Connection type (LAN or WINET)"
     options: ["LAN", "WINET"]

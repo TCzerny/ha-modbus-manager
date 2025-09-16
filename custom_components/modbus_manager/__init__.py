@@ -11,6 +11,7 @@ from homeassistant.core import HomeAssistant
 
 from .aggregates import AggregationManager
 from .const import DOMAIN, PLATFORMS
+from .ems import EMSManager
 from .logger import ModbusManagerLogger
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
@@ -126,6 +127,33 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     hass.services.async_register(DOMAIN, "optimize_registers", async_optimize_registers)
     hass.services.async_register(DOMAIN, "get_performance", async_get_performance)
     hass.services.async_register(DOMAIN, "reset_performance", async_reset_performance)
+
+    # Register static path for modbus manager panel
+    from homeassistant.components.http import StaticPathConfig
+
+    await hass.http.async_register_static_paths(
+        [
+            StaticPathConfig(
+                url_path="/api/panel_custom/modbus_manager/modbus-manager-panel.js",
+                path=hass.config.path(
+                    "custom_components/modbus_manager/modbus-manager-panel.js"
+                ),
+                cache_headers=False,
+            )
+        ]
+    )
+
+    # Register the custom panel
+    from homeassistant.components import panel_custom
+
+    await panel_custom.async_register_panel(
+        hass,
+        "modbus-manager-panel",
+        "modbus-manager-panel",
+        module_url="/api/panel_custom/modbus_manager/modbus-manager-panel.js",
+        sidebar_title="Modbus Manager",
+        sidebar_icon="mdi:chart-line",
+    )
 
     return True
 
@@ -541,6 +569,11 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             )
             await platform_task
             _LOGGER.debug("Alle Plattformen erfolgreich eingerichtet: %s", PLATFORMS)
+
+            # Initialize EMS Manager if this is not an aggregates template
+            if not entry.data.get("is_aggregates_template", False):
+                await _initialize_ems_manager(hass, entry)
+
         except Exception as e:
             _LOGGER.error("Fehler beim Einrichten der Plattformen: %s", str(e))
             return False
@@ -589,9 +622,37 @@ async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bo
 
         _LOGGER.debug("Setup Aggregates Template mit %d Aggregationen", len(aggregates))
 
+        # Process aggregates to add prefix to unique_id and name
+        processed_aggregates = []
+        for aggregate in aggregates:
+            processed_aggregate = aggregate.copy()
+
+            # Add prefix to unique_id if it exists
+            if "unique_id" in processed_aggregate:
+                template_unique_id = processed_aggregate["unique_id"]
+                processed_aggregate["unique_id"] = f"{prefix}_{template_unique_id}"
+                _LOGGER.debug(
+                    "Aggregate %s: Updated unique_id from %s to %s",
+                    processed_aggregate.get("name", "unknown"),
+                    template_unique_id,
+                    processed_aggregate["unique_id"],
+                )
+
+            # Add prefix to name
+            if "name" in processed_aggregate:
+                original_name = processed_aggregate["name"]
+                processed_aggregate["name"] = f"{prefix} {original_name}"
+                _LOGGER.debug(
+                    "Aggregate: Updated name from %s to %s",
+                    original_name,
+                    processed_aggregate["name"],
+                )
+
+            processed_aggregates.append(processed_aggregate)
+
         # Store aggregates data for sensor platform
         config_data = {
-            "aggregates": aggregates,
+            "aggregates": processed_aggregates,
             "prefix": prefix,
             "template": entry.data.get("template", "Modbus Manager Aggregates"),
             "template_version": entry.data.get("template_version", 1),
@@ -613,6 +674,351 @@ async def _setup_aggregates_entry(hass: HomeAssistant, entry: ConfigEntry) -> bo
     except Exception as e:
         _LOGGER.error("Fehler beim Setup des Aggregates Templates: %s", str(e))
         return False
+
+
+async def _initialize_ems_manager(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Initialize EMS Manager for the entry."""
+    try:
+        prefix = entry.data.get("prefix", "sg")
+
+        # EMS configuration removed - EMS will be handled in panel only
+        _LOGGER.debug("EMS initialization removed - handled in panel only")
+        return
+
+        # Create EMS Manager
+        ems_manager = EMSManager(hass, prefix)
+
+        # Initialize EMS system
+        await ems_manager.initialize()
+
+        # Add this device to EMS management
+        await ems_manager.add_device(
+            device_id=f"{prefix}_device",
+            name=f"{prefix.upper()} Device",
+            priority=2
+            if "sg" in prefix.lower()
+            else 1
+            if "ebox" in prefix.lower()
+            else 5,
+            max_power=10000
+            if "sg" in prefix.lower()
+            else 11000
+            if "ebox" in prefix.lower()
+            else 5000,
+            entity_id=f"switch.{prefix}_enable",
+            auto_switch_entity=f"switch.{prefix}_ems_enable",
+            power_sensor_entity=f"sensor.{prefix}_power",
+            device_type="inverter"
+            if "sg" in prefix.lower()
+            else "ev_charger"
+            if "ebox" in prefix.lower()
+            else "device",
+        )
+
+        # Add default devices
+        await _add_default_ems_devices(ems_manager)
+
+        # Store EMS manager in hass data
+        if DOMAIN not in hass.data:
+            hass.data[DOMAIN] = {}
+        hass.data[DOMAIN][f"{prefix}_ems_manager"] = ems_manager
+
+        _LOGGER.info(
+            "EMS Manager initialized for prefix %s with EMS configuration", prefix
+        )
+
+    except Exception as e:
+        _LOGGER.error("Failed to initialize EMS Manager: %s", str(e))
+
+
+async def _add_default_ems_devices(ems_manager: EMSManager) -> None:
+    """Add devices to EMS management based on existing entities."""
+    try:
+        prefix = ems_manager.prefix
+        hass = ems_manager.hass
+
+        # Get all existing entities
+        all_states = hass.states.async_all()
+        entity_ids = [state.entity_id for state in all_states]
+
+        _LOGGER.debug(
+            "Scanning %d entities for EMS devices with prefix %s",
+            len(entity_ids),
+            prefix,
+        )
+
+        # Find EV Chargers (Wallboxen)
+        ev_chargers = await _find_ev_chargers(entity_ids, prefix, hass)
+        for i, ev_data in enumerate(ev_chargers):
+            await ems_manager.add_device(
+                device_id=f"ev_charger_{i+1}",
+                name=ev_data["name"],
+                priority=1,
+                max_power=ev_data["max_power"],
+                entity_id=ev_data["enable_switch"],
+                auto_switch_entity=ev_data["auto_switch"],
+                power_sensor_entity=ev_data["power_sensor"],
+                device_type="ev_charger",
+            )
+
+        # Find Inverters
+        inverters = await _find_inverters(entity_ids, prefix)
+        for i, inv_data in enumerate(inverters):
+            await ems_manager.add_device(
+                device_id=f"inverter_{i+1}",
+                name=inv_data["name"],
+                priority=2,
+                max_power=inv_data["max_power"],
+                entity_id=inv_data["enable_switch"],
+                auto_switch_entity=inv_data["auto_switch"],
+                power_sensor_entity=inv_data["power_sensor"],
+                device_type="inverter",
+            )
+
+        # Find Heat Pumps
+        heat_pumps = await _find_heat_pumps(entity_ids, prefix)
+        for i, hp_data in enumerate(heat_pumps):
+            await ems_manager.add_device(
+                device_id=f"heat_pump_{i+1}",
+                name=hp_data["name"],
+                priority=3,
+                max_power=hp_data["max_power"],
+                entity_id=hp_data["enable_switch"],
+                auto_switch_entity=hp_data["auto_switch"],
+                power_sensor_entity=hp_data["power_sensor"],
+                device_type="heat_pump",
+            )
+
+        # Find Water Heaters
+        water_heaters = await _find_water_heaters(entity_ids, prefix)
+        for i, wh_data in enumerate(water_heaters):
+            await ems_manager.add_device(
+                device_id=f"water_heater_{i+1}",
+                name=wh_data["name"],
+                priority=4,
+                max_power=wh_data["max_power"],
+                entity_id=wh_data["enable_switch"],
+                auto_switch_entity=wh_data["auto_switch"],
+                power_sensor_entity=wh_data["power_sensor"],
+                device_type="water_heater",
+            )
+
+        # Find Pool Heaters
+        pool_heaters = await _find_pool_heaters(entity_ids, prefix)
+        for i, ph_data in enumerate(pool_heaters):
+            await ems_manager.add_device(
+                device_id=f"pool_heater_{i+1}",
+                name=ph_data["name"],
+                priority=5,
+                max_power=ph_data["max_power"],
+                entity_id=ph_data["enable_switch"],
+                auto_switch_entity=ph_data["auto_switch"],
+                power_sensor_entity=ph_data["power_sensor"],
+                device_type="pool_heater",
+            )
+
+        _LOGGER.info(
+            "Added %d devices to EMS: %d EV chargers, %d inverters, %d heat pumps, %d water heaters, %d pool heaters",
+            len(ems_manager.priority_manager.devices),
+            len(ev_chargers),
+            len(inverters),
+            len(heat_pumps),
+            len(water_heaters),
+            len(pool_heaters),
+        )
+
+    except Exception as e:
+        _LOGGER.error("Failed to add EMS devices: %s", str(e))
+
+
+async def _find_ev_chargers(entity_ids: list, prefix: str, hass: HomeAssistant) -> list:
+    """Find EV charger entities."""
+    ev_chargers = []
+
+    # Look for wallbox entities
+    wallbox_entities = [
+        eid for eid in entity_ids if "wallbox" in eid.lower() and prefix in eid
+    ]
+
+    for entity_id in wallbox_entities:
+        if entity_id.startswith("switch.") and "_enable" in entity_id:
+            # Extract wallbox name
+            wallbox_name = entity_id.replace("switch.", "").replace("_enable", "")
+
+            # Look for related entities
+            auto_switch = f"switch.{wallbox_name}_auto"
+            power_sensor = f"sensor.{wallbox_name}_power"
+            limit_number = f"number.{wallbox_name}_limit"
+
+            # Check if related entities exist
+            if (
+                auto_switch in entity_ids
+                and power_sensor in entity_ids
+                and limit_number in entity_ids
+            ):
+                # Get max power from limit number
+                max_power = 11000.0  # Default
+                try:
+                    limit_state = hass.states.get(limit_number)
+                    if limit_state and limit_state.attributes.get("max"):
+                        max_power = (
+                            float(limit_state.attributes["max"]) * 230
+                        )  # Convert A to W
+                except (ValueError, TypeError):
+                    pass
+
+                ev_chargers.append(
+                    {
+                        "name": wallbox_name.replace("_", " ").title(),
+                        "max_power": max_power,
+                        "enable_switch": entity_id,
+                        "auto_switch": auto_switch,
+                        "power_sensor": power_sensor,
+                    }
+                )
+
+    return ev_chargers
+
+
+async def _find_inverters(entity_ids: list, prefix: str) -> list:
+    """Find inverter entities."""
+    inverters = []
+
+    # Look for inverter entities
+    inverter_entities = [
+        eid for eid in entity_ids if "inverter" in eid.lower() and prefix in eid
+    ]
+
+    for entity_id in inverter_entities:
+        if entity_id.startswith("switch.") and "_enable" in entity_id:
+            # Extract inverter name
+            inverter_name = entity_id.replace("switch.", "").replace("_enable", "")
+
+            # Look for related entities
+            auto_switch = f"switch.{inverter_name}_auto"
+            power_sensor = f"sensor.{inverter_name}_total_active_power"
+
+            # Check if related entities exist
+            if auto_switch in entity_ids and power_sensor in entity_ids:
+                # Get max power from inverter specs (default based on common models)
+                max_power = 10000.0  # Default 10kW
+
+                inverters.append(
+                    {
+                        "name": inverter_name.replace("_", " ").title(),
+                        "max_power": max_power,
+                        "enable_switch": entity_id,
+                        "auto_switch": auto_switch,
+                        "power_sensor": power_sensor,
+                    }
+                )
+
+    return inverters
+
+
+async def _find_heat_pumps(entity_ids: list, prefix: str) -> list:
+    """Find heat pump entities."""
+    heat_pumps = []
+
+    # Look for heat pump entities
+    hp_entities = [
+        eid for eid in entity_ids if "heat_pump" in eid.lower() and prefix in eid
+    ]
+
+    for entity_id in hp_entities:
+        if entity_id.startswith("switch.") and "_enable" in entity_id:
+            # Extract heat pump name
+            hp_name = entity_id.replace("switch.", "").replace("_enable", "")
+
+            # Look for related entities
+            auto_switch = f"switch.{hp_name}_auto"
+            power_sensor = f"sensor.{hp_name}_power"
+
+            # Check if related entities exist
+            if auto_switch in entity_ids and power_sensor in entity_ids:
+                max_power = 5000.0  # Default 5kW
+
+                heat_pumps.append(
+                    {
+                        "name": hp_name.replace("_", " ").title(),
+                        "max_power": max_power,
+                        "enable_switch": entity_id,
+                        "auto_switch": auto_switch,
+                        "power_sensor": power_sensor,
+                    }
+                )
+
+    return heat_pumps
+
+
+async def _find_water_heaters(entity_ids: list, prefix: str) -> list:
+    """Find water heater entities."""
+    water_heaters = []
+
+    # Look for water heater entities
+    wh_entities = [
+        eid for eid in entity_ids if "water_heater" in eid.lower() and prefix in eid
+    ]
+
+    for entity_id in wh_entities:
+        if entity_id.startswith("switch.") and "_enable" in entity_id:
+            # Extract water heater name
+            wh_name = entity_id.replace("switch.", "").replace("_enable", "")
+
+            # Look for related entities
+            auto_switch = f"switch.{wh_name}_auto"
+            power_sensor = f"sensor.{wh_name}_power"
+
+            # Check if related entities exist
+            if auto_switch in entity_ids and power_sensor in entity_ids:
+                max_power = 3000.0  # Default 3kW
+
+                water_heaters.append(
+                    {
+                        "name": wh_name.replace("_", " ").title(),
+                        "max_power": max_power,
+                        "enable_switch": entity_id,
+                        "auto_switch": auto_switch,
+                        "power_sensor": power_sensor,
+                    }
+                )
+
+    return water_heaters
+
+
+async def _find_pool_heaters(entity_ids: list, prefix: str) -> list:
+    """Find pool heater entities."""
+    pool_heaters = []
+
+    # Look for pool heater entities
+    ph_entities = [
+        eid for eid in entity_ids if "pool_heater" in eid.lower() and prefix in eid
+    ]
+
+    for entity_id in ph_entities:
+        if entity_id.startswith("switch.") and "_enable" in entity_id:
+            # Extract pool heater name
+            ph_name = entity_id.replace("switch.", "").replace("_enable", "")
+
+            # Look for related entities
+            auto_switch = f"switch.{ph_name}_auto"
+            power_sensor = f"sensor.{ph_name}_power"
+
+            # Check if related entities exist
+            if auto_switch in entity_ids and power_sensor in entity_ids:
+                max_power = 2000.0  # Default 2kW
+
+                pool_heaters.append(
+                    {
+                        "name": ph_name.replace("_", " ").title(),
+                        "max_power": max_power,
+                        "enable_switch": entity_id,
+                        "auto_switch": auto_switch,
+                        "power_sensor": power_sensor,
+                    }
+                )
+
+    return pool_heaters
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

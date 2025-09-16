@@ -3,6 +3,7 @@
 import asyncio
 import json
 import os
+from signal import default_int_handler
 from typing import List
 
 import voluptuous as vol
@@ -36,75 +37,15 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         super().__init__()
         self._templates = {}
         self._selected_template = None
-        self._translations = {}
-
-    async def _load_translations(self) -> dict:
-        """Load translations from JSON files asynchronously."""
-        translations = {}
-        try:
-            # Get the directory of this file
-            current_dir = os.path.dirname(os.path.abspath(__file__))
-            translations_dir = os.path.join(current_dir, "translations")
-
-            # Load German translations
-            de_file = os.path.join(translations_dir, "de.json")
-            if os.path.exists(de_file):
-                loop = asyncio.get_event_loop()
-                content = await loop.run_in_executor(
-                    None, self._read_file_sync, de_file
-                )
-                translations["de"] = json.loads(content)
-
-            # Load English translations
-            en_file = os.path.join(translations_dir, "en.json")
-            if os.path.exists(en_file):
-                loop = asyncio.get_event_loop()
-                content = await loop.run_in_executor(
-                    None, self._read_file_sync, en_file
-                )
-                translations["en"] = json.loads(content)
-
-        except Exception as e:
-            _LOGGER.error("Error loading translations: %s", str(e))
-            translations = {}
-
-        return translations
 
     def _read_file_sync(self, file_path: str) -> str:
         """Read file synchronously (to be run in executor)."""
         with open(file_path, "r", encoding="utf-8") as f:
             return f.read()
 
-    def _get_translation(self, key: str, language: str = "de") -> str:
-        """Get translation for a key."""
-        try:
-            if language in self._translations:
-                # Navigate through the nested structure
-                keys = key.split(".")
-                value = self._translations[language]
-                for k in keys:
-                    if isinstance(value, dict) and k in value:
-                        value = value[k]
-                    else:
-                        return key  # Return key if translation not found
-                return value if isinstance(value, str) else key
-            return key
-        except Exception:
-            return key
-
     async def async_step_user(self, user_input: dict = None) -> FlowResult:
         """Handle the initial step."""
         try:
-            # Load translations if not loaded yet
-            if not self._translations:
-                _LOGGER.debug("Loading translations...")
-                self._translations = await self._load_translations()
-                _LOGGER.debug(
-                    "Translations loaded: %s", list(self._translations.keys())
-                )
-
-            # Templates laden (always reload for now to pick up changes)
-            _LOGGER.debug("Loading templates...")
             template_names = await get_template_names()
             self._templates = {}
             for name in template_names:
@@ -275,51 +216,27 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_dynamic_config(self, user_input: dict = None) -> FlowResult:
         """Handle dynamic configuration step for templates with dynamic config."""
-        _LOGGER.info(
-            "async_step_dynamic_config called with user_input: %s",
-            user_input is not None,
-        )
+
         if user_input is not None:
             # Combine connection params with dynamic config
             combined_input = {**self._connection_params, **user_input}
-            _LOGGER.info("Combined input keys: %s", list(combined_input.keys()))
             return await self.async_step_final_config(combined_input)
 
         # Get template data
         template_data = self._templates.get(self._selected_template, {})
         dynamic_config = template_data.get("dynamic_config", {})
 
-        _LOGGER.info(
-            "Template data keys: %s",
-            list(template_data.keys())
-            if isinstance(template_data, dict)
-            else "Not a dict",
-        )
-        _LOGGER.info(
-            "Dynamic config keys: %s",
-            list(dynamic_config.keys())
-            if isinstance(dynamic_config, dict)
-            else "Not a dict",
-        )
-        _LOGGER.info(
-            "Dynamic config valid_models: %s", dynamic_config.get("valid_models")
-        )
-        _LOGGER.info("Template valid_models: %s", template_data.get("valid_models"))
-
         # Generate schema for dynamic config
         schema_fields = {}
+
+        # EMS configuration removed - will be handled in panel only
 
         # Check if template has valid_models (model selection)
         # Look for valid_models in dynamic_config first, then at template root level
         valid_models = dynamic_config.get("valid_models") or template_data.get(
             "valid_models"
         )
-        _LOGGER.info(
-            "Valid models check: dynamic_config.valid_models=%s, template.valid_models=%s, final=%s",
-            dynamic_config.get("valid_models") is not None,
-            template_data.get("valid_models") is not None,
-            valid_models is not None,
-        )
+
         if valid_models:
             # Create model options with display names
             model_options = {}
@@ -354,11 +271,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Add firmware version if available
         if "firmware_version" in dynamic_config:
             firmware_options = dynamic_config["firmware_version"].get(
-                "options", ["SAPPHIRE-H_xxxx"]
+                "options", ["1.0"]
             )
-            firmware_default = dynamic_config["firmware_version"].get(
-                "default", "SAPPHIRE-H_xxxx"
-            )
+            firmware_default = dynamic_config["firmware_version"].get("default", "1.0")
             schema_fields["firmware_version"] = vol.In(firmware_options)
 
         # Add connection type if available
@@ -368,6 +283,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
             connection_default = dynamic_config["connection_type"].get("default", "LAN")
             schema_fields["connection_type"] = vol.In(connection_options)
+
+        # Add battery config if available
+        if "battery_config" in dynamic_config:
+            battery_options = dynamic_config["battery_config"].get("options", ["none"])
+            battery_default = dynamic_config["battery_config"].get("default", "none")
+            schema_fields["battery_config"] = vol.In(battery_options)
 
         return self.async_show_form(
             step_id="dynamic_config",
@@ -380,17 +301,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_device_config(self, user_input: dict = None) -> FlowResult:
         """Handle device configuration step."""
         if user_input is not None:
-            # Check if SBR battery is selected and we need battery slave ID
-            _LOGGER.debug("Device config user input: %s", user_input)
-            _LOGGER.debug("Device config user input keys: %s", list(user_input.keys()))
             battery_config = user_input.get("battery_config")
-            _LOGGER.debug("Battery config selected: %s", battery_config)
-            _LOGGER.debug(
-                "All config values: phases=%s, mppt_count=%s, battery_config=%s",
-                user_input.get("phases"),
-                user_input.get("mppt_count"),
-                battery_config,
-            )
+
             if battery_config == "sbr_battery":
                 # Store current input and go to battery slave ID step
                 _LOGGER.info(
@@ -483,10 +395,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "Adding firmware_version field to schema with options: %s",
                     available_firmware,
                 )
-                label = self._get_translation(
-                    "config.step.device_config.data.firmware_version"
-                )
-                schema_fields[label] = vol.In(available_firmware)
+                schema_fields["firmware_version"] = vol.In(available_firmware)
 
             return self.async_show_form(
                 step_id="device_config",
@@ -516,73 +425,40 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def _get_dynamic_config_schema(self, template_data: dict) -> dict:
         """Generate dynamic configuration schema based on template."""
         dynamic_config = template_data.get("dynamic_config", {})
-        _LOGGER.debug(
-            "_get_dynamic_config_schema: dynamic_config keys=%s",
-            list(dynamic_config.keys()),
-        )
         schema_fields = {}
 
-        # Check if model-specific config is enabled
-        model_specific_config = dynamic_config.get("model_specific_config", {}).get(
-            "default", False
-        )
-
-        if model_specific_config:
-            # Model-specific configuration: show model dropdown
-            valid_models = template_data.get("valid_models", {})
-
+        # First, check for valid_models - this takes precedence
+        valid_models = template_data.get("valid_models")
+        if valid_models and isinstance(valid_models, dict):
             # Create model options with display names
             model_options = {}
-            if valid_models and isinstance(valid_models, dict):
-                for model_name, config in valid_models.items():
-                    phases = config.get("phases", 1)
-                    mppt_count = config.get("mppt_count", 1)
-                    string_count = config.get("string_count", 0)
-                    display_name = f"{model_name} ({phases}Φ, {mppt_count} MPPT, {string_count} Strings)"
-                    model_options[model_name] = display_name
+            for model_name, config in valid_models.items():
+                phases = config.get("phases", 1)
+                mppt_count = config.get("mppt_count", 1)
+                string_count = config.get("string_count", 0)
+                display_name = f"{model_name} ({phases}Φ, {mppt_count} MPPT, {string_count} Strings)"
+                model_options[model_name] = display_name
 
-            _LOGGER.debug(
-                "Adding model_specific_config field to schema with %d models",
-                len(model_options),
-            )
+            _LOGGER.debug("Adding model selection with %d options", len(model_options))
             schema_fields["selected_model"] = vol.In(model_options)
-
         else:
-            # Individual field configuration: show separate fields
-            # Phase configuration
-            if "phases" in dynamic_config:
-                phase_options = dynamic_config["phases"].get("options", [1, 3])
-                phase_default = dynamic_config["phases"].get("default", 3)
-                _LOGGER.debug(
-                    "Adding phases field to schema with options: %s, default: %s",
-                    phase_options,
-                    phase_default,
-                )
-                schema_fields["phases"] = vol.In(phase_options)
+            # If no valid_models, use individual field configuration
+            _LOGGER.debug("No valid_models found, using individual field configuration")
 
-            # MPPT configuration
-            if "mppt_count" in dynamic_config:
-                mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
-                mppt_default = dynamic_config["mppt_count"].get("default", 1)
-                _LOGGER.debug(
-                    "Adding mppt_count field to schema with options: %s, default: %s",
-                    mppt_options,
-                    mppt_default,
-                )
-                schema_fields["mppt_count"] = vol.In(mppt_options)
+        # Add individual fields based on dynamic_config
+        if "phases" in dynamic_config:
+            phase_options = dynamic_config["phases"].get("options", [1, 3])
+            schema_fields["phases"] = vol.In(phase_options)
 
-            # String count configuration
-            if "string_count" in dynamic_config:
-                string_options = dynamic_config["string_count"].get(
-                    "options", [0, 1, 2, 3, 4]
-                )
-                string_default = dynamic_config["string_count"].get("default", 0)
-                _LOGGER.debug(
-                    "Adding string_count field to schema with options: %s, default: %s",
-                    string_options,
-                    string_default,
-                )
-                schema_fields["string_count"] = vol.In(string_options)
+        if "mppt_count" in dynamic_config:
+            mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
+            schema_fields["mppt_count"] = vol.In(mppt_options)
+
+        if "string_count" in dynamic_config:
+            string_options = dynamic_config["string_count"].get(
+                "options", [0, 1, 2, 3, 4]
+            )
+            schema_fields["string_count"] = vol.In(string_options)
 
         # Battery configuration (single combo box)
         if "battery_config" in dynamic_config:
@@ -1149,14 +1025,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     if isinstance(template_data, dict)
                     else template_data or []
                 )
-                _LOGGER.info("Template registers: %s", template_registers is not None)
-                _LOGGER.info("Template data type: %s", type(template_data))
-                _LOGGER.info(
-                    "Template data keys: %s",
-                    list(template_data.keys())
-                    if isinstance(template_data, dict)
-                    else "Not a dict",
-                )
+
                 template_calculated = (
                     template_data.get("calculated", []) or []
                     if isinstance(template_data, dict)
@@ -1190,12 +1059,6 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     },
                 )
 
-            # Debug: Show template structure
-            _LOGGER.debug(
-                "Template structure: %s",
-                template_registers[:2] if template_registers else "No registers",
-            )
-
             # Validate configuration
             if not self._validate_config(user_input):
                 return self.async_abort(
@@ -1216,7 +1079,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "host": user_input["host"],
                 "port": user_input.get("port", 502),
                 "slave_id": user_input.get("slave_id", 1),
-                "timeout": user_input.get("timeout", 1),  # PDF requirement: 1000ms
+                "timeout": user_input.get("timeout", 1),
                 "delay": user_input.get("delay", 0),
                 "firmware_version": firmware_version,
                 "registers": template_registers,
@@ -1226,10 +1089,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "is_aggregates_template": False,
             }
 
-            _LOGGER.info(
-                "Config data created with %d binary_sensors",
-                len(template_binary_sensors),
-            )
+            # Add EMS configuration for all templates
+            # EMS configuration removed - will be handled in panel only
 
             # Add dynamic configuration parameters if available
             if self._supports_dynamic_config(template_data):
@@ -1252,8 +1113,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     )
                     if model_config and isinstance(model_config, dict):
                         phases = model_config.get("phases", 3)
-                        mppt_count = model_config.get("mppt_count", 1)
-                        string_count = model_config.get("string_count", 0)
+                        mppt_count = model_config.get("mppt_count", 2)
+                        string_count = model_config.get("string_count", 2)
                         _LOGGER.info(
                             "Using model-specific config for %s: phases=%d, mppt=%d, strings=%d",
                             selected_model,
@@ -1267,13 +1128,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             selected_model,
                         )
                         phases = 3
-                        mppt_count = 1
-                        string_count = 0
+                        mppt_count = 2
+                        string_count = 2
                 else:
                     # Individual field configuration
                     phases = user_input.get("phases", 3)
-                    mppt_count = user_input.get("mppt_count", 1)
-                    string_count = user_input.get("string_count", 0)
+                    mppt_count = user_input.get("mppt_count", 2)
+                    string_count = user_input.get("string_count", 2)
 
                 config_data.update(
                     {
@@ -1282,9 +1143,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "string_count": string_count,
                         "battery_config": user_input.get("battery_config", "none"),
                         "battery_slave_id": user_input.get("battery_slave_id", 200),
-                        "firmware_version": user_input.get(
-                            "firmware_version", "SAPPHIRE-H_xxxx"
-                        ),
+                        "firmware_version": user_input.get("firmware_version", "1.0.0"),
                         "connection_type": user_input.get("connection_type", "LAN"),
                     }
                 )
@@ -1508,7 +1367,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return False
 
             # Timeout validieren
-            timeout = user_input.get("timeout", 1)  # PDF requirement: 1000ms
+            timeout = user_input.get("timeout", 1)
             if not isinstance(timeout, int) or timeout < 1:
                 return False
 
@@ -1621,11 +1480,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             if "phases" in dynamic_config:
                 current_phases = self.config_entry.data.get("phases", 3)
                 phase_options = dynamic_config["phases"].get("options", [1, 3])
-                _LOGGER.debug(
-                    "Adding phases field: current=%s, options=%s",
-                    current_phases,
-                    phase_options,
-                )
+
                 schema_fields[vol.Optional("phases", default=current_phases)] = vol.In(
                     phase_options
                 )
@@ -1634,11 +1489,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             if "mppt_count" in dynamic_config:
                 current_mppt = self.config_entry.data.get("mppt_count", 2)
                 mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
-                _LOGGER.debug(
-                    "Adding mppt_count field: current=%s, options=%s",
-                    current_mppt,
-                    mppt_options,
-                )
+
                 schema_fields[
                     vol.Optional("mppt_count", default=current_mppt)
                 ] = vol.In(mppt_options)
@@ -1660,11 +1511,6 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     )
                     battery_choices[option] = display_label
 
-                _LOGGER.debug(
-                    "Adding battery_config field: current=%s, choices=%s",
-                    current_battery,
-                    battery_choices,
-                )
                 schema_fields[
                     vol.Optional("battery_config", default=current_battery)
                 ] = vol.In(battery_choices)

@@ -62,7 +62,7 @@ async def async_setup_entry(
             entities.append(
                 TemplateBinarySensor(
                     hass=hass,
-                    name=sensor_name,
+                    name=f"{prefix} {sensor_name}",
                     unique_id=unique_id,
                     template_data=binary_sensor,
                     device_info={
@@ -103,7 +103,7 @@ async def async_setup_entry(
             entities.append(
                 TemplateBinarySensor(
                     hass=hass,
-                    name=sensor_name,
+                    name=f"{prefix} {sensor_name}",
                     unique_id=unique_id,
                     template_data=reg,
                     device_info={

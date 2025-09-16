@@ -5,6 +5,7 @@ from typing import Any, Optional
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.components.sensor.const import CONF_STATE_CLASS
+from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_DEVICE_CLASS, CONF_NAME, CONF_UNIT_OF_MEASUREMENT
 from homeassistant.core import HomeAssistant
@@ -13,6 +14,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.entity_registry import async_get as async_get_entity_registry
 
 from .const import DOMAIN
+from .ems import EMSManager
 from .error_handling import (
     handle_unavailable_register,
     is_unavailable_register_value,
@@ -106,6 +108,26 @@ async def async_setup_entry(
                 )
                 entity_id = f"sensor.{prefix}_{clean_name}"
             current_entity_ids.add(entity_id)
+
+        # For aggregates templates, also include aggregate entities
+        if entry.data.get("is_aggregates_template", False):
+            aggregates = entry.data.get("aggregates", [])
+            for aggregate in aggregates:
+                if "unique_id" in aggregate:
+                    # The unique_id is already processed with prefix in _setup_aggregates_entry
+                    entity_id = f"sensor.{aggregate['unique_id']}"
+                    current_entity_ids.add(entity_id)
+                    _LOGGER.debug(
+                        "Added aggregate entity to current_entity_ids: %s", entity_id
+                    )
+
+        # Debug: Log current entity IDs for aggregates templates
+        if entry.data.get("is_aggregates_template", False):
+            _LOGGER.debug(
+                "Current entity IDs for aggregates template: %s",
+                list(current_entity_ids),
+            )
+            _LOGGER.debug("Existing entities: %s", list(existing_entities))
 
         # Find orphaned entities
         orphaned_entities = existing_entities - current_entity_ids
@@ -331,26 +353,30 @@ async def async_setup_entry(
 
         if all_entities:
             async_add_entities(all_entities)
-            _LOGGER.info(
-                "Modbus Manager: Created %d sensors, %d calculated sensors, %d aggregate sensors",
-                len(entities),
-                len(calculated_entities),
-                len(aggregate_entities),
-            )
 
-            # Debug: List all created entities
-            if entities:
-                _LOGGER.debug("Created sensors: %s", [e.entity_id for e in entities])
-            if calculated_entities:
-                _LOGGER.debug(
-                    "Created calculated sensors: %s",
-                    [e.entity_id for e in calculated_entities],
-                )
-            if aggregate_entities:
-                _LOGGER.debug(
-                    "Created aggregate sensors: %s",
-                    [e.entity_id for e in aggregate_entities],
-                )
+        # Add EMS entities if EMS Manager is available
+        await _add_ems_entities(hass, entry, async_add_entities)
+
+        _LOGGER.info(
+            "Modbus Manager: Created %d sensors, %d calculated sensors, %d aggregate sensors",
+            len(entities),
+            len(calculated_entities),
+            len(aggregate_entities),
+        )
+
+        # Debug: List all created entities
+        if entities:
+            _LOGGER.debug("Created sensors: %s", [e.entity_id for e in entities])
+        if calculated_entities:
+            _LOGGER.debug(
+                "Created calculated sensors: %s",
+                [e.entity_id for e in calculated_entities],
+            )
+        if aggregate_entities:
+            _LOGGER.debug(
+                "Created aggregate sensors: %s",
+                [e.entity_id for e in aggregate_entities],
+            )
         else:
             _LOGGER.warning("Keine Sensoren erstellt")
 
@@ -1383,3 +1409,77 @@ class ModbusTemplateSensor(SensorEntity):
                         self.entity_id,
                         str(e),
                     )
+
+
+async def _add_ems_entities(
+    hass: HomeAssistant, entry: ConfigEntry, async_add_entities: AddEntitiesCallback
+) -> None:
+    """Add EMS entities if EMS Manager is available."""
+    try:
+        prefix = entry.data.get("prefix", "sg")
+        ems_config = entry.data.get("ems_config", {})
+
+        # Check if this device has EMS configuration
+        if not ems_config or not ems_config.get("enabled", False):
+            _LOGGER.debug("EMS not enabled for prefix %s", prefix)
+            return
+
+        # Create simple EMS enable switch
+        entities = []
+
+        # Create a simple EMS enable switch
+        entities.append(
+            EMSSimpleSwitch(
+                hass=hass,
+                name=f"{prefix} EMS Enable",
+                unique_id=f"{prefix}_ems_enable",
+                device_id=f"{prefix}_device",
+                prefix=prefix,
+            )
+        )
+
+        if entities:
+            async_add_entities(entities)
+            _LOGGER.info("Added %d EMS entities for prefix %s", len(entities), prefix)
+        else:
+            _LOGGER.debug("No EMS entities to add for prefix %s", prefix)
+
+    except Exception as e:
+        _LOGGER.error("Failed to add EMS entities: %s", str(e))
+
+
+class EMSSimpleSwitch(SwitchEntity):
+    """Simple EMS Enable Switch."""
+
+    def __init__(
+        self,
+        hass: HomeAssistant,
+        name: str,
+        unique_id: str,
+        device_id: str,
+        prefix: str,
+    ):
+        self.hass = hass
+        self._attr_name = name
+        self._attr_unique_id = unique_id
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, device_id)},
+            name=f"{prefix.upper()} Device",
+            manufacturer="Modbus Manager",
+            model="EMS Device",
+        )
+        self._attr_icon = "mdi:power"
+        self._attr_is_on = False
+        self._prefix = prefix
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Turn on EMS."""
+        self._attr_is_on = True
+        self.async_write_ha_state()
+        _LOGGER.info("EMS enabled for %s", self._prefix)
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Turn off EMS."""
+        self._attr_is_on = False
+        self.async_write_ha_state()
+        _LOGGER.info("EMS disabled for %s", self._prefix)

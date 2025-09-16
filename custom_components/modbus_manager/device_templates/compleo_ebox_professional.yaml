@@ -7,6 +7,22 @@ type: "ev_charger"
 firmware_version: "1.0.0"  # Default firmware version
 default_prefix: "eBox"  # Default prefix for entity names
 
+# EMS Configuration for eBox
+ems_config:
+  enabled: true
+  power_calculation:
+    phases: 3
+    voltage_per_phase: 230  # V
+    min_current_per_phase: 0  # A (disabled)
+    max_current_per_phase: 16  # A
+
+  control_entities:
+    enable: "number.{PREFIX}_max_current_phase_1" # set to 0 disable it
+    current_limit: "number.{PREFIX}_max_current_phase_1"
+    status: "sensor.{PREFIX}_charging_status"
+    power: "sensor.{PREFIX}_charging_power"
+    current: "sensor.{PREFIX}_total_current"
+
 # Available firmware versions for user selection
 available_firmware_versions:
   - "1.0.0"    # Basic functionality
@@ -230,6 +246,43 @@ sensors:
     icon: "mdi:meter-electric"
     firmware_min_version: "1.1.18"
 
+  # # Max current settings (holding registers)
+  # - name: "Max Current Phase 1"
+  #   unique_id: "max_current_phase_1"
+  #   address: 1012
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_current_control"
+  #   icon: "mdi:gauge"
+
+  # - name: "Max Current Phase 2"
+  #   unique_id: "max_current_phase_2"
+  #   address: 1013
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_current_control"
+  #   icon: "mdi:gauge"
+
+  # - name: "Max Current Phase 3"
+  #   unique_id: "max_current_phase_3"
+  #   address: 1014
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_current_control"
+  #   icon: "mdi:gauge"
+
 # Controls (holding registers - read/write)
 controls:
   # Max current settings (holding registers)
@@ -279,69 +332,68 @@ controls:
     step: 1
 
   # Fallback max current settings
-  - name: "Fallback Max Current Phase 1"
-    unique_id: "fallback_max_current_phase_1"
-    address: 1018
-    input_type: "holding"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    group: "EV_fallback_current_setting"
-    icon: "mdi:gauge"
-    min_value: 0
-    max_value: 16
-    step: 1
+  # - name: "Fallback Max Current Phase 1"
+  #   unique_id: "fallback_max_current_phase_1"
+  #   address: 1018
+  #   input_type: "holding"
+  #   data_type: "float32"
+  #   scan_interval: 10
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_fallback_current_setting"
+  #   icon: "mdi:gauge"
+  #   min_value: 0
+  #   max_value: 16
+  #   step: 1
 
-  - name: "Fallback Max Current Phase 2"
-    unique_id: "fallback_max_current_phase_2"
-    address: 1020
-    input_type: "holding"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    group: "EV_fallback_current_setting"
-    icon: "mdi:gauge"
-    min_value: 0
-    max_value: 16
-    step: 1
+  # - name: "Fallback Max Current Phase 2"
+  #   unique_id: "fallback_max_current_phase_2"
+  #   address: 1020
+  #   input_type: "holding"
+  #   data_type: "float32"
+  #   scan_interval: 10
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_fallback_current_setting"
+  #   icon: "mdi:gauge"
+  #   min_value: 0
+  #   max_value: 16
+  #   step: 1
 
-  - name: "Fallback Max Current Phase 3"
-    unique_id: "fallback_max_current_phase_3"
-    address: 1022
-    input_type: "holding"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    group: "EV_fallback_current_setting"
-    icon: "mdi:gauge"
-    min_value: 0
-    max_value: 16
-    step: 1
+  # - name: "Fallback Max Current Phase 3"
+  #   unique_id: "fallback_max_current_phase_3"
+  #   address: 1022
+  #   input_type: "holding"
+  #   data_type: "float32"
+  #   scan_interval: 10
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_fallback_current_setting"
+  #   icon: "mdi:gauge"
+  #   min_value: 0
+  #   max_value: 16
+  #   step: 1
 
-  # Fallback timer
-  - name: "Remaining Time Before Fallback"
-    unique_id: "remaining_time_before_fallback"
-    address: 1024
-    input_type: "holding"
-    data_type: "uint16"
-    precision: 0
-    unit_of_measurement: "min"
-    device_class: "duration"
-    state_class: "measurement"
-    scale: 1
-    min_value: 0
-    max_value: 120
-    step: 1
-    scan_interval: 10
-    group: "EV_fallback_timer"
-    icon: "mdi:timer"
-
+  # # Fallback timer
+  # - name: "Remaining Time Before Fallback"
+  #   unique_id: "remaining_time_before_fallback"
+  #   address: 1024
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   precision: 0
+  #   unit_of_measurement: "min"
+  #   device_class: "duration"
+  #   state_class: "measurement"
+  #   scale: 1
+  #   min_value: 0
+  #   max_value: 120
+  #   step: 1
+  #   scan_interval: 10
+  #   group: "EV_fallback_timer"
+  #   icon: "mdi:timer"
 
 # Calculated sensors
 calculated_sensors:
@@ -353,9 +405,9 @@ calculated_sensors:
          not is_state('sensor.{PREFIX}_current_phase_2', 'unavailable') and
          not is_state('sensor.{PREFIX}_current_phase_3', 'unavailable') }}
     state: >-
-      {{ (states('sensor.{PREFIX}_current_phase_1') | default(0) | float +
-          states('sensor.{PREFIX}_current_phase_2') | default(0) | float +
-          states('sensor.{PREFIX}_current_phase_3') | default(0) | float) | round(2) }}
+      {{ (states('sensor.{PREFIX}_current_phase_1') | float(0) +
+          states('sensor.{PREFIX}_current_phase_2') | float(0) +
+          states('sensor.{PREFIX}_current_phase_3') | float(0)) | round(2) }}
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -370,9 +422,9 @@ calculated_sensors:
          not is_state('sensor.{PREFIX}_current_phase_2', 'unavailable') and
          not is_state('sensor.{PREFIX}_current_phase_3', 'unavailable') }}
     state: >-
-      {% set current1 = states('sensor.{PREFIX}_current_phase_1') | default(0) | float %}
-      {% set current2 = states('sensor.{PREFIX}_current_phase_2') | default(0) | float %}
-      {% set current3 = states('sensor.{PREFIX}_current_phase_3') | default(0) | float %}
+      {% set current1 = states('sensor.{PREFIX}_current_phase_1') | float(0) %}
+      {% set current2 = states('sensor.{PREFIX}_current_phase_2') | float(0) %}
+      {% set current3 = states('sensor.{PREFIX}_current_phase_3') | float(0) %}
       {% if current1 > 0.11 or current2 > 0.11 or current3 > 0.11 %}
         {{ ((current1 + current2 + current3) - 0.27) * 230 | round(0) }}
       {% else %}
@@ -392,9 +444,9 @@ calculated_sensors:
          not is_state('sensor.{PREFIX}_max_current_phase_2', 'unavailable') and
          not is_state('sensor.{PREFIX}_max_current_phase_3', 'unavailable') }}
     state: >-
-      {{ (states('sensor.{PREFIX}_max_current_phase_1') | default(0) | float +
-          states('sensor.{PREFIX}_max_current_phase_2') | default(0) | float +
-          states('sensor.{PREFIX}_max_current_phase_3') | default(0) | float) | round(2) }}
+      {{ (states('sensor.{PREFIX}_max_current_phase_1') | float(0) +
+          states('sensor.{PREFIX}_max_current_phase_2') | float(0) +
+          states('sensor.{PREFIX}_max_current_phase_3') | float(0)) | round(2) }}
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -409,9 +461,9 @@ calculated_sensors:
          not is_state('sensor.{PREFIX}_max_current_phase_2', 'unavailable') and
          not is_state('sensor.{PREFIX}_max_current_phase_3', 'unavailable') }}
     state: >-
-      {{ (states('sensor.{PREFIX}_max_current_phase_1') | default(0) | float +
-          states('sensor.{PREFIX}_max_current_phase_2') | default(0) | float +
-          states('sensor.{PREFIX}_max_current_phase_3') | default(0) | float) * 230 | round(0) }}
+      {{ (states('sensor.{PREFIX}_max_current_phase_1') | float(0) +
+          states('sensor.{PREFIX}_max_current_phase_2') | float(0) +
+          states('sensor.{PREFIX}_max_current_phase_3') | float(0)) * 230 | round(0) }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -444,9 +496,9 @@ calculated_sensors:
          not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
          not is_state('sensor.{PREFIX}_voltage_phase_3', 'unavailable') }}
     state: >-
-      {{ ((states('sensor.{PREFIX}_voltage_phase_1') | default(0) | float +
-          states('sensor.{PREFIX}_voltage_phase_2') | default(0) | float +
-          states('sensor.{PREFIX}_voltage_phase_3') | default(0) | float) / 3) | round(1) }}
+      {{ ((states('sensor.{PREFIX}_voltage_phase_1') | float(0) +
+          states('sensor.{PREFIX}_voltage_phase_2') | float(0) +
+          states('sensor.{PREFIX}_voltage_phase_3') | float(0)) / 3) | round(1) }}
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
@@ -462,9 +514,9 @@ calculated_sensors:
          not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
          not is_state('sensor.{PREFIX}_voltage_phase_3', 'unavailable') }}
     state: >-
-      {% set v1 = states('sensor.{PREFIX}_voltage_phase_1') | default(0) | float %}
-      {% set v2 = states('sensor.{PREFIX}_voltage_phase_2') | default(0) | float %}
-      {% set v3 = states('sensor.{PREFIX}_voltage_phase_3') | default(0) | float %}
+      {% set v1 = states('sensor.{PREFIX}_voltage_phase_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_voltage_phase_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_voltage_phase_3') | float(0) %}
       {% set avg = (v1 + v2 + v3) / 3 %}
       {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
     unit_of_measurement: "%"
@@ -481,7 +533,7 @@ binary_sensors:
     availability: >-
       {{ not is_state('sensor.{PREFIX}_charging_power', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_charging_power') | default(0) | float > 0 }}
+      {{ states('sensor.{PREFIX}_charging_power') | float(0) > 0 }}
     device_class: "power"
     group: "EV_charging_status"
     icon: "mdi:ev-station"
@@ -492,25 +544,7 @@ binary_sensors:
     availability: >-
       {{ not is_state('sensor.{PREFIX}_cable_status', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_cable_status') | default(0) | int == 3 }}
+      {{ states('sensor.{PREFIX}_cable_status') | int(0) == 3 }}
     device_class: "connectivity"
     group: "EV_charging_status"
     icon: "mdi:cable-data"
-
-# Numbers for current control
-numbers:
-  - name: "Set Max Current"
-    unique_id: "set_max_current"
-    type: "number"
-    availability: >-
-      {{ not is_state('sensor.{PREFIX}_cable_status', 'unavailable') }}
-    state: >-
-      {{ states('sensor.{PREFIX}_max_total_current') | default(0) | float }}
-    min_value: 0
-    max_value: 16
-    step: 1
-    unit_of_measurement: "A"
-    mode: "box"
-    group: "EV_current_control"
-    icon: "mdi:gauge"
-    # This would need to be implemented as a service call to update all three phases
