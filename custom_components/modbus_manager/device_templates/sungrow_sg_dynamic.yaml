@@ -1,0 +1,2184 @@
+# Sungrow SG Dynamic Template for Modbus Manager
+# BASED ON: TI_20230117_Communication.Protocol.of.Residential.and.Commerical.PV.Grid-connected.Inverter_V1.1.53_EN.pdf
+
+name: "Sungrow SG Series Inverter"
+description: "Dynamic template for Sungrow SG series residential and commercial PV grid-connected inverters. Based on Communication Protocol V1.1.53. (RS, RT, HX, KTL, KTL-MT, HV/BF, CX Series)"
+manufacturer: "Sungrow"
+model: "SG Series Dynamic"
+version: 1.0.0
+default_prefix: "SG"
+default_slave_id: 1
+type: "PV_Inverter"
+firmware_version: "SAPPHIRE-H_xxxx"
+available_firmware_versions: ["SAPPHIRE-H_xxxx", "Latest"]
+
+# Dynamic configuration support
+dynamic_config:
+
+  # Model-specific configuration (shows model dropdown instead of individual fields)
+  valid_models:
+    # RS Series (Single Phase)
+    "SG3.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2603"}
+    "SG4.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2605"}
+    "SG5.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2606"}
+    "SG6.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2607"}
+    "SG8.0RS": {phases: 1, mppt_count: 3, string_count: 1, type_code: "0x2608"}
+    "SG10RS": {phases: 1, mppt_count: 3, string_count: 1, type_code: "0x2609"}
+
+    # RT Series (Three Phase)
+    "SG3.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x243D"}
+    "SG4.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x243E"}
+    "SG5.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x2430"}
+    "SG6.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x2431"}
+    "SG7.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x243C"}
+    "SG8.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2432"}
+    "SG10RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2433"}
+    "SG12RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2434"}
+    "SG15RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2435"}
+    "SG20RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2437"}
+
+    # KTL Series (Commercial)
+    "SG30KTL": {phases: 3, mppt_count: 2, string_count: 4, type_code: "0x27"}
+    "SG36KTL": {phases: 3, mppt_count: 2, string_count: 5, type_code: "0x2D"}
+    "SG40KTL": {phases: 3, mppt_count: 2, string_count: 4, type_code: "0x2F"}
+    "SG60KTL": {phases: 3, mppt_count: 1, string_count: 14, type_code: "0x010F"}
+    "SG80KTL": {phases: 3, mppt_count: 1, string_count: 18, type_code: "0x0138"}
+
+    # KTL-M Series (Modular)
+    "SG30KTL-M": {phases: 3, mppt_count: 3, string_count: 3, type_code: "0x0141"}
+    "SG40KTL-M": {phases: 3, mppt_count: 3, string_count: 3, type_code: "0x0135"}
+    "SG50KTL-M": {phases: 3, mppt_count: 4, string_count: 3, type_code: "0x011B"}
+    "SG60KTL-M": {phases: 3, mppt_count: 4, string_count: 4, type_code: "0x0131"}
+
+    # CX Series (Commercial)
+    "SG30CX": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0x2C10"}
+    "SG33CX": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0x2C00"}
+    "SG40CX": {phases: 3, mppt_count: 4, string_count: 2, type_code: "0x2C01"}
+    "SG50CX": {phases: 3, mppt_count: 5, string_count: 2, type_code: "0x2C02"}
+    "SG75CX": {phases: 3, mppt_count: 9, string_count: 2, type_code: "0x2C22"}
+    "SG100CX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C12"}
+    "SG110CX": {phases: 3, mppt_count: 9, string_count: 2, type_code: "0x2C06"}
+
+    # HX Series (High Power)
+    "SG250HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C0C"}
+    "SG320HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C26"}
+    "SG350HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C27"}
+
+    "SG10KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x26"}
+    "SG12KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x29"}
+    "SG15KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x28"}
+    "SG20KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x2A"}
+
+  firmware_version:
+    description: "Firmware version string (e.g., 'SAPPHIRE-H_xxx')"
+    default: "SAPPHIRE-H_xxx"
+
+  connection_type:
+    description: "Connection type (LAN or WINET)"
+    options: ["LAN", "WINET"]
+    default: "LAN"
+    sensor_availability:
+      # Some registers are only available via LAN connection
+      lan_only_sensors:
+
+      # Some registers are only available via WINET connection
+      winet_only_sensors:
+
+  # Filtering rules for dynamic register inclusion/exclusion
+  filter_rules:
+    # MPPT filtering - include only up to configured mppt_count
+    mppt_sensors:
+      - pattern: "mppt(\\d+)_.*"
+        max_number: "mppt_count"
+        exclude_above: true
+
+    # String current filtering - include only up to configured string_count
+    string_sensors:
+      - pattern: "string_(\\d+)_current"
+        max_number: "string_count"
+        exclude_above: true
+        exclude_if_zero: true  # Don't include any string sensors if string_count = 0
+
+    # Phase filtering - exclude phase B/C for single phase
+    phase_sensors:
+      - pattern: "phase_[bc]_.*"
+        exclude_if: "phases == 1"
+      - pattern: "meter_phase_[bc]_.*"
+        exclude_if: "phases == 1"
+
+# Sensors for read access (Input Registers)
+sensors:
+  # Device Information
+  - name: Sungrow inverter serial
+    unique_id: inverter_serial
+    group: "PV_device_info"
+    address: 4989 # reg 4990
+    input_type: input
+    data_type: string
+    count: 10
+    scan_interval: 600
+
+  - name: Sungrow device type code
+    unique_id: sungrow_device_type_code
+    group: "PV_device_info"
+    address: 4999 # reg 5000
+    input_type: input
+    data_type: uint16
+    scan_interval: 600
+    map:
+      # SG Series Device Type Codes (from Communication Protocol V1.1.53)
+      0x27: "SG30KTL"
+      0x26: "SG10KTL"
+      0x29: "SG12KTL"
+      0x28: "SG15KTL"
+      0x2A: "SG20KTL"
+      0x2C: "SG30KU"
+      0x2D: "SG36KTL"
+      0x2E: "SG36KU"
+      0x2F: "SG40KTL"
+      0x0135: "SG40KTL-M"
+      0x011B: "SG50KTL-M"
+      0x0131: "SG60KTL-M"
+      0x0136: "SG60KU"
+      0x0141: "SG30KTL-M"
+      0x70: "SG30KTL-M-V31"
+      0x0134: "SG33KTL-M"
+      0x74: "SG36KTL-M"
+      0x013D: "SG33K3J"
+      0x0137: "SG49K5J"
+      0x72: "SG34KJ"
+      0x73: "LP_P34KSG"
+      0x010F: "SG60KTL"
+      0x0138: "SG80KTL"
+      0x0132: "SG60KU-M"
+      0x0147: "SG5KTL-MT"
+      0x0148: "SG6KTL-MT"
+      0x013F: "SG8KTL-M"
+      0x013E: "SG10KTL-M"
+      0x2C0F: "SG10KTL-MT"
+      0x013C: "SG12KTL-M"
+      0x0142: "SG15KTL-M"
+      0x0149: "SG17KTL-M"
+      0x0143: "SG20KTL-M"
+      0x0139: "SG80KTL-M"
+      0x014C: "SG111HV"
+      0x013B: "SG125HV"
+      0x2C03: "SG125HV-20"
+      0x2C10: "SG30CX"
+      0x2C00: "SG33CX"
+      0x2C0A: "SG36CX-US"
+      0x2C01: "SG40CX"
+      0x2C02: "SG50CX"
+      0x2C0B: "SG60CX-US"
+      0x2C21: "SG49.5CX-JP"
+      0x2C06: "SG110CX"
+      0x2C0C: "SG250HX"
+      0x2C11: "SG250HX-US"
+      0x2C12: "SG100CX"
+      0x2C13: "SG250HX-IN"
+      0x2C15: "SG25CX-SA"
+      0x2C1C: "SG125HX"
+      0x2C22: "SG75CX"
+      # RT Series
+      0x243D: "SG3.0RT"
+      0x243E: "SG4.0RT"
+      0x2430: "SG5.0RT"
+      0x2431: "SG6.0RT"
+      0x243C: "SG7.0RT"
+      0x2432: "SG8.0RT"
+      0x2433: "SG10RT"
+      0x2434: "SG12RT"
+      0x2435: "SG15RT"
+      0x2436: "SG17RT"
+      0x2437: "SG20RT"
+      0x2438: "SG22RT"
+      0x243B: "SG23RT"
+      0x2439: "SG25RT"
+      # RT-P2 Series
+      0x244D: "SG3.0RT-P2"
+      0x244E: "SG4.0RT-P2"
+      0x2440: "SG5.0RT-P2"
+      0x2441: "SG6.0RT-P2"
+      0x244C: "SG7.0RT-P2"
+      0x2442: "SG8.0RT-P2"
+      0x2443: "SG10RT-P2"
+      0x2444: "SG12RT-P2"
+      0x2445: "SG15RT-P2"
+      0x2446: "SG17RT-P2"
+      0x2447: "SG20RT-P2"
+      0x244B: "SG23RT-P2"
+      0x2449: "SG25RT-P2"
+      # RS Series
+      0x260D: "SG5.5RS-JP"
+      0x2600: "SG2.0RS-S"
+      0x2601: "SG2.5RS-S"
+      0x2602: "SG3.0RS-S"
+      0x2603: "SG3.0RS"
+      0x2604: "SG3.6RS"
+      0x2605: "SG4.0RS"
+      0x2606: "SG5.0RS"
+      0x2607: "SG6.0RS"
+      0x2608: "SG8.0RS"
+      0x260E: "SG9.0RS"
+      0x2609: "SG10RS"
+      0x260F: "SG5.0RS-ADA"
+      # HX Series
+      0x2C25: "SG125HX-JP"
+      0x2C26: "SG320HX"
+      0x2C27: "SG350HX"
+      0x2C2D: "SG125CX-P2"
+      0x2C40: "SG110CX-P2"
+      0x2C3F: "SG75CX-P2"
+      0x2C43: "SG285HX"
+      0x2C46: "SG333HX"
+      0x2C4F: "SG350HX-US"
+      # CX-P2 Series
+      0x2C33: "SG25CX-P2"
+      0x2C34: "SG30CX-P2"
+      0x2C35: "SG33CX-P2"
+      0x2C36: "SG36CX-P2"
+      0x2C37: "SG40CX-P2"
+      0x2C32: "SG50CX-P2"
+    group: "PV_device_info"
+
+  # SG-specific Basic Registers
+  - name: Output type
+    unique_id: output_type
+    group: "PV_device_info"
+    address: 5001 # reg 5002
+    input_type: input
+    data_type: uint16
+    scan_interval: 600
+    map:
+      0: "Two phase"
+      1: "3P4L"
+      2: "3P3L"
+
+  - name: Daily PV generation
+    unique_id: daily_pv_generation
+    group: "PV_daily_energy"
+    address: 5002 # reg 5003
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 60
+    icon: "mdi:solar-power"
+
+  - name: Total PV generation
+    unique_id: total_pv_generation
+    group: "PV_total_energy"
+    address: 5003 # reg 5004-5005
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    scan_interval: 300
+    icon: "mdi:solar-power"
+
+  - name: Total running time
+    unique_id: total_running_time
+    group: "PV_status"
+    address: 5005 # reg 5006-5007
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "h"
+    device_class: "duration"
+    state_class: "total_increasing"
+    scan_interval: 300
+    icon: "mdi:clock"
+
+  - name: Inverter temperature
+    unique_id: inverter_temperature
+    group: "PV_temperature"
+    address: 5007 # reg 5008
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: °C
+    device_class: "temperature"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Total apparent power
+    unique_id: total_apparent_power
+    group: "PV_total_power"
+    address: 5008 # reg 5009-5010
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "VA"
+    device_class: "apparent_power"
+    state_class: measurement
+    scan_interval: 5
+    icon: "mdi:flash"
+
+  # MPPT Data (will be filtered based on mppt_count)
+  - name: MPPT1 voltage
+    unique_id: mppt1_voltage
+    group: "PV_mppt_voltage"
+    address: 5010 # reg 5011
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT1 current
+    unique_id: mppt1_current
+    group: "PV_mppt_current"
+    address: 5011 # reg 5012
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: A
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT2 voltage
+    unique_id: mppt2_voltage
+    group: "PV_mppt_voltage"
+    address: 5012 # reg 5013
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT2 current
+    unique_id: mppt2_current
+    group: "PV_mppt_current"
+    address: 5013 # reg 5014
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: A
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT3 voltage
+    unique_id: mppt3_voltage
+    group: "PV_mppt_voltage"
+    address: 5014 # reg 5015
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT3 current
+    unique_id: mppt3_current
+    group: "PV_mppt_current"
+    address: 5015 # reg 5016
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: A
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Total DC power
+    unique_id: total_dc_power
+    group: "PV_total_dc_power"
+    address: 5016 # reg 5017-5018
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    group: "PV_total_dc_power"
+
+  # Phase Data (will be filtered based on phases)
+  - name: Phase A voltage
+    unique_id: phase_a_voltage
+    address: 5018 # reg 5019
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Phase B voltage
+    unique_id: phase_b_voltage
+    address: 5019 # reg 5020
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Phase C voltage
+    unique_id: phase_c_voltage
+    address: 5020 # reg 5021
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Phase A current
+    unique_id: phase_a_current
+    address: 5021 # reg 5022
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Phase B current
+    unique_id: phase_b_current
+    address: 5022 # reg 5023
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Phase C current
+    unique_id: phase_c_current
+    address: 5023 # reg 5024
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Total active power
+    unique_id: total_active_power
+    address: 5030 # reg 5031-5032
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 5
+
+  - name: Reactive power
+    unique_id: reactive_power
+    address: 5032 # reg 5033
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    offset: 0
+    scan_interval: 10
+    group: "PV_power_measurement"
+
+  - name: "Load Adjustment Mode"
+    unique_id: "load_adjustment_mode_selection_raw"
+    address: 5034
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 10
+    map:
+      0x55: "OFF"
+      0xA1: "Power factor setting"
+      0xA2: "Reactive power percentage"
+      0xA3: "Enabled Q(P) Curve"
+      0xA4: "Enable Q(U) Curve"
+    group: "PV_modes"
+
+  - name: Grid frequency
+    unique_id: grid_frequency
+    group: "PV_grid_status"
+    address: 5035 # reg 5036
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "Hz"
+    device_class: "frequency"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    group: "PV_grid_status"
+
+  - name: Work state
+    unique_id: work_state
+    address: 5037 # reg 5038
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    map:
+      0x0: "Run"
+      0x8000: "Stop"
+      0x1300: "Key stop"
+      0x1500: "Emergency Stop"
+      0x1400: "Standby"
+      0x1200: "Initial standby"
+      0x1600: "Starting"
+      0x9100: "Alarm run"
+      0x8100: "Derating run"
+      0x8200: "Dispatch run"
+      0x5500: "Fault"
+      0x2500: "Communicate fault"
+      0x1111: "Uninitialized"
+
+  - name: "Running State"
+    unique_id: "running_state"
+    group: "PV_status"
+    address: 5080 # reg 5081
+    input_type: input
+    data_type: uint16
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    group: "PV_status"
+    # Map for status codes
+    map:
+      0: "Stop"
+      1: "Running"
+      2: "Standby"
+      3: "Fault"
+      4: "Warning"
+
+  - name: Meter active power raw
+    unique_id: meter_active_power_raw
+    address: 5082 # reg 5083-5084
+    input_type: input
+    data_type: int32
+    swap: word
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 5
+
+  - name: "Load Power"
+    unique_id: "load_power"
+    group: "PV_load_power"
+    address: 5090 # reg 5091
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "W"
+    device_class: power
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    group: "PV_load_power"
+
+  - name: Daily exported energy
+    unique_id: daily_exported_energy
+    address: 5092 # reg 5093-5094
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scale: 0.1
+    scan_interval: 60
+
+  - name: Total exported energy
+    unique_id: total_exported_energy
+    address: 5094 # reg 5095-5096
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    scale: 0.1
+    scan_interval: 300
+
+  - name: "Daily Imported Energy"
+    unique_id: "daily_imported_energy"
+    group: "PV_energy_import"
+    address: 5096 # reg 5097
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+    group: "PV_energy_import"
+
+  - name: "Total Imported Energy"
+    unique_id: "total_imported_energy"
+    group: "PV_energy_import"
+    address: 5098 # reg 5099
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total
+    scale: 1
+    scan_interval: 600
+    group: "PV_energy_import"
+
+  - name: "Daily Direct Energy Consumption"
+    unique_id: "daily_direct_energy_consumption"
+    group: "PV_energy_consumption"
+    address: 5100 # reg 5101
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 600
+    group: "PV_energy_consumption"
+
+  - name: "Total Direct Energy Consumption"
+    unique_id: "total_direct_energy_consumption"
+    group: "PV_energy_consumption"
+    address: 5102 # reg 5103
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: energy
+    state_class: total
+    scale: 1
+    scan_interval: 600
+    group: "PV_energy_consumption"
+
+  - name: Daily running time
+    unique_id: daily_running_time
+    address: 5112 # reg 5113
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "min"
+    device_class: "duration"
+    state_class: "total_increasing"
+    scale: 1
+    scan_interval: 300
+
+  # - name: Present country
+  #   unique_id: present_country
+  #   address: 5113 # reg 5114
+  #   input_type: input
+  #   data_type: uint16
+  #   scan_interval: 600
+
+  # Extended MPPT sensors (4-12) - will be filtered based on mppt_count
+  - name: MPPT4 voltage
+    unique_id: mppt4_voltage
+    group: "PV_mppt_voltage"
+    address: 5114 # reg 5115
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    group: "PV_mppt"
+
+  - name: MPPT4 current
+    unique_id: mppt4_current
+    group: "PV_mppt_current"
+    address: 5115 # reg 5116
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    group: "PV_mppt"
+
+  - name: MPPT5 voltage
+    unique_id: mppt5_voltage
+    group: "PV_mppt_voltage"
+    address: 5116 # reg 5117
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    group: "PV_mppt"
+
+  - name: MPPT5 current
+    unique_id: mppt5_current
+    group: "PV_mppt_current"
+    address: 5117 # reg 5118
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    group: "PV_mppt"
+
+  - name: MPPT6 voltage
+    unique_id: mppt6_voltage
+    group: "PV_mppt_voltage"
+    address: 5118 # reg 5119
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    group: "PV_mppt"
+
+  - name: MPPT6 current
+    unique_id: mppt6_current
+    group: "PV_mppt_current"
+    address: 5119 # reg 5120
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    group: "PV_mppt"
+
+  - name: Monthly PV generation
+    unique_id: monthly_pv_generation
+    address: 5127 # reg 5128-5129
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scale: 0.1
+    scan_interval: 300
+
+  # MPPT 7-12 sensors (continuation)
+  - name: MPPT7 voltage
+    unique_id: mppt7_voltage
+    group: "PV_mppt_voltage"
+    address: 5120 # reg 5121
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT7 current
+    unique_id: mppt7_current
+    group: "PV_mppt_current"
+    address: 5121 # reg 5122
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT8 voltage
+    unique_id: mppt8_voltage
+    group: "PV_mppt_voltage"
+    address: 5122 # reg 5123
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT8 current
+    unique_id: mppt8_current
+    group: "PV_mppt_current"
+    address: 5123 # reg 5124
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT9 voltage
+    unique_id: mppt9_voltage
+    group: "PV_mppt_voltage"
+    address: 5129 # reg 5130
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT9 current
+    unique_id: mppt9_current
+    group: "PV_mppt_current"
+    address: 5130 # reg 5131
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT10 voltage
+    unique_id: mppt10_voltage
+    group: "PV_mppt_voltage"
+    address: 5131 # reg 5132
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT10 current
+    unique_id: mppt10_current
+    group: "PV_mppt_current"
+    address: 5132 # reg 5133
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT11 voltage
+    unique_id: mppt11_voltage
+    group: "PV_mppt_voltage"
+    address: 5133 # reg 5134
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT11 current
+    unique_id: mppt11_current
+    group: "PV_mppt_current"
+    address: 5134 # reg 5135
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT12 voltage
+    unique_id: mppt12_voltage
+    group: "PV_mppt_voltage"
+    address: 5135 # reg 5136
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: MPPT12 current
+    unique_id: mppt12_current
+    group: "PV_mppt_current"
+    address: 5136 # reg 5137
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  # Work Status registers
+  - name: Work status 1
+    unique_id: work_status_1
+    address: 5139 # reg 5140
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    map:
+      0: "Standby"
+      1: "Running"
+      2: "Derating"
+      3: "Quota"
+      4: "Scheduled outage"
+      5: "Limit outage"
+      6: "Error outage"
+
+  - name: Work status 2
+    unique_id: work_status_2
+    address: 5140 # reg 5141
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    map:
+      1: "Running"
+      2: "Shut down"
+      3: "Overhaul"
+      4: "Standby"
+
+  - name: Heart beat
+    unique_id: heart_beat
+    address: 5142 # reg 5143
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+
+  - name: Total PV Generation (high precision)
+    unique_id: total_pv_generation_high_precision
+    group: "PV_total_energy"
+    address: 5143 # reg 5144-5145
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    scale: 0.1
+    scan_interval: 300
+
+  - name: Negative voltage to ground
+    unique_id: negative_voltage_ground
+    address: 5145 # reg 5146
+    input_type: input
+    data_type: int16
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 30
+
+  - name: Bus voltage
+    unique_id: bus_voltage
+    address: 5146 # reg 5147
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Grid frequency (high precision)
+    unique_id: grid_frequency_hp
+    address: 5147 # reg 5148
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "Hz"
+    device_class: "frequency"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 10
+
+  - name: PID work state
+    unique_id: pid_work_state
+    address: 5149 # reg 5150
+    input_type: input
+    data_type: uint16
+    scan_interval: 60
+    map:
+      2: "PID Recover Operation"
+      4: "Anti-PID Operation"
+      8: "PID Abnormity"
+
+  - name: PID alarm code
+    unique_id: pid_alarm_code
+    address: 5150 # reg 5151
+    input_type: input
+    data_type: uint16
+    scan_interval: 60
+    map:
+      432: "PID resistance abnormal"
+      433: "PID function abnormal"
+      434: "PID overvoltage/overcurrent protection"
+
+  # String Current sensors (7013-7044) - Important for diagnostics
+  - name: String 1 current
+    unique_id: string_1_current
+    address: 7012 # reg 7013
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+    group: "PV_strings"
+
+  - name: String 2 current
+    unique_id: string_2_current
+    address: 7013 # reg 7014
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+    group: "PV_strings"
+
+  - name: String 3 current
+    unique_id: string_3_current
+    address: 7014 # reg 7015
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+    group: "PV_strings"
+
+  - name: String 4 current
+    unique_id: string_4_current
+    address: 7015 # reg 7016
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+    group: "PV_strings"
+
+  - name: String 5 current
+    unique_id: string_5_current
+    address: 7016 # reg 7017
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+    group: "PV_strings"
+
+  - name: String 6 current
+    unique_id: string_6_current
+    address: 7017 # reg 7018
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+    group: "PV_strings"
+
+  - name: String 7 current
+    unique_id: string_7_current
+    address: 7018 # reg 7019
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+    group: "PV_strings"
+
+  - name: String 8 current
+    unique_id: string_8_current
+    address: 7019 # reg 7020
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 30
+    group: "PV_strings"
+
+# Controls for write access (Holding Registers)
+controls:
+
+  # # System Clock Controls
+  # - type: "number"
+  #   name: "System clock: Year"
+  #   unique_id: "system_clock_year"
+  #   address: 4999 # reg 5000
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   group: "PV_control"
+
+  # - type: "number"
+  #   name: "System clock: Month"
+  #   unique_id: "system_clock_month"
+  #   address: 5000 # reg 5001
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   group: "PV_control"
+
+  # - type: "number"
+  #   name: "System clock: Day"
+  #   unique_id: "system_clock_day"
+  #   address: 5001 # reg 5002
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   group: "PV_control"
+
+  # - type: "number"
+  #   name: "System clock: Hour"
+  #   unique_id: "system_clock_hour"
+  #   address: 5002 # reg 5003
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   group: "PV_control"
+
+  # - type: "number"
+  #   name: "System clock: Minute"
+  #   unique_id: "system_clock_minute"
+  #   address: 5003 # reg 5004
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   group: "PV_control"
+
+  # - type: "number"
+  #   name: "System clock: Second"
+  #   unique_id: "system_clock_second"
+  #   address: 5004 # reg 5005
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   group: "PV_control"
+
+
+  - type: "select"
+    name: "Start/Stop Control"
+    unique_id: "start_stop_control"
+    address: 5005 # reg 5006
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xCF: "Start"
+      0xCE: "Stop"
+    group: "PV_control"
+
+  - type: "select"
+    name: "Power Limitation Switch"
+    unique_id: "power_limitation_switch"
+    address: 5006 # reg 5007
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+
+  - type: "number"
+    name: "Power Limitation Setting"
+    unique_id: "power_limitation_setting"
+    address: 5007 # reg 5008
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "%"
+    scale: 0.1
+    min: 0
+    max: 1100
+    step: 1
+    scan_interval: 30
+    group: "PV_control"
+
+  # Additional SG-specific control registers
+  - type: "select"
+    name: "Export Power Limitation"
+    unique_id: "export_power_limitation"
+    address: 5009 # reg 5010
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+
+  - type: "number"
+    name: "Export Power Limitation Value"
+    unique_id: "export_power_limitation_value"
+    address: 5010 # reg 5011
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "W"
+    min: 0
+    max: 50000
+    step: 100
+    scan_interval: 30
+    group: "PV_control"
+
+  - type: "number"
+    name: "Current Transformer Output Current"
+    unique_id: "ct_output_current"
+    address: 5011 # reg 5012
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "A"
+    min: 1
+    max: 100
+    step: 1
+    scan_interval: 60
+    group: "PV_control"
+
+  - type: "number"
+    name: "Current Transformer Range"
+    unique_id: "ct_range"
+    address: 5012 # reg 5013
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "A"
+    min: 1
+    max: 10000
+    step: 1
+    scan_interval: 60
+    group: "PV_control"
+
+  - type: "select"
+    name: "Current Transformer Type"
+    unique_id: "ct_type"
+    address: 5013 # reg 5014
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    options:
+      0: "Internal"
+      1: "External"
+    group: "PV_control"
+
+  - type: "number"
+    name: "Export Power Limitation Percentage"
+    unique_id: "export_power_limitation_percentage"
+    address: 5014 # reg 5015
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "%"
+    scale: 0.1
+    min: 0
+    max: 100
+    step: 0.1
+    scan_interval: 30
+    group: "PV_control"
+
+  # - type: "number"
+  #   name: "Installed PV Power"
+  #   unique_id: "installed_pv_power"
+  #   address: 5015 # reg 5016
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   unit_of_measurement: "kW"
+  #   scale: 0.01
+  #   min: 0
+  #   max: 300
+  #   step: 0.01
+  #   scan_interval: 300
+  #   group: "PV_control"
+
+  - type: "number"
+    name: "Power Factor Setting"
+    unique_id: "power_factor_setting"
+    address: 5018 # reg 5019
+    input_type: "holding"
+    data_type: "int16"
+    scale: 0.001
+    min: -1.0
+    max: 1.0
+    step: 0.001
+    scan_interval: 30
+    group: "PV_control"
+
+  # Power Control Controls
+  - type: "select"
+    name: "Active Power Overload"
+    unique_id: "active_power_overload"
+    address: 5019 # reg 5020
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+    # Note: Check for valid inverters
+
+  # - type: "number"
+  #   name: "Local / remote control"
+  #   unique_id: "local_remote_control"
+  #   address: 5020 # reg 5021
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   group: "PV_control"
+
+  # Grid Control Controls
+  - type: "select"
+    name: "Night SVG Switch"
+    unique_id: "night_svg_switch"
+    address: 5034 # reg 5035
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+    # Note: Check for valid inverters
+
+  - type: "select"
+    name: "Reactive power adjustment mode"
+    unique_id: "reactive_power_adjustment_mode"
+    address: 5035 # reg 5036
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0x55: "OFF"
+      0xA1: "Power factor setting"
+      0xA2: "Reactive power percentage"
+      0xA3: "Q(P) curve"
+      0xA4: "Q(U) curve"
+    group: "PV_control"
+    # Note: The SG5.5RS-JP doesn't support 0xA2, 0xA3, 0xA4
+
+  - type: "number"
+    name: "Reactive power percentage setting"
+    unique_id: "reactive_power_percentage_setting"
+    address: 5036 # reg 5037
+    input_type: "holding"
+    data_type: "int16"
+    scan_interval: 30
+    unit_of_measurement: "0.1%"
+    group: "PV_control"
+    # Note: Available when reactive power adjustment mode is set to 0xA2
+
+  # Advanced Power Controls
+  - type: "number"
+    name: "Power limitation adjustment"
+    unique_id: "power_limitation_adjustment"
+    address: 5038 # reg 5039
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    unit_of_measurement: "0.1kW"
+    group: "PV_control"
+    # Note: Available when power limitation switch is enabled, Except SG5.5RS-JP
+
+  - type: "number"
+    name: "Reactive power adjustment"
+    unique_id: "reactive_power_adjustment"
+    address: 5039 # reg 5040
+    input_type: "holding"
+    data_type: "int16"
+    scan_interval: 30
+    unit_of_measurement: "0.1kVar"
+    group: "PV_control"
+    # Note: Check for valid inverters
+
+  # PID Controls
+  - type: "select"
+    name: "PID Recovery"
+    unique_id: "pid_recovery"
+    address: 5040 # reg 5041
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+    # Note: Check for valid inverters
+
+  - type: "select"
+    name: "Anti-PID"
+    unique_id: "anti_pid"
+    address: 5041 # reg 5042
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+    # Note: Check for valid inverters
+
+  - type: "select"
+    name: "Full-Day PID Suppression"
+    unique_id: "full_day_pid_suppression"
+    address: 5042 # reg 5043
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+    # Note: Check for valid inverters
+
+  # Grid Dispatch Controls
+  - type: "select"
+    name: "Quick grid dispatch mode"
+    unique_id: "quick_grid_dispatch_mode"
+    address: 32568 # reg 32569
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+    # Note: Check for valid inverters
+
+  - type: "select"
+    name: "Swift grid dispatch mode"
+    unique_id: "swift_grid_dispatch_mode"
+    address: 32569 # reg 32570
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control"
+    # Note: Check for valid inverters
+
+# Calculated Sensors
+calculated:
+  # MPPT Power Calculations
+  - name: "MPPT1 Power"
+    unique_id: "mppt1_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt1_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt1_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt1_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt1_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT2 Power"
+    unique_id: "mppt2_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt2_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt2_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt2_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT3 Power"
+    unique_id: "mppt3_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt3_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt3_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt3_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt3_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  # Extended MPPT Power calculations (4-12)
+  - name: "MPPT4 Power"
+    unique_id: "mppt4_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt4_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt4_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt4_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt4_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT5 Power"
+    unique_id: "mppt5_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt5_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt5_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt5_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt5_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT6 Power"
+    unique_id: "mppt6_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt6_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt6_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt6_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt6_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "Total MPPT Power"
+    unique_id: "total_mppt_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt1_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt1_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt2_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt2_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt3_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt3_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt4_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt4_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt5_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt5_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt6_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt6_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt7_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt7_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt8_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt8_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt9_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt9_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt10_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt10_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt11_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt11_current', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt12_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt12_current', 'unavailable')
+      }}
+    state: >-
+      {% set mppt1_voltage = states('sensor.{PREFIX}_mppt1_power_mppt1_voltage') %}
+      {% set mppt1_current = states('sensor.{PREFIX}_mppt1_current') %}
+      {% set mppt2_voltage = states('sensor.{PREFIX}_mppt2_voltage') %}
+      {% set mppt2_current = states('sensor.{PREFIX}_mppt2_current') %}
+      {% set mppt3_voltage = states('sensor.{PREFIX}_mppt3_voltage') %}
+      {% set mppt3_current = states('sensor.{PREFIX}_mppt3_current') %}
+      {% set mppt4_voltage = states('sensor.{PREFIX}_mppt4_voltage') %}
+      {% set mppt4_current = states('sensor.{PREFIX}_mppt4_current') %}
+      {% set mppt5_voltage = states('sensor.{PREFIX}_mppt5_voltage') %}
+      {% set mppt5_current = states('sensor.{PREFIX}_mppt5_current') %}
+      {% set mppt6_voltage = states('sensor.{PREFIX}_mppt6_voltage') %}
+      {% set mppt6_current = states('sensor.{PREFIX}_mppt6_current') %}
+      {% set mppt7_voltage = states('sensor.{PREFIX}_mppt7_voltage') %}
+      {% set mppt7_current = states('sensor.{PREFIX}_mppt7_current') %}
+      {% set mppt8_voltage = states('sensor.{PREFIX}_mppt8_voltage') %}
+      {% set mppt8_current = states('sensor.{PREFIX}_mppt8_current') %}
+      {% set mppt9_voltage = states('sensor.{PREFIX}_mppt9_voltage') %}
+      {% set mppt9_current = states('sensor.{PREFIX}_mppt9_current') %}
+      {% set mppt10_voltage = states('sensor.{PREFIX}_mppt10_voltage') %}
+      {% set mppt10_current = states('sensor.{PREFIX}_mppt10_current') %}
+      {% set mppt11_voltage = states('sensor.{PREFIX}_mppt11_voltage') %}
+      {% set mppt11_current = states('sensor.{PREFIX}_mppt11_current') %}
+      {% set mppt12_voltage = states('sensor.{PREFIX}_mppt12_voltage') %}
+      {% set mppt12_current = states('sensor.{PREFIX}_mppt12_current') %}
+
+      {% set mppt1_power = (mppt1_voltage | float(0)) * (mppt1_current | float(0)) %}
+      {% set mppt2_power = (mppt2_voltage | float(0)) * (mppt2_current | float(0)) %}
+      {% set mppt3_power = (mppt3_voltage | float(0)) * (mppt3_current | float(0)) %}
+      {% set mppt4_power = (mppt4_voltage | float(0)) * (mppt4_current | float(0)) %}
+      {% set mppt5_power = (mppt5_voltage | float(0)) * (mppt5_current | float(0)) %}
+      {% set mppt6_power = (mppt6_voltage | float(0)) * (mppt6_current | float(0)) %}
+      {% set mppt7_power = (mppt7_voltage | float(0)) * (mppt7_current | float(0)) %}
+      {% set mppt8_power = (mppt8_voltage | float(0)) * (mppt8_current | float(0)) %}
+      {% set mppt9_power = (mppt9_voltage | float(0)) * (mppt9_current | float(0)) %}
+      {% set mppt10_power = (mppt10_voltage | float(0)) * (mppt10_current | float(0)) %}
+      {% set mppt11_power = (mppt11_voltage | float(0)) * (mppt11_current | float(0)) %}
+      {% set mppt12_power = (mppt12_voltage | float(0)) * (mppt12_current | float(0)) %}
+
+      {{ mppt1_power + mppt2_power + mppt3_power + mppt4_power + mppt5_power + mppt6_power + mppt7_power + mppt8_power + mppt9_power + mppt10_power + mppt11_power + mppt12_power }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_total_power"
+
+  - name: "Import Power"
+    unique_id: "import_power"
+    type: "sensor"
+    availability: "{{ not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable') }}"
+    state: >-
+      {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
+      {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
+        0
+      {% elif (export_power|int) < 0 %}
+        {{ (export_power|int) *-1 }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_grid_power"
+
+  - name: "Export Power"
+    unique_id: "export_power"
+    type: "sensor"
+    availability: "{{states('sensor.{PREFIX}_export_power_raw')|is_number }}"
+    state: >-
+      {% if states('sensor.{PREFIX}_export_power_raw')|int > 0 %}
+        {{ states('sensor.{PREFIX}_export_power_raw') }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_grid_power"
+
+  - name: "Total Load Power"
+    unique_id: "total_load_power"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_load_power', 'unavailable') }}
+    state: "{{ states('sensor.{PREFIX}_load_power') | default(0) | float }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_load_power"
+
+  # System Efficiency Calculations
+  - name: "Solar to Grid Efficiency"
+    unique_id: "solar_to_grid_efficiency"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+      }}
+    state: "{% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}{% set grid = states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float %}{% if pv > 0 and grid < 0 %}{{ (grid | abs / pv * 100) | round(1) }}{% else %}0{% endif %}"
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_efficiency"
+
+  - name: "Battery to Load Efficiency"
+    unique_id: "battery_to_load_efficiency"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_pv_generation', 'unavailable')
+      and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
+      }}
+    state: "{% set pv = states('sensor.{PREFIX}_total_pv_generation') | default(0) | float %}{% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}{% if pv > 0 %}{{ (load / pv * 100) | round(1) }}{% else %}0{% endif %}"
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_efficiency"
+
+  # Power Balance Calculations
+  - name: "Power Balance"
+    unique_id: "power_balance"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_total_dc_power') | default(0) | float) + (states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float) - (states('sensor.{PREFIX}_load_power') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_power_balance"
+
+  # Individual Phase Power Calculations
+  - name: "Phase A Power"
+    unique_id: "phase_a_power"
+    group: "PV_phase_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_phase_a_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_phase_a_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_phase_a_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_a_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_phase_power"
+
+  - name: "Phase B Power"
+    unique_id: "phase_b_power"
+    group: "PV_phase_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_phase_b_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_phase_b_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_phase_b_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_b_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_phase_power"
+
+  - name: "Phase C Power"
+    unique_id: "phase_c_power"
+    group: "PV_phase_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_phase_c_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_phase_c_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_phase_c_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_c_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_phase_power"
+
+  # calculated sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
+  - name: "Meter Active Power"
+    unique_id: "meter_active_power"
+    type: "sensor"
+    availability: >-
+          {{
+          not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+          and states('sensor.{PREFIX}_meter_active_power_raw')|int != 0x7FFFFFFF
+          }}
+    state: "{{ states('sensor.{PREFIX}meter_active_power_raw') }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+
+  # Energy Consumption Calculations
+  - name: "Daily consumed energy"
+    unique_id: "daily_consumed_energy"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_daily_pv_generation', 'unavailable')
+      and not is_state('sensor.{PREFIX}_daily_exported_energy', 'unavailable')
+      and not is_state('sensor.{PREFIX}_daily_imported_energy', 'unavailable')
+      }}
+    state: >-
+      {{
+        (
+          states('sensor.{PREFIX}_daily_pv_generation')|float
+          - states('sensor.{PREFIX}_daily_exported_energy')|float
+          + states('sensor.{PREFIX}_daily_imported_energy')|float
+        )
+      }}
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    group: "PV_daily_consumed_energy"
+
+  - name: "Total consumed energy"
+    unique_id: "total_consumed_energy"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_pv_generation', 'unavailable')
+      and not is_state('sensor.{PREFIX}_total_exported_energy', 'unavailable')
+      and not is_state('sensor.{PREFIX}_total_imported_energy', 'unavailable')
+      }}
+    state: >-
+      {{
+        (
+          states('sensor.{PREFIX}_total_pv_generation')|float
+          - states('sensor.{PREFIX}_total_exported_energy')|float
+          + states('sensor.{PREFIX}_total_imported_energy')|float
+        )
+      }}
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    group: "PV_total_consumed_energy"
+
+  ## some additional calculated sensors ideas
+  - name: "Inverter Status Display"
+    unique_id: "inverter_status_display"
+    type: "sensor"
+    state: >-
+      {% set power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set temp = states('sensor.{PREFIX}_inverter_temperature') | default(0) | float %}
+      {% if power > 1000 %}
+        High Production
+      {% elif power > 100 %}
+        Normal Production
+      {% elif power > 0 %}
+        Low Production
+      {% else %}
+        Standby
+      {% endif %}
+    icon_template: >-
+      {% set power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set temp = states('sensor.{PREFIX}_inverter_temperature') | default(0) | float %}
+      {% if temp > 70 %}
+        mdi:alert-circle
+      {% elif power > 1000 %}
+        mdi:solar-power
+      {% elif power > 100 %}
+        mdi:solar-panel
+      {% elif power > 0 %}
+        mdi:solar-panel-large
+      {% else %}
+        mdi:power-sleep
+      {% endif %}
+    group: "PV_status"
+
+  - name: "Grid Status"
+    unique_id: "grid_status"
+    type: "sensor"
+    state: >-
+      {% set import_power = states('sensor.{PREFIX}_meter_active_power') | default(0) | float %}
+      {% if import_power > 100 %}
+        Importing
+      {% elif import_power < -100 %}
+        Exporting
+      {% else %}
+        Balanced
+      {% endif %}
+    icon_template: >-
+      {% set import_power = states('sensor.{PREFIX}_meter_active_power') | default(0) | float %}
+      {% if import_power > 500 %}
+        mdi:transmission-tower-import
+      {% elif import_power > 100 %}
+        mdi:transmission-tower
+      {% elif import_power < -500 %}
+        mdi:transmission-tower-export
+      {% elif import_power < -100 %}
+        mdi:transmission-tower-off
+      {% else %}
+        mdi:scale-balance
+      {% endif %}
+    group: "PV_grid_status"
+
+  # Additional MPPT Power Calculations (MPPT 7-16)
+  - name: "MPPT7 Power"
+    unique_id: "mppt7_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt7_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt7_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt7_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt7_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT8 Power"
+    unique_id: "mppt8_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt8_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt8_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt8_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt8_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT9 Power"
+    unique_id: "mppt9_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt9_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt9_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt9_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt9_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT10 Power"
+    unique_id: "mppt10_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt10_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt10_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt10_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt10_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT11 Power"
+    unique_id: "mppt11_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt11_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt11_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt11_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt11_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT12 Power"
+    unique_id: "mppt12_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt12_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt12_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt12_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt12_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+# Binary Sensors
+binary_sensors:
+  # Binary Sensors for Status Monitoring
+  - name: "PV generating"
+    unique_id: "pv_generating"
+    type: "binary_sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int |bitwise_and(0x1)) > 0 }}
+      {% else %}
+        {# workaround for SH*RS inverters without working running_state #}
+        {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
+        {% if total_dc_power in ['unknown', 'unavailable', 'none'] or total_dc_power is none %}
+          0
+        {% elif (total_dc_power|int) > 0 %}
+          1
+        {% else %}
+          0
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "PV_binary_status"
+
+  - name: "PV generating (delay)"
+    unique_id: "pv_generating_delay"
+    type: "binary_sensor"
+    availability: "{{ not is_state('binary_sensor.{PREFIX}_pv_generating', 'unavailable') }}"
+    delay_on:
+      seconds: 60
+    state: "{{ states('binary_sensor.{PREFIX}_pv_generating') }}"
+    device_class: "power"
+    group: "PV_binary_status"
+
+  - name: "Exporting power"
+    unique_id: "exporting_power"
+    type: "binary_sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x10)) > 0 }}
+      {% else %}
+        {# workaround for SH*RS inverters without working running_state #}
+        {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
+        {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
+          0
+        {% elif (export_power|int) > 0 %}
+          1
+        {% else %}
+          0
+        {% endif %}
+      {% endif %}
+    device_class: "battery"
+    group: "PV_binary_status"
+
+  - name: "Exporting power (delay)"
+    unique_id: "exporting_power_delay"
+    type: "binary_sensor"
+    availability: "{{ not is_state('binary_sensor.{PREFIX}_exporting_power', 'unavailable') }}"
+    delay_on:
+      seconds: 60
+    state: "{{ states('binary_sensor.{PREFIX}_exporting_power') }}"
+    device_class: "power"
+    group: "PV_binary_status"
+
+  - name: "Importing power"
+    unique_id: "importing_power"
+    type: "binary_sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      and not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x20)) > 0 }}
+      {% else %}
+        {# workaround for SH*RS inverters without working running_state #}
+        {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
+        {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
+          0
+        {% elif (export_power|int) < 0 %}
+          1
+        {% else %}
+          0
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "PV_binary_status"
+
+  - name: "Importing power (delay)"
+    unique_id: "importing_power_delay"
+    type: "binary_sensor"
+    availability: "{{ not is_state('binary_sensor.{PREFIX}_importing_power', 'unavailable') }}"
+    delay_on:
+      seconds: 60
+    state: "{{ states('binary_sensor.{PREFIX}_importing_power') }}"
+    device_class: "power"
+    group: "PV_binary_status"
+
+  - name: "Positive load power"
+    unique_id: "positive_load_power"
+    type: "binary_sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x8)) > 0 }}
+      {% else %}
+        {# workaround for SH*RS inverters without working running_state #}
+        {% set load_power = states('sensor.{PREFIX}_load_power') %}
+        {% if load_power in ['unknown', 'unavailable', 'none'] or load_power is none %}
+          0
+        {% elif (load_power|int) > 0 %}
+          1
+        {% else %}
+          0
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "PV_binary_status"
+
+  - name: "Negative load power"
+    unique_id: "negative_load_power"
+    type: "binary_sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_running_state', 'unavailable')
+      }}
+    state: >-
+      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
+        {# use available sensor running_state #}
+        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x80)) > 0 }}
+      {% else %}
+        {# workaround for SH*RS inverters without working running_state #}
+        {% set load_power = states('sensor.{PREFIX}_load_power') %}
+        {% if load_power in ['unknown', 'unavailable', 'none'] or load_power is none %}
+          0
+        {% elif (load_power|int) < 0 %}
+          1
+        {% else %}
+          0
+        {% endif %}
+      {% endif %}
+    device_class: "power"
+    group: "PV_binary_status"

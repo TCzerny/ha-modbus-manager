@@ -1,0 +1,39 @@
+# Modbus Manager Services
+performance_monitor:
+  name: "Performance Monitor"
+  description: "Get performance metrics for Modbus Manager devices"
+  fields:
+    device_id:
+      name: "Device ID"
+      description: "The device ID to get metrics for (optional, if not provided returns global metrics)"
+      required: false
+      selector:
+        text:
+
+performance_reset:
+  name: "Performance Reset"
+  description: "Reset performance metrics for Modbus Manager devices"
+  fields:
+    device_id:
+      name: "Device ID"
+      description: "The device ID to reset metrics for (optional, if not provided resets global metrics)"
+      required: false
+      selector:
+        text:
+
+
+
+
+
+
+
+reload_templates:
+  name: "Reload Templates"
+  description: "Reload device templates and update entity attributes without restart"
+  fields:
+    entry_id:
+      name: "Config Entry ID"
+      description: "The config entry ID to reload templates for (optional, if not provided reloads all entries)"
+      required: false
+      selector:
+        text:

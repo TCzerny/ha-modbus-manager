@@ -1,0 +1,559 @@
+name: "Compleo eBox Professional"
+version: 2
+description: "Compleo eBox Professional EV Charger (Innogy eBox)"
+manufacturer: "Compleo"
+model: "eBox Professional"
+type: "ev_charger"
+firmware_version: "1.0.0"  # Default firmware version
+default_prefix: "eBox"  # Default prefix for entity names
+default_slave_id: 1
+
+# Dynamic configuration support (example for EV charger)
+dynamic_config:
+  phases:
+    description: "Number of phases"
+    options: [1, 3]
+    default: 3
+
+  max_current:
+    description: "Maximum current per phase"
+    options: [6, 10, 16, 20, 32]
+    default: 16
+
+  connectors:
+    description: "Number of connectors"
+    options: [1, 2]
+    default: 1
+
+  connection_type:
+    description: "Connection type"
+    options: ["LAN", "WiFi"]
+    default: "LAN"
+
+# Available firmware versions for user selection
+available_firmware_versions:
+  - "1.0.0"    # Basic functionality
+  - "1.1.18"   # Added voltage sensors and current meter reading
+  - "1.2.0"
+  - "Latest"
+
+# Device information sensors
+sensors:
+  # Device identification
+  - name: "ID"
+    unique_id: "id"
+    address: 0
+    input_type: "input"
+    data_type: "string"
+    count: 25
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:identifier"
+
+  - name: "Serial Number"
+    unique_id: "serial_number"
+    address: 25
+    input_type: "input"
+    data_type: "string"
+    count: 25
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:barcode"
+
+  - name: "Active Protocol"
+    unique_id: "active_protocol"
+    address: 50
+    input_type: "input"
+    data_type: "string"
+    count: 25
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:protocol"
+
+  - name: "Manufacturer"
+    unique_id: "manufacturer"
+    address: 100
+    input_type: "input"
+    data_type: "string"
+    count: 25
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:factory"
+
+  - name: "Firmware"
+    unique_id: "firmware"
+    address: 200
+    input_type: "input"
+    data_type: "string"
+    count: 25
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:chip"
+
+  # Charging status
+  - name: "Status"
+    unique_id: "status"
+    address: 275
+    input_type: "input"
+    data_type: "string"
+    count: 25
+    scan_interval: 120
+    group: "EV_charging_status"
+    icon: "mdi:ev-station"
+    map:
+      A: "not connected"
+      B1: "Connected but not ready for charging"
+      B2: "Connected ready for charging"
+      C1: "Charging without ventilation - not ready"
+      C2: "Charging without ventilation - ready"
+      D1: "Charging with ventilation - not ready"
+      D2: "Charging with ventilation - ready"
+      E: "Error"
+      F: "EVSE not available"
+
+  - name: "Cable Status"
+    unique_id: "cable_status"
+    address: 300
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 120
+    group: "EV_charging_status"
+    icon: "mdi:cable-data"
+    map:
+      0: "no cable"
+      1: "Cable without car"
+      2: "Cable unlocked without car"
+      3: "Cable locked with car"
+
+  # Current measurements
+  - name: "Current Phase 1"
+    unique_id: "current_phase_1"
+    address: 1006
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Current Phase 2"
+    unique_id: "current_phase_2"
+    address: 1008
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Current Phase 3"
+    unique_id: "current_phase_3"
+    address: 1010
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
+
+  # Actual max current (read-only)
+  - name: "Actual Max Current Phase 1"
+    unique_id: "actual_max_current_phase_1"
+    address: 1000
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_max_current_actual"
+    icon: "mdi:gauge"
+
+  - name: "Actual Max Current Phase 2"
+    unique_id: "actual_max_current_phase_2"
+    address: 1002
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_max_current_actual"
+    icon: "mdi:gauge"
+
+  - name: "Actual Max Current Phase 3"
+    unique_id: "actual_max_current_phase_3"
+    address: 1004
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_max_current_actual"
+    icon: "mdi:gauge"
+
+  # Voltage measurements (firmware >= 1.1.18)
+  - name: "Voltage Phase 1"
+    unique_id: "voltage_phase_1"
+    address: 301
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "1.1.18"
+
+  - name: "Voltage Phase 2"
+    unique_id: "voltage_phase_2"
+    address: 303
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "1.1.18"
+
+  - name: "Voltage Phase 3"
+    unique_id: "voltage_phase_3"
+    address: 305
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "1.1.18"
+
+  # Current meter reading (firmware >= 1.1.18, not validated)
+  - name: "Current Meter Reading"
+    unique_id: "current_meter_reading"
+    address: 307
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_meter_reading"
+    icon: "mdi:meter-electric"
+    firmware_min_version: "1.1.18"
+
+  # # Max current settings (holding registers)
+  # - name: "Max Current Phase 1"
+  #   unique_id: "max_current_phase_1"
+  #   address: 1012
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_current_control"
+  #   icon: "mdi:gauge"
+
+  # - name: "Max Current Phase 2"
+  #   unique_id: "max_current_phase_2"
+  #   address: 1013
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_current_control"
+  #   icon: "mdi:gauge"
+
+  # - name: "Max Current Phase 3"
+  #   unique_id: "max_current_phase_3"
+  #   address: 1014
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_current_control"
+  #   icon: "mdi:gauge"
+
+# Controls (holding registers - read/write)
+controls:
+  # Max current settings (holding registers)
+  - name: "Max Current Phase 1"
+    unique_id: "max_current_phase_1"
+    address: 1012
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_max_current_setting"
+    icon: "mdi:gauge"
+    min_value: 0
+    max_value: 16
+    step: 1
+
+  # TODO: maybe we can remove this since the wallbox will sync current set on one phase
+  # with the other phases
+  - name: "Max Current Phase 2"
+    unique_id: "max_current_phase_2"
+    address: 1014
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_max_current_setting"
+    icon: "mdi:gauge"
+    min_value: 0
+    max_value: 16
+    step: 1
+
+  - name: "Max Current Phase 3"
+    unique_id: "max_current_phase_3"
+    address: 1016
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_max_current_setting"
+    icon: "mdi:gauge"
+    min_value: 0
+    max_value: 16
+    step: 1
+
+  # Fallback max current settings
+  # - name: "Fallback Max Current Phase 1"
+  #   unique_id: "fallback_max_current_phase_1"
+  #   address: 1018
+  #   input_type: "holding"
+  #   data_type: "float32"
+  #   scan_interval: 10
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_fallback_current_setting"
+  #   icon: "mdi:gauge"
+  #   min_value: 0
+  #   max_value: 16
+  #   step: 1
+
+  # - name: "Fallback Max Current Phase 2"
+  #   unique_id: "fallback_max_current_phase_2"
+  #   address: 1020
+  #   input_type: "holding"
+  #   data_type: "float32"
+  #   scan_interval: 10
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_fallback_current_setting"
+  #   icon: "mdi:gauge"
+  #   min_value: 0
+  #   max_value: 16
+  #   step: 1
+
+  # - name: "Fallback Max Current Phase 3"
+  #   unique_id: "fallback_max_current_phase_3"
+  #   address: 1022
+  #   input_type: "holding"
+  #   data_type: "float32"
+  #   scan_interval: 10
+  #   unit_of_measurement: "A"
+  #   device_class: "current"
+  #   state_class: "measurement"
+  #   group: "EV_fallback_current_setting"
+  #   icon: "mdi:gauge"
+  #   min_value: 0
+  #   max_value: 16
+  #   step: 1
+
+  # # Fallback timer
+  # - name: "Remaining Time Before Fallback"
+  #   unique_id: "remaining_time_before_fallback"
+  #   address: 1024
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   precision: 0
+  #   unit_of_measurement: "min"
+  #   device_class: "duration"
+  #   state_class: "measurement"
+  #   scale: 1
+  #   min_value: 0
+  #   max_value: 120
+  #   step: 1
+  #   scan_interval: 10
+  #   group: "EV_fallback_timer"
+  #   icon: "mdi:timer"
+
+# Calculated
+calculated:
+  - name: "Total Current"
+    unique_id: "total_current"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') and
+         not is_state('sensor.{PREFIX}_current_phase_2', 'unavailable') and
+         not is_state('sensor.{PREFIX}_current_phase_3', 'unavailable') }}
+    state: >-
+      {{ (states('sensor.{PREFIX}_current_phase_1') | float(0) +
+          states('sensor.{PREFIX}_current_phase_2') | float(0) +
+          states('sensor.{PREFIX}_current_phase_3') | float(0)) | round(2) }}
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Charging Power"
+    unique_id: "charging_power"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') and
+         not is_state('sensor.{PREFIX}_current_phase_2', 'unavailable') and
+         not is_state('sensor.{PREFIX}_current_phase_3', 'unavailable') }}
+    state: >-
+      {% set current1 = states('sensor.{PREFIX}_current_phase_1') | float(0) %}
+      {% set current2 = states('sensor.{PREFIX}_current_phase_2') | float(0) %}
+      {% set current3 = states('sensor.{PREFIX}_current_phase_3') | float(0) %}
+      {% if current1 > 0.11 or current2 > 0.11 or current3 > 0.11 %}
+        {{ ((current1 + current2 + current3) - 0.27) * 230 | round(0) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "EV_charging_power"
+    icon: "mdi:ev-station"
+
+  - name: "Max Total Current"
+    unique_id: "max_total_current"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_max_current_phase_1', 'unavailable') and
+         not is_state('sensor.{PREFIX}_max_current_phase_2', 'unavailable') and
+         not is_state('sensor.{PREFIX}_max_current_phase_3', 'unavailable') }}
+    state: >-
+      {{ (states('sensor.{PREFIX}_max_current_phase_1') | float(0) +
+          states('sensor.{PREFIX}_max_current_phase_2') | float(0) +
+          states('sensor.{PREFIX}_max_current_phase_3') | float(0)) | round(2) }}
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_max_current_setting"
+    icon: "mdi:gauge"
+
+  - name: "Max Charging Power"
+    unique_id: "max_charging_power"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_actual_max_current_phase_1', 'unavailable') and
+          not is_state('sensor.{PREFIX}_actual_max_current_phase_2', 'unavailable') and
+          not is_state('sensor.{PREFIX}_actual_max_current_phase_3', 'unavailable') }}
+    state: >-
+      {{ (states('sensor.{PREFIX}_actual_max_current_phase_1') | float(0) +
+          states('sensor.{PREFIX}_actual_max_current_phase_2') | float(0) +
+          states('sensor.{PREFIX}_actual_max_current_phase_3') | float(0)) * 230 | round(0) }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "EV_max_charging_power"
+    icon: "mdi:ev-station"
+
+  - name: "Charging Efficiency"
+    unique_id: "charging_efficiency"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_charging_power', 'unavailable') and
+         not is_state('sensor.{PREFIX}_max_charging_power', 'unavailable') and
+         states('sensor.{PREFIX}_max_charging_power') |  float(0) > 0 }}
+    state: >-
+      {{ (states('sensor.{PREFIX}_charging_power') | float(0) /
+          states('sensor.{PREFIX}_max_charging_power') | float(1) * 100) | round(1) }}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "EV_efficiency"
+    icon: "mdi:gauge"
+
+  # Voltage calculations (firmware >= 1.1.18)
+  - name: "Average Voltage"
+    unique_id: "average_voltage"
+    type: "sensor"
+    firmware_min_version: "1.1.18"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') and
+         not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
+         not is_state('sensor.{PREFIX}_voltage_phase_3', 'unavailable') }}
+    state: >-
+      {{ ((states('sensor.{PREFIX}_voltage_phase_1') | float(0) +
+          states('sensor.{PREFIX}_voltage_phase_2') | float(0) +
+          states('sensor.{PREFIX}_voltage_phase_3') | float(0)) / 3) | round(1) }}
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Voltage Imbalance"
+    unique_id: "voltage_imbalance"
+    type: "sensor"
+    firmware_min_version: "1.1.18"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') and
+         not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
+         not is_state('sensor.{PREFIX}_voltage_phase_3', 'unavailable') }}
+    state: >-
+      {% set v1 = states('sensor.{PREFIX}_voltage_phase_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_voltage_phase_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_voltage_phase_3') | float(0) %}
+      {% set avg = (v1 + v2 + v3) / 3 %}
+      {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
+    unit_of_measurement: "%"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:gauge"
+
+# Binary sensors for status
+binary_sensors:
+  - name: "Charging Active"
+    unique_id: "charging_active"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_charging_power', 'unavailable') }}
+    state: >-
+      {{ states('sensor.{PREFIX}_charging_power') | float(0) > 0 }}
+    device_class: "power"
+    group: "EV_charging_status"
+    icon: "mdi:ev-station"
+
+  - name: "Cable Connected"
+    unique_id: "cable_connected"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_cable_status', 'unavailable') }}
+    state: >-
+      {{ states('sensor.{PREFIX}_cable_status') not in ['unavailable', 'unknown', 'no cable'] }}
+    device_class: "connectivity"
+    group: "EV_charging_status"
+    icon: "mdi:cable-data"

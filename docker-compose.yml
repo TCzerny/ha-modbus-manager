@@ -1,0 +1,16 @@
+services:
+  homeassistant:
+    container_name: homeassistant-dev
+    image: ghcr.io/home-assistant/home-assistant:stable
+    volumes:
+      # HA Config
+      - ./config:/config
+      # Custom Components mounten für Development
+      - ./custom_components/modbus_manager:/config/custom_components/modbus_manager
+      # Workspace für DevContainer
+      - .:/workspace
+    environment:
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    network_mode: host
+    privileged: true

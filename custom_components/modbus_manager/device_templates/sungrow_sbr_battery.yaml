@@ -1,0 +1,627 @@
+# Sungrow SBR Battery Template for Modbus Manager
+# Extracted from Sungrow SHx Dynamic Template
+# All SBR Battery sensors, controls, calculated, binary sensors
+
+
+name: "Sungrow SBR Battery"
+description: "Template for Sungrow SBR Battery systems. Contains all battery sensors, controls, and diagnostics."
+manufacturer: "Sungrow"
+model: "SBR Battery"
+version: 1.0.0
+default_prefix: "SBR"
+default_slave_id: 200
+type: "battery"
+firmware_version: "SBRBCU-S_22011.01.19"
+
+# Dynamic configuration support
+dynamic_config:
+
+  valid_models:
+    # SBR Battery Models based on module count
+    "SBR096": {modules: 3}
+    "SBR128": {modules: 4}
+    "SBR160": {modules: 5}
+    "SBR192": {modules: 6}
+    "SBR224": {modules: 7}
+    "SBR256": {modules: 8}
+
+  # Note: slave_id is configured in config_flow and stored in devices array
+  # No need to define it here in dynamic_config
+
+  # Battery configuration for SBR template
+  battery_config:
+    description: "Battery configuration"
+    options: ["sbr_battery"]
+    option_labels:
+      sbr_battery: "SBR Battery"
+    default: "sbr_battery"
+
+sensors:
+  # SBR Battery Sensors
+  - name: Battery 1 Voltage
+    unique_id: battery_1_voltage
+    address: 10740 # reg 10741;Bat Spannung 0.1 V; 2010
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    icon: "mdi:battery-outline"
+    group: "battery_voltage"
+
+  - name: Battery 1 Current
+    unique_id: battery_1_current
+    address: 10741 # reg 10742;Bat Strom 0.1 A; 1
+    input_type: input
+    data_type: int16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_current"
+
+  - name: Battery 1 Temperature
+    unique_id: battery_1_temperature
+    address: 10742 # reg 10743;Bat Temp 0.1 °C; 215
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scan_interval: 30
+    group: "battery_temperature"
+
+  - name: Battery 1 SOC
+    unique_id: battery_1_soc
+    address: 10743 # reg 10744;SOC 0.1%; 1000
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: measurement
+    scan_interval: 30
+    group: "battery_soc"
+
+  - name: Battery 1 SOH
+    unique_id: battery_1_soh
+    address: 10744 # reg 10745;SOH %, 99
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 1
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: measurement
+    scan_interval: 60
+    group: "battery_soh"
+
+  - name: Battery 1 Total Battery Charge
+    unique_id: battery_1_total_battery_charge
+    address: 10745 # reg 10746-10747; in Batt gespeichert total kWh; 22751
+    input_type: input
+    data_type: uint32
+    swap: word
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scan_interval: 30
+    group: "battery"
+
+  - name: Battery 1 Total Battery Discharge
+    unique_id: battery_1_total_battery_discharge
+    address: 10747 # reg 10748-10749; aus Batt entnommen total kWh; 21501
+    input_type: input
+    data_type: uint32
+    swap: word
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scan_interval: 30
+    group: "battery"
+
+  - name: Battery 1 Max Voltage of Cell
+    unique_id: battery_1_max_voltage_of_cell
+    address: 10756 # reg 10757;Max.Voltage of Cell 0.1mV; 33457 (also 3.3457 Volt)
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    icon: "mdi:battery-plus-variant"
+    group: "battery"
+
+  - name: Battery 1 Position of Max Voltage Cell
+    unique_id: battery_1_position_of_max_voltage_cell
+    address: 10757 # reg 10758;Position of Max.Voltage Cell; 518
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 10
+    group: "battery"
+
+  - name: Battery 1 Min Voltage of Cell
+    unique_id: battery_1_min_voltage_of_cell
+    address: 10758 # reg 10759;Min.Voltage of Cell 0.1mV; 33390
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    icon: "mdi:battery-minus-variant"
+    group: "battery"
+
+  - name: Battery 1 Position of Min Voltage Cell
+    unique_id: battery_1_position_of_min_voltage_cell
+    address: 10759 # reg 10760;Position of Min.Voltage Cell; 788
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 10
+    group: "battery"
+
+  - name: Battery 1 Max Temperature of Module
+    unique_id: battery_1_max_temperature_of_module
+    address: 10760 # reg 10761;Max. Temp. of Module 0.1 °C; 218
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery"
+
+  - name: Battery 1 Position of Max Temperature of Module
+    unique_id: battery_1_position_of_max_temperature_of_module
+    address: 10761 # reg 10762; Pos of Max. Temp. of Module ; 514
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 10
+    group: "battery"
+
+  - name: Battery 1 Min Temperature of Module
+    unique_id: battery_1_min_temperature_of_module
+    address: 10762 # reg 10763;Min. Temp. of Module 0.1 °C; 206
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery"
+
+  - name: Battery 1 Position of Min Temperature of Module
+    unique_id: battery_1_position_of_min_temperature_of_module
+    address: 10763 # reg 10764; Pos of Min. Temp. of Module ; 257
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 10
+    group: "battery"
+
+  # Cell Voltage Sensors for BALANCING Analysis
+  - name: Battery 1 Max Cell Voltage of Module 1
+    unique_id: battery_1_max_cell_voltage_of_module_1
+    address: 10764 # reg 10765;Max. Cell Voltage of Module 1 0.1mV; 33440
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Max Cell Voltage of Module 2
+    unique_id: battery_1_max_cell_voltage_of_module_2
+    address: 10765 # reg 10766;Max. Cell Voltage of Module 2 0.1mV; 33457
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Max Cell Voltage of Module 3
+    unique_id: battery_1_max_cell_voltage_of_module_3
+    address: 10766 # reg 10767;Max. Cell Voltage of Module 3 0.1mV; 33440
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Max Cell Voltage of Module 4
+    unique_id: battery_1_max_cell_voltage_of_module_4
+    address: 10767 # reg 10768;Max. Cell Voltage of Module 4 0.1mV; 33440
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Max Cell Voltage of Module 5
+    unique_id: battery_1_max_cell_voltage_of_module_5
+    address: 10768 # reg 10769;Max. Cell Voltage of Module 5 0.1mV; 33440
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Max Cell Voltage of Module 6
+    unique_id: battery_1_max_cell_voltage_of_module_6
+    address: 10769
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Max Cell Voltage of Module 7
+    unique_id: battery_1_max_cell_voltage_of_module_7
+    address: 10770
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Max Cell Voltage of Module 8
+    unique_id: battery_1_max_cell_voltage_of_module_8
+    address: 10771
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Min Cell Voltage of Module 1
+    unique_id: battery_1_min_cell_voltage_of_module_1
+    address: 10772
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Min Cell Voltage of Module 2
+    unique_id: battery_1_min_cell_voltage_of_module_2
+    address: 10773
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Min Cell Voltage of Module 3
+    unique_id: battery_1_min_cell_voltage_of_module_3
+    address: 10774
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Min Cell Voltage of Module 4
+    unique_id: battery_1_min_cell_voltage_of_module_4
+    address: 10775
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Min Cell Voltage of Module 5
+    unique_id: battery_1_min_cell_voltage_of_module_5
+    address: 10776
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Min Cell Voltage of Module 6
+    unique_id: battery_1_min_cell_voltage_of_module_6
+    address: 10777
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Min Cell Voltage of Module 7
+    unique_id: battery_1_min_cell_voltage_of_module_7
+    address: 10778
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  - name: Battery 1 Min Cell Voltage of Module 8
+    unique_id: battery_1_min_cell_voltage_of_module_8
+    address: 10779
+    input_type: input
+    data_type: uint16
+    scale: 0.0001
+    precision: 4
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    group: "battery_cells"
+
+  # Cell Type Sensors
+  - name: Battery 1 Cell Type of Module 1
+    unique_id: battery_1_cell_type_of_module_1
+    address: 10780 # reg 10781;Cell Type of Module 1; 1
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  - name: Battery 1 Cell Type of Module 2
+    unique_id: battery_1_cell_type_of_module_2
+    address: 10781 # reg 10782;Cell Type of Module 2; 1
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  - name: Battery 1 Cell Type of Module 3
+    unique_id: battery_1_cell_type_of_module_3
+    address: 10782 # reg 10783;Cell Type of Module 3; 1
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  - name: Battery 1 Cell Type of Module 4
+    unique_id: battery_1_cell_type_of_module_4
+    address: 10783 # reg 10784;Cell Type of Module 4; 1
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  - name: Battery 1 Cell Type of Module 5
+    unique_id: battery_1_cell_type_of_module_5
+    address: 10784 # reg 10785;Cell Type of Module 5; 1
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  - name: Battery 1 Cell Type of Module 6
+    unique_id: battery_1_cell_type_of_module_6
+    address: 10785 # reg 10786;Cell Type of Module 6; 1
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  - name: Battery 1 Cell Type of Module 7
+    unique_id: battery_1_cell_type_of_module_7
+    address: 10786 # reg 10787;Cell Type of Module 7; 1
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  - name: Battery 1 Cell Type of Module 8
+    unique_id: battery_1_cell_type_of_module_8
+    address: 10787 # reg 10788;Cell Type of Module 8; 1
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  # DC Switch State
+  - name: Battery 1 State of DC Switch
+    unique_id: battery_1_state_of_dc_switch
+    address: 10788 # reg 10789;Zustand DC-Schütz; 2
+    input_type: input
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 120
+    group: "battery"
+
+  # Module Serial Numbers (dynamisch je nach Modell)
+  - name: Battery 1 module 1 serial number
+    unique_id: battery_1_module_1_sn
+    address: 10821 # reg 10822
+    input_type: input
+    data_type: string
+    count: 9
+    scan_interval: 600
+    group: "battery"
+    condition: "modules >= 1"
+
+  - name: Battery 1 module 2 serial number
+    unique_id: battery_1_module_2_sn
+    address: 10830 # reg 10831
+    input_type: input
+    data_type: string
+    count: 9
+    scan_interval: 600
+    group: "battery"
+    condition: "modules >= 2"
+
+  - name: Battery 1 module 3 serial number
+    unique_id: battery_1_module_3_sn
+    address: 10839 # reg 10840
+    input_type: input
+    data_type: string
+    count: 9
+    scan_interval: 600
+    group: "battery"
+    condition: "modules >= 3"
+
+  - name: Battery 1 module 4 serial number
+    unique_id: battery_1_module_4_sn
+    address: 10848 # reg 10849
+    input_type: input
+    data_type: string
+    count: 9
+    scan_interval: 600
+    group: "battery"
+
+  - name: Battery 1 module 5 serial number
+    unique_id: battery_1_module_5_sn
+    address: 10857 # reg 10858
+    input_type: input
+    data_type: string
+    count: 9
+    scan_interval: 600
+    group: "battery"
+
+  - name: Battery 1 module 6 serial number
+    unique_id: battery_1_module_6_sn
+    address: 10866 # reg 10867
+    input_type: input
+    data_type: string
+    count: 9
+    scan_interval: 600
+    group: "battery"
+
+  - name: Battery 1 module 7 serial number
+    unique_id: battery_1_module_7_sn
+    address: 10875 # reg 10876
+    input_type: input
+    data_type: string
+    count: 9
+    scan_interval: 600
+    group: "battery"
+
+  - name: Battery 1 module 8 serial number
+    unique_id: battery_1_module_8_sn
+    address: 10884 # reg 10885
+    input_type: input
+    data_type: string
+    count: 9
+    scan_interval: 600
+    group: "battery"
+
+  # Battery Status Array
+  # - name: Battery 1 Status Array
+  #   unique_id: battery_1_status_array
+  #   address: 10720 # reg 10721 - 10730; Batt Status; 0,0,0,0,0,0,0,0,0,0
+  #   input_type: input
+  #   data_type: uint16
+  #   scale: 1
+  #   precision: 0
+  #   count: 10
+  #   scan_interval: 600
+  #   group: "battery"
+
+# Binary Sensors
+binary_sensors: []
+  # Add binary sensors here if needed
+  # Example: Battery protection status, alarm states, etc.
+
+
+# Calculated Sensors
+calculated: []
+  # Add calculated sensors here if needed
+  # Example: Battery efficiency, power calculations, etc.

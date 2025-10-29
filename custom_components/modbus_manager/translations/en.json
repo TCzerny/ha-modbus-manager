@@ -1,0 +1,208 @@
+{
+    "config": {
+        "title": "Modbus Manager",
+        "step": {
+            "user": {
+                "title": "Modbus Manager Configuration",
+                "description": "Set up a new Modbus Manager connection",
+                "data": {
+                    "template": "Device Template",
+                    "name": "Name",
+                    "host": "Host",
+                    "port": "Port",
+                    "slave": "Slave ID",
+                    "device_type": "Device Type"
+                }
+            },
+            "firmware": {
+                "title": "Firmware Version",
+                "description": "Select the firmware version for your {device_type}",
+                "data": {
+                    "firmware_version": "Firmware Version"
+                }
+            },
+            "connection": {
+                "title": "Connection Parameters",
+                "description": "Configure Modbus connection for template: {template_name}",
+                "data": {
+                    "prefix": "Device Prefix",
+                    "host": "IP Address of Modbus Device",
+                    "port": "Modbus TCP Port",
+                    "slave_id": "Modbus Slave ID",
+                    "timeout": "Timeout in seconds",
+                    "delay": "Delay between operations (ms)",
+                    "request_delay": "Wait between requests (ms)",
+                    "use_coordinator": "Use Coordinator Mode (experimental)"
+                }
+            },
+            "dynamic_config": {
+                "title": "Dynamic Configuration",
+                "description": "Configure dynamic parameters for template: {template_name}",
+                "data": {
+                    "selected_model": "Select Model",
+                    "phases": "Number of Phases",
+                    "mppt_count": "Number of MPPT Trackers",
+                    "string_count": "Number of Strings",
+                    "modules": "Number of Modules",
+                    "max_current": "Maximum Current",
+                    "connectors": "Number of Connectors",
+                    "connection_type": "Connection Type",
+                    "firmware_version": "Firmware Version",
+                    "battery_config": "Battery Configuration",
+                    "battery_slave_id": "Battery Slave ID"
+                }
+            },
+            "battery_slave_id": {
+                "title": "SBR Battery Configuration",
+                "description": "Configure the Slave ID for the SBR Battery",
+                "data": {
+                    "battery_slave_id": "Battery Slave ID (Default: 200)"
+                }
+            },
+            "device_config": {
+                "title": "Device Configuration",
+                "description": "Configure the connection to the Modbus device",
+                "data": {
+                    "prefix": "Device Prefix (e.g. 'Device_1')",
+                    "host": "IP Address of Modbus device",
+                    "port": "Modbus TCP Port (Default: 502)",
+                    "slave_id": "Modbus Slave ID (Default: 1)",
+                    "timeout": "Timeout in seconds",
+                    "delay": "Delay between operations (ms)",
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "phases": "Number of phases (1 or 3)",
+                    "mppt_count": "Number of MPPT trackers",
+                    "battery_config": "Battery Configuration",
+                    "battery_slave_id": "Battery Slave ID (only needed for SBR Battery)",
+                    "firmware_version": "Firmware version",
+                    "connection_type": "Connection type",
+                    "name": "Device name (e.g. 'Sungrow Inverter')",
+                    "common_model_address": "Common Model register address (Default: 40001)",
+                    "inverter_model_address": "Inverter Model register address (Default: 40069)",
+                    "storage_model_address": "Storage Model register address (optional)",
+                    "meter_model_address": "Meter Model register address (optional)",
+                    "use_coordinator": "Use Coordinator Mode (experimental)"
+                }
+            },
+            "battery_detection": {
+                "title": "Battery Available?",
+                "description": "Is a battery connected to your {template_name} inverter?\n\nInverter: {inverter_prefix} ({inverter_host})",
+                "data": {
+                    "battery_available": "Battery Available"
+                }
+            },
+            "battery_template_selection": {
+                "title": "Select Battery Template",
+                "description": "Choose the template for your battery:\n\nInverter: {inverter_prefix}\nAvailable Templates: {available_templates}",
+                "data": {
+                    "battery_template": "Battery Template"
+                }
+            },
+            "battery_config": {
+                "title": "Battery Configuration",
+                "description": "Configure your battery:\n\nInverter: {inverter_prefix}\nTemplate: {battery_template}",
+                "data": {
+                    "battery_prefix": "Battery Prefix",
+                    "battery_slave_id": "Battery Slave ID",
+                    "battery_model": "Battery Model",
+                    "battery_modules": "Number of Battery Modules"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "invalid_host": "Invalid hostname or IP address",
+            "unknown": "Unexpected error",
+            "firmware_not_detected": "Could not detect firmware version",
+            "invalid_firmware": "Invalid firmware version",
+            "device_exists": "A device with this name already exists",
+            "no_device_definitions": "No device definitions found"
+        },
+        "abort": {
+            "no_device_definitions": "No device definitions found. Please make sure at least one YAML file exists in the device_definitions directory.",
+            "already_configured": "Device is already configured",
+            "template_not_found": "Template {template_name} not found.",
+            "no_registers": "Template {template_name} has no registers defined.",
+            "update_error": "Error updating template: {error}",
+            "no_template_selected": "No template selected",
+            "device_added_to_existing_hub": "Device successfully added to existing hub. A restart is required to activate the new device."
+        },
+        "progress": {
+            "firmware_detect": "Attempting to detect firmware version..."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Device Options",
+                "description": "Template: {template_name} (Version {template_version})\nLast Updated: {last_updated}\n\nCurrent Entities: {current_sensors} sensors, {current_calculated} calculated, {current_controls} controls",
+                "data": {
+                    "timeout": "Timeout (seconds)",
+                    "delay": "Delay after Connection (seconds)",
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)",
+                    "phases": "Number of Phases (1 or 3)",
+                    "mppt_count": "Number of MPPT Trackers",
+                    "battery_config": "Battery Configuration",
+                    "connection_type": "Connection Type",
+                    "firmware_version": "Firmware Version",
+                    "update_template": "Reload Template (even without version change)",
+                    "auto_detect_firmware": "Auto-detect firmware version"
+                }
+            },
+            "update_template": {
+                "title": "Reload Template",
+                "description": "Reload template {template_name}:\n\nVersion: {stored_version} → {current_version} (Changed: {version_changed})\nContent changed: {content_changed}\n\nNew Entities: {current_sensors} sensors, {current_calculated} calculated, {current_controls} controls\n\nThe integration will be automatically reloaded after the update."
+            },
+            "battery_config": {
+                "title": "SBR Battery Configuration",
+                "description": "Configure the Slave ID for the SBR Battery ({battery_config})",
+                "data": {
+                    "battery_slave_id": "Battery Slave ID (Default: 200)"
+                }
+            }
+        }
+    },
+    "device": {
+        "firmware": {
+            "auto_detect": "Auto Detect",
+            "manual_select": "Manual Selection",
+            "unknown": "Unknown Version",
+            "not_supported": "Not Supported Version"
+        }
+    },
+    "entity": {
+        "sensor": {
+            "firmware": {
+                "name": "Firmware Version",
+                "state": {
+                    "detecting": "Detecting",
+                    "unknown": "Unknown",
+                    "not_supported": "Not Supported",
+                    "error": "Detection Error"
+                }
+            }
+        }
+    },
+    "services": {
+        "update_firmware_version": {
+            "name": "Update Firmware Version",
+            "description": "Updates the firmware version of the device.",
+            "fields": {
+                "firmware_version": {
+                    "name": "Firmware Version",
+                    "description": "The new firmware version of the device."
+                }
+            }
+        }
+    },
+    "issues": {
+        "restart_required": {
+            "title": "Restart required for {device_name}",
+            "description": "A new device was added to {entry_title}. Please restart Home Assistant to activate the new device. Go to Settings > System > Restart."
+        },
+        "restart_required_fix": {
+            "title": "Restart Home Assistant",
+            "description": "Click to restart Home Assistant and activate the new device."
+        }
+    }
+}

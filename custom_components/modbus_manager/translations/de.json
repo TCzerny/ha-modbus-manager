@@ -1,0 +1,342 @@
+{
+    "config": {
+        "title": "Modbus Manager",
+        "step": {
+            "user": {
+                "title": "Modbus Manager Konfiguration",
+                "description": "Konfiguriere eine neue Modbus Manager Verbindung",
+                "data": {
+                    "template": "Geräte-Template",
+                    "name": "Name",
+                    "host": "Host",
+                    "port": "Port",
+                    "slave": "Slave ID",
+                    "device_type": "Gerätetyp"
+                }
+            },
+            "firmware": {
+                "title": "Firmware-Version",
+                "description": "Wählen Sie die Firmware-Version für Ihr {device_type}",
+                "data": {
+                    "firmware_version": "Firmware-Version"
+                }
+            },
+            "connection": {
+                "title": "Verbindungsparameter",
+                "description": "Konfiguriere die Modbus-Verbindung für Template: {template_name}",
+                "data": {
+                    "prefix": "Geräte-Präfix",
+                    "host": "IP-Adresse des Modbus-Geräts",
+                    "port": "Modbus TCP Port",
+                    "slave_id": "Modbus Slave ID",
+                    "timeout": "Timeout in Sekunden",
+                    "delay": "Verzögerung zwischen Operationen (ms)",
+                    "request_delay": "Wartezeit zwischen Requests (ms)",
+                    "use_coordinator": "Coordinator-Modus verwenden (experimentell)"
+                }
+            },
+            "dynamic_config": {
+                "title": "Dynamische Konfiguration",
+                "description": "Konfiguriere die dynamischen Parameter für Template: {template_name}",
+                "data": {
+                    "selected_model": "Modell auswählen",
+                    "phases": "Anzahl Phasen",
+                    "mppt_count": "Anzahl MPPT-Tracker",
+                    "string_count": "Anzahl Strings",
+                    "modules": "Anzahl Module",
+                    "max_current": "Maximaler Strom",
+                    "connectors": "Anzahl Anschlüsse",
+                    "connection_type": "Verbindungstyp",
+                    "firmware_version": "Firmware-Version",
+                    "battery_config": "Batterie-Konfiguration",
+                    "battery_slave_id": "Batterie Slave ID"
+                }
+            },
+            "device_config": {
+                "title": "Geräte-Konfiguration",
+                "description": "Konfiguriere die Verbindung zum Modbus-Gerät",
+                "data": {
+                    "prefix": "Geräte-Präfix (z.B. 'Inverter_1')",
+                    "host": "IP-Adresse des Modbus-Geräts",
+                    "port": "Modbus TCP Port (Standard: 502)",
+                    "slave_id": "Modbus Slave ID (Standard: 1)",
+                    "timeout": "Timeout in Sekunden",
+                    "delay": "Verzögerung zwischen Operationen (ms)",
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "phases": "Anzahl Phasen (1 oder 3)",
+                    "mppt_count": "Anzahl MPPT-Tracker",
+                    "string_count": "Anzahl Strings",
+                    "selected_model": "Modell auswählen",
+                    "battery_config": "Batterie-Konfiguration",
+                    "battery_slave_id": "Batterie Slave ID (nur für SBR Battery)",
+                    "firmware_version": "Firmware-Version",
+                    "connection_type": "Verbindungstyp",
+                    "name": "Gerätename (z.B. 'Sungrow Inverter')",
+                    "common_model_address": "Common Model Register-Adresse (Standard: 40001)",
+                    "inverter_model_address": "Inverter Model Register-Adresse (Standard: 40069)",
+                    "storage_model_address": "Storage Model Register-Adresse (optional)",
+                    "meter_model_address": "Meter Model Register-Adresse (optional)",
+                    "use_coordinator": "Coordinator-Modus verwenden (experimentell)"
+                }
+            },
+            "battery_detection": {
+                "title": "Batterie verfügbar?",
+                "description": "Ist eine Batterie an Ihrem {template_name} Wechselrichter angeschlossen?\n\nWechselrichter: {inverter_prefix} ({inverter_host})",
+                "data": {
+                    "battery_available": "Batterie verfügbar"
+                }
+            },
+            "battery_template_selection": {
+                "title": "Batterie-Template auswählen",
+                "description": "Wählen Sie das Template für Ihre Batterie:\n\nWechselrichter: {inverter_prefix}\nVerfügbare Templates: {available_templates}",
+                "data": {
+                    "battery_template": "Batterie-Template"
+                }
+            },
+            "battery_config": {
+                "title": "Batterie-Konfiguration",
+                "description": "Konfigurieren Sie Ihre Batterie:\n\nWechselrichter: {inverter_prefix}\nTemplate: {battery_template}",
+                "data": {
+                    "battery_prefix": "Batterie-Präfix",
+                    "battery_slave_id": "Batterie Slave ID",
+                    "battery_model": "Batterie-Modell",
+                    "battery_modules": "Anzahl Batterie-Module"
+                }
+            },
+            "battery_slave_id": {
+                "title": "SBR Batterie Konfiguration",
+                "description": "Konfiguriere die Slave ID für die SBR Batterie",
+                "data": {
+                    "battery_slave_id": "Batterie Slave ID (Standard: 200)"
+                }
+            }
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_host": "Ungültiger Hostname oder IP-Adresse",
+            "unknown": "Unerwarteter Fehler",
+            "firmware_not_detected": "Firmware-Version konnte nicht erkannt werden",
+            "invalid_firmware": "Ungültige Firmware-Version",
+            "device_exists": "Ein Gerät mit diesem Namen existiert bereits",
+            "no_device_definitions": "Keine Gerätedefinitionen gefunden"
+        },
+        "abort": {
+            "no_device_definitions": "Es wurden keine Gerätedefinitionen gefunden. Bitte stellen Sie sicher, dass mindestens eine YAML-Datei im device_definitions Verzeichnis existiert.",
+            "already_configured": "Gerät ist bereits konfiguriert",
+            "template_not_found": "Template {template_name} nicht gefunden.",
+            "no_registers": "Template {template_name} hat keine Register definiert.",
+            "update_error": "Fehler beim Aktualisieren des Templates: {error}",
+            "no_template_selected": "Kein Template ausgewählt",
+            "device_added_to_existing_hub": "Gerät erfolgreich zum bestehenden Hub hinzugefügt. Ein Neustart ist erforderlich, um das neue Gerät zu aktivieren."
+        },
+        "progress": {
+            "firmware_detect": "Versuche Firmware-Version zu erkennen..."
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "title": "Geräteoptionen",
+                "description": "Template: {template_name} (Version {template_version})\nLetzte Aktualisierung: {last_updated}\n\nAktuelle Entitäten: {current_sensors} Sensoren, {current_calculated} berechnete, {current_controls} Controls",
+                "data": {
+                    "timeout": "Timeout in Sekunden",
+                    "delay": "Verzögerung nach Verbindung (Sekunden)",
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "phases": "Anzahl Phasen (1 oder 3)",
+                    "mppt_count": "Anzahl MPPT-Tracker",
+                    "string_count": "Anzahl Strings",
+                    "selected_model": "Modell auswählen",
+                    "battery_config": "Batterie-Konfiguration",
+                    "connection_type": "Verbindungstyp",
+                    "firmware_version": "Firmware-Version",
+                    "update_template": "Template neu laden (auch ohne Versions-Änderung)",
+                    "allow_battery_car_charging": "Batterie-zu-Auto-Ladung erlauben",
+                    "auto_detect_firmware": "Firmware-Version automatisch erkennen"
+                }
+            },
+            "update_template": {
+                "title": "Template neu laden",
+                "description": "Template {template_name} neu laden:\n\nVersion: {stored_version} → {current_version} (Geändert: {version_changed})\nInhalt geändert: {content_changed}\n\nNeue Entitäten: {current_sensors} Sensoren, {current_calculated} berechnete, {current_controls} Controls\n\nDie Integration wird nach der Aktualisierung automatisch neu geladen."
+            },
+            "battery_config": {
+                "title": "SBR Batterie Konfiguration",
+                "description": "Konfiguriere die Slave ID für die SBR Batterie ({battery_config})",
+                "data": {
+                    "battery_slave_id": "Batterie Slave ID (Standard: 200)"
+                }
+            }
+        }
+    },
+    "device": {
+        "firmware": {
+            "auto_detect": "Automatische Erkennung",
+            "manual_select": "Manuelle Auswahl",
+            "unknown": "Unbekannte Version",
+            "not_supported": "Nicht unterstützte Version"
+        }
+    },
+    "entity": {
+        "sensor": {
+            "firmware": {
+                "name": "Firmware-Version",
+                "state": {
+                    "detecting": "Wird erkannt",
+                    "unknown": "Unbekannt",
+                    "not_supported": "Nicht unterstützt",
+                    "error": "Fehler bei der Erkennung"
+                }
+            },
+            "inverter": {
+                "state": {
+                    "wait": "Warten",
+                    "check": "Prüfen",
+                    "normal": "Normal",
+                    "fault": "Fehler",
+                    "permanent_fault": "Dauerhafter Fehler",
+                    "power_limit": "Leistungsbegrenzung",
+                    "startup": "Startvorgang",
+                    "shutdown": "Herunterfahren",
+                    "standby": "Standby",
+                    "emergency": "Notfall"
+                },
+                "metrics": {
+                    "self_consumption": "Eigenverbrauchsquote",
+                    "autarky": "Autarkiegrad"
+                }
+            },
+            "battery": {
+                "mode": {
+                    "standby": "Standby",
+                    "charge": "Laden",
+                    "discharge": "Entladen",
+                    "fault": "Fehler"
+                },
+                "status": {
+                    "offline": "Offline",
+                    "standby": "Standby",
+                    "running": "In Betrieb",
+                    "fault": "Fehler",
+                    "updating": "Aktualisierung"
+                },
+                "warning": {
+                    "none": "Keine",
+                    "low_soc": "Niedriger Ladezustand",
+                    "high_temp": "Hohe Temperatur",
+                    "low_temp": "Niedrige Temperatur"
+                }
+            },
+            "charging": {
+                "state": {
+                    "idle": "Bereit",
+                    "charging": "Lädt",
+                    "completed": "Abgeschlossen",
+                    "error": "Fehler"
+                },
+                "source": {
+                    "solar": "Solar",
+                    "solar_battery": "Solar + Batterie",
+                    "grid": "Netz",
+                    "none": "Keine Ladung"
+                }
+            },
+            "inverter_serial": "Wechselrichter Seriennummer",
+            "device_code": "Gerätetyp",
+            "daily_pv_gen_battery_discharge": "Tägliche PV-Erzeugung & Batterieentladung",
+            "total_pv_gen_battery_discharge": "Gesamte PV-Erzeugung & Batterieentladung",
+            "inverter_temperature": "Wechselrichter Temperatur",
+            "system_status": "Systemstatus",
+            "running_state": "Betriebszustand",
+            "mppt1_voltage": "MPPT1 Spannung",
+            "mppt1_current": "MPPT1 Strom",
+            "mppt2_voltage": "MPPT2 Spannung",
+            "mppt2_current": "MPPT2 Strom",
+            "grid_voltage_l1": "Netzspannung L1",
+            "grid_voltage_l2": "Netzspannung L2",
+            "grid_voltage_l3": "Netzspannung L3",
+            "grid_current_l1": "Netzstrom L1",
+            "grid_current_l2": "Netzstrom L2",
+            "grid_current_l3": "Netzstrom L3",
+            "phase_a_power": "Leistung Phase A",
+            "phase_b_power": "Leistung Phase B",
+            "phase_c_power": "Leistung Phase C",
+            "grid_frequency": "Netzfrequenz",
+            "battery_voltage": "Batteriespannung",
+            "battery_current": "Batteriestrom",
+            "battery_power": "Batterieleistung",
+            "battery_level": "Batterieladezustand",
+            "battery_health": "Batteriezustand",
+            "battery_temperature": "Batterietemperatur",
+            "daily_battery_charge": "Tägliche Batterieladung",
+            "total_battery_charge": "Gesamte Batterieladung",
+            "daily_battery_discharge": "Tägliche Batterieentladung",
+            "total_battery_discharge": "Gesamte Batterieentladung",
+            "battery_max_charge_power": "Maximale Ladeleistung",
+            "battery_max_discharge_power": "Maximale Entladeleistung",
+            "battery_capacity": "Batteriekapazität",
+            "serial_number": "Seriennummer",
+            "firmware_version": "Firmware Version",
+            "device_status": "Gerätestatus",
+            "charging_state": "Ladezustand",
+            "connected_state": "Verbindungsstatus",
+            "error_code": "Fehlercode",
+            "charging_power": "Ladeleistung",
+            "energy_total": "Gesamtenergie",
+            "energy_session": "Energie dieser Session",
+            "temperature": "Temperatur",
+            "charging_current_limit": "Ladestrom Limit",
+            "start_stop_charging": "Laden Start/Stop",
+            "reset_error": "Fehler zurücksetzen"
+        },
+        "input_boolean": {
+            "allow_battery_car_charging": {
+                "name": "Batterie-zu-Auto-Ladung",
+                "state": {
+                    "on": "Aktiviert",
+                    "off": "Deaktiviert"
+                }
+            }
+        }
+    },
+    "notification": {
+        "charging": {
+            "complete": {
+                "title": "Ladevorgang abgeschlossen",
+                "message": "Fahrzeug vollständig geladen\nEnergie: {energy} kWh\nKosten: {cost} €"
+            },
+            "pv": {
+                "title": "PV-Überschussladung aktiv",
+                "title_with_battery": "PV- & Batterie-Ladung aktiv",
+                "message": "Lade E-Auto mit Solarstrom\nPV-Leistung: {pv_power}W\nLadeleistung: {charging_power}W\nPV-Anteil: {pv_ratio}%",
+                "message_with_battery": "Lade E-Auto mit Solar- & Batteriestrom\nPV-Leistung: {pv_power}W\nBatterie-Leistung: {battery_power}W\nLadeleistung: {charging_power}W\nPV-Anteil: {pv_ratio}%"
+            }
+        },
+        "temperature": {
+            "high": {
+                "title": "Hohe Temperatur",
+                "message": "Wallbox Temperatur: {temperature}°C"
+            }
+        }
+    },
+    "services": {
+        "update_firmware_version": {
+            "name": "Firmware-Version aktualisieren",
+            "description": "Aktualisiert die Firmware-Version des Geräts.",
+            "fields": {
+                "firmware_version": {
+                    "name": "Firmware-Version",
+                    "description": "Die neue Firmware-Version des Geräts."
+                }
+            }
+        }
+    },
+    "issues": {
+        "restart_required": {
+            "title": "Neustart erforderlich für {device_name}",
+            "description": "Ein neues Gerät wurde zu {entry_title} hinzugefügt. Bitte starten Sie Home Assistant neu, um das neue Gerät zu aktivieren. Gehen Sie zu Einstellungen > System > Neustart."
+        },
+        "restart_required_fix": {
+            "title": "Home Assistant neu starten",
+            "description": "Klicken Sie hier, um Home Assistant neu zu starten und das neue Gerät zu aktivieren."
+        }
+    }
+}
