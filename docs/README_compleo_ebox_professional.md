@@ -94,6 +94,61 @@ unit_id: 1
 - **Time to Full**: Estimated completion time
 - **Cost Calculation**: Charging cost based on tariff
 
+## 📋 Complete Entity Reference
+
+This section contains all entities that will be created by this template, including Modbus register addresses and unique IDs.
+
+### Sensors (Read-only)
+
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| 0 | ID | id |
+| 25 | Serial Number | serial_number |
+| 50 | Active Protocol | active_protocol |
+| 100 | Manufacturer | manufacturer |
+| 200 | Firmware | firmware |
+| 275 | Status | status |
+| 300 | Cable Status | cable_status |
+| 301 | Voltage Phase 1 | voltage_phase_1 |
+| 303 | Voltage Phase 2 | voltage_phase_2 |
+| 305 | Voltage Phase 3 | voltage_phase_3 |
+| 307 | Current Meter Reading | current_meter_reading |
+| 1000 | Actual Max Current Phase 1 | actual_max_current_phase_1 |
+| 1002 | Actual Max Current Phase 2 | actual_max_current_phase_2 |
+| 1004 | Actual Max Current Phase 3 | actual_max_current_phase_3 |
+| 1006 | Current Phase 1 | current_phase_1 |
+| 1008 | Current Phase 2 | current_phase_2 |
+| 1010 | Current Phase 3 | current_phase_3 |
+
+### Controls (Read/Write)
+
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| 1012 | Max Current Phase 1 | max_current_phase_1 |
+| 1014 | Max Current Phase 2 | max_current_phase_2 |
+| 1016 | Max Current Phase 3 | max_current_phase_3 |
+
+### Calculated Sensors
+
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| - | Total Current | total_current |
+| - | Charging Power | charging_power |
+| - | Max Total Current | max_total_current |
+| - | Max Charging Power | max_charging_power |
+| - | Charging Efficiency | charging_efficiency |
+| - | Average Voltage | average_voltage |
+| - | Voltage Imbalance | voltage_imbalance |
+
+### Binary Sensors
+
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| - | Charging Active | charging_active |
+| - | Cable Connected | cable_connected |
+
+**Note:** Address "-" indicates that the entity is calculated or derived from other entities and does not have a direct Modbus register address.
+
 ## 🔧 Installation
 
 ### 1. Template Selection

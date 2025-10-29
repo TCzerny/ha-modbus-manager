@@ -149,6 +149,211 @@ The template supports **all 36** following Sungrow SHx models:
 - **Meter Active Power** - With 0x7FFFFFFF error handling
 - **Meter Phase Power** - Phase-specific with error handling
 
+## 📋 Complete Entity Reference
+
+This section contains all entities that will be created by this template, including Modbus register addresses and unique IDs. Entities are automatically filtered based on your device configuration (phases, MPPT count, battery enabled, connection type).
+
+### Sensors (Read-only)
+
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| 4989 | Sungrow inverter serial | inverter_serial |
+| 4999 | Sungrow device type code | sungrow_device_type_code |
+| 5002 | Daily PV generation & battery discharge | daily_pv_gen_battery_discharge |
+| 5003 | Total PV generation & battery discharge | total_pv_gen_battery_discharge |
+| 5007 | Inverter temperature | inverter_temperature |
+| 5010 | MPPT1 voltage | mppt1_voltage |
+| 5011 | MPPT1 current | mppt1_current |
+| 5012 | MPPT2 voltage | mppt2_voltage |
+| 5013 | MPPT2 current | mppt2_current |
+| 5014 | MPPT3 voltage | mppt3_voltage |
+| 5015 | MPPT3 current | mppt3_current |
+| 5016 | Total DC power | total_dc_power |
+| 5018 | Phase A voltage | phase_a_voltage |
+| 5019 | Phase B voltage | phase_b_voltage |
+| 5020 | Phase C voltage | phase_c_voltage |
+| 5032 | Reactive power | reactive_power |
+| 5034 | Power factor | power_factor |
+| 5241 | Grid frequency | grid_frequency |
+| 5600 | Meter active power raw | meter_active_power_raw |
+| 5602 | Meter phase A active power raw | meter_phase_a_active_power_raw |
+| 5604 | Meter phase B active power raw | meter_phase_b_active_power_raw |
+| 5606 | Meter phase C active power raw | meter_phase_c_active_power_raw |
+| 5627 | BDC rated power | bdc_rated_power |
+| 5634 | BMS max. charging current | bms_max_charging_current |
+| 5635 | BMS max. discharging current | bms_max_discharging_current |
+| 5638 | Battery capacity | battery_capacity |
+| 5722 | Backup phase A power | backup_phase_a_power |
+| 5723 | Backup phase B power | backup_phase_b_power |
+| 5724 | Backup phase C power | backup_phase_c_power |
+| 5725 | Total backup power | total_backup_power |
+| 5740 | Meter phase A voltage | meter_phase_a_voltage |
+| 5741 | Meter phase B voltage | meter_phase_b_voltage |
+| 5742 | Meter phase C voltage | meter_phase_c_voltage |
+| 5743 | Meter phase A current | meter_phase_a_current |
+| 5744 | Meter phase B current | meter_phase_b_current |
+| 5745 | Meter phase C current | meter_phase_c_current |
+| 6226 | Monthly PV generation (01 January) | monthly_pv_generation_01_january |
+| 6227 | Monthly PV generation (02 February) | monthly_pv_generation_02_february |
+| 6228 | Monthly PV generation (03 March) | monthly_pv_generation_03_march |
+| 6229 | Monthly PV generation (04 April) | monthly_pv_generation_04_april |
+| 6230 | Monthly PV generation (05 May) | monthly_pv_generation_05_may |
+| 6231 | Monthly PV generation (06 June) | monthly_pv_generation_06_june |
+| 6232 | Monthly PV generation (07 July) | monthly_pv_generation_07_july |
+| 6233 | Monthly PV generation (08 August) | monthly_pv_generation_08_august |
+| 6234 | Monthly PV generation (09 September) | monthly_pv_generation_09_september |
+| 6235 | Monthly PV generation (10 October) | monthly_pv_generation_10_october |
+| 6236 | Monthly PV generation (11 November) | monthly_pv_generation_11_november |
+| 6237 | Monthly PV generation (12 December) | monthly_pv_generation_12_december |
+| 6257 | Yearly PV generation (2019) | yearly_pv_generation_2019 |
+| 6259 | Yearly PV generation (2020) | yearly_pv_generation_2020 |
+| 6261 | Yearly PV generation (2021) | yearly_pv_generation_2021 |
+| 6263 | Yearly PV generation (2022) | yearly_pv_generation_2022 |
+| 6265 | Yearly PV generation (2023) | yearly_pv_generation_2023 |
+| 6267 | Yearly PV generation (2024) | yearly_pv_generation_2024 |
+| 6269 | Yearly PV generation (2025) | yearly_pv_generation_2025 |
+| 6271 | Yearly PV generation (2026) | yearly_pv_generation_2026 |
+| 6273 | Yearly PV generation (2027) | yearly_pv_generation_2027 |
+| 6275 | Yearly PV generation (2028) | yearly_pv_generation_2028 |
+| 6277 | Yearly PV generation (2029) | yearly_pv_generation_2029e |
+| 6595 | Monthly export (01 January) | monthly_export_01_january |
+| 6596 | Monthly export (02 February) | monthly_export_02_february |
+| 6597 | Monthly export (03 March) | monthly_export_03_march |
+| 6598 | Monthly export (04 April) | monthly_export_04_april |
+| 6599 | Monthly export (05 May) | monthly_export_05_may |
+| 6600 | Monthly export (06 June) | monthly_export_06_june |
+| 6601 | Monthly export (07 July) | monthly_export_07_july |
+| 6602 | Monthly export (08 August) | monthly_export_08_august |
+| 6603 | Monthly export (09 September) | monthly_export_09_september |
+| 6604 | Monthly export (10 October) | monthly_export_10_october |
+| 6605 | Monthly export (11 November) | monthly_export_11_november |
+| 6606 | Monthly export (12 December) | monthly_export_12_december |
+| 6615 | Yearly Export (2019) | yearly_export_2019 |
+| 6617 | Yearly Export (2020) | yearly_export_2020 |
+| 6619 | Yearly Export (2021) | yearly_export_2021 |
+| 6621 | Yearly Export (2022) | yearly_export_2022 |
+| 6623 | Yearly Export (2023) | yearly_export_2023 |
+| 6625 | Yearly Export (2024) | yearly_export_2024 |
+| 6627 | Yearly Export (2025) | yearly_export_2025 |
+| 6629 | Yearly Export (2026) | yearly_export_2026 |
+| 6631 | Yearly Export (2027) | yearly_export_2027 |
+| 6633 | Yearly Export (2028) | yearly_export_2028 |
+| 12999 | System state | system_state |
+| 13000 | Running state | running_state |
+| 13001 | Load Adjustment Mode Raw | load_adjustment_mode_selection_raw |
+| 13001 | Daily PV generation | daily_pv_generation |
+| 13002 | Total PV generation | total_pv_generation |
+| 13004 | Daily exported energy from PV | daily_exported_energy_from_PV |
+| 13005 | Total exported energy from PV | total_exported_energy_from_pv |
+| 13007 | Load power | load_power |
+| 13009 | Export power raw | export_power_raw |
+| 13010 | Load Adjustment Mode ON/OFF Selection raw | load_adjustment_mode_on_off_selection_raw |
+| 13011 | Daily battery charge from PV | daily_battery_charge_from_pv |
+| 13012 | Total battery charge from PV | total_battery_charge_from_pv |
+| 13016 | Daily direct energy consumption | daily_direct_energy_consumption |
+| 13017 | Total direct energy consumption | total_direct_energy_consumption |
+| 13019 | Battery voltage | battery_voltage |
+| 13020 | Battery current | battery_current |
+| 13021 | Battery power raw | battery_power_raw |
+| 13022 | Battery level | battery_level |
+| 13023 | Battery state of health | battery_state_of_health |
+| 13024 | Battery temperature | battery_temperature |
+| 13025 | Daily battery discharge | daily_battery_discharge |
+| 13026 | Total battery discharge | total_battery_discharge |
+| 13030 | Phase A current | phase_a_current |
+| 13031 | Phase B current | phase_b_current |
+| 13032 | Phase C current | phase_c_current |
+| 13033 | Total active power | total_active_power |
+| 13035 | Daily imported energy | daily_imported_energy |
+| 13036 | Total imported energy | total_imported_energy |
+| 13039 | Daily battery charge | daily_battery_charge |
+| 13040 | Total battery charge | total_battery_charge |
+| 13044 | Daily exported energy | daily_exported_energy |
+| 13045 | Total exported energy | total_exported_energy |
+| 30229 | Global mpp scan manual raw | global_mpp_scan_manual_raw |
+
+**Note:** Monthly and yearly statistical sensors are only available with LAN connection. Battery-related sensors are only available when battery is enabled.
+
+### Controls (Read/Write)
+
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| 13001 | Load Adjustment Mode | load_adjustment_mode_selection |
+| 13010 | Load Adjustment Mode ON/OFF | load_adjustment_mode_on_off_selection |
+| 13049 | EMS Mode Selection | ems_mode_selection |
+| 13050 | Battery forced charge discharge cmd raw | battery_forced_charge_discharge_cmd_raw |
+| 13051 | Battery forced charge discharge power | battery_forced_charge_discharge_power |
+| 13057 | Max SoC | max_soc |
+| 13058 | Min SoC | min_soc |
+| 13073 | Export Power Limit | export_power_limit |
+| 13074 | Backup Mode | backup_mode |
+| 13086 | Export Power Limit Mode | export_power_limit_mode |
+| 13099 | Reserved SoC for Backup | reserved_soc_for_backup |
+| 33046 | Battery Max Charge Power | battery_max_charge_power |
+| 33047 | Battery Max Discharge Power | battery_max_discharge_power |
+| 33148 | Battery Charging Start Power | battery_charging_start_power |
+| 33149 | Battery Discharging Start Power | battery_discharging_start_power |
+
+### Calculated Sensors
+
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| - | MPPT1 Power | mppt1_power |
+| - | MPPT2 Power | mppt2_power |
+| - | MPPT3 Power | mppt3_power |
+| - | Total MPPT Power | total_mppt_power |
+| - | Net Grid Power | net_grid_power |
+| - | Import Power | import_power |
+| - | Export Power | export_power |
+| - | Total Load Power | total_load_power |
+| - | Solar to Grid Efficiency | solar_to_grid_efficiency |
+| - | Battery to Load Efficiency | battery_to_load_efficiency |
+| - | Power Balance | power_balance |
+| - | Total Phase Power | total_phase_power |
+| - | Phase A Power | phase_a_power |
+| - | Phase B Power | phase_b_power |
+| - | Phase C Power | phase_c_power |
+| - | Meter Active Power | meter_active_power |
+| - | Meter Phase A Active Power | meter_phase_a_active_power |
+| - | Meter Phase B Active Power | meter_phase_b_active_power |
+| - | Meter Phase C Active Power | meter_phase_c_active_power |
+| - | Monthly PV generation (current) | monthly_pv_generation_current |
+| - | Yearly PV generation (current) | yearly_pv_generation_current |
+| - | Monthly export (current) | monthly_export_current |
+| - | Yearly export (current) | yearly_export_current |
+| - | Battery level (nominal) | battery_level_nom |
+| - | Battery charge (nominal) | battery_charge_nom |
+| - | Battery charge | battery_charge |
+| - | Battery charge (health-rated) | battery_charge_health_rated |
+| - | Daily consumed energy | daily_consumed_energy |
+| - | Total consumed energy | total_consumed_energy |
+| - | Signed battery power | signed_battery_power |
+| - | Battery charging power | battery_charging_power |
+| - | Battery discharging power | battery_discharging_power |
+| - | Inverter Status Display | inverter_status_display |
+| - | Grid Status | grid_status |
+| - | Battery Status Indicator | battery_status_indicator |
+| - | Battery Health Status | battery_health_status |
+
+### Binary Sensors
+
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| - | PV generating | pv_generating |
+| - | PV generating (delay) | pv_generating_delay |
+| - | Battery charging | battery_charging |
+| - | Battery charging (delay) | battery_charging_delay |
+| - | Battery discharging | battery_discharging |
+| - | Battery discharging (delay) | battery_discharging_delay |
+| - | Exporting power | exporting_power |
+| - | Exporting power (delay) | exporting_power_delay |
+| - | Importing power | importing_power |
+| - | Importing power (delay) | importing_power_delay |
+| - | Positive load power | positive_load_power |
+| - | Negative load power | negative_load_power |
+
+**Note:** Address "-" indicates that the entity is calculated or derived from other entities and does not have a direct Modbus register address.
+
 ## 🚀 Example Configurations
 
 ### 🔋 3-phase Hybrid Inverter (SH10RT)
