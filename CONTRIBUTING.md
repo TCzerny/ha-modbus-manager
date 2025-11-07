@@ -72,7 +72,7 @@ calculated:
   - name: "Calculated Sensor"
     unique_id: "calculated_sensor"
     type: "sensor"
-    state: "{{ states('sensor.{PREFIX}_base_sensor') | default(0) | float * 2 }}"
+    state: "{{ (states('sensor.{PREFIX}_base_sensor') | float(0)) * 2 }}"
     unit_of_measurement: "W"
     device_class: power
 ```
@@ -253,7 +253,7 @@ calculated:
   - name: "Total Power"
     unique_id: "total_power"
     type: "sensor"
-    state: "{{ states('sensor.{PREFIX}_power_1') | default(0) | float + states('sensor.{PREFIX}_power_2') | default(0) | float }}"
+    state: "{{ (states('sensor.{PREFIX}_power_1') | float(0)) + (states('sensor.{PREFIX}_power_2') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: power
 ```
@@ -265,8 +265,9 @@ calculated:
     unique_id: "grid_import_power"
     type: "sensor"
     state: >-
-      {% if states('sensor.{PREFIX}_grid_power') | default(0) | float > 0 %}
-        {{ states('sensor.{PREFIX}_grid_power') | default(0) | float }}
+      {% set grid_power = states('sensor.{PREFIX}_grid_power') | float(0) %}
+      {% if grid_power > 0 %}
+        {{ grid_power }}
       {% else %}
         0
       {% endif %}

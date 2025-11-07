@@ -369,7 +369,7 @@ calculated:
   - name: "Total Power"
     unique_id: "total_power"
     type: "sensor"
-    state: "{{ (states('sensor.{PREFIX}_power_1') | default(0) | float) + (states('sensor.{PREFIX}_power_2') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_power_1') | float(0)) + (states('sensor.{PREFIX}_power_2') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -417,7 +417,7 @@ calculated:
 {{ states('sensor.{PREFIX}_status') not in ['unavailable', 'unknown', 'no cable'] }}
 
 # Mathematical calculation
-{{ (states('sensor.{PREFIX}_voltage') | default(0) | float) * (states('sensor.{PREFIX}_current') | default(0) | float) }}
+{{ (states('sensor.{PREFIX}_voltage') | float(0)) * (states('sensor.{PREFIX}_current') | float(0)) }}
 ```
 
 ---
@@ -592,7 +592,7 @@ calculated:
   - name: "Total Power"
     unique_id: "total_power"
     type: "sensor"
-    state: "{{ (states('sensor.{PREFIX}_current_phase_1') | default(0) | float) * 230 }}"
+    state: "{{ (states('sensor.{PREFIX}_current_phase_1') | float(0)) * 230 }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
