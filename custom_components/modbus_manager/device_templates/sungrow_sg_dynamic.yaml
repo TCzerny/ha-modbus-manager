@@ -10,7 +10,6 @@ default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Inverter"
 firmware_version: "SAPPHIRE-H_xxxx"
-available_firmware_versions: ["SAPPHIRE-H_xxxx", "Latest"]
 
 # Dynamic configuration support
 dynamic_config:
@@ -71,7 +70,8 @@ dynamic_config:
 
   firmware_version:
     description: "Firmware version string (e.g., 'SAPPHIRE-H_xxx')"
-    default: "SAPPHIRE-H_xxx"
+    options: ["SAPPHIRE-H_xxxx", "Latest"]
+    default: "SAPPHIRE-H_xxxx"
 
   connection_type:
     description: "Connection type (LAN or WINET)"

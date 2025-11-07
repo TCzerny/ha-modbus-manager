@@ -297,6 +297,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Modbus-Hub schließen - aber mit verbesserter Logik
         if entry.entry_id in hass.data[DOMAIN]:
             hub_data = hass.data[DOMAIN][entry.entry_id]
+
+            # Mark coordinator as unloading and invalidate cache before unloading
+            if "coordinator" in hub_data:
+                coordinator = hub_data["coordinator"]
+                coordinator.mark_as_unloading()
+                _LOGGER.debug("Coordinator marked as unloading and cache invalidated")
+
             if "hub" in hub_data:
                 hub = hub_data["hub"]
                 host = entry.data.get("host", "unknown")

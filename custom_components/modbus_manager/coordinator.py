@@ -106,6 +106,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
         # Track when each interval group was last updated
         self._last_update_time = {}
 
+        # Flag to indicate if coordinator is being unloaded
+        self._is_unloading = False
+
         # Start with a short interval - will be adjusted after register analysis
         # Use 5 seconds as base to ensure we can update frequently
         update_interval = timedelta(seconds=5)
@@ -134,8 +137,19 @@ class ModbusCoordinator(DataUpdateCoordinator):
         # Force re-collection on next update
         self._cached_registers = None
 
+    def mark_as_unloading(self):
+        """Mark coordinator as unloading to stop further updates."""
+        _LOGGER.debug("Marking coordinator as unloading")
+        self._is_unloading = True
+        self.invalidate_cache()
+
     async def _async_update_data(self) -> Dict[str, Any]:
         """Fetch register data with respect to individual scan intervals."""
+        # Stop updates if coordinator is being unloaded
+        if self._is_unloading:
+            _LOGGER.debug("Coordinator is unloading, skipping update")
+            return self.register_data
+
         try:
             # Start performance monitoring
             operation_id = self.performance_monitor.start_operation(
@@ -1252,11 +1266,25 @@ class ModbusCoordinator(DataUpdateCoordinator):
             )
 
             if not result or not hasattr(result, "registers"):
-                _LOGGER.warning(
-                    "Failed to read registers %d-%d",
-                    range_obj.start_address,
-                    range_obj.end_address,
-                )
+                # Check if coordinator is being unloaded/reloaded
+                # If so, this is expected and we should log at debug level
+                if (
+                    self._is_unloading
+                    or not self._cache_initialized
+                    or not self._cached_registers_by_interval
+                ):
+                    # Coordinator is being reloaded/unloaded, suppress warning
+                    _LOGGER.debug(
+                        "Failed to read registers %d-%d (coordinator reloading/unloading)",
+                        range_obj.start_address,
+                        range_obj.end_address,
+                    )
+                else:
+                    _LOGGER.warning(
+                        "Failed to read registers %d-%d",
+                        range_obj.start_address,
+                        range_obj.end_address,
+                    )
                 return None
 
             return result.registers

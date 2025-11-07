@@ -10,13 +10,46 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### 🔧 Changed
 
 #### Compleo eBox Professional Template v3.0.0
-- **Firmware Version Filtering**: Voltage sensors and current meter reading now require firmware version 2.0.34 or higher
+- **Firmware Version Filtering**: Voltage sensors and energy meter reading now require firmware version 2.0.34 or higher
   - Voltage Phase 1, 2, 3 sensors: Only available with firmware 2.0.34+
-  - Current Meter Reading sensor: Only available with firmware 2.0.34+
+  - Energy Meter Reading sensor: Only available with firmware 2.0.35+
   - Average Voltage calculated sensor: Only available with firmware 2.0.34+
-  - Voltage Imbalance calculated sensor: Only available with firmware 2.0.34+
+  - Voltage Imbalance calculated sensor: Only available with firmware 2.0.35+
   - Sensors are automatically filtered based on selected firmware version during setup
   - Prevents errors when using older firmware versions that don't support these registers
+
+- **Energy Meter Reading Sensor Correction**:
+  - Corrected sensor name: "Current Meter Reading" → "Energy Meter Reading"
+  - Corrected unit: "A" → "kWh"
+  - Corrected device_class: "current" → "energy"
+  - Corrected state_class: "measurement" → "total_increasing"
+  - Added scale: 1 (register value is already in kWh)
+
+- **Voltage Imbalance Calculated Sensor Fix**:
+  - Removed incorrect device_class: "voltage" (unit is "%", not "V")
+  - Corrected firmware_min_version: "2.0.35"
+
+#### Config Flow Improvements
+- **Dynamic Config Defaults**: Default values are now properly displayed in dynamic configuration form
+  - All fields with `options` now use `vol.Optional()` with `default` parameter
+  - Connection type and firmware version defaults are correctly set
+  - Fixes issue where only firmware_version was pre-selected in dynamic config dialog
+
+- **Device Addition Fix**: When adding a device to existing hub, all required fields are now properly saved
+  - `firmware_version`, `template_version`, `selected_model`, and `type` are now included in device dict
+  - Ensures firmware filtering works correctly for newly added devices
+
+#### Coordinator Improvements
+- **Unloading Handling**: Coordinator now properly stops updates when being unloaded
+  - Added `_is_unloading` flag to prevent register reads during unload
+  - Suppresses warnings for failed register reads during reload/unload operations
+  - Cache is invalidated before unloading to prevent stale data
+
+#### Template Structure Improvements
+- **Firmware Version Configuration**: All templates now use `firmware_version` in `dynamic_config` with `options`
+  - Removed dependency on `available_firmware_versions` at template level
+  - Consistent structure across all templates (SHx, SG, eBox, SBR)
+  - Firmware version selection works correctly in dynamic config dialog
 
 ### 📚 Documentation
 
@@ -24,6 +57,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Added firmware version selection information and entity reference tables
 - Clarified which sensors require which firmware versions
 - Updated GitHub Wiki documentation for Compleo eBox Professional template
+- Corrected Energy Meter Reading documentation (kWh instead of A)
 
 ---
 

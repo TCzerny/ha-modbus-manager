@@ -30,10 +30,10 @@ dynamic_config:
     options: ["LAN", "WiFi"]
     default: "LAN"
 
-# Available firmware versions for user selection
-available_firmware_versions:
-  - "1.3.38"    # Basic functionality
-  - "2.0.35"    # Added voltage sensors and current meter reading
+  firmware_version:
+    description: "Firmware version"
+    options: ["1.3.38", "2.0.35"]
+    default: "1.3.38"
 
 # Device information sensors
 sensors:
@@ -123,6 +123,61 @@ sensors:
       2: "Cable unlocked without car"
       3: "Cable locked with car"
 
+  # Voltage measurements (firmware >= 2.0.35)
+  - name: "Voltage Phase 1"
+    unique_id: "voltage_phase_1"
+    address: 301
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "2.0.35"
+
+  - name: "Voltage Phase 2"
+    unique_id: "voltage_phase_2"
+    address: 303
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "2.0.35"
+
+  - name: "Voltage Phase 3"
+    unique_id: "voltage_phase_3"
+    address: 305
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+    firmware_min_version: "2.0.35"
+
+  # Energy meter reading (firmware >= 2.0.35)
+  - name: "Energy Meter Reading"
+    unique_id: "energy_meter_reading"
+    address: 307
+    input_type: "input"
+    data_type: "float32"
+    scale: 1
+    scan_interval: 10
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    group: "EV_meter_reading"
+    icon: "mdi:meter-electric"
+    firmware_min_version: "2.0.35"
+
   # Current measurements
   - name: "Current Phase 1"
     unique_id: "current_phase_1"
@@ -197,59 +252,9 @@ sensors:
     group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
-  # Voltage measurements (firmware >= 2.0.34)
-  - name: "Voltage Phase 1"
-    unique_id: "voltage_phase_1"
-    address: 301
-    input_type: "input"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    group: "EV_voltage_measurement"
-    icon: "mdi:lightning-bolt"
-    firmware_min_version: "2.0.34"
 
-  - name: "Voltage Phase 2"
-    unique_id: "voltage_phase_2"
-    address: 303
-    input_type: "input"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    group: "EV_voltage_measurement"
-    icon: "mdi:lightning-bolt"
-    firmware_min_version: "2.0.34"
 
-  - name: "Voltage Phase 3"
-    unique_id: "voltage_phase_3"
-    address: 305
-    input_type: "input"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "V"
-    device_class: "voltage"
-    state_class: "measurement"
-    group: "EV_voltage_measurement"
-    icon: "mdi:lightning-bolt"
-    firmware_min_version: "2.0.34"
 
-  # Current meter reading (firmware >= 2.0.34)
-  - name: "Current Meter Reading"
-    unique_id: "current_meter_reading"
-    address: 307
-    input_type: "input"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    group: "EV_meter_reading"
-    icon: "mdi:meter-electric"
-    firmware_min_version: "2.0.34"
 
   # # Max current settings (holding registers)
   # - name: "Max Current Phase 1"
@@ -493,11 +498,11 @@ calculated:
     group: "EV_efficiency"
     icon: "mdi:gauge"
 
-  # Voltage calculations (firmware >= 2.0.34)
+  # Voltage calculations (firmware >= 2.0.35)
   - name: "Average Voltage"
     unique_id: "average_voltage"
     type: "sensor"
-    firmware_min_version: "2.0.34"
+    firmware_min_version: "2.0.35"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') and
          not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
@@ -515,7 +520,7 @@ calculated:
   - name: "Voltage Imbalance"
     unique_id: "voltage_imbalance"
     type: "sensor"
-    firmware_min_version: "2.0.34"
+    firmware_min_version: "2.0.35"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') and
          not is_state('sensor.{PREFIX}_voltage_phase_2', 'unavailable') and
@@ -527,7 +532,6 @@ calculated:
       {% set avg = (v1 + v2 + v3) / 3 %}
       {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
     unit_of_measurement: "%"
-    device_class: "voltage"
     state_class: "measurement"
     group: "EV_voltage_measurement"
     icon: "mdi:gauge"

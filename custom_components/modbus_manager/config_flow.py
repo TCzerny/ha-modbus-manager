@@ -263,15 +263,6 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 ): int,
             }
 
-            # Add firmware version selection for all templates that have available_firmware_versions
-            available_firmware = template_data.get("available_firmware_versions", [])
-            if available_firmware:
-                _LOGGER.debug(
-                    "Adding firmware_version field to schema with options: %s",
-                    available_firmware,
-                )
-                schema_fields["firmware_version"] = vol.In(available_firmware)
-
             return self.async_show_form(
                 step_id="device_config",
                 data_schema=vol.Schema(schema_fields),
@@ -350,11 +341,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     )
 
                     if options:
-                        schema_fields[field_name] = vol.In(options)
+                        schema_fields[
+                            vol.Optional(field_name, default=default)
+                        ] = vol.In(options)
                         _LOGGER.debug(
-                            "Added configurable field %s with options: %s",
+                            "Added configurable field %s with options: %s, default: %s",
                             field_name,
                             options,
+                            default,
                         )
                 elif isinstance(field_config, dict) and "default" in field_config:
                     # Field with default value but no options (single value)
@@ -382,7 +376,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "options", ["1.0"]
             )
             firmware_default = dynamic_config["firmware_version"].get("default", "1.0")
-            schema_fields["firmware_version"] = vol.In(firmware_options)
+            schema_fields[
+                vol.Optional("firmware_version", default=firmware_default)
+            ] = vol.In(firmware_options)
 
         # Add connection type if available
         if "connection_type" in dynamic_config:
@@ -390,7 +386,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "options", ["LAN", "WINET"]
             )
             connection_default = dynamic_config["connection_type"].get("default", "LAN")
-            schema_fields["connection_type"] = vol.In(connection_options)
+            schema_fields[
+                vol.Optional("connection_type", default=connection_default)
+            ] = vol.In(connection_options)
 
         # Battery slave ID removed - using connection slave_id instead
 
@@ -517,7 +515,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         # Handle "Latest" firmware version - use the highest available version
         if firmware_version == "Latest":
-            available_firmware = template_data.get("available_firmware_versions", [])
+            firmware_config = dynamic_config.get("firmware_version", {})
+            available_firmware = firmware_config.get("options", [])
+
             if available_firmware:
                 # Find the highest version (excluding "Latest")
                 numeric_versions = [v for v in available_firmware if v != "Latest"]
@@ -1636,10 +1636,18 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 existing_devices = existing_entry.data.get("devices", [])
 
                 # Add new device
+                # Determine device type from template
+                template_type = template_data.get("type", "inverter")
+                device_type = template_type if template_type else "inverter"
+
                 new_device = {
+                    "type": device_type,
                     "prefix": config_data["prefix"],
                     "template": config_data["template"],
                     "slave_id": config_data.get("slave_id", 1),
+                    "template_version": config_data.get("template_version"),
+                    "firmware_version": config_data.get("firmware_version"),
+                    "selected_model": config_data.get("selected_model"),
                     "registers": config_data.get("registers", []),
                     "calculated_entities": config_data.get("calculated_entities", []),
                     "controls": config_data.get("controls", []),
@@ -1885,11 +1893,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         )
         current_controls_count = len(self.config_entry.data.get("controls", []))
 
-        # Load template to get available firmware versions
+        # Load template
         template_data = await get_template_by_name(template_name)
-        available_firmware = []
-        if template_data and isinstance(template_data, dict):
-            available_firmware = template_data.get("available_firmware_versions", [])
 
         # Build schema fields
 
@@ -1970,12 +1975,17 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     vol.Optional("connection_type", default=current_connection)
                 ] = vol.In(connection_options)
 
-        # Add firmware version selection if available
-        if available_firmware:
-            current_firmware = self.config_entry.data.get("firmware_version", "1.0.0")
-            schema_fields[
-                vol.Optional("firmware_version", default=current_firmware)
-            ] = vol.In(available_firmware)
+            # Add firmware version if available in dynamic_config
+            if "firmware_version" in dynamic_config:
+                current_firmware = self.config_entry.data.get(
+                    "firmware_version", "1.0.0"
+                )
+                firmware_options = dynamic_config["firmware_version"].get(
+                    "options", ["1.0.0"]
+                )
+                schema_fields[
+                    vol.Optional("firmware_version", default=current_firmware)
+                ] = vol.In(firmware_options)
 
         # Basic options form
         return self.async_show_form(
