@@ -5,7 +5,7 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.0.0
+version: 1.1.0
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -1695,6 +1695,17 @@ sensors:
     state_class: measurement
     scan_interval: 10
 
+  # mkaiser issue #444 SH10RT no standby mode after latest firmware update
+  - name: Forced Startup Under Low SoC Standby raw
+    unique_id: forced_startup_under_low_soc_standby_raw
+    address: 13016 # reg 13017
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    state_class: measurement
+    scan_interval: 10
+
+
 # Controls for write access
 controls:
   - type: "select"
@@ -1888,6 +1899,18 @@ controls:
     scale: 10
     scan_interval: 10
     group: "PV_battery_control"
+
+  - type: "select"
+    name: "Forced Startup Under Low SoC Standby"
+    unique_id: "forced_startup_under_low_soc_standby"
+    address: 13016 # reg 13017
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0x55: "Disabled"
+      0xAA: "Enabled"
+    group: "PV_control"
 
 # Calculated Sensors
 calculated:

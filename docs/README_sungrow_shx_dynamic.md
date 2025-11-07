@@ -121,6 +121,16 @@ The template supports **all 36** following Sungrow SHx models:
 - **Min SoC** - Minimum battery state of charge
 - **Reserved SoC for Backup** - Reserved SoC for backup
 - **Battery Max Charge Power** - Maximum battery charge power
+- **Battery Max Discharge Power** - Maximum battery discharge power
+- **Battery Charging Start Power** - Power threshold to start battery charging
+- **Battery Discharging Start Power** - Power threshold to start battery discharging
+
+### 🔄 System Control
+- **Forced Startup Under Low SoC Standby** - Enable/disable forced startup when battery is in low SoC standby mode
+  - **Address:** 13016 (register 13017)
+  - **Values:** 0xAA (Enabled) / 0x55 (Disabled)
+  - **Purpose:** Allows the inverter to start even when battery is in low SoC standby mode
+  - **Note:** This control addresses issue #444 from mkaiser's implementation (SH10RT no standby mode after latest firmware update)
 
 ## 🧮 Calculated Sensors
 
@@ -251,6 +261,7 @@ This section contains all entities that will be created by this template, includ
 | 13011 | Daily battery charge from PV | daily_battery_charge_from_pv |
 | 13012 | Total battery charge from PV | total_battery_charge_from_pv |
 | 13016 | Daily direct energy consumption | daily_direct_energy_consumption |
+| 13016 | Forced Startup Under Low SoC Standby raw | forced_startup_under_low_soc_standby_raw |
 | 13017 | Total direct energy consumption | total_direct_energy_consumption |
 | 13019 | Battery voltage | battery_voltage |
 | 13020 | Battery current | battery_current |
@@ -280,6 +291,7 @@ This section contains all entities that will be created by this template, includ
 |---------|------|-----------|
 | 13001 | Load Adjustment Mode | load_adjustment_mode_selection |
 | 13010 | Load Adjustment Mode ON/OFF | load_adjustment_mode_on_off_selection |
+| 13016 | Forced Startup Under Low SoC Standby | forced_startup_under_low_soc_standby |
 | 13049 | EMS Mode Selection | ems_mode_selection |
 | 13050 | Battery forced charge discharge cmd raw | battery_forced_charge_discharge_cmd_raw |
 | 13051 | Battery forced charge discharge power | battery_forced_charge_discharge_power |
@@ -435,6 +447,16 @@ Special thanks to the **photovoltaikforum.com** and **forum.iobroker.net** commu
 
 ## 📋 Version
 
-**Version:** 1.0.0
-**Last Update:** 2025
+**Version:** 1.1.0
+**Last Update:** 2025-11-07
 **Compatibility:** All 36 Sungrow SHx Models
+
+### 🔄 Changelog
+
+#### Version 1.1.0 (2025-11-07)
+- ✨ **New Control:** Added "Forced Startup Under Low SoC Standby" control (Address 13016 holding)
+  - Resolves issue with SH10RT inverters not entering standby mode after firmware update
+  - Allows forced startup when battery is in low SoC standby mode
+  - Values: 0xAA (Enabled) / 0x55 (Disabled)
+- 📊 **New Sensor:** Added "Forced Startup Under Low SoC Standby raw" sensor for status monitoring
+- 🔧 **Enhanced Switch Support:** Switches now support `on_value` and `off_value` for custom state interpretation

@@ -5,6 +5,42 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.1] - 2025-11-07
+
+### ✨ Added
+
+#### Switch Controls Enhancement
+- **Enhanced Switch State Interpretation**: Switches now support `on_value` and `off_value` for custom state interpretation
+  - Allows switches to correctly interpret non-standard ON/OFF values (e.g., 0xAA/0x55)
+  - Automatic fallback: If `on_value`/`off_value` not specified, uses `write_value`/`write_value_off` as defaults
+  - Supports devices that use custom values instead of standard 0/1 or 1/0
+
+#### Sungrow SHx Dynamic Template v1.1.0
+- **New Control**: "Forced Startup Under Low SoC Standby" (Address 13016)
+  - Resolves issue with SH10RT inverters not entering standby mode after firmware update (mkaiser issue #444)
+  - Allows forced startup when battery is in low SoC standby mode
+  - Values: 0xAA (Enabled) / 0x55 (Disabled)
+  - Implemented as Select control for reliable state interpretation
+
+- **New Sensor**: "Forced Startup Under Low SoC Standby raw" (Address 13016)
+  - Read-only sensor for monitoring the current state of the forced startup setting
+  - Useful for automation and status monitoring
+
+### 🔧 Changed
+
+- **Switch Implementation**: Improved switch state interpretation logic
+  - Better handling of custom ON/OFF values
+  - Automatic value mapping from write values to read values
+  - Warning logging for unexpected register values
+
+### 📚 Documentation
+
+- Updated `README_sungrow_shx_dynamic.md` with new control and sensor documentation
+- Enhanced `README_Template.md` with detailed Switch control configuration examples
+- Added examples for custom value switches (0xAA/0x55 pattern)
+
+---
+
 ## [0.1.0] - 2025-10-29
 
 ### 🎉 Initial Release

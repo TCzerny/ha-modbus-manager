@@ -249,10 +249,36 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
-    on_value: 1
-    off_value: 0
+    write_value: 1      # Value written when turning switch ON
+    write_value_off: 0  # Value written when turning switch OFF
+    on_value: 1         # Optional: Value that represents ON state (defaults to write_value)
+    off_value: 0        # Optional: Value that represents OFF state (defaults to write_value_off)
     group: "EV_settings"
 ```
+
+**Switch Configuration Options:**
+- **`write_value`**: Value written to register when switch is turned ON (default: 1)
+- **`write_value_off`**: Value written to register when switch is turned OFF (default: 0)
+- **`on_value`**: (Optional) Value that represents ON state when reading register. If not specified, uses `write_value` as fallback
+- **`off_value`**: (Optional) Value that represents OFF state when reading register. If not specified, uses `write_value_off` as fallback
+
+**Example with custom values (0xAA/0x55):**
+```yaml
+controls:
+  - type: "switch"
+    name: "Forced Startup Under Low SoC Standby"
+    unique_id: "forced_startup_under_low_soc_standby"
+    address: 13016
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    write_value: 0xAA      # 170 - Enable
+    write_value_off: 0x55  # 85 - Disable
+    # on_value and off_value automatically use write_value/write_value_off
+    group: "PV_control"
+```
+
+**Note:** If `on_value` and `off_value` are not specified, they automatically default to `write_value` and `write_value_off` respectively. This simplifies configuration for most use cases where the written and read values are the same.
 
 #### Button Control
 

@@ -72,6 +72,15 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         # Create register key for coordinator lookup
         self._register_key = f"{self._unique_id}_{self._address}"
 
+        # Get write values
+        self._write_value = register_config.get("write_value", 1)
+        self._write_value_off = register_config.get("write_value_off", 0)
+
+        # Get on_value and off_value for state interpretation
+        # If not specified, use write_value/write_value_off as fallback
+        self._on_value = register_config.get("on_value", self._write_value)
+        self._off_value = register_config.get("off_value", self._write_value_off)
+
         # Set entity properties
         self._attr_name = self._name
         self._attr_unique_id = self._unique_id
@@ -144,6 +153,12 @@ class ModbusCoordinatorSwitch(SwitchEntity):
             self._attr_extra_state_attributes["options"] = register_config["options"]
         if "swap" in register_config:
             self._attr_extra_state_attributes["swap"] = register_config["swap"]
+        if "on_value" in register_config:
+            self._attr_extra_state_attributes["on_value"] = register_config["on_value"]
+        if "off_value" in register_config:
+            self._attr_extra_state_attributes["off_value"] = register_config[
+                "off_value"
+            ]
 
     @property
     def is_on(self) -> bool | None:
@@ -160,7 +175,41 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         if processed_value is None:
             return None
 
-        # Convert to boolean based on data type and value
+        # Use on_value and off_value for state interpretation
+        # These are automatically set from write_value/write_value_off if not specified
+        if self._on_value is not None and self._off_value is not None:
+            if isinstance(processed_value, (int, float)):
+                # Compare numeric values directly
+                if processed_value == self._on_value:
+                    return True
+                elif processed_value == self._off_value:
+                    return False
+                else:
+                    # Value doesn't match expected on/off values
+                    _LOGGER.warning(
+                        "Switch %s has unexpected value %s (expected %s or %s)",
+                        self._name,
+                        processed_value,
+                        self._on_value,
+                        self._off_value,
+                    )
+                    return None
+            elif isinstance(processed_value, str):
+                # Try to convert string to int for comparison
+                try:
+                    int_value = int(processed_value)
+                    if int_value == self._on_value:
+                        return True
+                    elif int_value == self._off_value:
+                        return False
+                    else:
+                        return None
+                except (ValueError, TypeError):
+                    return None
+            else:
+                return None
+
+        # Default behavior: Convert to boolean based on data type and value
         if isinstance(processed_value, bool):
             return processed_value
         elif isinstance(processed_value, (int, float)):
@@ -180,11 +229,8 @@ class ModbusCoordinatorSwitch(SwitchEntity):
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn the switch on."""
         try:
-            # Get the write value from register config
-            write_value = self._register_config.get("write_value", 1)
-
-            # Write to Modbus register
-            await self._write_register(write_value)
+            # Write to Modbus register using write_value
+            await self._write_register(self._write_value)
 
         except Exception as e:
             _LOGGER.error("Error turning on switch %s: %s", self._name, str(e))
@@ -192,11 +238,8 @@ class ModbusCoordinatorSwitch(SwitchEntity):
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn the switch off."""
         try:
-            # Get the write value from register config
-            write_value = self._register_config.get("write_value_off", 0)
-
-            # Write to Modbus register
-            await self._write_register(write_value)
+            # Write to Modbus register using write_value_off
+            await self._write_register(self._write_value_off)
 
         except Exception as e:
             _LOGGER.error("Error turning off switch %s: %s", self._name, str(e))
