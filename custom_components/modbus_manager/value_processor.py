@@ -132,8 +132,11 @@ def apply_value_mapping(value: Any, config: Dict[str, Any]) -> Any:
                 elif str(int_value) in value_map:
                     return value_map[str(int_value)]
             elif isinstance(value, str):
-                # Try string key first, then int key if string is numeric
-                if value in value_map:
+                # Try string key first (trim whitespace for exact match)
+                trimmed_value = value.strip()
+                if trimmed_value in value_map:
+                    return value_map[trimmed_value]
+                elif value in value_map:
                     return value_map[value]
                 elif value.isdigit() and int(value) in value_map:
                     return value_map[int(value)]

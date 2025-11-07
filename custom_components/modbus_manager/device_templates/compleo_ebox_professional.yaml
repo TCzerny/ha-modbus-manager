@@ -530,7 +530,11 @@ calculated:
       {% set v2 = states('sensor.{PREFIX}_voltage_phase_2') | float(0) %}
       {% set v3 = states('sensor.{PREFIX}_voltage_phase_3') | float(0) %}
       {% set avg = (v1 + v2 + v3) / 3 %}
-      {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
+      {% if avg > 0 %}
+        {{ ((max([v1, v2, v3]) - min([v1, v2, v3])) / avg * 100) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
     unit_of_measurement: "%"
     state_class: "measurement"
     group: "EV_voltage_measurement"
@@ -555,7 +559,12 @@ binary_sensors:
     availability: >-
       {{ not is_state('sensor.{PREFIX}_cable_status', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_cable_status') not in ['unavailable', 'unknown', 'no cable'] }}
+      {% if is_state('sensor.{PREFIX}_cable_status', 'unavailable') or is_state('sensor.{PREFIX}_cable_status', 'unknown') %}
+        false
+      {% else %}
+        {% set raw_val = state_attr('sensor.{PREFIX}_cable_status', 'raw_value') | int(0) %}
+        {{ raw_val > 0 }}
+      {% endif %}
     device_class: "connectivity"
     group: "EV_charging_status"
     icon: "mdi:cable-data"
