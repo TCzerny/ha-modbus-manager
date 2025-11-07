@@ -17,6 +17,16 @@ The **Compleo eBox Professional Template** provides complete integration for Com
 |-----------|------|---------|-------------|
 | **Prefix** | String | Required | Unique prefix for all entities |
 | **Name** | String | Required | Display name for the device |
+| **Firmware Version** | String | 1.3.38 | Firmware version of your device |
+
+### Available Firmware Versions
+
+| Version | Description | Features |
+|---------|-------------|----------|
+| **1.3.38** | Basic functionality | All core features (current, status, controls) |
+| **2.0.35** | Enhanced features | Includes voltage sensors and current meter reading |
+
+**Important:** Voltage sensors and current meter reading are only available with firmware version **2.0.34** or higher. If you select firmware version 1.3.38, these sensors will be automatically filtered out.
 
 ### Example Configuration
 
@@ -45,9 +55,10 @@ unit_id: 1
 - **Phase A Current**: Current on phase A (A)
 - **Phase B Current**: Current on phase B (A)
 - **Phase C Current**: Current on phase C (A)
-- **Phase A Voltage**: Voltage on phase A (V)
-- **Phase B Voltage**: Voltage on phase B (V)
-- **Phase C Voltage**: Voltage on phase C (V)
+- **Phase A Voltage**: Voltage on phase A (V) ⚠️ *Requires firmware 2.0.34+*
+- **Phase B Voltage**: Voltage on phase B (V) ⚠️ *Requires firmware 2.0.34+*
+- **Phase C Voltage**: Voltage on phase C (V) ⚠️ *Requires firmware 2.0.34+*
+- **Current Meter Reading**: Total current meter reading (A) ⚠️ *Requires firmware 2.0.34+*
 - **Grid Frequency**: AC frequency (Hz)
 
 #### 🔋 Battery Information
@@ -100,25 +111,25 @@ This section contains all entities that will be created by this template, includ
 
 ### Sensors (Read-only)
 
-| Address | Name | Unique ID |
-|---------|------|-----------|
-| 0 | ID | id |
-| 25 | Serial Number | serial_number |
-| 50 | Active Protocol | active_protocol |
-| 100 | Manufacturer | manufacturer |
-| 200 | Firmware | firmware |
-| 275 | Status | status |
-| 300 | Cable Status | cable_status |
-| 301 | Voltage Phase 1 | voltage_phase_1 |
-| 303 | Voltage Phase 2 | voltage_phase_2 |
-| 305 | Voltage Phase 3 | voltage_phase_3 |
-| 307 | Current Meter Reading | current_meter_reading |
-| 1000 | Actual Max Current Phase 1 | actual_max_current_phase_1 |
-| 1002 | Actual Max Current Phase 2 | actual_max_current_phase_2 |
-| 1004 | Actual Max Current Phase 3 | actual_max_current_phase_3 |
-| 1006 | Current Phase 1 | current_phase_1 |
-| 1008 | Current Phase 2 | current_phase_2 |
-| 1010 | Current Phase 3 | current_phase_3 |
+| Address | Name | Unique ID | Firmware Requirement |
+|---------|------|-----------|----------------------|
+| 0 | ID | id | All versions |
+| 25 | Serial Number | serial_number | All versions |
+| 50 | Active Protocol | active_protocol | All versions |
+| 100 | Manufacturer | manufacturer | All versions |
+| 200 | Firmware | firmware | All versions |
+| 275 | Status | status | All versions |
+| 300 | Cable Status | cable_status | All versions |
+| 301 | Voltage Phase 1 | voltage_phase_1 | **2.0.34+** |
+| 303 | Voltage Phase 2 | voltage_phase_2 | **2.0.34+** |
+| 305 | Voltage Phase 3 | voltage_phase_3 | **2.0.34+** |
+| 307 | Current Meter Reading | current_meter_reading | **2.0.34+** |
+| 1000 | Actual Max Current Phase 1 | actual_max_current_phase_1 | All versions |
+| 1002 | Actual Max Current Phase 2 | actual_max_current_phase_2 | All versions |
+| 1004 | Actual Max Current Phase 3 | actual_max_current_phase_3 | All versions |
+| 1006 | Current Phase 1 | current_phase_1 | All versions |
+| 1008 | Current Phase 2 | current_phase_2 | All versions |
+| 1010 | Current Phase 3 | current_phase_3 | All versions |
 
 ### Controls (Read/Write)
 
@@ -130,15 +141,15 @@ This section contains all entities that will be created by this template, includ
 
 ### Calculated Sensors
 
-| Address | Name | Unique ID |
-|---------|------|-----------|
-| - | Total Current | total_current |
-| - | Charging Power | charging_power |
-| - | Max Total Current | max_total_current |
-| - | Max Charging Power | max_charging_power |
-| - | Charging Efficiency | charging_efficiency |
-| - | Average Voltage | average_voltage |
-| - | Voltage Imbalance | voltage_imbalance |
+| Address | Name | Unique ID | Firmware Requirement |
+|---------|------|-----------|----------------------|
+| - | Total Current | total_current | All versions |
+| - | Charging Power | charging_power | All versions |
+| - | Max Total Current | max_total_current | All versions |
+| - | Max Charging Power | max_charging_power | All versions |
+| - | Charging Efficiency | charging_efficiency | All versions |
+| - | Average Voltage | average_voltage | **2.0.34+** |
+| - | Voltage Imbalance | voltage_imbalance | **2.0.34+** |
 
 ### Binary Sensors
 
@@ -209,10 +220,27 @@ This section contains all entities that will be created by this template, includ
 
 ## 📋 Version
 
-**Version:** 1.0.0
-**Last Update:** 2024
+**Template Version:** 3.0.0
+**Last Update:** 2025-11-07
 **Status:** Stable
 **Compatibility:** Compleo eBox Professional Series
+
+## 📝 Changelog
+
+### Version 3.0.0 (2025-11-07)
+
+#### 🔧 Changed
+- **Firmware Version Filtering**: Voltage sensors and current meter reading now require firmware version 2.0.34 or higher
+  - Voltage Phase 1, 2, 3 sensors: Only available with firmware 2.0.34+
+  - Current Meter Reading sensor: Only available with firmware 2.0.34+
+  - Average Voltage calculated sensor: Only available with firmware 2.0.34+
+  - Voltage Imbalance calculated sensor: Only available with firmware 2.0.34+
+  - Sensors are automatically filtered based on selected firmware version during setup
+
+#### 📚 Documentation
+- Updated entity reference tables with firmware requirements
+- Added firmware version selection information
+- Clarified which sensors require which firmware versions
 
 ## 🔗 Related Documentation
 

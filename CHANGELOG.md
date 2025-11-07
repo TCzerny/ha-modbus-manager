@@ -5,6 +5,28 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.2] - 2025-11-07
+
+### 🔧 Changed
+
+#### Compleo eBox Professional Template v3.0.0
+- **Firmware Version Filtering**: Voltage sensors and current meter reading now require firmware version 2.0.34 or higher
+  - Voltage Phase 1, 2, 3 sensors: Only available with firmware 2.0.34+
+  - Current Meter Reading sensor: Only available with firmware 2.0.34+
+  - Average Voltage calculated sensor: Only available with firmware 2.0.34+
+  - Voltage Imbalance calculated sensor: Only available with firmware 2.0.34+
+  - Sensors are automatically filtered based on selected firmware version during setup
+  - Prevents errors when using older firmware versions that don't support these registers
+
+### 📚 Documentation
+
+- Updated `README_compleo_ebox_professional.md` with firmware version requirements
+- Added firmware version selection information and entity reference tables
+- Clarified which sensors require which firmware versions
+- Updated GitHub Wiki documentation for Compleo eBox Professional template
+
+---
+
 ## [0.1.1] - 2025-11-07
 
 ### ✨ Added
