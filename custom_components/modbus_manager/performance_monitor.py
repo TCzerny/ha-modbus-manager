@@ -23,6 +23,7 @@ class OperationMetrics:
     error_message: Optional[str] = None
     register_count: int = 0
     bytes_transferred: int = 0
+    optimized_ranges_count: int = 0  # Number of batch reads (optimized ranges)
 
     @property
     def duration(self) -> float:
@@ -259,6 +260,7 @@ class PerformanceMonitor:
                     "success": op.success,
                     "error_message": op.error_message,
                     "register_count": op.register_count,
+                    "optimized_ranges_count": op.optimized_ranges_count,
                     "throughput": round(op.throughput, 2),
                     "timestamp": datetime.fromtimestamp(op.start_time).isoformat(),
                 }

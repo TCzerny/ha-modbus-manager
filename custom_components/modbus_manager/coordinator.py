@@ -181,6 +181,17 @@ class ModbusCoordinator(DataUpdateCoordinator):
             # 2. Determine which registers need to be read based on their scan_interval
             registers_to_read = self._get_registers_due_for_update()
 
+            # Update operation with register count
+            total_registers = len(registers_to_read) if registers_to_read else 0
+            device_id = self.entry.data.get("prefix", "unknown")
+            device_metrics = self.performance_monitor.devices.get(device_id)
+            if device_metrics and device_metrics.operations:
+                # Update the last operation (the one we just started)
+                for op in reversed(device_metrics.operations):
+                    if op.end_time is None:  # Still running
+                        op.register_count = total_registers
+                        break
+
             if not registers_to_read:
                 _LOGGER.debug("No registers due for update at this time")
                 self.performance_monitor.end_operation(
@@ -193,6 +204,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
             # 3. Optimize reading (group consecutive registers)
             optimized_ranges = self.register_optimizer.optimize_registers(
                 registers_to_read
+            )
+
+            # Calculate total bytes that will be transferred (2 bytes per register)
+            total_bytes = sum(
+                range_obj.register_count * 2 for range_obj in optimized_ranges
             )
 
             _LOGGER.debug(
@@ -221,9 +237,20 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 interval = register.get("scan_interval", 30)
                 self._last_update_time[interval] = current_time
 
-            # 6. Update performance metrics
+            # 6. Update performance metrics with optimization stats
+            device_id = self.entry.data.get("prefix", "unknown")
+            # Update the operation with optimization metrics before ending
+            device_metrics = self.performance_monitor.devices.get(device_id)
+            if device_metrics and device_metrics.operations:
+                # Find the last operation that's still running
+                for op in reversed(device_metrics.operations):
+                    if op.end_time is None:  # Still running
+                        op.bytes_transferred = total_bytes
+                        op.optimized_ranges_count = len(optimized_ranges)
+                        break
+
             self.performance_monitor.end_operation(
-                device_id=self.entry.data.get("prefix", "unknown"),
+                device_id=device_id,
                 operation_id=operation_id,
                 success=True,
             )

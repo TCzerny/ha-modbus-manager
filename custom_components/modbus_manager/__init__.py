@@ -28,134 +28,10 @@ async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     # Set up services
     await async_setup_services(hass)
 
-    # Register services
-    async def async_get_performance(call):
-        """Get performance metrics for a device or globally."""
-        device_id = call.data.get("device_id")
-
-        if device_id:
-            # Get metrics for specific device
-            for entry_id, data in hass.data[DOMAIN].items():
-                if data.get("prefix") == device_id.replace("modbus_manager_", ""):
-                    performance_monitor = data.get("performance_monitor")
-                    if performance_monitor:
-                        # Get device-specific metrics
-                        device_metrics = performance_monitor.get_device_metrics(
-                            data.get("prefix", "unknown")
-                        )
-                        if device_metrics:
-                            _LOGGER.info(
-                                "Performance metrics for %s: %s",
-                                device_id,
-                                {
-                                    "total_operations": device_metrics.total_operations,
-                                    "successful_operations": device_metrics.successful_operations,
-                                    "failed_operations": device_metrics.failed_operations,
-                                    "success_rate": round(
-                                        device_metrics.success_rate, 2
-                                    ),
-                                    "average_duration": round(
-                                        device_metrics.average_duration, 3
-                                    ),
-                                    "average_throughput": round(
-                                        device_metrics.average_throughput, 2
-                                    ),
-                                },
-                            )
-                        else:
-                            _LOGGER.info(
-                                "No performance metrics available yet for device %s",
-                                device_id,
-                            )
-                        return
-                    else:
-                        _LOGGER.error(
-                            "Performance monitor not available for device %s", device_id
-                        )
-                        return
-
-            _LOGGER.error("Device %s not found", device_id)
-        else:
-            # Get global metrics from all coordinators
-            global_summary = {}
-            for entry_id, data in hass.data[DOMAIN].items():
-                performance_monitor = data.get("performance_monitor")
-                if performance_monitor:
-                    global_summary[
-                        entry_id
-                    ] = performance_monitor.get_performance_summary()
-
-            _LOGGER.info("Global performance metrics: %s", global_summary)
-
-    async def async_reset_performance(call):
-        """Reset performance metrics for a device or globally."""
-        device_id = call.data.get("device_id")
-
-        if device_id:
-            # Reset metrics for specific device
-            for entry_id, data in hass.data[DOMAIN].items():
-                if data.get("prefix") == device_id.replace("modbus_manager_", ""):
-                    performance_monitor = data.get("performance_monitor")
-                    if performance_monitor:
-                        performance_monitor.reset_metrics(
-                            device_id=data.get("prefix", "unknown")
-                        )
-                        _LOGGER.info(
-                            "Reset performance metrics for device %s", device_id
-                        )
-                        return
-                    else:
-                        _LOGGER.error(
-                            "Performance monitor not available for device %s", device_id
-                        )
-                        return
-
-            _LOGGER.error("Device %s not found", device_id)
-        else:
-            # Reset global metrics for all coordinators
-            for entry_id, data in hass.data[DOMAIN].items():
-                performance_monitor = data.get("performance_monitor")
-                if performance_monitor:
-                    performance_monitor.reset_metrics()
-
-            _LOGGER.info("Reset performance metrics for all devices")
-
-    # Register the services
-    hass.services.async_register(DOMAIN, "get_performance", async_get_performance)
-    hass.services.async_register(DOMAIN, "reset_performance", async_reset_performance)
-
-    async def async_get_devices(call):
-        """Get all configured devices from config entries."""
-        try:
-            all_devices = []
-            entries = hass.config_entries.async_entries(DOMAIN)
-
-            for entry in entries:
-                devices = entry.data.get("devices", [])
-                _LOGGER.info(
-                    "Found %d devices in entry %s", len(devices), entry.entry_id
-                )
-
-                # Add entry info to each device
-                for device in devices:
-                    device_info = {
-                        **device,
-                        "entry_id": entry.entry_id,
-                        "entry_title": entry.title,
-                        "hub_host": entry.data.get("hub", {}).get("host")
-                        or entry.data.get("host", "unknown"),
-                        "hub_port": entry.data.get("hub", {}).get("port")
-                        or entry.data.get("port", 502),
-                    }
-                    all_devices.append(device_info)
-
-            _LOGGER.info("Returning %d total devices", len(all_devices))
-            return {"devices": all_devices}
-        except Exception as e:
-            _LOGGER.error("Error getting devices: %s", str(e))
-            return {"devices": []}
-
-    hass.services.async_register(DOMAIN, "get_devices", async_get_devices)
+    # Note: get_performance, reset_performance, and get_devices removed
+    # - Use performance_monitor instead of get_performance
+    # - Use performance_reset instead of reset_performance
+    # - get_devices removed - devices are visible in Settings → Devices & Services
 
     return True
 
@@ -383,77 +259,249 @@ async def async_setup_services(hass: HomeAssistant) -> None:
 
     async def performance_monitor_service(call):
         """Handle performance monitor service."""
-        device_id = call.data.get("device_id")
+        try:
+            device_id = call.data.get("device_id") if call.data else None
 
-        if device_id:
-            # Get metrics for specific device
-            for entry_id, data in hass.data[DOMAIN].items():
-                if data.get("prefix") == device_id.replace("modbus_manager_", ""):
-                    performance_monitor = data.get("performance_monitor")
-                    if performance_monitor:
-                        summary = performance_monitor.get_performance_summary()
-                        _LOGGER.info(
-                            "Performance metrics for %s: %s", device_id, summary
-                        )
-                        return
-            _LOGGER.warning("Device %s not found", device_id)
-        else:
-            # Get global metrics from all coordinators
-            global_summary = {}
-            for entry_id, data in hass.data[DOMAIN].items():
-                performance_monitor = data.get("performance_monitor")
-                if performance_monitor:
-                    global_summary[
-                        entry_id
-                    ] = performance_monitor.get_performance_summary()
-            _LOGGER.info("Global performance metrics: %s", global_summary)
+            if not DOMAIN in hass.data:
+                _LOGGER.warning("No Modbus Manager entries found")
+                return {"error": "No Modbus Manager entries found"}
+
+            if device_id:
+                # Get metrics for specific device
+                found = False
+                for entry_id, data in hass.data[DOMAIN].items():
+                    if not isinstance(data, dict):
+                        continue
+                    prefix = data.get("prefix")
+                    if prefix and prefix == device_id.replace("modbus_manager_", ""):
+                        coordinator = data.get("coordinator")
+                        if coordinator and hasattr(coordinator, "performance_monitor"):
+                            performance_monitor = coordinator.performance_monitor
+                            if performance_monitor:
+                                summary = performance_monitor.get_performance_summary()
+                                _LOGGER.info(
+                                    "Performance metrics for %s: %s", device_id, summary
+                                )
+
+                                # Create notification with metrics
+                                # Use device-specific metrics, not global
+                                device_metrics = summary.get("devices", {}).get(
+                                    prefix, {}
+                                )
+
+                                if device_metrics:
+                                    message = f"Performance Metrics for {device_id}\n\n"
+                                    message += f"Total Operations: {device_metrics.get('total_operations', 0)}\n"
+                                    message += f"Success Rate: {device_metrics.get('success_rate', 0)}%\n"
+                                    message += f"Avg Duration: {device_metrics.get('average_duration', 0):.3f}s\n"
+                                    message += f"Avg Throughput: {device_metrics.get('average_throughput', 0):.2f} bytes/s\n"
+
+                                    # Add optimization metrics if available
+                                    recent_ops = (
+                                        performance_monitor.get_recent_operations(
+                                            device_id=prefix, limit=10
+                                        )
+                                    )
+                                    if recent_ops:
+                                        total_regs = sum(
+                                            op.get("register_count", 0)
+                                            for op in recent_ops
+                                        )
+                                        total_ranges = sum(
+                                            op.get("optimized_ranges_count", 0)
+                                            for op in recent_ops
+                                        )
+                                        if total_regs > 0 and total_ranges > 0:
+                                            avg_regs_per_batch = (
+                                                total_regs / total_ranges
+                                            )
+                                            optimization_ratio = (
+                                                (total_regs / total_ranges)
+                                                if total_ranges > 0
+                                                else 0
+                                            )
+                                            message += f"\n📊 Optimization Stats:\n"
+                                            message += f"  Avg Registers per Batch: {avg_regs_per_batch:.1f}\n"
+                                            message += (
+                                                f"  Total Batch Reads: {total_ranges}\n"
+                                            )
+                                            message += f"  Total Registers Read: {total_regs}\n"
+                                            if optimization_ratio > 1:
+                                                savings = (
+                                                    (total_regs - total_ranges)
+                                                    / total_regs
+                                                ) * 100
+                                                message += f"  Efficiency: {savings:.1f}% fewer reads"
+
+                                    if device_metrics.get("last_operation"):
+                                        message += f"\n\nLast Operation: {device_metrics.get('last_operation')}"
+                                else:
+                                    message = f"Performance Metrics for {device_id}\n\n"
+                                    message += "No metrics available yet. Wait a few minutes for data to accumulate."
+
+                                await hass.services.async_call(
+                                    "persistent_notification",
+                                    "create",
+                                    {
+                                        "title": f"Modbus Manager Performance - {device_id}",
+                                        "message": message,
+                                        "notification_id": f"modbus_performance_{device_id}",
+                                    },
+                                )
+
+                                # Return data for UI display
+                                return {"device_id": device_id, "metrics": summary}
+                if not found:
+                    _LOGGER.warning(
+                        "Device %s not found or has no performance monitor", device_id
+                    )
+                    return {
+                        "error": f"Device {device_id} not found or has no performance monitor"
+                    }
+            else:
+                # Get global metrics from all coordinators
+                global_summary = {}
+                for entry_id, data in hass.data[DOMAIN].items():
+                    if not isinstance(data, dict):
+                        continue
+                    coordinator = data.get("coordinator")
+                    if coordinator and hasattr(coordinator, "performance_monitor"):
+                        performance_monitor = coordinator.performance_monitor
+                        if performance_monitor:
+                            global_summary[
+                                entry_id
+                            ] = performance_monitor.get_performance_summary()
+                if global_summary:
+                    _LOGGER.info("Global performance metrics: %s", global_summary)
+
+                    # Create notification with global metrics
+                    message = "Global Performance Metrics\n\n"
+                    for entry_id, metrics in global_summary.items():
+                        device_data = hass.data[DOMAIN].get(entry_id, {})
+                        prefix = device_data.get("prefix", "unknown")
+
+                        # Use device-specific metrics, not global (global is always 0)
+                        device_metrics = metrics.get("devices", {}).get(prefix, {})
+
+                        if device_metrics:
+                            message += f"Device: {prefix} (Entry: {entry_id[:8]}...)\n"
+                            message += f"  Total Operations: {device_metrics.get('total_operations', 0)}\n"
+                            message += f"  Success Rate: {device_metrics.get('success_rate', 0)}%\n"
+                            message += f"  Avg Duration: {device_metrics.get('average_duration', 0):.3f}s\n"
+                            message += f"  Avg Throughput: {device_metrics.get('average_throughput', 0):.2f} bytes/s\n"
+
+                            # Add optimization stats
+                            coordinator = device_data.get("coordinator")
+                            if coordinator and hasattr(
+                                coordinator, "performance_monitor"
+                            ):
+                                pm = coordinator.performance_monitor
+                                recent_ops = pm.get_recent_operations(
+                                    device_id=prefix, limit=10
+                                )
+                                if recent_ops:
+                                    total_regs = sum(
+                                        op.get("register_count", 0) for op in recent_ops
+                                    )
+                                    total_ranges = sum(
+                                        op.get("optimized_ranges_count", 0)
+                                        for op in recent_ops
+                                    )
+                                    if total_regs > 0 and total_ranges > 0:
+                                        avg_regs_per_batch = total_regs / total_ranges
+                                        message += f"  📊 Avg {avg_regs_per_batch:.1f} regs/batch ({total_ranges} batches)\n"
+
+                            message += "\n"
+                        else:
+                            message += f"Device: {prefix} (Entry: {entry_id[:8]}...)\n"
+                            message += f"  No metrics available yet\n\n"
+
+                    message += "\n💡 Tip: Use device prefix (e.g., 'SH10RT') as device_id for device-specific metrics"
+
+                    await hass.services.async_call(
+                        "persistent_notification",
+                        "create",
+                        {
+                            "title": "Modbus Manager - Global Performance Metrics",
+                            "message": message,
+                            "notification_id": "modbus_performance_global",
+                        },
+                    )
+
+                    return {"metrics": global_summary}
+                else:
+                    _LOGGER.info("No performance metrics available")
+                    await hass.services.async_call(
+                        "persistent_notification",
+                        "create",
+                        {
+                            "title": "Modbus Manager Performance",
+                            "message": "No performance metrics available yet. Wait a few minutes for data to accumulate.",
+                            "notification_id": "modbus_performance_none",
+                        },
+                    )
+                    return {"message": "No performance metrics available"}
+        except Exception as e:
+            _LOGGER.error(
+                "Error in performance_monitor service: %s", str(e), exc_info=True
+            )
+            return {"error": str(e)}
 
     async def performance_reset_service(call):
         """Handle performance reset service."""
-        device_id = call.data.get("device_id")
+        try:
+            device_id = call.data.get("device_id") if call.data else None
 
-        if device_id:
-            # Reset metrics for specific device
-            for entry_id, data in hass.data[DOMAIN].items():
-                if data.get("prefix") == device_id.replace("modbus_manager_", ""):
-                    performance_monitor = data.get("performance_monitor")
-                    if performance_monitor:
-                        performance_monitor.reset_metrics(
-                            device_id=data.get("prefix", "unknown")
-                        )
-                        _LOGGER.info("Reset performance metrics for %s", device_id)
-                        return
-            _LOGGER.warning("Device %s not found", device_id)
-        else:
-            # Reset global metrics for all coordinators
-            for entry_id, data in hass.data[DOMAIN].items():
-                performance_monitor = data.get("performance_monitor")
-                if performance_monitor:
-                    performance_monitor.reset_metrics()
-            _LOGGER.info("Reset global performance metrics")
+            if not DOMAIN in hass.data:
+                _LOGGER.warning("No Modbus Manager entries found")
+                return
 
-    async def register_optimize_service(call):
-        """Handle register optimize service."""
-        device_id = call.data.get("device_id")
-        optimization_level = call.data.get("optimization_level", 3)
-
-        if not device_id:
-            _LOGGER.error("Device ID is required for register optimization")
-            return
-
-        # Find device and optimize registers
-        for entry_id, data in hass.data[DOMAIN].items():
-            if data.get("prefix") == device_id.replace("modbus_manager_", ""):
-                register_optimizer = data.get("register_optimizer")
-                if register_optimizer:
-                    await register_optimizer.optimize_registers(optimization_level)
-                    _LOGGER.info(
-                        "Optimized registers for %s with level %d",
-                        device_id,
-                        optimization_level,
+            if device_id:
+                # Reset metrics for specific device
+                found = False
+                for entry_id, data in hass.data[DOMAIN].items():
+                    if not isinstance(data, dict):
+                        continue
+                    prefix = data.get("prefix")
+                    if prefix and prefix == device_id.replace("modbus_manager_", ""):
+                        coordinator = data.get("coordinator")
+                        if coordinator and hasattr(coordinator, "performance_monitor"):
+                            performance_monitor = coordinator.performance_monitor
+                            if performance_monitor:
+                                performance_monitor.reset_metrics(device_id=prefix)
+                                _LOGGER.info(
+                                    "Reset performance metrics for %s", device_id
+                                )
+                                found = True
+                                break
+                if not found:
+                    _LOGGER.warning(
+                        "Device %s not found or has no performance monitor", device_id
                     )
-                    return
-        _LOGGER.warning("Device %s not found", device_id)
+            else:
+                # Reset global metrics for all coordinators
+                reset_count = 0
+                for entry_id, data in hass.data[DOMAIN].items():
+                    if not isinstance(data, dict):
+                        continue
+                    coordinator = data.get("coordinator")
+                    if coordinator and hasattr(coordinator, "performance_monitor"):
+                        performance_monitor = coordinator.performance_monitor
+                        if performance_monitor:
+                            performance_monitor.reset_metrics()
+                            reset_count += 1
+                if reset_count > 0:
+                    _LOGGER.info(
+                        "Reset performance metrics for %d device(s)", reset_count
+                    )
+                else:
+                    _LOGGER.info("No performance monitors found to reset")
+        except Exception as e:
+            _LOGGER.error(
+                "Error in performance_reset service: %s", str(e), exc_info=True
+            )
+
+    # register_optimize service removed - register optimization is automatic and handled by the coordinator
 
     async def ems_configure_service(call):
         """Handle EMS configure service."""
@@ -509,7 +557,15 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         )
 
     async def reload_templates_service(call):
-        """Handle template reload service - reload templates and update entity attributes without restart."""
+        """Handle template reload service - reload templates and update entity attributes without restart.
+
+        This service is useful when:
+        - You've updated a template file and want to apply changes without restarting Home Assistant
+        - You want to refresh entity attributes (name, icon, etc.) after template modifications
+        - You're developing templates and need to test changes quickly
+
+        Note: This does NOT reload the integration or change entity states, only updates attributes.
+        """
         from homeassistant.helpers.entity_registry import (
             async_get as async_get_entity_registry,
         )
@@ -730,6 +786,22 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                 _LOGGER.info(
                     "✅ Template reload completed - Modbus connection was maintained throughout"
                 )
+
+                # Create notification with results
+                message = f"Template reload completed successfully!\n\n"
+                message += f"Updated entries: {updated_entries}\n"
+                message += f"Updated entities: {updated_entities}\n\n"
+                message += "Entity attributes (name, icon, etc.) have been refreshed."
+
+                await hass.services.async_call(
+                    "persistent_notification",
+                    "create",
+                    {
+                        "title": "Modbus Manager - Template Reload",
+                        "message": message,
+                        "notification_id": "modbus_reload_templates",
+                    },
+                )
         else:
             _LOGGER.info("No templates were updated")
 
@@ -738,7 +810,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
         DOMAIN, "performance_monitor", performance_monitor_service
     )
     hass.services.async_register(DOMAIN, "performance_reset", performance_reset_service)
-    hass.services.async_register(DOMAIN, "register_optimize", register_optimize_service)
+    # register_optimize removed - optimization is automatic
     hass.services.async_register(DOMAIN, "reload_templates", reload_templates_service)
 
     _LOGGER.info("Modbus Manager services registered successfully")
