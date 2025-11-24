@@ -5,6 +5,42 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.3] - 2025-11-24
+
+### 🐛 Fixed
+
+#### Critical Bug Fixes
+- **Issue #3 - Config Flow Self Reference**: Fixed `AttributeError` when updating templates from options flow
+  - Added missing `_process_dynamic_config` and helper methods to `ModbusManagerOptionsFlow`
+  - Template updates now work correctly from device options menu
+  - Fixes crash when trying to update template version from options
+
+- **Issue #2 - Modbus Write Operations**: Fixed incorrect use of `CALL_TYPE_REGISTER_HOLDING` for write operations
+  - Changed to `CALL_TYPE_WRITE_REGISTERS` in `select.py`, `number.py`, and `switch.py`
+  - Write operations now use correct Modbus call type constant
+  - Improves compatibility with Modbus protocol standards
+
+- **Number Entity Scaling**: Fixed incorrect scaling when writing number values to Modbus registers
+  - Now uses `scale` from config if available, falls back to `multiplier`, defaults to 1.0
+  - Fixes issue where setting SOC Min to 7.0 resulted in 0.7 in inverter
+  - Added debug logging for write operations to track scaling calculations
+
+### 🔧 Changed
+
+#### Logging Improvements
+- **Reduced Log Noise**: Changed unnecessary info-level logs to debug level
+  - "Successfully set" logs now at debug level (number, select entities)
+  - "Created X entities" logs now at debug level (all entity types)
+  - Setup-related logs moved to debug level
+  - Only errors and important warnings remain at info/warning level
+  - Reduces log noise during normal operation
+
+### 📚 Documentation
+
+- Updated changelog with all fixes and improvements since v0.1.2
+
+---
+
 ## [0.1.2] - 2025-11-07
 
 ### 🔧 Changed
