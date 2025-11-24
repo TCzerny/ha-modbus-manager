@@ -48,9 +48,9 @@ async def async_setup_entry(
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("Created %d coordinator switches", len(entities))
+        _LOGGER.debug("Created %d coordinator switches", len(entities))
     else:
-        _LOGGER.info("No coordinator switches created")
+        _LOGGER.debug("No coordinator switches created")
 
 
 class ModbusCoordinatorSwitch(SwitchEntity):
@@ -247,19 +247,10 @@ class ModbusCoordinatorSwitch(SwitchEntity):
     async def _write_register(self, value: int) -> None:
         """Write value to Modbus register."""
         try:
-            from homeassistant.components.modbus.const import (
-                CALL_TYPE_REGISTER_HOLDING,
-                CALL_TYPE_REGISTER_INPUT,
-            )
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
 
-            # Determine register type
-            register_type = self._register_config.get("input_type", "holding")
-            call_type = (
-                CALL_TYPE_REGISTER_INPUT
-                if register_type == "input"
-                else CALL_TYPE_REGISTER_HOLDING
-            )
-
+            # For write operations, always use CALL_TYPE_WRITE_REGISTERS
+            # Input registers are read-only, so writes should always go to holding registers
             # Get slave ID
             slave_id = self._register_config.get("slave_id", 1)
 
@@ -268,7 +259,7 @@ class ModbusCoordinatorSwitch(SwitchEntity):
                 slave_id,
                 self._address,
                 value,
-                call_type,
+                CALL_TYPE_WRITE_REGISTERS,
             )
 
             _LOGGER.debug(

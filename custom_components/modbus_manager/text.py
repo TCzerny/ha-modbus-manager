@@ -50,7 +50,7 @@ async def async_setup_entry(
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("Created %d coordinator text entities", len(entities))
+        _LOGGER.debug("Created %d coordinator text entities", len(entities))
     else:
         _LOGGER.info("No coordinator text entities created")
 

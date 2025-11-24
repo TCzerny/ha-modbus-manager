@@ -137,22 +137,45 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             data_type = self.register_config.get("data_type", "uint16")
 
             # Convert value based on scaling
-            multiplier = self.register_config.get("multiplier", 1.0)
+            # Use scale if available, otherwise fall back to multiplier
+            # scale and multiplier are inverse operations:
+            # - Reading: display_value = raw_value * scale
+            # - Writing: raw_value = display_value / scale
+            scale = self.register_config.get("scale")
+            multiplier = self.register_config.get("multiplier")
+
+            # Use scale if available, otherwise use multiplier (default: 1.0)
+            if scale is not None:
+                scale_factor = scale
+            elif multiplier is not None:
+                scale_factor = multiplier
+            else:
+                scale_factor = 1.0
+
             offset = self.register_config.get("offset", 0.0)
-            raw_value = int((value - offset) / multiplier)
+            raw_value = int((value - offset) / scale_factor)
+
+            _LOGGER.debug(
+                "Writing number %s: value=%.2f, scale_factor=%.2f, offset=%.2f, raw_value=%d",
+                self._attr_name,
+                value,
+                scale_factor,
+                offset,
+                raw_value,
+            )
 
             # Write to Modbus register
-            from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
 
             result = await self.coordinator.hub.async_pb_call(
                 slave_id,
                 address,
                 raw_value,
-                CALL_TYPE_REGISTER_HOLDING,
+                CALL_TYPE_WRITE_REGISTERS,
             )
 
             if result:
-                _LOGGER.info("Successfully set %s to %s", self._attr_name, value)
+                _LOGGER.debug("Successfully set %s to %s", self._attr_name, value)
                 # Trigger coordinator update to refresh all entities
                 await self.coordinator.async_request_refresh()
             else:
@@ -261,7 +284,7 @@ async def async_setup_entry(
                     str(e),
                 )
 
-        _LOGGER.info(
+        _LOGGER.debug(
             "Created %d coordinator numbers",
             len(coordinator_numbers),
         )

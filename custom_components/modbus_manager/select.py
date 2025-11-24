@@ -282,18 +282,25 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                 )
                 return
 
+            _LOGGER.debug(
+                "Writing select %s: option=%s, numeric_value=%d",
+                self._attr_name,
+                option,
+                numeric_value,
+            )
+
             # Write to Modbus register
-            from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
 
             result = await self.coordinator.hub.async_pb_call(
                 slave_id,
                 address,
                 numeric_value,
-                CALL_TYPE_REGISTER_HOLDING,
+                CALL_TYPE_WRITE_REGISTERS,
             )
 
             if result:
-                _LOGGER.info("Successfully set %s to %s", self._attr_name, option)
+                _LOGGER.debug("Successfully set %s to %s", self._attr_name, option)
                 # Trigger coordinator update to refresh all entities
                 await self.coordinator.async_request_refresh()
             else:
@@ -410,7 +417,7 @@ async def async_setup_entry(
                     str(e),
                 )
 
-        _LOGGER.info(
+        _LOGGER.debug(
             "Created %d coordinator selects",
             len(coordinator_selects),
         )
