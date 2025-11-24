@@ -283,13 +283,13 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                 return
 
             # Write to Modbus register
-            from homeassistant.components.modbus.const import CALL_TYPE_REGISTER_HOLDING
+            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
 
             result = await self.coordinator.hub.async_pb_call(
                 slave_id,
                 address,
                 numeric_value,
-                CALL_TYPE_REGISTER_HOLDING,
+                CALL_TYPE_WRITE_REGISTERS,
             )
 
             if result:
