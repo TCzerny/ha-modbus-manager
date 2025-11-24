@@ -282,6 +282,13 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                 )
                 return
 
+            _LOGGER.debug(
+                "Writing select %s: option=%s, numeric_value=%d",
+                self._attr_name,
+                option,
+                numeric_value,
+            )
+
             # Write to Modbus register
             from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
 
