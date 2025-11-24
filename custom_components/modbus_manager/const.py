@@ -60,6 +60,12 @@ DEFAULT_PORT = 502
 
 # Service Namen
 SERVICE_SET_BATTERY_MODE = "set_battery_mode"
+
+# Modbus Function Codes
+MODBUS_FC_READ_HOLDING_REGISTERS = 3  # Read Holding Registers
+MODBUS_FC_READ_INPUT_REGISTERS = 4  # Read Input Registers
+MODBUS_FC_PRESET_SINGLE_REGISTER = 6  # Preset Single Register (Write Single)
+MODBUS_FC_PRESET_MULTIPLE_REGISTERS = 16  # Preset Multiple Registers (Write Multiple)
 SERVICE_SET_INVERTER_MODE = "set_inverter_mode"
 SERVICE_SET_EXPORT_POWER_LIMIT = "set_export_power_limit"
 

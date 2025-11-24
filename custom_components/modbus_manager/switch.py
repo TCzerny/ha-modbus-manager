@@ -247,10 +247,21 @@ class ModbusCoordinatorSwitch(SwitchEntity):
     async def _write_register(self, value: int) -> None:
         """Write value to Modbus register."""
         try:
-            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
+            from .modbus_utils import get_write_call_type
 
-            # For write operations, always use CALL_TYPE_WRITE_REGISTERS
-            # Input registers are read-only, so writes should always go to holding registers
+            # Check for custom write function code
+            write_function_code = self._register_config.get("write_function_code")
+            count = self._register_config.get("count", 1) or 1
+
+            call_type = get_write_call_type(count, write_function_code)
+
+            if write_function_code:
+                _LOGGER.debug(
+                    "Using custom write function code %d for register %d",
+                    write_function_code,
+                    self._address,
+                )
+
             # Get slave ID
             slave_id = self._register_config.get("slave_id", 1)
 
@@ -259,7 +270,7 @@ class ModbusCoordinatorSwitch(SwitchEntity):
                 slave_id,
                 self._address,
                 value,
-                CALL_TYPE_WRITE_REGISTERS,
+                call_type,
             )
 
             _LOGGER.debug(

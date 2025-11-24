@@ -29,10 +29,15 @@
                     "host": "IP-Adresse des Modbus-Geräts",
                     "port": "Modbus TCP Port",
                     "slave_id": "Modbus Slave ID",
+                    "modbus_type": "Modbus Verbindungstyp",
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung zwischen Operationen (ms)",
                     "request_delay": "Wartezeit zwischen Requests (ms)",
-                    "use_coordinator": "Coordinator-Modus verwenden (experimentell)"
+                    "use_coordinator": "Coordinator-Modus verwenden (experimentell)",
+                    "baudrate": "Baudrate",
+                    "data_bits": "Datenbits",
+                    "stop_bits": "Stoppbits",
+                    "parity": "Parität"
                 }
             },
             "dynamic_config": {
@@ -52,6 +57,26 @@
                     "battery_slave_id": "Batterie Slave ID"
                 }
             },
+            "rtu_parameters": {
+                "title": "RTU Parameter",
+                "description": "Konfiguriere RTU over TCP Parameter für Template: {template_name}",
+                "data": {
+                    "baudrate": "Baudrate",
+                    "data_bits": "Datenbits",
+                    "stop_bits": "Stoppbits",
+                    "parity": "Parität"
+                }
+            },
+            "rtu_parameters_device": {
+                "title": "RTU Parameter",
+                "description": "Konfiguriere RTU over TCP Parameter für Template: {template_name}",
+                "data": {
+                    "baudrate": "Baudrate",
+                    "data_bits": "Datenbits",
+                    "stop_bits": "Stoppbits",
+                    "parity": "Parität"
+                }
+            },
             "device_config": {
                 "title": "Geräte-Konfiguration",
                 "description": "Konfiguriere die Verbindung zum Modbus-Gerät",
@@ -60,9 +85,14 @@
                     "host": "IP-Adresse des Modbus-Geräts",
                     "port": "Modbus TCP Port (Standard: 502)",
                     "slave_id": "Modbus Slave ID (Standard: 1)",
+                    "modbus_type": "Modbus Verbindungstyp",
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung zwischen Operationen (ms)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
+                    "baudrate": "Baudrate (nur RTU)",
+                    "data_bits": "Datenbits (nur RTU)",
+                    "stop_bits": "Stoppbits (nur RTU)",
+                    "parity": "Parität (nur RTU)",
                     "phases": "Anzahl Phasen (1 oder 3)",
                     "mppt_count": "Anzahl MPPT-Tracker",
                     "string_count": "Anzahl Strings",

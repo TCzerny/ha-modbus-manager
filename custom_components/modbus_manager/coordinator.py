@@ -1267,11 +1267,26 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 )
 
             register_type = range_obj.registers[0].get("input_type", "holding")
-            call_type = (
-                CALL_TYPE_REGISTER_INPUT
-                if register_type == "input"
-                else CALL_TYPE_REGISTER_HOLDING
-            )
+
+            # Check for custom read function code
+            read_function_code = range_obj.registers[0].get("read_function_code")
+            if read_function_code:
+                from .modbus_utils import get_read_call_type
+
+                call_type = get_read_call_type(register_type, read_function_code)
+                _LOGGER.debug(
+                    "Using custom read function code %d for register range %d-%d",
+                    read_function_code,
+                    range_obj.start_address,
+                    range_obj.end_address,
+                )
+            else:
+                # Auto-detect based on input_type
+                call_type = (
+                    CALL_TYPE_REGISTER_INPUT
+                    if register_type == "input"
+                    else CALL_TYPE_REGISTER_HOLDING
+                )
 
             # Get slave ID from first register
             slave_id = range_obj.registers[0].get("slave_id", 1)

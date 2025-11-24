@@ -130,8 +130,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_connection(self, user_input: dict = None) -> FlowResult:
         """Handle connection parameters step for dynamic templates."""
         if user_input is not None:
-            # Store connection parameters and proceed to dynamic config
+            # Store connection parameters
             self._connection_params = user_input
+
+            # If RTU over TCP is selected, show RTU parameters step
+            if user_input.get("modbus_type") == "rtu_over_tcp":
+                return await self.async_step_rtu_parameters()
+
+            # Otherwise proceed to dynamic config
             _LOGGER.info("Connection parameters stored, proceeding to dynamic config")
             return await self.async_step_dynamic_config()
 
@@ -149,9 +155,75 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Required("host"): str,
                     vol.Optional("port", default=DEFAULT_PORT): int,
                     vol.Optional("slave_id", default=default_slave_id): int,
+                    vol.Optional("modbus_type", default="tcp"): vol.In(
+                        {
+                            "tcp": "TCP",
+                            "rtu_over_tcp": "RTU over TCP",
+                        }
+                    ),
                     vol.Optional("timeout", default=DEFAULT_TIMEOUT): int,
                     vol.Optional("delay", default=DEFAULT_DELAY): int,
                     vol.Optional("request_delay", default=DEFAULT_MESSAGE_WAIT_MS): int,
+                }
+            ),
+            description_placeholders={
+                "template_name": self._selected_template,
+            },
+        )
+
+    async def async_step_rtu_parameters(self, user_input: dict = None) -> FlowResult:
+        """Handle RTU-specific parameters step (for dynamic config flow)."""
+        if user_input is not None:
+            # Merge RTU parameters with connection parameters
+            self._connection_params.update(user_input)
+            return await self.async_step_dynamic_config()
+
+        # Show RTU parameters form
+        return self.async_show_form(
+            step_id="rtu_parameters",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("baudrate", default=9600): vol.In(
+                        [9600, 19200, 38400, 57600, 115200]
+                    ),
+                    vol.Required("data_bits", default=8): vol.In([7, 8]),
+                    vol.Required("stop_bits", default=1): vol.In([1, 2]),
+                    vol.Required("parity", default="none"): vol.In(
+                        ["none", "even", "odd"]
+                    ),
+                }
+            ),
+            description_placeholders={
+                "template_name": self._selected_template,
+            },
+        )
+
+    async def async_step_rtu_parameters_device(
+        self, user_input: dict = None
+    ) -> FlowResult:
+        """Handle RTU-specific parameters step (for device config flow)."""
+        if user_input is not None:
+            # Merge RTU parameters with device config input
+            self._device_config_input.update(user_input)
+            battery_config = self._device_config_input.get("battery_config")
+            _LOGGER.debug(
+                "Battery config: %s, proceeding to final config", battery_config
+            )
+            return await self.async_step_final_config(self._device_config_input)
+
+        # Show RTU parameters form
+        return self.async_show_form(
+            step_id="rtu_parameters_device",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("baudrate", default=9600): vol.In(
+                        [9600, 19200, 38400, 57600, 115200]
+                    ),
+                    vol.Required("data_bits", default=8): vol.In([7, 8]),
+                    vol.Required("stop_bits", default=1): vol.In([1, 2]),
+                    vol.Required("parity", default="none"): vol.In(
+                        ["none", "even", "odd"]
+                    ),
                 }
             ),
             description_placeholders={
@@ -217,6 +289,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_device_config(self, user_input: dict = None) -> FlowResult:
         """Handle device configuration step."""
         if user_input is not None:
+            # Store user input for potential RTU step
+            self._device_config_input = user_input
+
+            # If RTU over TCP is selected, show RTU parameters step
+            if user_input.get("modbus_type") == "rtu_over_tcp":
+                return await self.async_step_rtu_parameters_device()
+
             battery_config = user_input.get("battery_config")
 
             # Battery configuration is now simplified - no separate SBR battery step needed
@@ -256,6 +335,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("host"): str,
                 vol.Optional("port", default=DEFAULT_PORT): int,
                 vol.Optional("slave_id", default=default_slave_id): int,
+                vol.Optional("modbus_type", default="tcp"): vol.In(
+                    {
+                        "tcp": "TCP",
+                        "rtu_over_tcp": "RTU over TCP",
+                    }
+                ),
                 vol.Optional("timeout", default=DEFAULT_TIMEOUT): int,
                 vol.Optional("delay", default=DEFAULT_DELAY): int,
                 vol.Optional(

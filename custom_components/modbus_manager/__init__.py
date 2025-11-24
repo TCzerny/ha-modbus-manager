@@ -16,7 +16,7 @@ from .coordinator import ModbusCoordinator
 from .logger import ModbusManagerLogger
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
-from .template_loader import get_template_by_name
+from .template_loader import get_template_by_name, set_hass_instance
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -24,6 +24,9 @@ _LOGGER = ModbusManagerLogger(__name__)
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
     """Set up the Modbus Manager component."""
     hass.data.setdefault(DOMAIN, {})
+
+    # Set Home Assistant instance for custom template loading
+    set_hass_instance(hass)
 
     # Set up services
     await async_setup_services(hass)
@@ -50,15 +53,23 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
         hub_name = f"modbus_manager_{host}_{port}"
 
         # Create modbus config
+        modbus_type = entry.data.get("modbus_type", "tcp")
         modbus_config = {
             "name": hub_name,
-            "type": "tcp",
+            "type": modbus_type,
             "host": host,
             "port": port,
             "delay": entry.data.get("delay", 0),
             "timeout": entry.data.get("timeout", 5),
             "slave": entry.data.get("slave_id", 1),
         }
+
+        # Add RTU-specific parameters if RTU over TCP is selected
+        if modbus_type == "rtu_over_tcp":
+            modbus_config["baudrate"] = entry.data.get("baudrate", 9600)
+            modbus_config["data_bits"] = entry.data.get("data_bits", 8)
+            modbus_config["stop_bits"] = entry.data.get("stop_bits", 1)
+            modbus_config["parity"] = entry.data.get("parity", "none")
 
         # Create hub
         hub = ModbusHub(hass, modbus_config)

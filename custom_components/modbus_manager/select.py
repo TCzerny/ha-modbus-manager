@@ -290,13 +290,26 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
             )
 
             # Write to Modbus register
-            from homeassistant.components.modbus.const import CALL_TYPE_WRITE_REGISTERS
+            from .modbus_utils import get_write_call_type
+
+            # Check for custom write function code
+            write_function_code = self.register_config.get("write_function_code")
+            count = self.register_config.get("count", 1) or 1
+
+            call_type = get_write_call_type(count, write_function_code)
+
+            if write_function_code:
+                _LOGGER.debug(
+                    "Using custom write function code %d for register %d",
+                    write_function_code,
+                    address,
+                )
 
             result = await self.coordinator.hub.async_pb_call(
                 slave_id,
                 address,
                 numeric_value,
-                CALL_TYPE_WRITE_REGISTERS,
+                call_type,
             )
 
             if result:

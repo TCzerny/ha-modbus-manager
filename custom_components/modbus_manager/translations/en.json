@@ -29,10 +29,15 @@
                     "host": "IP Address of Modbus Device",
                     "port": "Modbus TCP Port",
                     "slave_id": "Modbus Slave ID",
+                    "modbus_type": "Modbus Connection Type",
                     "timeout": "Timeout in seconds",
                     "delay": "Delay between operations (ms)",
                     "request_delay": "Wait between requests (ms)",
-                    "use_coordinator": "Use Coordinator Mode (experimental)"
+                    "use_coordinator": "Use Coordinator Mode (experimental)",
+                    "baudrate": "Baudrate",
+                    "data_bits": "Data Bits",
+                    "stop_bits": "Stop Bits",
+                    "parity": "Parity"
                 }
             },
             "dynamic_config": {
@@ -106,6 +111,26 @@
                     "battery_slave_id": "Battery Slave ID",
                     "battery_model": "Battery Model",
                     "battery_modules": "Number of Battery Modules"
+                }
+            },
+            "rtu_parameters": {
+                "title": "RTU Parameters",
+                "description": "Configure RTU over TCP parameters for template: {template_name}",
+                "data": {
+                    "baudrate": "Baudrate",
+                    "data_bits": "Data Bits",
+                    "stop_bits": "Stop Bits",
+                    "parity": "Parity"
+                }
+            },
+            "rtu_parameters_device": {
+                "title": "RTU Parameters",
+                "description": "Configure RTU over TCP parameters for template: {template_name}",
+                "data": {
+                    "baudrate": "Baudrate",
+                    "data_bits": "Data Bits",
+                    "stop_bits": "Stop Bits",
+                    "parity": "Parity"
                 }
             }
         },

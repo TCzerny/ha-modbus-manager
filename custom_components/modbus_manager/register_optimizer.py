@@ -101,12 +101,22 @@ class RegisterOptimizer:
                     )
                     reg_input_type = reg.get("input_type", "holding")
 
+                    # Check if registers have compatible function codes
+                    current_read_fc = current_range.registers[0].get(
+                        "read_function_code"
+                    )
+                    reg_read_fc = reg.get("read_function_code")
+                    function_codes_compatible = current_read_fc == reg_read_fc or (
+                        current_read_fc is None and reg_read_fc is None
+                    )
+
                     if (
                         address <= current_range.end_address + 1
                         and current_range.register_count + (count or 1)
                         <= self.max_read_size
                         and current_input_type
                         == reg_input_type  # Same input_type required
+                        and function_codes_compatible  # Same function code required
                     ):
                         # Extend range
                         current_range.end_address = max(
