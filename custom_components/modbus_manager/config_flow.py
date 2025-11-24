@@ -2389,3 +2389,491 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             return self.async_abort(
                 reason="config_apply_error", description_placeholders={"error": str(e)}
             )
+
+    def _process_dynamic_config(self, user_input: dict, template_data: dict) -> dict:
+        """Process template based on dynamic configuration parameters."""
+
+        _LOGGER.debug(
+            "_process_dynamic_config user_input keys: %s", list(user_input.keys())
+        )
+
+        original_sensors = template_data.get("sensors", [])
+        original_calculated = template_data.get("calculated", [])
+        original_controls = template_data.get("controls", [])
+        dynamic_config = template_data.get("dynamic_config", {})
+
+        processed_sensors = []
+        processed_calculated = []
+        processed_controls = []
+
+        # Check if model-specific config is used
+        selected_model = user_input.get("selected_model")
+        if selected_model:
+            # Get configuration from selected model
+            # Look for valid_models in dynamic_config first, then at template root level
+            valid_models = dynamic_config.get("valid_models") or template_data.get(
+                "valid_models", {}
+            )
+
+            # Get model configuration directly from valid_models
+            model_config = (
+                valid_models.get(selected_model)
+                if valid_models and isinstance(valid_models, dict)
+                else None
+            )
+            if model_config:
+                # Generic model configuration - extract all fields dynamically
+                config_values = {}
+                for field_name, field_value in model_config.items():
+                    config_values[field_name] = field_value
+
+                # Set defaults for common fields if not present
+                phases = config_values.get("phases", 3)
+                mppt_count = config_values.get("mppt_count", 1)
+                string_count = config_values.get("string_count", 1)
+                modules = config_values.get("modules", 3)
+
+                # Log all configuration values
+                config_str = ", ".join([f"{k}={v}" for k, v in config_values.items()])
+                _LOGGER.info(
+                    "Using model-specific config for %s: %s",
+                    selected_model,
+                    config_str,
+                )
+            else:
+                _LOGGER.warning(
+                    "Model config not found for %s, using defaults", selected_model
+                )
+                phases = 3
+                mppt_count = 1
+                string_count = 1
+        else:
+            # Individual field configuration - generic for any device type
+            # Extract all configurable fields dynamically
+            phases = user_input.get(
+                "phases", dynamic_config.get("phases", {}).get("default", 3)
+            )
+            mppt_count = user_input.get(
+                "mppt_count", dynamic_config.get("mppt_count", {}).get("default", 1)
+            )
+            string_count = user_input.get(
+                "string_count", dynamic_config.get("string_count", {}).get("default", 1)
+            )
+            modules = user_input.get(
+                "modules", dynamic_config.get("modules", {}).get("default", 3)
+            )
+
+            # Log all individual field values for debugging
+            individual_fields = []
+            for field_name, field_config in dynamic_config.items():
+                if field_name not in [
+                    "valid_models",
+                    "firmware_version",
+                    "connection_type",
+                    "battery_slave_id",
+                ]:
+                    field_value = user_input.get(
+                        field_name, field_config.get("default", "unknown")
+                    )
+                    individual_fields.append(f"{field_name}={field_value}")
+
+            _LOGGER.info(
+                "Using individual field configuration: %s",
+                ", ".join(individual_fields),
+            )
+
+        battery_default = dynamic_config.get("battery_config", {}).get(
+            "default", "none"
+        )
+        battery_config = user_input.get("battery_config", battery_default)
+
+        # Use connection slave_id for all devices (including battery)
+        battery_slave_id = user_input.get("slave_id", 1)
+
+        firmware_version = user_input.get(
+            "firmware_version", template_data.get("firmware_version", "1.0.0")
+        )
+        connection_type = user_input.get("connection_type", "LAN")
+
+        # Derive battery settings from battery_config
+        # For SBR templates, always enable battery mode
+        if (
+            "sbr" in template_data.get("name", "").lower()
+            or "battery" in template_data.get("type", "").lower()
+        ):
+            battery_enabled = True
+            battery_type = "sbr_battery"
+        else:
+            battery_enabled = battery_config != "none"
+            battery_type = battery_config
+
+        # Handle "Latest" firmware version - use the highest available version
+        if firmware_version == "Latest":
+            firmware_config = dynamic_config.get("firmware_version", {})
+            available_firmware = firmware_config.get("options", [])
+
+            if available_firmware:
+                # Find the highest version (excluding "Latest")
+                numeric_versions = [v for v in available_firmware if v != "Latest"]
+                if numeric_versions:
+                    from packaging import version
+
+                    try:
+                        # Sort by version and take the highest
+                        sorted_versions = sorted(
+                            numeric_versions, key=lambda x: version.parse(x)
+                        )
+                        firmware_version = sorted_versions[-1]
+                        _LOGGER.debug(
+                            "Using latest firmware version: %s", firmware_version
+                        )
+                    except version.InvalidVersion:
+                        # Fallback to first numeric version
+                        firmware_version = numeric_versions[0]
+                        _LOGGER.debug(
+                            "Using fallback firmware version: %s", firmware_version
+                        )
+
+        _LOGGER.info(
+            "Processing dynamic config: phases=%d, mppt=%d, battery=%s, battery_type=%s, fw=%s, conn=%s",
+            phases,
+            mppt_count,
+            battery_enabled,
+            battery_type,
+            firmware_version,
+            connection_type,
+        )
+
+        # Add modules to dynamic_config for condition filtering
+        if selected_model and model_config:
+            dynamic_config["modules"] = modules
+        else:
+            # For individual field configuration, add all fields to dynamic_config
+            dynamic_config["modules"] = modules
+            # Add other individual fields that might be used for filtering
+            for field_name, field_config in dynamic_config.items():
+                if field_name not in [
+                    "valid_models",
+                    "firmware_version",
+                    "connection_type",
+                    "battery_slave_id",
+                ]:
+                    if isinstance(field_config, dict) and "default" in field_config:
+                        field_value = user_input.get(
+                            field_name, field_config.get("default")
+                        )
+                        dynamic_config[field_name] = field_value
+
+        # Process sensors
+        for sensor in original_sensors:
+            # Check if sensor should be included based on configuration
+            sensor_name = sensor.get("name", "unknown")
+            unique_id = sensor.get("unique_id", "unknown")
+            _LOGGER.debug(
+                "Processing sensor: %s (unique_id: %s)", sensor_name, unique_id
+            )
+
+            should_include = self._should_include_sensor(
+                sensor,
+                phases,
+                mppt_count,
+                battery_enabled,
+                battery_type,
+                battery_slave_id,
+                firmware_version,
+                connection_type,
+                dynamic_config,
+                string_count,
+            )
+
+            if should_include:
+                # Apply firmware-specific modifications
+                modified_sensor = self._apply_firmware_modifications(
+                    sensor, firmware_version, dynamic_config
+                )
+                processed_sensors.append(modified_sensor)
+                _LOGGER.debug("Included sensor: %s", sensor_name)
+            else:
+                _LOGGER.debug("Excluded sensor: %s", sensor_name)
+
+        # Process calculated sensors
+        for calculated in original_calculated:
+            # Check if calculated sensor should be included based on configuration
+            if self._should_include_sensor(
+                calculated,
+                phases,
+                mppt_count,
+                battery_enabled,
+                battery_type,
+                battery_slave_id,
+                firmware_version,
+                connection_type,
+                dynamic_config,
+                string_count,
+            ):
+                processed_calculated.append(calculated)
+
+        # Process binary sensors
+        original_binary_sensors = template_data.get("binary_sensors", [])
+        processed_binary_sensors = []
+        for binary_sensor in original_binary_sensors:
+            # Binary sensors are always included (they don't depend on hardware config)
+            processed_binary_sensors.append(binary_sensor)
+
+        # Process controls
+        for control in original_controls:
+            # Check if control should be included based on configuration
+            if self._should_include_sensor(
+                control,
+                phases,
+                mppt_count,
+                battery_enabled,
+                battery_type,
+                battery_slave_id,
+                firmware_version,
+                connection_type,
+                dynamic_config,
+                string_count,
+            ):
+                processed_controls.append(control)
+
+        # Return processed template data and configuration values
+
+        return {
+            "sensors": processed_sensors,
+            "calculated": processed_calculated,
+            "binary_sensors": processed_binary_sensors,
+            "controls": processed_controls,
+            # Also return configuration values for use in _create_regular_entry
+            "config_values": {
+                "phases": phases,
+                "mppt_count": mppt_count,
+                "string_count": string_count,
+                "modules": modules,
+                "battery_config": battery_config,
+                "battery_enabled": battery_enabled,
+                "battery_type": battery_type,
+                "battery_slave_id": battery_slave_id,
+                "firmware_version": firmware_version,
+                "connection_type": connection_type,
+                "selected_model": selected_model,
+                "dynamic_config": dynamic_config,
+            },
+        }
+
+    def _should_include_sensor(
+        self,
+        sensor: dict,
+        phases: int,
+        mppt_count: int,
+        battery_enabled: bool,
+        battery_type: str,
+        battery_slave_id: int,
+        firmware_version: str,
+        connection_type: str,
+        dynamic_config: dict,
+        string_count: int = 0,
+    ) -> bool:
+        """Check if sensor should be included based on configuration."""
+        sensor_name = sensor.get("name", "") or ""
+        unique_id = sensor.get("unique_id", "") or ""
+
+        # Ensure we have strings
+        sensor_name = str(sensor_name).lower()
+        unique_id = str(unique_id).lower()
+
+        # Check both sensor_name and unique_id for filtering
+        search_text = f"{sensor_name} {unique_id}".lower()
+
+        # For SBR battery templates, only include battery-related sensors
+        if battery_type == "sbr_battery":
+            # Only include sensors that are battery-related
+            battery_keywords = [
+                "battery",
+                "sbr",
+                "soc",
+                "soh",
+                "cell",
+                "module",
+                "voltage",
+                "current",
+                "temperature",
+                "charge",
+                "discharge",
+            ]
+            if not any(keyword in search_text for keyword in battery_keywords):
+                return False
+
+        # Phase-specific sensors
+        if phases == 1:
+            # Exclude phase B and C sensors for single phase
+            if any(phase in search_text for phase in ["phase b", "phase c"]):
+                return False
+
+        # MPPT-specific sensors
+        if "mppt" in search_text:
+            mppt_number = self._extract_mppt_number(search_text)
+            if mppt_number and mppt_number > mppt_count:
+                return False
+
+        # String-specific sensors
+        if "string" in search_text:
+            string_number = self._extract_string_number(search_text)
+            if string_number and string_number > string_count:
+                return False
+
+        # Module-specific sensors (for batteries)
+        if "module" in search_text:
+            module_number = self._extract_module_number(search_text)
+            if module_number:
+                actual_modules = dynamic_config.get("modules", 0)
+                if module_number > actual_modules:
+                    return False
+
+        # All other sensors are included
+        return True
+
+    # REGEX FUNCTIONS
+    def _extract_mppt_number(self, search_text: str) -> int:
+        """Extract MPPT number from sensor name or unique_id."""
+        import re
+
+        if not search_text:
+            return None
+
+        match = re.search(r"mppt(\d+)", search_text.lower())
+        if match and match.group(1):
+            try:
+                return int(match.group(1))
+            except (ValueError, TypeError):
+                return None
+        return None
+
+    def _extract_string_number(self, search_text: str) -> int:
+        """Extract string number from sensor name or unique_id."""
+        import re
+
+        if not search_text:
+            return None
+
+        # Look for "string" followed by digits, with optional underscore or space
+        match = re.search(r"string[_\s]*(\d+)", search_text.lower())
+        if match and match.group(1):
+            try:
+                return int(match.group(1))
+            except (ValueError, TypeError):
+                return None
+        return None
+
+    def _extract_module_number(self, search_text: str) -> int:
+        """Extract module number from sensor name or unique_id."""
+        import re
+
+        if not search_text:
+            return None
+
+        # Look for "module" followed by digits, with optional underscore or space
+        match = re.search(r"module[_\s]*(\d+)", search_text.lower())
+        if match and match.group(1):
+            try:
+                return int(match.group(1))
+            except (ValueError, TypeError):
+                return None
+        return None
+
+    # Firmware Handling to replace the sensors with the correct firmware version
+    def _apply_firmware_modifications(
+        self, sensor: dict, firmware_version: str, dynamic_config: dict
+    ) -> dict:
+        """Apply firmware-specific modifications to sensor based on unique_id."""
+        modified_sensor = sensor.copy()
+
+        # Get sensor replacements configuration
+        sensor_replacements = dynamic_config.get("sensor_replacements", {})
+
+        # Get sensor unique_id
+        unique_id = sensor.get("unique_id", "")
+
+        # Check if this sensor has firmware-specific replacements
+        if unique_id in sensor_replacements:
+            replacements = sensor_replacements.get(unique_id, {})
+
+            # Check if replacements is valid and not empty
+            if replacements and isinstance(replacements, dict) and replacements:
+                # Find the highest firmware version that matches or is lower than current
+                replacement_keys = list(replacements.keys()) if replacements else []
+                applicable_version = self._find_applicable_firmware_version(
+                    firmware_version, replacement_keys
+                )
+
+                if applicable_version:
+                    replacement_config = replacements.get(applicable_version, {})
+                    _LOGGER.debug(
+                        "Applying firmware %s replacement for sensor %s",
+                        applicable_version,
+                        unique_id,
+                    )
+
+                    # Apply all replacement parameters
+                    if replacement_config and isinstance(replacement_config, dict):
+                        for param, value in replacement_config.items():
+                            if (
+                                param != "description"
+                            ):  # Skip description, it's just for documentation
+                                modified_sensor[param] = value
+                                _LOGGER.debug(
+                                    "Replaced %s=%s for sensor %s (firmware %s)",
+                                    param,
+                                    value,
+                                    unique_id,
+                                    applicable_version,
+                                )
+
+        return modified_sensor
+
+    def _find_applicable_firmware_version(
+        self, current_version: str, available_versions: list
+    ) -> str:
+        """Find the highest firmware version that matches or is lower than current version."""
+        from packaging import version
+
+        # Check if available_versions is valid
+        if not available_versions or not isinstance(available_versions, (list, dict)):
+            return None
+
+        try:
+            # Try to parse as semantic version first
+            current_ver = version.parse(current_version)
+            applicable_versions = []
+
+            for ver_str in available_versions:
+                try:
+                    ver = version.parse(ver_str)
+                    if ver <= current_ver:
+                        applicable_versions.append(ver)
+                except version.InvalidVersion:
+                    # Skip invalid semantic versions
+                    continue
+
+            if applicable_versions:
+                # Return the highest applicable version
+                return str(max(applicable_versions))
+
+        except version.InvalidVersion:
+            # For non-semantic versions (like SAPPHIRE-H_03011.95.01),
+            # try exact match first, then fallback to string comparison
+            _LOGGER.debug(
+                "Non-semantic firmware version format detected: %s", current_version
+            )
+
+            # Check for exact match
+            if current_version in available_versions:
+                return current_version
+
+            # Try string comparison for similar formats
+            for ver_str in available_versions:
+                if ver_str == current_version:
+                    return ver_str
+                # For similar formats, we could add more sophisticated comparison logic here
+
+        return None
