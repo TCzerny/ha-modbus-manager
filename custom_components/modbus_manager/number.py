@@ -175,7 +175,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             )
 
             if result:
-                _LOGGER.info("Successfully set %s to %s", self._attr_name, value)
+                _LOGGER.debug("Successfully set %s to %s", self._attr_name, value)
                 # Trigger coordinator update to refresh all entities
                 await self.coordinator.async_request_refresh()
             else:
@@ -284,7 +284,7 @@ async def async_setup_entry(
                     str(e),
                 )
 
-        _LOGGER.info(
+        _LOGGER.debug(
             "Created %d coordinator numbers",
             len(coordinator_numbers),
         )

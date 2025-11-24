@@ -300,7 +300,7 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
             )
 
             if result:
-                _LOGGER.info("Successfully set %s to %s", self._attr_name, option)
+                _LOGGER.debug("Successfully set %s to %s", self._attr_name, option)
                 # Trigger coordinator update to refresh all entities
                 await self.coordinator.async_request_refresh()
             else:
@@ -417,7 +417,7 @@ async def async_setup_entry(
                     str(e),
                 )
 
-        _LOGGER.info(
+        _LOGGER.debug(
             "Created %d coordinator selects",
             len(coordinator_selects),
         )

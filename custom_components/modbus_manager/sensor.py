@@ -302,7 +302,7 @@ async def async_setup_entry(
 
         if devices and isinstance(devices, list):
             # NEW STRUCTURE: device_info is already in register configs from coordinator
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Using devices array structure with coordinator-provided device_info"
             )
 
@@ -381,7 +381,7 @@ async def async_setup_entry(
 
         else:
             # LEGACY STRUCTURE: Single device from top-level config
-            _LOGGER.info("Using legacy single-device structure")
+            _LOGGER.debug("Using legacy single-device structure")
 
             prefix = entry.data.get("prefix", "unknown")
             template_name = entry.data.get("template", "unknown")
@@ -453,7 +453,7 @@ async def async_setup_entry(
                         str(e),
                     )
 
-        _LOGGER.info(
+        _LOGGER.debug(
             "Created %d coordinator sensors and %d calculated sensors",
             len(coordinator_sensors),
             len(calculated_entities),

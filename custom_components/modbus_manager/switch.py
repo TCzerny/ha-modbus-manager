@@ -48,9 +48,9 @@ async def async_setup_entry(
 
     if entities:
         async_add_entities(entities)
-        _LOGGER.info("Created %d coordinator switches", len(entities))
+        _LOGGER.debug("Created %d coordinator switches", len(entities))
     else:
-        _LOGGER.info("No coordinator switches created")
+        _LOGGER.debug("No coordinator switches created")
 
 
 class ModbusCoordinatorSwitch(SwitchEntity):

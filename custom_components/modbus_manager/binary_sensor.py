@@ -190,7 +190,7 @@ async def async_setup_entry(
 
         if entities:
             async_add_entities(entities)
-            _LOGGER.info("Created %d binary sensors", len(entities))
+            _LOGGER.debug("Created %d binary sensors", len(entities))
         else:
             _LOGGER.info("No binary sensors created")
 
