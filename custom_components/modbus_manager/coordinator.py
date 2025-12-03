@@ -1291,6 +1291,18 @@ class ModbusCoordinator(DataUpdateCoordinator):
             # Get slave ID from first register
             slave_id = range_obj.registers[0].get("slave_id", 1)
 
+            # Safety check: verify all registers in range have the same slave_id
+            slave_ids = set(reg.get("slave_id", 1) for reg in range_obj.registers)
+            if len(slave_ids) > 1:
+                _LOGGER.warning(
+                    "Mixed slave_ids in range %d-%d: %s. Using slave_id: %d from first register. "
+                    "This should not happen - register optimizer should group by slave_id.",
+                    range_obj.start_address,
+                    range_obj.end_address,
+                    slave_ids,
+                    slave_id,
+                )
+
             _LOGGER.debug(
                 "Reading registers %d-%d (slave_id: %d, type: %s)",
                 range_obj.start_address,

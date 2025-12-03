@@ -73,9 +73,11 @@ class RegisterOptimizer:
             # Filter out register 0 and negative addresses to avoid Modbus errors
             filtered_registers = [reg for reg in registers if reg.get("address", 0) > 0]
 
-            # Sort registers by address
+            # Sort registers by slave_id first, then by address
+            # This ensures registers with the same slave_id are grouped together
             sorted_registers = sorted(
-                filtered_registers, key=lambda x: x.get("address", 0)
+                filtered_registers,
+                key=lambda x: (x.get("slave_id", 1), x.get("address", 0)),
             )
 
             ranges = []
@@ -95,11 +97,16 @@ class RegisterOptimizer:
                     )
                 else:
                     # Check if register can be appended to current range
-                    # Must have same input_type to be grouped together
+                    # Must have same input_type, slave_id, and compatible function codes to be grouped together
                     current_input_type = current_range.registers[0].get(
                         "input_type", "holding"
                     )
                     reg_input_type = reg.get("input_type", "holding")
+
+                    # Check if registers have the same slave_id
+                    current_slave_id = current_range.registers[0].get("slave_id", 1)
+                    reg_slave_id = reg.get("slave_id", 1)
+                    slave_ids_match = current_slave_id == reg_slave_id
 
                     # Check if registers have compatible function codes
                     current_read_fc = current_range.registers[0].get(
@@ -116,6 +123,7 @@ class RegisterOptimizer:
                         <= self.max_read_size
                         and current_input_type
                         == reg_input_type  # Same input_type required
+                        and slave_ids_match  # Same slave_id required
                         and function_codes_compatible  # Same function code required
                     ):
                         # Extend range
@@ -138,12 +146,14 @@ class RegisterOptimizer:
 
             _LOGGER.debug("Registers grouped into %d optimized ranges", len(ranges))
             for i, range_obj in enumerate(ranges):
+                slave_id = range_obj.registers[0].get("slave_id", 1)
                 _LOGGER.debug(
-                    "Range %d: Address %d-%d (%d registers)",
+                    "Range %d: Address %d-%d (%d registers, slave_id: %d)",
                     i,
                     range_obj.start_address,
                     range_obj.end_address,
                     range_obj.register_count,
+                    slave_id,
                 )
 
             return ranges
