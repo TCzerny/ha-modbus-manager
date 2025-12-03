@@ -134,7 +134,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._connection_params = user_input
 
             # If RTU over TCP is selected, show RTU parameters step
-            if user_input.get("modbus_type") == "rtu_over_tcp":
+            if user_input.get("modbus_type") == "rtuovertcp":
                 return await self.async_step_rtu_parameters()
 
             # Otherwise proceed to dynamic config
@@ -158,7 +158,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     vol.Optional("modbus_type", default="tcp"): vol.In(
                         {
                             "tcp": "TCP",
-                            "rtu_over_tcp": "RTU over TCP",
+                            "rtuovertcp": "RTU over TCP",
                         }
                     ),
                     vol.Optional("timeout", default=DEFAULT_TIMEOUT): int,
@@ -293,7 +293,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             self._device_config_input = user_input
 
             # If RTU over TCP is selected, show RTU parameters step
-            if user_input.get("modbus_type") == "rtu_over_tcp":
+            if user_input.get("modbus_type") == "rtuovertcp":
                 return await self.async_step_rtu_parameters_device()
 
             battery_config = user_input.get("battery_config")
@@ -338,7 +338,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Optional("modbus_type", default="tcp"): vol.In(
                     {
                         "tcp": "TCP",
-                        "rtu_over_tcp": "RTU over TCP",
+                        "rtuovertcp": "RTU over TCP",
                     }
                 ),
                 vol.Optional("timeout", default=DEFAULT_TIMEOUT): int,
@@ -1659,6 +1659,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Keep legacy fields for backward compatibility
                 "template": self._selected_template,
                 "prefix": user_input["prefix"],
+                "type": user_input.get("type", "tcp"),
                 "host": user_input["host"],
                 "port": user_input.get("port", DEFAULT_PORT),
                 "slave_id": user_input.get("slave_id", DEFAULT_SLAVE),
