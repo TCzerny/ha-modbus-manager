@@ -76,13 +76,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Select template
                 if "template" in user_input:
                     self._selected_template = user_input["template"]
-                    _LOGGER.info("=== TEMPLATE SELECTION DEBUG ===")
-                    _LOGGER.info("Selected template: %s", self._selected_template)
+                    _LOGGER.debug("=== TEMPLATE SELECTION DEBUG ===")
+                    _LOGGER.debug("Selected template: %s", self._selected_template)
 
                     # Debug template data
                     template_data = self._templates.get(self._selected_template, {})
-                    _LOGGER.info("Template data keys: %s", list(template_data.keys()))
-                    _LOGGER.info(
+                    _LOGGER.debug("Template data keys: %s", list(template_data.keys()))
+                    _LOGGER.debug(
                         "Template type: '%s'", template_data.get("type", "NOT_FOUND")
                     )
 
@@ -133,8 +133,6 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Store connection parameters
             self._connection_params = user_input
 
-            # Note: RTU over TCP does not require serial parameters (baudrate, data_bits, stop_bits, parity)
-            # These are only needed for direct serial connections, not for RTU over TCP
             # Proceed directly to dynamic config
             _LOGGER.info("Connection parameters stored, proceeding to dynamic config")
             return await self.async_step_dynamic_config()
@@ -242,18 +240,18 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             template_data = self._templates.get(self._selected_template, {})
             template_type = template_data.get("type", "")
 
-            _LOGGER.info("=== BATTERY DETECTION DEBUG ===")
-            _LOGGER.info("Selected template: %s", self._selected_template)
-            _LOGGER.info("Template data keys: %s", list(template_data.keys()))
-            _LOGGER.info("Template type: '%s'", template_type)
-            _LOGGER.info(
+            _LOGGER.debug("=== BATTERY DETECTION DEBUG ===")
+            _LOGGER.debug("Selected template: %s", self._selected_template)
+            _LOGGER.debug("Template data keys: %s", list(template_data.keys()))
+            _LOGGER.debug("Template type: '%s'", template_type)
+            _LOGGER.debug(
                 "Template type == 'pv_inverter': %s", template_type == "pv_inverter"
             )
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Template type.lower() == 'pv_inverter': %s",
                 template_type.lower() == "pv_inverter",
             )
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Template type.lower() in ['pv_inverter', 'pv_hybrid_inverter']: %s",
                 template_type.lower() in ["pv_inverter", "pv_hybrid_inverter"],
             )
@@ -262,11 +260,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if template_type.lower() in ["pv_inverter", "pv_hybrid_inverter"]:
                 # Store the inverter config and ask about battery
                 self._inverter_config = combined_input
-                _LOGGER.info("PV inverter detected - proceeding to battery detection")
+                _LOGGER.debug("PV inverter detected - proceeding to battery detection")
                 return await self.async_step_battery_detection()
             else:
                 # For non-PV inverters, proceed directly to final config
-                _LOGGER.info("Non-PV inverter - proceeding directly to final config")
+                _LOGGER.debug("Non-PV inverter - proceeding directly to final config")
                 return await self.async_step_final_config(combined_input)
 
         # Get template data
@@ -289,9 +287,6 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             # Store user input
             self._device_config_input = user_input
-
-            # Note: RTU over TCP does not require serial parameters (baudrate, data_bits, stop_bits, parity)
-            # These are only needed for direct serial connections, not for RTU over TCP
 
             battery_config = user_input.get("battery_config")
 
@@ -355,7 +350,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Check if template supports dynamic configuration."""
         # Check if template has dynamic_config section
         has_dynamic = "dynamic_config" in template_data
-        _LOGGER.info(
+        _LOGGER.debug(
             "_supports_dynamic_config: template_data keys=%s, has_dynamic=%s",
             list(template_data.keys()),
             has_dynamic,
@@ -1656,7 +1651,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Keep legacy fields for backward compatibility
                 "template": self._selected_template,
                 "prefix": user_input["prefix"],
-                "type": user_input.get("type", "tcp"),
+                "modbus_type": user_input.get("modbus_type", "tcp"),
                 "host": user_input["host"],
                 "port": user_input.get("port", DEFAULT_PORT),
                 "slave_id": user_input.get("slave_id", DEFAULT_SLAVE),

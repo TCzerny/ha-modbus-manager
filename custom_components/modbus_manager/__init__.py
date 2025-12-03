@@ -53,7 +53,8 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
         hub_name = f"modbus_manager_{host}_{port}"
 
         # Create modbus config
-        modbus_type = entry.data.get("modbus_type", "tcp")
+        # Support both modbus_type (new) and type (legacy) for backward compatibility
+        modbus_type = entry.data.get("modbus_type") or entry.data.get("type", "tcp")
         modbus_config = {
             "name": hub_name,
             "type": modbus_type,
