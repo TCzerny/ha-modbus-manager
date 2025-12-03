@@ -133,11 +133,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Store connection parameters
             self._connection_params = user_input
 
-            # If RTU over TCP is selected, show RTU parameters step
-            if user_input.get("modbus_type") == "rtuovertcp":
-                return await self.async_step_rtu_parameters()
-
-            # Otherwise proceed to dynamic config
+            # Note: RTU over TCP does not require serial parameters (baudrate, data_bits, stop_bits, parity)
+            # These are only needed for direct serial connections, not for RTU over TCP
+            # Proceed directly to dynamic config
             _LOGGER.info("Connection parameters stored, proceeding to dynamic config")
             return await self.async_step_dynamic_config()
 
@@ -289,12 +287,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_device_config(self, user_input: dict = None) -> FlowResult:
         """Handle device configuration step."""
         if user_input is not None:
-            # Store user input for potential RTU step
+            # Store user input
             self._device_config_input = user_input
 
-            # If RTU over TCP is selected, show RTU parameters step
-            if user_input.get("modbus_type") == "rtuovertcp":
-                return await self.async_step_rtu_parameters_device()
+            # Note: RTU over TCP does not require serial parameters (baudrate, data_bits, stop_bits, parity)
+            # These are only needed for direct serial connections, not for RTU over TCP
 
             battery_config = user_input.get("battery_config")
 

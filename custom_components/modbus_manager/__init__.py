@@ -64,13 +64,6 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
             "slave": entry.data.get("slave_id", 1),
         }
 
-        # Add RTU-specific parameters if RTU over TCP is selected
-        if modbus_type == "rtuovertcp":
-            modbus_config["baudrate"] = entry.data.get("baudrate", 9600)
-            modbus_config["data_bits"] = entry.data.get("data_bits", 8)
-            modbus_config["stop_bits"] = entry.data.get("stop_bits", 1)
-            modbus_config["parity"] = entry.data.get("parity", "none")
-
         # Create hub
         hub = ModbusHub(hass, modbus_config)
         _LOGGER.info("Created ModbusHub for coordinator: %s", hub_name)
