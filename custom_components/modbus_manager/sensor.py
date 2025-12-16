@@ -291,8 +291,14 @@ async def async_setup_entry(
             _LOGGER.warning("No sensors found in coordinator registers")
             return
 
-        # Check if we have devices array structure
+        # All config entries should have devices array after migration
         devices = entry.data.get("devices")
+        if not devices or not isinstance(devices, list):
+            _LOGGER.error(
+                "Config entry missing devices array. Please re-run the config flow to migrate."
+            )
+            return
+
         hub_config = entry.data.get("hub", {})
         host = hub_config.get("host") or entry.data.get("host", "unknown")
         port = hub_config.get("port") or entry.data.get("port", 502)
@@ -300,158 +306,124 @@ async def async_setup_entry(
         coordinator_sensors = []
         calculated_entities = []
 
-        if devices and isinstance(devices, list):
-            # NEW STRUCTURE: device_info is already in register configs from coordinator
-            _LOGGER.debug(
-                "Using devices array structure with coordinator-provided device_info"
-            )
+        # NEW STRUCTURE: device_info is already in register configs from coordinator
+        _LOGGER.debug(
+            "Using devices array structure with coordinator-provided device_info"
+        )
 
-            # Create coordinator sensors (device_info already attached by coordinator)
-            for sensor_config in regular_sensors:
-                try:
-                    _LOGGER.debug(
-                        "Creating sensor: name=%s, unique_id=%s",
+        # Create coordinator sensors (device_info already attached by coordinator)
+        registry = entity_registry.async_get(hass)
+        for sensor_config in regular_sensors:
+            try:
+                unique_id = sensor_config.get("unique_id")
+                _LOGGER.debug(
+                    "Creating sensor: name=%s, unique_id=%s",
+                    sensor_config.get("name"),
+                    unique_id,
+                )
+
+                # Check if entity with same unique_id already exists from another integration
+                entity_id = f"sensor.{unique_id}"
+                existing_entity = registry.async_get(entity_id)
+
+                if (
+                    existing_entity
+                    and existing_entity.config_entry_id != entry.entry_id
+                ):
+                    # Migrate entity to this config entry
+                    _LOGGER.info(
+                        "Migrating entity %s from %s to Modbus Manager",
+                        entity_id,
+                        existing_entity.config_entry_id,
+                    )
+                    registry.async_update_entity(
+                        entity_id,
+                        new_config_entry_id=entry.entry_id,
+                    )
+
+                # device_info is already in sensor_config from coordinator
+                device_info = sensor_config.get("device_info")
+                if not device_info:
+                    _LOGGER.warning(
+                        "Sensor %s missing device_info from coordinator",
                         sensor_config.get("name"),
-                        sensor_config.get("unique_id"),
+                    )
+                    continue
+
+                coordinator_sensor = ModbusCoordinatorSensor(
+                    coordinator=coordinator,
+                    register_config=sensor_config,
+                    device_info=device_info,
+                )
+
+                coordinator.async_add_listener(
+                    coordinator_sensor._handle_coordinator_update
+                )
+
+                coordinator_sensors.append(coordinator_sensor)
+
+            except Exception as e:
+                _LOGGER.error(
+                    "Error creating coordinator sensor for %s: %s",
+                    sensor_config.get("name", "unknown"),
+                    str(e),
+                )
+
+        # Create calculated sensors (device_info already attached by coordinator)
+        for calc_config in calculated_sensors:
+            try:
+                from .calculated import ModbusCalculatedSensor
+
+                # Extract device info from calc_config
+                device_info = calc_config.get("device_info", {})
+                # Extract prefix from unique_id (format: PREFIX_sensor_name)
+                unique_id = calc_config.get("unique_id", "")
+
+                # Check if entity with same unique_id already exists from another integration
+                entity_id = f"sensor.{unique_id}"
+                existing_entity = registry.async_get(entity_id)
+
+                if (
+                    existing_entity
+                    and existing_entity.config_entry_id != entry.entry_id
+                ):
+                    # Migrate entity to this config entry
+                    _LOGGER.info(
+                        "Migrating calculated entity %s from %s to Modbus Manager",
+                        entity_id,
+                        existing_entity.config_entry_id,
+                    )
+                    registry.async_update_entity(
+                        entity_id,
+                        new_config_entry_id=entry.entry_id,
                     )
 
-                    # device_info is already in sensor_config from coordinator
-                    device_info = sensor_config.get("device_info")
-                    if not device_info:
-                        _LOGGER.warning(
-                            "Sensor %s missing device_info from coordinator",
-                            sensor_config.get("name"),
-                        )
-                        continue
+                device_prefix = (
+                    unique_id.split("_")[0] if "_" in unique_id else "unknown"
+                )
 
-                    coordinator_sensor = ModbusCoordinatorSensor(
-                        coordinator=coordinator,
-                        register_config=sensor_config,
-                        device_info=device_info,
-                    )
+                # Template name is in device_info model field
+                template_name = device_info.get("model", "unknown")
 
-                    coordinator.async_add_listener(
-                        coordinator_sensor._handle_coordinator_update
-                    )
+                entity = ModbusCalculatedSensor(
+                    hass=hass,
+                    config=calc_config,
+                    prefix=None,
+                    template_name=template_name,
+                    host=host,
+                    port=port,
+                    slave_id=calc_config.get("slave_id", 1),
+                    config_entry_id=entry.entry_id,
+                    device_prefix=device_prefix,
+                )
+                calculated_entities.append(entity)
 
-                    coordinator_sensors.append(coordinator_sensor)
-
-                except Exception as e:
-                    _LOGGER.error(
-                        "Error creating coordinator sensor for %s: %s",
-                        sensor_config.get("name", "unknown"),
-                        str(e),
-                    )
-
-            # Create calculated sensors (device_info already attached by coordinator)
-            for calc_config in calculated_sensors:
-                try:
-                    from .calculated import ModbusCalculatedSensor
-
-                    # Extract device info from calc_config
-                    device_info = calc_config.get("device_info", {})
-                    # Extract prefix from unique_id (format: PREFIX_sensor_name)
-                    unique_id = calc_config.get("unique_id", "")
-                    device_prefix = (
-                        unique_id.split("_")[0] if "_" in unique_id else "unknown"
-                    )
-
-                    # Template name is in device_info model field
-                    template_name = device_info.get("model", "unknown")
-
-                    entity = ModbusCalculatedSensor(
-                        hass=hass,
-                        config=calc_config,
-                        prefix=None,
-                        template_name=template_name,
-                        host=host,
-                        port=port,
-                        slave_id=calc_config.get("slave_id", 1),
-                        config_entry_id=entry.entry_id,
-                        device_prefix=device_prefix,
-                    )
-                    calculated_entities.append(entity)
-
-                except Exception as e:
-                    _LOGGER.error(
-                        "Error creating calculated sensor %s: %s",
-                        calc_config.get("name", "unknown"),
-                        str(e),
-                    )
-
-        else:
-            # LEGACY STRUCTURE: Single device from top-level config
-            _LOGGER.debug("Using legacy single-device structure")
-
-            prefix = entry.data.get("prefix", "unknown")
-            template_name = entry.data.get("template", "unknown")
-            slave_id = entry.data.get("slave_id", 1)
-
-            device_info = create_device_info_dict(
-                hass=hass,
-                host=host,
-                port=port,
-                slave_id=slave_id,
-                prefix=prefix,
-                template_name=template_name,
-                config_entry_id=entry.entry_id,
-            )
-
-            # Create coordinator sensors (regular sensors with addresses)
-            for sensor_config in regular_sensors:
-                try:
-                    _LOGGER.debug(
-                        "Creating sensor: name=%s, unique_id=%s",
-                        sensor_config.get("name"),
-                        sensor_config.get("unique_id"),
-                    )
-
-                    if "slave_id" not in sensor_config:
-                        sensor_config["slave_id"] = entry.data.get("slave_id", 1)
-
-                    coordinator_sensor = ModbusCoordinatorSensor(
-                        coordinator=coordinator,
-                        register_config=sensor_config,
-                        device_info=device_info,
-                    )
-
-                    coordinator.async_add_listener(
-                        coordinator_sensor._handle_coordinator_update
-                    )
-
-                    coordinator_sensors.append(coordinator_sensor)
-
-                except Exception as e:
-                    _LOGGER.error(
-                        "Error creating coordinator sensor for %s: %s",
-                        sensor_config.get("name", "unknown"),
-                        str(e),
-                    )
-
-            # Create calculated sensors for legacy structure
-            for calc_config in calculated_sensors:
-                try:
-                    from .calculated import ModbusCalculatedSensor
-
-                    entity = ModbusCalculatedSensor(
-                        hass=hass,
-                        config=calc_config,
-                        prefix=None,
-                        template_name=template_name,
-                        host=host,
-                        port=port,
-                        slave_id=calc_config.get("slave_id", slave_id),
-                        config_entry_id=entry.entry_id,
-                        device_prefix=prefix,
-                    )
-                    calculated_entities.append(entity)
-
-                except Exception as e:
-                    _LOGGER.error(
-                        "Error creating calculated sensor %s: %s",
-                        calc_config.get("name", "unknown"),
-                        str(e),
-                    )
+            except Exception as e:
+                _LOGGER.error(
+                    "Error creating calculated sensor %s: %s",
+                    calc_config.get("name", "unknown"),
+                    str(e),
+                )
 
         _LOGGER.debug(
             "Created %d coordinator sensors and %d calculated sensors",

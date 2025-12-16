@@ -84,26 +84,17 @@ class ModbusCoordinatorButton(ButtonEntity):
 
         # Get device info from register_config (provided by coordinator)
         device_info = register_config.get("device_info")
-        if device_info:
-            self._attr_device_info = DeviceInfo(**device_info)
-        else:
-            # Fallback for legacy mode
-            prefix = coordinator.entry.data.get("prefix", "unknown")
-            template_name = coordinator.entry.data.get("template", "unknown")
-            host = coordinator.entry.data.get("host", "unknown")
-            port = coordinator.entry.data.get("port", 502)
-            slave_id = coordinator.entry.data.get("slave_id", 1)
-
-            device_info = create_device_info_dict(
-                hass=coordinator.hass,
-                host=host,
-                port=port,
-                slave_id=slave_id,
-                prefix=prefix,
-                template_name=template_name,
-                config_entry_id=coordinator.entry.entry_id,
+        if not device_info:
+            _LOGGER.error(
+                "Button %s missing device_info. Please re-run the config flow to migrate.",
+                self._name,
             )
-            self._attr_device_info = DeviceInfo(**device_info)
+            # Create minimal device info to prevent errors
+            device_info = {
+                "identifiers": {(DOMAIN, coordinator.entry.entry_id)},
+                "name": "Modbus Device",
+            }
+        self._attr_device_info = DeviceInfo(**device_info)
 
         # Set extra state attributes
         self._attr_extra_state_attributes = {

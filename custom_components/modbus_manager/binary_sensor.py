@@ -47,15 +47,22 @@ async def async_setup_entry(
             _LOGGER.debug("No binary sensor configs found in coordinator registers")
             return
 
-        # Check if we have devices array structure
+        # All config entries should have devices array after migration
         devices = entry.data.get("devices")
+        if not devices or not isinstance(devices, list):
+            _LOGGER.error(
+                "Config entry missing devices array. Please re-run the config flow to migrate."
+            )
+            return
+
         hub_config = entry.data.get("hub", {})
         host = hub_config.get("host") or entry.data.get("host", "unknown")
         port = hub_config.get("port") or entry.data.get("port", 502)
 
         entities = []
 
-        if devices and isinstance(devices, list):
+        # NEW STRUCTURE: device_info is already in register configs from coordinator
+        if True:  # Always use new structure after migration
             # NEW STRUCTURE: Separate template-based and register-based binary sensors
             _LOGGER.info(
                 "Using devices array structure with coordinator-provided device_info"
@@ -123,63 +130,6 @@ async def async_setup_entry(
                             "Binary sensor %s has neither state template nor address, skipping",
                             config.get("name"),
                         )
-
-                except Exception as e:
-                    _LOGGER.error(
-                        "Error creating binary sensor %s: %s",
-                        config.get("name", "unknown"),
-                        str(e),
-                    )
-
-        else:
-            # LEGACY STRUCTURE: Single device from top-level config
-            _LOGGER.info("Using legacy single-device structure")
-
-            prefix = entry.data.get("prefix", "unknown")
-            template_name = entry.data.get("template", "unknown")
-            slave_id = entry.data.get("slave_id", 1)
-
-            device_info = create_device_info_dict(
-                hass=hass,
-                host=host,
-                port=port,
-                slave_id=slave_id,
-                prefix=prefix,
-                template_name=template_name,
-                config_entry_id=entry.entry_id,
-            )
-
-            for config in binary_sensor_configs:
-                try:
-                    has_state_template = config.get("state") is not None
-                    has_address = (
-                        config.get("address") is not None and config.get("address") > 0
-                    )
-
-                    if has_state_template and not has_address:
-                        # Template-based binary sensor
-                        from .calculated import ModbusCalculatedBinarySensor
-
-                        entity = ModbusCalculatedBinarySensor(
-                            hass=hass,
-                            config=config,
-                            prefix=prefix,
-                            template_name=template_name,
-                            host=host,
-                            port=port,
-                            slave_id=config.get("slave_id", slave_id),
-                            config_entry_id=entry.entry_id,
-                            device_prefix=prefix,
-                        )
-                        entities.append(entity)
-                    elif has_address:
-                        # Register-based binary sensor
-                        entity = ModbusCoordinatorBinarySensor(
-                            coordinator=coordinator,
-                            register_config=config,
-                            device_info=device_info,
-                        )
-                        entities.append(entity)
 
                 except Exception as e:
                     _LOGGER.error(

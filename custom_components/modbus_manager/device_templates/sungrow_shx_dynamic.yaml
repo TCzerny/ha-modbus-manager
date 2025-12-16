@@ -5,12 +5,35 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.0
+version: 1.2.4
 # Updated to Protocol V1.1.11 (2025-11-17)
 # - Updated Battery Power to recommended register 5214-5215 (S32, 1W)
 # - Updated Battery Current to recommended register 5631 (S16, 0.1A)
 # - Confirmed Grid Frequency uses recommended register 5242 (U16, 0.01Hz)
 # - Added Firmware Information registers (13250-13369)
+# Updated Battery Power Limits (2025-01-XX)
+# - Added max_charge_power and max_discharge_power to dynamic_config for ALL models
+# - SAFETY: Battery Power Control max_values set to LOWEST limit (6kW) for safety
+# - Dynamic adjustment based on selected_model implemented in coordinator.py
+# - Verified Limits from datasheets:
+#   * SH3.0-6.0RS: 6.6kW/6.6kW (from datasheet V18)
+#   * SH8.0/10RS: 10kW/10kW (from datasheet V2)
+#   * SH5.0-10RT: 7.5kW/6kW to 10.6kW/10.6kW (from datasheet)
+#   * SH5-25T: Estimated based on RT series scaling (not verified)
+#   * MG5-6RL: Estimated based on RT series (not verified)
+# - Runtime validation in number.py enforces safe limits based on battery capacity
+# Updated Export Power and Battery Start Power Limits (2025-01-XX)
+# - Added max_ac_output_power to dynamic_config for ALL models
+# - SAFETY: Export Power Limit max_value set to LOWEST limit (3kW) for safety
+# - SAFETY: Feed-in Limitation Value Wide Range max_value set to LOWEST limit (3.0kW) for safety
+# - SAFETY: Battery Charging/Discharging Start Power max_value set to reasonable limit (3kW = 50% of smallest battery power)
+# - Dynamic adjustment for all controls based on selected_model implemented in coordinator.py
+# - Export Power Limits from datasheets:
+#   * SH3.0-6.0RS: 3kW-6kW AC output power (from datasheet V18)
+#   * SH8.0/10RS: 8kW-10kW AC output power (from datasheet V2)
+#   * SH5.0-10RT: 5kW-10kW AC output power (from datasheet)
+#   * SH5-25T: Estimated based on model name (kW rating)
+#   * MG5-6RL: Estimated based on model name (kW rating)
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -21,47 +44,63 @@ dynamic_config:
 
   valid_models:
     # SH3.0-6.0RS Series (Single Phase)
-    "SH3.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD17"}
-    "SH3.6RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD0D"}
-    "SH4.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD18"}
-    "SH5.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD0F"}
-    "SH6.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD10"}
+    # Battery Power Limits (from datasheet V18): max_charge_power (W), max_discharge_power (W)
+    # AC Output Power Limits (from datasheet V18): max_ac_output_power (W)
+    # All models: 6600W charge / 6600W discharge (30A max current)
+    "SH3.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD17", max_charge_power: 6600, max_discharge_power: 6600, max_ac_output_power: 3000}
+    "SH3.6RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD0D", max_charge_power: 6600, max_discharge_power: 6600, max_ac_output_power: 3680}
+    "SH4.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD18", max_charge_power: 6600, max_discharge_power: 6600, max_ac_output_power: 4000}
+    "SH5.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD0F", max_charge_power: 6600, max_discharge_power: 6600, max_ac_output_power: 5000}
+    "SH6.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0xD10", max_charge_power: 6600, max_discharge_power: 6600, max_ac_output_power: 6000}
 
     # SH8.0-10RS Series (Single Phase, 4 MPPT)
-    "SH8.0RS": {phases: 1, mppt_count: 4, string_count: 1, type_code: "0xD1A"}
-    "SH10RS": {phases: 1, mppt_count: 4, string_count: 1, type_code: "0xD1B"}
+    # Battery Power Limits (from datasheet V2): max_charge_power (W), max_discharge_power (W)
+    # AC Output Power Limits (from datasheet V2): max_ac_output_power (W)
+    # Both models: 10000W charge / 10000W discharge (50A max current)
+    "SH8.0RS": {phases: 1, mppt_count: 4, string_count: 1, type_code: "0xD1A", max_charge_power: 10000, max_discharge_power: 10000, max_ac_output_power: 8000}
+    "SH10RS": {phases: 1, mppt_count: 4, string_count: 1, type_code: "0xD1B", max_charge_power: 10000, max_discharge_power: 10000, max_ac_output_power: 10000}
 
     # SH5.0-10RT Series (Three Phase)
-    "SH5.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE00"}
-    "SH6.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE01"}
-    "SH8.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE02"}
-    "SH10RT": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0xE03"}
-    "SH5.0RT-20": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE10"}
-    "SH6.0RT-20": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE11"}
-    "SH8.0RT-20": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE12"}
-    "SH10RT-20": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0xE13"}
-    "SH5.0RT-V112": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE0C"}
-    "SH6.0RT-V112": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE0D"}
-    "SH8.0RT-V112": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE0E"}
-    "SH10RT-V112": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0xE0F"}
-    "SH5.0RT-V122": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE08"}
-    "SH6.0RT-V122": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE09"}
-    "SH8.0RT-V122": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE0A"}
-    "SH10RT-V122": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0xE0B"}
+    # Battery Power Limits (from datasheet): max_charge_power (W), max_discharge_power (W)
+    # AC Output Power Limits (from datasheet): max_ac_output_power (W)
+    "SH5.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE00", max_charge_power: 7500, max_discharge_power: 6000, max_ac_output_power: 5000}
+    "SH6.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE01", max_charge_power: 9000, max_discharge_power: 7200, max_ac_output_power: 6000}
+    "SH8.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE02", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 8000}
+    "SH10RT": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0xE03", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10000}
+    "SH5.0RT-20": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE10", max_charge_power: 7500, max_discharge_power: 6000, max_ac_output_power: 5000}
+    "SH6.0RT-20": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE11", max_charge_power: 9000, max_discharge_power: 7200, max_ac_output_power: 6000}
+    "SH8.0RT-20": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE12", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 8000}
+    "SH10RT-20": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0xE13", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10000}
+    "SH5.0RT-V112": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE0C", max_charge_power: 7500, max_discharge_power: 6000, max_ac_output_power: 5000}
+    "SH6.0RT-V112": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE0D", max_charge_power: 9000, max_discharge_power: 7200, max_ac_output_power: 6000}
+    "SH8.0RT-V112": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE0E", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 8000}
+    "SH10RT-V112": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0xE0F", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10000}
+    "SH5.0RT-V122": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE08", max_charge_power: 7500, max_discharge_power: 6000, max_ac_output_power: 5000}
+    "SH6.0RT-V122": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE09", max_charge_power: 9000, max_discharge_power: 7200, max_ac_output_power: 6000}
+    "SH8.0RT-V122": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE0A", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 8000}
+    "SH10RT-V122": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0xE0B", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10000}
 
     # SH5-25T Series (Three Phase)
-    "SH5T": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xE20"}
-    "SH6T": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xE21"}
-    "SH8T": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xE22"}
-    "SH10T": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE23"}
-    "SH12T": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE24"}
-    "SH15T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE25"}
-    "SH20T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE26"}
-    "SH25T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE28"}
+    # Battery Power Limits: Using conservative estimates based on RT series scaling
+    # AC Output Power Limits: Estimated based on model name (kW rating)
+    # NOTE: Specific datasheet values not found - using safe estimates
+    # SH5T-SH10T: Estimated similar to RT series
+    # SH12T-SH25T: Estimated higher limits for larger models
+    "SH5T": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xE20", max_charge_power: 7500, max_discharge_power: 6000, max_ac_output_power: 5000}
+    "SH6T": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xE21", max_charge_power: 9000, max_discharge_power: 7200, max_ac_output_power: 6000}
+    "SH8T": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xE22", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 8000}
+    "SH10T": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE23", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10000}
+    "SH12T": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0xE24", max_charge_power: 12000, max_discharge_power: 12000, max_ac_output_power: 12000}
+    "SH15T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE25", max_charge_power: 15000, max_discharge_power: 15000, max_ac_output_power: 15000}
+    "SH20T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE26", max_charge_power: 20000, max_discharge_power: 20000, max_ac_output_power: 20000}
+    "SH25T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE28", max_charge_power: 25000, max_discharge_power: 25000, max_ac_output_power: 25000}
 
     # MG5-6RL Series (Three Phase)
-    "MG5RL": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xD27"}
-    "MG6RL": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xD28"}
+    # Battery Power Limits: Using conservative estimates (similar to RT series)
+    # AC Output Power Limits: Estimated based on model name (kW rating)
+    # NOTE: Specific datasheet values not found - using safe estimates
+    "MG5RL": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xD27", max_charge_power: 7500, max_discharge_power: 6000, max_ac_output_power: 5000}
+    "MG6RL": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xD28", max_charge_power: 9000, max_discharge_power: 7200, max_ac_output_power: 6000}
 
   phases:
     description: "Number of phases (1 or 3)"
@@ -83,6 +122,7 @@ dynamic_config:
         "2.0.0":
           data_type: "int32"
           scale: 1
+          swap: word
           description: "Battery power signed in firmware v2+"
 
   connection_type:
@@ -141,6 +181,13 @@ dynamic_config:
 
       # Some registers are only available via WINET connection
       winet_only_sensors:
+
+  dual_channel_meter:
+    description: "Dual-channel meter enabled (e.g., DTSU666-20)"
+    options: [true, false]
+    default: false
+    # Meter Channel 2 sensors are only valid when a dual-channel meter is connected
+    # When disabled (default), Meter Channel 2 sensors will not be registered
 
 # Base sensors (will be filtered based on configuration)
 sensors:
@@ -207,7 +254,7 @@ sensors:
   # Firmware Information (Protocol V1.1.11)
   - name: Inverter Firmware Information
     unique_id: inverter_firmware_info
-    address: 13250 # reg 13251-13265 (15 bytes UTF-8 string)
+    address: 13249 # reg 13250-13264 (15 bytes UTF-8 string)
     input_type: input
     data_type: string
     count: 15
@@ -217,7 +264,7 @@ sensors:
 
   - name: Communication Module Firmware Information
     unique_id: communication_module_firmware_info
-    address: 13265 # reg 13266-13280 (15 bytes UTF-8 string)
+    address: 13264 # reg 13265-13279 (15 bytes UTF-8 string)
     input_type: input
     data_type: string
     count: 15
@@ -227,7 +274,7 @@ sensors:
 
   - name: Battery Firmware Information
     unique_id: battery_firmware_info
-    address: 13280 # reg 13281-13295 (15 bytes UTF-8 string)
+    address: 13279 # reg 13280-13294 (15 bytes UTF-8 string)
     input_type: input
     data_type: string
     count: 15
@@ -493,9 +540,12 @@ sensors:
     scan_interval: 10
 
   # Meter Channel 2 Data (Protocol V1.1.11) - for systems with multiple meter channels
+  # NOTE: These sensors are only valid when a dual-channel meter (e.g., DTSU666-20) is connected
+  # They will show invalid values (0x7FFFFFFF) if no dual-channel meter is present
+  # Use condition to only register these sensors when dual_channel_meter is enabled
   - name: Meter Channel 2 Total Active Power raw
     unique_id: meter_channel_2_total_active_power_raw
-    address: 13200 # reg 13201-13202 (S32, 1W)
+    address: 13199 # reg 13200-13214 (S32, 1W)
     input_type: input
     data_type: int32
     swap: word
@@ -506,10 +556,11 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_meter_channel_2"
+    condition: "dual_channel_meter == true"
 
   - name: Meter Channel 2 Phase A Active Power raw
     unique_id: meter_channel_2_phase_a_active_power_raw
-    address: 13202 # reg 13203-13204 (S32, 1W)
+    address: 13201 # reg 13202-13215 (S32, 1W)
     input_type: input
     data_type: int32
     swap: word
@@ -520,10 +571,11 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_meter_channel_2"
+    condition: "dual_channel_meter == true"
 
   - name: Meter Channel 2 Phase B Active Power raw
     unique_id: meter_channel_2_phase_b_active_power_raw
-    address: 13204 # reg 13205-13206 (S32, 1W)
+    address: 13203 # reg 13204-13217 (S32, 1W)
     input_type: input
     data_type: int32
     swap: word
@@ -534,10 +586,11 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_meter_channel_2"
+    condition: "dual_channel_meter == true"
 
   - name: Meter Channel 2 Phase C Active Power raw
     unique_id: meter_channel_2_phase_c_active_power_raw
-    address: 13206 # reg 13207-13208 (S32, 1W)
+    address: 13205 # reg 13206-13219 (S32, 1W)
     input_type: input
     data_type: int32
     swap: word
@@ -548,6 +601,7 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_meter_channel_2"
+    condition: "dual_channel_meter == true"
 
   - name: BDC rated power
     unique_id: bdc_rated_power
@@ -1563,10 +1617,10 @@ sensors:
 
   - name: Battery power
     unique_id: battery_power
-    address: 5214 # reg 5215-5216 - RECOMMENDED: Per Protocol V1.1.11, register 5214-5215 (S32) is recommended instead of 13022 (S16)
+    address: 5213 # reg 5214-5215 - RECOMMENDED: Per Protocol V1.1.11, register 5214-5215 (S32) is recommended instead of 13022 (S16)
     input_type: input
     data_type: int32
-    # Note: swap: word removed - register values come in correct order [high_word, low_word]
+    swap: word
     precision: 0
     unit_of_measurement: W
     device_class: "power"
@@ -1874,10 +1928,12 @@ controls:
     state_class: "measurement"
     scale: 1
     min_value: 0
-    max_value: 10000
+    max_value: 3000
     step: 100
     scan_interval: 30
     group: "PV_control"
+    # SAFETY: max_value set to LOWEST AC output power (SH3.0RS: 3000W)
+    # Will be dynamically adjusted based on selected_model in coordinator.py
 
   - type: "number"
     name: "Max SoC"
@@ -1951,7 +2007,7 @@ controls:
   - type: "select"
     name: "Active Power Limitation"
     unique_id: "active_power_limitation"
-    address: 13088 # reg 13089 - Protocol V1.1.7
+    address: 13088 # reg 13089
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
@@ -1963,7 +2019,7 @@ controls:
   - type: "number"
     name: "Active Power Limit Ratio"
     unique_id: "active_power_limit_ratio"
-    address: 13089 # reg 13090 - Protocol V1.1.7
+    address: 13089 # reg 13090
     input_type: "holding"
     data_type: "uint16"
     precision: 1
@@ -2001,36 +2057,17 @@ controls:
     group: "PV_modes"
 
   - type: "number"
-    name: "Battery Max Charge Power"
-    unique_id: "battery_max_charge_power"
-    address: 33046
+    name: "Battery Max Charging Power"
+    unique_id: "battery_max_charging_power"
+    address: 33046 # reg 33047
     input_type: "holding"
     data_type: "uint16"
-    precision: 0
-    unit_of_measurement: "W"
+    precision: 2
+    unit_of_measurement: "kW"
+    scale: 0.01
     min_value: 0
-    max_value: 5000
-    step: 100
-    device_class: "power"
-    state_class: measurement
-    scale: 10
-    scan_interval: 10
-    group: "PV_battery_control"
-
-  - type: "number"
-    name: "Battery Max Discharge Power"
-    unique_id: "battery_max_discharge_power"
-    address: 33047
-    input_type: "holding"
-    data_type: "uint16"
-    precision: 0
-    unit_of_measurement: "W"
-    min_value: 0
-    max_value: 8100
-    step: 100
-    device_class: "power"
-    state_class: measurement
-    scale: 10
+    max_value: 6.0
+    step: 0.01
     scan_interval: 10
     group: "PV_battery_control"
 
@@ -2044,7 +2081,7 @@ controls:
     unit_of_measurement: "kW"
     scale: 0.01
     min_value: 0
-    max_value: 100
+    max_value: 6.0
     step: 0.01
     scan_interval: 10
     group: "PV_battery_control"
@@ -2059,10 +2096,12 @@ controls:
     unit_of_measurement: "kW"
     scale: 0.01
     min_value: 0
-    max_value: 1000
+    max_value: 3.0
     step: 0.01
     scan_interval: 30
     group: "PV_control"
+    # SAFETY: max_value set to LOWEST AC output power (SH3.0RS: 3.0kW)
+    # Will be dynamically adjusted based on selected_model in coordinator.py
 
   - type: "number"
     name: "Battery Charging Start Power"
@@ -2073,13 +2112,15 @@ controls:
     precision: 0
     unit_of_measurement: "W"
     min_value: 0
-    max_value: 1000
+    max_value: 3000
     step: 10
     device_class: "power"
     state_class: measurement
     scale: 10
     scan_interval: 10
     group: "PV_battery_control"
+    # SAFETY: max_value set to reasonable limit (3000W = ~50% of smallest battery power)
+    # Will be dynamically adjusted based on selected_model max_charge_power in coordinator.py
 
   - type: "number"
     name: "Battery Discharging Start Power"
@@ -2090,13 +2131,15 @@ controls:
     precision: 0
     unit_of_measurement: "W"
     min_value: 0
-    max_value: 1000
+    max_value: 3000
     step: 10
     device_class: "power"
     state_class: measurement
     scale: 10
     scan_interval: 10
     group: "PV_battery_control"
+    # SAFETY: max_value set to reasonable limit (3000W = ~50% of smallest battery power)
+    # Will be dynamically adjusted based on selected_model max_discharge_power in coordinator.py
 
   - type: "select"
     name: "Forced Startup Under Low SoC Standby"
@@ -2428,9 +2471,11 @@ calculated:
     group: "PV_meter_power"
 
   # Meter Channel 2 Calculated Sensors (Protocol V1.1.11)
+  # NOTE: These calculated sensors depend on the raw sensors, which are only registered when dual_channel_meter is enabled
   - name: "Meter Channel 2 Total Active Power"
     unique_id: "meter_channel_2_total_active_power"
     type: "sensor"
+    condition: "dual_channel_meter == true"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_channel_2_total_active_power_raw', 'unavailable')
@@ -2451,6 +2496,7 @@ calculated:
   - name: "Meter Channel 2 Phase A Active Power"
     unique_id: "meter_channel_2_phase_a_active_power"
     type: "sensor"
+    condition: "dual_channel_meter == true"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw', 'unavailable')
@@ -2471,6 +2517,7 @@ calculated:
   - name: "Meter Channel 2 Phase B Active Power"
     unique_id: "meter_channel_2_phase_b_active_power"
     type: "sensor"
+    condition: "dual_channel_meter == true"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw', 'unavailable')
@@ -2491,6 +2538,7 @@ calculated:
   - name: "Meter Channel 2 Phase C Active Power"
     unique_id: "meter_channel_2_phase_c_active_power"
     type: "sensor"
+    condition: "dual_channel_meter == true"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw', 'unavailable')

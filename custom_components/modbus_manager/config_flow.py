@@ -890,6 +890,132 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         sensor_name = sensor.get("name", "") or ""
         unique_id = sensor.get("unique_id", "") or ""
 
+        # Check firmware_min_version filter first
+        sensor_firmware_min = sensor.get("firmware_min_version")
+        if sensor_firmware_min and firmware_version:
+            try:
+                from packaging import version
+
+                # Compare firmware versions
+                current_ver = version.parse(firmware_version)
+                min_ver = version.parse(sensor_firmware_min)
+                if current_ver < min_ver:
+                    _LOGGER.debug(
+                        "Excluding sensor due to firmware version: %s (unique_id: %s, requires: %s, current: %s)",
+                        sensor.get("name", "unknown"),
+                        sensor.get("unique_id", "unknown"),
+                        sensor_firmware_min,
+                        firmware_version,
+                    )
+                    return False
+            except Exception:
+                # Fallback to string comparison for non-semantic versions
+                try:
+                    if firmware_version < sensor_firmware_min:
+                        _LOGGER.debug(
+                            "Excluding sensor due to firmware version (string): %s (unique_id: %s, requires: %s, current: %s)",
+                            sensor.get("name", "unknown"),
+                            sensor.get("unique_id", "unknown"),
+                            sensor_firmware_min,
+                            firmware_version,
+                        )
+                        return False
+                except Exception as e:
+                    # If comparison fails, include the sensor (better safe than sorry)
+                    _LOGGER.debug(
+                        "Could not compare firmware versions for sensor %s: %s",
+                        sensor.get("name", "unknown"),
+                        str(e),
+                    )
+
+        # Check condition filter
+        condition = sensor.get("condition")
+        if condition:
+            # Parse condition like "modules >= 5", "phases == 3", or "dual_channel_meter == true"
+            if "==" in condition:
+                try:
+                    parts = condition.split("==")
+                    if len(parts) == 2:
+                        variable_name = parts[0].strip()
+                        required_value_str = parts[1].strip()
+
+                        # Get actual value from dynamic_config
+                        actual_value = dynamic_config.get(variable_name)
+
+                        # Try to convert to bool first (for true/false)
+                        if required_value_str.lower() in ["true", "false"]:
+                            required_value = required_value_str.lower() == "true"
+                            actual_value = (
+                                bool(actual_value)
+                                if actual_value is not None
+                                else False
+                            )
+                        else:
+                            # Try to convert to int, then string
+                            try:
+                                required_value = int(required_value_str)
+                                actual_value = (
+                                    int(actual_value) if actual_value is not None else 0
+                                )
+                            except (ValueError, TypeError):
+                                required_value = required_value_str
+                                actual_value = (
+                                    str(actual_value)
+                                    if actual_value is not None
+                                    else ""
+                                )
+
+                        if actual_value != required_value:
+                            _LOGGER.debug(
+                                "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
+                                condition,
+                                sensor.get("name", "unknown"),
+                                sensor.get("unique_id", "unknown"),
+                                required_value,
+                                actual_value,
+                            )
+                            return False
+                except (ValueError, IndexError) as e:
+                    _LOGGER.warning(
+                        "Invalid condition '%s' for sensor %s: %s",
+                        condition,
+                        sensor.get("name", "unknown"),
+                        str(e),
+                    )
+            elif ">=" in condition:
+                try:
+                    parts = condition.split(">=")
+                    if len(parts) == 2:
+                        variable_name = parts[0].strip()
+                        required_value_str = parts[1].strip()
+
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = dynamic_config.get(variable_name, 0)
+                            if isinstance(actual_value, str):
+                                actual_value = int(actual_value)
+                        except ValueError:
+                            required_value = required_value_str
+                            actual_value = str(dynamic_config.get(variable_name, ""))
+
+                        if actual_value < required_value:
+                            _LOGGER.debug(
+                                "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
+                                condition,
+                                sensor.get("name", "unknown"),
+                                sensor.get("unique_id", "unknown"),
+                                required_value,
+                                actual_value,
+                            )
+                            return False
+                except (ValueError, IndexError) as e:
+                    _LOGGER.warning(
+                        "Invalid condition '%s' for sensor %s: %s",
+                        condition,
+                        sensor.get("name", "unknown"),
+                        str(e),
+                    )
+
         # Ensure we have strings
         sensor_name = str(sensor_name).lower()
         unique_id = str(unique_id).lower()
@@ -2884,6 +3010,132 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         """Check if sensor should be included based on configuration."""
         sensor_name = sensor.get("name", "") or ""
         unique_id = sensor.get("unique_id", "") or ""
+
+        # Check firmware_min_version filter first
+        sensor_firmware_min = sensor.get("firmware_min_version")
+        if sensor_firmware_min and firmware_version:
+            try:
+                from packaging import version
+
+                # Compare firmware versions
+                current_ver = version.parse(firmware_version)
+                min_ver = version.parse(sensor_firmware_min)
+                if current_ver < min_ver:
+                    _LOGGER.debug(
+                        "Excluding sensor due to firmware version: %s (unique_id: %s, requires: %s, current: %s)",
+                        sensor.get("name", "unknown"),
+                        sensor.get("unique_id", "unknown"),
+                        sensor_firmware_min,
+                        firmware_version,
+                    )
+                    return False
+            except Exception:
+                # Fallback to string comparison for non-semantic versions
+                try:
+                    if firmware_version < sensor_firmware_min:
+                        _LOGGER.debug(
+                            "Excluding sensor due to firmware version (string): %s (unique_id: %s, requires: %s, current: %s)",
+                            sensor.get("name", "unknown"),
+                            sensor.get("unique_id", "unknown"),
+                            sensor_firmware_min,
+                            firmware_version,
+                        )
+                        return False
+                except Exception as e:
+                    # If comparison fails, include the sensor (better safe than sorry)
+                    _LOGGER.debug(
+                        "Could not compare firmware versions for sensor %s: %s",
+                        sensor.get("name", "unknown"),
+                        str(e),
+                    )
+
+        # Check condition filter
+        condition = sensor.get("condition")
+        if condition:
+            # Parse condition like "modules >= 5", "phases == 3", or "dual_channel_meter == true"
+            if "==" in condition:
+                try:
+                    parts = condition.split("==")
+                    if len(parts) == 2:
+                        variable_name = parts[0].strip()
+                        required_value_str = parts[1].strip()
+
+                        # Get actual value from dynamic_config
+                        actual_value = dynamic_config.get(variable_name)
+
+                        # Try to convert to bool first (for true/false)
+                        if required_value_str.lower() in ["true", "false"]:
+                            required_value = required_value_str.lower() == "true"
+                            actual_value = (
+                                bool(actual_value)
+                                if actual_value is not None
+                                else False
+                            )
+                        else:
+                            # Try to convert to int, then string
+                            try:
+                                required_value = int(required_value_str)
+                                actual_value = (
+                                    int(actual_value) if actual_value is not None else 0
+                                )
+                            except (ValueError, TypeError):
+                                required_value = required_value_str
+                                actual_value = (
+                                    str(actual_value)
+                                    if actual_value is not None
+                                    else ""
+                                )
+
+                        if actual_value != required_value:
+                            _LOGGER.debug(
+                                "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
+                                condition,
+                                sensor.get("name", "unknown"),
+                                sensor.get("unique_id", "unknown"),
+                                required_value,
+                                actual_value,
+                            )
+                            return False
+                except (ValueError, IndexError) as e:
+                    _LOGGER.warning(
+                        "Invalid condition '%s' for sensor %s: %s",
+                        condition,
+                        sensor.get("name", "unknown"),
+                        str(e),
+                    )
+            elif ">=" in condition:
+                try:
+                    parts = condition.split(">=")
+                    if len(parts) == 2:
+                        variable_name = parts[0].strip()
+                        required_value_str = parts[1].strip()
+
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = dynamic_config.get(variable_name, 0)
+                            if isinstance(actual_value, str):
+                                actual_value = int(actual_value)
+                        except ValueError:
+                            required_value = required_value_str
+                            actual_value = str(dynamic_config.get(variable_name, ""))
+
+                        if actual_value < required_value:
+                            _LOGGER.debug(
+                                "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
+                                condition,
+                                sensor.get("name", "unknown"),
+                                sensor.get("unique_id", "unknown"),
+                                required_value,
+                                actual_value,
+                            )
+                            return False
+                except (ValueError, IndexError) as e:
+                    _LOGGER.warning(
+                        "Invalid condition '%s' for sensor %s: %s",
+                        condition,
+                        sensor.get("name", "unknown"),
+                        str(e),
+                    )
 
         # Ensure we have strings
         sensor_name = str(sensor_name).lower()

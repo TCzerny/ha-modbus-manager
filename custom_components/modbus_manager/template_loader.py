@@ -912,9 +912,63 @@ def _should_include_sensor(
     # Check condition filter first
     condition = sensor.get("condition")
     if condition:
-        # Parse condition like "modules >= 5" or "phases >= 3" or "mppt_count >= 2"
+        # Parse condition like "modules >= 5", "phases == 3", or "dual_channel_meter == true"
         # Extract variable name and operator
-        if ">=" in condition:
+        if "==" in condition:
+            try:
+                parts = condition.split("==")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip()
+
+                    # Get actual value from dynamic_config
+                    actual_value = dynamic_config.get(variable_name)
+
+                    # Try to convert to bool first (for true/false)
+                    if required_value_str.lower() in ["true", "false"]:
+                        required_value = required_value_str.lower() == "true"
+                        actual_value = (
+                            bool(actual_value) if actual_value is not None else False
+                        )
+                    else:
+                        # Try to convert to int, then string
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = (
+                                int(actual_value) if actual_value is not None else 0
+                            )
+                        except (ValueError, TypeError):
+                            required_value = required_value_str
+                            actual_value = (
+                                str(actual_value) if actual_value is not None else ""
+                            )
+
+                    _LOGGER.debug(
+                        "Checking condition '%s' for sensor %s: required=%s, actual=%s",
+                        condition,
+                        sensor.get("name", "unknown"),
+                        required_value,
+                        actual_value,
+                    )
+
+                    if actual_value != required_value:
+                        _LOGGER.info(
+                            "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
+                            condition,
+                            sensor.get("name", "unknown"),
+                            sensor.get("unique_id", "unknown"),
+                            required_value,
+                            actual_value,
+                        )
+                        return False
+            except (ValueError, IndexError) as e:
+                _LOGGER.warning(
+                    "Invalid condition '%s' for sensor %s: %s",
+                    condition,
+                    sensor.get("name", "unknown"),
+                    str(e),
+                )
+        elif ">=" in condition:
             try:
                 parts = condition.split(">=")
                 if len(parts) == 2:

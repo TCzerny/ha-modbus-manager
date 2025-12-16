@@ -18,12 +18,14 @@ dynamic_config:
 
   valid_models:
     # SBR Battery Models based on module count
-    "SBR096": {modules: 3}
-    "SBR128": {modules: 4}
-    "SBR160": {modules: 5}
-    "SBR192": {modules: 6}
-    "SBR224": {modules: 7}
-    "SBR256": {modules: 8}
+    # Battery Power Limits (from datasheet): max_power (W) - DC-Nennleistung
+    # All SBR models support 30A max charge/discharge current
+    "SBR096": {modules: 3, max_power: 5760}
+    "SBR128": {modules: 4, max_power: 7680}
+    "SBR160": {modules: 5, max_power: 9600}
+    "SBR192": {modules: 6, max_power: 11520}
+    "SBR224": {modules: 7, max_power: 13440}
+    "SBR256": {modules: 8, max_power: 15360}
 
   # Note: slave_id is configured in config_flow and stored in devices array
   # No need to define it here in dynamic_config

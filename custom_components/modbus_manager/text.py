@@ -93,23 +93,15 @@ class ModbusCoordinatorText(TextEntity):
         # Get device info from register_config (provided by coordinator)
         device_info = register_config.get("device_info")
         if not device_info:
-            # Fallback for legacy mode
-            prefix = coordinator.entry.data.get("prefix", "unknown")
-            template_name = coordinator.entry.data.get("template", "unknown")
-            host = coordinator.entry.data.get("host", "unknown")
-            port = coordinator.entry.data.get("port", 502)
-            slave_id = coordinator.entry.data.get("slave_id", 1)
-
-            device_info = create_device_info_dict(
-                hass=coordinator.hass,
-                host=host,
-                port=port,
-                slave_id=slave_id,
-                prefix=prefix,
-                template_name=template_name,
-                config_entry_id=coordinator.entry.entry_id,
+            _LOGGER.error(
+                "Text entity %s missing device_info. Please re-run the config flow to migrate.",
+                self._name,
             )
-
+            # Create minimal device info to prevent errors
+            device_info = {
+                "identifiers": {(DOMAIN, coordinator.entry.entry_id)},
+                "name": "Modbus Device",
+            }
         self._attr_device_info = DeviceInfo(**device_info)
 
         # Set extra state attributes

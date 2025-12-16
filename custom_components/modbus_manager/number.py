@@ -131,6 +131,77 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
     async def async_set_native_value(self, value: float) -> None:
         """Set the value of the number."""
         try:
+            # Safety check: Validate battery power limits against battery capacity
+            unique_id = self.register_config.get("unique_id", "")
+            if "battery_max" in unique_id.lower() and "power" in unique_id.lower():
+                # Try to get battery capacity from coordinator's hass state
+                try:
+                    from homeassistant.core import State
+                    from homeassistant.helpers import entity_registry as er
+
+                    # Get device identifier to find battery capacity sensor
+                    device_id = self._attr_device_info.get("identifiers")
+                    if device_id:
+                        # Find battery capacity sensor for this device
+                        entity_registry = er.async_get(self.coordinator.hass)
+                        device_entities = er.async_entries_for_device(
+                            entity_registry, list(device_id)[0][1]
+                        )
+
+                        battery_capacity_entity = None
+                        for entity in device_entities:
+                            if (
+                                entity.unique_id
+                                and "battery_capacity" in entity.unique_id.lower()
+                            ):
+                                battery_capacity_entity = entity.entity_id
+                                break
+
+                        if battery_capacity_entity:
+                            battery_capacity_state = self.coordinator.hass.states.get(
+                                battery_capacity_entity
+                            )
+                            if (
+                                battery_capacity_state
+                                and battery_capacity_state.state
+                                not in ["unknown", "unavailable", None]
+                            ):
+                                try:
+                                    battery_capacity_kwh = float(
+                                        battery_capacity_state.state
+                                    )
+                                    # Calculate safe limit: 0.5C rate for charging, 1C for discharging
+                                    if "charge" in unique_id.lower():
+                                        max_safe_power_kw = (
+                                            battery_capacity_kwh * 0.5
+                                        )  # 0.5C charging rate
+                                    else:  # discharging
+                                        max_safe_power_kw = (
+                                            battery_capacity_kwh * 1.0
+                                        )  # 1C discharging rate
+
+                                    # Convert to same unit as value (W or kW)
+                                    if self._attr_native_unit_of_measurement == "kW":
+                                        max_safe_power = max_safe_power_kw
+                                    else:  # W
+                                        max_safe_power = max_safe_power_kw * 1000
+
+                                    if value > max_safe_power:
+                                        _LOGGER.warning(
+                                            "⚠️ SAFETY WARNING: Attempted to set %s to %.1f %s, but battery capacity (%.2f kWh) limits safe maximum to %.1f %s (0.5C/1C rate). Value will be limited.",
+                                            self._attr_name,
+                                            value,
+                                            self._attr_native_unit_of_measurement,
+                                            battery_capacity_kwh,
+                                            max_safe_power,
+                                            self._attr_native_unit_of_measurement,
+                                        )
+                                        value = min(value, max_safe_power)
+                                except (ValueError, TypeError):
+                                    pass  # Ignore if battery capacity cannot be parsed
+                except Exception as e:
+                    _LOGGER.debug("Could not validate battery power limit: %s", str(e))
+
             # Get register configuration
             address = self.register_config.get("address")
             slave_id = self.register_config.get("slave_id", 1)
@@ -260,22 +331,11 @@ async def async_setup_entry(
                 # Get device info from control_config (provided by coordinator)
                 device_info = control_config.get("device_info")
                 if not device_info:
-                    # Fallback for legacy mode
-                    prefix = entry.data.get("prefix", "unknown")
-                    template_name = entry.data.get("template", "unknown")
-                    host = entry.data.get("host", "unknown")
-                    port = entry.data.get("port", 502)
-                    slave_id = entry.data.get("slave_id", 1)
-
-                    device_info = create_device_info_dict(
-                        hass=hass,
-                        host=host,
-                        port=port,
-                        slave_id=slave_id,
-                        prefix=prefix,
-                        template_name=template_name,
-                        config_entry_id=entry.entry_id,
+                    _LOGGER.error(
+                        "Number control %s missing device_info. Please re-run the config flow to migrate.",
+                        control_config.get("name", "unknown"),
                     )
+                    continue
 
                 coordinator_number = ModbusCoordinatorNumber(
                     coordinator=coordinator,
