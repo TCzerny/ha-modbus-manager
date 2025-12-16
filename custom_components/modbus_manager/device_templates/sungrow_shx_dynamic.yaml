@@ -5,7 +5,12 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.1.0
+version: 1.2.0
+# Updated to Protocol V1.1.11 (2025-11-17)
+# - Updated Battery Power to recommended register 5214-5215 (S32, 1W)
+# - Updated Battery Current to recommended register 5631 (S16, 0.1A)
+# - Confirmed Grid Frequency uses recommended register 5242 (U16, 0.01Hz)
+# - Added Firmware Information registers (13250-13369)
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -73,10 +78,10 @@ dynamic_config:
     options: ["03011.95.01", "03011.95.10"]
     default: "03011.95.01"
     sensor_replacements:
-      # Battery power sensor replacement
-      battery_power_raw:
+      # Battery power sensor replacement (deprecated - now using recommended register 5214-5215)
+      battery_power:
         "2.0.0":
-          data_type: "int16"
+          data_type: "int32"
           scale: 1
           description: "Battery power signed in firmware v2+"
 
@@ -155,6 +160,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 600
+    group: "PV_device_info"
     map:
       3334: "SH3K6"
       3335: "SH4K6"
@@ -196,7 +202,38 @@ sensors:
       3624: "SH25T"
       3353: "MG5RL"
       3354: "MG6RL"
-    group: "PV_device_count"
+    group: "PV_device_info"
+
+  # Firmware Information (Protocol V1.1.11)
+  - name: Inverter Firmware Information
+    unique_id: inverter_firmware_info
+    address: 13250 # reg 13251-13265 (15 bytes UTF-8 string)
+    input_type: input
+    data_type: string
+    count: 15
+    scan_interval: 3600
+    group: "PV_device_info"
+    icon: "mdi:chip"
+
+  - name: Communication Module Firmware Information
+    unique_id: communication_module_firmware_info
+    address: 13265 # reg 13266-13280 (15 bytes UTF-8 string)
+    input_type: input
+    data_type: string
+    count: 15
+    scan_interval: 3600
+    group: "PV_device_info"
+    icon: "mdi:chip"
+
+  - name: Battery Firmware Information
+    unique_id: battery_firmware_info
+    address: 13280 # reg 13281-13295 (15 bytes UTF-8 string)
+    input_type: input
+    data_type: string
+    count: 15
+    scan_interval: 3600
+    group: "PV_device_info"
+    icon: "mdi:chip"
 
   # Basic Inverter Data
   - name: Daily PV generation & battery discharge
@@ -391,7 +428,7 @@ sensors:
 
   - name: Grid frequency
     unique_id: grid_frequency
-    address: 5241 # reg 5242
+    address: 5241 # reg 5242 - RECOMMENDED: Higher precision (0.01Hz) than register 5036 (0.1Hz) per Protocol V1.1.11
     input_type: input
     data_type: uint16
     precision: 2
@@ -455,6 +492,63 @@ sensors:
     scale: 1
     scan_interval: 10
 
+  # Meter Channel 2 Data (Protocol V1.1.11) - for systems with multiple meter channels
+  - name: Meter Channel 2 Total Active Power raw
+    unique_id: meter_channel_2_total_active_power_raw
+    address: 13200 # reg 13201-13202 (S32, 1W)
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    group: "PV_meter_channel_2"
+
+  - name: Meter Channel 2 Phase A Active Power raw
+    unique_id: meter_channel_2_phase_a_active_power_raw
+    address: 13202 # reg 13203-13204 (S32, 1W)
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    group: "PV_meter_channel_2"
+
+  - name: Meter Channel 2 Phase B Active Power raw
+    unique_id: meter_channel_2_phase_b_active_power_raw
+    address: 13204 # reg 13205-13206 (S32, 1W)
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    group: "PV_meter_channel_2"
+
+  - name: Meter Channel 2 Phase C Active Power raw
+    unique_id: meter_channel_2_phase_c_active_power_raw
+    address: 13206 # reg 13207-13208 (S32, 1W)
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    group: "PV_meter_channel_2"
+
   - name: BDC rated power
     unique_id: bdc_rated_power
     address: 5627 # reg 5628
@@ -492,7 +586,7 @@ sensors:
 
   - name: Battery capacity
     unique_id: battery_capacity
-    address: 5638 # reg 5639
+    address: 5638 # reg 5639 - High Precision version (0.01kWh precision) per Protocol V1.1.11
     input_type: input
     data_type: uint16
     precision: 2
@@ -500,6 +594,33 @@ sensors:
     device_class: "energy_storage"
     scale: 0.01
     scan_interval: 600
+
+  # Feed-in Power Limitation Values (Protocol V1.1.11)
+  - name: Min Feed-in Power Limitation Value
+    unique_id: min_feed_in_power_limitation_value
+    address: 5621 # reg 5622
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: kW
+    device_class: "power"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 60
+    group: "PV_control"
+
+  - name: Max Feed-in Power Limitation Value
+    unique_id: max_feed_in_power_limitation_value
+    address: 5622 # reg 5623
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: kW
+    device_class: "power"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 60
+    group: "PV_control"
 
   # Backup Power (will be filtered based on battery_enabled and phases)
   - name: Backup phase A power
@@ -1405,7 +1526,7 @@ sensors:
 
   - name: Total direct energy consumption
     unique_id: total_direct_energy_consumption
-    address: 13017 # reg 13018
+    address: 13017 # reg 13018 (Input register - different from holding register 13017 used for control)
     input_type: input
     data_type: uint32
     swap: word
@@ -1430,7 +1551,7 @@ sensors:
 
   - name: Battery current
     unique_id: battery_current
-    address: 13020 # reg 13021
+    address: 5630 # reg 5631 - RECOMMENDED: Per Protocol V1.1.11, register 5631 is recommended instead of 13021
     input_type: input
     data_type: int16
     precision: 1
@@ -1440,17 +1561,19 @@ sensors:
     scale: 0.1
     scan_interval: 10
 
-  - name: Battery power raw
-    unique_id: battery_power_raw
-    address: 13021 # reg 13022
+  - name: Battery power
+    unique_id: battery_power
+    address: 5214 # reg 5215-5216 - RECOMMENDED: Per Protocol V1.1.11, register 5214-5215 (S32) is recommended instead of 13022 (S16)
     input_type: input
-    data_type: int16
+    data_type: int32
+    # Note: swap: word removed - register values come in correct order [high_word, low_word]
     precision: 0
     unit_of_measurement: W
     device_class: "power"
     state_class: measurement
     scale: 1
     scan_interval: 10
+    group: "PV_battery_power"
 
   - name: Battery level
     unique_id: battery_level
@@ -1698,12 +1821,15 @@ sensors:
   # mkaiser issue #444 SH10RT no standby mode after latest firmware update
   - name: Forced Startup Under Low SoC Standby raw
     unique_id: forced_startup_under_low_soc_standby_raw
-    address: 13016 # reg 13017
+    address: 13016 # reg 13017 (Holding register - read-only for display purposes)
     input_type: holding
     data_type: uint16
     precision: 0
     state_class: measurement
     scan_interval: 10
+    options:
+      0x55: "Disabled"
+      0xAA: "Enabled"
 
 
 # Controls for write access
@@ -1808,6 +1934,48 @@ controls:
     group: "PV_modes"
 
   - type: "number"
+    name: "Feed-in Limitation Ratio"
+    unique_id: "feed_in_limitation_ratio"
+    address: 13087 # reg 13088 - Protocol V1.1.7
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 1
+    unit_of_measurement: "%"
+    scale: 0.1
+    min_value: 0
+    max_value: 1000
+    step: 1
+    scan_interval: 30
+    group: "PV_control"
+
+  - type: "select"
+    name: "Active Power Limitation"
+    unique_id: "active_power_limitation"
+    address: 13088 # reg 13089 - Protocol V1.1.7
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0x55: "Disabled"
+      0xAA: "Enabled"
+    group: "PV_control"
+
+  - type: "number"
+    name: "Active Power Limit Ratio"
+    unique_id: "active_power_limit_ratio"
+    address: 13089 # reg 13090 - Protocol V1.1.7
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 1
+    unit_of_measurement: "%"
+    scale: 0.1
+    min_value: 0
+    max_value: 1000
+    step: 1
+    scan_interval: 30
+    group: "PV_control"
+
+  - type: "number"
     name: "Reserved SoC for Backup"
     unique_id: "reserved_soc_for_backup"
     address: 13099
@@ -1867,6 +2035,36 @@ controls:
     group: "PV_battery_control"
 
   - type: "number"
+    name: "Battery Max Discharging Power"
+    unique_id: "battery_max_discharging_power"
+    address: 33047 # reg 33048 - Protocol V1.1.11
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 2
+    unit_of_measurement: "kW"
+    scale: 0.01
+    min_value: 0
+    max_value: 100
+    step: 0.01
+    scan_interval: 10
+    group: "PV_battery_control"
+
+  - type: "number"
+    name: "Feed-in Limitation Value Wide Range"
+    unique_id: "feed_in_limitation_value_wide_range"
+    address: 31221 # reg 31222 - Protocol V1.1.7
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 2
+    unit_of_measurement: "kW"
+    scale: 0.01
+    min_value: 0
+    max_value: 1000
+    step: 0.01
+    scan_interval: 30
+    group: "PV_control"
+
+  - type: "number"
     name: "Battery Charging Start Power"
     unique_id: "battery_charging_start_power"
     address: 33148
@@ -1903,13 +2101,25 @@ controls:
   - type: "select"
     name: "Forced Startup Under Low SoC Standby"
     unique_id: "forced_startup_under_low_soc_standby"
-    address: 13016 # reg 13017
+    address: 13016 # reg 13017 - Protocol V1.1.7 (Control register, not sensor)
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
+    group: "PV_control"
+
+  - type: "select"
+    name: "PV Power Limitation"
+    unique_id: "pv_power_limitation"
+    address: 13017 # reg 13018 - Protocol V1.1.10
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0x55: "Disabled"
+      0xAA: "Limit PV"
     group: "PV_control"
 
 # Calculated Sensors
@@ -2074,11 +2284,11 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
-      and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       and not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
       and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_total_dc_power') | default(0) | float) + (states('sensor.{PREFIX}_battery_power_raw') | default(0) | float) + (states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float) - (states('sensor.{PREFIX}_load_power') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_total_dc_power') | default(0) | float) + (states('sensor.{PREFIX}_battery_power') | default(0) | float) + (states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float) - (states('sensor.{PREFIX}_load_power') | default(0) | float) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -2216,6 +2426,87 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     group: "PV_meter_power"
+
+  # Meter Channel 2 Calculated Sensors (Protocol V1.1.11)
+  - name: "Meter Channel 2 Total Active Power"
+    unique_id: "meter_channel_2_total_active_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_meter_channel_2_total_active_power_raw', 'unavailable')
+      and states('sensor.{PREFIX}_meter_channel_2_total_active_power_raw')|int != 0x7FFFFFFF
+      }}
+    state: >-
+      {% set channel_2_total_power = states('sensor.{PREFIX}_meter_channel_2_total_active_power_raw') | default(0) | float %}
+      {% if channel_2_total_power != 0x7FFFFFFF and channel_2_total_power != 2147483647 %}
+        {{ channel_2_total_power }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_meter_channel_2"
+
+  - name: "Meter Channel 2 Phase A Active Power"
+    unique_id: "meter_channel_2_phase_a_active_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw', 'unavailable')
+      and states('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw')|int != 0x7FFFFFFF
+      }}
+    state: >-
+      {% set channel_2_phase_a_power = states('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw') | default(0) | float %}
+      {% if channel_2_phase_a_power != 0x7FFFFFFF and channel_2_phase_a_power != 2147483647 %}
+        {{ channel_2_phase_a_power }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_meter_channel_2"
+
+  - name: "Meter Channel 2 Phase B Active Power"
+    unique_id: "meter_channel_2_phase_b_active_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw', 'unavailable')
+      and states('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw')|int != 0x7FFFFFFF
+      }}
+    state: >-
+      {% set channel_2_phase_b_power = states('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw') | default(0) | float %}
+      {% if channel_2_phase_b_power != 0x7FFFFFFF and channel_2_phase_b_power != 2147483647 %}
+        {{ channel_2_phase_b_power }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_meter_channel_2"
+
+  - name: "Meter Channel 2 Phase C Active Power"
+    unique_id: "meter_channel_2_phase_c_active_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw', 'unavailable')
+      and states('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw')|int != 0x7FFFFFFF
+      }}
+    state: >-
+      {% set channel_2_phase_c_power = states('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw') | default(0) | float %}
+      {% if channel_2_phase_c_power != 0x7FFFFFFF and channel_2_phase_c_power != 2147483647 %}
+        {{ channel_2_phase_c_power }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_meter_channel_2"
 
   # Calculated Energy Summary Sensors
   - name: "Monthly PV generation (current)"
@@ -2424,13 +2715,13 @@ calculated:
       {{
       not is_state('binary_sensor.{PREFIX}_battery_charging', 'unavailable')
       and not is_state('binary_sensor.{PREFIX}_battery_discharging', 'unavailable')
-      and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
       {% if is_state('binary_sensor.{PREFIX}_battery_charging', 'on') %}
-        {{ (states('sensor.{PREFIX}_battery_power_raw') |float |abs)}}
+        {{ (states('sensor.{PREFIX}_battery_power') |float |abs)}}
       {% elif is_state('binary_sensor.{PREFIX}_battery_discharging', 'on') %}
-        {{ (states('sensor.{PREFIX}_battery_power_raw') |float |abs * -1)}}
+        {{ (states('sensor.{PREFIX}_battery_power') |float |abs * -1)}}
       {% else %}
         0
       {% endif %}
@@ -2445,11 +2736,11 @@ calculated:
     availability: >-
       {{
       not is_state('binary_sensor.{PREFIX}_battery_charging', 'unavailable')
-      and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
       {% if is_state('binary_sensor.{PREFIX}_battery_charging', 'on') %}
-        {{ states('sensor.{PREFIX}_battery_power_raw')|int |abs }}
+        {{ states('sensor.{PREFIX}_battery_power')|int |abs }}
       {% else %}
         0
       {% endif %}
@@ -2464,11 +2755,11 @@ calculated:
     availability: >-
       {{
       not is_state('binary_sensor.{PREFIX}_battery_discharging', 'unavailable')
-      and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
       {% if is_state('binary_sensor.{PREFIX}_battery_discharging', 'on') %}
-        {{ states('sensor.{PREFIX}_battery_power_raw')|int |abs }}
+        {{ states('sensor.{PREFIX}_battery_power')|int |abs }}
       {% else %}
         0
       {% endif %}
@@ -2758,7 +3049,7 @@ binary_sensors:
       or
         (   not is_state('sensor.{PREFIX}_ems_mode_selection_raw', 'unavailable')
         and not is_state('sensor.{PREFIX}_battery_forced_charge_discharge_cmd_raw', 'unavailable')
-        and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+        and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
         and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
         and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
         )
@@ -2777,7 +3068,7 @@ binary_sensors:
           {# EMS forced mode #}
           {% if (states('sensor.{PREFIX}_battery_forced_charge_discharge_cmd') == "Forced charge") %}
             {# in mode Forced charge #}
-            {% if (states('sensor.{PREFIX}_battery_power_raw')|int > 0 ) %}
+            {% if (states('sensor.{PREFIX}_battery_power')|int > 0 ) %}
               {# power flow from/to battery #}
               on
             {% else %}
@@ -2824,7 +3115,7 @@ binary_sensors:
       or
         (   not is_state('sensor.{PREFIX}_ems_mode_selection_raw', 'unavailable')
         and not is_state('sensor.{PREFIX}_battery_forced_charge_discharge_cmd_raw', 'unavailable')
-        and not is_state('sensor.{PREFIX}_battery_power_raw', 'unavailable')
+        and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
         and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
         and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
         )
@@ -2843,7 +3134,7 @@ binary_sensors:
           {# EMS forced mode #}
           {% if (states('sensor.{PREFIX}_battery_forced_charge_discharge_cmd') == "Forced discharge") %}
             {# in mode Forced discharge #}
-            {% if (states('sensor.{PREFIX}_battery_power_raw')|int > 0 ) %}
+            {% if (states('sensor.{PREFIX}_battery_power')|int > 0 ) %}
               {# power flow from/to battery #}
               on
             {% else %}
@@ -2858,7 +3149,7 @@ binary_sensors:
           {# not in EMS forced mode, assuming self consumption mode #}
           {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
           {% set load_power = states('sensor.{PREFIX}_load_power') %}
-          {% set battery_power = states('sensor.{PREFIX}_battery_power_raw') %}
+          {% set battery_power = states('sensor.{PREFIX}_battery_power') %}
           {% if ( (total_dc_power in ['unknown', 'unavailable', 'none'] or total_dc_power is none) or (load_power in ['unknown', 'unavailable', 'none'] or load_power is none) or (battery_power in ['unknown', 'unavailable', 'none'] or battery_power is none) ) %}
             off
           {% elif ( (total_dc_power|int < load_power|int) ) and (battery_power|int) > 0 %}

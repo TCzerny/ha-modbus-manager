@@ -160,7 +160,7 @@ def create_device_info_dict(
     slave_id: int,
     prefix: str,
     template_name: str,
-    firmware_version: str = "1.0.0",
+    firmware_version: str = None,
     config_entry_id: str = None,
 ) -> Dict[str, Any]:
     """Create device info dict using the device factory.
@@ -168,12 +168,20 @@ def create_device_info_dict(
     This is a convenience function that creates device info using the
     centralized device factory and converts it to a dict format that
     can be used by all platforms.
+
+    Args:
+        firmware_version: Firmware version from config entry or register.
+                         If None, defaults to "1.0.0".
     """
     # Create device identifier
     device_identifier = f"modbus_manager_{host}_{port}_slave_{slave_id}"
 
     # Don't create a separate hub device - just use the hub identifier for linking
     # The hub is managed by the Modbus connection in __init__.py
+
+    # Use firmware version from config or default
+    if firmware_version is None:
+        firmware_version = "1.0.0"
 
     # Return device info as dict - no separate hub device needed
     return {

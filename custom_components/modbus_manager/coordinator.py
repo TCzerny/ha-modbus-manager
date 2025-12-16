@@ -8,6 +8,7 @@ from typing import Any, Dict, List, Optional
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, UpdateFailed
 
 from .const import DOMAIN
@@ -237,6 +238,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 interval = register.get("scan_interval", 30)
                 self._last_update_time[interval] = current_time
 
+            # 5.5. Update device firmware from register if available
+            await self._update_device_firmware_from_register()
+
             # 6. Update performance metrics with optimization stats
             device_id = self.entry.data.get("prefix", "unknown")
             # Update the operation with optimization metrics before ending
@@ -406,6 +410,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 host = hub_config.get("host") or self.entry.data.get("host", "unknown")
                 port = hub_config.get("port") or self.entry.data.get("port", 502)
 
+                # Get firmware version from device config (fallback to template default)
+                device_firmware_version = firmware_version or template.get(
+                    "firmware_version", "1.0.0"
+                )
+
                 device_info = create_device_info_dict(
                     hass=self.hass,
                     host=host,
@@ -413,6 +422,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     slave_id=slave_id,
                     prefix=prefix,
                     template_name=template_name,
+                    firmware_version=device_firmware_version,
                     config_entry_id=self.entry.entry_id,
                 )
 
@@ -754,6 +764,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 host = hub_config.get("host") or self.entry.data.get("host", "unknown")
                 port = hub_config.get("port") or self.entry.data.get("port", 502)
 
+                # Get firmware version from device config (fallback to template default)
+                device_firmware_version = firmware_version or template.get(
+                    "firmware_version", "1.0.0"
+                )
+
                 device_info = create_device_info_dict(
                     hass=self.hass,
                     host=host,
@@ -761,6 +776,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     slave_id=slave_id,
                     prefix=prefix,
                     template_name=template_name,
+                    firmware_version=device_firmware_version,
                     config_entry_id=self.entry.entry_id,
                 )
 
@@ -1629,6 +1645,85 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
         except Exception as e:
             _LOGGER.error("Error updating coordinator interval: %s", str(e))
+
+    async def _update_device_firmware_from_register(self) -> None:
+        """Update device firmware version from inverter_firmware_info register if available."""
+        try:
+            # Track if we've already updated firmware to avoid repeated updates
+            if not hasattr(self, "_firmware_updated"):
+                self._firmware_updated = False
+
+            # Only try once per coordinator lifecycle
+            if self._firmware_updated:
+                return
+
+            # Look for inverter_firmware_info register data
+            firmware_key = None
+            for key in self.register_data.keys():
+                if "inverter_firmware_info" in key.lower():
+                    firmware_key = key
+                    break
+
+            if not firmware_key:
+                return
+
+            firmware_value = self.register_data.get(firmware_key)
+            if not firmware_value or firmware_value in [
+                "unknown",
+                "unavailable",
+                None,
+                "",
+            ]:
+                return
+
+            # Clean up firmware string (remove null bytes, strip whitespace)
+            if isinstance(firmware_value, str):
+                firmware_value = firmware_value.replace("\x00", "").strip()
+                if not firmware_value:
+                    return
+
+            # Get device identifier
+            hub_config = self.entry.data.get("hub", {})
+            host = hub_config.get("host") or self.entry.data.get("host", "unknown")
+            port = hub_config.get("port") or self.entry.data.get("port", 502)
+
+            # Get devices from config entry
+            devices = self.entry.data.get("devices", [])
+            if not devices:
+                return
+
+            # Find matching device by host/port/slave_id
+            for device in devices:
+                device_slave_id = device.get("slave_id", 1)
+                device_identifier = (
+                    f"modbus_manager_{host}_{port}_slave_{device_slave_id}"
+                )
+
+                # Update device registry
+                device_registry = dr.async_get(self.hass)
+                device_entry = device_registry.async_get_device(
+                    identifiers={(DOMAIN, device_identifier)}
+                )
+
+                if device_entry:
+                    # Update firmware version
+                    device_registry.async_update_device(
+                        device_entry.id,
+                        sw_version=f"Firmware: {firmware_value}",
+                    )
+                    _LOGGER.info(
+                        "Updated device firmware version to %s for device %s",
+                        firmware_value,
+                        device_identifier,
+                    )
+                    self._firmware_updated = True
+                    break
+
+        except Exception as e:
+            _LOGGER.debug(
+                "Could not update device firmware from register (this is normal if register is not available): %s",
+                str(e),
+            )
 
     async def async_shutdown(self) -> None:
         """Shutdown the coordinator."""
