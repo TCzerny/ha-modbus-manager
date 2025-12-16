@@ -5,6 +5,95 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.4-pre] - 2025-12-16
+
+### ✨ Added
+
+#### Dual-Channel Meter Support
+- **New Dynamic Config Option**: `dual_channel_meter` for Sungrow SHx template
+  - Allows users to enable/disable Meter Channel 2 sensors
+  - Default: `false` (disabled)
+  - Only registers Meter Channel 2 sensors when explicitly enabled
+  - Prevents errors for users without dual-channel meters (e.g., DTSU666-20)
+
+#### Condition Processing Enhancement
+- **Extended Condition Support**: Added `==` operator support for conditions
+  - Supports boolean comparisons (`dual_channel_meter == true`)
+  - Supports integer comparisons (`phases == 3`)
+  - Supports string comparisons
+  - Works alongside existing `>=` operator
+
+#### Firmware Version Filtering
+- **Config Flow Filtering**: Added `firmware_min_version` filtering to `config_flow.py`
+  - Sensors with `firmware_min_version` are now filtered during setup
+  - Prevents registration of sensors that require newer firmware
+  - Works in both initial setup and options flow
+
+### 🔧 Changed
+
+#### Sungrow SHx Dynamic Template v1.2.4
+- **Battery Power Register Update**: Changed to recommended register (Protocol V1.1.11)
+  - Old: Address 13021 (reg 13022, int16)
+  - New: Address 5213 (reg 5214-5215, int32, swap: word)
+  - More accurate battery power readings
+
+- **Battery Current Register Update**: Updated to recommended register
+  - Old: Address 13020 (reg 13021)
+  - New: Address 5630 (reg 5631)
+
+- **New Firmware Information Sensors**:
+  - Inverter Firmware Info (Address 13250, String, 15 registers)
+  - Communication Module Firmware Info (Address 13265, String, 15 registers)
+  - Battery Firmware Info (Address 13280, String, 15 registers)
+
+- **New Battery Capacity High Precision Sensor**:
+  - Address 5638 (reg 5639, U16, 0.01 kWh)
+  - More accurate battery capacity readings
+
+- **Meter Channel 2 Data Sensors** (Conditional):
+  - Total Active Power (Address 13199, int32)
+  - Phase A/B/C Active Power (Addresses 13201/13203/13205, int32)
+  - Only registered when `dual_channel_meter` is enabled
+
+- **Dynamic Power Limits**:
+  - Battery Max Charge/Discharge Power: Dynamically adjusted based on selected model
+  - Export Power Limit: Dynamically adjusted based on `max_ac_output_power`
+  - Battery Charging/Discharging Start Power: Set to 50% of respective max power
+  - Limits based on inverter datasheet specifications
+
+- **Safety Improvements**:
+  - Runtime validation for battery power limits (0.5C/1C rate)
+  - Warnings added to battery power controls
+  - Max values set to lowest safe defaults
+
+#### Device Firmware Display
+- **Firmware Priority**: Device firmware now shows register value if available, otherwise config value
+  - Reads firmware from `inverter_firmware_info` register (13250)
+  - Updates device registry automatically
+  - Falls back to firmware version from config flow
+
+### 🐛 Fixed
+
+- **Firmware Version Filtering**: Fixed missing firmware version filtering in config flow
+  - Sensors with `firmware_min_version` are now properly excluded during setup
+  - Prevents errors when reading registers that don't exist on older firmware
+
+- **Calculated Sensor Availability**: Fixed calculated sensors not appearing in Home Assistant Helper UI
+  - Added `should_poll = True` to `ModbusCalculatedSensor`
+  - Sensors now available for Riemann Integral and other helpers
+
+- **Battery Power Values**: Fixed incorrect battery power readings
+  - Corrected Modbus address (5213 instead of 5214)
+  - Proper handling of int32 with word swap
+
+### 📚 Documentation
+
+- Updated CHANGELOG.md with all changes since v0.1.3
+- Added documentation for dual-channel meter configuration
+- Updated Sungrow template documentation with new registers
+
+---
+
 ## [0.1.3] - 2025-11-24
 
 ### 🐛 Fixed
