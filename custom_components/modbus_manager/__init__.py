@@ -141,6 +141,22 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             entry.data.get("prefix", "unknown"),
         )
 
+        # Fallback migration check (Home Assistant should call migration automatically,
+        # but this ensures migration happens even if automatic migration fails)
+        if entry.version < 2 or not entry.data.get("devices"):
+            _LOGGER.info(
+                "Config entry needs migration from version %d to 2 (fallback migration)",
+                entry.version,
+            )
+            from .config_flow import ModbusManagerConfigFlow
+
+            flow = ModbusManagerConfigFlow()
+            migration_result = await flow.async_migrate_entry(hass, entry)
+            if not migration_result:
+                _LOGGER.error("Migration failed for entry %s", entry.entry_id)
+                return False
+            _LOGGER.info("Fallback migration completed successfully")
+
         # Always use coordinator mode
         return await _setup_coordinator_entry(hass, entry)
 

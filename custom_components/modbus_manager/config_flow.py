@@ -8,7 +8,7 @@ from typing import List
 
 import voluptuous as vol
 from homeassistant import config_entries
-from homeassistant.core import callback
+from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import config_validation as cv
 
@@ -32,13 +32,142 @@ _LOGGER = ModbusManagerLogger(__name__)
 class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Modbus Manager."""
 
-    VERSION = 1
+    VERSION = 2
 
     def __init__(self):
         """Initialize the config flow."""
         super().__init__()
         self._templates = {}
         self._selected_template = None
+
+    async def async_migrate_entry(
+        self, hass: HomeAssistant, config_entry: config_entries.ConfigEntry
+    ):
+        """Migrate old config entries to new devices array structure."""
+        _LOGGER.info(
+            "Migration handler called for entry %s (version %d -> %d)",
+            config_entry.entry_id,
+            config_entry.version,
+            self.VERSION,
+        )
+
+        # Check if already migrated (has devices array and correct version)
+        if (
+            config_entry.version >= self.VERSION
+            and config_entry.data.get("devices")
+            and isinstance(config_entry.data.get("devices"), list)
+        ):
+            _LOGGER.info(
+                "Config entry already migrated (version %d, has devices array), skipping",
+                config_entry.version,
+            )
+            return True
+
+        # Migrate entries from version < 2 to version 2, or entries without devices array
+        needs_migration = (
+            config_entry.version < self.VERSION
+            or not config_entry.data.get("devices")
+            or not isinstance(config_entry.data.get("devices"), list)
+        )
+
+        if needs_migration:
+            _LOGGER.info(
+                "Migrating config entry %s from version %d to %d (devices array structure)",
+                config_entry.entry_id,
+                config_entry.version,
+                self.VERSION,
+            )
+
+            # Create new data with devices array
+            new_data = dict(config_entry.data)
+
+            # Extract main device configuration
+            prefix = new_data.get("prefix", "unknown")
+            template = new_data.get("template")
+            slave_id = new_data.get("slave_id", 1)
+            battery_template = new_data.get("battery_template")
+            battery_prefix = new_data.get("battery_prefix", "SBR")
+            battery_slave_id = new_data.get("battery_slave_id", 200)
+
+            # Create devices array
+            devices = []
+
+            # Add main device (inverter)
+            if template:
+                main_device = {
+                    "prefix": prefix,
+                    "template": template,
+                    "slave_id": slave_id,
+                    "type": "inverter",
+                    "registers": new_data.get("registers", []),
+                    "calculated_entities": new_data.get("calculated_entities", []),
+                    "controls": new_data.get("controls", []),
+                    "binary_sensors": new_data.get("binary_sensors", []),
+                }
+
+                # Add dynamic config if present
+                if "phases" in new_data:
+                    main_device["phases"] = new_data.get("phases")
+                if "mppt_count" in new_data:
+                    main_device["mppt_count"] = new_data.get("mppt_count")
+                if "string_count" in new_data:
+                    main_device["string_count"] = new_data.get("string_count")
+                if "modules" in new_data:
+                    main_device["modules"] = new_data.get("modules")
+                if "firmware_version" in new_data:
+                    main_device["firmware_version"] = new_data.get("firmware_version")
+                if "connection_type" in new_data:
+                    main_device["connection_type"] = new_data.get("connection_type")
+                if "selected_model" in new_data:
+                    main_device["selected_model"] = new_data.get("selected_model")
+
+                devices.append(main_device)
+
+            # Add battery device if configured
+            if battery_template:
+                battery_device = {
+                    "prefix": battery_prefix,
+                    "template": battery_template,
+                    "slave_id": battery_slave_id,
+                    "type": "battery",
+                }
+
+                # Add battery-specific config
+                if "battery_modules" in new_data:
+                    battery_device["modules"] = new_data.get("battery_modules")
+                if "battery_model" in new_data:
+                    battery_device["selected_model"] = new_data.get("battery_model")
+
+                devices.append(battery_device)
+
+            # Update config entry data
+            new_data["devices"] = devices
+
+            # Create hub config if not present
+            if "hub" not in new_data:
+                new_data["hub"] = {
+                    "host": new_data.get("host", "unknown"),
+                    "port": new_data.get("port", 502),
+                    "timeout": new_data.get("timeout", 3),
+                    "delay": new_data.get("delay", 0),
+                }
+
+            # Migrate modbus_type if present as "type"
+            if "type" in new_data and "modbus_type" not in new_data:
+                new_data["modbus_type"] = new_data.pop("type")
+
+            # Update config entry
+            hass.config_entries.async_update_entry(
+                config_entry, data=new_data, version=2
+            )
+
+            _LOGGER.info(
+                "✅ Successfully migrated config entry to version 2 with %d device(s)",
+                len(devices),
+            )
+            return True
+
+        return True
 
     # def _read_file_sync(self, file_path: str) -> str:
     #     """Read file synchronously (to be run in executor)."""

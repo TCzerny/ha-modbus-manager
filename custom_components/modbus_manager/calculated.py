@@ -109,8 +109,7 @@ class ModbusCalculatedSensor(SensorEntity):
         self._group = config.get("group", "calculated")
         self._attr_group = self._group
 
-        # Use device_info from config if available (already attached by coordinator)
-        # Otherwise, create a new device_info dict for legacy support
+        # Use device_info from config (already attached by coordinator)
         device_info_from_config = config.get("device_info")
         if device_info_from_config:
             # Device info already provided by coordinator
@@ -119,48 +118,28 @@ class ModbusCalculatedSensor(SensorEntity):
                 "Using device_info from coordinator config for %s", self._attr_name
             )
         else:
-            # Legacy mode - create device info
-            if self._host and self._port:
-                from .device_utils import create_device_info_dict
-
-                # Handle prefix for device info
-                if device_prefix is not None:
-                    device_prefix_to_use = device_prefix
-                elif prefix is not None:
-                    device_prefix_to_use = prefix
-                else:
-                    # Extract prefix from already processed config
-                    device_prefix_to_use = config.get("prefix", "unknown")
-
-                self._device_info = create_device_info_dict(
-                    hass=self.hass,
-                    host=self._host,
-                    port=self._port,
-                    slave_id=self._slave_id,
-                    prefix=device_prefix_to_use,
-                    template_name=template_name,
-                    firmware_version="1.0.0",
-                    config_entry_id=config_entry_id,
-                )
+            _LOGGER.error(
+                "Calculated entity %s missing device_info. Please re-run the config flow to migrate.",
+                self._attr_name,
+            )
+            # Create minimal device info to prevent errors
+            if device_prefix is not None:
+                device_prefix_to_use = device_prefix
+            elif prefix is not None:
+                device_prefix_to_use = prefix
             else:
-                # Fallback for legacy calculated sensors without host/port info
-                if device_prefix is not None:
-                    device_prefix_to_use = device_prefix
-                elif prefix is not None:
-                    device_prefix_to_use = prefix
-                else:
-                    device_prefix_to_use = config.get("prefix", "unknown")
-                self._device_info = {
-                    "identifiers": {
-                        (
-                            DOMAIN,
-                            f"modbus_calculated_{device_prefix_to_use}_{template_name}",
-                        )
-                    },
-                    "name": f"{device_prefix_to_use} ({template_name})",
-                    "manufacturer": "Modbus Manager",
-                    "model": f"{template_name} (Calculated)",
-                }
+                device_prefix_to_use = config.get("prefix", "unknown")
+            self._device_info = {
+                "identifiers": {
+                    (
+                        DOMAIN,
+                        f"modbus_calculated_{device_prefix_to_use}_{template_name}",
+                    )
+                },
+                "name": f"{device_prefix_to_use} ({template_name})",
+                "manufacturer": "Modbus Manager",
+                "model": f"{template_name} (Calculated)",
+            }
 
         # State
         self._attr_native_value = None
@@ -231,6 +210,15 @@ class ModbusCalculatedSensor(SensorEntity):
     def group(self) -> str:
         """Return the group this sensor belongs to."""
         return self._group
+
+    @property
+    def should_poll(self) -> bool:
+        """Return True to enable polling for calculated sensors.
+
+        This is required for Home Assistant to automatically update
+        the sensor and make it available in Helper UI (e.g., Riemann Integral).
+        """
+        return True
 
     async def async_update(self) -> None:
         """Update the calculated sensor value."""
@@ -426,8 +414,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         self._group = config.get("group", "calculated")
         self._attr_group = self._group
 
-        # Use device_info from config if available (already attached by coordinator)
-        # Otherwise, create a new device_info dict for legacy support
+        # Use device_info from config (already attached by coordinator)
         device_info_from_config = config.get("device_info")
         if device_info_from_config:
             # Device info already provided by coordinator
@@ -436,37 +423,17 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 "Using device_info from coordinator config for %s", self._attr_name
             )
         else:
-            # Legacy mode - create device info
-            if self._host and self._port:
-                from .device_utils import create_device_info_dict
-
-                # Handle prefix for device info
-                if device_prefix is not None:
-                    device_prefix_to_use = device_prefix
-                elif prefix is not None:
-                    device_prefix_to_use = prefix
-                else:
-                    # Extract prefix from already processed config
-                    device_prefix_to_use = config.get("prefix", "unknown")
-
-                self._device_info = create_device_info_dict(
-                    hass=self.hass,
-                    host=self._host,
-                    port=self._port,
-                    slave_id=self._slave_id,
-                    prefix=device_prefix_to_use,
-                    template_name=template_name,
-                    firmware_version="1.0.0",
-                    config_entry_id=config_entry_id,
-                )
+            _LOGGER.error(
+                "Calculated binary sensor %s missing device_info. Please re-run the config flow to migrate.",
+                self._attr_name,
+            )
+            # Create minimal device info to prevent errors
+            if device_prefix is not None:
+                device_prefix_to_use = device_prefix
+            elif prefix is not None:
+                device_prefix_to_use = prefix
             else:
-                # Fallback for legacy calculated sensors without host/port info
-                if device_prefix is not None:
-                    device_prefix_to_use = device_prefix
-                elif prefix is not None:
-                    device_prefix_to_use = prefix
-                else:
-                    device_prefix_to_use = config.get("prefix", "unknown")
+                device_prefix_to_use = config.get("prefix", "unknown")
                 self._device_info = {
                     "identifiers": {
                         (
