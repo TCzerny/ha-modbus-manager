@@ -1419,7 +1419,7 @@ sensors:
 
   - name: "Running state"
     unique_id: "running_state"
-    address: 13000 # reg 13001
+    address: 13000
     input_type: input
     data_type: uint16
     precision: 0
@@ -1838,9 +1838,14 @@ sensors:
     precision: 0
     state_class: measurement
     scan_interval: 10
+    options:
+      0xAA: "Charge"
+      0xBB: "Discharge"
+      0xCC: "Stop"
+    group: "PV_battery_control"
 
-  - name: Battery forced charge discharge power
-    unique_id: battery_forced_charge_discharge_power
+  - name: Battery forced charge discharge power raw
+    unique_id: battery_forced_charge_discharge_power_raw
     address: 13051 # reg 13052
     input_type: holding
     data_type: uint16
@@ -1889,6 +1894,18 @@ sensors:
 # Controls for write access
 controls:
   - type: "select"
+    name: "Inverter Run Mode"
+    unique_id: "inverter_run_mode"
+    address: 12999 # reg 13000
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 10
+    options:
+      0xCF: "Boot"
+      0xCE: "Shutfown"
+    group: "PV_control"
+
+  - type: "select"
     name: "EMS Mode Selection"
     unique_id: "ems_mode_selection"
     address: 13049
@@ -1901,6 +1918,35 @@ controls:
       2: "Backup mode"
       3: "Emergency mode"
     group: "PV_modes"
+
+  - type: "select"
+    name: "Battery forced charge discharge cmd"
+    unique_id: "battery_forced_charge_discharge_cmd"
+    address: 13050
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 10
+    options:
+      0xAA: "Charge"
+      0xBB: "Discharge"
+      0xCC: "Stop"
+    group: "PV_battery_control"
+
+  - name: Battery forced charge discharge power
+    unique_id: battery_forced_charge_discharge_power
+    type: "number"
+    address: 13051 # reg 13052
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    min_value: 0
+    max_value: 3000
+    step: 100
+    scan_interval: 10w
+    group: "PV_battery_control"
 
   - type: "select"
     name: "Load Adjustment Mode"
@@ -1944,7 +1990,7 @@ controls:
     scale: 0.1
     precision: 1
     unit_of_measurement: "%"
-    min_value: 10
+    min_value: 50
     max_value: 100
     step: 1
     scan_interval: 30
@@ -1960,7 +2006,7 @@ controls:
     precision: 1
     unit_of_measurement: "%"
     min_value: 0
-    max_value: 90
+    max_value: 50
     step: 1
     scan_interval: 30
     group: "PV_battery_control"
