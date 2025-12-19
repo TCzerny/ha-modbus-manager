@@ -109,6 +109,18 @@ class ModbusCalculatedSensor(SensorEntity):
         self._group = config.get("group", "calculated")
         self._attr_group = self._group
 
+        # Set precision for display formatting
+        # This ensures small values are displayed with decimal places (e.g., 0.00234 V instead of 0 V)
+        # Only set precision if not explicitly disabled (will be removed if sensor returns string)
+        precision = config.get("precision")
+        if precision is not None and isinstance(precision, int) and precision > 0:
+            self._attr_suggested_display_precision = precision
+        elif precision is None:
+            # Default to 5 decimal places for calculated entities if not specified
+            # Will be removed in async_update if sensor returns a string value
+            self._attr_suggested_display_precision = 5
+        # If precision is explicitly set to 0 or False, don't set suggested_display_precision
+
         # Use device_info from config (already attached by coordinator)
         device_info_from_config = config.get("device_info")
         if device_info_from_config:
@@ -119,27 +131,10 @@ class ModbusCalculatedSensor(SensorEntity):
             )
         else:
             _LOGGER.error(
-                "Calculated entity %s missing device_info. Please re-run the config flow to migrate.",
+                "Calculated entity %s missing device_info. Coordinator should provide this.",
                 self._attr_name,
             )
-            # Create minimal device info to prevent errors
-            if device_prefix is not None:
-                device_prefix_to_use = device_prefix
-            elif prefix is not None:
-                device_prefix_to_use = prefix
-            else:
-                device_prefix_to_use = config.get("prefix", "unknown")
-            self._device_info = {
-                "identifiers": {
-                    (
-                        DOMAIN,
-                        f"modbus_calculated_{device_prefix_to_use}_{template_name}",
-                    )
-                },
-                "name": f"{device_prefix_to_use} ({template_name})",
-                "manufacturer": "Modbus Manager",
-                "model": f"{template_name} (Calculated)",
-            }
+            raise ValueError("device_info missing from coordinator")
 
         # State
         self._attr_native_value = None
@@ -284,10 +279,27 @@ class ModbusCalculatedSensor(SensorEntity):
                         self._attr_native_value = int(rendered_value)
                 except (ValueError, TypeError):
                     # If conversion fails, keep as string
+                    # Remove suggested_display_precision for string values
                     self._attr_native_value = str(rendered_value)
+                    if hasattr(self, "_attr_suggested_display_precision"):
+                        self._attr_suggested_display_precision = None
             else:
                 # Direct numeric value
                 self._attr_native_value = rendered_value
+                # Ensure precision is set for numeric values if not already set
+                if (
+                    not hasattr(self, "_attr_suggested_display_precision")
+                    or self._attr_suggested_display_precision is None
+                ):
+                    precision = self._config.get("precision")
+                    if (
+                        precision is not None
+                        and isinstance(precision, int)
+                        and precision > 0
+                    ):
+                        self._attr_suggested_display_precision = precision
+                    else:
+                        self._attr_suggested_display_precision = 5
 
             # Update dynamic icon if template is configured
             if self._icon_template and self._attr_native_value is not None:
@@ -424,27 +436,10 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             )
         else:
             _LOGGER.error(
-                "Calculated binary sensor %s missing device_info. Please re-run the config flow to migrate.",
+                "Calculated binary sensor %s missing device_info. Coordinator should provide this.",
                 self._attr_name,
             )
-            # Create minimal device info to prevent errors
-            if device_prefix is not None:
-                device_prefix_to_use = device_prefix
-            elif prefix is not None:
-                device_prefix_to_use = prefix
-            else:
-                device_prefix_to_use = config.get("prefix", "unknown")
-                self._device_info = {
-                    "identifiers": {
-                        (
-                            DOMAIN,
-                            f"modbus_calculated_{device_prefix_to_use}_{template_name}",
-                        )
-                    },
-                    "name": f"{device_prefix_to_use} ({template_name})",
-                    "manufacturer": "Modbus Manager",
-                    "model": f"{template_name} (Calculated)",
-                }
+            raise ValueError("device_info missing from coordinator")
 
         _LOGGER.debug(
             "Created calculated binary sensor: %s (entity_id: %s, group: %s)",

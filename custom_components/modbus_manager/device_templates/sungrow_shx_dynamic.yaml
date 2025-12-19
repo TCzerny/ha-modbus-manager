@@ -25,7 +25,6 @@ version: 1.2.4
 # Updated Export Power and Battery Start Power Limits (2025-01-XX)
 # - Added max_ac_output_power to dynamic_config for ALL models
 # - SAFETY: Export Power Limit max_value set to LOWEST limit (3kW) for safety
-# - SAFETY: Feed-in Limitation Value Wide Range max_value set to LOWEST limit (3.0kW) for safety
 # - SAFETY: Battery Charging/Discharging Start Power max_value set to reasonable limit (3kW = 50% of smallest battery power)
 # - Dynamic adjustment for all controls based on selected_model implemented in coordinator.py
 # - Export Power Limits from datasheets:
@@ -649,9 +648,9 @@ sensors:
     scale: 0.01
     scan_interval: 600
 
-  # Feed-in Power Limitation Values (Protocol V1.1.11)
-  - name: Min Feed-in Power Limitation Value
-    unique_id: min_feed_in_power_limitation_value
+  # Export Power Limitation Values (Protocol V1.1.11)
+  - name: Min Export Power Limit Value
+    unique_id: min_export_power_limit_value
     address: 5621 # reg 5622
     input_type: input
     data_type: uint16
@@ -663,8 +662,8 @@ sensors:
     scan_interval: 60
     group: "PV_control"
 
-  - name: Max Feed-in Power Limitation Value
-    unique_id: max_feed_in_power_limitation_value
+  - name: Max Export Power Limit Value
+    unique_id: max_export_power_limit_value
     address: 5622 # reg 5623
     input_type: input
     data_type: uint16
@@ -1855,19 +1854,6 @@ sensors:
     state_class: measurement
     scan_interval: 10
 
-  # Undocumented sensors (reverse engineered)
-  # use number sensor instead - direct write
-  # - name: Reserved SoC for backup
-  #   unique_id: reserved_soc_for_backup
-  #   address: 13099 # reg 13100
-  #   input_type: holding
-  #   data_type: uint16
-  #   unit_of_measurement: "%"
-  #   device_class: battery
-  #   state_class: measurement
-  #   scale: 1
-  #   scan_interval: 10
-
   - name: Global mpp scan manual raw
     unique_id: global_mpp_scan_manual_raw
     address: 30229 # reg 30230
@@ -1890,7 +1876,6 @@ sensors:
       0x55: "Disabled"
       0xAA: "Enabled"
 
-
 # Controls for write access
 controls:
   - type: "select"
@@ -1901,8 +1886,8 @@ controls:
     data_type: "uint16"
     scan_interval: 10
     options:
-      0xCF: "Boot"
-      0xCE: "Shutfown"
+      0xCF: "Enabled"
+      0xCE: "Shutdown"
     group: "PV_control"
 
   - type: "select"
@@ -1931,6 +1916,7 @@ controls:
       0xBB: "Discharge"
       0xCC: "Stop"
     group: "PV_battery_control"
+    condition: "battery_enabled == true"
 
   - name: Battery forced charge discharge power
     unique_id: battery_forced_charge_discharge_power
@@ -1961,25 +1947,6 @@ controls:
       2: "Power optimization"
       3: "Disabled"
     group: "PV_modes"
-
-  - type: "number"
-    name: "Export Power Limit"
-    unique_id: "export_power_limit"
-    address: 13073
-    input_type: "holding"
-    data_type: "uint16"
-    precision: 0
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    scale: 1
-    min_value: 0
-    max_value: 3000
-    step: 100
-    scan_interval: 30
-    group: "PV_control"
-    # SAFETY: max_value set to LOWEST AC output power (SH3.0RS: 3000W)
-    # Will be dynamically adjusted based on selected_model in coordinator.py
 
   - type: "number"
     name: "Max SoC"
@@ -2022,6 +1989,25 @@ controls:
       0x55: "Disabled"
       0xAA: "Enabled"
     group: "PV_modes"
+    condition: "battery_enabled == true"
+
+  - type: "number"
+    name: "Export Power Limit"
+    unique_id: "export_power_limit"
+    address: 13073
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "W"
+    scale: 1
+    min_value: 0
+    max_value: 3000
+    step: 100
+    mode: "box"  # Explicitly set to box for consistent UI display
+    scan_interval: 30
+    group: "PV_control"
+    # SAFETY: max_value set to LOWEST AC output power (SH3.0RS: 3000W)
+    # Will be dynamically adjusted based on selected_model in coordinator.py
 
   - type: "select"
     name: "Export Power Limit Mode"
@@ -2036,8 +2022,8 @@ controls:
     group: "PV_modes"
 
   - type: "number"
-    name: "Feed-in Limitation Ratio"
-    unique_id: "feed_in_limitation_ratio"
+    name: "Export Power Limit Ratio"
+    unique_id: "export_power_limit_ratio"
     address: 13087 # reg 13088 - Protocol V1.1.7
     input_type: "holding"
     data_type: "uint16"
@@ -2047,6 +2033,7 @@ controls:
     min_value: 0
     max_value: 1000
     step: 1
+    mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
     group: "PV_control"
 
@@ -2133,8 +2120,8 @@ controls:
     group: "PV_battery_control"
 
   - type: "number"
-    name: "Feed-in Limitation Value Wide Range"
-    unique_id: "feed_in_limitation_value_wide_range"
+    name: "Export Power Limit Value Wide Range"
+    unique_id: "export_power_limit_value_wide_range"
     address: 31221 # reg 31222 - Protocol V1.1.7
     input_type: "holding"
     data_type: "uint16"
@@ -2144,6 +2131,7 @@ controls:
     min_value: 0
     max_value: 3.0
     step: 0.01
+    mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
     group: "PV_control"
     # SAFETY: max_value set to LOWEST AC output power (SH3.0RS: 3.0kW)
@@ -2198,6 +2186,7 @@ controls:
       0x55: "Disabled"
       0xAA: "Enabled"
     group: "PV_control"
+    condition: "battery_enabled == true"
 
   - type: "select"
     name: "PV Power Limitation"
@@ -2302,7 +2291,7 @@ calculated:
       {% if export_power in ['unknown', 'unavailable', 'none'] or export_power is none %}
         0
       {% elif (export_power|int) < 0 %}
-        {{ (export_power|int) *-1 }}
+        {{ (export_power|int) * -1 }}
       {% else %}
         0
       {% endif %}

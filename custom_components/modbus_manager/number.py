@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from typing import Any, Optional
 
-from homeassistant.components.number import NumberEntity
+from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity import DeviceInfo
@@ -13,7 +13,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_device_info_dict, generate_entity_id
+from .device_utils import generate_entity_id
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -34,6 +34,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         self._attr_device_info = DeviceInfo(**device_info)
 
         # Set entity properties from register config
+        # unique_id is already processed by coordinator with prefix via _process_entities_with_prefix
         self._attr_name = register_config.get("name", "Unknown Number")
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         self._attr_native_unit_of_measurement = register_config.get(
@@ -47,6 +48,13 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         self._attr_native_max_value = register_config.get("max_value", 100)
         self._attr_native_step = register_config.get("step", 1)
         self._attr_native_value = None
+
+        # Set mode (slider or box) - defaults to box for precise input
+        mode_str = register_config.get("mode", "box").lower()
+        if mode_str == "slider":
+            self._attr_mode = NumberMode.SLIDER
+        else:
+            self._attr_mode = NumberMode.BOX
 
         # Store template parameters for extra_state_attributes
         self._scale = register_config.get("scale", 1.0)
@@ -73,6 +81,10 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             "group": self._group,
             "scan_interval": self._scan_interval,
             "input_type": self._input_type,
+            "unit_of_measurement": register_config.get("unit_of_measurement"),
+            "device_class": register_config.get("device_class"),
+            "state_class": register_config.get("state_class"),
+            "swap": register_config.get("swap"),
             "min_value": self._attr_native_min_value,
             "max_value": self._attr_native_max_value,
             "step": self._attr_native_step,
@@ -80,12 +92,6 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
 
         # Create register key for data lookup
         self.register_key = self._create_register_key(register_config)
-
-        _LOGGER.debug(
-            "ModbusCoordinatorNumber created: %s (key: %s)",
-            self._attr_name,
-            self.register_key,
-        )
 
     def _create_register_key(self, register_config: dict[str, Any]) -> str:
         """Create unique key for register data lookup."""
@@ -99,8 +105,10 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             register_data = self.coordinator.get_register_data(self.register_key)
 
             if register_data:
-                # Extract processed value
+                # Extract raw and processed values for attributes
+                raw_value = register_data.get("raw_value")
                 processed_value = register_data.get("processed_value")
+                numeric_value = register_data.get("numeric_value")
 
                 if processed_value is not None:
                     # Convert to float for number entities
@@ -109,17 +117,21 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                     except (ValueError, TypeError):
                         self._attr_native_value = None
 
-                    _LOGGER.debug(
-                        "Number %s updated: %s",
-                        self._attr_name,
-                        self._attr_native_value,
-                    )
+                    # Update extra_state_attributes with raw/processed/numeric values
+                    self._attr_extra_state_attributes = {
+                        **self._attr_extra_state_attributes,
+                        "raw_value": raw_value if raw_value is not None else "N/A",
+                        "processed_value": processed_value,
+                    }
+                    if numeric_value is not None:
+                        self._attr_extra_state_attributes[
+                            "numeric_value"
+                        ] = numeric_value
+
                 else:
                     self._attr_native_value = None
-                    _LOGGER.debug("Number %s: No processed value", self._attr_name)
             else:
                 self._attr_native_value = None
-                _LOGGER.debug("Number %s: No register data found", self._attr_name)
 
             # Notify Home Assistant about the change
             self.async_write_ha_state()
@@ -199,8 +211,8 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                                         value = min(value, max_safe_power)
                                 except (ValueError, TypeError):
                                     pass  # Ignore if battery capacity cannot be parsed
-                except Exception as e:
-                    _LOGGER.debug("Could not validate battery power limit: %s", str(e))
+                except Exception:
+                    pass  # Ignore any errors when trying to validate battery power limits
 
             # Get register configuration
             address = self.register_config.get("address")
@@ -226,15 +238,6 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             offset = self.register_config.get("offset", 0.0)
             raw_value = int((value - offset) / scale_factor)
 
-            _LOGGER.debug(
-                "Writing number %s: value=%.2f, scale_factor=%.2f, offset=%.2f, raw_value=%d",
-                self._attr_name,
-                value,
-                scale_factor,
-                offset,
-                raw_value,
-            )
-
             # Write to Modbus register
             from .modbus_utils import get_write_call_type
 
@@ -244,13 +247,6 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
 
             call_type = get_write_call_type(count, write_function_code)
 
-            if write_function_code:
-                _LOGGER.debug(
-                    "Using custom write function code %d for register %d",
-                    write_function_code,
-                    address,
-                )
-
             result = await self.coordinator.hub.async_pb_call(
                 slave_id,
                 address,
@@ -259,7 +255,6 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             )
 
             if result:
-                _LOGGER.debug("Successfully set %s to %s", self._attr_name, value)
                 # Trigger coordinator update to refresh all entities
                 await self.coordinator.async_request_refresh()
             else:
@@ -274,16 +269,6 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
     def should_poll(self) -> bool:
         """Return False - coordinator handles updates."""
         return False
-
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        """Return entity specific state attributes."""
-        return {
-            "register_address": self.register_config.get("address"),
-            "data_type": self.register_config.get("data_type"),
-            "slave_id": self.register_config.get("slave_id"),
-            "coordinator_mode": True,
-        }
 
 
 async def async_setup_entry(
@@ -321,7 +306,6 @@ async def async_setup_entry(
             )
 
         if not number_controls:
-            _LOGGER.debug("No number controls found in coordinator registers")
             return
 
         # Create coordinator numbers (device_info provided by coordinator)
@@ -332,7 +316,7 @@ async def async_setup_entry(
                 device_info = control_config.get("device_info")
                 if not device_info:
                     _LOGGER.error(
-                        "Number control %s missing device_info. Please re-run the config flow to migrate.",
+                        "Number control %s missing device_info. Coordinator should provide this.",
                         control_config.get("name", "unknown"),
                     )
                     continue
@@ -356,11 +340,6 @@ async def async_setup_entry(
                     control_config.get("name", "unknown"),
                     str(e),
                 )
-
-        _LOGGER.debug(
-            "Created %d coordinator numbers",
-            len(coordinator_numbers),
-        )
 
         async_add_entities(coordinator_numbers)
 

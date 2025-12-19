@@ -1,0 +1,453 @@
+title: Sungrow SBR Battery Analysis (Standard HA)
+path: battery-analysis-standard
+icon: mdi:battery-charging-high
+panel: false
+type: dashboard
+
+# IMPORTANT: Replace {PREFIX} with your actual device prefix (e.g., SBR)
+# Example: sensor.{PREFIX}_battery_1_voltage becomes sensor.SBR_battery_1_voltage
+# This version uses only built-in Home Assistant cards with the new Sections layout
+
+views:
+  - title: Battery Overview
+    path: overview
+    icon: mdi:view-dashboard
+    type: sections
+    sections:
+      - title: Battery Status
+        cards:
+          - type: gauge
+            entity: sensor.{PREFIX}_battery_1_soc
+            name: State of Charge
+            min: 0
+            max: 100
+            severity:
+              green: 50
+              yellow: 20
+              red: 0
+
+          - type: gauge
+            entity: sensor.{PREFIX}_battery_1_voltage
+            name: Battery Voltage
+            min: 0
+            max: 60
+            severity:
+              green: 48
+              yellow: 45
+              red: 40
+
+          - type: gauge
+            entity: sensor.{PREFIX}_battery_1_current
+            name: Battery Current
+            min: -50
+            max: 50
+
+          - type: gauge
+            entity: sensor.{PREFIX}_battery_1_temperature
+            name: Battery Temperature
+            min: 0
+            max: 50
+            severity:
+              green: 30
+              yellow: 40
+              red: 45
+
+      - title: Battery Health
+        cards:
+          - type: entities
+            title: Battery Metrics
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_soc
+                name: State of Charge
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_battery_1_soh
+                name: State of Health
+                icon: mdi:heart-pulse
+              - entity: sensor.{PREFIX}_battery_1_voltage
+                name: Voltage
+                icon: mdi:lightning-bolt
+              - entity: sensor.{PREFIX}_battery_1_current
+                name: Current
+                icon: mdi:current-ac
+              - entity: sensor.{PREFIX}_battery_1_temperature
+                name: Temperature
+                icon: mdi:thermometer
+
+      - title: Energy Statistics
+        cards:
+          - type: entities
+            title: Total Energy
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_total_battery_charge
+                name: Total Charged
+                icon: mdi:battery-charging
+              - entity: sensor.{PREFIX}_battery_1_total_battery_discharge
+                name: Total Discharged
+                icon: mdi:battery-minus
+
+          - type: statistics-graph
+            title: Battery Energy Statistics (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_total_battery_charge
+                name: Total Charged
+              - entity: sensor.{PREFIX}_battery_1_total_battery_discharge
+                name: Total Discharged
+            days_to_show: 30
+            chart_type: line
+            stat_types:
+              - state
+
+      - title: Battery Status History
+        cards:
+          - type: history-graph
+            title: Battery Voltage & Current (24h)
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_voltage
+                name: Voltage
+              - entity: sensor.{PREFIX}_battery_1_current
+                name: Current
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: history-graph
+            title: Battery Health (24h)
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_soc
+                name: State of Charge
+              - entity: sensor.{PREFIX}_battery_1_soh
+                name: State of Health
+            hours_to_show: 24
+            refresh_interval: 60
+
+  - title: Balancing Analysis
+    path: balancing
+    icon: mdi:scale-balance
+    type: sections
+    sections:
+      - title: Balancing Overview
+        cards:
+          - type: entities
+            title: Key Balancing Metrics
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_voltage_spread
+                name: Voltage Spread
+                icon: mdi:chart-line-variant
+              - entity: sensor.{PREFIX}_max_module_deviation
+                name: Max Module Deviation
+                icon: mdi:chart-timeline-variant
+              - entity: sensor.{PREFIX}_voltage_imbalance_percentage
+                name: Voltage Imbalance %
+                icon: mdi:percent
+              - entity: sensor.{PREFIX}_average_module_voltage
+                name: Average Module Voltage
+                icon: mdi:flash
+              - entity: sensor.{PREFIX}_battery_temperature_spread
+                name: Temperature Spread
+                icon: mdi:thermometer-lines
+              - entity: sensor.{PREFIX}_max_module_cell_voltage_range
+                name: Max Module Cell Range
+                icon: mdi:chart-box
+
+      - title: Module Deviations
+        cards:
+          - type: history-graph
+            title: Module Deviations Over Time (24h)
+            entities:
+              - entity: sensor.{PREFIX}_module_1_deviation
+                name: Module 1
+              - entity: sensor.{PREFIX}_module_2_deviation
+                name: Module 2
+              - entity: sensor.{PREFIX}_module_3_deviation
+                name: Module 3
+              - entity: sensor.{PREFIX}_module_4_deviation
+                name: Module 4
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: history-graph
+            title: Module Deviations Over Time - Modules 5-8 (24h)
+            entities:
+              - entity: sensor.{PREFIX}_module_5_deviation
+                name: Module 5
+              - entity: sensor.{PREFIX}_module_6_deviation
+                name: Module 6
+              - entity: sensor.{PREFIX}_module_7_deviation
+                name: Module 7
+              - entity: sensor.{PREFIX}_module_8_deviation
+                name: Module 8
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: entities
+            title: Module Deviations Detail
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_module_1_deviation
+                name: Module 1 Deviation
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_module_2_deviation
+                name: Module 2 Deviation
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_module_3_deviation
+                name: Module 3 Deviation
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_module_4_deviation
+                name: Module 4 Deviation
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_module_5_deviation
+                name: Module 5 Deviation
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_module_6_deviation
+                name: Module 6 Deviation
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_module_7_deviation
+                name: Module 7 Deviation
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_module_8_deviation
+                name: Module 8 Deviation
+                icon: mdi:battery
+
+      - title: Voltage Spread Analysis
+        cards:
+          - type: statistics-graph
+            title: Voltage Spread Statistics (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_battery_voltage_spread
+                name: Voltage Spread
+            days_to_show: 30
+            chart_type: line
+            stat_types:
+              - min
+              - max
+              - mean
+
+          - type: history-graph
+            title: Voltage Spread Over Time (24h)
+            entities:
+              - entity: sensor.{PREFIX}_battery_voltage_spread
+                name: Voltage Spread
+            hours_to_show: 24
+            refresh_interval: 60
+
+  - title: Module Details
+    path: modules
+    icon: mdi:view-grid
+    type: sections
+    sections:
+      - title: Module Cell Voltage Ranges
+        cards:
+          - type: entities
+            title: Cell Voltage Ranges
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_module_1_cell_voltage_range
+                name: Module 1 Range
+                icon: mdi:battery-charging-30
+              - entity: sensor.{PREFIX}_module_2_cell_voltage_range
+                name: Module 2 Range
+                icon: mdi:battery-charging-30
+              - entity: sensor.{PREFIX}_module_3_cell_voltage_range
+                name: Module 3 Range
+                icon: mdi:battery-charging-30
+              - entity: sensor.{PREFIX}_module_4_cell_voltage_range
+                name: Module 4 Range
+                icon: mdi:battery-charging-30
+              - entity: sensor.{PREFIX}_module_5_cell_voltage_range
+                name: Module 5 Range
+                icon: mdi:battery-charging-30
+              - entity: sensor.{PREFIX}_module_6_cell_voltage_range
+                name: Module 6 Range
+                icon: mdi:battery-charging-30
+              - entity: sensor.{PREFIX}_module_7_cell_voltage_range
+                name: Module 7 Range
+                icon: mdi:battery-charging-30
+              - entity: sensor.{PREFIX}_module_8_cell_voltage_range
+                name: Module 8 Range
+                icon: mdi:battery-charging-30
+
+      - title: Module Cell Voltages
+        cards:
+          - type: history-graph
+            title: Max Cell Voltages by Module (24h)
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1
+                name: Module 1 Max
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2
+                name: Module 2 Max
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3
+                name: Module 3 Max
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4
+                name: Module 4 Max
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: history-graph
+            title: Min Cell Voltages by Module (24h)
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_1
+                name: Module 1 Min
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_2
+                name: Module 2 Min
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_3
+                name: Module 3 Min
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_4
+                name: Module 4 Min
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: entities
+            title: Max Cell Voltages
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1
+                name: Module 1 Max
+                icon: mdi:battery-plus-variant
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2
+                name: Module 2 Max
+                icon: mdi:battery-plus-variant
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3
+                name: Module 3 Max
+                icon: mdi:battery-plus-variant
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4
+                name: Module 4 Max
+                icon: mdi:battery-plus-variant
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5
+                name: Module 5 Max
+                icon: mdi:battery-plus-variant
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6
+                name: Module 6 Max
+                icon: mdi:battery-plus-variant
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7
+                name: Module 7 Max
+                icon: mdi:battery-plus-variant
+              - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8
+                name: Module 8 Max
+                icon: mdi:battery-plus-variant
+
+          - type: entities
+            title: Min Cell Voltages
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_1
+                name: Module 1 Min
+                icon: mdi:battery-minus-variant
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_2
+                name: Module 2 Min
+                icon: mdi:battery-minus-variant
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_3
+                name: Module 3 Min
+                icon: mdi:battery-minus-variant
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_4
+                name: Module 4 Min
+                icon: mdi:battery-minus-variant
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_5
+                name: Module 5 Min
+                icon: mdi:battery-minus-variant
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_6
+                name: Module 6 Min
+                icon: mdi:battery-minus-variant
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_7
+                name: Module 7 Min
+                icon: mdi:battery-minus-variant
+              - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_8
+                name: Module 8 Min
+                icon: mdi:battery-minus-variant
+
+  - title: Advanced Metrics
+    path: advanced
+    icon: mdi:chart-box-outline
+    type: sections
+    sections:
+      - title: Cell Voltage Extremes
+        cards:
+          - type: entities
+            title: Cell Voltage Extremes
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_max_voltage_of_cell
+                name: Max Cell Voltage
+                icon: mdi:battery-plus-variant
+              - entity: sensor.{PREFIX}_battery_1_min_voltage_of_cell
+                name: Min Cell Voltage
+                icon: mdi:battery-minus-variant
+              - entity: sensor.{PREFIX}_battery_1_position_of_max_voltage_cell
+                name: Max Voltage Cell Position
+                icon: mdi:map-marker
+              - entity: sensor.{PREFIX}_battery_1_position_of_min_voltage_cell
+                name: Min Voltage Cell Position
+                icon: mdi:map-marker
+              - entity: sensor.{PREFIX}_battery_1_max_voltage_cell_info
+                name: Max Voltage Cell Info
+                icon: mdi:information
+              - entity: sensor.{PREFIX}_battery_1_min_voltage_cell_info
+                name: Min Voltage Cell Info
+                icon: mdi:information
+
+      - title: Temperature Extremes
+        cards:
+          - type: entities
+            title: Module Temperature Extremes
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_1_max_temperature_of_module
+                name: Max Module Temperature
+                icon: mdi:thermometer-high
+              - entity: sensor.{PREFIX}_battery_1_min_temperature_of_module
+                name: Min Module Temperature
+                icon: mdi:thermometer-low
+              - entity: sensor.{PREFIX}_battery_1_position_of_max_temperature_of_module
+                name: Max Temp Module Position
+                icon: mdi:map-marker
+              - entity: sensor.{PREFIX}_battery_1_position_of_min_temperature_of_module
+                name: Min Temp Module Position
+                icon: mdi:map-marker
+
+          - type: history-graph
+            title: Temperature Spread Over Time (24h)
+            entities:
+              - entity: sensor.{PREFIX}_battery_temperature_spread
+                name: Temperature Spread
+            hours_to_show: 24
+            refresh_interval: 60
+
+      - title: All Balancing Metrics
+        cards:
+          - type: entities
+            title: All Balancing Metrics
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_voltage_spread
+                name: Voltage Spread
+                icon: mdi:chart-line-variant
+              - entity: sensor.{PREFIX}_battery_temperature_spread
+                name: Temperature Spread
+                icon: mdi:thermometer-lines
+              - entity: sensor.{PREFIX}_average_module_voltage
+                name: Average Module Voltage
+                icon: mdi:flash
+              - entity: sensor.{PREFIX}_max_module_deviation
+                name: Max Module Deviation
+                icon: mdi:chart-timeline-variant
+              - entity: sensor.{PREFIX}_voltage_imbalance_percentage
+                name: Voltage Imbalance Percentage
+                icon: mdi:percent
+              - entity: sensor.{PREFIX}_max_module_cell_voltage_range
+                name: Max Module Cell Voltage Range
+                icon: mdi:chart-box
+
+          - type: statistics-graph
+            title: Balancing Metrics Statistics (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_battery_voltage_spread
+                name: Voltage Spread
+              - entity: sensor.{PREFIX}_max_module_deviation
+                name: Max Module Deviation
+            days_to_show: 30
+            chart_type: line
+            stat_types:
+              - min
+              - max
+              - mean

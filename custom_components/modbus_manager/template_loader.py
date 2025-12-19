@@ -435,9 +435,14 @@ def process_simple_template(
             if "state" in calc_sensor:
                 calc_sensor["state"] = calc_sensor["state"].replace("{PREFIX}", prefix)
 
-            # Add prefix to unique_id
-            calc_name = calc_sensor.get("name", "").lower().replace(" ", "_")
-            calc_sensor["unique_id"] = f"{prefix}_{calc_name}"
+            # Add prefix to unique_id using generate_unique_id for consistency
+            from .device_utils import generate_unique_id
+
+            calc_sensor["unique_id"] = generate_unique_id(
+                prefix=prefix,
+                template_unique_id=calc_sensor.get("unique_id"),
+                name=calc_sensor.get("name", ""),
+            )
 
         # Process sensors for placeholder replacement
         sensors = template_data.get("sensors", [])
@@ -452,9 +457,14 @@ def process_simple_template(
         # Process controls
         controls = template_data.get("controls", [])
         for control in controls:
-            # Add prefix to unique_id
-            ctrl_name = control.get("name", "").lower().replace(" ", "_")
-            control["unique_id"] = f"{prefix}_{ctrl_name}"
+            # Add prefix to unique_id using generate_unique_id for consistency
+            from .device_utils import generate_unique_id
+
+            control["unique_id"] = generate_unique_id(
+                prefix=prefix,
+                template_unique_id=control.get("unique_id"),
+                name=control.get("name", ""),
+            )
 
         # Create final template data
         processed_template = {

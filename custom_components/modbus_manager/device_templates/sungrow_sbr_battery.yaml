@@ -629,6 +629,519 @@ binary_sensors: []
 
 
 # Calculated Sensors
-calculated: []
-  # Add calculated sensors here if needed
-  # Example: Battery efficiency, power calculations, etc.
+calculated:
+  # Battery 1 Voltage Spread - difference between max and min cell voltage across all modules
+  - name: "Battery 1 Voltage Spread"
+    unique_id: battery_voltage_spread
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    state: >
+      {% set max_voltage = states('sensor.{PREFIX}_battery_1_max_voltage_of_cell') | float(0) %}
+      {% set min_voltage = states('sensor.{PREFIX}_battery_1_min_voltage_of_cell') | float(0) %}
+      {{ (max_voltage - min_voltage) | round(5) }}
+
+  # Battery 1 Module Deviation Sensors - deviation from average module voltage
+  # These sensors calculate the deviation of each module's max cell voltage from the average
+  # Only modules that exist (have non-zero voltage) are included in the average calculation
+  - name: "Battery 1 Module 1 Deviation"
+    unique_id: module_1_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 1"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {{ (v1 - avg) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  - name: "Battery 1 Module 2 Deviation"
+    unique_id: module_2_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 2"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {{ (v2 - avg) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  - name: "Battery 1 Module 3 Deviation"
+    unique_id: module_3_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 3"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {{ (v3 - avg) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  - name: "Battery 1 Module 4 Deviation"
+    unique_id: module_4_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 4"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {{ (v4 - avg) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  - name: "Battery 1 Module 5 Deviation"
+    unique_id: module_5_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 5"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {{ (v5 - avg) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  - name: "Battery 1 Module 6 Deviation"
+    unique_id: module_6_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 6"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {{ (v6 - avg) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  - name: "Battery 1 Module 7 Deviation"
+    unique_id: module_7_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 7"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {{ (v7 - avg) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  - name: "Battery 1 Module 8 Deviation"
+    unique_id: module_8_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 8"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {{ (v8 - avg) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  # Additional Battery Health & Balancing Metrics
+
+  # Battery 1 Temperature Spread - difference between hottest and coldest module
+  - name: "Battery 1 Temperature Spread"
+    unique_id: battery_temperature_spread
+    unit_of_measurement: "°C"
+    device_class: temperature
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    state: >
+      {% set max_temp = states('sensor.{PREFIX}_battery_1_max_temperature_of_module') | float(0) %}
+      {% set min_temp = states('sensor.{PREFIX}_battery_1_min_temperature_of_module') | float(0) %}
+      {{ (max_temp - min_temp) | round(5) }}
+
+  # Battery 1 Average Module Voltage - average of all module max cell voltages
+  - name: "Battery 1 Average Module Voltage"
+    unique_id: average_module_voltage
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {{ (sum / count) | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  # Battery 1 Max Module Deviation - largest absolute deviation from average
+  - name: "Battery 1 Max Module Deviation"
+    unique_id: max_module_deviation
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {% set d1 = (v1 - avg) | abs if v1 > 0 else 0 %}
+        {% set d2 = (v2 - avg) | abs if v2 > 0 else 0 %}
+        {% set d3 = (v3 - avg) | abs if v3 > 0 else 0 %}
+        {% set d4 = (v4 - avg) | abs if v4 > 0 else 0 %}
+        {% set d5 = (v5 - avg) | abs if v5 > 0 else 0 %}
+        {% set d6 = (v6 - avg) | abs if v6 > 0 else 0 %}
+        {% set d7 = (v7 - avg) | abs if v7 > 0 else 0 %}
+        {% set d8 = (v8 - avg) | abs if v8 > 0 else 0 %}
+        {% set max_dev = [d1, d2, d3, d4, d5, d6, d7, d8] | max %}
+        {{ max_dev | round(5) }}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  # Battery 1 Voltage Imbalance Percentage - max deviation as percentage of average
+  - name: "Battery 1 Voltage Imbalance Percentage"
+    unique_id: voltage_imbalance_percentage
+    unit_of_measurement: "%"
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    state: >
+      {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set v3 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set v4 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set v5 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set v6 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set v7 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set v8 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set sum = v1 + v2 + v3 + v4 + v5 + v6 + v7 + v8 %}
+      {% set count = (v1 > 0) | int + (v2 > 0) | int + (v3 > 0) | int + (v4 > 0) | int + (v5 > 0) | int + (v6 > 0) | int + (v7 > 0) | int + (v8 > 0) | int %}
+      {% if count > 0 %}
+        {% set avg = sum / count %}
+        {% set d1 = (v1 - avg) | abs if v1 > 0 else 0 %}
+        {% set d2 = (v2 - avg) | abs if v2 > 0 else 0 %}
+        {% set d3 = (v3 - avg) | abs if v3 > 0 else 0 %}
+        {% set d4 = (v4 - avg) | abs if v4 > 0 else 0 %}
+        {% set d5 = (v5 - avg) | abs if v5 > 0 else 0 %}
+        {% set d6 = (v6 - avg) | abs if v6 > 0 else 0 %}
+        {% set d7 = (v7 - avg) | abs if v7 > 0 else 0 %}
+        {% set d8 = (v8 - avg) | abs if v8 > 0 else 0 %}
+        {% set max_dev = [d1, d2, d3, d4, d5, d6, d7, d8] | max %}
+        {% if avg > 0 %}
+          {{ (max_dev / avg * 100) | round(5) }}
+        {% else %}
+          {{ 0 }}
+        {% endif %}
+      {% else %}
+        {{ 0 }}
+      {% endif %}
+
+  # Battery 1 Module Cell Voltage Range - internal spread within each module (max - min cell voltage)
+  - name: "Battery 1 Module 1 Cell Voltage Range"
+    unique_id: module_1_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 1"
+    state: >
+      {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
+      {% set min_v = states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_1') | float(0) %}
+      {{ (max_v - min_v) | round(5) }}
+
+  - name: "Battery 1 Module 2 Cell Voltage Range"
+    unique_id: module_2_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 2"
+    state: >
+      {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
+      {% set min_v = states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_2') | float(0) %}
+      {{ (max_v - min_v) | round(5) }}
+
+  - name: "Battery 1 Module 3 Cell Voltage Range"
+    unique_id: module_3_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 3"
+    state: >
+      {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
+      {% set min_v = states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_3') | float(0) %}
+      {{ (max_v - min_v) | round(5) }}
+
+  - name: "Battery 1 Module 4 Cell Voltage Range"
+    unique_id: module_4_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 4"
+    state: >
+      {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
+      {% set min_v = states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_4') | float(0) %}
+      {{ (max_v - min_v) | round(5) }}
+
+  - name: "Battery 1 Module 5 Cell Voltage Range"
+    unique_id: module_5_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 5"
+    state: >
+      {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
+      {% set min_v = states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_5') | float(0) %}
+      {{ (max_v - min_v) | round(5) }}
+
+  - name: "Battery 1 Module 6 Cell Voltage Range"
+    unique_id: module_6_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 6"
+    state: >
+      {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
+      {% set min_v = states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_6') | float(0) %}
+      {{ (max_v - min_v) | round(5) }}
+
+  - name: "Battery 1 Module 7 Cell Voltage Range"
+    unique_id: module_7_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 7"
+    state: >
+      {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
+      {% set min_v = states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_7') | float(0) %}
+      {{ (max_v - min_v) | round(5) }}
+
+  - name: "Battery 1 Module 8 Cell Voltage Range"
+    unique_id: module_8_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    condition: "modules >= 8"
+    state: >
+      {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
+      {% set min_v = states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_8') | float(0) %}
+      {{ (max_v - min_v) | round(5) }}
+
+  # Battery 1 Max Module Cell Voltage Range - largest internal spread across all modules
+  - name: "Battery 1 Max Module Cell Voltage Range"
+    unique_id: max_module_cell_voltage_range
+    unit_of_measurement: "V"
+    device_class: voltage
+    state_class: measurement
+    precision: 5
+    group: "battery_balancing"
+    state: >
+      {% set r1 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_1') | float(0)) | abs %}
+      {% set r2 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_2') | float(0)) | abs %}
+      {% set r3 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_3') | float(0)) | abs %}
+      {% set r4 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_4') | float(0)) | abs %}
+      {% set r5 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_5') | float(0)) | abs %}
+      {% set r6 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_6') | float(0)) | abs %}
+      {% set r7 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_7') | float(0)) | abs %}
+      {% set r8 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_8') | float(0)) | abs %}
+      {% set max_range = [r1, r2, r3, r4, r5, r6, r7, r8] | max %}
+      {{ max_range | round(5) }}
+
+  # Battery 1 Max/Min Voltage Cell Position Info - human-readable interpretation
+  # Note: The position is a unique cell ID from the BMS, not a simple "Module X, Cell Y" coordinate
+  # This sensor provides additional context about the cell position
+  - name: "Battery 1 Max Voltage Cell Info"
+    unique_id: battery_1_max_voltage_cell_info
+    group: "battery_balancing"
+    state: >
+      {% set pos = states('sensor.{PREFIX}_battery_1_position_of_max_voltage_cell') | int(0) %}
+      {% set volt = states('sensor.{PREFIX}_battery_1_max_voltage_of_cell') | float(0) %}
+      {% if pos > 0 and volt > 0 %}
+        Cell Position {{ pos }} ({{ "%.4f" | format(volt) }} V)
+      {% else %}
+        Unknown
+      {% endif %}
+
+  - name: "Battery 1 Min Voltage Cell Info"
+    unique_id: battery_1_min_voltage_cell_info
+    group: "battery_balancing"
+    state: >
+      {% set pos = states('sensor.{PREFIX}_battery_1_position_of_min_voltage_cell') | int(0) %}
+      {% set volt = states('sensor.{PREFIX}_battery_1_min_voltage_of_cell') | float(0) %}
+      {% if pos > 0 and volt > 0 %}
+        Cell Position {{ pos }} ({{ "%.4f" | format(volt) }} V)
+      {% else %}
+        Unknown
+      {% endif %}
+
+  # Battery 1 Max/Min Temperature Module Position Info - human-readable interpretation
+  # Note: The position is a unique module ID from the BMS
+  # This sensor provides additional context about the module position and temperature
+  - name: "Battery 1 Max Temperature Module Info"
+    unique_id: battery_1_max_temperature_module_info
+    group: "battery_balancing"
+    state: >
+      {% set pos = states('sensor.{PREFIX}_battery_1_position_of_max_temperature_of_module') | int(0) %}
+      {% set temp = states('sensor.{PREFIX}_battery_1_max_temperature_of_module') | float(0) %}
+      {% if pos > 0 and temp > 0 %}
+        Module Position {{ pos }} ({{ "%.1f" | format(temp) }} °C)
+      {% else %}
+        Unknown
+      {% endif %}
+
+  - name: "Battery 1 Min Temperature Module Info"
+    unique_id: battery_1_min_temperature_module_info
+    group: "battery_balancing"
+    state: >
+      {% set pos = states('sensor.{PREFIX}_battery_1_position_of_min_temperature_of_module') | int(0) %}
+      {% set temp = states('sensor.{PREFIX}_battery_1_min_temperature_of_module') | float(0) %}
+      {% if pos > 0 and temp > 0 %}
+        Module Position {{ pos }} ({{ "%.1f" | format(temp) }} °C)
+      {% else %}
+        Unknown
+      {% endif %}

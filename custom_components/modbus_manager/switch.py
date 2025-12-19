@@ -12,7 +12,6 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_device_info_dict
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -62,15 +61,13 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         self._register_config = register_config
 
         # Extract basic properties
+        # unique_id is already processed by coordinator with prefix via _process_entities_with_prefix
         self._name = register_config.get("name", "Unknown Switch")
-        self._unique_id = register_config.get("unique_id")
+        self._unique_id = register_config.get("unique_id", "unknown")
         self._address = register_config.get("address", 0)
         self._input_type = register_config.get("input_type", "holding")
         self._data_type = register_config.get("data_type", "uint16")
         self._scan_interval = register_config.get("scan_interval", 30)
-
-        # Create register key for coordinator lookup
-        self._register_key = f"{self._unique_id}_{self._address}"
 
         # Get write values
         self._write_value = register_config.get("write_value", 1)
@@ -81,6 +78,9 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         self._on_value = register_config.get("on_value", self._write_value)
         self._off_value = register_config.get("off_value", self._write_value_off)
 
+        # Create register key for coordinator lookup
+        self._register_key = f"{self._unique_id}_{self._address}"
+
         # Set entity properties
         self._attr_name = self._name
         self._attr_unique_id = self._unique_id
@@ -89,67 +89,48 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         device_info = register_config.get("device_info")
         if not device_info:
             _LOGGER.error(
-                "Switch %s missing device_info. Please re-run the config flow to migrate.",
+                "Switch %s missing device_info. Coordinator should provide this.",
                 self._name,
             )
-            # Create minimal device info to prevent errors
-            device_info = {
-                "identifiers": {(DOMAIN, coordinator.entry.entry_id)},
-                "name": "Modbus Device",
-            }
+            raise ValueError("device_info missing from coordinator")
         self._attr_device_info = DeviceInfo(**device_info)
 
-        # Set extra state attributes
+        # Set extra state attributes (consistent with sensors)
         self._attr_extra_state_attributes = {
-            "address": self._address,
-            "input_type": self._input_type,
+            "register_address": self._address,
             "data_type": self._data_type,
+            "slave_id": register_config.get(
+                "slave_id", coordinator.entry.data.get("slave_id", 1)
+            ),
+            "coordinator_mode": True,
+            "scale": register_config.get("scale"),
+            "offset": register_config.get("offset"),
+            "precision": register_config.get("precision"),
+            "group": register_config.get("group"),
             "scan_interval": self._scan_interval,
+            "input_type": self._input_type,
+            "unit_of_measurement": register_config.get("unit_of_measurement"),
+            "device_class": register_config.get("device_class"),
+            "state_class": register_config.get("state_class"),
+            "swap": register_config.get("swap"),
             "register_key": self._register_key,
             "template_name": coordinator.entry.data.get("template", "unknown"),
             "prefix": coordinator.entry.data.get("prefix", "unknown"),
             "host": coordinator.entry.data.get("host", "unknown"),
             "port": coordinator.entry.data.get("port", 502),
-            "slave_id": coordinator.entry.data.get("slave_id", 1),
+            "on_value": self._on_value,
+            "off_value": self._off_value,
+            "write_value": self._write_value,
+            "write_value_off": self._write_value_off,
         }
 
-        # Add template-specific attributes if present
-        if "scale" in register_config:
-            self._attr_extra_state_attributes["scale"] = register_config["scale"]
-        if "offset" in register_config:
-            self._attr_extra_state_attributes["offset"] = register_config["offset"]
-        if "precision" in register_config:
-            self._attr_extra_state_attributes["precision"] = register_config[
-                "precision"
-            ]
-        if "unit_of_measurement" in register_config:
-            self._attr_extra_state_attributes["unit_of_measurement"] = register_config[
-                "unit_of_measurement"
-            ]
-        if "device_class" in register_config:
-            self._attr_extra_state_attributes["device_class"] = register_config[
-                "device_class"
-            ]
-        if "state_class" in register_config:
-            self._attr_extra_state_attributes["state_class"] = register_config[
-                "state_class"
-            ]
-        if "group" in register_config:
-            self._attr_extra_state_attributes["group"] = register_config["group"]
-        if "map" in register_config:
+        # Add optional attributes if present
+        if register_config.get("map"):
             self._attr_extra_state_attributes["map"] = register_config["map"]
-        if "flags" in register_config:
+        if register_config.get("flags"):
             self._attr_extra_state_attributes["flags"] = register_config["flags"]
-        if "options" in register_config:
+        if register_config.get("options"):
             self._attr_extra_state_attributes["options"] = register_config["options"]
-        if "swap" in register_config:
-            self._attr_extra_state_attributes["swap"] = register_config["swap"]
-        if "on_value" in register_config:
-            self._attr_extra_state_attributes["on_value"] = register_config["on_value"]
-        if "off_value" in register_config:
-            self._attr_extra_state_attributes["off_value"] = register_config[
-                "off_value"
-            ]
 
     @property
     def is_on(self) -> bool | None:
@@ -288,4 +269,28 @@ class ModbusCoordinatorSwitch(SwitchEntity):
 
     def _handle_coordinator_update(self) -> None:
         """Handle updated data from the coordinator."""
+        try:
+            # Update raw/processed/numeric values in attributes if available
+            if self._coordinator.data:
+                register_data = self._coordinator.data.get(self._register_key)
+                if register_data:
+                    raw_value = register_data.get("raw_value")
+                    processed_value = register_data.get("processed_value")
+                    numeric_value = register_data.get("numeric_value")
+
+                    # Update extra_state_attributes with raw/processed/numeric values
+                    self._attr_extra_state_attributes = {
+                        **self._attr_extra_state_attributes,
+                        "raw_value": raw_value if raw_value is not None else "N/A",
+                        "processed_value": processed_value
+                        if processed_value is not None
+                        else "N/A",
+                    }
+                    if numeric_value is not None:
+                        self._attr_extra_state_attributes[
+                            "numeric_value"
+                        ] = numeric_value
+        except Exception as e:
+            _LOGGER.debug("Error updating switch attributes: %s", str(e))
+
         self.async_write_ha_state()

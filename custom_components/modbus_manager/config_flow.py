@@ -526,27 +526,44 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     model_options[model_name] = display_name
 
             schema_fields["selected_model"] = vol.In(model_options)
-        else:
-            # Individual field configuration - generic for any device type
-            # Process all configurable fields dynamically
-            for field_name, field_config in dynamic_config.items():
-                # Skip special fields that are handled separately
-                if field_name in [
-                    "valid_models",
-                    "firmware_version",
-                    "connection_type",
-                    "battery_slave_id",
-                ]:
-                    continue
 
-                # Check if this field has options (making it configurable)
-                if isinstance(field_config, dict) and "options" in field_config:
-                    options = field_config.get("options", [])
-                    default = field_config.get(
-                        "default", options[0] if options else None
-                    )
+        # Process ALL configurable fields from dynamic_config (works for both valid_models and individual fields)
+        # This ensures that fields like dual_channel_meter are always available
+        for field_name, field_config in dynamic_config.items():
+            # Skip special fields that are handled separately
+            if field_name in [
+                "valid_models",
+                "firmware_version",
+                "connection_type",
+                "battery_slave_id",
+            ]:
+                continue
 
-                    if options:
+            # Skip if already added (e.g., selected_model)
+            if field_name in schema_fields:
+                continue
+
+            # Check if this field has options (making it configurable)
+            if isinstance(field_config, dict) and "options" in field_config:
+                options = field_config.get("options", [])
+                default = field_config.get("default", options[0] if options else None)
+
+                if options:
+                    # Handle boolean fields specially
+                    if all(isinstance(opt, bool) for opt in options) or (
+                        len(options) == 2 and set(options) == {True, False}
+                    ):
+                        # Boolean field with options [true, false] or [True, False]
+                        schema_fields[
+                            vol.Optional(field_name, default=bool(default))
+                        ] = bool
+                        _LOGGER.debug(
+                            "Added boolean field %s with default: %s",
+                            field_name,
+                            default,
+                        )
+                    else:
+                        # Regular options field
                         schema_fields[
                             vol.Optional(field_name, default=default)
                         ] = vol.In(options)
@@ -556,25 +573,27 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             options,
                             default,
                         )
-                elif isinstance(field_config, dict) and "default" in field_config:
-                    # Field with default value but no options (single value)
-                    default_value = field_config.get("default")
-                    # Use proper vol.Optional format for voluptuous_serialize compatibility
-                    if isinstance(default_value, int):
-                        schema_fields[
-                            vol.Optional(field_name, default=default_value)
-                        ] = int
-                    elif isinstance(default_value, float):
-                        schema_fields[
-                            vol.Optional(field_name, default=default_value)
-                        ] = float
-                    else:
-                        schema_fields[
-                            vol.Optional(field_name, default=str(default_value))
-                        ] = str
-                    _LOGGER.debug(
-                        "Added field %s with default: %s", field_name, default_value
-                    )
+            elif isinstance(field_config, dict) and "default" in field_config:
+                # Field with default value but no options (single value)
+                default_value = field_config.get("default")
+                # Use proper vol.Optional format for voluptuous_serialize compatibility
+                if isinstance(default_value, bool):
+                    schema_fields[
+                        vol.Optional(field_name, default=default_value)
+                    ] = bool
+                elif isinstance(default_value, int):
+                    schema_fields[vol.Optional(field_name, default=default_value)] = int
+                elif isinstance(default_value, float):
+                    schema_fields[
+                        vol.Optional(field_name, default=default_value)
+                    ] = float
+                else:
+                    schema_fields[
+                        vol.Optional(field_name, default=str(default_value))
+                    ] = str
+                _LOGGER.debug(
+                    "Added field %s with default: %s", field_name, default_value
+                )
 
         # Add firmware version if available
         if "firmware_version" in dynamic_config:
@@ -762,19 +781,31 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         else:
             # For individual field configuration, add all fields to dynamic_config
             dynamic_config["modules"] = modules
-            # Add other individual fields that might be used for filtering
-            for field_name, field_config in dynamic_config.items():
-                if field_name not in [
-                    "valid_models",
-                    "firmware_version",
-                    "connection_type",
-                    "battery_slave_id",
-                ]:
+
+        # Add ALL user input fields to dynamic_config for condition filtering
+        # This ensures fields like dual_channel_meter are available for condition checks
+        for field_name, field_value in user_input.items():
+            if field_name not in [
+                "valid_models",
+                "firmware_version",
+                "connection_type",
+                "battery_slave_id",
+                "selected_model",  # Already handled separately
+            ]:
+                # Store the actual value from user_input, or use default from dynamic_config
+                if field_name in dynamic_config:
+                    field_config = dynamic_config[field_name]
                     if isinstance(field_config, dict) and "default" in field_config:
-                        field_value = user_input.get(
+                        # Use user input value if provided, otherwise use default
+                        dynamic_config[field_name] = user_input.get(
                             field_name, field_config.get("default")
                         )
+                    else:
+                        # Field exists but no default, use user input value
                         dynamic_config[field_name] = field_value
+                else:
+                    # New field not in dynamic_config, add it
+                    dynamic_config[field_name] = field_value
 
         # Process sensors
         for sensor in original_sensors:
@@ -1892,6 +1923,18 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "firmware_version": firmware_version,
                 }
 
+                # Add all dynamic config fields to device (e.g., dual_channel_meter)
+                if self._supports_dynamic_config(template_data):
+                    dynamic_config_dict = config_values.get("dynamic_config", {})
+                    for key, value in dynamic_config_dict.items():
+                        if key not in [
+                            "valid_models",
+                            "firmware_version",
+                            "connection_type",
+                            "battery_slave_id",
+                        ]:
+                            device[key] = value
+
                 devices.append(device)
                 _LOGGER.info("Created new devices array with single device")
 
@@ -2257,59 +2300,93 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         ):
             dynamic_config = template_data.get("dynamic_config", {})
 
-            # Add phases selection
-            if "phases" in dynamic_config:
-                current_phases = self.config_entry.data.get("phases", 3)
-                phase_options = dynamic_config["phases"].get("options", [1, 3])
+            # Automatically add ALL configurable fields from dynamic_config
+            for field_name, field_config in dynamic_config.items():
+                # Skip special fields that are handled separately or not needed in options
+                if field_name in [
+                    "valid_models",
+                    "battery_slave_id",
+                ]:
+                    continue
 
-                schema_fields[vol.Optional("phases", default=current_phases)] = vol.In(
-                    phase_options
-                )
+                # Skip if already added (e.g., firmware_version, connection_type)
+                if field_name in schema_fields:
+                    continue
 
-            # Add MPPT count selection
-            if "mppt_count" in dynamic_config:
-                current_mppt = self.config_entry.data.get("mppt_count", 2)
-                mppt_options = dynamic_config["mppt_count"].get("options", [1, 2, 3])
+                # Get current value from config entry or use default
+                current_value = self.config_entry.data.get(field_name)
 
-                schema_fields[
-                    vol.Optional("mppt_count", default=current_mppt)
-                ] = vol.In(mppt_options)
-
-            # Add battery configuration
-            if "battery_config" in dynamic_config:
-                current_battery = self.config_entry.data.get("battery_config", "none")
-                battery_options = dynamic_config["battery_config"].get(
-                    "options", ["none", "standard_battery", "sbr_battery"]
-                )
-                option_labels = dynamic_config["battery_config"].get(
-                    "option_labels", {}
-                )
-
-                battery_choices = {}
-                for option in battery_options:
-                    display_label = option_labels.get(
-                        option, option.replace("_", " ").title()
+                # Check if this field has options (making it configurable)
+                if isinstance(field_config, dict) and "options" in field_config:
+                    options = field_config.get("options", [])
+                    default = (
+                        current_value
+                        if current_value is not None
+                        else field_config.get(
+                            "default", options[0] if options else None
+                        )
                     )
-                    battery_choices[option] = display_label
 
-                schema_fields[
-                    vol.Optional("battery_config", default=current_battery)
-                ] = vol.In(battery_choices)
+                    if options:
+                        # Handle boolean fields specially
+                        if all(isinstance(opt, bool) for opt in options) or (
+                            len(options) == 2 and set(options) == {True, False}
+                        ):
+                            # Boolean field with options [true, false] or [True, False]
+                            schema_fields[
+                                vol.Optional(field_name, default=bool(default))
+                            ] = bool
+                            _LOGGER.debug(
+                                "Added boolean field %s to options flow with default: %s",
+                                field_name,
+                                default,
+                            )
+                        else:
+                            # Regular options field
+                            schema_fields[
+                                vol.Optional(field_name, default=default)
+                            ] = vol.In(options)
+                            _LOGGER.debug(
+                                "Added configurable field %s to options flow with options: %s, default: %s",
+                                field_name,
+                                options,
+                                default,
+                            )
+                elif isinstance(field_config, dict) and "default" in field_config:
+                    # Field with default value but no options (single value)
+                    default_value = (
+                        current_value
+                        if current_value is not None
+                        else field_config.get("default")
+                    )
+                    # Use proper vol.Optional format for voluptuous_serialize compatibility
+                    if isinstance(default_value, bool):
+                        schema_fields[
+                            vol.Optional(field_name, default=default_value)
+                        ] = bool
+                    elif isinstance(default_value, int):
+                        schema_fields[
+                            vol.Optional(field_name, default=default_value)
+                        ] = int
+                    elif isinstance(default_value, float):
+                        schema_fields[
+                            vol.Optional(field_name, default=default_value)
+                        ] = float
+                    else:
+                        schema_fields[
+                            vol.Optional(field_name, default=str(default_value))
+                        ] = str
+                    _LOGGER.debug(
+                        "Added field %s to options flow with default: %s",
+                        field_name,
+                        default_value,
+                    )
 
-            # Add connection type
-            if "connection_type" in dynamic_config:
-                current_connection = self.config_entry.data.get(
-                    "connection_type", "LAN"
-                )
-                connection_options = dynamic_config["connection_type"].get(
-                    "options", ["LAN", "WINET"]
-                )
-                schema_fields[
-                    vol.Optional("connection_type", default=current_connection)
-                ] = vol.In(connection_options)
-
-            # Add firmware version if available in dynamic_config
-            if "firmware_version" in dynamic_config:
+            # Add firmware version if available in dynamic_config (if not already added)
+            if (
+                "firmware_version" in dynamic_config
+                and "firmware_version" not in schema_fields
+            ):
                 current_firmware = self.config_entry.data.get(
                     "firmware_version", "1.0.0"
                 )
@@ -2319,6 +2396,21 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 schema_fields[
                     vol.Optional("firmware_version", default=current_firmware)
                 ] = vol.In(firmware_options)
+
+            # Add connection type if available (if not already added)
+            if (
+                "connection_type" in dynamic_config
+                and "connection_type" not in schema_fields
+            ):
+                current_connection = self.config_entry.data.get(
+                    "connection_type", "LAN"
+                )
+                connection_options = dynamic_config["connection_type"].get(
+                    "options", ["LAN", "WINET"]
+                )
+                schema_fields[
+                    vol.Optional("connection_type", default=current_connection)
+                ] = vol.In(connection_options)
 
         # Basic options form
         return self.async_show_form(
@@ -2385,44 +2477,76 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             # Apply dynamic configuration (important for MPPT filtering!)
             if dynamic_config:
                 try:
-                    # Use current configuration from config entry
-                    current_phases = self.config_entry.data.get("phases", 1)
-                    current_mppt_count = self.config_entry.data.get("mppt_count", 2)
-                    current_string_count = self.config_entry.data.get("string_count", 0)
-                    current_battery_config = self.config_entry.data.get(
-                        "battery_config", "none"
+                    # Build user_input dict with ALL dynamic config values from config entry
+                    # This ensures all fields like dual_channel_meter are included
+                    user_input_for_processing = {}
+
+                    # Read all dynamic config fields from config entry
+                    for field_name, field_config in dynamic_config.items():
+                        if field_name in [
+                            "valid_models",
+                            "firmware_version",
+                            "connection_type",
+                            "battery_slave_id",
+                        ]:
+                            # These are handled separately or don't need to be read
+                            continue
+
+                        # Get value from config entry, or use default from field_config
+                        if isinstance(field_config, dict) and "default" in field_config:
+                            default_value = field_config.get("default")
+                            current_value = self.config_entry.data.get(
+                                field_name, default_value
+                            )
+                            user_input_for_processing[field_name] = current_value
+                        elif (
+                            isinstance(field_config, dict) and "options" in field_config
+                        ):
+                            # Field with options - get current value or use first option as default
+                            options = field_config.get("options", [])
+                            default_value = options[0] if options else None
+                            current_value = self.config_entry.data.get(
+                                field_name, default_value
+                            )
+                            user_input_for_processing[field_name] = current_value
+
+                    # Add explicitly handled fields
+                    user_input_for_processing["phases"] = self.config_entry.data.get(
+                        "phases", 1
                     )
-                    current_battery_slave_id = self.config_entry.data.get(
-                        "battery_slave_id", 200
-                    )
-                    current_firmware_version = self.config_entry.data.get(
-                        "firmware_version", "1.0.0"
-                    )
-                    current_connection_type = self.config_entry.data.get(
-                        "connection_type", "LAN"
-                    )
+                    user_input_for_processing[
+                        "mppt_count"
+                    ] = self.config_entry.data.get("mppt_count", 2)
+                    user_input_for_processing[
+                        "string_count"
+                    ] = self.config_entry.data.get("string_count", 0)
+                    user_input_for_processing[
+                        "battery_config"
+                    ] = self.config_entry.data.get("battery_config", "none")
+                    user_input_for_processing[
+                        "battery_slave_id"
+                    ] = self.config_entry.data.get("battery_slave_id", 200)
+                    user_input_for_processing[
+                        "firmware_version"
+                    ] = self.config_entry.data.get("firmware_version", "1.0.0")
+                    user_input_for_processing[
+                        "connection_type"
+                    ] = self.config_entry.data.get("connection_type", "LAN")
+                    user_input_for_processing[
+                        "selected_model"
+                    ] = self.config_entry.data.get("selected_model")
 
                     _LOGGER.info(
-                        "Applying dynamic config during template update: phases=%d, mppt=%d, strings=%d, battery=%s, fw=%s",
-                        current_phases,
-                        current_mppt_count,
-                        current_string_count,
-                        current_battery_config,
-                        current_firmware_version,
+                        "Applying dynamic config during template update: %s",
+                        ", ".join(
+                            [f"{k}={v}" for k, v in user_input_for_processing.items()]
+                        ),
                     )
 
                     # Process template with current configuration
                     # Use the same logic as in _process_dynamic_config
                     processed_data = self._process_dynamic_config(
-                        {
-                            "phases": current_phases,
-                            "mppt_count": current_mppt_count,
-                            "string_count": current_string_count,
-                            "battery_config": current_battery_config,
-                            "battery_slave_id": current_battery_slave_id,
-                            "firmware_version": current_firmware_version,
-                            "connection_type": current_connection_type,
-                        },
+                        user_input_for_processing,
                         template_data,
                     )
 
@@ -2682,13 +2806,38 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             config_changes = {}
 
             # Check each dynamic config parameter
+            # Get all dynamic config fields from template to check for changes
+            template_name = self.config_entry.data.get("template", "Unknown")
+            template_data = await get_template_by_name(template_name)
+            dynamic_config_fields = []
+
+            if (
+                template_data
+                and isinstance(template_data, dict)
+                and template_data.get("dynamic_config")
+            ):
+                dynamic_config = template_data.get("dynamic_config", {})
+                # Add all configurable fields from dynamic_config
+                for field_name in dynamic_config.keys():
+                    if field_name not in [
+                        "valid_models",
+                        "firmware_version",
+                        "connection_type",
+                        "battery_slave_id",
+                    ]:
+                        dynamic_config_fields.append(field_name)
+
+            # Add explicitly handled fields
             dynamic_params = [
                 "phases",
                 "mppt_count",
                 "battery_config",
                 "battery_slave_id",
                 "connection_type",
-            ]
+                "firmware_version",
+                "selected_model",
+            ] + dynamic_config_fields
+
             for param in dynamic_params:
                 if param in user_input:
                     old_value = self.config_entry.data.get(param)
@@ -2883,19 +3032,31 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         else:
             # For individual field configuration, add all fields to dynamic_config
             dynamic_config["modules"] = modules
-            # Add other individual fields that might be used for filtering
-            for field_name, field_config in dynamic_config.items():
-                if field_name not in [
-                    "valid_models",
-                    "firmware_version",
-                    "connection_type",
-                    "battery_slave_id",
-                ]:
+
+        # Add ALL user input fields to dynamic_config for condition filtering
+        # This ensures fields like dual_channel_meter are available for condition checks
+        for field_name, field_value in user_input.items():
+            if field_name not in [
+                "valid_models",
+                "firmware_version",
+                "connection_type",
+                "battery_slave_id",
+                "selected_model",  # Already handled separately
+            ]:
+                # Store the actual value from user_input, or use default from dynamic_config
+                if field_name in dynamic_config:
+                    field_config = dynamic_config[field_name]
                     if isinstance(field_config, dict) and "default" in field_config:
-                        field_value = user_input.get(
+                        # Use user input value if provided, otherwise use default
+                        dynamic_config[field_name] = user_input.get(
                             field_name, field_config.get("default")
                         )
+                    else:
+                        # Field exists but no default, use user input value
                         dynamic_config[field_name] = field_value
+                else:
+                    # New field not in dynamic_config, add it
+                    dynamic_config[field_name] = field_value
 
         # Process sensors
         for sensor in original_sensors:

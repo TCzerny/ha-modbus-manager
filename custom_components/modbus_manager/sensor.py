@@ -14,7 +14,6 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_device_info_dict, generate_unique_id
 from .logger import ModbusManagerLogger
 from .template_loader import load_templates
 
@@ -42,12 +41,6 @@ async def _handle_group_assignments(
                         group=sensor._group,
                     )
 
-                    _LOGGER.debug(
-                        "Assigned sensor %s to group %s",
-                        sensor._attr_name,
-                        sensor._group,
-                    )
-
     except Exception as e:
         _LOGGER.error("Error handling group assignments: %s", str(e))
 
@@ -72,6 +65,7 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
         self.is_string_sensor = register_config.get("data_type") == "string"
 
         # Set entity properties from register config
+        # unique_id is already processed by coordinator with prefix via _process_entities_with_prefix
         self._attr_name = register_config.get("name", "Unknown Sensor")
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         self._attr_native_unit_of_measurement = register_config.get(
@@ -138,13 +132,6 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
 
         # Create register key for data lookup
         self.register_key = self._create_register_key(register_config)
-
-        _LOGGER.debug(
-            "ModbusCoordinatorSensor created: %s (key: %s, string_sensor: %s)",
-            self._attr_name,
-            self.register_key,
-            self.is_string_sensor,
-        )
 
     def _create_register_key(self, register_config: dict[str, Any]) -> str:
         """Create unique key for register data lookup."""
@@ -225,21 +212,10 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
                             "processed_value": processed_value,
                         }
 
-                    _LOGGER.debug(
-                        "Sensor %s updated: raw=%s, processed=%s (type: %s, scale: %s, precision: %s)",
-                        self._attr_name,
-                        raw_value,
-                        processed_value,
-                        type(processed_value).__name__,
-                        self._scale,
-                        self._precision,
-                    )
                 else:
                     self._attr_native_value = None
-                    _LOGGER.debug("Sensor %s: No processed value", self._attr_name)
             else:
                 self._attr_native_value = None
-                _LOGGER.debug("Sensor %s: No register data found", self._attr_name)
 
             # Notify Home Assistant about the change
             self.async_write_ha_state()
@@ -307,20 +283,12 @@ async def async_setup_entry(
         calculated_entities = []
 
         # NEW STRUCTURE: device_info is already in register configs from coordinator
-        _LOGGER.debug(
-            "Using devices array structure with coordinator-provided device_info"
-        )
 
         # Create coordinator sensors (device_info already attached by coordinator)
         registry = entity_registry.async_get(hass)
         for sensor_config in regular_sensors:
             try:
                 unique_id = sensor_config.get("unique_id")
-                _LOGGER.debug(
-                    "Creating sensor: name=%s, unique_id=%s",
-                    sensor_config.get("name"),
-                    unique_id,
-                )
 
                 # Check if entity with same unique_id already exists from another integration
                 entity_id = f"sensor.{unique_id}"
@@ -344,8 +312,8 @@ async def async_setup_entry(
                 # device_info is already in sensor_config from coordinator
                 device_info = sensor_config.get("device_info")
                 if not device_info:
-                    _LOGGER.warning(
-                        "Sensor %s missing device_info from coordinator",
+                    _LOGGER.error(
+                        "Sensor %s missing device_info. Coordinator should provide this.",
                         sensor_config.get("name"),
                     )
                     continue
@@ -424,12 +392,6 @@ async def async_setup_entry(
                     calc_config.get("name", "unknown"),
                     str(e),
                 )
-
-        _LOGGER.debug(
-            "Created %d coordinator sensors and %d calculated sensors",
-            len(coordinator_sensors),
-            len(calculated_entities),
-        )
 
         # Add all entities
         all_entities = coordinator_sensors + calculated_entities

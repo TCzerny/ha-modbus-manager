@@ -357,6 +357,60 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     _LOGGER.error("Template %s not found for device", template_name)
                     continue
 
+                # Build dynamic_config dict dynamically from template's dynamic_config section
+                # This automatically includes ALL fields defined in the template (e.g., dual_channel_meter)
+                template_dynamic_config = template.get("dynamic_config", {})
+                dynamic_config = {}
+
+                # 1. Load all available field names from template's dynamic_config section
+                for field_name in template_dynamic_config.keys():
+                    # Skip internal fields that are not user-configurable
+                    if field_name in [
+                        "valid_models",
+                        "firmware_version",
+                        "connection_type",
+                        "battery_slave_id",
+                    ]:
+                        continue
+
+                    # 2. Check device config first (most specific)
+                    if field_name in device:
+                        dynamic_config[field_name] = device[field_name]
+                    # 3. Check entry.data for backward compatibility
+                    elif field_name in self.entry.data:
+                        dynamic_config[field_name] = self.entry.data.get(field_name)
+                    # 4. Use default from template if available
+                    elif isinstance(template_dynamic_config[field_name], dict):
+                        default_value = template_dynamic_config[field_name].get(
+                            "default"
+                        )
+                        if default_value is not None:
+                            dynamic_config[field_name] = default_value
+
+                # Add model_config values (from valid_models)
+                dynamic_config.update(model_config)
+
+                # Add explicitly handled fields that might not be in template's dynamic_config
+                for key in ["battery_config", "connection_type", "firmware_version"]:
+                    if key in device:
+                        dynamic_config[key] = device[key]
+                    elif key in self.entry.data:
+                        dynamic_config[key] = self.entry.data.get(key)
+
+                # Calculate battery_enabled from battery_config for condition filtering
+                battery_config = dynamic_config.get("battery_config", "none")
+                dynamic_config["battery_enabled"] = battery_config != "none"
+
+                _LOGGER.debug(
+                    "Built dynamic_config for %s: %s",
+                    template_name,
+                    {
+                        k: v
+                        for k, v in dynamic_config.items()
+                        if k not in ["valid_models"]
+                    },
+                )
+
                 # Extract registers from template
                 registers = template.get("sensors", [])
                 controls = template.get("controls", [])
@@ -388,6 +442,26 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     binary_sensors = self._filter_by_model_config(
                         binary_sensors, model_config
                     )
+
+                # Apply condition-based filtering (e.g., dual_channel_meter == true)
+                # Get firmware_version for firmware filtering (separate from condition filtering)
+                firmware_version = device.get("firmware_version") or template.get(
+                    "firmware_version", "1.0.0"
+                )
+
+                # Filter using dynamic_config (automatically includes all template fields)
+                registers = self._filter_by_conditions(
+                    registers, dynamic_config, firmware_version
+                )
+                controls = self._filter_by_conditions(
+                    controls, dynamic_config, firmware_version
+                )
+                calculated = self._filter_by_conditions(
+                    calculated, dynamic_config, firmware_version
+                )
+                binary_sensors = self._filter_by_conditions(
+                    binary_sensors, dynamic_config, firmware_version
+                )
 
                 # Process entities with device-specific prefix
                 processed_registers = self._process_entities_with_prefix(
@@ -437,6 +511,14 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 for register in processed_controls:
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
+                    # Type field should come from template and never be changed
+                    if "type" not in register:
+                        _LOGGER.error(
+                            "Control %s (unique_id: %s) missing type field from template. This is a template error.",
+                            register.get("name", "unknown"),
+                            register.get("unique_id", "unknown"),
+                        )
+                        continue  # Skip this control as it's invalid
 
                     unique_id = register.get("unique_id", "").lower()
 
@@ -829,6 +911,49 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     _LOGGER.error("Template %s not found for device", template_name)
                     continue
 
+                # Build dynamic_config dict dynamically from template's dynamic_config section
+                template_dynamic_config = template.get("dynamic_config", {})
+                dynamic_config = {}
+
+                # 1. Load all available field names from template's dynamic_config section
+                for field_name in template_dynamic_config.keys():
+                    # Skip internal fields that are not user-configurable
+                    if field_name in [
+                        "valid_models",
+                        "firmware_version",
+                        "connection_type",
+                        "battery_slave_id",
+                    ]:
+                        continue
+
+                    # 2. Check device config first (most specific)
+                    if field_name in device:
+                        dynamic_config[field_name] = device[field_name]
+                    # 3. Check entry.data for backward compatibility
+                    elif field_name in self.entry.data:
+                        dynamic_config[field_name] = self.entry.data.get(field_name)
+                    # 4. Use default from template if available
+                    elif isinstance(template_dynamic_config[field_name], dict):
+                        default_value = template_dynamic_config[field_name].get(
+                            "default"
+                        )
+                        if default_value is not None:
+                            dynamic_config[field_name] = default_value
+
+                # Add model_config values (from valid_models)
+                dynamic_config.update(model_config)
+
+                # Add explicitly handled fields
+                for key in ["battery_config", "connection_type", "firmware_version"]:
+                    if key in device:
+                        dynamic_config[key] = device[key]
+                    elif key in self.entry.data:
+                        dynamic_config[key] = self.entry.data.get(key)
+
+                # Calculate battery_enabled from battery_config for condition filtering
+                battery_config = dynamic_config.get("battery_config", "none")
+                dynamic_config["battery_enabled"] = battery_config != "none"
+
                 # Extract calculated registers from template
                 calculated = template.get("calculated", [])
                 binary_sensors = template.get("binary_sensors", [])
@@ -854,6 +979,17 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     binary_sensors = self._filter_by_model_config(
                         binary_sensors, model_config
                     )
+
+                # Apply condition-based filtering (e.g., dual_channel_meter == true)
+                firmware_version = device.get("firmware_version") or template.get(
+                    "firmware_version", "1.0.0"
+                )
+                calculated = self._filter_by_conditions(
+                    calculated, dynamic_config, firmware_version
+                )
+                binary_sensors = self._filter_by_conditions(
+                    binary_sensors, dynamic_config, firmware_version
+                )
 
                 # Process entities with device-specific prefix
                 processed_calculated = self._process_entities_with_prefix(
@@ -1112,6 +1248,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
             for entity in entities:
                 processed_entity = entity.copy()
 
+                # entity.copy() preserves all fields including "type"
+
                 # Process unique_id
                 template_unique_id = entity.get("unique_id")
                 if template_unique_id:
@@ -1190,9 +1328,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         continue
 
                     # Check numeric pattern: base_name1, base_name2, base_name_1, base_name_2
+                    # Also check patterns like "max_current_phase_1" where phase is in the middle
                     numeric_patterns = [
                         rf"{base_name}(\d+)",  # mppt1, mppt2
-                        rf"{base_name}_(\d+)",  # mppt_1, mppt_2, module_1
+                        rf"{base_name}_(\d+)",  # mppt_1, mppt_2, module_1, phase_1
+                        rf"_{base_name}_(\d+)",  # max_current_phase_1, connector_phase_2
                     ]
 
                     for pattern in numeric_patterns:
@@ -1247,6 +1387,180 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
         except Exception as e:
             _LOGGER.error("Error filtering by model config: %s", str(e))
+            return entities
+
+    def _filter_by_conditions(
+        self,
+        entities: List[Dict[str, Any]],
+        dynamic_config: dict,
+        firmware_version: str,
+    ) -> List[Dict[str, Any]]:
+        """
+        Filter entities based on condition statements (e.g., dual_channel_meter == true).
+
+        This method dynamically handles ALL fields from the template's dynamic_config section.
+        No code changes needed when new fields are added to the template.
+
+        Args:
+            entities: List of entities to filter
+            dynamic_config: Dictionary containing all dynamic config values (automatically built from template)
+            firmware_version: Firmware version for firmware_min_version filtering
+
+        Returns:
+            Filtered list of entities
+        """
+        try:
+            import re
+
+            filtered_entities = []
+
+            for entity in entities:
+                sensor_name = entity.get("name", "") or ""
+                unique_id = entity.get("unique_id", "") or ""
+
+                # Check condition filter first
+                condition = entity.get("condition")
+                if condition:
+                    # Parse condition like "modules >= 5", "phases == 3", or "dual_channel_meter == true"
+                    if "==" in condition:
+                        try:
+                            parts = condition.split("==")
+                            if len(parts) == 2:
+                                variable_name = parts[0].strip()
+                                required_value_str = parts[1].strip()
+
+                                # Get actual value from dynamic_config
+                                actual_value = dynamic_config.get(variable_name)
+
+                                # Try to convert to bool first (for true/false)
+                                if required_value_str.lower() in ["true", "false"]:
+                                    required_value = (
+                                        required_value_str.lower() == "true"
+                                    )
+                                    actual_value = (
+                                        bool(actual_value)
+                                        if actual_value is not None
+                                        else False
+                                    )
+                                else:
+                                    # Try to convert to int, then string
+                                    try:
+                                        required_value = int(required_value_str)
+                                        actual_value = (
+                                            int(actual_value)
+                                            if actual_value is not None
+                                            else 0
+                                        )
+                                    except (ValueError, TypeError):
+                                        required_value = required_value_str
+                                        actual_value = (
+                                            str(actual_value)
+                                            if actual_value is not None
+                                            else ""
+                                        )
+
+                                _LOGGER.debug(
+                                    "Checking condition '%s' for entity %s: required=%s, actual=%s",
+                                    condition,
+                                    entity.get("name", "unknown"),
+                                    required_value,
+                                    actual_value,
+                                )
+
+                                if actual_value != required_value:
+                                    _LOGGER.debug(
+                                        "Excluding entity due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
+                                        condition,
+                                        entity.get("name", "unknown"),
+                                        entity.get("unique_id", "unknown"),
+                                        required_value,
+                                        actual_value,
+                                    )
+                                    continue  # Skip this entity
+                        except (ValueError, IndexError) as e:
+                            _LOGGER.warning(
+                                "Invalid condition '%s' for entity %s: %s",
+                                condition,
+                                entity.get("name", "unknown"),
+                                str(e),
+                            )
+                    elif ">=" in condition:
+                        try:
+                            parts = condition.split(">=")
+                            if len(parts) == 2:
+                                variable_name = parts[0].strip()
+                                required_value_str = parts[1].strip()
+
+                                # Get actual value from dynamic_config
+                                actual_value = dynamic_config.get(variable_name, 0)
+
+                                try:
+                                    required_value = int(required_value_str)
+                                    actual_value = (
+                                        int(actual_value)
+                                        if actual_value is not None
+                                        else 0
+                                    )
+
+                                    if actual_value < required_value:
+                                        _LOGGER.debug(
+                                            "Excluding entity due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
+                                            condition,
+                                            entity.get("name", "unknown"),
+                                            entity.get("unique_id", "unknown"),
+                                            required_value,
+                                            actual_value,
+                                        )
+                                        continue  # Skip this entity
+                                except (ValueError, TypeError):
+                                    _LOGGER.warning(
+                                        "Invalid condition '%s' for entity %s: cannot parse values",
+                                        condition,
+                                        entity.get("name", "unknown"),
+                                    )
+                        except (ValueError, IndexError) as e:
+                            _LOGGER.warning(
+                                "Invalid condition '%s' for entity %s: %s",
+                                condition,
+                                entity.get("name", "unknown"),
+                                str(e),
+                            )
+
+                # Check firmware_min_version filter
+                sensor_firmware_min = entity.get("firmware_min_version")
+                if sensor_firmware_min and firmware_version:
+                    try:
+                        from packaging import version
+
+                        current_ver = version.parse(firmware_version)
+                        min_ver = version.parse(sensor_firmware_min)
+                        if current_ver < min_ver:
+                            _LOGGER.debug(
+                                "Excluding entity due to firmware version: %s (unique_id: %s, requires: %s, current: %s)",
+                                entity.get("name", "unknown"),
+                                entity.get("unique_id", "unknown"),
+                                sensor_firmware_min,
+                                firmware_version,
+                            )
+                            continue  # Skip this entity
+                    except Exception:
+                        # If comparison fails, include the entity (better safe than sorry)
+                        pass
+
+                # Entity passed all filters
+                filtered_entities.append(entity)
+
+            if len(filtered_entities) != len(entities):
+                _LOGGER.debug(
+                    "Condition filtering: %d -> %d entities",
+                    len(entities),
+                    len(filtered_entities),
+                )
+
+            return filtered_entities
+
+        except Exception as e:
+            _LOGGER.error("Error filtering by conditions: %s", str(e))
             return entities  # Return unfiltered on error
 
     def _process_entities_with_dual_prefix(
@@ -1432,14 +1746,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     slave_ids,
                     slave_id,
                 )
-
-            _LOGGER.debug(
-                "Reading registers %d-%d (slave_id: %d, type: %s)",
-                range_obj.start_address,
-                range_obj.end_address,
-                slave_id,
-                register_type,
-            )
 
             # Read registers
             result = await self.hub.async_pb_call(
@@ -1790,6 +2096,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
             ]:
                 return
 
+            # Extract processed_value if firmware_value is a dictionary
+            if isinstance(firmware_value, dict):
+                firmware_value = firmware_value.get("processed_value")
+                if not firmware_value:
+                    return
+
             # Clean up firmware string (remove null bytes, strip whitespace)
             if isinstance(firmware_value, str):
                 firmware_value = firmware_value.replace("\x00", "").strip()
@@ -1824,11 +2136,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     device_registry.async_update_device(
                         device_entry.id,
                         sw_version=f"Firmware: {firmware_value}",
-                    )
-                    _LOGGER.info(
-                        "Updated device firmware version to %s for device %s",
-                        firmware_value,
-                        device_identifier,
                     )
                     self._firmware_updated = True
                     break

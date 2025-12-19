@@ -12,7 +12,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_device_info_dict, generate_entity_id
+from .device_utils import generate_entity_id
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -163,8 +163,9 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
         self._attr_device_info = DeviceInfo(**device_info)
 
         # Extract basic properties (already processed by coordinator)
+        # unique_id is already processed by coordinator with prefix via _process_entities_with_prefix
         self._name = register_config.get("name", "Unknown Binary Sensor")
-        self._unique_id = register_config.get("unique_id")
+        self._unique_id = register_config.get("unique_id", "unknown")
         self._address = register_config.get("address", 0)
         self._input_type = register_config.get("input_type", "holding")
         self._data_type = register_config.get("data_type", "uint16")

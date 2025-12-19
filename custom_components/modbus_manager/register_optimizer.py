@@ -144,18 +144,6 @@ class RegisterOptimizer:
             if current_range:
                 ranges.append(current_range)
 
-            _LOGGER.debug("Registers grouped into %d optimized ranges", len(ranges))
-            for i, range_obj in enumerate(ranges):
-                slave_id = range_obj.registers[0].get("slave_id", 1)
-                _LOGGER.debug(
-                    "Range %d: Address %d-%d (%d registers, slave_id: %d)",
-                    i,
-                    range_obj.start_address,
-                    range_obj.end_address,
-                    range_obj.register_count,
-                    slave_id,
-                )
-
             return ranges
 
         except Exception as e:
