@@ -1502,6 +1502,7 @@ sensors:
     scale: 0.1
     scan_interval: 600
 
+# Power consumed by loads
   - name: Load power
     unique_id: load_power
     address: 13007 # reg 13008
@@ -1515,6 +1516,7 @@ sensors:
     scale: 1
     scan_interval: 10
 
+# Power delivered by the inverter to the grid
   - name: Export power raw
     unique_id: export_power_raw
     address: 13009 # reg 13010
@@ -2850,6 +2852,105 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     group: "battery_power_discharging"
+
+  # HA Energy Dashboard compatible sensors
+  # These sensors follow HA Energy Dashboard convention:
+  # - Positive values = consumption/discharging/import
+  # - Negative values = generation/charging/export
+  # Battery Power Sensors for HA Energy Dashboard
+  # Note: battery_power is already in the correct format:
+  # - Negative when charging (battery receives power)
+  # - Positive when discharging (battery provides power)
+  # This matches HA Energy Dashboard convention exactly
+
+  - name: "Battery charging power signed"
+    unique_id: "battery_charging_power_signed"
+    type: "sensor"
+    availability: "{{ states('sensor.{PREFIX}_battery_power') not in ['unknown','unavailable'] }}"
+    state: "{{ states('sensor.{PREFIX}_battery_power')|int * -1 }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "battery_power_energy_dashboard"
+    # Note: battery_power is negative when charging, so we multiply by -1 to get positive when charging
+    # This is useful for display purposes (showing positive charging power)
+
+  - name: "Battery discharging power signed"
+    unique_id: "battery_discharging_power_signed"
+    type: "sensor"
+    availability: "{{ states('sensor.{PREFIX}_battery_power') not in ['unknown','unavailable'] }}"
+    state: "{{ states('sensor.{PREFIX}_battery_power')|int }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "battery_power_energy_dashboard"
+    # Note: battery_power is positive when discharging, which matches HA Energy Dashboard convention
+    # Use this sensor for the HA energy dashboard.
+    # HA Energy Dashboard configuration description:
+    # "Pick a sensor which measures the electricity flowing into and out of the battery in either of GW, kW, MW, mW, TW, W.
+    # Positive values indicate discharging the battery, negative values indicate charging the battery."
+    # IMPORTANT: For HA Energy Dashboard, use sensor.{PREFIX}_battery_power directly (it already has the correct sign)
+
+  # Grid Power Sensors for HA Energy Dashboard
+  # Note: export_power_raw format:
+  # - Positive when exporting to grid (generation)
+  # - Negative when importing from grid (consumption)
+  # For HA Energy Dashboard, we need:
+  # - Negative when exporting (generation)
+  # - Positive when importing (consumption)
+  # So we need to invert the sign of export_power_raw
+
+  - name: "Grid power signed"
+    unique_id: "grid_power_signed"
+    type: "sensor"
+    availability: "{{ states('sensor.{PREFIX}_export_power_raw') not in ['unknown','unavailable'] }}"
+    state: "{{ states('sensor.{PREFIX}_export_power_raw')|int * -1 }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "grid_power_energy_dashboard"
+    # Note: export_power_raw is positive when exporting, so we multiply by -1
+    # Result: Negative when exporting (generation), Positive when importing (consumption)
+    # IMPORTANT: Use this sensor for HA Energy Dashboard grid power
+    # HA Energy Dashboard: Positive = consumption (import), Negative = generation (export)
+
+  - name: "Grid export power signed"
+    unique_id: "grid_export_power_signed"
+    type: "sensor"
+    availability: "{{ states('sensor.{PREFIX}_export_power_raw') not in ['unknown','unavailable'] }}"
+    state: >-
+      {% set export_power = states('sensor.{PREFIX}_export_power_raw')|int %}
+      {% if export_power > 0 %}
+        {{ export_power * -1 }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "grid_power_energy_dashboard"
+    # Note: export_power_raw is positive when exporting, so we multiply by -1 for HA Energy Dashboard
+    # Negative values = export to grid (generation)
+    # This shows only export power as negative values
+
+  - name: "Grid import power signed"
+    unique_id: "grid_import_power_signed"
+    type: "sensor"
+    availability: "{{ states('sensor.{PREFIX}_export_power_raw') not in ['unknown','unavailable'] }}"
+    state: >-
+      {% set export_power = states('sensor.{PREFIX}_export_power_raw')|int %}
+      {% if export_power < 0 %}
+        {{ export_power * -1 }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "grid_power_energy_dashboard"
+    # Note: export_power_raw is negative when importing, so we multiply by -1 to get positive
+    # Positive values = import from grid (consumption)
+    # This shows only import power as positive values
 
   ## some additional calculated sensors ideas
   - name: "Inverter Status Display"

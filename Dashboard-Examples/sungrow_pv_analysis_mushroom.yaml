@@ -1,0 +1,528 @@
+title: Sungrow PV Analysis (Mushroom)
+path: pv-analysis-mushroom
+icon: mdi:solar-power
+panel: false
+type: dashboard
+
+# IMPORTANT: Replace {PREFIX} with your actual device prefix (e.g., SG)
+# Example: sensor.{PREFIX}_total_dc_power becomes sensor.SG_total_dc_power
+# This version uses Mushroom Cards with the new Sections layout
+# Requires: Mushroom Cards (HACS) - https://github.com/piitaya/lovelace-mushroom
+
+views:
+  - title: PV Overview
+    path: overview
+    icon: mdi:view-dashboard
+    type: sections
+    sections:
+      - title: PV Generation
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_total_dc_power
+            name: Total DC Power
+            icon: mdi:lightning-bolt
+            icon_color: |
+              [[[
+                const power = entity.state;
+                if (power > 5000) return 'green';
+                if (power > 2000) return 'orange';
+                return 'blue';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            fill_container: true
+            primary_info: state
+            secondary_info: last-updated
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_daily_pv_generation
+            name: Daily PV Generation
+            icon: mdi:solar-power
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_total_pv_generation
+            name: Total PV Generation
+            icon: mdi:solar-power
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_inverter_temperature
+            name: Inverter Temperature
+            icon: mdi:thermometer
+            icon_color: |
+              [[[
+                const temp = entity.state;
+                if (temp > 60) return 'red';
+                if (temp > 50) return 'orange';
+                return 'blue';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+      - title: MPPT Trackers
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt1_voltage
+            name: MPPT1 Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt1_current
+            name: MPPT1 Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt2_voltage
+            name: MPPT2 Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt2_current
+            name: MPPT2 Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt3_voltage
+            name: MPPT3 Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt3_current
+            name: MPPT3 Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt4_voltage
+            name: MPPT4 Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt4_current
+            name: MPPT4 Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+      - title: AC Output
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_a_voltage
+            name: Phase A Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_a_current
+            name: Phase A Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_a_power
+            name: Phase A Power
+            icon: mdi:flash
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_b_voltage
+            name: Phase B Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_b_current
+            name: Phase B Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_b_power
+            name: Phase B Power
+            icon: mdi:flash
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_c_voltage
+            name: Phase C Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_c_current
+            name: Phase C Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_phase_c_power
+            name: Phase C Power
+            icon: mdi:flash
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+      - title: PV Generation History
+        cards:
+          - type: history-graph
+            title: PV Generation (24h)
+            entities:
+              - entity: sensor.{PREFIX}_total_dc_power
+                name: Total DC Power
+              - entity: sensor.{PREFIX}_daily_pv_generation
+                name: Daily PV Generation
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: history-graph
+            title: Inverter Temperature (24h)
+            entities:
+              - entity: sensor.{PREFIX}_inverter_temperature
+                name: Inverter Temperature
+            hours_to_show: 24
+            refresh_interval: 60
+
+  - title: MPPT Analysis
+    path: mppt
+    icon: mdi:chart-line
+    type: sections
+    sections:
+      - title: MPPT Voltages
+        cards:
+          - type: history-graph
+            title: MPPT Voltages (24h)
+            entities:
+              - entity: sensor.{PREFIX}_mppt1_voltage
+                name: MPPT1 Voltage
+              - entity: sensor.{PREFIX}_mppt2_voltage
+                name: MPPT2 Voltage
+              - entity: sensor.{PREFIX}_mppt3_voltage
+                name: MPPT3 Voltage
+              - entity: sensor.{PREFIX}_mppt4_voltage
+                name: MPPT4 Voltage
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt1_voltage
+            name: MPPT1 Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt2_voltage
+            name: MPPT2 Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt3_voltage
+            name: MPPT3 Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt4_voltage
+            name: MPPT4 Voltage
+            icon: mdi:lightning-bolt
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+      - title: MPPT Currents
+        cards:
+          - type: history-graph
+            title: MPPT Currents (24h)
+            entities:
+              - entity: sensor.{PREFIX}_mppt1_current
+                name: MPPT1 Current
+              - entity: sensor.{PREFIX}_mppt2_current
+                name: MPPT2 Current
+              - entity: sensor.{PREFIX}_mppt3_current
+                name: MPPT3 Current
+              - entity: sensor.{PREFIX}_mppt4_current
+                name: MPPT4 Current
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt1_current
+            name: MPPT1 Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt2_current
+            name: MPPT2 Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt3_current
+            name: MPPT3 Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt4_current
+            name: MPPT4 Current
+            icon: mdi:current-ac
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+      - title: MPPT Power Analysis
+        cards:
+          - type: statistics-graph
+            title: MPPT Voltage Statistics (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_mppt1_voltage
+                name: MPPT1 Voltage
+              - entity: sensor.{PREFIX}_mppt2_voltage
+                name: MPPT2 Voltage
+            days_to_show: 30
+            chart_type: line
+            stat_types:
+              - min
+              - max
+              - mean
+
+          - type: statistics-graph
+            title: MPPT Current Statistics (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_mppt1_current
+                name: MPPT1 Current
+              - entity: sensor.{PREFIX}_mppt2_current
+                name: MPPT2 Current
+            days_to_show: 30
+            chart_type: line
+            stat_types:
+              - min
+              - max
+              - mean
+
+  - title: Statistics
+    path: statistics
+    icon: mdi:chart-box-outline
+    type: sections
+    sections:
+      - title: PV Generation Statistics
+        cards:
+          - type: statistics-graph
+            title: Daily PV Generation (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_daily_pv_generation
+                name: Daily PV Generation
+            days_to_show: 30
+            chart_type: bar
+            stat_types:
+              - state
+
+          - type: statistics-graph
+            title: Total PV Generation Statistics (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_total_pv_generation
+                name: Total PV Generation
+            days_to_show: 30
+            chart_type: line
+            stat_types:
+              - min
+              - max
+              - mean
+
+          - type: history-graph
+            title: PV Generation Trend (7 days)
+            entities:
+              - entity: sensor.{PREFIX}_daily_pv_generation
+                name: Daily PV Generation
+            hours_to_show: 168
+            refresh_interval: 3600
+
+      - title: Power Statistics
+        cards:
+          - type: statistics-graph
+            title: Total DC Power Statistics (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_total_dc_power
+                name: Total DC Power
+            days_to_show: 30
+            chart_type: line
+            stat_types:
+              - min
+              - max
+              - mean
+
+          - type: history-graph
+            title: Power Distribution (24h)
+            entities:
+              - entity: sensor.{PREFIX}_total_dc_power
+                name: Total DC Power
+              - entity: sensor.{PREFIX}_phase_a_power
+                name: Phase A Power
+              - entity: sensor.{PREFIX}_phase_b_power
+                name: Phase B Power
+              - entity: sensor.{PREFIX}_phase_c_power
+                name: Phase C Power
+            hours_to_show: 24
+            refresh_interval: 60
+
+      - title: Temperature Statistics
+        cards:
+          - type: statistics-graph
+            title: Inverter Temperature Statistics (30 days)
+            entities:
+              - entity: sensor.{PREFIX}_inverter_temperature
+                name: Inverter Temperature
+            days_to_show: 30
+            chart_type: line
+            stat_types:
+              - min
+              - max
+              - mean
+
+          - type: history-graph
+            title: Inverter Temperature Trend (7 days)
+            entities:
+              - entity: sensor.{PREFIX}_inverter_temperature
+                name: Inverter Temperature
+            hours_to_show: 168
+            refresh_interval: 3600

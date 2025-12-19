@@ -4,13 +4,30 @@ This folder contains example dashboard configurations for the Modbus Manager int
 
 ## Dashboard Files
 
-### sungrow_sbr_battery_analysis.yaml
+### Battery Dashboards
 
-The full-featured dashboard with custom cards (Mushroom Cards and ApexCharts Card) for a modern, visually appealing interface.
+#### sungrow_sbr_battery_analysis_standard.yaml
+Standard Home Assistant cards version with new Sections layout. Uses only built-in HA cards.
 
-### sungrow_sbr_battery_analysis_simple.yaml
+#### sungrow_sbr_battery_analysis_mushroom.yaml
+Mushroom Cards version with new Sections layout. Requires Mushroom Cards (HACS).
 
-A simplified version using only built-in Home Assistant cards. No custom cards required - works out of the box!
+#### sungrow_sbr_battery_analysis_simple.yaml
+Simplified version using only built-in Home Assistant cards. No custom cards required - works out of the box!
+
+#### sungrow_sbr_battery_analysis.yaml
+Legacy version with custom cards (Mushroom Cards and ApexCharts Card) for a modern, visually appealing interface.
+
+### PV Dashboards
+
+#### sungrow_pv_analysis_standard.yaml
+Standard Home Assistant cards version with new Sections layout. Uses only built-in HA cards for PV monitoring.
+
+#### sungrow_pv_analysis_mushroom.yaml
+Mushroom Cards version with new Sections layout. Requires Mushroom Cards (HACS).
+
+#### sungrow_pv_analysis_simple.yaml
+Simplified version using only built-in Home Assistant cards. No custom cards required - works out of the box!
 
 ## Sungrow SBR Battery Analysis Dashboard
 
@@ -89,6 +106,61 @@ You can customize the dashboard by:
 
 - The dashboard assumes you have 8 modules configured. If you have fewer modules, some entities may show as "unavailable" - this is normal.
 - All calculated entities use 5 decimal places precision for accurate balancing analysis.
+- Historical charts require the entities to have history enabled in Home Assistant.
+
+## Sungrow PV Analysis Dashboard
+
+The PV dashboards provide comprehensive monitoring and analysis for Sungrow PV inverter systems.
+
+### Features
+
+- **PV Overview**: Main status indicators (Total DC Power, Daily/Total PV Generation, Inverter Temperature)
+- **MPPT Analysis**: Individual MPPT tracker voltages, currents, and power analysis
+- **AC Output**: Phase voltages, currents, and power for 3-phase systems
+- **Statistics**: Long-term generation statistics and trends
+
+### Installation
+
+1. Copy the dashboard YAML file to your Home Assistant configuration directory
+2. **Important**: Replace all instances of `{PREFIX}` with your actual device prefix (e.g., `SG`)
+   - Example: `sensor.{PREFIX}_total_dc_power` → `sensor.SG_total_dc_power`
+3. Import the dashboard in Home Assistant:
+   - Go to **Settings** → **Dashboards** → **+ New Dashboard**
+   - Choose **Import from YAML**
+   - Paste the content of the YAML file (after replacing `{PREFIX}`)
+
+### Required Custom Cards (Mushroom Version Only)
+
+The `sungrow_pv_analysis_mushroom.yaml` dashboard uses:
+- **Mushroom Cards** (`custom:mushroom-entity-card`)
+  - HACS Repository: `https://github.com/piitaya/lovelace-mushroom`
+
+**Note**: The `sungrow_pv_analysis_standard.yaml` and `sungrow_pv_analysis_simple.yaml` versions use only built-in Home Assistant cards and require no additional installations.
+
+### Dashboard Structure
+
+The PV dashboard is organized into 3 views:
+
+1. **PV Overview** (`/overview`)
+   - PV generation status cards
+   - MPPT tracker information
+   - AC output details
+   - Historical generation charts
+
+2. **MPPT Analysis** (`/mppt`)
+   - MPPT voltage and current trends
+   - Individual MPPT tracker details
+   - Long-term MPPT statistics
+
+3. **Statistics** (`/statistics`)
+   - Daily and total PV generation statistics
+   - Power distribution analysis
+   - Inverter temperature trends
+
+### Notes
+
+- The dashboard supports up to 4 MPPT trackers. If you have fewer trackers, some entities may show as "unavailable" - this is normal.
+- For single-phase systems, only Phase A entities will be populated.
 - Historical charts require the entities to have history enabled in Home Assistant.
 
 ### Support
