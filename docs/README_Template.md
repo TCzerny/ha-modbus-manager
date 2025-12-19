@@ -396,9 +396,17 @@ calculated:
 - **`state`**: Jinja2 template expression (use `{PREFIX}` placeholder)
 - **`unit_of_measurement`**: Unit for sensor type
 - **`device_class`**: Home Assistant device class
-- **`state_class`**: State class for sensor type
+- **`state_class`**: State class for sensor type (should not be used for string values)
+- **`precision`**: Decimal places for display (optional, only for numeric values)
 - **`icon`**: Material Design Icon name
 - **`group`**: Group identifier
+- **`availability`**: Optional Jinja2 template for entity availability
+
+### Important Notes
+
+- **String Values**: If a calculated sensor returns a string value (e.g., "Cell Position 520 (3.3500 V)"), do NOT use `state_class: measurement` as this will cause validation errors. The system automatically removes `suggested_display_precision` for string values.
+- **Numeric Values**: For numeric calculated sensors, you can optionally specify `precision` to control decimal places. If not specified, defaults to 5 decimal places for calculated sensors.
+- **Availability**: Use the `availability` template to control when the sensor is available based on other sensor states.
 
 ### Template Placeholders
 
@@ -659,3 +667,9 @@ sensors:
 ---
 
 **Last Updated**: January 2025
+
+### Recent Improvements
+
+- **String Value Handling**: Calculated sensors that return string values automatically have `suggested_display_precision` removed to prevent validation errors
+- **Precision Control**: Calculated sensors support optional `precision` field for controlling decimal places (defaults to 5 if not specified)
+- **Availability Templates**: Enhanced support for availability templates in calculated sensors

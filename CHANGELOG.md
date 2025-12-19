@@ -9,6 +9,52 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### ✨ Added
 
+#### Home Assistant Energy Dashboard Compatible Sensors
+- **New Calculated Sensors for HA Energy Dashboard**: Added signed power sensors following HA Energy Dashboard convention
+  - `battery_charging_power_signed` - Positive when charging (for display purposes)
+  - `battery_discharging_power_signed` - Positive when discharging (matches HA convention)
+  - `grid_power_signed` - Negative when exporting (generation), positive when importing (consumption)
+  - `grid_export_power_signed` - Only export power as negative values
+  - `grid_import_power_signed` - Only import power as positive values
+  - Convention: Positive = consumption/discharging/import, Negative = generation/charging/export
+
+#### PV Analysis & Performance Metrics
+- **New Calculated Sensors for PV Inverter Analysis**:
+  - `self_consumption_rate` - Percentage of PV generation consumed directly (not exported to grid)
+  - `autarky_rate` - Percentage of load supplied by PV/Battery (self-sufficiency)
+  - `grid_dependency` - Percentage of load that depends on grid (inverse of autarky)
+  - `dc_to_ac_efficiency` - Inverter efficiency (AC output / DC input)
+  - `pv_capacity_factor` - Current PV power as percentage of inverter rated capacity
+  - `pv_generation_hours_today` - Equivalent generation hours at current power level
+
+#### Energy Flow Analysis Sensors
+- **New Energy Flow Breakdown Sensors**:
+  - `pv_to_load_direct` - PV power going directly to load (without battery)
+  - `pv_to_battery` - PV power charging battery
+  - `battery_to_load` - Battery power going to load (discharging)
+  - `grid_to_load` - Grid power going to load (importing)
+  - `net_consumption` - Net consumption after PV and battery supply
+
+#### MPPT Performance Analysis
+- **New MPPT Analysis Sensors**:
+  - `mppt_power_deviation` - Maximum deviation from average MPPT power (imbalance indicator)
+  - `mppt_utilization` - Percentage of DC power from MPPT trackers (should be close to 100%)
+  - `mppt4_power` - Power calculation for MPPT4 tracker
+
+#### Battery Temperature Module Info Sensors
+- **New Human-Readable Temperature Sensors** (Sungrow SBR Battery):
+  - `Battery 1 Max Temperature Module Info` - Shows "Module Position X (YY.Y °C)"
+  - `Battery 1 Min Temperature Module Info` - Shows "Module Position X (YY.Y °C)"
+  - Similar format to existing voltage cell info sensors
+
+#### Dashboard Examples
+- **New PV Analysis Dashboards**:
+  - `sungrow_pv_analysis_standard.yaml` - Standard HA cards with new Sections layout
+  - `sungrow_pv_analysis_mushroom.yaml` - Mushroom cards with new Sections layout
+  - `sungrow_pv_analysis_simple.yaml` - Simplified version with built-in HA cards only
+  - All dashboards include new calculated sensors for PV analysis
+  - Use new Home Assistant Sections layout (replaces HStack/VStack)
+
 #### Dual-Channel Meter Support
 - **New Dynamic Config Option**: `dual_channel_meter` for Sungrow SHx template
   - Allows users to enable/disable Meter Channel 2 sensors
@@ -31,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🔧 Changed
 
-#### Sungrow SHx Dynamic Template v1.2.4
+#### Sungrow SHx Dynamic Template v1.2.0
 - **Battery Power Register Update**: Changed to recommended register (Protocol V1.1.11)
   - Old: Address 13021 (reg 13022, int16)
   - New: Address 5213 (reg 5214-5215, int32, swap: word)
@@ -66,6 +112,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Warnings added to battery power controls
   - Max values set to lowest safe defaults
 
+- **Register Updates for SHxRT Models**:
+  - Updated various register addresses for improved compatibility with SHxRT series
+  - Enhanced register mapping accuracy
+
 #### Device Firmware Display
 - **Firmware Priority**: Device firmware now shows register value if available, otherwise config value
   - Reads firmware from `inverter_firmware_info` register (13250)
@@ -73,6 +123,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Falls back to firmware version from config flow
 
 ### 🐛 Fixed
+
+- **Calculated Sensors with String Values**: Fixed `ValueError` for calculated sensors returning string values
+  - Removed `suggested_display_precision` automatically for string sensor values
+  - Prevents validation errors when sensors return formatted strings (e.g., "Cell Position 520 (3.3500 V)")
+  - System now dynamically removes precision attribute for non-numeric values
+  - Fixes issue where sensors with `state_class: measurement` and string values caused errors
+
+- **Cell Info Sensor Template Logic**: Fixed template logic for Cell Info sensors to handle sensor states correctly
+  - Improved handling of `unknown` and `unavailable` states
+  - Better fallback logic for missing values
 
 - **Firmware Version Filtering**: Fixed missing firmware version filtering in config flow
   - Sensors with `firmware_min_version` are now properly excluded during setup
@@ -88,9 +148,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 📚 Documentation
 
-- Updated CHANGELOG.md with all changes since v0.1.3
-- Added documentation for dual-channel meter configuration
-- Updated Sungrow template documentation with new registers
+- **Updated Template Documentation**:
+  - Updated `README_sungrow_shx_dynamic.md` with all new calculated sensors
+  - Added sections for PV Analysis, Energy Flow Analysis, and HA Energy Dashboard compatibility
+  - Updated `README_Template.md` with notes on string value handling and precision control
+  - Added documentation for new dashboard examples
+
+- **Dashboard Examples**:
+  - Updated `Dashboard-Examples/README.md` with PV analysis dashboard documentation
+  - Added comprehensive documentation for all dashboard examples (battery and PV)
+  - Documented new HA Sections layout usage
+
+- **General Documentation**:
+  - Updated CHANGELOG.md with all changes since v0.1.3
+  - Added documentation for dual-channel meter configuration
+  - Updated Sungrow template documentation with new registers
+  - Added `BATTERY_CELL_POSITION.md` documentation for battery cell position sensors
 
 ---
 

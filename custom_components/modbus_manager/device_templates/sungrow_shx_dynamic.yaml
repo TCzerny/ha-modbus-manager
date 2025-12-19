@@ -2952,6 +2952,414 @@ calculated:
     # Positive values = import from grid (consumption)
     # This shows only import power as positive values
 
+  # PV Analysis & Performance Metrics
+  # Self-Consumption and Autarky Calculations
+  - name: "Self-Consumption Rate"
+    unique_id: "self_consumption_rate"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      }}
+    state: >-
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set export = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% if pv > 0 %}
+        {% set exported = export if export > 0 else 0 %}
+        {% set self_consumed = pv - exported %}
+        {{ (self_consumed / pv * 100) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_analysis"
+    # Percentage of PV generation that is consumed directly (not exported to grid)
+
+  - name: "Autarky Rate"
+    unique_id: "autarky_rate"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_load_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      }}
+    state: >-
+      {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
+      {% set grid = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% set import_power = (grid * -1) if grid < 0 else 0 %}
+      {% if load > 0 %}
+        {% set self_supplied = load - import_power %}
+        {{ (self_supplied / load * 100) | round(1) }}
+      {% else %}
+        100
+      {% endif %}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_analysis"
+    # Percentage of load that is supplied by PV/Battery (self-sufficiency)
+
+  # DC to AC Conversion Efficiency
+  - name: "DC to AC Efficiency"
+    unique_id: "dc_to_ac_efficiency"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_phase_a_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_phase_b_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_phase_c_power', 'unavailable')
+      }}
+    state: >-
+      {% set dc_power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set ac_power = (states('sensor.{PREFIX}_phase_a_power') | default(0) | float) + (states('sensor.{PREFIX}_phase_b_power') | default(0) | float) + (states('sensor.{PREFIX}_phase_c_power') | default(0) | float) %}
+      {% if dc_power > 0 %}
+        {{ (ac_power / dc_power * 100) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_efficiency"
+    # Inverter efficiency: AC output power / DC input power
+
+  # MPPT Power Calculations (Voltage * Current for each MPPT)
+  - name: "MPPT1 Power"
+    unique_id: "mppt1_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt1_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt1_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt1_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt1_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT2 Power"
+    unique_id: "mppt2_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt2_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt2_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt2_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT3 Power"
+    unique_id: "mppt3_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt3_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt3_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt3_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt3_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "MPPT4 Power"
+    unique_id: "mppt4_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt4_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt4_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_mppt4_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt4_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  # Total MPPT Power (sum of all MPPT trackers)
+  - name: "Total MPPT Power"
+    unique_id: "total_mppt_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt1_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt2_power', 'unavailable')
+      }}
+    state: >-
+      {{
+        (states('sensor.{PREFIX}_mppt1_power') | default(0) | float) +
+        (states('sensor.{PREFIX}_mppt2_power') | default(0) | float) +
+        (states('sensor.{PREFIX}_mppt3_power') | default(0) | float) +
+        (states('sensor.{PREFIX}_mppt4_power') | default(0) | float)
+      }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+    # Sum of all MPPT tracker powers (should match total_dc_power)
+
+  # Energy Flow Analysis
+  - name: "PV to Load Direct"
+    unique_id: "pv_to_load_direct"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
+      }}
+    state: >-
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
+      {% set export = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% set battery = states('sensor.{PREFIX}_battery_power') | default(0) | float %}
+      {% set exported = export if export > 0 else 0 %}
+      {% set charging = battery if battery < 0 else 0 %}
+      {% set pv_available = pv - exported - (charging | abs) %}
+      {% if pv_available > 0 and load > 0 %}
+        {{ [pv_available, load] | min }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_energy_flow"
+    # PV power going directly to load (without battery)
+
+  - name: "PV to Battery"
+    unique_id: "pv_to_battery"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
+      }}
+    state: >-
+      {% set battery = states('sensor.{PREFIX}_battery_power') | default(0) | float %}
+      {% if battery < 0 %}
+        {{ (battery | abs) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_energy_flow"
+    # PV power going to battery (charging)
+
+  - name: "Battery to Load"
+    unique_id: "battery_to_load"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
+      }}
+    state: >-
+      {% set battery = states('sensor.{PREFIX}_battery_power') | default(0) | float %}
+      {% if battery > 0 %}
+        {{ battery }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_energy_flow"
+    # Battery power going to load (discharging)
+
+  - name: "Grid to Load"
+    unique_id: "grid_to_load"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      }}
+    state: >-
+      {% set grid = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% if grid < 0 %}
+        {{ (grid | abs) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_energy_flow"
+    # Grid power going to load (importing)
+
+  - name: "Net Consumption"
+    unique_id: "net_consumption"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_load_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
+      }}
+    state: >-
+      {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set battery = states('sensor.{PREFIX}_battery_power') | default(0) | float %}
+      {% set battery_supply = battery if battery > 0 else 0 %}
+      {% set net = load - pv - battery_supply %}
+      {{ net if net > 0 else 0 }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_analysis"
+    # Net consumption after PV and battery supply (what needs to come from grid)
+
+  - name: "Grid Dependency"
+    unique_id: "grid_dependency"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_load_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      }}
+    state: >-
+      {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
+      {% set grid = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% set import_power = (grid * -1) if grid < 0 else 0 %}
+      {% if load > 0 %}
+        {{ (import_power / load * 100) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_analysis"
+    # Percentage of load that depends on grid (inverse of autarky)
+
+  # MPPT Performance Analysis
+  - name: "MPPT Power Deviation"
+    unique_id: "mppt_power_deviation"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_mppt1_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_mppt2_power', 'unavailable')
+      }}
+    state: >-
+      {% set m1 = states('sensor.{PREFIX}_mppt1_power') | default(0) | float %}
+      {% set m2 = states('sensor.{PREFIX}_mppt2_power') | default(0) | float %}
+      {% set m3 = states('sensor.{PREFIX}_mppt3_power') | default(0) | float %}
+      {% set m4 = states('sensor.{PREFIX}_mppt4_power') | default(0) | float %}
+      {% set powers = [m1, m2, m3, m4] | select('>', 0) | list %}
+      {% if powers | length > 0 %}
+        {% set avg = (powers | sum) / (powers | length) %}
+        {% set max_dev = 0 %}
+        {% for p in powers %}
+          {% set dev = (p - avg) | abs %}
+          {% if dev > max_dev %}
+            {% set max_dev = dev %}
+          {% endif %}
+        {% endfor %}
+        {{ max_dev | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_analysis"
+    # Maximum deviation from average MPPT power (indicates imbalance)
+
+  - name: "MPPT Utilization"
+    unique_id: "mppt_utilization"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_mppt_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      }}
+    state: >-
+      {% set mppt_sum = states('sensor.{PREFIX}_total_mppt_power') | default(0) | float %}
+      {% set dc_power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% if mppt_sum > 0 and dc_power > 0 %}
+        {{ (mppt_sum / dc_power * 100) | round(1) }}
+      {% elif dc_power > 0 %}
+        100
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_mppt_analysis"
+    # How much of total DC power comes from MPPT trackers (should be close to 100%)
+
+  # PV System Performance Metrics
+  - name: "PV Capacity Factor"
+    unique_id: "pv_capacity_factor"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      }}
+    state: >-
+      {% set current_power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set device_type = states('sensor.{PREFIX}_sungrow_device_type_code') | default('') %}
+      {% set max_power = 5000 %}
+      {% if 'SH3.0' in device_type or 'SH3K' in device_type %}
+        {% set max_power = 3000 %}
+      {% elif 'SH3.6' in device_type %}
+        {% set max_power = 3600 %}
+      {% elif 'SH4.0' in device_type %}
+        {% set max_power = 4000 %}
+      {% elif 'SH5.0' in device_type %}
+        {% set max_power = 5000 %}
+      {% elif 'SH6.0' in device_type %}
+        {% set max_power = 6000 %}
+      {% elif 'SH8.0' in device_type %}
+        {% set max_power = 8000 %}
+      {% elif 'SH10' in device_type %}
+        {% set max_power = 10000 %}
+      {% endif %}
+      {% if max_power > 0 %}
+        {{ (current_power / max_power * 100) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    group: "PV_performance"
+    # Current PV power as percentage of inverter rated capacity
+
+  - name: "PV Generation Hours Today"
+    unique_id: "pv_generation_hours_today"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_daily_pv_generation', 'unavailable')
+      and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      }}
+    state: >-
+      {% set daily_gen = states('sensor.{PREFIX}_daily_pv_generation') | default(0) | float %}
+      {% set current_power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set avg_power = current_power %}
+      {% if avg_power > 0 %}
+        {{ (daily_gen / avg_power) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "h"
+    device_class: "duration"
+    state_class: "measurement"
+    group: "PV_performance"
+    # Equivalent generation hours at current power level (approximation)
+
   ## some additional calculated sensors ideas
   - name: "Inverter Status Display"
     unique_id: "inverter_status_display"

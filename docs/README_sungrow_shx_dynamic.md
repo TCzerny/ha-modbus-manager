@@ -135,9 +135,9 @@ The template supports **all 36** following Sungrow SHx models:
 ## 🧮 Calculated Sensors
 
 ### ⚡ Power Calculations
-- **MPPT Power** - Calculated power per MPPT
-- **Total MPPT Power** - Total MPPT power
-- **Phase Power** - Calculated power per phase
+- **MPPT Power** - Calculated power per MPPT (MPPT1-4)
+- **Total MPPT Power** - Total MPPT power (sum of all MPPT trackers)
+- **Phase Power** - Calculated power per phase (A, B, C)
 - **Total Phase Power** - Total phase power
 
 ### 🔄 Grid Power Calculations
@@ -153,11 +153,45 @@ The template supports **all 36** following Sungrow SHx models:
 ### 📊 Efficiency Calculations
 - **Solar to Grid Efficiency** - PV to grid efficiency
 - **Battery to Load Efficiency** - Battery to load efficiency
+- **DC to AC Efficiency** - Inverter efficiency (AC output / DC input)
 - **Power Balance** - System power balance
 
 ### 🛡️ Meter Power Handling
 - **Meter Active Power** - With 0x7FFFFFFF error handling
 - **Meter Phase Power** - Phase-specific with error handling
+
+### 🏠 Home Assistant Energy Dashboard Compatible Sensors
+These sensors follow the HA Energy Dashboard convention: **positive values for consumption/discharging/import, negative values for generation/charging/export**.
+
+- **Battery Charging Power Signed** - Positive when charging (for display purposes)
+- **Battery Discharging Power Signed** - Positive when discharging (matches HA convention)
+- **Grid Power Signed** - Negative when exporting (generation), positive when importing (consumption)
+- **Grid Export Power Signed** - Only export power as negative values
+- **Grid Import Power Signed** - Only import power as positive values
+
+**Usage:** Use `sensor.{PREFIX}_battery_power` directly for HA Energy Dashboard battery sensor (already has correct sign). Use `sensor.{PREFIX}_grid_power_signed` for grid power in Energy Dashboard.
+
+### 📈 PV Analysis & Performance Metrics
+
+#### Self-Consumption & Autarky
+- **Self-Consumption Rate** - Percentage of PV generation consumed directly (not exported to grid)
+- **Autarky Rate** - Percentage of load supplied by PV/Battery (self-sufficiency)
+- **Grid Dependency** - Percentage of load that depends on grid (inverse of autarky)
+
+#### Energy Flow Analysis
+- **PV to Load Direct** - PV power going directly to load (without battery)
+- **PV to Battery** - PV power going to battery (charging)
+- **Battery to Load** - Battery power going to load (discharging)
+- **Grid to Load** - Grid power going to load (importing)
+- **Net Consumption** - Net consumption after PV and battery supply
+
+#### MPPT Performance Analysis
+- **MPPT Power Deviation** - Maximum deviation from average MPPT power (indicates imbalance)
+- **MPPT Utilization** - How much of total DC power comes from MPPT trackers (should be close to 100%)
+
+#### PV System Performance
+- **PV Capacity Factor** - Current PV power as percentage of inverter rated capacity
+- **PV Generation Hours Today** - Equivalent generation hours at current power level (approximation)
 
 ## 📋 Complete Entity Reference
 
@@ -308,40 +342,96 @@ This section contains all entities that will be created by this template, includ
 
 ### Calculated Sensors
 
+#### Power Calculations
 | Address | Name | Unique ID |
 |---------|------|-----------|
 | - | MPPT1 Power | mppt1_power |
 | - | MPPT2 Power | mppt2_power |
 | - | MPPT3 Power | mppt3_power |
+| - | MPPT4 Power | mppt4_power |
 | - | Total MPPT Power | total_mppt_power |
+| - | Phase A Power | phase_a_power |
+| - | Phase B Power | phase_b_power |
+| - | Phase C Power | phase_c_power |
+| - | Total Phase Power | total_phase_power |
+
+#### Grid Power Calculations
+| Address | Name | Unique ID |
+|---------|------|-----------|
 | - | Net Grid Power | net_grid_power |
 | - | Import Power | import_power |
 | - | Export Power | export_power |
 | - | Total Load Power | total_load_power |
-| - | Solar to Grid Efficiency | solar_to_grid_efficiency |
-| - | Battery to Load Efficiency | battery_to_load_efficiency |
-| - | Power Balance | power_balance |
-| - | Total Phase Power | total_phase_power |
-| - | Phase A Power | phase_a_power |
-| - | Phase B Power | phase_b_power |
-| - | Phase C Power | phase_c_power |
 | - | Meter Active Power | meter_active_power |
 | - | Meter Phase A Active Power | meter_phase_a_active_power |
 | - | Meter Phase B Active Power | meter_phase_b_active_power |
 | - | Meter Phase C Active Power | meter_phase_c_active_power |
-| - | Monthly PV generation (current) | monthly_pv_generation_current |
-| - | Yearly PV generation (current) | yearly_pv_generation_current |
-| - | Monthly export (current) | monthly_export_current |
-| - | Yearly export (current) | yearly_export_current |
+
+#### Battery Power Calculations
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| - | Signed battery power | signed_battery_power |
+| - | Battery charging power | battery_charging_power |
+| - | Battery discharging power | battery_discharging_power |
 | - | Battery level (nominal) | battery_level_nom |
 | - | Battery charge (nominal) | battery_charge_nom |
 | - | Battery charge | battery_charge |
 | - | Battery charge (health-rated) | battery_charge_health_rated |
+
+#### Home Assistant Energy Dashboard Compatible
+| Address | Name | Unique ID | Description |
+|---------|------|-----------|-------------|
+| - | Battery charging power signed | battery_charging_power_signed | Positive when charging (display) |
+| - | Battery discharging power signed | battery_discharging_power_signed | Positive when discharging (HA convention) |
+| - | Grid power signed | grid_power_signed | Negative=export, Positive=import (HA convention) |
+| - | Grid export power signed | grid_export_power_signed | Only export as negative values |
+| - | Grid import power signed | grid_import_power_signed | Only import as positive values |
+
+#### PV Analysis & Performance Metrics
+| Address | Name | Unique ID | Description |
+|---------|------|-----------|-------------|
+| - | Self-Consumption Rate | self_consumption_rate | % of PV consumed directly |
+| - | Autarky Rate | autarky_rate | % of load supplied by PV/Battery |
+| - | Grid Dependency | grid_dependency | % of load depending on grid |
+| - | DC to AC Efficiency | dc_to_ac_efficiency | Inverter efficiency (%) |
+| - | PV Capacity Factor | pv_capacity_factor | Current power as % of rated capacity |
+| - | PV Generation Hours Today | pv_generation_hours_today | Equivalent generation hours |
+
+#### Energy Flow Analysis
+| Address | Name | Unique ID | Description |
+|---------|------|-----------|-------------|
+| - | PV to Load Direct | pv_to_load_direct | PV power directly to load |
+| - | PV to Battery | pv_to_battery | PV power charging battery |
+| - | Battery to Load | battery_to_load | Battery power to load |
+| - | Grid to Load | grid_to_load | Grid power to load |
+| - | Net Consumption | net_consumption | Net consumption after PV/Battery |
+
+#### MPPT Performance Analysis
+| Address | Name | Unique ID | Description |
+|---------|------|-----------|-------------|
+| - | MPPT Power Deviation | mppt_power_deviation | Max deviation from average (imbalance indicator) |
+| - | MPPT Utilization | mppt_utilization | % of DC power from MPPT trackers |
+
+#### Efficiency Calculations
+| Address | Name | Unique ID |
+|---------|------|-----------|
+| - | Solar to Grid Efficiency | solar_to_grid_efficiency |
+| - | Battery to Load Efficiency | battery_to_load_efficiency |
+| - | Power Balance | power_balance |
+
+#### Energy Statistics
+| Address | Name | Unique ID |
+|---------|------|-----------|
 | - | Daily consumed energy | daily_consumed_energy |
 | - | Total consumed energy | total_consumed_energy |
-| - | Signed battery power | signed_battery_power |
-| - | Battery charging power | battery_charging_power |
-| - | Battery discharging power | battery_discharging_power |
+| - | Monthly PV generation (current) | monthly_pv_generation_current |
+| - | Yearly PV generation (current) | yearly_pv_generation_current |
+| - | Monthly export (current) | monthly_export_current |
+| - | Yearly export (current) | yearly_export_current |
+
+#### Status Displays
+| Address | Name | Unique ID |
+|---------|------|-----------|
 | - | Inverter Status Display | inverter_status_display |
 | - | Grid Status | grid_status |
 | - | Battery Status Indicator | battery_status_indicator |
@@ -447,11 +537,42 @@ Special thanks to the **photovoltaikforum.com** and **forum.iobroker.net** commu
 
 ## 📋 Version
 
-**Version:** 1.1.0
-**Last Update:** 2025-11-07
+**Version:** 1.2.0
+**Last Update:** January 2025
 **Compatibility:** All 36 Sungrow SHx Models
 
 ### 🔄 Changelog
+
+#### Version 1.2.0 (January 2025)
+- ✨ **New: Home Assistant Energy Dashboard Compatible Sensors**
+  - Added `battery_charging_power_signed` - Positive when charging (for display)
+  - Added `battery_discharging_power_signed` - Positive when discharging (HA convention)
+  - Added `grid_power_signed` - Negative=export, Positive=import (HA convention)
+  - Added `grid_export_power_signed` - Only export as negative values
+  - Added `grid_import_power_signed` - Only import as positive values
+  - All sensors follow HA Energy Dashboard convention: positive for consumption/discharging/import, negative for generation/charging/export
+
+- 📊 **New: PV Analysis & Performance Metrics**
+  - Added `self_consumption_rate` - Percentage of PV generation consumed directly
+  - Added `autarky_rate` - Percentage of load supplied by PV/Battery
+  - Added `grid_dependency` - Percentage of load depending on grid
+  - Added `dc_to_ac_efficiency` - Inverter efficiency (AC output / DC input)
+  - Added `pv_capacity_factor` - Current power as percentage of rated capacity
+  - Added `pv_generation_hours_today` - Equivalent generation hours
+
+- 🔄 **New: Energy Flow Analysis**
+  - Added `pv_to_load_direct` - PV power going directly to load
+  - Added `pv_to_battery` - PV power charging battery
+  - Added `battery_to_load` - Battery power going to load
+  - Added `grid_to_load` - Grid power going to load
+  - Added `net_consumption` - Net consumption after PV/Battery supply
+
+- 📈 **New: MPPT Performance Analysis**
+  - Added `mppt_power_deviation` - Maximum deviation from average MPPT power (imbalance indicator)
+  - Added `mppt_utilization` - Percentage of DC power from MPPT trackers
+  - Added `mppt4_power` - Power calculation for MPPT4 tracker
+
+- 🎨 **Dashboard Examples:** Added comprehensive PV analysis dashboard examples (standard, mushroom, simple) with new calculated sensors
 
 #### Version 1.1.0 (2025-11-07)
 - ✨ **New Control:** Added "Forced Startup Under Low SoC Standby" control (Address 13016 holding)
