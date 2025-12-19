@@ -265,6 +265,70 @@ views:
             primary_info: state
             secondary_info: name
 
+      - title: Performance Metrics
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_self_consumption_rate
+            name: Self-Consumption Rate
+            icon: mdi:home-lightning-bolt
+            icon_color: |
+              [[[
+                const rate = entity.state;
+                if (rate > 70) return 'green';
+                if (rate > 50) return 'orange';
+                return 'blue';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_autarky_rate
+            name: Autarky Rate
+            icon: mdi:power-plug-off
+            icon_color: |
+              [[[
+                const rate = entity.state;
+                if (rate > 80) return 'green';
+                if (rate > 50) return 'orange';
+                return 'blue';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_dc_to_ac_efficiency
+            name: DC to AC Efficiency
+            icon: mdi:gauge
+            icon_color: |
+              [[[
+                const eff = entity.state;
+                if (eff > 95) return 'green';
+                if (eff > 90) return 'orange';
+                return 'red';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_pv_capacity_factor
+            name: PV Capacity Factor
+            icon: mdi:percent
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
       - title: PV Generation History
         cards:
           - type: history-graph
@@ -412,6 +476,103 @@ views:
 
       - title: MPPT Power Analysis
         cards:
+          - type: history-graph
+            title: MPPT Power (24h)
+            entities:
+              - entity: sensor.{PREFIX}_mppt1_power
+                name: MPPT1 Power
+              - entity: sensor.{PREFIX}_mppt2_power
+                name: MPPT2 Power
+              - entity: sensor.{PREFIX}_mppt3_power
+                name: MPPT3 Power
+              - entity: sensor.{PREFIX}_mppt4_power
+                name: MPPT4 Power
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt1_power
+            name: MPPT1 Power
+            icon: mdi:flash
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt2_power
+            name: MPPT2 Power
+            icon: mdi:flash
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt3_power
+            name: MPPT3 Power
+            icon: mdi:flash
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt4_power
+            name: MPPT4 Power
+            icon: mdi:flash
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_total_mppt_power
+            name: Total MPPT Power
+            icon: mdi:flash-circle
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt_power_deviation
+            name: MPPT Power Deviation
+            icon: mdi:chart-line-variant
+            icon_color: |
+              [[[
+                const dev = entity.state;
+                if (dev > 100) return 'red';
+                if (dev > 50) return 'orange';
+                return 'green';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt_utilization
+            name: MPPT Utilization
+            icon: mdi:percent
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
           - type: statistics-graph
             title: MPPT Voltage Statistics (30 days)
             entities:
@@ -439,6 +600,153 @@ views:
               - min
               - max
               - mean
+
+  - title: Energy Flow Analysis
+    path: energy-flow
+    icon: mdi:transit-connection-variant
+    type: sections
+    sections:
+      - title: Energy Flow
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_pv_to_load_direct
+            name: PV to Load Direct
+            icon: mdi:solar-power
+            icon_color: green
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_pv_to_battery
+            name: PV to Battery
+            icon: mdi:battery-charging
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_battery_to_load
+            name: Battery to Load
+            icon: mdi:battery
+            icon_color: orange
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_grid_to_load
+            name: Grid to Load
+            icon: mdi:transmission-tower
+            icon_color: red
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_net_consumption
+            name: Net Consumption
+            icon: mdi:flash
+            icon_color: |
+              [[[
+                const consumption = entity.state;
+                if (consumption > 1000) return 'red';
+                if (consumption > 500) return 'orange';
+                return 'green';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: history-graph
+            title: Energy Flow (24h)
+            entities:
+              - entity: sensor.{PREFIX}_pv_to_load_direct
+                name: PV to Load Direct
+              - entity: sensor.{PREFIX}_pv_to_battery
+                name: PV to Battery
+              - entity: sensor.{PREFIX}_battery_to_load
+                name: Battery to Load
+              - entity: sensor.{PREFIX}_grid_to_load
+                name: Grid to Load
+            hours_to_show: 24
+            refresh_interval: 60
+
+      - title: Self-Consumption & Autarky
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_self_consumption_rate
+            name: Self-Consumption Rate
+            icon: mdi:home-lightning-bolt
+            icon_color: |
+              [[[
+                const rate = entity.state;
+                if (rate > 70) return 'green';
+                if (rate > 50) return 'orange';
+                return 'blue';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            fill_container: true
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_autarky_rate
+            name: Autarky Rate
+            icon: mdi:power-plug-off
+            icon_color: |
+              [[[
+                const rate = entity.state;
+                if (rate > 80) return 'green';
+                if (rate > 50) return 'orange';
+                return 'blue';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            fill_container: true
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_grid_dependency
+            name: Grid Dependency
+            icon: mdi:transmission-tower
+            icon_color: |
+              [[[
+                const dep = entity.state;
+                if (dep > 50) return 'red';
+                if (dep > 20) return 'orange';
+                return 'green';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: history-graph
+            title: Self-Consumption & Autarky (24h)
+            entities:
+              - entity: sensor.{PREFIX}_self_consumption_rate
+                name: Self-Consumption Rate
+              - entity: sensor.{PREFIX}_autarky_rate
+                name: Autarky Rate
+            hours_to_show: 24
+            refresh_interval: 60
 
   - title: Statistics
     path: statistics
@@ -526,3 +834,65 @@ views:
                 name: Inverter Temperature
             hours_to_show: 168
             refresh_interval: 3600
+
+      - title: Performance Metrics
+        cards:
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_dc_to_ac_efficiency
+            name: DC to AC Efficiency
+            icon: mdi:gauge
+            icon_color: |
+              [[[
+                const eff = entity.state;
+                if (eff > 95) return 'green';
+                if (eff > 90) return 'orange';
+                return 'red';
+              ]]]
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_pv_capacity_factor
+            name: PV Capacity Factor
+            icon: mdi:percent
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_mppt_utilization
+            name: MPPT Utilization
+            icon: mdi:percent
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: custom:mushroom-entity-card
+            entity: sensor.{PREFIX}_pv_generation_hours_today
+            name: PV Generation Hours Today
+            icon: mdi:clock-outline
+            icon_color: blue
+            tap_action:
+              action: more-info
+            layout: vertical
+            primary_info: state
+            secondary_info: name
+
+          - type: history-graph
+            title: Efficiency Metrics (24h)
+            entities:
+              - entity: sensor.{PREFIX}_dc_to_ac_efficiency
+                name: DC to AC Efficiency
+              - entity: sensor.{PREFIX}_self_consumption_rate
+                name: Self-Consumption Rate
+            hours_to_show: 24
+            refresh_interval: 60

@@ -103,6 +103,72 @@ views:
                 name: Phase C Power
                 icon: mdi:flash
 
+      - title: Performance Metrics
+        cards:
+          - type: entities
+            title: System Performance
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_self_consumption_rate
+                name: Self-Consumption Rate
+                icon: mdi:home-lightning-bolt
+              - entity: sensor.{PREFIX}_autarky_rate
+                name: Autarky Rate
+                icon: mdi:power-plug-off
+              - entity: sensor.{PREFIX}_dc_to_ac_efficiency
+                name: DC to AC Efficiency
+                icon: mdi:gauge
+              - entity: sensor.{PREFIX}_pv_capacity_factor
+                name: PV Capacity Factor
+                icon: mdi:percent
+
+      - title: Energy Flow
+        cards:
+          - type: entities
+            title: Energy Flow Breakdown
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_pv_to_load_direct
+                name: PV to Load Direct
+                icon: mdi:solar-power
+              - entity: sensor.{PREFIX}_pv_to_battery
+                name: PV to Battery
+                icon: mdi:battery-charging
+              - entity: sensor.{PREFIX}_battery_to_load
+                name: Battery to Load
+                icon: mdi:battery
+              - entity: sensor.{PREFIX}_grid_to_load
+                name: Grid to Load
+                icon: mdi:transmission-tower
+              - entity: sensor.{PREFIX}_net_consumption
+                name: Net Consumption
+                icon: mdi:flash
+
+      - title: MPPT Power
+        cards:
+          - type: entities
+            title: MPPT Power
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_mppt1_power
+                name: MPPT1 Power
+                icon: mdi:flash
+              - entity: sensor.{PREFIX}_mppt2_power
+                name: MPPT2 Power
+                icon: mdi:flash
+              - entity: sensor.{PREFIX}_mppt3_power
+                name: MPPT3 Power
+                icon: mdi:flash
+              - entity: sensor.{PREFIX}_mppt4_power
+                name: MPPT4 Power
+                icon: mdi:flash
+              - entity: sensor.{PREFIX}_total_mppt_power
+                name: Total MPPT Power
+                icon: mdi:flash-circle
+              - entity: sensor.{PREFIX}_mppt_power_deviation
+                name: MPPT Power Deviation
+                icon: mdi:chart-line-variant
+
       - title: PV Generation History
         cards:
           - type: history-graph
@@ -140,6 +206,16 @@ views:
             entities:
               - entity: sensor.{PREFIX}_inverter_temperature
                 name: Inverter Temperature
+            hours_to_show: 24
+            refresh_interval: 60
+
+          - type: history-graph
+            title: Self-Consumption & Autarky (24h)
+            entities:
+              - entity: sensor.{PREFIX}_self_consumption_rate
+                name: Self-Consumption Rate
+              - entity: sensor.{PREFIX}_autarky_rate
+                name: Autarky Rate
             hours_to_show: 24
             refresh_interval: 60
 
