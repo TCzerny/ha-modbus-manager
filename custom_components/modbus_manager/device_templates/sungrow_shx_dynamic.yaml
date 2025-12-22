@@ -2929,21 +2929,38 @@ calculated:
       {{
       not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
       and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_discharging_power', 'unavailable')
       }}
     state: >-
       {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set export = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
-      {% if pv > 0 %}
-        {% set exported = export if export > 0 else 0 %}
-        {% set self_consumed = pv - exported %}
-        {{ (self_consumed / pv * 100) | round(1) }}
-      {% else %}
+      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | default(0) | float %}
+      {% if pv <= 0 %}
+        {# No PV generation #}
         0
+      {% else %}
+        {# Eigenverbrauch = total_dc_power - export_power_raw + battery_discharging_power #}
+        {# export_power_raw: positive = export, negative = import (don't subtract import) #}
+        {% set exported = export_raw if export_raw > 0 else 0 %}
+        {% set self_consumed = pv - exported + battery_discharge %}
+        {% if self_consumed <= 0 %}
+          0
+        {% else %}
+          {% set rate = (self_consumed / pv * 100) %}
+          {# Clamp to 0-100% range #}
+          {% if rate > 100 %}
+            100
+          {% elif rate < 0 %}
+            0
+          {% else %}
+            {{ rate | round(1) }}
+          {% endif %}
+        {% endif %}
       {% endif %}
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
-    precision: 0
+    precision: 1
     group: "PV_analysis"
     # Percentage of PV generation that is consumed directly (not exported to grid)
 
@@ -2953,17 +2970,37 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_load_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
       and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_discharging_power', 'unavailable')
       }}
     state: >-
       {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
-      {% set grid = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
-      {% set import_power = (grid * -1) if grid < 0 else 0 %}
-      {% if load > 0 %}
-        {% set self_supplied = load - import_power %}
-        {{ (self_supplied / load * 100) | round(1) }}
-      {% else %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | default(0) | float %}
+      {% if load <= 0 %}
+        {# No load or negative load - 100% autarky #}
         100
+      {% else %}
+        {# Eigenverbrauch = total_dc_power - export_power_raw + battery_discharging_power #}
+        {# export_power_raw: positive = export (subtract), negative = import (don't subtract) #}
+        {% set exported = export_raw if export_raw > 0 else 0 %}
+        {% set self_consumed = pv - exported + battery_discharge %}
+        {# Autarkiegrad (%) = (Eigenverbrauch / Gesamtverbrauch) * 100 #}
+        {% if self_consumed <= 0 %}
+          0
+        {% else %}
+          {% set autarky = (self_consumed / load * 100) %}
+          {# Clamp to 0-100% range #}
+          {% if autarky > 100 %}
+            100
+          {% elif autarky < 0 %}
+            0
+          {% else %}
+            {{ autarky | round(1) }}
+          {% endif %}
+        {% endif %}
       {% endif %}
     unit_of_measurement: "%"
     device_class: "power_factor"
