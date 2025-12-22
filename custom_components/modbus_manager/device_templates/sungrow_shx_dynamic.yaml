@@ -3242,16 +3242,38 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_load_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
       and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_discharging_power', 'unavailable')
       }}
     state: >-
       {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
-      {% set grid = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
-      {% set import_power = (grid * -1) if grid < 0 else 0 %}
-      {% if load > 0 %}
-        {{ (import_power / load * 100) | round(1) }}
-      {% else %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | default(0) | float %}
+      {% if load <= 0 %}
+        {# No load or negative load - 0% grid dependency #}
         0
+      {% else %}
+        {# Eigenverbrauch = total_dc_power - export_power_raw + battery_discharging_power #}
+        {% set exported = export_raw if export_raw > 0 else 0 %}
+        {% set self_consumed = pv - exported + battery_discharge %}
+        {# Grid Dependency = (Import / Gesamtverbrauch) * 100 = ((load - self_consumed) / load) * 100 #}
+        {% set import_power = load - self_consumed %}
+        {% if import_power <= 0 %}
+          {# No import needed - 0% grid dependency #}
+          0
+        {% else %}
+          {% set dependency = (import_power / load * 100) %}
+          {# Clamp to 0-100% range #}
+          {% if dependency > 100 %}
+            100
+          {% elif dependency < 0 %}
+            0
+          {% else %}
+            {{ dependency | round(1) }}
+          {% endif %}
+        {% endif %}
       {% endif %}
     unit_of_measurement: "%"
     device_class: "power_factor"
