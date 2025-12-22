@@ -31,7 +31,6 @@ class ModbusCalculatedSensor(SensorEntity):
         """Initialize the calculated sensor."""
         self.hass = hass
         self._config = config
-        self._prefix = prefix
         self._template_name = template_name
         self._host = host
         self._port = port
@@ -43,10 +42,13 @@ class ModbusCalculatedSensor(SensorEntity):
         # Handle prefix - if None, config is already processed by coordinator
         if prefix is None:
             # Config is already processed by coordinator
+            # Use device_prefix for display in attributes
+            self._prefix = device_prefix if device_prefix else "unknown"
             self._attr_name = base_name
             unique_id = config.get("unique_id", "unknown")
         else:
             # Legacy mode - process prefix
+            self._prefix = prefix
             self._attr_name = generate_entity_name(prefix, base_name)
             unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
 
@@ -194,10 +196,12 @@ class ModbusCalculatedSensor(SensorEntity):
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
         """Return entity specific state attributes."""
+        precision = self._config.get("precision")
         return {
             "group": self._group,
             "template": self._template_name,
             "prefix": self._prefix,
+            "precision": precision,
             "calculation_type": "state",
         }
 
@@ -366,7 +370,6 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         """Initialize the calculated binary sensor."""
         self.hass = hass
         self._config = config
-        self._prefix = prefix
         self._template_name = template_name
         self._host = host
         self._port = port
@@ -378,10 +381,13 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         # Handle prefix - if None, config is already processed by coordinator
         if prefix is None:
             # Config is already processed by coordinator
+            # Use device_prefix for display in attributes
+            self._prefix = device_prefix if device_prefix else "unknown"
             self._attr_name = base_name
             unique_id = config.get("unique_id", "unknown")
         else:
             # Legacy mode - process prefix
+            self._prefix = prefix
             self._attr_name = generate_entity_name(prefix, base_name)
             unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
 

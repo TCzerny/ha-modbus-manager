@@ -2204,75 +2204,6 @@ controls:
 
 # Calculated Sensors
 calculated:
-  # MPPT Power Calculations
-  - name: "MPPT1 Power"
-    unique_id: "mppt1_power"
-    type: "sensor"
-    availability: >-
-      {{
-      not is_state('sensor.{PREFIX}_mppt1_voltage', 'unavailable')
-      and not is_state('sensor.{PREFIX}_mppt1_current', 'unavailable')
-      }}
-    state: "{{ (states('sensor.{PREFIX}_mppt1_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt1_current') | default(0) | float) }}"
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_mppt_power"
-
-  - name: "MPPT2 Power"
-    unique_id: "mppt2_power"
-    type: "sensor"
-    availability: >-
-      {{
-      not is_state('sensor.{PREFIX}_mppt2_voltage', 'unavailable')
-      and not is_state('sensor.{PREFIX}_mppt2_current', 'unavailable')
-      }}
-    state: "{{ (states('sensor.{PREFIX}_mppt2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt2_current') | default(0) | float) }}"
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_mppt_power"
-
-  - name: "MPPT3 Power"
-    unique_id: "mppt3_power"
-    type: "sensor"
-    availability: >-
-      {{
-      not is_state('sensor.{PREFIX}_mppt3_voltage', 'unavailable')
-      and not is_state('sensor.{PREFIX}_mppt3_current', 'unavailable')
-      }}
-    state: "{{ (states('sensor.{PREFIX}_mppt3_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt3_current') | default(0) | float) }}"
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_mppt_power"
-
-  - name: "Total MPPT Power"
-    unique_id: "total_mppt_power"
-    type: "sensor"
-    availability: >-
-      {{
-      not is_state('sensor.{PREFIX}_mppt1_voltage', 'unavailable')
-      and not is_state('sensor.{PREFIX}_mppt1_current', 'unavailable')
-      }}
-    state: >-
-      {% set mppt1_voltage = states('sensor.{PREFIX}_mppt1_power_mppt1_voltage') %}
-      {% set mppt1_current = states('sensor.{PREFIX}_mppt1_current') %}
-      {% set mppt2_voltage = states('sensor.{PREFIX}_mppt2_voltage') %}
-      {% set mppt2_current = states('sensor.{PREFIX}_mppt2_current') %}
-      {% set mppt3_voltage = states('sensor.{PREFIX}_mppt3_voltage') %}
-      {% set mppt3_current = states('sensor.{PREFIX}_mppt3_current') %}
-
-      {% set mppt1_power = (mppt1_voltage | float(0)) * (mppt1_current | float(0)) %}
-      {% set mppt2_power = (mppt2_voltage | float(0)) * (mppt2_current | float(0)) %}
-      {% set mppt3_power = (mppt3_voltage | float(0)) * (mppt3_current | float(0)) %}
-
-      {{ mppt1_power + mppt2_power + mppt3_power }}
-    unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "PV_total_power"
-
   - name: "Net Grid Power"
     unique_id: "net_grid_power"
     type: "sensor"
@@ -2282,6 +2213,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_grid_power"
 
   - name: "Import Power"
@@ -2300,6 +2232,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_grid_power"
 
   - name: "Export Power"
@@ -2315,6 +2248,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_grid_power"
 
   - name: "Total Load Power"
@@ -2326,6 +2260,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_load_power"
 
   # System Efficiency Calculations
@@ -2341,6 +2276,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
+    precision: 1
     group: "PV_efficiency"
 
   - name: "Battery to Load Efficiency"
@@ -2355,6 +2291,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
+    precision: 1
     group: "PV_efficiency"
 
   # Power Balance Calculations
@@ -2372,6 +2309,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_power_balance"
 
   # Phase Power Calculations
@@ -2388,6 +2326,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_phase_power"
 
   # Individual Phase Power Calculations
@@ -2403,6 +2342,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_phase_power"
 
   - name: "Phase B Power"
@@ -2417,6 +2357,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_phase_power"
 
   - name: "Phase C Power"
@@ -2431,6 +2372,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_phase_power"
 
   # calculated sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
@@ -2444,6 +2386,7 @@ calculated:
           }}
     state: "{{ states('sensor.{PREFIX}_meter_active_power_raw') }}"
     unit_of_measurement: "W"
+    precision: 0
     device_class: "power"
     state_class: "measurement"
 
@@ -2464,6 +2407,7 @@ calculated:
       {% endif %}
     unit_of_measurement: "W"
     device_class: "power"
+    precision: 0
     state_class: "measurement"
     group: "PV_meter_power"
 
@@ -2485,6 +2429,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_meter_power"
 
   - name: "Meter Phase C Active Power"
@@ -2505,6 +2450,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_meter_power"
 
   # Meter Channel 2 Calculated Sensors (Protocol V1.1.11)
@@ -2528,6 +2474,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_meter_channel_2"
 
   - name: "Meter Channel 2 Phase A Active Power"
@@ -2549,6 +2496,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_meter_channel_2"
 
   - name: "Meter Channel 2 Phase B Active Power"
@@ -2570,6 +2518,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_meter_channel_2"
 
   - name: "Meter Channel 2 Phase C Active Power"
@@ -2591,6 +2540,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_meter_channel_2"
 
   # Calculated Energy Summary Sensors
@@ -2606,6 +2556,7 @@ calculated:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
+    precision: 1
     group: "calculated_energy"
 
   - name: "Yearly PV generation (current)"
@@ -2620,6 +2571,7 @@ calculated:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
+    precision: 1
     group: "calculated_energy"
 
   - name: "Monthly export (current)"
@@ -2634,6 +2586,7 @@ calculated:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
+    precision: 1
     group: "calculated_energy"
 
   - name: "Yearly export (current)"
@@ -2648,6 +2601,7 @@ calculated:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
+    precision: 1
     group: "calculated_energy"
 
   # Battery Level and Charge Calculations
@@ -2673,6 +2627,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "battery"
     state_class: "measurement"
+    precision: 1
     group: "battery_level_nominal"
 
   - name: "Battery charge (nominal)"
@@ -2693,6 +2648,7 @@ calculated:
     unit_of_measurement: "kWh"
     device_class: "energy_storage"
     state_class: "measurement"
+    precision: 1
     group: "battery_charge_nominal"
 
   - name: "Battery charge"
@@ -2701,6 +2657,7 @@ calculated:
     unit_of_measurement: kWh
     device_class: energy_storage
     state_class: measurement
+    precision: 2
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_battery_capacity', 'unavailable')
@@ -2737,6 +2694,7 @@ calculated:
     unit_of_measurement: "kWh"
     device_class: "energy_storage"
     state_class: "measurement"
+    precision: 2
     group: "battery_charge_health_rated"
 
   # Energy Consumption Calculations
@@ -2764,6 +2722,7 @@ calculated:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total"
+    precision: 1
     group: "calculated_energy"
 
   - name: "Total consumed energy"
@@ -2790,6 +2749,7 @@ calculated:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total"
+    precision: 1
     group: "calculated_energy"
 
   # Power Flow Calculations
@@ -2813,6 +2773,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "battery_power_signed"
 
   - name: "Battery charging power"
@@ -2832,6 +2793,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "battery_power_charging"
 
   - name: "Battery discharging power"
@@ -2851,6 +2813,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "battery_power_discharging"
 
   # HA Energy Dashboard compatible sensors
@@ -2871,6 +2834,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "battery_power_energy_dashboard"
     # Note: battery_power is negative when charging, so we multiply by -1 to get positive when charging
     # This is useful for display purposes (showing positive charging power)
@@ -2883,6 +2847,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "battery_power_energy_dashboard"
     # Note: battery_power is positive when discharging, which matches HA Energy Dashboard convention
     # Use this sensor for the HA energy dashboard.
@@ -2908,6 +2873,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "grid_power_energy_dashboard"
     # Note: export_power_raw is positive when exporting, so we multiply by -1
     # Result: Negative when exporting (generation), Positive when importing (consumption)
@@ -2928,6 +2894,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "grid_power_energy_dashboard"
     # Note: export_power_raw is positive when exporting, so we multiply by -1 for HA Energy Dashboard
     # Negative values = export to grid (generation)
@@ -2947,6 +2914,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "grid_power_energy_dashboard"
     # Note: export_power_raw is negative when importing, so we multiply by -1 to get positive
     # Positive values = import from grid (consumption)
@@ -2975,6 +2943,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
+    precision: 0
     group: "PV_analysis"
     # Percentage of PV generation that is consumed directly (not exported to grid)
 
@@ -2999,6 +2968,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
+    precision: 2
     group: "PV_analysis"
     # Percentage of load that is supplied by PV/Battery (self-sufficiency)
 
@@ -3024,6 +2994,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
+    precision: 2
     group: "PV_efficiency"
     # Inverter efficiency: AC output power / DC input power
 
@@ -3040,6 +3011,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_mppt_power"
 
   - name: "MPPT2 Power"
@@ -3054,6 +3026,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_mppt_power"
 
   - name: "MPPT3 Power"
@@ -3068,6 +3041,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_mppt_power"
 
   - name: "MPPT4 Power"
@@ -3082,6 +3056,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_mppt_power"
 
   # Total MPPT Power (sum of all MPPT trackers)
@@ -3103,6 +3078,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_mppt_power"
     # Sum of all MPPT tracker powers (should match total_dc_power)
 
@@ -3133,6 +3109,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_energy_flow"
     # PV power going directly to load (without battery)
 
@@ -3153,6 +3130,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_energy_flow"
     # PV power going to battery (charging)
 
@@ -3173,6 +3151,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_energy_flow"
     # Battery power going to load (discharging)
 
@@ -3193,6 +3172,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_energy_flow"
     # Grid power going to load (importing)
 
@@ -3215,6 +3195,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 0
     group: "PV_analysis"
     # Net consumption after PV and battery supply (what needs to come from grid)
 
@@ -3238,6 +3219,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
+    precision: 2
     group: "PV_analysis"
     # Percentage of load that depends on grid (inverse of autarky)
 
@@ -3272,6 +3254,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
+    precision: 1
     group: "PV_mppt_analysis"
     # Maximum deviation from average MPPT power (indicates imbalance)
 
@@ -3296,6 +3279,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
+    precision: 1
     group: "PV_mppt_analysis"
     # How much of total DC power comes from MPPT trackers (should be close to 100%)
 
@@ -3334,6 +3318,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
+    precision: 1
     group: "PV_performance"
     # Current PV power as percentage of inverter rated capacity
 
@@ -3357,6 +3342,7 @@ calculated:
     unit_of_measurement: "h"
     device_class: "duration"
     state_class: "measurement"
+    precision: 2
     group: "PV_performance"
     # Equivalent generation hours at current power level (approximation)
 
