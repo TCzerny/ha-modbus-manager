@@ -192,6 +192,7 @@ calculated_sensors:
 # Controls
 controls:
   - name: "Max SOC"
+    type: "number"
     unique_id: "max_soc"
     address: 5001
     input_type: "holding"
@@ -265,8 +266,8 @@ type: entities
 title: "Energy Overview"
 entities:
   # Individual devices
-  - sensor.sg1_battery_level
-  - sensor.ebox1_charging_power
+  - sensor.sg_battery_level
+  - sensor.ebox_charging_power
 ```
 
 ## 📊 Available Templates

@@ -427,6 +427,7 @@ calculated:
     device_class: "current"
     state_class: "measurement"
     group: "EV_current_measurement"
+    precision: 2
     icon: "mdi:lightning-bolt"
 
   - name: "Charging Power"
@@ -450,6 +451,7 @@ calculated:
     state_class: "measurement"
     group: "EV_charging_power"
     icon: "mdi:ev-station"
+    precision: 0
 
   - name: "Max Total Current"
     unique_id: "max_total_current"
@@ -467,6 +469,7 @@ calculated:
     state_class: "measurement"
     group: "EV_max_current_setting"
     icon: "mdi:gauge"
+    precision: 2
 
   - name: "Max Charging Power"
     unique_id: "max_charging_power"
@@ -484,6 +487,7 @@ calculated:
     state_class: "measurement"
     group: "EV_max_charging_power"
     icon: "mdi:ev-station"
+    precision: 0
 
   - name: "Charging Efficiency"
     unique_id: "charging_efficiency"
@@ -500,6 +504,7 @@ calculated:
     state_class: "measurement"
     group: "EV_efficiency"
     icon: "mdi:gauge"
+    precision: 1
 
   # Voltage calculations (firmware >= 2.0.35)
   - name: "Average Voltage"
@@ -519,6 +524,7 @@ calculated:
     state_class: "measurement"
     group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
+    precision: 1
 
   - name: "Voltage Imbalance"
     unique_id: "voltage_imbalance"
@@ -542,6 +548,7 @@ calculated:
     state_class: "measurement"
     group: "EV_voltage_measurement"
     icon: "mdi:gauge"
+    precision: 1
 
 # Binary sensors for status
 binary_sensors:
