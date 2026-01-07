@@ -734,6 +734,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         ):
             battery_enabled = True
             battery_type = "sbr_battery"
+            battery_config = "sbr_battery"  # Set battery_config for condition filtering
         else:
             battery_enabled = battery_config != "none"
             battery_type = battery_config
@@ -2985,6 +2986,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         ):
             battery_enabled = True
             battery_type = "sbr_battery"
+            battery_config = "sbr_battery"  # Set battery_config for condition filtering
         else:
             battery_enabled = battery_config != "none"
             battery_type = battery_config
