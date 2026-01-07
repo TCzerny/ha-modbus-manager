@@ -319,6 +319,25 @@ class ModbusCoordinator(DataUpdateCoordinator):
         try:
             all_registers = []
 
+            # Check if there's an SBR Battery device in the devices array
+            # This is needed for backward compatibility with existing configurations
+            has_sbr_battery = False
+            for device in devices:
+                template_name = device.get("template", "").lower()
+                device_type = device.get("type", "").lower()
+                if (
+                    "sbr" in template_name
+                    or "battery" in template_name
+                    or device_type == "battery"
+                ):
+                    has_sbr_battery = True
+                    _LOGGER.debug(
+                        "Found SBR Battery device: %s (type: %s)",
+                        template_name,
+                        device_type,
+                    )
+                    break
+
             for device in devices:
                 device_type = device.get("type", "inverter")
                 template_name = device.get("template")
@@ -399,6 +418,14 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
                 # Calculate battery_enabled from battery_config for condition filtering
                 battery_config = dynamic_config.get("battery_config", "none")
+                # If battery_config is not set but we have an SBR Battery device, enable battery
+                if battery_config == "none" and has_sbr_battery:
+                    battery_config = "sbr_battery"
+                    dynamic_config["battery_config"] = "sbr_battery"
+                    _LOGGER.debug(
+                        "Auto-detected SBR Battery - setting battery_enabled=True for device %s",
+                        template_name,
+                    )
                 dynamic_config["battery_enabled"] = battery_config != "none"
 
                 _LOGGER.debug(
@@ -875,6 +902,25 @@ class ModbusCoordinator(DataUpdateCoordinator):
         try:
             all_calculated_registers = []
 
+            # Check if there's an SBR Battery device in the devices array
+            # This is needed for backward compatibility with existing configurations
+            has_sbr_battery = False
+            for device in devices:
+                template_name = device.get("template", "").lower()
+                device_type = device.get("type", "").lower()
+                if (
+                    "sbr" in template_name
+                    or "battery" in template_name
+                    or device_type == "battery"
+                ):
+                    has_sbr_battery = True
+                    _LOGGER.debug(
+                        "Found SBR Battery device: %s (type: %s)",
+                        template_name,
+                        device_type,
+                    )
+                    break
+
             for device in devices:
                 device_type = device.get("type", "inverter")
                 template_name = device.get("template")
@@ -952,6 +998,14 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
                 # Calculate battery_enabled from battery_config for condition filtering
                 battery_config = dynamic_config.get("battery_config", "none")
+                # If battery_config is not set but we have an SBR Battery device, enable battery
+                if battery_config == "none" and has_sbr_battery:
+                    battery_config = "sbr_battery"
+                    dynamic_config["battery_config"] = "sbr_battery"
+                    _LOGGER.debug(
+                        "Auto-detected SBR Battery - setting battery_enabled=True for calculated device %s",
+                        template_name,
+                    )
                 dynamic_config["battery_enabled"] = battery_config != "none"
 
                 # Extract calculated registers from template
