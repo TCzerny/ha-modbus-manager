@@ -5,13 +5,13 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.4
+version: 1.2.5
 # Updated to Protocol V1.1.11 (2025-11-17)
 # - Updated Battery Power to recommended register 5214-5215 (S32, 1W)
 # - Updated Battery Current to recommended register 5631 (S16, 0.1A)
 # - Confirmed Grid Frequency uses recommended register 5242 (U16, 0.01Hz)
 # - Added Firmware Information registers (13250-13369)
-# Updated Battery Power Limits (2025-01-XX)
+# Updated Battery Power Limits (2026-01-08)
 # - Added max_charge_power and max_discharge_power to dynamic_config for ALL models
 # - SAFETY: Battery Power Control max_values set to LOWEST limit (6kW) for safety
 # - Dynamic adjustment based on selected_model implemented in coordinator.py
@@ -22,17 +22,11 @@ version: 1.2.4
 #   * SH5-25T: Estimated based on RT series scaling (not verified)
 #   * MG5-6RL: Estimated based on RT series (not verified)
 # - Runtime validation in number.py enforces safe limits based on battery capacity
-# Updated Export Power and Battery Start Power Limits (2025-01-XX)
+# Updated Export Power and Battery Start Power Limits (2026-01-08)
 # - Added max_ac_output_power to dynamic_config for ALL models
-# - SAFETY: Export Power Limit max_value set to LOWEST limit (3kW) for safety
 # - SAFETY: Battery Charging/Discharging Start Power max_value set to reasonable limit (3kW = 50% of smallest battery power)
 # - Dynamic adjustment for all controls based on selected_model implemented in coordinator.py
-# - Export Power Limits from datasheets:
-#   * SH3.0-6.0RS: 3kW-6kW AC output power (from datasheet V18)
-#   * SH8.0/10RS: 8kW-10kW AC output power (from datasheet V2)
-#   * SH5.0-10RT: 5kW-10kW AC output power (from datasheet)
-#   * SH5-25T: Estimated based on model name (kW rating)
-#   * MG5-6RL: Estimated based on model name (kW rating)
+
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -1931,10 +1925,12 @@ controls:
     device_class: "power"
     state_class: measurement
     min_value: 0
-    max_value: 3000
+    max_value: "{{max(max_charge_power, max_discharge_power)}}"
     step: 100
-    scan_interval: 10w
+    scan_interval: 10
     group: "PV_battery_control"
+    # Placeholder will be replaced with maximum of model-specific max_charge_power and max_discharge_power
+    # For SH10RT: max(10600, 10600) = 10600 W
 
   - type: "select"
     name: "Load Adjustment Mode"
@@ -2003,13 +1999,11 @@ controls:
     unit_of_measurement: "W"
     scale: 1
     min_value: 0
-    max_value: 3000
+    max_value: "{{max_ac_output_power}}"
     step: 100
     mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
     group: "PV_control"
-    # SAFETY: max_value set to LOWEST AC output power (SH3.0RS: 3000W)
-    # Will be dynamically adjusted based on selected_model in coordinator.py
 
   - type: "select"
     name: "Export Power Limit Mode"
@@ -2101,10 +2095,12 @@ controls:
     unit_of_measurement: "kW"
     scale: 0.01
     min_value: 0
-    max_value: 6.0
+    max_value: "{{max_charge_power}}"
     step: 0.01
     scan_interval: 10
     group: "PV_battery_control"
+    # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
+    # For SH10RT: 10600 W -> 10.6 kW
 
   - type: "number"
     name: "Battery Max Discharging Power"
@@ -2116,10 +2112,12 @@ controls:
     unit_of_measurement: "kW"
     scale: 0.01
     min_value: 0
-    max_value: 6.0
+    max_value: "{{max_discharge_power}}"
     step: 0.01
     scan_interval: 10
     group: "PV_battery_control"
+    # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
+    # For SH10RT: 10600 W -> 10.6 kW
 
   - type: "number"
     name: "Export Power Limit Value Wide Range"
@@ -2131,13 +2129,13 @@ controls:
     unit_of_measurement: "kW"
     scale: 0.01
     min_value: 0
-    max_value: 3.0
+    max_value: "{{max_ac_output_power}}"
     step: 0.01
     mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
     group: "PV_control"
-    # SAFETY: max_value set to LOWEST AC output power (SH3.0RS: 3.0kW)
-    # Will be dynamically adjusted based on selected_model in coordinator.py
+    # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
+    # For SH10RT: 10000 W -> 10.0 kW
 
   - type: "number"
     name: "Battery Charging Start Power"
@@ -2148,15 +2146,15 @@ controls:
     precision: 0
     unit_of_measurement: "W"
     min_value: 0
-    max_value: 3000
+    max_value: "{{max_charge_power * 0.5}}"
     step: 10
     device_class: "power"
     state_class: measurement
     scale: 10
     scan_interval: 10
     group: "PV_battery_control"
-    # SAFETY: max_value set to reasonable limit (3000W = ~50% of smallest battery power)
-    # Will be dynamically adjusted based on selected_model max_charge_power in coordinator.py
+    # Placeholder will be replaced with 50% of model-specific max_charge_power
+    # For SH10RT: 10600 * 0.5 = 5300 W
 
   - type: "number"
     name: "Battery Discharging Start Power"
@@ -2167,15 +2165,15 @@ controls:
     precision: 0
     unit_of_measurement: "W"
     min_value: 0
-    max_value: 3000
+    max_value: "{{max_discharge_power * 0.5}}"
     step: 10
     device_class: "power"
     state_class: measurement
     scale: 10
     scan_interval: 10
     group: "PV_battery_control"
-    # SAFETY: max_value set to reasonable limit (3000W = ~50% of smallest battery power)
-    # Will be dynamically adjusted based on selected_model max_discharge_power in coordinator.py
+    # Placeholder will be replaced with 50% of model-specific max_discharge_power
+    # For SH10RT: 10600 * 0.5 = 5300 W
 
   - type: "select"
     name: "Forced Startup Under Low SoC Standby"

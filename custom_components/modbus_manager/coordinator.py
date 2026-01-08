@@ -534,7 +534,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["device_info"] = device_info
                     all_registers.append(register)
 
-                # Adjust control max_values based on selected_model
+                # Replace model-specific placeholders in controls (e.g., {{max_charge_power}})
                 for register in processed_controls:
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
@@ -547,116 +547,86 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         )
                         continue  # Skip this control as it's invalid
 
-                    unique_id = register.get("unique_id", "").lower()
-
-                    if selected_model and template.get("dynamic_config", {}).get(
-                        "valid_models", {}
-                    ).get(selected_model):
-                        model_limits = template["dynamic_config"]["valid_models"][
-                            selected_model
-                        ]
-
-                        # Dynamically adjust max_value for battery power controls
-                        if "battery_max" in unique_id and "power" in unique_id:
-                            max_charge_power = model_limits.get("max_charge_power")
-                            max_discharge_power = model_limits.get(
-                                "max_discharge_power"
-                            )
-
-                            if (
-                                max_charge_power is not None
-                                or max_discharge_power is not None
-                            ):
-                                # Determine which limit to use based on control type
-                                if (
-                                    "charge" in unique_id
-                                    and max_charge_power is not None
-                                ):
-                                    # Convert to appropriate unit (W or kW)
-                                    unit = register.get(
-                                        "unit_of_measurement", ""
-                                    ).lower()
-                                    if unit == "kw":
-                                        register["max_value"] = (
-                                            max_charge_power / 1000.0
-                                        )
-                                    else:  # W
-                                        register["max_value"] = max_charge_power
-                                    _LOGGER.debug(
-                                        "Adjusted %s max_value to %.1f %s (model: %s)",
-                                        register.get("name", "unknown"),
-                                        register["max_value"],
-                                        unit,
-                                        selected_model,
-                                    )
-                                elif (
-                                    "discharge" in unique_id
-                                    and max_discharge_power is not None
-                                ):
-                                    # Convert to appropriate unit (W or kW)
-                                    unit = register.get(
-                                        "unit_of_measurement", ""
-                                    ).lower()
-                                    if unit == "kw":
-                                        register["max_value"] = (
-                                            max_discharge_power / 1000.0
-                                        )
-                                    else:  # W
-                                        register["max_value"] = max_discharge_power
-                                    _LOGGER.debug(
-                                        "Adjusted %s max_value to %.1f %s (model: %s)",
-                                        register.get("name", "unknown"),
-                                        register["max_value"],
-                                        unit,
-                                        selected_model,
-                                    )
-
-                        # Dynamically adjust max_value for export power limit controls
-                        elif (
-                            "export_power_limit" in unique_id
-                            or "feed_in_limitation" in unique_id
+                    # Replace placeholders in max_value if model_config is available
+                    # Supports: {{max_charge_power}}, {{max_discharge_power}}, {{max_ac_output_power}}
+                    # Also supports calculations: {{max_charge_power * 0.5}}
+                    if selected_model and model_config:
+                        max_value = register.get("max_value")
+                        if (
+                            max_value
+                            and isinstance(max_value, str)
+                            and "{{" in max_value
+                            and "}}" in max_value
                         ):
-                            max_ac_output_power = model_limits.get(
-                                "max_ac_output_power"
-                            )
-                            if max_ac_output_power is not None:
-                                unit = register.get("unit_of_measurement", "").lower()
-                                if unit == "kw":
-                                    register["max_value"] = max_ac_output_power / 1000.0
-                                else:  # W
-                                    register["max_value"] = max_ac_output_power
-                                _LOGGER.debug(
-                                    "Adjusted %s max_value to %.1f %s (model: %s)",
-                                    register.get("name", "unknown"),
-                                    register["max_value"],
-                                    unit,
-                                    selected_model,
-                                )
+                            try:
+                                # Extract expression inside {{ }}
+                                import re
 
-                        # Dynamically adjust max_value for battery start power controls
-                        elif "battery_charging_start_power" in unique_id:
-                            max_charge_power = model_limits.get("max_charge_power")
-                            if max_charge_power is not None:
-                                # Set to 50% of max charge power (reasonable limit)
-                                register["max_value"] = int(max_charge_power * 0.5)
-                                _LOGGER.debug(
-                                    "Adjusted %s max_value to %d W (50%% of max charge power, model: %s)",
+                                pattern = r"\{\{([^}]+)\}\}"
+                                match = re.search(pattern, max_value)
+
+                                if match:
+                                    expression = match.group(1).strip()
+                                    unit = register.get(
+                                        "unit_of_measurement", ""
+                                    ).lower()
+
+                                    # Replace model_config keys in expression
+                                    # e.g., "max_charge_power * 0.5" -> "10600 * 0.5"
+                                    processed_expression = expression
+                                    for key, value in model_config.items():
+                                        if isinstance(value, (int, float)):
+                                            # Replace whole word matches only (to avoid partial replacements)
+                                            processed_expression = re.sub(
+                                                r"\b" + re.escape(key) + r"\b",
+                                                str(value),
+                                                processed_expression,
+                                            )
+
+                                    # Evaluate expression safely (only math operations allowed)
+                                    # Use a restricted eval environment for safety
+                                    allowed_names = {
+                                        "__builtins__": {},
+                                        "abs": abs,
+                                        "round": round,
+                                        "int": int,
+                                        "float": float,
+                                        "min": min,
+                                        "max": max,
+                                    }
+                                    result = eval(  # nosec B307
+                                        processed_expression, allowed_names
+                                    )
+
+                                    # Convert to appropriate unit if needed
+                                    # Power values in model_config are in W, but controls might be in kW
+                                    if unit == "kw" and any(
+                                        k in expression
+                                        for k in [
+                                            "max_charge_power",
+                                            "max_discharge_power",
+                                            "max_ac_output_power",
+                                        ]
+                                    ):
+                                        # If original value was in W, convert to kW
+                                        register["max_value"] = float(result) / 1000.0
+                                    else:
+                                        register["max_value"] = float(result)
+
+                                    _LOGGER.debug(
+                                        "Replaced placeholder {{%s}} with %.1f %s for %s (model: %s)",
+                                        expression,
+                                        register["max_value"],
+                                        unit,
+                                        register.get("name", "unknown"),
+                                        selected_model,
+                                    )
+                            except Exception as e:
+                                _LOGGER.warning(
+                                    "Error replacing placeholder {{%s}} in max_value for %s: %s",
+                                    max_value,
                                     register.get("name", "unknown"),
-                                    register["max_value"],
-                                    selected_model,
-                                )
-                        elif "battery_discharging_start_power" in unique_id:
-                            max_discharge_power = model_limits.get(
-                                "max_discharge_power"
-                            )
-                            if max_discharge_power is not None:
-                                # Set to 50% of max discharge power (reasonable limit)
-                                register["max_value"] = int(max_discharge_power * 0.5)
-                                _LOGGER.debug(
-                                    "Adjusted %s max_value to %d W (50%% of max discharge power, model: %s)",
-                                    register.get("name", "unknown"),
-                                    register["max_value"],
-                                    selected_model,
+                                    str(e),
                                 )
 
                     all_registers.append(register)
@@ -1266,22 +1236,17 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 )
                 return {}
 
-            # Extract all configuration values
-            config = {
-                "modules": model_config.get("modules"),
-                "mppt_count": model_config.get("mppt_count"),
-                "string_count": model_config.get("string_count"),
-                "phases": model_config.get("phases"),
-                "type_code": model_config.get("type_code"),
-            }
+            # GENERIC: Extract ALL configuration values from model_config
+            # This automatically includes any new fields added to templates in the future:
+            # - phases, mppt_count, string_count, modules, type_code (existing)
+            # - max_charge_power, max_discharge_power, max_ac_output_power (power limits)
+            # - any future fields added by template authors
+            config = dict(model_config)
 
             _LOGGER.debug(
-                "Extracted config from model %s: modules=%s, mppt=%s, strings=%s, phases=%s",
+                "Extracted config from model %s: %s",
                 selected_model,
-                config.get("modules"),
-                config.get("mppt_count"),
-                config.get("string_count"),
-                config.get("phases"),
+                {k: v for k, v in config.items() if v is not None},
             )
 
             return config
@@ -1597,7 +1562,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 firmware_version,
                             )
                             continue  # Skip this entity
-                    except Exception:
+                    except Exception:  # nosec B110
                         # If comparison fails, include the entity (better safe than sorry)
                         pass
 

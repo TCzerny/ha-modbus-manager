@@ -5,6 +5,31 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.5] - 2026-01-08
+
+### ✨ Added
+- **Template Placeholders for Model-Specific Values**: Added support for placeholders in control `max_value` fields
+  - Use `{{max_charge_power}}`, `{{max_discharge_power}}`, `{{max_ac_output_power}}` in templates
+  - Supports calculations: `{{max_charge_power * 0.5}}` for 50% limits, `{{max(max_charge_power, max_discharge_power)}}` for maximum values
+  - Supports built-in functions: `max()`, `min()`, `abs()`, `round()`, `int()`, `float()`
+  - Automatically converts W to kW when control unit is "kW"
+  - Placeholders are replaced at runtime based on `selected_model` from `dynamic_config.valid_models`
+  - Example: `max_value: "{{max_charge_power}}"` → `10.6` for SH10RT (10600 W / 1000)
+  - Applied to: Battery Max Charging/Discharging Power, Export Power Limit, Battery Start Power, Battery Forced Charge Discharge Power
+
+### 🔧 Fixed
+- **Generic Model Config Extraction**: Fixed `_extract_config_from_model` to automatically extract ALL fields from model configuration
+  - Now properly includes `max_charge_power`, `max_discharge_power`, `max_ac_output_power` in `dynamic_config`
+  - Future-proof: Any new fields added to template `valid_models` will be automatically extracted
+  - Makes template extensions work without requiring coordinator code changes
+
+- **Template Reload with Model-Specific Limits**: Fixed config/options flow to apply model-specific power limits during template reload
+  - Added global helper function `_adjust_control_limits_for_model()` for consistent limit adjustment
+  - Config flow and options flow now both adjust control max/min values based on `selected_model`
+  - Template reload now correctly updates power limits without requiring device deletion/re-adding
+  - Added automatic migration: Legacy config format is automatically converted to devices array format on template reload
+  - Preserves `selected_model` during migration to ensure power limits work correctly after upgrade
+
 ## [0.1.4] - 2026-01-07
 
 ### ✨ Added
