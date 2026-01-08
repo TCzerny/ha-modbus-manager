@@ -5,7 +5,7 @@ name: "Sungrow SG Series Inverter"
 description: "Dynamic template for Sungrow SG series residential and commercial PV grid-connected inverters. Based on Communication Protocol V1.1.53. (RS, RT, HX, KTL, KTL-MT, HV/BF, CX Series)"
 manufacturer: "Sungrow"
 model: "SG Series Dynamic"
-version: 1.0.0
+version: 1.1.0
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Inverter"
@@ -17,56 +17,73 @@ dynamic_config:
   # Model-specific configuration (shows model dropdown instead of individual fields)
   valid_models:
     # RS Series (Single Phase)
-    "SG3.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2603"}
-    "SG4.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2605"}
-    "SG5.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2606"}
-    "SG6.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2607"}
-    "SG8.0RS": {phases: 1, mppt_count: 3, string_count: 1, type_code: "0x2608"}
-    "SG10RS": {phases: 1, mppt_count: 3, string_count: 1, type_code: "0x2609"}
+    # AC Output Power Limits: max_ac_output_power (W) - based on model kW rating
+    # Max Current: max_current (A) - from datasheet (Datasheet_Sungrow_1ph_SG3.0-6.0RS_V11)
+    "SG3.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2603", max_ac_output_power: 3000, max_current: 14}  # Datasheet: 13.7A, rounded to 14A
+    "SG3.6RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2604", max_ac_output_power: 3680, max_current: 16}  # Datasheet: 16.0A
+    "SG4.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2605", max_ac_output_power: 4000, max_current: 18}  # Datasheet: 18.2A, rounded to 18A
+    "SG5.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2606", max_ac_output_power: 5000, max_current: 23}  # Datasheet: 22.8A, rounded to 23A
+    "SG6.0RS": {phases: 1, mppt_count: 2, string_count: 1, type_code: "0x2607", max_ac_output_power: 6000, max_current: 27}  # Datasheet: 27.3A, rounded to 27A
+    "SG8.0RS": {phases: 1, mppt_count: 3, string_count: 1, type_code: "0x2608", max_ac_output_power: 8000, max_current: 36}  # TODO: Verify from datasheet
+    "SG10RS": {phases: 1, mppt_count: 3, string_count: 1, type_code: "0x2609", max_ac_output_power: 10000, max_current: 45}  # TODO: Verify from datasheet
 
     # RT Series (Three Phase)
-    "SG3.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x243D"}
-    "SG4.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x243E"}
-    "SG5.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x2430"}
-    "SG6.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x2431"}
-    "SG7.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x243C"}
-    "SG8.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2432"}
-    "SG10RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2433"}
-    "SG12RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2434"}
-    "SG15RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2435"}
-    "SG20RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2437"}
+    # AC Output Power Limits: max_ac_output_power (W) - based on model kW rating
+    # Max Current: max_current (A) - from datasheet (DS_20231113_SG5.0_6.0_7.0_8.0_10_12RT-P2_V2_EN)
+    "SG3.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x243D", max_ac_output_power: 3000, max_current: 5}  # TODO: Verify from datasheet
+    "SG4.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x243E", max_ac_output_power: 4000, max_current: 6}  # TODO: Verify from datasheet
+    "SG5.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x2430", max_ac_output_power: 5000, max_current: 8}  # Datasheet: 8.3A, rounded to 8A
+    "SG6.0RT": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0x2431", max_ac_output_power: 6000, max_current: 10}  # Datasheet: 10.0A
+    "SG7.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x243C", max_ac_output_power: 7000, max_current: 12}  # Datasheet: 11.7A, rounded to 12A
+    "SG8.0RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2432", max_ac_output_power: 8000, max_current: 13}  # Datasheet: 13.3A, rounded to 13A
+    "SG10RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2433", max_ac_output_power: 10000, max_current: 17}  # Datasheet: 16.7A, rounded to 17A
+    "SG12RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2434", max_ac_output_power: 12000, max_current: 20}  # Datasheet: 20.0A
+    "SG15RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2435", max_ac_output_power: 15000, max_current: 25}  # Datasheet: 25A
+    "SG20RT": {phases: 3, mppt_count: 2, string_count: 2, type_code: "0x2437", max_ac_output_power: 20000, max_current: 32}  # Datasheet: 31.9A, rounded to 32A
 
     # KTL Series (Commercial)
-    "SG30KTL": {phases: 3, mppt_count: 2, string_count: 4, type_code: "0x27"}
-    "SG36KTL": {phases: 3, mppt_count: 2, string_count: 5, type_code: "0x2D"}
-    "SG40KTL": {phases: 3, mppt_count: 2, string_count: 4, type_code: "0x2F"}
-    "SG60KTL": {phases: 3, mppt_count: 1, string_count: 14, type_code: "0x010F"}
-    "SG80KTL": {phases: 3, mppt_count: 1, string_count: 18, type_code: "0x0138"}
+    # AC Output Power Limits: max_ac_output_power (W) - based on model kW rating
+    # Max Current: max_current (A) - TODO: Verify from datasheet (calculated from max_ac_output_power / (phases * 220V))
+    "SG30KTL": {phases: 3, mppt_count: 2, string_count: 4, type_code: "0x27", max_ac_output_power: 30000, max_current: 45}  # TODO: Verify from datasheet
+    "SG36KTL": {phases: 3, mppt_count: 2, string_count: 5, type_code: "0x2D", max_ac_output_power: 36000, max_current: 55}  # TODO: Verify from datasheet
+    "SG40KTL": {phases: 3, mppt_count: 2, string_count: 4, type_code: "0x2F", max_ac_output_power: 40000, max_current: 61}  # TODO: Verify from datasheet
+    "SG60KTL": {phases: 3, mppt_count: 1, string_count: 14, type_code: "0x010F", max_ac_output_power: 60000, max_current: 91}  # TODO: Verify from datasheet
+    "SG80KTL": {phases: 3, mppt_count: 1, string_count: 18, type_code: "0x0138", max_ac_output_power: 80000, max_current: 121}  # TODO: Verify from datasheet
 
     # KTL-M Series (Modular)
-    "SG30KTL-M": {phases: 3, mppt_count: 3, string_count: 3, type_code: "0x0141"}
-    "SG40KTL-M": {phases: 3, mppt_count: 3, string_count: 3, type_code: "0x0135"}
-    "SG50KTL-M": {phases: 3, mppt_count: 4, string_count: 3, type_code: "0x011B"}
-    "SG60KTL-M": {phases: 3, mppt_count: 4, string_count: 4, type_code: "0x0131"}
+    # AC Output Power Limits: max_ac_output_power (W) - based on model kW rating
+    # Max Current: max_current (A) - TODO: Verify from datasheet (calculated from max_ac_output_power / (phases * 220V))
+    "SG30KTL-M": {phases: 3, mppt_count: 3, string_count: 3, type_code: "0x0141", max_ac_output_power: 30000, max_current: 45}  # TODO: Verify from datasheet
+    "SG40KTL-M": {phases: 3, mppt_count: 3, string_count: 3, type_code: "0x0135", max_ac_output_power: 40000, max_current: 61}  # TODO: Verify from datasheet
+    "SG50KTL-M": {phases: 3, mppt_count: 4, string_count: 3, type_code: "0x011B", max_ac_output_power: 50000, max_current: 76}  # TODO: Verify from datasheet
+    "SG60KTL-M": {phases: 3, mppt_count: 4, string_count: 4, type_code: "0x0131", max_ac_output_power: 60000, max_current: 91}  # TODO: Verify from datasheet
 
     # CX Series (Commercial)
-    "SG30CX": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0x2C10"}
-    "SG33CX": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0x2C00"}
-    "SG40CX": {phases: 3, mppt_count: 4, string_count: 2, type_code: "0x2C01"}
-    "SG50CX": {phases: 3, mppt_count: 5, string_count: 2, type_code: "0x2C02"}
-    "SG75CX": {phases: 3, mppt_count: 9, string_count: 2, type_code: "0x2C22"}
-    "SG100CX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C12"}
-    "SG110CX": {phases: 3, mppt_count: 9, string_count: 2, type_code: "0x2C06"}
+    # AC Output Power Limits: max_ac_output_power (W) - based on model kW rating
+    # Max Current: max_current (A) - from datasheet specifications (per phase)
+    # References: DS_20200611_SG30CXAU_V11, SG125_110_75CX-P2-UEN-Ver14-202303
+    "SG30CX": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0x2C10", max_ac_output_power: 30000, max_current: 45}  # TODO: Verify from datasheet
+    "SG33CX": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0x2C00", max_ac_output_power: 33000, max_current: 55}  # Datasheet: 55.2A, rounded to 55A
+    "SG40CX": {phases: 3, mppt_count: 4, string_count: 2, type_code: "0x2C01", max_ac_output_power: 40000, max_current: 67}  # Datasheet: 66.9A, rounded to 67A
+    "SG50CX": {phases: 3, mppt_count: 5, string_count: 2, type_code: "0x2C02", max_ac_output_power: 50000, max_current: 84}  # Datasheet: 83.6A, rounded to 84A
+    "SG75CX": {phases: 3, mppt_count: 9, string_count: 2, type_code: "0x2C22", max_ac_output_power: 75000, max_current: 114}  # TODO: Verify from datasheet (SG125_110_75CX-P2)
+    "SG100CX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C12", max_ac_output_power: 100000, max_current: 152}  # TODO: Verify from datasheet (SG125_110_75CX-P2)
+    "SG110CX": {phases: 3, mppt_count: 9, string_count: 2, type_code: "0x2C06", max_ac_output_power: 110000, max_current: 159}  # Datasheet: 158.8A, rounded to 159A
 
     # HX Series (High Power)
-    "SG250HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C0C"}
-    "SG320HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C26"}
-    "SG350HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C27"}
+    # AC Output Power Limits: max_ac_output_power (W) - based on model kW rating
+    # Max Current: max_current (A) - calculated from max_ac_output_power / (phases * 220V)
+    "SG250HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C0C", max_ac_output_power: 250000, max_current: 379}
+    "SG320HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C26", max_ac_output_power: 320000, max_current: 485}
+    "SG350HX": {phases: 3, mppt_count: 12, string_count: 2, type_code: "0x2C27", max_ac_output_power: 350000, max_current: 530}
 
-    "SG10KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x26"}
-    "SG12KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x29"}
-    "SG15KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x28"}
-    "SG20KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x2A"}
+    # KTL Series (Additional models)
+    # AC Output Power Limits: max_ac_output_power (W) - based on model kW rating
+    # Max Current: max_current (A) - calculated from max_ac_output_power / (phases * 220V)
+    "SG10KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x26", max_ac_output_power: 10000, max_current: 15}
+    "SG12KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x29", max_ac_output_power: 12000, max_current: 18}
+    "SG15KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x28", max_ac_output_power: 15000, max_current: 23}
+    "SG20KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x2A", max_ac_output_power: 20000, max_current: 30}
 
   firmware_version:
     description: "Firmware version string (e.g., 'SAPPHIRE-H_xxx')"
@@ -1257,7 +1274,7 @@ controls:
     unit_of_measurement: "%"
     scale: 0.1
     min: 0
-    max: 1100
+    max: 1000
     step: 1
     scan_interval: 30
     group: "PV_control"
@@ -1283,10 +1300,12 @@ controls:
     data_type: "uint16"
     unit_of_measurement: "W"
     min: 0
-    max: 50000
+    max_value: "{{max_ac_output_power}}"
     step: 100
     scan_interval: 30
     group: "PV_control"
+    # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
+    # For SG10RT: 10000 W, for SG20RT: 20000 W, for SG350HX: 350000 W
 
   - type: "number"
     name: "Current Transformer Output Current"
@@ -1296,10 +1315,11 @@ controls:
     data_type: "uint16"
     unit_of_measurement: "A"
     min: 1
-    max: 100
+    max_value: 5
     step: 1
     scan_interval: 60
     group: "PV_control"
+    # Standard CT secondary current is 5A
 
   - type: "number"
     name: "Current Transformer Range"
@@ -1309,10 +1329,12 @@ controls:
     data_type: "uint16"
     unit_of_measurement: "A"
     min: 1
-    max: 10000
+    max_value: "{{max_current * 1.5}}"
     step: 1
     scan_interval: 60
     group: "PV_control"
+    # Placeholder will be replaced with model-specific value: max_current * 1.5 (50% safety margin)
+    # For SG10RT: 15A * 1.5 = 23A, for SG350HX: 530A * 1.5 = 795A
 
   - type: "select"
     name: "Current Transformer Type"
