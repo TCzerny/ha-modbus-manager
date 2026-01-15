@@ -89,6 +89,9 @@ class ModbusCoordinatorButton(ButtonEntity):
             else:
                 self._attr_entity_id = f"button.{default_entity_id}"
 
+        # Buttons should appear under device controls
+        self._attr_entity_category = EntityCategory.CONFIG
+
         # Get device info from register_config (provided by coordinator)
         device_info = register_config.get("device_info")
         if not device_info:

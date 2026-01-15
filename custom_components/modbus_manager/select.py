@@ -45,6 +45,9 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                 self._attr_entity_id = f"select.{default_entity_id}"
         self._attr_icon = register_config.get("icon")
 
+        # Selects should appear under device controls
+        self._attr_entity_category = EntityCategory.CONFIG
+
         # Select-specific properties
         self._attr_options = list(register_config.get("options", {}).values())
         self._attr_current_option = None

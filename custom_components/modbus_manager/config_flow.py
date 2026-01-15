@@ -2884,6 +2884,10 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             new_data = dict(self.config_entry.data)
             new_data.update(user_input)
 
+            # Ensure battery_enabled is stored based on battery_config
+            if "battery_config" in user_input:
+                new_data["battery_enabled"] = user_input["battery_config"] != "none"
+
             # Remove temporary fields
             new_data.pop("update_template", None)
 
