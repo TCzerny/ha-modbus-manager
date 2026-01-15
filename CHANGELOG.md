@@ -49,6 +49,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - Total power: 8156 (scale: 10) vs 5600 (scale: 1)
   - Phase power: 8558-8562 (scale: 1) vs 5602-5606 (scale: 1)
   - All iHomeManager power values use scale 10 (0.1W units)
+- **Entity ID Handling**: Added `default_entity_id` support to enforce deterministic entity IDs
+  - Default: `default_entity_id` is set from `unique_id` (with prefix)
+  - If provided in the template, the entity is created with the exact `entity_id`
 
 ### 🐛 Fixed
 

@@ -174,6 +174,8 @@ model: "SHx Series"
 sensors:
   - name: "Battery Level"
     unique_id: "battery_level"
+    # Optional: force entity_id (defaults to unique_id if omitted)
+    default_entity_id: "battery_level"
     address: 5000
     input_type: "holding"
     data_type: "uint16"
@@ -197,12 +199,20 @@ controls:
   - name: "Max SOC"
     type: "number"
     unique_id: "max_soc"
+    default_entity_id: "max_soc"
     address: 5001
     input_type: "holding"
     data_type: "uint16"
     min_value: 0
     max_value: 100
 ```
+
+### Entity ID Handling
+
+- `unique_id` is required and always includes the device prefix.
+- `default_entity_id` is optional. If not set, it is derived from `unique_id`.
+- If `default_entity_id` is set, the entity will be created with that exact `entity_id`.
+- When existing entities have different IDs, Home Assistant may keep the old IDs until the registry is cleaned up.
 
 ## 🔧 Installation
 

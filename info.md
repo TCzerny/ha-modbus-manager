@@ -19,6 +19,7 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - 📊 **Template-Based Configuration**: YAML templates for easy device setup
 - 🛠 **UI-Driven Setup**: Complete configuration through Home Assistant UI
 - 🔄 **Automatic Entity Generation**: Sensors, switches, numbers, and more created automatically
+- 🆔 **Deterministic Entity IDs**: Optional `default_entity_id` enforces stable entity IDs
 
 ### Advanced Data Processing
 - ⚡ **Bit Operations**: Shift bits, bit masking, and bit field extraction
