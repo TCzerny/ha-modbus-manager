@@ -1286,12 +1286,13 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     processed_entity["unique_id"] = f"{prefix}_{clean_name}"
 
                 # Process name
-                # With has_entity_name=True, entity.name should NOT include prefix
-                # HA will combine device name + entity name for friendly_name
-                # HA uses unique_id (not device_name + entity_name) for entity_id generation
+                # IMPORTANT: With has_entity_name=True, HA generates entity_id from device_name + entity_name
+                # Device name is now just the prefix (e.g., "SG"), so entity.name should be the rest of unique_id
+                # unique_id = "sg_autarky_rate", device_name = "sg", entity.name = "Autarky Rate"
+                # Result: entity_id = "sensor.sg_autarky_rate" ✓ (matches unique_id)
                 template_name_value = entity.get("name")
                 if template_name_value:
-                    # Remove prefix if present (legacy support)
+                    # Remove prefix from name since device name is now just the prefix
                     if template_name_value.startswith(f"{prefix} "):
                         processed_entity["name"] = template_name_value[
                             len(f"{prefix} ") :
@@ -1628,12 +1629,13 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     processed_entity["unique_id"] = f"{entity_prefix}_{clean_name}"
 
                 # Process name
-                # With has_entity_name=True, entity.name should NOT include prefix
-                # HA will combine device name + entity name for friendly_name
-                # HA uses unique_id (not device_name + entity_name) for entity_id generation
+                # IMPORTANT: With has_entity_name=True, HA generates entity_id from device_name + entity_name
+                # Device name is now just the prefix (e.g., "SG"), so entity.name should be the rest of unique_id
+                # unique_id = "sg_autarky_rate", device_name = "sg", entity.name = "Autarky Rate"
+                # Result: entity_id = "sensor.sg_autarky_rate" ✓ (matches unique_id)
                 template_name_value = entity.get("name")
                 if template_name_value:
-                    # Remove prefix if present (legacy support)
+                    # Remove prefix from name since device name is now just the prefix
                     if template_name_value.startswith(f"{entity_prefix} "):
                         processed_entity["name"] = template_name_value[
                             len(f"{entity_prefix} ") :
