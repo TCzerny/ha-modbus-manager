@@ -18,18 +18,14 @@ def generate_unique_id(
         name: Fallback name if no template_unique_id (optional)
 
     Returns:
-        Generated unique_id with prefix (all lowercase for consistency)
+        Generated unique_id with prefix
     """
-    # Convert prefix to lowercase for consistent unique_id format
-    prefix_lower = prefix.lower()
-
     if template_unique_id:
-        # Check if template_unique_id already has prefix (case-insensitive)
-        if template_unique_id.lower().startswith(f"{prefix_lower}_"):
-            # unique_id already has prefix, but ensure it's lowercase
-            return template_unique_id.lower()
+        # Check if template_unique_id already has prefix
+        if template_unique_id.startswith(f"{prefix}_"):
+            return template_unique_id
         else:
-            return f"{prefix_lower}_{template_unique_id}"
+            return f"{prefix}_{template_unique_id}"
     else:
         # Fallback: Clean the name for unique_id
         if name:
@@ -40,9 +36,9 @@ def generate_unique_id(
                 .replace("(", "")
                 .replace(")", "")
             )
-            return f"{prefix_lower}_{clean_name}"
+            return f"{prefix}_{clean_name}"
         else:
-            return f"{prefix_lower}_unknown"
+            return f"{prefix}_unknown"
 
 
 def process_template_entities_with_prefix(
@@ -64,16 +60,10 @@ def process_template_entities_with_prefix(
         processed_entity = entity.copy()
 
         # Process unique_id
-        # Convert prefix to lowercase for consistent unique_id format
-        prefix_lower = prefix.lower()
         template_unique_id = entity.get("unique_id")
         if template_unique_id:
-            # Check if unique_id already has prefix (case-insensitive check)
-            if not template_unique_id.lower().startswith(f"{prefix_lower}_"):
-                processed_entity["unique_id"] = f"{prefix_lower}_{template_unique_id}"
-            else:
-                # unique_id already has prefix, but ensure it's lowercase
-                processed_entity["unique_id"] = template_unique_id.lower()
+            if not template_unique_id.startswith(f"{prefix}_"):
+                processed_entity["unique_id"] = f"{prefix}_{template_unique_id}"
         else:
             # Generate unique_id from name if not present
             name = entity.get("name", "unknown")
@@ -84,7 +74,7 @@ def process_template_entities_with_prefix(
                 .replace("(", "")
                 .replace(")", "")
             )
-            processed_entity["unique_id"] = f"{prefix_lower}_{clean_name}"
+            processed_entity["unique_id"] = f"{prefix}_{clean_name}"
 
         # Process name - avoid double prefixes
         template_name_value = entity.get("name")
@@ -194,12 +184,11 @@ def create_device_info_dict(
         firmware_version = "1.0.0"
 
     # Return device info as dict - no separate hub device needed
-    # Device name includes full template name for better UI display
-    # Eindeutigkeit wird durch unique_id sichergestellt (enthält bereits prefix)
-    # Device identifiers (host, port, slave_id) stellen auch Eindeutigkeit sicher
+    # Device name is set to prefix only to keep entity_id format stable
+    # unique_id already contains the prefix and stays stable across updates
     return {
         "identifiers": {(DOMAIN, device_identifier)},
-        "name": f"{prefix} ({template_name})",  # Full name for better UI display
+        "name": prefix,
         "manufacturer": "Modbus Manager",
         "model": f"{template_name} (Slave {slave_id})",
         "sw_version": f"Firmware: {firmware_version}",

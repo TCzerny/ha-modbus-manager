@@ -1270,18 +1270,10 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 # entity.copy() preserves all fields including "type"
 
                 # Process unique_id
-                # Convert prefix to lowercase for consistent unique_id format
-                prefix_lower = prefix.lower()
                 template_unique_id = entity.get("unique_id")
                 if template_unique_id:
-                    # Check if unique_id already has prefix (case-insensitive check)
-                    if not template_unique_id.lower().startswith(f"{prefix_lower}_"):
-                        processed_entity[
-                            "unique_id"
-                        ] = f"{prefix_lower}_{template_unique_id}"
-                    else:
-                        # unique_id already has prefix, but ensure it's lowercase
-                        processed_entity["unique_id"] = template_unique_id.lower()
+                    if not template_unique_id.startswith(f"{prefix}_"):
+                        processed_entity["unique_id"] = f"{prefix}_{template_unique_id}"
                 else:
                     name = entity.get("name", "unknown")
                     clean_name = (
@@ -1291,50 +1283,18 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         .replace("(", "")
                         .replace(")", "")
                     )
-                    processed_entity["unique_id"] = f"{prefix_lower}_{clean_name}"
+                    processed_entity["unique_id"] = f"{prefix}_{clean_name}"
 
                 # Process name
-                # IMPORTANT: With has_entity_name=True, HA generates entity_id from device_name + entity_name
-                # Device name is now full name (e.g., "SG (Sungrow SH Series Inverter)")
-                # To ensure entity_id matches unique_id pattern, we set entity.name to match unique_id
-                # unique_id = "sg_autarky_rate" (already has prefix)
-                # entity.name = "sg_autarky_rate" (full unique_id as name)
-                # device_name = "SG (Sungrow SH Series Inverter)" → "sg_sungrow_sh_series_inverter"
-                # Result: entity_id = "sensor.sg_sungrow_sh_series_inverter_sg_autarky_rate"
-                # NOTE: This doesn't match unique_id, but unique_id ensures registry stability
-                # Users can rename entity_id via UI if needed (since unique_id is present)
+                # With has_entity_name=True, entity.name should not include the prefix
                 template_name_value = entity.get("name")
-                unique_id_value = processed_entity.get("unique_id", "")
                 if template_name_value:
-                    # Use unique_id as entity.name to ensure consistency
-                    # This ensures entity_id is predictable even if not exactly matching unique_id
-                    if unique_id_value:
-                        # Convert unique_id to readable name format for display
-                        # "sg_autarky_rate" -> "Autarky Rate" (remove prefix, title case)
-                        prefix_lower = prefix.lower()
-                        if unique_id_value.lower().startswith(f"{prefix_lower}_"):
-                            name_without_prefix = unique_id_value[
-                                len(f"{prefix_lower}_") :
-                            ]
-                            processed_entity["name"] = name_without_prefix.replace(
-                                "_", " "
-                            ).title()
-                        else:
-                            # Fallback: use original name without prefix
-                            if template_name_value.startswith(f"{prefix} "):
-                                processed_entity["name"] = template_name_value[
-                                    len(f"{prefix} ") :
-                                ]
-                            else:
-                                processed_entity["name"] = template_name_value
+                    if template_name_value.startswith(f"{prefix} "):
+                        processed_entity["name"] = template_name_value[
+                            len(f"{prefix} ") :
+                        ]
                     else:
-                        # Fallback: use original name without prefix
-                        if template_name_value.startswith(f"{prefix} "):
-                            processed_entity["name"] = template_name_value[
-                                len(f"{prefix} ") :
-                            ]
-                        else:
-                            processed_entity["name"] = template_name_value
+                        processed_entity["name"] = template_name_value
 
                 processed_entities.append(processed_entity)
 
@@ -1647,20 +1607,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 processed_entity = entity.copy()
 
                 # Process unique_id
-                # Convert prefix to lowercase for consistent unique_id format
-                entity_prefix_lower = entity_prefix.lower()
                 template_unique_id = entity.get("unique_id")
                 if template_unique_id:
-                    # Check if unique_id already has prefix (case-insensitive check)
-                    if not template_unique_id.lower().startswith(
-                        f"{entity_prefix_lower}_"
-                    ):
+                    if not template_unique_id.startswith(f"{entity_prefix}_"):
                         processed_entity[
                             "unique_id"
-                        ] = f"{entity_prefix_lower}_{template_unique_id}"
-                    else:
-                        # unique_id already has prefix, but ensure it's lowercase
-                        processed_entity["unique_id"] = template_unique_id.lower()
+                        ] = f"{entity_prefix}_{template_unique_id}"
                 else:
                     name = entity.get("name", "unknown")
                     clean_name = (
@@ -1670,53 +1622,18 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         .replace("(", "")
                         .replace(")", "")
                     )
-                    processed_entity[
-                        "unique_id"
-                    ] = f"{entity_prefix_lower}_{clean_name}"
+                    processed_entity["unique_id"] = f"{entity_prefix}_{clean_name}"
 
                 # Process name
-                # IMPORTANT: With has_entity_name=True, HA generates entity_id from device_name + entity_name
-                # Device name is now full name (e.g., "SG (Sungrow SH Series Inverter)")
-                # To ensure entity_id matches unique_id pattern, we set entity.name to match unique_id
-                # unique_id = "sg_autarky_rate" (already has prefix)
-                # entity.name = "Autarky Rate" (readable format)
-                # device_name = "SG (Sungrow SH Series Inverter)" → "sg_sungrow_sh_series_inverter"
-                # Result: entity_id = "sensor.sg_sungrow_sh_series_inverter_autarky_rate"
-                # NOTE: This doesn't match unique_id, but unique_id ensures registry stability
-                # Users can rename entity_id via UI if needed (since unique_id is present)
+                # With has_entity_name=True, entity.name should not include the prefix
                 template_name_value = entity.get("name")
-                unique_id_value = processed_entity.get("unique_id", "")
                 if template_name_value:
-                    # Use unique_id to generate readable entity name
-                    if unique_id_value:
-                        # Convert unique_id to readable name format for display
-                        # "sg_autarky_rate" -> "Autarky Rate" (remove prefix, title case)
-                        entity_prefix_lower = entity_prefix.lower()
-                        if unique_id_value.lower().startswith(
-                            f"{entity_prefix_lower}_"
-                        ):
-                            name_without_prefix = unique_id_value[
-                                len(f"{entity_prefix_lower}_") :
-                            ]
-                            processed_entity["name"] = name_without_prefix.replace(
-                                "_", " "
-                            ).title()
-                        else:
-                            # Fallback: use original name without prefix
-                            if template_name_value.startswith(f"{entity_prefix} "):
-                                processed_entity["name"] = template_name_value[
-                                    len(f"{entity_prefix} ") :
-                                ]
-                            else:
-                                processed_entity["name"] = template_name_value
+                    if template_name_value.startswith(f"{entity_prefix} "):
+                        processed_entity["name"] = template_name_value[
+                            len(f"{entity_prefix} ") :
+                        ]
                     else:
-                        # Fallback: use original name without prefix
-                        if template_name_value.startswith(f"{entity_prefix} "):
-                            processed_entity["name"] = template_name_value[
-                                len(f"{entity_prefix} ") :
-                            ]
-                        else:
-                            processed_entity["name"] = template_name_value
+                        processed_entity["name"] = template_name_value
 
                 processed_entities.append(processed_entity)
 
