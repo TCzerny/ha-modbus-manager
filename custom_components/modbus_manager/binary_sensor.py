@@ -179,6 +179,12 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
         # unique_id should be just the value, not "binary_sensor.{value}"
         # Home Assistant will auto-generate entity_id from unique_id
         self._attr_unique_id = self._unique_id
+        default_entity_id = register_config.get("default_entity_id")
+        if default_entity_id:
+            if "." in default_entity_id:
+                self._attr_entity_id = default_entity_id
+            else:
+                self._attr_entity_id = f"binary_sensor.{default_entity_id}"
 
         # Binary sensors are typically diagnostic (status indicators)
         entity_category_str = register_config.get("entity_category")

@@ -424,6 +424,10 @@ def process_simple_template(
                 processed_sensor[
                     "unique_id"
                 ] = f"{prefix}_{processed_sensor['unique_id']}"
+            if "default_entity_id" not in processed_sensor:
+                processed_sensor["default_entity_id"] = processed_sensor.get(
+                    "unique_id"
+                )
             processed_sensors.append(processed_sensor)
 
         filtered_registers = processed_sensors
@@ -443,6 +447,8 @@ def process_simple_template(
                 template_unique_id=calc_sensor.get("unique_id"),
                 name=calc_sensor.get("name", ""),
             )
+            if "default_entity_id" not in calc_sensor:
+                calc_sensor["default_entity_id"] = calc_sensor.get("unique_id")
 
         # Process sensors for placeholder replacement
         sensors = template_data.get("sensors", [])
@@ -465,6 +471,8 @@ def process_simple_template(
                 template_unique_id=control.get("unique_id"),
                 name=control.get("name", ""),
             )
+            if "default_entity_id" not in control:
+                control["default_entity_id"] = control.get("unique_id")
 
         # Create final template data
         processed_template = {

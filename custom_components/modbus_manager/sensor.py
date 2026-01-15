@@ -69,6 +69,12 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
         self._attr_has_entity_name = True
         self._attr_name = register_config.get("name", "Unknown Sensor")
         self._attr_unique_id = register_config.get("unique_id", "unknown")
+        default_entity_id = register_config.get("default_entity_id")
+        if default_entity_id:
+            if "." in default_entity_id:
+                self._attr_entity_id = default_entity_id
+            else:
+                self._attr_entity_id = f"sensor.{default_entity_id}"
         self._attr_native_unit_of_measurement = register_config.get(
             "unit_of_measurement", ""
         )

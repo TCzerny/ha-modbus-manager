@@ -76,6 +76,10 @@ def process_template_entities_with_prefix(
             )
             processed_entity["unique_id"] = f"{prefix}_{clean_name}"
 
+        # Ensure default_entity_id is set (used to force entity_id)
+        if "default_entity_id" not in processed_entity:
+            processed_entity["default_entity_id"] = processed_entity.get("unique_id")
+
         # Process name - avoid double prefixes
         template_name_value = entity.get("name")
         if template_name_value:

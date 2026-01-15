@@ -62,6 +62,12 @@ class ModbusCalculatedSensor(SensorEntity):
         # unique_id should be just the value, not "sensor.{value}"
         # Home Assistant will auto-generate entity_id from unique_id
         self._attr_unique_id = unique_id
+        default_entity_id = config.get("default_entity_id")
+        if default_entity_id:
+            if "." in default_entity_id:
+                self._attr_entity_id = default_entity_id
+            else:
+                self._attr_entity_id = f"sensor.{default_entity_id}"
         self._attr_has_entity_name = True
 
         # Template processing - support both 'template' and 'state' parameters
@@ -415,6 +421,12 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         # unique_id should be just the value, not "binary_sensor.{value}"
         # Home Assistant will auto-generate entity_id from unique_id
         self._attr_unique_id = unique_id
+        default_entity_id = config.get("default_entity_id")
+        if default_entity_id:
+            if "." in default_entity_id:
+                self._attr_entity_id = default_entity_id
+            else:
+                self._attr_entity_id = f"binary_sensor.{default_entity_id}"
         self._attr_has_entity_name = True
 
         # Template processing - support 'state' parameter

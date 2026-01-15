@@ -1285,6 +1285,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     )
                     processed_entity["unique_id"] = f"{prefix}_{clean_name}"
 
+                # Ensure default_entity_id is set (used to force entity_id)
+                if "default_entity_id" not in processed_entity:
+                    processed_entity["default_entity_id"] = processed_entity.get(
+                        "unique_id"
+                    )
+
                 # Process name
                 # With has_entity_name=True, entity.name should not include the prefix
                 template_name_value = entity.get("name")
@@ -1623,6 +1629,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         .replace(")", "")
                     )
                     processed_entity["unique_id"] = f"{entity_prefix}_{clean_name}"
+
+                # Ensure default_entity_id is set (used to force entity_id)
+                if "default_entity_id" not in processed_entity:
+                    processed_entity["default_entity_id"] = processed_entity.get(
+                        "unique_id"
+                    )
 
                 # Process name
                 # With has_entity_name=True, entity.name should not include the prefix

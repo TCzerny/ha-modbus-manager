@@ -82,11 +82,12 @@ class ModbusCoordinatorButton(ButtonEntity):
         self._attr_has_entity_name = True
         self._attr_name = self._name
         self._attr_unique_id = self._unique_id
-
-        # Buttons trigger actions - ALWAYS CONFIG category
-        # Controls (switches, numbers, selects, buttons, text) should NEVER be DIAGNOSTIC
-        # Note: Buttons with IDENTIFY device class would be DIAGNOSTIC, but we don't use that
-        self._attr_entity_category = EntityCategory.CONFIG
+        default_entity_id = register_config.get("default_entity_id")
+        if default_entity_id:
+            if "." in default_entity_id:
+                self._attr_entity_id = default_entity_id
+            else:
+                self._attr_entity_id = f"button.{default_entity_id}"
 
         # Get device info from register_config (provided by coordinator)
         device_info = register_config.get("device_info")

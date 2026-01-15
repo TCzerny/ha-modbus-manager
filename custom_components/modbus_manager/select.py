@@ -37,6 +37,12 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._attr_has_entity_name = True
         self._attr_name = register_config.get("name", "Unknown Select")
         self._attr_unique_id = register_config.get("unique_id", "unknown")
+        default_entity_id = register_config.get("default_entity_id")
+        if default_entity_id:
+            if "." in default_entity_id:
+                self._attr_entity_id = default_entity_id
+            else:
+                self._attr_entity_id = f"select.{default_entity_id}"
         self._attr_icon = register_config.get("icon")
 
         # Select-specific properties

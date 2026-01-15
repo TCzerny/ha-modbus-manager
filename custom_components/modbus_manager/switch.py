@@ -85,10 +85,12 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         self._attr_has_entity_name = True
         self._attr_name = self._name
         self._attr_unique_id = self._unique_id
-
-        # Switches allow changing device configuration - ALWAYS CONFIG category
-        # Controls (switches, numbers, selects, buttons, text) should NEVER be DIAGNOSTIC
-        self._attr_entity_category = EntityCategory.CONFIG
+        default_entity_id = register_config.get("default_entity_id")
+        if default_entity_id:
+            if "." in default_entity_id:
+                self._attr_entity_id = default_entity_id
+            else:
+                self._attr_entity_id = f"switch.{default_entity_id}"
 
         # Get device info from register_config (provided by coordinator)
         device_info = register_config.get("device_info")
