@@ -39,13 +39,9 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         self._attr_icon = register_config.get("icon")
 
-        # Selects allow changing device configuration - set as CONFIG category
-        entity_category_str = register_config.get("entity_category")
-        if entity_category_str == "diagnostic":
-            self._attr_entity_category = EntityCategory.DIAGNOSTIC
-        else:
-            # Default: CONFIG for selects (they change device configuration)
-            self._attr_entity_category = EntityCategory.CONFIG
+        # Selects allow changing device configuration - ALWAYS CONFIG category
+        # Controls (switches, numbers, selects, buttons, text) should NEVER be DIAGNOSTIC
+        self._attr_entity_category = EntityCategory.CONFIG
 
         # Select-specific properties
         self._attr_options = list(register_config.get("options", {}).values())

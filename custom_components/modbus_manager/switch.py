@@ -86,13 +86,9 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         self._attr_name = self._name
         self._attr_unique_id = self._unique_id
 
-        # Switches allow changing device configuration - set as CONFIG category
-        entity_category_str = register_config.get("entity_category")
-        if entity_category_str == "diagnostic":
-            self._attr_entity_category = EntityCategory.DIAGNOSTIC
-        else:
-            # Default: CONFIG for switches (they change device configuration)
-            self._attr_entity_category = EntityCategory.CONFIG
+        # Switches allow changing device configuration - ALWAYS CONFIG category
+        # Controls (switches, numbers, selects, buttons, text) should NEVER be DIAGNOSTIC
+        self._attr_entity_category = EntityCategory.CONFIG
 
         # Get device info from register_config (provided by coordinator)
         device_info = register_config.get("device_info")

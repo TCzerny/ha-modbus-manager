@@ -44,13 +44,9 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         self._attr_device_class = register_config.get("device_class")
         self._attr_icon = register_config.get("icon")
 
-        # Numbers allow changing device configuration - set as CONFIG category
-        entity_category_str = register_config.get("entity_category")
-        if entity_category_str == "diagnostic":
-            self._attr_entity_category = EntityCategory.DIAGNOSTIC
-        else:
-            # Default: CONFIG for numbers (they change device configuration)
-            self._attr_entity_category = EntityCategory.CONFIG
+        # Numbers allow changing device configuration - ALWAYS CONFIG category
+        # Controls (switches, numbers, selects, buttons, text) should NEVER be DIAGNOSTIC
+        self._attr_entity_category = EntityCategory.CONFIG
 
         # Number-specific properties
         self._attr_native_min_value = register_config.get("min_value", 0)
