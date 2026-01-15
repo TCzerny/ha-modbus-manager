@@ -191,6 +191,11 @@ dynamic_config:
     # iHomeManager: iHomeManager EMS uses different register addresses (8156, 8558-8562, scale: 10)
     # Meter Channel 2 sensors are only valid when DTSU666-20 is selected
 
+  battery_config:
+    description: "Battery configuration"
+    options: ["none", "standard_battery", "sbr_battery"]
+    default: "none"
+
 # Base sensors (will be filtered based on configuration)
 sensors:
   # Device Information
