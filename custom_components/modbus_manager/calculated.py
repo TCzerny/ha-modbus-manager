@@ -45,12 +45,18 @@ class ModbusCalculatedSensor(SensorEntity):
             # Config is already processed by coordinator
             # Use device_prefix for display in attributes
             self._prefix = device_prefix if device_prefix else "unknown"
+            # With has_entity_name=True, entity.name should NOT include prefix
             self._attr_name = base_name
             unique_id = config.get("unique_id", "unknown")
         else:
             # Legacy mode - process prefix
             self._prefix = prefix
-            self._attr_name = generate_entity_name(prefix, base_name)
+            # With has_entity_name=True, entity.name should NOT include prefix
+            # Remove prefix from base_name if present
+            if base_name.startswith(f"{prefix} "):
+                self._attr_name = base_name[len(f"{prefix} ") :]
+            else:
+                self._attr_name = base_name
             unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
 
         # unique_id should be just the value, not "sensor.{value}"
@@ -392,12 +398,18 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             # Config is already processed by coordinator
             # Use device_prefix for display in attributes
             self._prefix = device_prefix if device_prefix else "unknown"
+            # With has_entity_name=True, entity.name should NOT include prefix
             self._attr_name = base_name
             unique_id = config.get("unique_id", "unknown")
         else:
             # Legacy mode - process prefix
             self._prefix = prefix
-            self._attr_name = generate_entity_name(prefix, base_name)
+            # With has_entity_name=True, entity.name should NOT include prefix
+            # Remove prefix from base_name if present
+            if base_name.startswith(f"{prefix} "):
+                self._attr_name = base_name[len(f"{prefix} ") :]
+            else:
+                self._attr_name = base_name
             unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
 
         # unique_id should be just the value, not "binary_sensor.{value}"

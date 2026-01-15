@@ -1286,10 +1286,16 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     processed_entity["unique_id"] = f"{prefix}_{clean_name}"
 
                 # Process name
+                # With has_entity_name=True, entity.name should NOT include prefix
+                # HA will combine device name + entity name for friendly_name
+                # HA uses unique_id (not device_name + entity_name) for entity_id generation
                 template_name_value = entity.get("name")
                 if template_name_value:
-                    if not template_name_value.startswith(f"{prefix} "):
-                        processed_entity["name"] = f"{prefix} {template_name_value}"
+                    # Remove prefix if present (legacy support)
+                    if template_name_value.startswith(f"{prefix} "):
+                        processed_entity["name"] = template_name_value[
+                            len(f"{prefix} ") :
+                        ]
                     else:
                         processed_entity["name"] = template_name_value
 
@@ -1621,13 +1627,17 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     )
                     processed_entity["unique_id"] = f"{entity_prefix}_{clean_name}"
 
-                # Process name - avoid double prefixes
+                # Process name
+                # With has_entity_name=True, entity.name should NOT include prefix
+                # HA will combine device name + entity name for friendly_name
+                # HA uses unique_id (not device_name + entity_name) for entity_id generation
                 template_name_value = entity.get("name")
                 if template_name_value:
-                    if not template_name_value.startswith(f"{entity_prefix} "):
-                        processed_entity[
-                            "name"
-                        ] = f"{entity_prefix} {template_name_value}"
+                    # Remove prefix if present (legacy support)
+                    if template_name_value.startswith(f"{entity_prefix} "):
+                        processed_entity["name"] = template_name_value[
+                            len(f"{entity_prefix} ") :
+                        ]
                     else:
                         processed_entity["name"] = template_name_value
 
