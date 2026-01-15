@@ -184,12 +184,12 @@ def create_device_info_dict(
         firmware_version = "1.0.0"
 
     # Return device info as dict - no separate hub device needed
-    # IMPORTANT: Device name is set to just the prefix to ensure entity_id generation matches unique_id
-    # With has_entity_name=True, HA generates entity_id from device_name + entity_name
-    # By using prefix as device name, entity_id = platform.{prefix}_{entity_name} = platform.{unique_id}
+    # Device name includes full template name for better UI display
+    # Eindeutigkeit wird durch unique_id sichergestellt (enthält bereits prefix)
+    # Device identifiers (host, port, slave_id) stellen auch Eindeutigkeit sicher
     return {
         "identifiers": {(DOMAIN, device_identifier)},
-        "name": prefix,  # Use just prefix, not full template name, to match unique_id pattern
+        "name": f"{prefix} ({template_name})",  # Full name for better UI display
         "manufacturer": "Modbus Manager",
         "model": f"{template_name} (Slave {slave_id})",
         "sw_version": f"Firmware: {firmware_version}",
