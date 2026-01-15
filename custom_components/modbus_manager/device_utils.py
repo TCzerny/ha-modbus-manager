@@ -18,14 +18,18 @@ def generate_unique_id(
         name: Fallback name if no template_unique_id (optional)
 
     Returns:
-        Generated unique_id with prefix
+        Generated unique_id with prefix (all lowercase for consistency)
     """
+    # Convert prefix to lowercase for consistent unique_id format
+    prefix_lower = prefix.lower()
+
     if template_unique_id:
-        # Check if template_unique_id already has prefix
-        if template_unique_id.startswith(f"{prefix}_"):
-            return template_unique_id
+        # Check if template_unique_id already has prefix (case-insensitive)
+        if template_unique_id.lower().startswith(f"{prefix_lower}_"):
+            # unique_id already has prefix, but ensure it's lowercase
+            return template_unique_id.lower()
         else:
-            return f"{prefix}_{template_unique_id}"
+            return f"{prefix_lower}_{template_unique_id}"
     else:
         # Fallback: Clean the name for unique_id
         if name:
@@ -36,9 +40,9 @@ def generate_unique_id(
                 .replace("(", "")
                 .replace(")", "")
             )
-            return f"{prefix}_{clean_name}"
+            return f"{prefix_lower}_{clean_name}"
         else:
-            return f"{prefix}_unknown"
+            return f"{prefix_lower}_unknown"
 
 
 def process_template_entities_with_prefix(
@@ -60,10 +64,16 @@ def process_template_entities_with_prefix(
         processed_entity = entity.copy()
 
         # Process unique_id
+        # Convert prefix to lowercase for consistent unique_id format
+        prefix_lower = prefix.lower()
         template_unique_id = entity.get("unique_id")
         if template_unique_id:
-            if not template_unique_id.startswith(f"{prefix}_"):
-                processed_entity["unique_id"] = f"{prefix}_{template_unique_id}"
+            # Check if unique_id already has prefix (case-insensitive check)
+            if not template_unique_id.lower().startswith(f"{prefix_lower}_"):
+                processed_entity["unique_id"] = f"{prefix_lower}_{template_unique_id}"
+            else:
+                # unique_id already has prefix, but ensure it's lowercase
+                processed_entity["unique_id"] = template_unique_id.lower()
         else:
             # Generate unique_id from name if not present
             name = entity.get("name", "unknown")
@@ -74,7 +84,7 @@ def process_template_entities_with_prefix(
                 .replace("(", "")
                 .replace(")", "")
             )
-            processed_entity["unique_id"] = f"{prefix}_{clean_name}"
+            processed_entity["unique_id"] = f"{prefix_lower}_{clean_name}"
 
         # Process name - avoid double prefixes
         template_name_value = entity.get("name")

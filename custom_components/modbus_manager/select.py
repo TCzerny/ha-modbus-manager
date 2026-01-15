@@ -41,7 +41,7 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
 
         # Selects allow changing device configuration - ALWAYS CONFIG category
         # Controls (switches, numbers, selects, buttons, text) should NEVER be DIAGNOSTIC
-        self._attr_entity_category = EntityCategory.CONFIG
+        # self._attr_entity_category = EntityCategory.CONFIG
 
         # Select-specific properties
         self._attr_options = list(register_config.get("options", {}).values())
