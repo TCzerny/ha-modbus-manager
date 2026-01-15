@@ -7,12 +7,11 @@ from typing import Any
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import generate_entity_id
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -175,21 +174,33 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
         self._register_key = f"{self._unique_id}_{self._address}"
 
         # Set entity properties
+        self._attr_has_entity_name = True
         self._attr_name = self._name
-        self._attr_unique_id = generate_entity_id("binary_sensor", self._unique_id)
+        # unique_id should be just the value, not "binary_sensor.{value}"
+        # Home Assistant will auto-generate entity_id from unique_id
+        self._attr_unique_id = self._unique_id
 
-        # Set extra state attributes
+        # Binary sensors are typically diagnostic (status indicators)
+        entity_category_str = register_config.get("entity_category")
+        if entity_category_str == "config":
+            self._attr_entity_category = EntityCategory.CONFIG
+        else:
+            # Default: DIAGNOSTIC for binary sensors (they expose status/diagnostics)
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+
+        # Minimize extra_state_attributes - only include static/essential attributes
         self._attr_extra_state_attributes = {
-            "address": self._address,
+            "register_address": self._address,
             "input_type": self._input_type,
             "data_type": self._data_type,
-            "scan_interval": self._scan_interval,
-            "register_key": self._register_key,
-            "template_name": coordinator.entry.data.get("template", "unknown"),
-            "prefix": coordinator.entry.data.get("prefix", "modbus"),
-            "host": coordinator.entry.data.get("host", "unknown"),
-            "port": coordinator.entry.data.get("port", 502),
             "slave_id": coordinator.entry.data.get("slave_id", 1),
+            # Static configuration values
+            "scan_interval": self._scan_interval,
+            "scale": register_config.get("scale"),
+            "offset": register_config.get("offset"),
+            "precision": register_config.get("precision"),
+            "group": register_config.get("group"),
+            "swap": register_config.get("swap"),
         }
 
         # Add template-specific attributes if present

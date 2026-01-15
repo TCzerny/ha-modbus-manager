@@ -7,7 +7,7 @@ from typing import Any, Optional
 from homeassistant.components.number import NumberEntity, NumberMode
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -35,6 +35,7 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
 
         # Set entity properties from register config
         # unique_id is already processed by coordinator with prefix via _process_entities_with_prefix
+        self._attr_has_entity_name = True
         self._attr_name = register_config.get("name", "Unknown Number")
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         self._attr_native_unit_of_measurement = register_config.get(
@@ -42,6 +43,14 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         )
         self._attr_device_class = register_config.get("device_class")
         self._attr_icon = register_config.get("icon")
+
+        # Numbers allow changing device configuration - set as CONFIG category
+        entity_category_str = register_config.get("entity_category")
+        if entity_category_str == "diagnostic":
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        else:
+            # Default: CONFIG for numbers (they change device configuration)
+            self._attr_entity_category = EntityCategory.CONFIG
 
         # Number-specific properties
         self._attr_native_min_value = register_config.get("min_value", 0)
@@ -69,21 +78,18 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         if self._precision is not None:
             self._attr_suggested_display_precision = self._precision
 
-        # Set extra_state_attributes
+        # Minimize extra_state_attributes - only include static/essential attributes
         self._attr_extra_state_attributes = {
             "register_address": register_config.get("address"),
             "data_type": register_config.get("data_type"),
             "slave_id": register_config.get("slave_id"),
-            "coordinator_mode": True,
+            "input_type": self._input_type,
+            # Static configuration values
             "scale": self._scale,
             "offset": self._offset,
             "precision": self._precision,
             "group": self._group,
             "scan_interval": self._scan_interval,
-            "input_type": self._input_type,
-            "unit_of_measurement": register_config.get("unit_of_measurement"),
-            "device_class": register_config.get("device_class"),
-            "state_class": register_config.get("state_class"),
             "swap": register_config.get("swap"),
             "min_value": self._attr_native_min_value,
             "max_value": self._attr_native_max_value,
@@ -210,9 +216,18 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                                         )
                                         value = min(value, max_safe_power)
                                 except (ValueError, TypeError):
-                                    pass  # Ignore if battery capacity cannot be parsed
-                except Exception:
-                    pass  # Ignore any errors when trying to validate battery power limits
+                                    # Ignore if battery capacity cannot be parsed
+                                    _LOGGER.debug(
+                                        "Could not parse battery capacity for %s",
+                                        self._attr_name,
+                                    )
+                except Exception as e:
+                    # Ignore any errors when trying to validate battery power limits
+                    _LOGGER.debug(
+                        "Error validating battery power limits for %s: %s",
+                        self._attr_name,
+                        str(e),
+                    )
 
             # Get register configuration
             address = self.register_config.get("address")
@@ -269,6 +284,11 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
     def should_poll(self) -> bool:
         """Return False - coordinator handles updates."""
         return False
+
+    async def async_added_to_hass(self) -> None:
+        """When entity is added to hass."""
+        await super().async_added_to_hass()
+        # CoordinatorEntity already handles listener registration, but we can add custom logic here if needed
 
 
 async def async_setup_entry(

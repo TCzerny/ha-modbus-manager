@@ -7,7 +7,7 @@ from typing import Any
 from homeassistant.components.text import TextEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
@@ -81,8 +81,17 @@ class ModbusCoordinatorText(TextEntity):
         self._register_key = f"{self._unique_id}_{self._address}"
 
         # Set entity properties
+        self._attr_has_entity_name = True
         self._attr_name = self._name
         self._attr_unique_id = self._unique_id
+
+        # Text entities allow changing device configuration - set as CONFIG category
+        entity_category_str = register_config.get("entity_category")
+        if entity_category_str == "diagnostic":
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        else:
+            # Default: CONFIG for text entities (they change device configuration)
+            self._attr_entity_category = EntityCategory.CONFIG
 
         # Get device info from register_config (provided by coordinator)
         device_info = register_config.get("device_info")
@@ -102,29 +111,22 @@ class ModbusCoordinatorText(TextEntity):
         # device_info already retrieved above for prefix extraction
         self._attr_device_info = DeviceInfo(**device_info)
 
-        # Set extra state attributes (consistent with sensors)
+        # Minimize extra_state_attributes - only include static/essential attributes
         self._attr_extra_state_attributes = {
             "register_address": self._address,
             "data_type": self._data_type,
             "slave_id": register_config.get(
                 "slave_id", coordinator.entry.data.get("slave_id", 1)
             ),
-            "coordinator_mode": True,
+            "input_type": self._input_type,
+            # Static configuration values
             "scale": register_config.get("scale"),
             "offset": register_config.get("offset"),
             "precision": register_config.get("precision"),
             "group": register_config.get("group"),
             "scan_interval": self._scan_interval,
-            "input_type": self._input_type,
-            "unit_of_measurement": register_config.get("unit_of_measurement"),
-            "device_class": register_config.get("device_class"),
-            "state_class": register_config.get("state_class"),
             "swap": register_config.get("swap"),
-            "register_key": self._register_key,
-            "template_name": coordinator.entry.data.get("template", "unknown"),
-            "prefix": coordinator.entry.data.get("prefix", "unknown"),
-            "host": coordinator.entry.data.get("host", "unknown"),
-            "port": coordinator.entry.data.get("port", 502),
+            # Text-specific static values
             "min_length": self._min_length,
             "max_length": self._max_length,
             "pattern": self._pattern,

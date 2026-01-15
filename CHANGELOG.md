@@ -5,6 +5,72 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.1.6] - 2026-01-15
+
+### ✨ Added
+
+#### iHomeManager EMS Support
+- ⚠️ **BETA**: iHomeManager support is in beta testing and requires end-user testing. Please report any issues you encounter.
+- **Meter Type Selection**: Added `meter_type` dynamic configuration option for Sungrow SHx template
+  - Options: `DTSU666` (standard), `DTSU666-20` (dual-channel), `iHomeManager` (EMS)
+  - Default: `DTSU666`
+  - Conditional register loading ensures only compatible registers are loaded based on selected meter type
+
+- **iHomeManager Input Registers**: Added comprehensive iHomeManager-specific input registers
+  - **Device Information**: Device type code, protocol number/version, total devices connected, devices in fault
+  - **System Capacity**: Total nominal active power, total battery rated capacity
+  - **Battery Limits**: Charge/discharge limits, min/max charge/discharge power
+  - **Real-Time Power**: Total active power, load power, battery power
+  - **Battery State**: Battery level (SoC)
+  - **Energy Totals**: Grid import/export energy
+  - **Grid Meter Channel 1**: Output type, phase voltages (A/B/C), frequency, phase active power (A/B/C)
+  - **Grid Meter Channel 2**: Phase voltages (A/B/C), frequency, phase active power (A/B/C)
+  - **Charger Status**: Charger status raw value
+
+- **iHomeManager Holding Registers (Controls)**: Added iHomeManager-specific controls
+  - **EMS Mode Selection**: Select control for energy management mode (Self-consumption, Time-of-use, Fixed charge/discharge, External EMS, VPP)
+  - **Battery Forced Charge/Discharge**: Select control (Auto, Charge, Discharge, Standby) and power setting (0-100 kW)
+  - **Export Power Limit**: Export power limit mode (Disabled, Absolute, Percentage) and limit value (0-100 kW)
+  - **Export Power Limit Ratio**: Percentage-based export limit (0-1000%)
+
+- **Conditional Loading Enhancement**: Enhanced template_loader.py to support `AND` and `!=` operators in condition statements
+  - Enables more complex filtering logic (e.g., `meter_type != 'iHomeManager'`, `meter_type == 'DTSU666' or meter_type == 'DTSU666-20'`)
+
+- **Standardized Naming**: Standardized `unique_id` and `name` fields for functionally equivalent registers across meter types
+  - Same `unique_id` used for equivalent registers (e.g., `meter_active_power_raw` for both DTSU666 and iHomeManager)
+  - Filtering based on `meter_type` condition ensures correct register is loaded
+
+### 🔧 Changed
+
+#### Sungrow SHx Dynamic Template v1.2.6
+- **Template Version**: Updated from v1.2.5 to v1.2.6
+- **Meter Type Configuration**: Added `meter_type` to dynamic configuration with three options
+- **Register Addresses**: iHomeManager uses different addresses than DTSU666:
+  - Total power: 8156 (scale: 10) vs 5600 (scale: 1)
+  - Phase power: 8558-8562 (scale: 1) vs 5602-5606 (scale: 1)
+  - All iHomeManager power values use scale 10 (0.1W units)
+
+### 🐛 Fixed
+
+#### Bug Fixes & Code Cleanup
+- **Solvis SC3 Template**: Fixed Warmwasser Nachheizung register address (changed from 2328 to 2322)
+- **Solvis SC3 Template**: Changed default prefix from "solvis" to "SC3" for consistency
+- **Meter Type Handling**: Fixed `meter_type` handling and improved dynamic config processing
+- **Entity Implementation**: Code cleanup and improvements to follow Home Assistant Entity guidelines:
+  - Set `has_entity_name = True` in all entity classes (mandatory for new integrations)
+  - Fixed `unique_id` bug in binary_sensor.py (removed incorrect `generate_entity_id` wrapper)
+  - Added `EntityCategory.CONFIG` for switches, numbers, selects, buttons, text (configuration entities)
+  - Added `EntityCategory.DIAGNOSTIC` for binary_sensors and diagnostic sensors
+  - Reduced `extra_state_attributes` to minimize database size (removed frequently changing attributes)
+  - Added `async_added_to_hass()` lifecycle hooks to sensor, number, select entities
+  - Fixed device membership for proper `friendly_name` generation
+
+### 📚 Documentation
+
+- **README.md**: Updated with iHomeManager support information
+- **Wiki**: Updated Sungrow SHx Dynamic documentation with complete iHomeManager register tables
+- **CHANGELOG.md**: Added comprehensive changelog entry for iHomeManager support
+
 ## [0.1.5] - 2026-01-08
 
 ### ✨ Added

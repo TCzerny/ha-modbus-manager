@@ -5,10 +5,11 @@ from typing import Any, Dict
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.template import Template
 
 from .const import DOMAIN
-from .device_utils import generate_entity_id, generate_entity_name, generate_unique_id
+from .device_utils import generate_entity_name, generate_unique_id
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -52,13 +53,10 @@ class ModbusCalculatedSensor(SensorEntity):
             self._attr_name = generate_entity_name(prefix, base_name)
             unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
 
-        self._attr_unique_id = generate_entity_id("sensor", unique_id)
-
-        # Set explicit entity_id for proper tracking
-        self._attr_entity_id = generate_entity_id("sensor", unique_id)
-
-        # Force entity_id to be used (prevent Home Assistant from overriding)
-        self._attr_has_entity_name = False
+        # unique_id should be just the value, not "sensor.{value}"
+        # Home Assistant will auto-generate entity_id from unique_id
+        self._attr_unique_id = unique_id
+        self._attr_has_entity_name = True
 
         # Template processing - support both 'template' and 'state' parameters
         template_str = config.get("template", config.get("state", ""))
@@ -90,6 +88,16 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_device_class = config.get("device_class")
         self._attr_state_class = config.get("state_class")
         self._attr_entity_registry_enabled_default = True
+
+        # Set entity category - calculated sensors are typically primary (None) or diagnostic
+        entity_category_str = config.get("entity_category")
+        if entity_category_str == "diagnostic":
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        elif entity_category_str == "config":
+            self._attr_entity_category = EntityCategory.CONFIG
+        else:
+            # Default: None for primary calculated sensors (main data points)
+            self._attr_entity_category = None
 
         # Icon support
         self._static_icon = config.get("icon")
@@ -127,7 +135,10 @@ class ModbusCalculatedSensor(SensorEntity):
         device_info_from_config = config.get("device_info")
         if device_info_from_config:
             # Device info already provided by coordinator
-            self._device_info = device_info_from_config
+            # Convert dict to DeviceInfo object for proper device membership
+            from homeassistant.helpers.entity import DeviceInfo
+
+            self._attr_device_info = DeviceInfo(**device_info_from_config)
             _LOGGER.debug(
                 "Using device_info from coordinator config for %s", self._attr_name
             )
@@ -142,9 +153,9 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_native_value = None
 
         _LOGGER.debug(
-            "Created calculated sensor: %s (entity_id: %s, group: %s)",
+            "Created calculated sensor: %s (unique_id: %s, group: %s)",
             self._attr_name,
-            self._attr_entity_id,
+            self._attr_unique_id,
             self._group,
         )
 
@@ -167,10 +178,8 @@ class ModbusCalculatedSensor(SensorEntity):
             )
             return template_str
 
-    @property
-    def device_info(self) -> Dict[str, Any]:
-        """Return device info for proper grouping."""
-        return self._device_info
+    # device_info is now handled via _attr_device_info (DeviceInfo object)
+    # Home Assistant will automatically use _attr_device_info for device membership
 
     @property
     def available(self) -> bool:
@@ -391,13 +400,10 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             self._attr_name = generate_entity_name(prefix, base_name)
             unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
 
-        self._attr_unique_id = generate_entity_id("binary_sensor", unique_id)
-
-        # Set explicit entity_id for proper tracking
-        self._attr_entity_id = generate_entity_id("binary_sensor", unique_id)
-
-        # Force entity_id to be used (prevent Home Assistant from overriding)
-        self._attr_has_entity_name = False
+        # unique_id should be just the value, not "binary_sensor.{value}"
+        # Home Assistant will auto-generate entity_id from unique_id
+        self._attr_unique_id = unique_id
+        self._attr_has_entity_name = True
 
         # Template processing - support 'state' parameter
         template_str = config.get("state", "")
@@ -436,7 +442,10 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         device_info_from_config = config.get("device_info")
         if device_info_from_config:
             # Device info already provided by coordinator
-            self._device_info = device_info_from_config
+            # Convert dict to DeviceInfo object for proper device membership
+            from homeassistant.helpers.entity import DeviceInfo
+
+            self._attr_device_info = DeviceInfo(**device_info_from_config)
             _LOGGER.debug(
                 "Using device_info from coordinator config for %s", self._attr_name
             )
@@ -448,9 +457,9 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             raise ValueError("device_info missing from coordinator")
 
         _LOGGER.debug(
-            "Created calculated binary sensor: %s (entity_id: %s, group: %s)",
+            "Created calculated binary sensor: %s (unique_id: %s, group: %s)",
             self._attr_name,
-            self._attr_entity_id,
+            self._attr_unique_id,
             self._group,
         )
 
@@ -472,10 +481,8 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             )
             return template_str
 
-    @property
-    def device_info(self) -> Dict[str, Any]:
-        """Return device info for proper grouping."""
-        return self._device_info
+    # device_info is now handled via _attr_device_info (DeviceInfo object)
+    # Home Assistant will automatically use _attr_device_info for device membership
 
     @property
     def available(self) -> bool:

@@ -7,7 +7,7 @@ from typing import Any, Optional
 from homeassistant.components.select import SelectEntity
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
-from homeassistant.helpers.entity import DeviceInfo
+from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -34,9 +34,18 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._attr_device_info = DeviceInfo(**device_info)
 
         # Set entity properties from register config
+        self._attr_has_entity_name = True
         self._attr_name = register_config.get("name", "Unknown Select")
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         self._attr_icon = register_config.get("icon")
+
+        # Selects allow changing device configuration - set as CONFIG category
+        entity_category_str = register_config.get("entity_category")
+        if entity_category_str == "diagnostic":
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        else:
+            # Default: CONFIG for selects (they change device configuration)
+            self._attr_entity_category = EntityCategory.CONFIG
 
         # Select-specific properties
         self._attr_options = list(register_config.get("options", {}).values())
@@ -63,18 +72,21 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._map = register_config.get("map", {})
         self._flags = register_config.get("flags", {})
 
-        # Set extra_state_attributes
+        # Minimize extra_state_attributes - only include static/essential attributes
+        # options, map, flags are static configuration - keep them
         self._attr_extra_state_attributes = {
             "register_address": register_config.get("address"),
             "data_type": register_config.get("data_type"),
             "slave_id": register_config.get("slave_id"),
-            "coordinator_mode": True,
+            "input_type": self._input_type,
+            # Static configuration values
             "scale": self._scale,
             "offset": self._offset,
             "precision": self._precision,
             "group": self._group,
             "scan_interval": self._scan_interval,
-            "input_type": self._input_type,
+            "swap": register_config.get("swap"),
+            # Mapping configuration (static)
             "options": self._options,
             "map": self._map,
             "flags": self._flags,
@@ -329,15 +341,10 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         """Return False - coordinator handles updates."""
         return False
 
-    @property
-    def extra_state_attributes(self) -> dict[str, Any]:
-        """Return entity specific state attributes."""
-        return {
-            "register_address": self.register_config.get("address"),
-            "data_type": self.register_config.get("data_type"),
-            "slave_id": self.register_config.get("slave_id"),
-            "coordinator_mode": True,
-        }
+    async def async_added_to_hass(self) -> None:
+        """When entity is added to hass."""
+        await super().async_added_to_hass()
+        # CoordinatorEntity already handles listener registration, but we can add custom logic here if needed
 
 
 async def async_setup_entry(

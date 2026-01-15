@@ -48,6 +48,7 @@ This integration is provided "AS IS" without warranty of any kind. By using this
   - **Automatic Filtering**: Based on phases (1/3), MPPT count (1-4), battery options, strings, firmware
   - **Firmware Compatibility**: Automatic sensor parameter adjustment
   - **Connection Types**: LAN/WINET support with register filtering
+  - **Meter Support**: DTSU666, DTSU666-20 (dual-channel), and iHomeManager EMS (BETA)
 - ☀️ **Sungrow SG Dynamic**: Model selection for SG series inverters
 - 🔋 **Compleo EBox Professional**: EV charger wallbox integration template
 - 🔋 **Sungrow SBR Battery**: Battery system template
@@ -93,7 +94,7 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 
 ## 🎯 Current Status
 
-### Version 0.1.3 (Current - November 2025)
+### Version 0.1.6 (Current - January 2026)
 - ✅ Core Modbus integration with template system
 - ✅ Advanced data processing and entity types
 - ✅ Performance monitoring and register optimization
@@ -102,6 +103,8 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - ✅ Template reload functionality
 - ✅ Calculated sensors with Jinja2
 - ✅ Full float conversion support (IEEE 754)
+- ✅ iHomeManager EMS support (BETA - requires end-user testing)
+- ✅ Home Assistant Entity guidelines compliance (has_entity_name, EntityCategory, etc.)
 
 ## 🤝 Contributing
 
@@ -131,7 +134,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 0.1.3
-**Status**: Active Development
+**Version**: 0.1.6
+**Status**: Beta - Active Development
 **Home Assistant**: 2025.1.0+
-**Last Updated**: November 2025
+**Last Updated**: January 2026

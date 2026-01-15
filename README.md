@@ -76,6 +76,9 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
   - **MPPT tracking**: 1-3 MPPT trackers with power calculations
   - **String tracking**: 0-4 strings with individual monitoring
   - **Grid interaction**: Import/export, phase monitoring, frequency
+  - **Meter Support**: DTSU666, DTSU666-20 (dual-channel), and iHomeManager EMS
+  - **iHomeManager Support**: Complete register mapping for iHomeManager energy management system
+    - ⚠️ **BETA**: iHomeManager support is in beta testing and requires end-user testing. Please report any issues you encounter.
   - **Calculated sensors**: Efficiency, power balance, signed battery power
   - **Full Modbus register mapping**: Based on mkaiser's comprehensive implementation
   - **Firmware compatibility**: Automatic sensor parameter adjustment
@@ -359,6 +362,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Last Updated**: October 2025
-**Version**: 0.1.0
-**Status**: Initial Release
+**Last Updated**: January 2026
+**Version**: 0.1.5
+**Status**: Beta - Active Development
