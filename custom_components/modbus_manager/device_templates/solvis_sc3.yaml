@@ -1,0 +1,1265 @@
+# Solvis SC3 Heating Control Template for Modbus Manager
+# BASED ON: https://github.com/LarsK1/hass_solvis_control
+# Supports Solvis SC2 and SC3 heating controllers via Modbus TCP
+# Register addresses from: https://raw.githubusercontent.com/LarsK1/hass_solvis_control/refs/heads/main/supported-entities.md
+
+name: "Solvis SC3 Heating Control"
+description: "Template for Solvis SC2/SC3 heating controllers. Supports temperature sensors (S1-S16), flow sensors (S17-S18), pump controls (A1-A9), and heating circuit management via Modbus TCP."
+manufacturer: "Solvis"
+model: "SC3"
+version: 1.0.0
+default_prefix: "solvis"
+default_slave_id: 1
+type: "heating_control"
+firmware_version: "SC3"
+
+# Dynamic configuration support
+dynamic_config:
+  device_model:
+    description: "Solvis device model"
+    options: ["SC2", "SC3"]
+    default: "SC3"
+
+  connection_type:
+    description: "Connection type"
+    options: ["TCP", "RTU"]
+    default: "TCP"
+
+  firmware_version:
+    description: "Firmware version"
+    options: ["SC2", "SC3"]
+    default: "SC3"
+
+# Sensors (Input Registers - Read Only)
+sensors:
+  # Device Information
+  - name: "Anzahl Heizkreise"
+    unique_id: "anzahl_heizkreise"
+    address: 2
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 600
+    group: "diagnose"
+    icon: "mdi:information"
+    # Min: 1, Max: 3
+
+  - name: "Version SC3"
+    unique_id: "version_sc3"
+    address: 32770
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 600
+    group: "diagnose"
+    icon: "mdi:chip"
+
+  - name: "Version NBG"
+    unique_id: "version_nbg"
+    address: 32771
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 600
+    group: "diagnose"
+    icon: "mdi:chip"
+
+  # Diagnostic Sensors
+  - name: "Meldungen Anzahl"
+    unique_id: "meldungen_anzahl"
+    address: 33792
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "diagnose"
+    icon: "mdi:message-alert"
+
+  # Analog Output Status (Diagnostic)
+  # Note: These show the modulation mode for various outputs
+  # Analog Out 1 is typically used for burner modulation
+  - name: "Brennermodulation Modus"
+    unique_id: "brennermodulation_modus"
+    address: 3840
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "diagnose"
+    icon: "mdi:gauge"
+    options:
+      0: "Auto PWM"
+      1: "Hand PWM"
+      2: "Auto analog"
+      3: "Hand analog"
+
+  - name: "Wärmepumpe Ladepumpe Modus"
+    unique_id: "warmepumpe_ladepumpe_modus"
+    address: 3845
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "diagnose"
+    icon: "mdi:pump"
+    options:
+      0: "Auto PWM"
+      1: "Hand PWM"
+      2: "Auto analog"
+      3: "Hand analog"
+
+  - name: "Analog Out 3 Status"
+    unique_id: "analog_out_3_status"
+    address: 3850
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "diagnose"
+    icon: "mdi:gauge"
+    options:
+      0: "Auto PWM"
+      1: "Hand PWM"
+      2: "Auto analog"
+      3: "Hand analog"
+
+  - name: "Analog Out 4 Status"
+    unique_id: "analog_out_4_status"
+    address: 3855
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "diagnose"
+    icon: "mdi:gauge"
+    options:
+      0: "Auto PWM"
+      1: "Hand PWM"
+      2: "Auto analog"
+      3: "Hand analog"
+
+  - name: "Warmwasserpumpe Modus"
+    unique_id: "warmwasserpumpe_modus"
+    address: 3860
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "diagnose"
+    icon: "mdi:water-pump"
+    options:
+      0: "Auto PWM"
+      1: "Hand PWM"
+      2: "Auto analog"
+      3: "Hand analog"
+
+  - name: "Analog Out 6 Status"
+    unique_id: "analog_out_6_status"
+    address: 3865
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "diagnose"
+    icon: "mdi:gauge"
+    options:
+      0: "Auto PWM"
+      1: "Hand PWM"
+      2: "Auto analog"
+      3: "Hand analog"
+
+  # Unix Timestamp (high and low words)
+  #- name: "Unix Zeitstempel High"
+  #  unique_id: "unix_zeitstempel_high"
+  #  address: 32768
+  #  input_type: "input"
+  #  data_type: "uint16"
+  #  scan_interval: 60
+  #  group: "heating_device_info"
+  #  icon: "mdi:clock"
+
+  #- name: "Unix Zeitstempel Low"
+  #  unique_id: "unix_zeitstempel_low"
+  #  address: 32769
+  #  input_type: "input"
+  #  data_type: "uint16"
+  #  scan_interval: 60
+  #  group: "heating_device_info"
+  #  icon: "mdi:clock"
+
+  # Temperature Sensors (S1-S16: addresses 33024-33039, 0.1°C scale)
+  # NOTE: The PDF documentation does not specify what S1-S16 measure.
+  # These are generic temperature sensor inputs that can be configured
+  # differently per installation (e.g., flow/return, collector, storage, etc.).
+  # The calculated sensors below make assumptions that may need adjustment
+  # based on your specific installation configuration.
+  # S1-S4: Basic temperatures (available since v0.1)
+  - name: "Temperatur S1"
+    unique_id: "temperatur_s1"
+    address: 33024
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Temperatur S2"
+    unique_id: "temperatur_s2"
+    address: 33025
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Temperatur S3"
+    unique_id: "temperatur_s3"
+    address: 33026
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Temperatur S4"
+    unique_id: "temperatur_s4"
+    address: 33027
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  # S5-S7: Additional temperatures (available since v0.9, conf option 3)
+  - name: "Temperatur S5"
+    unique_id: "temperatur_s5"
+    address: 33028
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Temperatur S6"
+    unique_id: "temperatur_s6"
+    address: 33029
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Temperatur S7"
+    unique_id: "temperatur_s7"
+    address: 33030
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  # S8: Typically used for Solar Collector Temperature (available since v0.1, conf option 3)
+  # NOTE: This is a common use case, but S8 can be configured differently per installation
+  - name: "Temperatur S8"
+    unique_id: "temperatur_s8"
+    address: 33031
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 30
+    group: "heating_temperatures"
+    icon: "mdi:solar-power"
+
+  # S9-S12: Additional temperatures (available since v0.1)
+  - name: "Temperatur S9"
+    unique_id: "temperatur_s9"
+    address: 33032
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Temperatur S10"
+    unique_id: "temperatur_s10"
+    address: 33033
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Temperatur S11"
+    unique_id: "temperatur_s11"
+    address: 33034
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  - name: "Temperatur S12"
+    unique_id: "temperatur_s12"
+    address: 33035
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  # S13: Available since v1.0.0, conf option 1
+  - name: "Temperatur S13"
+    unique_id: "temperatur_s13"
+    address: 33036
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  # S14: Available since v1.0.0
+  - name: "Temperatur S14"
+    unique_id: "temperatur_s14"
+    address: 33037
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  # S15: Available since v0.1
+  - name: "Temperatur S15"
+    unique_id: "temperatur_s15"
+    address: 33038
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  # S16: Available since v1.0, conf option 2
+  - name: "Temperatur S16"
+    unique_id: "temperatur_s16"
+    address: 33039
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:thermometer"
+
+  # Room Temperatures (available since v1.0.0)
+  - name: "Raumtemperatur 1"
+    unique_id: "raumtemperatur_1"
+    address: 34304
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:home-thermometer"
+
+  - name: "Raumtemperatur 2"
+    unique_id: "raumtemperatur_2"
+    address: 34305
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:home-thermometer"
+
+  - name: "Raumtemperatur 3"
+    unique_id: "raumtemperatur_3"
+    address: 34306
+    input_type: "input"
+    data_type: "int16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_temperatures"
+    icon: "mdi:home-thermometer"
+
+  # Flow Sensors (S17-S18: addresses 33040-33041, l/min)
+  - name: "Durchflussmenge S17"
+    unique_id: "durchflussmenge_s17"
+    address: 33040
+    input_type: "input"
+    data_type: "uint16"
+    precision: 1
+    unit_of_measurement: "L/min"
+    device_class: None
+    state_class: "measurement"
+    scan_interval: 30
+    group: "heating_flow"
+    icon: "mdi:water"
+    # Available since v0.9, conf option 3
+
+  - name: "Durchflussmenge S18"
+    unique_id: "durchflussmenge_s18"
+    address: 33041
+    input_type: "input"
+    data_type: "uint16"
+    precision: 1
+    unit_of_measurement: "L/min"
+    device_class: None
+    state_class: "measurement"
+    scan_interval: 30
+    group: "heating_flow"
+    icon: "mdi:water"
+    # Available since v0.1
+
+  # Analog Inputs
+  - name: "Analog Eingang 1"
+    unique_id: "analog_eingang_1"
+    address: 33042
+    input_type: "input"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: None
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_analog"
+    icon: "mdi:signal"
+
+  - name: "Analog Eingang 2"
+    unique_id: "analog_eingang_2"
+    address: 33043
+    input_type: "input"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: None
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_analog"
+    icon: "mdi:signal"
+
+  - name: "Analog Eingang 3"
+    unique_id: "analog_eingang_3"
+    address: 33044
+    input_type: "input"
+    data_type: "uint16"
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "V"
+    device_class: None
+    state_class: "measurement"
+    scan_interval: 60
+    group: "heating_analog"
+    icon: "mdi:signal"
+
+  # Digital Input - Faults (available since v1.1.1)
+  - name: "Digital Eingang Störungen"
+    unique_id: "digital_eingang_stoerungen"
+    address: 33045
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:alert"
+
+# Controls (Holding Registers - Read/Write)
+controls:
+  # Circulation Mode (available since v0.9)
+  - type: "select"
+    name: "Zirkulation Betriebsart"
+    unique_id: "zirkulation_betriebsart"
+    address: 2049
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:water-sync"
+    options:
+      0: "Aus"
+      1: "Auto"
+      2: "Dauerbetrieb"
+      3: "Zeitplan"
+
+  # Heating Circuit 1 Operating Mode
+  - type: "select"
+    name: "HKR1 Betriebsart"
+    unique_id: "hkr1_betriebsart"
+    address: 2818
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:radiator"
+    options:
+      2: "Automatik"
+      3: "Tagbetrieb"
+      4: "Absenkbetrieb"
+      5: "Standby"
+      6: "Eco"
+      7: "Urlaub"
+
+  # Heating Circuit 2 Operating Mode
+  - type: "select"
+    name: "HKR2 Betriebsart"
+    unique_id: "hkr2_betriebsart"
+    address: 3074
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:radiator"
+    options:
+      2: "Automatik"
+      3: "Tagbetrieb"
+      4: "Absenkbetrieb"
+      5: "Standby"
+      6: "Eco"
+      7: "Urlaub"
+
+  # Hot Water Setpoint Temperature
+  - type: "number"
+    name: "Warmwasser Solltemperatur"
+    unique_id: "warmwasser_solltemperatur"
+    address: 2305
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 10
+    max_value: 65
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer-water"
+
+  # Heating Circuit 1 - Fixed Flow Temperature Settings
+  - type: "number"
+    name: "HKR1 Fix Vorlauf Tag-Temperatur"
+    unique_id: "hkr1_fix_vorlauf_tag_temperatur"
+    address: 2820
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 75
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR1 Fix Vorlauf Absenk-Temperatur"
+    unique_id: "hkr1_fix_vorlauf_absenk_temperatur"
+    address: 2821
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 75
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  # Heating Circuit 1 - Heating Curve Settings
+  - type: "number"
+    name: "HKR1 Heizkurve Tag-Temperatur 1"
+    unique_id: "hkr1_heizkurve_tag_temperatur_1"
+    address: 2822
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 50
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR1 Heizkurve Tag-Temperatur 2"
+    unique_id: "hkr1_heizkurve_tag_temperatur_2"
+    address: 2823
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR1 Heizkurve Tag-Temperatur 3"
+    unique_id: "hkr1_heizkurve_tag_temperatur_3"
+    address: 2824
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR1 Heizkurve Absenk-Temperatur"
+    unique_id: "hkr1_heizkurve_absenk_temperatur"
+    address: 2825
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR1 Heizkurve Steilheit"
+    unique_id: "hkr1_heizkurve_steilheit"
+    address: 2832
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 20
+    max_value: 250
+    step: 1
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:chart-line"
+
+  # Heating Circuit 2 - Fixed Flow Temperature Settings
+  - type: "number"
+    name: "HKR2 Fix Vorlauf Tag-Temperatur"
+    unique_id: "hkr2_fix_vorlauf_tag_temperatur"
+    address: 3076
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 75
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR2 Fix Vorlauf Absenk-Temperatur"
+    unique_id: "hkr2_fix_vorlauf_absenk_temperatur"
+    address: 3077
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 75
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  # Heating Circuit 2 - Heating Curve Settings
+  - type: "number"
+    name: "HKR2 Heizkurve Tag-Temperatur 1"
+    unique_id: "hkr2_heizkurve_tag_temperatur_1"
+    address: 3078
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 50
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR2 Heizkurve Tag-Temperatur 2"
+    unique_id: "hkr2_heizkurve_tag_temperatur_2"
+    address: 3079
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR2 Heizkurve Tag-Temperatur 3"
+    unique_id: "hkr2_heizkurve_tag_temperatur_3"
+    address: 3080
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR2 Heizkurve Absenk-Temperatur"
+    unique_id: "hkr2_heizkurve_absenk_temperatur"
+    address: 3081
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 5
+    max_value: 30
+    step: 1
+    unit_of_measurement: "°C"
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:thermometer"
+
+  - type: "number"
+    name: "HKR2 Heizkurve Steilheit"
+    unique_id: "hkr2_heizkurve_steilheit"
+    address: 3088
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 20
+    max_value: 250
+    step: 1
+    mode: "slider"
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:chart-line"
+
+  # Hot Water Priority Switches
+  - type: "switch"
+    name: "HKR1 Warmwasser Vorrang"
+    unique_id: "hkr1_warmwasser_vorrang"
+    address: 2817
+    input_type: "holding"
+    data_type: "uint16"
+    write_value: 1
+    write_value_off: 0
+    on_value: 1
+    off_value: 0
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:water-boiler-alert"
+
+  - type: "switch"
+    name: "HKR2 Warmwasser Vorrang"
+    unique_id: "hkr2_warmwasser_vorrang"
+    address: 3073
+    input_type: "holding"
+    data_type: "uint16"
+    write_value: 1
+    write_value_off: 0
+    on_value: 1
+    off_value: 0
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:water-boiler-alert"
+
+  - type: "switch"
+    name: "Warmwasser Nachheizung Start"
+    unique_id: "warmwasser_nachheizung_start"
+    address: 2328
+    input_type: "holding"
+    data_type: "uint16"
+    write_value: 1
+    write_value_off: 0
+    on_value: 1
+    off_value: 0
+    # Note: Register 2328 should only return 0 or 1 according to Solvis documentation.
+    # If value 8 is read, it may indicate an error state or device initialization.
+    # The switch will log a warning and return None (unknown state) for unexpected values.
+    # Consider checking device status or Modbus connection if unexpected values persist.
+    scan_interval: 60
+    group: "heating_control"
+    icon: "mdi:water-boiler"
+
+# Calculated Sensors
+calculated:
+  - name: "Solarthermie Leistung"
+    unique_id: "solarthermie_leistung"
+    group: "heating_calculated"
+    icon: "mdi:solar-power"
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    template: |
+      {% set collector_temp = states('sensor.{PREFIX}_temperatur_s8') | float(0) %}
+      {% set circuit_temp = states('sensor.{PREFIX}_temperatur_s3') | float(0) %}
+      {% set flow = states('sensor.{PREFIX}_durchflussmenge_s17') | float(0) %}
+      {% if collector_temp > circuit_temp and flow > 0 %}
+        {{ ((collector_temp - circuit_temp) * flow * 0.07) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    # Calculated: (T_collector - T_circuit) * flow * 0.07 (specific heat capacity of water)
+    # NOTE: Assumes S8 = collector temp, S3 = circuit temp. Adjust if your installation differs.
+
+  - name: "Solarkollektor Delta T"
+    unique_id: "solarkollektor_delta_t"
+    group: "heating_calculated"
+    icon: "mdi:thermometer-lines"
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    template: |
+      {% set collector_temp = states('sensor.{PREFIX}_temperatur_s8') | float(0) %}
+      {% set circuit_temp = states('sensor.{PREFIX}_temperatur_s3') | float(0) %}
+      {% if collector_temp > 0 and circuit_temp > 0 %}
+        {{ (collector_temp - circuit_temp) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    # Temperature difference between collector and circuit
+    # NOTE: Assumes S8 = collector temp, S3 = circuit temp. Adjust if your installation differs.
+
+  - name: "Heizkreis 1 Delta T"
+    unique_id: "heizkreis_1_delta_t"
+    group: "heating_calculated"
+    icon: "mdi:thermometer-lines"
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    template: |
+      {% set flow_temp = states('sensor.{PREFIX}_temperatur_s1') | float(0) %}
+      {% set return_temp = states('sensor.{PREFIX}_temperatur_s2') | float(0) %}
+      {% if flow_temp > 0 and return_temp > 0 %}
+        {{ (flow_temp - return_temp) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    # Temperature difference between flow and return (HK1)
+    # NOTE: Assumes S1 = flow temp, S2 = return temp for heating circuit 1.
+    # This is a common configuration but may differ per installation.
+
+  - name: "Heizkreis 2 Delta T"
+    unique_id: "heizkreis_2_delta_t"
+    group: "heating_calculated"
+    icon: "mdi:thermometer-lines"
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    template: |
+      {% set flow_temp = states('sensor.{PREFIX}_temperatur_s9') | float(0) %}
+      {% set return_temp = states('sensor.{PREFIX}_temperatur_s10') | float(0) %}
+      {% if flow_temp > 0 and return_temp > 0 %}
+        {{ (flow_temp - return_temp) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    # Temperature difference between flow and return (HK2)
+    # NOTE: Assumes S9 = flow temp, S10 = return temp for heating circuit 2.
+    # This is a common configuration but may differ per installation.
+
+  - name: "Heizkreis 1 Leistung"
+    unique_id: "heizkreis_1_leistung"
+    group: "heating_calculated"
+    icon: "mdi:radiator"
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    template: |
+      {% set delta_t = states('sensor.{PREFIX}_heizkreis_1_delta_t') | float(0) %}
+      {% set flow = states('sensor.{PREFIX}_durchflussmenge_s18') | float(0) %}
+      {% if delta_t > 0 and flow > 0 %}
+        {{ (delta_t * flow * 0.07) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    # Calculated: Delta T * flow * 0.07 (specific heat capacity of water)
+
+  - name: "Heizkreis 2 Leistung"
+    unique_id: "heizkreis_2_leistung"
+    group: "heating_calculated"
+    icon: "mdi:radiator"
+    unit_of_measurement: "kW"
+    device_class: "power"
+    state_class: "measurement"
+    template: |
+      {% set delta_t = states('sensor.{PREFIX}_heizkreis_2_delta_t') | float(0) %}
+      {% set flow = states('sensor.{PREFIX}_durchflussmenge_s18') | float(0) %}
+      {% if delta_t > 0 and flow > 0 %}
+        {{ (delta_t * flow * 0.07) | round(2) }}
+      {% else %}
+        0
+      {% endif %}
+    # Calculated: Delta T * flow * 0.07 (specific heat capacity of water)
+
+  - name: "Solar Effizienz"
+    unique_id: "solar_effizienz"
+    group: "heating_calculated"
+    icon: "mdi:gauge"
+    unit_of_measurement: "%"
+    device_class: None
+    state_class: "measurement"
+    template: |
+      {% set collector_temp = states('sensor.{PREFIX}_temperatur_s8') | float(0) %}
+      {% set outside_temp = states('sensor.{PREFIX}_temperatur_s15') | float(0) %}
+      {% set flow = states('sensor.{PREFIX}_durchflussmenge_s17') | float(0) %}
+      {% if collector_temp > outside_temp and flow > 0 and outside_temp > -50 %}
+        {% set delta_t = collector_temp - outside_temp %}
+        {% set max_delta = 50 %}
+        {{ ((delta_t / max_delta) * 100) | round(1) }}
+      {% else %}
+        0
+      {% endif %}
+    # Efficiency based on temperature difference (simplified calculation)
+    # NOTE: Assumes S8 = collector temp, S15 = outside temp. Adjust if your installation differs.
+
+# Binary Sensors
+binary_sensors:
+  # Digital Input Faults
+  - name: "DigIn Fehler"
+    unique_id: "digin_fehler"
+    address: 33045
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "diagnose"
+    icon: "mdi:alert"
+    device_class: "problem"
+    # Value > 0 indicates error (0 = Aus/Off, >0 = Error)
+
+  # Output Status Binary Sensors (A1-A14)
+  # These read directly from Holding Registers (read-only status)
+  # NOTE: A1-A14 are defined as Holding Registers but are read-only status indicators
+  - name: "Zirkulationspumpe (A1)"
+    unique_id: "zirkulationspumpe_a1"
+    address: 33280
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:pump"
+    device_class: None
+    # Value > 0 means pump is on
+
+  - name: "Wärmepumpe Ladepumpe (A2)"
+    unique_id: "warmepumpe_ladepumpe_a2"
+    address: 33281
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:pump"
+    device_class: None
+    # Value > 0 means pump is on
+
+  - name: "HKR1 Pumpe (A3)"
+    unique_id: "hkr1_pumpe_a3"
+    address: 33282
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:pump"
+    device_class: None
+    # Value > 0 means pump is on
+
+  - name: "HKR2 Pumpe (A4)"
+    unique_id: "hkr2_pumpe_a4"
+    address: 33283
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:pump"
+    device_class: None
+    # Value > 0 means pump is on
+
+  - name: "Ausgang A5"
+    unique_id: "ausgang_a5"
+    address: 33284
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:gauge"
+    device_class: None
+    # Value > 0 means output is active
+
+  - name: "Ausgang A6"
+    unique_id: "ausgang_a6"
+    address: 33285
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:gauge"
+    device_class: None
+    # Value > 0 means output is active
+
+  - name: "Ausgang A7"
+    unique_id: "ausgang_a7"
+    address: 33286
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:gauge"
+    device_class: None
+    # Value > 0 means output is active
+
+  - name: "HKR1 Mischer Heizkreis auf (A8)"
+    unique_id: "hkr1_mischer_heizkreis_auf_a8"
+    address: 33287
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:valve"
+    device_class: None
+    # Value > 0 means mixer is open
+
+  - name: "HKR1 Mischer Heizkreis zu (A9)"
+    unique_id: "hkr1_mischer_heizkreis_zu_a9"
+    address: 33288
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:valve"
+    device_class: None
+    # Value > 0 means mixer is closed
+
+  - name: "HKR2 Mischer Heizkreis auf (A10)"
+    unique_id: "hkr2_mischer_heizkreis_auf_a10"
+    address: 33289
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:valve"
+    device_class: None
+    # Value > 0 means mixer is open
+
+  - name: "HKR2 Mischer Heizkreis zu (A11)"
+    unique_id: "hkr2_mischer_heizkreis_zu_a11"
+    address: 33290
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:valve"
+    device_class: None
+    # Value > 0 means mixer is closed
+
+  - name: "Brennerstatus (A12)"
+    unique_id: "brennerstatus_a12"
+    address: 33291
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:fire"
+    device_class: None
+    # Value > 0 means burner is on
+
+  - name: "Wärmepumpe Heizstab Stufe 2 & 3 (A13)"
+    unique_id: "warmepumpe_heizstab_stufe_2_3_a13"
+    address: 33292
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:radiator"
+    device_class: None
+    # Value > 0 means heating rod is active
+
+  - name: "Wärmepumpe Umschaltventil (A14)"
+    unique_id: "warmepumpe_umschaltventil_a14"
+    address: 33293
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:valve"
+    device_class: None
+    # Value > 0 means diverter valve is active
+
+  # Analog Output Status (available since v1.1.0)
+  - name: "Analog Ausgang 1 Status"
+    unique_id: "analog_ausgang_1_status"
+    address: 3840
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:signal"
+    device_class: None
+    map:
+      0: "aus"
+      1: "ein"
+      2: "auto"
+      3: "zeitplan"
+
+  - name: "Analog Ausgang 2 Status"
+    unique_id: "analog_ausgang_2_status"
+    address: 3845
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:signal"
+    device_class: None
+    map:
+      0: "aus"
+      1: "ein"
+      2: "auto"
+      3: "zeitplan"
+
+  - name: "Analog Ausgang 3 Status"
+    unique_id: "analog_ausgang_3_status"
+    address: 3850
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:signal"
+    device_class: None
+    map:
+      0: "aus"
+      1: "ein"
+      2: "auto"
+      3: "zeitplan"
+
+  - name: "Analog Ausgang 4 Status"
+    unique_id: "analog_ausgang_4_status"
+    address: 3855
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:signal"
+    device_class: None
+    map:
+      0: "aus"
+      1: "ein"
+      2: "auto"
+      3: "zeitplan"
+
+  - name: "Analog Ausgang 5 Status"
+    unique_id: "analog_ausgang_5_status"
+    address: 3860
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:signal"
+    device_class: None
+    map:
+      0: "aus"
+      1: "ein"
+      2: "auto"
+      3: "zeitplan"
+
+  - name: "Analog Ausgang 6 Status"
+    unique_id: "analog_ausgang_6_status"
+    address: 3865
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 30
+    group: "heating_status"
+    icon: "mdi:signal"
+    device_class: None
+    map:
+      0: "aus"
+      1: "ein"
+      2: "auto"
+      3: "zeitplan"
