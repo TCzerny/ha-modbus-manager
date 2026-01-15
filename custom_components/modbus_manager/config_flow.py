@@ -657,6 +657,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 config_values = {}
                 for field_name, field_value in model_config.items():
                     config_values[field_name] = field_value
+                    # Store model config values in dynamic_config for condition filtering
+                    # This ensures model-specific values are available and not overwritten by defaults
+                    dynamic_config[field_name] = field_value
 
                 # Set defaults for common fields if not present
                 phases = config_values.get("phases", 3)
@@ -678,6 +681,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 phases = 3
                 mppt_count = 1
                 string_count = 1
+                modules = 3
         else:
             # Individual field configuration - generic for any device type
             # Extract all configurable fields dynamically
@@ -766,16 +770,6 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             "Using fallback firmware version: %s", firmware_version
                         )
 
-        _LOGGER.info(
-            "Processing dynamic config: phases=%d, mppt=%d, battery=%s, battery_type=%s, fw=%s, conn=%s",
-            phases,
-            mppt_count,
-            battery_enabled,
-            battery_type,
-            firmware_version,
-            connection_type,
-        )
-
         # Add modules to dynamic_config for condition filtering
         if selected_model and model_config:
             dynamic_config["modules"] = modules
@@ -784,7 +778,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             dynamic_config["modules"] = modules
 
         # Add ALL user input fields to dynamic_config for condition filtering
-        # This ensures fields like dual_channel_meter are available for condition checks
+        # This ensures fields like meter_type, dual_channel_meter are available for condition checks
         for field_name, field_value in user_input.items():
             if field_name not in [
                 "valid_models",
@@ -807,6 +801,45 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 else:
                     # New field not in dynamic_config, add it
                     dynamic_config[field_name] = field_value
+
+        # Also ensure all fields from dynamic_config with defaults are in dynamic_config
+        # This is important for fields that might not be in user_input (e.g., when using defaults)
+        # BUT: Don't overwrite values that came from selected_model - those are already set above
+        # We need to check the original template_data, not the already-modified dynamic_config
+        original_dynamic_config = template_data.get("dynamic_config", {})
+        for field_name, field_config in original_dynamic_config.items():
+            if field_name not in [
+                "valid_models",
+                "firmware_version",
+                "connection_type",
+                "battery_slave_id",
+            ]:
+                if isinstance(field_config, dict) and "default" in field_config:
+                    # If field not already set from user_input or selected_model, use default
+                    # Check if it's still a dict (meaning it wasn't set) or if it's missing
+                    # Don't overwrite if it's already a concrete value (not a dict)
+                    if field_name not in dynamic_config or isinstance(
+                        dynamic_config.get(field_name), dict
+                    ):
+                        dynamic_config[field_name] = field_config.get("default")
+                        _LOGGER.debug(
+                            "Setting default value for %s: %s",
+                            field_name,
+                            field_config.get("default"),
+                        )
+
+        # Log meter_type if present for debugging
+        meter_type = dynamic_config.get("meter_type", "not_set")
+        _LOGGER.info(
+            "Processing dynamic config: phases=%d, mppt=%d, battery=%s, battery_type=%s, fw=%s, conn=%s, meter_type=%s",
+            phases,
+            mppt_count,
+            battery_enabled,
+            battery_type,
+            firmware_version,
+            connection_type,
+            meter_type,
+        )
 
         # Process sensors
         for sensor in original_sensors:
@@ -2909,6 +2942,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 config_values = {}
                 for field_name, field_value in model_config.items():
                     config_values[field_name] = field_value
+                    # Store model config values in dynamic_config for condition filtering
+                    # This ensures model-specific values are available and not overwritten by defaults
+                    dynamic_config[field_name] = field_value
 
                 # Set defaults for common fields if not present
                 phases = config_values.get("phases", 3)
@@ -2930,6 +2966,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 phases = 3
                 mppt_count = 1
                 string_count = 1
+                modules = 3
         else:
             # Individual field configuration - generic for any device type
             # Extract all configurable fields dynamically
@@ -3018,16 +3055,6 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                             "Using fallback firmware version: %s", firmware_version
                         )
 
-        _LOGGER.info(
-            "Processing dynamic config: phases=%d, mppt=%d, battery=%s, battery_type=%s, fw=%s, conn=%s",
-            phases,
-            mppt_count,
-            battery_enabled,
-            battery_type,
-            firmware_version,
-            connection_type,
-        )
-
         # Add modules to dynamic_config for condition filtering
         if selected_model and model_config:
             dynamic_config["modules"] = modules
@@ -3036,7 +3063,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             dynamic_config["modules"] = modules
 
         # Add ALL user input fields to dynamic_config for condition filtering
-        # This ensures fields like dual_channel_meter are available for condition checks
+        # This ensures fields like meter_type, dual_channel_meter are available for condition checks
         for field_name, field_value in user_input.items():
             if field_name not in [
                 "valid_models",
@@ -3059,6 +3086,45 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 else:
                     # New field not in dynamic_config, add it
                     dynamic_config[field_name] = field_value
+
+        # Also ensure all fields from dynamic_config with defaults are in dynamic_config
+        # This is important for fields that might not be in user_input (e.g., when using defaults)
+        # BUT: Don't overwrite values that came from selected_model - those are already set above
+        # We need to check the original template_data, not the already-modified dynamic_config
+        original_dynamic_config = template_data.get("dynamic_config", {})
+        for field_name, field_config in original_dynamic_config.items():
+            if field_name not in [
+                "valid_models",
+                "firmware_version",
+                "connection_type",
+                "battery_slave_id",
+            ]:
+                if isinstance(field_config, dict) and "default" in field_config:
+                    # If field not already set from user_input or selected_model, use default
+                    # Check if it's still a dict (meaning it wasn't set) or if it's missing
+                    # Don't overwrite if it's already a concrete value (not a dict)
+                    if field_name not in dynamic_config or isinstance(
+                        dynamic_config.get(field_name), dict
+                    ):
+                        dynamic_config[field_name] = field_config.get("default")
+                        _LOGGER.debug(
+                            "Setting default value for %s: %s",
+                            field_name,
+                            field_config.get("default"),
+                        )
+
+        # Log meter_type if present for debugging
+        meter_type = dynamic_config.get("meter_type", "not_set")
+        _LOGGER.info(
+            "Processing dynamic config: phases=%d, mppt=%d, battery=%s, battery_type=%s, fw=%s, conn=%s, meter_type=%s",
+            phases,
+            mppt_count,
+            battery_enabled,
+            battery_type,
+            firmware_version,
+            connection_type,
+            meter_type,
+        )
 
         # Process sensors
         for sensor in original_sensors:

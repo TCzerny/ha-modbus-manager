@@ -23,8 +23,8 @@ async def async_setup_entry(
     """Set up Modbus Manager coordinator switches from a config entry."""
     coordinator: ModbusCoordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
 
-    # Get switches from coordinator
-    switch_controls = await coordinator._collect_calculated_registers()
+    # Get switches from coordinator (from controls, like number and select)
+    switch_controls = await coordinator._collect_all_registers()
     switch_controls = [reg for reg in switch_controls if reg.get("type") == "switch"]
 
     entities = []

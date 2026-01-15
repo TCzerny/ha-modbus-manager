@@ -827,14 +827,17 @@ async def process_template_registers(
                 if key not in [
                     "firmware_version",
                     "connection_type",
+                    "meter_type",  # Logged separately below
                 ]:  # Skip verbose ones
                     config_items.append(f"{key}={value}")
 
+            meter_type = dynamic_config.get("meter_type", "not_set")
             _LOGGER.info(
-                "Dynamic config: %s, fw=%s, conn=%s",
+                "Dynamic config: %s, fw=%s, conn=%s, meter_type=%s",
                 ", ".join(config_items),
                 firmware_version,
                 connection_type,
+                meter_type,
             )
 
             # Apply filtering logic (same as in config_flow.py)
@@ -922,9 +925,59 @@ def _should_include_sensor(
     # Check condition filter first
     condition = sensor.get("condition")
     if condition:
+        # Support AND conditions: "battery_enabled == true and meter_type != 'iHomeManager'"
+        if " and " in condition:
+            # Split by " and " and evaluate each part - ALL must be true
+            condition_parts = [part.strip() for part in condition.split(" and ")]
+            condition_met = True
+            for part in condition_parts:
+                if not _evaluate_single_condition(part, dynamic_config):
+                    condition_met = False
+                    break
+            if not condition_met:
+                _LOGGER.info(
+                    "Excluding sensor due to AND condition '%s': %s (unique_id: %s)",
+                    condition,
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                )
+                return False
+        # Support OR conditions: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+        elif " or " in condition:
+            # Split by " or " and evaluate each part
+            condition_parts = [part.strip() for part in condition.split(" or ")]
+            condition_met = False
+            for part in condition_parts:
+                if _evaluate_single_condition(part, dynamic_config):
+                    condition_met = True
+                    break
+            if not condition_met:
+                _LOGGER.info(
+                    "Excluding sensor due to OR condition '%s': %s (unique_id: %s)",
+                    condition,
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                )
+                return False
+        else:
+            # Single condition evaluation
+            if not _evaluate_single_condition(condition, dynamic_config):
+                _LOGGER.info(
+                    "Excluding sensor due to condition '%s': %s (unique_id: %s)",
+                    condition,
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                )
+                return False
+
+    # Legacy condition parsing (kept for backward compatibility with old format)
+    # This handles old conditions that don't use the new _evaluate_single_condition function
+    # Can be removed once all templates are migrated
+    condition_legacy = sensor.get("condition")
+    if condition_legacy and " or " not in condition_legacy:
         # Parse condition like "modules >= 5", "phases == 3", or "dual_channel_meter == true"
         # Extract variable name and operator
-        if "==" in condition:
+        if "==" in condition_legacy:
             try:
                 parts = condition.split("==")
                 if len(parts) == 2:
@@ -1160,6 +1213,125 @@ def _should_include_sensor(
             )
             return False
 
+    return True
+
+
+def _evaluate_single_condition(condition: str, dynamic_config: dict) -> bool:
+    """Evaluate a single condition (without OR/AND support).
+
+    Supports:
+    - "variable == value" (string, int, bool)
+    - "variable != value" (string, int, bool)
+    - "variable >= value" (int)
+    """
+    condition = condition.strip()
+
+    if "!=" in condition:
+        try:
+            parts = condition.split("!=")
+            if len(parts) == 2:
+                variable_name = parts[0].strip()
+                required_value_str = parts[1].strip().strip("'\"")  # Remove quotes
+
+                # Get actual value from dynamic_config
+                actual_value = dynamic_config.get(variable_name)
+
+                # Try to convert to bool first (for true/false)
+                if required_value_str.lower() in ["true", "false"]:
+                    required_value = required_value_str.lower() == "true"
+                    actual_value = (
+                        bool(actual_value) if actual_value is not None else False
+                    )
+                else:
+                    # Try to convert to int, then string
+                    try:
+                        required_value = int(required_value_str)
+                        actual_value = (
+                            int(actual_value) if actual_value is not None else 0
+                        )
+                    except (ValueError, TypeError):
+                        required_value = required_value_str
+                        actual_value = (
+                            str(actual_value) if actual_value is not None else ""
+                        )
+
+                result = actual_value != required_value
+                _LOGGER.debug(
+                    "Evaluating condition '%s': variable=%s, required=%s, actual=%s, result=%s",
+                    condition,
+                    variable_name,
+                    required_value,
+                    actual_value,
+                    result,
+                )
+                return result
+        except (ValueError, IndexError) as e:
+            _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+            return False
+    elif "==" in condition:
+        try:
+            parts = condition.split("==")
+            if len(parts) == 2:
+                variable_name = parts[0].strip()
+                required_value_str = parts[1].strip().strip("'\"")  # Remove quotes
+
+                # Get actual value from dynamic_config
+                actual_value = dynamic_config.get(variable_name)
+
+                # Try to convert to bool first (for true/false)
+                if required_value_str.lower() in ["true", "false"]:
+                    required_value = required_value_str.lower() == "true"
+                    actual_value = (
+                        bool(actual_value) if actual_value is not None else False
+                    )
+                else:
+                    # Try to convert to int, then string
+                    try:
+                        required_value = int(required_value_str)
+                        actual_value = (
+                            int(actual_value) if actual_value is not None else 0
+                        )
+                    except (ValueError, TypeError):
+                        required_value = required_value_str
+                        actual_value = (
+                            str(actual_value) if actual_value is not None else ""
+                        )
+
+                result = actual_value == required_value
+                _LOGGER.debug(
+                    "Evaluating condition '%s': variable=%s, required=%s, actual=%s, result=%s",
+                    condition,
+                    variable_name,
+                    required_value,
+                    actual_value,
+                    result,
+                )
+                return result
+        except (ValueError, IndexError) as e:
+            _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+            return False
+
+    elif ">=" in condition:
+        try:
+            parts = condition.split(">=")
+            if len(parts) == 2:
+                variable_name = parts[0].strip()
+                required_value_str = parts[1].strip()
+
+                try:
+                    required_value = int(required_value_str)
+                    actual_value = dynamic_config.get(variable_name, 0)
+                    if isinstance(actual_value, str):
+                        actual_value = int(actual_value)
+                    return actual_value >= required_value
+                except ValueError:
+                    return False
+        except (ValueError, IndexError) as e:
+            _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+            return False
+
+    # Unknown condition format - return True to be safe (include sensor)
+    _LOGGER.warning("Unknown condition format '%s', including sensor", condition)
     return True
 
 
