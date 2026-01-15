@@ -855,17 +855,17 @@ controls:
   - type: "switch"
     name: "Warmwasser Nachheizung Start"
     unique_id: "warmwasser_nachheizung_start"
-    address: 2328
+    address: 2322
+    # Register 2322: Warmwasser Nachheizung Start (Holding Register)
+    # Values: 0 = off, 1 = on
+    # Note: Some sources mention register 2328, but 2322 is confirmed by multiple users
+    # as the correct register for controlling WW reheating on Solvis SC2/SC3
     input_type: "holding"
     data_type: "uint16"
     write_value: 1
     write_value_off: 0
     on_value: 1
     off_value: 0
-    # Note: Register 2328 should only return 0 or 1 according to Solvis documentation.
-    # If value 8 is read, it may indicate an error state or device initialization.
-    # The switch will log a warning and return None (unknown state) for unexpected values.
-    # Consider checking device status or Modbus connection if unexpected values persist.
     scan_interval: 60
     group: "heating_control"
     icon: "mdi:water-boiler"
