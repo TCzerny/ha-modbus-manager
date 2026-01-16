@@ -13,7 +13,11 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_device_info_dict, generate_unique_id
+from .device_utils import (
+    create_base_extra_state_attributes,
+    create_device_info_dict,
+    generate_unique_id,
+)
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -39,6 +43,8 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         default_entity_id = register_config.get("default_entity_id")
         if default_entity_id:
+            if isinstance(default_entity_id, str):
+                default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
                 self._attr_entity_id = default_entity_id
             else:
@@ -46,17 +52,25 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._attr_icon = register_config.get("icon")
 
         # Selects should appear under device controls
-        self._attr_entity_category = EntityCategory.CONFIG
+        # self._attr_entity_category = EntityCategory.CONFIG
 
         # Select-specific properties
         self._attr_options = list(register_config.get("options", {}).values())
         self._attr_current_option = None
 
         # Debug: Log options loading
-        _LOGGER.debug(
+        _LOGGER.info(
             "Select %s: Loaded options %s",
             self._attr_name,
             register_config.get("options", {}),
+        )
+        _LOGGER.info(
+            "Select %s: entity_id=%s unique_id=%s device_info=%s category=%s",
+            self._attr_name,
+            getattr(self, "_attr_entity_id", None),
+            self._attr_unique_id,
+            device_info,
+            getattr(self, "_attr_entity_category", None),
         )
 
         # Store template parameters for extra_state_attributes
@@ -74,24 +88,18 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._flags = register_config.get("flags", {})
 
         # Minimize extra_state_attributes - only include static/essential attributes
-        # options, map, flags are static configuration - keep them
-        self._attr_extra_state_attributes = {
-            "register_address": register_config.get("address"),
-            "data_type": register_config.get("data_type"),
-            "slave_id": register_config.get("slave_id"),
-            "input_type": self._input_type,
-            # Static configuration values
-            "scale": self._scale,
-            "offset": self._offset,
-            "precision": self._precision,
-            "group": self._group,
-            "scan_interval": self._scan_interval,
-            "swap": register_config.get("swap"),
-            # Mapping configuration (static)
-            "options": self._options,
-            "map": self._map,
-            "flags": self._flags,
-        }
+        # Avoid "options" key because it conflicts with SelectEntity options list
+        self._attr_extra_state_attributes = create_base_extra_state_attributes(
+            unique_id=self._attr_unique_id,
+            register_config=register_config,
+            scan_interval=self._scan_interval,
+            additional_attributes={
+                # Mapping configuration (static)
+                "options_config": self._options,
+                "map": self._map,
+                "flags": self._flags,
+            },
+        )
 
         # Create register key for data lookup (after prefix is added)
         self.register_key = self._create_register_key(register_config)

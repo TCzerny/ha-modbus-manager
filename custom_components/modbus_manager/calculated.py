@@ -9,7 +9,11 @@ from homeassistant.helpers.entity import EntityCategory
 from homeassistant.helpers.template import Template
 
 from .const import DOMAIN
-from .device_utils import generate_entity_name, generate_unique_id
+from .device_utils import (
+    create_base_extra_state_attributes,
+    generate_entity_name,
+    generate_unique_id,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -45,18 +49,19 @@ class ModbusCalculatedSensor(SensorEntity):
             # Config is already processed by coordinator
             # Use device_prefix for display in attributes
             self._prefix = device_prefix if device_prefix else "unknown"
-            # With has_entity_name=True, entity.name should NOT include prefix
-            self._attr_name = base_name
+            # Set friendly_name to "prefix entityname" format
+            self._attr_name = f"{self._prefix} {base_name}"
             unique_id = config.get("unique_id", "unknown")
         else:
             # Legacy mode - process prefix
             self._prefix = prefix
-            # With has_entity_name=True, entity.name should NOT include prefix
-            # Remove prefix from base_name if present
+            # Set friendly_name to "prefix entityname" format
+            # Remove prefix from base_name if present to avoid double prefix
             if base_name.startswith(f"{prefix} "):
-                self._attr_name = base_name[len(f"{prefix} ") :]
+                clean_base_name = base_name[len(f"{prefix} ") :]
             else:
-                self._attr_name = base_name
+                clean_base_name = base_name
+            self._attr_name = f"{prefix} {clean_base_name}"
             unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
 
         # unique_id should be just the value, not "sensor.{value}"
@@ -64,11 +69,14 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_unique_id = unique_id
         default_entity_id = config.get("default_entity_id")
         if default_entity_id:
+            if isinstance(default_entity_id, str):
+                default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
                 self._attr_entity_id = default_entity_id
             else:
                 self._attr_entity_id = f"sensor.{default_entity_id}"
-        self._attr_has_entity_name = True
+        # Set has_entity_name=False so friendly_name uses _attr_name directly (prefix entityname format)
+        self._attr_has_entity_name = False
 
         # Template processing - support both 'template' and 'state' parameters
         template_str = config.get("template", config.get("state", ""))
@@ -217,14 +225,32 @@ class ModbusCalculatedSensor(SensorEntity):
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
         """Return entity specific state attributes."""
-        precision = self._config.get("precision")
-        return {
+        # Create a register_config-like dict for the central function
+        # Calculated entities don't have register addresses, so we use None/0
+        register_config_like = {
+            "address": self._config.get("address", 0),  # May not exist for calculated
+            "data_type": self._config.get("data_type"),  # May not exist
+            "slave_id": self._slave_id,
+            "input_type": self._config.get("input_type"),  # May not exist
+            "scale": self._config.get("scale"),
+            "offset": self._config.get("offset"),
+            "precision": self._config.get("precision"),
             "group": self._group,
-            "template": self._template_name,
-            "prefix": self._prefix,
-            "precision": precision,
-            "calculation_type": "state",
+            "scan_interval": self._config.get("scan_interval"),
+            "swap": self._config.get("swap"),
         }
+
+        # Use central function and add calculated-specific attributes
+        return create_base_extra_state_attributes(
+            unique_id=self._attr_unique_id,
+            register_config=register_config_like,
+            scan_interval=self._config.get("scan_interval"),
+            additional_attributes={
+                "template": self._template_name,
+                "prefix": self._prefix,
+                "calculation_type": "state",
+            },
+        )
 
     @property
     def group(self) -> str:
@@ -404,18 +430,19 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             # Config is already processed by coordinator
             # Use device_prefix for display in attributes
             self._prefix = device_prefix if device_prefix else "unknown"
-            # With has_entity_name=True, entity.name should NOT include prefix
-            self._attr_name = base_name
+            # Set friendly_name to "prefix entityname" format
+            self._attr_name = f"{self._prefix} {base_name}"
             unique_id = config.get("unique_id", "unknown")
         else:
             # Legacy mode - process prefix
             self._prefix = prefix
-            # With has_entity_name=True, entity.name should NOT include prefix
-            # Remove prefix from base_name if present
+            # Set friendly_name to "prefix entityname" format
+            # Remove prefix from base_name if present to avoid double prefix
             if base_name.startswith(f"{prefix} "):
-                self._attr_name = base_name[len(f"{prefix} ") :]
+                clean_base_name = base_name[len(f"{prefix} ") :]
             else:
-                self._attr_name = base_name
+                clean_base_name = base_name
+            self._attr_name = f"{prefix} {clean_base_name}"
             unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
 
         # unique_id should be just the value, not "binary_sensor.{value}"
@@ -423,11 +450,14 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         self._attr_unique_id = unique_id
         default_entity_id = config.get("default_entity_id")
         if default_entity_id:
+            if isinstance(default_entity_id, str):
+                default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
                 self._attr_entity_id = default_entity_id
             else:
                 self._attr_entity_id = f"binary_sensor.{default_entity_id}"
-        self._attr_has_entity_name = True
+        # Set has_entity_name=False so friendly_name uses _attr_name directly (prefix entityname format)
+        self._attr_has_entity_name = False
 
         # Template processing - support 'state' parameter
         template_str = config.get("state", "")
@@ -528,12 +558,32 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
         """Return entity specific state attributes."""
-        return {
+        # Create a register_config-like dict for the central function
+        # Calculated entities don't have register addresses, so we use None/0
+        register_config_like = {
+            "address": self._config.get("address", 0),  # May not exist for calculated
+            "data_type": self._config.get("data_type"),  # May not exist
+            "slave_id": self._slave_id,
+            "input_type": self._config.get("input_type"),  # May not exist
+            "scale": self._config.get("scale"),
+            "offset": self._config.get("offset"),
+            "precision": self._config.get("precision"),
             "group": self._group,
-            "template": self._template_name,
-            "prefix": self._prefix,
-            "calculation_type": "binary_state",
+            "scan_interval": self._config.get("scan_interval"),
+            "swap": self._config.get("swap"),
         }
+
+        # Use central function and add calculated-specific attributes
+        return create_base_extra_state_attributes(
+            unique_id=self._attr_unique_id,
+            register_config=register_config_like,
+            scan_interval=self._config.get("scan_interval"),
+            additional_attributes={
+                "template": self._template_name,
+                "prefix": self._prefix,
+                "calculation_type": "binary_state",
+            },
+        )
 
     @property
     def group(self) -> str:

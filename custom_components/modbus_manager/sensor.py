@@ -14,6 +14,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
+from .device_utils import create_base_extra_state_attributes
 from .logger import ModbusManagerLogger
 from .template_loader import load_templates
 
@@ -71,6 +72,8 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         default_entity_id = register_config.get("default_entity_id")
         if default_entity_id:
+            if isinstance(default_entity_id, str):
+                default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
                 self._attr_entity_id = default_entity_id
             else:
@@ -134,19 +137,11 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
         # scale, offset, precision are static configuration - keep them
         # group, scan_interval, input_type are static - keep them
         # unit_of_measurement, device_class, state_class are already in entity properties - remove from attributes
-        self._attr_extra_state_attributes = {
-            "register_address": register_config.get("address"),
-            "data_type": register_config.get("data_type"),
-            "slave_id": register_config.get("slave_id"),
-            "input_type": self._input_type,
-            # Static configuration values (don't change frequently)
-            "scale": self._scale,
-            "offset": self._offset,
-            "precision": self._precision,
-            "group": self._group,
-            "scan_interval": self._scan_interval,
-            "swap": register_config.get("swap"),
-        }
+        self._attr_extra_state_attributes = create_base_extra_state_attributes(
+            unique_id=self._attr_unique_id,
+            register_config=register_config,
+            scan_interval=self._scan_interval,
+        )
 
         self._attr_icon = register_config.get("icon")
 

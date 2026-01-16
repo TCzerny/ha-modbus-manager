@@ -12,6 +12,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
+from .device_utils import create_base_extra_state_attributes
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -181,6 +182,8 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
         self._attr_unique_id = self._unique_id
         default_entity_id = register_config.get("default_entity_id")
         if default_entity_id:
+            if isinstance(default_entity_id, str):
+                default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
                 self._attr_entity_id = default_entity_id
             else:
@@ -195,29 +198,18 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
             self._attr_entity_category = EntityCategory.DIAGNOSTIC
 
         # Minimize extra_state_attributes - only include static/essential attributes
-        self._attr_extra_state_attributes = {
-            "register_address": self._address,
-            "input_type": self._input_type,
-            "data_type": self._data_type,
-            "slave_id": coordinator.entry.data.get("slave_id", 1),
-            # Static configuration values
-            "scan_interval": self._scan_interval,
-            "scale": register_config.get("scale"),
-            "offset": register_config.get("offset"),
-            "precision": register_config.get("precision"),
-            "group": register_config.get("group"),
-            "swap": register_config.get("swap"),
-        }
+        # Ensure slave_id is in register_config for base attributes
+        register_config_with_slave = register_config.copy()
+        if "slave_id" not in register_config_with_slave:
+            register_config_with_slave["slave_id"] = coordinator.entry.data.get(
+                "slave_id", 1
+            )
 
-        # Add template-specific attributes if present
-        if "scale" in register_config:
-            self._attr_extra_state_attributes["scale"] = register_config["scale"]
-        if "offset" in register_config:
-            self._attr_extra_state_attributes["offset"] = register_config["offset"]
-        if "precision" in register_config:
-            self._attr_extra_state_attributes["precision"] = register_config[
-                "precision"
-            ]
+        self._attr_extra_state_attributes = create_base_extra_state_attributes(
+            unique_id=self._attr_unique_id,
+            register_config=register_config_with_slave,
+            scan_interval=self._scan_interval,
+        )
         if "unit_of_measurement" in register_config:
             self._attr_extra_state_attributes["unit_of_measurement"] = register_config[
                 "unit_of_measurement"

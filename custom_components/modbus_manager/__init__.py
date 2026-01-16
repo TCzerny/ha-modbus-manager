@@ -10,6 +10,8 @@ from homeassistant.components.modbus import ModbusHub
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
+from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import entity_registry as er
 
 from .const import DOMAIN, PLATFORMS
 from .coordinator import ModbusCoordinator
@@ -121,6 +123,9 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
             _LOGGER.error("Error loading coordinator platforms: %s", str(e))
             return False
 
+        # Normalize binary_sensor entity_ids to include device prefix (case-insensitive)
+        await _normalize_binary_sensor_entity_ids(hass, entry)
+
         _LOGGER.info(
             "Modbus Manager coordinator setup completed for %s",
             entry.data.get("prefix", "unknown"),
@@ -131,6 +136,58 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
     except Exception as e:
         _LOGGER.error("Error setting up coordinator: %s", str(e))
         return False
+
+
+async def _normalize_binary_sensor_entity_ids(
+    hass: HomeAssistant, entry: ConfigEntry
+) -> None:
+    """Ensure binary_sensor entity_ids include the device prefix."""
+    try:
+        entity_registry = er.async_get(hass)
+        device_registry = dr.async_get(hass)
+        updated = 0
+
+        for entity_entry in list(entity_registry.entities.values()):
+            if entity_entry.config_entry_id != entry.entry_id:
+                continue
+            if entity_entry.platform != "binary_sensor":
+                continue
+            if not entity_entry.device_id:
+                continue
+
+            prefix = entry.data.get("prefix")
+            if not prefix:
+                continue
+
+            prefix_lower = prefix.lower()
+            current_entity_id = entity_entry.entity_id
+            if current_entity_id.startswith(f"binary_sensor.{prefix_lower}_"):
+                continue
+
+            object_id = current_entity_id.split(".", 1)[1]
+            if object_id.startswith(f"{prefix_lower}_"):
+                continue
+
+            new_entity_id = f"binary_sensor.{prefix_lower}_{object_id}"
+            if entity_registry.async_get(new_entity_id):
+                _LOGGER.warning(
+                    "Skipping binary_sensor rename due to conflict: %s -> %s",
+                    current_entity_id,
+                    new_entity_id,
+                )
+                continue
+
+            entity_registry.async_update_entity(
+                current_entity_id, new_entity_id=new_entity_id
+            )
+            updated += 1
+
+        if updated:
+            _LOGGER.info(
+                "Normalized %d binary_sensor entity_id(s) to include prefix", updated
+            )
+    except Exception as e:
+        _LOGGER.warning("Failed to normalize binary_sensor entity_ids: %s", str(e))
 
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:

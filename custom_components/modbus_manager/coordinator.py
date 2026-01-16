@@ -1287,8 +1287,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
                 # Ensure default_entity_id is set (used to force entity_id)
                 if "default_entity_id" not in processed_entity:
-                    processed_entity["default_entity_id"] = processed_entity.get(
-                        "unique_id"
+                    default_entity_id = processed_entity.get("unique_id")
+                    processed_entity["default_entity_id"] = (
+                        default_entity_id.lower()
+                        if isinstance(default_entity_id, str)
+                        else default_entity_id
                     )
 
                 # Process name
@@ -1449,110 +1452,54 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 # Check condition filter first
                 condition = entity.get("condition")
                 if condition:
-                    # Parse condition like "modules >= 5", "phases == 3", or "dual_channel_meter == true"
-                    if "==" in condition:
-                        try:
-                            parts = condition.split("==")
-                            if len(parts) == 2:
-                                variable_name = parts[0].strip()
-                                required_value_str = parts[1].strip()
-
-                                # Get actual value from dynamic_config
-                                actual_value = dynamic_config.get(variable_name)
-
-                                # Try to convert to bool first (for true/false)
-                                if required_value_str.lower() in ["true", "false"]:
-                                    required_value = (
-                                        required_value_str.lower() == "true"
-                                    )
-                                    actual_value = (
-                                        bool(actual_value)
-                                        if actual_value is not None
-                                        else False
-                                    )
-                                else:
-                                    # Try to convert to int, then string
-                                    try:
-                                        required_value = int(required_value_str)
-                                        actual_value = (
-                                            int(actual_value)
-                                            if actual_value is not None
-                                            else 0
-                                        )
-                                    except (ValueError, TypeError):
-                                        required_value = required_value_str
-                                        actual_value = (
-                                            str(actual_value)
-                                            if actual_value is not None
-                                            else ""
-                                        )
-
-                                _LOGGER.debug(
-                                    "Checking condition '%s' for entity %s: required=%s, actual=%s",
-                                    condition,
-                                    entity.get("name", "unknown"),
-                                    required_value,
-                                    actual_value,
-                                )
-
-                                if actual_value != required_value:
-                                    _LOGGER.debug(
-                                        "Excluding entity due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
-                                        condition,
-                                        entity.get("name", "unknown"),
-                                        entity.get("unique_id", "unknown"),
-                                        required_value,
-                                        actual_value,
-                                    )
-                                    continue  # Skip this entity
-                        except (ValueError, IndexError) as e:
-                            _LOGGER.warning(
-                                "Invalid condition '%s' for entity %s: %s",
+                    # Support AND/OR conditions and "!=" (aligned with template_loader)
+                    if " and " in condition:
+                        condition_parts = [
+                            part.strip() for part in condition.split(" and ")
+                        ]
+                        condition_met = True
+                        for part in condition_parts:
+                            if not self._evaluate_single_condition(
+                                part, dynamic_config
+                            ):
+                                condition_met = False
+                                break
+                        if not condition_met:
+                            _LOGGER.debug(
+                                "Excluding entity due to AND condition '%s': %s (unique_id: %s)",
                                 condition,
                                 entity.get("name", "unknown"),
-                                str(e),
+                                entity.get("unique_id", "unknown"),
                             )
-                    elif ">=" in condition:
-                        try:
-                            parts = condition.split(">=")
-                            if len(parts) == 2:
-                                variable_name = parts[0].strip()
-                                required_value_str = parts[1].strip()
-
-                                # Get actual value from dynamic_config
-                                actual_value = dynamic_config.get(variable_name, 0)
-
-                                try:
-                                    required_value = int(required_value_str)
-                                    actual_value = (
-                                        int(actual_value)
-                                        if actual_value is not None
-                                        else 0
-                                    )
-
-                                    if actual_value < required_value:
-                                        _LOGGER.debug(
-                                            "Excluding entity due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
-                                            condition,
-                                            entity.get("name", "unknown"),
-                                            entity.get("unique_id", "unknown"),
-                                            required_value,
-                                            actual_value,
-                                        )
-                                        continue  # Skip this entity
-                                except (ValueError, TypeError):
-                                    _LOGGER.warning(
-                                        "Invalid condition '%s' for entity %s: cannot parse values",
-                                        condition,
-                                        entity.get("name", "unknown"),
-                                    )
-                        except (ValueError, IndexError) as e:
-                            _LOGGER.warning(
-                                "Invalid condition '%s' for entity %s: %s",
+                            continue
+                    elif " or " in condition:
+                        condition_parts = [
+                            part.strip() for part in condition.split(" or ")
+                        ]
+                        condition_met = False
+                        for part in condition_parts:
+                            if self._evaluate_single_condition(part, dynamic_config):
+                                condition_met = True
+                                break
+                        if not condition_met:
+                            _LOGGER.debug(
+                                "Excluding entity due to OR condition '%s': %s (unique_id: %s)",
                                 condition,
                                 entity.get("name", "unknown"),
-                                str(e),
+                                entity.get("unique_id", "unknown"),
                             )
+                            continue
+                    else:
+                        if not self._evaluate_single_condition(
+                            condition, dynamic_config
+                        ):
+                            _LOGGER.debug(
+                                "Excluding entity due to condition '%s': %s (unique_id: %s)",
+                                condition,
+                                entity.get("name", "unknown"),
+                                entity.get("unique_id", "unknown"),
+                            )
+                            continue
 
                 # Check firmware_min_version filter
                 sensor_firmware_min = entity.get("firmware_min_version")
@@ -1590,6 +1537,116 @@ class ModbusCoordinator(DataUpdateCoordinator):
         except Exception as e:
             _LOGGER.error("Error filtering by conditions: %s", str(e))
             return entities  # Return unfiltered on error
+
+    def _evaluate_single_condition(self, condition: str, dynamic_config: dict) -> bool:
+        """Evaluate a single condition (no AND/OR).
+
+        Supports:
+        - "variable == value" (string, int, bool)
+        - "variable != value" (string, int, bool)
+        - "variable >= value" (int)
+        """
+        condition = condition.strip()
+
+        if "!=" in condition:
+            try:
+                parts = condition.split("!=")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip().strip("'\"")
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_value_str.lower() in ["true", "false"]:
+                        required_value = required_value_str.lower() == "true"
+                        actual_value = (
+                            bool(actual_value) if actual_value is not None else False
+                        )
+                    else:
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = (
+                                int(actual_value) if actual_value is not None else 0
+                            )
+                        except (ValueError, TypeError):
+                            required_value = required_value_str
+                            actual_value = (
+                                str(actual_value) if actual_value is not None else ""
+                            )
+
+                    result = actual_value != required_value
+                    _LOGGER.debug(
+                        "Evaluating condition '%s': variable=%s, required=%s, actual=%s, result=%s",
+                        condition,
+                        variable_name,
+                        required_value,
+                        actual_value,
+                        result,
+                    )
+                    return result
+            except (ValueError, IndexError) as e:
+                _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+                return False
+        elif "==" in condition:
+            try:
+                parts = condition.split("==")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip().strip("'\"")
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_value_str.lower() in ["true", "false"]:
+                        required_value = required_value_str.lower() == "true"
+                        actual_value = (
+                            bool(actual_value) if actual_value is not None else False
+                        )
+                    else:
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = (
+                                int(actual_value) if actual_value is not None else 0
+                            )
+                        except (ValueError, TypeError):
+                            required_value = required_value_str
+                            actual_value = (
+                                str(actual_value) if actual_value is not None else ""
+                            )
+
+                    result = actual_value == required_value
+                    _LOGGER.debug(
+                        "Evaluating condition '%s': variable=%s, required=%s, actual=%s, result=%s",
+                        condition,
+                        variable_name,
+                        required_value,
+                        actual_value,
+                        result,
+                    )
+                    return result
+            except (ValueError, IndexError) as e:
+                _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+                return False
+        elif ">=" in condition:
+            try:
+                parts = condition.split(">=")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip()
+
+                    try:
+                        required_value = int(required_value_str)
+                        actual_value = dynamic_config.get(variable_name, 0)
+                        if isinstance(actual_value, str):
+                            actual_value = int(actual_value)
+                        return actual_value >= required_value
+                    except ValueError:
+                        return False
+            except (ValueError, IndexError) as e:
+                _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+                return False
+
+        _LOGGER.warning("Unknown condition format '%s', including entity", condition)
+        return True
 
     def _process_entities_with_dual_prefix(
         self,
@@ -1632,8 +1689,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
                 # Ensure default_entity_id is set (used to force entity_id)
                 if "default_entity_id" not in processed_entity:
-                    processed_entity["default_entity_id"] = processed_entity.get(
-                        "unique_id"
+                    default_entity_id = processed_entity.get("unique_id")
+                    processed_entity["default_entity_id"] = (
+                        default_entity_id.lower()
+                        if isinstance(default_entity_id, str)
+                        else default_entity_id
                     )
 
                 # Process name

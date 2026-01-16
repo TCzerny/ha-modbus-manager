@@ -12,6 +12,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
+from .device_utils import create_base_extra_state_attributes
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -87,6 +88,8 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         self._attr_unique_id = self._unique_id
         default_entity_id = register_config.get("default_entity_id")
         if default_entity_id:
+            if isinstance(default_entity_id, str):
+                default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
                 self._attr_entity_id = default_entity_id
             else:
@@ -106,26 +109,25 @@ class ModbusCoordinatorSwitch(SwitchEntity):
         self._attr_device_info = DeviceInfo(**device_info)
 
         # Minimize extra_state_attributes - only include static/essential attributes
-        self._attr_extra_state_attributes = {
-            "register_address": self._address,
-            "data_type": self._data_type,
-            "slave_id": register_config.get(
-                "slave_id", coordinator.entry.data.get("slave_id", 1)
-            ),
-            "input_type": self._input_type,
-            # Static configuration values
-            "scale": register_config.get("scale"),
-            "offset": register_config.get("offset"),
-            "precision": register_config.get("precision"),
-            "group": register_config.get("group"),
-            "scan_interval": self._scan_interval,
-            "swap": register_config.get("swap"),
-            # Switch-specific static values
-            "on_value": self._on_value,
-            "off_value": self._off_value,
-            "write_value": self._write_value,
-            "write_value_off": self._write_value_off,
-        }
+        # Ensure slave_id is in register_config for base attributes
+        register_config_with_slave = register_config.copy()
+        if "slave_id" not in register_config_with_slave:
+            register_config_with_slave["slave_id"] = coordinator.entry.data.get(
+                "slave_id", 1
+            )
+
+        self._attr_extra_state_attributes = create_base_extra_state_attributes(
+            unique_id=self._attr_unique_id,
+            register_config=register_config_with_slave,
+            scan_interval=self._scan_interval,
+            additional_attributes={
+                # Switch-specific static values
+                "on_value": self._on_value,
+                "off_value": self._off_value,
+                "write_value": self._write_value,
+                "write_value_off": self._write_value_off,
+            },
+        )
 
         # Add optional attributes if present
         if register_config.get("map"):

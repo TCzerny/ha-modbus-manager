@@ -996,90 +996,45 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Check condition filter
         condition = sensor.get("condition")
         if condition:
-            # Parse condition like "modules >= 5", "phases == 3", or "dual_channel_meter == true"
-            if "==" in condition:
-                try:
-                    parts = condition.split("==")
-                    if len(parts) == 2:
-                        variable_name = parts[0].strip()
-                        required_value_str = parts[1].strip()
-
-                        # Get actual value from dynamic_config
-                        actual_value = dynamic_config.get(variable_name)
-
-                        # Try to convert to bool first (for true/false)
-                        if required_value_str.lower() in ["true", "false"]:
-                            required_value = required_value_str.lower() == "true"
-                            actual_value = (
-                                bool(actual_value)
-                                if actual_value is not None
-                                else False
-                            )
-                        else:
-                            # Try to convert to int, then string
-                            try:
-                                required_value = int(required_value_str)
-                                actual_value = (
-                                    int(actual_value) if actual_value is not None else 0
-                                )
-                            except (ValueError, TypeError):
-                                required_value = required_value_str
-                                actual_value = (
-                                    str(actual_value)
-                                    if actual_value is not None
-                                    else ""
-                                )
-
-                        if actual_value != required_value:
-                            _LOGGER.debug(
-                                "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
-                                condition,
-                                sensor.get("name", "unknown"),
-                                sensor.get("unique_id", "unknown"),
-                                required_value,
-                                actual_value,
-                            )
-                            return False
-                except (ValueError, IndexError) as e:
-                    _LOGGER.warning(
-                        "Invalid condition '%s' for sensor %s: %s",
+            if " and " in condition:
+                condition_parts = [part.strip() for part in condition.split(" and ")]
+                condition_met = True
+                for part in condition_parts:
+                    if not self._evaluate_single_condition(part, dynamic_config):
+                        condition_met = False
+                        break
+                if not condition_met:
+                    _LOGGER.debug(
+                        "Excluding sensor due to AND condition '%s': %s (unique_id: %s)",
                         condition,
                         sensor.get("name", "unknown"),
-                        str(e),
+                        sensor.get("unique_id", "unknown"),
                     )
-            elif ">=" in condition:
-                try:
-                    parts = condition.split(">=")
-                    if len(parts) == 2:
-                        variable_name = parts[0].strip()
-                        required_value_str = parts[1].strip()
-
-                        try:
-                            required_value = int(required_value_str)
-                            actual_value = dynamic_config.get(variable_name, 0)
-                            if isinstance(actual_value, str):
-                                actual_value = int(actual_value)
-                        except ValueError:
-                            required_value = required_value_str
-                            actual_value = str(dynamic_config.get(variable_name, ""))
-
-                        if actual_value < required_value:
-                            _LOGGER.debug(
-                                "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
-                                condition,
-                                sensor.get("name", "unknown"),
-                                sensor.get("unique_id", "unknown"),
-                                required_value,
-                                actual_value,
-                            )
-                            return False
-                except (ValueError, IndexError) as e:
-                    _LOGGER.warning(
-                        "Invalid condition '%s' for sensor %s: %s",
+                    return False
+            elif " or " in condition:
+                condition_parts = [part.strip() for part in condition.split(" or ")]
+                condition_met = False
+                for part in condition_parts:
+                    if self._evaluate_single_condition(part, dynamic_config):
+                        condition_met = True
+                        break
+                if not condition_met:
+                    _LOGGER.debug(
+                        "Excluding sensor due to OR condition '%s': %s (unique_id: %s)",
                         condition,
                         sensor.get("name", "unknown"),
-                        str(e),
+                        sensor.get("unique_id", "unknown"),
                     )
+                    return False
+            else:
+                if not self._evaluate_single_condition(condition, dynamic_config):
+                    _LOGGER.debug(
+                        "Excluding sensor due to condition '%s': %s (unique_id: %s)",
+                        condition,
+                        sensor.get("name", "unknown"),
+                        sensor.get("unique_id", "unknown"),
+                    )
+                    return False
 
         # Ensure we have strings
         sensor_name = str(sensor_name).lower()
@@ -1134,6 +1089,94 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     return False
 
         # All other sensors are included
+        return True
+
+    def _evaluate_single_condition(self, condition: str, dynamic_config: dict) -> bool:
+        """Evaluate a single condition (no AND/OR).
+
+        Supports:
+        - "variable == value" (string, int, bool)
+        - "variable != value" (string, int, bool)
+        - "variable >= value" (int)
+        """
+        condition = condition.strip()
+
+        if "!=" in condition:
+            try:
+                parts = condition.split("!=")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip().strip("'\"")
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_value_str.lower() in ["true", "false"]:
+                        required_value = required_value_str.lower() == "true"
+                        actual_value = (
+                            bool(actual_value) if actual_value is not None else False
+                        )
+                    else:
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = (
+                                int(actual_value) if actual_value is not None else 0
+                            )
+                        except (ValueError, TypeError):
+                            required_value = required_value_str
+                            actual_value = (
+                                str(actual_value) if actual_value is not None else ""
+                            )
+
+                    return actual_value != required_value
+            except (ValueError, IndexError):
+                return False
+        elif "==" in condition:
+            try:
+                parts = condition.split("==")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip().strip("'\"")
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_value_str.lower() in ["true", "false"]:
+                        required_value = required_value_str.lower() == "true"
+                        actual_value = (
+                            bool(actual_value) if actual_value is not None else False
+                        )
+                    else:
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = (
+                                int(actual_value) if actual_value is not None else 0
+                            )
+                        except (ValueError, TypeError):
+                            required_value = required_value_str
+                            actual_value = (
+                                str(actual_value) if actual_value is not None else ""
+                            )
+
+                    return actual_value == required_value
+            except (ValueError, IndexError):
+                return False
+        elif ">=" in condition:
+            try:
+                parts = condition.split(">=")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip()
+
+                    try:
+                        required_value = int(required_value_str)
+                        actual_value = dynamic_config.get(variable_name, 0)
+                        if isinstance(actual_value, str):
+                            actual_value = int(actual_value)
+                        return actual_value >= required_value
+                    except ValueError:
+                        return False
+            except (ValueError, IndexError):
+                return False
+
         return True
 
     # REGEX FUNCTIONS
@@ -2272,6 +2315,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
         if user_input is not None:
             if "update_template" in user_input and user_input["update_template"]:
+                # Stash current option changes so template update uses them
+                self._pending_options_update = user_input
                 return await self.async_step_update_template()
             elif "firmware_version" in user_input:
                 # Update firmware version
@@ -2463,6 +2508,8 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     async def async_step_update_template(self, user_input: dict = None) -> FlowResult:
         """Update the template to the latest version or reload for changes."""
         try:
+            pending_update = getattr(self, "_pending_options_update", None)
+
             # Get current template information
             template_name = self.config_entry.data.get("template", "Unknown")
             stored_version = self.config_entry.data.get("template_version", 1)
@@ -2508,6 +2555,15 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     description_placeholders={"template_name": template_name},
                 )
 
+            # Build effective data (config entry + pending options updates)
+            effective_data = dict(self.config_entry.data)
+            if pending_update:
+                effective_data.update(pending_update)
+                if "battery_config" in pending_update:
+                    effective_data["battery_enabled"] = (
+                        pending_update["battery_config"] != "none"
+                    )
+
             # Apply dynamic configuration (important for MPPT filtering!)
             if dynamic_config:
                 try:
@@ -2529,7 +2585,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         # Get value from config entry, or use default from field_config
                         if isinstance(field_config, dict) and "default" in field_config:
                             default_value = field_config.get("default")
-                            current_value = self.config_entry.data.get(
+                            current_value = effective_data.get(
                                 field_name, default_value
                             )
                             user_input_for_processing[field_name] = current_value
@@ -2539,36 +2595,36 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                             # Field with options - get current value or use first option as default
                             options = field_config.get("options", [])
                             default_value = options[0] if options else None
-                            current_value = self.config_entry.data.get(
+                            current_value = effective_data.get(
                                 field_name, default_value
                             )
                             user_input_for_processing[field_name] = current_value
 
                     # Add explicitly handled fields
-                    user_input_for_processing["phases"] = self.config_entry.data.get(
+                    user_input_for_processing["phases"] = effective_data.get(
                         "phases", 1
                     )
-                    user_input_for_processing[
-                        "mppt_count"
-                    ] = self.config_entry.data.get("mppt_count", 2)
-                    user_input_for_processing[
-                        "string_count"
-                    ] = self.config_entry.data.get("string_count", 0)
-                    user_input_for_processing[
-                        "battery_config"
-                    ] = self.config_entry.data.get("battery_config", "none")
-                    user_input_for_processing[
-                        "battery_slave_id"
-                    ] = self.config_entry.data.get("battery_slave_id", 200)
-                    user_input_for_processing[
-                        "firmware_version"
-                    ] = self.config_entry.data.get("firmware_version", "1.0.0")
-                    user_input_for_processing[
-                        "connection_type"
-                    ] = self.config_entry.data.get("connection_type", "LAN")
-                    user_input_for_processing[
+                    user_input_for_processing["mppt_count"] = effective_data.get(
+                        "mppt_count", 2
+                    )
+                    user_input_for_processing["string_count"] = effective_data.get(
+                        "string_count", 0
+                    )
+                    user_input_for_processing["battery_config"] = effective_data.get(
+                        "battery_config", "none"
+                    )
+                    user_input_for_processing["battery_slave_id"] = effective_data.get(
+                        "battery_slave_id", 200
+                    )
+                    user_input_for_processing["firmware_version"] = effective_data.get(
+                        "firmware_version", "1.0.0"
+                    )
+                    user_input_for_processing["connection_type"] = effective_data.get(
+                        "connection_type", "LAN"
+                    )
+                    user_input_for_processing["selected_model"] = effective_data.get(
                         "selected_model"
-                    ] = self.config_entry.data.get("selected_model")
+                    )
 
                     _LOGGER.info(
                         "Applying dynamic config during template update: %s",
@@ -2617,6 +2673,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             if user_input is not None:
                 # Update template
                 new_data = dict(self.config_entry.data)
+                if pending_update:
+                    new_data.update(pending_update)
+                    if "battery_config" in pending_update:
+                        new_data["battery_enabled"] = (
+                            pending_update["battery_config"] != "none"
+                        )
                 new_data["template_version"] = current_version
 
                 # Only update registers if they exist
@@ -2654,6 +2716,41 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
                 new_data["template_last_updated"] = int(time.time())
 
+                # Keep device-specific dynamic config in sync with options updates
+                if dynamic_config:
+                    dynamic_config_fields = [
+                        key
+                        for key in dynamic_config.keys()
+                        if key
+                        not in [
+                            "valid_models",
+                            "firmware_version",
+                            "connection_type",
+                            "battery_slave_id",
+                        ]
+                    ]
+                else:
+                    dynamic_config_fields = []
+
+                dynamic_params = [
+                    "phases",
+                    "mppt_count",
+                    "battery_config",
+                    "battery_slave_id",
+                    "connection_type",
+                    "firmware_version",
+                    "selected_model",
+                ] + dynamic_config_fields
+
+                devices = new_data.get("devices")
+                if isinstance(devices, list) and template_name:
+                    for device in devices:
+                        if device.get("template") != template_name:
+                            continue
+                        for key in dynamic_params:
+                            if key in new_data:
+                                device[key] = new_data[key]
+
                 # Update config entry
                 self.hass.config_entries.async_update_entry(
                     self.config_entry, data=new_data
@@ -2669,6 +2766,10 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     len(template_controls),
                     len(template_binary_sensors),
                 )
+
+                # Clear pending updates after successful application
+                if pending_update:
+                    self._pending_options_update = None
 
                 # Reload integration to apply changes
                 await self.hass.config_entries.async_reload(self.config_entry.entry_id)
@@ -2887,6 +2988,16 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             # Ensure battery_enabled is stored based on battery_config
             if "battery_config" in user_input:
                 new_data["battery_enabled"] = user_input["battery_config"] != "none"
+
+            # Keep device-specific dynamic config in sync with options updates
+            devices = new_data.get("devices")
+            if isinstance(devices, list) and template_name:
+                for device in devices:
+                    if device.get("template") != template_name:
+                        continue
+                    for key in dynamic_params:
+                        if key in user_input:
+                            device[key] = user_input[key]
 
             # Remove temporary fields
             new_data.pop("update_template", None)
@@ -3285,90 +3396,45 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         # Check condition filter
         condition = sensor.get("condition")
         if condition:
-            # Parse condition like "modules >= 5", "phases == 3", or "dual_channel_meter == true"
-            if "==" in condition:
-                try:
-                    parts = condition.split("==")
-                    if len(parts) == 2:
-                        variable_name = parts[0].strip()
-                        required_value_str = parts[1].strip()
-
-                        # Get actual value from dynamic_config
-                        actual_value = dynamic_config.get(variable_name)
-
-                        # Try to convert to bool first (for true/false)
-                        if required_value_str.lower() in ["true", "false"]:
-                            required_value = required_value_str.lower() == "true"
-                            actual_value = (
-                                bool(actual_value)
-                                if actual_value is not None
-                                else False
-                            )
-                        else:
-                            # Try to convert to int, then string
-                            try:
-                                required_value = int(required_value_str)
-                                actual_value = (
-                                    int(actual_value) if actual_value is not None else 0
-                                )
-                            except (ValueError, TypeError):
-                                required_value = required_value_str
-                                actual_value = (
-                                    str(actual_value)
-                                    if actual_value is not None
-                                    else ""
-                                )
-
-                        if actual_value != required_value:
-                            _LOGGER.debug(
-                                "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
-                                condition,
-                                sensor.get("name", "unknown"),
-                                sensor.get("unique_id", "unknown"),
-                                required_value,
-                                actual_value,
-                            )
-                            return False
-                except (ValueError, IndexError) as e:
-                    _LOGGER.warning(
-                        "Invalid condition '%s' for sensor %s: %s",
+            if " and " in condition:
+                condition_parts = [part.strip() for part in condition.split(" and ")]
+                condition_met = True
+                for part in condition_parts:
+                    if not self._evaluate_single_condition(part, dynamic_config):
+                        condition_met = False
+                        break
+                if not condition_met:
+                    _LOGGER.debug(
+                        "Excluding sensor due to AND condition '%s': %s (unique_id: %s)",
                         condition,
                         sensor.get("name", "unknown"),
-                        str(e),
+                        sensor.get("unique_id", "unknown"),
                     )
-            elif ">=" in condition:
-                try:
-                    parts = condition.split(">=")
-                    if len(parts) == 2:
-                        variable_name = parts[0].strip()
-                        required_value_str = parts[1].strip()
-
-                        try:
-                            required_value = int(required_value_str)
-                            actual_value = dynamic_config.get(variable_name, 0)
-                            if isinstance(actual_value, str):
-                                actual_value = int(actual_value)
-                        except ValueError:
-                            required_value = required_value_str
-                            actual_value = str(dynamic_config.get(variable_name, ""))
-
-                        if actual_value < required_value:
-                            _LOGGER.debug(
-                                "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
-                                condition,
-                                sensor.get("name", "unknown"),
-                                sensor.get("unique_id", "unknown"),
-                                required_value,
-                                actual_value,
-                            )
-                            return False
-                except (ValueError, IndexError) as e:
-                    _LOGGER.warning(
-                        "Invalid condition '%s' for sensor %s: %s",
+                    return False
+            elif " or " in condition:
+                condition_parts = [part.strip() for part in condition.split(" or ")]
+                condition_met = False
+                for part in condition_parts:
+                    if self._evaluate_single_condition(part, dynamic_config):
+                        condition_met = True
+                        break
+                if not condition_met:
+                    _LOGGER.debug(
+                        "Excluding sensor due to OR condition '%s': %s (unique_id: %s)",
                         condition,
                         sensor.get("name", "unknown"),
-                        str(e),
+                        sensor.get("unique_id", "unknown"),
                     )
+                    return False
+            else:
+                if not self._evaluate_single_condition(condition, dynamic_config):
+                    _LOGGER.debug(
+                        "Excluding sensor due to condition '%s': %s (unique_id: %s)",
+                        condition,
+                        sensor.get("name", "unknown"),
+                        sensor.get("unique_id", "unknown"),
+                    )
+                    return False
 
         # Ensure we have strings
         sensor_name = str(sensor_name).lower()
@@ -3423,6 +3489,94 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     return False
 
         # All other sensors are included
+        return True
+
+    def _evaluate_single_condition(self, condition: str, dynamic_config: dict) -> bool:
+        """Evaluate a single condition (no AND/OR).
+
+        Supports:
+        - "variable == value" (string, int, bool)
+        - "variable != value" (string, int, bool)
+        - "variable >= value" (int)
+        """
+        condition = condition.strip()
+
+        if "!=" in condition:
+            try:
+                parts = condition.split("!=")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip().strip("'\"")
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_value_str.lower() in ["true", "false"]:
+                        required_value = required_value_str.lower() == "true"
+                        actual_value = (
+                            bool(actual_value) if actual_value is not None else False
+                        )
+                    else:
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = (
+                                int(actual_value) if actual_value is not None else 0
+                            )
+                        except (ValueError, TypeError):
+                            required_value = required_value_str
+                            actual_value = (
+                                str(actual_value) if actual_value is not None else ""
+                            )
+
+                    return actual_value != required_value
+            except (ValueError, IndexError):
+                return False
+        elif "==" in condition:
+            try:
+                parts = condition.split("==")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip().strip("'\"")
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_value_str.lower() in ["true", "false"]:
+                        required_value = required_value_str.lower() == "true"
+                        actual_value = (
+                            bool(actual_value) if actual_value is not None else False
+                        )
+                    else:
+                        try:
+                            required_value = int(required_value_str)
+                            actual_value = (
+                                int(actual_value) if actual_value is not None else 0
+                            )
+                        except (ValueError, TypeError):
+                            required_value = required_value_str
+                            actual_value = (
+                                str(actual_value) if actual_value is not None else ""
+                            )
+
+                    return actual_value == required_value
+            except (ValueError, IndexError):
+                return False
+        elif ">=" in condition:
+            try:
+                parts = condition.split(">=")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_value_str = parts[1].strip()
+
+                    try:
+                        required_value = int(required_value_str)
+                        actual_value = dynamic_config.get(variable_name, 0)
+                        if isinstance(actual_value, str):
+                            actual_value = int(actual_value)
+                        return actual_value >= required_value
+                    except ValueError:
+                        return False
+            except (ValueError, IndexError):
+                return False
+
         return True
 
     # REGEX FUNCTIONS

@@ -13,7 +13,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import generate_entity_id
+from .device_utils import create_base_extra_state_attributes, generate_entity_id
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -40,6 +40,8 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         self._attr_unique_id = register_config.get("unique_id", "unknown")
         default_entity_id = register_config.get("default_entity_id")
         if default_entity_id:
+            if isinstance(default_entity_id, str):
+                default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
                 self._attr_entity_id = default_entity_id
             else:
@@ -81,22 +83,16 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             self._attr_suggested_display_precision = self._precision
 
         # Minimize extra_state_attributes - only include static/essential attributes
-        self._attr_extra_state_attributes = {
-            "register_address": register_config.get("address"),
-            "data_type": register_config.get("data_type"),
-            "slave_id": register_config.get("slave_id"),
-            "input_type": self._input_type,
-            # Static configuration values
-            "scale": self._scale,
-            "offset": self._offset,
-            "precision": self._precision,
-            "group": self._group,
-            "scan_interval": self._scan_interval,
-            "swap": register_config.get("swap"),
-            "min_value": self._attr_native_min_value,
-            "max_value": self._attr_native_max_value,
-            "step": self._attr_native_step,
-        }
+        self._attr_extra_state_attributes = create_base_extra_state_attributes(
+            unique_id=self._attr_unique_id,
+            register_config=register_config,
+            scan_interval=self._scan_interval,
+            additional_attributes={
+                "min_value": self._attr_native_min_value,
+                "max_value": self._attr_native_max_value,
+                "step": self._attr_native_step,
+            },
+        )
 
         # Create register key for data lookup
         self.register_key = self._create_register_key(register_config)

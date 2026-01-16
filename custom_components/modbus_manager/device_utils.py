@@ -78,7 +78,12 @@ def process_template_entities_with_prefix(
 
         # Ensure default_entity_id is set (used to force entity_id)
         if "default_entity_id" not in processed_entity:
-            processed_entity["default_entity_id"] = processed_entity.get("unique_id")
+            default_entity_id = processed_entity.get("unique_id")
+            processed_entity["default_entity_id"] = (
+                default_entity_id.lower()
+                if isinstance(default_entity_id, str)
+                else default_entity_id
+            )
 
         # Process name - avoid double prefixes
         template_name_value = entity.get("name")
@@ -188,12 +193,56 @@ def create_device_info_dict(
         firmware_version = "1.0.0"
 
     # Return device info as dict - no separate hub device needed
-    # Device name is set to prefix only to keep entity_id format stable
-    # unique_id already contains the prefix and stays stable across updates
+    # Device name includes template for clearer device UI grouping
     return {
         "identifiers": {(DOMAIN, device_identifier)},
-        "name": prefix,
+        "name": f"{prefix} ({template_name})",
         "manufacturer": "Modbus Manager",
         "model": f"{template_name} (Slave {slave_id})",
         "sw_version": f"Firmware: {firmware_version}",
     }
+
+
+def create_base_extra_state_attributes(
+    unique_id: str,
+    register_config: Dict[str, Any],
+    scan_interval: Any = None,
+    additional_attributes: Dict[str, Any] = None,
+) -> Dict[str, Any]:
+    """Create base extra_state_attributes dict with common attributes for all entities.
+
+    This centralizes the common attributes to avoid duplication across entity classes.
+    Entity-specific attributes can be added via additional_attributes parameter.
+
+    Args:
+        unique_id: The entity's unique_id
+        register_config: Register configuration dict containing address, data_type, etc.
+        scan_interval: Scan interval value (optional, can be in register_config)
+        additional_attributes: Optional dict of entity-specific attributes to merge
+
+    Returns:
+        Dict with common extra_state_attributes that can be used by all entity types
+    """
+    # Ensure unique_id is lowercase in attributes
+    unique_id_lower = unique_id.lower() if isinstance(unique_id, str) else unique_id
+
+    base_attributes = {
+        "unique_id": unique_id_lower,
+        "register_address": register_config.get("address"),
+        "data_type": register_config.get("data_type"),
+        "slave_id": register_config.get("slave_id"),
+        "input_type": register_config.get("input_type"),
+        # Static configuration values
+        "scale": register_config.get("scale"),
+        "offset": register_config.get("offset"),
+        "precision": register_config.get("precision"),
+        "group": register_config.get("group"),
+        "scan_interval": scan_interval or register_config.get("scan_interval"),
+        "swap": register_config.get("swap"),
+    }
+
+    # Merge additional entity-specific attributes if provided
+    if additional_attributes:
+        base_attributes.update(additional_attributes)
+
+    return base_attributes
