@@ -3015,7 +3015,7 @@ calculated:
       not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
       }}
     state: >-
-      {{ states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float }}
+      {{ states('sensor.{PREFIX}_meter_active_power_raw') | float(0) }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3062,7 +3062,7 @@ calculated:
     type: "sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_load_power', 'unavailable') }}
-    state: "{{ states('sensor.{PREFIX}_load_power') | default(0) | float }}"
+    state: "{{ states('sensor.{PREFIX}_load_power') | float(0) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3079,8 +3079,8 @@ calculated:
       and not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
       }}
     state: >-
-      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') | float(0) %}
       {% if pv > 0 and grid < 0 %}{{ (grid | abs / pv * 100) | round(1) }}{% else %}0{% endif %}
     unit_of_measurement: "%"
     device_class: "power_factor"
@@ -3096,7 +3096,7 @@ calculated:
       not is_state('sensor.{PREFIX}_total_pv_generation', 'unavailable')
       and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
       }}
-    state: "{% set pv = states('sensor.{PREFIX}_total_pv_generation') | default(0) | float %}{% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}{% if pv > 0 %}{{ (load / pv * 100) | round(1) }}{% else %}0{% endif %}"
+    state: "{% set pv = states('sensor.{PREFIX}_total_pv_generation') | float(0) %}{% set load = states('sensor.{PREFIX}_load_power') | float(0) %}{% if pv > 0 %}{{ (load / pv * 100) | round(1) }}{% else %}0{% endif %}"
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
@@ -3115,8 +3115,8 @@ calculated:
       and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
       }}
     state: >-
-      {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float %}
-      {{ (states('sensor.{PREFIX}_total_dc_power') | default(0) | float) + (states('sensor.{PREFIX}_battery_power') | default(0) | float) + grid - (states('sensor.{PREFIX}_load_power') | default(0) | float) }}
+      {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') | float(0) %}
+      {{ (states('sensor.{PREFIX}_total_dc_power') | float(0)) + (states('sensor.{PREFIX}_battery_power') | float(0)) + grid - (states('sensor.{PREFIX}_load_power') | float(0)) }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3133,7 +3133,7 @@ calculated:
       and not is_state('sensor.{PREFIX}_meter_phase_b_active_power_raw', 'unavailable')
       and not is_state('sensor.{PREFIX}_meter_phase_c_active_power_raw', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | default(0) | float) + (states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | default(0) | float) + (states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | float(0)) + (states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | float(0)) + (states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3149,7 +3149,7 @@ calculated:
       not is_state('sensor.{PREFIX}_phase_a_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_phase_a_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_phase_a_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_a_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_phase_a_voltage') | float(0)) * (states('sensor.{PREFIX}_phase_a_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3164,7 +3164,7 @@ calculated:
       not is_state('sensor.{PREFIX}_phase_b_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_phase_b_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_phase_b_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_b_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_phase_b_voltage') | float(0)) * (states('sensor.{PREFIX}_phase_b_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3179,7 +3179,7 @@ calculated:
       not is_state('sensor.{PREFIX}_phase_c_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_phase_c_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_phase_c_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_c_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_phase_c_voltage') | float(0)) * (states('sensor.{PREFIX}_phase_c_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3230,7 +3230,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_phase_a_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_a_power = states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | default(0) | float %}
+      {% set phase_a_power = states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | float(0) %}
       {% if phase_a_power != 0x7FFFFFFF and phase_a_power != 2147483647 %}
         {{ phase_a_power }}
       {% else %}
@@ -3252,7 +3252,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_phase_b_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_b_power = states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | default(0) | float %}
+      {% set phase_b_power = states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | float(0) %}
       {% if phase_b_power != 0x7FFFFFFF and phase_b_power != 2147483647 %}
         {{ phase_b_power }}
       {% else %}
@@ -3274,7 +3274,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_phase_c_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_c_power = states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | default(0) | float %}
+      {% set phase_c_power = states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | float(0) %}
       {% if phase_c_power != 0x7FFFFFFF and phase_c_power != 2147483647 %}
         {{ phase_c_power }}
       {% else %}
@@ -3297,7 +3297,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_phase_a_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_a_power = states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | default(0) | float %}
+      {% set phase_a_power = states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | float(0) %}
       {% if phase_a_power != 0x7FFFFFFF and phase_a_power != 2147483647 %}
         {{ phase_a_power }}
       {% else %}
@@ -3319,7 +3319,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_phase_b_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_b_power = states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | default(0) | float %}
+      {% set phase_b_power = states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | float(0) %}
       {% if phase_b_power != 0x7FFFFFFF and phase_b_power != 2147483647 %}
         {{ phase_b_power }}
       {% else %}
@@ -3341,7 +3341,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_phase_c_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set phase_c_power = states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | default(0) | float %}
+      {% set phase_c_power = states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | float(0) %}
       {% if phase_c_power != 0x7FFFFFFF and phase_c_power != 2147483647 %}
         {{ phase_c_power }}
       {% else %}
@@ -3365,7 +3365,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_channel_2_total_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set channel_2_total_power = states('sensor.{PREFIX}_meter_channel_2_total_active_power_raw') | default(0) | float %}
+      {% set channel_2_total_power = states('sensor.{PREFIX}_meter_channel_2_total_active_power_raw') | float(0) %}
       {% if channel_2_total_power != 0x7FFFFFFF and channel_2_total_power != 2147483647 %}
         {{ channel_2_total_power }}
       {% else %}
@@ -3387,7 +3387,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set channel_2_phase_a_power = states('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw') | default(0) | float %}
+      {% set channel_2_phase_a_power = states('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw') | float(0) %}
       {% if channel_2_phase_a_power != 0x7FFFFFFF and channel_2_phase_a_power != 2147483647 %}
         {{ channel_2_phase_a_power }}
       {% else %}
@@ -3409,7 +3409,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set channel_2_phase_b_power = states('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw') | default(0) | float %}
+      {% set channel_2_phase_b_power = states('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw') | float(0) %}
       {% if channel_2_phase_b_power != 0x7FFFFFFF and channel_2_phase_b_power != 2147483647 %}
         {{ channel_2_phase_b_power }}
       {% else %}
@@ -3431,7 +3431,7 @@ calculated:
       and states('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw')|int != 0x7FFFFFFF
       }}
     state: >-
-      {% set channel_2_phase_c_power = states('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw') | default(0) | float %}
+      {% set channel_2_phase_c_power = states('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw') | float(0) %}
       {% if channel_2_phase_c_power != 0x7FFFFFFF and channel_2_phase_c_power != 2147483647 %}
         {{ channel_2_phase_c_power }}
       {% else %}
@@ -3832,9 +3832,9 @@ calculated:
       and not is_state('sensor.{PREFIX}_battery_discharging_power', 'unavailable')
       }}
     state: >-
-      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
-      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | default(0) | float %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | float(0) %}
+      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | float(0) %}
       {% if pv <= 0 %}
         {# No PV generation #}
         0
@@ -3875,10 +3875,10 @@ calculated:
       and not is_state('sensor.{PREFIX}_battery_discharging_power', 'unavailable')
       }}
     state: >-
-      {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
-      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
-      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | default(0) | float %}
+      {% set load = states('sensor.{PREFIX}_load_power') | float(0) %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | float(0) %}
+      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | float(0) %}
       {% if load <= 0 %}
         {# No load or negative load - 100% autarky #}
         100
@@ -3921,8 +3921,8 @@ calculated:
       and not is_state('sensor.{PREFIX}_phase_c_power', 'unavailable')
       }}
     state: >-
-      {% set dc_power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set ac_power = (states('sensor.{PREFIX}_phase_a_power') | default(0) | float) + (states('sensor.{PREFIX}_phase_b_power') | default(0) | float) + (states('sensor.{PREFIX}_phase_c_power') | default(0) | float) %}
+      {% set dc_power = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set ac_power = (states('sensor.{PREFIX}_phase_a_power') | float(0)) + (states('sensor.{PREFIX}_phase_b_power') | float(0)) + (states('sensor.{PREFIX}_phase_c_power') | float(0)) %}
       {% if dc_power > 0 %}
         {{ (ac_power / dc_power * 100) | round(2) }}
       {% else %}
@@ -3944,7 +3944,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt1_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt1_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt1_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt1_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt1_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt1_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3959,7 +3959,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt2_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt2_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt2_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt2_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt2_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3974,7 +3974,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt3_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt3_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt3_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt3_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt3_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt3_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -3989,7 +3989,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt4_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt4_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt4_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt4_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt4_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt4_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -4007,10 +4007,10 @@ calculated:
       }}
     state: >-
       {{
-        (states('sensor.{PREFIX}_mppt1_power') | default(0) | float) +
-        (states('sensor.{PREFIX}_mppt2_power') | default(0) | float) +
-        (states('sensor.{PREFIX}_mppt3_power') | default(0) | float) +
-        (states('sensor.{PREFIX}_mppt4_power') | default(0) | float)
+        (states('sensor.{PREFIX}_mppt1_power') | float(0) ) +
+        (states('sensor.{PREFIX}_mppt2_power') | float(0) ) +
+        (states('sensor.{PREFIX}_mppt3_power') | float(0) ) +
+        (states('sensor.{PREFIX}_mppt4_power') | float(0) )
       }}
     unit_of_measurement: "W"
     device_class: "power"
@@ -4031,10 +4031,10 @@ calculated:
       and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
-      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
-      {% set export = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
-      {% set battery = states('sensor.{PREFIX}_battery_power') | default(0) | float %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set load = states('sensor.{PREFIX}_load_power') | float(0) %}
+      {% set export = states('sensor.{PREFIX}_export_power_raw') | float(0) %}
+      {% set battery = states('sensor.{PREFIX}_battery_power') | float(0) %}
       {% set exported = export if export > 0 else 0 %}
       {% set charging = battery if battery < 0 else 0 %}
       {% set pv_available = pv - exported - (charging | abs) %}
@@ -4058,7 +4058,7 @@ calculated:
       not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
-      {% set battery = states('sensor.{PREFIX}_battery_power') | default(0) | float %}
+      {% set battery = states('sensor.{PREFIX}_battery_power') | float(0) %}
       {% if battery < 0 %}
         {{ (battery | abs) }}
       {% else %}
@@ -4079,7 +4079,7 @@ calculated:
       not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
-      {% set battery = states('sensor.{PREFIX}_battery_power') | default(0) | float %}
+      {% set battery = states('sensor.{PREFIX}_battery_power') | float(0) %}
       {% if battery > 0 %}
         {{ battery }}
       {% else %}
@@ -4100,7 +4100,7 @@ calculated:
       not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
       }}
     state: >-
-      {% set grid = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
+      {% set grid = states('sensor.{PREFIX}_export_power_raw') | float(0) %}
       {% if grid < 0 %}
         {{ (grid | abs) }}
       {% else %}
@@ -4123,9 +4123,9 @@ calculated:
       and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
-      {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
-      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set battery = states('sensor.{PREFIX}_battery_power') | default(0) | float %}
+      {% set load = states('sensor.{PREFIX}_load_power') | float(0) %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set battery = states('sensor.{PREFIX}_battery_power') | float(0) %}
       {% set battery_supply = battery if battery > 0 else 0 %}
       {% set net = load - pv - battery_supply %}
       {{ net if net > 0 else 0 }}
@@ -4147,10 +4147,10 @@ calculated:
       and not is_state('sensor.{PREFIX}_battery_discharging_power', 'unavailable')
       }}
     state: >-
-      {% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}
-      {% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | default(0) | float %}
-      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | default(0) | float %}
+      {% set load = states('sensor.{PREFIX}_load_power') | float(0) %}
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set export_raw = states('sensor.{PREFIX}_export_power_raw') | float(0) %}
+      {% set battery_discharge = states('sensor.{PREFIX}_battery_discharging_power') | float(0) %}
       {% if load <= 0 %}
         {# No load or negative load - 0% grid dependency #}
         0
@@ -4192,10 +4192,10 @@ calculated:
       and not is_state('sensor.{PREFIX}_mppt2_power', 'unavailable')
       }}
     state: >-
-      {% set m1 = states('sensor.{PREFIX}_mppt1_power') | default(0) | float %}
-      {% set m2 = states('sensor.{PREFIX}_mppt2_power') | default(0) | float %}
-      {% set m3 = states('sensor.{PREFIX}_mppt3_power') | default(0) | float %}
-      {% set m4 = states('sensor.{PREFIX}_mppt4_power') | default(0) | float %}
+      {% set m1 = states('sensor.{PREFIX}_mppt1_power') | float(0) %}
+      {% set m2 = states('sensor.{PREFIX}_mppt2_power') | float(0) %}
+      {% set m3 = states('sensor.{PREFIX}_mppt3_power') | float(0) %}
+      {% set m4 = states('sensor.{PREFIX}_mppt4_power') | float(0) %}
       {% set powers = [m1, m2, m3, m4] | select('>', 0) | list %}
       {% if powers | length > 0 %}
         {% set avg = (powers | sum) / (powers | length) %}
@@ -4226,8 +4226,8 @@ calculated:
       and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
       }}
     state: >-
-      {% set mppt_sum = states('sensor.{PREFIX}_total_mppt_power') | default(0) | float %}
-      {% set dc_power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set mppt_sum = states('sensor.{PREFIX}_total_mppt_power') | float(0) %}
+      {% set dc_power = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
       {% if mppt_sum > 0 and dc_power > 0 %}
         {{ (mppt_sum / dc_power * 100) | round(1) }}
       {% elif dc_power > 0 %}
@@ -4251,7 +4251,7 @@ calculated:
       not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
       }}
     state: >-
-      {% set current_power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set current_power = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
       {% set device_type = states('sensor.{PREFIX}_sungrow_device_type_code') | default('') %}
       {% set max_power = 5000 %}
       {% if 'SH3.0' in device_type or 'SH3K' in device_type %}
@@ -4290,8 +4290,8 @@ calculated:
       and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
       }}
     state: >-
-      {% set daily_gen = states('sensor.{PREFIX}_daily_pv_generation') | default(0) | float %}
-      {% set current_power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
+      {% set daily_gen = states('sensor.{PREFIX}_daily_pv_generation') | float(0) %}
+      {% set current_power = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
       {% set avg_power = current_power %}
       {% if avg_power > 0 %}
         {{ (daily_gen / avg_power) | round(2) }}

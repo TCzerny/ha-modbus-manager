@@ -229,18 +229,31 @@ def create_base_extra_state_attributes(
 
     base_attributes = {
         "unique_id": unique_id_lower,
-        "register_address": register_config.get("address"),
-        "data_type": register_config.get("data_type"),
-        "slave_id": register_config.get("slave_id"),
-        "input_type": register_config.get("input_type"),
-        # Static configuration values
-        "scale": register_config.get("scale"),
-        "offset": register_config.get("offset"),
-        "precision": register_config.get("precision"),
-        "group": register_config.get("group"),
-        "scan_interval": scan_interval or register_config.get("scan_interval"),
-        "swap": register_config.get("swap"),
     }
+
+    # Only add fields if they have values (not None)
+    if register_config.get("address") is not None:
+        base_attributes["register_address"] = register_config.get("address")
+    if register_config.get("data_type") is not None:
+        base_attributes["data_type"] = register_config.get("data_type")
+    if register_config.get("slave_id") is not None:
+        base_attributes["slave_id"] = register_config.get("slave_id")
+    if register_config.get("input_type") is not None:
+        base_attributes["input_type"] = register_config.get("input_type")
+    # Static configuration values
+    if register_config.get("scale") is not None:
+        base_attributes["scale"] = register_config.get("scale")
+    if register_config.get("offset") is not None:
+        base_attributes["offset"] = register_config.get("offset")
+    if register_config.get("precision") is not None:
+        base_attributes["precision"] = register_config.get("precision")
+    if register_config.get("group") is not None:
+        base_attributes["group"] = register_config.get("group")
+    scan_interval_value = scan_interval or register_config.get("scan_interval")
+    if scan_interval_value is not None:
+        base_attributes["scan_interval"] = scan_interval_value
+    if register_config.get("swap") is not None:
+        base_attributes["swap"] = register_config.get("swap")
 
     # Merge additional entity-specific attributes if provided
     if additional_attributes:
