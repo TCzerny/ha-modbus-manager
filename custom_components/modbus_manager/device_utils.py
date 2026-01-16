@@ -193,10 +193,11 @@ def create_device_info_dict(
         firmware_version = "1.0.0"
 
     # Return device info as dict - no separate hub device needed
-    # Device name includes template for clearer device UI grouping
+    # Device name is set to prefix only, so with has_entity_name=True,
+    # friendly_name will be "{prefix} {entity.name}" instead of "{prefix} ({template_name}) {entity.name}"
     return {
         "identifiers": {(DOMAIN, device_identifier)},
-        "name": f"{prefix} ({template_name})",
+        "name": prefix,  # Use prefix only to keep friendly_name short: "Prefix Entityname"
         "manufacturer": "Modbus Manager",
         "model": f"{template_name} (Slave {slave_id})",
         "sw_version": f"Firmware: {firmware_version}",

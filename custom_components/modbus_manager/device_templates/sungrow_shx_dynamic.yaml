@@ -207,6 +207,7 @@ sensors:
     count: 10
     scan_interval: 600
     group: "PV_device_count"
+    entity_category: "diagnostic"
 
   - name: Sungrow device type code
     unique_id: sungrow_device_type_code
@@ -215,6 +216,7 @@ sensors:
     data_type: uint16
     scan_interval: 600
     group: "PV_device_info"
+    entity_category: "diagnostic"
     map:
       3334: "SH3K6"
       3335: "SH4K6"
@@ -268,6 +270,7 @@ sensors:
     scan_interval: 3600
     group: "PV_device_info"
     icon: "mdi:chip"
+    entity_category: "diagnostic"
 
   - name: Communication Module Firmware Information
     unique_id: communication_module_firmware_info
@@ -278,6 +281,7 @@ sensors:
     scan_interval: 3600
     group: "PV_device_info"
     icon: "mdi:chip"
+    entity_category: "diagnostic"
 
   - name: Battery Firmware Information
     unique_id: battery_firmware_info
@@ -288,6 +292,7 @@ sensors:
     scan_interval: 3600
     group: "PV_device_info"
     icon: "mdi:chip"
+    entity_category: "diagnostic"
 
   # Basic Inverter Data
   - name: Daily PV generation & battery discharge
@@ -314,6 +319,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Inverter temperature
     unique_id: inverter_temperature
@@ -467,6 +473,7 @@ sensors:
     offset: 0
     scan_interval: 10
     group: "PV_power_measurement"
+    entity_category: "diagnostic"
 
   - name: Power factor
     unique_id: power_factor
@@ -479,6 +486,7 @@ sensors:
     state_class: measurement
     scale: 0.001
     scan_interval: 10
+    entity_category: "diagnostic"
 
   - name: Grid frequency
     unique_id: grid_frequency
@@ -508,6 +516,7 @@ sensors:
     scale: 1
     scan_interval: 10
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    entity_category: "diagnostic"
 
   - name: Meter phase A active power raw
     unique_id: meter_phase_a_active_power_raw
@@ -522,6 +531,7 @@ sensors:
     scale: 1
     scan_interval: 10
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    entity_category: "diagnostic"
 
   - name: Meter phase B active power raw
     unique_id: meter_phase_b_active_power_raw
@@ -536,6 +546,7 @@ sensors:
     scale: 1
     scan_interval: 10
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    entity_category: "diagnostic"
 
   - name: Meter phase C active power raw
     unique_id: meter_phase_c_active_power_raw
@@ -551,6 +562,7 @@ sensors:
     scale: 1
     scan_interval: 10
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    entity_category: "diagnostic"
 
   # Meter Channel 2 Data (Protocol V1.1.11) - for DTSU666-20 dual-channel meter
   # NOTE: These sensors are only valid when DTSU666-20 is selected
@@ -569,6 +581,7 @@ sensors:
     scan_interval: 10
     group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20'"
+    entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase A Active Power raw
     unique_id: meter_channel_2_phase_a_active_power_raw
@@ -584,6 +597,7 @@ sensors:
     scan_interval: 10
     group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20'"
+    entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase B Active Power raw
     unique_id: meter_channel_2_phase_b_active_power_raw
@@ -599,6 +613,7 @@ sensors:
     scan_interval: 10
     group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20'"
+    entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase C Active Power raw
     unique_id: meter_channel_2_phase_c_active_power_raw
@@ -614,6 +629,7 @@ sensors:
     scan_interval: 10
     group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20'"
+    entity_category: "diagnostic"
 
   # iHomeManager Meter Data (different register addresses and scale)
   # NOTE: iHomeManager uses register 8156 for total power and 8558-8562 for phase power
@@ -632,6 +648,7 @@ sensors:
     scale: 10
     scan_interval: 10
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: Meter phase A active power raw
     unique_id: meter_phase_a_active_power_raw
@@ -646,6 +663,7 @@ sensors:
     scale: 1
     scan_interval: 10
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: Meter phase B active power raw
     unique_id: meter_phase_b_active_power_raw
@@ -660,6 +678,7 @@ sensors:
     scale: 1
     scan_interval: 10
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: Meter phase C active power raw
     unique_id: meter_phase_c_active_power_raw
@@ -674,6 +693,7 @@ sensors:
     scale: 1
     scan_interval: 10
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   # iHomeManager Additional Input Registers
   # Device Information
@@ -685,6 +705,7 @@ sensors:
     scan_interval: 3600
     group: "PV_device_info"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager protocol number
     unique_id: ihm_protocol_number
@@ -695,6 +716,7 @@ sensors:
     scan_interval: 3600
     group: "PV_device_info"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager protocol version
     unique_id: ihm_protocol_version
@@ -705,6 +727,7 @@ sensors:
     scan_interval: 3600
     group: "PV_device_info"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager total devices connected
     unique_id: ihm_total_devices_connected
@@ -715,6 +738,7 @@ sensors:
     scan_interval: 300
     group: "PV_device_info"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager devices in fault
     unique_id: ihm_devices_in_fault
@@ -725,6 +749,7 @@ sensors:
     scan_interval: 60
     group: "PV_device_info"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   # System Capacity
   - name: iHomeManager total nominal active power
@@ -740,6 +765,7 @@ sensors:
     scan_interval: 300
     group: "PV_system_capacity"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager total battery rated capacity
     unique_id: ihm_total_battery_rated_capacity
@@ -754,6 +780,7 @@ sensors:
     scan_interval: 300
     group: "PV_system_capacity"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   # Battery Limits
   - name: iHomeManager battery charge discharge limit
@@ -769,6 +796,7 @@ sensors:
     scan_interval: 60
     group: "PV_battery_limits"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager battery max charge power
     unique_id: ihm_battery_max_charge_power
@@ -782,6 +810,7 @@ sensors:
     scan_interval: 60
     group: "PV_battery_limits"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager battery min charge power
     unique_id: ihm_battery_min_charge_power
@@ -795,6 +824,7 @@ sensors:
     scan_interval: 60
     group: "PV_battery_limits"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager battery max discharge power
     unique_id: ihm_battery_max_discharge_power
@@ -808,6 +838,7 @@ sensors:
     scan_interval: 60
     group: "PV_battery_limits"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager battery min discharge power
     unique_id: ihm_battery_min_discharge_power
@@ -821,6 +852,7 @@ sensors:
     scan_interval: 60
     group: "PV_battery_limits"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   # Real-Time Power
   - name: iHomeManager total active power
@@ -923,6 +955,7 @@ sensors:
     scan_interval: 300
     group: "PV_meter_ihm"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: iHomeManager phase A voltage
     unique_id: ihm_phase_a_voltage
@@ -1090,6 +1123,7 @@ sensors:
     scan_interval: 60
     group: "PV_charger"
     condition: "meter_type == 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: BDC rated power
     unique_id: bdc_rated_power
@@ -1101,6 +1135,7 @@ sensors:
     state_class: measurement
     scale: 100
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: BMS max. charging current
     unique_id: bms_max_charging_current
@@ -1113,6 +1148,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 60
+    entity_category: "diagnostic"
 
   - name: BMS max. discharging current
     unique_id: bms_max_discharging_current
@@ -1125,6 +1161,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 60
+    entity_category: "diagnostic"
 
   - name: Battery capacity
     unique_id: battery_capacity
@@ -1136,6 +1173,7 @@ sensors:
     device_class: "energy_storage"
     scale: 0.01
     scan_interval: 600
+    entity_category: "diagnostic"
 
   # Export Power Limitation Values (Protocol V1.1.11)
   - name: Min Export Power Limit Value
@@ -1150,6 +1188,7 @@ sensors:
     scale: 0.01
     scan_interval: 60
     group: "PV_control"
+    entity_category: "diagnostic"
 
   - name: Max Export Power Limit Value
     unique_id: max_export_power_limit_value
@@ -1163,6 +1202,7 @@ sensors:
     scale: 0.01
     scan_interval: 60
     group: "PV_control"
+    entity_category: "diagnostic"
 
   # Backup Power (will be filtered based on battery_enabled and phases)
   - name: Backup phase A power
@@ -1304,6 +1344,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (02 February)
     unique_id: monthly_pv_generation_02_february
@@ -1316,6 +1357,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (03 March)
     unique_id: monthly_pv_generation_03_march
@@ -1328,6 +1370,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (04 April)
     unique_id: monthly_pv_generation_04_april
@@ -1340,6 +1383,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (05 May)
     unique_id: monthly_pv_generation_05_may
@@ -1352,6 +1396,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (06 June)
     unique_id: monthly_pv_generation_06_june
@@ -1364,6 +1409,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (07 July)
     unique_id: monthly_pv_generation_07_july
@@ -1376,6 +1422,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (08 August)
     unique_id: monthly_pv_generation_08_august
@@ -1388,6 +1435,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (09 September)
     unique_id: monthly_pv_generation_09_september
@@ -1400,6 +1448,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (10 October)
     unique_id: monthly_pv_generation_10_october
@@ -1412,6 +1461,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (11 November)
     unique_id: monthly_pv_generation_11_november
@@ -1424,6 +1474,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly PV generation (12 December)
     unique_id: monthly_pv_generation_12_december
@@ -1436,6 +1487,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
   # End monthly PV generation
 
   # Start yearly pv generation
@@ -1451,6 +1503,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2020)
     unique_id: yearly_pv_generation_2020
@@ -1464,6 +1517,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2021)
     unique_id: yearly_pv_generation_2021
@@ -1477,6 +1531,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2022)
     unique_id: yearly_pv_generation_2022
@@ -1490,6 +1545,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2023)
     unique_id: yearly_pv_generation_2023
@@ -1503,6 +1559,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2024)
     unique_id: yearly_pv_generation_2024
@@ -1516,6 +1573,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2025)
     unique_id: yearly_pv_generation_2025
@@ -1529,6 +1587,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2026)
     unique_id: yearly_pv_generation_2026
@@ -1542,6 +1601,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2027)
     unique_id: yearly_pv_generation_2027
@@ -1555,6 +1615,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2028)
     unique_id: yearly_pv_generation_2028
@@ -1568,6 +1629,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly PV generation (2029)
     unique_id: yearly_pv_generation_2029e
@@ -1581,6 +1643,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
   # End yearly pv generation
 
   # Start monthly export
@@ -1595,6 +1658,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (02 February)
     unique_id: monthly_export_02_february
@@ -1607,6 +1671,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (03 March)
     unique_id: monthly_export_03_march
@@ -1619,6 +1684,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (04 April)
     unique_id: monthly_export_04_april
@@ -1631,6 +1697,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (05 May)
     unique_id: monthly_export_05_may
@@ -1643,6 +1710,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (06 June)
     unique_id: monthly_export_06_june
@@ -1655,6 +1723,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (07 July)
     unique_id: monthly_export_07_july
@@ -1667,6 +1736,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (08 August)
     unique_id: monthly_export_08_august
@@ -1679,6 +1749,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (09 September)
     unique_id: monthly_export_09_september
@@ -1691,6 +1762,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (10 October)
     unique_id: monthly_export_10_october
@@ -1703,6 +1775,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (11 November)
     unique_id: monthly_export_11_november
@@ -1715,6 +1788,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Monthly export (12 December)
     unique_id: monthly_export_12_december
@@ -1727,6 +1801,7 @@ sensors:
     state_class: total_increasing
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
   # End monthly export
 
   # Start yearly export energy from PV
@@ -1742,6 +1817,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2020)
     unique_id: yearly_export_2020
@@ -1755,6 +1831,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2021)
     unique_id: yearly_export_2021
@@ -1768,6 +1845,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2022)
     unique_id: yearly_export_2022
@@ -1781,6 +1859,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2023)
     unique_id: yearly_export_2023
@@ -1794,6 +1873,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2024)
     unique_id: yearly_export_2024
@@ -1807,6 +1887,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2025)
     unique_id: yearly_export_2025
@@ -1820,6 +1901,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2026)
     unique_id: yearly_export_2026
@@ -1833,6 +1915,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2027)
     unique_id: yearly_export_2027
@@ -1846,6 +1929,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
 
   - name: Yearly Export (2028)
     unique_id: yearly_export_2028
@@ -1859,6 +1943,7 @@ sensors:
     state_class: total
     scale: 0.1
     scan_interval: 600
+    entity_category: "diagnostic"
   # # End yearly export energy from PV
 
 
@@ -2263,6 +2348,7 @@ sensors:
     scale: 0.1
     scan_interval: 600
     condition: "meter_type != 'iHomeManager'"
+    entity_category: "diagnostic"
 
   - name: Daily battery charge
     unique_id: daily_battery_charge
