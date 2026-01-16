@@ -58,21 +58,6 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._attr_options = list(register_config.get("options", {}).values())
         self._attr_current_option = None
 
-        # Debug: Log options loading
-        _LOGGER.info(
-            "Select %s: Loaded options %s",
-            self._attr_name,
-            register_config.get("options", {}),
-        )
-        _LOGGER.info(
-            "Select %s: entity_id=%s unique_id=%s device_info=%s category=%s",
-            self._attr_name,
-            getattr(self, "_attr_entity_id", None),
-            self._attr_unique_id,
-            device_info,
-            getattr(self, "_attr_entity_category", None),
-        )
-
         # Store template parameters for extra_state_attributes
         self._scale = register_config.get("scale", 1.0)
         self._offset = register_config.get("offset", 0.0)
