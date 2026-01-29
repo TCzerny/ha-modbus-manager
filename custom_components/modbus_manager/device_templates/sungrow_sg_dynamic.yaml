@@ -1397,6 +1397,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    condition: "selected_model in [SG33CX, SG40CX, SG50CX, SG75CX, SG110CX]"
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1904,9 +1905,14 @@ calculated:
   - name: "Inverter Status Display"
     unique_id: "inverter_status_display"
     type: "sensor"
+    availability: >-
+      {{
+      states('sensor.{PREFIX}_total_dc_power') not in ['unknown', 'unavailable']
+      and states('sensor.{PREFIX}_inverter_temperature') not in ['unknown', 'unavailable']
+      }}
     state: >-
-      {% set power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set temp = states('sensor.{PREFIX}_inverter_temperature') | default(0) | float %}
+      {% set power = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set temp = states('sensor.{PREFIX}_inverter_temperature') | float(0) %}
       {% if power > 1000 %}
         High Production
       {% elif power > 100 %}
@@ -1917,8 +1923,8 @@ calculated:
         Standby
       {% endif %}
     icon_template: >-
-      {% set power = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}
-      {% set temp = states('sensor.{PREFIX}_inverter_temperature') | default(0) | float %}
+      {% set power = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% set temp = states('sensor.{PREFIX}_inverter_temperature') | float(0) %}
       {% if temp > 70 %}
         mdi:alert-circle
       {% elif power > 1000 %}
@@ -1935,8 +1941,12 @@ calculated:
   - name: "Grid Status"
     unique_id: "grid_status"
     type: "sensor"
+    availability: >-
+      {{
+      states('sensor.{PREFIX}_meter_active_power') not in ['unknown', 'unavailable']
+      }}
     state: >-
-      {% set import_power = states('sensor.{PREFIX}_meter_active_power') | default(0) | float %}
+      {% set import_power = states('sensor.{PREFIX}_meter_active_power') | float(0) %}
       {% if import_power > 100 %}
         Importing
       {% elif import_power < -100 %}
@@ -1945,7 +1955,7 @@ calculated:
         Balanced
       {% endif %}
     icon_template: >-
-      {% set import_power = states('sensor.{PREFIX}_meter_active_power') | default(0) | float %}
+      {% set import_power = states('sensor.{PREFIX}_meter_active_power') | float(0) %}
       {% if import_power > 500 %}
         mdi:transmission-tower-import
       {% elif import_power > 100 %}

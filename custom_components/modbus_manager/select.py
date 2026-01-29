@@ -17,6 +17,7 @@ from .device_utils import (
     create_base_extra_state_attributes,
     create_device_info_dict,
     generate_unique_id,
+    is_coordinator_connected,
 )
 from .logger import ModbusManagerLogger
 
@@ -334,6 +335,11 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
     def should_poll(self) -> bool:
         """Return False - coordinator handles updates."""
         return False
+
+    @property
+    def available(self) -> bool:
+        """Return if the entity is available."""
+        return is_coordinator_connected(self.coordinator) and super().available
 
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass."""

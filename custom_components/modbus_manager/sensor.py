@@ -14,7 +14,7 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_base_extra_state_attributes
+from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
 from .logger import ModbusManagerLogger
 from .template_loader import load_templates
 
@@ -243,6 +243,11 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
     def should_poll(self) -> bool:
         """Return False - coordinator handles updates."""
         return False
+
+    @property
+    def available(self) -> bool:
+        """Return if the entity is available."""
+        return is_coordinator_connected(self.coordinator) and super().available
 
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass."""

@@ -5,6 +5,29 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### ✨ Added
+- **Condition Filtering**: Added `in` / `not in` list support for `condition` statements
+  - Enables model-specific inclusion like `selected_model in [SG33CX, SG40CX]`
+  - Works across config flow, options flow, and coordinator filtering
+
+### 🐛 Fixed
+- **Offline Setup**: Prevent setup from hanging when Modbus host is unreachable
+  - Coordinator setup now proceeds in offline mode if connect fails or times out
+  - Coordinator reconnect attempts now honor the configured timeout
+- **Calculated Sensors**: Avoid template errors when source entities are unavailable
+  - Added availability guards and `float(0)` conversions for SG calculated status sensors
+- **HA Standard Offline Handling**: Mark entities unavailable on connection loss
+  - Coordinator now raises `UpdateFailed` when hub is offline
+
+### 📚 Documentation
+- **Template Docs**: Documented condition syntax and model list usage in `docs/README_Template.md`
+- **Sungrow SG Docs**: Documented model-limited Active Power Overload control
+- **README**: Added note about offline entity availability and retry behavior
+
+---
+
 ## [0.1.6] - 2026-01-15
 
 ### ✨ Added

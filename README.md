@@ -327,6 +327,9 @@ entities:
 
 ## 🚧 Known Issues
 
+### Offline Devices
+- If the Modbus host is unreachable, entities show as **unavailable** (standard HA behavior).
+- Home Assistant’s Modbus hub retries the TCP connection every 60 seconds (Core behavior).
 
 ## 🤝 Contributing
 

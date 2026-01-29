@@ -108,6 +108,31 @@ dynamic_config:
 3. **Sensor Replacements**: Sensor parameters can change based on firmware version
 4. **Sensor Availability**: Sensors can be marked as available only for specific connection types
 
+### Condition Filtering
+
+Use the `condition` field on sensors/controls/calculated/binary entities to include or skip them based on dynamic configuration.
+
+**Supported operators:**
+- `==`, `!=`, `>=`
+- `in`, `not in` for list checks
+- `and`, `or` for combining conditions
+
+**Examples:**
+```yaml
+# Model-specific control
+condition: "selected_model in [SG33CX, SG40CX, SG50CX]"
+
+# Exclude a meter type
+condition: "meter_type != 'iHomeManager'"
+
+# Combined logic
+condition: "phases >= 3 and connection_type == 'LAN'"
+```
+
+**Notes:**
+- Conditions can use any field from `dynamic_config`.
+- `selected_model` is always available when a model is chosen in setup/options.
+
 ---
 
 ## Sensors

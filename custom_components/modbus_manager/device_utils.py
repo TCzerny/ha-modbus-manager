@@ -260,3 +260,11 @@ def create_base_extra_state_attributes(
         base_attributes.update(additional_attributes)
 
     return base_attributes
+
+
+def is_coordinator_connected(coordinator: Any) -> bool:
+    """Return True if the coordinator hub is connected."""
+    hub = getattr(coordinator, "hub", None)
+    if not hub:
+        return False
+    return bool(getattr(hub, "_is_connected", False))

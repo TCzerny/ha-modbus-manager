@@ -12,7 +12,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_base_extra_state_attributes
+from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -135,7 +135,10 @@ class ModbusCoordinatorButton(ButtonEntity):
     @property
     def available(self) -> bool:
         """Return if the entity is available."""
-        return self._coordinator.last_update_success
+        return (
+            is_coordinator_connected(self._coordinator)
+            and self._coordinator.last_update_success
+        )
 
     async def async_press(self) -> None:
         """Handle the button press."""

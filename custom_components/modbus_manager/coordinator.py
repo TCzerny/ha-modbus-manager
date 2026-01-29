@@ -107,6 +107,11 @@ class ModbusCoordinator(DataUpdateCoordinator):
         # Track when each interval group was last updated
         self._last_update_time = {}
 
+        # Connection retry state (avoid log spam)
+        self._next_connect_attempt = 0.0
+        self._connect_retry_interval = 60.0
+        self._connect_failure_logged = False
+
         # Flag to indicate if coordinator is being unloaded
         self._is_unloading = False
 
@@ -151,7 +156,32 @@ class ModbusCoordinator(DataUpdateCoordinator):
             _LOGGER.debug("Coordinator is unloading, skipping update")
             return self.register_data
 
+        operation_id = None
         try:
+            # Ensure hub is connected (HA standard: UpdateFailed when offline)
+            if not getattr(self.hub, "_is_connected", False):
+                now = asyncio.get_event_loop().time()
+                if now >= self._next_connect_attempt:
+                    self._next_connect_attempt = now + self._connect_retry_interval
+                    try:
+                        connect_timeout = self.entry.data.get("timeout", 5)
+                        await asyncio.wait_for(
+                            self.hub.async_pb_connect(), timeout=connect_timeout
+                        )
+                        self.hub._is_connected = True
+                        self._connect_failure_logged = False
+                        _LOGGER.info("Modbus hub reconnected successfully")
+                    except Exception as e:
+                        if not self._connect_failure_logged:
+                            _LOGGER.info(
+                                "Modbus hub not connected; entities will be unavailable until reconnected"
+                            )
+                            self._connect_failure_logged = True
+                        _LOGGER.debug("Failed to reconnect hub: %s", str(e))
+                        raise UpdateFailed("Modbus hub not connected")
+                else:
+                    raise UpdateFailed("Modbus hub not connected")
+
             # Start performance monitoring
             operation_id = self.performance_monitor.start_operation(
                 device_id=self.entry.data.get("prefix", "unknown"),
@@ -266,14 +296,25 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
             return self.register_data
 
+        except UpdateFailed:
+            # UpdateFailed is handled by DataUpdateCoordinator; avoid extra log spam here
+            if operation_id is not None:
+                self.performance_monitor.end_operation(
+                    device_id=self.entry.data.get("prefix", "unknown"),
+                    operation_id=operation_id,
+                    success=False,
+                    error_message="update_failed",
+                )
+            raise
         except Exception as e:
             _LOGGER.error("Error in coordinator update: %s", str(e))
-            self.performance_monitor.end_operation(
-                device_id=self.entry.data.get("prefix", "unknown"),
-                operation_id=operation_id,
-                success=False,
-                error_message=str(e),
-            )
+            if operation_id is not None:
+                self.performance_monitor.end_operation(
+                    device_id=self.entry.data.get("prefix", "unknown"),
+                    operation_id=operation_id,
+                    success=False,
+                    error_message=str(e),
+                )
             raise UpdateFailed(f"Error updating coordinator: {e}")
 
     async def _collect_all_registers(self) -> List[Dict[str, Any]]:
@@ -291,20 +332,22 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
             if devices and isinstance(devices, list):
                 if not self._cache_initialized:
-                    _LOGGER.info(
+                    _LOGGER.debug(
                         "Initializing register cache for %d devices", len(devices)
                     )
                 registers = await self._collect_registers_from_devices(devices)
             else:
                 # Fallback to legacy structure for backward compatibility
                 if not self._cache_initialized:
-                    _LOGGER.info("Initializing register cache (legacy structure)")
+                    _LOGGER.debug("Initializing register cache (legacy structure)")
                 registers = await self._collect_registers_legacy()
 
             # Cache the results
             self._cached_registers = registers
             self._cache_initialized = True
-            _LOGGER.info("Register cache initialized with %d registers", len(registers))
+            _LOGGER.debug(
+                "Register cache initialized with %d registers", len(registers)
+            )
 
             return registers
 
@@ -408,6 +451,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
                 # Add model_config values (from valid_models)
                 dynamic_config.update(model_config)
+                if selected_model:
+                    dynamic_config["selected_model"] = selected_model
 
                 # Add explicitly handled fields that might not be in template's dynamic_config
                 for key in ["battery_config", "connection_type", "firmware_version"]:
@@ -847,14 +892,14 @@ class ModbusCoordinator(DataUpdateCoordinator):
             else:
                 # Fallback to legacy structure for backward compatibility
                 if not self._cache_initialized:
-                    _LOGGER.info(
+                    _LOGGER.debug(
                         "Initializing calculated registers cache (legacy structure)"
                     )
                 calculated = await self._collect_calculated_legacy()
 
             # Cache the results
             self._cached_calculated = calculated
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Calculated registers cache initialized with %d registers",
                 len(calculated),
             )
@@ -958,6 +1003,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
                 # Add model_config values (from valid_models)
                 dynamic_config.update(model_config)
+                if selected_model:
+                    dynamic_config["selected_model"] = selected_model
 
                 # Add explicitly handled fields
                 for key in ["battery_config", "connection_type", "firmware_version"]:
@@ -1545,10 +1592,89 @@ class ModbusCoordinator(DataUpdateCoordinator):
         - "variable == value" (string, int, bool)
         - "variable != value" (string, int, bool)
         - "variable >= value" (int)
+        - "variable in [value1, value2]" (string list)
         """
         condition = condition.strip()
 
-        if "!=" in condition:
+        if " not in " in condition:
+            try:
+                parts = condition.split(" not in ")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_values_str = parts[1].strip()
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_values_str.startswith(
+                        "["
+                    ) and required_values_str.endswith("]"):
+                        required_values_str = required_values_str[1:-1]
+                    required_values = [
+                        value.strip().strip("'\"")
+                        for value in required_values_str.split(",")
+                        if value.strip()
+                    ]
+
+                    if isinstance(actual_value, (list, tuple, set)):
+                        actual_values = {str(value) for value in actual_value}
+                        result = not any(
+                            value in actual_values for value in required_values
+                        )
+                    else:
+                        result = str(actual_value) not in required_values
+
+                    _LOGGER.debug(
+                        "Evaluating condition '%s': variable=%s, required=%s, actual=%s, result=%s",
+                        condition,
+                        variable_name,
+                        required_values,
+                        actual_value,
+                        result,
+                    )
+                    return result
+            except (ValueError, IndexError) as e:
+                _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+                return False
+        elif " in " in condition:
+            try:
+                parts = condition.split(" in ")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_values_str = parts[1].strip()
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_values_str.startswith(
+                        "["
+                    ) and required_values_str.endswith("]"):
+                        required_values_str = required_values_str[1:-1]
+                    required_values = [
+                        value.strip().strip("'\"")
+                        for value in required_values_str.split(",")
+                        if value.strip()
+                    ]
+
+                    if isinstance(actual_value, (list, tuple, set)):
+                        actual_values = {str(value) for value in actual_value}
+                        result = any(
+                            value in actual_values for value in required_values
+                        )
+                    else:
+                        result = str(actual_value) in required_values
+
+                    _LOGGER.debug(
+                        "Evaluating condition '%s': variable=%s, required=%s, actual=%s, result=%s",
+                        condition,
+                        variable_name,
+                        required_values,
+                        actual_value,
+                        result,
+                    )
+                    return result
+            except (ValueError, IndexError) as e:
+                _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+                return False
+        elif "!=" in condition:
             try:
                 parts = condition.split("!=")
                 if len(parts) == 2:
@@ -1779,16 +1905,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 CALL_TYPE_REGISTER_INPUT,
             )
 
-            # Ensure hub is connected
+            # Ensure hub is connected (handled by coordinator update)
             if not getattr(self.hub, "_is_connected", False):
-                _LOGGER.warning("Hub not connected, attempting to connect...")
-                try:
-                    await self.hub.async_pb_connect()
-                    self.hub._is_connected = True
-                    _LOGGER.info("Hub reconnected successfully")
-                except Exception as e:
-                    _LOGGER.error("Failed to reconnect hub: %s", str(e))
-                    return None
+                return None
 
             # Determine register type - check all registers in range
             # If mixed types, we need to handle them separately

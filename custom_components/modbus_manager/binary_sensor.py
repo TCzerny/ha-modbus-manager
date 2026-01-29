@@ -12,7 +12,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_base_extra_state_attributes
+from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -177,6 +177,7 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
         # Set entity properties
         self._attr_has_entity_name = True
         self._attr_name = self._name
+
         # unique_id should be just the value, not "binary_sensor.{value}"
         # Home Assistant will auto-generate entity_id from unique_id
         self._attr_unique_id = self._unique_id
@@ -263,7 +264,10 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
     @property
     def available(self) -> bool:
         """Return if the entity is available."""
-        return self._coordinator.last_update_success
+        return (
+            is_coordinator_connected(self._coordinator)
+            and self._coordinator.last_update_success
+        )
 
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass."""

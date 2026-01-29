@@ -1244,10 +1244,87 @@ def _evaluate_single_condition(condition: str, dynamic_config: dict) -> bool:
     - "variable == value" (string, int, bool)
     - "variable != value" (string, int, bool)
     - "variable >= value" (int)
+    - "variable in [value1, value2]" (string list)
     """
     condition = condition.strip()
 
-    if "!=" in condition:
+    if " not in " in condition:
+        try:
+            parts = condition.split(" not in ")
+            if len(parts) == 2:
+                variable_name = parts[0].strip()
+                required_values_str = parts[1].strip()
+
+                actual_value = dynamic_config.get(variable_name)
+
+                if required_values_str.startswith("[") and required_values_str.endswith(
+                    "]"
+                ):
+                    required_values_str = required_values_str[1:-1]
+                required_values = [
+                    value.strip().strip("'\"")
+                    for value in required_values_str.split(",")
+                    if value.strip()
+                ]
+
+                if isinstance(actual_value, (list, tuple, set)):
+                    actual_values = {str(value) for value in actual_value}
+                    result = not any(
+                        value in actual_values for value in required_values
+                    )
+                else:
+                    result = str(actual_value) not in required_values
+
+                _LOGGER.debug(
+                    "Evaluating condition '%s': variable=%s, required=%s, actual=%s, result=%s",
+                    condition,
+                    variable_name,
+                    required_values,
+                    actual_value,
+                    result,
+                )
+                return result
+        except (ValueError, IndexError) as e:
+            _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+            return False
+    elif " in " in condition:
+        try:
+            parts = condition.split(" in ")
+            if len(parts) == 2:
+                variable_name = parts[0].strip()
+                required_values_str = parts[1].strip()
+
+                actual_value = dynamic_config.get(variable_name)
+
+                if required_values_str.startswith("[") and required_values_str.endswith(
+                    "]"
+                ):
+                    required_values_str = required_values_str[1:-1]
+                required_values = [
+                    value.strip().strip("'\"")
+                    for value in required_values_str.split(",")
+                    if value.strip()
+                ]
+
+                if isinstance(actual_value, (list, tuple, set)):
+                    actual_values = {str(value) for value in actual_value}
+                    result = any(value in actual_values for value in required_values)
+                else:
+                    result = str(actual_value) in required_values
+
+                _LOGGER.debug(
+                    "Evaluating condition '%s': variable=%s, required=%s, actual=%s, result=%s",
+                    condition,
+                    variable_name,
+                    required_values,
+                    actual_value,
+                    result,
+                )
+                return result
+        except (ValueError, IndexError) as e:
+            _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+            return False
+    elif "!=" in condition:
         try:
             parts = condition.split("!=")
             if len(parts) == 2:

@@ -13,6 +13,7 @@ from .device_utils import (
     create_base_extra_state_attributes,
     generate_entity_name,
     generate_unique_id,
+    is_coordinator_connected,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -40,6 +41,8 @@ class ModbusCalculatedSensor(SensorEntity):
         self._host = host
         self._port = port
         self._slave_id = slave_id
+        self._config_entry_id = config_entry_id
+        self._template_error_logged = False
 
         # Extract configuration
         base_name = config.get("name", "Unknown Calculated Sensor")
@@ -204,6 +207,8 @@ class ModbusCalculatedSensor(SensorEntity):
     @property
     def available(self) -> bool:
         """Return True if entity is available."""
+        if not self._is_data_available():
+            return False
         if self._availability_template is None:
             return True
 
@@ -221,6 +226,25 @@ class ModbusCalculatedSensor(SensorEntity):
                 "Error checking availability for %s: %s", self._attr_name, str(e)
             )
             return True  # Default to available if check fails
+
+    def _get_coordinator(self):
+        """Get coordinator from hass.data if available."""
+        if not getattr(self, "_config_entry_id", None):
+            return None
+        domain_data = self.hass.data.get(DOMAIN, {})
+        entry_data = domain_data.get(self._config_entry_id)
+        if not entry_data:
+            return None
+        return entry_data.get("coordinator")
+
+    def _is_data_available(self) -> bool:
+        """Return False if the hub is offline or last update failed."""
+        coordinator = self._get_coordinator()
+        if not coordinator:
+            return True
+        if not is_coordinator_connected(coordinator):
+            return False
+        return bool(getattr(coordinator, "last_update_success", True))
 
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
@@ -268,6 +292,10 @@ class ModbusCalculatedSensor(SensorEntity):
 
     async def async_update(self) -> None:
         """Update the calculated sensor value."""
+        if not self._is_data_available():
+            self._attr_native_value = None
+            return
+
         # Update availability first if template exists
         if self._availability_template is not None:
             try:
@@ -316,6 +344,8 @@ class ModbusCalculatedSensor(SensorEntity):
             if rendered_value is None:
                 self._attr_native_value = None
                 return
+            if self._template_error_logged:
+                self._template_error_logged = False
 
             # Handle 'unknown' and 'unavailable' values gracefully
             if isinstance(rendered_value, str):
@@ -381,21 +411,28 @@ class ModbusCalculatedSensor(SensorEntity):
                         self._attr_icon = self._static_icon
 
         except Exception as e:
-            # Check if it's a template error with 'unknown' input
-            if "float got invalid input 'unknown'" in str(e):
+            message = str(e)
+            if (
+                "float got invalid input 'unknown'" in message
+                or "float got invalid input 'unavailable'" in message
+            ):
                 _LOGGER.debug(
-                    "Sensor %s has 'unknown' value, setting to None", self._attr_name
+                    "Sensor %s has unavailable source value, setting to None",
+                    self._attr_name,
                 )
                 self._attr_native_value = None
-            elif "Cannot be called from within the event loop" in str(e):
+            elif "Cannot be called from within the event loop" in message:
                 _LOGGER.debug(
                     "Template rendering issue for %s, setting to None", self._attr_name
                 )
                 self._attr_native_value = None
             else:
-                _LOGGER.error(
-                    "Error updating calculated sensor %s: %s", self._attr_name, str(e)
-                )
+                if not self._template_error_logged:
+                    _LOGGER.info(
+                        "Calculated sensor %s template unavailable; waiting for source entities",
+                        self._attr_name,
+                    )
+                    self._template_error_logged = True
                 self._attr_native_value = None
 
 
@@ -421,6 +458,8 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         self._host = host
         self._port = port
         self._slave_id = slave_id
+        self._config_entry_id = config_entry_id
+        self._template_error_logged = False
 
         # Extract configuration
         base_name = config.get("name", "Unknown Binary Sensor")
@@ -541,6 +580,8 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
     @property
     def available(self) -> bool:
         """Return True if entity is available."""
+        if not self._is_data_available():
+            return False
         if self._availability_template is None:
             return True
 
@@ -554,6 +595,25 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 "Error checking availability for %s: %s", self._attr_name, str(e)
             )
             return True
+
+    def _get_coordinator(self):
+        """Get coordinator from hass.data if available."""
+        if not self._config_entry_id:
+            return None
+        domain_data = self.hass.data.get(DOMAIN, {})
+        entry_data = domain_data.get(self._config_entry_id)
+        if not entry_data:
+            return None
+        return entry_data.get("coordinator")
+
+    def _is_data_available(self) -> bool:
+        """Return False if the hub is offline or last update failed."""
+        coordinator = self._get_coordinator()
+        if not coordinator:
+            return True
+        if not is_coordinator_connected(coordinator):
+            return False
+        return bool(getattr(coordinator, "last_update_success", True))
 
     @property
     def extra_state_attributes(self) -> Dict[str, Any]:
@@ -592,6 +652,10 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
 
     async def async_update(self) -> None:
         """Update the calculated binary sensor value."""
+        if not self._is_data_available():
+            self._attr_is_on = None
+            return
+
         # Update availability first if template exists
         if self._availability_template is not None:
             try:
@@ -631,11 +695,20 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                     except Exception:
                         rendered_value = None
                 else:
-                    raise
+                    if not self._template_error_logged:
+                        _LOGGER.info(
+                            "Calculated binary sensor %s template unavailable; waiting for source entities",
+                            self._attr_name,
+                        )
+                        self._template_error_logged = True
+                    self._attr_is_on = None
+                    return
 
             if rendered_value is None:
                 self._attr_is_on = None
                 return
+            if self._template_error_logged:
+                self._template_error_logged = False
 
             # Convert rendered value to boolean
             if isinstance(rendered_value, bool):

@@ -13,7 +13,11 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_base_extra_state_attributes, generate_entity_id
+from .device_utils import (
+    create_base_extra_state_attributes,
+    generate_entity_id,
+    is_coordinator_connected,
+)
 from .logger import ModbusManagerLogger
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -282,6 +286,11 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
     def should_poll(self) -> bool:
         """Return False - coordinator handles updates."""
         return False
+
+    @property
+    def available(self) -> bool:
+        """Return if the entity is available."""
+        return is_coordinator_connected(self.coordinator) and super().available
 
     async def async_added_to_hass(self) -> None:
         """When entity is added to hass."""

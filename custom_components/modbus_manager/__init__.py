@@ -71,19 +71,23 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
         hub = ModbusHub(hass, modbus_config)
         _LOGGER.info("Created ModbusHub for coordinator: %s", hub_name)
 
-        # Setup and connect hub
+        # Setup hub, then attempt a best-effort connect
         try:
             await hub.async_setup()
             _LOGGER.info("ModbusHub setup completed for coordinator")
+        except Exception as e:
+            _LOGGER.error("Failed to setup ModbusHub for coordinator: %s", str(e))
+            return False
 
-            await hub.async_pb_connect()
+        # Avoid blocking setup on unreachable hosts
+        connect_timeout = entry.data.get("timeout", 5)
+        try:
+            await asyncio.wait_for(hub.async_pb_connect(), timeout=connect_timeout)
             _LOGGER.info("ModbusHub connected successfully for coordinator")
             hub._is_connected = True
         except Exception as e:
-            _LOGGER.error(
-                "Failed to setup/connect ModbusHub for coordinator: %s", str(e)
-            )
-            return False
+            _LOGGER.warning("ModbusHub connect failed (continuing offline): %s", str(e))
+            hub._is_connected = False
 
         # Store hub globally
         hass.data[DOMAIN][hub_name] = hub
@@ -110,7 +114,12 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
         }
 
         # Start coordinator
-        await coordinator.async_config_entry_first_refresh()
+        try:
+            await coordinator.async_config_entry_first_refresh()
+        except Exception as e:
+            _LOGGER.info(
+                "Coordinator initial refresh failed (continuing offline): %s", str(e)
+            )
 
         # Load platforms for coordinator-based entities
         try:

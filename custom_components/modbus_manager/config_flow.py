@@ -640,6 +640,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Check if model-specific config is used
         selected_model = user_input.get("selected_model")
         if selected_model:
+            dynamic_config["selected_model"] = selected_model
             # Get configuration from selected model
             # Look for valid_models in dynamic_config first, then at template root level
             valid_models = dynamic_config.get("valid_models") or template_data.get(
@@ -1098,10 +1099,64 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         - "variable == value" (string, int, bool)
         - "variable != value" (string, int, bool)
         - "variable >= value" (int)
+        - "variable in [value1, value2]" (string list)
+        - "variable not in [value1, value2]" (string list)
         """
         condition = condition.strip()
 
-        if "!=" in condition:
+        if " not in " in condition:
+            try:
+                parts = condition.split(" not in ")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_values_str = parts[1].strip()
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_values_str.startswith(
+                        "["
+                    ) and required_values_str.endswith("]"):
+                        required_values_str = required_values_str[1:-1]
+                    required_values = [
+                        value.strip().strip("'\"")
+                        for value in required_values_str.split(",")
+                        if value.strip()
+                    ]
+
+                    if isinstance(actual_value, (list, tuple, set)):
+                        actual_values = {str(value) for value in actual_value}
+                        return not any(
+                            value in actual_values for value in required_values
+                        )
+                    return str(actual_value) not in required_values
+            except (ValueError, IndexError):
+                return False
+        elif " in " in condition:
+            try:
+                parts = condition.split(" in ")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_values_str = parts[1].strip()
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_values_str.startswith(
+                        "["
+                    ) and required_values_str.endswith("]"):
+                        required_values_str = required_values_str[1:-1]
+                    required_values = [
+                        value.strip().strip("'\"")
+                        for value in required_values_str.split(",")
+                        if value.strip()
+                    ]
+
+                    if isinstance(actual_value, (list, tuple, set)):
+                        actual_values = {str(value) for value in actual_value}
+                        return any(value in actual_values for value in required_values)
+                    return str(actual_value) in required_values
+            except (ValueError, IndexError):
+                return False
+        elif "!=" in condition:
             try:
                 parts = condition.split("!=")
                 if len(parts) == 2:
@@ -3040,6 +3095,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         # Check if model-specific config is used
         selected_model = user_input.get("selected_model")
         if selected_model:
+            dynamic_config["selected_model"] = selected_model
             # Get configuration from selected model
             # Look for valid_models in dynamic_config first, then at template root level
             valid_models = dynamic_config.get("valid_models") or template_data.get(
@@ -3501,7 +3557,59 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         """
         condition = condition.strip()
 
-        if "!=" in condition:
+        if " not in " in condition:
+            try:
+                parts = condition.split(" not in ")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_values_str = parts[1].strip()
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_values_str.startswith(
+                        "["
+                    ) and required_values_str.endswith("]"):
+                        required_values_str = required_values_str[1:-1]
+                    required_values = [
+                        value.strip().strip("'\"")
+                        for value in required_values_str.split(",")
+                        if value.strip()
+                    ]
+
+                    if isinstance(actual_value, (list, tuple, set)):
+                        actual_values = {str(value) for value in actual_value}
+                        return not any(
+                            value in actual_values for value in required_values
+                        )
+                    return str(actual_value) not in required_values
+            except (ValueError, IndexError):
+                return False
+        elif " in " in condition:
+            try:
+                parts = condition.split(" in ")
+                if len(parts) == 2:
+                    variable_name = parts[0].strip()
+                    required_values_str = parts[1].strip()
+
+                    actual_value = dynamic_config.get(variable_name)
+
+                    if required_values_str.startswith(
+                        "["
+                    ) and required_values_str.endswith("]"):
+                        required_values_str = required_values_str[1:-1]
+                    required_values = [
+                        value.strip().strip("'\"")
+                        for value in required_values_str.split(",")
+                        if value.strip()
+                    ]
+
+                    if isinstance(actual_value, (list, tuple, set)):
+                        actual_values = {str(value) for value in actual_value}
+                        return any(value in actual_values for value in required_values)
+                    return str(actual_value) in required_values
+            except (ValueError, IndexError):
+                return False
+        elif "!=" in condition:
             try:
                 parts = condition.split("!=")
                 if len(parts) == 2:
