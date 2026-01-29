@@ -39,6 +39,10 @@ The template supports the following Sungrow SG series models:
 | **Firmware** | String | "SAPPHIRE-H_xxx" | Firmware version |
 | **Connection** | LAN, WINET | LAN | Connection type |
 
+**Battery prompt:** Only templates that define `dynamic_config.battery_config` show a
+dedicated battery step in the config flow. The SG template does not define a
+battery section, so no battery prompt is shown during setup.
+
 ### 🔄 Automatic Filtering
 
 #### **Phase Filtering**
@@ -55,6 +59,18 @@ The template supports the following Sungrow SG series models:
 #### **Connection Filtering**
 - **LAN:** Full access to all registers
 - **WINET:** Limited access (some registers not available)
+
+#### **Model-Specific Register Filtering**
+Some registers are only available on specific model families. The template now
+filters these entities automatically using `selected_model` (limited to the
+models listed in `valid_models`).
+
+- **RT/CX/HX only:** `work_status_1`, `work_status_2`, `active_power_overload`,
+  `night_svg_switch`, `pid_recovery`
+- **HX only:** `anti_pid`, `full_day_pid_suppression`
+- **HX (SG320HX/SG350HX):** `quick_grid_dispatch_mode`,
+  `swift_grid_dispatch_mode`
+- **KTL/KTL-M/RT/CX/HX only:** `total_apparent_power`
 
 ## 📡 Available Sensors
 

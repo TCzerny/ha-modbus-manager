@@ -107,6 +107,8 @@ dynamic_config:
 2. **Sensor Filtering**: Sensors can be conditionally included/excluded based on configuration
 3. **Sensor Replacements**: Sensor parameters can change based on firmware version
 4. **Sensor Availability**: Sensors can be marked as available only for specific connection types
+5. **Battery Setup Step**: A dedicated battery prompt is shown in the config flow
+   only when `dynamic_config.battery_config` is defined in the template.
 
 ### Condition Filtering
 

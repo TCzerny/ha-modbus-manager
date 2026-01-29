@@ -386,7 +386,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
             # Check for PV inverter (case-insensitive) - support both PV_inverter and PV_Hybrid_Inverter
-            if template_type.lower() in ["pv_inverter", "pv_hybrid_inverter"]:
+            if template_type.lower() in [
+                "pv_inverter",
+                "pv_hybrid_inverter",
+            ] and self._supports_battery_config(template_data):
                 # Store the inverter config and ask about battery
                 self._inverter_config = combined_input
                 _LOGGER.debug("PV inverter detected - proceeding to battery detection")
@@ -486,6 +489,17 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
 
         return has_dynamic
+
+    def _supports_battery_config(self, template_data: dict) -> bool:
+        """Check if template defines a battery_config dynamic section."""
+        dynamic_config = template_data.get("dynamic_config", {})
+        has_battery_config = isinstance(dynamic_config.get("battery_config"), dict)
+        _LOGGER.debug(
+            "_supports_battery_config: template_data keys=%s, has_battery_config=%s",
+            list(template_data.keys()),
+            has_battery_config,
+        )
+        return has_battery_config
 
     def _get_dynamic_config_schema(self, template_data: dict) -> dict:
         """Generate dynamic configuration schema based on template."""
@@ -713,7 +727,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     )
                     individual_fields.append(f"{field_name}={field_value}")
 
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Using individual field configuration: %s",
                 ", ".join(individual_fields),
             )

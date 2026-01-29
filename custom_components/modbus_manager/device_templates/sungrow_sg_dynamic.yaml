@@ -335,6 +335,7 @@ sensors:
     state_class: measurement
     scan_interval: 5
     icon: "mdi:flash"
+    condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG10KTL, SG12KTL, SG15KTL, SG20KTL, SG30KTL, SG36KTL, SG40KTL, SG60KTL, SG80KTL, SG30KTL-M, SG40KTL-M, SG50KTL-M, SG60KTL-M, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
 
   # MPPT Data (will be filtered based on mppt_count)
   - name: MPPT1 voltage
@@ -980,6 +981,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 30
+    condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     map:
       0: "Standby"
       1: "Running"
@@ -995,6 +997,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 30
+    condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     map:
       1: "Running"
       2: "Shut down"
@@ -1397,7 +1400,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
-    condition: "selected_model in [SG33CX, SG40CX, SG50CX, SG75CX, SG110CX]"
+    condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1421,6 +1424,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1485,6 +1489,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1498,6 +1503,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    condition: "selected_model in [SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1511,6 +1517,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    condition: "selected_model in [SG250HX, SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1525,6 +1532,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    condition: "selected_model in [SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
       0x55: "Disable"
@@ -1538,6 +1546,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    condition: "selected_model in [SG320HX, SG350HX]"
     options:
       0xAA: "Enable"
       0x55: "Disable"
