@@ -5,7 +5,7 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.1.7] - 2026-01-29
 
 ### ✨ Added
 - **Condition Filtering**: Added `in` / `not in` list support for `condition` statements
@@ -23,7 +23,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 📚 Documentation
 - **Template Docs**: Documented condition syntax and model list usage in `docs/README_Template.md`
-- **Sungrow SG Docs**: Documented model-limited Active Power Overload control
 - **README**: Added note about offline entity availability and retry behavior
 
 ---

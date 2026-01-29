@@ -95,7 +95,7 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 
 ## 🎯 Current Status
 
-### Version 0.1.6 (Current - January 2026)
+### Version 0.1.7 (Current - January 2026)
 - ✅ Core Modbus integration with template system
 - ✅ Advanced data processing and entity types
 - ✅ Performance monitoring and register optimization
@@ -135,7 +135,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 0.1.6
+**Version**: 0.1.7
 **Status**: Beta - Active Development
 **Home Assistant**: 2025.1.0+
 **Last Updated**: January 2026
