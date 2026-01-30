@@ -39,10 +39,6 @@ The template supports the following Sungrow SG series models:
 | **Firmware** | String | "SAPPHIRE-H_xxx" | Firmware version |
 | **Connection** | LAN, WINET | LAN | Connection type |
 
-**Battery prompt:** Only templates that define `dynamic_config.battery_config` show a
-dedicated battery step in the config flow. The SG template does not define a
-battery section, so no battery prompt is shown during setup.
-
 ### 🔄 Automatic Filtering
 
 #### **Phase Filtering**
