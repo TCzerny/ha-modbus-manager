@@ -43,7 +43,7 @@ sensors:
     unique_id: meter_phase_a_active_power_raw
     address: 8558 # reg 8559
     input_type: input
-    data_type: uint32
+    data_type: int32
     swap: word
     precision: 0
     unit_of_measurement: W
@@ -57,7 +57,7 @@ sensors:
     unique_id: meter_phase_b_active_power_raw
     address: 8560 # reg 8561
     input_type: input
-    data_type: uint32
+    data_type: int32
     swap: word
     precision: 0
     unit_of_measurement: W
@@ -71,7 +71,7 @@ sensors:
     unique_id: meter_phase_c_active_power_raw
     address: 8562 # reg 8563
     input_type: input
-    data_type: uint32
+    data_type: int32
     swap: word
     precision: 0
     unit_of_measurement: W
@@ -445,7 +445,7 @@ sensors:
     unique_id: ihm_phase_a_active_power_ch2
     address: 8568 # reg 8569
     input_type: input
-    data_type: uint32
+    data_type: int32
     swap: word
     precision: 0
     unit_of_measurement: W
@@ -459,7 +459,7 @@ sensors:
     unique_id: ihm_phase_b_active_power_ch2
     address: 8570 # reg 8571
     input_type: input
-    data_type: uint32
+    data_type: int32
     swap: word
     precision: 0
     unit_of_measurement: W
@@ -473,7 +473,7 @@ sensors:
     unique_id: ihm_phase_c_active_power_ch2
     address: 8572 # reg 8573
     input_type: input
-    data_type: uint32
+    data_type: int32
     swap: word
     precision: 0
     unit_of_measurement: W
@@ -541,6 +541,37 @@ controls:
     scan_interval: 30
     group: "PV_control_ihm"
     condition: "battery_enabled == true"
+
+  - type: "select"
+    name: "Feed-in Power Limit Mode"
+    unique_id: "feed_in_power_limit_mode"
+    address: 8027 # reg 8028
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0: "Disabled"
+      1: "Absolute"
+      2: "Percentage"
+    group: "PV_control_ihm"
+
+  - type: "number"
+    name: "Feed-in Power Limit"
+    unique_id: "feed_in_power_limit"
+    address: 8028 # reg 8029
+    input_type: "holding"
+    data_type: "uint32"
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    min_value: 0
+    max_value: 100
+    step: 0.1
+    mode: "box"
+    scan_interval: 30
+    group: "PV_control_ihm"
 
   - type: "number"
     name: "Export Power Limit Ratio"
