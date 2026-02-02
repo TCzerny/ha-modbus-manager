@@ -2691,6 +2691,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     user_input_for_processing["connection_type"] = effective_data.get(
                         "connection_type", "LAN"
                     )
+                    user_input_for_processing["meter_type"] = effective_data.get(
+                        "meter_type", "DTSU666"
+                    )
                     user_input_for_processing["selected_model"] = effective_data.get(
                         "selected_model"
                     )
@@ -2807,6 +2810,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     "battery_config",
                     "battery_slave_id",
                     "connection_type",
+                    "meter_type",
                     "firmware_version",
                     "selected_model",
                 ] + dynamic_config_fields
@@ -3038,6 +3042,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 "battery_config",
                 "battery_slave_id",
                 "connection_type",
+                "meter_type",
                 "firmware_version",
                 "selected_model",
             ] + dynamic_config_fields

@@ -1,0 +1,783 @@
+# Sungrow iHomeManager Template for Modbus Manager
+# Extracted from Sungrow SHx/SG iHomeManager register mappings (no battery registers)
+
+name: "Sungrow iHomeManager"
+description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
+manufacturer: "Sungrow"
+model: "iHomeManager"
+version: 1.0.0
+default_prefix: "IHM"
+default_slave_id: 247
+type: "energy_manager"
+firmware_version: "iHomeManager"
+
+dynamic_config:
+  battery_enabled:
+    description: "Enable battery-related registers"
+    options: [true, false]
+    default: false
+  channel_2_enabled:
+    description: "Enable meter channel 2 registers"
+    options: [true, false]
+    default: false
+
+sensors:
+  # iHomeManager Meter Data (different register addresses and scale)
+  # NOTE: iHomeManager uses register 8156 for total power and 8558-8562 for phase power
+  # Scale is 10 instead of 1 (values are in 0.1W units)
+  - name: Meter active power raw
+    unique_id: meter_active_power_raw
+    address: 8156 # reg 8157
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 10
+    scan_interval: 10
+    entity_category: "diagnostic"
+
+  - name: Meter phase A active power raw
+    unique_id: meter_phase_a_active_power_raw
+    address: 8558 # reg 8559
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    entity_category: "diagnostic"
+
+  - name: Meter phase B active power raw
+    unique_id: meter_phase_b_active_power_raw
+    address: 8560 # reg 8561
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    entity_category: "diagnostic"
+
+  - name: Meter phase C active power raw
+    unique_id: meter_phase_c_active_power_raw
+    address: 8562 # reg 8563
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    entity_category: "diagnostic"
+
+  # iHomeManager Additional Input Registers
+  # Device Information
+  - name: iHomeManager device type code
+    unique_id: ihm_device_type_code
+    address: 7999 # reg 8000
+    input_type: input
+    data_type: uint16
+    scan_interval: 3600
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager protocol number
+    unique_id: ihm_protocol_number
+    address: 8000 # reg 8001
+    input_type: input
+    data_type: uint32
+    swap: word
+    scan_interval: 3600
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager protocol version
+    unique_id: ihm_protocol_version
+    address: 8002 # reg 8003
+    input_type: input
+    data_type: uint32
+    swap: word
+    scan_interval: 3600
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager total devices connected
+    unique_id: ihm_total_devices_connected
+    address: 8004 # reg 8005
+    input_type: input
+    data_type: uint16
+    state_class: measurement
+    scan_interval: 300
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager devices in fault
+    unique_id: ihm_devices_in_fault
+    address: 8005 # reg 8006
+    input_type: input
+    data_type: uint16
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
+  # System Capacity
+  - name: iHomeManager total nominal active power
+    unique_id: ihm_total_nominal_active_power
+    address: 8144 # reg 8145
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    scan_interval: 300
+    group: "PV_system_capacity"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager total battery rated capacity
+    unique_id: ihm_total_battery_rated_capacity
+    address: 8146 # reg 8147
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kWh
+    device_class: "energy"
+    scan_interval: 300
+    group: "PV_system_capacity"
+    condition: "battery_enabled == true"
+    entity_category: "diagnostic"
+
+  # Battery Limits
+  - name: iHomeManager battery charge/discharge limit
+    unique_id: ihm_battery_charge_discharge_limit
+    address: 8148 # reg 8149
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    scan_interval: 60
+    group: "PV_battery_limits"
+    condition: "battery_enabled == true"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager battery max charge power
+    unique_id: ihm_battery_max_charge_power
+    address: 8150 # reg 8151
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    scan_interval: 60
+    group: "PV_battery_limits"
+    condition: "battery_enabled == true"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager battery min charge power
+    unique_id: ihm_battery_min_charge_power
+    address: 8151 # reg 8152
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    scan_interval: 60
+    group: "PV_battery_limits"
+    condition: "battery_enabled == true"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager battery max discharge power
+    unique_id: ihm_battery_max_discharge_power
+    address: 8152 # reg 8153
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    scan_interval: 60
+    group: "PV_battery_limits"
+    condition: "battery_enabled == true"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager battery min discharge power
+    unique_id: ihm_battery_min_discharge_power
+    address: 8153 # reg 8154
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    scan_interval: 60
+    group: "PV_battery_limits"
+    condition: "battery_enabled == true"
+    entity_category: "diagnostic"
+
+  # Real-Time Power
+  - name: iHomeManager total active power
+    unique_id: ihm_total_active_power
+    address: 8154 # reg 8155
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    scale: 10
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    group: "PV_power"
+
+  - name: Load power
+    unique_id: load_power
+    address: 8158 # reg 8159
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    scale: 10
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 5
+    group: "PV_power"
+
+  - name: Battery power
+    unique_id: battery_power
+    address: 8160 # reg 8161
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    scale: 10
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    group: "PV_battery_power"
+    condition: "battery_enabled == true"
+
+  - name: Battery level
+    unique_id: battery_level
+    address: 8162 # reg 8163
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: measurement
+    scan_interval: 10
+    group: "PV_battery_state"
+    condition: "battery_enabled == true"
+
+  # Energy Totals
+  - name: iHomeManager grid import energy
+    unique_id: ihm_grid_import_energy
+    address: 8175 # reg 8176
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kWh
+    device_class: "energy"
+    state_class: total_increasing
+    scan_interval: 600
+    group: "PV_energy"
+
+  - name: iHomeManager grid export energy
+    unique_id: ihm_grid_export_energy
+    address: 8177 # reg 8178
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kWh
+    device_class: "energy"
+    state_class: total_increasing
+    scan_interval: 600
+    group: "PV_energy"
+
+  # Grid Meter Channel 1 - Voltage and Frequency
+  - name: iHomeManager output type raw
+    unique_id: ihm_output_type_raw
+    address: 8553 # reg 8554
+    input_type: input
+    data_type: uint16
+    scan_interval: 300
+    group: "PV_meter_ihm"
+    entity_category: "diagnostic"
+
+  - name: iHomeManager phase A voltage
+    unique_id: ihm_phase_a_voltage
+    address: 8554 # reg 8555
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_meter_ihm"
+
+  - name: iHomeManager phase B voltage
+    unique_id: ihm_phase_b_voltage
+    address: 8555 # reg 8556
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_meter_ihm"
+
+  - name: iHomeManager phase C voltage
+    unique_id: ihm_phase_c_voltage
+    address: 8556 # reg 8557
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_meter_ihm"
+
+  - name: Grid frequency
+    unique_id: grid_frequency
+    address: 8557 # reg 8558
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: Hz
+    device_class: "frequency"
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_meter_ihm"
+
+  # Grid Meter Channel 2 - Voltage and Frequency
+  - name: iHomeManager phase A voltage ch2
+    unique_id: ihm_phase_a_voltage_ch2
+    address: 8564 # reg 8565
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  - name: iHomeManager phase B voltage ch2
+    unique_id: ihm_phase_b_voltage_ch2
+    address: 8565 # reg 8566
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  - name: iHomeManager phase C voltage ch2
+    unique_id: ihm_phase_c_voltage_ch2
+    address: 8566 # reg 8567
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  - name: iHomeManager grid frequency ch2
+    unique_id: ihm_grid_frequency_ch2
+    address: 8567 # reg 8568
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: Hz
+    device_class: "frequency"
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  # Grid Meter Channel 2 - Phase Power
+  - name: iHomeManager phase A active power ch2
+    unique_id: ihm_phase_a_active_power_ch2
+    address: 8568 # reg 8569
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  - name: iHomeManager phase B active power ch2
+    unique_id: ihm_phase_b_active_power_ch2
+    address: 8570 # reg 8571
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  - name: iHomeManager phase C active power ch2
+    unique_id: ihm_phase_c_active_power_ch2
+    address: 8572 # reg 8573
+    input_type: input
+    data_type: uint32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    group: "PV_meter_ihm_ch2"
+    condition: "channel_2_enabled == true"
+
+  # Charger Status
+  - name: iHomeManager charger status raw
+    unique_id: ihm_charger_status_raw
+    address: 8551 # reg 8552
+    input_type: input
+    data_type: uint16
+    state_class: measurement
+    scan_interval: 60
+    group: "PV_charger"
+    entity_category: "diagnostic"
+
+controls:
+  # EMS Settings
+  - type: "select"
+    name: "EMS Mode Selection"
+    unique_id: "ems_mode_selection"
+    address: 8023 # reg 8024
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      1: "Self-consumption"
+      4: "VPP"
+      5: "Compulsory mode"
+    group: "PV_control_ihm"
+
+  - type: "select"
+    name: "Charging/Discharging Command"
+    unique_id: "charging_discharging_command"
+    address: 8024 # reg 8025
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Charge"
+      0xBB: "Discharge"
+      0xCC: "Stop"
+    group: "PV_control_ihm"
+    condition: "battery_enabled == true"
+
+  - type: "number"
+    name: "Charging/Discharging Power"
+    unique_id: "charging_discharging_power"
+    address: 8025 # reg 8026
+    input_type: "holding"
+    data_type: "uint32"
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: kW
+    device_class: "power"
+    min_value: 0
+    max_value: 100
+    step: 0.1
+    mode: "box"
+    scan_interval: 30
+    group: "PV_control_ihm"
+    condition: "battery_enabled == true"
+
+  - type: "number"
+    name: "Export Power Limit Ratio"
+    unique_id: "export_power_limit_ratio"
+    address: 8030 # reg 8031
+    input_type: "holding"
+    data_type: "int32"
+    swap: word
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 0.1
+    mode: "box"
+    scan_interval: 30
+    group: "PV_control_ihm"
+
+  - type: "number"
+    name: "External VPP Heartbeat"
+    unique_id: "external_vpp_heartbeat"
+    address: 8032 # reg 8033
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: s
+    min_value: 0
+    max_value: 65535
+    step: 1
+    mode: "box"
+    scan_interval: 30
+    group: "PV_control_ihm"
+
+  # Charger Controls
+  - type: "select"
+    name: "Power-on/off"
+    unique_id: "power_on_off"
+    address: 8046 # reg 8047
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xCF: "Power-on"
+      0xCE: "Power-off"
+    group: "PV_control_ihm"
+
+  - type: "select"
+    name: "Charger charging modes"
+    unique_id: "charger_charging_modes"
+    address: 8047 # reg 8048
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      160: "Fast charging mode"
+      161: "Eco charging mode"
+    group: "PV_control_ihm"
+
+  - type: "switch"
+    name: "Charger Enable"
+    unique_id: "charger_enable"
+    address: 8048 # reg 8049
+    input_type: "holding"
+    data_type: "uint16"
+    write_value: 0xAA
+    write_value_off: 0x55
+    on_value: 0xAA
+    off_value: 0x55
+    scan_interval: 30
+    group: "PV_control_ihm"
+
+  - type: "select"
+    name: "Charger Grid Power Draw"
+    unique_id: "charger_grid_power_draw"
+    address: 8049 # reg 8050
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0xAA: "Enable"
+      0x55: "Disable"
+    group: "PV_control_ihm"
+
+  - type: "switch"
+    name: "Charger Power Limitation Enable"
+    unique_id: "charger_power_limitation_enable"
+    address: 8050 # reg 8051
+    input_type: "holding"
+    data_type: "uint16"
+    write_value: 170
+    write_value_off: 85
+    on_value: 170
+    off_value: 85
+    scan_interval: 30
+    group: "PV_control_ihm"
+
+  - type: "number"
+    name: "Charger Power Limit Percentage"
+    unique_id: "charger_power_limit_percentage"
+    address: 8051 # reg 8052
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "%"
+    min_value: 0
+    max_value: 100
+    step: 0.1
+    mode: "box"
+    scan_interval: 30
+    group: "PV_control_ihm"
+
+calculated:
+  # Net Grid Power
+  - name: "Net Grid Power"
+    unique_id: "net_grid_power"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}
+    state: "{{ states('sensor.{PREFIX}_meter_active_power_raw') | float(0) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_grid_power"
+
+  - name: "Import Power"
+    unique_id: "import_power"
+    type: "sensor"
+    availability: "{{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}"
+    state: >-
+      {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') %}
+      {% if grid in ['unknown', 'unavailable', 'none'] or grid is none %}
+        0
+      {% elif (grid | int) < 0 %}
+        {{ (grid | int) * -1 }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_grid_power"
+
+  - name: "Export Power"
+    unique_id: "export_power"
+    type: "sensor"
+    availability: "{{ states('sensor.{PREFIX}_meter_active_power_raw') | is_number }}"
+    state: >-
+      {% if states('sensor.{PREFIX}_meter_active_power_raw') | int > 0 %}
+        {{ states('sensor.{PREFIX}_meter_active_power_raw') }}
+      {% else %}
+        0
+      {% endif %}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_grid_power"
+
+  # Phase Power Calculations (Channel 1)
+  - name: "Total Phase Power"
+    unique_id: "total_phase_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_meter_phase_a_active_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_meter_phase_b_active_power_raw', 'unavailable')
+      and not is_state('sensor.{PREFIX}_meter_phase_c_active_power_raw', 'unavailable')
+      }}
+    state: >-
+      {{
+        (states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | float(0))
+        + (states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | float(0))
+        + (states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | float(0))
+      }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_phase_power"
+
+  - name: "Phase A Power"
+    unique_id: "phase_a_power"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_meter_phase_a_active_power_raw', 'unavailable') }}
+    state: "{{ states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | float(0) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_phase_power"
+
+  - name: "Phase B Power"
+    unique_id: "phase_b_power"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_meter_phase_b_active_power_raw', 'unavailable') }}
+    state: "{{ states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | float(0) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_phase_power"
+
+  - name: "Phase C Power"
+    unique_id: "phase_c_power"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_meter_phase_c_active_power_raw', 'unavailable') }}
+    state: "{{ states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | float(0) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_phase_power"
+
+  # Phase Power Calculations (Channel 2)
+  - name: "Total Phase Power Ch2"
+    unique_id: "total_phase_power_ch2"
+    type: "sensor"
+    condition: "channel_2_enabled == true"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_ihm_phase_a_active_power_ch2', 'unavailable')
+      and not is_state('sensor.{PREFIX}_ihm_phase_b_active_power_ch2', 'unavailable')
+      and not is_state('sensor.{PREFIX}_ihm_phase_c_active_power_ch2', 'unavailable')
+      }}
+    state: >-
+      {{
+        (states('sensor.{PREFIX}_ihm_phase_a_active_power_ch2') | float(0))
+        + (states('sensor.{PREFIX}_ihm_phase_b_active_power_ch2') | float(0))
+        + (states('sensor.{PREFIX}_ihm_phase_c_active_power_ch2') | float(0))
+      }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_phase_power"
