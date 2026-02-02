@@ -376,5 +376,5 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 **Last Updated**: January 2026
-**Version**: 0.1.6
+**Version**: 0.1.8
 **Status**: Beta - Active Development
