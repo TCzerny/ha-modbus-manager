@@ -186,9 +186,9 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
             if isinstance(default_entity_id, str):
                 default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
-                self._attr_entity_id = default_entity_id
+                self.entity_id = default_entity_id
             else:
-                self._attr_entity_id = f"binary_sensor.{default_entity_id}"
+                self.entity_id = f"binary_sensor.{default_entity_id}"
 
         # Binary sensors are typically diagnostic (status indicators)
         entity_category_str = register_config.get("entity_category")

@@ -74,9 +74,9 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             if isinstance(default_entity_id, str):
                 default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
-                self._attr_entity_id = default_entity_id
+                self.entity_id = default_entity_id
             else:
-                self._attr_entity_id = f"number.{default_entity_id}"
+                self.entity_id = f"number.{default_entity_id}"
         self._attr_native_unit_of_measurement = register_config.get(
             "unit_of_measurement", ""
         )

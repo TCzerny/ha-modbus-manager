@@ -88,9 +88,9 @@ class ModbusCoordinatorButton(ButtonEntity):
             if isinstance(default_entity_id, str):
                 default_entity_id = default_entity_id.lower()
             if "." in default_entity_id:
-                self._attr_entity_id = default_entity_id
+                self.entity_id = default_entity_id
             else:
-                self._attr_entity_id = f"button.{default_entity_id}"
+                self.entity_id = f"button.{default_entity_id}"
 
         # Buttons should appear under device controls
         self._attr_entity_category = EntityCategory.CONFIG
