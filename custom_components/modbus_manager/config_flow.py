@@ -2432,6 +2432,17 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     """Handle options flow for Modbus Manager."""
 
+    def _supports_battery_config(self, template_data: dict) -> bool:
+        """Check if template defines a battery_config dynamic section."""
+        dynamic_config = template_data.get("dynamic_config", {})
+        has_battery_config = isinstance(dynamic_config.get("battery_config"), dict)
+        _LOGGER.debug(
+            "_supports_battery_config: template_data keys=%s, has_battery_config=%s",
+            list(template_data.keys()),
+            has_battery_config,
+        )
+        return has_battery_config
+
     async def async_step_init(self, user_input: dict = None) -> FlowResult:
         """Manage the options."""
 
