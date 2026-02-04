@@ -5,7 +5,45 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.1.8] - 2026-01-29
+## [0.1.9] - 2026-02-04
+
+### ✨ Added
+
+#### New device templates (BETA – need testing)
+These templates were added for additional manufacturers. They have **not been tested on real hardware**. Feedback and issue reports are welcome so we can fix register maps and behaviour.
+
+- **BYD Battery Box** – Battery template for BYD Battery-Box HVS/HVM/HVL/LVS series
+  - Modbus RTU over TCP (port 8080), default IP 192.168.16.254
+  - Sensors: SOC, SOH, voltage, current, temperature, charge/discharge cycles
+  - Cell monitoring, error bitmask, calculated power
+  - Docs: `docs/README_byd_battery_box.md`
+- **Fronius GEN24 Series** – Dynamic template for Fronius GEN24 inverters
+  - SunSpec support (Models 103, 160, 124), PV/grid/inverter sensors
+  - Docs: `docs/README_fronius_dynamic.md`
+- **Growatt MIN/MOD/MAX Series** – Dynamic template for Growatt MIN/MOD/MAX inverters
+  - valid_models, PV/battery/grid sensors and controls
+  - Docs: `docs/README_growatt_min_mod_max_dynamic.md`
+- **SMA Sunny Tripower/Boy Series** – Dynamic template for SMA inverters
+  - valid_models, production and DC/AC sensors
+  - Docs: `docs/README_sma_dynamic.md`
+- **SolaX Inverter Series** – Dynamic template for SolaX GEN2–GEN6
+  - valid_models (X1/X3, AC/HYBRID/PV/MIC/MAX), PV/grid/inverter/battery
+  - Docs: `docs/README_solax_dynamic.md`
+
+### 🔧 Changed
+- **Sungrow SBR Battery template**: Added **SBH series** (SBH100–SBH400) to `valid_models`
+  - SBH is SH-T compatible only; uses same Modbus map via inverter (slave 200) as SBR
+  - Models: SBH100 (2 mod), SBH150 (3), SBH200 (4), SBH250 (5), SBH300 (6), SBH350 (7), SBH400 (8)
+  - ⚠️ **Needs testing**: SBH support is based on protocol documentation; not verified on real SBH hardware. Please report if registers or behaviour differ.
+- **BYD template**: Use value_processor bit operations (bitmask, bit_range) for Module/BMS count; calculated entities use `state` with `{PREFIX}` placeholder
+
+### 📚 Documentation
+- **info.md / README.md**: New templates section and note that new templates need testing; request for feedback
+- **README_sungrow_sbr_battery.md**: SBR vs SBH section, SBH model list, and note that SBH needs testing
+
+---
+
+## [0.1.8] - 2026-02-04
 
 ### ✨ Added
 - **SG iHomeManager Support**: Added `meter_type` selection for SG templates

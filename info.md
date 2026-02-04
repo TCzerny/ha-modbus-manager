@@ -53,6 +53,10 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 - ☀️ **Sungrow SG Dynamic**: Model selection for SG series inverters
 - 🔋 **Compleo EBox Professional**: EV charger wallbox integration template
 - 🔋 **Sungrow SBR Battery**: Battery system template
+- 🔋 **BYD Battery Box**: Battery template for BYD Battery-Box HVS/HVM/HVL/LVS (BETA – needs testing)
+
+**New / BETA templates (v0.1.9)**
+The following templates were added recently and **have not been tested on real hardware**. If you use them, please report any issues or feedback so we can fix register maps and behaviour: **Fronius GEN24**, **Growatt MIN/MOD/MAX**, **SMA Sunny Tripower/Boy**, **SolaX Inverter Series**, **BYD Battery Box**. See [Documentation](https://github.com/TCzerny/ha-modbus-manager/wiki) and `docs/` for per-template docs.
 
 
 ## 📋 Configuration
@@ -95,7 +99,7 @@ This integration is provided "AS IS" without warranty of any kind. By using this
 
 ## 🎯 Current Status
 
-### Version 0.1.8 (Current - January 2026)
+### Version 0.1.9 (Current - February 2026)
 - ✅ Core Modbus integration with template system
 - ✅ Advanced data processing and entity types
 - ✅ Performance monitoring and register optimization
@@ -135,7 +139,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 0.1.8
+**Version**: 0.1.9
 **Status**: Beta - Active Development
 **Home Assistant**: 2025.1.0+
-**Last Updated**: January 2026
+**Last Updated**: February 2026

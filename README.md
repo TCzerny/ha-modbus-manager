@@ -96,9 +96,20 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
   - ⚠️ **BETA**: iHomeManager support is in beta testing and requires end-user testing. Please report any issues you encounter.
 
 #### Battery Systems
-- **Sungrow SBR Battery** - Dedicated battery template with sensors and controls
-  - **Model Selection**: Supports SBR096–SBR256 (module count based)
+- **Sungrow SBR / SBH Battery** - Dedicated battery template with sensors and controls
+  - **SBR**: Model selection SBR096–SBR256 (module count based); SH-RS / SH-RT / SH-T compatible
+  - **SBH**: Model selection SBH100–SBH400 (SH-T compatible only); same Modbus map via inverter (slave 200)
   - **Full battery diagnostics**: SOC, SOH, cell voltage, temperature, charge/discharge
+  - ⚠️ **SBH needs testing**: SBH support is based on protocol documentation and has not been verified on real SBH hardware. Feedback welcome.
+- **BYD Battery Box** - Template for BYD Battery-Box HVS/HVM/HVL/LVS (Modbus RTU over TCP, port 8080)
+  - ⚠️ **BETA – needs testing**: Not tested on real hardware. Feedback and issue reports welcome.
+
+#### Other Inverters (BETA – need testing)
+The following inverter templates were added in v0.1.9 and **have not been tested on real hardware**. If you try them, please report issues or feedback so we can fix register maps and behaviour.
+- **Fronius GEN24 Series** - SunSpec-capable dynamic template
+- **Growatt MIN/MOD/MAX Series** - MIN/MOD/MAX inverter template
+- **SMA Sunny Tripower/Boy Series** - SMA inverter template
+- **SolaX Inverter Series** - SolaX GEN2–GEN6 dynamic template
 
 #### Heating Controls
 - **Solvis SC2/SC3** - Heating controller template for Solvis SC2/SC3
@@ -333,6 +344,11 @@ https://github.com/TCzerny/ha-modbus-manager/wiki
 - **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** - SBR battery template
 - **[Solvis SC3](docs/README_solvis_sc3.md)** - Solvis SC2/SC3 template
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template
+- **[BYD Battery Box](docs/README_byd_battery_box.md)** - BYD Battery-Box template (BETA)
+- **[Fronius GEN24 Dynamic](docs/README_fronius_dynamic.md)** - Fronius GEN24 template (BETA)
+- **[Growatt MIN/MOD/MAX Dynamic](docs/README_growatt_min_mod_max_dynamic.md)** - Growatt template (BETA)
+- **[SMA Dynamic](docs/README_sma_dynamic.md)** - SMA Sunny Tripower/Boy template (BETA)
+- **[SolaX Dynamic](docs/README_solax_dynamic.md)** - SolaX inverter template (BETA)
 
 ## 📄 License
 
@@ -354,6 +370,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Last Updated**: January 2026
-**Version**: 0.1.8
+**Last Updated**: February 2026
+**Version**: 0.1.9
 **Status**: Beta - Active Development

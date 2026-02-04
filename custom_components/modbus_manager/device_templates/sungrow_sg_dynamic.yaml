@@ -101,28 +101,6 @@ dynamic_config:
       # Some registers are only available via WINET connection
       winet_only_sensors:
 
-  # Filtering rules for dynamic register inclusion/exclusion
-  filter_rules:
-    # MPPT filtering - include only up to configured mppt_count
-    mppt_sensors:
-      - pattern: "mppt(\\d+)_.*"
-        max_number: "mppt_count"
-        exclude_above: true
-
-    # String current filtering - include only up to configured string_count
-    string_sensors:
-      - pattern: "string_(\\d+)_current"
-        max_number: "string_count"
-        exclude_above: true
-        exclude_if_zero: true  # Don't include any string sensors if string_count = 0
-
-    # Phase filtering - exclude phase B/C for single phase
-    phase_sensors:
-      - pattern: "phase_[bc]_.*"
-        exclude_if: "phases == 1"
-      - pattern: "meter_phase_[bc]_.*"
-        exclude_if: "phases == 1"
-
 # Sensors for read access (Input Registers)
 sensors:
   # Device Information
@@ -376,6 +354,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 2"
 
   - name: MPPT2 current
     unique_id: mppt2_current
@@ -389,6 +368,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 2"
 
   - name: MPPT3 voltage
     unique_id: mppt3_voltage
@@ -402,6 +382,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 3"
 
   - name: MPPT3 current
     unique_id: mppt3_current
@@ -415,6 +396,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 3"
 
   - name: Total DC power
     unique_id: total_dc_power
@@ -455,6 +437,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "phases >= 2"
 
   - name: Phase C voltage
     unique_id: phase_c_voltage
@@ -467,6 +450,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "phases >= 2"
 
   - name: Phase A current
     unique_id: phase_a_current
@@ -491,6 +475,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "phases >= 2"
 
   - name: Phase C current
     unique_id: phase_c_current
@@ -503,6 +488,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "phases >= 2"
 
   - name: Total active power
     unique_id: total_active_power
@@ -734,6 +720,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     group: "PV_mppt"
+    condition: "mppt_count >= 4"
 
   - name: MPPT4 current
     unique_id: mppt4_current
@@ -748,6 +735,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     group: "PV_mppt"
+    condition: "mppt_count >= 4"
 
   - name: MPPT5 voltage
     unique_id: mppt5_voltage
@@ -762,6 +750,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     group: "PV_mppt"
+    condition: "mppt_count >= 5"
 
   - name: MPPT5 current
     unique_id: mppt5_current
@@ -776,6 +765,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     group: "PV_mppt"
+    condition: "mppt_count >= 5"
 
   - name: MPPT6 voltage
     unique_id: mppt6_voltage
@@ -790,6 +780,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     group: "PV_mppt"
+    condition: "mppt_count >= 6"
 
   - name: MPPT6 current
     unique_id: mppt6_current
@@ -804,6 +795,7 @@ sensors:
     scale: 0.1
     scan_interval: 10
     group: "PV_mppt"
+    condition: "mppt_count >= 6"
 
   - name: Monthly PV generation
     unique_id: monthly_pv_generation
@@ -830,6 +822,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 7"
 
   - name: MPPT7 current
     unique_id: mppt7_current
@@ -843,6 +836,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 7"
 
   - name: MPPT8 voltage
     unique_id: mppt8_voltage
@@ -856,6 +850,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 8"
 
   - name: MPPT8 current
     unique_id: mppt8_current
@@ -869,6 +864,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 8"
 
   - name: MPPT9 voltage
     unique_id: mppt9_voltage
@@ -882,6 +878,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 9"
 
   - name: MPPT9 current
     unique_id: mppt9_current
@@ -895,6 +892,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 9"
 
   - name: MPPT10 voltage
     unique_id: mppt10_voltage
@@ -908,6 +906,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 10"
 
   - name: MPPT10 current
     unique_id: mppt10_current
@@ -921,6 +920,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 10"
 
   - name: MPPT11 voltage
     unique_id: mppt11_voltage
@@ -934,6 +934,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 11"
 
   - name: MPPT11 current
     unique_id: mppt11_current
@@ -947,6 +948,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 11"
 
   - name: MPPT12 voltage
     unique_id: mppt12_voltage
@@ -960,6 +962,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 12"
 
   - name: MPPT12 current
     unique_id: mppt12_current
@@ -973,6 +976,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
+    condition: "mppt_count >= 12"
 
   # Work Status registers
   - name: Work status 1
@@ -1093,6 +1097,7 @@ sensors:
     scale: 0.01
     scan_interval: 30
     group: "PV_strings"
+    condition: "string_count >= 1"
 
   - name: String 2 current
     unique_id: string_2_current
@@ -1106,6 +1111,7 @@ sensors:
     scale: 0.01
     scan_interval: 30
     group: "PV_strings"
+    condition: "string_count >= 2"
 
   - name: String 3 current
     unique_id: string_3_current
@@ -1119,6 +1125,7 @@ sensors:
     scale: 0.01
     scan_interval: 30
     group: "PV_strings"
+    condition: "string_count >= 3"
 
   - name: String 4 current
     unique_id: string_4_current
@@ -1132,6 +1139,7 @@ sensors:
     scale: 0.01
     scan_interval: 30
     group: "PV_strings"
+    condition: "string_count >= 4"
 
   - name: String 5 current
     unique_id: string_5_current
@@ -1145,6 +1153,7 @@ sensors:
     scale: 0.01
     scan_interval: 30
     group: "PV_strings"
+    condition: "string_count >= 5"
 
   - name: String 6 current
     unique_id: string_6_current
@@ -1158,6 +1167,7 @@ sensors:
     scale: 0.01
     scan_interval: 30
     group: "PV_strings"
+    condition: "string_count >= 6"
 
   - name: String 7 current
     unique_id: string_7_current
@@ -1171,9 +1181,11 @@ sensors:
     scale: 0.01
     scan_interval: 30
     group: "PV_strings"
+    condition: "string_count >= 7"
 
   - name: String 8 current
     unique_id: string_8_current
+    condition: "string_count >= 8"
     address: 7019 # reg 7020
     input_type: input
     data_type: uint16
@@ -1573,6 +1585,7 @@ calculated:
   - name: "MPPT2 Power"
     unique_id: "mppt2_power"
     type: "sensor"
+    condition: "mppt_count >= 2"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt2_voltage', 'unavailable')
@@ -1587,6 +1600,7 @@ calculated:
   - name: "MPPT3 Power"
     unique_id: "mppt3_power"
     type: "sensor"
+    condition: "mppt_count >= 3"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt3_voltage', 'unavailable')
@@ -1602,6 +1616,7 @@ calculated:
   - name: "MPPT4 Power"
     unique_id: "mppt4_power"
     type: "sensor"
+    condition: "mppt_count >= 4"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt4_voltage', 'unavailable')
@@ -1616,6 +1631,7 @@ calculated:
   - name: "MPPT5 Power"
     unique_id: "mppt5_power"
     type: "sensor"
+    condition: "mppt_count >= 5"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt5_voltage', 'unavailable')
@@ -1630,6 +1646,7 @@ calculated:
   - name: "MPPT6 Power"
     unique_id: "mppt6_power"
     type: "sensor"
+    condition: "mppt_count >= 6"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt6_voltage', 'unavailable')
@@ -1825,6 +1842,7 @@ calculated:
     unique_id: "phase_b_power"
     group: "PV_phase_power"
     type: "sensor"
+    condition: "phases >= 2"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_phase_b_voltage', 'unavailable')
@@ -1840,6 +1858,7 @@ calculated:
     unique_id: "phase_c_power"
     group: "PV_phase_power"
     type: "sensor"
+    condition: "phases >= 2"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_phase_c_voltage', 'unavailable')
@@ -1982,6 +2001,7 @@ calculated:
   - name: "MPPT7 Power"
     unique_id: "mppt7_power"
     type: "sensor"
+    condition: "mppt_count >= 7"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt7_voltage', 'unavailable')
@@ -1996,6 +2016,7 @@ calculated:
   - name: "MPPT8 Power"
     unique_id: "mppt8_power"
     type: "sensor"
+    condition: "mppt_count >= 8"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt8_voltage', 'unavailable')
@@ -2010,6 +2031,7 @@ calculated:
   - name: "MPPT9 Power"
     unique_id: "mppt9_power"
     type: "sensor"
+    condition: "mppt_count >= 9"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt9_voltage', 'unavailable')
@@ -2024,6 +2046,7 @@ calculated:
   - name: "MPPT10 Power"
     unique_id: "mppt10_power"
     type: "sensor"
+    condition: "mppt_count >= 10"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt10_voltage', 'unavailable')
@@ -2038,6 +2061,7 @@ calculated:
   - name: "MPPT11 Power"
     unique_id: "mppt11_power"
     type: "sensor"
+    condition: "mppt_count >= 11"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt11_voltage', 'unavailable')
@@ -2052,6 +2076,7 @@ calculated:
   - name: "MPPT12 Power"
     unique_id: "mppt12_power"
     type: "sensor"
+    condition: "mppt_count >= 12"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_mppt12_voltage', 'unavailable')

@@ -773,6 +773,19 @@ async def load_single_template(
             result["dynamic_config"] = data["dynamic_config"]
             _LOGGER.debug("Template %s includes dynamic_config", template_name)
 
+        # Extract SunSpec metadata if present
+        if "sunspec_enabled" in data:
+            result["sunspec_enabled"] = data["sunspec_enabled"]
+            if data["sunspec_enabled"]:
+                _LOGGER.debug("Template %s has SunSpec enabled", template_name)
+                if "sunspec_models" in data:
+                    result["sunspec_models"] = data["sunspec_models"]
+                    _LOGGER.debug(
+                        "Template %s defines %d SunSpec models",
+                        template_name,
+                        len(data["sunspec_models"]),
+                    )
+
         # Add extends information if present
         if extends_name:
             result["extends"] = extends_name

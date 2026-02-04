@@ -1,0 +1,1317 @@
+# Growatt MIN/MOD/MAX Dynamic Template for Modbus Manager
+# Register addresses verified from MIN-6000TL-XH.yaml, MOD-6000TL-X.yaml, MOD-10KTL3-XH.yaml
+# Protocol: Growatt Modbus RTU Protocol V1.05 (2018-04-19) / V1.13 (2019-01-16 for MAX)
+#
+# IMPORTANT NOTES:
+# - MIN/MOD Series: Use register addresses 3000-3180+ (Input) and 0-15, 3036-3049, 3085 (Holding)
+# - MAX Series: Uses DIFFERENT register addresses (0-52 Input, 0-42 Holding) - may need separate template
+# - MAX series models are large commercial inverters (50-253kW) with different register map
+# - This template currently supports MIN/MOD register structure
+# - MAX series support is preliminary and may need verification/adjustment
+
+name: "Growatt MIN/MOD/MAX Series Inverter"
+description: "Dynamic template for Growatt MIN, MOD, and MAX series hybrid inverters. Supports battery-enabled models with PV, grid, and battery monitoring."
+manufacturer: "Growatt"
+model: "MIN/MOD/MAX Series Dynamic"
+version: 1.0.0
+default_prefix: "Growatt"
+default_slave_id: 1
+type: "PV_Hybrid_Inverter"
+firmware_version: "1.0.0"
+
+# Dynamic configuration support
+dynamic_config:
+
+  valid_models:
+    # MIN Series (Single Phase Hybrid)
+    # Register addresses: 3000-3180+ (Input Registers), 0-15, 3036-3049, 3085 (Holding Registers)
+    # Battery support: Yes (registers 3125-3180)
+    # Models: 2.5-6kW range with 2 MPPTs
+    "MIN-2500TL-X": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 2500}
+    "MIN-2500TL-XE": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 2500}
+    "MIN-3000TL-X": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 3000}
+    "MIN-5000TL-X": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 5000}
+    "MIN-5000TL-XH": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 5000}
+    "MIN-6000TL-X": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 6000}
+    "MIN-6000TL-XH": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 6000}
+
+    # MOD Series (Three Phase Hybrid)
+    # Note: Register addresses identical to MIN series (3000-3180+)
+    # Battery support: Yes (registers 3125-3180)
+    # Models: 3-9kW range with 2 MPPTs (Three Phase)
+    "MOD-3000TL3-X": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 3000}
+    "MOD-3000TL3-XH": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 3000}
+    "MOD-4000TL3-X": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 4000}
+    "MOD-4000TL3-XH": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 4000}
+    "MOD-5000TL3-X": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 5000}
+    "MOD-5000TL3-XH": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 5000}
+    "MOD-6000TL-X": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 6000}
+    "MOD-6000TL3-X": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 6000}
+    "MOD-6000TL3-XH": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 6000}
+    "MOD-7000TL3-X": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 7000}
+    "MOD-7000TL3-XH": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 7000}
+    "MOD-8000TL3-X": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 8000}
+    "MOD-8000TL3-XH": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 8000}
+    "MOD-9000TL3-X": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 9000}
+    "MOD-9000TL3-XH": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 9000}
+    "MOD-10KTL3-XH": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, max_ac_output_power: 10000}
+
+    # MAX Series (Three Phase Commercial - Large Scale)
+    # Note: Register addresses DIFFERENT from MIN/MOD - uses 0-52 (Input) and 0-42 (Holding)
+    # Protocol: MAX Series Modbus RTU Protocol V1.13 (2019-01-16)
+    # Battery support: Yes (assumed based on protocol documentation)
+    # Models: 50-253kW range with 6-15 MPPTs
+    # WARNING: MAX series uses different register addresses - may need separate template or conditional handling
+    "MAX-50KTL3-LV": {phases: 3, mppt_count: 6, string_count: 6, battery_enabled: true, max_ac_output_power: 50000}
+    "MAX-50KTL3-MV": {phases: 3, mppt_count: 6, string_count: 6, battery_enabled: true, max_ac_output_power: 50000}
+    "MAX-60KTL3-LV": {phases: 3, mppt_count: 6, string_count: 6, battery_enabled: true, max_ac_output_power: 60000}
+    "MAX-60KTL3-MV": {phases: 3, mppt_count: 6, string_count: 6, battery_enabled: true, max_ac_output_power: 60000}
+    "MAX-80KTL3-LV": {phases: 3, mppt_count: 7, string_count: 7, battery_enabled: true, max_ac_output_power: 80000}
+    "MAX-80KTL3-MV": {phases: 3, mppt_count: 7, string_count: 7, battery_enabled: true, max_ac_output_power: 80000}
+    "MAX-100KTL3-LV": {phases: 3, mppt_count: 10, string_count: 10, battery_enabled: true, max_ac_output_power: 100000}
+    "MAX-100KTL3-X": {phases: 3, mppt_count: 10, string_count: 10, battery_enabled: true, max_ac_output_power: 100000}
+    "MAX-125KTL3-X": {phases: 3, mppt_count: 10, string_count: 10, battery_enabled: true, max_ac_output_power: 125000}
+    "MAX-185KTL3-X": {phases: 3, mppt_count: 9, string_count: 9, battery_enabled: true, max_ac_output_power: 185000}
+    "MAX-200KTL3-X": {phases: 3, mppt_count: 12, string_count: 12, battery_enabled: true, max_ac_output_power: 200000}
+    "MAX-253KTL3-X": {phases: 3, mppt_count: 15, string_count: 15, battery_enabled: true, max_ac_output_power: 253000}
+
+  battery_config:
+    description: "Battery configuration"
+    options: ["none", "standard_battery"]
+    default: "standard_battery"
+
+  firmware_version:
+    description: "Firmware version string"
+    options: ["1.0.0", "Latest"]
+    default: "1.0.0"
+
+# Sensors for read access (Input Registers - address 3000+)
+sensors:
+  # Device Information
+  - name: Inverter machine status
+    unique_id: machine_status
+    group: "PV_device_info"
+    address: 3000
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    map:
+      0: "Standby"
+      1: "Normal"
+      3: "Fault"
+      4: "Flash"
+    bits: 8
+
+  - name: Inverter run status
+    unique_id: run_status
+    group: "PV_device_info"
+    address: 3000
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    shift_bits: 8
+    bits: 8
+    map:
+      0: "Waiting module"
+      1: "Self-test"
+      3: "SysFault module"
+      4: "Flash module"
+      5: "PVBATOnline module"
+      6: "BatOnline module"
+      7: "PVOffline mode"
+      8: "BatOffline mode"
+
+  # PV Data (MPPT 1 & 2)
+  - name: PV total power
+    unique_id: pv_total_power
+    group: "PV_total_power"
+    address: 3001
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    icon: "mdi:solar-power"
+
+  - name: PV1 voltage
+    unique_id: pv1_voltage
+    group: "PV_mppt_voltage"
+    address: 3003
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: PV1 current
+    unique_id: pv1_current
+    group: "PV_mppt_current"
+    address: 3004
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: PV1 power
+    unique_id: pv1_power
+    group: "PV_mppt_power"
+    address: 3005
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: PV2 voltage
+    unique_id: pv2_voltage
+    group: "PV_mppt_voltage"
+    address: 3007
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: PV2 current
+    unique_id: pv2_current
+    group: "PV_mppt_current"
+    address: 3008
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: PV2 power
+    unique_id: pv2_power
+    group: "PV_mppt_power"
+    address: 3009
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  # Grid Data
+  - name: Output power
+    unique_id: output_power
+    group: "PV_output_power"
+    address: 3023
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 5
+
+  - name: Grid frequency
+    unique_id: grid_frequency
+    group: "PV_grid_status"
+    address: 3025
+    input_type: input
+    data_type: uint16
+    precision: 3
+    unit_of_measurement: "Hz"
+    device_class: "frequency"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 10
+
+  - name: Grid voltage
+    unique_id: grid_voltage
+    group: "PV_grid_voltage"
+    address: 3026
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Grid output current
+    unique_id: grid_output_current
+    group: "PV_grid_current"
+    address: 3027
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Grid output apparent power
+    unique_id: grid_output_apparent_power
+    group: "PV_grid_power"
+    address: 3028
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "VA"
+    device_class: "apparent_power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  # Three Phase Grid Data (will be filtered based on phases)
+  - name: Three phase grid voltage (2)
+    unique_id: grid_voltage_phase_2
+    group: "PV_grid_voltage"
+    address: 3030
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  - name: Three phase grid output current (2)
+    unique_id: grid_current_phase_2
+    group: "PV_grid_current"
+    address: 3031
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  - name: Three phase grid output power (2)
+    unique_id: grid_power_phase_2
+    group: "PV_grid_power"
+    address: 3032
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "VA"
+    device_class: "apparent_power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  - name: Three phase grid voltage (3)
+    unique_id: grid_voltage_phase_3
+    group: "PV_grid_voltage"
+    address: 3034
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  - name: Three phase grid output current (3)
+    unique_id: grid_current_phase_3
+    group: "PV_grid_current"
+    address: 3035
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  - name: Three phase grid output power (3)
+    unique_id: grid_power_phase_3
+    group: "PV_grid_power"
+    address: 3036
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "VA"
+    device_class: "apparent_power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  # Three Phase Line-to-Line Voltages
+  - name: Three phase grid voltage RS
+    unique_id: grid_voltage_rs
+    group: "PV_grid_voltage"
+    address: 3038
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  - name: Three phase grid voltage ST
+    unique_id: grid_voltage_st
+    group: "PV_grid_voltage"
+    address: 3039
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  - name: Three phase grid voltage TR
+    unique_id: grid_voltage_tr
+    group: "PV_grid_voltage"
+    address: 3040
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "phases == 3"
+
+  # Energy Data
+  - name: Total forward power
+    unique_id: total_forward_power
+    group: "PV_energy"
+    address: 3041
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Total reverse power
+    unique_id: total_reverse_power
+    group: "PV_energy"
+    address: 3043
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Total load power
+    unique_id: total_load_power
+    group: "PV_load_power"
+    address: 3045
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Work time total
+    unique_id: work_time_total
+    group: "PV_status"
+    address: 3047
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "s"
+    device_class: "duration"
+    state_class: total_increasing
+    scale: 0.5
+    scan_interval: 300
+    never_resets: true
+
+  - name: Today generate energy
+    unique_id: daily_generation_energy
+    group: "PV_daily_energy"
+    address: 3049
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 60
+
+  - name: Total generate energy
+    unique_id: total_generation_energy
+    group: "PV_total_energy"
+    address: 3051
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+
+  - name: PV Energy total
+    unique_id: pv_energy_total
+    group: "PV_total_energy"
+    address: 3053
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+
+  - name: PV1 Energy today
+    unique_id: pv1_energy_today
+    group: "PV_daily_energy"
+    address: 3055
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 60
+
+  - name: PV1 Energy total
+    unique_id: pv1_energy_total
+    group: "PV_total_energy"
+    address: 3057
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+
+  - name: PV2 Energy today
+    unique_id: pv2_energy_today
+    group: "PV_daily_energy"
+    address: 3059
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 60
+
+  - name: PV2 Energy total
+    unique_id: pv2_energy_total
+    group: "PV_total_energy"
+    address: 3061
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+
+  - name: Today energy to user
+    unique_id: daily_energy_to_user
+    group: "PV_energy_import"
+    address: 3067
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 60
+    icon: "mdi:transmission-tower-import"
+
+  - name: Total energy to user
+    unique_id: total_energy_to_user
+    group: "PV_energy_import"
+    address: 3069
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+    icon: "mdi:transmission-tower-import"
+
+  - name: Today energy to grid
+    unique_id: daily_energy_to_grid
+    group: "PV_energy_export"
+    address: 3071
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 60
+    icon: "mdi:transmission-tower-export"
+
+  - name: Total energy to grid
+    unique_id: total_energy_to_grid
+    group: "PV_energy_export"
+    address: 3073
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+    icon: "mdi:transmission-tower-export"
+
+  - name: Today energy of user load
+    unique_id: daily_energy_load
+    group: "PV_energy_consumption"
+    address: 3075
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 60
+    icon: "mdi:solar-power-variant"
+
+  - name: Total energy of user load
+    unique_id: total_energy_load
+    group: "PV_energy_consumption"
+    address: 3077
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+    icon: "mdi:solar-power-variant"
+
+  # System Status
+  - name: Derating mode
+    unique_id: derating_mode
+    group: "PV_status"
+    address: 3086
+    input_type: input
+    data_type: uint16
+    scan_interval: 60
+    map:
+      0: "cNOTDerate"
+      1: "cPVHighDerate"
+      2: "cPowerConstantDerate"
+      3: "cGridVHighDerate"
+      4: "cFreqHighDerate"
+      5: "cDcSoureModeDerate"
+      6: "cInvTemprDerate"
+      7: "cActivePowerOrder"
+      8: "cLoadSpeedProcess"
+      9: "cOverBackbyTime"
+      10: "cInternalTemprDerate"
+      11: "cOutTemprDerate"
+      12: "cLineImpeCalcDerate"
+      13: "cParallelAntiBackflowDerate"
+      14: "cLocalAnti BackflowDerate"
+      15: "cBdcLoadPriDerate"
+      16: "cChkCTErrDerate"
+
+  # Temperature Sensors
+  - name: Inverter temperature
+    unique_id: inverter_temperature
+    group: "PV_temperature"
+    address: 3093
+    input_type: input
+    data_type: int16
+    precision: 2
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: IPM Inverter temperature
+    unique_id: ipm_temperature
+    group: "PV_temperature"
+    address: 3094
+    input_type: input
+    data_type: int16
+    precision: 2
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Boost temperature
+    unique_id: boost_temperature
+    group: "PV_temperature"
+    address: 3095
+    input_type: input
+    data_type: int16
+    precision: 2
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Communications board temperature
+    unique_id: comm_board_temperature
+    group: "PV_temperature"
+    address: 3097
+    input_type: input
+    data_type: int16
+    precision: 2
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  # Bus Voltages
+  - name: P Bus inside voltage
+    unique_id: p_bus_voltage
+    group: "PV_bus_voltage"
+    address: 3098
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: N Bus inside voltage
+    unique_id: n_bus_voltage
+    group: "PV_bus_voltage"
+    address: 3099
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  # Power Factor and Status
+  - name: Inverter output Power Factor
+    unique_id: power_factor
+    group: "PV_power_measurement"
+    address: 3100
+    input_type: input
+    data_type: uint16
+    precision: 2
+    device_class: "power_factor"
+    state_class: measurement
+    scale: 0.001
+    scan_interval: 10
+
+  - name: Real output power percent
+    unique_id: real_output_power_percent
+    group: "PV_power_measurement"
+    address: 3101
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "%"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Output Maxpower Limited
+    unique_id: output_maxpower_limited
+    group: "PV_power_measurement"
+    address: 3102
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+
+  - name: Inverter standby flag
+    unique_id: standby_flag
+    group: "PV_status"
+    address: 3104
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+
+  - name: Fault code
+    unique_id: fault_code
+    group: "PV_status"
+    address: 3105
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+
+  - name: Warning code
+    unique_id: warning_code
+    group: "PV_status"
+    address: 3106
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+
+  # Battery Data (will be filtered based on battery_config)
+  - name: Today discharge energy
+    unique_id: daily_discharge_energy
+    group: "PV_battery_energy"
+    address: 3125
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 60
+    icon: "mdi:battery-negative"
+    condition: "battery_config != 'none'"
+
+  - name: Total discharge energy
+    unique_id: total_discharge_energy
+    group: "PV_battery_energy"
+    address: 3127
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+    icon: "mdi:battery-negative"
+    condition: "battery_config != 'none'"
+
+  - name: Today charge energy
+    unique_id: daily_charge_energy
+    group: "PV_battery_energy"
+    address: 3129
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 60
+    icon: "mdi:battery-positive"
+    condition: "battery_config != 'none'"
+
+  - name: Total charge energy
+    unique_id: total_charge_energy
+    group: "PV_battery_energy"
+    address: 3131
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: total_increasing
+    scale: 0.1
+    scan_interval: 300
+    never_resets: true
+    icon: "mdi:battery-positive"
+    condition: "battery_config != 'none'"
+
+  - name: Work mode
+    unique_id: work_mode
+    group: "PV_battery_status"
+    address: 3144
+    input_type: input
+    data_type: uint16
+    scan_interval: 60
+    map:
+      0: "LoadFirst"
+      1: "BatteryFirst"
+      2: "GridFirst"
+    condition: "battery_config != 'none'"
+
+  - name: Storage Fault code
+    unique_id: storage_fault_code
+    group: "PV_battery_status"
+    address: 3167
+    input_type: input
+    data_type: uint16
+    scan_interval: 60
+    condition: "battery_config != 'none'"
+
+  - name: Storage Warning code
+    unique_id: storage_warning_code
+    group: "PV_battery_status"
+    address: 3168
+    input_type: input
+    data_type: uint16
+    scan_interval: 60
+    condition: "battery_config != 'none'"
+
+  - name: Battery voltage
+    unique_id: battery_voltage
+    group: "PV_battery_voltage"
+    address: 3169
+    input_type: input
+    data_type: uint16
+    precision: 3
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 10
+    condition: "battery_config != 'none'"
+
+  - name: Battery current
+    unique_id: battery_current
+    group: "PV_battery_current"
+    address: 3170
+    input_type: input
+    data_type: int16
+    precision: 2
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_config != 'none'"
+
+  - name: Battery SoC
+    unique_id: battery_soc
+    group: "PV_battery_status"
+    address: 3171
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    condition: "battery_config != 'none'"
+
+  - name: Discharge power
+    unique_id: discharge_power
+    group: "PV_battery_power"
+    address: 3178
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_config != 'none'"
+
+  - name: Charge power
+    unique_id: charge_power
+    group: "PV_battery_power"
+    address: 3180
+    input_type: input
+    data_type: uint32
+    count: 2
+    swap: word
+    precision: 2
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_config != 'none'"
+
+# Controls for write access (Holding Registers)
+controls:
+  - type: "switch"
+    name: "Remote On/Off"
+    unique_id: "remote_on_off"
+    address: 0
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0: "Off"
+      1: "On"
+    group: "PV_control"
+
+  # Device Information (Holding Registers - readable)
+  - type: "text"
+    name: "Firmware version"
+    unique_id: "firmware_version"
+    address: 9
+    input_type: "holding"
+    data_type: "string"
+    count: 3
+    scan_interval: 600
+    group: "PV_device_info"
+
+  - type: "text"
+    name: "Control firmware version"
+    unique_id: "control_firmware_version"
+    address: 12
+    input_type: "holding"
+    data_type: "string"
+    count: 3
+    scan_interval: 600
+    group: "PV_device_info"
+
+  - type: "text"
+    name: "Serial number"
+    unique_id: "serial_number"
+    address: 3001
+    input_type: "holding"
+    data_type: "string"
+    count: 14
+    scan_interval: 600
+    group: "PV_device_info"
+
+  - type: "number"
+    name: "Max output active power"
+    unique_id: "max_output_active_power"
+    address: 3
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "%"
+    scale: 1
+    min_value: 0
+    max_value: 100
+    step: 1
+    scan_interval: 30
+    group: "PV_control"
+
+  - type: "number"
+    name: "Discharge Power Rate (Grid First)"
+    unique_id: "grid_first_discharge_power_rate"
+    address: 3036
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 1
+    max_value: 255
+    step: 1
+    scan_interval: 30
+    group: "PV_control"
+    condition: "battery_config != 'none'"
+
+  - type: "number"
+    name: "Stop Discharge SOC (Grid First)"
+    unique_id: "grid_first_stop_soc"
+    address: 3037
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "%"
+    min_value: 1
+    max_value: 100
+    step: 1
+    scan_interval: 30
+    group: "PV_control"
+    condition: "battery_config != 'none'"
+
+  - type: "number"
+    name: "Discharge Power Rate (Bat First)"
+    unique_id: "bat_first_discharge_power_rate"
+    address: 3047
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 1
+    max_value: 100
+    step: 1
+    scan_interval: 30
+    group: "PV_control"
+    condition: "battery_config != 'none'"
+
+  - type: "number"
+    name: "Stop Charge SOC (Bat First)"
+    unique_id: "bat_first_stop_soc"
+    address: 3048
+    input_type: "holding"
+    data_type: "uint16"
+    unit_of_measurement: "%"
+    min_value: 1
+    max_value: 100
+    step: 1
+    scan_interval: 30
+    group: "PV_control"
+    condition: "battery_config != 'none'"
+
+  - type: "switch"
+    name: "AC Charge Enable"
+    unique_id: "ac_charge_enable"
+    address: 3049
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    options:
+      0: "Off"
+      1: "On"
+    group: "PV_control"
+    condition: "battery_config != 'none'"
+
+  - type: "select"
+    name: "LCD language"
+    unique_id: "lcd_language"
+    address: 15
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 300
+    options:
+      0: "Italian"
+      1: "English"
+      2: "German"
+      3: "Spanish"
+      4: "French"
+      5: "Chinese"
+      6: "Polish"
+      7: "Portuguese"
+      8: "Hungarian"
+    group: "PV_control"
+
+  - type: "number"
+    name: "Communicate address"
+    unique_id: "com_address"
+    address: 3085
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 1
+    max_value: 254
+    step: 1
+    scan_interval: 300
+    group: "PV_control"
+
+# Calculated Sensors
+calculated:
+  - name: "PV1 Power"
+    unique_id: "pv1_power_calculated"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_pv1_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_pv1_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_pv1_voltage') | default(0) | float) * (states('sensor.{PREFIX}_pv1_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "PV2 Power"
+    unique_id: "pv2_power_calculated"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_pv2_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_pv2_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_pv2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_pv2_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_mppt_power"
+
+  - name: "Total PV Power"
+    unique_id: "total_pv_power_calculated"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_pv1_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_pv2_power', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_pv1_power') | default(0) | float) + (states('sensor.{PREFIX}_pv2_power') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_total_power"
+
+  - name: "Battery Power"
+    unique_id: "battery_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_battery_voltage', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_current', 'unavailable')
+      }}
+    state: "{{ (states('sensor.{PREFIX}_battery_voltage') | default(0) | float) * (states('sensor.{PREFIX}_battery_current') | default(0) | float) }}"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "PV_battery_power"
+    condition: "battery_config != 'none'"
+
+# Binary Sensors
+binary_sensors:
+  - name: "PV generating"
+    unique_id: "pv_generating"
+    type: "binary_sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_pv_total_power', 'unavailable')
+      }}
+    state: >-
+      {% set pv_power = states('sensor.{PREFIX}_pv_total_power') %}
+      {% if pv_power in ['unknown', 'unavailable', 'none'] or pv_power is none %}
+        0
+      {% elif (pv_power|int) > 0 %}
+        1
+      {% else %}
+        0
+      {% endif %}
+    device_class: "power"
+    group: "PV_binary_status"
+
+  - name: "Battery charging"
+    unique_id: "battery_charging"
+    type: "binary_sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_battery_current', 'unavailable')
+      }}
+    state: >-
+      {% set bat_current = states('sensor.{PREFIX}_battery_current') %}
+      {% if bat_current in ['unknown', 'unavailable', 'none'] or bat_current is none %}
+        0
+      {% elif (bat_current|int) > 0 %}
+        1
+      {% else %}
+        0
+      {% endif %}
+    device_class: "battery_charging"
+    group: "PV_binary_status"
+    condition: "battery_config != 'none'"
+
+  - name: "Battery discharging"
+    unique_id: "battery_discharging"
+    type: "binary_sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_battery_current', 'unavailable')
+      }}
+    state: >-
+      {% set bat_current = states('sensor.{PREFIX}_battery_current') %}
+      {% if bat_current in ['unknown', 'unavailable', 'none'] or bat_current is none %}
+        0
+      {% elif (bat_current|int) < 0 %}
+        1
+      {% else %}
+        0
+      {% endif %}
+    device_class: "battery"
+    group: "PV_binary_status"
+    condition: "battery_config != 'none'"

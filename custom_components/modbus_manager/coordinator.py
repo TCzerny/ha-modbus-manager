@@ -20,6 +20,10 @@ from .device_utils import (
 from .logger import ModbusManagerLogger
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
+from .sunspec_utils import (
+    calculate_sunspec_register_address,
+    detect_sunspec_model_addresses,
+)
 from .template_loader import get_template_by_name
 from .value_processor import process_register_value
 
@@ -542,6 +546,75 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 binary_sensors = self._filter_by_conditions(
                     binary_sensors, dynamic_config, firmware_version
                 )
+
+                # Calculate SunSpec addresses if template has SunSpec enabled
+                sunspec_model_addresses = {}
+                if template.get("sunspec_enabled"):
+                    sunspec_models = template.get("sunspec_models", {})
+                    if sunspec_models:
+                        # Get user-provided SunSpec addresses from dynamic_config
+                        user_sunspec_config = dynamic_config.get(
+                            "sunspec_model_addresses", {}
+                        )
+
+                        # Determine input_type for SunSpec detection
+                        # Check first register to determine if using input or holding registers
+                        input_type = "holding"  # Default
+                        if registers:
+                            first_reg = registers[0]
+                            reg_input_type = first_reg.get("input_type", "holding")
+                            if reg_input_type == "input":
+                                input_type = "input"
+
+                        # Detect SunSpec model addresses
+                        sunspec_model_addresses = await detect_sunspec_model_addresses(
+                            hub=self.hub,
+                            slave_id=slave_id,
+                            sunspec_models=sunspec_models,
+                            user_config=user_sunspec_config,
+                            input_type=input_type,
+                        )
+
+                        _LOGGER.info(
+                            "Detected SunSpec model addresses for %s: %s",
+                            template_name,
+                            sunspec_model_addresses,
+                        )
+
+                        # Calculate SunSpec addresses for registers
+                        for reg in registers:
+                            sunspec_model = reg.get("sunspec_model")
+                            sunspec_offset = reg.get("sunspec_offset")
+
+                            if sunspec_model is not None and sunspec_offset is not None:
+                                # Get model start address
+                                model_start_address = sunspec_model_addresses.get(
+                                    sunspec_model
+                                )
+                                if model_start_address:
+                                    # Calculate actual address
+                                    calculated_address = (
+                                        calculate_sunspec_register_address(
+                                            base_address=model_start_address,
+                                            sunspec_offset=sunspec_offset,
+                                            register_address=reg.get("address"),
+                                        )
+                                    )
+                                    reg["address"] = calculated_address
+                                    _LOGGER.debug(
+                                        "Calculated SunSpec address for %s: Model %d, offset %d -> address %d",
+                                        reg.get("name", "unknown"),
+                                        sunspec_model,
+                                        sunspec_offset,
+                                        calculated_address,
+                                    )
+                                else:
+                                    _LOGGER.warning(
+                                        "SunSpec Model %d not found for register %s, using fallback address %d",
+                                        sunspec_model,
+                                        reg.get("name", "unknown"),
+                                        reg.get("address"),
+                                    )
 
                 # Process entities with device-specific prefix
                 processed_registers = self._process_entities_with_prefix(

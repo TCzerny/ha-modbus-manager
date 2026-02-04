@@ -235,7 +235,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 return await self.async_step_final_config(user_input)
 
             # Show template selection
-            template_names = list(self._templates.keys())
+            # Sort template names alphabetically for better UX
+            template_names = sorted(list(self._templates.keys()))
             return self.async_show_form(
                 step_id="user",
                 data_schema=vol.Schema(
@@ -639,7 +640,38 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         vol.Optional(field_name, default=default_value)
                     ] = bool
                 elif isinstance(default_value, int):
-                    schema_fields[vol.Optional(field_name, default=default_value)] = int
+                    # Check if min/max constraints are specified
+                    min_value = field_config.get("min")
+                    max_value = field_config.get("max")
+                    if min_value is not None or max_value is not None:
+                        # Apply range validation for integer fields
+                        validators = [vol.Coerce(int)]
+                        if min_value is not None or max_value is not None:
+                            validators.append(
+                                vol.Range(
+                                    min=min_value if min_value is not None else 1,
+                                    max=max_value if max_value is not None else 65535,
+                                )
+                            )
+                        schema_fields[
+                            vol.Optional(field_name, default=default_value)
+                        ] = vol.All(*validators)
+                        _LOGGER.debug(
+                            "Added integer field %s with default: %s, min: %s, max: %s",
+                            field_name,
+                            default_value,
+                            min_value,
+                            max_value,
+                        )
+                    else:
+                        schema_fields[
+                            vol.Optional(field_name, default=default_value)
+                        ] = int
+                        _LOGGER.debug(
+                            "Added integer field %s with default: %s",
+                            field_name,
+                            default_value,
+                        )
                 elif isinstance(default_value, float):
                     schema_fields[
                         vol.Optional(field_name, default=default_value)
@@ -673,6 +705,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             ] = vol.In(connection_options)
 
         # Battery slave ID removed - using connection slave_id instead
+        # SunSpec model address fields are now handled automatically via dynamic_config
+        # They will be added by the generic loop above if defined in template's dynamic_config
 
         _LOGGER.debug("Final schema fields: %s", list(schema_fields.keys()))
         return schema_fields
@@ -1515,8 +1549,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if not battery_templates:
             battery_templates = {"other": "Other (no template)"}
         else:
+            # Sort battery templates alphabetically by display name for better UX
+            sorted_battery_templates = dict(
+                sorted(battery_templates.items(), key=lambda x: x[1])
+            )
             battery_templates = {
-                **battery_templates,
+                **sorted_battery_templates,
                 "other": "Other (no template)",
             }
 
@@ -2697,7 +2735,10 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 battery_options = {"none": "None"}
 
                 # Load all available battery templates
+                from .template_loader import get_template_names
+
                 template_names = await get_template_names()
+                battery_templates_dict = {}
                 for template_name in template_names:
                     battery_template_data = await get_template_by_name(template_name)
                     if battery_template_data and isinstance(
@@ -2708,7 +2749,13 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                             display_name = battery_template_data.get(
                                 "display_name", template_name
                             )
-                            battery_options[template_name] = display_name
+                            battery_templates_dict[template_name] = display_name
+
+                # Sort battery templates alphabetically by display name for better UX
+                sorted_battery_templates = dict(
+                    sorted(battery_templates_dict.items(), key=lambda x: x[1])
+                )
+                battery_options.update(sorted_battery_templates)
 
                 # Get current battery config - check devices array first
                 current_battery_config = self.config_entry.data.get(
@@ -2761,6 +2808,20 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     list(battery_options.keys()),
                     current_battery_config,
                 )
+
+            # Get valid_models from dynamic_config
+            valid_models_for_check = dynamic_config.get(
+                "valid_models"
+            ) or template_data.get("valid_models")
+
+            # Fields that should be hidden when template has valid_models (they're defined by the model)
+            model_defined_fields = ["phases", "mppt_count", "string_count"]
+
+            # If template has valid_models, these fields should NEVER be shown
+            # because they are always defined by the selected model
+            should_hide_model_fields = bool(
+                valid_models_for_check and isinstance(valid_models_for_check, dict)
+            )
 
             # Automatically add ALL configurable fields from dynamic_config
             # But skip fields that are defined by valid_models (if template has valid_models)
@@ -3341,17 +3402,24 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             }
             return await self.async_step_battery_config()
 
-        battery_templates = {
-            "none": "None",
-            "other": "Other (no template)",
-        }
+        battery_templates_dict = {}
         template_names = await get_template_names()
         for template_name in template_names:
             template_data = await get_template_by_name(template_name)
             if template_data and isinstance(template_data, dict):
                 if template_data.get("type", "") == "battery":
                     display_name = template_data.get("display_name", template_name)
-                    battery_templates[template_name] = display_name
+                    battery_templates_dict[template_name] = display_name
+
+        # Sort battery templates alphabetically by display name for better UX
+        sorted_battery_templates = dict(
+            sorted(battery_templates_dict.items(), key=lambda x: x[1])
+        )
+        battery_templates = {
+            "none": "None",
+            **sorted_battery_templates,
+            "other": "Other (no template)",
+        }
 
         current_selection = self.config_entry.data.get("battery_config", "none")
         if current_selection not in battery_templates:
@@ -3801,6 +3869,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             dynamic_config["modules"] = modules
 
         # Add ALL user input fields to dynamic_config for condition filtering
+        # SunSpec model address fields are now handled automatically via the generic loop below
         # This ensures fields like meter_type, dual_channel_meter are available for condition checks
         for field_name, field_value in user_input.items():
             if field_name not in [
@@ -3810,6 +3879,11 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 "battery_slave_id",
                 "selected_model",  # Already handled separately
             ]:
+                # Skip SunSpec address fields - already processed above
+                if field_name.startswith("sunspec_model_") and field_name.endswith(
+                    "_address"
+                ):
+                    continue
                 # Store the actual value from user_input, or use default from dynamic_config
                 if field_name in dynamic_config:
                     field_config = dynamic_config[field_name]

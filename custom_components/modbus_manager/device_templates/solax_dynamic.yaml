@@ -1,0 +1,424 @@
+# SolaX Dynamic Template for Modbus Manager
+# Source: wills106/homeassistant-solax-modbus (https://github.com/wills106/homeassistant-solax-modbus)
+# Documentation: https://homeassistant-solax-modbus.readthedocs.io/
+# Protocol: SolaX Modbus RTU/TCP
+# Supports: GEN2-GEN6, X1/X3 variants, AC/HYBRID/PV/MIC/MAX types
+#
+# IMPORTANT NOTES:
+# - This is a BETA template - use at your own risk
+# - Supports multiple inverter types: AC, HYBRID, PV, MIC, MAX
+# - Register addresses may vary by generation (GEN2-GEN6)
+# - Battery support with per-pack entities
+# - Parallel mode support (PM registers)
+# - EPS (Emergency Power Supply) support available
+
+name: "SolaX Inverter Series"
+description: "Dynamic template for SolaX inverters (GEN2-GEN6). Supports AC, HYBRID, PV, MIC, and MAX types with battery support."
+manufacturer: "SolaX"
+model: "SolaX Series Dynamic"
+version: 1.0.0
+default_prefix: "SolaX"
+default_slave_id: 1
+type: "PV_Hybrid_Inverter"
+firmware_version: "1.0.0"
+
+# Dynamic configuration support
+dynamic_config:
+
+  valid_models:
+    # GEN2 Series (X1 Single Phase)
+    "GEN2-X1-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 3000}
+    "GEN2-X1-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 4000}
+    "GEN2-X1-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 5000}
+    "GEN2-X1-Hybrid-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 3000}
+    "GEN2-X1-Hybrid-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 4000}
+    "GEN2-X1-Hybrid-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 5000}
+
+    # GEN3 Series (X1 Single Phase)
+    "GEN3-X1-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 3000}
+    "GEN3-X1-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 4000}
+    "GEN3-X1-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 5000}
+    "GEN3-X1-Hybrid-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 3000}
+    "GEN3-X1-Hybrid-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 4000}
+    "GEN3-X1-Hybrid-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 5000}
+
+    # GEN4 Series (X1/X3)
+    "GEN4-X1-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 3000}
+    "GEN4-X1-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 4000}
+    "GEN4-X1-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 5000}
+    "GEN4-X1-Hybrid-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 3000}
+    "GEN4-X1-Hybrid-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 4000}
+    "GEN4-X1-Hybrid-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 5000}
+    "GEN4-X3-8.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 8000}
+    "GEN4-X3-10.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 10000}
+    "GEN4-X3-Hybrid-8.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 8000}
+    "GEN4-X3-Hybrid-10.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 10000}
+
+    # GEN5 Series (X1/X3)
+    "GEN5-X1-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 3000}
+    "GEN5-X1-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 4000}
+    "GEN5-X1-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 5000}
+    "GEN5-X1-Hybrid-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 3000}
+    "GEN5-X1-Hybrid-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 4000}
+    "GEN5-X1-Hybrid-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 5000}
+    "GEN5-X3-8.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 8000}
+    "GEN5-X3-10.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 10000}
+    "GEN5-X3-Hybrid-8.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 8000}
+    "GEN5-X3-Hybrid-10.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 10000}
+
+    # GEN6 Series (X1/X3)
+    "GEN6-X1-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 3000}
+    "GEN6-X1-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 4000}
+    "GEN6-X1-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 5000}
+    "GEN6-X1-Hybrid-3.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 3000}
+    "GEN6-X1-Hybrid-4.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 4000}
+    "GEN6-X1-Hybrid-5.0": {phases: 1, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 5000}
+    "GEN6-X3-8.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 8000}
+    "GEN6-X3-10.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: false, inverter_type: "AC", max_ac_output_power: 10000}
+    "GEN6-X3-Hybrid-8.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 8000}
+    "GEN6-X3-Hybrid-10.0": {phases: 3, mppt_count: 2, string_count: 2, battery_enabled: true, inverter_type: "HYBRID", max_ac_output_power: 10000}
+
+  # phases, mppt_count, string_count are defined by valid_models (selected model) - not duplicated here
+
+  battery_config:
+    description: "Battery configuration"
+    options: ["none", "solax_battery"]
+    default: "none"
+
+  firmware_version:
+    description: "Firmware version string"
+    options: ["1.0.0", "Latest"]
+    default: "1.0.0"
+
+# Sensors for read access (Input Registers)
+# Note: Register addresses are typical for GEN4/GEN5 - may vary by generation
+sensors:
+  # PV Data (Input Registers 0-20)
+  - name: "PV Voltage 1"
+    unique_id: "pv_voltage_1"
+    address: 0
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    precision: 1
+
+  - name: "PV Current 1"
+    unique_id: "pv_current_1"
+    address: 1
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    precision: 1
+
+  - name: "PV Power 1"
+    unique_id: "pv_power_1"
+    address: 2
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 1
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+
+  - name: "PV Voltage 2"
+    unique_id: "pv_voltage_2"
+    address: 3
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    precision: 1
+    condition: "mppt_count >= 2"
+
+  - name: "PV Current 2"
+    unique_id: "pv_current_2"
+    address: 4
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    precision: 1
+    condition: "mppt_count >= 2"
+
+  - name: "PV Power 2"
+    unique_id: "pv_power_2"
+    address: 5
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 1
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    condition: "mppt_count >= 2"
+
+  # Grid Data (Input Registers 21-40)
+  - name: "Grid Voltage"
+    unique_id: "grid_voltage"
+    address: 21
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    precision: 1
+
+  - name: "Grid Current"
+    unique_id: "grid_current"
+    address: 22
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    precision: 1
+
+  - name: "Grid Power"
+    unique_id: "grid_power"
+    address: 23
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scale: 1
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+
+  - name: "Grid Frequency"
+    unique_id: "grid_frequency"
+    address: 24
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 0.01
+    unit_of_measurement: "Hz"
+    device_class: "frequency"
+    state_class: "measurement"
+    precision: 2
+
+  # Inverter Data (Input Registers 41-60)
+  - name: "Inverter Power"
+    unique_id: "inverter_power"
+    address: 41
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 1
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+
+  - name: "Inverter Temperature"
+    unique_id: "inverter_temperature"
+    address: 42
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    precision: 1
+
+  # Battery Data (Input Registers 61-80) - for HYBRID models
+  - name: "Battery Voltage"
+    unique_id: "battery_voltage"
+    address: 61
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    precision: 1
+    condition: "battery_enabled == true"
+
+  - name: "Battery Current"
+    unique_id: "battery_current"
+    address: 62
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    precision: 1
+    condition: "battery_enabled == true"
+
+  - name: "Battery Power"
+    unique_id: "battery_power"
+    address: 63
+    input_type: "input"
+    data_type: "int16"
+    count: 1
+    scale: 1
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    condition: "battery_enabled == true"
+
+  - name: "Battery SOC"
+    unique_id: "battery_soc"
+    address: 64
+    input_type: "input"
+    data_type: "uint16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: "measurement"
+    precision: 1
+    condition: "battery_enabled == true"
+
+  # Energy Data (Input Registers 81-100)
+  - name: "PV Energy Today"
+    unique_id: "pv_energy_today"
+    address: 81
+    input_type: "input"
+    data_type: "uint32"
+    count: 2
+    scale: 0.1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    precision: 1
+
+  - name: "PV Energy Total"
+    unique_id: "pv_energy_total"
+    address: 83
+    input_type: "input"
+    data_type: "uint32"
+    count: 2
+    scale: 0.1
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    precision: 1
+
+# Controls (Holding Registers)
+controls:
+  - type: "number"
+    name: "Export Power Limit"
+    unique_id: "export_power_limit"
+    address: 0
+    input_type: "holding"
+    data_type: "uint16"
+    count: 1
+    scale: 1
+    unit_of_measurement: "W"
+    device_class: "power"
+    min_value: 0
+    max_value: 10000
+    step: 100
+
+  - type: "number"
+    name: "Battery Charge Power Limit"
+    unique_id: "battery_charge_power_limit"
+    address: 1
+    input_type: "holding"
+    data_type: "uint16"
+    count: 1
+    scale: 1
+    unit_of_measurement: "W"
+    device_class: "power"
+    min_value: 0
+    max_value: 5000
+    step: 100
+    condition: "battery_enabled == true"
+
+  - type: "number"
+    name: "Battery Discharge Power Limit"
+    unique_id: "battery_discharge_power_limit"
+    address: 2
+    input_type: "holding"
+    data_type: "uint16"
+    count: 1
+    scale: 1
+    unit_of_measurement: "W"
+    device_class: "power"
+    min_value: 0
+    max_value: 5000
+    step: 100
+    condition: "battery_enabled == true"
+
+  - type: "number"
+    name: "Battery SOC Min"
+    unique_id: "battery_soc_min"
+    address: 3
+    input_type: "holding"
+    data_type: "uint16"
+    count: 1
+    scale: 0.1
+    unit_of_measurement: "%"
+    device_class: "battery"
+    min_value: 0
+    max_value: 100
+    step: 1
+    condition: "battery_enabled == true"
+
+# Calculated sensors
+calculated:
+  - name: "PV Power Total"
+    unique_id: "pv_power_total"
+    template: "{PREFIX}_pv_power_1 + {PREFIX}_pv_power_2"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+
+  - name: "Battery Power"
+    unique_id: "battery_power_calc"
+    template: "{PREFIX}_battery_power"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    condition: "battery_enabled == true"
+
+  - name: "Inverter Power"
+    unique_id: "inverter_power_calc"
+    template: "{PREFIX}_inverter_power"
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+
+# Binary sensors
+binary_sensors:
+  - name: "PV Generating"
+    unique_id: "pv_generating"
+    template: "{PREFIX}_pv_power_total"
+    device_class: "power"
+    condition: "{PREFIX}_pv_power_total > 0"
+
+  - name: "Battery Charging"
+    unique_id: "battery_charging"
+    template: "{PREFIX}_battery_power"
+    device_class: "battery_charging"
+    condition: "{PREFIX}_battery_power > 0"
+    condition_template: "battery_enabled == true"
+
+  - name: "Battery Discharging"
+    unique_id: "battery_discharging"
+    template: "{PREFIX}_battery_power"
+    device_class: "battery_charging"
+    condition: "{PREFIX}_battery_power < 0"
+    condition_template: "battery_enabled == true"

@@ -4,10 +4,10 @@
 
 
 name: "Sungrow SBR Battery"
-description: "Template for Sungrow SBR Battery systems. Contains all battery sensors, controls, and diagnostics."
+description: "Template for Sungrow SBR and SBH battery systems (Modbus via inverter). Contains all battery sensors, controls, and diagnostics."
 manufacturer: "Sungrow"
 model: "SBR Battery"
-version: 1.0.0
+version: 1.1.0
 default_prefix: "SBR"
 default_slave_id: 200
 type: "battery"
@@ -17,9 +17,8 @@ firmware_version: "22011.01.19"
 dynamic_config:
 
   valid_models:
-    # SBR Battery Models based on module count
-    # Battery Power Limits (from datasheet): max_power (W) - DC-Nennleistung
-    # All SBR models support 30A max charge/discharge current
+    # SBR Battery Models (SH-RS / SH-RT / SH-T compatible)
+    # Module count and max_power (W) from datasheet; 30A max charge/discharge
     "SBR096": {modules: 3, max_power: 5760}
     "SBR128": {modules: 4, max_power: 7680}
     "SBR160": {modules: 5, max_power: 9600}
@@ -27,8 +26,15 @@ dynamic_config:
     "SBR224": {modules: 7, max_power: 13440}
     "SBR256": {modules: 8, max_power: 15360}
 
-  # Note: slave_id is configured in config_flow and stored in devices array
-  # No need to define it here in dynamic_config
+    # SBH Battery Models (SH-T compatible only; same Modbus map via inverter, slave 200)
+    # 5 kWh per module, 2–8 modules per unit; up to 50A, max power >25 kW
+    "SBH100": {modules: 2, max_power: 6400}
+    "SBH150": {modules: 3, max_power: 9600}
+    "SBH200": {modules: 4, max_power: 12800}
+    "SBH250": {modules: 5, max_power: 16000}
+    "SBH300": {modules: 6, max_power: 19200}
+    "SBH350": {modules: 7, max_power: 22400}
+    "SBH400": {modules: 8, max_power: 25600}
 
   # Battery configuration for SBR template
   battery_config:

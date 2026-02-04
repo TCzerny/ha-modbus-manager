@@ -1,24 +1,25 @@
-## Sungrow SBR Battery Template
+## Sungrow SBR / SBH Battery Template
 
-This document lists the Modbus registers for the Sungrow SBR battery template: `sungrow_sbr_battery.yaml`.
+This document lists the Modbus registers for the Sungrow SBR/SBH battery template: `sungrow_sbr_battery.yaml`.
 
 ### Template Overview
 
-- **Name**: Sungrow SBR Battery
+- **Name**: Sungrow SBR Battery (covers SBR and SBH series)
 - **Type**: `battery`
 - **Default prefix**: `SBR`
 - **Default slave ID**: `200`
 - **Firmware**: `22011.01.19`
 
+### SBR vs SBH
+
+- **SBR** (SBR096–SBR256): 3.2 kWh per module, 30 A, compatible with SH-RS (single-phase) and SH-RT/SH-T (three-phase).
+- **SBH** (SBH100–SBH400): 5 kWh per module, up to 50 A, compatible with **SH-T only**. Both series use the same Residential Hybrid Inverter Modbus protocol; battery data is read via the inverter (typically slave ID 200, registers 10740+). If you have an SBH with an SH-T inverter, use this template and select the matching SBH model; report back if any registers differ.
+
 ### Dynamic Configuration
 
-- `valid_models`: model list based on module count
-  - `SBR096`: modules=3, max_power=5760
-  - `SBR128`: modules=4, max_power=7680
-  - `SBR160`: modules=5, max_power=9600
-  - `SBR192`: modules=6, max_power=11520
-  - `SBR224`: modules=7, max_power=13440
-  - `SBR256`: modules=8, max_power=15360
+- `valid_models`: model list based on module count and max_power (W)
+  - **SBR**: SBR096 (3 mod), SBR128 (4), SBR160 (5), SBR192 (6), SBR224 (7), SBR256 (8)
+  - **SBH**: SBH100 (2 mod), SBH150 (3), SBH200 (4), SBH250 (5), SBH300 (6), SBH350 (7), SBH400 (8)
 - `battery_config`: options=['sbr_battery'] (default: sbr_battery)
 - `firmware_version`: options=['22011.01.19'] (default: 22011.01.19)
 

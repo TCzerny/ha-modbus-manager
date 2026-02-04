@@ -1,0 +1,282 @@
+# BYD Battery Box Template for Modbus Manager
+# Based on BYD Battery-Box HVS/HVM/HVL/LVS series Modbus protocol
+# Protocol: Modbus RTU over TCP (port 8080)
+# Default IP: 192.168.16.254
+# Reference: https://github.com/sarnau/BYD-Battery-Box-Infos/blob/main/Read_Modbus.py
+
+name: "BYD Battery Box"
+display_name: "BYD Battery Box"
+description: "Template for BYD Battery-Box systems (HVS, HVM, HVL, LVS series). Supports Modbus RTU over TCP communication."
+manufacturer: "BYD"
+model: "Battery Box"
+version: 1.0.0
+default_prefix: "BYD"
+default_slave_id: 1
+type: "battery"
+firmware_version: "3.16"
+
+# Dynamic configuration support
+dynamic_config:
+  valid_models:
+    # BYD Battery Box Models
+    # HVS Series: 5.1, 7.7, 10.2, 12.8 kWh (P3 - Modules in Serial)
+    # HVM Series: 8.3-22.1 kWh (P3 - Modules in Serial)
+    # HVL Series: (P3 - Modules in Serial)
+    # LVS/LVS Lite: (P2 - Modules in Parallel)
+    # LVL: (P2 - Modules in Parallel)
+    # LVFlex(Lite): (P2 - Modules in Parallel)
+    "HVS-5.1": {modules: 1, capacity_kwh: 5.1, battery_type: "HVS"}
+    "HVS-7.7": {modules: 1, capacity_kwh: 7.7, battery_type: "HVS"}
+    "HVS-10.2": {modules: 1, capacity_kwh: 10.2, battery_type: "HVS"}
+    "HVS-12.8": {modules: 1, capacity_kwh: 12.8, battery_type: "HVS"}
+    "HVM-8.3": {modules: 1, capacity_kwh: 8.3, battery_type: "HVM"}
+    "HVM-11.0": {modules: 1, capacity_kwh: 11.0, battery_type: "HVM"}
+    "HVM-13.8": {modules: 1, capacity_kwh: 13.8, battery_type: "HVM"}
+    "HVM-16.5": {modules: 1, capacity_kwh: 16.5, battery_type: "HVM"}
+    "HVM-19.3": {modules: 1, capacity_kwh: 19.3, battery_type: "HVM"}
+    "HVM-22.1": {modules: 1, capacity_kwh: 22.1, battery_type: "HVM"}
+
+  firmware_version:
+    description: "BMU Firmware version"
+    options: ["3.16", "3.24"]
+    default: "3.16"
+
+sensors:
+  # BMU Status Registers (0x0000-0x0065)
+  # Note: Register addresses are in hex format, converted to decimal
+
+  # Battery Status Registers (0x0500-0x0513) - Main battery data
+  - name: "State of Charge"
+    unique_id: battery_soc
+    address: 1280  # 0x0500 - SOC in %
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: measurement
+    scan_interval: 30
+    icon: "mdi:battery"
+    group: "battery_status"
+
+  - name: "Max Cell Voltage"
+    unique_id: battery_max_cell_voltage
+    address: 1281  # 0x0501 - Max cell voltage in 0.01V
+    input_type: holding
+    data_type: uint16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 30
+    icon: "mdi:battery-plus-variant"
+    group: "battery_cells"
+
+  - name: "Min Cell Voltage"
+    unique_id: battery_min_cell_voltage
+    address: 1282  # 0x0502 - Min cell voltage in 0.01V
+    input_type: holding
+    data_type: uint16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 30
+    icon: "mdi:battery-minus-variant"
+    group: "battery_cells"
+
+  - name: "State of Health"
+    unique_id: battery_soh
+    address: 1283  # 0x0503 - SOH in %
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    unit_of_measurement: "%"
+    device_class: "battery"
+    state_class: measurement
+    scan_interval: 60
+    icon: "mdi:battery-heart"
+    group: "battery_status"
+
+  - name: "Battery Current"
+    unique_id: battery_current
+    address: 1284  # 0x0504 - Current in 0.1A (signed)
+    input_type: holding
+    data_type: int16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: measurement
+    scan_interval: 10
+    icon: "mdi:current-ac"
+    group: "battery_status"
+
+  - name: "Battery Voltage"
+    unique_id: battery_voltage
+    address: 1285  # 0x0505 - Battery voltage in 0.01V
+    input_type: holding
+    data_type: uint16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    icon: "mdi:battery-outline"
+    group: "battery_status"
+
+  - name: "Max Cell Temperature"
+    unique_id: battery_max_cell_temp
+    address: 1286  # 0x0506 - Max cell temperature in °C
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scan_interval: 30
+    icon: "mdi:thermometer-high"
+    group: "battery_temperature"
+
+  - name: "Min Cell Temperature"
+    unique_id: battery_min_cell_temp
+    address: 1287  # 0x0507 - Min cell temperature in °C
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scan_interval: 30
+    icon: "mdi:thermometer-low"
+    group: "battery_temperature"
+
+  - name: "BMU Temperature"
+    unique_id: battery_bmu_temp
+    address: 1288  # 0x0508 - BMU temperature in °C
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: measurement
+    scan_interval: 30
+    icon: "mdi:thermometer"
+    group: "battery_temperature"
+
+  - name: "Output Voltage"
+    unique_id: battery_output_voltage
+    address: 1296  # 0x0510 - Output voltage in 0.01V
+    input_type: holding
+    data_type: uint16
+    scale: 0.01
+    precision: 2
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: measurement
+    scan_interval: 10
+    icon: "mdi:lightning-bolt"
+    group: "battery_status"
+
+  - name: "Charge Cycles"
+    unique_id: battery_charge_cycles
+    address: 1297  # 0x0511 - Charge cycles count
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    unit_of_measurement: "cycles"
+    state_class: total_increasing
+    scan_interval: 60
+    icon: "mdi:counter"
+    group: "battery_diagnostics"
+
+  - name: "Discharge Cycles"
+    unique_id: battery_discharge_cycles
+    address: 1299  # 0x0513 - Discharge cycles count
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    unit_of_measurement: "cycles"
+    state_class: total_increasing
+    scan_interval: 60
+    icon: "mdi:counter"
+    group: "battery_diagnostics"
+
+  # BMU Configuration Registers (0x0000-0x0065)
+  # Use value_processor bit operations (bitmask, bit_range)
+  - name: "Module Count"
+    unique_id: battery_module_count
+    address: 16  # 0x0010 - Lower 4 bits contain module count (0x0F mask)
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 300
+    icon: "mdi:counter"
+    group: "battery_info"
+    bitmask: 0x0F
+
+  - name: "BMS Count"
+    unique_id: battery_bms_count
+    address: 16  # 0x0010 - Bits 4-7 contain BMS count
+    input_type: holding
+    data_type: uint16
+    scale: 1
+    precision: 0
+    scan_interval: 300
+    icon: "mdi:counter"
+    group: "battery_info"
+    bit_range: [4, 7]
+
+# Calculated entities: use 'state' with {PREFIX} (replaced at runtime)
+calculated:
+  - name: "Battery Power"
+    unique_id: battery_power
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 10
+    icon: "mdi:lightning-bolt"
+    group: "battery_status"
+    state: "{{ (states('sensor.{PREFIX}_battery_current') | default(0) | float * states('sensor.{PREFIX}_battery_output_voltage') | default(0) | float) | round(1) }}"
+
+  - name: "Battery Energy Capacity"
+    unique_id: battery_energy_capacity
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: measurement
+    scan_interval: 60
+    icon: "mdi:battery-high"
+    group: "battery_status"
+    state: "{{ (states('sensor.{PREFIX}_battery_voltage') | default(0) | float * states('sensor.{PREFIX}_battery_module_count') | default(1) | float * 0.1) | round(2) }}"
+
+binary_sensors:
+  # Register-based: 0 = off, non-zero = on (value_processor not needed; coordinator treats != 0 as True)
+  - name: "Battery Error"
+    unique_id: battery_error
+    address: 1293  # 0x050D - Error bitmask (non-zero = error)
+    input_type: holding
+    data_type: uint16
+    scan_interval: 30
+    icon: "mdi:alert-circle"
+    group: "battery_alarms"
+    device_class: "problem"
+
+  # Note: Detailed error/warning decoding would require calculated sensors
+  # Error codes: Cells Voltage Sensor Failure, Temperature Sensor Failure, etc.
+  # Warning codes: Battery Over Voltage, Battery Under Voltage, etc.
+  # See Read_Modbus.py for full error/warning bitmask definitions
+
+# Controls
+# Note: BYD Battery Box typically doesn't expose write controls via Modbus
+# Battery control is usually handled by the inverter/BMS communication
