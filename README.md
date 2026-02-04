@@ -297,45 +297,8 @@ entities:
 
 ## 📊 Available Templates
 
-### Sungrow SHx Series
-- **File**: `sungrow_shx_dynamic.yaml`
-- **Devices**: All 36 SHx models (SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL)
-- **Features**:
-  - **Multi-Step Configuration**: Connection parameters → Dynamic configuration
-  - **Dynamic Configuration**: 6 configurable parameters (phases, MPPT, battery, firmware, strings, connection)
-  - **Battery Options**: None, Standard Battery, SBR Battery
-  - **Automatic Filtering**: Register filtering based on device configuration
-  - **Battery management**: SOC, charging/discharging, temperature, health monitoring
-  - **MPPT tracking**: 1-3 MPPT trackers with individual power calculations
-  - **String tracking**: 0-4 strings with individual monitoring
-  - **Grid interaction**: Import/export, phase monitoring, frequency, meter data
-  - **Load management**: Load power, backup power, direct consumption
-  - **Calculated sensors**: Efficiency, power balance, signed battery power, phase power
-  - **Firmware compatibility**: Automatic sensor parameter adjustment for different firmware versions
-  - **Connection support**: LAN (full access) and WINET (limited access) with register filtering
-
-### Sungrow SG Series
-- **File**: `sungrow_sg_dynamic.yaml`
-- **Devices**: SG3.0RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS, SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT
-- **Features**:
-  - **2-Step Configuration**: Connection parameters → Model selection
-  - **Model Selection**: Automatic configuration based on selected model
-  - **Automatic Filtering**: Phases, MPPT, Strings configured automatically
-  - **Firmware Support**: SAPPHIRE-H firmware compatibility
-  - **Connection Types**: LAN and WINET support
-  - **MPPT tracking**: 2-3 MPPT trackers based on model
-  - **Phase support**: 1-phase (RS) and 3-phase (RT) models
-  - **String tracking**: 1 string per model
-
-### Compleo eBox Professional
-- **File**: `compleo_ebox_professional.yaml`
-- **Devices**: Compleo eBox Professional, Innogy eBox
-- **Features**:
-  - 3-phase charging control
-  - Current monitoring per phase
-  - Power calculations
-  - Fallback current settings
-  - Cable status monitoring
+The full, up-to-date list of templates is maintained in the project wiki:
+https://github.com/TCzerny/ha-modbus-manager/wiki
 
 ## 🚧 Known Issues
 
@@ -365,6 +328,10 @@ entities:
 
 - **[GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)** - Complete documentation
 - **[Sungrow SHx Dynamic](docs/README_sungrow_shx_dynamic.md)** - Complete dynamic template documentation
+- **[Sungrow SG Dynamic](docs/README_sungrow_sg_dynamic.md)** - Dynamic SG template documentation
+- **[Sungrow iHomeManager](docs/README_iHomeManager.md)** - iHomeManager register documentation
+- **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** - SBR battery template
+- **[Solvis SC3](docs/README_solvis_sc3.md)** - Solvis SC2/SC3 template
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template
 
 ## 📄 License

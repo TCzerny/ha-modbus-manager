@@ -112,6 +112,8 @@ dynamic_config:
    captures battery availability and selection (template or "other"). The
    resulting `battery_config` value is stored as `none`, `other`, or the battery
    template name (e.g., `sungrow_sbr_battery`).
+6. **Model Selection**: If `valid_models` is defined, `selected_model` is
+   required in the config/options flow and is always available for conditions.
 
 ### Condition Filtering
 
@@ -138,6 +140,36 @@ condition: "phases >= 3 and connection_type == 'LAN'"
 - Conditions can use any field from `dynamic_config`.
 - `selected_model` is required when `valid_models` exist.
 - `battery_config` can be `none`, `other`, or a battery template name.
+
+### Unique IDs and Prefixing
+
+`unique_id` values should not include a device prefix. The integration
+automatically adds the configured prefix (e.g., `{PREFIX}`) to entity IDs.
+
+### Example: Battery Flow Trigger
+
+```yaml
+dynamic_config:
+  battery_config:
+    description: "Battery configuration"
+    options: ["none", "sbr_battery"]
+    default: "none"
+```
+
+This enables the battery flow. The final `battery_config` value is set by the
+UI to `none`, `other`, or a template name, regardless of the options list.
+
+### Example: Model Selection
+
+```yaml
+dynamic_config:
+  valid_models:
+    "SG10RT": {phases: 3, mppt_count: 2, string_count: 2}
+    "SG12RT": {phases: 3, mppt_count: 2, string_count: 2}
+```
+
+When `valid_models` exists, `selected_model` is required and can be used in
+`condition` expressions.
 
 ---
 
