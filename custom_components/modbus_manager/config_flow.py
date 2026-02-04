@@ -11,6 +11,7 @@ from homeassistant import config_entries
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import config_validation as cv
+from homeassistant.helpers import device_registry as dr
 
 from .const import (
     DEFAULT_DELAY,
@@ -403,7 +404,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         template_data = self._templates.get(self._selected_template, {})
 
         # Generate schema for dynamic config using the helper function
-        schema_fields = self._get_dynamic_config_schema(template_data)
+        # Get current user_input for dynamic schema updates (e.g., when model changes)
+        schema_fields = self._get_dynamic_config_schema(template_data, user_input)
 
         return self.async_show_form(
             step_id="dynamic_config",
@@ -501,7 +503,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         )
         return has_battery_config
 
-    def _get_dynamic_config_schema(self, template_data: dict) -> dict:
+    def _get_dynamic_config_schema(
+        self, template_data: dict, user_input: dict = None
+    ) -> dict:
         """Generate dynamic configuration schema based on template."""
         dynamic_config = template_data.get("dynamic_config", {})
         schema_fields = {}
@@ -511,6 +515,16 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         valid_models = dynamic_config.get("valid_models") or template_data.get(
             "valid_models"
         )
+
+        # Get selected_model from user_input if available (for dynamic updates)
+        selected_model = None
+        if user_input:
+            selected_model = user_input.get("selected_model")
+
+        # Get model config if selected_model is available
+        model_config = {}
+        if selected_model and valid_models and isinstance(valid_models, dict):
+            model_config = valid_models.get(selected_model, {})
 
         if valid_models:
             # Create model options with generic display names
@@ -541,9 +555,22 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             default_model = next(iter(model_options)) if model_options else None
             if default_model is not None:
+                # Use selected_model from user_input if available, otherwise use default
+                current_model = (
+                    selected_model
+                    if selected_model and selected_model in model_options
+                    else default_model
+                )
                 schema_fields[
-                    vol.Required("selected_model", default=default_model)
+                    vol.Required("selected_model", default=current_model)
                 ] = vol.In(model_options)
+
+        # Fields that should be hidden when template has valid_models (they're defined by the model)
+        model_defined_fields = ["phases", "mppt_count", "string_count"]
+
+        # If template has valid_models, these fields should NEVER be shown
+        # because they are always defined by the selected model
+        should_hide_model_fields = bool(valid_models and isinstance(valid_models, dict))
 
         # Process ALL configurable fields from dynamic_config (works for both valid_models and individual fields)
         # This ensures that fields like dual_channel_meter are always available
@@ -563,6 +590,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             # Skip if already added (e.g., selected_model)
             if field_name in schema_fields:
+                continue
+
+            # Skip fields that are defined by models if template has valid_models
+            if should_hide_model_fields and field_name in model_defined_fields:
+                _LOGGER.debug(
+                    "Skipping field %s - template has valid_models, field will be defined by selected model",
+                    field_name,
+                )
                 continue
 
             # Check if this field has options (making it configurable)
@@ -2432,6 +2467,57 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
     """Handle options flow for Modbus Manager."""
 
+    async def _remove_battery_devices_from_registry(
+        self, battery_devices: list
+    ) -> None:
+        """Remove battery devices from device registry when they are removed from config."""
+        try:
+            device_registry = dr.async_get(self.hass)
+            hub_config = self.config_entry.data.get("hub", {})
+            host = hub_config.get("host") or self.config_entry.data.get(
+                "host", "unknown"
+            )
+            port = hub_config.get("port") or self.config_entry.data.get("port", 502)
+
+            for battery_device in battery_devices:
+                battery_slave_id = battery_device.get("slave_id", 200)
+                device_identifier = (
+                    f"modbus_manager_{host}_{port}_slave_{battery_slave_id}"
+                )
+
+                # Find device in registry
+                device_entry = device_registry.async_get_device(
+                    identifiers={(DOMAIN, device_identifier)}
+                )
+
+                if device_entry:
+                    # Check if this device belongs to this config entry
+                    if (
+                        device_entry.config_entries
+                        and self.config_entry.entry_id in device_entry.config_entries
+                    ):
+                        # Remove device from registry
+                        device_registry.async_remove_device(device_entry.id)
+                        _LOGGER.info(
+                            "Removed battery device '%s' (slave %d) from device registry",
+                            battery_device.get("prefix", "unknown"),
+                            battery_slave_id,
+                        )
+                    else:
+                        _LOGGER.debug(
+                            "Battery device '%s' (slave %d) not found in device registry or belongs to different config entry",
+                            battery_device.get("prefix", "unknown"),
+                            battery_slave_id,
+                        )
+                else:
+                    _LOGGER.debug(
+                        "Battery device '%s' (slave %d) not found in device registry",
+                        battery_device.get("prefix", "unknown"),
+                        battery_slave_id,
+                    )
+        except Exception as e:
+            _LOGGER.error("Error removing battery devices from registry: %s", str(e))
+
     def _supports_battery_config(self, template_data: dict) -> bool:
         """Check if template defines a battery_config dynamic section."""
         dynamic_config = template_data.get("dynamic_config", {})
@@ -2451,16 +2537,73 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 # Stash current option changes so template update uses them
                 self._pending_options_update = user_input
                 return await self.async_step_update_template()
-            elif "firmware_version" in user_input:
+
+            # Check if battery_config was changed and requires additional configuration
+            # This must be checked BEFORE firmware_version to ensure battery step is shown
+            if "battery_config" in user_input:
+                battery_config = user_input.get("battery_config")
+                current_battery_config = self.config_entry.data.get(
+                    "battery_config", "none"
+                )
+                battery_template = self.config_entry.data.get(
+                    "battery_template", "none"
+                )
+
+                _LOGGER.debug(
+                    "Battery config check: battery_config=%s, current_battery_config=%s",
+                    battery_config,
+                    current_battery_config,
+                )
+
+                # If battery config changed to a template (not "none"), go to battery config step
+                if battery_config and battery_config != "none":
+                    # Check if this is a battery template name
+                    battery_template_data = await get_template_by_name(battery_config)
+                    _LOGGER.debug(
+                        "Looking up battery template '%s': found=%s",
+                        battery_config,
+                        battery_template_data is not None,
+                    )
+
+                    if battery_template_data and isinstance(
+                        battery_template_data, dict
+                    ):
+                        template_type = battery_template_data.get("type", "")
+                        _LOGGER.debug(
+                            "Battery template '%s' found, type=%s",
+                            battery_config,
+                            template_type,
+                        )
+
+                        # This is a valid battery template - navigate to battery config step
+                        self._pending_options_update = user_input.copy()
+                        self._selected_battery_template = battery_config
+                        _LOGGER.info(
+                            "Battery config changed to template %s, navigating to battery_config step",
+                            battery_config,
+                        )
+                        return await self.async_step_battery_config()
+                    else:
+                        # Template not found - log warning but proceed with save
+                        _LOGGER.warning(
+                            "Battery template '%s' not found, proceeding with save",
+                            battery_config,
+                        )
+
+                # If battery config is "none" or unchanged, proceed normally
+                # Update settings and apply dynamic configuration changes
+                _LOGGER.debug(
+                    "Battery config is 'none' or unchanged, proceeding to apply_config_changes"
+                )
+                return await self.async_step_apply_config_changes(user_input)
+
+            # Check for firmware_version update (after battery_config check)
+            if "firmware_version" in user_input:
                 # Update firmware version
                 return await self.async_step_firmware_update(user_input)
-            if user_input.get("configure_battery"):
-                self._pending_options_update = user_input
-                return await self.async_step_battery_options_selection()
-            # Battery configuration is now simplified - no separate SBR battery step needed
-            else:
-                # Update settings and apply dynamic configuration changes
-                return await self.async_step_apply_config_changes(user_input)
+
+            # Update settings and apply dynamic configuration changes
+            return await self.async_step_apply_config_changes(user_input)
 
         # Prepare template information for display
         template_name = self.config_entry.data.get("template", "Unknown")
@@ -2548,18 +2691,112 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     vol.Required("selected_model", default=default_model)
                 ] = vol.In(model_options)
 
+            # Handle battery_config specially - load available battery templates
+            if self._supports_battery_config(template_data):
+                # Build battery options: start with "none", then add available battery templates
+                battery_options = {"none": "None"}
+
+                # Load all available battery templates
+                template_names = await get_template_names()
+                for template_name in template_names:
+                    battery_template_data = await get_template_by_name(template_name)
+                    if battery_template_data and isinstance(
+                        battery_template_data, dict
+                    ):
+                        template_type = battery_template_data.get("type", "")
+                        if template_type == "battery":
+                            display_name = battery_template_data.get(
+                                "display_name", template_name
+                            )
+                            battery_options[template_name] = display_name
+
+                # Get current battery config - check devices array first
+                current_battery_config = self.config_entry.data.get(
+                    "battery_config", "none"
+                )
+                battery_template = self.config_entry.data.get(
+                    "battery_template", "none"
+                )
+
+                # Check if there's a Battery device in the devices array
+                devices = self.config_entry.data.get("devices", [])
+                if isinstance(devices, list):
+                    for device in devices:
+                        device_template = device.get("template", "")
+                        device_type = device.get("type", "").lower()
+                        if (
+                            device_type == "battery"
+                            or device_template in battery_options
+                        ):
+                            # Found Battery device - use template name as battery_config
+                            if device_template in battery_options:
+                                current_battery_config = device_template
+                                battery_template = device_template
+                            elif current_battery_config == "none":
+                                # Try to match by template name patterns
+                                device_template_lower = device_template.lower()
+                                if "sbr" in device_template_lower:
+                                    # Look for SBR battery template
+                                    for opt_key in battery_options:
+                                        if "sbr" in opt_key.lower():
+                                            current_battery_config = opt_key
+                                            battery_template = opt_key
+                                            break
+                            _LOGGER.debug(
+                                "Found Battery device %s, setting battery_config to: %s",
+                                device_template,
+                                current_battery_config,
+                            )
+                            break
+
+                # Ensure current value is in options, fallback to "none"
+                if current_battery_config not in battery_options:
+                    current_battery_config = "none"
+
+                schema_fields[
+                    vol.Optional("battery_config", default=current_battery_config)
+                ] = vol.In(battery_options)
+                _LOGGER.debug(
+                    "Added battery_config selector to options flow with options: %s, default: %s",
+                    list(battery_options.keys()),
+                    current_battery_config,
+                )
+
             # Automatically add ALL configurable fields from dynamic_config
+            # But skip fields that are defined by valid_models (if template has valid_models)
+            # Get valid_models from dynamic_config
+            valid_models_for_check = dynamic_config.get(
+                "valid_models"
+            ) or template_data.get("valid_models")
+
+            # Fields that should be hidden when template has valid_models (they're defined by the model)
+            model_defined_fields = ["phases", "mppt_count", "string_count"]
+
+            # If template has valid_models, these fields should NEVER be shown
+            # because they are always defined by the selected model
+            should_hide_model_fields = bool(
+                valid_models_for_check and isinstance(valid_models_for_check, dict)
+            )
+
             for field_name, field_config in dynamic_config.items():
                 # Skip special fields that are handled separately or not needed in options
                 if field_name in [
                     "valid_models",
                     "battery_slave_id",
-                    "battery_config",
+                    "battery_config",  # Already handled above
                 ]:
                     continue
 
                 # Skip if already added (e.g., firmware_version, connection_type)
                 if field_name in schema_fields:
+                    continue
+
+                # Skip fields that are defined by models if template has valid_models
+                if should_hide_model_fields and field_name in model_defined_fields:
+                    _LOGGER.debug(
+                        "Skipping field %s - template has valid_models, field will be defined by selected model",
+                        field_name,
+                    )
                     continue
 
                 # Get current value from config entry or use default
@@ -2660,9 +2897,6 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 schema_fields[
                     vol.Optional("connection_type", default=current_connection)
                 ] = vol.In(connection_options)
-
-        if self._supports_battery_config(template_data):
-            schema_fields[vol.Optional("configure_battery", default=False)] = bool
 
         # Basic options form
         return self.async_show_form(
@@ -3139,20 +3373,74 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         if user_input is not None:
             combined_input = dict(user_input)
             base_update = getattr(self, "_battery_options_base", {}) or {}
+            # Also merge pending_options_update if available
+            pending_update = getattr(self, "_pending_options_update", {}) or {}
             combined_input.update(base_update)
+            combined_input.update(pending_update)
+            # Clear pending updates
+            self._pending_options_update = {}
+            self._battery_options_base = {}
+            _LOGGER.debug(
+                "Battery config step completed, applying changes with combined_input: %s",
+                {
+                    k: v
+                    for k, v in combined_input.items()
+                    if k not in ["registers", "calculated_entities", "controls"]
+                },
+            )
             return await self.async_step_apply_config_changes(combined_input)
 
-        battery_template_data = await get_template_by_name(
-            self._selected_battery_template
-        )
-        default_slave_id = self.config_entry.data.get("battery_slave_id", 200)
-        default_prefix = self.config_entry.data.get("battery_prefix", "SBR")
+        # Get battery template name - either from _selected_battery_template or from pending update
+        battery_template_name = getattr(self, "_selected_battery_template", None)
+        if not battery_template_name:
+            pending_update = getattr(self, "_pending_options_update", {}) or {}
+            battery_template_name = pending_update.get("battery_config")
 
+        _LOGGER.debug(
+            "Battery config step: template_name=%s, _selected_battery_template=%s",
+            battery_template_name,
+            getattr(self, "_selected_battery_template", None),
+        )
+
+        if not battery_template_name or battery_template_name == "none":
+            _LOGGER.error("No battery template selected for configuration")
+            return self.async_abort(reason="no_battery_template")
+
+        battery_template_data = await get_template_by_name(battery_template_name)
+
+        if not battery_template_data:
+            _LOGGER.error("Battery template '%s' not found", battery_template_name)
+            return self.async_abort(reason="battery_template_not_found")
+
+        # Get defaults from template FIRST (highest priority), then from config_entry
         if battery_template_data and isinstance(battery_template_data, dict):
-            default_slave_id = battery_template_data.get(
-                "default_slave_id", default_slave_id
+            # Template defaults have highest priority
+            template_default_slave_id = battery_template_data.get("default_slave_id")
+            template_default_prefix = battery_template_data.get("default_prefix")
+
+            # Use template defaults if available, otherwise use config_entry values, otherwise use fallback
+            default_slave_id = (
+                template_default_slave_id
+                if template_default_slave_id is not None
+                else self.config_entry.data.get("battery_slave_id", 200)
             )
-            default_prefix = battery_template_data.get("default_prefix", default_prefix)
+            default_prefix = (
+                template_default_prefix
+                if template_default_prefix
+                else self.config_entry.data.get("battery_prefix", "SBR")
+            )
+
+            _LOGGER.debug(
+                "Battery config defaults: template_slave_id=%s, template_prefix=%s, using slave_id=%s, prefix=%s",
+                template_default_slave_id,
+                template_default_prefix,
+                default_slave_id,
+                default_prefix,
+            )
+        else:
+            # Fallback if template data is invalid
+            default_slave_id = self.config_entry.data.get("battery_slave_id", 200)
+            default_prefix = self.config_entry.data.get("battery_prefix", "SBR")
 
         schema_fields = {
             vol.Required("battery_prefix", default=default_prefix): str,
@@ -3181,7 +3469,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             step_id="battery_config",
             data_schema=vol.Schema(schema_fields),
             description_placeholders={
-                "battery_template": self._selected_battery_template,
+                "battery_template": battery_template_name or "Unknown",
             },
         )
 
@@ -3254,17 +3542,29 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
             # Sync devices array for battery selection changes
             devices = new_data.get("devices")
+            battery_removed = False
+            removed_battery_devices = []  # Store removed devices for cleanup
             if isinstance(devices, list) and devices:
                 battery_devices = [
                     device for device in devices if device.get("type") == "battery"
                 ]
                 if battery_selection in ["none", "other"]:
                     if battery_devices:
+                        # Store removed devices for device registry cleanup
+                        removed_battery_devices = battery_devices.copy()
+
+                        # Remove battery devices from devices array
                         devices[:] = [
                             device
                             for device in devices
                             if device.get("type") != "battery"
                         ]
+                        battery_removed = True
+                        _LOGGER.info(
+                            "Removed %d battery device(s) from devices array (battery_config set to '%s')",
+                            len(battery_devices),
+                            battery_selection,
+                        )
                 elif battery_selection:
                     battery_template_data = await get_template_by_name(
                         battery_selection
@@ -3316,9 +3616,23 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
             _LOGGER.info("Configuration updated: %s", config_changes)
 
-            # If dynamic configuration changed, reload the integration
-            if dynamic_config_changed:
-                _LOGGER.info("Dynamic configuration changed, reloading integration")
+            # If battery was removed, clean up device registry entries
+            if battery_removed and removed_battery_devices:
+                await self._remove_battery_devices_from_registry(
+                    removed_battery_devices
+                )
+
+            # If battery was removed or dynamic configuration changed, reload the integration
+            # This will:
+            # 1. Remove battery device entities (because device is removed from devices array)
+            # 2. Hide battery registers from inverter template (because battery_enabled=False)
+            if battery_removed or dynamic_config_changed:
+                if battery_removed:
+                    _LOGGER.info(
+                        "Battery device removed and battery_config set to 'none', reloading integration to deregister battery entities and hide battery registers"
+                    )
+                else:
+                    _LOGGER.info("Dynamic configuration changed, reloading integration")
                 await self.hass.config_entries.async_reload(self.config_entry.entry_id)
 
             return self.async_create_entry(title="", data={})
