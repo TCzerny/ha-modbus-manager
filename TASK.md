@@ -11,3 +11,6 @@
 - [x] Update option flow to mirror new battery flow
 - [x] Update translations for new fields/steps
 - [x] Update docs for new battery flow
+- [x] Add Solvis SC3 template docs
+- [x] Add SBR battery template docs
+- [x] Update README supported devices list

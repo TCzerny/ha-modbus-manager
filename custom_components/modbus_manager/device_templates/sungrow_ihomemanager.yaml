@@ -25,7 +25,7 @@ sensors:
   # iHomeManager Meter Data (different register addresses and scale)
   # NOTE: iHomeManager uses register 8156 for total power and 8558-8562 for phase power
   # Scale is 10 instead of 1 (values are in 0.1W units)
-  - name: Meter active power raw
+  - name: Meter Active Power Raw
     unique_id: meter_active_power_raw
     address: 8156 # reg 8157
     input_type: input
@@ -39,7 +39,7 @@ sensors:
     scan_interval: 10
     entity_category: "diagnostic"
 
-  - name: Meter phase A active power raw
+  - name: Meter Phase A Active Power Raw
     unique_id: meter_phase_a_active_power_raw
     address: 8558 # reg 8559
     input_type: input
@@ -53,7 +53,7 @@ sensors:
     scan_interval: 10
     entity_category: "diagnostic"
 
-  - name: Meter phase B active power raw
+  - name: Meter Phase B Active Power Raw
     unique_id: meter_phase_b_active_power_raw
     address: 8560 # reg 8561
     input_type: input
@@ -67,7 +67,7 @@ sensors:
     scan_interval: 10
     entity_category: "diagnostic"
 
-  - name: Meter phase C active power raw
+  - name: Meter Phase C Active Power Raw
     unique_id: meter_phase_c_active_power_raw
     address: 8562 # reg 8563
     input_type: input
@@ -83,8 +83,8 @@ sensors:
 
   # iHomeManager Additional Input Registers
   # Device Information
-  - name: iHomeManager device type code
-    unique_id: ihm_device_type_code
+  - name: Device Type Code
+    unique_id: device_type_code
     address: 7999 # reg 8000
     input_type: input
     data_type: uint16
@@ -92,8 +92,8 @@ sensors:
     group: "PV_device_info"
     entity_category: "diagnostic"
 
-  - name: iHomeManager protocol number
-    unique_id: ihm_protocol_number
+  - name: Protocol Number
+    unique_id: protocol_number
     address: 8000 # reg 8001
     input_type: input
     data_type: uint32
@@ -102,8 +102,8 @@ sensors:
     group: "PV_device_info"
     entity_category: "diagnostic"
 
-  - name: iHomeManager protocol version
-    unique_id: ihm_protocol_version
+  - name: Protocol Version
+    unique_id: protocol_version
     address: 8002 # reg 8003
     input_type: input
     data_type: uint32
@@ -112,8 +112,8 @@ sensors:
     group: "PV_device_info"
     entity_category: "diagnostic"
 
-  - name: iHomeManager total devices connected
-    unique_id: ihm_total_devices_connected
+  - name: Total Devices Connected
+    unique_id: total_devices_connected
     address: 8004 # reg 8005
     input_type: input
     data_type: uint16
@@ -122,8 +122,8 @@ sensors:
     group: "PV_device_info"
     entity_category: "diagnostic"
 
-  - name: iHomeManager devices in fault
-    unique_id: ihm_devices_in_fault
+  - name: Devices in Fault
+    unique_id: devices_in_fault
     address: 8005 # reg 8006
     input_type: input
     data_type: uint16
@@ -133,8 +133,8 @@ sensors:
     entity_category: "diagnostic"
 
   # System Capacity
-  - name: iHomeManager total nominal active power
-    unique_id: ihm_total_nominal_active_power
+  - name: Total Nominal Active Power
+    unique_id: total_nominal_active_power
     address: 8144 # reg 8145
     input_type: input
     data_type: uint32
@@ -147,8 +147,8 @@ sensors:
     group: "PV_system_capacity"
     entity_category: "diagnostic"
 
-  - name: iHomeManager total battery rated capacity
-    unique_id: ihm_total_battery_rated_capacity
+  - name: Total Battery Rated Capacity
+    unique_id: total_battery_rated_capacity
     address: 8146 # reg 8147
     input_type: input
     data_type: uint32
@@ -163,8 +163,8 @@ sensors:
     entity_category: "diagnostic"
 
   # Battery Limits
-  - name: iHomeManager battery charge/discharge limit
-    unique_id: ihm_battery_charge_discharge_limit
+  - name: Battery Charge/Discharge Limit
+    unique_id: battery_charge_discharge_limit
     address: 8148 # reg 8149
     input_type: input
     data_type: uint32
@@ -178,8 +178,8 @@ sensors:
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
-  - name: iHomeManager battery max charge power
-    unique_id: ihm_battery_max_charge_power
+  - name: Battery Max Charge Power
+    unique_id: battery_max_charge_power
     address: 8150 # reg 8151
     input_type: input
     data_type: uint16
@@ -192,8 +192,8 @@ sensors:
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
-  - name: iHomeManager battery min charge power
-    unique_id: ihm_battery_min_charge_power
+  - name: Battery Min Charge Power
+    unique_id: battery_min_charge_power
     address: 8151 # reg 8152
     input_type: input
     data_type: uint16
@@ -206,8 +206,8 @@ sensors:
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
-  - name: iHomeManager battery max discharge power
-    unique_id: ihm_battery_max_discharge_power
+  - name: Battery Max Discharge Power
+    unique_id: battery_max_discharge_power
     address: 8152 # reg 8153
     input_type: input
     data_type: uint16
@@ -220,8 +220,8 @@ sensors:
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
-  - name: iHomeManager battery min discharge power
-    unique_id: ihm_battery_min_discharge_power
+  - name: Battery Min Discharge Power
+    unique_id: battery_min_discharge_power
     address: 8153 # reg 8154
     input_type: input
     data_type: uint16
@@ -235,8 +235,8 @@ sensors:
     entity_category: "diagnostic"
 
   # Real-Time Power
-  - name: iHomeManager total active power
-    unique_id: ihm_total_active_power
+  - name: Total Active Power
+    unique_id: total_active_power
     address: 8154 # reg 8155
     input_type: input
     data_type: int32
@@ -249,7 +249,7 @@ sensors:
     scan_interval: 10
     group: "PV_power"
 
-  - name: Load power
+  - name: Load Power
     unique_id: load_power
     address: 8158 # reg 8159
     input_type: input
@@ -263,7 +263,7 @@ sensors:
     scan_interval: 5
     group: "PV_power"
 
-  - name: Battery power
+  - name: Battery Power
     unique_id: battery_power
     address: 8160 # reg 8161
     input_type: input
@@ -278,7 +278,7 @@ sensors:
     group: "PV_battery_power"
     condition: "battery_enabled == true"
 
-  - name: Battery level
+  - name: Battery Level
     unique_id: battery_level
     address: 8162 # reg 8163
     input_type: input
@@ -293,8 +293,8 @@ sensors:
     condition: "battery_enabled == true"
 
   # Energy Totals
-  - name: iHomeManager grid import energy
-    unique_id: ihm_grid_import_energy
+  - name: Grid Import Energy
+    unique_id: grid_import_energy
     address: 8175 # reg 8176
     input_type: input
     data_type: uint32
@@ -307,8 +307,8 @@ sensors:
     scan_interval: 600
     group: "PV_energy"
 
-  - name: iHomeManager grid export energy
-    unique_id: ihm_grid_export_energy
+  - name: Grid Export Energy
+    unique_id: grid_export_energy
     address: 8177 # reg 8178
     input_type: input
     data_type: uint32
@@ -322,8 +322,8 @@ sensors:
     group: "PV_energy"
 
   # Grid Meter Channel 1 - Voltage and Frequency
-  - name: iHomeManager output type raw
-    unique_id: ihm_output_type_raw
+  - name: Output Type Raw
+    unique_id: output_type_raw
     address: 8553 # reg 8554
     input_type: input
     data_type: uint16
@@ -331,8 +331,8 @@ sensors:
     group: "PV_meter_ihm"
     entity_category: "diagnostic"
 
-  - name: iHomeManager phase A voltage
-    unique_id: ihm_phase_a_voltage
+  - name: Phase A Voltage
+    unique_id: phase_a_voltage
     address: 8554 # reg 8555
     input_type: input
     data_type: uint16
@@ -344,8 +344,8 @@ sensors:
     scan_interval: 60
     group: "PV_meter_ihm"
 
-  - name: iHomeManager phase B voltage
-    unique_id: ihm_phase_b_voltage
+  - name: Phase B Voltage
+    unique_id: phase_b_voltage
     address: 8555 # reg 8556
     input_type: input
     data_type: uint16
@@ -357,8 +357,8 @@ sensors:
     scan_interval: 60
     group: "PV_meter_ihm"
 
-  - name: iHomeManager phase C voltage
-    unique_id: ihm_phase_c_voltage
+  - name: Phase C Voltage
+    unique_id: phase_c_voltage
     address: 8556 # reg 8557
     input_type: input
     data_type: uint16
@@ -370,7 +370,7 @@ sensors:
     scan_interval: 60
     group: "PV_meter_ihm"
 
-  - name: Grid frequency
+  - name: Grid Frequency
     unique_id: grid_frequency
     address: 8557 # reg 8558
     input_type: input
@@ -384,8 +384,8 @@ sensors:
     group: "PV_meter_ihm"
 
   # Grid Meter Channel 2 - Voltage and Frequency
-  - name: iHomeManager phase A voltage ch2
-    unique_id: ihm_phase_a_voltage_ch2
+  - name: Phase A Voltage Ch2
+    unique_id: phase_a_voltage_ch2
     address: 8564 # reg 8565
     input_type: input
     data_type: uint16
@@ -398,8 +398,8 @@ sensors:
     group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
-  - name: iHomeManager phase B voltage ch2
-    unique_id: ihm_phase_b_voltage_ch2
+  - name: Phase B Voltage Ch2
+    unique_id: phase_b_voltage_ch2
     address: 8565 # reg 8566
     input_type: input
     data_type: uint16
@@ -412,8 +412,8 @@ sensors:
     group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
-  - name: iHomeManager phase C voltage ch2
-    unique_id: ihm_phase_c_voltage_ch2
+  - name: Phase C Voltage Ch2
+    unique_id: phase_c_voltage_ch2
     address: 8566 # reg 8567
     input_type: input
     data_type: uint16
@@ -426,8 +426,8 @@ sensors:
     group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
-  - name: iHomeManager grid frequency ch2
-    unique_id: ihm_grid_frequency_ch2
+  - name: Grid Frequency Ch2
+    unique_id: grid_frequency_ch2
     address: 8567 # reg 8568
     input_type: input
     data_type: uint16
@@ -441,8 +441,8 @@ sensors:
     condition: "channel_2_enabled == true"
 
   # Grid Meter Channel 2 - Phase Power
-  - name: iHomeManager phase A active power ch2
-    unique_id: ihm_phase_a_active_power_ch2
+  - name: Phase A Active Power Ch2
+    unique_id: phase_a_active_power_ch2
     address: 8568 # reg 8569
     input_type: input
     data_type: int32
@@ -455,8 +455,8 @@ sensors:
     group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
-  - name: iHomeManager phase B active power ch2
-    unique_id: ihm_phase_b_active_power_ch2
+  - name: Phase B Active Power Ch2
+    unique_id: phase_b_active_power_ch2
     address: 8570 # reg 8571
     input_type: input
     data_type: int32
@@ -469,8 +469,8 @@ sensors:
     group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
-  - name: iHomeManager phase C active power ch2
-    unique_id: ihm_phase_c_active_power_ch2
+  - name: Phase C Active Power Ch2
+    unique_id: phase_c_active_power_ch2
     address: 8572 # reg 8573
     input_type: input
     data_type: int32
@@ -484,8 +484,8 @@ sensors:
     condition: "channel_2_enabled == true"
 
   # Charger Status
-  - name: iHomeManager charger status raw
-    unique_id: ihm_charger_status_raw
+  - name: Charger Status Raw
+    unique_id: charger_status_raw
     address: 8551 # reg 8552
     input_type: input
     data_type: uint16
@@ -618,7 +618,7 @@ controls:
     group: "PV_control_ihm"
 
   - type: "select"
-    name: "Charger charging modes"
+    name: "Charger Charging Modes"
     unique_id: "charger_charging_modes"
     address: 8047 # reg 8048
     input_type: "holding"
@@ -797,15 +797,15 @@ calculated:
     condition: "channel_2_enabled == true"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_ihm_phase_a_active_power_ch2', 'unavailable')
-      and not is_state('sensor.{PREFIX}_ihm_phase_b_active_power_ch2', 'unavailable')
-      and not is_state('sensor.{PREFIX}_ihm_phase_c_active_power_ch2', 'unavailable')
+      not is_state('sensor.{PREFIX}_phase_a_active_power_ch2', 'unavailable')
+      and not is_state('sensor.{PREFIX}_phase_b_active_power_ch2', 'unavailable')
+      and not is_state('sensor.{PREFIX}_phase_c_active_power_ch2', 'unavailable')
       }}
     state: >-
       {{
-        (states('sensor.{PREFIX}_ihm_phase_a_active_power_ch2') | float(0))
-        + (states('sensor.{PREFIX}_ihm_phase_b_active_power_ch2') | float(0))
-        + (states('sensor.{PREFIX}_ihm_phase_c_active_power_ch2') | float(0))
+        (states('sensor.{PREFIX}_phase_a_active_power_ch2') | float(0))
+        + (states('sensor.{PREFIX}_phase_b_active_power_ch2') | float(0))
+        + (states('sensor.{PREFIX}_phase_c_active_power_ch2') | float(0))
       }}
     unit_of_measurement: "W"
     device_class: "power"
