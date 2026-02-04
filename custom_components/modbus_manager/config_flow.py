@@ -539,7 +539,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     display_name = f"{model_name} ({', '.join(field_parts)})"
                     model_options[model_name] = display_name
 
-            schema_fields["selected_model"] = vol.In(model_options)
+            default_model = next(iter(model_options)) if model_options else None
+            if default_model is not None:
+                schema_fields[
+                    vol.Required("selected_model", default=default_model)
+                ] = vol.In(model_options)
 
         # Process ALL configurable fields from dynamic_config (works for both valid_models and individual fields)
         # This ensures that fields like dual_channel_meter are always available
@@ -551,6 +555,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "connection_type",
                 "battery_slave_id",
             ]:
+                continue
+            if field_name == "battery_config" and self._supports_battery_config(
+                template_data
+            ):
                 continue
 
             # Skip if already added (e.g., selected_model)
@@ -1404,6 +1412,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if user_input.get("battery_available"):
                 return await self.async_step_battery_template_selection()
             else:
+                if self._inverter_config is not None:
+                    self._inverter_config["battery_config"] = "none"
+                    self._inverter_config["battery_template"] = "none"
+                self._keep_inverter_battery_entities = False
                 # No battery - filter battery registers and proceed to final config
                 return await self.async_step_finalize_inverter_without_battery()
 
@@ -1437,7 +1449,20 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> FlowResult:
         """Select battery template."""
         if user_input is not None:
-            self._selected_battery_template = user_input["battery_template"]
+            selected_template = user_input["battery_template"]
+            if selected_template == "other":
+                self._selected_battery_template = None
+                if self._inverter_config is not None:
+                    self._inverter_config["battery_config"] = "other"
+                    self._inverter_config["battery_template"] = "other"
+                self._keep_inverter_battery_entities = True
+                return await self.async_step_finalize_inverter_with_other_battery()
+
+            self._selected_battery_template = selected_template
+            if self._inverter_config is not None:
+                self._inverter_config["battery_config"] = selected_template
+                self._inverter_config["battery_template"] = selected_template
+            self._keep_inverter_battery_entities = True
             return await self.async_step_battery_config()
 
         # Get available battery templates
@@ -1453,8 +1478,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     battery_templates[template_name] = display_name
 
         if not battery_templates:
-            # No battery templates available - proceed without battery
-            return await self.async_step_finalize_inverter_without_battery()
+            battery_templates = {"other": "Other (no template)"}
+        else:
+            battery_templates = {
+                **battery_templates,
+                "other": "Other (no template)",
+            }
 
         return self.async_show_form(
             step_id="battery_template_selection",
@@ -1475,6 +1504,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         if user_input is not None:
             # Store battery config and proceed directly to finalization
             self._battery_config = user_input
+            if self._inverter_config is not None and self._selected_battery_template:
+                self._inverter_config[
+                    "battery_config"
+                ] = self._selected_battery_template
+                self._inverter_config[
+                    "battery_template"
+                ] = self._selected_battery_template
 
             # Extract module count from selected model if available
             battery_template_data = await get_template_by_name(
@@ -1562,6 +1598,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_finalize_inverter_without_battery(self) -> FlowResult:
         """Create inverter entry without battery, filtering out battery registers."""
         try:
+            if self._inverter_config is not None:
+                self._inverter_config["battery_config"] = "none"
+                self._inverter_config["battery_template"] = "none"
             # Filter battery registers from inverter template
             filtered_config = self._filter_battery_registers_from_inverter()
             return await self.async_step_final_config(filtered_config)
@@ -1571,13 +1610,23 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 reason="finalization_error", description_placeholders={"error": str(e)}
             )
 
+    async def async_step_finalize_inverter_with_other_battery(self) -> FlowResult:
+        """Create inverter entry with inverter-only battery entities (no template)."""
+        try:
+            if self._inverter_config is not None:
+                self._inverter_config["battery_config"] = "other"
+                self._inverter_config["battery_template"] = "other"
+            return await self.async_step_final_config(self._inverter_config)
+        except Exception as e:
+            _LOGGER.error("Error finalizing inverter with other battery: %s", str(e))
+            return self.async_abort(
+                reason="finalization_error", description_placeholders={"error": str(e)}
+            )
+
     # Step 8: Finalize inverter with battery
     async def async_step_finalize_inverter_with_battery(self) -> FlowResult:
         """Create both inverter and battery entries."""
         try:
-            # First filter battery registers from inverter (updates self._inverter_config)
-            filtered_inverter_config = self._filter_battery_registers_from_inverter()
-
             # Then create the devices array structure with both inverter and battery
             # This updates self._inverter_config with the devices array
             await self._create_battery_subentry()
@@ -2242,9 +2291,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     )
                     config_data["devices"] = [
                         {
+                            "type": template_data.get("type", "inverter"),
                             "prefix": config_data["prefix"],
                             "template": config_data["template"],
                             "slave_id": config_data.get("slave_id", 1),
+                            "selected_model": config_data.get("selected_model"),
+                            "template_version": config_data.get("template_version"),
+                            "firmware_version": config_data.get("firmware_version"),
                             "registers": config_data.get("registers", []),
                             "calculated_entities": config_data.get(
                                 "calculated_entities", []
@@ -2390,6 +2443,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             elif "firmware_version" in user_input:
                 # Update firmware version
                 return await self.async_step_firmware_update(user_input)
+            if user_input.get("configure_battery"):
+                self._pending_options_update = user_input
+                return await self.async_step_battery_options_selection()
             # Battery configuration is now simplified - no separate SBR battery step needed
             else:
                 # Update settings and apply dynamic configuration changes
@@ -2447,6 +2503,39 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             and template_data.get("dynamic_config")
         ):
             dynamic_config = template_data.get("dynamic_config", {})
+            valid_models = dynamic_config.get("valid_models") or template_data.get(
+                "valid_models"
+            )
+            if valid_models and isinstance(valid_models, dict):
+                model_options = {}
+                for model_name, config in valid_models.items():
+                    field_parts = []
+                    for field_name, field_value in config.items():
+                        if field_name == "phases":
+                            field_parts.append(f"{field_value}Φ")
+                        elif field_name == "mppt_count":
+                            field_parts.append(f"{field_value} MPPT")
+                        elif field_name == "string_count":
+                            field_parts.append(f"{field_value} Strings")
+                        elif field_name == "modules":
+                            field_parts.append(f"{field_value} Modules")
+                        elif field_name == "type_code":
+                            continue
+                        else:
+                            field_parts.append(f"{field_name}: {field_value}")
+
+                    display_name = f"{model_name} ({', '.join(field_parts)})"
+                    model_options[model_name] = display_name
+
+                current_model = self.config_entry.data.get("selected_model")
+                default_model = (
+                    current_model
+                    if current_model in model_options
+                    else next(iter(model_options))
+                )
+                schema_fields[
+                    vol.Required("selected_model", default=default_model)
+                ] = vol.In(model_options)
 
             # Automatically add ALL configurable fields from dynamic_config
             for field_name, field_config in dynamic_config.items():
@@ -2454,6 +2543,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 if field_name in [
                     "valid_models",
                     "battery_slave_id",
+                    "battery_config",
                 ]:
                     continue
 
@@ -2559,6 +2649,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 schema_fields[
                     vol.Optional("connection_type", default=current_connection)
                 ] = vol.In(connection_options)
+
+        if self._supports_battery_config(template_data):
+            schema_fields[vol.Optional("configure_battery", default=False)] = bool
 
         # Basic options form
         return self.async_show_form(
@@ -2978,32 +3071,107 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 description_placeholders={"error": str(e)},
             )
 
+    async def async_step_battery_options_selection(
+        self, user_input: dict = None
+    ) -> FlowResult:
+        """Select battery setup for options flow."""
+        if user_input is not None:
+            selection = user_input["battery_selection"]
+            pending_update = getattr(self, "_pending_options_update", {}) or {}
+            pending_update.pop("configure_battery", None)
+
+            if selection in ["none", "other"]:
+                combined_input = {
+                    **pending_update,
+                    "battery_config": selection,
+                    "battery_template": selection,
+                }
+                return await self.async_step_apply_config_changes(combined_input)
+
+            self._selected_battery_template = selection
+            self._battery_options_base = {
+                **pending_update,
+                "battery_config": selection,
+                "battery_template": selection,
+            }
+            return await self.async_step_battery_config()
+
+        battery_templates = {
+            "none": "None",
+            "other": "Other (no template)",
+        }
+        template_names = await get_template_names()
+        for template_name in template_names:
+            template_data = await get_template_by_name(template_name)
+            if template_data and isinstance(template_data, dict):
+                if template_data.get("type", "") == "battery":
+                    display_name = template_data.get("display_name", template_name)
+                    battery_templates[template_name] = display_name
+
+        current_selection = self.config_entry.data.get("battery_config", "none")
+        if current_selection not in battery_templates:
+            current_selection = "none"
+
+        return self.async_show_form(
+            step_id="battery_options_selection",
+            data_schema=vol.Schema(
+                {
+                    vol.Required(
+                        "battery_selection", default=current_selection
+                    ): vol.In(battery_templates),
+                }
+            ),
+        )
+
     async def async_step_battery_config(self, user_input: dict = None) -> FlowResult:
-        """Handle battery configuration step for SBR battery."""
-        if user_input is not None and "battery_slave_id" in user_input:
-            # Combine with previous input and apply changes
+        """Handle battery configuration step for options flow."""
+        if user_input is not None:
             combined_input = dict(user_input)
-            # Get the previous user input from the flow
-            if hasattr(self, "_temp_user_input"):
-                combined_input.update(self._temp_user_input)
+            base_update = getattr(self, "_battery_options_base", {}) or {}
+            combined_input.update(base_update)
             return await self.async_step_apply_config_changes(combined_input)
 
-        # Store the current user input temporarily
-        self._temp_user_input = user_input
+        battery_template_data = await get_template_by_name(
+            self._selected_battery_template
+        )
+        default_slave_id = self.config_entry.data.get("battery_slave_id", 200)
+        default_prefix = self.config_entry.data.get("battery_prefix", "SBR")
 
-        # Show battery slave ID configuration
-        current_battery_slave_id = self.config_entry.data.get("battery_slave_id", 200)
+        if battery_template_data and isinstance(battery_template_data, dict):
+            default_slave_id = battery_template_data.get(
+                "default_slave_id", default_slave_id
+            )
+            default_prefix = battery_template_data.get("default_prefix", default_prefix)
+
+        schema_fields = {
+            vol.Required("battery_prefix", default=default_prefix): str,
+            vol.Required("battery_slave_id", default=default_slave_id): int,
+        }
+
+        if battery_template_data and battery_template_data.get(
+            "dynamic_config", {}
+        ).get("valid_models"):
+            valid_models = battery_template_data["dynamic_config"]["valid_models"]
+            model_options = list(valid_models.keys())
+            current_model = self.config_entry.data.get("battery_model")
+            default_model = (
+                current_model if current_model in model_options else model_options[0]
+            )
+            schema_fields[
+                vol.Required("battery_model", default=default_model)
+            ] = vol.In(model_options)
+        else:
+            current_modules = self.config_entry.data.get("battery_modules", 1)
+            schema_fields[
+                vol.Optional("battery_modules", default=current_modules)
+            ] = int
 
         return self.async_show_form(
             step_id="battery_config",
-            data_schema=vol.Schema(
-                {
-                    vol.Optional(
-                        "battery_slave_id", default=current_battery_slave_id
-                    ): int,
-                }
-            ),
-            description_placeholders={"battery_config": "SBR Battery"},
+            data_schema=vol.Schema(schema_fields),
+            description_placeholders={
+                "battery_template": self._selected_battery_template,
+            },
         )
 
     async def async_step_apply_config_changes(self, user_input: dict) -> FlowResult:
@@ -3040,7 +3208,11 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 "phases",
                 "mppt_count",
                 "battery_config",
+                "battery_template",
+                "battery_prefix",
                 "battery_slave_id",
+                "battery_model",
+                "battery_modules",
                 "connection_type",
                 "meter_type",
                 "firmware_version",
@@ -3063,6 +3235,56 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             if "battery_config" in user_input:
                 new_data["battery_enabled"] = user_input["battery_config"] != "none"
 
+            battery_selection = new_data.get("battery_config")
+            if battery_selection in ["none", "other"]:
+                new_data["battery_template"] = battery_selection
+            elif battery_selection:
+                new_data["battery_template"] = battery_selection
+
+            # Sync devices array for battery selection changes
+            devices = new_data.get("devices")
+            if isinstance(devices, list) and devices:
+                battery_devices = [
+                    device for device in devices if device.get("type") == "battery"
+                ]
+                if battery_selection in ["none", "other"]:
+                    if battery_devices:
+                        devices[:] = [
+                            device
+                            for device in devices
+                            if device.get("type") != "battery"
+                        ]
+                elif battery_selection:
+                    battery_template_data = await get_template_by_name(
+                        battery_selection
+                    )
+                    battery_prefix = new_data.get("battery_prefix", "SBR")
+                    battery_slave_id = new_data.get("battery_slave_id", 200)
+                    battery_model = new_data.get("battery_model")
+                    battery_device = {
+                        "type": "battery",
+                        "template": battery_selection,
+                        "prefix": battery_prefix,
+                        "slave_id": battery_slave_id,
+                        "selected_model": battery_model,
+                    }
+                    if battery_template_data and isinstance(
+                        battery_template_data, dict
+                    ):
+                        battery_device["template_version"] = battery_template_data.get(
+                            "version", 1
+                        )
+                        battery_device["firmware_version"] = battery_template_data.get(
+                            "firmware_version", "1.0.0"
+                        )
+                    if battery_devices:
+                        for i, device in enumerate(devices):
+                            if device.get("type") == "battery":
+                                devices[i] = battery_device
+                                break
+                    else:
+                        devices.append(battery_device)
+
             # Keep device-specific dynamic config in sync with options updates
             devices = new_data.get("devices")
             if isinstance(devices, list) and template_name:
@@ -3075,6 +3297,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
             # Remove temporary fields
             new_data.pop("update_template", None)
+            new_data.pop("configure_battery", None)
 
             self.hass.config_entries.async_update_entry(
                 self.config_entry, data=new_data

@@ -184,7 +184,8 @@
                     "dual_channel_meter": "Dual-Channel Zähler aktiviert",
                     "update_template": "Template neu laden (auch ohne Versions-Änderung)",
                     "allow_battery_car_charging": "Batterie-zu-Auto-Ladung erlauben",
-                    "auto_detect_firmware": "Firmware-Version automatisch erkennen"
+                    "auto_detect_firmware": "Firmware-Version automatisch erkennen",
+                    "configure_battery": "Configure Battery Settings"
                 }
             },
             "update_template": {
@@ -192,10 +193,20 @@
                 "description": "Template {template_name} neu laden:\n\nVersion: {stored_version} → {current_version} (Geändert: {version_changed})\nInhalt geändert: {content_changed}\n\nNeue Entitäten: {current_sensors} Sensoren, {current_calculated} berechnete, {current_controls} Controls\n\nDie Integration wird nach der Aktualisierung automatisch neu geladen."
             },
             "battery_config": {
-                "title": "SBR Batterie Konfiguration",
-                "description": "Konfiguriere die Slave ID für die SBR Batterie ({battery_config})",
+                "title": "Battery Configuration",
+                "description": "Configure your battery template:\n\nTemplate: {battery_template}",
                 "data": {
-                    "battery_slave_id": "Batterie Slave ID (Standard: 200)"
+                    "battery_prefix": "Battery Prefix",
+                    "battery_slave_id": "Battery Slave ID",
+                    "battery_model": "Battery Model",
+                    "battery_modules": "Number of Battery Modules"
+                }
+            },
+            "battery_options_selection": {
+                "title": "Battery Setup",
+                "description": "Select your battery configuration",
+                "data": {
+                    "battery_selection": "Battery Selection"
                 }
             }
         }

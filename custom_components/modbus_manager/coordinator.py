@@ -381,12 +381,20 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     )
                     break
 
+            device_count = len(devices)
             for device in devices:
                 device_type = device.get("type", "inverter")
                 template_name = device.get("template")
                 prefix = device.get("prefix", "unknown")
                 slave_id = device.get("slave_id", 1)
                 selected_model = device.get("selected_model")
+                if not selected_model and device_count == 1:
+                    selected_model = self.entry.data.get("selected_model")
+                    if selected_model:
+                        _LOGGER.debug(
+                            "Using selected_model from entry data for legacy device: %s",
+                            selected_model,
+                        )
 
                 # Extract configuration from selected model if available
                 model_config = await self._extract_config_from_model(

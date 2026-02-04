@@ -169,12 +169,14 @@
                     "message_wait_milliseconds": "Wait between Requests (milliseconds)",
                     "phases": "Number of Phases (1 or 3)",
                     "mppt_count": "Number of MPPT Trackers",
+                    "selected_model": "Select Model",
                     "battery_config": "Battery Configuration",
                     "connection_type": "Connection Type",
                     "firmware_version": "Firmware Version",
                     "dual_channel_meter": "Dual-Channel Meter Enabled",
                     "update_template": "Reload Template (even without version change)",
-                    "auto_detect_firmware": "Auto-detect firmware version"
+                    "auto_detect_firmware": "Auto-detect firmware version",
+                    "configure_battery": "Configure Battery Settings"
                 }
             },
             "update_template": {
@@ -182,10 +184,20 @@
                 "description": "Reload template {template_name}:\n\nVersion: {stored_version} → {current_version} (Changed: {version_changed})\nContent changed: {content_changed}\n\nNew Entities: {current_sensors} sensors, {current_calculated} calculated, {current_controls} controls\n\nThe integration will be automatically reloaded after the update."
             },
             "battery_config": {
-                "title": "SBR Battery Configuration",
-                "description": "Configure the Slave ID for the SBR Battery ({battery_config})",
+                "title": "Battery Configuration",
+                "description": "Configure your battery template:\n\nTemplate: {battery_template}",
                 "data": {
-                    "battery_slave_id": "Battery Slave ID (Default: 200)"
+                    "battery_prefix": "Battery Prefix",
+                    "battery_slave_id": "Battery Slave ID",
+                    "battery_model": "Battery Model",
+                    "battery_modules": "Number of Battery Modules"
+                }
+            },
+            "battery_options_selection": {
+                "title": "Battery Setup",
+                "description": "Select your battery configuration",
+                "data": {
+                    "battery_selection": "Battery Selection"
                 }
             }
         }

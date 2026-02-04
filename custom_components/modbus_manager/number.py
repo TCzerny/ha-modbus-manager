@@ -26,6 +26,33 @@ _LOGGER = ModbusManagerLogger(__name__)
 class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
     """Coordinator-based Number entity."""
 
+    def _coerce_numeric(self, value: Any, default: float, field_name: str) -> float:
+        """Coerce config values to float with a safe fallback."""
+        if value is None:
+            return float(default)
+        if isinstance(value, (int, float)):
+            return float(value)
+        if isinstance(value, str):
+            try:
+                return float(value)
+            except (ValueError, TypeError):
+                _LOGGER.warning(
+                    "Invalid %s value for number entity %s: %r. Using default %s.",
+                    field_name,
+                    self._attr_unique_id,
+                    value,
+                    default,
+                )
+                return float(default)
+        _LOGGER.warning(
+            "Unexpected %s type for number entity %s: %r. Using default %s.",
+            field_name,
+            self._attr_unique_id,
+            value,
+            default,
+        )
+        return float(default)
+
     def __init__(
         self,
         coordinator: ModbusCoordinator,
@@ -61,8 +88,14 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         self._attr_entity_category = EntityCategory.CONFIG
 
         # Number-specific properties
-        self._attr_native_min_value = register_config.get("min_value", 0)
-        self._attr_native_max_value = register_config.get("max_value", 100)
+        raw_min_value = register_config.get("min_value", 0)
+        raw_max_value = register_config.get("max_value", 100)
+        self._attr_native_min_value = self._coerce_numeric(
+            raw_min_value, 0, "min_value"
+        )
+        self._attr_native_max_value = self._coerce_numeric(
+            raw_max_value, 100, "max_value"
+        )
         self._attr_native_step = register_config.get("step", 1)
         self._attr_native_value = None
 
