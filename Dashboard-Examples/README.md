@@ -2,6 +2,22 @@
 
 This folder contains example dashboard configurations for the Modbus Manager integration.
 
+## Screenshot Examples
+
+### Battery Dashboards
+
+![Battery Overview](BatteryOverview.png)
+![Balancing Analytics](BalancingAnalytics.png)
+![Module Details](ModuleDetails.png)
+![Advanced Metrics](AdvancedMetrics.png)
+
+### PV Dashboards
+
+![PV Overview](PVOverview.png)
+![MPPT Analysis](MPPTAnalysis.png)
+![Energy Flow Analysis](EnergyFlowAnalysis.png)
+![Statistics](Statistics.png)
+
 ## Dashboard Files
 
 ### Battery Dashboards
