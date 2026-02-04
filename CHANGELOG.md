@@ -10,9 +10,25 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### ✨ Added
 - **SG iHomeManager Support**: Added `meter_type` selection for SG templates
   - iHomeManager-specific meter registers, device info, and EMS controls
+- **Battery Flow**: Dedicated battery selection flow with template/other options
+- **Template Docs**: Added docs for iHomeManager, SBR Battery, and Solvis SC3
 
 ### 🧹 Changed
 - **SG Template**: Excluded battery-only iHomeManager registers for PV-only inverters
+- **Model Selection**: `selected_model` is now required when `valid_models` exist
+- **Battery Config**: `battery_config` stores `none`, `other`, or template name
+- **iHomeManager Template**: Register names standardized to title case
+- **iHomeManager IDs**: Removed `ihm_` prefix from unique_ids (prefix handled by template)
+- **README**: Available templates list moved to the wiki; new docs links added
+- **Git Ignore**: `TASK.md` is now ignored by git
+
+### 🐛 Fixed
+- **Number Controls**: Coerce `min_value`/`max_value` to numeric values
+- **Legacy Config**: Preserve and fallback `selected_model` for single-device entries
+
+### 📚 Documentation
+- **README_Template.md**: Documented battery flow semantics and model requirements
+- **Wiki**: Creating Templates updated with battery flow and unique_id guidance
 
 ---
 
