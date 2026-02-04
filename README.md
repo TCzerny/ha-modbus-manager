@@ -71,7 +71,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **Sungrow SHx Series** - Complete template with all sensors and controls
   - **Dynamic Configuration**: Supports all 36 SHx models with automatic filtering
   - **Multi-Step Setup**: Connection parameters → Dynamic configuration
-  - **Battery Options**: None, Standard Battery, SBR Battery
+  - **Battery Options**: None, Other (no template), or Battery Template
   - **Battery management**: SOC, charging/discharging, temperature monitoring
   - **MPPT tracking**: 1-3 MPPT trackers with power calculations
   - **String tracking**: 0-4 strings with individual monitoring

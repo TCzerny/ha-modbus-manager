@@ -107,8 +107,11 @@ dynamic_config:
 2. **Sensor Filtering**: Sensors can be conditionally included/excluded based on configuration
 3. **Sensor Replacements**: Sensor parameters can change based on firmware version
 4. **Sensor Availability**: Sensors can be marked as available only for specific connection types
-5. **Battery Setup Step**: A dedicated battery prompt is shown in the config flow
-   only when `dynamic_config.battery_config` is defined in the template.
+5. **Battery Setup Step**: A dedicated battery flow is shown in the config flow
+   only when `dynamic_config.battery_config` is defined in the template. The UI
+   captures battery availability and selection (template or "other"). The
+   resulting `battery_config` value is stored as `none`, `other`, or the battery
+   template name (e.g., `sungrow_sbr_battery`).
 
 ### Condition Filtering
 
@@ -133,7 +136,8 @@ condition: "phases >= 3 and connection_type == 'LAN'"
 
 **Notes:**
 - Conditions can use any field from `dynamic_config`.
-- `selected_model` is always available when a model is chosen in setup/options.
+- `selected_model` is required when `valid_models` exist.
+- `battery_config` can be `none`, `other`, or a battery template name.
 
 ---
 

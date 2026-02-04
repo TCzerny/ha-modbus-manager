@@ -10,4 +10,4 @@
 - [x] Persist battery selection (none/other/template)
 - [x] Update option flow to mirror new battery flow
 - [x] Update translations for new fields/steps
-- [ ] Update docs for new battery flow
+- [x] Update docs for new battery flow

@@ -33,7 +33,7 @@ The template supports **all 36** following Sungrow SHx models:
 |-----------|----------|---------|-------------|
 | **Phases** | 1, 3 | 1 | Number of phases (1-phase or 3-phase) |
 | **MPPT** | 1, 2, 3 | 1 | Number of MPPT trackers |
-| **Battery** | true, false | false | Battery support enabled |
+| **Battery** | none, other, template | none | Battery selection (no battery, no template, or template) |
 | **Firmware** | String | "SAPPHIRE-H_03011.95.01" | Firmware version (e.g. "SAPPHIRE-H_03011.95.01") |
 | **Strings** | 1-24 | 1 | Number of PV strings |
 | **Connection** | LAN, WINET | LAN | Connection type |
@@ -50,8 +50,9 @@ The template supports **all 36** following Sungrow SHx models:
 - **MPPT 3:** All MPPT1, MPPT2, MPPT3 registers
 
 #### **Battery Filtering**
-- **Battery disabled:** No battery registers
-- **Battery enabled:** All battery registers + backup power
+- **Battery none:** No battery registers
+- **Battery other:** Inverter battery registers only
+- **Battery template:** Inverter battery registers + battery template entities
 
 #### **Connection Filtering**
 - **LAN:** All registers available
