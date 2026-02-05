@@ -5,6 +5,41 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2026-02-05
+
+### 🐛 Fixed
+
+#### Unexpected Register Values Handling
+- **HA-Compliant Unknown State**: Select and Switch entities now correctly show 'unknown' state when register returns unexpected values (e.g., 0 instead of expected 170/85)
+  - Select entities: Return `None` when value not found in options/map/flags (instead of original value)
+  - Switch entities: Changed warning to debug level for unexpected values (None is valid HA unknown state)
+  - Both entities now properly handle `None` without converting to string 'None'
+  - Fixes issue where registers returning 0 (uninitialized) caused warnings/log errors
+
+#### Register Read Error Handling
+- **Error Tracking**: Added error tracking for register read failures to reduce log spam
+  - Register errors now logged only once per hour (instead of every update cycle)
+  - Optional registers can be marked with `optional: true` flag
+  - Errors for optional registers logged at debug level
+  - Improves handling of registers that don't exist on all devices
+
+### ✨ Added
+
+#### Register Dependency Support
+- **Conditional Entity Availability**: Added `depends_on_register` field for number entities
+  - Entities can now depend on values from other registers for availability
+  - Power Factor Setting (5018) only available when Reactive power adjustment mode (5035) is set to 0xA1
+  - Supports hex values (0xA1) and handles mapped select values correctly
+  - Entity marked as unavailable when dependency condition not met
+  - Runtime dependency checking based on actual register values
+
+### 🔧 Changed
+
+#### Sungrow SG Template
+- **Power Factor Register**: Updated Register 5035 to "Power factor" (S16, 0.001 scale)
+  - >0 means leading, <0 means lagging
+  - Replaces previous "Reactive power adjustment mode" at this address
+
 ## [0.2.0] - 2026-02-05
 
 ### ✨ Added
