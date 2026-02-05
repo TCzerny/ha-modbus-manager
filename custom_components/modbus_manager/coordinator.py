@@ -713,85 +713,160 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         )
                         continue  # Skip this control as it's invalid
 
-                    # Replace placeholders in max_value if model_config is available
+                    # Replace placeholders in max_value/min_value using both model_config and dynamic_config
                     # Supports: {{max_charge_power}}, {{max_discharge_power}}, {{max_ac_output_power}}
-                    # Also supports calculations: {{max_charge_power * 0.5}}
-                    if selected_model and model_config:
-                        max_value = register.get("max_value")
-                        if (
-                            max_value
-                            and isinstance(max_value, str)
-                            and "{{" in max_value
-                            and "}}" in max_value
-                        ):
-                            try:
-                                # Extract expression inside {{ }}
-                                pattern = r"\{\{([^}]+)\}\}"
-                                match = re.search(pattern, max_value)
+                    # Also supports dynamic_config values: {{max_current}}, {{phases}}, etc.
+                    # Also supports calculations: {{max_charge_power * 0.5}} or {{max_current * 2}}
+                    max_value = register.get("max_value")
+                    min_value = register.get("min_value")
 
-                                if match:
-                                    expression = match.group(1).strip()
-                                    unit = register.get(
-                                        "unit_of_measurement", ""
-                                    ).lower()
+                    # Combine model_config and dynamic_config for placeholder replacement
+                    # model_config contains values from valid_models (e.g., max_charge_power)
+                    # dynamic_config contains all dynamic config values (e.g., max_current, phases)
+                    placeholder_values = {}
+                    if model_config:
+                        placeholder_values.update(model_config)
+                    if dynamic_config:
+                        # Only add numeric values from dynamic_config (skip strings, booleans, etc.)
+                        for key, value in dynamic_config.items():
+                            if isinstance(value, (int, float)):
+                                placeholder_values[key] = value
 
-                                    # Replace model_config keys in expression
-                                    # e.g., "max_charge_power * 0.5" -> "10600 * 0.5"
-                                    processed_expression = expression
-                                    for key, value in model_config.items():
-                                        if isinstance(value, (int, float)):
-                                            # Replace whole word matches only (to avoid partial replacements)
-                                            processed_expression = re.sub(
-                                                r"\b" + re.escape(key) + r"\b",
-                                                str(value),
-                                                processed_expression,
-                                            )
+                    # Process max_value if it contains placeholders
+                    if (
+                        max_value
+                        and isinstance(max_value, str)
+                        and "{{" in max_value
+                        and "}}" in max_value
+                    ):
+                        try:
+                            # Extract expression inside {{ }}
+                            pattern = r"\{\{([^}]+)\}\}"
+                            match = re.search(pattern, max_value)
 
-                                    # Evaluate expression safely (only math operations allowed)
-                                    # Use a restricted eval environment for safety
-                                    allowed_names = {
-                                        "__builtins__": {},
-                                        "abs": abs,
-                                        "round": round,
-                                        "int": int,
-                                        "float": float,
-                                        "min": min,
-                                        "max": max,
-                                    }
-                                    result = eval(  # nosec B307
-                                        processed_expression, allowed_names
-                                    )
+                            if match:
+                                expression = match.group(1).strip()
+                                unit = register.get("unit_of_measurement", "").lower()
 
-                                    # Convert to appropriate unit if needed
-                                    # Power values in model_config are in W, but controls might be in kW
-                                    if unit == "kw" and any(
-                                        k in expression
-                                        for k in [
-                                            "max_charge_power",
-                                            "max_discharge_power",
-                                            "max_ac_output_power",
-                                        ]
-                                    ):
-                                        # If original value was in W, convert to kW
-                                        register["max_value"] = float(result) / 1000.0
-                                    else:
-                                        register["max_value"] = float(result)
+                                # Replace placeholder keys in expression
+                                # e.g., "max_charge_power * 0.5" -> "10600 * 0.5"
+                                # e.g., "max_current" -> "16"
+                                processed_expression = expression
+                                for key, value in placeholder_values.items():
+                                    if isinstance(value, (int, float)):
+                                        # Replace whole word matches only (to avoid partial replacements)
+                                        processed_expression = re.sub(
+                                            r"\b" + re.escape(key) + r"\b",
+                                            str(value),
+                                            processed_expression,
+                                        )
 
-                                    _LOGGER.debug(
-                                        "Replaced placeholder {{%s}} with %.1f %s for %s (model: %s)",
-                                        expression,
-                                        register["max_value"],
-                                        unit,
-                                        register.get("name", "unknown"),
-                                        selected_model,
-                                    )
-                            except Exception as e:
-                                _LOGGER.warning(
-                                    "Error replacing placeholder {{%s}} in max_value for %s: %s",
-                                    max_value,
-                                    register.get("name", "unknown"),
-                                    str(e),
+                                # Evaluate expression safely (only math operations allowed)
+                                # Use a restricted eval environment for safety
+                                allowed_names = {
+                                    "__builtins__": {},
+                                    "abs": abs,
+                                    "round": round,
+                                    "int": int,
+                                    "float": float,
+                                    "min": min,
+                                    "max": max,
+                                }
+                                result = eval(  # nosec B307
+                                    processed_expression, allowed_names
                                 )
+
+                                # Convert to appropriate unit if needed
+                                # Power values in model_config are in W, but controls might be in kW
+                                if unit == "kw" and any(
+                                    k in expression
+                                    for k in [
+                                        "max_charge_power",
+                                        "max_discharge_power",
+                                        "max_ac_output_power",
+                                    ]
+                                ):
+                                    # If original value was in W, convert to kW
+                                    register["max_value"] = float(result) / 1000.0
+                                else:
+                                    register["max_value"] = float(result)
+
+                                # Determine source for logging
+                                source = "dynamic_config"
+                                if model_config and any(
+                                    k in expression for k in model_config.keys()
+                                ):
+                                    source = "model_config"
+
+                                _LOGGER.debug(
+                                    "Replaced placeholder {{%s}} with %.1f %s for %s (from %s)",
+                                    expression,
+                                    register["max_value"],
+                                    unit,
+                                    register.get("name", "unknown"),
+                                    source,
+                                )
+                        except Exception as e:
+                            _LOGGER.warning(
+                                "Error replacing placeholder {{%s}} in max_value for %s: %s",
+                                max_value,
+                                register.get("name", "unknown"),
+                                str(e),
+                            )
+
+                    # Process min_value if it contains placeholders
+                    if (
+                        min_value
+                        and isinstance(min_value, str)
+                        and "{{" in min_value
+                        and "}}" in min_value
+                    ):
+                        try:
+                            # Extract expression inside {{ }}
+                            pattern = r"\{\{([^}]+)\}\}"
+                            match = re.search(pattern, min_value)
+
+                            if match:
+                                expression = match.group(1).strip()
+
+                                # Replace placeholder keys in expression
+                                processed_expression = expression
+                                for key, value in placeholder_values.items():
+                                    if isinstance(value, (int, float)):
+                                        processed_expression = re.sub(
+                                            r"\b" + re.escape(key) + r"\b",
+                                            str(value),
+                                            processed_expression,
+                                        )
+
+                                # Evaluate expression safely
+                                allowed_names = {
+                                    "__builtins__": {},
+                                    "abs": abs,
+                                    "round": round,
+                                    "int": int,
+                                    "float": float,
+                                    "min": min,
+                                    "max": max,
+                                }
+                                result = eval(  # nosec B307
+                                    processed_expression, allowed_names
+                                )
+                                register["min_value"] = float(result)
+
+                                _LOGGER.debug(
+                                    "Replaced placeholder {{%s}} in min_value with %.1f for %s",
+                                    expression,
+                                    register["min_value"],
+                                    register.get("name", "unknown"),
+                                )
+                        except Exception as e:
+                            _LOGGER.warning(
+                                "Error replacing placeholder {{%s}} in min_value for %s: %s",
+                                min_value,
+                                register.get("name", "unknown"),
+                                str(e),
+                            )
 
                     # Only add if it has a valid address (for Modbus reading)
                     if (
