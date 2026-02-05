@@ -117,11 +117,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 
 1. **Open Home Assistant** → Configuration → Integrations
 2. **Click "Add Integration"** → "Modbus Manager"
-3. **Select your device template**:
-   - **Sungrow SHx Dynamic Inverter** for SHx series solar inverters
-   - **Sungrow SG Dynamic Inverter** for SG series solar inverters
-   - **Compleo eBox Professional** for EV chargers
-   - **Any Other Template you like**
+3. **Select your device template** → Choose the device template you like to add
 4. **Configure connection** (Step 1):
    - **Host**: Device IP address
    - **Port**: Modbus port (usually 502)
@@ -136,7 +132,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 
 ### 2. Configure Dashboard
 
-Ready-to-use dashboard examples are available in the [Dashboard Examples](Dashboard-Examples/README.md) folder:
+Dashboard examples are available in the [Dashboard Examples](Dashboard-Examples/README.md) folder:
 
 - **Battery Dashboards**: Comprehensive battery monitoring with balancing analysis, module details, and advanced metrics
 - **PV Dashboards**: PV inverter monitoring with MPPT analysis, energy flow, and statistics
@@ -211,7 +207,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Wiki**: [GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)
 
 ---
-
-**Last Updated**: February 2026
-**Version**: 0.2.0
-**Status**: Beta - Active Development

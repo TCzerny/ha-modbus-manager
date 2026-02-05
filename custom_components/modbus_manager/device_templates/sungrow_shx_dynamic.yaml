@@ -2656,6 +2656,7 @@ calculated:
     device_class: "energy"
     state_class: "total_increasing"
     precision: 1
+    condition: "connection_type == 'LAN'"
     group: "calculated_energy"
 
   - name: "Yearly PV generation (current)"
@@ -2671,6 +2672,7 @@ calculated:
     device_class: "energy"
     state_class: "total_increasing"
     precision: 1
+    condition: "connection_type == 'LAN'"
     group: "calculated_energy"
 
   - name: "Monthly export (current)"
@@ -2686,6 +2688,7 @@ calculated:
     device_class: "energy"
     state_class: "total_increasing"
     precision: 1
+    condition: "connection_type == 'LAN'"
     group: "calculated_energy"
 
   - name: "Yearly export (current)"
@@ -2701,6 +2704,7 @@ calculated:
     device_class: "energy"
     state_class: "total_increasing"
     precision: 1
+    condition: "connection_type == 'LAN'"
     group: "calculated_energy"
 
   # Battery Level and Charge Calculations
