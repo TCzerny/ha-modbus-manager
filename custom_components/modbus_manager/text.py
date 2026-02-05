@@ -24,11 +24,12 @@ async def async_setup_entry(
     """Set up Modbus Manager coordinator text entities from a config entry."""
     coordinator: ModbusCoordinator = hass.data[DOMAIN][entry.entry_id]["coordinator"]
 
-    # Get all processed registers from coordinator
-    registers = await coordinator._collect_all_registers()
+    # Get all entities from coordinator (structured dict)
+    entities_dict = await coordinator._collect_all_registers()
 
-    # Filter for text controls
-    text_controls = [reg for reg in registers if reg.get("type") == "text"]
+    # Get controls and filter for text type
+    controls = entities_dict.get("controls", [])
+    text_controls = [c for c in controls if c.get("type") == "text"]
 
     entities = []
 

@@ -274,19 +274,14 @@ async def async_setup_entry(
             _LOGGER.error("No coordinator found for entry %s", entry.entry_id)
             return
 
+        # Get all entities from coordinator (structured dict)
+        entities_dict = await coordinator._collect_all_registers()
+
         # Get regular sensors with addresses
-        regular_sensors = await coordinator._collect_all_registers()
-        regular_sensors = [
-            reg for reg in regular_sensors if reg.get("type") == "sensor"
-        ]
+        regular_sensors = entities_dict.get("sensors", [])
 
         # Get calculated entities separately
-        calculated_sensors = await coordinator._collect_calculated_registers()
-        calculated_sensors = [
-            reg
-            for reg in calculated_sensors
-            if reg.get("type") in ["calculated", "sensor"]
-        ]
+        calculated_sensors = entities_dict.get("calculated", [])
 
         if not regular_sensors and not calculated_sensors:
             _LOGGER.warning("No sensors found in coordinator registers")

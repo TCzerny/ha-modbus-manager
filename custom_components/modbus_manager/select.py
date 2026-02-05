@@ -366,11 +366,12 @@ async def async_setup_entry(
             _LOGGER.error("No coordinator found for entry %s", entry.entry_id)
             return
 
-        # Get select controls from coordinator
-        select_controls = await coordinator._collect_all_registers()
-        select_controls = [
-            reg for reg in select_controls if reg.get("type") == "select"
-        ]
+        # Get all entities from coordinator (structured dict)
+        entities_dict = await coordinator._collect_all_registers()
+
+        # Get controls and filter for select type
+        controls = entities_dict.get("controls", [])
+        select_controls = [c for c in controls if c.get("type") == "select"]
 
         # Filter by firmware version if specified
         firmware_version = entry.data.get("firmware_version")

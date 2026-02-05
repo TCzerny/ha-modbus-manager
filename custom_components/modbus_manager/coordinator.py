@@ -3,9 +3,14 @@
 from __future__ import annotations
 
 import asyncio
+import re
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
+from homeassistant.components.modbus.const import (
+    CALL_TYPE_REGISTER_HOLDING,
+    CALL_TYPE_REGISTER_INPUT,
+)
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
@@ -13,6 +18,7 @@ from homeassistant.helpers.update_coordinator import DataUpdateCoordinator, Upda
 
 from .const import DOMAIN
 from .device_utils import (
+    create_device_info_dict,
     generate_unique_id,
     process_template_entities_with_prefix,
     replace_template_placeholders,
@@ -102,9 +108,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
         self.register_optimizer = RegisterOptimizer()
         self.performance_monitor = PerformanceMonitor()
 
-        # Cache for processed registers (loaded once at startup, reused on every update)
-        self._cached_registers = None
-        self._cached_calculated = None
+        # Cache for processed entities (loaded once at startup, reused on every update)
+        # Structured dict: {"sensors": [...], "controls": [...], "calculated": [...], "binary_sensors": [...]}
+        self._cached_entities = None
         self._cached_registers_by_interval = {}  # Register grouped by scan_interval
         self._cache_initialized = False
 
@@ -137,15 +143,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
         )
 
     def invalidate_cache(self):
-        """Invalidate the register cache (e.g., when template is reloaded)."""
-        _LOGGER.info("Invalidating register cache")
-        self._cached_registers = None
-        self._cached_calculated = None
+        """Invalidate the entity cache (e.g., when template is reloaded)."""
+        _LOGGER.info("Invalidating entity cache")
+        self._cached_entities = None
         self._cached_registers_by_interval = {}
         self._last_update_time = {}
         self._cache_initialized = False
-        # Force re-collection on next update
-        self._cached_registers = None
 
     def mark_as_unloading(self):
         """Mark coordinator as unloading to stop further updates."""
@@ -194,18 +197,15 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
             # 1. Group registers by scan_interval if not cached
             if not self._cached_registers_by_interval:
-                all_registers = await self._collect_all_registers()
+                entities_dict = await self._collect_all_registers()
+                # Only use sensors and controls (they have addresses for Modbus reading)
+                all_registers = entities_dict.get("sensors", []) + entities_dict.get(
+                    "controls", []
+                )
                 if all_registers:
                     # Group registers by their scan_interval
                     self._cached_registers_by_interval = (
                         self._group_registers_by_interval(all_registers)
-                    )
-
-                    # Calculate minimum interval and update coordinator if needed
-                    min_interval = (
-                        min(self._cached_registers_by_interval.keys())
-                        if self._cached_registers_by_interval
-                        else 10
                     )
 
                     # Update coordinator to use the minimum interval
@@ -276,7 +276,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
             await self._update_device_firmware_from_register()
 
             # 6. Update performance metrics with optimization stats
-            device_id = self.entry.data.get("prefix", "unknown")
             # Update the operation with optimization metrics before ending
             device_metrics = self.performance_monitor.devices.get(device_id)
             if device_metrics and device_metrics.operations:
@@ -321,15 +320,30 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 )
             raise UpdateFailed(f"Error updating coordinator: {e}")
 
-    async def _collect_all_registers(self) -> List[Dict[str, Any]]:
-        """Collect all registers that need to be read using devices array structure."""
+    async def _collect_all_registers(self) -> Dict[str, List[Dict[str, Any]]]:
+        """Collect all entities using devices array structure.
+
+        Returns a structured dict with entity categories:
+        {
+            "sensors": [...],           # type="sensor", address > 0
+            "controls": [...],          # type in ["number", "select", "switch", "button", "text"], address > 0
+            "calculated": [...],        # type="calculated", kein address
+            "binary_sensors": [...]      # type="binary_sensor", kein address
+        }
+        """
         try:
-            # Use cached registers if already initialized (massive performance improvement!)
-            if self._cache_initialized and self._cached_registers is not None:
-                _LOGGER.debug(
-                    "Using cached registers (%d registers)", len(self._cached_registers)
+            # Use cached entities if already initialized (massive performance improvement!)
+            if self._cache_initialized and self._cached_entities is not None:
+                total_entities = (
+                    len(self._cached_entities.get("sensors", []))
+                    + len(self._cached_entities.get("controls", []))
+                    + len(self._cached_entities.get("calculated", []))
+                    + len(self._cached_entities.get("binary_sensors", []))
                 )
-                return self._cached_registers
+                _LOGGER.debug(
+                    "Using cached entities (%d total entities)", total_entities
+                )
+                return self._cached_entities
 
             # First time or cache invalidated - load and process templates
             devices = self.entry.data.get("devices")
@@ -337,34 +351,63 @@ class ModbusCoordinator(DataUpdateCoordinator):
             if devices and isinstance(devices, list):
                 if not self._cache_initialized:
                     _LOGGER.debug(
-                        "Initializing register cache for %d devices", len(devices)
+                        "Initializing entity cache for %d devices", len(devices)
                     )
-                registers = await self._collect_registers_from_devices(devices)
+                entities = await self._collect_registers_from_devices(devices)
             else:
                 # Fallback to legacy structure for backward compatibility
                 if not self._cache_initialized:
-                    _LOGGER.debug("Initializing register cache (legacy structure)")
-                registers = await self._collect_registers_legacy()
+                    _LOGGER.debug("Initializing entity cache (legacy structure)")
+                entities = await self._collect_registers_legacy()
 
             # Cache the results
-            self._cached_registers = registers
+            self._cached_entities = entities
             self._cache_initialized = True
+            total_entities = (
+                len(entities.get("sensors", []))
+                + len(entities.get("controls", []))
+                + len(entities.get("calculated", []))
+                + len(entities.get("binary_sensors", []))
+            )
             _LOGGER.debug(
-                "Register cache initialized with %d registers", len(registers)
+                "Entity cache initialized with %d total entities (sensors: %d, controls: %d, calculated: %d, binary_sensors: %d)",
+                total_entities,
+                len(entities.get("sensors", [])),
+                len(entities.get("controls", [])),
+                len(entities.get("calculated", [])),
+                len(entities.get("binary_sensors", [])),
             )
 
-            return registers
+            return entities
 
         except Exception as e:
-            _LOGGER.error("Error collecting registers: %s", str(e))
-            return []
+            _LOGGER.error("Error collecting entities: %s", str(e))
+            return {
+                "sensors": [],
+                "controls": [],
+                "calculated": [],
+                "binary_sensors": [],
+            }
 
     async def _collect_registers_from_devices(
         self, devices: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
-        """Collect registers from devices array structure."""
+    ) -> Dict[str, List[Dict[str, Any]]]:
+        """Collect registers from devices array structure.
+
+        Returns a structured dict with entity categories:
+        {
+            "sensors": [...],           # type="sensor", address > 0
+            "controls": [...],          # type in ["number", "select", "switch", "button", "text"], address > 0
+            "calculated": [...],        # type="calculated", kein address
+            "binary_sensors": [...]      # type="binary_sensor", kein address
+        }
+        """
         try:
-            all_registers = []
+            # Initialize structured entity collections
+            all_sensors = []
+            all_controls = []
+            all_calculated = []
+            all_binary_sensors = []
 
             # Check if there's an SBR Battery device in the devices array
             # This is needed for backward compatibility with existing configurations
@@ -404,10 +447,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 model_config = await self._extract_config_from_model(
                     selected_model, template_name
                 )
-                modules = model_config.get("modules")
-                mppt_count = model_config.get("mppt_count")
-                string_count = model_config.get("string_count")
-                phases = model_config.get("phases")
 
                 if not template_name:
                     _LOGGER.warning(
@@ -501,7 +540,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 calculated = template.get("calculated", [])
                 binary_sensors = template.get("binary_sensors", [])
 
-                # Apply firmware version filtering if specified
+                # Apply firmware version filtering if specified (firmware_min_version parameter)
                 firmware_version = device.get("firmware_version")
                 if firmware_version:
                     registers = filter_by_firmware_version(registers, firmware_version)
@@ -513,7 +552,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         binary_sensors, firmware_version
                     )
 
-                # Apply generic model-based filtering (works for any device type)
+                # Apply generic model-based filtering (phases, mppt_count)
                 if model_config:
                     _LOGGER.debug(
                         "Applying model-based filtering for %s with config: %s",
@@ -528,23 +567,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     )
 
                 # Apply condition-based filtering (e.g., dual_channel_meter == true)
-                # Get firmware_version for firmware filtering (separate from condition filtering)
-                firmware_version = device.get("firmware_version") or template.get(
-                    "firmware_version", "1.0.0"
-                )
-
                 # Filter using dynamic_config (automatically includes all template fields)
-                registers = self._filter_by_conditions(
-                    registers, dynamic_config, firmware_version
-                )
-                controls = self._filter_by_conditions(
-                    controls, dynamic_config, firmware_version
-                )
-                calculated = self._filter_by_conditions(
-                    calculated, dynamic_config, firmware_version
-                )
+                registers = self._filter_by_conditions(registers, dynamic_config)
+                controls = self._filter_by_conditions(controls, dynamic_config)
+                calculated = self._filter_by_conditions(calculated, dynamic_config)
                 binary_sensors = self._filter_by_conditions(
-                    binary_sensors, dynamic_config, firmware_version
+                    binary_sensors, dynamic_config
                 )
 
                 # Calculate SunSpec addresses if template has SunSpec enabled
@@ -631,8 +659,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 )
 
                 # Create device info dict for this device
-                from .device_utils import create_device_info_dict
-
                 hub_config = self.entry.data.get("hub", {})
                 host = hub_config.get("host") or self.entry.data.get("host", "unknown")
                 port = hub_config.get("port") or self.entry.data.get("port", 502)
@@ -653,14 +679,20 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     config_entry_id=self.entry.entry_id,
                 )
 
-                # Add type field, device info, and combine
+                # Add type field, device info, and categorize entities
+                # Sensors: registers with address > 0, type="sensor"
                 for register in processed_registers:
                     register["type"] = "sensor"
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
-                    all_registers.append(register)
+                    # Only add if it has a valid address (for Modbus reading)
+                    if (
+                        register.get("address") is not None
+                        and register.get("address", 0) > 0
+                    ):
+                        all_sensors.append(register)
 
-                # Replace model-specific placeholders in controls (e.g., {{max_charge_power}})
+                # Controls: registers with address > 0, type in ["number", "select", "switch", "button", "text"]
                 for register in processed_controls:
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
@@ -686,8 +718,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         ):
                             try:
                                 # Extract expression inside {{ }}
-                                import re
-
                                 pattern = r"\{\{([^}]+)\}\}"
                                 match = re.search(pattern, max_value)
 
@@ -755,49 +785,102 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                     str(e),
                                 )
 
-                    all_registers.append(register)
+                    # Only add if it has a valid address (for Modbus reading)
+                    if (
+                        register.get("address") is not None
+                        and register.get("address", 0) > 0
+                    ):
+                        all_controls.append(register)
 
+                # Calculated: entities without address, type="calculated"
                 for register in processed_calculated:
                     register["type"] = "calculated"
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
-                    all_registers.append(register)
+                    # Replace placeholders in calculated entity templates (state, availability)
+                    for field in ["state", "availability", "template"]:
+                        if field in register and isinstance(register[field], str):
+                            register[field] = replace_template_placeholders(
+                                register[field], prefix, slave_id, 0
+                            )
+                    all_calculated.append(register)
 
+                # Binary sensors: entities without address, type="binary_sensor"
                 for register in processed_binary_sensors:
                     register["type"] = "binary_sensor"
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
-                    all_registers.append(register)
+                    # Replace placeholders in binary sensor templates (state, availability)
+                    for field in ["state", "availability", "template"]:
+                        if field in register and isinstance(register[field], str):
+                            register[field] = replace_template_placeholders(
+                                register[field], prefix, slave_id, 0
+                            )
+                    all_binary_sensors.append(register)
 
                 _LOGGER.debug(
-                    "Added %d registers for device %s",
+                    "Added %d entities for device %s (sensors: %d, controls: %d, calculated: %d, binary_sensors: %d)",
                     len(processed_registers)
                     + len(processed_controls)
                     + len(processed_calculated)
                     + len(processed_binary_sensors),
                     template_name,
+                    len(processed_registers),
+                    len(processed_controls),
+                    len(processed_calculated),
+                    len(processed_binary_sensors),
                 )
 
-            return all_registers
+            # Return structured dict with all entity categories
+            return {
+                "sensors": all_sensors,
+                "controls": all_controls,
+                "calculated": all_calculated,
+                "binary_sensors": all_binary_sensors,
+            }
 
         except Exception as e:
             _LOGGER.error("Error collecting registers from devices: %s", str(e))
-            return []
+            return {
+                "sensors": [],
+                "controls": [],
+                "calculated": [],
+                "binary_sensors": [],
+            }
 
-    async def _collect_registers_legacy(self) -> List[Dict[str, Any]]:
-        """Legacy method for backward compatibility."""
+    async def _collect_registers_legacy(self) -> Dict[str, List[Dict[str, Any]]]:
+        """Legacy method for backward compatibility.
+
+        Returns a structured dict with entity categories:
+        {
+            "sensors": [...],           # type="sensor", address > 0
+            "controls": [...],          # type in ["number", "select", "switch", "button", "text"], address > 0
+            "calculated": [...],        # type="calculated", kein address
+            "binary_sensors": [...]      # type="binary_sensor", kein address
+        }
+        """
         try:
             # Get template name from entry
             template_name = self.entry.data.get("template")
             if not template_name:
                 _LOGGER.error("No template specified in entry")
-                return []
+                return {
+                    "sensors": [],
+                    "controls": [],
+                    "calculated": [],
+                    "binary_sensors": [],
+                }
 
             # Load main template
             template = await get_template_by_name(template_name)
             if not template:
                 _LOGGER.error("Template %s not found", template_name)
-                return []
+                return {
+                    "sensors": [],
+                    "controls": [],
+                    "calculated": [],
+                    "binary_sensors": [],
+                }
 
             # Extract registers from main template and set type based on section
             registers = template.get("sensors", [])
@@ -830,29 +913,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         len(battery_calculated),
                         len(battery_binary_sensors),
                     )
-
-            # Combine all register types and set type field
-            all_registers = []
-
-            # Add sensors (no type field needed - they are sensors by default)
-            for register in registers:
-                register["type"] = "sensor"
-                all_registers.append(register)
-
-            # Add controls with their specific types
-            for register in controls:
-                # Controls already have type field set in template
-                all_registers.append(register)
-
-            # Add calculated entities
-            for register in calculated:
-                register["type"] = "calculated"
-                all_registers.append(register)
-
-            # Add binary sensors
-            for register in binary_sensors:
-                register["type"] = "binary_sensor"
-                all_registers.append(register)
 
             # Process all registers with prefix handling
             prefix = self.entry.data.get("prefix", "unknown")
@@ -900,7 +960,13 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
             for entity in all_processed_entities:
                 # Replace placeholders in name and other string fields
-                for field in ["name", "template", "unit_of_measurement"]:
+                for field in [
+                    "name",
+                    "template",
+                    "unit_of_measurement",
+                    "state",
+                    "availability",
+                ]:
                     if field in entity and isinstance(entity[field], str):
                         entity[field] = replace_template_placeholders(
                             entity[field], prefix, slave_id, battery_slave_id
@@ -909,83 +975,129 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 # Note: slave_id is now set from device config, not from template
                 # Template slave_id values (including placeholders) are ignored
 
-            # Update all_registers with processed data
-            all_registers = (
-                processed_registers
-                + processed_controls
-                + processed_calculated
-                + processed_binary_sensors
+            # Create device info dict
+            hub_config = self.entry.data.get("hub", {})
+            host = hub_config.get("host") or self.entry.data.get("host", "unknown")
+            port = hub_config.get("port") or self.entry.data.get("port", 502)
+            firmware_version = self.entry.data.get("firmware_version") or template.get(
+                "firmware_version", "1.0.0"
             )
 
-            # Separate registers with addresses from calculated entities
-            valid_registers = []
-            calculated_registers = []
+            device_info = create_device_info_dict(
+                hass=self.hass,
+                host=host,
+                port=port,
+                slave_id=slave_id,
+                prefix=prefix,
+                template_name=template_name,
+                firmware_version=firmware_version,
+                config_entry_id=self.entry.entry_id,
+            )
 
-            for reg in all_registers:
-                address = reg.get("address")
-                if address is not None and address > 0:
-                    valid_registers.append(reg)
-                else:
-                    # Keep calculated entities for later processing
-                    calculated_registers.append(reg)
-                    _LOGGER.debug(
-                        "Found calculated entity without address: %s",
-                        reg.get("name", "unknown"),
+            # Categorize entities into structured collections
+            all_sensors = []
+            all_controls = []
+            all_calculated = []
+            all_binary_sensors = []
+
+            # Process sensors: type="sensor", address > 0
+            for register in processed_registers:
+                register["type"] = "sensor"
+                register["slave_id"] = slave_id
+                register["device_info"] = device_info
+                if (
+                    register.get("address") is not None
+                    and register.get("address", 0) > 0
+                ):
+                    all_sensors.append(register)
+
+            # Process controls: type in ["number", "select", "switch", "button", "text"], address > 0
+            for register in processed_controls:
+                if "type" not in register:
+                    _LOGGER.error(
+                        "Control %s (unique_id: %s) missing type field from template. This is a template error.",
+                        register.get("name", "unknown"),
+                        register.get("unique_id", "unknown"),
                     )
+                    continue
+                register["slave_id"] = slave_id
+                register["device_info"] = device_info
+                if (
+                    register.get("address") is not None
+                    and register.get("address", 0) > 0
+                ):
+                    all_controls.append(register)
 
-            _LOGGER.debug(
-                "Filtered %d valid registers from %d total registers",
-                len(valid_registers),
-                len(all_registers),
-            )
-            all_registers = valid_registers
+            # Process calculated: type="calculated", kein address
+            for register in processed_calculated:
+                register["type"] = "calculated"
+                register["slave_id"] = slave_id
+                register["device_info"] = device_info
+                all_calculated.append(register)
+
+            # Process binary sensors: type="binary_sensor", kein address
+            for register in processed_binary_sensors:
+                register["type"] = "binary_sensor"
+                register["slave_id"] = slave_id
+                register["device_info"] = device_info
+                all_binary_sensors.append(register)
 
             # Filter by firmware version if specified
             firmware_version = self.entry.data.get("firmware_version")
             if firmware_version:
-                all_registers = filter_by_firmware_version(
-                    all_registers, firmware_version
+                all_sensors = filter_by_firmware_version(all_sensors, firmware_version)
+                all_controls = filter_by_firmware_version(
+                    all_controls, firmware_version
+                )
+                all_calculated = filter_by_firmware_version(
+                    all_calculated, firmware_version
+                )
+                all_binary_sensors = filter_by_firmware_version(
+                    all_binary_sensors, firmware_version
                 )
 
-            # Only return registers with addresses for Modbus reading
-            # Calculated registers are handled separately by their respective platforms
-            return valid_registers
+            _LOGGER.debug(
+                "Legacy collection: %d sensors, %d controls, %d calculated, %d binary_sensors",
+                len(all_sensors),
+                len(all_controls),
+                len(all_calculated),
+                len(all_binary_sensors),
+            )
+
+            # Return structured dict with all entity categories
+            return {
+                "sensors": all_sensors,
+                "controls": all_controls,
+                "calculated": all_calculated,
+                "binary_sensors": all_binary_sensors,
+            }
 
         except Exception as e:
             _LOGGER.error("Error collecting registers: %s", str(e))
             return []
 
     async def _collect_calculated_registers(self) -> List[Dict[str, Any]]:
-        """Collect calculated registers using devices array structure."""
+        """Collect calculated registers and binary sensors from cached entities.
+
+        Returns combined list of calculated entities and binary sensors.
+        """
         try:
-            # Use cached calculated registers if already initialized
-            if self._cache_initialized and self._cached_calculated is not None:
-                _LOGGER.debug(
-                    "Using cached calculated registers (%d registers)",
-                    len(self._cached_calculated),
-                )
-                return self._cached_calculated
+            # Ensure cache is initialized by calling _collect_all_registers()
+            entities_dict = await self._collect_all_registers()
 
-            # First time or cache invalidated - load and process templates
-            devices = self.entry.data.get("devices")
-            if devices and isinstance(devices, list):
-                calculated = await self._collect_calculated_from_devices(devices)
-            else:
-                # Fallback to legacy structure for backward compatibility
-                if not self._cache_initialized:
-                    _LOGGER.debug(
-                        "Initializing calculated registers cache (legacy structure)"
-                    )
-                calculated = await self._collect_calculated_legacy()
+            # Combine calculated and binary_sensors from cached entities
+            calculated = entities_dict.get("calculated", [])
+            binary_sensors = entities_dict.get("binary_sensors", [])
+            combined = calculated + binary_sensors
 
-            # Cache the results
-            self._cached_calculated = calculated
             _LOGGER.debug(
-                "Calculated registers cache initialized with %d registers",
+                "Returning %d calculated entities (%d calculated, %d binary_sensors)",
+                len(combined),
                 len(calculated),
+                len(binary_sensors),
             )
 
-            return calculated
+            return combined
 
         except Exception as e:
             _LOGGER.error("Error collecting calculated registers: %s", str(e))
@@ -1028,10 +1140,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 model_config = await self._extract_config_from_model(
                     selected_model, template_name
                 )
-                modules = model_config.get("modules")
-                mppt_count = model_config.get("mppt_count")
-                string_count = model_config.get("string_count")
-                phases = model_config.get("phases")
 
                 if not template_name:
                     _LOGGER.warning(
@@ -1312,8 +1420,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
     ) -> List[Dict[str, Any]]:
         """Filter battery template entities based on module count."""
         try:
-            import re
-
             filtered_entities = []
             filtered_count = 0
 
@@ -1460,8 +1566,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
             if not model_config:
                 return entities  # No filtering needed
 
-            import re
-
             filtered_entities = []
 
             for entity in entities:
@@ -1549,10 +1653,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
             return entities
 
     def _filter_by_conditions(
-        self,
-        entities: List[Dict[str, Any]],
-        dynamic_config: dict,
-        firmware_version: str,
+        self, entities: List[Dict[str, Any]], dynamic_config: dict
     ) -> List[Dict[str, Any]]:
         """
         Filter entities based on condition statements (e.g., dual_channel_meter == true).
@@ -1569,8 +1670,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
             Filtered list of entities
         """
         try:
-            import re
-
             filtered_entities = []
 
             for entity in entities:
@@ -1628,27 +1727,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 entity.get("unique_id", "unknown"),
                             )
                             continue
-
-                # Check firmware_min_version filter
-                sensor_firmware_min = entity.get("firmware_min_version")
-                if sensor_firmware_min and firmware_version:
-                    try:
-                        from packaging import version
-
-                        current_ver = version.parse(firmware_version)
-                        min_ver = version.parse(sensor_firmware_min)
-                        if current_ver < min_ver:
-                            _LOGGER.debug(
-                                "Excluding entity due to firmware version: %s (unique_id: %s, requires: %s, current: %s)",
-                                entity.get("name", "unknown"),
-                                entity.get("unique_id", "unknown"),
-                                sensor_firmware_min,
-                                firmware_version,
-                            )
-                            continue  # Skip this entity
-                    except Exception:  # nosec B110
-                        # If comparison fails, include the entity (better safe than sorry)
-                        pass
 
                 # Entity passed all filters
                 filtered_entities.append(entity)
@@ -1981,11 +2059,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
     async def _read_register_range(self, range_obj) -> Optional[List[int]]:
         """Read a range of registers from Modbus."""
         try:
-            from homeassistant.components.modbus.const import (
-                CALL_TYPE_REGISTER_HOLDING,
-                CALL_TYPE_REGISTER_INPUT,
-            )
-
             # Ensure hub is connected (handled by coordinator update)
             if not getattr(self.hub, "_is_connected", False):
                 return None

@@ -35,13 +35,9 @@ async def async_setup_entry(
             _LOGGER.error("No coordinator found for entry %s", entry.entry_id)
             return
 
-        # Get binary sensors from coordinator - use calculated registers collection
-        all_calculated_registers = await coordinator._collect_calculated_registers()
-        binary_sensor_configs = [
-            reg
-            for reg in all_calculated_registers
-            if reg.get("type") == "binary_sensor"
-        ]
+        # Get binary sensors from coordinator (structured dict)
+        entities_dict = await coordinator._collect_all_registers()
+        binary_sensor_configs = entities_dict.get("binary_sensors", [])
 
         if not binary_sensor_configs:
             _LOGGER.debug("No binary sensor configs found in coordinator registers")
