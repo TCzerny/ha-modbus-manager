@@ -5,6 +5,79 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.0] - 2026-02-05
+
+### 🚀 Performance Improvements
+
+#### Structured Entity Collection (Option B)
+- **Major Performance Optimization**: Refactored entity collection to use structured dictionary instead of flat list
+  - Template processing: Reduced from **2x to 1x** per device (50% reduction)
+  - Entity access: Changed from **O(n) filtering** to **O(1) direct access**
+  - Memory: Single structured cache instead of duplicate lists
+  - Code quality: Clearer structure with separated entity categories (sensors, controls, calculated, binary_sensors)
+
+#### Centralized Caching
+- **Unified Cache Structure**: Replaced separate `_cached_registers` and `_cached_calculated` with single `_cached_entities` dict
+  - All entity types cached together: sensors, controls, calculated, binary_sensors
+  - Cache initialized once at startup, reused until invalidated
+  - Eliminates duplicate template processing during entity setup
+
+#### Legacy Configuration Handling
+- **Automatic Legacy Conversion**: Legacy configurations automatically converted to devices array format
+  - New `_convert_legacy_to_devices_array()` function converts old configs on-the-fly
+  - Legacy configs use same processing logic as new configs
+  - No performance penalty for legacy users
+
+### 🧹 Code Cleanup
+
+#### Removed Legacy Functions
+- **Removed ~650 lines of deprecated code**:
+  - `_collect_registers_legacy()` - replaced by automatic conversion
+  - `_process_entities_with_dual_prefix()` - no longer needed
+  - `_is_battery_entity()` - no longer needed
+  - `_collect_calculated_from_devices()` - not used after Option B refactoring
+  - `_collect_calculated_legacy()` - not used after Option B refactoring
+  - `process_template_entities_with_prefix()` - replaced by `_process_entities_with_prefix()`
+  - Legacy mode from `calculated.py` - only new structure supported
+
+#### Centralized unique_id Generation
+- **Code Deduplication**: `_process_entities_with_prefix()` now uses centralized `generate_unique_id()` function
+  - Removed duplicate unique_id generation logic
+  - Consistent unique_id format across all platforms
+  - Single source of truth for unique_id generation
+
+#### Calculated Sensors Simplification
+- **Removed Redundant Processing**: Calculated sensors no longer process templates twice
+  - Removed `_process_template_with_prefix()` from calculated.py
+  - Templates already processed by coordinator (PREFIX already replaced)
+  - Cleaner code, no duplicate processing
+
+### 🔧 Changed
+
+#### Prefix Replacement
+- **Lowercase Prefix in Templates**: `{PREFIX}` placeholder now replaced with lowercase prefix
+  - Consistent with entity_id format (eBox → ebox)
+  - Matches Home Assistant entity naming conventions
+  - Example: `sensor.{PREFIX}_total_energy` → `sensor.ebox_total_energy`
+
+#### Placeholder Replacement Enhancement
+- **Extended Placeholder Support**: Placeholder replacement now uses both `model_config` and `dynamic_config`
+  - Previously only `model_config` (from valid_models) was used
+  - Now supports `dynamic_config` values like `max_current`, `phases`, etc.
+  - Works even when `selected_model` is not set
+  - Added support for `min_value` placeholder replacement (previously only `max_value`)
+  - Fixes issue where placeholders like `{{max_current}}` in eBox template were not replaced
+
+### 📊 Impact Summary
+
+- **Code Reduction**: ~650 lines of legacy code removed (23% reduction in coordinator.py)
+- **Performance**: 50% reduction in template processing overhead
+- **Memory**: Single cache structure instead of duplicate lists
+- **Maintainability**: Centralized logic, cleaner code structure
+- **Compatibility**: Legacy configs automatically converted, no breaking changes
+
+---
+
 ## [0.1.9] - 2026-02-04
 
 ### ✨ Added
