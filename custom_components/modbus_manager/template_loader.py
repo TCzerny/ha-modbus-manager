@@ -579,54 +579,6 @@ def process_simple_template(
         return {}
 
 
-async def process_simple_template_with_config(
-    template_info: Dict[str, Any], user_config: Dict[str, Any]
-) -> Optional[Dict[str, Any]]:
-    """Process a simple template with user configuration."""
-    try:
-        template_data = template_info.get("template_data")
-        base_template = template_info.get("base_template")
-
-        if not template_data or not base_template:
-            _LOGGER.error("Ungültige Template-Informationen für vereinfachtes Template")
-            return None
-
-        # Process the simple template with user config
-        processed_template = process_simple_template(
-            template_data, base_template, user_config
-        )
-
-        if not processed_template:
-            _LOGGER.error("Fehler bei der Verarbeitung des vereinfachten Templates")
-            return None
-
-        # Validate and process registers
-        validated_registers = []
-        for reg in processed_template.get("sensors", []):
-            validated_reg = validate_and_process_register(
-                reg, processed_template.get("name")
-            )
-            if validated_reg:
-                validated_reg["template"] = processed_template.get("name")
-                validated_registers.append(validated_reg)
-
-        # Update processed template with validated registers
-        processed_template["sensors"] = validated_registers
-
-        _LOGGER.debug(
-            "Vereinfachtes Template erfolgreich verarbeitet: %s",
-            processed_template.get("name"),
-        )
-        return processed_template
-
-    except Exception as e:
-        _LOGGER.error(
-            "Fehler bei der Verarbeitung des vereinfachten Templates mit Konfiguration: %s",
-            str(e),
-        )
-        return None
-
-
 async def load_single_template(
     template_path: str, base_templates: Dict[str, Dict[str, Any]] = None
 ) -> Optional[Dict[str, Any]]:
