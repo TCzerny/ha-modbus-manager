@@ -5,7 +5,7 @@ name: "Sungrow SG Series Inverter"
 description: "Dynamic template for Sungrow SG series residential and commercial PV grid-connected inverters. Based on Communication Protocol V1.1.53. (RS, RT, HX, KTL, KTL-MT, HV/BF, CX Series)"
 manufacturer: "Sungrow"
 model: "SG Series Dynamic"
-version: 1.2.0
+version: 1.3.0
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Inverter"
@@ -94,12 +94,6 @@ dynamic_config:
     description: "Connection type (LAN or WINET)"
     options: ["LAN", "WINET"]
     default: "LAN"
-    sensor_availability:
-      # Some registers are only available via LAN connection
-      lan_only_sensors:
-
-      # Some registers are only available via WINET connection
-      winet_only_sensors:
 
 # Sensors for read access (Input Registers)
 sensors:
@@ -597,6 +591,33 @@ sensors:
     scale: 1
     scan_interval: 5
 
+  # Following 2 registers are not in the documentation, but other projects are using them
+  - name: Export power raw
+    unique_id: export_power_raw
+    address: 5216 # reg 5217-5218
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Meter Power raw
+    unique_id: meter_power_raw
+    address: 5218 # reg 5219-5220
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
   - name: "Load Power"
     unique_id: "load_power"
     group: "PV_load_power"
@@ -1008,6 +1029,7 @@ sensors:
       3: "Overhaul"
       4: "Standby"
 
+  # Added with Version 1.1.50
   - name: Heart beat
     unique_id: heart_beat
     address: 5142 # reg 5143
@@ -1576,7 +1598,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt1_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt1_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt1_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt1_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt1_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt1_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1591,7 +1613,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt2_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt2_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt2_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt2_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt2_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1606,7 +1628,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt3_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt3_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt3_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt3_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt3_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt3_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1622,7 +1644,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt4_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt4_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt4_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt4_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt4_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt4_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1637,7 +1659,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt5_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt5_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt5_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt5_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt5_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt5_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1652,7 +1674,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt6_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt6_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt6_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt6_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt6_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt6_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1771,7 +1793,7 @@ calculated:
     type: "sensor"
     availability: >-
       {{ not is_state('sensor.{PREFIX}_load_power', 'unavailable') }}
-    state: "{{ states('sensor.{PREFIX}_load_power') | default(0) | float }}"
+    state: "{{ states('sensor.{PREFIX}_load_power') | float(0) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1784,9 +1806,19 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
-      and not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+      and (not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+           or not is_state('sensor.{PREFIX}_power_meter_raw', 'unavailable'))
       }}
-    state: "{% set pv = states('sensor.{PREFIX}_total_dc_power') | default(0) | float %}{% set grid = states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float %}{% if pv > 0 and grid < 0 %}{{ (grid | abs / pv * 100) | round(1) }}{% else %}0{% endif %}"
+    state: >-
+      {% set pv = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% if not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') %}
+        {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') | float(0) %}
+      {% elif not is_state('sensor.{PREFIX}_power_meter_raw', 'unavailable') %}
+        {% set grid = states('sensor.{PREFIX}_power_meter_raw') | float(0) %}
+      {% else %}
+        {% set grid = 0 %}
+      {% endif %}
+      {% if pv > 0 and grid < 0 %}{{ (grid | abs / pv * 100) | round(1) }}{% else %}0{% endif %}
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
@@ -1800,7 +1832,7 @@ calculated:
       not is_state('sensor.{PREFIX}_total_pv_generation', 'unavailable')
       and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
       }}
-    state: "{% set pv = states('sensor.{PREFIX}_total_pv_generation') | default(0) | float %}{% set load = states('sensor.{PREFIX}_load_power') | default(0) | float %}{% if pv > 0 %}{{ (load / pv * 100) | round(1) }}{% else %}0{% endif %}"
+    state: "{% set pv = states('sensor.{PREFIX}_total_pv_generation') | float(0) %}{% set load = states('sensor.{PREFIX}_load_power') | float(0) %}{% if pv > 0 %}{{ (load / pv * 100) | round(1) }}{% else %}0{% endif %}"
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
@@ -1813,10 +1845,21 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
-      and not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+      and (not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+           or not is_state('sensor.{PREFIX}_power_meter_raw', 'unavailable'))
       and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_total_dc_power') | default(0) | float) + (states('sensor.{PREFIX}_meter_active_power_raw') | default(0) | float) - (states('sensor.{PREFIX}_load_power') | default(0) | float) }}"
+    state: >-
+      {% set dc_power = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
+      {% if not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') %}
+        {% set grid_power = states('sensor.{PREFIX}_meter_active_power_raw') | float(0) %}
+      {% elif not is_state('sensor.{PREFIX}_power_meter_raw', 'unavailable') %}
+        {% set grid_power = states('sensor.{PREFIX}_power_meter_raw') | float(0) %}
+      {% else %}
+        {% set grid_power = 0 %}
+      {% endif %}
+      {% set load_power = states('sensor.{PREFIX}_load_power') | float(0) %}
+      {{ dc_power + grid_power - load_power }}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1832,7 +1875,7 @@ calculated:
       not is_state('sensor.{PREFIX}_phase_a_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_phase_a_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_phase_a_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_a_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_phase_a_voltage') | float(0)) * (states('sensor.{PREFIX}_phase_a_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1848,7 +1891,7 @@ calculated:
       not is_state('sensor.{PREFIX}_phase_b_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_phase_b_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_phase_b_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_b_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_phase_b_voltage') | float(0)) * (states('sensor.{PREFIX}_phase_b_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1864,7 +1907,7 @@ calculated:
       not is_state('sensor.{PREFIX}_phase_c_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_phase_c_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_phase_c_voltage') | default(0) | float) * (states('sensor.{PREFIX}_phase_c_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_phase_c_voltage') | float(0)) * (states('sensor.{PREFIX}_phase_c_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1875,11 +1918,22 @@ calculated:
     unique_id: "meter_active_power"
     type: "sensor"
     availability: >-
-          {{
-          not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
-          and states('sensor.{PREFIX}_meter_active_power_raw')|int != 0x7FFFFFFF
-          }}
-    state: "{{ states('sensor.{PREFIX}meter_active_power_raw') }}"
+      {{
+      (not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+       and states('sensor.{PREFIX}_meter_active_power_raw')|int != 0x7FFFFFFF)
+      or (not is_state('sensor.{PREFIX}_power_meter_raw', 'unavailable')
+          and states('sensor.{PREFIX}_power_meter_raw')|int != 0x7FFFFFFF)
+      }}
+    state: >-
+      {% if not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
+            and states('sensor.{PREFIX}_meter_active_power_raw')|int != 0x7FFFFFFF %}
+        {{ states('sensor.{PREFIX}_meter_active_power_raw') }}
+      {% elif not is_state('sensor.{PREFIX}_power_meter_raw', 'unavailable')
+            and states('sensor.{PREFIX}_power_meter_raw')|int != 0x7FFFFFFF %}
+        {{ states('sensor.{PREFIX}_power_meter_raw') }}
+      {% else %}
+        0
+      {% endif %}
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -2007,7 +2061,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt7_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt7_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt7_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt7_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt7_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt7_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -2022,7 +2076,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt8_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt8_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt8_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt8_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt8_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt8_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -2037,7 +2091,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt9_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt9_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt9_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt9_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt9_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt9_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -2052,7 +2106,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt10_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt10_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt10_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt10_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt10_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt10_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -2067,7 +2121,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt11_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt11_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt11_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt11_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt11_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt11_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -2082,7 +2136,7 @@ calculated:
       not is_state('sensor.{PREFIX}_mppt12_voltage', 'unavailable')
       and not is_state('sensor.{PREFIX}_mppt12_current', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_mppt12_voltage') | default(0) | float) * (states('sensor.{PREFIX}_mppt12_current') | default(0) | float) }}"
+    state: "{{ (states('sensor.{PREFIX}_mppt12_voltage') | float(0)) * (states('sensor.{PREFIX}_mppt12_current') | float(0)) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"

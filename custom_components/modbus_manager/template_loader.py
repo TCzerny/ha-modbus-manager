@@ -1186,30 +1186,33 @@ def _should_include_sensor(
                 )
                 return False
 
-    # Connection type specific sensors
+    # Connection type specific sensors (DEPRECATED: Use condition instead)
+    # This is kept for backward compatibility with old templates
+    # New templates should use condition: "connection_type == 'LAN'" on sensors
     connection_config = dynamic_config.get("connection_type", {}).get(
         "sensor_availability", {}
     )
-    if connection_type == "LAN":
-        # Exclude WINET-only sensors
-        winet_only_sensors = connection_config.get("winet_only_sensors", [])
-        if unique_id in winet_only_sensors:
-            _LOGGER.info(
-                "Excluding sensor due to LAN connection: %s (unique_id: %s)",
-                sensor.get("name", "unknown"),
-                sensor.get("unique_id", "unknown"),
-            )
-            return False
-    elif connection_type == "WINET":
-        # Exclude LAN-only sensors
-        lan_only_sensors = connection_config.get("lan_only_sensors", [])
-        if unique_id in lan_only_sensors:
-            _LOGGER.info(
-                "Excluding sensor due to WINET connection: %s (unique_id: %s)",
-                sensor.get("name", "unknown"),
-                sensor.get("unique_id", "unknown"),
-            )
-            return False
+    if connection_config:  # Only check if sensor_availability is defined
+        if connection_type == "LAN":
+            # Exclude WINET-only sensors
+            winet_only_sensors = connection_config.get("winet_only_sensors", [])
+            if unique_id in winet_only_sensors:
+                _LOGGER.info(
+                    "Excluding sensor due to LAN connection (deprecated sensor_availability): %s (unique_id: %s)",
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                )
+                return False
+        elif connection_type == "WINET":
+            # Exclude LAN-only sensors
+            lan_only_sensors = connection_config.get("lan_only_sensors", [])
+            if unique_id in lan_only_sensors:
+                _LOGGER.info(
+                    "Excluding sensor due to WINET connection (deprecated sensor_availability): %s (unique_id: %s)",
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                )
+                return False
 
     return True
 
