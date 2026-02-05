@@ -166,8 +166,9 @@ class ModbusCoordinatorSwitch(SwitchEntity):
                     return False
                 else:
                     # Value doesn't match expected on/off values
-                    _LOGGER.warning(
-                        "Switch %s has unexpected value %s (expected %s or %s)",
+                    # Return None to indicate unknown state (HA-compliant)
+                    _LOGGER.debug(
+                        "Switch %s has unexpected value %s (expected %s or %s) - state unknown",
                         self._name,
                         processed_value,
                         self._on_value,

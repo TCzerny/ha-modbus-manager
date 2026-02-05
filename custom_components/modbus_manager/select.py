@@ -114,14 +114,23 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                 if processed_value is not None:
                     # Apply mapping to convert numeric value to option name
                     mapped_value = self._apply_value_mapping(processed_value)
-                    self._attr_current_option = str(mapped_value)
 
-                    _LOGGER.debug(
-                        "Select %s updated: %s -> %s",
-                        self._attr_name,
-                        processed_value,
-                        mapped_value,
-                    )
+                    # Handle None (unknown state) correctly - don't convert to string
+                    if mapped_value is None:
+                        self._attr_current_option = None
+                        _LOGGER.debug(
+                            "Select %s: Value %s not found in options - state unknown",
+                            self._attr_name,
+                            processed_value,
+                        )
+                    else:
+                        self._attr_current_option = str(mapped_value)
+                        _LOGGER.debug(
+                            "Select %s updated: %s -> %s",
+                            self._attr_name,
+                            processed_value,
+                            mapped_value,
+                        )
                 else:
                     self._attr_current_option = None
                     _LOGGER.debug("Select %s: No processed value", self._attr_name)
@@ -176,10 +185,11 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                         return mapped_value
                     else:
                         _LOGGER.debug(
-                            "Value %s not found in map for %s",
+                            "Value %s not found in map for %s - will check other mappings",
                             int_value,
                             self._attr_name,
                         )
+                        # Continue to check flags and options
 
                 # 2. Apply flags (if defined)
                 if self._flags:
@@ -210,18 +220,20 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                         return option_value
                     else:
                         _LOGGER.debug(
-                            "Value %s not found in options for %s",
+                            "Value %s not found in options for %s - returning None (unknown state)",
                             int_value,
                             self._attr_name,
                         )
+                        # Return None to indicate unknown state (HA-compliant)
+                        return None
 
-            # No processing applied - return original value
+            # No processing applied - return None for unknown state (HA-compliant)
             _LOGGER.debug(
-                "No value processing applied for %s, returning original value: %s",
+                "No value processing applied for %s, value %s not mapped - returning None (unknown state)",
                 self._attr_name,
                 value,
             )
-            return value
+            return None
 
         except Exception as e:
             _LOGGER.error(
