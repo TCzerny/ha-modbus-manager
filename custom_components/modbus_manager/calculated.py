@@ -12,7 +12,6 @@ from .const import DOMAIN
 from .device_utils import (
     create_base_extra_state_attributes,
     generate_entity_name,
-    generate_unique_id,
     is_coordinator_connected,
 )
 
@@ -47,25 +46,12 @@ class ModbusCalculatedSensor(SensorEntity):
         # Extract configuration
         base_name = config.get("name", "Unknown Calculated Sensor")
 
-        # Handle prefix - if None, config is already processed by coordinator
-        if prefix is None:
-            # Config is already processed by coordinator
-            # Use device_prefix for display in attributes
-            self._prefix = device_prefix if device_prefix else "unknown"
-            # Set friendly_name to "prefix entityname" format
-            self._attr_name = f"{self._prefix} {base_name}"
-            unique_id = config.get("unique_id", "unknown")
-        else:
-            # Legacy mode - process prefix
-            self._prefix = prefix
-            # Set friendly_name to "prefix entityname" format
-            # Remove prefix from base_name if present to avoid double prefix
-            if base_name.startswith(f"{prefix} "):
-                clean_base_name = base_name[len(f"{prefix} ") :]
-            else:
-                clean_base_name = base_name
-            self._attr_name = f"{prefix} {clean_base_name}"
-            unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
+        # Config is already processed by coordinator (prefix=None always in new structure)
+        # Use device_prefix for display in attributes
+        self._prefix = device_prefix if device_prefix else "unknown"
+        # Set friendly_name to "prefix entityname" format
+        self._attr_name = f"{self._prefix} {base_name}"
+        unique_id = config.get("unique_id", "unknown")
 
         # unique_id should be just the value, not "sensor.{value}"
         # Home Assistant will auto-generate entity_id from unique_id
@@ -82,27 +68,25 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_has_entity_name = False
 
         # Template processing - support both 'template' and 'state' parameters
+        # Template is already processed by coordinator (PREFIX already replaced)
         template_str = config.get("template", config.get("state", ""))
         if not template_str:
             raise ValueError(
                 f"Calculated entity {self._attr_name} has no template or state defined"
             )
 
-        # Process template with prefix injection
-        processed_template = self._process_template_with_prefix(template_str)
+        # Template is already processed by coordinator - use directly
         try:
-            self._template = Template(processed_template, hass)
+            self._template = Template(template_str, hass)
         except Exception as e:
             _LOGGER.error("Error creating template for %s: %s", self._attr_name, str(e))
             raise
 
         # Availability template processing
+        # Template is already processed by coordinator (PREFIX already replaced)
         availability_template = config.get("availability")
         if availability_template:
-            processed_availability = self._process_template_with_prefix(
-                availability_template
-            )
-            self._availability_template = Template(processed_availability, hass)
+            self._availability_template = Template(availability_template, hass)
         else:
             self._availability_template = None
 
@@ -181,25 +165,6 @@ class ModbusCalculatedSensor(SensorEntity):
             self._attr_unique_id,
             self._group,
         )
-
-    def _process_template_with_prefix(self, template_str: str) -> str:
-        """Process template string to inject prefix into sensor references."""
-        try:
-            # Replace {PREFIX} placeholder with actual prefix
-            # This allows templates to use {PREFIX} as a placeholder
-            if self._prefix is not None:
-                processed_template = template_str.replace("{PREFIX}", self._prefix)
-            else:
-                # If prefix is None, config is already processed by coordinator
-                # Just return the template as-is
-                processed_template = template_str
-            return processed_template
-
-        except Exception as e:
-            _LOGGER.error(
-                "Error processing template for %s: %s", self._attr_name, str(e)
-            )
-            return template_str
 
     # device_info is now handled via _attr_device_info (DeviceInfo object)
     # Home Assistant will automatically use _attr_device_info for device membership
@@ -383,13 +348,10 @@ class ModbusCalculatedSensor(SensorEntity):
                         self._attr_suggested_display_precision = 5
 
             # Update dynamic icon if template is configured
+            # Icon template is already processed by coordinator (PREFIX already replaced)
             if self._icon_template and self._attr_native_value is not None:
                 try:
-                    # Process icon template with prefix injection
-                    processed_icon_template = self._process_template_with_prefix(
-                        self._icon_template
-                    )
-                    icon_template = Template(processed_icon_template, self.hass)
+                    icon_template = Template(self._icon_template, self.hass)
                     rendered_icon = await self.hass.async_add_executor_job(
                         icon_template.render
                     )
@@ -464,25 +426,12 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         # Extract configuration
         base_name = config.get("name", "Unknown Binary Sensor")
 
-        # Handle prefix - if None, config is already processed by coordinator
-        if prefix is None:
-            # Config is already processed by coordinator
-            # Use device_prefix for display in attributes
-            self._prefix = device_prefix if device_prefix else "unknown"
-            # Set friendly_name to "prefix entityname" format
-            self._attr_name = f"{self._prefix} {base_name}"
-            unique_id = config.get("unique_id", "unknown")
-        else:
-            # Legacy mode - process prefix
-            self._prefix = prefix
-            # Set friendly_name to "prefix entityname" format
-            # Remove prefix from base_name if present to avoid double prefix
-            if base_name.startswith(f"{prefix} "):
-                clean_base_name = base_name[len(f"{prefix} ") :]
-            else:
-                clean_base_name = base_name
-            self._attr_name = f"{prefix} {clean_base_name}"
-            unique_id = generate_unique_id(prefix, config.get("unique_id"), base_name)
+        # Config is already processed by coordinator (prefix=None always in new structure)
+        # Use device_prefix for display in attributes
+        self._prefix = device_prefix if device_prefix else "unknown"
+        # Set friendly_name to "prefix entityname" format
+        self._attr_name = f"{self._prefix} {base_name}"
+        unique_id = config.get("unique_id", "unknown")
 
         # unique_id should be just the value, not "binary_sensor.{value}"
         # Home Assistant will auto-generate entity_id from unique_id
@@ -505,21 +454,18 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 f"Calculated binary sensor {self._attr_name} has no state template defined"
             )
 
-        # Process template with prefix injection
-        processed_template = self._process_template_with_prefix(template_str)
+        # Template is already processed by coordinator (PREFIX already replaced)
         try:
-            self._template = Template(processed_template, hass)
+            self._template = Template(template_str, hass)
         except Exception as e:
             _LOGGER.error("Error creating template for %s: %s", self._attr_name, str(e))
             raise
 
         # Availability template processing
+        # Template is already processed by coordinator (PREFIX already replaced)
         availability_template = config.get("availability")
         if availability_template:
-            processed_availability = self._process_template_with_prefix(
-                availability_template
-            )
-            self._availability_template = Template(processed_availability, hass)
+            self._availability_template = Template(availability_template, hass)
         else:
             self._availability_template = None
 
@@ -555,24 +501,6 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             self._attr_unique_id,
             self._group,
         )
-
-    def _process_template_with_prefix(self, template_str: str) -> str:
-        """Process template string to inject prefix into sensor references."""
-        try:
-            # Replace {PREFIX} placeholder with actual prefix
-            if self._prefix is not None:
-                processed_template = template_str.replace("{PREFIX}", self._prefix)
-            else:
-                # If prefix is None, config is already processed by coordinator
-                # Just return the template as-is
-                processed_template = template_str
-            return processed_template
-
-        except Exception as e:
-            _LOGGER.error(
-                "Error processing template for %s: %s", self._attr_name, str(e)
-            )
-            return template_str
 
     # device_info is now handled via _attr_device_info (DeviceInfo object)
     # Home Assistant will automatically use _attr_device_info for device membership

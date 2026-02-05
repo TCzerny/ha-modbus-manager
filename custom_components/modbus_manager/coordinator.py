@@ -20,7 +20,6 @@ from .const import DOMAIN
 from .device_utils import (
     create_device_info_dict,
     generate_unique_id,
-    process_template_entities_with_prefix,
     replace_template_placeholders,
 )
 from .logger import ModbusManagerLogger
@@ -1124,21 +1123,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
                 # entity.copy() preserves all fields including "type"
 
-                # Process unique_id
+                # Process unique_id using centralized function
                 template_unique_id = entity.get("unique_id")
-                if template_unique_id:
-                    if not template_unique_id.startswith(f"{prefix}_"):
-                        processed_entity["unique_id"] = f"{prefix}_{template_unique_id}"
-                else:
-                    name = entity.get("name", "unknown")
-                    clean_name = (
-                        name.lower()
-                        .replace(" ", "_")
-                        .replace("-", "_")
-                        .replace("(", "")
-                        .replace(")", "")
-                    )
-                    processed_entity["unique_id"] = f"{prefix}_{clean_name}"
+                name = entity.get("name", "unknown")
+                processed_entity["unique_id"] = generate_unique_id(
+                    prefix, template_unique_id, name
+                )
 
                 # Ensure default_entity_id is set (used to force entity_id)
                 if "default_entity_id" not in processed_entity:

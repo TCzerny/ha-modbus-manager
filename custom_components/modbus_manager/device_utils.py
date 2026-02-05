@@ -123,8 +123,9 @@ def replace_template_placeholders(
 
     # Replace common placeholders
     # Note: {PREFIX} is still actively used, {SLAVE_ID} and {BATTERY_SLAVE_ID} are legacy
+    # PREFIX is replaced lowercase for consistency with entity_id format
     replacements = {
-        "{PREFIX}": prefix,
+        "{PREFIX}": prefix.lower(),
         "{SLAVE_ID}": str(slave_id),  # Legacy - no longer used in templates
         "{BATTERY_SLAVE_ID}": str(battery_slave_id),  # Legacy - no longer used
     }
