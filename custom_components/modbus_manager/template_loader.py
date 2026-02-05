@@ -20,6 +20,45 @@ def set_hass_instance(hass: HomeAssistant) -> None:
     _hass_instance = hass
 
 
+# Template cache with file modification time tracking
+_template_cache: Dict[str, Dict[str, Any]] = {}
+_base_template_cache: Optional[Dict[str, Dict[str, Any]]] = None
+_cache_file_mtimes: Dict[str, float] = {}
+# Cache mapping template names to file paths for faster lookup
+_template_name_to_path: Dict[str, str] = {}
+
+
+def _get_file_mtime(file_path: str) -> float:
+    """Get file modification time, return 0 if file doesn't exist."""
+    try:
+        return os.path.getmtime(file_path)
+    except OSError:
+        return 0.0
+
+
+def _is_cache_valid(file_path: str) -> bool:
+    """Check if cached template is still valid based on file modification time."""
+    if file_path not in _cache_file_mtimes:
+        return False
+    current_mtime = _get_file_mtime(file_path)
+    return current_mtime == _cache_file_mtimes[file_path]
+
+
+def _invalidate_cache() -> None:
+    """Invalidate all template caches."""
+    global _base_template_cache
+    _template_cache.clear()
+    _base_template_cache = None
+    _cache_file_mtimes.clear()
+    _template_name_to_path.clear()
+
+
+def invalidate_template_cache() -> None:
+    """Public function to invalidate template cache (e.g., after template updates)."""
+    _invalidate_cache()
+    _LOGGER.debug("Template cache invalidated")
+
+
 from .const import (
     DEFAULT_MAX_REGISTER_READ,
     DEFAULT_MAX_VALUE,
@@ -229,13 +268,35 @@ async def load_templates() -> List[Dict[str, Any]]:
 
 
 async def load_base_templates() -> Dict[str, Dict[str, Any]]:
-    """Load all base template files asynchronously."""
+    """Load all base template files asynchronously with caching."""
+    global _base_template_cache
+
     try:
+        # Check if cache is valid by checking all base template files
+        if _base_template_cache is not None:
+            cache_valid = True
+            if os.path.exists(BASE_TEMPLATE_DIR):
+                loop = asyncio.get_event_loop()
+                filenames = await loop.run_in_executor(
+                    None, os.listdir, BASE_TEMPLATE_DIR
+                )
+                for filename in filenames:
+                    if filename.endswith((".yaml", ".yml")):
+                        template_path = os.path.join(BASE_TEMPLATE_DIR, filename)
+                        if not _is_cache_valid(template_path):
+                            cache_valid = False
+                            break
+
+            if cache_valid:
+                _LOGGER.debug("Using cached base templates")
+                return _base_template_cache
+
         # Create base templates directory if it doesn't exist
         if not os.path.exists(BASE_TEMPLATE_DIR):
             os.makedirs(BASE_TEMPLATE_DIR)
             _LOGGER.debug("BASE-Template-Verzeichnis %s erstellt", BASE_TEMPLATE_DIR)
-            return {}
+            _base_template_cache = {}
+            return _base_template_cache
 
         # List files in thread-safe way
         loop = asyncio.get_event_loop()
@@ -250,9 +311,14 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
                     base_name = template_data.get("name")
                     if base_name:
                         base_templates[base_name] = template_data
-                        # BASE-Template loaded
+                        # Track file modification time for cache invalidation
+                        _cache_file_mtimes[template_path] = _get_file_mtime(
+                            template_path
+                        )
 
-        # BASE-Templates loaded
+        # Cache the result
+        _base_template_cache = base_templates
+        _LOGGER.debug("Loaded and cached %d base templates", len(base_templates))
         return base_templates
 
     except Exception as e:
@@ -564,8 +630,14 @@ async def process_simple_template_with_config(
 async def load_single_template(
     template_path: str, base_templates: Dict[str, Dict[str, Any]] = None
 ) -> Optional[Dict[str, Any]]:
-    """Load a single template file asynchronously."""
+    """Load a single template file asynchronously with caching."""
     try:
+        # Check cache first
+        cache_key = template_path
+        if cache_key in _template_cache and _is_cache_valid(template_path):
+            _LOGGER.debug("Using cached template: %s", template_path)
+            return _template_cache[cache_key]
+
         # Read file in thread-safe way
         loop = asyncio.get_event_loop()
         data = await loop.run_in_executor(None, _read_template_file, template_path)
@@ -789,6 +861,14 @@ async def load_single_template(
         # Add extends information if present
         if extends_name:
             result["extends"] = extends_name
+
+        # Cache the result
+        cache_key = template_path
+        _template_cache[cache_key] = result
+        _cache_file_mtimes[template_path] = _get_file_mtime(template_path)
+        # Cache template name to path mapping
+        if template_name:
+            _template_name_to_path[template_name] = template_path
 
         return result
 
@@ -1773,7 +1853,7 @@ async def load_mapping_template(
 
 
 async def get_template_by_name(template_name: str) -> Optional[Dict[str, Any]]:
-    """Get a specific template by name - optimized to load only the needed template.
+    """Get a specific template by name - optimized with caching.
 
     Priority:
     1. Check custom templates first (can override built-in)
@@ -1781,7 +1861,7 @@ async def get_template_by_name(template_name: str) -> Optional[Dict[str, Any]]:
     3. Check manufacturer mappings
     """
     try:
-        # Load base templates first
+        # Load base templates first (cached)
         base_templates = await load_base_templates()
 
         # 1. Check custom templates first (highest priority)
@@ -1793,7 +1873,18 @@ async def get_template_by_name(template_name: str) -> Optional[Dict[str, Any]]:
                     _LOGGER.debug("Loaded custom template: %s", template_name)
                     return template_data
 
-        # 2. Check built-in templates
+        # 2. Check cache first - if we know the path, load directly
+        if template_name in _template_name_to_path:
+            cached_path = _template_name_to_path[template_name]
+            if _is_cache_valid(cached_path) and cached_path in _template_cache:
+                _LOGGER.debug("Using cached template: %s", template_name)
+                return _template_cache[cached_path]
+            # Path exists but cache invalid, load from that path
+            template_data = await load_single_template(cached_path, base_templates)
+            if template_data and template_data.get("name") == template_name:
+                return template_data
+
+        # 3. Check built-in templates (only if not in cache)
         if os.path.exists(TEMPLATE_DIR):
             loop = asyncio.get_event_loop()
             filenames = await loop.run_in_executor(None, os.listdir, TEMPLATE_DIR)
@@ -1814,7 +1905,7 @@ async def get_template_by_name(template_name: str) -> Optional[Dict[str, Any]]:
                         )
                         return template_data
 
-        # 3. Check manufacturer mappings if not found in device templates
+        # 4. Check manufacturer mappings if not found in device templates
         if os.path.exists(MAPPING_DIR):
             loop = asyncio.get_event_loop()
             mapping_files = await loop.run_in_executor(None, os.listdir, MAPPING_DIR)
