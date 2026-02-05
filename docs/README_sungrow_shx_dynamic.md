@@ -558,11 +558,43 @@ Special thanks to the **photovoltaikforum.com** and **forum.iobroker.net** commu
 
 ## 📋 Version
 
-**Version:** 1.2.0
-**Last Update:** January 2025
+**Version:** 1.2.7
+**Last Update:** February 2026
 **Compatibility:** All 36 Sungrow SHx Models
 
 ### 🔄 Changelog
+
+#### Version 1.2.7 (February 2025)
+- 🔧 **Meter Type Configuration Updated**
+  - Removed iHomeManager from meter_type options (now separate template `sungrow_ihomemanager.yaml`)
+  - Updated meter_type options to: DTSU666, DTSU666-20 only
+  - Added Meter Type Filtering section in documentation
+- 📊 **New Registers Added**
+  - Added Meter Channel 2 registers (13199, 13201, 13203, 13205) for DTSU666-20 dual-channel meter
+  - Added Firmware Information registers (13249, 13264)
+  - Added Meter Channel 2 calculated sensors
+- 📝 **Documentation Updates**
+  - Updated Meter Data section with Channel 2 information
+  - Added notes about iHomeManager being a separate template
+  - Updated Configurable Parameters table
+  - Removed incorrect "Automatic Model Detection" section
+
+#### Version 1.2.6 (January 2025)
+- 🔋 **Battery Power Limits Enhancement**
+  - Added `max_charge_power` and `max_discharge_power` to dynamic_config for ALL models
+  - Dynamic adjustment based on selected_model implemented
+  - Runtime validation enforces safe limits based on battery capacity
+- ⚡ **Export Power and Battery Start Power Limits**
+  - Added `max_ac_output_power` to dynamic_config for ALL models
+  - Dynamic adjustment for all controls based on selected_model
+  - Battery Charging/Discharging Start Power max_value set to reasonable limits
+
+#### Version 1.2.5 (November 2025)
+- 📡 **Protocol V1.1.11 Updates**
+  - Updated Battery Power to recommended register 5214-5215 (S32, 1W)
+  - Updated Battery Current to recommended register 5631 (S16, 0.1A)
+  - Confirmed Grid Frequency uses recommended register 5242 (U16, 0.01Hz)
+  - Added Firmware Information registers (13250-13369)
 
 #### Version 1.2.0 (January 2025)
 - ✨ **New: Home Assistant Energy Dashboard Compatible Sensors**
