@@ -174,8 +174,8 @@ Use the `condition` field on sensors/controls/calculated/binary entities to incl
 # Model-specific control
 condition: "selected_model in [SG33CX, SG40CX, SG50CX]"
 
-# Exclude a meter type
-condition: "meter_type != 'iHomeManager'"
+# Exclude based on meter type (example)
+condition: "meter_type == 'DTSU666'"
 
 # Combined logic
 condition: "phases >= 3 and connection_type == 'LAN'"

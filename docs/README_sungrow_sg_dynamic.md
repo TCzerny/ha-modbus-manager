@@ -123,8 +123,9 @@ models listed in `valid_models`).
 - **Phase Power** - Calculated power per phase
 
 ### 🔄 Grid Power Calculations
-- **Grid Import Power** - Grid import (positive)
-- **Grid Export Power** - Grid export (negative)
+- **Grid Import Power** - Grid import (positive, uses `export_power_raw` or `meter_active_power_raw`)
+- **Grid Export Power** - Grid export (negative, uses `export_power_raw`)
+- **Meter Active Power** - Grid power with fallback to `power_meter_raw` if `meter_active_power_raw` unavailable
 
 ### 📊 Efficiency Calculations
 - **Solar to Grid Efficiency** - PV to grid efficiency
@@ -166,6 +167,8 @@ This section contains all entities that will be created by this template, includ
 | 5037 | Work state | work_state |
 | 5080 | Running State | running_state |
 | 5082 | Meter active power raw | meter_active_power_raw |
+| 5216 | Export power raw | export_power_raw |
+| 5218 | Meter Power raw | meter_power_raw |
 | 5090 | Load Power | load_power |
 | 5092 | Daily exported energy | daily_exported_energy |
 | 5094 | Total exported energy | total_exported_energy |
@@ -211,7 +214,10 @@ This section contains all entities that will be created by this template, includ
 | 7018 | String 7 current | string_7_current |
 | 7019 | String 8 current | string_8_current |
 
-**Note:** MPPT and phase sensors are automatically filtered based on model configuration.
+**Note:**
+- MPPT and phase sensors are automatically filtered based on model configuration
+- `export_power_raw` (5216) and `meter_power_raw` (5218) are alternative meter registers that can be used as fallback if `meter_active_power_raw` is unavailable
+- Calculated sensors automatically use `meter_power_raw` as fallback when `meter_active_power_raw` is unavailable
 
 ### Controls (Read/Write)
 

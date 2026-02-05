@@ -31,11 +31,13 @@ The template supports **all 36** following Sungrow SHx models:
 
 | Parameter | Options | Default | Description |
 |-----------|----------|---------|-------------|
-| **Phases** | 1, 3 | 1 | Number of phases (1-phase or 3-phase) |
-| **MPPT** | 1, 2, 3 | 1 | Number of MPPT trackers |
-| **Battery** | none, other, template | none | Battery selection (no battery, no template, or template) |
-| **Firmware** | String | "SAPPHIRE-H_03011.95.01" | Firmware version (e.g. "SAPPHIRE-H_03011.95.01") |
-| **Strings** | 1-24 | 1 | Number of PV strings |
+| **Model** | See list above | Required | Inverter model selection |
+| **Phases** | 1, 3 | Auto | Number of phases (auto-detected from model) |
+| **MPPT** | 1, 2, 3 | Auto | Number of MPPT trackers (auto-detected from model) |
+| **Battery** | none, standard_battery, sbr_battery | none | Battery configuration |
+| **Meter Type** | DTSU666, DTSU666-20 | DTSU666 | Meter type connected to inverter |
+| **Firmware** | String | "03011.95.01" | Firmware version (e.g. "03011.95.01") |
+| **Strings** | 1-24 | Auto | Number of PV strings (auto-detected from model) |
 | **Connection** | LAN, WINET | LAN | Connection type |
 
 ### 🔄 Automatic Filtering
@@ -51,8 +53,13 @@ The template supports **all 36** following Sungrow SHx models:
 
 #### **Battery Filtering**
 - **Battery none:** No battery registers
-- **Battery other:** Inverter battery registers only
-- **Battery template:** Inverter battery registers + battery template entities
+- **Battery standard_battery:** Inverter battery registers only
+- **Battery sbr_battery:** Inverter battery registers + SBR battery template entities
+
+#### **Meter Type Filtering**
+- **DTSU666:** Standard single-channel meter (registers 5600-5606)
+- **DTSU666-20:** Dual-channel meter with Channel 2 support (registers 5600-5606 + 13199-13205)
+- **Note:** iHomeManager is now a separate template (`sungrow_ihomemanager.yaml`) and should not be selected here
 
 #### **Connection Filtering**
 - **LAN:** All registers available
@@ -95,10 +102,12 @@ The template supports **all 36** following Sungrow SHx models:
 - **Daily/Total Battery Charge/Discharge** - Battery charge cycles
 
 ### 🎛️ Meter Data (Grid Monitoring)
-- **Meter Active Power** - Grid active power
-- **Meter Phase Power** - Phase-specific power
+- **Meter Active Power** - Grid active power (DTSU666/DTSU666-20)
+- **Meter Phase Power** - Phase-specific power (DTSU666/DTSU666-20, 3-phase only)
 - **Meter Voltage/Current** - Grid voltage and current
 - **Grid Frequency** - Grid frequency
+- **Meter Channel 2** - Channel 2 power data (DTSU666-20 dual-channel meter only)
+  - **Note:** iHomeManager meter support is now provided by the separate `sungrow_ihomemanager.yaml` template
 
 ### 📈 Statistical Data (LAN only)
 - **Monthly PV Generation** - Monthly PV generation (12 months)
@@ -224,6 +233,12 @@ This section contains all entities that will be created by this template, includ
 | 5602 | Meter phase A active power raw | meter_phase_a_active_power_raw |
 | 5604 | Meter phase B active power raw | meter_phase_b_active_power_raw |
 | 5606 | Meter phase C active power raw | meter_phase_c_active_power_raw |
+| 13199 | Meter Channel 2 Total Active Power raw (DTSU666-20 only) | meter_channel_2_total_active_power_raw |
+| 13201 | Meter Channel 2 Phase A Active Power raw (DTSU666-20 only) | meter_channel_2_phase_a_active_power_raw |
+| 13203 | Meter Channel 2 Phase B Active Power raw (DTSU666-20 only) | meter_channel_2_phase_b_active_power_raw |
+| 13205 | Meter Channel 2 Phase C Active Power raw (DTSU666-20 only) | meter_channel_2_phase_c_active_power_raw |
+| 13249 | Inverter Firmware Information | inverter_firmware_info |
+| 13264 | Communication Module Firmware Information | communication_module_firmware_info |
 | 5627 | BDC rated power | bdc_rated_power |
 | 5634 | BMS max. charging current | bms_max_charging_current |
 | 5635 | BMS max. discharging current | bms_max_discharging_current |
@@ -318,7 +333,11 @@ This section contains all entities that will be created by this template, includ
 | 13045 | Total exported energy | total_exported_energy |
 | 30229 | Global mpp scan manual raw | global_mpp_scan_manual_raw |
 
-**Note:** Monthly and yearly statistical sensors are only available with LAN connection. Battery-related sensors are only available when battery is enabled.
+**Note:**
+- Monthly and yearly statistical sensors are only available with LAN connection
+- Battery-related sensors are only available when battery is enabled
+- Meter Channel 2 sensors (13199-13205) are only available when meter_type is set to "DTSU666-20"
+- **iHomeManager is now a separate template** (`sungrow_ihomemanager.yaml`) - do not use meter_type "iHomeManager" with this template
 
 ### Controls (Read/Write)
 
@@ -367,6 +386,10 @@ This section contains all entities that will be created by this template, includ
 | - | Meter Phase A Active Power | meter_phase_a_active_power |
 | - | Meter Phase B Active Power | meter_phase_b_active_power |
 | - | Meter Phase C Active Power | meter_phase_c_active_power |
+| - | Meter Channel 2 Total Active Power (DTSU666-20 only) | meter_channel_2_total_active_power |
+| - | Meter Channel 2 Phase A Active Power (DTSU666-20 only) | meter_channel_2_phase_a_active_power |
+| - | Meter Channel 2 Phase B Active Power (DTSU666-20 only) | meter_channel_2_phase_b_active_power |
+| - | Meter Channel 2 Phase C Active Power (DTSU666-20 only) | meter_channel_2_phase_c_active_power |
 
 #### Battery Power Calculations
 | Address | Name | Unique ID |
