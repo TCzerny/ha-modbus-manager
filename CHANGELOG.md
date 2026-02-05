@@ -58,8 +58,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### 🧹 Code Cleanup
 
-#### Removed Legacy Functions
-- **Removed ~650 lines of deprecated code**:
+- Removed several unused functions:
+- Reduces code complexity and maintenance burden
+- No functional impact - all functions were completely unused
+- Reduced log spam by converting many info-level logs to debug level:
+- **Important info logs preserved**:
+  - Modbus connection status (connected/disconnected)
+  - Template reload events
+  - Configuration migrations
+  - Setup completion
+  - Error messages
+- Significantly reduces log noise while maintaining visibility of important events
+
 
 #### Centralized unique_id Generation (if not provided)
 - **Code Deduplication**: `_process_entities_with_prefix()` now uses centralized `generate_unique_id()` function
