@@ -143,7 +143,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
     def invalidate_cache(self):
         """Invalidate the entity cache (e.g., when template is reloaded)."""
-        _LOGGER.info("Invalidating entity cache")
+        _LOGGER.debug("Invalidating entity cache")
         self._cached_entities = None
         self._cached_registers_by_interval = {}
         self._last_update_time = {}
@@ -610,7 +610,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                             input_type=input_type,
                         )
 
-                        _LOGGER.info(
+                        _LOGGER.debug(
                             "Detected SunSpec model addresses for %s: %s",
                             template_name,
                             sunspec_model_addresses,
@@ -995,7 +995,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 _LOGGER.error("No devices found in legacy configuration")
                 return []
 
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Converted legacy configuration to %d devices (main: %s, battery: %s)",
                 len(devices),
                 template or "none",

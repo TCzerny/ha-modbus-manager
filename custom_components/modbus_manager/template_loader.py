@@ -320,6 +320,79 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
         return {}
 
 
+def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
+    """Validate a custom control in a template."""
+    try:
+        # Required fields
+        required_fields = ["type", "name", "address"]
+        for field in required_fields:
+            if field not in ctrl:
+                _LOGGER.error(
+                    "Template %s: Custom Control fehlt Pflichtfeld %s",
+                    template_name,
+                    field,
+                )
+                return False
+
+        # Validate control type
+        ctrl_type = ctrl.get("type")
+        valid_control_types = {"select", "number", "button", "switch"}
+        if ctrl_type not in valid_control_types:
+            _LOGGER.error(
+                "Template %s: Ungültiger Control-Typ für %s: %s",
+                template_name,
+                ctrl.get("name"),
+                ctrl_type,
+            )
+            return False
+
+        # Validate address
+        address = ctrl.get("address")
+        if not isinstance(address, int) or address < 1:
+            _LOGGER.error(
+                "Template %s: Ungültige Adresse für Control %s: %s",
+                template_name,
+                ctrl.get("name"),
+                address,
+            )
+            return False
+
+        # Type-specific validation
+        if ctrl_type == "select":
+            options = ctrl.get("options", {})
+            if not isinstance(options, dict) or not options:
+                _LOGGER.error(
+                    "Template %s: Select-Control %s benötigt gültige options",
+                    template_name,
+                    ctrl.get("name"),
+                )
+                return False
+
+        elif ctrl_type == "number":
+            min_val = ctrl.get("min_value")
+            max_val = ctrl.get("max_value")
+            if min_val is not None and max_val is not None:
+                if min_val >= max_val:
+                    _LOGGER.error(
+                        "Template %s: Ungültige min/max Werte für Control %s: min=%s, max=%s",
+                        template_name,
+                        ctrl.get("name"),
+                        min_val,
+                        max_val,
+                    )
+                    return False
+
+        return True
+
+    except Exception as e:
+        _LOGGER.error(
+            "Fehler bei der Validierung des Custom Controls in Template %s: %s",
+            template_name,
+            str(e),
+        )
+        return False
+
+
 async def load_single_template(
     template_path: str, base_templates: Dict[str, Dict[str, Any]] = None
 ) -> Optional[Dict[str, Any]]:
@@ -617,7 +690,7 @@ def _should_include_sensor(
             )
 
             if module_number > actual_modules:
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Excluding sensor due to module number in name: %s (module=%d, actual_modules=%d)",
                     sensor_name,
                     module_number,
@@ -629,7 +702,7 @@ def _should_include_sensor(
     condition = sensor.get("condition")
     if condition:
         if not _evaluate_condition(condition, dynamic_config):
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Excluding sensor due to condition '%s': %s (unique_id: %s)",
                 condition,
                 sensor.get("name", "unknown"),
@@ -682,7 +755,7 @@ def _should_include_sensor(
                     )
 
                     if actual_value != required_value:
-                        _LOGGER.info(
+                        _LOGGER.debug(
                             "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
                             condition,
                             sensor.get("name", "unknown"),
@@ -726,7 +799,7 @@ def _should_include_sensor(
                     )
 
                     if actual_value < required_value:
-                        _LOGGER.info(
+                        _LOGGER.debug(
                             "Excluding sensor due to condition '%s': %s (unique_id: %s, required: %s, actual: %s)",
                             condition,
                             sensor.get("name", "unknown"),
@@ -761,7 +834,7 @@ def _should_include_sensor(
             phase in search_text
             for phase in ["phase_b", "phase_c", "phase b", "phase c"]
         ):
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Excluding sensor due to single phase config: %s (unique_id: %s)",
                 sensor.get("name", "unknown"),
                 sensor.get("unique_id", "unknown"),
@@ -776,7 +849,7 @@ def _should_include_sensor(
         # Extract MPPT number from sensor name or unique_id
         mppt_number = _extract_mppt_number(search_text)
         if mppt_number and mppt_number > mppt_count:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Excluding sensor due to MPPT count config: %s (unique_id: %s, MPPT %d > %d)",
                 sensor.get("name", "unknown"),
                 sensor.get("unique_id", "unknown"),
@@ -790,7 +863,7 @@ def _should_include_sensor(
         # Extract string number from sensor name or unique_id
         string_number = _extract_string_number(search_text)
         if string_number and string_number > string_count:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Excluding sensor due to string count config: %s (unique_id: %s, String %d > %d)",
                 sensor.get("name", "unknown"),
                 sensor.get("unique_id", "unknown"),
@@ -803,7 +876,7 @@ def _should_include_sensor(
     if not battery_enabled:
         battery_keywords = ["battery", "bms", "soc", "charge", "discharge", "backup"]
         if any(keyword in search_text for keyword in battery_keywords):
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Excluding sensor due to battery disabled: %s (unique_id: %s)",
                 sensor.get("name", "unknown"),
                 sensor.get("unique_id", "unknown"),
@@ -818,7 +891,7 @@ def _should_include_sensor(
     elif battery_type == "standard_battery":
         # Standard Battery selected - exclude battery sensors (they are now separate)
         if sensor_group in ["battery", "battery_cells"]:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Excluding sensor due to standard battery selected: %s (unique_id: %s)",
                 sensor.get("name", "unknown"),
                 sensor.get("unique_id", "unknown"),
@@ -835,7 +908,7 @@ def _should_include_sensor(
             current_ver = version.parse(firmware_version)
             min_ver = version.parse(sensor_firmware_min)
             if current_ver < min_ver:
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Excluding sensor due to firmware version: %s (unique_id: %s, requires: %s, current: %s)",
                     sensor.get("name", "unknown"),
                     sensor.get("unique_id", "unknown"),
@@ -846,7 +919,7 @@ def _should_include_sensor(
         except version.InvalidVersion:
             # Fallback to string comparison for non-semantic versions
             if firmware_version < sensor_firmware_min:
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Excluding sensor due to firmware version (string): %s (unique_id: %s, requires: %s, current: %s)",
                     sensor.get("name", "unknown"),
                     sensor.get("unique_id", "unknown"),
@@ -866,7 +939,7 @@ def _should_include_sensor(
             # Exclude WINET-only sensors
             winet_only_sensors = connection_config.get("winet_only_sensors", [])
             if unique_id in winet_only_sensors:
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Excluding sensor due to LAN connection (deprecated sensor_availability): %s (unique_id: %s)",
                     sensor.get("name", "unknown"),
                     sensor.get("unique_id", "unknown"),
@@ -876,7 +949,7 @@ def _should_include_sensor(
             # Exclude LAN-only sensors
             lan_only_sensors = connection_config.get("lan_only_sensors", [])
             if unique_id in lan_only_sensors:
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Excluding sensor due to WINET connection (deprecated sensor_availability): %s (unique_id: %s)",
                     sensor.get("name", "unknown"),
                     sensor.get("unique_id", "unknown"),

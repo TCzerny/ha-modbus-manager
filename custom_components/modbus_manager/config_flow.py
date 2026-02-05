@@ -1446,11 +1446,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     # Step 4: Battery detection for PV inverters
     async def async_step_battery_detection(self, user_input: dict = None) -> FlowResult:
         """Ask if battery is available for PV inverter."""
-        _LOGGER.info("=== BATTERY DETECTION STEP CALLED ===")
-        _LOGGER.info("User input: %s", user_input)
+        _LOGGER.debug("=== BATTERY DETECTION STEP CALLED ===")
+        _LOGGER.debug("User input: %s", user_input)
 
         if user_input is not None:
-            _LOGGER.info("Battery available: %s", user_input.get("battery_available"))
+            _LOGGER.debug("Battery available: %s", user_input.get("battery_available"))
             if user_input.get("battery_available"):
                 return await self.async_step_battery_template_selection()
             else:
@@ -1465,7 +1465,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         inverter_prefix = self._inverter_config.get("prefix", "SG")
         inverter_host = self._inverter_config.get("host", "unknown")
 
-        _LOGGER.info(
+        _LOGGER.debug(
             "Showing battery detection form for inverter: %s (%s)",
             inverter_prefix,
             inverter_host,
@@ -1573,13 +1573,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     if selected_model in valid_models:
                         modules = valid_models[selected_model].get("modules", 1)
                         self._battery_config["battery_modules"] = modules
-                        _LOGGER.info(
+                        _LOGGER.debug(
                             "Selected battery model %s has %d modules",
                             selected_model,
                             modules,
                         )
 
-            _LOGGER.info("Battery config completed - proceeding to finalization")
+            _LOGGER.debug("Battery config completed - proceeding to finalization")
             return await self.async_step_finalize_inverter_with_battery()
 
         # Get battery template data for defaults and model selection
@@ -1593,7 +1593,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             default_slave_id = battery_template_data.get("default_slave_id", 200)
             default_prefix = battery_template_data.get("default_prefix", "SBR")
 
-        _LOGGER.info(
+        _LOGGER.debug(
             "Battery template defaults - prefix: %s, slave_id: %d",
             default_prefix,
             default_slave_id,
@@ -1620,11 +1620,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 vol.Required("battery_model", default=model_options[0])
             ] = vol.In(model_options)
 
-            _LOGGER.info("Battery template has valid_models: %s", model_options)
+            _LOGGER.debug("Battery template has valid_models: %s", model_options)
         else:
             # Fallback to simple module count if no valid_models
             schema_fields[vol.Optional("battery_modules", default=1)] = int
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Battery template has no valid_models - using simple module count"
             )
 
@@ -1706,11 +1706,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "battery",
             ]
 
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Filtering battery groups from inverter template: %s",
                 self._selected_template,
             )
-            _LOGGER.info("Battery groups to filter: %s", battery_groups)
+            _LOGGER.debug("Battery groups to filter: %s", battery_groups)
 
             # Filter sensors based on groups
             if "sensors" in inverter_template_data:
@@ -1721,7 +1721,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     if not self._is_battery_group_sensor(sensor, battery_groups)
                 ]
                 filtered_count = original_count - len(inverter_template_data["sensors"])
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Filtered %d battery sensors from inverter template", filtered_count
                 )
 
@@ -1736,7 +1736,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 filtered_count = original_count - len(
                     inverter_template_data["calculated"]
                 )
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Filtered %d battery calculated sensors from inverter template",
                     filtered_count,
                 )
@@ -1752,12 +1752,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 filtered_count = original_count - len(
                     inverter_template_data["binary_sensors"]
                 )
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Filtered %d battery binary sensors from inverter template",
                     filtered_count,
                 )
 
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Battery group filtering completed for template: %s",
                 self._selected_template,
             )
@@ -1788,7 +1788,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     ) -> dict:
         """Filter battery template to only include sensors for the selected number of modules."""
         try:
-            _LOGGER.info("Filtering battery template for %d modules", module_count)
+            _LOGGER.debug("Filtering battery template for %d modules", module_count)
 
             # Create a copy of the template data
             filtered_template = template_data.copy()
@@ -1802,7 +1802,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     if self._is_sensor_for_selected_modules(sensor, module_count)
                 ]
                 filtered_count = original_count - len(filtered_template["sensors"])
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Filtered %d sensors for %d modules (kept %d)",
                     filtered_count,
                     module_count,
@@ -1818,7 +1818,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     if self._is_sensor_for_selected_modules(calc, module_count)
                 ]
                 filtered_count = original_count - len(filtered_template["calculated"])
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Filtered %d calculated sensors for %d modules (kept %d)",
                     filtered_count,
                     module_count,
@@ -1836,14 +1836,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 filtered_count = original_count - len(
                     filtered_template["binary_sensors"]
                 )
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Filtered %d binary sensors for %d modules (kept %d)",
                     filtered_count,
                     module_count,
                     len(filtered_template["binary_sensors"]),
                 )
 
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Battery template filtering completed for %d modules", module_count
             )
             return filtered_template
@@ -1917,7 +1917,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             # Store module count for runtime filtering
             module_count = self._battery_config.get("battery_modules", 5)
-            _LOGGER.info("Battery will be configured for %d modules", module_count)
+            _LOGGER.debug("Battery will be configured for %d modules", module_count)
 
             # Create devices array structure
             devices = []
@@ -2007,8 +2007,8 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "battery_selected_model"
                 ] = self._battery_config.get("battery_model")
 
-            _LOGGER.info("Devices array structure created:")
-            _LOGGER.info(
+            _LOGGER.debug("Devices array structure created:")
+            _LOGGER.debug(
                 "  Inverter: %s (prefix: %s, slave_id: %s, model: %s, fw: %s)",
                 inverter_device["template"],
                 inverter_device["prefix"],
@@ -2016,7 +2016,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 inverter_device["selected_model"],
                 inverter_device["firmware_version"],
             )
-            _LOGGER.info(
+            _LOGGER.debug(
                 "  Battery: %s (prefix: %s, slave_id: %s, model: %s, fw: %s)",
                 battery_device["template"],
                 battery_device["prefix"],
@@ -2144,7 +2144,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             if "devices" in user_input and user_input["devices"]:
                 # Use existing devices array (e.g., from battery subentry)
                 devices = user_input["devices"]
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Using existing devices array with %d devices", len(devices)
                 )
             else:
@@ -2177,7 +2177,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             device[key] = value
 
                 devices.append(device)
-                _LOGGER.info("Created new devices array with single device")
+                _LOGGER.debug("Created new devices array with single device")
 
             config_data = {
                 "hub": {
@@ -2207,7 +2207,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Add dynamic configuration parameters if available
             # Configuration values are already extracted from processed_data above
             if self._supports_dynamic_config(template_data):
-                _LOGGER.info("Using configuration values from processed_data")
+                _LOGGER.debug("Using configuration values from processed_data")
                 config_data.update(
                     {
                         "phases": phases,
@@ -2242,7 +2242,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
             if existing_entry:
                 # Extend existing entry with new device
-                _LOGGER.info(
+                _LOGGER.debug(
                     "Extending existing hub %s:%s with new device (slave_id: %s)",
                     host,
                     port,
@@ -2278,7 +2278,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         # Update existing device
                         existing_devices[i] = new_device
                         device_exists = True
-                        _LOGGER.info(
+                        _LOGGER.debug(
                             "Updated existing device with slave_id %s",
                             new_device["slave_id"],
                         )
@@ -2286,7 +2286,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
                 if not device_exists:
                     existing_devices.append(new_device)
-                    _LOGGER.info(
+                    _LOGGER.debug(
                         "Added new device with slave_id %s", new_device["slave_id"]
                     )
 
@@ -2294,11 +2294,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 new_data = dict(existing_entry.data)
                 new_data["devices"] = existing_devices
 
-                _LOGGER.info(
+                _LOGGER.debug(
                     "🔍 Updating config entry with %d devices", len(existing_devices)
                 )
                 for i, device in enumerate(existing_devices):
-                    _LOGGER.info(
+                    _LOGGER.debug(
                         "🔍 Device %d: prefix=%s, template=%s, slave_id=%s, registers=%d",
                         i,
                         device.get("prefix", "unknown"),

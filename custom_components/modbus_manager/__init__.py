@@ -69,12 +69,12 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
 
         # Create hub
         hub = ModbusHub(hass, modbus_config)
-        _LOGGER.info("Created ModbusHub for coordinator: %s", hub_name)
+        _LOGGER.debug("Created ModbusHub for coordinator: %s", hub_name)
 
         # Setup hub, then attempt a best-effort connect
         try:
             await hub.async_setup()
-            _LOGGER.info("ModbusHub setup completed for coordinator")
+            _LOGGER.debug("ModbusHub setup completed for coordinator")
         except Exception as e:
             _LOGGER.error("Failed to setup ModbusHub for coordinator: %s", str(e))
             return False
@@ -117,7 +117,7 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
         try:
             await coordinator.async_config_entry_first_refresh()
         except Exception as e:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Coordinator initial refresh failed (continuing offline): %s", str(e)
             )
 
@@ -127,7 +127,7 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
                 hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
             )
             await platform_task
-            _LOGGER.info("Coordinator platforms loaded successfully: %s", PLATFORMS)
+            _LOGGER.debug("Coordinator platforms loaded successfully: %s", PLATFORMS)
         except Exception as e:
             _LOGGER.error("Error loading coordinator platforms: %s", str(e))
             return False
@@ -192,7 +192,7 @@ async def _normalize_binary_sensor_entity_ids(
             updated += 1
 
         if updated:
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Normalized %d binary_sensor entity_id(s) to include prefix", updated
             )
     except Exception as e:
@@ -243,7 +243,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         is_reload = hass.data[DOMAIN].get("_reload_in_progress", False)
 
         if is_reload:
-            _LOGGER.info("🔄 Reload detected - keeping Modbus connection alive")
+            _LOGGER.debug("🔄 Reload detected - keeping Modbus connection alive")
 
         # Alle Plattformen entladen
         try:
@@ -280,7 +280,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 new_refcount = max(0, current_refcount - 1)
                 hass.data[DOMAIN][hub_ref_key] = new_refcount
 
-                _LOGGER.info(
+                _LOGGER.debug(
                     "📊 Hub %s reference count: %d → %d",
                     hub_name,
                     current_refcount,
@@ -310,13 +310,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                             "Fehler beim Schließen des Modbus-Hubs: %s", str(e)
                         )
                 elif is_reload:
-                    _LOGGER.info(
+                    _LOGGER.debug(
                         "✅ Keeping Modbus connection %s alive during reload (refcount: %d)",
                         hub_name,
                         new_refcount,
                     )
                 else:
-                    _LOGGER.info(
+                    _LOGGER.debug(
                         "✅ Keeping Modbus connection %s open (%d devices still using it)",
                         hub_name,
                         new_refcount,
@@ -327,7 +327,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 del hass.data[DOMAIN][entry.entry_id]
             else:
                 # Bei Reload nur Entity-Daten löschen, Hub behalten
-                _LOGGER.info("🔄 Keeping entry data for reload")
+                _LOGGER.debug("🔄 Keeping entry data for reload")
 
         _LOGGER.debug(
             "Modbus Manager erfolgreich entladen für %s",
@@ -366,7 +366,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                             performance_monitor = coordinator.performance_monitor
                             if performance_monitor:
                                 summary = performance_monitor.get_performance_summary()
-                                _LOGGER.info(
+                                _LOGGER.debug(
                                     "Performance metrics for %s: %s", device_id, summary
                                 )
 
@@ -459,7 +459,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                                 entry_id
                             ] = performance_monitor.get_performance_summary()
                 if global_summary:
-                    _LOGGER.info("Global performance metrics: %s", global_summary)
+                    _LOGGER.debug("Global performance metrics: %s", global_summary)
 
                     # Create notification with global metrics
                     message = "Global Performance Metrics\n\n"
@@ -517,7 +517,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
 
                     return {"metrics": global_summary}
                 else:
-                    _LOGGER.info("No performance metrics available")
+                    _LOGGER.debug("No performance metrics available")
                     await hass.services.async_call(
                         "persistent_notification",
                         "create",
@@ -556,7 +556,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                             performance_monitor = coordinator.performance_monitor
                             if performance_monitor:
                                 performance_monitor.reset_metrics(device_id=prefix)
-                                _LOGGER.info(
+                                _LOGGER.debug(
                                     "Reset performance metrics for %s", device_id
                                 )
                                 found = True
@@ -578,11 +578,11 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                             performance_monitor.reset_metrics()
                             reset_count += 1
                 if reset_count > 0:
-                    _LOGGER.info(
+                    _LOGGER.debug(
                         "Reset performance metrics for %d device(s)", reset_count
                     )
                 else:
-                    _LOGGER.info("No performance monitors found to reset")
+                    _LOGGER.debug("No performance monitors found to reset")
         except Exception as e:
             _LOGGER.error(
                 "Error in performance_reset service: %s", str(e), exc_info=True
@@ -612,7 +612,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                         priority=priority,
                         max_power=max_power,
                     )
-                    _LOGGER.info(
+                    _LOGGER.debug(
                         "Configured EMS for %s: enabled=%s, priority=%d, max_power=%s",
                         device_id,
                         ems_enabled,
@@ -637,7 +637,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                 )
                 total_optimized += optimized
 
-        _LOGGER.info(
+        _LOGGER.debug(
             "EMS optimization completed: %dW surplus power managed across %d devices",
             total_optimized,
             len(hass.data[DOMAIN]),
@@ -798,7 +798,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                             # We can't directly update them in the registry
                             # Instead, we need to trigger entity re-creation
 
-                            _LOGGER.info(
+                            _LOGGER.debug(
                                 "📝 Entity %s needs attribute update (group: %s, template: %s)",
                                 entity_entry.entity_id,
                                 new_group,
@@ -890,7 +890,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                     },
                 )
         else:
-            _LOGGER.info("No templates were updated")
+            _LOGGER.debug("No templates were updated")
 
     # Register services
     hass.services.async_register(
@@ -900,4 +900,4 @@ async def async_setup_services(hass: HomeAssistant) -> None:
     # register_optimize removed - optimization is automatic
     hass.services.async_register(DOMAIN, "reload_templates", reload_templates_service)
 
-    _LOGGER.info("Modbus Manager services registered successfully")
+    _LOGGER.debug("Modbus Manager services registered successfully")
