@@ -514,9 +514,6 @@ connection_type: "WINET"
 
 ## 📝 Special Features
 
-### 🔄 Automatic Model Detection
-The template automatically detects the inverter model via `dev_code` and adjusts available registers accordingly.
-
 ### 🛡️ Firmware Compatibility
 - **Firmware v1.x:** Standard data formats
 - **Firmware v2.x:** Signed values for battery current/power
