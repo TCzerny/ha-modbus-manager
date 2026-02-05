@@ -348,17 +348,25 @@ class ModbusCoordinator(DataUpdateCoordinator):
             # First time or cache invalidated - load and process templates
             devices = self.entry.data.get("devices")
 
-            if devices and isinstance(devices, list):
+            if not devices or not isinstance(devices, list):
+                # Convert legacy structure to devices array format
                 if not self._cache_initialized:
                     _LOGGER.debug(
-                        "Initializing entity cache for %d devices", len(devices)
+                        "Converting legacy configuration to devices array format"
                     )
-                entities = await self._collect_registers_from_devices(devices)
-            else:
-                # Fallback to legacy structure for backward compatibility
-                if not self._cache_initialized:
-                    _LOGGER.debug("Initializing entity cache (legacy structure)")
-                entities = await self._collect_registers_legacy()
+                devices = self._convert_legacy_to_devices_array()
+                if not devices:
+                    _LOGGER.error("Failed to convert legacy configuration")
+                    return {
+                        "sensors": [],
+                        "controls": [],
+                        "calculated": [],
+                        "binary_sensors": [],
+                    }
+
+            if not self._cache_initialized:
+                _LOGGER.debug("Initializing entity cache for %d devices", len(devices))
+            entities = await self._collect_registers_from_devices(devices)
 
             # Cache the results
             self._cached_entities = entities
@@ -848,232 +856,82 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 "binary_sensors": [],
             }
 
-    async def _collect_registers_legacy(self) -> Dict[str, List[Dict[str, Any]]]:
-        """Legacy method for backward compatibility.
+    def _convert_legacy_to_devices_array(self) -> List[Dict[str, Any]]:
+        """Convert legacy configuration structure to devices array format.
 
-        Returns a structured dict with entity categories:
-        {
-            "sensors": [...],           # type="sensor", address > 0
-            "controls": [...],          # type in ["number", "select", "switch", "button", "text"], address > 0
-            "calculated": [...],        # type="calculated", kein address
-            "binary_sensors": [...]      # type="binary_sensor", kein address
-        }
+        This allows us to use the same processing logic for both old and new configs.
         """
         try:
-            # Get template name from entry
-            template_name = self.entry.data.get("template")
-            if not template_name:
-                _LOGGER.error("No template specified in entry")
-                return {
-                    "sensors": [],
-                    "controls": [],
-                    "calculated": [],
-                    "binary_sensors": [],
-                }
+            devices = []
 
-            # Load main template
-            template = await get_template_by_name(template_name)
-            if not template:
-                _LOGGER.error("Template %s not found", template_name)
-                return {
-                    "sensors": [],
-                    "controls": [],
-                    "calculated": [],
-                    "binary_sensors": [],
-                }
-
-            # Extract registers from main template and set type based on section
-            registers = template.get("sensors", [])
-            controls = template.get("controls", [])
-            calculated = template.get("calculated", [])
-            binary_sensors = template.get("binary_sensors", [])
-
-            # Check if battery template is configured
-            battery_template_name = self.entry.data.get("battery_template")
-            if battery_template_name:
-                _LOGGER.info("Loading battery template: %s", battery_template_name)
-                battery_template = await get_template_by_name(battery_template_name)
-                if battery_template:
-                    # Add battery registers with battery prefix
-                    battery_registers = battery_template.get("sensors", [])
-                    battery_controls = battery_template.get("controls", [])
-                    battery_calculated = battery_template.get("calculated", [])
-                    battery_binary_sensors = battery_template.get("binary_sensors", [])
-
-                    # Add battery registers to main lists
-                    registers.extend(battery_registers)
-                    controls.extend(battery_controls)
-                    calculated.extend(battery_calculated)
-                    binary_sensors.extend(battery_binary_sensors)
-
-                    _LOGGER.info(
-                        "Added battery template registers: %d sensors, %d controls, %d calculated, %d binary",
-                        len(battery_registers),
-                        len(battery_controls),
-                        len(battery_calculated),
-                        len(battery_binary_sensors),
-                    )
-
-            # Process all registers with prefix handling
+            # Extract main device configuration
             prefix = self.entry.data.get("prefix", "unknown")
+            template = self.entry.data.get("template")
             slave_id = self.entry.data.get("slave_id", 1)
+            battery_template = self.entry.data.get("battery_template")
+            battery_prefix = self.entry.data.get("battery_prefix", "SBR")
             battery_slave_id = self.entry.data.get("battery_slave_id", 200)
 
-            # Filter battery template based on module count if specified
-            if self.entry.data.get("battery_modules"):
-                module_count = self.entry.data.get("battery_modules")
-                registers = self._filter_battery_template_by_modules(
-                    registers, module_count
-                )
-                controls = self._filter_battery_template_by_modules(
-                    controls, module_count
-                )
-                calculated = self._filter_battery_template_by_modules(
-                    calculated, module_count
-                )
-                binary_sensors = self._filter_battery_template_by_modules(
-                    binary_sensors, module_count
-                )
+            # Add main device (inverter)
+            if template:
+                main_device = {
+                    "prefix": prefix,
+                    "template": template,
+                    "slave_id": slave_id,
+                    "type": "inverter",
+                }
 
-            # Process each register type with appropriate prefix
-            battery_prefix = self.entry.data.get("battery_prefix", "SBR")
-            processed_registers = self._process_entities_with_dual_prefix(
-                registers, prefix, battery_prefix, template_name
-            )
-            processed_controls = self._process_entities_with_dual_prefix(
-                controls, prefix, battery_prefix, template_name
-            )
-            processed_calculated = self._process_entities_with_dual_prefix(
-                calculated, prefix, battery_prefix, template_name
-            )
-            processed_binary_sensors = self._process_entities_with_dual_prefix(
-                binary_sensors, prefix, battery_prefix, template_name
-            )
-
-            # Replace placeholders in all processed entities
-            all_processed_entities = (
-                processed_registers
-                + processed_controls
-                + processed_calculated
-                + processed_binary_sensors
-            )
-
-            for entity in all_processed_entities:
-                # Replace placeholders in name and other string fields
+                # Add dynamic config fields if present
                 for field in [
-                    "name",
-                    "template",
-                    "unit_of_measurement",
-                    "state",
-                    "availability",
+                    "phases",
+                    "mppt_count",
+                    "string_count",
+                    "modules",
+                    "firmware_version",
+                    "connection_type",
+                    "selected_model",
+                    "dual_channel_meter",
+                    "battery_config",
                 ]:
-                    if field in entity and isinstance(entity[field], str):
-                        entity[field] = replace_template_placeholders(
-                            entity[field], prefix, slave_id, battery_slave_id
-                        )
+                    if field in self.entry.data:
+                        main_device[field] = self.entry.data.get(field)
 
-                # Note: slave_id is now set from device config, not from template
-                # Template slave_id values (including placeholders) are ignored
+                devices.append(main_device)
 
-            # Create device info dict
-            hub_config = self.entry.data.get("hub", {})
-            host = hub_config.get("host") or self.entry.data.get("host", "unknown")
-            port = hub_config.get("port") or self.entry.data.get("port", 502)
-            firmware_version = self.entry.data.get("firmware_version") or template.get(
-                "firmware_version", "1.0.0"
-            )
+            # Add battery device if configured
+            if battery_template:
+                battery_device = {
+                    "prefix": battery_prefix,
+                    "template": battery_template,
+                    "slave_id": battery_slave_id,
+                    "type": "battery",
+                }
 
-            device_info = create_device_info_dict(
-                hass=self.hass,
-                host=host,
-                port=port,
-                slave_id=slave_id,
-                prefix=prefix,
-                template_name=template_name,
-                firmware_version=firmware_version,
-                config_entry_id=self.entry.entry_id,
-            )
-
-            # Categorize entities into structured collections
-            all_sensors = []
-            all_controls = []
-            all_calculated = []
-            all_binary_sensors = []
-
-            # Process sensors: type="sensor", address > 0
-            for register in processed_registers:
-                register["type"] = "sensor"
-                register["slave_id"] = slave_id
-                register["device_info"] = device_info
-                if (
-                    register.get("address") is not None
-                    and register.get("address", 0) > 0
-                ):
-                    all_sensors.append(register)
-
-            # Process controls: type in ["number", "select", "switch", "button", "text"], address > 0
-            for register in processed_controls:
-                if "type" not in register:
-                    _LOGGER.error(
-                        "Control %s (unique_id: %s) missing type field from template. This is a template error.",
-                        register.get("name", "unknown"),
-                        register.get("unique_id", "unknown"),
+                # Add battery-specific config
+                if "battery_modules" in self.entry.data:
+                    battery_device["modules"] = self.entry.data.get("battery_modules")
+                if "firmware_version" in self.entry.data:
+                    battery_device["firmware_version"] = self.entry.data.get(
+                        "firmware_version"
                     )
-                    continue
-                register["slave_id"] = slave_id
-                register["device_info"] = device_info
-                if (
-                    register.get("address") is not None
-                    and register.get("address", 0) > 0
-                ):
-                    all_controls.append(register)
 
-            # Process calculated: type="calculated", kein address
-            for register in processed_calculated:
-                register["type"] = "calculated"
-                register["slave_id"] = slave_id
-                register["device_info"] = device_info
-                all_calculated.append(register)
+                devices.append(battery_device)
 
-            # Process binary sensors: type="binary_sensor", kein address
-            for register in processed_binary_sensors:
-                register["type"] = "binary_sensor"
-                register["slave_id"] = slave_id
-                register["device_info"] = device_info
-                all_binary_sensors.append(register)
+            if not devices:
+                _LOGGER.error("No devices found in legacy configuration")
+                return []
 
-            # Filter by firmware version if specified
-            firmware_version = self.entry.data.get("firmware_version")
-            if firmware_version:
-                all_sensors = filter_by_firmware_version(all_sensors, firmware_version)
-                all_controls = filter_by_firmware_version(
-                    all_controls, firmware_version
-                )
-                all_calculated = filter_by_firmware_version(
-                    all_calculated, firmware_version
-                )
-                all_binary_sensors = filter_by_firmware_version(
-                    all_binary_sensors, firmware_version
-                )
-
-            _LOGGER.debug(
-                "Legacy collection: %d sensors, %d controls, %d calculated, %d binary_sensors",
-                len(all_sensors),
-                len(all_controls),
-                len(all_calculated),
-                len(all_binary_sensors),
+            _LOGGER.info(
+                "Converted legacy configuration to %d devices (main: %s, battery: %s)",
+                len(devices),
+                template or "none",
+                battery_template or "none",
             )
 
-            # Return structured dict with all entity categories
-            return {
-                "sensors": all_sensors,
-                "controls": all_controls,
-                "calculated": all_calculated,
-                "binary_sensors": all_binary_sensors,
-            }
+            return devices
 
         except Exception as e:
-            _LOGGER.error("Error collecting registers: %s", str(e))
+            _LOGGER.error("Error converting legacy configuration: %s", str(e))
             return []
 
     async def _collect_calculated_registers(self) -> List[Dict[str, Any]]:
@@ -1098,318 +956,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
             )
 
             return combined
-
-        except Exception as e:
-            _LOGGER.error("Error collecting calculated registers: %s", str(e))
-            return []
-
-    async def _collect_calculated_from_devices(
-        self, devices: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
-        """Collect calculated registers from devices array structure."""
-        try:
-            all_calculated_registers = []
-
-            # Check if there's an SBR Battery device in the devices array
-            # This is needed for backward compatibility with existing configurations
-            has_sbr_battery = False
-            for device in devices:
-                template_name = device.get("template", "").lower()
-                device_type = device.get("type", "").lower()
-                if (
-                    "sbr" in template_name
-                    or "battery" in template_name
-                    or device_type == "battery"
-                ):
-                    has_sbr_battery = True
-                    _LOGGER.debug(
-                        "Found SBR Battery device: %s (type: %s)",
-                        template_name,
-                        device_type,
-                    )
-                    break
-
-            for device in devices:
-                device_type = device.get("type", "inverter")
-                template_name = device.get("template")
-                prefix = device.get("prefix", "unknown")
-                slave_id = device.get("slave_id", 1)
-                selected_model = device.get("selected_model")
-
-                # Extract configuration from selected model if available
-                model_config = await self._extract_config_from_model(
-                    selected_model, template_name
-                )
-
-                if not template_name:
-                    _LOGGER.warning(
-                        "Device missing template name, skipping: %s", device
-                    )
-                    continue
-
-                _LOGGER.debug(
-                    "Processing calculated registers for device: %s (prefix: %s, model: %s, fw: %s)",
-                    template_name,
-                    prefix,
-                    selected_model,
-                    device.get("firmware_version", "unknown"),
-                )
-
-                # Load template
-                template = await get_template_by_name(template_name)
-                if not template:
-                    _LOGGER.error("Template %s not found for device", template_name)
-                    continue
-
-                # Build dynamic_config dict dynamically from template's dynamic_config section
-                template_dynamic_config = template.get("dynamic_config", {})
-                dynamic_config = {}
-
-                # 1. Load all available field names from template's dynamic_config section
-                for field_name in template_dynamic_config.keys():
-                    # Skip internal fields that are not user-configurable
-                    if field_name in [
-                        "valid_models",
-                        "firmware_version",
-                        "connection_type",
-                        "battery_slave_id",
-                    ]:
-                        continue
-
-                    # 2. Check device config first (most specific)
-                    if field_name in device:
-                        dynamic_config[field_name] = device[field_name]
-                    # 3. Check entry.data for backward compatibility
-                    elif field_name in self.entry.data:
-                        dynamic_config[field_name] = self.entry.data.get(field_name)
-                    # 4. Use default from template if available
-                    elif isinstance(template_dynamic_config[field_name], dict):
-                        default_value = template_dynamic_config[field_name].get(
-                            "default"
-                        )
-                        if default_value is not None:
-                            dynamic_config[field_name] = default_value
-
-                # Add model_config values (from valid_models)
-                dynamic_config.update(model_config)
-                if selected_model:
-                    dynamic_config["selected_model"] = selected_model
-
-                # Add explicitly handled fields
-                for key in ["battery_config", "connection_type", "firmware_version"]:
-                    if key in device:
-                        dynamic_config[key] = device[key]
-                    elif key in self.entry.data:
-                        dynamic_config[key] = self.entry.data.get(key)
-
-                # Calculate battery_enabled from battery_config for condition filtering
-                battery_config = dynamic_config.get("battery_config", "none")
-                # If battery_config is not set but we have an SBR Battery device, enable battery
-                if battery_config == "none" and has_sbr_battery:
-                    battery_config = "sbr_battery"
-                    dynamic_config["battery_config"] = "sbr_battery"
-                    _LOGGER.debug(
-                        "Auto-detected SBR Battery - setting battery_enabled=True for calculated device %s",
-                        template_name,
-                    )
-                dynamic_config["battery_enabled"] = battery_config != "none"
-
-                # Extract calculated registers from template
-                calculated = template.get("calculated", [])
-                binary_sensors = template.get("binary_sensors", [])
-
-                # Apply firmware version filtering if specified
-                firmware_version = device.get("firmware_version")
-                if firmware_version:
-                    calculated = filter_by_firmware_version(
-                        calculated, firmware_version
-                    )
-                    binary_sensors = filter_by_firmware_version(
-                        binary_sensors, firmware_version
-                    )
-
-                # Apply generic model-based filtering (works for any device type)
-                if model_config:
-                    _LOGGER.debug(
-                        "Applying model-based filtering for calculated in %s with config: %s",
-                        template_name,
-                        {k: v for k, v in model_config.items() if v is not None},
-                    )
-                    calculated = self._filter_by_model_config(calculated, model_config)
-                    binary_sensors = self._filter_by_model_config(
-                        binary_sensors, model_config
-                    )
-
-                # Apply condition-based filtering (e.g., dual_channel_meter == true)
-                firmware_version = device.get("firmware_version") or template.get(
-                    "firmware_version", "1.0.0"
-                )
-                calculated = self._filter_by_conditions(
-                    calculated, dynamic_config, firmware_version
-                )
-                binary_sensors = self._filter_by_conditions(
-                    binary_sensors, dynamic_config, firmware_version
-                )
-
-                # Process entities with device-specific prefix
-                processed_calculated = self._process_entities_with_prefix(
-                    calculated, prefix, template_name
-                )
-                processed_binary_sensors = self._process_entities_with_prefix(
-                    binary_sensors, prefix, template_name
-                )
-
-                # Replace placeholders in calculated entity templates (state, availability)
-                for entity in processed_calculated + processed_binary_sensors:
-                    for field in ["state", "availability", "template"]:
-                        if field in entity and isinstance(entity[field], str):
-                            entity[field] = replace_template_placeholders(
-                                entity[field], prefix, slave_id, 0
-                            )
-
-                # Create device info dict for this device
-                from .device_utils import create_device_info_dict
-
-                hub_config = self.entry.data.get("hub", {})
-                host = hub_config.get("host") or self.entry.data.get("host", "unknown")
-                port = hub_config.get("port") or self.entry.data.get("port", 502)
-
-                # Get firmware version from device config (fallback to template default)
-                device_firmware_version = firmware_version or template.get(
-                    "firmware_version", "1.0.0"
-                )
-
-                device_info = create_device_info_dict(
-                    hass=self.hass,
-                    host=host,
-                    port=port,
-                    slave_id=slave_id,
-                    prefix=prefix,
-                    template_name=template_name,
-                    firmware_version=device_firmware_version,
-                    config_entry_id=self.entry.entry_id,
-                )
-
-                # Add type field, device info, and combine
-                for register in processed_calculated:
-                    register["type"] = "calculated"
-                    register["slave_id"] = slave_id
-                    register["device_info"] = device_info
-                    all_calculated_registers.append(register)
-
-                for register in processed_binary_sensors:
-                    register["type"] = "binary_sensor"
-                    register["slave_id"] = slave_id
-                    register["device_info"] = device_info
-                    all_calculated_registers.append(register)
-
-                _LOGGER.debug(
-                    "Added %d calculated registers for device %s",
-                    len(processed_calculated) + len(processed_binary_sensors),
-                    template_name,
-                )
-
-            return all_calculated_registers
-
-        except Exception as e:
-            _LOGGER.error(
-                "Error collecting calculated registers from devices: %s", str(e)
-            )
-            return []
-
-    async def _collect_calculated_legacy(self) -> List[Dict[str, Any]]:
-        """Legacy method for collecting calculated registers."""
-        try:
-            # Get template name from entry
-            template_name = self.entry.data.get("template")
-            if not template_name:
-                _LOGGER.error("No template specified in entry")
-                return []
-
-            # Load template
-            template = await get_template_by_name(template_name)
-            if not template:
-                _LOGGER.error("Template %s not found", template_name)
-                return []
-
-            # Extract calculated registers from template
-            calculated = template.get("calculated", [])
-            binary_sensors = template.get("binary_sensors", [])
-
-            # Check if battery template is configured
-            battery_template_name = self.entry.data.get("battery_template")
-            if battery_template_name:
-                _LOGGER.info(
-                    "Loading battery calculated registers from: %s",
-                    battery_template_name,
-                )
-                battery_template = await get_template_by_name(battery_template_name)
-                if battery_template:
-                    # Add battery calculated registers
-                    battery_calculated = battery_template.get("calculated", [])
-                    battery_binary_sensors = battery_template.get("binary_sensors", [])
-
-                    calculated.extend(battery_calculated)
-                    binary_sensors.extend(battery_binary_sensors)
-
-                    _LOGGER.info(
-                        "Added battery calculated registers: %d calculated, %d binary",
-                        len(battery_calculated),
-                        len(battery_binary_sensors),
-                    )
-
-            # Combine calculated registers and set type field
-            calculated_registers = []
-
-            # Add calculated entities
-            for register in calculated:
-                register["type"] = "calculated"
-                calculated_registers.append(register)
-
-            # Add binary sensors
-            for register in binary_sensors:
-                register["type"] = "binary_sensor"
-                calculated_registers.append(register)
-
-            # Process calculated registers with prefix handling
-            prefix = self.entry.data.get("prefix", "unknown")
-            slave_id = self.entry.data.get("slave_id", 1)
-            battery_slave_id = self.entry.data.get("battery_slave_id", 200)
-
-            # Filter battery template based on module count if specified
-            if self.entry.data.get("battery_modules"):
-                module_count = self.entry.data.get("battery_modules")
-                calculated_registers = self._filter_battery_template_by_modules(
-                    calculated_registers, module_count
-                )
-
-            # Process calculated registers with appropriate prefix
-            battery_prefix = self.entry.data.get("battery_prefix", "SBR")
-            processed_calculated_registers = self._process_entities_with_dual_prefix(
-                calculated_registers, prefix, battery_prefix, template_name
-            )
-
-            _LOGGER.debug(
-                "Processed %d calculated/binary registers with prefix '%s'",
-                len(processed_calculated_registers),
-                prefix,
-            )
-
-            # Replace placeholders in calculated entities
-            for entity in processed_calculated_registers:
-                # Replace placeholders in name and other string fields
-                for field in ["state", "availability", "template"]:
-                    if field in entity and isinstance(entity[field], str):
-                        entity[field] = replace_template_placeholders(
-                            entity[field], prefix, slave_id, battery_slave_id
-                        )
-
-                # Note: slave_id is now set from device config, not from template
-                # Template slave_id values (including placeholders) are ignored
-
-            calculated_registers = processed_calculated_registers
-
-            return calculated_registers
 
         except Exception as e:
             _LOGGER.error("Error collecting calculated registers: %s", str(e))
@@ -1932,129 +1478,6 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
         _LOGGER.warning("Unknown condition format '%s', including entity", condition)
         return True
-
-    def _process_entities_with_dual_prefix(
-        self,
-        entities: List[Dict[str, Any]],
-        inverter_prefix: str,
-        battery_prefix: str,
-        template_name: str,
-    ) -> List[Dict[str, Any]]:
-        """Process entities with appropriate prefix based on whether they are battery entities."""
-        try:
-            processed_entities = []
-
-            for entity in entities:
-                # Determine if this is a battery entity
-                is_battery_entity = self._is_battery_entity(entity)
-
-                # Use appropriate prefix
-                entity_prefix = battery_prefix if is_battery_entity else inverter_prefix
-
-                # Process with the determined prefix
-                processed_entity = entity.copy()
-
-                # Process unique_id
-                template_unique_id = entity.get("unique_id")
-                if template_unique_id:
-                    if not template_unique_id.startswith(f"{entity_prefix}_"):
-                        processed_entity[
-                            "unique_id"
-                        ] = f"{entity_prefix}_{template_unique_id}"
-                else:
-                    name = entity.get("name", "unknown")
-                    clean_name = (
-                        name.lower()
-                        .replace(" ", "_")
-                        .replace("-", "_")
-                        .replace("(", "")
-                        .replace(")", "")
-                    )
-                    processed_entity["unique_id"] = f"{entity_prefix}_{clean_name}"
-
-                # Ensure default_entity_id is set (used to force entity_id)
-                if "default_entity_id" not in processed_entity:
-                    default_entity_id = processed_entity.get("unique_id")
-                    processed_entity["default_entity_id"] = (
-                        default_entity_id.lower()
-                        if isinstance(default_entity_id, str)
-                        else default_entity_id
-                    )
-
-                # Process name
-                # With has_entity_name=True, entity.name should not include the prefix
-                template_name_value = entity.get("name")
-                if template_name_value:
-                    if template_name_value.startswith(f"{entity_prefix} "):
-                        processed_entity["name"] = template_name_value[
-                            len(f"{entity_prefix} ") :
-                        ]
-                    else:
-                        processed_entity["name"] = template_name_value
-
-                processed_entities.append(processed_entity)
-
-            return processed_entities
-
-        except Exception as e:
-            _LOGGER.error("Error processing entities with dual prefix: %s", str(e))
-            return entities
-
-    def _is_battery_entity(self, entity: Dict[str, Any]) -> bool:
-        """Check if an entity belongs to the battery template."""
-        try:
-            # Check if entity has battery-specific patterns
-            unique_id = entity.get("unique_id", "").lower()
-            name = entity.get("name", "").lower()
-
-            # Battery-specific patterns
-            battery_patterns = [
-                "battery",
-                "module_",
-                "cell_",
-                "sbr",
-                "charge",
-                "discharge",
-                "soc",
-                "soh",
-            ]
-
-            for pattern in battery_patterns:
-                if pattern in unique_id or pattern in name:
-                    return True
-
-            # Check register ranges (Sungrow SBR specific)
-            register = entity.get("register")
-            if register is not None:
-                # Battery register ranges
-                battery_register_ranges = [
-                    (10720, 10729),  # Battery status registers
-                    (10740, 10745),  # Battery configuration registers
-                    (10747, 10747),  # Battery control register
-                    (10756, 10763),  # Battery module 1 registers
-                    (10764, 10771),  # Battery module 2 registers
-                    (10772, 10779),  # Battery module 3 registers
-                    (10780, 10787),  # Battery module 4 registers
-                    (10788, 10788),  # Battery module 5 registers
-                    (10821, 10829),  # Battery module 6 registers
-                    (10830, 10838),  # Battery module 7 registers
-                    (10839, 10847),  # Battery module 8 registers
-                    (10848, 10856),  # Battery module 9 registers
-                    (10857, 10865),  # Battery module 10 registers
-                    (10866, 10874),  # Battery module 11 registers
-                    (10875, 10883),  # Battery module 12 registers
-                    (10884, 10892),  # Battery module 13 registers
-                ]
-
-                for start, end in battery_register_ranges:
-                    if start <= register <= end:
-                        return True
-
-            return False
-
-        except Exception as e:
-            _LOGGER.error("Error checking if entity is battery entity: %s", str(e))
-            return False
 
     async def _read_register_range(self, range_obj) -> Optional[List[int]]:
         """Read a range of registers from Modbus."""
