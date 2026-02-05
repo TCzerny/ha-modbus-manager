@@ -7,10 +7,38 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.0] - 2026-02-05
 
+### ✨ Added
+
+#### Nested Condition Support
+- **Recursive Condition Evaluation**: Added support for nested AND/OR conditions with parentheses
+  - Supports complex conditions like `(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1`
+  - Proper operator precedence: OR has lower precedence than AND
+  - Recursive evaluation handles parentheses correctly
+  - Works in template_loader, coordinator, and config_flow
+
+#### Comparison Operator Enhancement
+- **Greater Than Operator**: Added support for `>` operator in conditions
+  - Previously only `>=` was supported
+  - Now supports: `phases > 1`, `mppt_count > 2`, etc.
+  - Works alongside existing `>=`, `==`, `!=` operators
+
+### 🔧 Changed
+
+#### Sungrow SHx Template - Phase Filtering
+- **Phase A/B/C Meter Sensors**: Phase-specific meter sensors now only shown for 3-phase systems
+  - `meter_phase_a_active_power_raw` - Only shown when `phases > 1`
+  - `meter_phase_b_active_power_raw` - Only shown when `phases > 1`
+  - `meter_phase_c_active_power_raw` - Only shown when `phases > 1`
+  - `meter_phase_a_active_power` (calculated) - Only shown when `phases > 1`
+  - `meter_phase_b_active_power` (calculated) - Only shown when `phases > 1`
+  - `meter_phase_c_active_power` (calculated) - Only shown when `phases > 1`
+  - Updated condition: `(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1`
+  - Prevents showing phase-specific sensors on single-phase inverters
+
 ### 🚀 Performance Improvements
 
-#### Structured Entity Collection (Option B)
-- **Major Performance Optimization**: Refactored entity collection to use structured dictionary instead of flat list
+#### Structured Entity Collection
+- **Performance Optimization**: Refactored entity collection to use structured dictionary instead of flat list
   - Template processing: Reduced from **2x to 1x** per device (50% reduction)
   - Entity access: Changed from **O(n) filtering** to **O(1) direct access**
   - Memory: Single structured cache instead of duplicate lists
@@ -32,15 +60,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Removed Legacy Functions
 - **Removed ~650 lines of deprecated code**:
-  - `_collect_registers_legacy()` - replaced by automatic conversion
-  - `_process_entities_with_dual_prefix()` - no longer needed
-  - `_is_battery_entity()` - no longer needed
-  - `_collect_calculated_from_devices()` - not used after Option B refactoring
-  - `_collect_calculated_legacy()` - not used after Option B refactoring
-  - `process_template_entities_with_prefix()` - replaced by `_process_entities_with_prefix()`
-  - Legacy mode from `calculated.py` - only new structure supported
 
-#### Centralized unique_id Generation
+#### Centralized unique_id Generation (if not provided)
 - **Code Deduplication**: `_process_entities_with_prefix()` now uses centralized `generate_unique_id()` function
   - Removed duplicate unique_id generation logic
   - Consistent unique_id format across all platforms
@@ -56,25 +77,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Prefix Replacement
 - **Lowercase Prefix in Templates**: `{PREFIX}` placeholder now replaced with lowercase prefix
-  - Consistent with entity_id format (eBox → ebox)
+  - Consistent with entity_id format (eBox → ebox, SG → sg)
   - Matches Home Assistant entity naming conventions
-  - Example: `sensor.{PREFIX}_total_energy` → `sensor.ebox_total_energy`
 
 #### Placeholder Replacement Enhancement
-- **Extended Placeholder Support**: Placeholder replacement now uses both `model_config` and `dynamic_config`
-  - Previously only `model_config` (from valid_models) was used
-  - Now supports `dynamic_config` values like `max_current`, `phases`, etc.
-  - Works even when `selected_model` is not set
-  - Added support for `min_value` placeholder replacement (previously only `max_value`)
-  - Fixes issue where placeholders like `{{max_current}}` in eBox template were not replaced
-
-### 📊 Impact Summary
-
-- **Code Reduction**: ~650 lines of legacy code removed (23% reduction in coordinator.py)
-- **Performance**: 50% reduction in template processing overhead
-- **Memory**: Single cache structure instead of duplicate lists
-- **Maintainability**: Centralized logic, cleaner code structure
-- **Compatibility**: Legacy configs automatically converted, no breaking changes
+  - Fixes issue where placeholders like `{{max_current}}` in template were not replaced
 
 ---
 

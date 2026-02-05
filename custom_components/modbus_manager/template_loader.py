@@ -959,50 +959,14 @@ def _should_include_sensor(
     # Check condition filter first
     condition = sensor.get("condition")
     if condition:
-        # Support AND conditions: "battery_enabled == true and meter_type != 'iHomeManager'"
-        if " and " in condition:
-            # Split by " and " and evaluate each part - ALL must be true
-            condition_parts = [part.strip() for part in condition.split(" and ")]
-            condition_met = True
-            for part in condition_parts:
-                if not _evaluate_single_condition(part, dynamic_config):
-                    condition_met = False
-                    break
-            if not condition_met:
-                _LOGGER.info(
-                    "Excluding sensor due to AND condition '%s': %s (unique_id: %s)",
-                    condition,
-                    sensor.get("name", "unknown"),
-                    sensor.get("unique_id", "unknown"),
-                )
-                return False
-        # Support OR conditions: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
-        elif " or " in condition:
-            # Split by " or " and evaluate each part
-            condition_parts = [part.strip() for part in condition.split(" or ")]
-            condition_met = False
-            for part in condition_parts:
-                if _evaluate_single_condition(part, dynamic_config):
-                    condition_met = True
-                    break
-            if not condition_met:
-                _LOGGER.info(
-                    "Excluding sensor due to OR condition '%s': %s (unique_id: %s)",
-                    condition,
-                    sensor.get("name", "unknown"),
-                    sensor.get("unique_id", "unknown"),
-                )
-                return False
-        else:
-            # Single condition evaluation
-            if not _evaluate_single_condition(condition, dynamic_config):
-                _LOGGER.info(
-                    "Excluding sensor due to condition '%s': %s (unique_id: %s)",
-                    condition,
-                    sensor.get("name", "unknown"),
-                    sensor.get("unique_id", "unknown"),
-                )
-                return False
+        if not _evaluate_condition(condition, dynamic_config):
+            _LOGGER.info(
+                "Excluding sensor due to condition '%s': %s (unique_id: %s)",
+                condition,
+                sensor.get("name", "unknown"),
+                sensor.get("unique_id", "unknown"),
+            )
+            return False
 
     # Legacy condition parsing (kept for backward compatibility with old format)
     # This handles old conditions that don't use the new _evaluate_single_condition function
@@ -1250,6 +1214,82 @@ def _should_include_sensor(
     return True
 
 
+def _evaluate_condition(condition: str, dynamic_config: dict) -> bool:
+    """Evaluate a condition with support for nested AND/OR operators and parentheses.
+
+    Supports:
+    - Simple conditions: "phases > 1", "meter_type == 'DTSU666'"
+    - AND conditions: "a == 1 and b == 2"
+    - OR conditions: "a == 1 or a == 2"
+    - Nested conditions: "(a == 1 or a == 2) and b > 1"
+
+    Args:
+        condition: The condition string to evaluate
+        dynamic_config: Dictionary containing dynamic configuration values
+
+    Returns:
+        True if condition is met, False otherwise
+    """
+    condition = condition.strip()
+
+    # Remove outer parentheses if present
+    while condition.startswith("(") and condition.endswith(")"):
+        # Check if parentheses are balanced
+        depth = 0
+        is_outer = True
+        for i, char in enumerate(condition):
+            if char == "(":
+                depth += 1
+            elif char == ")":
+                depth -= 1
+                if depth == 0 and i < len(condition) - 1:
+                    is_outer = False
+                    break
+        if is_outer:
+            condition = condition[1:-1].strip()
+        else:
+            break
+
+    # Find the operator with lowest precedence (outside parentheses)
+    # OR has lower precedence than AND
+    depth = 0
+    or_pos = -1
+    and_pos = -1
+
+    for i, char in enumerate(condition):
+        if char == "(":
+            depth += 1
+        elif char == ")":
+            depth -= 1
+        elif depth == 0:
+            # Check for " or " (with spaces)
+            if i + 4 <= len(condition) and condition[i : i + 4] == " or ":
+                or_pos = i + 2  # Position after "or"
+            # Check for " and " (with spaces)
+            elif i + 5 <= len(condition) and condition[i : i + 5] == " and ":
+                if and_pos == -1:  # Only record first AND at this level
+                    and_pos = i + 2  # Position after "and"
+
+    # Split by lowest precedence operator
+    if or_pos != -1:
+        # Split by OR
+        left = condition[: or_pos - 2].strip()
+        right = condition[or_pos + 2 :].strip()
+        return _evaluate_condition(left, dynamic_config) or _evaluate_condition(
+            right, dynamic_config
+        )
+    elif and_pos != -1:
+        # Split by AND
+        left = condition[: and_pos - 2].strip()
+        right = condition[and_pos + 3 :].strip()
+        return _evaluate_condition(left, dynamic_config) and _evaluate_condition(
+            right, dynamic_config
+        )
+    else:
+        # No operators found, evaluate as single condition
+        return _evaluate_single_condition(condition, dynamic_config)
+
+
 def _evaluate_single_condition(condition: str, dynamic_config: dict) -> bool:
     """Evaluate a single condition (without OR/AND support).
 
@@ -1435,6 +1475,24 @@ def _evaluate_single_condition(condition: str, dynamic_config: dict) -> bool:
                     if isinstance(actual_value, str):
                         actual_value = int(actual_value)
                     return actual_value >= required_value
+                except ValueError:
+                    return False
+        except (ValueError, IndexError) as e:
+            _LOGGER.warning("Invalid condition '%s': %s", condition, str(e))
+            return False
+    elif ">" in condition:
+        try:
+            parts = condition.split(">")
+            if len(parts) == 2:
+                variable_name = parts[0].strip()
+                required_value_str = parts[1].strip()
+
+                try:
+                    required_value = int(required_value_str)
+                    actual_value = dynamic_config.get(variable_name, 0)
+                    if isinstance(actual_value, str):
+                        actual_value = int(actual_value)
+                    return actual_value > required_value
                 except ValueError:
                     return False
         except (ValueError, IndexError) as e:

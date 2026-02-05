@@ -5,7 +5,7 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.6
+version: 1.2.7
 # Updated to Protocol V1.1.11 (2025-11-17)
 # - Updated Battery Power to recommended register 5214-5215 (S32, 1W)
 # - Updated Battery Current to recommended register 5631 (S16, 0.1A)
@@ -484,6 +484,11 @@ sensors:
 
   # Meter Data (will be filtered based on phases and meter_type)
   # DTSU666 and DTSU666-20 use the same registers (5600-5606)
+  # Note 1: Data related to the grid or load is only valid when the inverter is directly connected to a smart energy meter.
+  # Registers 5603-5607 are valid only when a three-phase meter is connected.
+  # These registers represent the power values of each phase (A, B, C).
+  # Data is invalid for single - phase meters.
+
   - name: Meter active power raw
     unique_id: meter_active_power_raw
     address: 5600 # reg 5601
@@ -511,7 +516,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     entity_category: "diagnostic"
 
   - name: Meter phase B active power raw
@@ -526,7 +531,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     entity_category: "diagnostic"
 
   - name: Meter phase C active power raw
@@ -542,7 +547,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     entity_category: "diagnostic"
 
   # Meter Channel 2 Data (Protocol V1.1.11) - for DTSU666-20 dual-channel meter
@@ -2491,7 +2496,7 @@ calculated:
   - name: "Meter Phase A Active Power"
     unique_id: "meter_phase_a_active_power"
     type: "sensor"
-    condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_phase_a_active_power_raw', 'unavailable')
@@ -2513,7 +2518,7 @@ calculated:
   - name: "Meter Phase B Active Power"
     unique_id: "meter_phase_b_active_power"
     type: "sensor"
-    condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_phase_b_active_power_raw', 'unavailable')
@@ -2535,7 +2540,7 @@ calculated:
   - name: "Meter Phase C Active Power"
     unique_id: "meter_phase_c_active_power"
     type: "sensor"
-    condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
+    condition: "(meter_type == 'DTSU666' or meter_type == 'DTSU666-20') and phases > 1"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_phase_c_active_power_raw', 'unavailable')

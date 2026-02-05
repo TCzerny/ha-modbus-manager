@@ -29,7 +29,7 @@ from .sunspec_utils import (
     calculate_sunspec_register_address,
     detect_sunspec_model_addresses,
 )
-from .template_loader import get_template_by_name
+from .template_loader import _evaluate_condition, get_template_by_name
 from .value_processor import process_register_value
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -1290,54 +1290,14 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 # Check condition filter first
                 condition = entity.get("condition")
                 if condition:
-                    # Support AND/OR conditions and "!=" (aligned with template_loader)
-                    if " and " in condition:
-                        condition_parts = [
-                            part.strip() for part in condition.split(" and ")
-                        ]
-                        condition_met = True
-                        for part in condition_parts:
-                            if not self._evaluate_single_condition(
-                                part, dynamic_config
-                            ):
-                                condition_met = False
-                                break
-                        if not condition_met:
-                            _LOGGER.debug(
-                                "Excluding entity due to AND condition '%s': %s (unique_id: %s)",
-                                condition,
-                                entity.get("name", "unknown"),
-                                entity.get("unique_id", "unknown"),
-                            )
-                            continue
-                    elif " or " in condition:
-                        condition_parts = [
-                            part.strip() for part in condition.split(" or ")
-                        ]
-                        condition_met = False
-                        for part in condition_parts:
-                            if self._evaluate_single_condition(part, dynamic_config):
-                                condition_met = True
-                                break
-                        if not condition_met:
-                            _LOGGER.debug(
-                                "Excluding entity due to OR condition '%s': %s (unique_id: %s)",
-                                condition,
-                                entity.get("name", "unknown"),
-                                entity.get("unique_id", "unknown"),
-                            )
-                            continue
-                    else:
-                        if not self._evaluate_single_condition(
-                            condition, dynamic_config
-                        ):
-                            _LOGGER.debug(
-                                "Excluding entity due to condition '%s': %s (unique_id: %s)",
-                                condition,
-                                entity.get("name", "unknown"),
-                                entity.get("unique_id", "unknown"),
-                            )
-                            continue
+                    if not _evaluate_condition(condition, dynamic_config):
+                        _LOGGER.debug(
+                            "Excluding entity due to condition '%s': %s (unique_id: %s)",
+                            condition,
+                            entity.get("name", "unknown"),
+                            entity.get("unique_id", "unknown"),
+                        )
+                        continue
 
                 # Entity passed all filters
                 filtered_entities.append(entity)

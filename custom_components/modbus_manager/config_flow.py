@@ -25,7 +25,11 @@ from .const import (
     MIN_TIMEOUT,
 )
 from .logger import ModbusManagerLogger
-from .template_loader import get_template_by_name, get_template_names
+from .template_loader import (
+    _evaluate_condition,
+    get_template_by_name,
+    get_template_names,
+)
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -1088,45 +1092,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Check condition filter
         condition = sensor.get("condition")
         if condition:
-            if " and " in condition:
-                condition_parts = [part.strip() for part in condition.split(" and ")]
-                condition_met = True
-                for part in condition_parts:
-                    if not self._evaluate_single_condition(part, dynamic_config):
-                        condition_met = False
-                        break
-                if not condition_met:
-                    _LOGGER.debug(
-                        "Excluding sensor due to AND condition '%s': %s (unique_id: %s)",
-                        condition,
-                        sensor.get("name", "unknown"),
-                        sensor.get("unique_id", "unknown"),
-                    )
-                    return False
-            elif " or " in condition:
-                condition_parts = [part.strip() for part in condition.split(" or ")]
-                condition_met = False
-                for part in condition_parts:
-                    if self._evaluate_single_condition(part, dynamic_config):
-                        condition_met = True
-                        break
-                if not condition_met:
-                    _LOGGER.debug(
-                        "Excluding sensor due to OR condition '%s': %s (unique_id: %s)",
-                        condition,
-                        sensor.get("name", "unknown"),
-                        sensor.get("unique_id", "unknown"),
-                    )
-                    return False
-            else:
-                if not self._evaluate_single_condition(condition, dynamic_config):
-                    _LOGGER.debug(
-                        "Excluding sensor due to condition '%s': %s (unique_id: %s)",
-                        condition,
-                        sensor.get("name", "unknown"),
-                        sensor.get("unique_id", "unknown"),
-                    )
-                    return False
+            if not _evaluate_condition(condition, dynamic_config):
+                _LOGGER.debug(
+                    "Excluding sensor due to condition '%s': %s (unique_id: %s)",
+                    condition,
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                )
+                return False
 
         # Ensure we have strings
         sensor_name = str(sensor_name).lower()
@@ -4093,45 +4066,14 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         # Check condition filter
         condition = sensor.get("condition")
         if condition:
-            if " and " in condition:
-                condition_parts = [part.strip() for part in condition.split(" and ")]
-                condition_met = True
-                for part in condition_parts:
-                    if not self._evaluate_single_condition(part, dynamic_config):
-                        condition_met = False
-                        break
-                if not condition_met:
-                    _LOGGER.debug(
-                        "Excluding sensor due to AND condition '%s': %s (unique_id: %s)",
-                        condition,
-                        sensor.get("name", "unknown"),
-                        sensor.get("unique_id", "unknown"),
-                    )
-                    return False
-            elif " or " in condition:
-                condition_parts = [part.strip() for part in condition.split(" or ")]
-                condition_met = False
-                for part in condition_parts:
-                    if self._evaluate_single_condition(part, dynamic_config):
-                        condition_met = True
-                        break
-                if not condition_met:
-                    _LOGGER.debug(
-                        "Excluding sensor due to OR condition '%s': %s (unique_id: %s)",
-                        condition,
-                        sensor.get("name", "unknown"),
-                        sensor.get("unique_id", "unknown"),
-                    )
-                    return False
-            else:
-                if not self._evaluate_single_condition(condition, dynamic_config):
-                    _LOGGER.debug(
-                        "Excluding sensor due to condition '%s': %s (unique_id: %s)",
-                        condition,
-                        sensor.get("name", "unknown"),
-                        sensor.get("unique_id", "unknown"),
-                    )
-                    return False
+            if not _evaluate_condition(condition, dynamic_config):
+                _LOGGER.debug(
+                    "Excluding sensor due to condition '%s': %s (unique_id: %s)",
+                    condition,
+                    sensor.get("name", "unknown"),
+                    sensor.get("unique_id", "unknown"),
+                )
+                return False
 
         # Ensure we have strings
         sensor_name = str(sensor_name).lower()
