@@ -45,6 +45,25 @@ Mushroom Cards version with new Sections layout. Requires Mushroom Cards (HACS).
 #### sungrow_pv_analysis_simple.yaml
 Simplified version using only built-in Home Assistant cards. No custom cards required - works out of the box!
 
+## Installation
+
+All dashboards follow the same installation process:
+
+1. Copy the dashboard YAML file to your Home Assistant configuration directory
+2. **Important**: Replace all instances of `{PREFIX}` with your actual device prefix
+   - Battery example: `sensor.{PREFIX}_battery_1_voltage` → `sensor.SBR_battery_1_voltage`
+   - PV example: `sensor.{PREFIX}_total_dc_power` → `sensor.SG_total_dc_power`
+3. **Adjust for your device configuration**: Review and remove or comment out entities that are not available on your device
+   - **Battery dashboards**: If you have fewer modules, remove references to modules you don't have (e.g., if you have 6 modules, remove references to modules 7 and 8)
+   - **PV dashboards**: If you have fewer MPPT trackers, remove references to MPPT trackers you don't have (e.g., if you have 2 MPPTs, remove references to MPPT 3 and 4)
+   - **PV dashboards**: If you have single-phase, remove references to Phase B and Phase C entities
+   - If entities show as "unavailable" after import, they may not exist for your device configuration
+   - Search for entity IDs in the YAML and remove/comment out unavailable ones to avoid dashboard errors
+4. Import the dashboard in Home Assistant:
+   - Go to **Settings** → **Dashboards** → **+ New Dashboard**
+   - Choose **Import from YAML**
+   - Paste the content of the YAML file (after replacing `{PREFIX}` and adjusting for your device)
+
 ## Sungrow SBR Battery Analysis Dashboard
 
 Both dashboard files provide comprehensive monitoring and analysis for Sungrow SBR battery systems.
@@ -56,73 +75,14 @@ Both dashboard files provide comprehensive monitoring and analysis for Sungrow S
 - **Module Details**: Cell voltage ranges and comparisons per module
 - **Advanced Metrics**: Historical data and detailed balancing metrics
 
-### Installation
-
-1. Copy the dashboard YAML file to your Home Assistant configuration directory
-2. **Important**: Replace all instances of `{PREFIX}` with your actual device prefix (e.g., `SBR`)
-   - Example: `sensor.{PREFIX}_battery_1_voltage` → `sensor.SBR_battery_1_voltage`
-3. Import the dashboard in Home Assistant:
-   - Go to **Settings** → **Dashboards** → **+ New Dashboard**
-   - Choose **Import from YAML**
-   - Paste the content of the YAML file (after replacing `{PREFIX}`)
-
-### Required Custom Cards (Full Version Only)
-
-The `sungrow_sbr_battery_analysis.yaml` dashboard uses the following custom cards (install via HACS if not already installed):
-
-- **Mushroom Cards** (`custom:mushroom-entity-card`)
-  - HACS Repository: `https://github.com/piitaya/lovelace-mushroom`
-
-- **ApexCharts Card** (`custom:apexcharts-card`)
-  - HACS Repository: `https://github.com/RomRider/apexcharts-card`
-
-**Note**: The `sungrow_sbr_battery_analysis_simple.yaml` version uses only built-in Home Assistant cards and requires no additional installations.
-
 ### Dashboard Structure
 
-The dashboard is organized into 4 views:
+The battery dashboard is organized into 4 views:
 
-1. **Battery Overview** (`/overview`)
-   - Main battery status cards
-   - Energy statistics
-
-2. **Balancing Analysis** (`/balancing`)
-   - Voltage spread and deviation metrics
-   - Module deviation charts and tables
-
-3. **Module Details** (`/modules`)
-   - Cell voltage ranges per module
-   - Max/min cell voltage comparisons
-
-4. **Advanced Metrics** (`/advanced`)
-   - All balancing metrics in one view
-   - Historical voltage spread chart
-   - Cell voltage and temperature extremes
-
-### Color Coding
-
-The dashboard uses color coding to indicate status:
-
-- **Green**: Normal/Good values
-- **Orange**: Warning values
-- **Red**: Critical values
-
-Thresholds are configured in the card templates and can be adjusted based on your battery specifications.
-
-### Customization
-
-You can customize the dashboard by:
-
-- Adjusting color thresholds in the `icon_color` sections
-- Adding or removing entities from the cards
-- Modifying chart types and configurations
-- Changing the layout (grid columns, card sizes, etc.)
-
-### Notes
-
-- The dashboard assumes you have 8 modules configured. If you have fewer modules, some entities may show as "unavailable" - this is normal.
-- All calculated entities use 5 decimal places precision for accurate balancing analysis.
-- Historical charts require the entities to have history enabled in Home Assistant.
+1. **Battery Overview** (`/overview`) - Main battery status cards and energy statistics
+2. **Balancing Analysis** (`/balancing`) - Voltage spread, module deviations, and imbalance metrics
+3. **Module Details** (`/modules`) - Cell voltage ranges and comparisons per module
+4. **Advanced Metrics** (`/advanced`) - Historical data and detailed balancing metrics
 
 ## Sungrow PV Analysis Dashboard
 
@@ -135,50 +95,54 @@ The PV dashboards provide comprehensive monitoring and analysis for Sungrow PV i
 - **AC Output**: Phase voltages, currents, and power for 3-phase systems
 - **Statistics**: Long-term generation statistics and trends
 
-### Installation
-
-1. Copy the dashboard YAML file to your Home Assistant configuration directory
-2. **Important**: Replace all instances of `{PREFIX}` with your actual device prefix (e.g., `SG`)
-   - Example: `sensor.{PREFIX}_total_dc_power` → `sensor.SG_total_dc_power`
-3. Import the dashboard in Home Assistant:
-   - Go to **Settings** → **Dashboards** → **+ New Dashboard**
-   - Choose **Import from YAML**
-   - Paste the content of the YAML file (after replacing `{PREFIX}`)
-
-### Required Custom Cards (Mushroom Version Only)
-
-The `sungrow_pv_analysis_mushroom.yaml` dashboard uses:
-- **Mushroom Cards** (`custom:mushroom-entity-card`)
-  - HACS Repository: `https://github.com/piitaya/lovelace-mushroom`
-
-**Note**: The `sungrow_pv_analysis_standard.yaml` and `sungrow_pv_analysis_simple.yaml` versions use only built-in Home Assistant cards and require no additional installations.
-
 ### Dashboard Structure
 
 The PV dashboard is organized into 3 views:
 
-1. **PV Overview** (`/overview`)
-   - PV generation status cards
-   - MPPT tracker information
-   - AC output details
-   - Historical generation charts
+1. **PV Overview** (`/overview`) - PV generation status, MPPT tracker information, AC output details, and historical charts
+2. **MPPT Analysis** (`/mppt`) - MPPT voltage/current trends and individual tracker details
+3. **Statistics** (`/statistics`) - Daily/total generation statistics, power distribution, and temperature trends
 
-2. **MPPT Analysis** (`/mppt`)
-   - MPPT voltage and current trends
-   - Individual MPPT tracker details
-   - Long-term MPPT statistics
+## Required Custom Cards
 
-3. **Statistics** (`/statistics`)
-   - Daily and total PV generation statistics
-   - Power distribution analysis
-   - Inverter temperature trends
+Some dashboard versions require custom cards (install via HACS if not already installed):
 
-### Notes
+- **Mushroom Cards** (`custom:mushroom-entity-card`)
+  - HACS Repository: `https://github.com/piitaya/lovelace-mushroom`
+  - Required for: `*_mushroom.yaml` versions
 
-- The dashboard supports up to 4 MPPT trackers. If you have fewer trackers, some entities may show as "unavailable" - this is normal.
-- For single-phase systems, only Phase A entities will be populated.
+- **ApexCharts Card** (`custom:apexcharts-card`)
+  - HACS Repository: `https://github.com/RomRider/apexcharts-card`
+  - Required for: `sungrow_sbr_battery_analysis.yaml` (legacy version only)
+
+**Note**: The `*_standard.yaml` and `*_simple.yaml` versions use only built-in Home Assistant cards and require no additional installations.
+
+## Customization
+
+You can customize any dashboard by:
+
+- Adjusting color thresholds in the `icon_color` sections
+- Adding or removing entities from the cards
+- Modifying chart types and configurations
+- Changing the layout (grid columns, card sizes, etc.)
+
+### Color Coding
+
+All dashboards use color coding to indicate status:
+
+- **Green**: Normal/Good values
+- **Orange**: Warning values
+- **Red**: Critical values
+
+Thresholds are configured in the card templates and can be adjusted based on your device specifications.
+
+## Notes
+
+- **Battery dashboards**: Assumes you have 8 modules configured. If you have fewer modules, some entities may show as "unavailable" - this is normal. Remove unavailable entities from the YAML to avoid errors.
+- **PV dashboards**: Supports up to 4 MPPT trackers. If you have fewer trackers, some entities may show as "unavailable" - this is normal. For single-phase systems, only Phase A entities will be populated.
+- All calculated entities use 5 decimal places precision for accurate analysis.
 - Historical charts require the entities to have history enabled in Home Assistant.
 
-### Support
+## Support
 
 For issues or questions about the Modbus Manager integration, please refer to the main project documentation or open an issue on GitHub.
