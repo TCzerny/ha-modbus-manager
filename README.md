@@ -68,174 +68,30 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 ### ✅ Currently Supported
 
 #### Solar Inverters
-- **Sungrow SHx Series** - Complete template with all sensors and controls
-  - **Dynamic Configuration**: Supports all 36 SHx models with automatic filtering
-  - **Multi-Step Setup**: Connection parameters → Dynamic configuration
-  - **Battery Options**: None, Other (no template), or Battery Template
-  - **Battery management**: SOC, charging/discharging, temperature monitoring
-  - **MPPT tracking**: 1-3 MPPT trackers with power calculations
-  - **String tracking**: 0-4 strings with individual monitoring
-  - **Grid interaction**: Import/export, phase monitoring, frequency
-  - **Meter Support**: DTSU666, DTSU666-20 (dual-channel)
-  - **Calculated sensors**: Efficiency, power balance, signed battery power
-  - **Full Modbus register mapping**: Based on mkaiser's comprehensive implementation
-  - **Firmware compatibility**: Automatic sensor parameter adjustment
-  - **Connection types**: LAN and WINET support with register filtering
-  - **Float conversion**: Full IEEE 754 32-bit and 64-bit floating-point support
-
-- **Sungrow SG Series** - Dynamic template with model selection
-  - **2-Step Configuration**: Connection parameters → Model selection
-  - **Model Selection**: Automatic configuration based on selected model
-  - **Supported Models**: SG3.0RS, SG4.0RS, SG5.0RS, SG6.0RS, SG8.0RS, SG10RS, SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT
-  - **Automatic Filtering**: Phases, MPPT, Strings configured automatically
-  - **Firmware Support**: SAPPHIRE-H firmware compatibility
-  - **Connection Types**: LAN and WINET support
-
-- **Sungrow iHomeManager EMS** - Separate template for iHomeManager energy management system
-  - **Complete register mapping**: Dedicated iHomeManager device template
-  - ⚠️ **BETA**: iHomeManager support is in beta testing and requires end-user testing. Please report any issues you encounter.
+- **Sungrow SHx Series** - Complete template with dynamic configuration for all 36 SHx models
+  - Automatic filtering: MPPT (1-3), strings (0-4), phases, battery options
+  - Meter support: DTSU666, DTSU666-20 (dual-channel)
+  - Connection types: LAN and WINET with register filtering
+- **Sungrow SG Series** - Dynamic template with model selection (SG3.0RS–SG10RS, SG3.0RT–SG6.0RT)
+- **Sungrow iHomeManager EMS** - Energy management system template ⚠️ **BETA – needs testing**
 
 #### Battery Systems
-- **Sungrow SBR / SBH Battery** - Dedicated battery template with sensors and controls
-  - **SBR**: Model selection SBR096–SBR256 (module count based); SH-RS / SH-RT / SH-T compatible
-  - **SBH**: Model selection SBH100–SBH400 (SH-T compatible only); same Modbus map via inverter (slave 200)
-  - **Full battery diagnostics**: SOC, SOH, cell voltage, temperature, charge/discharge
-  - ⚠️ **SBH needs testing**: SBH support is based on protocol documentation and has not been verified on real SBH hardware. Feedback welcome.
-- **BYD Battery Box** - Template for BYD Battery-Box HVS/HVM/HVL/LVS (Modbus RTU over TCP, port 8080)
-  - ⚠️ **BETA – needs testing**: Not tested on real hardware. Feedback and issue reports welcome.
+- **Sungrow SBR / SBH Battery** - Dedicated battery template (SBR096–SBR256, SBH100–SBH400)
+  - ⚠️ **SBH needs testing** - Based on protocol documentation, not verified on hardware
+- **BYD Battery Box** - Template for HVS/HVM/HVL/LVS series ⚠️ **BETA – needs testing**
 
-#### Other Inverters (BETA – need testing)
-The following inverter templates were added in v0.1.9 and **have not been tested on real hardware**. If you try them, please report issues or feedback so we can fix register maps and behaviour.
+#### Other Inverters ⚠️ **BETA – need testing**
 - **Fronius GEN24 Series** - SunSpec-capable dynamic template
 - **Growatt MIN/MOD/MAX Series** - MIN/MOD/MAX inverter template
 - **SMA Sunny Tripower/Boy Series** - SMA inverter template
 - **SolaX Inverter Series** - SolaX GEN2–GEN6 dynamic template
 
-#### Heating Controls
-- **Solvis SC2/SC3** - Heating controller template for Solvis SC2/SC3
-  - **Dynamic Configuration**: SC2/SC3 model selection
-  - **Inputs/Outputs**: Temperature sensors, flow sensors, and pump controls
-
-#### EV Chargers
-- **Compleo eBox Professional** - Complete EV charger template
-  - 3-phase charging control
-  - Current and power monitoring
-  - Fallback current settings
-  - Cable status and charging control
+#### Other Devices
+- **Solvis SC2/SC3** - Heating controller with temperature sensors and pump controls
+- **Compleo eBox Professional** - EV charger with 3-phase charging control and monitoring
 
 ### 🔮 Future Support
-
-#### Other Manufacturers (Planned)
-- **Kostal** - Piko, Plenticore
-- **Growatt** - MIN, MAX series
-- **Victron** - MultiPlus, Quattro
-
-## 🏗️ Template Structure
-
-### Value Processing (Map, Flags, Options)
-
-The Modbus Manager supports three types of value processing for converting raw register values to human-readable text:
-
-#### 1. **Map** (Highest Priority)
-Direct 1:1 mapping of numeric values to text strings. Used for status codes, error codes, and operating modes.
-
-```yaml
-# Example: Operating mode mapping
-map:
-  0: "Off"
-  1: "On"
-  2: "Standby"
-  3: "Error"
-  64: "Running (normal operation)"
-```
-
-#### 2. **Flags** (Medium Priority)
-Bit-based evaluation where multiple flags can be active simultaneously. Used for status registers with multiple bits or alarm flags.
-
-```yaml
-# Example: Status register with multiple flags
-flags:
-  0: "Alarm 1"
-  1: "Alarm 2"
-  2: "Warning"
-  3: "Maintenance"
-  4: "System OK"
-```
-
-**Result**: If register value = 5 (binary: 101), the result would be: "Alarm 1, Warning"
-
-#### 3. **Options** (Lowest Priority)
-Dropdown options for Select controls. Used for configuration options and selection menus.
-
-```yaml
-# Example: Configuration options
-options:
-  0: "Auto"
-  1: "Manual"
-  2: "Schedule"
-  3: "Emergency"
-```
-
-#### Processing Order
-All entity types (Sensors, Select, Number, Switch, Binary Sensor) process values in this order:
-1. **Map** (if defined)
-2. **Flags** (if no map defined)
-3. **Options** (if no map or flags defined)
-
-### Device Templates
-Each device template includes:
-
-```yaml
-# Example: Sungrow SHx Template
-name: "Sungrow SHx Inverter"
-version: 1
-description: "Sungrow SHx Series Solar Inverter"
-manufacturer: "Sungrow"
-model: "SHx Series"
-
-# Raw Modbus sensors
-sensors:
-  - name: "Battery Level"
-    unique_id: "battery_level"
-    # Optional: force entity_id (defaults to unique_id if omitted)
-    default_entity_id: "battery_level"
-    address: 5000
-    input_type: "holding"
-    data_type: "uint16"
-    group: "PV_battery_power"
-    # ... more configuration
-
-# Calculated sensors
-calculated_sensors:
-  - name: "Battery Charging Power"
-    type: "sensor"
-    state: >-
-      {% if states('sensor.{PREFIX}_battery_power_raw') | default(0) | float > 0 %}
-        {{ states('sensor.{PREFIX}_battery_power_raw') | default(0) | float }}
-      {% else %}
-        0
-      {% endif %}
-    group: "PV_battery_charging"
-
-# Controls
-controls:
-  - name: "Max SOC"
-    type: "number"
-    unique_id: "max_soc"
-    default_entity_id: "max_soc"
-    address: 5001
-    input_type: "holding"
-    data_type: "uint16"
-    min_value: 0
-    max_value: 100
-```
-
-### Entity ID Handling
-
-- `unique_id` is required and always includes the device prefix.
-- `default_entity_id` is optional. If not set, it is derived from `unique_id`.
-- If `default_entity_id` is set, the entity will be created with that exact `entity_id`.
-- When existing entities have different IDs, Home Assistant may keep the old IDs until the registry is cleaned up.
+- **Kostal** (Piko, Plenticore), **Victron** (MultiPlus, Quattro)
 
 ## 🔧 Installation
 
@@ -254,23 +110,6 @@ controls:
 
 4. **Add Integration**: Configuration → Integrations → Add "Modbus Manager"
 
-## 📁 Directory Structure
-
-```
-custom_components/modbus_manager/
-├── __init__.py
-├── template_loader.py          # Template loader
-├── sensor.py                   # Sensor entities
-├── calculated.py               # Calculated sensors
-├── config_flow.py             # Configuration UI
-├── device_templates/
-│   ├── sungrow_shx.yaml           # Sungrow SHx template
-│   ├── compleo_ebox_professional.yaml  # Compleo eBox template
-│   └── base_templates/           # Base templates (if needed)
-└── translations/               # UI translations
-    ├── de.json
-    └── en.json
-```
 
 ## 🧪 Usage
 
@@ -282,6 +121,7 @@ custom_components/modbus_manager/
    - **Sungrow SHx Dynamic Inverter** for SHx series solar inverters
    - **Sungrow SG Dynamic Inverter** for SG series solar inverters
    - **Compleo eBox Professional** for EV chargers
+   - **Any Other Template you like**
 4. **Configure connection** (Step 1):
    - **Host**: Device IP address
    - **Port**: Modbus port (usually 502)
@@ -296,15 +136,17 @@ custom_components/modbus_manager/
 
 ### 2. Configure Dashboard
 
-```yaml
-# Lovelace Dashboard Example
-type: entities
-title: "Energy Overview"
-entities:
-  # Individual devices
-  - sensor.sg_battery_level
-  - sensor.ebox_charging_power
-```
+Ready-to-use dashboard examples are available in the [Dashboard Examples](Dashboard-Examples/README.md) folder:
+
+- **Battery Dashboards**: Comprehensive battery monitoring with balancing analysis, module details, and advanced metrics
+- **PV Dashboards**: PV inverter monitoring with MPPT analysis, energy flow, and statistics
+
+All examples are available in multiple versions:
+- **Standard**: Uses built-in Home Assistant cards (no custom cards required)
+- **Mushroom**: Enhanced UI with Mushroom Cards (requires HACS installation)
+- **Simple**: Minimal version with only essential cards
+
+See the [Dashboard Examples README](Dashboard-Examples/README.md) for installation instructions and customization options.
 
 ## 📊 Available Templates
 

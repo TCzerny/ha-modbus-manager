@@ -25,9 +25,9 @@ version: 1                             # Required: Template version number
 description: "Device description"      # Optional: Detailed description
 manufacturer: "Manufacturer Name"      # Optional: Device manufacturer
 model: "Model Series"                  # Optional: Device model/series
-type: "device_type"                    # Optional: Device type (e.g., "PV_Hybrid_Inverter", "ev_charger")
-default_prefix: "device_prefix"        # Optional: Default prefix for entity IDs
-default_slave_id: 1                    # Optional: Default Modbus slave ID
+type: "device_type"                    # Device type (e.g., "PV_Hybrid_Inverter", "EV_charger")
+default_prefix: "device_prefix"        # Default prefix for entity IDs
+default_slave_id: 1                    # Default Modbus slave ID
 firmware_version: "1.0.0"             # Optional: Default firmware version
 
 # Available firmware versions for user selection during setup
@@ -46,7 +46,7 @@ available_firmware_versions:
 - **`manufacturer`**: Company that produces the device
 - **`model`**: Specific model or model series
 - **`type`**: Device category (used for grouping and organization)
-- **`default_prefix`**: Prefix used for entity IDs (e.g., "SG" creates `sensor.sg1_temperature`)
+- **`default_prefix`**: Prefix used for entity IDs (e.g., "SG" creates `sensor.sg_temperature`)
 - **`default_slave_id`**: Default Modbus slave/unit ID
 - **`firmware_version`**: Default firmware version if none specified
 - **`available_firmware_versions`**: List of firmware versions available for user selection during setup
@@ -59,36 +59,29 @@ Dynamic configuration allows templates to adapt based on user-selected parameter
 
 ```yaml
 dynamic_config:
-  # Simple option selection
-  phases:
-    description: "Number of phases"
-    options: [1, 3]
-    default: 3
+  # RECOMMENDED: Model-specific configuration using valid_models
+  # This is the preferred approach for device variants with different specifications
+  # When a model is selected, all values from that model are automatically added to dynamic_config
+  # and can be used throughout the template (e.g., in conditions, max_value placeholders, etc.)
+  valid_models:
+    "Model-A":
+      phases: 1
+      mppt_count: 2
+      string_count: 2
+      max_ac_output_power: 5000
+      max_current: 23
+      battery_enabled: false
+    "Model-B":
+      phases: 3
+      mppt_count: 2
+      string_count: 2
+      max_ac_output_power: 10000
+      max_current: 45
+      battery_enabled: true
+      max_charge_power: 6600
+      max_discharge_power: 6600
 
-  # Numeric option selection
-  max_current:
-    description: "Maximum current per phase"
-    options: [6, 10, 16, 20, 32]
-    default: 16
-
-  # String option selection
-  connection_type:
-    description: "Connection type"
-    options: ["LAN", "WiFi"]
-    default: "LAN"
-
-  # Firmware-based sensor replacements
-  firmware_version:
-    description: "Firmware version string"
-    default: "1.0.0"
-    sensor_replacements:
-      battery_power_raw:
-        "2.0.0":
-          data_type: "int16"
-          scale: 1
-          description: "Battery power signed in firmware v2+"
-
-  # Connection-based sensor availability
+  # Other configuration options (can be combined with valid_models)
   connection_type:
     description: "Connection type"
     options: ["LAN", "WINET"]
@@ -99,21 +92,73 @@ dynamic_config:
         - "yearly_pv_generation_2023"
       winet_only_sensors:
         - "some_winet_sensor"
+
+  firmware_version:
+    description: "Firmware version string"
+    default: "1.0.0"
+    sensor_replacements:
+      battery_power_raw:
+        "2.0.0":
+          data_type: "int16"
+          scale: 1
+          description: "Battery power signed in firmware v2+"
+
+  battery_config:
+    description: "Battery configuration"
+    options: ["none", "sungrow_sbr_battery", "other"]
+    default: "none"
+```
+
+**How `valid_models` Works:**
+
+1. **Model Selection**: When `valid_models` is defined, users select a model during setup instead of configuring individual parameters
+2. **Automatic Value Injection**: All values from the selected model are automatically added to `dynamic_config` and available throughout the template
+3. **Template Usage**: Values can be used in:
+   - **Conditions**: `condition: "phases >= 3"` or `condition: "selected_model == 'Model-B'"`
+   - **Placeholders**: `max_value: "{{max_ac_output_power}}"` or `max_value: "{{max_charge_power * 0.5}}"`
+   - **Calculations**: Supports Jinja2 expressions like `{{max(max_charge_power, max_discharge_power)}}`
+4. **Value Replacement**: Placeholders like `{{max_ac_output_power}}` are replaced at runtime with the actual value from the selected model
+5. **No Duplication**: When using `valid_models`, you don't need to define `phases`, `mppt_count`, etc. separately - they come from the model configuration
+
+**Example Template Usage:**
+
+```yaml
+controls:
+  - type: "number"
+    name: "Export Power Limit"
+    unique_id: "export_power_limit"
+    address: 5010
+    input_type: "holding"
+    data_type: "uint16"
+    min_value: 0
+    max_value: "{{max_ac_output_power}}"  # Replaced with 5000 for Model-A, 10000 for Model-B
+    unit_of_measurement: "W"
+    group: "PV_control"
+
+sensors:
+  - name: "Power Phase 1"
+    unique_id: "power_phase_1"
+    address: 1000
+    condition: "phases >= 1"  # Uses phases value from selected model
+    # ... more config
 ```
 
 ### Dynamic Config Features
 
-1. **Option Selection**: User chooses from predefined options during setup
-2. **Sensor Filtering**: Sensors can be conditionally included/excluded based on configuration
-3. **Sensor Replacements**: Sensor parameters can change based on firmware version
-4. **Sensor Availability**: Sensors can be marked as available only for specific connection types
-5. **Battery Setup Step**: A dedicated battery flow is shown in the config flow
+1. **Model Selection (Recommended)**: Use `valid_models` for device variants with different specifications
+   - Users select a model during setup instead of configuring individual parameters
+   - All model values are automatically injected into `dynamic_config` and available throughout the template
+   - Values can be used in conditions, placeholders (e.g., `{{max_ac_output_power}}`), and calculations
+   - This is the **preferred approach** for templates supporting multiple device models
+2. **Option Selection**: User chooses from predefined options during setup (alternative to `valid_models` for simple configurations)
+3. **Sensor Filtering**: Sensors can be conditionally included/excluded based on configuration
+4. **Sensor Replacements**: Sensor parameters can change based on firmware version
+5. **Sensor Availability**: Sensors can be marked as available only for specific connection types
+6. **Battery Setup Step**: A dedicated battery flow is shown in the config flow
    only when `dynamic_config.battery_config` is defined in the template. The UI
    captures battery availability and selection (template or "other"). The
    resulting `battery_config` value is stored as `none`, `other`, or the battery
    template name (e.g., `sungrow_sbr_battery`).
-6. **Model Selection**: If `valid_models` is defined, `selected_model` is
-   required in the config/options flow and is always available for conditions.
 
 ### Condition Filtering
 
@@ -141,10 +186,19 @@ condition: "phases >= 3 and connection_type == 'LAN'"
 - `selected_model` is required when `valid_models` exist.
 - `battery_config` can be `none`, `other`, or a battery template name.
 
-### Unique IDs and Prefixing
+### Unique IDs and Entity ID Handling
 
-`unique_id` values should not include a device prefix. The integration
-automatically adds the configured prefix (e.g., `{PREFIX}`) to entity IDs.
+- **`unique_id`**: Required field that uniquely identifies the entity
+  - Should not include a device prefix in the template
+  - The integration automatically adds the configured prefix (e.g., `SG`) to entity IDs
+  - Format: `prefix_unique_id` (e.g., `sg_average_voltage`)
+
+- **`default_entity_id`**: Optional field to force a specific entity_id
+  - If not set, it is automatically derived from `unique_id`
+  - If set, the entity will be created with that exact `entity_id`
+  - Useful for maintaining consistent entity IDs across template updates
+
+**Note**: When existing entities have different IDs, Home Assistant may keep the old IDs until the entity registry is manually cleaned up.
 
 ### Example: Battery Flow Trigger
 
@@ -198,13 +252,12 @@ sensors:
 ### Required Fields
 
 - **`name`**: Display name for the sensor (shown in Home Assistant)
+- **`unique_id`**: Unique identifier for the sensor (used for entity ID generation)
 - **`address`**: Modbus register address (0-based, matches Modbus protocol)
 
 ### Optional Fields
 
 #### Modbus Configuration
-
-- **`unique_id`**: Unique identifier for the sensor (used for entity ID generation)
 - **`device_address`**: Optional different slave ID for this sensor (default: uses template default)
 - **`input_type`**: Register type - `"input"` (read-only) or `"holding"` (read/write)
 - **`data_type`**: Data type - `"uint16"`, `"int16"`, `"uint32"`, `"int32"`, `"float32"`, `"float64"`, `"string"`, `"boolean"`
@@ -473,13 +526,13 @@ calculated:
 
 ### Template Placeholders
 
-- **`{PREFIX}`**: Replaced with device prefix (e.g., "SG1", "eBox1")
+- **`{PREFIX}`**: Replaced with device prefix (e.g., "SG", "eBox")
 
 ### Example Expressions
 
 ```jinja2
 # Conditional value
-{{ 1 if states('sensor.{PREFIX}_voltage') | float > 230 else 0 }}
+{{ if states('sensor.{PREFIX}_voltage') | float > 230 else 0 }}
 
 # Bitwise operation (for flags-based sensors)
 {{ (states('sensor.{PREFIX}_running_state') | int) | bitwise_and(1) == 1 }}
@@ -499,9 +552,11 @@ The Modbus Manager supports three types of value processing that convert raw num
 
 ### Processing Order
 
+All entity types (Sensors, Select, Number, Switch, Binary Sensor) process values in this order:
+
 1. **Map** (highest priority) - Direct 1:1 mapping
-2. **Flags** (medium priority) - Bit-based evaluation
-3. **Options** (lowest priority) - Dropdown options
+2. **Flags** (medium priority) - Bit-based evaluation (if no map defined)
+3. **Options** (lowest priority) - Dropdown options (if no map or flags defined)
 
 ### 1. Map (Direct Value Mapping)
 
@@ -574,136 +629,103 @@ controls:
 
 ## Examples
 
-### Complete Example: Simple Temperature Sensor
+The best way to learn how to create templates is to study the existing device templates in this project. Each template demonstrates real-world usage of all features described in this documentation.
 
+### Available Device Templates
+
+All templates are located in `custom_components/modbus_manager/device_templates/`:
+
+#### PV Inverters
+- **[Sungrow SHx Dynamic](README_sungrow_shx_dynamic.md)** (`sungrow_shx_dynamic.yaml`) - Comprehensive hybrid inverter template with `valid_models`, dynamic configuration, battery support, and extensive calculated sensors
+- **[Sungrow SG Dynamic](README_sungrow_sg_dynamic.md)** (`sungrow_sg_dynamic.yaml`) - PV inverter template with model selection and power limit controls
+- **[Fronius Dynamic](README_fronius_dynamic.md)** (`fronius_dynamic.yaml`) - SunSpec-based inverter with model selection
+- **[SMA Dynamic](README_sma_dynamic.md)** (`sma_dynamic.yaml`) - Sunny Tripower/Boy series with model selection
+- **[SolaX Dynamic](README_solax_dynamic.md)** (`solax_dynamic.yaml`) - GEN2/GEN3/GEN6 series with dynamic configuration
+- **[Growatt MIN/MOD/MAX Dynamic](README_growatt_min_mod_max_dynamic.md)** (`growatt_min_mod_max_dynamic.yaml`) - Hybrid inverter series with battery support
+
+#### Battery Systems
+- **[Sungrow SBR Battery](README_sungrow_sbr_battery.md)** (`sungrow_sbr_battery.yaml`) - Battery system with module-level monitoring and balancing analysis
+- **[BYD Battery Box](README_byd_battery_box.md)** (`byd_battery_box.yaml`) - Battery system template
+
+#### Other Devices
+- **[Compleo eBox Professional](README_compleo_ebox_professional.md)** (`compleo_ebox_professional.yaml`) - EV charger with 3-phase control, status mapping, and calculated sensors
+- **[Solvis SC3](README_solvis_sc3.md)** (`solvis_sc3.yaml`) - Heating controller with temperature sensors and pump controls
+- **[Sungrow iHomeManager](README_iHomeManager.md)** (`sungrow_ihomemanager.yaml`) - Energy management system
+
+### Template Examples by Feature
+
+#### Using `valid_models` (Recommended Approach)
+- **Sungrow SHx Dynamic**: Demonstrates comprehensive model selection with power limits, phases, MPPT counts
+- **Sungrow SG Dynamic**: Shows model-specific AC output power limits and current limits
+- **Sungrow SBR Battery**: Model selection for different battery capacities and module counts
+
+#### Dynamic Configuration
+- **Fronius Dynamic**: Connection type-based sensor availability
+- **SolaX Dynamic**: Battery configuration and firmware version handling
+- **Growatt Dynamic**: Phases, MPPT, and battery configuration
+
+#### Value Processing (Map, Flags, Options)
+- **Compleo eBox Professional**: Extensive use of `map` for status codes and charging states
+- **Sungrow SHx Dynamic**: `flags` for status registers and `options` for select controls
+
+#### Calculated Sensors
+- **Sungrow SHx Dynamic**: Complex battery power calculations, efficiency metrics, energy flow analysis
+- **Sungrow SBR Battery**: Balancing analysis, voltage spread calculations, module comparisons
+- **Compleo eBox Professional**: Power calculations from current and voltage
+
+#### Controls (Number, Switch, Select, Button, Text)
+- **Sungrow SHx Dynamic**: Power limits with model-specific `max_value` placeholders, battery control switches
+- **Compleo eBox Professional**: Current limits, charging control switches, mode selection
+
+#### Binary Sensors
+- **Sungrow SHx Dynamic**: Battery charging/discharging states, grid connection status
+- **Compleo eBox Professional**: Cable connection status, charging active state
+
+### Quick Reference Examples
+
+For quick reference, here are minimal examples of common patterns:
+
+#### Basic Sensor with Map
 ```yaml
-name: "Simple Temperature Sensor"
-version: 1
-description: "Basic temperature monitoring"
-manufacturer: "Generic"
-model: "TempSensor"
-
 sensors:
-  - name: "Temperature"
-    unique_id: "temperature"
-    address: 5007
-    input_type: "input"
-    data_type: "int16"
-    scale: 0.1
-    scan_interval: 10
-    unit_of_measurement: "°C"
-    device_class: "temperature"
-    state_class: "measurement"
-    group: "environment"
-    icon: "mdi:thermometer"
-```
-
-### Complete Example: EV Charger with Controls
-
-```yaml
-name: "EV Charger"
-version: 1
-description: "EV Charger with control capabilities"
-manufacturer: "Generic"
-model: "EVCharger"
-default_prefix: "EV"
-default_slave_id: 1
-
-sensors:
-  - name: "Current Phase 1"
-    unique_id: "current_phase_1"
-    address: 1006
-    input_type: "input"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    group: "EV_current"
-
   - name: "Status"
     unique_id: "status"
     address: 275
     input_type: "input"
     data_type: "string"
-    scan_interval: 120
-    group: "EV_status"
     map:
       A: "not connected"
-      B2: "Connected ready for charging"
+      B2: "Connected ready"
       C2: "Charging"
+```
 
+#### Control with Model-Specific Max Value
+```yaml
 controls:
   - type: "number"
-    name: "Max Current"
-    unique_id: "max_current"
-    address: 1012
+    name: "Export Power Limit"
+    unique_id: "export_power_limit"
+    address: 5010
     input_type: "holding"
-    data_type: "float32"
-    scan_interval: 30
-    unit_of_measurement: "A"
-    device_class: "current"
+    data_type: "uint16"
     min_value: 0
-    max_value: 32
-    step: 1
-    group: "EV_settings"
-
-  - type: "switch"
-    name: "Charging Enabled"
-    unique_id: "charging_enabled"
-    address: 2001
-    input_type: "holding"
-    data_type: "uint16"
-    scan_interval: 30
-    on_value: 1
-    off_value: 0
-    group: "EV_settings"
-
-calculated:
-  - name: "Total Power"
-    unique_id: "total_power"
-    type: "sensor"
-    state: "{{ (states('sensor.{PREFIX}_current_phase_1') | float(0)) * 230 }}"
+    max_value: "{{max_ac_output_power}}"  # Replaced from valid_models
     unit_of_measurement: "W"
-    device_class: "power"
-    state_class: "measurement"
-    group: "EV_calculated"
 ```
 
-### Example: Dynamic Configuration Template
-
+#### Calculated Sensor with Condition
 ```yaml
-name: "Dynamic Device"
-version: 1
-description: "Device with dynamic configuration"
-manufacturer: "Generic"
-model: "Dynamic"
-
-dynamic_config:
-  phases:
-    description: "Number of phases"
-    options: [1, 3]
-    default: 3
-
-  max_power:
-    description: "Maximum power"
-    options: [3000, 5000, 7000]
-    default: 5000
-
-sensors:
-  - name: "Power Phase 1"
-    unique_id: "power_phase_1"
-    address: 1000
-    input_type: "input"
-    data_type: "uint16"
-    scale: 1
-    scan_interval: 10
+calculated:
+  - name: "Battery Charging Power"
+    unique_id: "battery_charging_power"
+    type: "sensor"
+    state: "{{ states('sensor.{PREFIX}_battery_power_raw') | float(0) if states('sensor.{PREFIX}_battery_power_raw') | float(0) > 0 else 0 }}"
     unit_of_measurement: "W"
     device_class: "power"
-    # This sensor only appears if phases >= 1
-    condition: "phases >= 1"
-    group: "PV_power"
+    condition: "battery_enabled == true"
 ```
+
+**For complete, production-ready examples, refer to the templates listed above.**
 
 ---
 
@@ -728,11 +750,3 @@ sensors:
 - [Jinja2 Template Documentation](https://jinja.palletsprojects.com/)
 
 ---
-
-**Last Updated**: January 2025
-
-### Recent Improvements
-
-- **String Value Handling**: Calculated sensors that return string values automatically have `suggested_display_precision` removed to prevent validation errors
-- **Precision Control**: Calculated sensors support optional `precision` field for controlling decimal places (defaults to 5 if not specified)
-- **Availability Templates**: Enhanced support for availability templates in calculated sensors
