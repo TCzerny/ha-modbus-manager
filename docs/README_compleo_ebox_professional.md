@@ -218,34 +218,6 @@ This section contains all entities that will be created by this template, includ
      custom_components.modbus_manager: debug
    ```
 
-## 📋 Version
-
-**Template Version:** 3.0.0
-**Last Update:** 2025-11-07
-**Status:** Stable
-**Compatibility:** Compleo eBox Professional Series
-
-## 📝 Changelog
-
-### Version 3.0.0 (2025-11-07)
-
-#### 🔧 Changed
-- **Firmware Version Filtering**: Voltage sensors and current meter reading now require firmware version 2.0.34 or higher
-  - Voltage Phase 1, 2, 3 sensors: Only available with firmware 2.0.34+
-  - Energy Meter Reading sensor: Only available with firmware 2.0.35+
-  - Average Voltage calculated sensor: Only available with firmware 2.0.34+
-  - Voltage Imbalance calculated sensor: Only available with firmware 2.0.34+
-  - Sensors are automatically filtered based on selected firmware version during setup
-
-#### 📚 Documentation
-- Updated entity reference tables with firmware requirements
-- Added firmware version selection information
-- Clarified which sensors require which firmware versions
-
-## 🔗 Related Documentation
-
-- **[Main README](../../README.md)** - Project overview
-- **[GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)** - Additional documentation
 
 ## 🙏 Acknowledgments
 

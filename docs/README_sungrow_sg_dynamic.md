@@ -311,26 +311,7 @@ string_count: 4
 connection_type: "LAN"
 ```
 
-## 📝 Special Features
-
-### 🔄 Automatic Model Detection
-The template automatically detects the inverter model and adjusts available registers accordingly.
-
-### 🔌 Connection Type Support
-- **LAN:** Full access to all registers
-- **WINET:** Limited access (some registers not available)
-
-### 📊 Error Handling
-- **0x7FFFFFFF Handling:** Automatic handling of meter errors
-- **Unavailable State:** Graceful handling of unavailable sensors
-
 ## 🔗 Based on
 
 - **Sungrow Communication Protocol V1.1.53** - Official Sungrow Modbus protocol documentation
 - **Complete Register Mapping** - All registers from protocol documentation
-
-## 📋 Version
-
-**Version:** 1.0.0
-**Last Update:** 2025
-**Compatibility:** All Sungrow SG Series Models
