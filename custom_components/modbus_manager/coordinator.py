@@ -258,8 +258,15 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     if data:
                         self._distribute_data(data, range_obj)
                 except Exception as e:
+                    # Get register type for logging
+                    register_type = (
+                        range_obj.registers[0].get("input_type", "holding")
+                        if range_obj.registers
+                        else "unknown"
+                    )
                     _LOGGER.error(
-                        "Error reading register range %d-%d: %s",
+                        "Error reading %s register range %d-%d: %s",
+                        register_type,
                         range_obj.start_address,
                         range_obj.end_address,
                         str(e),
@@ -1581,13 +1588,15 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 ):
                     # Coordinator is being reloaded/unloaded, suppress warning
                     _LOGGER.debug(
-                        "Failed to read registers %d-%d (coordinator reloading/unloading)",
+                        "Failed to read %s registers %d-%d (coordinator reloading/unloading)",
+                        register_type,
                         range_obj.start_address,
                         range_obj.end_address,
                     )
                 else:
                     _LOGGER.warning(
-                        "Failed to read registers %d-%d",
+                        "Failed to read %s registers %d-%d",
+                        register_type,
                         range_obj.start_address,
                         range_obj.end_address,
                     )
@@ -1597,7 +1606,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
         except Exception as e:
             _LOGGER.error(
-                "Error reading register range %d-%d: %s",
+                "Error reading %s register range %d-%d: %s",
+                register_type,
                 range_obj.start_address,
                 range_obj.end_address,
                 str(e),

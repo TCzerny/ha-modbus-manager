@@ -235,7 +235,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
     try:
         _LOGGER.debug(
-            "Unload von Modbus Manager für %s", entry.data.get("prefix", "unbekannt")
+            "Unloading Modbus Manager for %s", entry.data.get("prefix", "unknown")
         )
 
         # Check if this is a reload operation (not a full removal)
@@ -245,17 +245,17 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         if is_reload:
             _LOGGER.debug("🔄 Reload detected - keeping Modbus connection alive")
 
-        # Alle Plattformen entladen
+        # Unload all platforms
         try:
             unload_ok = await hass.config_entries.async_unload_platforms(
                 entry, PLATFORMS
             )
             if unload_ok:
-                _LOGGER.debug("Alle Plattformen erfolgreich entladen: %s", PLATFORMS)
+                _LOGGER.debug("All platforms successfully unloaded: %s", PLATFORMS)
             else:
-                _LOGGER.warning("Nicht alle Plattformen konnten entladen werden")
+                _LOGGER.warning("Not all platforms could be unloaded")
         except Exception as e:
-            _LOGGER.error("Fehler beim Entladen der Plattformen: %s", str(e))
+            _LOGGER.error("Error unloading platforms: %s", str(e))
 
         # Modbus-Hub schließen - aber mit verbesserter Logik
         if entry.entry_id in hass.data[DOMAIN]:
@@ -296,7 +296,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                             hub_name,
                         )
                         await hub.async_close()
-                        _LOGGER.debug("Modbus-Hub erfolgreich geschlossen")
+                        _LOGGER.debug("Modbus hub successfully closed")
 
                         # Remove hub from global storage
                         if hub_name in hass.data[DOMAIN]:
@@ -306,9 +306,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         if hub_ref_key in hass.data[DOMAIN]:
                             del hass.data[DOMAIN][hub_ref_key]
                     except Exception as e:
-                        _LOGGER.warning(
-                            "Fehler beim Schließen des Modbus-Hubs: %s", str(e)
-                        )
+                        _LOGGER.warning("Error closing Modbus hub: %s", str(e))
                 elif is_reload:
                     _LOGGER.debug(
                         "✅ Keeping Modbus connection %s alive during reload (refcount: %d)",
@@ -322,7 +320,7 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                         new_refcount,
                     )
 
-            # Daten löschen (aber Hub-Referenz bleibt für Reload bestehen)
+            # Delete data (but hub reference remains for reload)
             if not is_reload:
                 del hass.data[DOMAIN][entry.entry_id]
             else:
@@ -330,13 +328,13 @@ async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 _LOGGER.debug("🔄 Keeping entry data for reload")
 
         _LOGGER.debug(
-            "Modbus Manager erfolgreich entladen für %s",
-            entry.data.get("prefix", "unbekannt"),
+            "Modbus Manager successfully unloaded for %s",
+            entry.data.get("prefix", "unknown"),
         )
         return True
 
     except Exception as e:
-        _LOGGER.error("Fehler beim Unload von Modbus Manager: %s", str(e))
+        _LOGGER.error("Error unloading Modbus Manager: %s", str(e))
         return False
 
 
@@ -589,59 +587,6 @@ async def async_setup_services(hass: HomeAssistant) -> None:
             )
 
     # register_optimize service removed - register optimization is automatic and handled by the coordinator
-
-    async def ems_configure_service(call):
-        """Handle EMS configure service."""
-        device_id = call.data.get("device_id")
-        ems_enabled = call.data.get("ems_enabled", True)
-        priority = call.data.get("priority", 5)
-        max_power = call.data.get("max_power")
-
-        if not device_id:
-            _LOGGER.error("Device ID is required for EMS configuration")
-            return
-
-        # Configure EMS for device
-        for entry_id, data in hass.data[DOMAIN].items():
-            if data.get("prefix") == device_id.replace("modbus_manager_", ""):
-                ems_manager = data.get("ems_manager")
-                if ems_manager:
-                    await ems_manager.configure_device(
-                        device_id=device_id,
-                        enabled=ems_enabled,
-                        priority=priority,
-                        max_power=max_power,
-                    )
-                    _LOGGER.debug(
-                        "Configured EMS for %s: enabled=%s, priority=%d, max_power=%s",
-                        device_id,
-                        ems_enabled,
-                        priority,
-                        max_power,
-                    )
-                    return
-        _LOGGER.warning("Device %s not found", device_id)
-
-    async def ems_optimize_service(call):
-        """Handle EMS optimize service."""
-        surplus_power = call.data.get("surplus_power", 0)
-        optimization_mode = call.data.get("optimization_mode", "balanced")
-
-        # Run EMS optimization across all devices
-        total_optimized = 0
-        for entry_id, data in hass.data[DOMAIN].items():
-            ems_manager = data.get("ems_manager")
-            if ems_manager:
-                optimized = await ems_manager.optimize_surplus_power(
-                    surplus_power, optimization_mode
-                )
-                total_optimized += optimized
-
-        _LOGGER.debug(
-            "EMS optimization completed: %dW surplus power managed across %d devices",
-            total_optimized,
-            len(hass.data[DOMAIN]),
-        )
 
     async def reload_templates_service(call):
         """Handle template reload service - reload templates and update entity attributes without restart.

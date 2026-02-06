@@ -67,7 +67,7 @@ from .logger import ModbusManagerLogger
 
 _LOGGER = logging.getLogger(__name__)
 
-# Template-Verzeichnisse relativ zum Projekt-Root
+# Template directories relative to project root
 TEMPLATE_DIR = os.path.join(os.path.dirname(__file__), "device_templates")
 BASE_TEMPLATE_DIR = os.path.join(TEMPLATE_DIR, "base_templates")
 MAPPING_DIR = os.path.join(TEMPLATE_DIR, "manufacturer_mappings")
@@ -86,7 +86,7 @@ OPTIONAL_FIELDS = {
     "state_class": None,
     "scale": 1.0,
     "swap": False,
-    "byte_order": "big",  # Standard-Byte-Reihenfolge (big endian)
+    "byte_order": "big",  # Standard byte order (big endian)
     "group": None,
     # Neue Felder aus modbus_connect
     "offset": 0.0,
@@ -94,7 +94,7 @@ OPTIONAL_FIELDS = {
     "sum_scale": None,
     "shift_bits": 0,
     "bits": None,
-    "bitmask": None,  # Bitmaske (z.B. 0xFF für die unteren 8 Bits)
+    "bitmask": None,  # Bitmask (e.g., 0xFF for lower 8 bits)
     "bit_position": None,  # Einzelnes Bit an Position extrahieren (0-31)
     "bit_shift": 0,  # Bits nach links/rechts verschieben (positiv=links, negativ=rechts)
     "bit_rotate": 0,  # Bits rotieren (positiv=links, negativ=rechts)
@@ -188,7 +188,7 @@ async def load_templates() -> List[Dict[str, Any]]:
 
         # 1. Load built-in templates first (PRIORITY 1)
         if not os.path.exists(TEMPLATE_DIR):
-            _LOGGER.error("Template-Verzeichnis %s existiert nicht", TEMPLATE_DIR)
+            _LOGGER.error("Template directory %s does not exist", TEMPLATE_DIR)
         else:
             loop = asyncio.get_event_loop()
             filenames = await loop.run_in_executor(None, os.listdir, TEMPLATE_DIR)
@@ -257,7 +257,7 @@ async def load_templates() -> List[Dict[str, Any]]:
         return templates
 
     except Exception as e:
-        _LOGGER.error("Fehler beim Laden der Templates: %s", str(e))
+        _LOGGER.error("Error loading templates: %s", str(e))
         return []
 
 
@@ -288,7 +288,7 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
         # Create base templates directory if it doesn't exist
         if not os.path.exists(BASE_TEMPLATE_DIR):
             os.makedirs(BASE_TEMPLATE_DIR)
-            _LOGGER.debug("BASE-Template-Verzeichnis %s erstellt", BASE_TEMPLATE_DIR)
+            _LOGGER.debug("BASE template directory %s created", BASE_TEMPLATE_DIR)
             _base_template_cache = {}
             return _base_template_cache
 
@@ -316,7 +316,7 @@ async def load_base_templates() -> Dict[str, Dict[str, Any]]:
         return base_templates
 
     except Exception as e:
-        _LOGGER.error("Fehler beim Laden der BASE-Templates: %s", str(e))
+        _LOGGER.error("Error loading BASE templates: %s", str(e))
         return {}
 
 
@@ -339,7 +339,7 @@ def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
         valid_control_types = {"select", "number", "button", "switch"}
         if ctrl_type not in valid_control_types:
             _LOGGER.error(
-                "Template %s: Ungültiger Control-Typ für %s: %s",
+                "Template %s: Invalid control type for %s: %s",
                 template_name,
                 ctrl.get("name"),
                 ctrl_type,
@@ -350,7 +350,7 @@ def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
         address = ctrl.get("address")
         if not isinstance(address, int) or address < 1:
             _LOGGER.error(
-                "Template %s: Ungültige Adresse für Control %s: %s",
+                "Template %s: Invalid address for control %s: %s",
                 template_name,
                 ctrl.get("name"),
                 address,
@@ -362,7 +362,7 @@ def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
             options = ctrl.get("options", {})
             if not isinstance(options, dict) or not options:
                 _LOGGER.error(
-                    "Template %s: Select-Control %s benötigt gültige options",
+                    "Template %s: Select control %s requires valid options",
                     template_name,
                     ctrl.get("name"),
                 )
@@ -374,7 +374,7 @@ def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
             if min_val is not None and max_val is not None:
                 if min_val >= max_val:
                     _LOGGER.error(
-                        "Template %s: Ungültige min/max Werte für Control %s: min=%s, max=%s",
+                        "Template %s: Invalid min/max values for control %s: min=%s, max=%s",
                         template_name,
                         ctrl.get("name"),
                         min_val,
@@ -386,7 +386,7 @@ def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
 
     except Exception as e:
         _LOGGER.error(
-            "Fehler bei der Validierung des Custom Controls in Template %s: %s",
+            "Error validating custom controls in template %s: %s",
             template_name,
             str(e),
         )
@@ -639,12 +639,10 @@ async def load_single_template(
         return result
 
     except yaml.YAMLError as e:
-        _LOGGER.error("YAML-Fehler in Template %s: %s", template_path, str(e))
+        _LOGGER.error("YAML error in template %s: %s", template_path, str(e))
         return None
     except Exception as e:
-        _LOGGER.error(
-            "Unerwarteter Fehler beim Laden von Template %s: %s", template_path, str(e)
-        )
+        _LOGGER.error("Unexpected error loading template %s: %s", template_path, str(e))
         return None
 
 
@@ -654,7 +652,7 @@ def _read_template_file(template_path: str) -> Optional[Dict[str, Any]]:
         with open(template_path, "r", encoding="utf-8") as f:
             return yaml.safe_load(f)
     except Exception as e:
-        _LOGGER.error("Fehler beim Lesen von Template %s: %s", template_path, str(e))
+        _LOGGER.error("Error reading template %s: %s", template_path, str(e))
         return None
 
 
@@ -1270,17 +1268,17 @@ def validate_and_process_register(
 ) -> Dict[str, Any]:
     """Validate and process a single register definition."""
     try:
-        # Pflichtfelder prüfen
+        # Check required fields
         if not all(field in reg for field in REQUIRED_FIELDS):
             missing_fields = REQUIRED_FIELDS - set(reg.keys())
             _LOGGER.warning(
-                "Register in Template %s fehlt Pflichtfelder: %s",
+                "Register in template %s missing required fields: %s",
                 template_name,
                 missing_fields,
             )
             return None
 
-        # Pflichtfelder hinzufügen
+        # Add required fields
         processed_reg = {}
         for field in REQUIRED_FIELDS:
             processed_reg[field] = reg[field]
@@ -1299,7 +1297,7 @@ def validate_and_process_register(
             processed_reg["count"] = None
             # No count specified - will use data_type-based defaults in sensor init
 
-        # Standardwerte für optionale Felder setzen (skip count - handled above)
+        # Set default values for optional fields (skip count - handled above)
         for field, default_value in OPTIONAL_FIELDS.items():
             if field not in processed_reg and field != "count":
                 processed_reg[field] = reg.get(field, default_value)

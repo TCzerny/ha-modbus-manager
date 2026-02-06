@@ -5,7 +5,7 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.7
+version: 1.2.8
 # Updated to Protocol V1.1.11 (2025-11-17)
 # - Updated Battery Power to recommended register 5214-5215 (S32, 1W)
 # - Updated Battery Current to recommended register 5631 (S16, 0.1A)
@@ -26,6 +26,12 @@ version: 1.2.7
 # - Added max_ac_output_power to dynamic_config for ALL models
 # - SAFETY: Battery Charging/Discharging Start Power max_value set to reasonable limit (3kW = 50% of smallest battery power)
 # - Dynamic adjustment for all controls based on selected_model implemented in coordinator.py
+# Updated Register Conditions (2026-02-05)
+# - Added Protocol Version register (4952-4953, U32) with formatted calculated sensor (V1.1.7 format)
+# - Firmware Information registers: Only available on RT/T/K6 models, not RS/MG models
+# - Meter Channel 2 registers: Only available with DTSU666-20 meter AND not on RS/MG models
+# - Battery capacity register: Only available on SH3.0-6.0RS, SH8.0-10RS, and SH5.0-10RT models
+# - PV Power Limitation control: Only available on SHT models (SH5T-SH25T), not RT/RS models
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -189,7 +195,22 @@ sensors:
       3354: "MG6RL"
     group: "PV_device_info"
 
+  - name: Protocol version raw
+    unique_id: protocol_version_raw
+    address: 4952 # reg 4953-4954 (U32)
+    input_type: input
+    data_type: uint32
+    scan_interval: 600
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+    # Note: Format: 0x01010700 = V1.1.7 (Major.Minor.Patch.Build)
+    # Format: 0xMMmmppbb where MM=Major (byte 0), mm=Minor (byte 1), pp=Patch (byte 2), bb=Build (byte 3)
+    # Register 4952 = high word (0x0101), Register 4953 = low word (0x0700)
+    # Combined: (0x0101 << 16) | 0x0700 = 0x01010700
+    # Forwarding via Logger is not supported
+
   # Firmware Information (Protocol V1.1.11)
+  # Note: Not available on SH3.0-10RS and MG5-10RL models
   - name: Inverter Firmware Information
     unique_id: inverter_firmware_info
     address: 13249 # reg 13250-13264 (15 bytes UTF-8 string)
@@ -200,6 +221,7 @@ sensors:
     group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
 
   - name: Communication Module Firmware Information
     unique_id: communication_module_firmware_info
@@ -211,6 +233,7 @@ sensors:
     group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
 
   - name: Battery Firmware Information
     unique_id: battery_firmware_info
@@ -222,6 +245,7 @@ sensors:
     group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
 
   # Basic Inverter Data
   - name: Daily PV generation & battery discharge
@@ -514,7 +538,7 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_meter_channel_2"
-    condition: "meter_type == 'DTSU666-20'"
+    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
     entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase A Active Power raw
@@ -530,7 +554,7 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_meter_channel_2"
-    condition: "meter_type == 'DTSU666-20'"
+    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
     entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase B Active Power raw
@@ -546,7 +570,7 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_meter_channel_2"
-    condition: "meter_type == 'DTSU666-20'"
+    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
     entity_category: "diagnostic"
 
   - name: Meter Channel 2 Phase C Active Power raw
@@ -562,7 +586,7 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_meter_channel_2"
-    condition: "meter_type == 'DTSU666-20'"
+    condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
     entity_category: "diagnostic"
 
   - name: BDC rated power
@@ -614,6 +638,7 @@ sensors:
     scale: 0.01
     scan_interval: 600
     entity_category: "diagnostic"
+    condition: "selected_model in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
 
   # Export Power Limitation Values (Protocol V1.1.11)
   - name: Min Export Power Limit Value
@@ -3508,6 +3533,26 @@ calculated:
     precision: 2
     group: "PV_performance"
     # Equivalent generation hours at current power level (approximation)
+
+  # Protocol Version (formatted)
+  - name: "Protocol Version"
+    unique_id: "protocol_version"
+    type: "sensor"
+    availability: "{{ not is_state('sensor.{PREFIX}_protocol_version_raw', 'unavailable') }}"
+    state: >-
+      {% set raw_value = states('sensor.{PREFIX}_protocol_version_raw') | int(0) %}
+      {% if raw_value == 0 %}
+        unknown
+      {% else %}
+        {% set major = (raw_value >> 24) & 0xFF %}
+        {% set minor = (raw_value >> 16) & 0xFF %}
+        {% set patch = (raw_value >> 8) & 0xFF %}
+        {% set build = raw_value & 0xFF %}
+        V{{ major }}.{{ minor }}.{{ patch }}{% if build > 0 %}.{{ build }}{% endif %}
+      {% endif %}
+    icon: "mdi:code-tags"
+    group: "PV_device_info"
+    entity_category: "diagnostic"
 
   ## some additional calculated sensors ideas
   - name: "Inverter Status Display"

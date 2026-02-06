@@ -255,7 +255,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
         except Exception as e:
-            _LOGGER.error("Fehler im Config Flow: %s", str(e))
+            _LOGGER.error("Error in Config Flow: %s", str(e))
             return self.async_abort(
                 reason="unknown_error", description_placeholders={"error": str(e)}
             )

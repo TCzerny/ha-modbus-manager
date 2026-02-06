@@ -84,7 +84,7 @@ class PerformanceMonitor:
         self.devices: Dict[str, DeviceMetrics] = {}
         self.global_metrics = DeviceMetrics(device_id="global")
         _LOGGER.debug(
-            "Performance-Monitor initialisiert mit max_history: %d", max_history
+            "Performance monitor initialized with max_history: %d", max_history
         )
 
     def start_operation(
@@ -96,11 +96,11 @@ class PerformanceMonitor:
     ) -> str:
         """Start monitoring an operation."""
         try:
-            # Device-Metriken erstellen falls nicht vorhanden
+            # Create device metrics if not present
             if device_id not in self.devices:
                 self.devices[device_id] = DeviceMetrics(device_id=device_id)
 
-            # Operation starten
+            # Start operation
             operation = OperationMetrics(
                 operation_type=operation_type,
                 start_time=time.time(),
@@ -108,24 +108,24 @@ class PerformanceMonitor:
                 bytes_transferred=bytes_transferred,
             )
 
-            # Operation-ID generieren
+            # Generate operation ID
             operation_id = (
                 f"{device_id}_{operation_type}_{int(operation.start_time * 1000)}"
             )
 
-            # Metriken aktualisieren
+            # Update metrics
             self.devices[device_id].operations.append(operation)
             self.global_metrics.operations.append(operation)
 
-            # History begrenzen
+            # Limit history
             self._limit_history(device_id)
             self._limit_global_history()
 
-            _LOGGER.debug("Operation gestartet: %s", operation_id)
+            _LOGGER.debug("Operation started: %s", operation_id)
             return operation_id
 
         except Exception as e:
-            _LOGGER.error("Fehler beim Starten der Operation: %s", str(e))
+            _LOGGER.error("Error starting operation: %s", str(e))
             return ""
 
     def end_operation(
@@ -137,16 +137,16 @@ class PerformanceMonitor:
     ) -> None:
         """End monitoring an operation."""
         try:
-            # Operation in Device-Metriken finden
+            # Find operation in device metrics
             device_metrics = self.devices.get(device_id)
             if device_metrics:
                 for operation in device_metrics.operations:
-                    if operation.end_time is None:  # Noch nicht beendet
+                    if operation.end_time is None:  # Not yet ended
                         operation.end_time = time.time()
                         operation.success = success
                         operation.error_message = error_message
 
-                        # Device-Metriken aktualisieren
+                        # Update device metrics
                         device_metrics.total_operations += 1
                         device_metrics.total_duration += operation.duration
                         device_metrics.total_bytes += operation.bytes_transferred
@@ -159,14 +159,14 @@ class PerformanceMonitor:
 
                         break
 
-            # Global-Metriken aktualisieren
+            # Update global metrics
             for operation in self.global_metrics.operations:
-                if operation.end_time is None:  # Noch nicht beendet
+                if operation.end_time is None:  # Not yet ended
                     operation.end_time = time.time()
                     operation.success = success
                     operation.error_message = error_message
 
-                    # Global-Metriken aktualisieren
+                    # Update global metrics
                     self.global_metrics.total_operations += 1
                     self.global_metrics.total_duration += operation.duration
                     self.global_metrics.total_bytes += operation.bytes_transferred
@@ -179,10 +179,10 @@ class PerformanceMonitor:
 
                     break
 
-            _LOGGER.debug("Operation beendet: %s (Success: %s)", operation_id, success)
+            _LOGGER.debug("Operation ended: %s (Success: %s)", operation_id, success)
 
         except Exception as e:
-            _LOGGER.error("Fehler beim Beenden der Operation: %s", str(e))
+            _LOGGER.error("Error ending operation: %s", str(e))
 
     def get_device_metrics(self, device_id: str) -> Optional[DeviceMetrics]:
         """Get metrics for a specific device."""
@@ -228,9 +228,7 @@ class PerformanceMonitor:
             return summary
 
         except Exception as e:
-            _LOGGER.error(
-                "Fehler beim Erstellen der Performance-Zusammenfassung: %s", str(e)
-            )
+            _LOGGER.error("Error creating performance summary: %s", str(e))
             return {}
 
     def get_recent_operations(
@@ -246,7 +244,7 @@ class PerformanceMonitor:
             else:
                 operations = self.global_metrics.operations
 
-            # Neueste Operationen zuerst
+            # Latest operations first
             recent_operations = sorted(
                 [op for op in operations if op.end_time is not None],
                 key=lambda x: x.end_time,
@@ -268,20 +266,20 @@ class PerformanceMonitor:
             ]
 
         except Exception as e:
-            _LOGGER.error("Fehler beim Abrufen der letzten Operationen: %s", str(e))
+            _LOGGER.error("Error retrieving recent operations: %s", str(e))
             return []
 
     def _limit_history(self, device_id: str) -> None:
         """Limit operation history for a device."""
         device_metrics = self.devices.get(device_id)
         if device_metrics and len(device_metrics.operations) > self.max_history:
-            # Älteste Operationen entfernen
+            # Remove oldest operations
             device_metrics.operations = device_metrics.operations[-self.max_history :]
 
     def _limit_global_history(self) -> None:
         """Limit global operation history."""
         if len(self.global_metrics.operations) > self.max_history:
-            # Älteste Operationen entfernen
+            # Remove oldest operations
             self.global_metrics.operations = self.global_metrics.operations[
                 -self.max_history :
             ]
@@ -292,11 +290,11 @@ class PerformanceMonitor:
             if device_id:
                 if device_id in self.devices:
                     self.devices[device_id] = DeviceMetrics(device_id=device_id)
-                    _LOGGER.debug("Metriken für Device %s zurückgesetzt", device_id)
+                    _LOGGER.debug("Metrics reset for device %s", device_id)
             else:
                 self.devices.clear()
                 self.global_metrics = DeviceMetrics(device_id="global")
-                _LOGGER.debug("Alle Metriken zurückgesetzt")
+                _LOGGER.debug("All metrics reset")
 
         except Exception as e:
-            _LOGGER.error("Fehler beim Zurücksetzen der Metriken: %s", str(e))
+            _LOGGER.error("Error resetting metrics: %s", str(e))
