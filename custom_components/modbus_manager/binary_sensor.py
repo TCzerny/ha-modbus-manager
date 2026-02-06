@@ -79,16 +79,21 @@ async def async_setup_entry(
 
                         device_info = config.get("device_info", {})
                         unique_id = config.get("unique_id", "")
-                        device_prefix = (
-                            unique_id.split("_")[0] if "_" in unique_id else "unknown"
-                        )
+                        # Extract device prefix from config (set by coordinator) or fallback to unique_id
+                        device_prefix = config.get("device_prefix")
+                        if not device_prefix:
+                            # Fallback: extract from unique_id if not in config
+                            device_prefix = (
+                                unique_id.split("_")[0].lower()
+                                if "_" in unique_id
+                                else "unknown"
+                            )
 
                         template_name = device_info.get("model", "unknown")
 
                         entity = ModbusCalculatedBinarySensor(
                             hass=hass,
                             config=config,
-                            prefix=None,  # Already processed by coordinator
                             template_name=template_name,
                             host=host,
                             port=port,

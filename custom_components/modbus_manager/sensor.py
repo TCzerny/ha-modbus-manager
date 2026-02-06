@@ -386,9 +386,15 @@ async def async_setup_entry(
                         new_config_entry_id=entry.entry_id,
                     )
 
-                device_prefix = (
-                    unique_id.split("_")[0] if "_" in unique_id else "unknown"
-                )
+                # Extract device prefix from config (set by coordinator) or fallback to unique_id
+                device_prefix = calc_config.get("device_prefix")
+                if not device_prefix:
+                    # Fallback: extract from unique_id if not in config
+                    device_prefix = (
+                        unique_id.split("_")[0].lower()
+                        if "_" in unique_id
+                        else "unknown"
+                    )
 
                 # Template name is in device_info model field
                 template_name = device_info.get("model", "unknown")
@@ -396,7 +402,6 @@ async def async_setup_entry(
                 entity = ModbusCalculatedSensor(
                     hass=hass,
                     config=calc_config,
-                    prefix=None,
                     template_name=template_name,
                     host=host,
                     port=port,

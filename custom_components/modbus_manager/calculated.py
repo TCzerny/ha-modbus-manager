@@ -25,8 +25,7 @@ class ModbusCalculatedSensor(SensorEntity):
         self,
         hass,
         config: Dict[str, Any],
-        prefix: str,
-        template_name: str,
+        template_name: str = None,
         host: str = None,
         port: int = 502,
         slave_id: int = 1,
@@ -44,13 +43,10 @@ class ModbusCalculatedSensor(SensorEntity):
         self._template_error_logged = False
 
         # Extract configuration
-        base_name = config.get("name", "Unknown Calculated Sensor")
-
-        # Config is already processed by coordinator (prefix=None always in new structure)
-        # Use device_prefix for display in attributes
-        self._prefix = device_prefix if device_prefix else "unknown"
-        # Set friendly_name to "prefix entityname" format
-        self._attr_name = f"{self._prefix} {base_name}"
+        # Name is already processed by coordinator with prefix via _process_entities_with_prefix
+        # The coordinator removes prefix from name when has_entity_name=True
+        self._attr_has_entity_name = True
+        self._attr_name = config.get("name", "Unknown Calculated Sensor")
         unique_id = config.get("unique_id", "unknown")
 
         # unique_id should be just the value, not "sensor.{value}"
@@ -64,11 +60,11 @@ class ModbusCalculatedSensor(SensorEntity):
                 self.entity_id = default_entity_id
             else:
                 self.entity_id = f"sensor.{default_entity_id}"
-        # Set has_entity_name=False so friendly_name uses _attr_name directly (prefix entityname format)
-        self._attr_has_entity_name = False
+
+        # Store prefix for entity_id construction if needed (e.g., for protocol_version sensors)
+        self._prefix = config.get("device_prefix") or device_prefix or "unknown"
 
         # Template processing - support both 'template' and 'state' parameters
-        # Template is already processed by coordinator (PREFIX already replaced)
         template_str = config.get("template", config.get("state", ""))
         if not template_str:
             raise ValueError(
@@ -405,15 +401,19 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         self,
         hass,
         config: Dict[str, Any],
-        prefix: str,
-        template_name: str,
+        template_name: str = None,
         host: str = None,
         port: int = 502,
         slave_id: int = 1,
         config_entry_id: str = None,
-        device_prefix: str = None,
+        device_prefix: str = None,  # Used for display: extracted from unique_id (e.g., "SG_protocol_version" -> "sg")
     ):
-        """Initialize the calculated binary sensor."""
+        """Initialize the calculated binary sensor.
+
+        Args:
+            device_prefix: Device prefix extracted from unique_id (e.g., "sg" from "SG_protocol_version").
+                          Used for entity name display and entity_id construction.
+        """
         self.hass = hass
         self._config = config
         self._template_name = template_name
@@ -424,13 +424,10 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         self._template_error_logged = False
 
         # Extract configuration
-        base_name = config.get("name", "Unknown Binary Sensor")
-
-        # Config is already processed by coordinator (prefix=None always in new structure)
-        # Use device_prefix for display in attributes
-        self._prefix = device_prefix if device_prefix else "unknown"
-        # Set friendly_name to "prefix entityname" format
-        self._attr_name = f"{self._prefix} {base_name}"
+        # Name is already processed by coordinator with prefix via _process_entities_with_prefix
+        # The coordinator removes prefix from name when has_entity_name=True
+        self._attr_has_entity_name = True
+        self._attr_name = config.get("name", "Unknown Binary Sensor")
         unique_id = config.get("unique_id", "unknown")
 
         # unique_id should be just the value, not "binary_sensor.{value}"
@@ -444,8 +441,9 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 self.entity_id = default_entity_id
             else:
                 self.entity_id = f"binary_sensor.{default_entity_id}"
-        # Set has_entity_name=False so friendly_name uses _attr_name directly (prefix entityname format)
-        self._attr_has_entity_name = False
+
+        # Store prefix for entity_id construction if needed
+        self._prefix = config.get("device_prefix") or device_prefix or "unknown"
 
         # Template processing - support 'state' parameter
         template_str = config.get("state", "")

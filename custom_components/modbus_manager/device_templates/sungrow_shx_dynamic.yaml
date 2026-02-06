@@ -197,17 +197,68 @@ sensors:
 
   - name: Protocol version raw
     unique_id: protocol_version_raw
-    address: 4952 # reg 4953-4954 (U32)
+    address: 4951 # reg 4952-4953
     input_type: input
     data_type: uint32
-    scan_interval: 600
+    swap: word
+    scan_interval: 30
     group: "PV_device_info"
     entity_category: "diagnostic"
-    # Note: Format: 0x01010700 = V1.1.7 (Major.Minor.Patch.Build)
-    # Format: 0xMMmmppbb where MM=Major (byte 0), mm=Minor (byte 1), pp=Patch (byte 2), bb=Build (byte 3)
-    # Register 4952 = high word (0x0101), Register 4953 = low word (0x0700)
-    # Combined: (0x0101 << 16) | 0x0700 = 0x01010700
-    # Forwarding via Logger is not supported
+    # Note: Format: 0x01010B00 = V1.1.11 (Major.Minor.Patch.Build)
+    # For example, 0x01010700 represents the protocol version V1.1.7;
+    # Forwarding via Logger is not supported.
+
+  # Certification Versions (Protocol V1.1.11)
+  - name: Certification version of ARM Software
+    unique_id: certification_version_arm_software
+    address: 4953 # reg 4954-4968 (15 bytes UTF-8 string)
+    input_type: input
+    data_type: string
+    count: 15
+    scan_interval: 3600
+    group: "PV_device_info"
+    icon: "mdi:certificate"
+    entity_category: "diagnostic"
+    # Certified version information after finalizing functions such as electrical, safety regulations, and standards for the whole machine
+
+  - name: Certification version of DSP Software
+    unique_id: certification_version_dsp_software
+    address: 4968 # reg 4969-4983 (15 bytes UTF-8 string)
+    input_type: input
+    data_type: string
+    count: 15
+    scan_interval: 3600
+    group: "PV_device_info"
+    icon: "mdi:certificate"
+    entity_category: "diagnostic"
+
+  # Device Specifications (Protocol V1.1.11)
+  - name: Nominal output power
+    unique_id: nominal_output_power
+    address: 5000 # reg 5001
+    input_type: input
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: kW
+    device_class: "power"
+    state_class: measurement
+    scan_interval: 3600
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
+  - name: Output type
+    unique_id: output_type
+    address: 5001 # reg 5002
+    input_type: input
+    data_type: uint16
+    scan_interval: 3600
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+    options:
+      0: "Single"
+      1: "3P4L"
+      2: "3P3L"
 
   # Firmware Information (Protocol V1.1.11)
   # Note: Not available on SH3.0-10RS and MG5-10RL models
@@ -3534,21 +3585,24 @@ calculated:
     group: "PV_performance"
     # Equivalent generation hours at current power level (approximation)
 
-  # Protocol Version (formatted)
+  # Protocol Version (formatted) - extracts directly from raw value using bit operations
+  # Format per documentation V1.1.7: 0xMMmmppbb
   - name: "Protocol Version"
     unique_id: "protocol_version"
     type: "sensor"
     availability: "{{ not is_state('sensor.{PREFIX}_protocol_version_raw', 'unavailable') }}"
     state: >-
-      {% set raw_value = states('sensor.{PREFIX}_protocol_version_raw') | int(0) %}
-      {% if raw_value == 0 %}
+      {% set raw_value = states('sensor.{PREFIX}_protocol_version_raw') %}
+      {% if raw_value in ['unavailable', 'unknown', 'None', ''] %}
         unknown
       {% else %}
-        {% set major = (raw_value >> 24) & 0xFF %}
-        {% set minor = (raw_value >> 16) & 0xFF %}
-        {% set patch = (raw_value >> 8) & 0xFF %}
-        {% set build = raw_value & 0xFF %}
-        V{{ major }}.{{ minor }}.{{ patch }}{% if build > 0 %}.{{ build }}{% endif %}
+        {% set raw = raw_value | int %}
+        {% set major = (raw // 16777216) %}
+        {% set minor = (raw // 65536) % 256 %}
+        {% set patch = (raw // 256) % 256 %}
+        {% set build = raw % 256 %}
+        {% set raw = raw | int %}
+        V{{ major }}.{{ minor }}.{{ patch }}
       {% endif %}
     icon: "mdi:code-tags"
     group: "PV_device_info"
