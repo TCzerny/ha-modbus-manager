@@ -6,7 +6,12 @@ description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx mo
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
 version: 1.2.8
-# Updated to Protocol V1.1.11 (2025-11-17)
+default_prefix: "SG"
+default_slave_id: 1
+type: "PV_Hybrid_Inverter"
+firmware_version: "03011.95.01"
+
+# Updated to Protocol Documentation V1.1.11 (2025-11-17)
 # - Updated Battery Power to recommended register 5214-5215 (S32, 1W)
 # - Updated Battery Current to recommended register 5631 (S16, 0.1A)
 # - Confirmed Grid Frequency uses recommended register 5242 (U16, 0.01Hz)
@@ -32,10 +37,7 @@ version: 1.2.8
 # - Meter Channel 2 registers: Only available with DTSU666-20 meter AND not on RS/MG models
 # - Battery capacity register: Only available on SH3.0-6.0RS, SH8.0-10RS, and SH5.0-10RT models
 # - PV Power Limitation control: Only available on SHT models (SH5T-SH25T), not RT/RS models
-default_prefix: "SG"
-default_slave_id: 1
-type: "PV_Hybrid_Inverter"
-firmware_version: "03011.95.01"
+
 
 # Dynamic configuration support
 dynamic_config:
