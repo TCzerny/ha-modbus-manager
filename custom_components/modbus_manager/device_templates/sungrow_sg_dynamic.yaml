@@ -1028,12 +1028,13 @@ sensors:
       4: "Standby"
 
   # Added with Version 1.1.50
-  - name: Heart beat
-    unique_id: heart_beat
-    address: 5142 # reg 5143
-    input_type: input
-    data_type: uint16
-    scan_interval: 30
+  # type: input seems not to work, holding sends FFFF. consider to change to holding.
+  #- name: Heart beat
+  #  unique_id: heart_beat
+  #  address: 5142 # reg 5143
+  #  input_type: input
+  #  data_type: uint16
+  #  scan_interval: 30
 
   - name: Total PV Generation (high precision)
     unique_id: total_pv_generation_high_precision
