@@ -886,8 +886,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["type"] = "calculated"
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
-                    # Store prefix in config for easier access (lowercase for consistency)
-                    register["device_prefix"] = prefix.lower()
+                    register["device_prefix"] = prefix
                     # Replace placeholders in calculated entity templates (state, availability)
                     for field in ["state", "availability", "template"]:
                         if field in register and isinstance(register[field], str):
@@ -901,8 +900,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["type"] = "binary_sensor"
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
-                    # Store prefix in config for easier access (lowercase for consistency)
-                    register["device_prefix"] = prefix.lower()
+                    register["device_prefix"] = prefix
                     # Replace placeholders in binary sensor templates (state, availability)
                     for field in ["state", "availability", "template"]:
                         if field in register and isinstance(register[field], str):

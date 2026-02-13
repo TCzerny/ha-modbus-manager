@@ -3344,7 +3344,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
             return self.async_create_entry(title="", data={})
 
         except Exception as e:
-            _LOGGER.error("Fehler beim Aktualisieren der Firmware-Version: %s", str(e))
+            _LOGGER.error("Error updating the firmware version: %s", str(e))
             return self.async_abort(
                 reason="firmware_update_error",
                 description_placeholders={"error": str(e)},
