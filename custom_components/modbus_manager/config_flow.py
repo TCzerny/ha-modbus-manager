@@ -4,7 +4,7 @@ import asyncio
 import json
 import os
 from signal import default_int_handler
-from typing import List
+from typing import Any, List
 
 import voluptuous as vol
 from homeassistant import config_entries
@@ -781,17 +781,22 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         else:
             # Individual field configuration - generic for any device type
             # Extract all configurable fields dynamically
+            # Safe access: config values may be overwritten with primitives
+            def _safe_default(config: dict, key: str, default: Any) -> Any:
+                val = config.get(key, {})
+                return val.get("default", default) if isinstance(val, dict) else default
+
             phases = user_input.get(
-                "phases", dynamic_config.get("phases", {}).get("default", 3)
+                "phases", _safe_default(dynamic_config, "phases", 3)
             )
             mppt_count = user_input.get(
-                "mppt_count", dynamic_config.get("mppt_count", {}).get("default", 1)
+                "mppt_count", _safe_default(dynamic_config, "mppt_count", 1)
             )
             string_count = user_input.get(
-                "string_count", dynamic_config.get("string_count", {}).get("default", 1)
+                "string_count", _safe_default(dynamic_config, "string_count", 1)
             )
             modules = user_input.get(
-                "modules", dynamic_config.get("modules", {}).get("default", 3)
+                "modules", _safe_default(dynamic_config, "modules", 3)
             )
 
             # Log all individual field values for debugging
@@ -803,9 +808,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "connection_type",
                     "battery_slave_id",
                 ]:
-                    field_value = user_input.get(
-                        field_name, field_config.get("default", "unknown")
+                    default_val = (
+                        field_config.get("default", "unknown")
+                        if isinstance(field_config, dict)
+                        else "unknown"
                     )
+                    field_value = user_input.get(field_name, default_val)
                     individual_fields.append(f"{field_name}={field_value}")
 
             _LOGGER.debug(
@@ -813,8 +821,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 ", ".join(individual_fields),
             )
 
-        battery_default = dynamic_config.get("battery_config", {}).get(
-            "default", "none"
+        # Safe access: battery_config may be overwritten with string (e.g. "none")
+        battery_config_val = dynamic_config.get("battery_config", {})
+        battery_default = (
+            battery_config_val.get("default", "none")
+            if isinstance(battery_config_val, dict)
+            else "none"
         )
         battery_config = user_input.get("battery_config", battery_default)
 
@@ -842,7 +854,11 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Handle "Latest" firmware version - use the highest available version
         if firmware_version == "Latest":
             firmware_config = dynamic_config.get("firmware_version", {})
-            available_firmware = firmware_config.get("options", [])
+            available_firmware = (
+                firmware_config.get("options", [])
+                if isinstance(firmware_config, dict)
+                else []
+            )
 
             if available_firmware:
                 # Find the highest version (excluding "Latest")
@@ -3749,17 +3765,22 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         else:
             # Individual field configuration - generic for any device type
             # Extract all configurable fields dynamically
+            # Safe access: config values may be overwritten with primitives
+            def _safe_default(config: dict, key: str, default: Any) -> Any:
+                val = config.get(key, {})
+                return val.get("default", default) if isinstance(val, dict) else default
+
             phases = user_input.get(
-                "phases", dynamic_config.get("phases", {}).get("default", 3)
+                "phases", _safe_default(dynamic_config, "phases", 3)
             )
             mppt_count = user_input.get(
-                "mppt_count", dynamic_config.get("mppt_count", {}).get("default", 1)
+                "mppt_count", _safe_default(dynamic_config, "mppt_count", 1)
             )
             string_count = user_input.get(
-                "string_count", dynamic_config.get("string_count", {}).get("default", 1)
+                "string_count", _safe_default(dynamic_config, "string_count", 1)
             )
             modules = user_input.get(
-                "modules", dynamic_config.get("modules", {}).get("default", 3)
+                "modules", _safe_default(dynamic_config, "modules", 3)
             )
 
             # Log all individual field values for debugging
@@ -3771,9 +3792,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                     "connection_type",
                     "battery_slave_id",
                 ]:
-                    field_value = user_input.get(
-                        field_name, field_config.get("default", "unknown")
+                    default_val = (
+                        field_config.get("default", "unknown")
+                        if isinstance(field_config, dict)
+                        else "unknown"
                     )
+                    field_value = user_input.get(field_name, default_val)
                     individual_fields.append(f"{field_name}={field_value}")
 
             _LOGGER.info(
@@ -3781,8 +3805,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 ", ".join(individual_fields),
             )
 
-        battery_default = dynamic_config.get("battery_config", {}).get(
-            "default", "none"
+        # Safe access: battery_config may be overwritten with string (e.g. "none")
+        battery_config_val = dynamic_config.get("battery_config", {})
+        battery_default = (
+            battery_config_val.get("default", "none")
+            if isinstance(battery_config_val, dict)
+            else "none"
         )
         battery_config = user_input.get("battery_config", battery_default)
 
@@ -3810,7 +3838,11 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         # Handle "Latest" firmware version - use the highest available version
         if firmware_version == "Latest":
             firmware_config = dynamic_config.get("firmware_version", {})
-            available_firmware = firmware_config.get("options", [])
+            available_firmware = (
+                firmware_config.get("options", [])
+                if isinstance(firmware_config, dict)
+                else []
+            )
 
             if available_firmware:
                 # Find the highest version (excluding "Latest")

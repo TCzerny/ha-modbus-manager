@@ -929,8 +929,12 @@ def _should_include_sensor(
     # Connection type specific sensors (DEPRECATED: Use condition instead)
     # This is kept for backward compatibility with old templates
     # New templates should use condition: "connection_type == 'LAN'" on sensors
-    connection_config = dynamic_config.get("connection_type", {}).get(
-        "sensor_availability", {}
+    # Safe access: connection_type may be overwritten with string (e.g. "LAN")
+    connection_type_val = dynamic_config.get("connection_type", {})
+    connection_config = (
+        connection_type_val.get("sensor_availability", {})
+        if isinstance(connection_type_val, dict)
+        else {}
     )
     if connection_config:  # Only check if sensor_availability is defined
         if connection_type == "LAN":

@@ -125,12 +125,12 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                         )
                     else:
                         self._attr_current_option = str(mapped_value)
-                        _LOGGER.debug(
-                            "Select %s updated: %s -> %s",
-                            self._attr_name,
-                            processed_value,
-                            mapped_value,
-                        )
+                    #  _LOGGER.debug(
+                    #      "Select %s updated: %s -> %s",
+                    #      self._attr_name,
+                    #      processed_value,
+                    #      mapped_value,
+                    #  )
                 else:
                     self._attr_current_option = None
                     _LOGGER.debug("Select %s: No processed value", self._attr_name)
@@ -151,12 +151,12 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
             if value is None:
                 return None
 
-            _LOGGER.debug(
-                "Select %s: Processing value %s (type: %s)",
-                self._attr_name,
-                value,
-                type(value),
-            )
+            #  _LOGGER.debug(
+            #      "Select %s: Processing value %s (type: %s)",
+            #      self._attr_name,
+            #      value,
+            #      type(value),
+            #  )
 
             # Only process numeric values
             if isinstance(value, (int, float)):
@@ -208,15 +208,15 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                 if self._options:
                     if int_value in self._options:
                         option_value = self._options[int_value]
-                        _LOGGER.debug(
-                            "Found option for %s: '%s'", int_value, option_value
-                        )
+                        # _LOGGER.debug(
+                        #     "Found option for %s: '%s'", int_value, option_value
+                        # )
                         return option_value
                     elif str(int_value) in self._options:
                         option_value = self._options[str(int_value)]
-                        _LOGGER.debug(
-                            "Found option for %s: '%s'", int_value, option_value
-                        )
+                        # _LOGGER.debug(
+                        #     "Found option for %s: '%s'", int_value, option_value
+                        # )
                         return option_value
                     else:
                         _LOGGER.debug(

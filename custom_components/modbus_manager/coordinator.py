@@ -301,10 +301,10 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 success=True,
             )
 
-            _LOGGER.debug(
-                "Coordinator update completed. Data keys: %s",
-                list(self.register_data.keys()),
-            )
+            #  _LOGGER.debug(
+            #      "Coordinator update completed. Data keys: %s",
+            #      list(self.register_data.keys()),
+            #  )
 
             return self.register_data
 

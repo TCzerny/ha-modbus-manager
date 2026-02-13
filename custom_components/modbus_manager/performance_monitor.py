@@ -121,7 +121,7 @@ class PerformanceMonitor:
             self._limit_history(device_id)
             self._limit_global_history()
 
-            _LOGGER.debug("Operation started: %s", operation_id)
+            # _LOGGER.debug("Operation started: %s", operation_id)
             return operation_id
 
         except Exception as e:
@@ -179,7 +179,7 @@ class PerformanceMonitor:
 
                     break
 
-            _LOGGER.debug("Operation ended: %s (Success: %s)", operation_id, success)
+            # _LOGGER.debug("Operation ended: %s (Success: %s)", operation_id, success)
 
         except Exception as e:
             _LOGGER.error("Error ending operation: %s", str(e))

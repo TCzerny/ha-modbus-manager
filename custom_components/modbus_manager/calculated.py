@@ -142,9 +142,6 @@ class ModbusCalculatedSensor(SensorEntity):
             from homeassistant.helpers.entity import DeviceInfo
 
             self._attr_device_info = DeviceInfo(**device_info_from_config)
-            _LOGGER.debug(
-                "Using device_info from coordinator config for %s", self._attr_name
-            )
         else:
             _LOGGER.error(
                 "Calculated entity %s missing device_info. Coordinator should provide this.",
@@ -353,11 +350,11 @@ class ModbusCalculatedSensor(SensorEntity):
                     )
                     if rendered_icon and isinstance(rendered_icon, str):
                         self._attr_icon = rendered_icon.strip()
-                        _LOGGER.debug(
-                            "Dynamic icon updated for %s: %s",
-                            self._attr_name,
-                            self._attr_icon,
-                        )
+                    #  _LOGGER.debug(
+                    #      "Dynamic icon updated for %s: %s",
+                    #      self._attr_name,
+                    #      self._attr_icon,
+                    #  )
                 except Exception as icon_error:
                     _LOGGER.debug(
                         "Error updating dynamic icon for %s: %s",
@@ -483,9 +480,6 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             from homeassistant.helpers.entity import DeviceInfo
 
             self._attr_device_info = DeviceInfo(**device_info_from_config)
-            _LOGGER.debug(
-                "Using device_info from coordinator config for %s", self._attr_name
-            )
         else:
             _LOGGER.error(
                 "Calculated binary sensor %s missing device_info. Coordinator should provide this.",
@@ -669,12 +663,12 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                     bool(rendered_value) if rendered_value is not None else None
                 )
 
-            _LOGGER.debug(
-                "Binary sensor %s updated: state=%s (rendered=%s)",
-                self._attr_name,
-                self._attr_is_on,
-                rendered_value,
-            )
+        #  _LOGGER.debug(
+        #      "Binary sensor %s updated: state=%s (rendered=%s)",
+        #      self._attr_name,
+        #      self._attr_is_on,
+        #      rendered_value,
+        #  )
 
         except Exception as e:
             _LOGGER.error(
