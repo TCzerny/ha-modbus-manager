@@ -5,7 +5,21 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [0.2.1] - 2026-02-05
+## [0.2.2] - 2026-02-13
+
+### 🔧 Improved
+
+#### Register Read Error Debug Logging
+- **Entity identification**: Failed register reads now log affected entity unique_ids/names (e.g. `[running_state, meter_active_power_raw]`)
+- **Register context**: All error/warning logs now include `slave_id`, register type (input/holding), and address range
+- **Error classification**: Distinguishes timeout (no response), connection error, and Modbus errors for faster troubleshooting
+- **Clarified messages**:
+  - "no/invalid response" when read returns empty/None (device may not support register, firmware mismatch)
+  - Exception path: shows classified error type (timeout, connection, Modbus) instead of raw exception only
+- **DEBUG logs**: Additional debug entries with possible causes and full exception details when errors occur
+- Helps identify which registers cause issues on specific models/firmware during production use
+
+## [0.2.1] - 2026-02-13
 
 ### 🐛 Fixed
 
