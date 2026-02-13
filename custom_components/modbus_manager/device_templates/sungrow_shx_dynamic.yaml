@@ -95,12 +95,11 @@ dynamic_config:
     "SH20T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE26", max_charge_power: 20000, max_discharge_power: 20000, max_ac_output_power: 20000}
     "SH25T": {phases: 3, mppt_count: 3, string_count: 2, type_code: "0xE28", max_charge_power: 25000, max_discharge_power: 25000, max_ac_output_power: 25000}
 
-    # MG5-6RL Series (Three Phase)
-    # Battery Power Limits: Using conservative estimates (similar to RT series)
-    # AC Output Power Limits: Estimated based on model name (kW rating)
-    # NOTE: Specific datasheet values not found - using safe estimates
+    # MG5-10RL Series (Three Phase) - Appendix 1
     "MG5RL": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xD27", max_charge_power: 7500, max_discharge_power: 6000, max_ac_output_power: 5000}
     "MG6RL": {phases: 3, mppt_count: 2, string_count: 1, type_code: "0xD28", max_charge_power: 9000, max_discharge_power: 7200, max_ac_output_power: 6000}
+    "MG8RL": {phases: 3, mppt_count: 3, string_count: 1, type_code: "0xD29", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 8000}
+    "MG10RL": {phases: 3, mppt_count: 3, string_count: 1, type_code: "0xD2A", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10000}
 
   firmware_version:
     description: "Firmware version string (e.g., '03011.95.01')"
@@ -154,7 +153,9 @@ sensors:
     scan_interval: 600
     group: "PV_device_info"
     entity_category: "diagnostic"
+    # Appendix 1: Device type codes (hex -> decimal)
     map:
+      # SH3K6, SH4K6, SH5K-20, etc. (K6/30 series - not in Appendix 1)
       3334: "SH3K6"
       3335: "SH4K6"
       3337: "SH5K-20"
@@ -162,13 +163,16 @@ sensors:
       3338: "SH3K6-30"
       3339: "SH4K6-30"
       3340: "SH5K-30"
+      # SH3.0-6.0RS (0xD17, 0xD0D, 0xD18, 0xD0F, 0xD10)
       3351: "SH3.0RS"
       3341: "SH3.6RS"
       3352: "SH4.0RS"
       3343: "SH5.0RS"
       3344: "SH6.0RS"
+      # SH8.0-10RS (0xD1A, 0xD1B)
       3354: "SH8.0RS"
       3355: "SH10RS"
+      # SH5.0-10RT (0xE00-0xE03), RT-20 (0xE10-0xE13), V112 (0xE0C-0xE0F), V122 (0xE08-0xE0B)
       3584: "SH5.0RT"
       3585: "SH6.0RT"
       3586: "SH8.0RT"
@@ -185,6 +189,7 @@ sensors:
       3593: "SH6.0RT-V122"
       3594: "SH8.0RT-V122"
       3595: "SH10RT-V122"
+      # SH5-25T (0xE20-0xE28)
       3616: "SH5T"
       3617: "SH6T"
       3618: "SH8T"
@@ -193,8 +198,11 @@ sensors:
       3621: "SH15T"
       3622: "SH20T"
       3624: "SH25T"
-      3353: "MG5RL"
-      3354: "MG6RL"
+      # MG5-10RL (0xD27, 0xD28, 0xD29, 0xD2A) - Appendix 1
+      3367: "MG5RL"
+      3368: "MG6RL"
+      3369: "MG8RL"
+      3370: "MG10RL"
     group: "PV_device_info"
 
   - name: Protocol version raw
@@ -257,6 +265,7 @@ sensors:
     scan_interval: 3600
     group: "PV_device_info"
     entity_category: "diagnostic"
+    # Protocol Table 3: 0=Single, 1=3P4L, 2=3P3L
     options:
       0: "Single"
       1: "3P4L"
@@ -274,7 +283,7 @@ sensors:
     group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
 
   - name: Communication Module Firmware Information
     unique_id: communication_module_firmware_info
@@ -286,7 +295,7 @@ sensors:
     group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
 
   - name: Battery Firmware Information
     unique_id: battery_firmware_info
@@ -298,7 +307,7 @@ sensors:
     group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
-    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
+    condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
 
   # Basic Inverter Data
   - name: Daily PV generation & battery discharge
@@ -414,6 +423,33 @@ sensors:
     scale: 0.1
     scan_interval: 10
 
+  # MPPT 4 (only SH8.0RS, SH10RS with 4 MPPTs per Protocol V1.1.11)
+  - name: MPPT4 voltage
+    unique_id: mppt4_voltage
+    address: 5114 # reg 5115
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "selected_model in [SH8.0RS, SH10RS]"
+
+  - name: MPPT4 current
+    unique_id: mppt4_current
+    address: 5115 # reg 5116
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: A
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "selected_model in [SH8.0RS, SH10RS]"
+
   - name: Total DC power
     unique_id: total_dc_power
     address: 5016 # reg 5017
@@ -493,6 +529,15 @@ sensors:
     scale: 0.001
     scan_interval: 10
     entity_category: "diagnostic"
+
+  # Grid frequency: we use reg 5242 (address 5241) for higher precision 0.01Hz; reg 5036 (address 5035) has 0.1Hz only
+  # - name: Grid frequency (0.1Hz)
+  #   unique_id: grid_frequency_alt
+  #   address: 5035 # reg 5036 - lower precision; prefer 5242 (address 5241)
+  #   input_type: input
+  #   data_type: uint16
+  #   scale: 0.1
+  #   unit_of_measurement: Hz
 
   - name: Grid frequency
     unique_id: grid_frequency
@@ -771,6 +816,98 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
+
+  # Backup port current, voltage, frequency (off-grid/backup monitoring per Protocol V1.1.11)
+  - name: Backup phase A current
+    unique_id: backup_phase_a_current
+    address: 5719 # reg 5720
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: A
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_enabled == true"
+
+  - name: Backup phase B current
+    unique_id: backup_phase_b_current
+    address: 5720 # reg 5721
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: A
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_enabled == true and phases > 1"
+
+  - name: Backup phase C current
+    unique_id: backup_phase_c_current
+    address: 5721 # reg 5722
+    input_type: input
+    data_type: int16
+    precision: 1
+    unit_of_measurement: A
+    device_class: "current"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_enabled == true and phases > 1"
+
+  - name: Backup phase A voltage
+    unique_id: backup_phase_a_voltage
+    address: 5730 # reg 5731
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_enabled == true"
+
+  - name: Backup phase B voltage
+    unique_id: backup_phase_b_voltage
+    address: 5731 # reg 5732
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_enabled == true and phases > 1"
+
+  - name: Backup phase C voltage
+    unique_id: backup_phase_c_voltage
+    address: 5732 # reg 5733
+    input_type: input
+    data_type: uint16
+    precision: 1
+    unit_of_measurement: V
+    device_class: "voltage"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 10
+    condition: "battery_enabled == true and phases > 1"
+
+  - name: Backup frequency
+    unique_id: backup_frequency
+    address: 5733 # reg 5734
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: Hz
+    device_class: "frequency"
+    state_class: measurement
+    scale: 0.01
+    scan_interval: 10
+    condition: "battery_enabled == true"
 
   # Meter Phase Data (will be filtered based on phases)
   - name: Meter phase A voltage
@@ -1517,42 +1654,45 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 10
-    # System state mapping based on mkaiser implementation
-    # Value 64 (0x0040) = Running (normal operation)
+    # Appendix 2: Running State
     options:
-      0x0000: "Running"
-      0x0040: "Running"
-      0x0410: "Off-grid Charge"
-      0x0200: "Update Failed"
-      0x0400: "Maintain mode"
-      0x0800: "Forced mode"
-      0x1000: "Off-grid mode"
-      0x1111: "Un-Initialized"
-      0x0010: "Initial Standby"
-      0x12000: "Initial Standby"
-      0x1300: "Shutdown"
-      0x0002: "Shutdown"
-      0x1400: "Standby"
-      0x0008: "Standby"
-      0x1500: "Emergency Stop"
-      0x0004: "Emergency Stop"
-      0x1600: "Startup"
-      0x0020: "Startup"
-      0x1700: "AFCI self test shutdown"
-      0x1800: "Intelligent Station Building Status"
-      0x1900: "Safe Mode"
-      0x2000: "Open Loop"
-      0x2501: "Restarting"
-      0x4000: "External EMS mode"
-      0x4001: "Emergency Battery Charging"
-      0x5500: "Fault"
-      0x0100: "Fault"
+      # Running states (power generation)
+      0x0000: "Running (On-grid)"
+      0x0040: "Running (On-grid)"
+      0x0014: "Microgrid Operation"
+      0x0041: "Off-grid Charge"
+      0x0400: "Running in maintain mode"
+      0x0800: "Running in compulsory mode"
+      0x1000: "Running (Off-grid)"
+      0x4000: "Running in External EMS mode"
+      0x4001: "Emergency Charging Operation"
+      0x8100: "Derating Running"
+      0x0080: "Derating Running"
+      0x8200: "Dispatch Running"
+      0x9100: "Warn Running"
+      # Stop/standby states (no power generation)
       0x8000: "Stop"
       0x0001: "Stop"
-      0x8100: "De-rating Running"
-      0x0080: "De-rating Running"
-      0x8200: "Dispatch Run"
-      0x9100: "Warn Running"
+      0x1300: "Key stop"
+      0x0002: "Key stop"
+      0x1500: "Emergency Stop"
+      0x0004: "Emergency Stop"
+      0x1400: "Standby"
+      0x0008: "Standby"
+      0x1200: "Initial standby"
+      0x0010: "Initial standby"
+      0x1600: "Starting"
+      0x0020: "Starting"
+      0x1111: "Uninitialized"
+      0x0200: "Update Failed"
+      0x2500: "Communicate fault"
+      0x2501: "Restarting"
+      0x5500: "Fault"
+      0x0100: "Fault"
+      0x1700: "AFCI self-test shutdown"
+      0x1800: "Intelligent Station Building Status"
+      0x1900: "Safe Mode"
+      0x2000: "Open loop"
     group: "PV_status"
 
   - name: "Running state"
@@ -1565,15 +1705,15 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_status"
-    # Flags for individual bit interpretation
+    # Appendix 3: Power Flow State (bit position = key)
     flags:
-      0x1: "PV Generating"
-      0x2: "Battery Charging"
-      0x4: "Battery Discharging"
-      0x8: "Load Active"
-      0x10: "Exporting Power"
-      0x20: "Importing Power"
-      0x80: "Negative Load Power"
+      0: "PV Generating"
+      1: "Battery charging"
+      2: "Battery discharging"
+      3: "Positive load power"
+      4: "Exporting power to grid"
+      5: "Importing power from grid"
+      7: "Negative load power"
 
 
   - name: "Load Adjustment Mode Raw"
@@ -1583,11 +1723,12 @@ sensors:
     data_type: "uint16"
     scan_interval: 10
     state_class: measurement
+    # Appendix 5: Load Control Mode
     options:
-      0: "Timing"
-      1: "ON/OFF"
-      2: "Power optimization"
-      3: "Disabled"
+      0: "Timing mode"
+      1: "ON/OFF mode"
+      2: "Power optimized mode"
+      3: "Disable"
     group: "PV_modes"
 
   # Energy and power sensors
@@ -1679,9 +1820,10 @@ sensors:
     data_type: uint16
     scan_interval: 10
     state_class: measurement
+    # Parameter Setting Table 4: Load ON/OFF mode - 0xAA=ON, 0x55=OFF
     options:
-      170: "ON"  # 0xAA
-      85: "OFF"  # 0x55
+      0xAA: "ON"
+      0x55: "OFF"
 
   # Battery sensors (will be filtered based on battery_enabled)
   - name: Daily battery charge from PV
@@ -1835,6 +1977,36 @@ sensors:
     scale: 0.1
     scan_interval: 600
 
+  - name: Self-consumption of today
+    unique_id: self_consumption_of_today
+    address: 13028 # reg 13029
+    input_type: input
+    data_type: uint16
+    precision: 2
+    unit_of_measurement: "%"
+    state_class: measurement
+    scale: 0.1
+    scan_interval: 600
+  # Commented out for now as not clear if useful for us
+  #- name: DRM State
+  #  unique_id: drm_state
+  #  address: 13042 # reg 13043
+  #  input_type: input
+  #  data_type: uint16
+  #  scan_interval: 60
+  #  entity_category: "diagnostic"
+  #  # Protocol Table 3: 1-9 = DRM0-DRM8; other = Invalid
+  #  options:
+  #    1: "DRM0"
+  #    2: "DRM1"
+  #    3: "DRM2"
+  #    4: "DRM3"
+  #    5: "DRM4"
+  #    6: "DRM5"
+  #    7: "DRM6"
+  #    8: "DRM7"
+  #    9: "DRM8"
+
   # Phase current sensors (will be filtered based on phases)
   - name: Phase A current
     unique_id: phase_a_current
@@ -1965,6 +2137,400 @@ sensors:
     scan_interval: 600
     condition: "meter_type != 'iHomeManager'"
 
+  # --- COMMENTED OUT: Fault/Diagnostic registers (Protocol V1.1.11 Appendix 4) - uncomment for diagnostics ---
+  # Bit-based fault analysis; flags key = bit position
+  # - name: Inverter alarm
+  #   unique_id: inverter_alarm_raw
+  #   address: 13049 # reg 13050-13051 U32
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   flags:
+  #     0: "Fan Alarm"
+  #     1: "Lightning Protection Alarm on AC Side"
+  #     2: "Lightning Protection Alarm on DC Side"
+  #     3: "Bypass Switch Abnormal"
+  #     4: "Communication Alarm"
+  #     5: "Parallel Communication Alarm"
+  #     6: "Device Abnormality"
+  #     7: "Junction Box leakage Protector Alarm"
+  #     8: "PV1 Abnormal Warn"
+  #     9: "PV2 Abnormal Warn"
+  #     10: "PV3 Abnormal Warn"
+  #     11: "PV4 Abnormal Warn"
+  #     12: "Fan 2 Rotate Low Speed Alarm"
+  #     13: "Fan 2 Stall Alarm"
+  #     14: "Meter input/output ports reversed or wrong terminals"
+  #     15: "Software Version Mismatch"
+  #     16: "SPD or Fuse Alarm"
+  #     17: "FRAM Read Alarm"
+  #     18: "SPI Com Alarm"
+  #     19: "Ambient Temperature Sensor Open Circuit Alarm"
+  #     20: "Ambient Temperature Sensor Short Circuit Alarm"
+  #     21: "Inversion T Sensor Open Circuit Alarm"
+  #     22: "Inversion T Sensor Short Circuit Alarm"
+  #     23: "Boost T Sensor Open Circuit Alarm"
+  #     24: "Boost T Sensor Short Circuit Alarm"
+  #     25: "Input Cfg Alarm In DC Source Mode Or Clock Reset Abnormal"
+  #     26: "PV HV Flt"
+  #     27: "Ambient Low Temperature Sensor Open Circuit Alarm"
+  #     28: "Fan 1 Low Rotation Speed Alarm"
+  #     29: "Fan 1 Stall Alarm"
+  #     30: "Meter Communication Alarm"
+  #     31: "BOOST Short Circuit Alarm"
+  # - name: Grid-side fault
+  #   unique_id: grid_side_fault_raw
+  #   address: 13051 # reg 13052-13053 U32
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   flags:
+  #     0: "Grid Overvoltage"
+  #     1: "Grid Transient V-over"
+  #     2: "Grid Under-voltage"
+  #     3: "Grid V-low"
+  #     5: "AC C-over"
+  #     6: "Grid Over-frequency"
+  #     7: "Grid Under-frequency"
+  #     8: "Grid Power Outage"
+  #     9: "Device Abnormality"
+  #     10: "Excessive Leakage Current"
+  #     11: "Grid Abnormal"
+  #     12: "10 Minutes Grid Overvoltage"
+  #     13: "High Grid Voltage"
+  #     14: "Output Overload"
+  #     15: "Grid Voltage Imbalance"
+  #     16: "Inversion C-over Hardware Flt"
+  #     17: "High Grid Frequency"
+  #     18: "Grid F-low"
+  #     19: "V-Grid Uniform Fault"
+  #     20: "Grid Frequency Uniform Fault"
+  #     21: "Network Side Protection Self-test Failed"
+  #     22: "Grounding Cable Fault"
+  #     23: "Inversion V DC Ject V-over Flt"
+  #     24: "AC Side Under-voltage"
+  #     25: "AC Side Overvoltage"
+  #     26: "AC Side Under-frequency"
+  #     27: "AC Side Over-frequency"
+  #     28: "Vac Unbal"
+  #     29: "Bypass Instantaneous Overcurrent"
+  #     30: "Bypass Switch Over Current"
+  # - name: System fault 1
+  #   unique_id: system_fault_1_raw
+  #   address: 13053 # reg 13054-13055 U32
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   flags:
+  #     0: "Inversion Switch Tube Over-temperature"
+  #     1: "BOOST Switch Tube T-over"
+  #     2: "PV IR Flt"
+  #     3: "Bypass Switch Fault"
+  #     4: "EPS Relay Failure"
+  #     5: "Junction Box Relay Fault"
+  #     6: "Input and Output Mismatch Fault"
+  #     7: "PV HV P-over Alarm or Prot"
+  #     8: "Redundancy Fault"
+  #     9: "R-phase inverter voltage sampling channel abnormal"
+  #     10: "S-phase inverter voltage sampling channel abnormal"
+  #     11: "T-phase inverter voltage sampling channel abnormal"
+  #     12: "R-phase DC component sampling channel abnormal"
+  #     13: "S-phase DC component sampling channel abnormal"
+  #     14: "T-phase DC component sampling channel abnormal"
+  #     15: "PV 1 current sampling channel abnormal"
+  #     16: "PV 2 current sampling channel abnormal"
+  #     17: "PV 1 MPPT current sampling channel abnormal"
+  #     18: "PV 2 MPPT current sampling channel abnormal"
+  #     19: "Control Board Power Supply Under-voltage Fault"
+  #     20: "Leak Current CT Self-detection Fault"
+  #     21: "SPI Com Flt"
+  #     22: "LCD and Main DSP Communication Fault"
+  #     24: "PV3 current sampling channel failure"
+  #     25: "N-wire current sampling channel abnormal"
+  #     26: "Balance bridge current sampling channel abnormal"
+  # - name: System fault 2
+  #   unique_id: system_fault_2_raw
+  #   address: 13055 # reg 13056-13057 U32
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   flags:
+  #     0: "Module Over-temperature"
+  #     1: "Excessively High Ambient Temperature"
+  #     2: "Device Abnormality"
+  #     3: "Low System Insulation Resistance"
+  #     7: "Low Ambient Temperature"
+  #     11: "Input Configuration Abnormality"
+  #     15: "Backup Load Overpower Fault"
+  # - name: DC-side fault
+  #   unique_id: dc_side_fault_raw
+  #   address: 13057 # reg 13058-13059 U32
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   flags:
+  #     4: "PV Access Failure"
+  #     9: "PV1 Reverse Connection Fault"
+  #     10: "PV2 Reverse Connection Fault"
+  #     16: "Bus Overvoltage Hardware Fault"
+  #     17: "Busbar Average Under-voltage"
+  #     18: "PV Hardware Overcurrent Fault"
+  #     19: "PV Voltage Exceeds Bus Voltage"
+  #     20: "BOOST1 Short Circuit Fault"
+  #     21: "BOOST2 Short Circuit Fault"
+  #     22: "DC C-over"
+  #     23: "PV3 Overcurrent"
+  #     24: "PV3 Reverse Connection Fault"
+  #     25: "BOOST3 short circuit fault"
+  #     26: "Half-bus overvoltage hardware fault"
+  #     27: "Balance bridge overcurrent hardware fault"
+  #     28: "PV4 Reverse Connection Fault"
+  # - name: Permanent fault
+  #   unique_id: permanent_fault_raw
+  #   address: 13059 # reg 13060-13061 U32
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   flags:
+  #     0: "PV Overcurrent Permanent Fault"
+  #     1: "Inversion Overcurrent Permanent Fault"
+  #     2: "High DC Injection Permanent Fault"
+  #     3: "Bus V-over Perm. Flt"
+  #     4: "Relay Perm Fault"
+  #     5: "PV1 Self-check Permanent Fault"
+  #     6: "PV2 Self-check Permanent Fault"
+  #     7: "Inversion Open-loop Self-detection Perm. Flt"
+  #     8: "Entire Temperature Sensor Failure"
+  #     9: "BOOST3 open-loop self-check permanent fault"
+  #     10: "Balance bridge overcurrent permanent fault"
+  #     11: "Half-bus overvoltage permanent fault"
+  # - name: BDC-side fault
+  #   unique_id: bdc_side_fault_raw
+  #   address: 13061 # reg 13062-13063 U32
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   flags:
+  #     0: "BDC Charge Transient I-over"
+  #     1: "BDC Discharge Transient I-over"
+  #     2: "Clamping Capacitance V-low Fault"
+  #     3: "Clamping Capacitance Transient V-over"
+  #     5: "Battery Pre-charge Relay Failure"
+  #     8: "BDC Self-detect Flt"
+  #     12: "BDC T-over Flt"
+  #     16: "BDC Hardware I-over"
+  #     20: "BDC Current Sampling Channel Abnormality"
+  #     22: "Leakage Current Sampling Channel Abnormality"
+  #     23: "Secondary DSP Communication Fault"
+  #     24: "BDC Soft Start Flt"
+  # - name: BDC-side permanent fault
+  #   unique_id: bdc_side_permanent_fault_raw
+  #   address: 13063 # reg 13064-13065 U32
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   flags:
+  #     0: "BDC I-over Perm. Flt"
+  #     2: "Battery Overvoltage Permanent Fault"
+  #     4: "BDC Self-detect Permanent Flt"
+  #     7: "BDC Soft Start Perm. Flt"
+  - name: Battery fault
+    unique_id: battery_fault_raw
+    address: 13065 # reg 13066-13067 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    condition: "battery_enabled == true"
+    flags:
+      3: "Battery Average Under-voltage Fault"
+      7: "Battery Over-temperature Fault"
+      8: "Battery Low Temperature Fault"
+      11: "Battery Transient Overvoltage"
+      12: "Battery Average Overvoltage Fault"
+      14: "BMS Communication Fault"
+      15: "Battery Hardware Overvoltage"
+      16: "Abnormal Battery Connection (Reversed Polarity)"
+      17: "BMS and Battery Fault"
+  - name: Battery alarm
+    unique_id: battery_alarm_raw
+    address: 13067 # reg 13068-13069 U32
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    condition: "battery_enabled == true"
+    flags:
+      0: "BDC T Sensor Open Circuit Alarm"
+      1: "BDC T Sensor Short Circuit Alarm"
+  - name: BMS alarm
+    unique_id: bms_alarm_raw
+    address: 13069 # reg 13070-13071 U32 - requires battery Modbus address
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    condition: "battery_enabled == true"
+    flags:
+      0: "Overvoltage Alarm"
+      1: "Over-temperature Alarm"
+      2: "Low Temperature Alarm"
+      3: "Charge/Discharge Overcurrent Alarm"
+      5: "Battery Voltage Unbalance"
+      7: "Under-voltage Alarm"
+      8: "Abnormal SD Card"
+      9: "Cell Voltage Imbalance Alarm"
+      10: "Cell Temperature Difference Alarm"
+      11: "Battery Module Inconsistency Alarm"
+      12: "Mixed Cell Alarm"
+  - name: BMS protection
+    unique_id: bms_protection_raw
+    address: 13071 # reg 13072-13073 U32 - requires battery Modbus address
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    condition: "battery_enabled == true"
+    flags:
+      0: "Overvoltage Protection"
+      1: "Over-temperature Protection"
+      2: "Low Temperature Protection"
+      3: "Charge/Discharge Overcurrent Protection"
+      4: "Over Charge Power Limit Fault"
+      5: "Over Discharge Power Limit Fault"
+      7: "Low Voltage Protection"
+      8: "Slave Battery Fault"
+      9: "Pre-Charge Failed"
+      10: "Abnormal External Power Line Status"
+      11: "Current Sampling Fault"
+      12: "Temperature Sampling Fault"
+      13: "Voltage Sampling Fault"
+      14: "Battery Internal Communication Failure"
+      15: "DC Contactor Failure"
+  - name: BMS fault 1
+    unique_id: bms_fault_1_raw
+    address: 13073 # reg 13074-13075 U32 - requires battery Modbus address; note Holding 13073=Export Limit
+    input_type: input
+    data_type: uint32
+    swap: word
+    entity_category: diagnostic
+    condition: "battery_enabled == true"
+    flags:
+      0: "FET Failure/Battery Switch Failure"
+      1: "Failure in Battery Internal Hardware"
+      2: "Overcurrent Fault"
+      3: "Battery Short Circuit Fault"
+      4: "Internal Communication Fault"
+      5: "Input Overvoltage"
+      7: "Software Version Mismatch Fault"
+      8: "Heating Alarm"
+      9: "Heating Circuit Abnormal"
+      12: "Battery Self-test Fault"
+
+  # - name: BMS fault 2
+  #   unique_id: bms_fault_2_raw
+  #   address: 13075 # reg 13076-13077 U32 - requires battery Modbus address
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   condition: "battery_enabled == true"
+  #   # Bit0-Bit31 Reserved per Appendix 4
+  # - name: BMS alarm 2
+  #   unique_id: bms_alarm_2_raw
+  #   address: 13077 # reg 13078-13079 U32 - requires battery Modbus address
+  #   input_type: input
+  #   data_type: uint32
+  #   swap: word
+  #   entity_category: diagnostic
+  #   condition: "battery_enabled == true"
+  #   flags:
+  #     0: "BMS Internal Alarm"
+
+  # --- COMMENTED OUT: System clock (Holding 4999-5004) ---
+  # - name: System clock year
+  #   unique_id: system_clock_year
+  #   address: 4999
+  #   input_type: holding
+  #   data_type: uint16
+  # - name: System clock month
+  #   unique_id: system_clock_month
+  #   address: 5000
+  #   input_type: holding
+  #   data_type: uint16
+  # - name: System clock day
+  #   unique_id: system_clock_day
+  #   address: 5001
+  #   input_type: holding
+  #   data_type: uint16
+  # - name: System clock hour
+  #   unique_id: system_clock_hour
+  #   address: 5002
+  #   input_type: holding
+  #   data_type: uint16
+  # - name: System clock minute
+  #   unique_id: system_clock_minute
+  #   address: 5003
+  #   input_type: holding
+  #   data_type: uint16
+  # - name: System clock second
+  #   unique_id: system_clock_second
+  #   address: 5004
+  #   input_type: holding
+  #   data_type: uint16
+
+  # --- COMMENTED OUT: DO Configuration (reg 13001, address 13000) - 0: Off, 1: Load Control, 2: Grounding Fault, 3: Micro Grid ---
+  # - name: DO Configuration raw
+  #   unique_id: do_configuration_raw
+  #   address: 13000
+  #   input_type: holding
+  #   data_type: uint16
+
+  # --- COMMENTED OUT: Load timing periods (reg 13003-13010), Load power optimized (13012-13015), Optimized power (13016) ---
+  # - name: Load timing period 1 start hour
+  #   unique_id: load_timing_period_1_start_hour
+  #   address: 13002
+  #   input_type: holding
+  #   data_type: uint16
+  # (... 13003-13009 for start/end minute, etc.)
+  # - name: Optimized power of load
+  #   unique_id: optimized_power_of_load
+  #   address: 13015
+  #   input_type: holding
+  #   data_type: uint16
+
+  # --- COMMENTED OUT: Charge Cutoff Voltage (33041), Forced Charging (33207-33218), Load Rated Power (33273) ---
+  # - name: Charge Cutoff Voltage raw
+  #   unique_id: charge_cutoff_voltage_raw
+  #   address: 33041
+  #   input_type: holding
+  #   data_type: uint16
+  #   scale: 0.1
+  # - name: Forced Charging raw
+  #   unique_id: forced_charging_raw
+  #   address: 33207
+  #   input_type: holding
+  #   data_type: uint16
+  # - name: External EMS heartbeat raw
+  #   unique_id: external_ems_heartbeat_raw
+  #   address: 13079
+  #   input_type: holding
+  #   data_type: uint16
+  # - name: Load Rated Power raw
+  #   unique_id: load_rated_power_raw
+  #   address: 33273
+  #   input_type: holding
+  #   data_type: uint16
+  #   scale: 0.01
+
   # EMS Mode sensor
   - name: "EMS Mode"
     unique_id: "ems_mode_selection_raw"
@@ -1972,10 +2538,11 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 10
+    # Appendix 6: Energy Management Mode
     map:
-      0: "Self-consumption mode (default)"
-      2: "Forced mode"
-      3: "External EMS"
+      0: "Self-consumption (default)"
+      2: "Forced mode" # The inverter is devised to charge or discharge the battery with the charging and discharging power as much as practicable.
+      3: "External EMS mode"
       4: "VPP"
     group: "PV_modes"
 
@@ -1988,6 +2555,7 @@ sensors:
     precision: 0
     state_class: measurement
     scan_interval: 10
+    # Parameter Setting Table 4: Charge/discharge command
     options:
       0xAA: "Charge"
       0xBB: "Discharge"
@@ -2039,6 +2607,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 10
+    # Parameter Setting Table 4: Start/Stop - 0xCF=Boot, 0xCE=Shutdown
     options:
       0xCF: "Enabled"
       0xCE: "Shutdown"
@@ -2052,6 +2621,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    # Appendix 6: Energy Management Mode
     options:
       0: "Self-consumption mode (default)"
       2: "Forced mode"
@@ -2100,11 +2670,12 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    # Appendix 5: Load Control Mode
     options:
-      0: "Timing"
-      1: "ON/OFF"
-      2: "Power optimization"
-      3: "Disabled"
+      0: "Timing mode"
+      1: "ON/OFF mode"
+      2: "Power optimized"
+      3: "Disable"
     group: "PV_modes"
 
   - type: "number"
@@ -2244,9 +2815,10 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
+    # Parameter Setting Table 4: Load ON/OFF mode
     options:
-      0x55: "OFF"  # 0x55
-      0xAA: "ON"  # 0xAA
+      0x55: "OFF"
+      0xAA: "ON"
     group: "PV_modes"
 
   - type: "number"

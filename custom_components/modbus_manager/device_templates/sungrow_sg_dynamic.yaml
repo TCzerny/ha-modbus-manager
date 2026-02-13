@@ -98,6 +98,50 @@ dynamic_config:
 # Sensors for read access (Input Registers)
 sensors:
   # Device Information
+  - name: Protocol num
+    unique_id: protocol_num
+    group: "PV_device_info"
+    address: 4949 # reg 4950-4951
+    input_type: input
+    data_type: uint32
+    swap: word
+    scan_interval: 600
+    entity_category: "diagnostic"
+
+  - name: Protocol version raw
+    unique_id: protocol_version_raw
+    group: "PV_device_info"
+    address: 4951 # reg 4952-4953
+    input_type: input
+    data_type: uint32
+    swap: word
+    scan_interval: 30
+    entity_category: "diagnostic"
+    # Format: 0x01015300 = V1.1.53 (Major.Minor.Patch.Build); Logger forwarding not supported
+
+  - name: Certification version of ARM Software
+    unique_id: certification_version_arm_software
+    group: "PV_device_info"
+    address: 4953 # reg 4954-4968 (15 registers UTF-8 string)
+    input_type: input
+    data_type: string
+    count: 15
+    scan_interval: 3600
+    icon: "mdi:certificate"
+    entity_category: "diagnostic"
+    # Certified version after finalizing electrical, safety regulations, and standards
+
+  - name: Certification version of DSP Software
+    unique_id: certification_version_dsp_software
+    group: "PV_device_info"
+    address: 4968 # reg 4969-4983 (15 registers UTF-8 string)
+    input_type: input
+    data_type: string
+    count: 15
+    scan_interval: 3600
+    icon: "mdi:certificate"
+    entity_category: "diagnostic"
+
   - name: Sungrow inverter serial
     unique_id: inverter_serial
     group: "PV_device_info"
@@ -559,23 +603,40 @@ sensors:
       0x2500: "Communicate fault"
       0x1111: "Uninitialized"
 
+  # Fault/Alarm code 1 - valid when work_state = Fault (0x5500) or Alarm (0x9100); See Appendix 3
+  # - name: Fault alarm code 1
+  #   unique_id: fault_alarm_code_1
+  #   address: 5044 # reg 5045
+  #   input_type: input
+  #   data_type: uint16
+  #   scan_interval: 30
+
+  # Work State 2 (Appendix 2): U32 bit-based; flags key = bit position
   - name: "Running State"
     unique_id: "running_state"
     group: "PV_status"
-    address: 5080 # reg 5081
+    address: 5080 # reg 5081-5082
+    condition: "selected_model != SG5.5RS-JP"
     input_type: input
-    data_type: uint16
+    data_type: uint32
+    swap: word
     state_class: measurement
-    scale: 1
     scan_interval: 10
-    group: "PV_status"
-    # Map for status codes
-    map:
-      0: "Stop"
-      1: "Running"
-      2: "Standby"
-      3: "Fault"
-      4: "Warning"
+    # Bit positions per Appendix 2; flags key = bit position
+    flags:
+      1: "Stop"
+      2: "Initial standby"
+      3: "Key stop"
+      4: "Standby"
+      5: "Emergency Stop"
+      6: "Starting"
+      9: "Fault"
+      10: "Alarm run"
+      11: "Derating run"
+      12: "Dispatch run"
+      13: "Communicate fault"
+      17: "Run"
+      18: "Total fault"
 
   - name: Meter active power raw
     unique_id: meter_active_power_raw
@@ -619,9 +680,10 @@ sensors:
   - name: "Load Power"
     unique_id: "load_power"
     group: "PV_load_power"
-    address: 5090 # reg 5091
+    address: 5090 # reg 5091-5092
     input_type: input
-    data_type: uint16
+    data_type: int32
+    swap: word
     unit_of_measurement: "W"
     device_class: power
     state_class: measurement
@@ -656,9 +718,10 @@ sensors:
   - name: "Daily Imported Energy"
     unique_id: "daily_imported_energy"
     group: "PV_energy_import"
-    address: 5096 # reg 5097
+    address: 5096 # reg 5097-5098
     input_type: input
-    data_type: uint16
+    data_type: uint32
+    swap: word
     unit_of_measurement: "kWh"
     device_class: energy
     state_class: total_increasing
@@ -683,9 +746,10 @@ sensors:
   - name: "Daily Direct Energy Consumption"
     unique_id: "daily_direct_energy_consumption"
     group: "PV_energy_consumption"
-    address: 5100 # reg 5101
+    address: 5100 # reg 5101-5102
     input_type: input
-    data_type: uint16
+    data_type: uint32
+    swap: word
     unit_of_measurement: "kWh"
     device_class: energy
     state_class: total_increasing
@@ -1438,19 +1502,19 @@ controls:
     # Note: >0 means leading, <0 means lagging
 
   # Power Control Controls
-  - type: "select"
-    name: "Active Power Overload"
-    unique_id: "active_power_overload"
-    address: 5019 # reg 5020
-    input_type: "holding"
-    data_type: "uint16"
-    scan_interval: 30
-    condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
-    options:
-      0xAA: "Enable"
-      0x55: "Disable"
-    group: "PV_control"
-    # Note: Check for valid inverters
+  # Active Power Overload commented out: not all inverters support; needs testing; may depend on firmware
+  # - type: "select"
+  #   name: "Active Power Overload"
+  #   unique_id: "active_power_overload"
+  #   address: 5019 # reg 5020
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   scan_interval: 30
+  #   condition: "selected_model in [SG3.0RT, SG4.0RT, SG5.0RT, SG6.0RT, SG7.0RT, SG8.0RT, SG10RT, SG12RT, SG15RT, SG20RT, SG30CX, SG33CX, SG40CX, SG50CX, SG75CX, SG100CX, SG110CX, SG250HX, SG320HX, SG350HX]"
+  #   options:
+  #     0xAA: "Enable"
+  #     0x55: "Disable"
+  #   group: "PV_control"
 
   # - type: "number"
   #   name: "Local / remote control"
@@ -1600,6 +1664,26 @@ controls:
 
 # Calculated Sensors
 calculated:
+  # Protocol Version (formatted) - from protocol_version_raw
+  - name: "Protocol Version"
+    unique_id: "protocol_version"
+    type: "sensor"
+    availability: "{{ not is_state('sensor.{PREFIX}_protocol_version_raw', 'unavailable') }}"
+    state: >-
+      {% set raw_value = states('sensor.{PREFIX}_protocol_version_raw') %}
+      {% if raw_value in ['unavailable', 'unknown', 'None', ''] %}
+        unknown
+      {% else %}
+        {% set raw = raw_value | int %}
+        {% set major = (raw // 16777216) %}
+        {% set minor = (raw // 65536) % 256 %}
+        {% set patch = (raw // 256) % 256 %}
+        V{{ major }}.{{ minor }}.{{ patch }}
+      {% endif %}
+    icon: "mdi:code-tags"
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
   # MPPT Power Calculations
   - name: "MPPT1 Power"
     unique_id: "mppt1_power"

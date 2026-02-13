@@ -211,8 +211,14 @@ This section contains all entities that will be created by this template, includ
 
 | Address | Name | Unique ID |
 |---------|------|-----------|
+| 5035 | Grid frequency 0.1 Hz *(commented out)* | grid_frequency_alt |
+| 4951 | Protocol version raw | protocol_version_raw |
+| 4953 | Certification version of ARM Software | certification_version_arm_software |
+| 4968 | Certification version of DSP Software | certification_version_dsp_software |
 | 4989 | Sungrow inverter serial | inverter_serial |
 | 4999 | Sungrow device type code | sungrow_device_type_code |
+| 5000 | Nominal output power | nominal_output_power |
+| 5001 | Output type | output_type |
 | 5002 | Daily PV generation & battery discharge | daily_pv_gen_battery_discharge |
 | 5003 | Total PV generation & battery discharge | total_pv_gen_battery_discharge |
 | 5007 | Inverter temperature | inverter_temperature |
@@ -228,18 +234,16 @@ This section contains all entities that will be created by this template, includ
 | 5020 | Phase C voltage | phase_c_voltage |
 | 5032 | Reactive power | reactive_power |
 | 5034 | Power factor | power_factor |
+| 5213 | Battery power | battery_power |
 | 5241 | Grid frequency | grid_frequency |
 | 5600 | Meter active power raw | meter_active_power_raw |
 | 5602 | Meter phase A active power raw | meter_phase_a_active_power_raw |
 | 5604 | Meter phase B active power raw | meter_phase_b_active_power_raw |
 | 5606 | Meter phase C active power raw | meter_phase_c_active_power_raw |
-| 13199 | Meter Channel 2 Total Active Power raw (DTSU666-20 only) | meter_channel_2_total_active_power_raw |
-| 13201 | Meter Channel 2 Phase A Active Power raw (DTSU666-20 only) | meter_channel_2_phase_a_active_power_raw |
-| 13203 | Meter Channel 2 Phase B Active Power raw (DTSU666-20 only) | meter_channel_2_phase_b_active_power_raw |
-| 13205 | Meter Channel 2 Phase C Active Power raw (DTSU666-20 only) | meter_channel_2_phase_c_active_power_raw |
-| 13249 | Inverter Firmware Information | inverter_firmware_info |
-| 13264 | Communication Module Firmware Information | communication_module_firmware_info |
+| 5621 | Min Export Power Limit Value | min_export_power_limit_value |
+| 5622 | Max Export Power Limit Value | max_export_power_limit_value |
 | 5627 | BDC rated power | bdc_rated_power |
+| 5630 | Battery current | battery_current |
 | 5634 | BMS max. charging current | bms_max_charging_current |
 | 5635 | BMS max. discharging current | bms_max_discharging_current |
 | 5638 | Battery capacity | battery_capacity |
@@ -314,8 +318,8 @@ This section contains all entities that will be created by this template, includ
 | 13016 | Forced Startup Under Low SoC Standby raw | forced_startup_under_low_soc_standby_raw |
 | 13017 | Total direct energy consumption | total_direct_energy_consumption |
 | 13019 | Battery voltage | battery_voltage |
-| 13020 | Battery current | battery_current |
-| 13021 | Battery power raw | battery_power_raw |
+| 13020 | Battery current *(we use 5630 instead)* | - |
+| 13021 | Battery power *(we use 5213 instead)* | - |
 | 13022 | Battery level | battery_level |
 | 13023 | Battery state of health | battery_state_of_health |
 | 13024 | Battery temperature | battery_temperature |
@@ -331,9 +335,35 @@ This section contains all entities that will be created by this template, includ
 | 13040 | Total battery charge | total_battery_charge |
 | 13044 | Daily exported energy | daily_exported_energy |
 | 13045 | Total exported energy | total_exported_energy |
+| 13199 | Meter Channel 2 Total Active Power raw (DTSU666-20 only) | meter_channel_2_total_active_power_raw |
+| 13201 | Meter Channel 2 Phase A Active Power raw (DTSU666-20 only) | meter_channel_2_phase_a_active_power_raw |
+| 13203 | Meter Channel 2 Phase B Active Power raw (DTSU666-20 only) | meter_channel_2_phase_b_active_power_raw |
+| 13205 | Meter Channel 2 Phase C Active Power raw (DTSU666-20 only) | meter_channel_2_phase_c_active_power_raw |
+| 13249 | Inverter Firmware Information (RT/T/K6 only) | inverter_firmware_info |
+| 13264 | Communication Module Firmware Information (RT/T/K6 only) | communication_module_firmware_info |
+| 13279 | Battery Firmware Information (RT/T/K6 only) | battery_firmware_info |
 | 30229 | Global mpp scan manual raw | global_mpp_scan_manual_raw |
+| 13042 | DRM State *(commented out)* | drm_state |
+| 13049 | Inverter alarm raw *(commented out)* | inverter_alarm_raw |
+| 13051 | Grid-side fault raw *(commented out)* | grid_side_fault_raw |
+| 13053 | System fault 1 raw *(commented out)* | system_fault_1_raw |
+| 13055 | System fault 2 raw *(commented out)* | system_fault_2_raw |
+| 13057 | DC-side fault raw *(commented out)* | dc_side_fault_raw |
+| 13059 | Permanent fault raw *(commented out)* | permanent_fault_raw |
+| 13061 | BDC-side fault raw *(commented out)* | bdc_side_fault_raw |
+| 13063 | BDC-side permanent fault raw *(commented out)* | bdc_side_permanent_fault_raw |
+| 13065 | Battery fault raw *(commented out)* | battery_fault_raw |
+| 13067 | Battery alarm raw *(commented out)* | battery_alarm_raw |
+| 13071 | BMS fault 2 raw *(commented out)* | bms_fault_2_raw |
+| 13077 | BMS alarm 2 raw *(commented out)* | bms_alarm_2_raw |
+| 13079 | External EMS heartbeat raw *(commented out)* | external_ems_heartbeat_raw |
 
 **Note:**
+- **Grid frequency 0.1 Hz (5035)** is commented out: template uses reg 5242 (address 5241) for higher precision 0.01 Hz
+- **Fault/alarm registers** (13049–13067): commented out; fault codes per Appendix 4; uncomment for diagnostics
+- **DRM State (13042)**, **BMS fault 2/alarm 2 (13075, 13077)**, **External EMS heartbeat (13079)** are commented out
+- **Battery current (5630)** and **Battery power (5213)** are used instead of 13020/13021 per Protocol V1.1.11 documentation recommendation
+- **Firmware Information** (13249, 13264, 13279) and **Protocol version raw** (4951) are only available on RT/T/K6 models, not on RS/MG models
 - Monthly and yearly statistical sensors are only available with LAN connection
 - Battery-related sensors are only available when battery is enabled
 - Meter Channel 2 sensors (13199-13205) are only available when meter_type is set to "DTSU666-20"
@@ -354,11 +384,32 @@ This section contains all entities that will be created by this template, includ
 | 13073 | Export Power Limit | export_power_limit |
 | 13074 | Backup Mode | backup_mode |
 | 13086 | Export Power Limit Mode | export_power_limit_mode |
+| 13087 | Export Power Limit Ratio | export_power_limit_ratio |
+| 13088 | Active Power Limitation (SHT only) | active_power_limitation |
+| 13089 | Active Power Limit Ratio | active_power_limit_ratio |
 | 13099 | Reserved SoC for Backup | reserved_soc_for_backup |
+| 31221 | Export Power Limit Value Wide Range | export_power_limit_value_wide_range |
 | 33046 | Battery Max Charge Power | battery_max_charge_power |
 | 33047 | Battery Max Discharge Power | battery_max_discharge_power |
 | 33148 | Battery Charging Start Power | battery_charging_start_power |
 | 33149 | Battery Discharging Start Power | battery_discharging_start_power |
+| 13017 | PV Power Limitation (SHT only) | pv_power_limitation |
+| 4999 | System clock: Year *(commented out)* | system_clock_year |
+| 5000 | System clock: Month *(commented out)* | system_clock_month |
+| 5001 | System clock: Day *(commented out)* | system_clock_day |
+| 5002 | System clock: Hour *(commented out)* | system_clock_hour |
+| 5003 | System clock: Minute *(commented out)* | system_clock_minute |
+| 5004 | System clock: Second *(commented out)* | system_clock_second |
+| 13000 | DO Configuration raw *(commented out)* | do_configuration_raw |
+| 13002 | Load timing period 1 start hour *(commented out)* | load_timing_period_1_start_hour |
+| 13015 | Optimized power of load *(commented out)* | optimized_power_of_load |
+| 33041 | Charge Cutoff Voltage raw *(commented out)* | charge_cutoff_voltage_raw |
+| 33207 | Forced Charging raw *(commented out)* | forced_charging_raw |
+| 33273 | Load Rated Power raw *(commented out)* | load_rated_power_raw |
+
+**Note (Controls):**
+- **Active Power Limitation** (13088) and **PV Power Limitation** (13017) are only available on SHT models (SH5T–SH25T), not on RT/RS models
+- **System clock (4999–5004)**, **DO Configuration (13000)**, **Load timing (13002–13015)**, **Charge Cutoff Voltage (33041)**, **Forced Charging (33207–33218)**, **Load Rated Power (33273)** are commented out in template; uncomment to enable
 
 ### Calculated Sensors
 
@@ -453,6 +504,11 @@ This section contains all entities that will be created by this template, includ
 | - | Monthly export (current) | monthly_export_current |
 | - | Yearly export (current) | yearly_export_current |
 
+#### Device Information
+| Address | Name | Unique ID | Description |
+|---------|------|-----------|-------------|
+| - | Protocol Version | protocol_version | Formatted from protocol_version_raw (e.g. V1.1.11) |
+
 #### Status Displays
 | Address | Name | Unique ID |
 |---------|------|-----------|
@@ -515,6 +571,7 @@ connection_type: "WINET"
 ## 🔗 Based on
 
 - **mkaiser Implementation:** https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
+- **[SH_template_missing_registers.md](SH_template_missing_registers.md)** - Register comparison, commented vs active, and recommended changes
 - **100% Register Compatibility:** All registers exactly taken over
 - **Extended Functionality:** Dynamic configuration added
 

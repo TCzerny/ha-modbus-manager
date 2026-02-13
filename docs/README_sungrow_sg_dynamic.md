@@ -71,6 +71,8 @@ models listed in `valid_models`).
 ## 📡 Available Sensors
 
 ### 🔧 Basic Inverter Data
+- **Protocol Num / Protocol Version** - Protocol number (raw) and formatted version (e.g. V1.1.53)
+- **Certification version of ARM/DSP Software** - Firmware certification versions
 - **Inverter Serial** - Serial number
 - **Device Type Code** - Automatic model detection
 - **Inverter Temperature** - Inverter temperature
@@ -139,6 +141,10 @@ This section contains all entities that will be created by this template, includ
 
 | Address | Name | Unique ID |
 |---------|------|-----------|
+| 4949 | Protocol num | protocol_num |
+| 4951 | Protocol version raw | protocol_version_raw |
+| 4953 | Certification version of ARM Software | certification_version_arm_software |
+| 4968 | Certification version of DSP Software | certification_version_dsp_software |
 | 4989 | Sungrow inverter serial | inverter_serial |
 | 4999 | Sungrow device type code | sungrow_device_type_code |
 | 5001 | Output type | output_type |
@@ -177,6 +183,8 @@ This section contains all entities that will be created by this template, includ
 | 5100 | Daily Direct Energy Consumption | daily_direct_energy_consumption |
 | 5102 | Total Direct Energy Consumption | total_direct_energy_consumption |
 | 5112 | Daily running time | daily_running_time |
+| 5044 | Fault alarm code 1 *(commented out)* | fault_alarm_code_1 |
+| 5113 | Present country *(commented out)* | present_country |
 | 5114 | MPPT4 voltage | mppt4_voltage |
 | 5115 | MPPT4 current | mppt4_current |
 | 5116 | MPPT5 voltage | mppt5_voltage |
@@ -198,7 +206,7 @@ This section contains all entities that will be created by this template, includ
 | 5136 | MPPT12 current | mppt12_current |
 | 5139 | Work status 1 | work_status_1 |
 | 5140 | Work status 2 | work_status_2 |
-| 5142 | Heart beat | heart_beat |
+| 5142 | Heart beat *(commented out)* | heart_beat |
 | 5143 | Total PV Generation (high precision) | total_pv_generation_high_precision |
 | 5145 | Negative voltage to ground | negative_voltage_ground |
 | 5146 | Bus voltage | bus_voltage |
@@ -215,6 +223,10 @@ This section contains all entities that will be created by this template, includ
 | 7019 | String 8 current | string_8_current |
 
 **Note:**
+- **Protocol Version** (formatted, e.g. V1.1.53) is a calculated sensor from `protocol_version_raw`
+- **Fault alarm code 1 (5044)** is commented out: valid when work state = Fault (0x5500) or Alarm (0x9100); see Appendix 3 for fault codes
+- **Heart beat (5142)** is commented out: register not working as documented; documented as input register but returns error—may be holding register with inconsistent values; no current need for HA integration
+- **Present country (5113)** is commented out in template (reserved for future use)
 - MPPT and phase sensors are automatically filtered based on model configuration
 - `export_power_raw` (5216) and `meter_power_raw` (5218) are alternative meter registers that can be used as fallback if `meter_active_power_raw` is unavailable
 - Calculated sensors automatically use `meter_power_raw` as fallback when `meter_active_power_raw` is unavailable
@@ -223,6 +235,12 @@ This section contains all entities that will be created by this template, includ
 
 | Address | Name | Unique ID |
 |---------|------|-----------|
+| 4999 | System clock: Year *(commented out)* | system_clock_year |
+| 5000 | System clock: Month *(commented out)* | system_clock_month |
+| 5001 | System clock: Day *(commented out)* | system_clock_day |
+| 5002 | System clock: Hour *(commented out)* | system_clock_hour |
+| 5003 | System clock: Minute *(commented out)* | system_clock_minute |
+| 5004 | System clock: Second *(commented out)* | system_clock_second |
 | 5005 | Start/Stop Control | start_stop_control |
 | 5006 | Power Limitation Switch | power_limitation_switch |
 | 5007 | Power Limitation Setting | power_limitation_setting |
@@ -232,8 +250,10 @@ This section contains all entities that will be created by this template, includ
 | 5012 | Current Transformer Range | ct_range |
 | 5013 | Current Transformer Type | ct_type |
 | 5014 | Export Power Limitation Percentage | export_power_limitation_percentage |
+| 5015 | Installed PV Power *(commented out)* | installed_pv_power |
 | 5018 | Power Factor Setting | power_factor_setting |
-| 5019 | Active Power Overload | active_power_overload |
+| 5019 | Active Power Overload *(commented out)* | active_power_overload |
+| 5020 | Local / remote control *(commented out)* | local_remote_control |
 | 5034 | Night SVG Switch | night_svg_switch |
 | 5035 | Reactive power adjustment mode | reactive_power_adjustment_mode |
 | 5036 | Reactive power percentage setting | reactive_power_percentage_setting |
@@ -244,6 +264,10 @@ This section contains all entities that will be created by this template, includ
 | 5042 | Full-Day PID Suppression | full_day_pid_suppression |
 | 32568 | Quick grid dispatch mode | quick_grid_dispatch_mode |
 | 32569 | Swift grid dispatch mode | swift_grid_dispatch_mode |
+
+**Note (Controls):**
+- **Active Power Overload (5019)** is commented out: not all inverters in the documentation support this register; needs testing; may depend on firmware version (feature expected available for years)
+- **System clock (4999–5004)**, **Installed PV Power (5015)**, **Local/remote control (5020)** are commented out in template (reserved for future use or testing)
 
 ### Calculated Sensors
 
@@ -274,6 +298,7 @@ This section contains all entities that will be created by this template, includ
 | - | Meter Active Power | meter_active_power |
 | - | Daily consumed energy | daily_consumed_energy |
 | - | Total consumed energy | total_consumed_energy |
+| - | Protocol Version | protocol_version |
 | - | Inverter Status Display | inverter_status_display |
 | - | Grid Status | grid_status |
 
