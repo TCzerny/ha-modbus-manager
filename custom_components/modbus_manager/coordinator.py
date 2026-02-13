@@ -258,18 +258,21 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     if data:
                         self._distribute_data(data, range_obj)
                 except Exception as e:
-                    # Get register type for logging
+                    # Fallback log if _read_register_range raised (normally it catches all)
                     register_type = (
                         range_obj.registers[0].get("input_type", "holding")
                         if range_obj.registers
                         else "unknown"
                     )
+                    entity_list = self._get_register_range_debug_info(range_obj)
                     _LOGGER.error(
-                        "Error reading %s register range %d-%d: %s",
+                        "Error reading %s register range %d-%d: %s. "
+                        "Entities affected: [%s]",
                         register_type,
                         range_obj.start_address,
                         range_obj.end_address,
                         str(e),
+                        entity_list,
                     )
 
             # 5. Update last_update_time for each interval
@@ -1513,8 +1516,30 @@ class ModbusCoordinator(DataUpdateCoordinator):
         _LOGGER.warning("Unknown condition format '%s', including entity", condition)
         return True
 
+    def _get_register_range_debug_info(self, range_obj) -> str:
+        """Build debug string with entity names/ids for a register range."""
+        names = []
+        for reg in range_obj.registers:
+            uid = reg.get("unique_id") or reg.get("name") or "?"
+            names.append(str(uid))
+        return ", ".join(names) if names else "unknown"
+
+    def _classify_modbus_error(self, e: Exception) -> str:
+        """Classify exception for clearer log messages."""
+        msg = str(e).lower()
+        exc_name = type(e).__name__
+        if "timeout" in msg or "timed out" in msg:
+            return "timeout (no response from device)"
+        if "connection" in msg or "connect" in msg or "Connection" in exc_name:
+            return "connection error"
+        if "Modbus" in exc_name or "modbus" in msg:
+            return f"Modbus error ({exc_name})"
+        return f"{exc_name}: {str(e)}"
+
     async def _read_register_range(self, range_obj) -> Optional[List[int]]:
         """Read a range of registers from Modbus."""
+        register_type = "unknown"
+        slave_id = 1
         try:
             # Ensure hub is connected (handled by coordinator update)
             if not getattr(self.hub, "_is_connected", False):
@@ -1596,22 +1621,48 @@ class ModbusCoordinator(DataUpdateCoordinator):
                         range_obj.end_address,
                     )
                 else:
+                    entity_list = self._get_register_range_debug_info(range_obj)
                     _LOGGER.warning(
-                        "Failed to read %s registers %d-%d",
+                        "Failed to read %s registers %d-%d (slave_id=%d): no/invalid response. "
+                        "Entities affected: [%s]. Enable debug logging for more details.",
                         register_type,
                         range_obj.start_address,
                         range_obj.end_address,
+                        slave_id,
+                        entity_list,
+                    )
+                    _LOGGER.debug(
+                        "Read returned None/empty for %s addr %d-%d slave_id=%d. "
+                        "Possible causes: device does not support this register, "
+                        "firmware/model mismatch, or invalid response.",
+                        register_type,
+                        range_obj.start_address,
+                        range_obj.end_address,
+                        slave_id,
                     )
                 return None
 
             return result.registers
 
         except Exception as e:
+            entity_list = self._get_register_range_debug_info(range_obj)
+            error_class = self._classify_modbus_error(e)
             _LOGGER.error(
-                "Error reading %s register range %d-%d: %s",
+                "Error reading %s registers %d-%d (slave_id=%d): %s. "
+                "Entities affected: [%s]",
                 register_type,
                 range_obj.start_address,
                 range_obj.end_address,
+                slave_id,
+                error_class,
+                entity_list,
+            )
+            _LOGGER.debug(
+                "Full exception for %s addr %d-%d: %s: %s",
+                register_type,
+                range_obj.start_address,
+                range_obj.end_address,
+                type(e).__name__,
                 str(e),
             )
             return None
