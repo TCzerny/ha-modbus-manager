@@ -1,0 +1,137 @@
+# Sungrow Inverter - Status & Diagnostic Dashboard
+# Shows device identity, versions, running state, and alarm/fault indicators
+# Compatible with SH and SG templates (some entities may vary by model)
+#
+# IMPORTANT: Replace {PREFIX} with your actual device prefix (e.g., SG)
+# Some entities are conditionally available (e.g., firmware info only on RT/T models)
+# Remove or comment out entities that show as "unavailable" for your setup
+
+title: Inverter Status & Diagnostic
+path: inverter-status
+icon: mdi:information-outline
+panel: false
+type: dashboard
+
+views:
+  - title: Device Info & Versions
+    path: device-info
+    icon: mdi:chip
+    type: sections
+    sections:
+      - title: Device Identity
+        cards:
+          - type: entities
+            title: Device Information
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_inverter_serial
+                name: Serial Number
+                icon: mdi:identifier
+              - entity: sensor.{PREFIX}_sungrow_device_type_code
+                name: Device Model
+                icon: mdi:solar-power
+              - entity: sensor.{PREFIX}_nominal_output_power
+                name: Nominal Output Power
+                icon: mdi:gauge
+              - entity: sensor.{PREFIX}_output_type
+                name: Output Type
+                icon: mdi:transmission-tower
+
+      - title: Protocol & Certification
+        cards:
+          - type: entities
+            title: Protocol Version
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_protocol_version
+                name: Protocol Version
+                icon: mdi:file-document-outline
+              - entity: sensor.{PREFIX}_protocol_version_raw
+                name: Protocol Version Raw
+                icon: mdi:hexadecimal
+              - entity: sensor.{PREFIX}_certification_version_arm_software
+                name: ARM Certification
+                icon: mdi:certificate
+              - entity: sensor.{PREFIX}_certification_version_dsp_software
+                name: DSP Certification
+                icon: mdi:certificate
+
+      - title: Firmware Information
+        cards:
+          - type: entities
+            title: Firmware Versions
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_inverter_firmware_info
+                name: Inverter Firmware
+                icon: mdi:chip
+              - entity: sensor.{PREFIX}_communication_module_firmware_info
+                name: Communication Module
+                icon: mdi:chip
+              - entity: sensor.{PREFIX}_battery_firmware_info
+                name: Battery Firmware
+                icon: mdi:chip
+            # Note: Firmware entities only available on RT/T/K6 models, not RS/MG
+
+  - title: Status & Running State
+    path: status
+    icon: mdi:state-machine
+    type: sections
+    sections:
+      - title: System Status
+        cards:
+          - type: entities
+            title: System State
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_system_state
+                name: System State
+                icon: mdi:flash
+              - entity: sensor.{PREFIX}_running_state
+                name: Running State
+                icon: mdi:state-machine
+              - entity: sensor.{PREFIX}_inverter_temperature
+                name: Inverter Temperature
+                icon: mdi:thermometer
+
+      - title: Master/Slave (Multi-Inverter)
+        cards:
+          - type: entities
+            title: Cascade Configuration
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_master_slave_mode
+                name: Master Slave Mode
+                icon: mdi:connection
+              - entity: sensor.{PREFIX}_master_slave_role
+                name: Master Slave Role
+                icon: mdi:connection
+              - entity: sensor.{PREFIX}_slave_count
+                name: Slave Count
+                icon: mdi:numeric
+            # Note: May show 65535 (Invalid) on single-inverter setups
+
+  - title: Alarms & Faults
+    path: alarms
+    icon: mdi:alert
+    type: sections
+    sections:
+      - title: Fault Indicators
+        cards:
+          - type: entities
+            title: Battery Alarms & Faults
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_fault_raw
+                name: Battery Fault
+                icon: mdi:alert-circle
+              - entity: sensor.{PREFIX}_battery_alarm_raw
+                name: Battery Alarm
+                icon: mdi:alert
+              - entity: sensor.{PREFIX}_bms_alarm_raw
+                name: BMS Alarm
+                icon: mdi:alert
+              - entity: sensor.{PREFIX}_bms_fault_1_raw
+                name: BMS Fault 1
+                icon: mdi:alert-circle
+            # Note: Only available when battery is configured

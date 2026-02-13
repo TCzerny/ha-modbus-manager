@@ -34,6 +34,11 @@ Simplified version using only built-in Home Assistant cards. No custom cards req
 #### sungrow_sbr_battery_analysis.yaml
 Legacy version with custom cards (Mushroom Cards and ApexCharts Card) for a modern, visually appealing interface.
 
+### Status & Diagnostic Dashboards
+
+#### sungrow_inverter_status_diagnostic.yaml
+Dashboard for inverter status and diagnostic registers: device identity (serial, model), protocol/firmware versions, running state, Master/Slave configuration, and battery alarm/fault indicators. Uses only built-in HA cards.
+
 ### PV Dashboards
 
 #### sungrow_pv_analysis_standard.yaml
@@ -57,6 +62,7 @@ All dashboards follow the same installation process:
    - **Battery dashboards**: If you have fewer modules, remove references to modules you don't have (e.g., if you have 6 modules, remove references to modules 7 and 8)
    - **PV dashboards**: If you have fewer MPPT trackers, remove references to MPPT trackers you don't have (e.g., if you have 2 MPPTs, remove references to MPPT 3 and 4)
    - **PV dashboards**: If you have single-phase, remove references to Phase B and Phase C entities
+   - **Status & diagnostic dashboards**: Firmware entities are only available on RT/T/K6 models; battery alarm/fault entities only when a battery is configured
    - If entities show as "unavailable" after import, they may not exist for your device configuration
    - Search for entity IDs in the YAML and remove/comment out unavailable ones to avoid dashboard errors
 4. Import the dashboard in Home Assistant:
@@ -102,6 +108,24 @@ The PV dashboard is organized into 3 views:
 1. **PV Overview** (`/overview`) - PV generation status, MPPT tracker information, AC output details, and historical charts
 2. **MPPT Analysis** (`/mppt`) - MPPT voltage/current trends and individual tracker details
 3. **Statistics** (`/statistics`) - Daily/total generation statistics, power distribution, and temperature trends
+
+## Sungrow Inverter Status & Diagnostic Dashboard
+
+The status & diagnostic dashboard provides a central view for device info, firmware versions, running state, and alarm/fault indicators.
+
+### Features
+
+- **Device Info & Versions**: Serial number, device model, nominal power, output type, protocol version, ARM/DSP certification, inverter/comm/battery firmware
+- **Status & Running State**: System state, running state flags, inverter temperature, Master/Slave mode/role/slave count
+- **Alarms & Faults**: Battery fault, battery alarm, BMS alarm, BMS fault (when battery is configured)
+
+### Dashboard Structure
+
+1. **Device Info & Versions** (`/device-info`) - Identity, protocol, certification, firmware versions
+2. **Status & Running State** (`/status`) - System and running state, Master/Slave configuration
+3. **Alarms & Faults** (`/alarms`) - Battery-related fault and alarm indicators
+
+**Note**: Some entities are conditionally available (e.g., firmware info only on RT/T/K6 models; battery alarms only when a battery is configured). Remove unavailable entities from the YAML if they show as unavailable.
 
 ## Required Custom Cards
 
