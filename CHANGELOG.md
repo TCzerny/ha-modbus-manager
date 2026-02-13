@@ -40,6 +40,26 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   - >0 means leading, <0 means lagging
   - Replaces previous "Reactive power adjustment mode" at this address
 
+#### Sungrow SG Template – Protocol Alignment (V1.1.53)
+- **Version/Protocol Registers**: Added Protocol num (4949), Protocol version raw (4951), Certification version of ARM/DSP Software (4953, 4968)
+  - Aligned naming and structure with SH template: `protocol_version_raw`, `certification_version_arm_software`, `certification_version_dsp_software`
+  - `entity_category: diagnostic`, `icon: mdi:certificate` for ARM/DSP
+  - Calculated sensor: **Protocol Version** (formatted, e.g. V1.1.53)
+- **Running State (reg 5081–5082)**: Switched from `map` to `flags` per Appendix 2
+  - Uses bit positions 1–18 (Stop, Standby, Fault, Run, etc.)
+  - `data_type: uint32`, `swap: word`
+  - Condition: `selected_model != SG5.5RS-JP`
+- **Data Types (per PDF)**: Load power (S32), Daily imported energy (U32), Daily direct energy consumption (U32)
+  - Corrected to 2 registers each with `swap: word`
+- **Fault Alarm Code 1** (5044): Added as commented sensor (valid when work state = Fault/Alarm)
+  - See Appendix 3 for fault code definitions
+
+### 📚 Documentation
+
+#### README Register Tables
+- **README_sungrow_sg_dynamic.md**: Added Protocol num, Protocol version, ARM/DSP certification, Fault alarm code; marked commented registers; added Protocol Version to calculated sensors; link to SG_template_missing_registers.md
+- **README_sungrow_shx_dynamic.md**: Added commented-out registers (Grid frequency 0.1 Hz, fault/alarm raw, DRM State, BMS, External EMS heartbeat, System clock, DO Configuration, Load timing, Charge Cutoff Voltage, Forced Charging, Load Rated Power); link to SH_template_missing_registers.md
+
 ## [0.2.0] - 2026-02-05
 
 ### ✨ Added
