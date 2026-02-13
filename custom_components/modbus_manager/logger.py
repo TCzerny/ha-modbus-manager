@@ -53,14 +53,14 @@ class ModbusManagerLogger(logging.Logger):
             else:
                 formatted_msg = msg
 
-            # Füge den Kontext hinzu
+            # Add context (no [name] prefix - logging framework adds logger name automatically)
             if context:
-                return f"[{self.name}] {formatted_msg} extra={{{context}}}"
+                return f"{formatted_msg} extra={{{context}}}"
             else:
-                return f"[{self.name}] {formatted_msg}"
+                return formatted_msg
 
         except Exception as e:
-            return f"[{self.name}] ERROR FORMATTING MESSAGE: {msg} (Error: {str(e)})"
+            return f"ERROR FORMATTING MESSAGE: {msg} (Error: {str(e)})"
 
     def debug(self, msg: str, *args: Any, **kwargs: Any) -> None:
         """Log a debug message."""

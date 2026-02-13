@@ -77,6 +77,17 @@ The template supports **all 36** following Sungrow SHx models:
 - **Inverter Temperature** - Inverter temperature
 - **System State** - System status with flags
 
+### 🔗 Master/Slave Mode (Multi-Inverter / Cascade)
+Undocumented holding registers for Master/Slave cascade configuration. Available as **sensors** (read) and **controls** (read/write). Values may vary by model/firmware.
+
+| Register | Address | Type | Description | Mapped Values |
+|----------|---------|------|-------------|---------------|
+| **Master Slave Mode** | 33499 | U16 | Master/Slave mode enabled/disabled | 0xAA (170) = Enabled, 0x55 (85) = Disabled |
+| **Master Slave Role** | 33500 | U16 | Role in cascade (Master or Slave 1-4) | 0xA0=Master, 0xA1=Slave 1, 0xA2=Slave 2, 0xA3=Slave 3, 0xA4=Slave 4 |
+| **Slave Count** | 33501 | U16 | Number of slaves in cascade | 0-4 valid; 65535 (0xFFFF) = Invalid/Not supported |
+
+- **Note:** On single-inverter setups (e.g. SH10RT + SBR battery), Slave Count may return 65535 (not implemented). Master/Slave registers are primarily for multi-inverter cascade systems.
+
 ### ⚡ MPPT Data (1-3 Trackers)
 - **MPPT Voltage/Current** - Voltage and current per tracker
 - **MPPT Power** - Calculated power per tracker
@@ -141,6 +152,15 @@ The template supports **all 36** following Sungrow SHx models:
   - **Values:** 0xAA (Enabled) / 0x55 (Disabled)
   - **Purpose:** Allows the inverter to start even when battery is in low SoC standby mode
   - **Note:** This control addresses issue #444 from mkaiser's implementation (SH10RT no standby mode after latest firmware update)
+
+### 🔗 Master/Slave Mode (Multi-Inverter / Cascade)
+Holding registers for Master/Slave cascade configuration. Available as select (Mode, Role) and number (Slave Count) controls.
+
+| Control | Address | Type | Options / Range |
+|---------|---------|------|-----------------|
+| **Master Slave Mode** | 33499 | Select | 0xAA (Enabled), 0x55 (Disabled) |
+| **Master Slave Role** | 33500 | Select | 0xA0 (Master), 0xA1 (Slave 1), 0xA2 (Slave 2), 0xA3 (Slave 3), 0xA4 (Slave 4) |
+| **Slave Count** | 33501 | Number | 0-4 |
 
 ## 🧮 Calculated Sensors
 
@@ -571,7 +591,6 @@ connection_type: "WINET"
 ## 🔗 Based on
 
 - **mkaiser Implementation:** https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
-- **[SH_template_missing_registers.md](SH_template_missing_registers.md)** - Register comparison, commented vs active, and recommended changes
 - **100% Register Compatibility:** All registers exactly taken over
 - **Extended Functionality:** Dynamic configuration added
 

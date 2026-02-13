@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.2.2] - 2026-02-13
 
+### ✨ Added
+
+#### Sungrow SH Template - Master/Slave Mode Registers
+- **Master Slave Mode** (Holding 33499): Sensor + Select control - 0xAA=Enabled, 0x55=Disabled
+- **Master Slave Role** (Holding 33500): Sensor + Select control - 0xA0=Master, 0xA1-0xA4=Slave 1-4
+- **Slave Count** (Holding 33501): Sensor + Number control - 0-4 range; 65535 = Invalid/Not supported
+- Undocumented registers for multi-inverter cascade; values may vary by model/firmware on single-inverter setups
+- README_sungrow_shx_dynamic.md: Added Master/Slave registers table (sensors + controls)
+
 ### 🔧 Improved
 
 #### Register Read Error Debug Logging

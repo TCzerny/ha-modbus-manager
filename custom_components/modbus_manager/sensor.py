@@ -343,10 +343,7 @@ async def async_setup_entry(
                     register_config=sensor_config,
                     device_info=device_info,
                 )
-
-                coordinator.async_add_listener(
-                    coordinator_sensor._handle_coordinator_update
-                )
+                # CoordinatorEntity auto-registers _handle_coordinator_update in async_added_to_hass
 
                 coordinator_sensors.append(coordinator_sensor)
 

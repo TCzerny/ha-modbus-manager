@@ -481,11 +481,7 @@ async def async_setup_entry(
                     register_config=control_config,
                     device_info=device_info,
                 )
-
-                # Register the number with the coordinator for updates
-                coordinator.async_add_listener(
-                    coordinator_number._handle_coordinator_update
-                )
+                # CoordinatorEntity auto-registers _handle_coordinator_update in async_added_to_hass
 
                 coordinator_numbers.append(coordinator_number)
 

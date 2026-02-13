@@ -134,6 +134,45 @@ dynamic_config:
 
 # Base sensors (will be filtered based on configuration)
 sensors:
+  # Debug: Master/Slave mode raw (holding, read - mirror of controls for availability test)
+  - name: Master Slave Mode
+    unique_id: master_slave_mode
+    address: 33499
+    input_type: holding
+    data_type: uint16
+    scan_interval: 10
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+    map:
+      170: "Enabled"   # 0xAA
+      85: "Disabled"   # 0x55
+
+  - name: Master Slave Role
+    unique_id: master_slave_role
+    address: 33500
+    input_type: holding
+    data_type: uint16
+    scan_interval: 10
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+    map:
+      160: "Master"    # 0xA0
+      161: "Slave 1"   # 0xA1
+      162: "Slave 2"   # 0xA2
+      163: "Slave 3"   # 0xA3
+      164: "Slave 4"   # 0xA4
+
+  - name: Slave Count
+    unique_id: slave_count
+    address: 33501
+    input_type: holding
+    data_type: uint16
+    precision: 0
+    scan_interval: 10
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
+
   # Device Information
   - name: Sungrow inverter serial
     unique_id: inverter_serial
