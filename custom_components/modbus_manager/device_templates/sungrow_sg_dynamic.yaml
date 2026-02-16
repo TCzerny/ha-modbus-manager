@@ -105,7 +105,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 600
+    scan_interval: 3600
     entity_category: "diagnostic"
 
   - name: Protocol version raw
@@ -115,7 +115,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 30
+    scan_interval: 3600
     entity_category: "diagnostic"
     # Format: 0x01015300 = V1.1.53 (Major.Minor.Patch.Build); Logger forwarding not supported
 
@@ -638,6 +638,7 @@ sensors:
       17: "Run"
       18: "Total fault"
 
+  # Registers 5082-5104 valid for KTL series only (Country set to Europe Area)
   - name: Meter active power raw
     unique_id: meter_active_power_raw
     address: 5082 # reg 5083-5084
@@ -649,6 +650,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 5
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
   # Following 2 registers are not in the documentation, but other projects are using them
   - name: Export power raw
@@ -690,6 +692,7 @@ sensors:
     scale: 1
     scan_interval: 10
     group: "PV_load_power"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
   - name: Daily exported energy
     unique_id: daily_exported_energy
@@ -702,6 +705,7 @@ sensors:
     state_class: "total_increasing"
     scale: 0.1
     scan_interval: 60
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
   - name: Total exported energy
     unique_id: total_exported_energy
@@ -714,6 +718,7 @@ sensors:
     state_class: "total"
     scale: 0.1
     scan_interval: 300
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
   - name: "Daily Imported Energy"
     unique_id: "daily_imported_energy"
@@ -728,6 +733,7 @@ sensors:
     scale: 0.1
     scan_interval: 600
     group: "PV_energy_import"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
   - name: "Total Imported Energy"
     unique_id: "total_imported_energy"
@@ -742,6 +748,7 @@ sensors:
     scale: 1
     scan_interval: 600
     group: "PV_energy_import"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
   - name: "Daily Direct Energy Consumption"
     unique_id: "daily_direct_energy_consumption"
@@ -756,6 +763,7 @@ sensors:
     scale: 0.1
     scan_interval: 600
     group: "PV_energy_consumption"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
   - name: "Total Direct Energy Consumption"
     unique_id: "total_direct_energy_consumption"
@@ -770,6 +778,7 @@ sensors:
     scale: 1
     scan_interval: 600
     group: "PV_energy_consumption"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
   - name: Daily running time
     unique_id: daily_running_time
@@ -1390,7 +1399,7 @@ controls:
     options:
       0xAA: "Enable"
       0x55: "Disable"
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL-M, SG10KTL-MT, SG12KTL-M, SG15KTL-M, SG17KTL-M, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     group: "PV_control"
 
   - type: "number"
@@ -1404,7 +1413,7 @@ controls:
     max_value: "{{max_ac_output_power}}"
     step: 100
     scan_interval: 30
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL-M, SG10KTL-MT, SG12KTL-M, SG15KTL-M, SG17KTL-M, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     group: "PV_control"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
     # For SG10RT: 10000 W, for SG20RT: 20000 W, for SG350HX: 350000 W
@@ -1420,7 +1429,7 @@ controls:
     max_value: 5
     step: 1
     scan_interval: 60
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL-M, SG10KTL-MT, SG12KTL-M, SG15KTL-M, SG17KTL-M, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     group: "PV_control"
     # Standard CT secondary current is 5A
 
@@ -1435,7 +1444,7 @@ controls:
     max_value: "{{max_current * 1.5}}"
     step: 1
     scan_interval: 60
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL-M, SG10KTL-MT, SG12KTL-M, SG15KTL-M, SG17KTL-M, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     group: "PV_control"
     # Placeholder will be replaced with model-specific value: max_current * 1.5 (50% safety margin)
     # For SG10RT: 15A * 1.5 = 23A, for SG350HX: 530A * 1.5 = 795A
@@ -1450,7 +1459,7 @@ controls:
     options:
       0: "Internal"
       1: "External"
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL-M, SG10KTL-MT, SG12KTL-M, SG15KTL-M, SG17KTL-M, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     group: "PV_control"
 
   - type: "number"
@@ -1465,7 +1474,7 @@ controls:
     max: 100
     step: 0.1
     scan_interval: 30
-    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL-M, SG10KTL-MT, SG12KTL-M, SG15KTL-M, SG17KTL-M, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
     group: "PV_control"
 
   # - type: "number"
@@ -1480,7 +1489,7 @@ controls:
   #   max: 300
   #   step: 0.01
   #   scan_interval: 300
-  #   condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL-M, SG10KTL-MT, SG12KTL-M, SG15KTL-M, SG17KTL-M, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+  #   condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
   #   group: "PV_control"
 
   - type: "number"
