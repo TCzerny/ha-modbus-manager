@@ -3041,6 +3041,30 @@ calculated:
     precision: 0
     group: "PV_load_power"
 
+  # Real load from energy flow balance: Load = PV + Import + Battery_Discharge - Export - Battery_Charge
+  - name: "Real Load Power"
+    unique_id: "real_load_power"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_import_power', 'unavailable')
+      and not is_state('sensor.{PREFIX}_export_power', 'unavailable')
+      }}
+    state: >-
+      {{
+        (states('sensor.{PREFIX}_total_dc_power') | float(0))
+        + (states('sensor.{PREFIX}_import_power') | float(0))
+        + (states('sensor.{PREFIX}_battery_discharging_power') | float(0))
+        - (states('sensor.{PREFIX}_export_power') | float(0))
+        - (states('sensor.{PREFIX}_battery_charging_power') | float(0))
+      }}
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    precision: 0
+    group: "PV_load_power"
+
   # System Efficiency Calculations
   - name: "Solar to Grid Efficiency"
     unique_id: "solar_to_grid_efficiency"
