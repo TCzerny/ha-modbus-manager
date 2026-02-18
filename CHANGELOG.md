@@ -7,6 +7,30 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.3] - 2026-02-18
+
+### ✨ Added
+
+#### Number Entity – Dynamic Limit from Register
+- **max_value_from_register** / **min_value_from_register** – Number controls can use another register's value as dynamic min/max limit
+  - Format: `"{PREFIX}_unique_id"` (string) or `{register_unique_id: "...", fallback: 100}` (object)
+  - Coordinator replaces `{PREFIX}` placeholder for cross-device references
+  - Case-insensitive register matching; uses fallback when referenced register unavailable
+  - Example: Charging Power max from `battery_charge_discharge_limit` with 3.7 kW fallback
+
+#### Sungrow iHomeManager Template V1.0.2
+- Aligned with Communication Protocol TI_20260121 V1.0.2
+- **Feed-in limitation** (8028) as switch, **Feed-in ratio** (8031) S16
+- **Application Software Version** sensor (8318–8332 UTF-8)
+- Fix Import/Export Power logic (positive = import, negative = export)
+- **Charging Power** uses `max_value_from_register` with 3.7 kW fallback (1-phase 16A)
+- Protocol PDF: `docs/TI_20260121_Communication Protocol of iHomeManager_V1.0.2.pdf`
+
+#### Sungrow SHx Template – Self-Consumption & Autarky
+- **Self-Consumption Rate (Today)** (`self_consumption_rate_today`) – Standard formula: (Direct + PV→Battery) / PV generation × 100
+- **Autarky Rate (Today)** (`autarky_rate_today`) – Standard formula: (Direct + Battery discharge) / Total consumption × 100
+- **Chart restructuring** – PV dashboards: Current (real-time) rates, Today (daily) rates, 30-day bar chart (Grafana-style)
+
 ### 🔧 Changed
 
 #### Sungrow SHx Template – MPPT Performance Sensors
@@ -14,6 +38,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Added** `mppt_balance` – 100% when strings are balanced; lower when one string underperforms
 - **Added** `active_mppt_count` – Number of MPPT channels with power > 10 W (useful for 4-MPPT inverters)
 - Dashboard examples updated accordingly
+
+#### Sungrow SBR Battery Template – Calculated Sensor unique_ids
+- **Added** `battery_1_` prefix to all calculated sensor unique_ids for consistency with register sensors
+  - `battery_voltage_spread` → `battery_1_voltage_spread`
+  - `max_module_deviation` → `battery_1_max_module_deviation`
+  - `voltage_imbalance_percentage` → `battery_1_voltage_imbalance_percentage`
+  - `module_X_deviation` → `battery_1_module_X_deviation`, etc.
+  - Entity IDs: `sensor.{PREFIX}_battery_1_*` (e.g. `sensor.sbr_battery_1_voltage_spread`)
+- SBR battery dashboard examples updated to new entity IDs
+- **Note**: Existing entities keep old IDs until removed; new entities use new IDs after integration reload
+
+### 📚 Documentation
+
+- **README_sungrow_shx_dynamic.md** – Self-consumption/autarky formulas (Klarsolar standard), `self_consumption_rate_today`, `autarky_rate_today`
+- **README_sungrow_sbr_battery.md** – Updated unique_id table for calculated sensors
+- **Dashboard-Examples/README.md** – Self-consumption/autarky today entities, charts section
 
 ## [0.2.2] - 2026-02-13
 

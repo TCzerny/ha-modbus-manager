@@ -2026,6 +2026,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 600
+
   # Commented out for now as not clear if useful for us
   #- name: DRM State
   #  unique_id: drm_state
@@ -3826,13 +3827,44 @@ calculated:
     group: "PV_analysis"
     # Percentage of load that is supplied by PV/Battery (self-sufficiency)
 
+  # Self-Consumption Rate (Today) – standard formula per Klarsolar/GitHub Pages
+  # Eigenverbrauchsquote = (Direct + PV→Battery) / PV Generation × 100
+  # "Welcher Anteil des erzeugten Solarstroms wird direkt verbraucht oder gespeichert?"
+  - name: "Self-Consumption Rate (Today)"
+    unique_id: "self_consumption_rate_today"
+    type: "sensor"
+    availability: >-
+      {{
+      not is_state('sensor.{PREFIX}_daily_direct_energy_consumption', 'unavailable')
+      and not is_state('sensor.{PREFIX}_daily_pv_generation', 'unavailable')
+      }}
+    state: >-
+      {% set direct = states('sensor.{PREFIX}_daily_direct_energy_consumption') | float(0) %}
+      {% set pv_to_battery = states('sensor.{PREFIX}_daily_battery_charge_from_pv') | float(0) %}
+      {% set pv_gen = states('sensor.{PREFIX}_daily_pv_generation') | float(0) %}
+      {% if pv_gen <= 0 %}
+        0
+      {% else %}
+        {% set self_consumed = direct + pv_to_battery %}
+        {% set rate = (self_consumed / pv_gen * 100) %}
+        {% if rate > 100 %}100{% elif rate < 0 %}0{% else %}{{ rate | round(1) }}{% endif %}
+      {% endif %}
+    unit_of_measurement: "%"
+    device_class: "power_factor"
+    state_class: "measurement"
+    precision: 1
+    group: "PV_analysis"
+    # (Direct consumption + PV to battery) / PV generation × 100
+
+  # Autarky Rate (Today) – standard formula per Klarsolar/GitHub Pages
+  # Autarkiegrad = (Direct + Battery discharge) / Total consumption × 100
+  # "Welcher Anteil des verbrauchten Stroms stammt aus eigener Produktion (inkl. Speicher)?"
   - name: "Autarky Rate (Today)"
     unique_id: "autarky_rate_today"
     type: "sensor"
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_daily_direct_energy_consumption', 'unavailable')
-      and not is_state('sensor.{PREFIX}_daily_battery_discharge', 'unavailable')
       and not is_state('sensor.{PREFIX}_daily_consumed_energy', 'unavailable')
       }}
     state: >-
@@ -3851,7 +3883,7 @@ calculated:
     state_class: "measurement"
     precision: 1
     group: "PV_analysis"
-    # Daily autarky: % of today's consumption supplied by PV direct + battery discharge
+    # (Direct consumption + Battery discharge) / Total consumption × 100
 
   # DC to AC Conversion Efficiency
 #  - name: "DC to AC Efficiency"

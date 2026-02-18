@@ -204,9 +204,19 @@ These sensors follow the HA Energy Dashboard convention: **positive values for c
 ### 📈 PV Analysis & Performance Metrics
 
 #### Self-Consumption & Autarky
-- **Self-Consumption Rate** - Percentage of PV generation consumed directly (not exported to grid)
-- **Autarky Rate** - Percentage of load supplied by PV/Battery (self-sufficiency)
-- **Grid Dependency** - Percentage of load that depends on grid (inverse of autarky)
+Formulas follow standard definitions (Klarsolar, GitHub Pages): daily-basis for short-term PV efficiency analysis.
+
+**Current (real-time)** – power-based, instant snapshot:
+- **Self-Consumption Rate** – % of PV power consumed directly (not exported)
+- **Autarky Rate** – % of load supplied by PV/Battery
+- **Grid Dependency** – % of load from grid (inverse of autarky)
+
+**Today (daily)** – energy-based, standard formulas:
+- **Self-Consumption Rate (Today)** – (Direct + PV→Battery) / PV Generation × 100
+  *"Which share of generated solar is used directly or stored?"*
+- **Autarky Rate (Today)** – (Direct + Battery discharge) / Total consumption × 100
+  *"Which share of consumed power comes from own production (incl. storage)?"*
+- **self_consumption_of_today** – inverter register (13029), may differ from calculated value
 
 #### Energy Flow Analysis
 Priority logic reflects physical inverter behavior: Grid supplies load first (AC path); only remainder charges battery (AC→DC). PV (DC) charges battery before grid when both available.
@@ -492,8 +502,9 @@ This section contains all entities that will be created by this template, includ
 | Address | Name | Unique ID | Description |
 |---------|------|-----------|-------------|
 | - | Self-Consumption Rate | self_consumption_rate | % of PV consumed directly (real-time) |
+| - | Self-Consumption Rate (Today) | self_consumption_rate_today | (Direct + PV→Battery) / PV generation × 100 |
 | - | Autarky Rate | autarky_rate | % of load supplied by PV/Battery (real-time) |
-| - | Autarky Rate (Today) | autarky_rate_today | Daily autarky: % of today's consumption from PV+Battery |
+| - | Autarky Rate (Today) | autarky_rate_today | (Direct + Battery discharge) / Total consumption × 100 |
 | - | Grid Dependency | grid_dependency | % of load depending on grid |
 | - | DC to AC Efficiency | dc_to_ac_efficiency | Inverter efficiency (%) |
 | - | PV Capacity Factor | pv_capacity_factor | Current power as % of rated capacity |

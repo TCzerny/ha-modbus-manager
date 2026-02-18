@@ -75,7 +75,7 @@ All dashboards follow the same installation process:
    - **PV dashboards**: If you have single-phase, remove references to Phase B and Phase C entities
    - **EMS Control**: Some entities are conditional (e.g., `inverter_run_mode`, `export_power_limit` not on iHomeManager; `pv_power_limitation` only on SHT models; battery controls only when battery is configured)
    - **Status & diagnostic dashboards**: Firmware entities are only available on RT/T/K6 models; battery alarm/fault entities only when a battery is configured
-   - **Self-Consumption & Autarky Today**: `self_consumption_of_today` (from inverter) and `autarky_rate_today` (calculated from daily energies) may be unavailable on iHomeManager or systems without meter; remove from YAML if they show as unavailable
+   - **Self-Consumption & Autarky Today**: `self_consumption_rate_today` and `autarky_rate_today` (calculated from daily energies per standard formulas) may be unavailable on iHomeManager or systems without meter; remove from YAML if they show as unavailable
    - If entities show as "unavailable" after import, they may not exist for your device configuration
    - Search for entity IDs in the YAML and remove/comment out unavailable ones to avoid dashboard errors
 4. Import the dashboard in Home Assistant:
