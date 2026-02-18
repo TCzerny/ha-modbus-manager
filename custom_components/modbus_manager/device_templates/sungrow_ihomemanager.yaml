@@ -42,19 +42,21 @@ sensors:
     group: "PV_device_info"
     entity_category: "diagnostic"
 
+  # Protocol No. (8001-8002): UTF8 string, example "AW0"
   - name: Protocol Number
     unique_id: protocol_number
-    address: 8000 # reg 8001
+    address: 8000 # reg 8001-8002
     input_type: input
-    data_type: uint32
-    swap: word
+    data_type: string
+    count: 2
     scan_interval: 3600
     group: "PV_device_info"
     entity_category: "diagnostic"
 
-  - name: Protocol Version
-    unique_id: protocol_version
-    address: 8002 # reg 8003
+  # Protocol version (8003-8004): U32, e.g. 0x02000100 = V1.0.2
+  - name: Protocol Version Raw
+    unique_id: protocol_version_raw
+    address: 8002 # reg 8003-8004
     input_type: input
     data_type: uint32
     swap: word
@@ -672,6 +674,26 @@ controls:
     group: "PV_control_ihm"
 
 calculated:
+  # Protocol Version (formatted) - U32 e.g. 0x02000100 = V1.0.2
+  - name: "Protocol Version"
+    unique_id: "protocol_version"
+    type: "sensor"
+    availability: "{{ not is_state('sensor.{PREFIX}_protocol_version_raw', 'unavailable') }}"
+    state: >-
+      {% set raw_value = states('sensor.{PREFIX}_protocol_version_raw') %}
+      {% if raw_value in ['unavailable', 'unknown', 'None', ''] %}
+        unknown
+      {% else %}
+        {% set raw = raw_value | int %}
+        {% set major = (raw // 16777216) %}
+        {% set minor = (raw // 65536) % 256 %}
+        {% set patch = (raw // 256) % 256 %}
+        V{{ major }}.{{ minor }}.{{ patch }}
+      {% endif %}
+    icon: "mdi:code-tags"
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
   # Net Grid Power
   - name: "Net Grid Power"
     unique_id: "net_grid_power"
