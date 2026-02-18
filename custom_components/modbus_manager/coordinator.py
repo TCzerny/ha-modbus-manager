@@ -877,6 +877,35 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 str(e),
                             )
 
+                    # Replace {PREFIX} in max_value_from_register / min_value_from_register
+                    for ref_field in [
+                        "max_value_from_register",
+                        "min_value_from_register",
+                    ]:
+                        ref_config = register.get(ref_field)
+                        if (
+                            ref_config
+                            and isinstance(ref_config, str)
+                            and "{PREFIX}" in ref_config
+                        ):
+                            register[ref_field] = replace_template_placeholders(
+                                ref_config, prefix, slave_id, 0
+                            )
+                        elif ref_config and isinstance(ref_config, dict):
+                            reg_uid = ref_config.get("register_unique_id")
+                            if (
+                                reg_uid
+                                and isinstance(reg_uid, str)
+                                and "{PREFIX}" in reg_uid
+                            ):
+                                ref_config = ref_config.copy()
+                                ref_config[
+                                    "register_unique_id"
+                                ] = replace_template_placeholders(
+                                    reg_uid, prefix, slave_id, 0
+                                )
+                                register[ref_field] = ref_config
+
                     # Only add if it has a valid address (for Modbus reading)
                     if (
                         register.get("address") is not None

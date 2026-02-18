@@ -103,6 +103,26 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         # Format: {"register_unique_id": "reactive_power_adjustment_mode", "required_value": 0xA1}
         self._register_dependency = register_config.get("depends_on_register")
 
+        # Dynamic max/min from register: Value is read from another register at runtime
+        # Format: "{PREFIX}_battery_charge_discharge_limit" or "battery_charge_discharge_limit" (substring match)
+        # Dict: {"register_unique_id": "{PREFIX}_...", "fallback": 100} - {PREFIX} replaced in coordinator
+        self._max_value_from_register = register_config.get("max_value_from_register")
+        self._min_value_from_register = register_config.get("min_value_from_register")
+        max_cfg = self._max_value_from_register
+        min_cfg = self._min_value_from_register
+        self._fallback_max_value = self._attr_native_max_value
+        self._fallback_min_value = self._attr_native_min_value
+        if isinstance(max_cfg, dict) and "fallback" in max_cfg:
+            try:
+                self._fallback_max_value = float(max_cfg["fallback"])
+            except (ValueError, TypeError):
+                pass
+        if isinstance(min_cfg, dict) and "fallback" in min_cfg:
+            try:
+                self._fallback_min_value = float(min_cfg["fallback"])
+            except (ValueError, TypeError):
+                pass
+
         # Set mode (slider or box) - defaults to box for precise input
         mode_str = register_config.get("mode", "box").lower()
         if mode_str == "slider":
@@ -142,6 +162,46 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
         """Create unique key for register data lookup."""
         return f"{register_config.get('unique_id', 'unknown')}_{register_config.get('address', 0)}"
 
+    def _get_value_from_referenced_register(
+        self, config: str | dict[str, Any]
+    ) -> Optional[float]:
+        """Get processed value from a register referenced by unique_id.
+
+        config: Either a string (unique_id, use {PREFIX}_xxx in template for clarity)
+                or dict with register_unique_id, fallback. {PREFIX} is replaced in coordinator.
+        Returns the processed_value (display value with scale) or None if unavailable.
+        Matching is case-insensitive to handle PREFIX formatting differences.
+        """
+        if not config:
+            return None
+        if isinstance(config, str):
+            register_unique_id = config
+            fallback = None
+        elif isinstance(config, dict):
+            register_unique_id = config.get("register_unique_id")
+            fallback = config.get("fallback")
+            if not register_unique_id:
+                return None
+        else:
+            return None
+
+        register_data_source = self.coordinator.register_data
+        if not register_data_source:
+            return fallback
+
+        # Match case-insensitively (PREFIX may be lowercased in template, keys use original case)
+        register_unique_id_lower = register_unique_id.lower()
+        for register_key, data in register_data_source.items():
+            if register_unique_id_lower in register_key.lower():
+                processed_value = data.get("processed_value")
+                if processed_value is not None:
+                    try:
+                        return float(processed_value)
+                    except (ValueError, TypeError):
+                        pass
+                break
+        return fallback
+
     @callback
     def _handle_coordinator_update(self) -> None:
         """Handle coordinator update."""
@@ -177,6 +237,39 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
                     self._attr_native_value = None
             else:
                 self._attr_native_value = None
+
+            # Update dynamic max_value from referenced register (e.g. battery limit)
+            if self._max_value_from_register:
+                dynamic_max = self._get_value_from_referenced_register(
+                    self._max_value_from_register
+                )
+                if dynamic_max is not None and dynamic_max > 0:
+                    self._attr_native_max_value = self._coerce_numeric(
+                        dynamic_max, self._fallback_max_value, "max_value_from_register"
+                    )
+                    self._attr_extra_state_attributes = {
+                        **self._attr_extra_state_attributes,
+                        "max_value": self._attr_native_max_value,
+                    }
+                elif self._attr_native_max_value != self._fallback_max_value:
+                    # Revert to fallback when source unavailable
+                    self._attr_native_max_value = self._fallback_max_value
+
+            # Update dynamic min_value from referenced register
+            if self._min_value_from_register:
+                dynamic_min = self._get_value_from_referenced_register(
+                    self._min_value_from_register
+                )
+                if dynamic_min is not None:
+                    self._attr_native_min_value = self._coerce_numeric(
+                        dynamic_min, self._fallback_min_value, "min_value_from_register"
+                    )
+                    self._attr_extra_state_attributes = {
+                        **self._attr_extra_state_attributes,
+                        "min_value": self._attr_native_min_value,
+                    }
+                elif self._attr_native_min_value != self._fallback_min_value:
+                    self._attr_native_min_value = self._fallback_min_value
 
             # Notify Home Assistant about the change
             self.async_write_ha_state()

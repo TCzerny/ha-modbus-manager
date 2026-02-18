@@ -5,11 +5,17 @@ name: "Sungrow iHomeManager"
 description: "Template for Sungrow iHomeManager EMS device (Modbus TCP). Includes iHomeManager meter, EMS, and charger registers."
 manufacturer: "Sungrow"
 model: "iHomeManager"
-version: 1.0.0
+version: 1.0.2
 default_prefix: "IHM"
 default_slave_id: 247
 type: "energy_manager"
 firmware_version: "iHomeManager"
+
+###
+###  Note: iHM only supports system energy dispatch-related data forwarding and does not support data forwarding for connected devices (including inverters, WiNet-S/S2, etc.)
+# V1.0.0: Initial Version
+# V1.0.1: Added channel 2 data of the meter(8565~8574), Application Software Version(8318~8332), active power limit(8051~8052)
+# V1.0.2: Added Feed-in limitation (8028), Changed the data type of Feed-in limitation ratio(8031) from S32 to S16.
 
 dynamic_config:
   battery_enabled:
@@ -17,71 +23,15 @@ dynamic_config:
     options: [true, false]
     default: false
   channel_2_enabled:
-    description: "Enable meter channel 2 registers"
+    description: "Enable PROD.CT channel 2 registers"
+    options: [true, false]
+    default: false
+  charger_enabled:
+    description: "Enable charger-related registers"
     options: [true, false]
     default: false
 
 sensors:
-  # iHomeManager Meter Data (different register addresses and scale)
-  # NOTE: iHomeManager uses register 8156 for total power and 8558-8562 for phase power
-  # Scale is 10 instead of 1 (values are in 0.1W units)
-  - name: Meter Active Power Raw
-    unique_id: meter_active_power_raw
-    address: 8156 # reg 8157
-    input_type: input
-    data_type: int32
-    swap: word
-    precision: 0
-    unit_of_measurement: W
-    device_class: "power"
-    state_class: measurement
-    scale: 10
-    scan_interval: 10
-    entity_category: "diagnostic"
-
-  - name: Meter Phase A Active Power Raw
-    unique_id: meter_phase_a_active_power_raw
-    address: 8558 # reg 8559
-    input_type: input
-    data_type: int32
-    swap: word
-    precision: 0
-    unit_of_measurement: W
-    device_class: "power"
-    state_class: measurement
-    scale: 1
-    scan_interval: 10
-    entity_category: "diagnostic"
-
-  - name: Meter Phase B Active Power Raw
-    unique_id: meter_phase_b_active_power_raw
-    address: 8560 # reg 8561
-    input_type: input
-    data_type: int32
-    swap: word
-    precision: 0
-    unit_of_measurement: W
-    device_class: "power"
-    state_class: measurement
-    scale: 1
-    scan_interval: 10
-    entity_category: "diagnostic"
-
-  - name: Meter Phase C Active Power Raw
-    unique_id: meter_phase_c_active_power_raw
-    address: 8562 # reg 8563
-    input_type: input
-    data_type: int32
-    swap: word
-    precision: 0
-    unit_of_measurement: W
-    device_class: "power"
-    state_class: measurement
-    scale: 1
-    scan_interval: 10
-    entity_category: "diagnostic"
-
-  # iHomeManager Additional Input Registers
   # Device Information
   - name: Device Type Code
     unique_id: device_type_code
@@ -112,6 +62,7 @@ sensors:
     group: "PV_device_info"
     entity_category: "diagnostic"
 
+  # Communication devices connected only via RS485/WIFI/ETH, excluding devices connected through DO;
   - name: Total Devices Connected
     unique_id: total_devices_connected
     address: 8004 # reg 8005
@@ -234,10 +185,11 @@ sensors:
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
-  # Real-Time Power
+  # Total Active Power of Inverter
+  # Total active power accumulated from connected inverters
   - name: Total Active Power
     unique_id: total_active_power
-    address: 8154 # reg 8155
+    address: 8154 # reg 8155 - 8156
     input_type: input
     data_type: int32
     swap: word
@@ -249,9 +201,25 @@ sensors:
     scan_interval: 10
     group: "PV_power"
 
+  # Total Active Power of Grid Connection
+  # Note 1：This data is obtained through the GRID.CT sampling port of iHM;
+  - name: Meter Active Power Raw
+    unique_id: meter_active_power_raw
+    address: 8156 # reg 8157
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 10
+    scan_interval: 10
+    entity_category: "diagnostic"
+
   - name: Load Power
     unique_id: load_power
-    address: 8158 # reg 8159
+    address: 8158 # reg 8159-8160
     input_type: input
     data_type: int32
     swap: word
@@ -278,7 +246,7 @@ sensors:
     group: "PV_battery_power"
     condition: "battery_enabled == true"
 
-  - name: Battery Level
+  - name: Battery Level SOC
     unique_id: battery_level
     address: 8162 # reg 8163
     input_type: input
@@ -293,6 +261,9 @@ sensors:
     condition: "battery_enabled == true"
 
   # Energy Totals
+  # Import energy at the grid connection point
+  # Note 1：This data is obtained through the GRID.CT sampling port of iHM;
+
   - name: Grid Import Energy
     unique_id: grid_import_energy
     address: 8175 # reg 8176
@@ -307,6 +278,8 @@ sensors:
     scan_interval: 600
     group: "PV_energy"
 
+  # Export energy at the grid connection point
+  # Note 1：This data is obtained through the GRID.CT sampling port of iHM;
   - name: Grid Export Energy
     unique_id: grid_export_energy
     address: 8177 # reg 8178
@@ -321,16 +294,53 @@ sensors:
     scan_interval: 600
     group: "PV_energy"
 
-  # Grid Meter Channel 1 - Voltage and Frequency
+  # Application Software Version
+  - name: Application Software Version
+    unique_id: application_software_version
+    address: 8317 # reg 8318-8332
+    input_type: input
+    data_type: string
+    count: 15
+    scan_interval: 3600
+    group: "PV_device_info"
+    entity_category: "diagnostic"
+
+  # Charger Status
+  - name: Charger Status Raw
+    unique_id: charger_status_raw
+    address: 8551 # reg 8552
+    input_type: input
+    data_type: uint16
+    state_class: measurement
+    scan_interval: 10
+    group: "PV_charger"
+    entity_category: "diagnostic"
+    condition: "charger_enabled == true"
+    options:
+      1: "Idle (unplugged)"
+      2: "Standby (plugged)"
+      3: "Charging"
+      6: "Charging completed"
+
   - name: Output Type Raw
     unique_id: output_type_raw
     address: 8553 # reg 8554
     input_type: input
     data_type: uint16
-    scan_interval: 300
+    scale: 0.1
+    unit_of_measurement: "V"
+    scan_interval: 3600
     group: "PV_meter_ihm"
     entity_category: "diagnostic"
+    options:
+      0: "Single"
+      1: "3P4L"
+      2: "3P3L"
 
+  # Output type (address 8554) is
+  # 0: upload A-phase voltage;
+  # is 1: upload phase voltage;
+  # is 2: upload line voltage
   - name: Phase A Voltage
     unique_id: phase_a_voltage
     address: 8554 # reg 8555
@@ -383,49 +393,51 @@ sensors:
     scan_interval: 60
     group: "PV_meter_ihm"
 
+  # Note: This data is obtained through the GRID-CT sampling port of iHM
+  - name: Meter Phase A Active Power Raw
+    unique_id: meter_phase_a_active_power_raw
+    address: 8558 # reg 8559
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    entity_category: "diagnostic"
+
+  - name: Meter Phase B Active Power Raw
+    unique_id: meter_phase_b_active_power_raw
+    address: 8560 # reg 8561
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    entity_category: "diagnostic"
+
+  - name: Meter Phase C Active Power Raw
+    unique_id: meter_phase_c_active_power_raw
+    address: 8562 # reg 8563
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: W
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+    entity_category: "diagnostic"
+
   # Grid Meter Channel 2 - Voltage and Frequency
-  - name: Phase A Voltage Ch2
-    unique_id: phase_a_voltage_ch2
-    address: 8564 # reg 8565
-    input_type: input
-    data_type: uint16
-    precision: 1
-    scale: 0.1
-    unit_of_measurement: V
-    device_class: "voltage"
-    state_class: measurement
-    scan_interval: 60
-    group: "PV_meter_ihm_ch2"
-    condition: "channel_2_enabled == true"
-
-  - name: Phase B Voltage Ch2
-    unique_id: phase_b_voltage_ch2
-    address: 8565 # reg 8566
-    input_type: input
-    data_type: uint16
-    precision: 1
-    scale: 0.1
-    unit_of_measurement: V
-    device_class: "voltage"
-    state_class: measurement
-    scan_interval: 60
-    group: "PV_meter_ihm_ch2"
-    condition: "channel_2_enabled == true"
-
-  - name: Phase C Voltage Ch2
-    unique_id: phase_c_voltage_ch2
-    address: 8566 # reg 8567
-    input_type: input
-    data_type: uint16
-    precision: 1
-    scale: 0.1
-    unit_of_measurement: V
-    device_class: "voltage"
-    state_class: measurement
-    scan_interval: 60
-    group: "PV_meter_ihm_ch2"
-    condition: "channel_2_enabled == true"
-
+  # Note 2：This data is obtained through the PROD.CT sampling port of iHM;
   - name: Grid Frequency Ch2
     unique_id: grid_frequency_ch2
     address: 8567 # reg 8568
@@ -441,6 +453,7 @@ sensors:
     condition: "channel_2_enabled == true"
 
   # Grid Meter Channel 2 - Phase Power
+  # Note 2：This data is obtained through the PROD.CT sampling port of iHM;
   - name: Phase A Active Power Ch2
     unique_id: phase_a_active_power_ch2
     address: 8568 # reg 8569
@@ -483,17 +496,6 @@ sensors:
     group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
-  # Charger Status
-  - name: Charger Status Raw
-    unique_id: charger_status_raw
-    address: 8551 # reg 8552
-    input_type: input
-    data_type: uint16
-    state_class: measurement
-    scan_interval: 60
-    group: "PV_charger"
-    entity_category: "diagnostic"
-
 controls:
   # EMS Settings
   - type: "select"
@@ -535,7 +537,8 @@ controls:
     unit_of_measurement: kW
     device_class: "power"
     min_value: 0
-    max_value: 100
+    max_value: 3.7  # fallback when battery_charge_discharge_limit unavailable
+    max_value_from_register: "{PREFIX}_battery_charge_discharge_limit"
     step: 0.1
     mode: "box"
     scan_interval: 30
@@ -543,68 +546,49 @@ controls:
     condition: "battery_enabled == true"
 
   - type: "select"
-    name: "Feed-in Power Limit Mode"
-    unique_id: "feed_in_power_limit_mode"
+    name: "Feed-in Power Limitation"
+    unique_id: "feed_in_power_limitation"
     address: 8027 # reg 8028
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 30
     options:
-      0: "Disabled"
-      1: "Absolute"
-      2: "Percentage"
+      0: "Off"
+      1: "On"
     group: "PV_control_ihm"
 
   - type: "number"
-    name: "Feed-in Power Limit"
-    unique_id: "feed_in_power_limit"
-    address: 8028 # reg 8029
-    input_type: "holding"
-    data_type: "uint32"
-    swap: word
-    precision: 1
-    scale: 0.1
-    unit_of_measurement: kW
-    device_class: "power"
-    min_value: 0
-    max_value: 100
-    step: 0.1
-    mode: "box"
-    scan_interval: 30
-    group: "PV_control_ihm"
-
-  - type: "number"
-    name: "Export Power Limit Ratio"
-    unique_id: "export_power_limit_ratio"
+    name: "Feed-in Power Limit Ratio"
+    unique_id: "feed_in_power_limit_ratio"
     address: 8030 # reg 8031
     input_type: "holding"
-    data_type: "int32"
-    swap: word
+    data_type: "int16"
     precision: 1
     scale: 0.1
     unit_of_measurement: "%"
+    device_class: "percentage"
     min_value: 0
-    max_value: 100
-    step: 0.1
-    mode: "box"
-    scan_interval: 30
-    group: "PV_control_ihm"
-
-  - type: "number"
-    name: "External VPP Heartbeat"
-    unique_id: "external_vpp_heartbeat"
-    address: 8032 # reg 8033
-    input_type: "holding"
-    data_type: "uint16"
-    unit_of_measurement: s
-    min_value: 0
-    max_value: 65535
+    max_value: 1000
     step: 1
     mode: "box"
     scan_interval: 30
     group: "PV_control_ihm"
 
-  # Charger Controls
+  # external VPP heartbeat - commented out for now
+  # - name: "External VPP Heartbeat"
+  #   unique_id: "external_vpp_heartbeat"
+  #   address: 8032 # reg 8033
+  #   input_type: "holding"
+  #   data_type: "uint16"
+  #   unit_of_measurement: s
+  #   min_value: 0
+  #   max_value: 1000
+  #   step: 1
+  #   mode: "box"
+  #   scan_interval: 30
+  #   group: "PV_control_ihm"
+
+  # Controls
   - type: "select"
     name: "Power-on/off"
     unique_id: "power_on_off"
@@ -625,9 +609,10 @@ controls:
     data_type: "uint16"
     scan_interval: 30
     options:
-      160: "Fast charging mode"
-      161: "Eco charging mode"
+      0xA0: "Fast charging mode"
+      0xA1: "Eco charging mode"
     group: "PV_control_ihm"
+    condition: "charger_enabled == true"
 
   - type: "switch"
     name: "Charger Enable"
@@ -641,7 +626,9 @@ controls:
     off_value: 0x55
     scan_interval: 30
     group: "PV_control_ihm"
+    condition: "charger_enabled == true"
 
+  # Setting is allowed when the charging mode is Eco charging mode.
   - type: "select"
     name: "Charger Grid Power Draw"
     unique_id: "charger_grid_power_draw"
@@ -653,23 +640,24 @@ controls:
       0xAA: "Enable"
       0x55: "Disable"
     group: "PV_control_ihm"
+    condition: "charger_enabled == true"
 
   - type: "switch"
-    name: "Charger Power Limitation Enable"
-    unique_id: "charger_power_limitation_enable"
+    name: "Active Power Limitation"
+    unique_id: "active_power_limitation"
     address: 8050 # reg 8051
     input_type: "holding"
     data_type: "uint16"
-    write_value: 170
-    write_value_off: 85
-    on_value: 170
-    off_value: 85
+    write_value: 0xAA
+    write_value_off: 0x55
+    on_value: 0xAA
+    off_value: 0x55
     scan_interval: 30
     group: "PV_control_ihm"
 
   - type: "number"
-    name: "Charger Power Limit Percentage"
-    unique_id: "charger_power_limit_percentage"
+    name: "Active Power Limit Ratio"
+    unique_id: "active_power_limit_ratio"
     address: 8051 # reg 8052
     input_type: "holding"
     data_type: "uint16"
@@ -678,7 +666,7 @@ controls:
     unit_of_measurement: "%"
     min_value: 0
     max_value: 100
-    step: 0.1
+    step: 1
     mode: "box"
     scan_interval: 30
     group: "PV_control_ihm"
@@ -697,6 +685,7 @@ calculated:
     precision: 0
     group: "PV_grid_power"
 
+  # Grid meter convention: positive = import (draw from grid), negative = export (feed to grid)
   - name: "Import Power"
     unique_id: "import_power"
     type: "sensor"
@@ -705,8 +694,8 @@ calculated:
       {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') %}
       {% if grid in ['unknown', 'unavailable', 'none'] or grid is none %}
         0
-      {% elif (grid | int) < 0 %}
-        {{ (grid | int) * -1 }}
+      {% elif (grid | int) > 0 %}
+        {{ grid | int }}
       {% else %}
         0
       {% endif %}
@@ -721,8 +710,11 @@ calculated:
     type: "sensor"
     availability: "{{ states('sensor.{PREFIX}_meter_active_power_raw') | is_number }}"
     state: >-
-      {% if states('sensor.{PREFIX}_meter_active_power_raw') | int > 0 %}
-        {{ states('sensor.{PREFIX}_meter_active_power_raw') }}
+      {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') %}
+      {% if grid in ['unknown', 'unavailable', 'none'] or grid is none %}
+        0
+      {% elif (grid | int) < 0 %}
+        {{ (grid | int) * -1 }}
       {% else %}
         0
       {% endif %}
