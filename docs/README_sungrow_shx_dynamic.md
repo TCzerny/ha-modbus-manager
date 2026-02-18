@@ -154,13 +154,13 @@ Undocumented holding registers for Master/Slave cascade configuration. Available
   - **Note:** This control addresses issue #444 from mkaiser's implementation (SH10RT no standby mode after latest firmware update)
 
 ### 🔗 Master/Slave Mode (Multi-Inverter / Cascade)
-Holding registers for Master/Slave cascade configuration. Available as select (Mode, Role) and number (Slave Count) controls.
+Holding registers for Master/Slave cascade configuration. Available as sensors.
 
 | Control | Address | Type | Options / Range |
 |---------|---------|------|-----------------|
-| **Master Slave Mode** | 33499 | Select | 0xAA (Enabled), 0x55 (Disabled) |
-| **Master Slave Role** | 33500 | Select | 0xA0 (Master), 0xA1 (Slave 1), 0xA2 (Slave 2), 0xA3 (Slave 3), 0xA4 (Slave 4) |
-| **Slave Count** | 33501 | Number | 0-4 |
+| **Master Slave Mode** | 33499 | Sensor | 0xAA (Enabled), 0x55 (Disabled) |
+| **Master Slave Role** | 33500 | Sensor | 0xA0 (Master), 0xA1 (Slave 1), 0xA2 (Slave 2), 0xA3 (Slave 3), 0xA4 (Slave 4) |
+| **Slave Count** | 33501 | Sensor | 0-4 |
 
 ## 🧮 Calculated Sensors
 
@@ -209,15 +209,21 @@ These sensors follow the HA Energy Dashboard convention: **positive values for c
 - **Grid Dependency** - Percentage of load that depends on grid (inverse of autarky)
 
 #### Energy Flow Analysis
+Priority logic reflects physical inverter behavior: Grid supplies load first (AC path); only remainder charges battery (AC→DC). PV (DC) charges battery before grid when both available.
+
 - **PV to Load Direct** - PV power going directly to load (without battery)
-- **PV to Battery** - PV power going to battery (charging)
-- **Battery to Load** - Battery power going to load (discharging)
-- **Grid to Load** - Grid power going to load (importing)
+- **PV to Battery** - PV (DC) charging battery; grid charges only after load supplied
+- **Grid to Battery** - Grid power charging battery; only after load deficit covered (AC→DC)
+- **Battery to Load** - Battery power to load (excludes battery export)
+- **PV to Grid** - PV excess exported to grid (excludes battery export)
+- **Battery to Grid** - Battery power exported to grid (e.g. VPP, feed-in)
+- **Grid to Load** - Grid power to load (priority when importing)
 - **Net Consumption** - Net consumption after PV and battery supply
 
 #### MPPT Performance Analysis
-- **MPPT Power Deviation** - Maximum deviation from average MPPT power (indicates imbalance)
-- **MPPT Utilization** - How much of total DC power comes from MPPT trackers (should be close to 100%)
+- **MPPT Deviation from Average** - Maximum deviation (W) from average MPPT power; indicates string imbalance. 0 W when balanced.
+- **MPPT Balance** - 100% when all strings are balanced; lower when one string underperforms.
+- **Active MPPT Count** - Number of MPPT channels with power > 10 W (useful for 4-MPPT inverters with fewer strings).
 
 #### PV System Performance
 - **PV Capacity Factor** - Current PV power as percentage of inverter rated capacity
@@ -485,8 +491,9 @@ This section contains all entities that will be created by this template, includ
 #### PV Analysis & Performance Metrics
 | Address | Name | Unique ID | Description |
 |---------|------|-----------|-------------|
-| - | Self-Consumption Rate | self_consumption_rate | % of PV consumed directly |
-| - | Autarky Rate | autarky_rate | % of load supplied by PV/Battery |
+| - | Self-Consumption Rate | self_consumption_rate | % of PV consumed directly (real-time) |
+| - | Autarky Rate | autarky_rate | % of load supplied by PV/Battery (real-time) |
+| - | Autarky Rate (Today) | autarky_rate_today | Daily autarky: % of today's consumption from PV+Battery |
 | - | Grid Dependency | grid_dependency | % of load depending on grid |
 | - | DC to AC Efficiency | dc_to_ac_efficiency | Inverter efficiency (%) |
 | - | PV Capacity Factor | pv_capacity_factor | Current power as % of rated capacity |
@@ -504,8 +511,9 @@ This section contains all entities that will be created by this template, includ
 #### MPPT Performance Analysis
 | Address | Name | Unique ID | Description |
 |---------|------|-----------|-------------|
-| - | MPPT Power Deviation | mppt_power_deviation | Max deviation from average (imbalance indicator) |
-| - | MPPT Utilization | mppt_utilization | % of DC power from MPPT trackers |
+| - | MPPT Deviation from Average | mppt_power_deviation | Max deviation (W) from average; imbalance indicator |
+| - | MPPT Balance | mppt_balance | 100% = balanced strings; lower = imbalance |
+| - | Active MPPT Count | active_mppt_count | Number of MPPT channels with power > 10 W |
 
 #### Efficiency Calculations
 | Address | Name | Unique ID |

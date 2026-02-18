@@ -138,7 +138,7 @@ views:
             columns: 3
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_voltage_spread
+                entity: sensor.{PREFIX}_battery_1_voltage_spread
                 name: Battery 1 Voltage Spread
                 icon: mdi:chart-line-variant
                 icon_color: |
@@ -155,7 +155,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_max_module_deviation
+                entity: sensor.{PREFIX}_battery_1_max_module_deviation
                 name: Battery 1 Max Module Deviation
                 icon: mdi:chart-timeline-variant
                 icon_color: |
@@ -172,7 +172,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_voltage_imbalance_percentage
+                entity: sensor.{PREFIX}_battery_1_voltage_imbalance_percentage
                 name: Battery 1 Voltage Imbalance %
                 icon: mdi:percent
                 icon_color: |
@@ -189,7 +189,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_average_module_voltage
+                entity: sensor.{PREFIX}_battery_1_average_module_voltage
                 name: Battery 1 Avg Module Voltage
                 icon: mdi:flash
                 icon_color: blue
@@ -200,7 +200,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_temperature_spread
+                entity: sensor.{PREFIX}_battery_1_temperature_spread
                 name: Battery 1 Temp Spread
                 icon: mdi:thermometer-lines
                 icon_color: orange
@@ -211,7 +211,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_max_module_cell_voltage_range
+                entity: sensor.{PREFIX}_battery_1_max_module_cell_voltage_range
                 name: Battery 1 Max Module Cell Range
                 icon: mdi:chart-box
                 icon_color: |
@@ -477,22 +477,22 @@ views:
         title: Battery 1 All Balancing Metrics
         show_header_toggle: false
         entities:
-          - entity: sensor.{PREFIX}_battery_voltage_spread
+          - entity: sensor.{PREFIX}_battery_1_voltage_spread
             name: Battery 1 Voltage Spread
             icon: mdi:chart-line-variant
-          - entity: sensor.{PREFIX}_battery_temperature_spread
+          - entity: sensor.{PREFIX}_battery_1_temperature_spread
             name: Battery 1 Temperature Spread
             icon: mdi:thermometer-lines
-          - entity: sensor.{PREFIX}_average_module_voltage
+          - entity: sensor.{PREFIX}_battery_1_average_module_voltage
             name: Battery 1 Average Module Voltage
             icon: mdi:flash
-          - entity: sensor.{PREFIX}_max_module_deviation
+          - entity: sensor.{PREFIX}_battery_1_max_module_deviation
             name: Battery 1 Max Module Deviation
             icon: mdi:chart-timeline-variant
-          - entity: sensor.{PREFIX}_voltage_imbalance_percentage
+          - entity: sensor.{PREFIX}_battery_1_voltage_imbalance_percentage
             name: Battery 1 Voltage Imbalance Percentage
             icon: mdi:percent
-          - entity: sensor.{PREFIX}_max_module_cell_voltage_range
+          - entity: sensor.{PREFIX}_battery_1_max_module_cell_voltage_range
             name: Battery 1 Max Module Cell Voltage Range
             icon: mdi:chart-box
 
@@ -531,7 +531,7 @@ views:
         series:
           - name: Battery 1 Voltage Spread
             type: area
-            entity: sensor.{PREFIX}_battery_voltage_spread
+            entity: sensor.{PREFIX}_battery_1_voltage_spread
             data_generator: |
               return entity.attributes.history.map((entry) => {
                 return [new Date(entry.last_changed).getTime(), entry.state];

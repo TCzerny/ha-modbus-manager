@@ -5,16 +5,25 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 🔧 Changed
+
+#### Sungrow SHx Template – MPPT Performance Sensors
+- **Removed** `mppt_utilization` – DC power always comes from MPPTs; ratio provided no useful information
+- **Added** `mppt_balance` – 100% when strings are balanced; lower when one string underperforms
+- **Added** `active_mppt_count` – Number of MPPT channels with power > 10 W (useful for 4-MPPT inverters)
+- Dashboard examples updated accordingly
+
 ## [0.2.2] - 2026-02-13
 
 ### ✨ Added
 
 #### Sungrow SH Template - Master/Slave Mode Registers
-- **Master Slave Mode** (Holding 33499): Sensor + Select control - 0xAA=Enabled, 0x55=Disabled
-- **Master Slave Role** (Holding 33500): Sensor + Select control - 0xA0=Master, 0xA1-0xA4=Slave 1-4
-- **Slave Count** (Holding 33501): Sensor + Number control - 0-4 range; 65535 = Invalid/Not supported
+- **Master Slave Mode** (Holding 33499): Sensor - 0xAA=Enabled, 0x55=Disabled
+- **Master Slave Role** (Holding 33500): Sensor - 0xA0=Master, 0xA1-0xA4=Slave 1-4
+- **Slave Count** (Holding 33501): Sensor
 - Undocumented registers for multi-inverter cascade; values may vary by model/firmware on single-inverter setups
-- README_sungrow_shx_dynamic.md: Added Master/Slave registers table (sensors + controls)
 
 ### 🔧 Improved
 

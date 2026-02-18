@@ -34,21 +34,32 @@ Simplified version using only built-in Home Assistant cards. No custom cards req
 #### sungrow_sbr_battery_analysis.yaml
 Legacy version with custom cards (Mushroom Cards and ApexCharts Card) for a modern, visually appealing interface.
 
-### Status & Diagnostic Dashboards
-
-#### sungrow_inverter_status_diagnostic.yaml
-Dashboard for inverter status and diagnostic registers: device identity (serial, model), protocol/firmware versions, running state, Master/Slave configuration, and battery alarm/fault indicators. Uses only built-in HA cards.
-
 ### PV Dashboards
 
 #### sungrow_pv_analysis_standard.yaml
-Standard Home Assistant cards version with new Sections layout. Uses only built-in HA cards for PV monitoring.
+Standard Home Assistant cards version with new Sections layout. Uses only built-in HA cards for PV monitoring. **Includes** integrated device info, status, and alarm/fault views.
 
 #### sungrow_pv_analysis_mushroom.yaml
-Mushroom Cards version with new Sections layout. Requires Mushroom Cards (HACS).
+Mushroom Cards version with new Sections layout. Requires Mushroom Cards (HACS). **Includes** integrated device info, status, and alarm/fault views.
 
 #### sungrow_pv_analysis_simple.yaml
-Simplified version using only built-in Home Assistant cards. No custom cards required - works out of the box!
+Simplified version using only built-in Home Assistant cards. No custom cards required - works out of the box! **Includes** integrated device info, status, and alarm/fault views.
+
+### Chart-Focused Dashboard
+
+#### sungrow_charts_examples.yaml
+Chart-focused dashboard inspired by Grafana and advanced energy monitoring layouts. Contains:
+- **Self-Consumption & Autarky**: Current (real-time) rates, today's daily rates, and 30-day bar chart
+- **Energy Flow**: Power flow breakdown and 24h line chart
+- **Energy Balance**: Daily PV/import/export/consumption as 30-day bar charts, plus today's totals
+- **PV & Power Trends**: PV generation history, phase power, DC power statistics
+
+Use this as a template for building custom chart-heavy dashboards.
+
+### Standalone Diagnostic Dashboard
+
+#### sungrow_inverter_status_diagnostic.yaml
+Standalone dashboard for inverter status and diagnostic registers only (device identity, protocol/firmware versions, running state, Master/Slave configuration, battery alarms/faults). Use this if you prefer a separate diagnostic dashboard. **Note:** The PV analysis dashboards above now include these diagnostic views.
 
 ## Installation
 
@@ -62,7 +73,9 @@ All dashboards follow the same installation process:
    - **Battery dashboards**: If you have fewer modules, remove references to modules you don't have (e.g., if you have 6 modules, remove references to modules 7 and 8)
    - **PV dashboards**: If you have fewer MPPT trackers, remove references to MPPT trackers you don't have (e.g., if you have 2 MPPTs, remove references to MPPT 3 and 4)
    - **PV dashboards**: If you have single-phase, remove references to Phase B and Phase C entities
+   - **EMS Control**: Some entities are conditional (e.g., `inverter_run_mode`, `export_power_limit` not on iHomeManager; `pv_power_limitation` only on SHT models; battery controls only when battery is configured)
    - **Status & diagnostic dashboards**: Firmware entities are only available on RT/T/K6 models; battery alarm/fault entities only when a battery is configured
+   - **Self-Consumption & Autarky Today**: `self_consumption_of_today` (from inverter) and `autarky_rate_today` (calculated from daily energies) may be unavailable on iHomeManager or systems without meter; remove from YAML if they show as unavailable
    - If entities show as "unavailable" after import, they may not exist for your device configuration
    - Search for entity IDs in the YAML and remove/comment out unavailable ones to avoid dashboard errors
 4. Import the dashboard in Home Assistant:
@@ -99,15 +112,21 @@ The PV dashboards provide comprehensive monitoring and analysis for Sungrow PV i
 - **PV Overview**: Main status indicators (Total DC Power, Daily/Total PV Generation, Inverter Temperature)
 - **MPPT Analysis**: Individual MPPT tracker voltages, currents, and power analysis
 - **AC Output**: Phase voltages, currents, and power for 3-phase systems
+- **Energy Flow**: PV-to-load/battery/grid flows, self-consumption, autarky (current, today, 30-day chart)
 - **Statistics**: Long-term generation statistics and trends
+- **EMS Control**: Energy management settings (EMS mode, Min/Max SoC, export limits, battery controls). Similar to [mkaiser's EMS control tab](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant/blob/main/doc/dashboard.md).
+- **Status & Diagnostics**: Device identity, protocol/firmware, system status, Master/Slave, battery alarms/faults (all in one tab)
 
 ### Dashboard Structure
 
-The PV dashboard is organized into 3 views:
+The PV dashboard is organized into 6 views:
 
 1. **PV Overview** (`/overview`) - PV generation status, MPPT tracker information, AC output details, and historical charts
-2. **MPPT Analysis** (`/mppt`) - MPPT voltage/current trends and individual tracker details
-3. **Statistics** (`/statistics`) - Daily/total generation statistics, power distribution, and temperature trends
+2. **MPPT Analysis** (`/mppt`) - MPPT voltage/current/power trends and individual tracker details
+3. **Energy Flow Analysis** (`/energy-flow`) - Energy flow breakdown, self-consumption & autarky (current/today/30-day chart)
+4. **Statistics** (`/statistics`) - Daily/total generation statistics, power distribution, and temperature trends
+5. **EMS Control** (`/ems-control`) - EMS mode, battery SoC/backup, export limits, forced charge/discharge (remove unavailable entities for your setup)
+6. **Status & Diagnostics** (`/diagnostics`) - Device identity, protocol/firmware, system status, Master/Slave config, battery alarms & faults (all in one tab)
 
 ## Sungrow Inverter Status & Diagnostic Dashboard
 

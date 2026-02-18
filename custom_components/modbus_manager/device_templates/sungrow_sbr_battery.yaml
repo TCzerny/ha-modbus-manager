@@ -638,7 +638,7 @@ binary_sensors: []
 calculated:
   # Battery 1 Voltage Spread - difference between max and min cell voltage across all modules
   - name: "Battery 1 Voltage Spread"
-    unique_id: battery_voltage_spread
+    unique_id: battery_1_voltage_spread
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -653,7 +653,7 @@ calculated:
   # These sensors calculate the deviation of each module's max cell voltage from the average
   # Only modules that exist (have non-zero voltage) are included in the average calculation
   - name: "Battery 1 Module 1 Deviation"
-    unique_id: module_1_deviation
+    unique_id: battery_1_module_1_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -679,7 +679,7 @@ calculated:
       {% endif %}
 
   - name: "Battery 1 Module 2 Deviation"
-    unique_id: module_2_deviation
+    unique_id: battery_1_module_2_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -705,7 +705,7 @@ calculated:
       {% endif %}
 
   - name: "Battery 1 Module 3 Deviation"
-    unique_id: module_3_deviation
+    unique_id: battery_1_module_3_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -731,7 +731,7 @@ calculated:
       {% endif %}
 
   - name: "Battery 1 Module 4 Deviation"
-    unique_id: module_4_deviation
+    unique_id: battery_1_module_4_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -757,7 +757,7 @@ calculated:
       {% endif %}
 
   - name: "Battery 1 Module 5 Deviation"
-    unique_id: module_5_deviation
+    unique_id: battery_1_module_5_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -783,7 +783,7 @@ calculated:
       {% endif %}
 
   - name: "Battery 1 Module 6 Deviation"
-    unique_id: module_6_deviation
+    unique_id: battery_1_module_6_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -809,7 +809,7 @@ calculated:
       {% endif %}
 
   - name: "Battery 1 Module 7 Deviation"
-    unique_id: module_7_deviation
+    unique_id: battery_1_module_7_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -835,7 +835,7 @@ calculated:
       {% endif %}
 
   - name: "Battery 1 Module 8 Deviation"
-    unique_id: module_8_deviation
+    unique_id: battery_1_module_8_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -864,7 +864,7 @@ calculated:
 
   # Battery 1 Temperature Spread - difference between hottest and coldest module
   - name: "Battery 1 Temperature Spread"
-    unique_id: battery_temperature_spread
+    unique_id: battery_1_temperature_spread
     unit_of_measurement: "°C"
     device_class: temperature
     state_class: measurement
@@ -877,7 +877,7 @@ calculated:
 
   # Battery 1 Average Module Voltage - average of all module max cell voltages
   - name: "Battery 1 Average Module Voltage"
-    unique_id: average_module_voltage
+    unique_id: battery_1_average_module_voltage
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -902,7 +902,7 @@ calculated:
 
   # Battery 1 Max Module Deviation - largest absolute deviation from average
   - name: "Battery 1 Max Module Deviation"
-    unique_id: max_module_deviation
+    unique_id: battery_1_max_module_deviation
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -937,7 +937,7 @@ calculated:
 
   # Battery 1 Voltage Imbalance Percentage - max deviation as percentage of average
   - name: "Battery 1 Voltage Imbalance Percentage"
-    unique_id: voltage_imbalance_percentage
+    unique_id: battery_1_voltage_imbalance_percentage
     unit_of_measurement: "%"
     state_class: measurement
     precision: 5
@@ -975,7 +975,7 @@ calculated:
 
   # Battery 1 Module Cell Voltage Range - internal spread within each module (max - min cell voltage)
   - name: "Battery 1 Module 1 Cell Voltage Range"
-    unique_id: module_1_cell_voltage_range
+    unique_id: battery_1_module_1_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -988,7 +988,7 @@ calculated:
       {{ (max_v - min_v) | round(5) }}
 
   - name: "Battery 1 Module 2 Cell Voltage Range"
-    unique_id: module_2_cell_voltage_range
+    unique_id: battery_1_module_2_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -1001,7 +1001,7 @@ calculated:
       {{ (max_v - min_v) | round(5) }}
 
   - name: "Battery 1 Module 3 Cell Voltage Range"
-    unique_id: module_3_cell_voltage_range
+    unique_id: battery_1_module_3_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -1014,7 +1014,7 @@ calculated:
       {{ (max_v - min_v) | round(5) }}
 
   - name: "Battery 1 Module 4 Cell Voltage Range"
-    unique_id: module_4_cell_voltage_range
+    unique_id: battery_1_module_4_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -1027,7 +1027,7 @@ calculated:
       {{ (max_v - min_v) | round(5) }}
 
   - name: "Battery 1 Module 5 Cell Voltage Range"
-    unique_id: module_5_cell_voltage_range
+    unique_id: battery_1_module_5_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -1040,7 +1040,7 @@ calculated:
       {{ (max_v - min_v) | round(5) }}
 
   - name: "Battery 1 Module 6 Cell Voltage Range"
-    unique_id: module_6_cell_voltage_range
+    unique_id: battery_1_module_6_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -1053,7 +1053,7 @@ calculated:
       {{ (max_v - min_v) | round(5) }}
 
   - name: "Battery 1 Module 7 Cell Voltage Range"
-    unique_id: module_7_cell_voltage_range
+    unique_id: battery_1_module_7_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -1066,7 +1066,7 @@ calculated:
       {{ (max_v - min_v) | round(5) }}
 
   - name: "Battery 1 Module 8 Cell Voltage Range"
-    unique_id: module_8_cell_voltage_range
+    unique_id: battery_1_module_8_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement
@@ -1080,7 +1080,7 @@ calculated:
 
   # Battery 1 Max Module Cell Voltage Range - largest internal spread across all modules
   - name: "Battery 1 Max Module Cell Voltage Range"
-    unique_id: max_module_cell_voltage_range
+    unique_id: battery_1_max_module_cell_voltage_range
     unit_of_measurement: "V"
     device_class: voltage
     state_class: measurement

@@ -121,6 +121,15 @@ views:
               - entity: sensor.{PREFIX}_pv_capacity_factor
                 name: PV Capacity Factor
                 icon: mdi:percent
+              - entity: sensor.{PREFIX}_mppt_balance
+                name: MPPT Balance
+                icon: mdi:scale-balance
+              - entity: sensor.{PREFIX}_active_mppt_count
+                name: Active MPPTs
+                icon: mdi:counter
+              - entity: sensor.{PREFIX}_pv_generation_hours_today
+                name: PV Generation Hours Today
+                icon: mdi:clock-outline
 
       - title: Energy Flow
         cards:
@@ -134,12 +143,21 @@ views:
               - entity: sensor.{PREFIX}_pv_to_battery
                 name: PV to Battery
                 icon: mdi:battery-charging
+              - entity: sensor.{PREFIX}_pv_to_grid
+                name: PV to Grid
+                icon: mdi:transmission-tower-export
               - entity: sensor.{PREFIX}_battery_to_load
                 name: Battery to Load
                 icon: mdi:battery
+              - entity: sensor.{PREFIX}_battery_to_grid
+                name: Battery to Grid
+                icon: mdi:transmission-tower-export
               - entity: sensor.{PREFIX}_grid_to_load
                 name: Grid to Load
                 icon: mdi:transmission-tower
+              - entity: sensor.{PREFIX}_grid_to_battery
+                name: Grid to Battery
+                icon: mdi:battery-charging
               - entity: sensor.{PREFIX}_net_consumption
                 name: Net Consumption
                 icon: mdi:flash
@@ -166,8 +184,14 @@ views:
                 name: Total MPPT Power
                 icon: mdi:flash-circle
               - entity: sensor.{PREFIX}_mppt_power_deviation
-                name: MPPT Power Deviation
+                name: MPPT Deviation from Average
                 icon: mdi:chart-line-variant
+              - entity: sensor.{PREFIX}_mppt_balance
+                name: MPPT Balance
+                icon: mdi:scale-balance
+              - entity: sensor.{PREFIX}_active_mppt_count
+                name: Active MPPTs
+                icon: mdi:counter
 
       - title: PV Generation History
         cards:
@@ -209,15 +233,40 @@ views:
             hours_to_show: 24
             refresh_interval: 60
 
-          - type: history-graph
-            title: Self-Consumption & Autarky (24h)
+          - type: entities
+            title: Self-Consumption & Autarky (Current)
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_self_consumption_rate
+                name: Self-Consumption Rate
+                icon: mdi:home-lightning-bolt
+              - entity: sensor.{PREFIX}_autarky_rate
+                name: Autarky Rate
+                icon: mdi:power-plug-off
+
+          - type: entities
+            title: Self-Consumption & Autarky (Today)
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_self_consumption_of_today
+                name: Self-Consumption Today
+                icon: mdi:home-lightning-bolt
+              - entity: sensor.{PREFIX}_autarky_rate_today
+                name: Autarky Today
+                icon: mdi:power-plug-off
+
+          - type: statistics-graph
+            title: Self-Consumption & Autarky (30 days)
             entities:
               - entity: sensor.{PREFIX}_self_consumption_rate
                 name: Self-Consumption Rate
               - entity: sensor.{PREFIX}_autarky_rate
                 name: Autarky Rate
-            hours_to_show: 24
-            refresh_interval: 60
+            days_to_show: 30
+            chart_type: bar
+            period: day
+            stat_types:
+              - mean
 
   - title: Statistics
     path: statistics
@@ -259,3 +308,219 @@ views:
                 name: Phase C Power
             hours_to_show: 24
             refresh_interval: 60
+
+  - title: EMS Control
+    path: ems-control
+    icon: mdi:cog
+    type: sections
+    sections:
+      - title: Mode Settings
+        cards:
+          - type: entities
+            title: Energy Management
+            show_header_toggle: false
+            entities:
+              - entity: select.{PREFIX}_ems_mode_selection
+                name: EMS Mode
+                icon: mdi:state-machine
+              - entity: select.{PREFIX}_inverter_run_mode
+                name: Inverter Run Mode
+                icon: mdi:power
+              - entity: select.{PREFIX}_load_adjustment_mode_selection
+                name: Load Adjustment Mode
+                icon: mdi:clock-outline
+              - entity: select.{PREFIX}_load_adjustment_mode_on_off_selection
+                name: Load ON/OFF
+                icon: mdi:toggle-switch
+
+      - title: Battery Control
+        cards:
+          - type: entities
+            title: SoC & Backup
+            show_header_toggle: false
+            entities:
+              - entity: number.{PREFIX}_min_soc
+                name: Min SoC
+                icon: mdi:battery-arrow-down
+              - entity: number.{PREFIX}_max_soc
+                name: Max SoC
+                icon: mdi:battery-arrow-up
+              - entity: number.{PREFIX}_reserved_soc_for_backup
+                name: Reserved SoC for Backup
+                icon: mdi:battery-backup
+              - entity: select.{PREFIX}_backup_mode
+                name: Backup Mode
+                icon: mdi:backup-restore
+
+          - type: entities
+            title: Battery Power Limits
+            show_header_toggle: false
+            entities:
+              - entity: number.{PREFIX}_battery_max_charging_power
+                name: Max Charging Power
+                icon: mdi:battery-charging
+              - entity: number.{PREFIX}_battery_max_discharging_power
+                name: Max Discharging Power
+                icon: mdi:battery-charging-high
+
+          - type: entities
+            title: Forced Charge/Discharge
+            show_header_toggle: false
+            entities:
+              - entity: select.{PREFIX}_battery_forced_charge_discharge_cmd
+                name: Forced Cmd
+                icon: mdi:battery-sync
+              - entity: number.{PREFIX}_battery_forced_charge_discharge_power
+                name: Forced Power
+                icon: mdi:flash
+
+      - title: Export & Power Limit
+        cards:
+          - type: entities
+            title: Export Control
+            show_header_toggle: false
+            entities:
+              - entity: select.{PREFIX}_export_power_limit_mode
+                name: Export Limit Mode
+                icon: mdi:transmission-tower-export
+              - entity: number.{PREFIX}_export_power_limit
+                name: Export Power Limit
+                icon: mdi:gauge
+              - entity: number.{PREFIX}_export_power_limit_ratio
+                name: Export Limit Ratio %
+                icon: mdi:percent
+
+      - title: Advanced Controls
+        cards:
+          - type: entities
+            title: Power & PV Limitation
+            show_header_toggle: false
+            entities:
+              - entity: select.{PREFIX}_active_power_limitation
+                name: Active Power Limitation
+                icon: mdi:flash-off
+              - entity: number.{PREFIX}_active_power_limit_ratio
+                name: Active Power Limit Ratio %
+                icon: mdi:percent
+              - entity: select.{PREFIX}_pv_power_limitation
+                name: PV Power Limitation
+                icon: mdi:solar-power
+              - entity: select.{PREFIX}_forced_startup_under_low_soc_standby
+                name: Forced Startup (Low SoC)
+                icon: mdi:battery-alert
+              - entity: number.{PREFIX}_battery_charging_start_power
+                name: Charging Start Power
+                icon: mdi:battery-charging-50
+              - entity: number.{PREFIX}_battery_discharging_start_power
+                name: Discharging Start Power
+                icon: mdi:battery-discharging
+
+  - title: Status & Diagnostics
+    path: diagnostics
+    icon: mdi:information-outline
+    type: sections
+    sections:
+      - title: Device Identity
+        cards:
+          - type: entities
+            title: Device Information
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_inverter_serial
+                name: Serial Number
+                icon: mdi:identifier
+              - entity: sensor.{PREFIX}_sungrow_device_type_code
+                name: Device Model
+                icon: mdi:solar-power
+              - entity: sensor.{PREFIX}_nominal_output_power
+                name: Nominal Output Power
+                icon: mdi:gauge
+              - entity: sensor.{PREFIX}_output_type
+                name: Output Type
+                icon: mdi:transmission-tower
+
+      - title: Protocol & Certification
+        cards:
+          - type: entities
+            title: Protocol Version
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_protocol_version
+                name: Protocol Version
+                icon: mdi:file-document-outline
+              - entity: sensor.{PREFIX}_protocol_version_raw
+                name: Protocol Version Raw
+                icon: mdi:hexadecimal
+              - entity: sensor.{PREFIX}_certification_version_arm_software
+                name: ARM Certification
+                icon: mdi:certificate
+              - entity: sensor.{PREFIX}_certification_version_dsp_software
+                name: DSP Certification
+                icon: mdi:certificate
+
+      - title: Firmware Information
+        cards:
+          - type: entities
+            title: Firmware Versions
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_inverter_firmware_info
+                name: Inverter Firmware
+                icon: mdi:chip
+              - entity: sensor.{PREFIX}_communication_module_firmware_info
+                name: Communication Module
+                icon: mdi:chip
+              - entity: sensor.{PREFIX}_battery_firmware_info
+                name: Battery Firmware
+                icon: mdi:chip
+
+      - title: System Status
+        cards:
+          - type: entities
+            title: System State
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_system_state
+                name: System State
+                icon: mdi:flash
+              - entity: sensor.{PREFIX}_running_state
+                name: Running State
+                icon: mdi:state-machine
+              - entity: sensor.{PREFIX}_inverter_temperature
+                name: Inverter Temperature
+                icon: mdi:thermometer
+
+      - title: Master/Slave (Multi-Inverter)
+        cards:
+          - type: entities
+            title: Cascade Configuration
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_master_slave_mode
+                name: Master Slave Mode
+                icon: mdi:connection
+              - entity: sensor.{PREFIX}_master_slave_role
+                name: Master Slave Role
+                icon: mdi:connection
+              - entity: sensor.{PREFIX}_slave_count
+                name: Slave Count
+                icon: mdi:numeric
+
+      - title: Fault Indicators
+        cards:
+          - type: entities
+            title: Battery Alarms & Faults
+            show_header_toggle: false
+            entities:
+              - entity: sensor.{PREFIX}_battery_fault_raw
+                name: Battery Fault
+                icon: mdi:alert-circle
+              - entity: sensor.{PREFIX}_battery_alarm_raw
+                name: Battery Alarm
+                icon: mdi:alert
+              - entity: sensor.{PREFIX}_bms_alarm_raw
+                name: BMS Alarm
+                icon: mdi:alert
+              - entity: sensor.{PREFIX}_bms_fault_1_raw
+                name: BMS Fault 1
+                icon: mdi:alert-circle

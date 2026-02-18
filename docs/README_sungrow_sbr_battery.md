@@ -80,28 +80,28 @@ This document lists the Modbus registers for the Sungrow SBR/SBH battery templat
 
 | Name | Unique ID | Address | Input | Data | Unit | Scale | Condition |
 |---|---|---|---|---|---|---|---|
-| Battery 1 Voltage Spread | battery_voltage_spread |  |  |  | V |  |  |
-| Battery 1 Module 1 Deviation | module_1_deviation |  |  |  | V |  | modules >= 1 |
-| Battery 1 Module 2 Deviation | module_2_deviation |  |  |  | V |  | modules >= 2 |
-| Battery 1 Module 3 Deviation | module_3_deviation |  |  |  | V |  | modules >= 3 |
-| Battery 1 Module 4 Deviation | module_4_deviation |  |  |  | V |  | modules >= 4 |
-| Battery 1 Module 5 Deviation | module_5_deviation |  |  |  | V |  | modules >= 5 |
-| Battery 1 Module 6 Deviation | module_6_deviation |  |  |  | V |  | modules >= 6 |
-| Battery 1 Module 7 Deviation | module_7_deviation |  |  |  | V |  | modules >= 7 |
-| Battery 1 Module 8 Deviation | module_8_deviation |  |  |  | V |  | modules >= 8 |
-| Battery 1 Temperature Spread | battery_temperature_spread |  |  |  | °C |  |  |
-| Battery 1 Average Module Voltage | average_module_voltage |  |  |  | V |  |  |
-| Battery 1 Max Module Deviation | max_module_deviation |  |  |  | V |  |  |
-| Battery 1 Voltage Imbalance Percentage | voltage_imbalance_percentage |  |  |  | % |  |  |
-| Battery 1 Module 1 Cell Voltage Range | module_1_cell_voltage_range |  |  |  | V |  | modules >= 1 |
-| Battery 1 Module 2 Cell Voltage Range | module_2_cell_voltage_range |  |  |  | V |  | modules >= 2 |
-| Battery 1 Module 3 Cell Voltage Range | module_3_cell_voltage_range |  |  |  | V |  | modules >= 3 |
-| Battery 1 Module 4 Cell Voltage Range | module_4_cell_voltage_range |  |  |  | V |  | modules >= 4 |
-| Battery 1 Module 5 Cell Voltage Range | module_5_cell_voltage_range |  |  |  | V |  | modules >= 5 |
-| Battery 1 Module 6 Cell Voltage Range | module_6_cell_voltage_range |  |  |  | V |  | modules >= 6 |
-| Battery 1 Module 7 Cell Voltage Range | module_7_cell_voltage_range |  |  |  | V |  | modules >= 7 |
-| Battery 1 Module 8 Cell Voltage Range | module_8_cell_voltage_range |  |  |  | V |  | modules >= 8 |
-| Battery 1 Max Module Cell Voltage Range | max_module_cell_voltage_range |  |  |  | V |  |  |
+| Battery 1 Voltage Spread | battery_1_voltage_spread |  |  |  | V |  |  |
+| Battery 1 Module 1 Deviation | battery_1_module_1_deviation |  |  |  | V |  | modules >= 1 |
+| Battery 1 Module 2 Deviation | battery_1_module_2_deviation |  |  |  | V |  | modules >= 2 |
+| Battery 1 Module 3 Deviation | battery_1_module_3_deviation |  |  |  | V |  | modules >= 3 |
+| Battery 1 Module 4 Deviation | battery_1_module_4_deviation |  |  |  | V |  | modules >= 4 |
+| Battery 1 Module 5 Deviation | battery_1_module_5_deviation |  |  |  | V |  | modules >= 5 |
+| Battery 1 Module 6 Deviation | battery_1_module_6_deviation |  |  |  | V |  | modules >= 6 |
+| Battery 1 Module 7 Deviation | battery_1_module_7_deviation |  |  |  | V |  | modules >= 7 |
+| Battery 1 Module 8 Deviation | battery_1_module_8_deviation |  |  |  | V |  | modules >= 8 |
+| Battery 1 Temperature Spread | battery_1_temperature_spread |  |  |  | °C |  |  |
+| Battery 1 Average Module Voltage | battery_1_average_module_voltage |  |  |  | V |  |  |
+| Battery 1 Max Module Deviation | battery_1_max_module_deviation |  |  |  | V |  |  |
+| Battery 1 Voltage Imbalance Percentage | battery_1_voltage_imbalance_percentage |  |  |  | % |  |  |
+| Battery 1 Module 1 Cell Voltage Range | battery_1_module_1_cell_voltage_range |  |  |  | V |  | modules >= 1 |
+| Battery 1 Module 2 Cell Voltage Range | battery_1_module_2_cell_voltage_range |  |  |  | V |  | modules >= 2 |
+| Battery 1 Module 3 Cell Voltage Range | battery_1_module_3_cell_voltage_range |  |  |  | V |  | modules >= 3 |
+| Battery 1 Module 4 Cell Voltage Range | battery_1_module_4_cell_voltage_range |  |  |  | V |  | modules >= 4 |
+| Battery 1 Module 5 Cell Voltage Range | battery_1_module_5_cell_voltage_range |  |  |  | V |  | modules >= 5 |
+| Battery 1 Module 6 Cell Voltage Range | battery_1_module_6_cell_voltage_range |  |  |  | V |  | modules >= 6 |
+| Battery 1 Module 7 Cell Voltage Range | battery_1_module_7_cell_voltage_range |  |  |  | V |  | modules >= 7 |
+| Battery 1 Module 8 Cell Voltage Range | battery_1_module_8_cell_voltage_range |  |  |  | V |  | modules >= 8 |
+| Battery 1 Max Module Cell Voltage Range | battery_1_max_module_cell_voltage_range |  |  |  | V |  |  |
 | Battery 1 Max Voltage Cell Info | battery_1_max_voltage_cell_info |  |  |  |  |  |  |
 | Battery 1 Min Voltage Cell Info | battery_1_min_voltage_cell_info |  |  |  |  |  |  |
 | Battery 1 Max Temperature Module Info | battery_1_max_temperature_module_info |  |  |  |  |  |  |
