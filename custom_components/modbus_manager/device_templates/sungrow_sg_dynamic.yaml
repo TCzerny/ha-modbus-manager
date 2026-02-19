@@ -652,32 +652,46 @@ sensors:
     scan_interval: 5
     condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
-  # Following 2 registers are not in the documentation, but other projects are using them
-  - name: Export power raw
-    unique_id: export_power_raw
-    address: 5216 # reg 5217-5218
+  - name: Meter Phase A power
+    unique_id: meter_phase_a_power
+    address: 5084 # reg 5085-5086
     input_type: input
     data_type: int32
     swap: word
-    precision: 0
     unit_of_measurement: "W"
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_interval: 5
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
 
-  - name: Meter Power raw
-    unique_id: meter_power_raw
-    address: 5218 # reg 5219-5220
+  - name: Meter Phase B power
+    unique_id: meter_phase_a_power
+    address: 5086 # reg 5087-5088
     input_type: input
     data_type: int32
     swap: word
-    precision: 0
     unit_of_measurement: "W"
     device_class: "power"
     state_class: measurement
     scale: 1
-    scan_interval: 10
+    scan_interval: 5
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+
+  - name: Meter Phase C power
+    unique_id: meter_phase_a_power
+    address: 5088 # reg 5089-5090
+    input_type: input
+    data_type: int32
+    swap: word
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 5
+    condition: "selected_model in [SG5KTL-MT, SG6KTL-MT, SG8KTL-M, SG10KTL, SG10KTL-M, SG10KTL-MT, SG12KTL, SG12KTL-M, SG15KTL, SG15KTL-M, SG17KTL-M, SG20KTL, SG20KTL-M, SG30KTL, SG36KTL, SG40KTL, SG50KTL-M, SG60KTL-M, SG30KTL-M]"
+
+
 
   - name: "Load Power"
     unique_id: "load_power"
@@ -1177,6 +1191,34 @@ sensors:
       432: "PID resistance abnormal"
       433: "PID function abnormal"
       434: "PID overvoltage/overcurrent protection"
+
+
+  # Following 2 registers are not in the documentation, but other projects are using them
+  - name: Export power raw
+    unique_id: export_power_raw
+    address: 5216 # reg 5217-5218
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
+
+  - name: Meter Power raw
+    unique_id: meter_power_raw
+    address: 5218 # reg 5219-5220
+    input_type: input
+    data_type: int32
+    swap: word
+    precision: 0
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: measurement
+    scale: 1
+    scan_interval: 10
 
   # String Current sensors (7013-7044) - Important for diagnostics
   - name: String 1 current
@@ -2024,16 +2066,16 @@ calculated:
     availability: >-
       {{
       (not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
-       and states('sensor.{PREFIX}_meter_active_power_raw')|int != 0x7FFFFFFF)
+       and states('sensor.{PREFIX}_meter_active_power_raw')|int(0) != 0x7FFFFFFF)
       or (not is_state('sensor.{PREFIX}_power_meter_raw', 'unavailable')
-          and states('sensor.{PREFIX}_power_meter_raw')|int != 0x7FFFFFFF)
+          and states('sensor.{PREFIX}_power_meter_raw')|int(0) != 0x7FFFFFFF)
       }}
     state: >-
       {% if not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
-            and states('sensor.{PREFIX}_meter_active_power_raw')|int != 0x7FFFFFFF %}
+            and states('sensor.{PREFIX}_meter_active_power_raw')|int(0) != 0x7FFFFFFF %}
         {{ states('sensor.{PREFIX}_meter_active_power_raw') }}
       {% elif not is_state('sensor.{PREFIX}_power_meter_raw', 'unavailable')
-            and states('sensor.{PREFIX}_power_meter_raw')|int != 0x7FFFFFFF %}
+            and states('sensor.{PREFIX}_power_meter_raw')|int(0) != 0x7FFFFFFF %}
         {{ states('sensor.{PREFIX}_power_meter_raw') }}
       {% else %}
         0
