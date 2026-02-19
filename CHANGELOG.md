@@ -7,6 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.4] - 2026-02-19
+
+### 🐛 Fixed
+
+#### Template availability – unknown state handling
+- **SG template**: Meter Active Power calculated sensor – use `int(0)` in Jinja templates when state may be `unknown` to avoid `ValueError: int got invalid input 'unknown'`
+- **SHx template**: Meter Active Power, Meter Phase A/B/C Active Power, Meter Channel 2 Total/Phase A/B/C – same fix for 8 calculated sensors
+
+### ✨ Added
+
+#### Sungrow iHomeManager Template
+- **Protocol Number** (8001–8002): `data_type: string`, UTF8 per documentation (e.g. "AW0")
+- **Protocol Version**: Calculated sensor from raw U32 (8003–8004), formatted as Vx.y.z (e.g. V1.0.2)
+- **Protocol Version Raw**: New diagnostic sensor for raw register value
+
 ## [0.2.3] - 2026-02-18
 
 ### ✨ Added
@@ -29,7 +44,6 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### Sungrow SHx Template – Self-Consumption & Autarky
 - **Self-Consumption Rate (Today)** (`self_consumption_rate_today`) – Standard formula: (Direct + PV→Battery) / PV generation × 100
 - **Autarky Rate (Today)** (`autarky_rate_today`) – Standard formula: (Direct + Battery discharge) / Total consumption × 100
-- **Chart restructuring** – PV dashboards: Current (real-time) rates, Today (daily) rates, 30-day bar chart (Grafana-style)
 
 ### 🔧 Changed
 
@@ -49,11 +63,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - SBR battery dashboard examples updated to new entity IDs
 - **Note**: Existing entities keep old IDs until removed; new entities use new IDs after integration reload
 
-### 📚 Documentation
 
-- **README_sungrow_shx_dynamic.md** – Self-consumption/autarky formulas (Klarsolar standard), `self_consumption_rate_today`, `autarky_rate_today`
-- **README_sungrow_sbr_battery.md** – Updated unique_id table for calculated sensors
-- **Dashboard-Examples/README.md** – Self-consumption/autarky today entities, charts section
 
 ## [0.2.2] - 2026-02-13
 
