@@ -65,30 +65,24 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 
 ## 🔌 Supported Devices
 
-### ✅ Currently Supported
+### ✅ Supported
+- **[Sungrow SHx Series](docs/README_sungrow_shx_dynamic.md)** – All 36 SHx models, MPPT, strings, phases, battery, meters (DTSU666)
+- **[Sungrow SG Series](docs/README_sungrow_sg_dynamic.md)** – SG3.0RS–SG10RS, SG3.0RT–SG6.0RT
+- **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** – SBR096–SBR256
+- **[Solvis SC2/SC3](docs/README_solvis_sc3.md)** – Heating controller, temperature sensors, pump controls
+- **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** – EV charger, 3-phase charging
 
-#### Solar Inverters
-- **Sungrow SHx Series** - Complete template with dynamic configuration for all 36 SHx models
-  - Automatic filtering: MPPT (1-3), strings (0-4), phases, battery options
-  - Meter support: DTSU666, DTSU666-20 (dual-channel)
-  - Connection types: LAN and WINET with register filtering
-- **Sungrow SG Series** - Dynamic template with model selection (SG3.0RS–SG10RS, SG3.0RT–SG6.0RT)
-- **Sungrow iHomeManager EMS** - Energy management system template ⚠️ **BETA – needs testing**
+### ⚠️ Needs Testing
+*Based on protocol documentation, not verified on hardware.*
 
-#### Battery Systems
-- **Sungrow SBR / SBH Battery** - Dedicated battery template (SBR096–SBR256, SBH100–SBH400)
-  - ⚠️ **SBH needs testing** - Based on protocol documentation, not verified on hardware
-- **BYD Battery Box** - Template for HVS/HVM/HVL/LVS series ⚠️ **BETA – needs testing**
-
-#### Other Inverters ⚠️ **BETA – need testing**
-- **Fronius GEN24 Series** - SunSpec-capable dynamic template
-- **Growatt MIN/MOD/MAX Series** - MIN/MOD/MAX inverter template
-- **SMA Sunny Tripower/Boy Series** - SMA inverter template
-- **SolaX Inverter Series** - SolaX GEN2–GEN6 dynamic template
-
-#### Other Devices
-- **Solvis SC2/SC3** - Heating controller with temperature sensors and pump controls
-- **Compleo eBox Professional** - EV charger with 3-phase charging control and monitoring
+- **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** – EV charger (Modbus RTU via proxy)
+- **[Sungrow iHomeManager EMS](docs/README_iHomeManager.md)** – Energy management system
+- **[Sungrow SBH Battery](docs/README_sungrow_sbr_battery.md)** – SBH100–SBH400
+- **[BYD Battery Box](docs/README_byd_battery_box.md)** – HVS/HVM/HVL/LVS series
+- **[Fronius GEN24](docs/README_fronius_dynamic.md)** – SunSpec-capable
+- **[Growatt MIN/MOD/MAX](docs/README_growatt_min_mod_max_dynamic.md)** – Inverter template
+- **[SMA Sunny Tripower/Boy](docs/README_sma_dynamic.md)** – SMA inverter template
+- **[SolaX Inverter](docs/README_solax_dynamic.md)** – GEN2–GEN6 dynamic template
 
 ### 🔮 Future Support
 - **Kostal** (Piko, Plenticore), **Victron** (MultiPlus, Quattro)
@@ -182,6 +176,7 @@ https://github.com/TCzerny/ha-modbus-manager/wiki
 - **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** - SBR battery template
 - **[Solvis SC3](docs/README_solvis_sc3.md)** - Solvis SC2/SC3 template
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template
+- **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** - EV charger (Modbus RTU via proxy)
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** - BYD Battery-Box template (BETA)
 - **[Fronius GEN24 Dynamic](docs/README_fronius_dynamic.md)** - Fronius GEN24 template (BETA)
 - **[Growatt MIN/MOD/MAX Dynamic](docs/README_growatt_min_mod_max_dynamic.md)** - Growatt template (BETA)
