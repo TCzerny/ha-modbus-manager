@@ -20,8 +20,10 @@ This document lists the Modbus registers for the Solvis SC2/SC3 template: `solvi
 | Name | Unique ID | Address | Input | Data | Unit | Scale | Condition |
 |---|---|---|---|---|---|---|---|
 | Anzahl Heizkreise | anzahl_heizkreise | 2 | input | uint16 |  |  |  |
-| Version SC3 | version_sc3 | 32770 | input | uint16 |  |  |  |
-| Version NBG | version_nbg | 32771 | input | uint16 |  |  |  |
+| Version SC3 Raw | version_sc3_raw | 32770 | input | uint16 |  |  |  |
+| Version NBG Raw | version_nbg_raw | 32771 | input | uint16 |  |  |  |
+| Version SC3 | version_sc3 | (calculated from _raw) |  |  | e.g. 3.20.16 |  |  |
+| Version NBG | version_nbg | (calculated from _raw) |  |  | e.g. 3.00.00 |  |  |
 | Meldungen Anzahl | meldungen_anzahl | 33792 | input | uint16 |  |  |  |
 | Brennermodulation Modus | brennermodulation_modus | 3840 | input | uint16 |  |  |  |
 | Wärmepumpe Ladepumpe Modus | warmepumpe_ladepumpe_modus | 3845 | input | uint16 |  |  |  |

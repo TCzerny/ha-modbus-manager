@@ -197,10 +197,15 @@ class ModbusCoordinator(DataUpdateCoordinator):
             # 1. Group registers by scan_interval if not cached
             if not self._cached_registers_by_interval:
                 entities_dict = await self._collect_all_registers()
-                # Only use sensors and controls (they have addresses for Modbus reading)
-                all_registers = entities_dict.get("sensors", []) + entities_dict.get(
-                    "controls", []
-                )
+                # Include all entity types with addresses for Modbus reading
+                sensors = entities_dict.get("sensors", [])
+                controls = entities_dict.get("controls", [])
+                binary_sensors = entities_dict.get("binary_sensors", [])
+                # Register-based binary sensors (have address) must be read from Modbus
+                binary_sensors_with_address = [
+                    b for b in binary_sensors if b.get("address", 0) > 0
+                ]
+                all_registers = sensors + controls + binary_sensors_with_address
                 if all_registers:
                     # Group registers by their scan_interval
                     self._cached_registers_by_interval = (

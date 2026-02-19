@@ -1,7 +1,7 @@
 # Solvis SC3 Heating Control Template for Modbus Manager
-# BASED ON: https://github.com/LarsK1/hass_solvis_control
-# Supports Solvis SC2 and SC3 heating controllers via Modbus TCP
-# Register addresses from: https://raw.githubusercontent.com/LarsK1/hass_solvis_control/refs/heads/main/supported-entities.md
+# BASED ON: Official Solvis SC-3 Modbus Spezifikationen (TNF-SC-3 v1.0, Sept 2021)
+# Also: https://github.com/LarsK1/hass_solvis_control supported-entities.md
+# Register types per PDF: 3.3.1 Input Registers (FC 0x04), 3.3.2 Holding Registers (FC 0x03)
 
 name: "Solvis SC3 Heating Control"
 description: "Template for Solvis SC2/SC3 heating controllers. Supports temperature sensors (S1-S16), flow sensors (S17-S18), pump controls (A1-A9), and heating circuit management via Modbus TCP."
@@ -31,6 +31,7 @@ sensors:
   - name: "Anzahl Heizkreise"
     unique_id: "anzahl_heizkreise"
     address: 2
+    precision: 0
     input_type: "input"
     data_type: "uint16"
     scan_interval: 600
@@ -38,28 +39,31 @@ sensors:
     icon: "mdi:information"
     # Min: 1, Max: 3
 
-  - name: "Version SC3"
-    unique_id: "version_sc3"
+  - name: "Version SC3 Raw"
+    unique_id: "version_sc3_raw"
     address: 32770
     input_type: "input"
     data_type: "uint16"
     scan_interval: 600
     group: "diagnose"
     icon: "mdi:chip"
+    entity_category: "diagnostic"
 
-  - name: "Version NBG"
-    unique_id: "version_nbg"
+  - name: "Version NBG Raw"
+    unique_id: "version_nbg_raw"
     address: 32771
     input_type: "input"
     data_type: "uint16"
     scan_interval: 600
     group: "diagnose"
     icon: "mdi:chip"
+    entity_category: "diagnostic"
 
   # Diagnostic Sensors
   - name: "Meldungen Anzahl"
     unique_id: "meldungen_anzahl"
     address: 33792
+    precision: 0
     input_type: "input"
     data_type: "uint16"
     scan_interval: 60
@@ -411,11 +415,11 @@ sensors:
     group: "heating_temperatures"
     icon: "mdi:thermometer"
 
-  # Room Temperatures (available since v1.0.0)
+  # Room Temperatures (per PDF 3.3.2: Holding Registers 34304-34306)
   - name: "Raumtemperatur 1"
     unique_id: "raumtemperatur_1"
     address: 34304
-    input_type: "input"
+    input_type: "holding"
     data_type: "int16"
     scale: 0.1
     precision: 1
@@ -429,7 +433,7 @@ sensors:
   - name: "Raumtemperatur 2"
     unique_id: "raumtemperatur_2"
     address: 34305
-    input_type: "input"
+    input_type: "holding"
     data_type: "int16"
     scale: 0.1
     precision: 1
@@ -443,7 +447,7 @@ sensors:
   - name: "Raumtemperatur 3"
     unique_id: "raumtemperatur_3"
     address: 34306
-    input_type: "input"
+    input_type: "holding"
     data_type: "int16"
     scale: 0.1
     precision: 1
@@ -530,6 +534,7 @@ sensors:
   - name: "Digital Eingang Störungen"
     unique_id: "digital_eingang_stoerungen"
     address: 33045
+    precision: 0
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
@@ -867,11 +872,40 @@ controls:
 
 # Calculated Sensors
 calculated:
+  - name: "Version SC3"
+    unique_id: "version_sc3"
+    group: "diagnose"
+    icon: "mdi:chip"
+    entity_category: "diagnostic"
+    template: |
+      {% set v = states('sensor.{PREFIX}_version_sc3_raw') | int(0) %}
+      {% if v > 0 %}
+        {{ '%d.%02d.%02d' | format(v // 10000, (v // 100) % 100, v % 100) }}
+      {% else %}
+        unknown
+      {% endif %}
+    # Format: raw 32016 -> 3.20.16 (Firmware version in device info)
+
+  - name: "Version NBG"
+    unique_id: "version_nbg"
+    group: "diagnose"
+    icon: "mdi:chip"
+    entity_category: "diagnostic"
+    template: |
+      {% set v = states('sensor.{PREFIX}_version_nbg_raw') | int(0) %}
+      {% if v > 0 %}
+        {{ '%d.%02d.%02d' | format(v // 10000, (v // 100) % 100, v % 100) }}
+      {% else %}
+        unknown
+      {% endif %}
+    # Format: raw 30000 -> 3.00.00 (Hardware version in device info)
+
   - name: "Solarthermie Leistung"
     unique_id: "solarthermie_leistung"
     group: "heating_calculated"
     icon: "mdi:solar-power"
     unit_of_measurement: "kW"
+    precision: 1
     device_class: "power"
     state_class: "measurement"
     template: |
@@ -891,6 +925,7 @@ calculated:
     group: "heating_calculated"
     icon: "mdi:thermometer-lines"
     unit_of_measurement: "°C"
+    precision: 1
     device_class: "temperature"
     state_class: "measurement"
     template: |
@@ -909,6 +944,7 @@ calculated:
     group: "heating_calculated"
     icon: "mdi:thermometer-lines"
     unit_of_measurement: "°C"
+    precision: 1
     device_class: "temperature"
     state_class: "measurement"
     template: |
@@ -928,6 +964,7 @@ calculated:
     group: "heating_calculated"
     icon: "mdi:thermometer-lines"
     unit_of_measurement: "°C"
+    precision: 1
     device_class: "temperature"
     state_class: "measurement"
     template: |
@@ -947,6 +984,7 @@ calculated:
     group: "heating_calculated"
     icon: "mdi:radiator"
     unit_of_measurement: "kW"
+    precision: 1
     device_class: "power"
     state_class: "measurement"
     template: |
@@ -964,6 +1002,7 @@ calculated:
     group: "heating_calculated"
     icon: "mdi:radiator"
     unit_of_measurement: "kW"
+    precision: 1
     device_class: "power"
     state_class: "measurement"
     template: |
@@ -981,6 +1020,7 @@ calculated:
     group: "heating_calculated"
     icon: "mdi:gauge"
     unit_of_measurement: "%"
+    precision: 1
     device_class: None
     state_class: "measurement"
     template: |
@@ -1009,15 +1049,16 @@ binary_sensors:
     group: "diagnose"
     icon: "mdi:alert"
     device_class: "problem"
+    assume_off_when_unavailable: true
     # Value > 0 indicates error (0 = Aus/Off, >0 = Error)
 
   # Output Status Binary Sensors (A1-A14)
-  # These read directly from Holding Registers (read-only status)
-  # NOTE: A1-A14 are defined as Holding Registers but are read-only status indicators
+  # Per Solvis supported-entities: A1-A14 are in "Reading registers" (Input Registers, FC 4)
+  # Using input_type: "input" for correct Modbus function code
   - name: "Zirkulationspumpe (A1)"
     unique_id: "zirkulationspumpe_a1"
     address: 33280
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1028,7 +1069,7 @@ binary_sensors:
   - name: "Wärmepumpe Ladepumpe (A2)"
     unique_id: "warmepumpe_ladepumpe_a2"
     address: 33281
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1039,7 +1080,7 @@ binary_sensors:
   - name: "HKR1 Pumpe (A3)"
     unique_id: "hkr1_pumpe_a3"
     address: 33282
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1050,7 +1091,7 @@ binary_sensors:
   - name: "HKR2 Pumpe (A4)"
     unique_id: "hkr2_pumpe_a4"
     address: 33283
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1061,7 +1102,7 @@ binary_sensors:
   - name: "Ausgang A5"
     unique_id: "ausgang_a5"
     address: 33284
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1072,7 +1113,7 @@ binary_sensors:
   - name: "Ausgang A6"
     unique_id: "ausgang_a6"
     address: 33285
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1083,7 +1124,7 @@ binary_sensors:
   - name: "Ausgang A7"
     unique_id: "ausgang_a7"
     address: 33286
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1094,7 +1135,7 @@ binary_sensors:
   - name: "HKR1 Mischer Heizkreis auf (A8)"
     unique_id: "hkr1_mischer_heizkreis_auf_a8"
     address: 33287
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1105,7 +1146,7 @@ binary_sensors:
   - name: "HKR1 Mischer Heizkreis zu (A9)"
     unique_id: "hkr1_mischer_heizkreis_zu_a9"
     address: 33288
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1116,7 +1157,7 @@ binary_sensors:
   - name: "HKR2 Mischer Heizkreis auf (A10)"
     unique_id: "hkr2_mischer_heizkreis_auf_a10"
     address: 33289
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1127,7 +1168,7 @@ binary_sensors:
   - name: "HKR2 Mischer Heizkreis zu (A11)"
     unique_id: "hkr2_mischer_heizkreis_zu_a11"
     address: 33290
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1138,7 +1179,7 @@ binary_sensors:
   - name: "Brennerstatus (A12)"
     unique_id: "brennerstatus_a12"
     address: 33291
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1149,7 +1190,7 @@ binary_sensors:
   - name: "Wärmepumpe Heizstab Stufe 2 & 3 (A13)"
     unique_id: "warmepumpe_heizstab_stufe_2_3_a13"
     address: 33292
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
@@ -1160,7 +1201,7 @@ binary_sensors:
   - name: "Wärmepumpe Umschaltventil (A14)"
     unique_id: "warmepumpe_umschaltventil_a14"
     address: 33293
-    input_type: "holding"
+    input_type: "input"
     data_type: "uint16"
     scan_interval: 30
     group: "heating_status"
