@@ -5,7 +5,7 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.8
+version: 1.2.9
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -349,6 +349,8 @@ sensors:
     condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
 
   # Basic Inverter Data
+  # Power generation of active output (including PV power generation and battery discharge)
+  # How much AC has the Inverter generated today rom PV and Discharge today for consumption?
   - name: Daily PV generation & battery discharge
     unique_id: daily_pv_gen_battery_discharge
     address: 5002 # reg 5003
@@ -3192,7 +3194,7 @@ calculated:
     availability: >-
           {{
           not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable')
-          and states('sensor.{PREFIX}_meter_active_power_raw')|int != 0x7FFFFFFF
+          and states('sensor.{PREFIX}_meter_active_power_raw')|int(0) != 0x7FFFFFFF
           }}
     state: "{{ states('sensor.{PREFIX}_meter_active_power_raw') }}"
     unit_of_measurement: "W"
@@ -3208,7 +3210,7 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_phase_a_active_power_raw', 'unavailable')
-      and states('sensor.{PREFIX}_meter_phase_a_active_power_raw')|int != 0x7FFFFFFF
+      and states('sensor.{PREFIX}_meter_phase_a_active_power_raw')|int(0) != 0x7FFFFFFF
       }}
     state: >-
       {% set phase_a_power = states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | float(0) %}
@@ -3230,7 +3232,7 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_phase_b_active_power_raw', 'unavailable')
-      and states('sensor.{PREFIX}_meter_phase_b_active_power_raw')|int != 0x7FFFFFFF
+      and states('sensor.{PREFIX}_meter_phase_b_active_power_raw')|int(0) != 0x7FFFFFFF
       }}
     state: >-
       {% set phase_b_power = states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | float(0) %}
@@ -3252,7 +3254,7 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_phase_c_active_power_raw', 'unavailable')
-      and states('sensor.{PREFIX}_meter_phase_c_active_power_raw')|int != 0x7FFFFFFF
+      and states('sensor.{PREFIX}_meter_phase_c_active_power_raw')|int(0) != 0x7FFFFFFF
       }}
     state: >-
       {% set phase_c_power = states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | float(0) %}
@@ -3276,7 +3278,7 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_channel_2_total_active_power_raw', 'unavailable')
-      and states('sensor.{PREFIX}_meter_channel_2_total_active_power_raw')|int != 0x7FFFFFFF
+      and states('sensor.{PREFIX}_meter_channel_2_total_active_power_raw')|int(0) != 0x7FFFFFFF
       }}
     state: >-
       {% set channel_2_total_power = states('sensor.{PREFIX}_meter_channel_2_total_active_power_raw') | float(0) %}
@@ -3298,7 +3300,7 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw', 'unavailable')
-      and states('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw')|int != 0x7FFFFFFF
+      and states('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw')|int(0) != 0x7FFFFFFF
       }}
     state: >-
       {% set channel_2_phase_a_power = states('sensor.{PREFIX}_meter_channel_2_phase_a_active_power_raw') | float(0) %}
@@ -3320,7 +3322,7 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw', 'unavailable')
-      and states('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw')|int != 0x7FFFFFFF
+      and states('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw')|int(0) != 0x7FFFFFFF
       }}
     state: >-
       {% set channel_2_phase_b_power = states('sensor.{PREFIX}_meter_channel_2_phase_b_active_power_raw') | float(0) %}
@@ -3342,7 +3344,7 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw', 'unavailable')
-      and states('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw')|int != 0x7FFFFFFF
+      and states('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw')|int(0) != 0x7FFFFFFF
       }}
     state: >-
       {% set channel_2_phase_c_power = states('sensor.{PREFIX}_meter_channel_2_phase_c_active_power_raw') | float(0) %}
@@ -3827,9 +3829,8 @@ calculated:
     group: "PV_analysis"
     # Percentage of load that is supplied by PV/Battery (self-sufficiency)
 
-  # Self-Consumption Rate (Today) – standard formula per Klarsolar/GitHub Pages
-  # Eigenverbrauchsquote = (Direct + PV→Battery) / PV Generation × 100
-  # "Welcher Anteil des erzeugten Solarstroms wird direkt verbraucht oder gespeichert?"
+  # Self-Consumption Rate (Today)
+  # Self-Consumption Rate = (Direct + PV→Battery) / PV Generation × 100
   - name: "Self-Consumption Rate (Today)"
     unique_id: "self_consumption_rate_today"
     type: "sensor"
