@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.2.5] - 2026-02-18
+
+### ✨ Added
+
+#### Heidelberg Energy Control Wallbox Template
+- New template for Amperfied Heidelberg Energy Control EV charger (Modbus RTU)
+- Supports Energy Control, Energy Control PLUS 11kW, Energy Control Climate
+- Sensors: status (IEC 61851), current/voltage phases, charging power, energy counters, PCB temperature, lock state
+- Controls: max current (0–16 A), failsafe current, remote lock, standby, watchdog timeout
+- Dynamic config: connection_type (RTU over TCP), valid_models, firmware_version (1.0.7, 1.0.8)
+- Step-by-step setup guide with Modbus Proxy configuration (docs/README_heidelberg_energy_control.md)
+
 ## [0.2.4] - 2026-02-19
 
 ### 🐛 Fixed
