@@ -1,0 +1,459 @@
+# Heidelberg Energy Control Wallbox - Amperfied
+# Based on EC_ModBus_register_table_20210222_LW.pdf
+# Cross-checked with evcc: https://github.com/evcc-io/evcc/blob/master/charger/heidelberg-ec.go
+# Supports Modbus RTU via RS485 - use "RTU over TCP" when connecting via modbus-proxy/gateway
+
+name: "Heidelberg Energy Control"
+description: "Amperfied Heidelberg Energy Control Wallbox EV Charger (Modbus RTU)"
+manufacturer: "Amperfied"
+model: "Heidelberg Energy Control"
+type: "ev_charger"
+version: 1.0.0
+firmware_version: "1.0.8"
+default_prefix: "HEC"
+default_slave_id: 1
+
+# Note: Wallbox speaks Modbus RTU only. RTU over TCP via proxy (e.g. modbus-proxy, Combox)
+# is the preferred and currently supported connection method. Serial is not supported yet.
+
+dynamic_config:
+  connection_type:
+    description: "Connection type"
+    options: ["RTU over TCP"]
+    default: "RTU over TCP"
+
+  valid_models:
+    "Energy Control": {max_current: 16, phases: 3}
+    "Energy Control PLUS 11kW": {max_current: 16, phases: 3}
+    "Energy Control Climate": {max_current: 16, phases: 3}
+
+  firmware_version:
+    description: "Modbus register layout version (check reg 4)"
+    options: ["1.0.7", "1.0.8"]
+    default: "1.0.8"
+
+# Charging States per documentation:
+# A1/A2: No vehicle plugged | B1/B2: Vehicle plugged, no request | C1/C2: Charging
+# 2=A1, 3=A2, 4=B1, 5=B2, 6=C1, 7=C2, 8=derating, 9=E, 10=F, 11=ERR
+
+sensors:
+  # Device information (Input Registers)
+  - name: "Modbus Register Version"
+    unique_id: "modbus_register_version"
+    address: 4
+    input_type: input
+    data_type: uint16
+    scan_interval: 3600
+    group: "EV_device_info"
+    entity_category: "diagnostic"
+    icon: "mdi:information"
+
+  - name: "Status"
+    unique_id: "status"
+    address: 5
+    input_type: input
+    data_type: uint16
+    scan_interval: 10
+    group: "EV_charging_status"
+    icon: "mdi:ev-station"
+    map:
+      2: "A1"
+      3: "A2"
+      4: "B1"
+      5: "B2"
+      6: "C1"
+      7: "C2"
+      8: "Derating"
+      9: "E"
+      10: "F"
+      11: "Error"
+
+  # Current measurements (scale 0.1 A)
+  - name: "Current Phase 1"
+    unique_id: "current_phase_1"
+    address: 6
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    scan_interval: 10
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Current Phase 2"
+    unique_id: "current_phase_2"
+    address: 7
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    scan_interval: 10
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Current Phase 3"
+    unique_id: "current_phase_3"
+    address: 8
+    input_type: input
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    scan_interval: 10
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
+
+  # PCB Temperature (int16, 0.1 °C)
+  - name: "PCB Temperature"
+    unique_id: "pcb_temperature"
+    address: 9
+    input_type: input
+    data_type: int16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "°C"
+    device_class: "temperature"
+    state_class: "measurement"
+    scan_interval: 60
+    group: "EV_device_info"
+    entity_category: "diagnostic"
+    icon: "mdi:thermometer"
+
+  # Voltage (direct V)
+  - name: "Voltage Phase 1"
+    unique_id: "voltage_phase_1"
+    address: 10
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    scan_interval: 10
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Voltage Phase 2"
+    unique_id: "voltage_phase_2"
+    address: 11
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    scan_interval: 10
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Voltage Phase 3"
+    unique_id: "voltage_phase_3"
+    address: 12
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    scan_interval: 10
+    group: "EV_voltage_measurement"
+    icon: "mdi:lightning-bolt"
+
+  # External lock state (0=locked, 1=unlocked)
+  - name: "External Lock State"
+    unique_id: "external_lock_state"
+    address: 13
+    input_type: input
+    data_type: uint16
+    scan_interval: 30
+    group: "EV_device_info"
+    entity_category: "diagnostic"
+    icon: "mdi:lock"
+    map:
+      0: "Locked"
+      1: "Unlocked"
+
+  # Power in VA (1000 = 1 kVA)
+  - name: "Charging Power"
+    unique_id: "charging_power"
+    address: 14
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "VA"
+    device_class: "power"
+    state_class: "measurement"
+    scan_interval: 10
+    group: "EV_charging_power"
+    icon: "mdi:ev-station"
+
+  # Energy since PowerOn (reg 15-16, uint32, VAh)
+  - name: "Energy since PowerOn"
+    unique_id: "energy_since_poweron"
+    address: 15
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "VAh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 60
+    group: "EV_meter_reading"
+    icon: "mdi:meter-electric"
+
+  # Energy since Installation (reg 17-18, V1.0.7+)
+  - name: "Energy since Installation"
+    unique_id: "energy_since_installation"
+    address: 17
+    input_type: input
+    data_type: uint32
+    swap: word
+    unit_of_measurement: "VAh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    scan_interval: 60
+    group: "EV_meter_reading"
+    icon: "mdi:meter-electric"
+    entity_category: "diagnostic"
+    firmware_min_version: "1.0.7"
+
+  # Hardware config (read-only)
+  - name: "HW Max Current"
+    unique_id: "hw_max_current"
+    address: 100
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "A"
+    device_class: "current"
+    scan_interval: 3600
+    group: "EV_device_info"
+    entity_category: "diagnostic"
+    icon: "mdi:gauge"
+
+  - name: "HW Min Current"
+    unique_id: "hw_min_current"
+    address: 101
+    input_type: input
+    data_type: uint16
+    unit_of_measurement: "A"
+    device_class: "current"
+    scan_interval: 3600
+    group: "EV_device_info"
+    entity_category: "diagnostic"
+    icon: "mdi:gauge"
+
+  # Hardware variant, Application Software (V1.0.3, V1.0.5)
+  - name: "Hardware Variant"
+    unique_id: "hardware_variant"
+    address: 200
+    input_type: input
+    data_type: uint16
+    scan_interval: 3600
+    group: "EV_device_info"
+    entity_category: "diagnostic"
+    icon: "mdi:chip"
+
+  - name: "Application Software Version"
+    unique_id: "application_software_version"
+    address: 203
+    input_type: input
+    data_type: uint16
+    scan_interval: 3600
+    group: "EV_device_info"
+    entity_category: "diagnostic"
+    icon: "mdi:chip"
+
+  # Holding registers - read current values (for display)
+  - name: "Actual Max Current"
+    unique_id: "actual_max_current"
+    address: 261
+    input_type: holding
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    scan_interval: 30
+    group: "EV_max_current_actual"
+    icon: "mdi:gauge"
+
+  - name: "FailSafe Current"
+    unique_id: "failsafe_current_raw"
+    address: 262
+    input_type: holding
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    scan_interval: 60
+    group: "EV_max_current_actual"
+    entity_category: "config"
+    icon: "mdi:shield-alert"
+
+# Controls (Holding Registers)
+controls:
+  # Maximal current command [0; 60-160] = 0 (off) or 6-16 A (reg 261)
+  - type: "number"
+    name: "Max Current"
+    unique_id: "max_current"
+    address: 261
+    input_type: holding
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    min_value: 0
+    max_value: 16
+    max_value_from_register: {register_unique_id: "{PREFIX}_hw_max_current", fallback: 16}
+    step: 0.1
+    mode: "slider"
+    scan_interval: 30
+    group: "EV_max_current_setting"
+
+  # FailSafe current (0=error state, 60-160=6-16A) (reg 262)
+  - type: "number"
+    name: "FailSafe Current"
+    unique_id: "failsafe_current"
+    address: 262
+    input_type: holding
+    data_type: uint16
+    precision: 1
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    min_value: 0
+    max_value: 16
+    max_value_from_register: {register_unique_id: "{PREFIX}_hw_max_current", fallback: 16}
+    step: 0.1
+    scan_interval: 60
+    group: "EV_max_current_setting"
+    entity_category: "config"
+
+  # Remote lock 0=locked, 1=unlocked (reg 259, only if external lock unlocked)
+  - type: "switch"
+    name: "Remote Lock"
+    unique_id: "remote_lock"
+    address: 259
+    input_type: holding
+    data_type: uint16
+    scan_interval: 30
+    group: "EV_lock_control"
+    switch:
+      on: 1    # unlocked
+      off: 0   # locked
+
+  # Standby: 0=enable, 4=disable (reg 258)
+  - type: "select"
+    name: "Standby Function"
+    unique_id: "standby_function"
+    address: 258
+    input_type: holding
+    data_type: uint16
+    scan_interval: 60
+    group: "EV_power_control"
+    options:
+      0: "Enable (Power Saving)"
+      4: "Disable"
+
+  # Watchdog timeout (0=Off, ms) (reg 257)
+  - type: "number"
+    name: "Watchdog Timeout"
+    unique_id: "watchdog_timeout_set"
+    address: 257
+    input_type: holding
+    data_type: uint16
+    unit_of_measurement: "ms"
+    device_class: "duration"
+    min_value: 0
+    max_value: 65535
+    step: 1000
+    scan_interval: 60
+    group: "EV_device_config"
+    entity_category: "config"
+
+# Calculated sensors
+calculated:
+  - name: "Total Current"
+    unique_id: "total_current"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') }}
+    state: >-
+      {{ (states('sensor.{PREFIX}_current_phase_1') | float(0) +
+          states('sensor.{PREFIX}_current_phase_2') | float(0) +
+          states('sensor.{PREFIX}_current_phase_3') | float(0)) | round(2) }}
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_measurement"
+    precision: 2
+    icon: "mdi:lightning-bolt"
+
+  - name: "Average Voltage"
+    unique_id: "average_voltage"
+    type: "sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') }}
+    state: >-
+      {{ ((states('sensor.{PREFIX}_voltage_phase_1') | float(0) +
+          states('sensor.{PREFIX}_voltage_phase_2') | float(0) +
+          states('sensor.{PREFIX}_voltage_phase_3') | float(0)) / 3) | round(1) }}
+    unit_of_measurement: "V"
+    device_class: "voltage"
+    state_class: "measurement"
+    group: "EV_voltage_measurement"
+    precision: 1
+    icon: "mdi:lightning-bolt"
+
+# Binary sensors
+binary_sensors:
+  - name: "Charging Active"
+    unique_id: "charging_active"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_status', 'unavailable') }}
+    state: >-
+      {{ states('sensor.{PREFIX}_status') in ['C1', 'C2'] }}
+    device_class: "power"
+    group: "EV_charging_status"
+    icon: "mdi:ev-station"
+
+  - name: "Vehicle Connected"
+    unique_id: "vehicle_connected"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_status', 'unavailable') }}
+    state: >-
+      {{ states('sensor.{PREFIX}_status') in ['B1', 'B2', 'C1', 'C2'] }}
+    device_class: "connectivity"
+    group: "EV_charging_status"
+    icon: "mdi:car-electric"
+
+  - name: "Remote Unlocked"
+    unique_id: "remote_unlocked"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_external_lock_state', 'unavailable') }}
+    state: >-
+      {{ states('sensor.{PREFIX}_external_lock_state') == 'Unlocked' }}
+    device_class: "lock"
+    group: "EV_charging_status"
+    icon: "mdi:lock-open"
+
+  # Charging enabled when max current > 0 (evcc Enable API)
+  - name: "Charging Enabled"
+    unique_id: "charging_enabled"
+    type: "binary_sensor"
+    availability: >-
+      {{ not is_state('sensor.{PREFIX}_actual_max_current', 'unavailable') }}
+    state: >-
+      {{ states('sensor.{PREFIX}_actual_max_current') | float(0) > 0 }}
+    device_class: "power"
+    group: "EV_charging_status"
+    icon: "mdi:ev-station"
