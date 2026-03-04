@@ -1,6 +1,5 @@
 # Heidelberg Energy Control Wallbox - Amperfied
 # Based on EC_ModBus_register_table_20210222_LW.pdf
-# Cross-checked with evcc: https://github.com/evcc-io/evcc/blob/master/charger/heidelberg-ec.go
 # Supports Modbus RTU via RS485 - use "RTU over TCP" when connecting via modbus-proxy/gateway
 
 name: "Heidelberg Energy Control"
@@ -13,14 +12,10 @@ firmware_version: "1.0.8"
 default_prefix: "HEC"
 default_slave_id: 1
 
-# Note: Wallbox speaks Modbus RTU only. RTU over TCP via proxy (e.g. modbus-proxy, Combox)
+# Note: Wallbox speaks Modbus RTU only. RTU over TCP via proxy (e.g. modbus-proxy)
 # is the preferred and currently supported connection method. Serial is not supported yet.
 
 dynamic_config:
-  connection_type:
-    description: "Connection type"
-    options: ["RTU over TCP"]
-    default: "RTU over TCP"
 
   valid_models:
     "Energy Control": {max_current: 16, phases: 3}
@@ -362,20 +357,20 @@ controls:
       4: "Disable"
 
   # Watchdog timeout (0=Off, ms) (reg 257)
-  - type: "number"
-    name: "Watchdog Timeout"
-    unique_id: "watchdog_timeout_set"
-    address: 257
-    input_type: holding
-    data_type: uint16
-    unit_of_measurement: "ms"
-    device_class: "duration"
-    min_value: 0
-    max_value: 65535
-    step: 1000
-    scan_interval: 60
-    group: "EV_device_config"
-    entity_category: "config"
+  #- type: "number"
+  #  name: "Watchdog Timeout"
+  #  unique_id: "watchdog_timeout_set"
+  #  address: 257
+  #  input_type: holding
+  #  data_type: uint16
+  #  unit_of_measurement: "ms"
+  #  device_class: "duration"
+  #  min_value: 0
+  #  max_value: 65535
+  #  step: 1000
+  #  scan_interval: 60
+  #  group: "EV_device_config"
+  #  entity_category: "config"
 
 # Calculated sensors
 calculated:

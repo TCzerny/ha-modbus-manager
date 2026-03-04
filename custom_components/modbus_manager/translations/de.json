@@ -4,7 +4,7 @@
         "step": {
             "user": {
                 "title": "Modbus Manager Konfiguration",
-                "description": "Konfiguriere eine neue Modbus Manager Verbindung",
+                "description": "Konfiguriere eine neue Modbus Manager Verbindung\n\n{config_flow_note}",
                 "data": {
                     "template": "Geräte-Template",
                     "name": "Name",
@@ -23,7 +23,7 @@
             },
             "connection": {
                 "title": "Verbindungsparameter",
-                "description": "Konfiguriere die Modbus-Verbindung für Template: {template_name}\n\n{config_flow_note}",
+                "description": "Konfiguriere die Modbus-Verbindung für Template: {template_name}",
                 "data": {
                     "prefix": "Geräte-Präfix",
                     "host": "IP-Adresse des Modbus-Geräts",
@@ -117,7 +117,7 @@
             },
             "battery_detection": {
                 "title": "Batterie verfügbar?",
-                "description": "Ist eine Batterie an Ihrem {template_name} Wechselrichter angeschlossen?\n\nWechselrichter: {inverter_prefix} ({inverter_host})",
+                "description": "Ist eine Batterie an Ihrem {template_name} Wechselrichter angeschlossen?\n\nWechselrichter: {inverter_prefix} ({inverter_host})\n\n{config_flow_note}",
                 "data": {
                     "battery_available": "Batterie verfügbar"
                 }

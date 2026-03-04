@@ -4,7 +4,7 @@
         "step": {
             "user": {
                 "title": "Modbus Manager Configuration",
-                "description": "Set up a new Modbus Manager connection",
+                "description": "Set up a new Modbus Manager connection\n\n{config_flow_note}",
                 "data": {
                     "template": "Device Template",
                     "name": "Name",
@@ -23,7 +23,7 @@
             },
             "connection": {
                 "title": "Connection Parameters",
-                "description": "Configure Modbus connection for template: {template_name}\n\n{config_flow_note}",
+                "description": "Configure Modbus connection for template: {template_name}",
                 "data": {
                     "prefix": "Device Prefix",
                     "host": "IP Address of Modbus Device",
@@ -97,7 +97,7 @@
             },
             "battery_detection": {
                 "title": "Battery Available?",
-                "description": "Is a battery connected to your {template_name} inverter?\n\nInverter: {inverter_prefix} ({inverter_host})",
+                "description": "Is a battery connected to your {template_name} inverter?\n\nInverter: {inverter_prefix} ({inverter_host})\n\n{config_flow_note}",
                 "data": {
                     "battery_available": "Battery Available"
                 }

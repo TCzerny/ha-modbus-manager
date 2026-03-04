@@ -12,7 +12,7 @@ The **Sungrow AC011E Wallbox Template** provides integration for Sungrow EV wall
 
 ## 🔌 Connection
 
-The wallbox is connected to the inverter via **RS485**. Modbus Manager connects to the inverter (Modbus TCP via WiNet-S or gateway). To address the wallbox on the inverter’s RS485 bus, configure the wallbox **slave ID** (default **3** – verify in the iSolarCloud app).
+The wallbox is connected to the inverter via **RS485**. Modbus Manager connects to the inverter (Modbus TCP via WiNet-S or LAN). To address the wallbox on the inverter’s RS485 bus, configure the wallbox **slave ID** (default **3** – verify in the iSolarCloud app).
 
 ## ⚙️ Configuration
 
@@ -88,8 +88,3 @@ Add as a Modbus Manager device with:
 | Entity | Description |
 |--------|-------------|
 | Charging Active | True when status is Charging |
-
-## 📚 References
-
-- [Sungrow-Wallbox-Modbus-HomeAssistant](https://github.com/Louisbertelsmann/Sungrow-Wallbox-Modbus-HomeAssistant)
-- [modbus_wallbox.yaml](https://raw.githubusercontent.com/Louisbertelsmann/Sungrow-Wallbox-Modbus-HomeAssistant/refs/heads/main/modbus_wallbox.yaml)
