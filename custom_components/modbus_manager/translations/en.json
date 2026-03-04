@@ -138,6 +138,27 @@
                     "stop_bits": "Stop Bits",
                     "parity": "Parity"
                 }
+            },
+            "reconfigure": {
+                "title": "Reconfigure Hub",
+                "description": "Update hub communication settings",
+                "data": {
+                    "prefix": "Device Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Select Model",
+                    "phases": "Number of Phases",
+                    "mppt_count": "Number of MPPT Trackers",
+                    "string_count": "Number of Strings",
+                    "modules": "Number of Modules",
+                    "firmware_version": "Firmware Version",
+                    "connection_type": "Connection Type",
+                    "meter_type": "Meter Type",
+                    "battery_config": "Battery Configuration",
+                    "battery_slave_id": "Battery Slave ID",
+                    "timeout": "Timeout (seconds)",
+                    "delay": "Delay after Connection (seconds)",
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)"
+                }
             }
         },
         "error": {
@@ -152,6 +173,8 @@
         "abort": {
             "no_device_definitions": "No device definitions found. Please make sure at least one YAML file exists in the device_definitions directory.",
             "already_configured": "Device is already configured",
+            "invalid_config": "Invalid configuration. {error}",
+            "no_available_devices_for_subentry": "All devices already have a subentry.",
             "template_not_found": "Template {template_name} not found.",
             "no_registers": "Template {template_name} has no registers defined.",
             "update_error": "Error updating template: {error}",
@@ -165,22 +188,12 @@
     "options": {
         "step": {
             "init": {
-                "title": "Device Options",
-                "description": "Template: {template_name} (Version {template_version})\nLast Updated: {last_updated}\n\nCurrent Entities: {current_sensors} sensors, {current_calculated} calculated, {current_controls} controls",
+                "title": "Hub Options",
+                "description": "Update hub communication settings.",
                 "data": {
                     "timeout": "Timeout (seconds)",
                     "delay": "Delay after Connection (seconds)",
-                    "message_wait_milliseconds": "Wait between Requests (milliseconds)",
-                    "phases": "Number of Phases (1 or 3)",
-                    "mppt_count": "Number of MPPT Trackers",
-                    "selected_model": "Select Model",
-                    "battery_config": "Battery Configuration",
-                    "connection_type": "Connection Type",
-                    "firmware_version": "Firmware Version",
-                    "dual_channel_meter": "Dual-Channel Meter Enabled",
-                    "update_template": "Reload Template (even without version change)",
-                    "auto_detect_firmware": "Auto-detect firmware version",
-                    "configure_battery": "Configure Battery Settings"
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)"
                 }
             },
             "update_template": {
@@ -204,6 +217,44 @@
                     "battery_selection": "Battery Selection"
                 }
             }
+        }
+    },
+    "config_subentries": {
+        "step": {
+            "user": {
+                "title": "Add Device Subentry",
+                "description": "Add a new device to this hub.",
+                "data": {
+                    "template": "Device Template",
+                    "prefix": "Device Prefix",
+                    "slave_id": "Slave ID"
+                }
+            },
+            "reconfigure": {
+                "title": "Reconfigure Device",
+                "description": "Edit device settings for: {device}",
+                "data": {
+                    "prefix": "Device Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Select Model",
+                    "phases": "Number of Phases",
+                    "mppt_count": "Number of MPPT Trackers",
+                    "string_count": "Number of Strings",
+                    "modules": "Number of Modules",
+                    "firmware_version": "Firmware Version",
+                    "connection_type": "Connection Type",
+                    "meter_type": "Meter Type",
+                    "battery_config": "Battery Configuration",
+                    "battery_slave_id": "Battery Slave ID"
+                }
+            }
+        },
+        "abort": {
+            "reconfigure_successful": "Device reconfigured successfully.",
+            "already_configured": "No additional device subentry can be created.",
+            "invalid_config": "Invalid configuration. {error}",
+            "no_available_devices_for_subentry": "All devices already have a subentry.",
+            "config_error": "Configuration error."
         }
     },
     "device": {

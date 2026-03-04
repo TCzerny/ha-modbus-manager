@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import json
 import re
 import struct
 from datetime import timedelta
@@ -114,6 +115,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
         self._cached_entities = None
         self._cached_registers_by_interval = {}  # Register grouped by scan_interval
         self._cache_initialized = False
+        self._cache_signature: str | None = None
+        self._logged_dynamic_config_sources: set[str] = set()
 
         # Track when each interval group was last updated
         self._last_update_time = {}
@@ -150,6 +153,38 @@ class ModbusCoordinator(DataUpdateCoordinator):
         self._cached_registers_by_interval = {}
         self._last_update_time = {}
         self._cache_initialized = False
+        self._cache_signature = None
+        self._logged_dynamic_config_sources = set()
+
+    def _build_cache_signature(self) -> str:
+        """Build a lightweight signature for config that affects entity composition."""
+        devices = self.entry.data.get("devices", [])
+        signature_payload = {
+            "devices": devices if isinstance(devices, list) else [],
+            "selected_model": self.entry.data.get("selected_model"),
+            "connection_type": self.entry.data.get("connection_type"),
+            "meter_type": self.entry.data.get("meter_type"),
+            "battery_config": self.entry.data.get("battery_config"),
+            "firmware_version": self.entry.data.get("firmware_version"),
+            "phases": self.entry.data.get("phases"),
+            "mppt_count": self.entry.data.get("mppt_count"),
+            "string_count": self.entry.data.get("string_count"),
+            "modules": self.entry.data.get("modules"),
+        }
+        return json.dumps(signature_payload, sort_keys=True, default=str)
+
+    def _resolve_device_or_entry_value(
+        self,
+        device: Dict[str, Any],
+        key: str,
+        default: Any = None,
+    ) -> tuple[Any, str]:
+        """Resolve value with priority: device -> entry fallback -> default."""
+        if key in device:
+            return device.get(key), "device"
+        if key in self.entry.data:
+            return self.entry.data.get(key), "entry"
+        return default, "default"
 
     def mark_as_unloading(self):
         """Mark coordinator as unloading to stop further updates."""
@@ -348,6 +383,18 @@ class ModbusCoordinator(DataUpdateCoordinator):
         }
         """
         try:
+            current_signature = self._build_cache_signature()
+            if (
+                self._cache_initialized
+                and self._cache_signature is not None
+                and self._cache_signature != current_signature
+            ):
+                _LOGGER.debug(
+                    "Config signature changed for %s, invalidating entity cache",
+                    self.entry.entry_id,
+                )
+                self.invalidate_cache()
+
             # Use cached entities if already initialized (massive performance improvement!)
             if self._cache_initialized and self._cached_entities is not None:
                 total_entities = (
@@ -387,6 +434,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
             # Cache the results
             self._cached_entities = entities
             self._cache_initialized = True
+            self._cache_signature = current_signature
             total_entities = (
                 len(entities.get("sensors", []))
                 + len(entities.get("controls", []))
@@ -498,6 +546,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 # This automatically includes ALL fields defined in the template (e.g., dual_channel_meter)
                 template_dynamic_config = template.get("dynamic_config", {})
                 dynamic_config = {}
+                dynamic_config_source = {}
 
                 # 1. Load all available field names from template's dynamic_config section
                 for field_name in template_dynamic_config.keys():
@@ -510,31 +559,43 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     ]:
                         continue
 
-                    # 2. Check device config first (most specific)
+                    # Resolve per-device first, then legacy entry fallback, then template default.
                     if field_name in device:
                         dynamic_config[field_name] = device[field_name]
-                    # 3. Check entry.data for backward compatibility
+                        dynamic_config_source[field_name] = "device"
                     elif field_name in self.entry.data:
                         dynamic_config[field_name] = self.entry.data.get(field_name)
-                    # 4. Use default from template if available
+                        dynamic_config_source[field_name] = "entry"
                     elif isinstance(template_dynamic_config[field_name], dict):
                         default_value = template_dynamic_config[field_name].get(
                             "default"
                         )
                         if default_value is not None:
                             dynamic_config[field_name] = default_value
+                            dynamic_config_source[field_name] = "default"
 
                 # Add model_config values (from valid_models)
                 dynamic_config.update(model_config)
+                for key in model_config.keys():
+                    dynamic_config_source[key] = "model"
                 if selected_model:
                     dynamic_config["selected_model"] = selected_model
+                    dynamic_config_source["selected_model"] = (
+                        "device"
+                        if "selected_model" in device
+                        else "entry"
+                        if selected_model == self.entry.data.get("selected_model")
+                        else "model"
+                    )
 
                 # Add explicitly handled fields that might not be in template's dynamic_config
                 for key in ["battery_config", "connection_type", "firmware_version"]:
-                    if key in device:
-                        dynamic_config[key] = device[key]
-                    elif key in self.entry.data:
-                        dynamic_config[key] = self.entry.data.get(key)
+                    value, source = self._resolve_device_or_entry_value(
+                        device, key, None
+                    )
+                    if value is not None:
+                        dynamic_config[key] = value
+                        dynamic_config_source[key] = source
 
                 # Calculate battery_enabled from battery_config for condition filtering
                 battery_config = dynamic_config.get("battery_config", "none")
@@ -542,11 +603,13 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 if battery_config == "none" and has_sbr_battery:
                     battery_config = "sbr_battery"
                     dynamic_config["battery_config"] = "sbr_battery"
+                    dynamic_config_source["battery_config"] = "derived_sbr_detect"
                     _LOGGER.debug(
                         "Auto-detected SBR Battery - setting battery_enabled=True for device %s",
                         template_name,
                     )
                 dynamic_config["battery_enabled"] = battery_config != "none"
+                dynamic_config_source["battery_enabled"] = "derived"
 
                 _LOGGER.debug(
                     "Built dynamic_config for %s: %s",
@@ -558,11 +621,32 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     },
                 )
 
+                # Log config source resolution once per device per cache lifecycle.
+                device_log_id = device.get("device_entry_id") or (
+                    f"{prefix}_{slave_id}_{template_name}"
+                )
+                if device_log_id not in self._logged_dynamic_config_sources:
+                    _LOGGER.debug(
+                        "Dynamic config source map for %s: %s",
+                        device_log_id,
+                        {
+                            key: dynamic_config_source.get(key, "unknown")
+                            for key in sorted(dynamic_config.keys())
+                        },
+                    )
+                    self._logged_dynamic_config_sources.add(device_log_id)
+
                 # Extract registers from template
                 registers = template.get("sensors", [])
                 controls = template.get("controls", [])
                 calculated = template.get("calculated", [])
                 binary_sensors = template.get("binary_sensors", [])
+                original_counts = {
+                    "sensors": len(registers),
+                    "controls": len(controls),
+                    "calculated": len(calculated),
+                    "binary_sensors": len(binary_sensors),
+                }
 
                 # Apply firmware version filtering if specified (firmware_min_version parameter)
                 firmware_version = device.get("firmware_version")
@@ -575,6 +659,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     binary_sensors = filter_by_firmware_version(
                         binary_sensors, firmware_version
                     )
+                firmware_counts = {
+                    "sensors": len(registers),
+                    "controls": len(controls),
+                    "calculated": len(calculated),
+                    "binary_sensors": len(binary_sensors),
+                }
 
                 # Apply generic model-based filtering (phases, mppt_count)
                 if model_config:
@@ -589,6 +679,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     binary_sensors = self._filter_by_model_config(
                         binary_sensors, model_config
                     )
+                model_counts = {
+                    "sensors": len(registers),
+                    "controls": len(controls),
+                    "calculated": len(calculated),
+                    "binary_sensors": len(binary_sensors),
+                }
 
                 # Apply condition-based filtering (e.g., dual_channel_meter == true)
                 # Filter using dynamic_config (automatically includes all template fields)
@@ -597,6 +693,31 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 calculated = self._filter_by_conditions(calculated, dynamic_config)
                 binary_sensors = self._filter_by_conditions(
                     binary_sensors, dynamic_config
+                )
+                condition_counts = {
+                    "sensors": len(registers),
+                    "controls": len(controls),
+                    "calculated": len(calculated),
+                    "binary_sensors": len(binary_sensors),
+                }
+
+                _LOGGER.debug(
+                    (
+                        "Dynamic filtering summary for %s/%s (prefix=%s, slave=%s): "
+                        "template=%s -> firmware=%s -> model=%s -> conditions=%s "
+                        "(connection_type=%s, meter_type=%s, battery_config=%s)"
+                    ),
+                    template_name,
+                    device_type,
+                    prefix,
+                    slave_id,
+                    original_counts,
+                    firmware_counts,
+                    model_counts,
+                    condition_counts,
+                    dynamic_config.get("connection_type"),
+                    dynamic_config.get("meter_type"),
+                    dynamic_config.get("battery_config"),
                 )
 
                 # Calculate SunSpec addresses if template has SunSpec enabled
@@ -686,6 +807,16 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 hub_config = self.entry.data.get("hub", {})
                 host = hub_config.get("host") or self.entry.data.get("host", "unknown")
                 port = hub_config.get("port") or self.entry.data.get("port", 502)
+                device_entry_id = device.get("device_entry_id")
+                config_subentry_id = None
+                if device_entry_id:
+                    for subentry in self.entry.subentries.values():
+                        if (
+                            subentry.subentry_type == "device"
+                            and subentry.unique_id == device_entry_id
+                        ):
+                            config_subentry_id = subentry.subentry_id
+                            break
 
                 # Get firmware version from device config (fallback to template default)
                 device_firmware_version = firmware_version or template.get(
@@ -709,6 +840,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["type"] = "sensor"
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
+                    register["config_subentry_id"] = config_subentry_id
                     # Only add if it has a valid address (for Modbus reading)
                     if (
                         register.get("address") is not None
@@ -720,6 +852,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 for register in processed_controls:
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
+                    register["config_subentry_id"] = config_subentry_id
                     # Type field should come from template and never be changed
                     if "type" not in register:
                         _LOGGER.error(
@@ -926,6 +1059,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
                     register["device_prefix"] = prefix
+                    register["config_subentry_id"] = config_subentry_id
                     # Replace placeholders in calculated entity templates (state, availability)
                     for field in ["state", "availability", "template"]:
                         if field in register and isinstance(register[field], str):
@@ -940,6 +1074,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
                     register["device_prefix"] = prefix
+                    register["config_subentry_id"] = config_subentry_id
                     # Replace placeholders in binary sensor templates (state, availability)
                     for field in ["state", "availability", "template"]:
                         if field in register and isinstance(register[field], str):

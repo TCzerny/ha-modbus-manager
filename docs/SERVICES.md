@@ -125,62 +125,16 @@ data:
 
 ---
 
-### 4. `modbus_manager.remove_device`
+### 4. Device removal via subentry delete
 
-**Description:** Remove a device from a Modbus Manager hub without deleting the entire hub. Useful for removing test entries or devices that no longer respond (e.g. wallbox not connected).
+**Description:** Per-device removal is now handled directly in Home Assistant UI by deleting the device subentry.
 
-**Service Call:**
-```yaml
-service: modbus_manager.remove_device
-data:
-  entry_id: "config_entry_id"  # Required
-  prefix: "WB"                 # Optional: remove by device prefix
-  slave_id: 3                  # Optional: remove by Modbus slave ID
-  template: "sungrow_ac011e_wallbox"  # Optional: remove by template name
-```
+**How to use:**
+- Open the Modbus Manager entry
+- Select the device subentry
+- Use delete/remove in the subentry menu
 
-**Parameters:**
-- `entry_id` (required): Config entry ID of the hub.
-
-**How to find `entry_id` in the UI:**
-- **Template:** Developer Tools → Template, run: `{{ config_entry_id('sensor.sg_grid_power') }}` (use any entity from your hub, e.g. SG or SBR)
-- **Diagnostics:** 3-dots menu on hub → Download diagnostics → filename is `{entry_id}.json`
-- `prefix` (optional): Remove device by prefix (e.g. `WB` for wallbox).
-- `slave_id` (optional): Remove device by Modbus slave ID (1–247).
-- `template` (optional): Remove device by template name (e.g. `sungrow_ac011e_wallbox`).
-
-At least one of `prefix`, `slave_id`, or `template` must be provided.
-
-**Response:**
-- Removes the device from the hub's config
-- Removes the device from the device registry
-- Reloads the integration so the hub initializes without the removed device
-
-**When to use:**
-- Remove a test device that was added but doesn't exist
-- Remove a wallbox/device that's disconnected and causes initialization errors
-- Clean up a hub without losing other devices (inverter, battery, etc.)
-
-**Example:**
-```yaml
-# Remove wallbox by prefix
-service: modbus_manager.remove_device
-data:
-  entry_id: "abc123def456789"
-  prefix: "WB"
-
-# Remove by slave ID
-service: modbus_manager.remove_device
-data:
-  entry_id: "abc123def456789"
-  slave_id: 3
-
-# Remove by template name
-service: modbus_manager.remove_device
-data:
-  entry_id: "abc123def456789"
-  template: "sungrow_ac011e_wallbox"
-```
+This updates the underlying `devices[]` data and the removed device does not return after restart.
 
 ---
 
@@ -192,6 +146,7 @@ The following services have been removed as they were duplicates, unnecessary, o
 - **`modbus_manager.get_performance`** - Removed (use `performance_monitor` instead)
 - **`modbus_manager.reset_performance`** - Removed (use `performance_reset` instead)
 - **`modbus_manager.register_optimize`** - Removed (register optimization is automatic)
+- **`modbus_manager.remove_device`** - Removed (use subentry delete in UI)
 
 ---
 

@@ -37,34 +37,3 @@ reload_templates:
       required: false
       selector:
         text:
-
-remove_device:
-  name: "Remove Device"
-  description: "Remove a device from a Modbus Manager hub (e.g. test entries or devices that no longer respond)"
-  fields:
-    entry_id:
-      name: "Config Entry ID"
-      description: "Config entry ID of the hub. Find via: Developer Tools > Template, run {{ config_entry_id('sensor.sg_grid_power') }} (use any entity from the hub)"
-      required: true
-      selector:
-        text:
-    prefix:
-      name: "Device Prefix"
-      description: "Remove device by prefix (e.g. WB for wallbox)"
-      required: false
-      selector:
-        text:
-    slave_id:
-      name: "Slave ID"
-      description: "Remove device by Modbus slave ID"
-      required: false
-      selector:
-        number:
-          min: 1
-          max: 247
-    template:
-      name: "Template Name"
-      description: "Remove device by template name (e.g. sungrow_ac011e_wallbox)"
-      required: false
-      selector:
-        text:

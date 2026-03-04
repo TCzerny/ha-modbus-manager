@@ -145,6 +145,27 @@
                 "data": {
                     "battery_slave_id": "Batterie Slave ID (Standard: 200)"
                 }
+            },
+            "reconfigure": {
+                "title": "Hub neu konfigurieren",
+                "description": "Kommunikationseinstellungen des Hubs aktualisieren",
+                "data": {
+                    "prefix": "Geräte-Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Modell auswählen",
+                    "phases": "Anzahl Phasen",
+                    "mppt_count": "Anzahl MPPT-Tracker",
+                    "string_count": "Anzahl Strings",
+                    "modules": "Anzahl Module",
+                    "firmware_version": "Firmware-Version",
+                    "connection_type": "Verbindungstyp",
+                    "meter_type": "Zählertyp",
+                    "battery_config": "Batterie-Konfiguration",
+                    "battery_slave_id": "Batterie Slave ID",
+                    "timeout": "Timeout in Sekunden",
+                    "delay": "Verzögerung nach Verbindung (Sekunden)",
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)"
+                }
             }
         },
         "error": {
@@ -159,6 +180,8 @@
         "abort": {
             "no_device_definitions": "Es wurden keine Gerätedefinitionen gefunden. Bitte stellen Sie sicher, dass mindestens eine YAML-Datei im device_definitions Verzeichnis existiert.",
             "already_configured": "Gerät ist bereits konfiguriert",
+            "invalid_config": "Ungültige Konfiguration. {error}",
+            "no_available_devices_for_subentry": "Alle Geräte haben bereits ein Subentry.",
             "template_not_found": "Template {template_name} nicht gefunden.",
             "no_registers": "Template {template_name} hat keine Register definiert.",
             "update_error": "Fehler beim Aktualisieren des Templates: {error}",
@@ -172,24 +195,12 @@
     "options": {
         "step": {
             "init": {
-                "title": "Geräteoptionen",
-                "description": "Template: {template_name} (Version {template_version})\nLetzte Aktualisierung: {last_updated}\n\nAktuelle Entitäten: {current_sensors} Sensoren, {current_calculated} berechnete, {current_controls} Controls",
+                "title": "Hub-Optionen",
+                "description": "Kommunikationseinstellungen des Hubs aktualisieren.",
                 "data": {
                     "timeout": "Timeout in Sekunden",
                     "delay": "Verzögerung nach Verbindung (Sekunden)",
-                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
-                    "phases": "Anzahl Phasen (1 oder 3)",
-                    "mppt_count": "Anzahl MPPT-Tracker",
-                    "string_count": "Anzahl Strings",
-                    "selected_model": "Modell auswählen",
-                    "battery_config": "Batterie-Konfiguration",
-                    "connection_type": "Verbindungstyp",
-                    "firmware_version": "Firmware-Version",
-                    "dual_channel_meter": "Dual-Channel Zähler aktiviert",
-                    "update_template": "Template neu laden (auch ohne Versions-Änderung)",
-                    "allow_battery_car_charging": "Batterie-zu-Auto-Ladung erlauben",
-                    "auto_detect_firmware": "Firmware-Version automatisch erkennen",
-                    "configure_battery": "Configure Battery Settings"
+                    "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)"
                 }
             },
             "update_template": {
@@ -213,6 +224,44 @@
                     "battery_selection": "Battery Selection"
                 }
             }
+        }
+    },
+    "config_subentries": {
+        "step": {
+            "user": {
+                "title": "Geräte-Subentry hinzufügen",
+                "description": "Füge diesem Hub ein neues Gerät hinzu.",
+                "data": {
+                    "template": "Geräte-Template",
+                    "prefix": "Geräte-Prefix",
+                    "slave_id": "Slave ID"
+                }
+            },
+            "reconfigure": {
+                "title": "Gerät neu konfigurieren",
+                "description": "Geräteeinstellungen bearbeiten für: {device}",
+                "data": {
+                    "prefix": "Geräte-Prefix",
+                    "slave_id": "Slave ID",
+                    "selected_model": "Modell auswählen",
+                    "phases": "Anzahl Phasen",
+                    "mppt_count": "Anzahl MPPT-Tracker",
+                    "string_count": "Anzahl Strings",
+                    "modules": "Anzahl Module",
+                    "firmware_version": "Firmware-Version",
+                    "connection_type": "Verbindungstyp",
+                    "meter_type": "Zählertyp",
+                    "battery_config": "Batterie-Konfiguration",
+                    "battery_slave_id": "Batterie Slave ID"
+                }
+            }
+        },
+        "abort": {
+            "reconfigure_successful": "Gerät erfolgreich neu konfiguriert.",
+            "already_configured": "Es kann kein zusätzliches Geräte-Subentry erstellt werden.",
+            "invalid_config": "Ungültige Konfiguration. {error}",
+            "no_available_devices_for_subentry": "Alle Geräte haben bereits ein Subentry.",
+            "config_error": "Konfigurationsfehler."
         }
     },
     "device": {

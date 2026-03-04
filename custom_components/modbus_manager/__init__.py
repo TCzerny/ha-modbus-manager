@@ -3,11 +3,12 @@
 import asyncio
 import os
 from datetime import datetime
+from types import MappingProxyType
 from typing import Any
 
 import yaml
 from homeassistant.components.modbus import ModbusHub
-from homeassistant.config_entries import ConfigEntry
+from homeassistant.config_entries import ConfigEntry, ConfigSubentry
 from homeassistant.const import CONF_HOST, CONF_PORT
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import device_registry as dr
@@ -21,6 +22,352 @@ from .register_optimizer import RegisterOptimizer
 from .template_loader import get_template_by_name, set_hass_instance
 
 _LOGGER = ModbusManagerLogger(__name__)
+
+
+def _build_device_entry_id(device: dict[str, Any]) -> str:
+    """Build stable logical device id."""
+    prefix = str(device.get("prefix", "device")).strip() or "device"
+    slave_id = str(device.get("slave_id", 1)).strip() or "1"
+    template = str(device.get("template", "template")).strip() or "template"
+    return f"{prefix}_{slave_id}_{template}"
+
+
+def _normalize_device_record(device: dict[str, Any]) -> dict[str, Any]:
+    """Normalize device shape for subentry sync."""
+    normalized = dict(device)
+    if not normalized.get("type"):
+        normalized["type"] = "inverter"
+    normalized["device_entry_id"] = normalized.get(
+        "device_entry_id", _build_device_entry_id(normalized)
+    )
+    return normalized
+
+
+async def _sync_device_subentries(hass: HomeAssistant, entry: ConfigEntry) -> None:
+    """Sync config subentries from entry.data['devices'].
+
+    Keeps true HA subentries aligned with the current devices list.
+    """
+    devices = entry.data.get("devices", [])
+    if not isinstance(devices, list):
+        return
+
+    normalized_devices = [
+        _normalize_device_record(device)
+        for device in devices
+        if isinstance(device, dict)
+    ]
+    existing_device_subentries = {
+        subentry.subentry_id: subentry
+        for subentry in entry.subentries.values()
+        if subentry.subentry_type == "device"
+    }
+    existing_by_unique_id = {
+        subentry.unique_id: subentry
+        for subentry in existing_device_subentries.values()
+        if subentry.unique_id
+    }
+
+    # Mark setup as initialized once we have at least one persisted device subentry.
+    subentries_initialized = bool(entry.data.get("device_subentries_initialized"))
+    if existing_by_unique_id and not subentries_initialized:
+        subentries_initialized = True
+
+    new_data = dict(entry.data)
+    data_changed = False
+
+    # After initialization, treat subentries as source of truth for device existence.
+    # If a user deletes a subentry in HA UI, prune the matching device record from devices[]
+    # so it doesn't come back on next restart.
+    if subentries_initialized:
+        existing_ids = set(existing_by_unique_id.keys())
+        filtered_devices = [
+            device
+            for device in normalized_devices
+            if device.get("device_entry_id") in existing_ids
+        ]
+        if len(filtered_devices) != len(normalized_devices):
+            _LOGGER.info(
+                "Pruned %d device(s) removed via subentry delete for entry %s",
+                len(normalized_devices) - len(filtered_devices),
+                entry.entry_id,
+            )
+            normalized_devices = filtered_devices
+            new_data["devices"] = normalized_devices
+            data_changed = True
+
+    wanted_ids = {device.get("device_entry_id") for device in normalized_devices}
+
+    for device in normalized_devices:
+        device_id = device.get("device_entry_id")
+        if not device_id:
+            continue
+
+        title = (
+            f"{device.get('prefix', 'unknown')} | "
+            f"slave {device.get('slave_id', '?')} | "
+            f"{device.get('template', 'unknown')}"
+        )
+        data = {
+            "device_entry_id": device_id,
+            "type": device.get("type", "inverter"),
+            "template": device.get("template"),
+            "prefix": device.get("prefix"),
+            "slave_id": device.get("slave_id"),
+            "selected_model": device.get("selected_model"),
+            "firmware_version": device.get("firmware_version"),
+            "connection_type": device.get("connection_type"),
+            "meter_type": device.get("meter_type"),
+        }
+
+        existing_subentry = existing_by_unique_id.get(device_id)
+        if existing_subentry:
+            hass.config_entries.async_update_subentry(
+                entry=entry,
+                subentry=existing_subentry,
+                title=title,
+                data=data,
+                unique_id=device_id,
+            )
+        elif not subentries_initialized:
+            # Bootstrap only once. After initialization, missing subentries mean
+            # the corresponding device was intentionally deleted.
+            hass.config_entries.async_add_subentry(
+                entry=entry,
+                subentry=ConfigSubentry(
+                    data=MappingProxyType(data),
+                    subentry_type="device",
+                    title=title,
+                    unique_id=device_id,
+                ),
+            )
+
+    # Remove stale device subentries no longer present in devices[]
+    for subentry in existing_device_subentries.values():
+        if subentry.unique_id and subentry.unique_id not in wanted_ids:
+            hass.config_entries.async_remove_subentry(
+                entry=entry, subentry_id=subentry.subentry_id
+            )
+
+    if not entry.data.get("device_subentries_initialized"):
+        new_data["device_subentries_initialized"] = True
+        data_changed = True
+
+    if data_changed:
+        hass.config_entries.async_update_entry(entry, data=new_data)
+
+
+async def _relink_entities_to_device_subentries(
+    hass: HomeAssistant, entry: ConfigEntry
+) -> None:
+    """Assign existing entities to matching device subentries by prefix.
+
+    This migrates previously created entities (without subentry link) so they no
+    longer appear under "devices not assigned to a subentry".
+    """
+    try:
+        entity_registry = er.async_get(hass)
+        devices = entry.data.get("devices", [])
+        if not isinstance(devices, list):
+            return
+
+        # Build mapping from prefix -> subentry_id using device_entry_id(unique_id)
+        prefix_to_subentry_id: dict[str, str] = {}
+        for device in devices:
+            if not isinstance(device, dict):
+                continue
+            normalized = _normalize_device_record(device)
+            device_entry_id = normalized.get("device_entry_id")
+            prefix = str(normalized.get("prefix", "")).strip().lower()
+            if not device_entry_id or not prefix:
+                continue
+            for subentry in entry.subentries.values():
+                if (
+                    subentry.subentry_type == "device"
+                    and subentry.unique_id == device_entry_id
+                ):
+                    prefix_to_subentry_id[prefix] = subentry.subentry_id
+                    break
+
+        if not prefix_to_subentry_id:
+            return
+
+        updated = 0
+        for reg_entry in list(entity_registry.entities.values()):
+            if reg_entry.config_entry_id != entry.entry_id:
+                continue
+            unique_id = reg_entry.unique_id or ""
+            if "_" not in unique_id:
+                continue
+            entity_prefix = unique_id.split("_", 1)[0].strip().lower()
+            target_subentry_id = prefix_to_subentry_id.get(entity_prefix)
+            if not target_subentry_id:
+                continue
+            if reg_entry.config_subentry_id == target_subentry_id:
+                continue
+            entity_registry.async_update_entity(
+                reg_entry.entity_id, config_subentry_id=target_subentry_id
+            )
+            updated += 1
+
+        if updated:
+            _LOGGER.info(
+                "Assigned %d existing entities to device subentries for entry %s",
+                updated,
+                entry.entry_id,
+            )
+    except Exception as e:
+        _LOGGER.warning("Could not relink entities to subentries: %s", str(e))
+
+
+async def _relink_devices_to_subentries(
+    hass: HomeAssistant, entry: ConfigEntry
+) -> None:
+    """Relink device registry entries from legacy (None) to concrete subentries."""
+    try:
+        device_registry = dr.async_get(hass)
+        devices = entry.data.get("devices", [])
+        if not isinstance(devices, list):
+            return
+
+        hub_config = entry.data.get("hub", {})
+        host = hub_config.get("host") or entry.data.get("host", "unknown")
+        port = hub_config.get("port") or entry.data.get("port", 502)
+
+        moved = 0
+        for device in devices:
+            if not isinstance(device, dict):
+                continue
+            normalized = _normalize_device_record(device)
+            device_entry_id = normalized.get("device_entry_id")
+            slave_id = normalized.get("slave_id", 1)
+            if not device_entry_id:
+                continue
+
+            target_subentry_id = None
+            for subentry in entry.subentries.values():
+                if (
+                    subentry.subentry_type == "device"
+                    and subentry.unique_id == device_entry_id
+                ):
+                    target_subentry_id = subentry.subentry_id
+                    break
+            if not target_subentry_id:
+                continue
+
+            identifier = f"modbus_manager_{host}_{port}_slave_{slave_id}"
+            device_entry = device_registry.async_get_device(
+                identifiers={(DOMAIN, identifier)}
+            )
+            if not device_entry:
+                continue
+
+            # Ensure device is linked to the concrete subentry.
+            device_registry.async_update_device(
+                device_entry.id,
+                add_config_entry_id=entry.entry_id,
+                add_config_subentry_id=target_subentry_id,
+            )
+            # Remove legacy unassigned link for this entry to avoid duplicate UI groups.
+            device_registry.async_update_device(
+                device_entry.id,
+                remove_config_entry_id=entry.entry_id,
+                remove_config_subentry_id=None,
+            )
+            moved += 1
+
+        if moved:
+            _LOGGER.info(
+                "Relinked %d device registry entries to concrete subentries for %s",
+                moved,
+                entry.entry_id,
+            )
+    except Exception as e:
+        _LOGGER.warning("Could not relink device registry entries: %s", str(e))
+
+
+async def _cleanup_stale_registry_entities(
+    hass: HomeAssistant, entry: ConfigEntry, coordinator: ModbusCoordinator
+) -> None:
+    """Remove stale entities no longer present in current coordinator entity set."""
+    try:
+        entity_registry = er.async_get(hass)
+        managed_domains = {
+            "sensor",
+            "number",
+            "select",
+            "switch",
+            "button",
+            "text",
+            "binary_sensor",
+        }
+
+        entities_dict = await coordinator._collect_all_registers()
+        expected_unique_ids = {
+            entity.get("unique_id")
+            for category in ["sensors", "controls", "calculated", "binary_sensors"]
+            for entity in entities_dict.get(category, [])
+            if entity.get("unique_id")
+        }
+        normalized_expected = {
+            str(unique_id).strip().lower()
+            for unique_id in expected_unique_ids
+            if unique_id
+        }
+
+        if not normalized_expected:
+            return
+
+        def _matches_expected(registry_unique_id: str) -> bool:
+            normalized_registry = str(registry_unique_id).strip().lower()
+            if not normalized_registry:
+                return False
+            return normalized_registry in normalized_expected
+
+        removed = 0
+        for reg_entry in list(entity_registry.entities.values()):
+            if reg_entry.config_entry_id != entry.entry_id:
+                continue
+            domain = reg_entry.entity_id.split(".", 1)[0]
+            if domain not in managed_domains:
+                continue
+            unique_id = reg_entry.unique_id or ""
+            if _matches_expected(unique_id):
+                continue
+            entity_registry.async_remove(reg_entry.entity_id)
+            removed += 1
+
+        if removed:
+            _LOGGER.info(
+                "Removed %d stale registry entities for entry %s after dynamic filtering",
+                removed,
+                entry.entry_id,
+            )
+    except Exception as e:
+        _LOGGER.warning("Could not cleanup stale registry entities: %s", str(e))
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Migrate a config entry to the latest version.
+
+    Home Assistant calls this function during setup when entry.version is older.
+    """
+    try:
+        from .config_flow import ModbusManagerConfigFlow
+
+        flow = ModbusManagerConfigFlow()
+        _LOGGER.info(
+            "Running integration migration handler for entry %s (version %d -> %d)",
+            entry.entry_id,
+            entry.version,
+            flow.VERSION,
+        )
+        return await flow.async_migrate_entry(hass, entry)
+    except Exception as e:
+        _LOGGER.error(
+            "Integration migration failed for entry %s: %s", entry.entry_id, str(e)
+        )
+        return False
 
 
 async def async_setup(hass: HomeAssistant, config: dict[str, Any]) -> bool:
@@ -121,6 +468,9 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
                 "Coordinator initial refresh failed (continuing offline): %s", str(e)
             )
 
+        # Keep registry consistent with current dynamic filtering output.
+        await _cleanup_stale_registry_entities(hass, entry, coordinator)
+
         # Load platforms for coordinator-based entities
         try:
             platform_task = asyncio.create_task(
@@ -209,19 +559,25 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         # Fallback migration check (Home Assistant should call migration automatically,
         # but this ensures migration happens even if automatic migration fails)
-        if entry.version < 2 or not entry.data.get("devices"):
-            _LOGGER.info(
-                "Config entry needs migration from version %d to 2 (fallback migration)",
-                entry.version,
-            )
-            from .config_flow import ModbusManagerConfigFlow
+        from .config_flow import ModbusManagerConfigFlow
 
-            flow = ModbusManagerConfigFlow()
+        flow = ModbusManagerConfigFlow()
+        if entry.version < flow.VERSION or not entry.data.get("devices"):
+            _LOGGER.info(
+                "Config entry needs migration from version %d to %d (fallback migration)",
+                entry.version,
+                flow.VERSION,
+            )
             migration_result = await flow.async_migrate_entry(hass, entry)
             if not migration_result:
                 _LOGGER.error("Migration failed for entry %s", entry.entry_id)
                 return False
             _LOGGER.info("Fallback migration completed successfully")
+
+        # Keep true config subentries in sync with current devices[] records.
+        await _sync_device_subentries(hass, entry)
+        await _relink_devices_to_subentries(hass, entry)
+        await _relink_entities_to_device_subentries(hass, entry)
 
         # Always use coordinator mode
         return await _setup_coordinator_entry(hass, entry)
@@ -588,99 +944,6 @@ async def async_setup_services(hass: HomeAssistant) -> None:
 
     # register_optimize service removed - register optimization is automatic and handled by the coordinator
 
-    async def remove_device_service(call):
-        """Remove a device from a Modbus Manager hub.
-
-        Use this to remove test entries or devices that no longer respond
-        (e.g. wallbox not connected) without deleting the entire hub.
-        """
-        entry_id = call.data.get("entry_id")
-        prefix = call.data.get("prefix")
-        slave_id = call.data.get("slave_id")
-        template = call.data.get("template")
-
-        if not entry_id:
-            _LOGGER.error("remove_device service: entry_id is required")
-            return
-
-        if not any([prefix, slave_id is not None, template]):
-            _LOGGER.error(
-                "remove_device service: at least one of prefix, slave_id, or template is required"
-            )
-            return
-
-        config_entry = None
-        for entry in hass.config_entries.async_entries(DOMAIN):
-            if entry.entry_id == entry_id:
-                config_entry = entry
-                break
-
-        if not config_entry:
-            _LOGGER.error("remove_device service: config entry %s not found", entry_id)
-            return
-
-        devices = list(config_entry.data.get("devices", []))
-        if not devices:
-            _LOGGER.warning(
-                "remove_device service: hub %s has no devices array", entry_id
-            )
-            return
-
-        def device_matches(device: dict) -> bool:
-            if prefix and device.get("prefix", "").lower() != str(prefix).lower():
-                return False
-            if slave_id is not None and device.get("slave_id") != slave_id:
-                return False
-            if template and device.get("template") != template:
-                return False
-            return True
-
-        to_remove = [d for d in devices if device_matches(d)]
-        if not to_remove:
-            _LOGGER.warning(
-                "remove_device service: no matching device found (prefix=%s, slave_id=%s, template=%s)",
-                prefix,
-                slave_id,
-                template,
-            )
-            return
-
-        new_devices = [d for d in devices if not device_matches(d)]
-
-        hub_config = config_entry.data.get("hub", {})
-        host = hub_config.get("host") or config_entry.data.get("host", "unknown")
-        port = hub_config.get("port") or config_entry.data.get("port", 502)
-
-        device_registry = dr.async_get(hass)
-        for device in to_remove:
-            d_slave_id = device.get("slave_id", 1)
-            d_prefix = device.get("prefix", "unknown")
-            device_identifier = f"modbus_manager_{host}_{port}_slave_{d_slave_id}"
-            device_entry = device_registry.async_get_device(
-                identifiers={(DOMAIN, device_identifier)}
-            )
-            if device_entry and (
-                device_entry.config_entries
-                and config_entry.entry_id in device_entry.config_entries
-            ):
-                device_registry.async_remove_device(device_entry.id)
-                _LOGGER.info(
-                    "Removed device '%s' (slave %s) from device registry",
-                    d_prefix,
-                    d_slave_id,
-                )
-
-        new_data = dict(config_entry.data)
-        new_data["devices"] = new_devices
-        hass.config_entries.async_update_entry(config_entry, data=new_data)
-
-        _LOGGER.info(
-            "Removed %d device(s) from hub %s, reloading integration",
-            len(to_remove),
-            entry_id,
-        )
-        await hass.config_entries.async_reload(config_entry.entry_id)
-
     async def reload_templates_service(call):
         """Handle template reload service - reload templates and update entity attributes without restart.
 
@@ -937,6 +1200,5 @@ async def async_setup_services(hass: HomeAssistant) -> None:
     hass.services.async_register(DOMAIN, "performance_reset", performance_reset_service)
     # register_optimize removed - optimization is automatic
     hass.services.async_register(DOMAIN, "reload_templates", reload_templates_service)
-    hass.services.async_register(DOMAIN, "remove_device", remove_device_service)
 
     _LOGGER.debug("Modbus Manager services registered successfully")
