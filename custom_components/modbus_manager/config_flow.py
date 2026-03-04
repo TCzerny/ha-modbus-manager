@@ -249,6 +249,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     }
                 ),
                 description_placeholders={
+                    "config_flow_note": "",
                     "template_count": str(len(template_names)),
                     "template_list": ", ".join(template_names),
                 },
