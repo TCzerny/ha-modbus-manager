@@ -283,8 +283,8 @@ sensors:
 
 #### Byte Order (32/64-bit values)
 
-- **`byte_order`**: `"big"` (default) or `"little"` endian
-- **`swap`**: Swap bytes within words (default: false)
+- **`byte_order`**: `"big"` (default) or `"little"`; controls byte order inside each 16-bit register
+- **`swap`**: Word-order swap for multi-register values (`"word"` = swap register order, default: no swap). Legacy boolean values are still accepted (`true` = swap, `false` = no swap)
 
 #### String Configuration
 
