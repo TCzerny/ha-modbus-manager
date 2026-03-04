@@ -231,11 +231,13 @@ class ModbusCoordinatorSwitch(SwitchEntity):
     async def _write_register(self, value: int) -> None:
         """Write value to Modbus register."""
         try:
-            from .modbus_utils import get_write_call_type
+            from .modbus_utils import encode_register_write_value, get_write_call_type
 
             # Check for custom write function code
             write_function_code = self._register_config.get("write_function_code")
-            count = self._register_config.get("count", 1) or 1
+            write_value, count = encode_register_write_value(
+                value, self._register_config
+            )
 
             call_type = get_write_call_type(count, write_function_code)
 
@@ -253,7 +255,7 @@ class ModbusCoordinatorSwitch(SwitchEntity):
             await self._coordinator.hub.async_pb_call(
                 slave_id,
                 self._address,
-                value,
+                write_value,
                 call_type,
             )
 

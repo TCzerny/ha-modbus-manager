@@ -309,11 +309,13 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
             )
 
             # Write to Modbus register
-            from .modbus_utils import get_write_call_type
+            from .modbus_utils import encode_register_write_value, get_write_call_type
 
             # Check for custom write function code
             write_function_code = self.register_config.get("write_function_code")
-            count = self.register_config.get("count", 1) or 1
+            write_value, count = encode_register_write_value(
+                numeric_value, self.register_config
+            )
 
             call_type = get_write_call_type(count, write_function_code)
 
@@ -327,7 +329,7 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
             result = await self.coordinator.hub.async_pb_call(
                 slave_id,
                 address,
-                numeric_value,
+                write_value,
                 call_type,
             )
 

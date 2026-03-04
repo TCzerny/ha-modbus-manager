@@ -146,10 +146,24 @@ class ModbusCoordinatorButton(ButtonEntity):
         try:
             # Write the button press value to the register
             if self._input_type == "holding":
-                await self._coordinator._hub.write_register(
+                from .modbus_utils import (
+                    encode_register_write_value,
+                    get_write_call_type,
+                )
+
+                write_function_code = self._register_config.get("write_function_code")
+                slave_id = self._register_config.get("slave_id", 1)
+
+                write_value, count = encode_register_write_value(
+                    self._button_press_value, self._register_config
+                )
+                call_type = get_write_call_type(count, write_function_code)
+
+                await self._coordinator.hub.async_pb_call(
+                    slave_id,
                     self._address,
-                    self._button_press_value,
-                    self._coordinator._entry.data.get("slave_id", 1),
+                    write_value,
+                    call_type,
                 )
                 _LOGGER.debug(
                     "Button pressed: wrote value %d to register %d",
@@ -162,16 +176,25 @@ class ModbusCoordinatorButton(ButtonEntity):
                     import asyncio
 
                     await asyncio.sleep(self._button_press_duration)
-                    await self._coordinator._hub.write_register(
+                    reset_value, reset_count = encode_register_write_value(
+                        0, self._register_config
+                    )
+                    reset_call_type = get_write_call_type(
+                        reset_count, write_function_code
+                    )
+                    await self._coordinator.hub.async_pb_call(
+                        slave_id,
                         self._address,
-                        0,  # Reset to 0
-                        self._coordinator._entry.data.get("slave_id", 1),
+                        reset_value,
+                        reset_call_type,
                     )
                     _LOGGER.debug(
                         "Button reset: wrote value 0 to register %d after %d seconds",
                         self._address,
                         self._button_press_duration,
                     )
+
+                await self._coordinator.async_request_refresh()
             else:
                 _LOGGER.warning("Cannot write to read-only register %d", self._address)
 

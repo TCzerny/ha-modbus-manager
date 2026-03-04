@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import struct
 from typing import Any, Optional
 
 from homeassistant.components.number import NumberEntity, NumberMode
@@ -365,7 +364,6 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             # Get register configuration
             address = self.register_config.get("address")
             slave_id = self.register_config.get("slave_id", 1)
-            data_type = self.register_config.get("data_type", "uint16")
 
             # Convert value based on scaling
             # Use scale if available, otherwise fall back to multiplier
@@ -386,26 +384,12 @@ class ModbusCoordinatorNumber(CoordinatorEntity, NumberEntity):
             offset = self.register_config.get("offset", 0.0)
             scaled_value = (value - offset) / scale_factor
 
-            # Convert to Modbus register format based on data type
-            if data_type in ("float", "float32"):
-                # IEEE 754 float32: 2 registers, big-endian
-                bytes_data = struct.pack(">f", float(scaled_value))
-                regs = list(struct.unpack(">HH", bytes_data))
-                swap = self.register_config.get("swap", "none")
-                if swap == "word":
-                    regs = [regs[1], regs[0]]
-                write_value: int | list[int] = regs
-                count = 2
-            elif data_type == "float64":
-                # IEEE 754 float64: 4 registers, big-endian
-                bytes_data = struct.pack(">d", float(scaled_value))
-                regs = list(struct.unpack(">HHHH", bytes_data))
-                write_value = regs
-                count = 4
-            else:
-                # Integer types (uint16, int16, uint32, int32, etc.)
-                write_value = int(scaled_value)
-                count = self.register_config.get("count", 1) or 1
+            # Encode to Modbus register format based on data type/endian settings
+            from .modbus_utils import encode_register_write_value
+
+            write_value, count = encode_register_write_value(
+                scaled_value, self.register_config
+            )
 
             # Write to Modbus register
             from .modbus_utils import get_write_call_type

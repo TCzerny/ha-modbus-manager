@@ -179,17 +179,28 @@ class ModbusCoordinatorText(TextEntity):
         # For text entities, we typically write to holding registers
         if self._input_type == "holding":
             try:
-                # Convert string to appropriate format for Modbus write
-                # This is a simplified implementation - in practice you might need
-                # more sophisticated string-to-register conversion
-                await self._coordinator._hub.write_register(
+                from .modbus_utils import (
+                    encode_register_write_value,
+                    get_write_call_type,
+                )
+
+                write_function_code = self._register_config.get("write_function_code")
+                slave_id = self._register_config.get("slave_id", 1)
+                write_value, count = encode_register_write_value(
+                    value, self._register_config
+                )
+                call_type = get_write_call_type(count, write_function_code)
+
+                await self._coordinator.hub.async_pb_call(
+                    slave_id,
                     self._address,
-                    value.encode("utf-8"),
-                    self._coordinator._entry.data.get("slave_id", 1),
+                    write_value,
+                    call_type,
                 )
                 _LOGGER.debug(
                     "Text value written to register %d: %s", self._address, value
                 )
+                await self._coordinator.async_request_refresh()
             except Exception as e:
                 _LOGGER.error(
                     "Error writing text value to register %d: %s", self._address, str(e)

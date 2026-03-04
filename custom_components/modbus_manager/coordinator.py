@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import asyncio
 import re
+import struct
 from datetime import timedelta
 from typing import Any, Dict, List, Optional
 
@@ -23,6 +24,7 @@ from .device_utils import (
     replace_template_placeholders,
 )
 from .logger import ModbusManagerLogger
+from .modbus_utils import registers_to_bytes
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
 from .sunspec_utils import (
@@ -1782,35 +1784,27 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 if data_type in ["uint32", "int32"]:
                     # 32-bit integer (2 registers)
                     if len(raw_value) >= 2:
-                        # Check for byte swapping
-                        swap = register.get("swap", "none")
-                        if swap == "word":
-                            # Swap word order: [high_word, low_word] -> [low_word, high_word]
-                            combined = (raw_value[1] << 16) | raw_value[0]
-                        else:
-                            # Default: [high_word, low_word]
-                            combined = (raw_value[0] << 16) | raw_value[1]
-
-                        if data_type == "int32" and combined >= 0x80000000:
-                            combined -= 0x100000000
-                        processed_value = combined
+                        bytes_data = registers_to_bytes(
+                            raw_value[:2],
+                            byte_order=register.get("byte_order", "big"),
+                            swap=register.get("swap", "none"),
+                        )
+                        processed_value = int.from_bytes(
+                            bytes_data,
+                            byteorder="big",
+                            signed=data_type == "int32",
+                        )
                     else:
                         processed_value = raw_value[0] if raw_value else 0
 
                 elif data_type in ["float", "float32"]:
                     # 32-bit float (2 registers)
                     if len(raw_value) >= 2:
-                        import struct
-
-                        # Check for byte swapping
-                        swap = register.get("swap", "none")
-                        if swap == "word":
-                            # Swap word order for float
-                            bytes_data = struct.pack(">HH", raw_value[1], raw_value[0])
-                        else:
-                            # Default order
-                            bytes_data = struct.pack(">HH", raw_value[0], raw_value[1])
-
+                        bytes_data = registers_to_bytes(
+                            raw_value[:2],
+                            byte_order=register.get("byte_order", "big"),
+                            swap=register.get("swap", "none"),
+                        )
                         processed_value = struct.unpack(">f", bytes_data)[0]
                     else:
                         processed_value = float(raw_value[0]) if raw_value else 0.0
@@ -1818,14 +1812,10 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 elif data_type == "float64":
                     # 64-bit float (4 registers)
                     if len(raw_value) >= 4:
-                        import struct
-
-                        bytes_data = struct.pack(
-                            ">HHHH",
-                            raw_value[0],
-                            raw_value[1],
-                            raw_value[2],
-                            raw_value[3],
+                        bytes_data = registers_to_bytes(
+                            raw_value[:4],
+                            byte_order=register.get("byte_order", "big"),
+                            swap=register.get("swap", "none"),
                         )
                         processed_value = struct.unpack(">d", bytes_data)[0]
                     else:
