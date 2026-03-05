@@ -139,6 +139,8 @@ This section contains all entities that will be created by this template, includ
 | 1014 | Max Current Phase 2 | max_current_phase_2 |
 | 1016 | Max Current Phase 3 | max_current_phase_3 |
 
+**Tip (Option B):** Use `Max Current Phase 1` as your master value and mirror it to phase 2/3 with an automation.
+
 ### Calculated Sensors
 
 | Address | Name | Unique ID | Firmware Requirement |
@@ -181,6 +183,41 @@ This section contains all entities that will be created by this template, includ
 1. Check all sensors are created
 2. Verify charging control works
 3. Test current limit adjustments
+
+### 4. Optional: Sync all phase current limits from one control
+
+If you want a single "master" current setting without adding new template entities, you can use `number.{PREFIX}_max_current_phase_1` as source and mirror the same value to phase 2 and phase 3.
+
+```yaml
+alias: "Compleo eBox - Sync max current to all phases"
+description: "Use max_current_phase_1 as master and mirror to phase 2/3 via number.set_value"
+trigger:
+  - platform: state
+    entity_id: number.{PREFIX}_max_current_phase_1
+    for: "00:00:01"
+condition:
+  - condition: template
+    value_template: "{{ trigger.to_state is not none and trigger.to_state.state not in ['unknown', 'unavailable'] }}"
+action:
+  - variables:
+      target_current: "{{ trigger.to_state.state | float(0) }}"
+  - service: number.set_value
+    target:
+      entity_id: number.{PREFIX}_max_current_phase_2
+    data:
+      value: "{{ target_current }}"
+  - service: number.set_value
+    target:
+      entity_id: number.{PREFIX}_max_current_phase_3
+    data:
+      value: "{{ target_current }}"
+mode: restart
+```
+
+**Notes:**
+- Replace `{PREFIX}` with your configured entity prefix (usually lowercase in Home Assistant entity IDs, e.g. `ebox`).
+- This variant uses Home Assistant number entities and does not require direct `modbus.write_register` calls.
+- This block is for **UI Automation YAML mode** (no `automation:` wrapper).
 
 ## 🚨 Troubleshooting
 
