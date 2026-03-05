@@ -1,7 +1,7 @@
 # Home Assistant Modbus Manager
 
-> **⚠️ BETA - Use at your own risk!**
-> This integration is currently in beta testing. Some features may not work as expected. Please report any issues you encounter.
+> **⚠️ Use at your own risk**
+> This integration interacts with real devices and control registers. Please validate behavior in your environment before relying on it in production.
 
 A modular, template-based Modbus Manager for Home Assistant with predefined device templates for popular energy devices.
 

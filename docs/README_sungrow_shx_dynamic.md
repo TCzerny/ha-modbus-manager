@@ -52,7 +52,7 @@ The template supports **all 36** following Sungrow SHx models:
 - **MPPT 3:** All MPPT1, MPPT2, MPPT3 registers
 
 #### **Battery Filtering**
-- **Battery none:** No battery registers
+- **Battery none:** Battery-dependent entities are filtered out
 - **Battery standard_battery:** Inverter battery registers only
 - **Battery sbr_battery:** Inverter battery registers + SBR battery template entities
 
@@ -114,7 +114,7 @@ Undocumented holding registers for Master/Slave cascade configuration. Available
 
 ### 🎛️ Meter Data (Grid Monitoring)
 - **Meter Active Power** - Grid active power (DTSU666/DTSU666-20)
-- **Meter Phase Power** - Phase-specific power (DTSU666/DTSU666-20, 3-phase only)
+- **Meter Phase Power** - Phase-specific power (DTSU666/DTSU666-20; some entities are additionally phase-filtered)
 - **Meter Voltage/Current** - Grid voltage and current
 - **Grid Frequency** - Grid frequency
 - **Meter Channel 2** - Channel 2 power data (DTSU666-20 dual-channel meter only)
@@ -168,7 +168,7 @@ Holding registers for Master/Slave cascade configuration. Available as sensors.
 - **MPPT Power** - Calculated power per MPPT (MPPT1-4)
 - **Total MPPT Power** - Total MPPT power (sum of all MPPT trackers)
 - **Phase Power** - Calculated power per phase (A, B, C)
-- **Total Phase Power** - Total phase power
+- **Total Meter Phase Power** - Sum of meter phase powers
 
 ### 🔄 Grid Power Calculations
 - **Grid Import Power** - Grid import (positive)
@@ -182,7 +182,7 @@ Holding registers for Master/Slave cascade configuration. Available as sensors.
 
 ### 📊 Efficiency Calculations
 - **Solar to Grid Efficiency** - PV to grid efficiency
-- **Battery to Load Efficiency** - Battery to load efficiency
+- **Battery to Load Efficiency** - Share of current load supplied by battery discharge (`battery_discharging_power / load_power`, clamped to 0..100%)
 - **DC to AC Efficiency** - Inverter efficiency (AC output / DC input)
 - **Power Balance** - System power balance
 
@@ -204,7 +204,7 @@ These sensors follow the HA Energy Dashboard convention: **positive values for c
 ### 📈 PV Analysis & Performance Metrics
 
 #### Self-Consumption & Autarky
-Formulas follow standard definitions (Klarsolar, GitHub Pages): daily-basis for short-term PV efficiency analysis.
+Formulas follow standard definitions: daily-basis for short-term PV efficiency analysis.
 
 **Current (real-time)** – power-based, instant snapshot:
 - **Self-Consumption Rate** – % of PV power consumed directly (not exported)
@@ -403,6 +403,9 @@ This section contains all entities that will be created by this template, includ
 - Monthly and yearly statistical sensors are only available with LAN connection
 - Battery-related sensors are only available when battery is enabled
 - Meter Channel 2 sensors (13199-13205) are only available when meter_type is set to "DTSU666-20"
+- Meter phase voltage/current sensors (5740-5745) are only available for meter types `DTSU666` and `DTSU666-20`
+- `Load power` (13007), `Export power raw` (13009), `Daily/Total import` (13035/13036), and `Daily/Total export` (13044/13045) are no longer meter-type-filtered
+- Battery control/diagnostic entities around 13050/13051, 33046/33047, and 33148/33149 are available when `battery_enabled == true` (independent of `meter_type`)
 - **iHomeManager is now a separate template** (`sungrow_ihomemanager.yaml`) - do not use meter_type "iHomeManager" with this template
 
 ### Controls (Read/Write)
@@ -460,7 +463,7 @@ This section contains all entities that will be created by this template, includ
 | - | Phase A Power | phase_a_power |
 | - | Phase B Power | phase_b_power |
 | - | Phase C Power | phase_c_power |
-| - | Total Phase Power | total_phase_power |
+| - | Total Meter Phase Power | total_meter_phase_power |
 
 #### Grid Power Calculations
 | Address | Name | Unique ID |

@@ -21,6 +21,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Coordinator consumption hardened to prefer per-device values with fallback compatibility for legacy top-level keys.
 - `remove_device` service removed; device removal is now done via subentry delete in UI.
 - Minimum supported Home Assistant version raised to `2025.4.0` for stable Config Subentry support.
+- Project status promoted from beta to stable for `v1.0.0`.
 
 ### 🐛 Fixed
 

@@ -186,6 +186,15 @@ condition: "phases >= 3 and connection_type == 'LAN'"
 - `selected_model` is required when `valid_models` exist.
 - `battery_config` can be `none`, `other`, or a battery template name.
 
+### Template Validation Rules
+
+- A template is considered valid when it defines at least one entity in any supported section:
+  - `sensors`
+  - `controls`
+  - `calculated`
+  - `binary_sensors`
+- Templates do not need to define `sensors` specifically if they already define entities in one of the other sections.
+
 ### Unique IDs and Entity ID Handling
 
 - **`unique_id`**: Required field that uniquely identifies the entity
@@ -253,7 +262,7 @@ sensors:
 
 - **`name`**: Display name for the sensor (shown in Home Assistant)
 - **`unique_id`**: Unique identifier for the sensor (used for entity ID generation)
-- **`address`**: Modbus register address (0-based, matches Modbus protocol)
+- **`address`**: Modbus register address (0-based, matches Modbus protocol; `0` is valid, negative values are invalid)
 
 ### Optional Fields
 
@@ -283,7 +292,7 @@ sensors:
 
 #### Byte Order (32/64-bit values)
 
-- **`byte_order`**: `"big"` (default) or `"little"`; controls byte order inside each 16-bit register
+- **`byte_order`**: `"big"` (default) or `"little"`
 - **`swap`**: Word-order swap for multi-register values (`"word"` = swap register order, default: no swap). Legacy boolean values are still accepted (`true` = swap, `false` = no swap)
 
 #### String Configuration
