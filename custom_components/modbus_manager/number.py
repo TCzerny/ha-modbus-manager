@@ -560,7 +560,7 @@ async def async_setup_entry(
             return
 
         # Create coordinator numbers (device_info provided by coordinator)
-        coordinator_numbers = []
+        entities_by_subentry: dict[str | None, list] = {}
         for control_config in number_controls:
             try:
                 # Get device info from control_config (provided by coordinator)
@@ -579,7 +579,10 @@ async def async_setup_entry(
                 )
                 # CoordinatorEntity auto-registers _handle_coordinator_update in async_added_to_hass
 
-                coordinator_numbers.append(coordinator_number)
+                subentry_id = control_config.get("config_subentry_id")
+                entities_by_subentry.setdefault(subentry_id, []).append(
+                    coordinator_number
+                )
 
             except Exception as e:
                 _LOGGER.error(
@@ -588,7 +591,13 @@ async def async_setup_entry(
                     str(e),
                 )
 
-        async_add_entities(coordinator_numbers)
+        for subentry_id, entities in entities_by_subentry.items():
+            if not entities:
+                continue
+            if subentry_id:
+                async_add_entities(entities, config_subentry_id=subentry_id)
+            else:
+                async_add_entities(entities)
 
     except Exception as e:
         _LOGGER.error("Error setting up coordinator numbers: %s", str(e))

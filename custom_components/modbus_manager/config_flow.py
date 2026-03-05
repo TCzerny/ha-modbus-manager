@@ -1079,7 +1079,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         # Log meter_type if present for debugging
         meter_type = dynamic_config.get("meter_type", "not_set")
-        _LOGGER.info(
+        _LOGGER.debug(
             "Processing dynamic config: phases=%d, mppt=%d, battery=%s, battery_type=%s, fw=%s, conn=%s, meter_type=%s",
             phases,
             mppt_count,
@@ -4341,7 +4341,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
 
         # Log meter_type if present for debugging
         meter_type = dynamic_config.get("meter_type", "not_set")
-        _LOGGER.info(
+        _LOGGER.debug(
             "Processing dynamic config: phases=%d, mppt=%d, battery=%s, battery_type=%s, fw=%s, conn=%s, meter_type=%s",
             phases,
             mppt_count,

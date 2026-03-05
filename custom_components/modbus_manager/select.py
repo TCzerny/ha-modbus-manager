@@ -401,7 +401,7 @@ async def async_setup_entry(
             return
 
         # Create coordinator selects (device_info provided by coordinator)
-        coordinator_selects = []
+        entities_by_subentry: dict[str | None, list] = {}
         for control_config in select_controls:
             try:
                 # Ensure options are properly loaded
@@ -428,7 +428,10 @@ async def async_setup_entry(
                 )
                 # CoordinatorEntity auto-registers _handle_coordinator_update in async_added_to_hass
 
-                coordinator_selects.append(coordinator_select)
+                subentry_id = control_config.get("config_subentry_id")
+                entities_by_subentry.setdefault(subentry_id, []).append(
+                    coordinator_select
+                )
 
             except Exception as e:
                 _LOGGER.error(
@@ -437,12 +440,21 @@ async def async_setup_entry(
                     str(e),
                 )
 
+        total_created = 0
+        for entities in entities_by_subentry.values():
+            total_created += len(entities)
         _LOGGER.debug(
             "Created %d coordinator selects",
-            len(coordinator_selects),
+            total_created,
         )
 
-        async_add_entities(coordinator_selects)
+        for subentry_id, entities in entities_by_subentry.items():
+            if not entities:
+                continue
+            if subentry_id:
+                async_add_entities(entities, config_subentry_id=subentry_id)
+            else:
+                async_add_entities(entities)
 
     except Exception as e:
         _LOGGER.error("Error setting up coordinator selects: %s", str(e))

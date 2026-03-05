@@ -31,12 +31,13 @@ async def async_setup_entry(
     controls = entities_dict.get("controls", [])
     text_controls = [c for c in controls if c.get("type") == "text"]
 
-    entities = []
+    entities_by_subentry: dict[str | None, list] = {}
 
     for register_config in text_controls:
         try:
             entity = ModbusCoordinatorText(coordinator, register_config)
-            entities.append(entity)
+            subentry_id = register_config.get("config_subentry_id")
+            entities_by_subentry.setdefault(subentry_id, []).append(entity)
             _LOGGER.debug(
                 "ModbusCoordinatorText created: %s (key: %s)",
                 entity.name,
@@ -49,11 +50,19 @@ async def async_setup_entry(
                 str(e),
             )
 
-    if entities:
-        async_add_entities(entities)
-        _LOGGER.debug("Created %d coordinator text entities", len(entities))
+    entities_count = 0
+    for subentry_id, entities in entities_by_subentry.items():
+        if not entities:
+            continue
+        entities_count += len(entities)
+        if subentry_id:
+            async_add_entities(entities, config_subentry_id=subentry_id)
+        else:
+            async_add_entities(entities)
+    if entities_count:
+        _LOGGER.debug("Created %d coordinator text entities", entities_count)
     else:
-        _LOGGER.info("No coordinator text entities created")
+        _LOGGER.debug("No coordinator text entities created")
 
 
 class ModbusCoordinatorText(TextEntity):

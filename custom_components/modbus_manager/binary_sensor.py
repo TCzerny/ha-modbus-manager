@@ -55,12 +55,12 @@ async def async_setup_entry(
         host = hub_config.get("host") or entry.data.get("host", "unknown")
         port = hub_config.get("port") or entry.data.get("port", 502)
 
-        entities = []
+        entities_by_subentry: dict[str | None, list] = {}
 
         # NEW STRUCTURE: device_info is already in register configs from coordinator
         if True:  # Always use new structure after migration
             # NEW STRUCTURE: Separate template-based and register-based binary sensors
-            _LOGGER.info(
+            _LOGGER.debug(
                 "Using devices array structure with coordinator-provided device_info"
             )
 
@@ -101,7 +101,8 @@ async def async_setup_entry(
                             config_entry_id=entry.entry_id,
                             device_prefix=device_prefix,
                         )
-                        entities.append(entity)
+                        subentry_id = config.get("config_subentry_id")
+                        entities_by_subentry.setdefault(subentry_id, []).append(entity)
                         _LOGGER.debug(
                             "Created calculated binary sensor: %s", config.get("name")
                         )
@@ -121,7 +122,8 @@ async def async_setup_entry(
                             register_config=config,
                             device_info=device_info,
                         )
-                        entities.append(entity)
+                        subentry_id = config.get("config_subentry_id")
+                        entities_by_subentry.setdefault(subentry_id, []).append(entity)
                         _LOGGER.debug(
                             "Created coordinator binary sensor: %s", config.get("name")
                         )
@@ -139,11 +141,19 @@ async def async_setup_entry(
                         str(e),
                     )
 
-        if entities:
-            async_add_entities(entities)
-            _LOGGER.debug("Created %d binary sensors", len(entities))
+        entities_count = 0
+        for subentry_id, entities in entities_by_subentry.items():
+            if not entities:
+                continue
+            entities_count += len(entities)
+            if subentry_id:
+                async_add_entities(entities, config_subentry_id=subentry_id)
+            else:
+                async_add_entities(entities)
+        if entities_count:
+            _LOGGER.debug("Created %d binary sensors", entities_count)
         else:
-            _LOGGER.info("No binary sensors created")
+            _LOGGER.debug("No binary sensors created")
 
     except Exception as e:
         _LOGGER.error("Error setting up coordinator binary sensors: %s", str(e))

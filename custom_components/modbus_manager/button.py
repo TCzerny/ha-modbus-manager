@@ -31,12 +31,13 @@ async def async_setup_entry(
     controls = entities_dict.get("controls", [])
     button_controls = [c for c in controls if c.get("type") == "button"]
 
-    entities = []
+    entities_by_subentry: dict[str | None, list] = {}
 
     for register_config in button_controls:
         try:
             entity = ModbusCoordinatorButton(coordinator, register_config)
-            entities.append(entity)
+            subentry_id = register_config.get("config_subentry_id")
+            entities_by_subentry.setdefault(subentry_id, []).append(entity)
             _LOGGER.debug(
                 "ModbusCoordinatorButton created: %s (key: %s)",
                 entity.name,
@@ -49,11 +50,19 @@ async def async_setup_entry(
                 str(e),
             )
 
-    if entities:
-        async_add_entities(entities)
-        _LOGGER.debug("Created %d coordinator button entities", len(entities))
+    entities_count = 0
+    for subentry_id, entities in entities_by_subentry.items():
+        if not entities:
+            continue
+        entities_count += len(entities)
+        if subentry_id:
+            async_add_entities(entities, config_subentry_id=subentry_id)
+        else:
+            async_add_entities(entities)
+    if entities_count:
+        _LOGGER.debug("Created %d coordinator button entities", entities_count)
     else:
-        _LOGGER.info("No coordinator button entities created")
+        _LOGGER.debug("No coordinator button entities created")
 
 
 class ModbusCoordinatorButton(ButtonEntity):

@@ -31,12 +31,13 @@ async def async_setup_entry(
     controls = entities_dict.get("controls", [])
     switch_controls = [c for c in controls if c.get("type") == "switch"]
 
-    entities = []
+    entities_by_subentry: dict[str | None, list] = {}
 
     for register_config in switch_controls:
         try:
             entity = ModbusCoordinatorSwitch(coordinator, register_config)
-            entities.append(entity)
+            subentry_id = register_config.get("config_subentry_id")
+            entities_by_subentry.setdefault(subentry_id, []).append(entity)
             _LOGGER.debug(
                 "ModbusCoordinatorSwitch created: %s (key: %s)",
                 entity.name,
@@ -49,9 +50,17 @@ async def async_setup_entry(
                 str(e),
             )
 
-    if entities:
-        async_add_entities(entities)
-        _LOGGER.debug("Created %d coordinator switches", len(entities))
+    entities_count = 0
+    for subentry_id, entities in entities_by_subentry.items():
+        if not entities:
+            continue
+        entities_count += len(entities)
+        if subentry_id:
+            async_add_entities(entities, config_subentry_id=subentry_id)
+        else:
+            async_add_entities(entities)
+    if entities_count:
+        _LOGGER.debug("Created %d coordinator switches", entities_count)
     else:
         _LOGGER.debug("No coordinator switches created")
 

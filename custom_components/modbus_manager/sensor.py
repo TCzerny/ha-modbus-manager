@@ -299,8 +299,7 @@ async def async_setup_entry(
         host = hub_config.get("host") or entry.data.get("host", "unknown")
         port = hub_config.get("port") or entry.data.get("port", 502)
 
-        coordinator_sensors = []
-        calculated_entities = []
+        entities_by_subentry: dict[str | None, list] = {}
 
         # NEW STRUCTURE: device_info is already in register configs from coordinator
 
@@ -345,7 +344,10 @@ async def async_setup_entry(
                 )
                 # CoordinatorEntity auto-registers _handle_coordinator_update in async_added_to_hass
 
-                coordinator_sensors.append(coordinator_sensor)
+                subentry_id = sensor_config.get("config_subentry_id")
+                entities_by_subentry.setdefault(subentry_id, []).append(
+                    coordinator_sensor
+                )
 
             except Exception as e:
                 _LOGGER.error(
@@ -406,7 +408,8 @@ async def async_setup_entry(
                     config_entry_id=entry.entry_id,
                     device_prefix=device_prefix,
                 )
-                calculated_entities.append(entity)
+                subentry_id = calc_config.get("config_subentry_id")
+                entities_by_subentry.setdefault(subentry_id, []).append(entity)
 
             except Exception as e:
                 _LOGGER.error(
@@ -415,12 +418,26 @@ async def async_setup_entry(
                     str(e),
                 )
 
-        # Add all entities
-        all_entities = coordinator_sensors + calculated_entities
-        async_add_entities(all_entities)
+        # Add entities grouped by config_subentry_id
+        all_entities = []
+        for subentry_id, entities in entities_by_subentry.items():
+            if not entities:
+                continue
+            all_entities.extend(entities)
+            if subentry_id:
+                async_add_entities(entities, config_subentry_id=subentry_id)
+            else:
+                async_add_entities(entities)
 
         # Handle group assignments after entities are added
-        await _handle_group_assignments(hass, coordinator_sensors)
+        await _handle_group_assignments(
+            hass,
+            [
+                entity
+                for entity in all_entities
+                if isinstance(entity, ModbusCoordinatorSensor)
+            ],
+        )
 
     except Exception as e:
         _LOGGER.error("Error setting up coordinator sensors: %s", str(e))

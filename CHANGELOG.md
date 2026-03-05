@@ -5,6 +5,50 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-03-04
+
+### ✨ Added
+
+#### UI-first Subentry device management
+- Devices on the same hub can now be managed individually via Home Assistant Config Subentries.
+- Per-device add / reconfigure / delete is available directly in UI without recreating the full hub.
+- Dynamic device fields (for example `selected_model`, `connection_type`, `meter_type`, `battery_config`) are editable per device in subentry reconfigure flow.
+
+### 🔧 Changed
+
+#### Major architecture update
+- Subentry-aware device model is now the primary management path for multi-device hubs.
+- Coordinator consumption hardened to prefer per-device values with fallback compatibility for legacy top-level keys.
+- `remove_device` service removed; device removal is now done via subentry delete in UI.
+- Minimum supported Home Assistant version raised to `2025.4.0` for stable Config Subentry support.
+
+### 🐛 Fixed
+
+#### Persistence and cleanup correctness
+- Deleting a device subentry now persists across restarts.
+- Setup sync now prunes removed subentries from `devices[]` so deleted devices are not recreated.
+- Stale entity cleanup uses strict normalized `unique_id` matching.
+- Subentry and entry-level cleanup paths use consistent matching behavior.
+- Dynamic processing in subentry cleanup now uses deep-copied template data to avoid mutating cached template metadata.
+
+#### Dynamic config and translations
+- Fixed missing translation labels for reconfigure fields in subentry/device flows.
+- Fixed mixed/placeholder abort reason display (`invalid_config`) by adding missing translation keys.
+
+#### Byte order and register write handling
+- Fixed `byte_order` handling and unified register write encoding behavior for controls.
+- Improved compatibility for float/string and swapped-word register writes.
+
+### ♻️ Migration
+
+- Existing configurations are automatically migrated to the subentry-ready `devices[]` model.
+- Existing device records are backfilled with stable `device_entry_id`.
+- Migration preserves device order and dynamic values for backward compatibility.
+
+### 📚 Documentation
+- Updated `docs/SERVICES.md` to document subentry-based device removal and mark `remove_device` as removed.
+- Added release notes for Subentry architecture, migration, and cleanup hardening.
+
 ## [0.2.6] - 2026-02-24
 
 ### 🐛 Fixed
