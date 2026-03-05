@@ -685,9 +685,12 @@ calculated:
         unknown
       {% else %}
         {% set raw = raw_value | int %}
-        {% set major = (raw // 16777216) %}
-        {% set minor = (raw // 65536) % 256 %}
-        {% set patch = (raw // 256) % 256 %}
+        {% set major_raw = (raw // 16777216) % 256 %}
+        {% set minor_raw = (raw // 65536) % 256 %}
+        {% set patch_raw = (raw // 256) % 256 %}
+        {% set major = ((major_raw // 16) * 10) + (major_raw % 16) %}
+        {% set minor = ((minor_raw // 16) * 10) + (minor_raw % 16) %}
+        {% set patch = ((patch_raw // 16) * 10) + (patch_raw % 16) %}
         V{{ major }}.{{ minor }}.{{ patch }}
       {% endif %}
     icon: "mdi:code-tags"

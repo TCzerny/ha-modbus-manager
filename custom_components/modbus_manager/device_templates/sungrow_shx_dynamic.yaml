@@ -253,7 +253,7 @@ sensors:
     input_type: input
     data_type: uint32
     swap: word
-    scan_interval: 30
+    scan_interval: 600
     group: "PV_device_info"
     entity_category: "diagnostic"
     # Note: Format: 0x01010B00 = V1.1.11 (Major.Minor.Patch.Build)
@@ -755,7 +755,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 1
-    scan_interval: 60
+    scan_interval: 600
     entity_category: "diagnostic"
 
   - name: BMS max. discharging current
@@ -768,7 +768,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scale: 1
-    scan_interval: 60
+    scan_interval: 600
     entity_category: "diagnostic"
 
   - name: Battery capacity
@@ -795,7 +795,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.01
-    scan_interval: 60
+    scan_interval: 600
     group: "PV_control"
     entity_category: "diagnostic"
 
@@ -809,7 +809,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scale: 0.01
-    scan_interval: 60
+    scan_interval: 600
     group: "PV_control"
     entity_category: "diagnostic"
 
@@ -2167,7 +2167,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scale: 0.1
-    scan_interval: 60
+    scan_interval: 600
 
   - name: Total exported energy
     unique_id: total_exported_energy
@@ -4495,11 +4495,12 @@ calculated:
         unknown
       {% else %}
         {% set raw = raw_value | int %}
-        {% set major = (raw // 16777216) %}
-        {% set minor = (raw // 65536) % 256 %}
-        {% set patch = (raw // 256) % 256 %}
-        {% set build = raw % 256 %}
-        {% set raw = raw | int %}
+        {% set major_raw = (raw // 16777216) % 256 %}
+        {% set minor_raw = (raw // 65536) % 256 %}
+        {% set patch_raw = (raw // 256) % 256 %}
+        {% set major = ((major_raw // 16) * 10) + (major_raw % 16) %}
+        {% set minor = ((minor_raw // 16) * 10) + (minor_raw % 16) %}
+        {% set patch = ((patch_raw // 16) * 10) + (patch_raw % 16) %}
         V{{ major }}.{{ minor }}.{{ patch }}
       {% endif %}
     icon: "mdi:code-tags"
