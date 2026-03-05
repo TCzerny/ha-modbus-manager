@@ -1,11 +1,14 @@
 """Calculated sensor class for Modbus Manager."""
 
 import logging
+import re
 from typing import Any, Dict
 
 from homeassistant.components.binary_sensor import BinarySensorEntity
 from homeassistant.components.sensor import SensorEntity
+from homeassistant.core import callback
 from homeassistant.helpers.entity import EntityCategory
+from homeassistant.helpers.event import async_track_state_change_event
 from homeassistant.helpers.template import Template
 
 from .const import DOMAIN
@@ -16,6 +19,27 @@ from .device_utils import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+_FUNCTION_ENTITY_ID_PATTERN = re.compile(
+    r"""(?:states|state_attr|is_state|is_state_attr|expand)\(\s*['"]([a-zA-Z_]+\.[a-zA-Z0-9_]+)['"]"""
+)
+_ATTRIBUTE_ENTITY_ID_PATTERN = re.compile(r"""states\.([a-zA-Z_]+)\.([a-zA-Z0-9_]+)""")
+
+
+def _extract_template_entity_ids(*template_strings: str | None) -> set[str]:
+    """Extract static entity IDs from Jinja template strings."""
+    entity_ids: set[str] = set()
+    for template_str in template_strings:
+        if not template_str or not isinstance(template_str, str):
+            continue
+
+        for match in _FUNCTION_ENTITY_ID_PATTERN.findall(template_str):
+            entity_ids.add(match.lower())
+
+        for domain, object_id in _ATTRIBUTE_ENTITY_ID_PATTERN.findall(template_str):
+            entity_ids.add(f"{domain.lower()}.{object_id.lower()}")
+
+    return entity_ids
 
 
 class ModbusCalculatedSensor(SensorEntity):
@@ -85,6 +109,12 @@ class ModbusCalculatedSensor(SensorEntity):
             self._availability_template = Template(availability_template, hass)
         else:
             self._availability_template = None
+        self._dependency_entity_ids = _extract_template_entity_ids(
+            template_str,
+            availability_template,
+            config.get("icon_template"),
+        )
+        self._unsubscribe_dependency_listener = None
 
         # Entity attributes
         self._attr_native_unit_of_measurement = config.get("unit_of_measurement")
@@ -241,12 +271,32 @@ class ModbusCalculatedSensor(SensorEntity):
 
     @property
     def should_poll(self) -> bool:
-        """Return True to enable polling for calculated sensors.
+        """Use event-driven updates when dependencies are known, fallback to polling."""
+        return not bool(self._dependency_entity_ids)
 
-        This is required for Home Assistant to automatically update
-        the sensor and make it available in Helper UI (e.g., Riemann Integral).
-        """
-        return True
+    async def async_added_to_hass(self) -> None:
+        """Register dependency listener for targeted recalculation."""
+        await super().async_added_to_hass()
+        if self._dependency_entity_ids:
+            self._unsubscribe_dependency_listener = async_track_state_change_event(
+                self.hass,
+                list(self._dependency_entity_ids),
+                self._handle_dependency_state_change,
+            )
+            # Prime state once after listener registration.
+            self.async_schedule_update_ha_state(True)
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Remove dependency listener when entity is unloaded."""
+        if self._unsubscribe_dependency_listener is not None:
+            self._unsubscribe_dependency_listener()
+            self._unsubscribe_dependency_listener = None
+        await super().async_will_remove_from_hass()
+
+    @callback
+    def _handle_dependency_state_change(self, _event: Any) -> None:
+        """Recalculate only when a referenced source entity changes."""
+        self.async_schedule_update_ha_state(True)
 
     async def async_update(self) -> None:
         """Update the calculated sensor value."""
@@ -463,6 +513,11 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             self._availability_template = Template(availability_template, hass)
         else:
             self._availability_template = None
+        self._dependency_entity_ids = _extract_template_entity_ids(
+            template_str,
+            availability_template,
+        )
+        self._unsubscribe_dependency_listener = None
 
         # Entity attributes
         self._attr_device_class = config.get("device_class")
@@ -569,6 +624,34 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
     def group(self) -> str:
         """Return the group this sensor belongs to."""
         return self._group
+
+    @property
+    def should_poll(self) -> bool:
+        """Use event-driven updates when dependencies are known, fallback to polling."""
+        return not bool(self._dependency_entity_ids)
+
+    async def async_added_to_hass(self) -> None:
+        """Register dependency listener for targeted recalculation."""
+        await super().async_added_to_hass()
+        if self._dependency_entity_ids:
+            self._unsubscribe_dependency_listener = async_track_state_change_event(
+                self.hass,
+                list(self._dependency_entity_ids),
+                self._handle_dependency_state_change,
+            )
+            self.async_schedule_update_ha_state(True)
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Remove dependency listener when entity is unloaded."""
+        if self._unsubscribe_dependency_listener is not None:
+            self._unsubscribe_dependency_listener()
+            self._unsubscribe_dependency_listener = None
+        await super().async_will_remove_from_hass()
+
+    @callback
+    def _handle_dependency_state_change(self, _event: Any) -> None:
+        """Recalculate only when a referenced source entity changes."""
+        self.async_schedule_update_ha_state(True)
 
     async def async_update(self) -> None:
         """Update the calculated binary sensor value."""
