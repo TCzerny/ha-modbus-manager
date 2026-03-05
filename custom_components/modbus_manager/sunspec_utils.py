@@ -9,6 +9,7 @@ based on SunSpec model offsets.
 from typing import Any, Dict, List, Optional
 
 from .logger import ModbusManagerLogger
+from .modbus_utils import is_valid_modbus_address
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -246,7 +247,7 @@ async def detect_sunspec_model_addresses(
             # Priority 1: Use user-provided address if available
             if user_config and model_id in user_config:
                 user_address = user_config[model_id]
-                if user_address and user_address > 0:
+                if is_valid_modbus_address(user_address):
                     detected_addresses[model_id] = user_address
                     _LOGGER.info(
                         "Using user-provided address %d for SunSpec Model %d",

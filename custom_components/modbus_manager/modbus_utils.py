@@ -82,6 +82,15 @@ def _is_word_swap_enabled(swap: str | bool | None) -> bool:
     return str(swap).lower() == "word"
 
 
+def is_valid_modbus_address(address: object) -> bool:
+    """Return True for supported Modbus register addresses.
+
+    Modbus templates in this project allow zero-based addresses,
+    so address 0 is valid while negative values are rejected.
+    """
+    return isinstance(address, int) and not isinstance(address, bool) and address >= 0
+
+
 def registers_to_bytes(
     registers: list[int],
     byte_order: str = "big",

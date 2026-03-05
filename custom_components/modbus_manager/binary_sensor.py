@@ -14,6 +14,7 @@ from .const import DOMAIN
 from .coordinator import ModbusCoordinator
 from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
 from .logger import ModbusManagerLogger
+from .modbus_utils import is_valid_modbus_address
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -69,9 +70,7 @@ async def async_setup_entry(
                     # Check if this is a template-based binary_sensor (has 'state' template, no 'address')
                     # or a register-based binary_sensor (has 'address')
                     has_state_template = config.get("state") is not None
-                    has_address = (
-                        config.get("address") is not None and config.get("address") > 0
-                    )
+                    has_address = is_valid_modbus_address(config.get("address"))
 
                     if has_state_template and not has_address:
                         # Template-based binary sensor - use ModbusCalculatedBinarySensor

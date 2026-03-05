@@ -10,6 +10,8 @@ import yaml
 from homeassistant.core import HomeAssistant
 from homeassistant.util.async_ import run_callback_threadsafe
 
+from .modbus_utils import is_valid_modbus_address
+
 # Global reference to Home Assistant instance for custom template loading
 _hass_instance: Optional[HomeAssistant] = None
 
@@ -348,7 +350,7 @@ def validate_custom_control(ctrl: Dict[str, Any], template_name: str) -> bool:
 
         # Validate address
         address = ctrl.get("address")
-        if not isinstance(address, int) or address < 1:
+        if not is_valid_modbus_address(address):
             _LOGGER.error(
                 "Template %s: Invalid address for control %s: %s",
                 template_name,
@@ -530,6 +532,7 @@ async def load_single_template(
             raw_registers = data.get("sensors", [])
             calculated_entities = data.get("calculated", [])
             controls = data.get("controls", [])
+            binary_sensors = data.get("binary_sensors", [])
             if not raw_registers:
                 # Allow empty base templates
                 if "type" in data and data["type"] == "base_template":
@@ -539,8 +542,15 @@ async def load_single_template(
                     )
                     raw_registers = []
                 else:
-                    _LOGGER.warning("Template %s has no sensors defined", template_name)
-                    return None
+                    if not (calculated_entities or controls or binary_sensors):
+                        _LOGGER.warning(
+                            "Template %s has no entities defined", template_name
+                        )
+                        return None
+                    _LOGGER.debug(
+                        "Template %s has no sensors but includes non-sensor entities",
+                        template_name,
+                    )
 
         # _LOGGER.debug("Template %s: %d sensors found", template_name, len(raw_registers))
 
@@ -562,8 +572,9 @@ async def load_single_template(
         if not validated_registers and not (
             "type" in data and data["type"] == "base_template"
         ):
-            _LOGGER.error("Template %s has no valid registers", template_name)
-            return None
+            if not (calculated_entities or controls or binary_sensors):
+                _LOGGER.error("Template %s has no valid entities", template_name)
+                return None
 
         # _LOGGER.debug("Template %s: %d valid registers processed", template_name, len(validated_registers))
 
@@ -1358,7 +1369,7 @@ def validate_register_data(reg: Dict[str, Any], template_name: str) -> bool:
     try:
         # Validate address
         address = reg.get("address")
-        if not isinstance(address, int) or address < 0:
+        if not is_valid_modbus_address(address):
             _LOGGER.error("Invalid address in Template %s: %s", template_name, address)
             return False
 

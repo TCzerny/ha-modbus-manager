@@ -25,7 +25,7 @@ from .device_utils import (
     replace_template_placeholders,
 )
 from .logger import ModbusManagerLogger
-from .modbus_utils import registers_to_bytes
+from .modbus_utils import is_valid_modbus_address, registers_to_bytes
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
 from .sunspec_utils import (
@@ -240,7 +240,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 binary_sensors = entities_dict.get("binary_sensors", [])
                 # Register-based binary sensors (have address) must be read from Modbus
                 binary_sensors_with_address = [
-                    b for b in binary_sensors if b.get("address", 0) > 0
+                    b
+                    for b in binary_sensors
+                    if is_valid_modbus_address(b.get("address"))
                 ]
                 all_registers = sensors + controls + binary_sensors_with_address
                 if all_registers:
@@ -376,8 +378,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
         Returns a structured dict with entity categories:
         {
-            "sensors": [...],           # type="sensor", address > 0
-            "controls": [...],          # type in ["number", "select", "switch", "button", "text"], address > 0
+            "sensors": [...],           # type="sensor", address >= 0
+            "controls": [...],          # type in ["number", "select", "switch", "button", "text"], address >= 0
             "calculated": [...],        # type="calculated", kein address
             "binary_sensors": [...]      # type="binary_sensor", kein address
         }
@@ -468,8 +470,8 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
         Returns a structured dict with entity categories:
         {
-            "sensors": [...],           # type="sensor", address > 0
-            "controls": [...],          # type in ["number", "select", "switch", "button", "text"], address > 0
+            "sensors": [...],           # type="sensor", address >= 0
+            "controls": [...],          # type in ["number", "select", "switch", "button", "text"], address >= 0
             "calculated": [...],        # type="calculated", kein address
             "binary_sensors": [...]      # type="binary_sensor", kein address
         }
@@ -835,20 +837,17 @@ class ModbusCoordinator(DataUpdateCoordinator):
                 )
 
                 # Add type field, device info, and categorize entities
-                # Sensors: registers with address > 0, type="sensor"
+                # Sensors: registers with address >= 0, type="sensor"
                 for register in processed_registers:
                     register["type"] = "sensor"
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
                     register["config_subentry_id"] = config_subentry_id
                     # Only add if it has a valid address (for Modbus reading)
-                    if (
-                        register.get("address") is not None
-                        and register.get("address", 0) > 0
-                    ):
+                    if is_valid_modbus_address(register.get("address")):
                         all_sensors.append(register)
 
-                # Controls: registers with address > 0, type in ["number", "select", "switch", "button", "text"]
+                # Controls: registers with address >= 0, type in ["number", "select", "switch", "button", "text"]
                 for register in processed_controls:
                     register["slave_id"] = slave_id
                     register["device_info"] = device_info
@@ -1047,10 +1046,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 register[ref_field] = ref_config
 
                     # Only add if it has a valid address (for Modbus reading)
-                    if (
-                        register.get("address") is not None
-                        and register.get("address", 0) > 0
-                    ):
+                    if is_valid_modbus_address(register.get("address")):
                         all_controls.append(register)
 
                 # Calculated: entities without address, type="calculated"

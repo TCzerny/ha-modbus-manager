@@ -2330,12 +2330,17 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             )
 
             # Validate template data
-            if not template_registers:
-                _LOGGER.error("Template %s has no registers", self._selected_template)
+            if not (
+                template_registers
+                or template_calculated
+                or template_controls
+                or template_binary_sensors
+            ):
+                _LOGGER.error("Template %s has no entities", self._selected_template)
                 return self.async_abort(
                     reason="no_registers",
                     description_placeholders={
-                        "error": f"Template {self._selected_template} has no registers"
+                        "error": f"Template {self._selected_template} has no entities"
                     },
                 )
 
@@ -3355,7 +3360,12 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                 original_binary_sensors = []
                 dynamic_config = {}
 
-            if not original_sensors:
+            if not (
+                original_sensors
+                or original_calculated
+                or original_controls
+                or original_binary_sensors
+            ):
                 return self.async_abort(
                     reason="no_registers",
                     description_placeholders={"template_name": template_name},

@@ -6,6 +6,7 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Tuple
 
 from .logger import ModbusManagerLogger
+from .modbus_utils import is_valid_modbus_address
 
 _LOGGER = ModbusManagerLogger(__name__)
 
@@ -70,8 +71,10 @@ class RegisterOptimizer:
             if not registers:
                 return []
 
-            # Filter out register 0 and negative addresses to avoid Modbus errors
-            filtered_registers = [reg for reg in registers if reg.get("address", 0) > 0]
+            # Keep zero-based addresses and filter only invalid/negative addresses.
+            filtered_registers = [
+                reg for reg in registers if is_valid_modbus_address(reg.get("address"))
+            ]
 
             # Sort registers by slave_id first, then by address
             # This ensures registers with the same slave_id are grouped together
