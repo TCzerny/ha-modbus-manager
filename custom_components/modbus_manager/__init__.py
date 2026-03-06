@@ -76,15 +76,23 @@ async def _sync_device_subentries(hass: HomeAssistant, entry: ConfigEntry) -> No
     new_data = dict(entry.data)
     data_changed = False
 
+    pending_device_id = entry.data.get("pending_subentry_device_id")
+
     # After initialization, treat subentries as source of truth for device existence.
     # If a user deletes a subentry in HA UI, prune the matching device record from devices[]
     # so it doesn't come back on next restart.
+    #
+    # Exception: keep one pending device id from add flow until its subentry exists
+    # to avoid races between async_update_entry + async_schedule_reload + subentry persist.
     if subentries_initialized:
         existing_ids = set(existing_by_unique_id.keys())
         filtered_devices = [
             device
             for device in normalized_devices
-            if device.get("device_entry_id") in existing_ids
+            if (
+                device.get("device_entry_id") in existing_ids
+                or device.get("device_entry_id") == pending_device_id
+            )
         ]
         if len(filtered_devices) != len(normalized_devices):
             _LOGGER.info(
@@ -148,6 +156,15 @@ async def _sync_device_subentries(hass: HomeAssistant, entry: ConfigEntry) -> No
             hass.config_entries.async_remove_subentry(
                 entry=entry, subentry_id=subentry.subentry_id
             )
+
+    # Clear pending add marker once subentry exists (or no longer relevant).
+    if pending_device_id:
+        if (
+            pending_device_id in existing_by_unique_id
+            or pending_device_id not in wanted_ids
+        ):
+            new_data.pop("pending_subentry_device_id", None)
+            data_changed = True
 
     if not entry.data.get("device_subentries_initialized"):
         new_data["device_subentries_initialized"] = True
@@ -410,6 +427,10 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
             "host": host,
             "port": port,
             "delay": entry.data.get("delay", 0),
+            "message_wait_milliseconds": entry.data.get(
+                "message_wait_milliseconds",
+                entry.data.get("request_delay", 100),
+            ),
             "timeout": entry.data.get("timeout", 5),
             "slave": entry.data.get("slave_id", 1),
         }
@@ -460,13 +481,22 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
             "performance_monitor": coordinator.performance_monitor,
         }
 
-        # Start coordinator
-        try:
-            await coordinator.async_config_entry_first_refresh()
-        except Exception as e:
-            _LOGGER.debug(
-                "Coordinator initial refresh failed (continuing offline): %s", str(e)
-            )
+        # Start coordinator refresh fully in background (Option A).
+        # Do not block entry setup on initial Modbus roundtrips.
+        initial_refresh_task = asyncio.create_task(
+            coordinator.async_config_entry_first_refresh()
+        )
+
+        def _log_initial_refresh_result(task: asyncio.Task) -> None:
+            try:
+                task.result()
+            except Exception as err:
+                _LOGGER.debug(
+                    "Coordinator initial background refresh finished with error: %s",
+                    str(err),
+                )
+
+        initial_refresh_task.add_done_callback(_log_initial_refresh_result)
 
         # Keep registry consistent with current dynamic filtering output.
         await _cleanup_stale_registry_entities(hass, entry, coordinator)
@@ -576,8 +606,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
         # Keep true config subentries in sync with current devices[] records.
         await _sync_device_subentries(hass, entry)
-        await _relink_devices_to_subentries(hass, entry)
-        await _relink_entities_to_device_subentries(hass, entry)
+        relink_completed = bool(entry.data.get("device_registry_relink_completed"))
+        pending_relink = bool(entry.data.get("pending_registry_relink"))
+        if pending_relink or not relink_completed:
+            await _relink_devices_to_subentries(hass, entry)
+            await _relink_entities_to_device_subentries(hass, entry)
+            new_data = dict(entry.data)
+            new_data["device_registry_relink_completed"] = True
+            new_data.pop("pending_registry_relink", None)
+            hass.config_entries.async_update_entry(entry, data=new_data)
+        else:
+            _LOGGER.debug(
+                "Skipping registry relink for %s (already completed)",
+                entry.entry_id,
+            )
 
         # Always use coordinator mode
         return await _setup_coordinator_entry(hass, entry)

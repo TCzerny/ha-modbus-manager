@@ -5,6 +5,33 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2026-03-06
+
+### 🐛 Fixed
+
+#### Connection parameter persistence and application
+- Fixed dynamic template connection flow key mismatch (`request_delay` vs `message_wait_milliseconds`) so "wait between requests" is saved correctly.
+- Fixed coordinator hub setup to pass `message_wait_milliseconds` to Modbus hub configuration.
+
+#### Subentry add/reconfigure stability (Issue #30)
+- Fixed race condition when re-adding deleted device subentries (stale orphaned `devices[]` entries could trigger false `already_configured` or missing entities).
+- Fixed subentry reconfigure completion path to use valid `reconfigure` flow semantics (prevents `ValueError: Source is reconfigure, expected user`).
+- Hardened subentry translation lookup by adding type-scoped keys under `config_subentries.device` (step/abort), including `reconfigure_successful`.
+
+#### Protocol version formatting
+- Fixed Sungrow protocol version display for SH/SG/iHomeManager templates by decoding BCD bytes correctly (for example `0x01001100` -> `V1.0.11`).
+
+### 🚀 Performance
+
+- Reduced polling frequency of low-change SH template registers to improve batching efficiency and reduce unnecessary reads.
+- Removed blocking wait for coordinator initial refresh during setup (refresh now continues in background, entities load sooner).
+
+### 🔧 Changed
+
+#### Subentry add UX
+- Hub `+` device flow now uses explicit 2-step UX: template selection first, then template-based configuration.
+- Second step now includes dynamic template fields (for example `selected_model` from `valid_models`) when adding devices such as SBR.
+
 ## [1.0.0] - 2026-03-04
 
 ### ✨ Added

@@ -32,7 +32,7 @@
                     "modbus_type": "Modbus Connection Type",
                     "timeout": "Timeout in seconds",
                     "delay": "Delay between operations (ms)",
-                    "request_delay": "Wait between requests (ms)",
+                    "message_wait_milliseconds": "Wait between Requests (milliseconds)",
                     "use_coordinator": "Use Coordinator Mode (experimental)",
                     "baudrate": "Baudrate",
                     "data_bits": "Data Bits",
@@ -173,6 +173,7 @@
         "abort": {
             "no_device_definitions": "No device definitions found. Please make sure at least one YAML file exists in the device_definitions directory.",
             "already_configured": "Device is already configured",
+            "reconfigure_successful": "Device reconfigured successfully.",
             "invalid_config": "Invalid configuration. {error}",
             "no_available_devices_for_subentry": "All devices already have a subentry.",
             "template_not_found": "Template {template_name} not found.",
@@ -255,6 +256,44 @@
             "invalid_config": "Invalid configuration. {error}",
             "no_available_devices_for_subentry": "All devices already have a subentry.",
             "config_error": "Configuration error."
+        },
+        "device": {
+            "step": {
+                "user": {
+                    "title": "Add Device Subentry",
+                    "description": "Add a new device to this hub.",
+                    "data": {
+                        "template": "Device Template",
+                        "prefix": "Device Prefix",
+                        "slave_id": "Slave ID"
+                    }
+                },
+                "reconfigure": {
+                    "title": "Reconfigure Device",
+                    "description": "Edit device settings for: {device}",
+                    "data": {
+                        "prefix": "Device Prefix",
+                        "slave_id": "Slave ID",
+                        "selected_model": "Select Model",
+                        "phases": "Number of Phases",
+                        "mppt_count": "Number of MPPT Trackers",
+                        "string_count": "Number of Strings",
+                        "modules": "Number of Modules",
+                        "firmware_version": "Firmware Version",
+                        "connection_type": "Connection Type",
+                        "meter_type": "Meter Type",
+                        "battery_config": "Battery Configuration",
+                        "battery_slave_id": "Battery Slave ID"
+                    }
+                }
+            },
+            "abort": {
+                "reconfigure_successful": "Device reconfigured successfully.",
+                "already_configured": "No additional device subentry can be created.",
+                "invalid_config": "Invalid configuration. {error}",
+                "no_available_devices_for_subentry": "All devices already have a subentry.",
+                "config_error": "Configuration error."
+            }
         }
     },
     "device": {

@@ -374,6 +374,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_connection(self, user_input: dict = None) -> FlowResult:
         """Handle connection parameters step for dynamic templates."""
         if user_input is not None:
+            # Backward-compatible normalization: older flow used "request_delay".
+            if (
+                "message_wait_milliseconds" not in user_input
+                and "request_delay" in user_input
+            ):
+                user_input["message_wait_milliseconds"] = user_input["request_delay"]
+            user_input.pop("request_delay", None)
+
             # Store connection parameters
             self._connection_params = user_input
 
@@ -405,7 +413,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     ),
                     vol.Optional("timeout", default=DEFAULT_TIMEOUT): int,
                     vol.Optional("delay", default=DEFAULT_DELAY): int,
-                    vol.Optional("request_delay", default=DEFAULT_MESSAGE_WAIT_MS): int,
+                    vol.Optional(
+                        "message_wait_milliseconds", default=DEFAULT_MESSAGE_WAIT_MS
+                    ): int,
                 }
             ),
             description_placeholders={
@@ -2415,6 +2425,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     "port": user_input.get("port", DEFAULT_PORT),
                     "timeout": user_input.get("timeout", DEFAULT_TIMEOUT),
                     "delay": user_input.get("delay", DEFAULT_DELAY),
+                    "message_wait_milliseconds": user_input.get(
+                        "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                    ),
                 },
                 "devices": devices,
                 # Keep legacy fields for backward compatibility
@@ -2426,6 +2439,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 "slave_id": user_input.get("slave_id", DEFAULT_SLAVE),
                 "timeout": user_input.get("timeout", DEFAULT_TIMEOUT),
                 "delay": user_input.get("delay", DEFAULT_DELAY),
+                "message_wait_milliseconds": user_input.get(
+                    "message_wait_milliseconds", DEFAULT_MESSAGE_WAIT_MS
+                ),
                 "template_version": template_version,
                 "firmware_version": firmware_version,
                 "registers": template_registers,
@@ -2733,6 +2749,121 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
     """Config subentry flow for Modbus Manager devices."""
 
     @staticmethod
+    async def _get_template_defaults(template_name: str) -> tuple[str, int]:
+        """Return default prefix/slave_id for a template."""
+        template_data = await get_template_by_name(template_name)
+        if not isinstance(template_data, dict):
+            return "device", 1
+        return (
+            str(template_data.get("default_prefix", "device")),
+            int(template_data.get("default_slave_id", 1)),
+        )
+
+    async def _show_add_device_form(
+        self,
+        selected_template: str,
+        prefix_default: str | None = None,
+        slave_id_default: int | None = None,
+    ) -> FlowResult:
+        """Render add-device form with template-aware defaults."""
+        template_names = sorted(await get_template_names())
+        if not template_names:
+            return self.async_abort(reason="no_templates")
+
+        if selected_template not in template_names:
+            selected_template = template_names[0]
+
+        if prefix_default is None or slave_id_default is None:
+            resolved_prefix, resolved_slave_id = await self._get_template_defaults(
+                selected_template
+            )
+            if prefix_default is None:
+                prefix_default = resolved_prefix
+            if slave_id_default is None:
+                slave_id_default = resolved_slave_id
+
+        self._add_form_template_name = selected_template
+        self._add_form_prefix_default = prefix_default
+        self._add_form_slave_default = slave_id_default
+
+        template_data = await get_template_by_name(selected_template)
+        dynamic_config = (
+            template_data.get("dynamic_config", {})
+            if isinstance(template_data, dict)
+            else {}
+        )
+
+        schema_fields: dict[Any, Any] = {
+            vol.Required("prefix", default=prefix_default): str,
+            vol.Required("slave_id", default=slave_id_default): int,
+        }
+
+        valid_models = dynamic_config.get("valid_models")
+        if isinstance(valid_models, dict) and valid_models:
+            model_options = {name: name for name in valid_models.keys()}
+            default_model = next(iter(model_options))
+            schema_fields[
+                vol.Optional("selected_model", default=default_model)
+            ] = vol.In(model_options)
+
+        for field_name, field_config in dynamic_config.items():
+            if field_name in [
+                "valid_models",
+                "battery_slave_id",
+                "battery_config",
+                "selected_model",
+            ]:
+                continue
+
+            if isinstance(field_config, dict) and "options" in field_config:
+                options = field_config.get("options", [])
+                if options:
+                    default = field_config.get("default", options[0])
+                    if default not in options:
+                        default = options[0]
+                    schema_fields[vol.Optional(field_name, default=default)] = vol.In(
+                        options
+                    )
+            elif isinstance(field_config, dict) and "default" in field_config:
+                default = field_config.get("default")
+                if isinstance(default, bool):
+                    schema_fields[vol.Optional(field_name, default=default)] = bool
+                elif isinstance(default, int):
+                    schema_fields[vol.Optional(field_name, default=default)] = int
+                elif isinstance(default, float):
+                    schema_fields[vol.Optional(field_name, default=default)] = float
+                else:
+                    schema_fields[vol.Optional(field_name, default=str(default))] = str
+
+        return self.async_show_form(
+            step_id="user",
+            data_schema=vol.Schema(schema_fields),
+        )
+
+    async def _show_add_template_select_form(self) -> FlowResult:
+        """Render first add-device step with template selection only."""
+        template_names = sorted(await get_template_names())
+        if not template_names:
+            return self.async_abort(reason="no_templates")
+
+        default_template = template_names[0]
+        self._add_form_template_name = None
+        self._add_template_candidate = default_template
+        self._add_form_prefix_default = None
+        self._add_form_slave_default = None
+
+        return self.async_show_form(
+            step_id="user",
+            data_schema=vol.Schema(
+                {
+                    vol.Required("template", default=default_template): vol.In(
+                        template_names
+                    ),
+                }
+            ),
+        )
+
+    @staticmethod
     def _build_device_entry_id(device: dict[str, Any]) -> str:
         prefix = str(device.get("prefix", "device")).strip() or "device"
         slave_id = str(device.get("slave_id", 1)).strip() or "1"
@@ -2894,7 +3025,22 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
         """Add a new device to current hub and create its subentry."""
         entry = self._get_entry()
         if user_input is not None:
-            template_name = user_input["template"]
+            # Stage 1: template selected, now show defaults for prefix/slave_id.
+            if "prefix" not in user_input and "slave_id" not in user_input:
+                template_name = user_input["template"]
+                self._add_template_candidate = template_name
+                default_prefix, default_slave_id = await self._get_template_defaults(
+                    template_name
+                )
+                return await self._show_add_device_form(
+                    selected_template=template_name,
+                    prefix_default=default_prefix,
+                    slave_id_default=default_slave_id,
+                )
+
+            template_name = user_input.get(
+                "template", getattr(self, "_add_template_candidate", None)
+            )
             template_data = await get_template_by_name(template_name)
             if not template_data or not isinstance(template_data, dict):
                 return self.async_abort(reason="template_not_found")
@@ -2902,8 +3048,35 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             prefix = str(user_input.get("prefix", "")).strip()
             slave_id = int(user_input.get("slave_id", 1))
 
-            if not _is_prefix_unique_across_hubs(self.hass, prefix):
-                return self.async_abort(reason="already_configured")
+            # UX helper: if user changed only template, but prefix/slave still match
+            # the previous form defaults, automatically apply defaults of the newly
+            # selected template.
+            shown_template = getattr(self, "_add_form_template_name", None)
+            shown_prefix_default = getattr(self, "_add_form_prefix_default", None)
+            shown_slave_default = getattr(self, "_add_form_slave_default", None)
+            template_changed = shown_template and shown_template != template_name
+            prefix_matches_shown_default = (
+                shown_prefix_default is not None
+                and prefix == str(shown_prefix_default).strip()
+            )
+            slave_matches_shown_default = (
+                shown_slave_default is not None and slave_id == int(shown_slave_default)
+            )
+
+            if (
+                template_changed
+                and prefix_matches_shown_default
+                and slave_matches_shown_default
+            ):
+                # Re-render form so user sees updated defaults of the chosen template.
+                new_prefix, new_slave_id = await self._get_template_defaults(
+                    template_name
+                )
+                return await self._show_add_device_form(
+                    selected_template=template_name,
+                    prefix_default=new_prefix,
+                    slave_id_default=new_slave_id,
+                )
 
             device = {
                 "type": template_data.get("type", "inverter") or "inverter",
@@ -2919,7 +3092,9 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                 valid_models = dynamic_config.get("valid_models")
                 if isinstance(valid_models, dict) and valid_models:
                     default_model = next(iter(valid_models))
-                    device["selected_model"] = default_model
+                    device["selected_model"] = user_input.get(
+                        "selected_model", default_model
+                    )
                 for field_name, field_config in dynamic_config.items():
                     if field_name in [
                         "valid_models",
@@ -2927,12 +3102,60 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                         "battery_config",
                     ]:
                         continue
-                    if isinstance(field_config, dict) and "default" in field_config:
+                    if field_name in user_input:
+                        device[field_name] = user_input.get(field_name)
+                    elif isinstance(field_config, dict) and "default" in field_config:
                         device[field_name] = field_config.get("default")
 
             normalized_device = self._normalize_device_record(device)
 
             devices = self._get_devices(entry)
+            active_subentry_unique_ids = {
+                subentry.unique_id
+                for subentry in entry.subentries.values()
+                if subentry.subentry_type == "device" and subentry.unique_id
+            }
+
+            # If a device subentry was deleted in HA UI, devices[] can be temporarily stale
+            # until the next sync/reload. Prune only the stale duplicate candidate here so
+            # re-adding the same logical device works immediately.
+            pruned_devices: list[dict[str, Any]] = []
+            removed_stale_duplicate = False
+            for existing in devices:
+                existing_device_id = existing.get("device_entry_id")
+                same_entry_id = existing_device_id == normalized_device.get(
+                    "device_entry_id"
+                )
+                same_identity = (
+                    existing.get("prefix") == normalized_device.get("prefix")
+                    and existing.get("slave_id") == normalized_device.get("slave_id")
+                    and existing.get("template") == normalized_device.get("template")
+                )
+                is_orphaned = existing_device_id not in active_subentry_unique_ids
+
+                if is_orphaned and (same_entry_id or same_identity):
+                    removed_stale_duplicate = True
+                    _LOGGER.info(
+                        "Pruned stale device record without subentry before add: %s",
+                        existing_device_id,
+                    )
+                    continue
+
+                pruned_devices.append(existing)
+
+            if removed_stale_duplicate:
+                devices = pruned_devices
+                new_data = dict(entry.data)
+                new_data["devices"] = devices
+                self.hass.config_entries.async_update_entry(entry, data=new_data)
+
+            # Prefix must be unique across other hubs.
+            # Current hub duplicates are validated below against active devices[].
+            if not _is_prefix_unique_across_hubs(
+                self.hass, prefix, exclude_entry_id=entry.entry_id
+            ):
+                return self.async_abort(reason="already_configured")
+
             for existing in devices:
                 same_entry_id = existing.get(
                     "device_entry_id"
@@ -2947,6 +3170,12 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
 
             new_data = dict(entry.data)
             new_data["devices"] = devices + [normalized_device]
+            # Mark newly added logical device as pending until its subentry exists.
+            # This avoids add-flow race conditions where setup pruning runs before
+            # HA persists the subentry.
+            new_data["pending_subentry_device_id"] = normalized_device.get(
+                "device_entry_id"
+            )
             self.hass.config_entries.async_update_entry(entry, data=new_data)
             self.hass.config_entries.async_schedule_reload(entry.entry_id)
 
@@ -2956,35 +3185,7 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                 unique_id=normalized_device.get("device_entry_id"),
             )
 
-        template_names = sorted(await get_template_names())
-        if not template_names:
-            return self.async_abort(reason="no_templates")
-
-        first_template = template_names[0]
-        first_template_data = await get_template_by_name(first_template)
-        default_prefix = (
-            first_template_data.get("default_prefix", "device")
-            if isinstance(first_template_data, dict)
-            else "device"
-        )
-        default_slave_id = (
-            first_template_data.get("default_slave_id", 1)
-            if isinstance(first_template_data, dict)
-            else 1
-        )
-
-        return self.async_show_form(
-            step_id="user",
-            data_schema=vol.Schema(
-                {
-                    vol.Required("template", default=first_template): vol.In(
-                        template_names
-                    ),
-                    vol.Required("prefix", default=default_prefix): str,
-                    vol.Required("slave_id", default=default_slave_id): int,
-                }
-            ),
-        )
+        return await self._show_add_template_select_form()
 
     async def async_step_reconfigure(
         self, user_input: dict | None = None
