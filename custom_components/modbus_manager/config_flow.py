@@ -32,6 +32,7 @@ from .template_loader import (
     _evaluate_condition,
     get_template_by_name,
     get_template_names,
+    set_hass_instance,
 )
 
 _LOGGER = ModbusManagerLogger(__name__)
@@ -244,6 +245,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     async def async_step_user(self, user_input: dict = None) -> FlowResult:
         """Handle the initial step."""
         try:
+            # Required for first-ever integration setup so user templates from
+            # config/modbus_manager/templates are visible immediately.
+            set_hass_instance(self.hass)
             template_names = await get_template_names()
             self._templates = {}
             for name in template_names:
