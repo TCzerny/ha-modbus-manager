@@ -128,6 +128,11 @@ dynamic_config:
     # DTSU666-20: Dual-channel meter with Channel 2 support (registers 5600-5606 + 13199-13205, scale: 1)
     # Meter Channel 2 sensors are only valid when DTSU666-20 is selected
 
+  wallbox_connected:
+    description: "Wallbox connected to inverter"
+    options: ["no", "yes"]
+    default: "no"
+
   battery_config:
     description: "Battery configuration"
     options: ["none", "standard_battery", "sbr_battery"]
@@ -174,7 +179,6 @@ sensors:
     scan_interval: 10
     group: "PV_device_info"
     entity_category: "diagnostic"
-
 
   # Device Information
   - name: Inverter Serial
@@ -782,7 +786,8 @@ sensors:
     scale: 0.01
     scan_interval: 600
     entity_category: "diagnostic"
-    condition: "selected_model in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
+    condition: "selected_model in [SH20T, SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, SH5.0RT, SH6.0RT, SH8.0RT, SH10RT, SH5.0RT-20, SH6.0RT-20, SH8.0RT-20, SH10RT-20, SH5.0RT-V112, SH6.0RT-V112, SH8.0RT-V112, SH10RT-V112, SH5.0RT-V122, SH6.0RT-V122, SH8.0RT-V122, SH10RT-V122]"
+    # Added SH20T om request of user
 
   # Export Power Limitation Values (Protocol V1.1.11)
   - name: Min Export Power Limit Value
@@ -2647,6 +2652,96 @@ sensors:
       0xAA: "Enabled"
     condition: "battery_enabled == true"
 
+
+ # Wallbox Registers (read-only, only when wallbox is connected)
+  - name: "WB Charging Mode"
+    unique_id: "wb_charging_mode"
+    address: 33540
+    input_type: holding
+    data_type: uint16
+    scan_interval: 30
+    group: "WB_settings"
+    icon: "mdi:ev-station"
+    map:
+      160: "Fast Charge"
+      161: "PV Surplus"
+      162: "Quantity & Time Based"
+      163: "User Defined"
+    condition: "wallbox_connected == 'yes'"
+
+  - name: "WB Charging Quantity"
+    unique_id: "wb_charging_quantity"
+    address: 33541
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "kWh"
+    scan_interval: 30
+    group: "WB_settings"
+    icon: "mdi:battery-charging"
+    condition: "wallbox_connected == 'yes'"
+
+  - name: "WB Charging Duration Raw"
+    unique_id: "wb_charging_duration_raw"
+    address: 33542
+    input_type: holding
+    data_type: uint32
+    scan_interval: 30
+    group: "WB_settings"
+    icon: "mdi:timer-outline"
+    entity_category: "diagnostic"
+    condition: "wallbox_connected == 'yes'"
+
+  - name: "WB User Defined Charging Current"
+    unique_id: "wb_user_defined_charging_current"
+    address: 33544
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 1
+    unit_of_measurement: "A"
+    scan_interval: 30
+    group: "WB_settings"
+    icon: "mdi:current-ac"
+    condition: "wallbox_connected == 'yes'"
+
+  - name: "WB User Defined Charge Start Time Raw"
+    unique_id: "wb_user_defined_charge_start_time_raw"
+    address: 33545
+    input_type: holding
+    data_type: uint32
+    scan_interval: 30
+    group: "WB_settings"
+    icon: "mdi:clock-start"
+    entity_category: "diagnostic"
+    condition: "wallbox_connected == 'yes'"
+
+  - name: "WB User Defined Charge End Time Raw"
+    unique_id: "wb_user_defined_charge_end_time_raw"
+    address: 33547
+    input_type: holding
+    data_type: uint32
+    scan_interval: 30
+    group: "WB_settings"
+    icon: "mdi:clock-end"
+    entity_category: "diagnostic"
+    condition: "wallbox_connected == 'yes'"
+
+  - name: "WB Surplus Power From Grid Raw"
+    unique_id: "wb_surplus_power_from_grid_raw"
+    address: 33549
+    input_type: holding
+    data_type: uint16
+    scan_interval: 30
+    group: "WB_settings"
+    icon: "mdi:transmission-tower-export"
+    entity_category: "diagnostic"
+    map:
+      85: "Power From Grid"
+      170: "Unknown (170)"
+    condition: "wallbox_connected == 'yes'"
+
 # Controls for write access
 controls:
   - type: "select"
@@ -3488,14 +3583,14 @@ calculated:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_battery_capacity', 'unavailable')
-      and not is_state('sensor.{PREFIX}_battery_level_nominal', 'unavailable')
+      and not is_state('sensor.{PREFIX}_battery_level_nom', 'unavailable')
       and not is_state('sensor.{PREFIX}_battery_capacity', 'unknown')
-      and not is_state('sensor.{PREFIX}_battery_level_nominal', 'unknown')
+      and not is_state('sensor.{PREFIX}_battery_level_nom', 'unknown')
       }}
     state: >-
       {{
         ( states('sensor.{PREFIX}_battery_capacity') | float *
-        states('sensor.{PREFIX}_battery_level_nominal') | float / 100 )| round(1)
+        states('sensor.{PREFIX}_battery_level_nom') | float / 100 )| round(1)
       }}
     unit_of_measurement: "kWh"
     device_class: "energy_storage"
