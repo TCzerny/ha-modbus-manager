@@ -2652,15 +2652,16 @@ sensors:
       0xAA: "Enabled"
     condition: "battery_enabled == true"
 
-
+ ################################################################
  # Wallbox Registers (read-only, only when wallbox is connected)
-  - name: "WB Charging Mode"
-    unique_id: "wb_charging_mode"
+ ################################################################
+  - name: "WB Charging Mode Raw"
+    unique_id: "wb_charging_mode_raw"
     address: 33540
     input_type: holding
     data_type: uint16
     scan_interval: 30
-    group: "WB_settings"
+    group: "EV_settings"
     icon: "mdi:ev-station"
     map:
       160: "Fast Charge"
@@ -2669,8 +2670,8 @@ sensors:
       163: "User Defined"
     condition: "wallbox_connected == 'yes'"
 
-  - name: "WB Charging Quantity"
-    unique_id: "wb_charging_quantity"
+  - name: "WB Charging Quantity Raw"
+    unique_id: "wb_charging_quantity_raw"
     address: 33541
     input_type: holding
     data_type: uint16
@@ -2678,7 +2679,7 @@ sensors:
     precision: 1
     unit_of_measurement: "kWh"
     scan_interval: 30
-    group: "WB_settings"
+    group: "EV_settings"
     icon: "mdi:battery-charging"
     condition: "wallbox_connected == 'yes'"
 
@@ -2688,13 +2689,13 @@ sensors:
     input_type: holding
     data_type: uint32
     scan_interval: 30
-    group: "WB_settings"
+    group: "EV_settings"
     icon: "mdi:timer-outline"
     entity_category: "diagnostic"
     condition: "wallbox_connected == 'yes'"
 
-  - name: "WB User Defined Charging Current"
-    unique_id: "wb_user_defined_charging_current"
+  - name: "WB User Defined Charging Current Raw"
+    unique_id: "wb_user_defined_charging_current_raw"
     address: 33544
     input_type: holding
     data_type: uint16
@@ -2702,7 +2703,7 @@ sensors:
     precision: 1
     unit_of_measurement: "A"
     scan_interval: 30
-    group: "WB_settings"
+    group: "EV_settings"
     icon: "mdi:current-ac"
     condition: "wallbox_connected == 'yes'"
 
@@ -2712,7 +2713,7 @@ sensors:
     input_type: holding
     data_type: uint32
     scan_interval: 30
-    group: "WB_settings"
+    group: "EV_settings"
     icon: "mdi:clock-start"
     entity_category: "diagnostic"
     condition: "wallbox_connected == 'yes'"
@@ -2723,7 +2724,7 @@ sensors:
     input_type: holding
     data_type: uint32
     scan_interval: 30
-    group: "WB_settings"
+    group: "EV_settings"
     icon: "mdi:clock-end"
     entity_category: "diagnostic"
     condition: "wallbox_connected == 'yes'"
@@ -2734,12 +2735,12 @@ sensors:
     input_type: holding
     data_type: uint16
     scan_interval: 30
-    group: "WB_settings"
+    group: "EV_settings"
     icon: "mdi:transmission-tower-export"
     entity_category: "diagnostic"
     map:
-      85: "Power From Grid"
-      170: "Unknown (170)"
+      85: "PV Surplus without Grid Power"
+      170: "PV Surplus with Grid Power"
     condition: "wallbox_connected == 'yes'"
 
 # Controls for write access
@@ -3082,6 +3083,64 @@ controls:
       0x55: "Disabled"
       0xAA: "Limit PV"
     group: "PV_control"
+
+
+  ################################################################
+  # Wallbox Registers (holding-registers, only when wallbox is connected)
+  ################################################################
+  - type: "select"
+    name: "WB charging mode"
+    unique_id: "wb_charging_mode"
+    address: 33540
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 10
+    options:
+      160: "Fast Charge"
+      161: "PV Surplus"
+      162: "Quantity & Time"
+      163: "User defined"
+    group: "EV_control"
+    condition: "wallbox_connected == 'yes'"
+
+  - name: "WB Charging Quantity"
+    unique_id: "wb_charging_quantity"
+    type: "number"
+    address: 33541
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 0
+    unit_of_measurement: "kWh"
+    scan_interval: 0
+    group: "EV_control"
+    condition: "wallbox_connected == 'yes'"
+
+  - name: "WB User Defined Charging Current"
+    unique_id: "wb_user_defined_charging_current"
+    type: "number"
+    address: 33544
+    input_type: holding
+    data_type: uint16
+    scale: 0.1
+    precision: 0
+    unit_of_measurement: "A"
+    scan_interval: 10
+    group: "EV_control"
+    condition: "wallbox_connected == 'yes'"
+
+  - type: "select"
+    name: WB surplus power from grid
+    unique_id: "wb_surplus_power_from_grid"
+    address: 33549
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 10
+    options:
+      85: "PV Surplus with out Grid Power"
+      170: "PV Surplus with Grid Power"
+    group: "EV_control"
+    condition: "wallbox_connected == 'yes'"
 
 # Calculated Sensors
 calculated:
