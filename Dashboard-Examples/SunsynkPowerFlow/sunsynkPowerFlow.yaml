@@ -1,0 +1,167 @@
+type: custom:sunsynk-power-flow-card
+cardstyle: full
+wide: false
+large_font: true
+show_solar: true
+show_battery: true
+show_grid: true
+center_no_grid: false
+card_height: 100%
+card_width: 100%
+decimal_places: 2
+decimal_places_energy: 1
+dynamic_line_width: true
+max_line_width: 4
+min_line_width: 1
+inverter:
+  modern: true
+  colour: "#9e9e9e"
+  autarky: energy
+  auto_scale: true
+  three_phase: true
+  model: sungrow
+battery:
+  energy: sensor.{PREFIX}_battery_charge_health_rated
+  shutdown_soc: number.{PREFIX}_min_soc
+  invert_power: true
+  colour: "#4e9b3c"
+  show_daily: true
+  animation_speed: 6
+  max_power: 5750
+  full_capacity: 100
+  empty_capacity: 5
+  show_absolute: true
+  auto_scale: true
+  hide_soc: false
+  show_remaining_energy: true
+  soc_end_of_charge: number.{PREFIX}_max_soc
+battery2:
+  energy: 0
+  shutdown_soc: 20
+  soc_end_of_charge: 100
+  invert_power: false
+  hide_soc: false
+  colour: "#ffc0cb"
+  show_remaining_energy: true
+  remaining_energy_to_shutdown: false
+  show_absolute: false
+  auto_scale: true
+  dynamic_colour: true
+  linear_gradient: true
+  animate: true
+  path_threshold: 100
+  navigate: ""
+  invert_flow: false
+solar:
+  colour: "#ffa500"
+  show_daily: true
+  mppts: 2
+  animation_speed: 9
+  max_power: 12000
+  pv1_name: West
+  pv2_name: Ost
+  pv3_name: West
+  pv4_name: Ost
+  auto_scale: true
+  display_mode: 3
+  dynamic_colour: false
+load:
+  colour: "#5fb6ad"
+  show_daily: true
+  show_daily_aux: false
+  show_aux: false
+  invert_aux: false
+  aux_name: Generator
+  aux_type: gen
+  aux_colour: "#008000"
+  aux_off_colour: "#ff0000"
+  aux_loads: 2
+  aux_load1_name: Aux load 1
+  aux_load2_name: Aux load 2
+  aux_load1_icon: mdi:air-filter
+  aux_load2_icon: mdi:stove
+  animation_speed: 8
+  max_power: 15000
+  additional_loads: 5
+  load1_name: Trockner
+  load2_name: Waschmaschine
+  load1_icon: mdi:tumble-dryer
+  load2_icon: mdi:washing-machine
+  auto_scale: true
+  dynamic_colour: true
+  dynamic_icon: true
+  essential_name: Hausverbrauch
+  load3_name: WB 1
+  load4_name: WB 2
+  load5_icon: mdi:ev-station
+grid:
+  colour: "#ff8647"
+  show_daily_buy: true
+  show_daily_sell: true
+  no_grid_colour: "#b1dd8c"
+  show_nonessential: false
+  invert_grid: false
+  nonessential_name: null
+  nonessential_icon: ""
+  additional_loads: 0
+  load1_name: Disk
+  load2_name: EV
+  load1_icon: ""
+  load2_icon: ""
+  animation_speed: 8
+  max_power: 15000
+  auto_scale: true
+  export_colour: "#77bb41"
+  grid_off_colour: "#e63b7a"
+  energy_cost_decimals: 2
+panel_mode: false
+title_colour: "#9e9e9e"
+title_size: 18px
+entities:
+  day_battery_charge_70: sensor.{PREFIX}_daily_battery_charge
+  day_battery_discharge_71: sensor.{PREFIX}_daily_battery_discharge
+  day_load_energy_84: sensor.{PREFIX}_daily_consumed_energy
+  day_grid_import_76: sensor.{PREFIX}_daily_imported_energy
+  day_grid_export_77: sensor.{PREFIX}_daily_exported_energy
+  day_pv_energy_108: sensor.{PREFIX}_daily_pv_generation
+  inverter_voltage_154: sensor.{PREFIX}_phase_a_voltage
+  load_frequency_192: sensor.{PREFIX}_grid_frequency
+  inverter_current_164: sensor.{PREFIX}_phase_a_current
+  inverter_power_175: sensor.{PREFIX}_real_load_power
+  grid_power_169: sensor.{PREFIX}_meter_active_power_raw
+  pv1_power_186: sensor.{PREFIX}_mppt1_power
+  pv2_power_187: sensor.{PREFIX}_mppt2_power
+  pv3_power_188: none
+  pv4_power_189: none
+  pv_total: sensor.{PREFIX}_total_dc_power
+  pv1_voltage_109: sensor.{PREFIX}_mppt1_voltage
+  pv1_current_110: sensor.{PREFIX}_mppt1_current
+  pv2_voltage_111: sensor.{PREFIX}_mppt2_voltage
+  pv2_current_112: sensor.{PREFIX}_mppt2_current
+  pv3_voltage_113: none
+  pv3_current_114: none
+  pv4_voltage_115: none
+  pv4_current_116: none
+  battery_voltage_183: sensor.{PREFIX}_battery_voltage
+  battery_soc_184: sensor.{PREFIX}_battery_level_nominal
+  battery_power_190: sensor.{PREFIX}_signed_battery_power
+  battery_current_191: sensor.{PREFIX}_battery_current
+  essential_power: sensor.{PREFIX}_load_power
+  grid_ct_power_172: sensor.{PREFIX}_meter_phase_a_active_power_raw
+  inverter_status_59: sensor.{PREFIX}_inverter_status_display
+  battery_temp_182: sensor.{PREFIX}_battery_temperature
+  radiator_temp_91: sensor.{PREFIX}_inverter_temperature
+  dc_transformer_temp_90: sensor.{PREFIX}_battery_temperature
+  energy_cost_buy: input_number.aktueller_strompreis
+  solar_sell_247: input_select.set_{PREFIX}_ems_mode
+  total_pv_generation: sensor.{PREFIX}_yearly_pv_generation_2025
+  grid_ct_power_L2: sensor.{PREFIX}_meter_phase_b_active_power_raw
+  grid_ct_power_L3: sensor.{PREFIX}_meter_phase_c_active_power_raw
+  grid_ct_power_total: sensor.{PREFIX}_meter_active_power
+  inverter_voltage_L2: sensor.{PREFIX}_phase_b_voltage
+  inverter_voltage_L3: sensor.{PREFIX}_phase_c_voltage
+  inverter_current_L2: sensor.{PREFIX}_phase_b_current
+  inverter_current_L3: sensor.{PREFIX}_phase_c_current
+  energy_cost_sell: input_number.aktuelle_einspeisevergutung
+  battery_current_direction: binary_sensor.{PREFIX}_battery_discharging
+  essential_load5: sensor.{WBPREFIX}_charging_power

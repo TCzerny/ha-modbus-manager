@@ -31,7 +31,7 @@
                     "slave_id": "Modbus Slave ID",
                     "modbus_type": "Modbus Verbindungstyp",
                     "timeout": "Timeout in Sekunden",
-                    "delay": "Verzögerung zwischen Operationen (ms)",
+                    "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
                     "use_coordinator": "Coordinator-Modus verwenden (experimentell)",
                     "baudrate": "Baudrate",
@@ -57,6 +57,7 @@
                     "battery_slave_id": "Batterie Slave ID",
                     "dual_channel_meter": "Dual-Channel Zähler aktiviert",
                     "meter_type": "Zählertyp",
+                    "wallbox_connected": "Wallbox angeschlossen",
                     "sunspec_model_103_address": "SunSpec Model 103 Adresse (Inverter Base - PV Daten) - Optional, nur bei Bedarf ändern",
                     "sunspec_model_160_address": "SunSpec Model 160 Adresse (Multiple MPPT Extension) - Optional, nur bei Bedarf ändern",
                     "sunspec_model_124_address": "SunSpec Model 124 Adresse (Battery Storage Control) - Optional, nur bei Bedarf ändern"
@@ -92,7 +93,7 @@
                     "slave_id": "Modbus Slave ID (Standard: 1)",
                     "modbus_type": "Modbus Verbindungstyp",
                     "timeout": "Timeout in Sekunden",
-                    "delay": "Verzögerung zwischen Operationen (ms)",
+                    "delay": "Verzögerung nach Verbindung (Sekunden)",
                     "message_wait_milliseconds": "Wartezeit zwischen Requests (Millisekunden)",
                     "baudrate": "Baudrate (nur RTU)",
                     "data_bits": "Datenbits (nur RTU)",
@@ -107,6 +108,7 @@
                     "firmware_version": "Firmware-Version",
                     "connection_type": "Verbindungstyp",
                     "dual_channel_meter": "Dual-Channel Zähler aktiviert",
+                    "wallbox_connected": "Wallbox angeschlossen",
                     "name": "Gerätename (z.B. 'Sungrow Inverter')",
                     "common_model_address": "Common Model Register-Adresse (Standard: 40001)",
                     "inverter_model_address": "Inverter Model Register-Adresse (Standard: 40069)",
@@ -160,6 +162,7 @@
                     "firmware_version": "Firmware-Version",
                     "connection_type": "Verbindungstyp",
                     "meter_type": "Zählertyp",
+                    "wallbox_connected": "Wallbox angeschlossen",
                     "battery_config": "Batterie-Konfiguration",
                     "battery_slave_id": "Batterie Slave ID",
                     "timeout": "Timeout in Sekunden",
@@ -235,7 +238,9 @@
                 "data": {
                     "template": "Geräte-Template",
                     "prefix": "Geräte-Prefix",
-                    "slave_id": "Slave ID"
+                    "slave_id": "Slave ID",
+                    "selected_model": "Modell auswählen",
+                    "wallbox_connected": "Wallbox angeschlossen"
                 }
             },
             "reconfigure": {
@@ -252,6 +257,7 @@
                     "firmware_version": "Firmware-Version",
                     "connection_type": "Verbindungstyp",
                     "meter_type": "Zählertyp",
+                    "wallbox_connected": "Wallbox angeschlossen",
                     "battery_config": "Batterie-Konfiguration",
                     "battery_slave_id": "Batterie Slave ID"
                 }
@@ -272,7 +278,9 @@
                     "data": {
                         "template": "Geräte-Template",
                         "prefix": "Geräte-Prefix",
-                        "slave_id": "Slave ID"
+                        "slave_id": "Slave ID",
+                        "selected_model": "Modell auswählen",
+                        "wallbox_connected": "Wallbox angeschlossen"
                     }
                 },
                 "reconfigure": {
@@ -289,6 +297,7 @@
                         "firmware_version": "Firmware-Version",
                         "connection_type": "Verbindungstyp",
                         "meter_type": "Zählertyp",
+                        "wallbox_connected": "Wallbox angeschlossen",
                         "battery_config": "Batterie-Konfiguration",
                         "battery_slave_id": "Batterie Slave ID"
                     }
