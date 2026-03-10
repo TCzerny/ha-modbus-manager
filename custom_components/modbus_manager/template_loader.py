@@ -117,6 +117,7 @@ OPTIONAL_FIELDS = {
     "icon": None,
     "read_function_code": None,  # Optional: Modbus function code for read (3, 4, or None for auto)
     "write_function_code": None,  # Optional: Modbus function code for write (6, 16, or None for auto)
+    "force_update": False,  # Write each update to state machine, even if data is the same
 }
 
 
@@ -529,10 +530,10 @@ async def load_single_template(
 
         else:
             # Standard template processing
-            raw_registers = data.get("sensors", [])
-            calculated_entities = data.get("calculated", [])
-            controls = data.get("controls", [])
-            binary_sensors = data.get("binary_sensors", [])
+            raw_registers = data.get("sensors", []) # Process sensors if present
+            calculated_entities = data.get("calculated", []) # Process calculated if present
+            controls = data.get("controls", []) # Process controls if present
+            binary_sensors = data.get("binary_sensors", []) # Process binary sensors if present
             if not raw_registers:
                 # Allow empty base templates
                 if "type" in data and data["type"] == "base_template":
@@ -577,16 +578,6 @@ async def load_single_template(
                 return None
 
         # _LOGGER.debug("Template %s: %d valid registers processed", template_name, len(validated_registers))
-
-        # Process calculated section if present
-        if calculated_entities:
-            pass  # _LOGGER.debug("Template %s: %d calculated entities found", template_name, len(calculated_entities))
-
-        # Process controls section if present
-        # Controls processed
-
-        # Process binary sensors if present
-        binary_sensors = data.get("binary_sensors", [])
 
         # Template structure summary (only log if there are issues)
         template_type = data.get("type", "device_template")

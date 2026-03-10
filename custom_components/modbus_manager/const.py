@@ -29,6 +29,7 @@ CONF_INPUT_TYPE: Final = "input_type"
 CONF_UNIT_OF_MEASUREMENT: Final = "unit_of_measurement"
 CONF_DEVICE_CLASS: Final = "device_class"
 CONF_STATE_CLASS: Final = "state_class"
+CONF_FORCE_UPDATE: Final = "force_update"
 
 # Service types
 SERVICE_TYPE_NUMBER: Final = "number"
@@ -40,6 +41,7 @@ DEFAULT_TIMEOUT: Final = 3  # Sekunden
 MIN_TIMEOUT: Final = 1  # Minimum timeout in seconds
 MAX_TIMEOUT: Final = 30  # Maximum timeout in seconds
 DEFAULT_DELAY: Final = 0  # Default delay in seconds
+DEFAULT_FORCE_UPDATE: Final = False  # Default force_update value
 MIN_DELAY: Final = 0  # Minimum delay in seconds
 DEFAULT_MESSAGE_WAIT_MS: Final = 100  # Default message wait in milliseconds
 MIN_MESSAGE_WAIT_MS: Final = 10  # Minimum message wait in milliseconds

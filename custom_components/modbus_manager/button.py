@@ -102,6 +102,9 @@ class ModbusCoordinatorButton(ButtonEntity):
             else:
                 self.entity_id = f"button.{default_entity_id}"
 
+        # Write each update to the state machine, even if the data is the same.
+        self._attr_force_update = register_config.get("force_update", False)
+
         # Buttons should appear under device controls
         self._attr_entity_category = EntityCategory.CONFIG
 
