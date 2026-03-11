@@ -78,6 +78,9 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
                 self.entity_id = default_entity_id
             else:
                 self.entity_id = f"sensor.{default_entity_id}"
+
+        # Write each update to the state machine, even if the data is the same.
+        self._attr_force_update = register_config.get("force_update", False)
         self._attr_native_unit_of_measurement = register_config.get(
             "unit_of_measurement", ""
         )

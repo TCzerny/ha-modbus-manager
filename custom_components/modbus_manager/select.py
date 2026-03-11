@@ -50,6 +50,9 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
                 self.entity_id = default_entity_id
             else:
                 self.entity_id = f"select.{default_entity_id}"
+
+        # Write each update to the state machine, even if the data is the same.
+        self._attr_force_update = register_config.get("force_update", False)
         self._attr_icon = register_config.get("icon")
 
         # Selects should appear under device controls
