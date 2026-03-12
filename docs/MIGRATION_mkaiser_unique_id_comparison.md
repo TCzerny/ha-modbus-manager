@@ -35,31 +35,24 @@ Modbus Manager uses **unique_id** (with prefix) for `entity_id`:
 
 ## How to Make Migration Easier
 
-### Option A: Use "mkaiser entity_id compatibility" mode (future feature)
+### Option A: Use `entity_ids_without_prefix` (Recommended for single-device setups)
 
-**Idea:** Add a device-level option when adding the SH device: **"Use mkaiser entity_id format"** (or **"Entity ID prefix: none"**).
+**Implemented in Modbus Manager v1.0.2+.** When adding the Sungrow SH device, set **Entity IDs without prefix** to **yes** in the dynamic configuration.
 
-- **Behavior:** When enabled, use the template `unique_id` **without** prefix for `entity_id` (e.g. `sensor.mppt1_voltage` instead of `sensor.sg_mppt1_voltage`).
-- **Registry:** Keep `unique_id` with prefix (e.g. `sg_mppt1_voltage`) for registry stability.
-- **Pros:** Entity IDs match mkaiser; history and automations can stay unchanged.
-- **Cons:** Only safe when there is **one** SH device per hub. With multiple devices (e.g. two inverters), entity_ids would collide.
+- **Behavior:** Entity IDs are generated **without** the prefix (e.g. `sensor.mppt1_voltage`, `sensor.load_power` instead of `sensor.sg_mppt1_voltage`).
+- **Registry:** `unique_id` keeps the prefix (e.g. `sg_mppt1_voltage`) for registry stability.
+- **Pros:** Entity IDs match mkaiser; **history carries over**; automations and dashboards continue to work without changes.
+- **Cons:** Only safe when there is **one** Sungrow SH device per hub. With multiple devices, entity_ids would collide.
 
-**Implementation:** Add a config option (e.g. `entity_id_prefix: ""` or `mkaiser_entity_id_compat: true`) and, when set, use `template_unique_id` instead of `prefix_template_unique_id` for `default_entity_id` in `process_template_entities_with_prefix`.
+**After migration:** When ready to switch to prefixed entity_ids, call the service `modbus_manager.add_entity_prefix` with your config entry ID. Entity IDs will be renamed (e.g. `sensor.load_power` → `sensor.sg_load_power`). Home Assistant migrates history automatically when entity_ids are renamed.
 
-### Option A2: Use template `default_entity_id` parameter
-
-**Existing feature:** Templates can define `default_entity_id` per entity. If set, it overrides the auto-derived entity_id.
-
-- **Current behavior:** If template has `default_entity_id: "battery_level"`, the entity gets `sensor.battery_level`. But this is used for **all** devices—with prefix `sg` we'd still get `sensor.battery_level` (no prefix applied to template default_entity_id). That would cause **collisions** when multiple SH devices exist on the same hub.
-- **Gap:** `default_entity_id` does **not** go through `replace_template_placeholders`—no `{PREFIX}` support. So we cannot have `default_entity_id: "{PREFIX}_battery_level"` to get `sg_battery_level` in normal mode.
-- **How it could help:** When combined with Option A (mkaiser compat mode): in mkaiser mode, use template `default_entity_id` if present (for entities where our `unique_id` differs from mkaiser, e.g. `meter_active_power_raw` → `meter_active_power`), else use `template_unique_id`. In normal mode, ignore template `default_entity_id` and use `prefix_unique_id`.
-- **Template changes:** Add `default_entity_id` only for entities that don't match mkaiser (e.g. `meter_active_power_raw` gets `default_entity_id: "meter_active_power"`). For the bulk, `template_unique_id` suffices in mkaiser mode.
+See [MIGRATION_mkaiser_to_modbus_manager.md](MIGRATION_mkaiser_to_modbus_manager.md) for the full step-by-step guide.
 
 ### Option B: Manual entity rename after migration
 
 - **Flow:** Migrate as usual (prefix `sg`), then manually rename entities in **Settings → Devices & Services → Entities** to remove the `sg_` prefix (e.g. `sensor.sg_mppt1_voltage` → `sensor.mppt1_voltage`).
-- **Pros:** No code changes; works with existing setup.
-- **Cons:** Tedious for many entities; history still does not carry over unless the entity_id matches exactly.
+- **Pros:** Works with existing setup.
+- **Cons:** Tedious for many entities; history does not carry over unless the entity_id matches exactly.
 
 ### Option C: Update automations and dashboards
 
@@ -69,12 +62,14 @@ Modbus Manager uses **unique_id** (with prefix) for `entity_id`:
 
 ### Recommendation
 
-- **Short term:** Use Option C (update references) and document it clearly.
-- **Future:** Add Option A as an optional "mkaiser compatibility" mode for single-device setups, with a clear warning about multi-device conflicts.
+- **Single Sungrow SH device per hub:** Use **Option A** (`entity_ids_without_prefix: yes`) for seamless migration with history retention.
+- **Multiple devices per hub:** Use **Option C** (update references) and document the new entity_ids.
 
 ---
 
 ## 1. unique_id Comparison (Modbus Manager prefix `sg` vs mkaiser)
+
+**Note on `_raw` entities:** Modbus Manager exposes both `_raw` (direct register value) and calculated entities where a transformation is applied. The calculated entity (e.g. `sg_protocol_version`, `sg_meter_active_power`) typically aligns with mkaiser's equivalent. The `_raw` variant is the internal source (e.g. BCD-encoded protocol version, or meter value before filtering invalid 0x7FFFFFFF).
 
 ### 1.1 Sensors – Match (same unique_id after prefix)
 
@@ -99,10 +94,10 @@ Modbus Manager uses **unique_id** (with prefix) for `entity_id`:
 | sg_inverter_temperature | sg_inverter_temperature | ✓ |
 | sg_battery_power | sg_battery_power | ✓ |
 | sg_grid_frequency | sg_grid_frequency | ✓ |
-| sg_meter_active_power | sg_meter_active_power_raw | ✗ (suffix `_raw`) |
-| sg_meter_phase_a_active_power | sg_meter_phase_a_active_power_raw | ✗ |
-| sg_meter_phase_b_active_power | sg_meter_phase_b_active_power_raw | ✗ |
-| sg_meter_phase_c_active_power | sg_meter_phase_c_active_power_raw | ✗ |
+| sg_meter_active_power | sg_meter_active_power | ✓ (calculated from _raw, filters 0x7FFFFFFF) |
+| sg_meter_phase_a_active_power | sg_meter_phase_a_active_power | ✓ (calculated from _raw) |
+| sg_meter_phase_b_active_power | sg_meter_phase_b_active_power | ✓ (calculated from _raw) |
+| sg_meter_phase_c_active_power | sg_meter_phase_c_active_power | ✓ (calculated from _raw) |
 | sg_bdc_rated_power | sg_bdc_rated_power | ✓ |
 | sg_battery_current | sg_battery_current | ✓ |
 | sg_bms_max_charging_current | sg_bms_max_charging_current | ✓ |
@@ -122,7 +117,7 @@ Modbus Manager uses **unique_id** (with prefix) for `entity_id`:
 | sg_daily_exported_energy_from_PV | sg_daily_exported_energy_from_PV | ✓ |
 | sg_total_exported_energy_from_pv | sg_total_exported_energy_from_pv | ✓ |
 | sg_load_power | sg_load_power | ✓ |
-| sg_battery_export_power_raw | sg_export_power_raw | ✗ (different name) |
+| sg_battery_export_power_raw | sg_export_power_raw | Different name (same register); we also have sg_export_power (calculated) |
 | sg_daily_battery_charge_from_pv | sg_daily_battery_charge_from_pv | ✓ |
 | sg_total_battery_charge_from_pv | sg_total_battery_charge_from_pv | ✓ |
 | sg_daily_direct_energy_consumption | sg_daily_direct_energy_consumption | ✓ |
@@ -143,39 +138,39 @@ Modbus Manager uses **unique_id** (with prefix) for `entity_id`:
 | sg_total_battery_charge | sg_total_battery_charge | ✓ |
 | sg_daily_exported_energy | sg_daily_exported_energy | ✓ |
 | sg_total_exported_energy | sg_total_exported_energy | ✓ |
+| sg_protocol_version | sg_protocol_version | ✓ (calculated from _raw, BCD→version string) |
+| sg_inverter_serial | sg_inverter_serial | ✓ |
+| sg_load_adjustment_mode_selection_raw | sg_load_adjustment_mode_selection_raw | ✓ |
+| sg_ems_mode_selection_raw | sg_ems_mode_selection_raw | ✓ |
+| sg_export_power_limit | sg_export_power_limit | ✓ |
+| sg_backup_mode_raw | sg_backup_mode_raw | ✓ |
+| sg_export_power_limit_mode_raw | sg_export_power_limit_mode_raw | ✓ |
+| sg_battery_reserved_soc_for_backup | sg_battery_reserved_soc_for_backup | ✓ |
+| sg_battery_max_charge_power | sg_battery_max_charge_power | ✓ |
+| sg_battery_max_discharge_power | sg_battery_max_discharge_power | ✓ |
+| sg_battery_charging_start_power | sg_battery_charging_start_power | ✓ |
+| sg_battery_discharging_start_power | sg_battery_discharging_start_power | ✓ |
 
 ### 1.2 Sensors – Mismatch or Different Structure
 
 | mkaiser | Modbus Manager | Notes |
 |---------|----------------|-------|
 | sg_version_1, sg_version_2, sg_version_3, sg_version_4_battery | inverter_firmware_info (combined) | mkaiser: 4 separate firmware strings; we: single combined firmware |
-| sg_protocol_version | sg_protocol_version_raw | Different suffix |
 | sg_arm_software | sg_certification_version_arm_software | Different name |
 | sg_dsp_software | sg_certification_version_dsp_software | Different name |
-| sg_inverter_serial | sg_inverter_serial | ✓ |
 | sg_dev_code | sg_sungrow_device_type_code | Different name |
 | sg_inverter_rated_output | sg_nominal_output_power | Different name |
 | uid_battery_capacity_high_precision | sg_battery_capacity | Different (we use battery_capacity) |
 | uid_sg_running_state_raw | sg_system_state | Different (we have system_state + running_state) |
 | uid_power_flow_status | sg_running_state | Different (power flow vs running state) |
-| sg_load_adjustment_mode_selection_raw | sg_load_adjustment_mode_selection_raw | ✓ |
 | sg_load_adjustment_mode_enable_raw | sg_load_adjustment_mode_on_off_selection_raw | Different (different register semantics) |
-| sg_ems_mode_selection_raw | sg_ems_mode_selection_raw | ✓ |
-| sg_battery_forced_charge_discharge_cmd_raw | (in controls) | ✓ |
-| sg_battery_forced_charge_discharge_power | (in controls) | ✓ |
+| sg_battery_forced_charge_discharge_cmd_raw | (in controls) | Same semantic, different platform (controls vs sensors) |
+| sg_battery_forced_charge_discharge_power | (in controls) | Same semantic, different platform (controls vs sensors) |
 | uid_sg_battery_max_soc | sg_max_export_power_limit_value (or battery max SoC control) | Different structure |
 | uid_sg_battery_min_soc | sg_min_export_power_limit_value (or battery min SoC control) | Different structure |
-| sg_export_power_limit | sg_export_power_limit | ✓ |
-| sg_backup_mode_raw | sg_backup_mode_raw | ✓ |
-| sg_export_power_limit_mode_raw | sg_export_power_limit_mode_raw | ✓ |
-| sg_battery_reserved_soc_for_backup | sg_battery_reserved_soc_for_backup | ✓ |
 | sg_inverter_firmware_version | sg_inverter_firmware_info | Different name |
 | sg_communication_module_firmware_version | sg_communication_module_firmware_info | Different name |
 | sg_battery_firmware_version | sg_battery_firmware_info | Different name |
-| sg_battery_max_charge_power | sg_battery_max_charge_power | ✓ |
-| sg_battery_max_discharge_power | sg_battery_max_discharge_power | ✓ |
-| sg_battery_charging_start_power | sg_battery_charging_start_power | ✓ |
-| sg_battery_discharging_start_power | sg_battery_discharging_start_power | ✓ |
 
 ### 1.3 mkaiser Template Entities (binary_sensor, sensor, number, select, switch, button)
 
@@ -212,14 +207,16 @@ So with prefix `sg`, Modbus Manager entities are `sensor.sg_mppt1_voltage`, whil
 | Aspect | Result |
 |--------|--------|
 | **unique_id alignment** | Many match when using prefix `sg`; some differ (`_raw`, different names) |
-| **entity_id alignment** | **Do not match** – mkaiser uses name-based entity_ids, we use unique_id-based |
-| **Automation compatibility** | Automations referencing mkaiser entity_ids (e.g. `sensor.mppt1_voltage`) will **not** work with Modbus Manager entities (e.g. `sensor.sg_mppt1_voltage`) without updates |
+| **entity_id alignment (default)** | **Do not match** – mkaiser uses name-based entity_ids, Modbus Manager uses unique_id-based with prefix |
+| **entity_id alignment (entity_ids_without_prefix: yes)** | **Match** – Modbus Manager generates unprefixed entity_ids (e.g. `sensor.mppt1_voltage`), same as mkaiser |
+| **History retention** | With `entity_ids_without_prefix: yes`, entity_ids match → history carries over. Use `add_entity_prefix` service later to add prefix; HA migrates history on rename |
+| **Automation compatibility** | With `entity_ids_without_prefix: yes`, automations continue to work. With default (prefixed), automations must be updated |
 
 ---
 
 ## 4. Recommendation for Migration Guide
 
-1. **Do not** claim that entity_ids match when using prefix `sg`.
-2. **State clearly** that automations, dashboards, and scripts must be updated to the new entity_ids.
-3. **History:** History is tied to entity_id. If entity_ids differ, history will not carry over. To keep history, entity_ids would need to match, which is not the case with the current designs.
-4. **Prefix `sg`:** Use prefix `sg` for consistency with mkaiser’s `sg_` unique_ids and to avoid conflicts with other integrations, but expect different entity_ids and plan for automation updates.
+1. **Single-device setups:** Use `entity_ids_without_prefix: yes` for history retention and automation compatibility. Call `modbus_manager.add_entity_prefix` when ready to switch to prefixed entity_ids.
+2. **Multi-device setups:** Use default (prefixed) mode. Update automations, dashboards, and scripts to the new entity_ids.
+3. **Prefix `sg`:** Use prefix `sg` for consistency with mkaiser's `sg_` unique_ids and to avoid conflicts with other integrations.
+4. **Full guide:** See [MIGRATION_mkaiser_to_modbus_manager.md](MIGRATION_mkaiser_to_modbus_manager.md) for the complete step-by-step migration process.

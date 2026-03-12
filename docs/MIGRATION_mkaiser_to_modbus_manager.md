@@ -34,9 +34,11 @@ To **preserve history** when migrating from integrations that use unprefixed ent
 
 1. **Add device with `entity_ids_without_prefix: yes`** – Entity IDs will match the source integration (e.g. `sensor.battery_level`, `sensor.mppt1_voltage`). History carries over.
 2. **After migration is complete**, call the service `modbus_manager.add_entity_prefix` to add the prefix to entity_ids (e.g. `sensor.battery_level` → `sensor.sg_battery_level`). Home Assistant migrates history when entity_ids are renamed.
-3. **Set `entity_ids_without_prefix: no`** in the device configuration (via device reconfigure).
+3. **Set `entity_ids_without_prefix: no`** in the device configuration (via device reconfigure) so future reloads use prefixed entity_ids.
 
-**Constraint:** Only safe for a **single** Sungrow SH device per hub (entity_id collision with multiple devices).
+**Constraint:** Only safe for a **single** Sungrow SH device per hub. With multiple devices, unprefixed entity_ids would collide.
+
+**Implementation details:** See [MIGRATION_mkaiser_unique_id_comparison.md](MIGRATION_mkaiser_unique_id_comparison.md) for unique_id vs entity_id alignment.
 
 ### Automations, Dashboards, Scripts
 
@@ -160,7 +162,9 @@ If you used **Entity IDs without prefix: yes**, entity_ids match the source inte
    service: modbus_manager.add_entity_prefix
    data:
      entry_id: "<your-modbus-manager-config-entry-id>"
+     # device_entry_id: "<device-subentry-unique_id>"  # Optional: for multi-device hubs, to target a specific device
    ```
+   **Finding the entry_id:** In **Developer Tools → Services**, select `modbus_manager.add_entity_prefix`—the dropdown shows your hub(s) (e.g. "Modbus Hub (192.168.178.83:502)") with the config entry ID.
 2. Entity IDs will be renamed (e.g. `sensor.battery_level` → `sensor.sg_battery_level`). Home Assistant migrates history automatically.
 3. Set **Entity IDs without prefix** to **no** in the device configuration (device → Configure).
 
