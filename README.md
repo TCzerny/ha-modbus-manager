@@ -68,7 +68,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 ### ✅ Supported
 - **[Sungrow SHx Series](docs/README_sungrow_shx_dynamic.md)** – All 36 SHx models, MPPT, strings, phases, battery, meters (DTSU666)
 - **[Sungrow SG Series](docs/README_sungrow_sg_dynamic.md)** – SG3.0RS–SG10RS, SG3.0RT–SG6.0RT
-- **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** – SBR096–SBR256
+- **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** – SBR064–SBR256, SBH100-SBH400
 - **[Solvis SC2/SC3](docs/README_solvis_sc3.md)** – Heating controller, temperature sensors, pump controls
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** – EV charger, 3-phase charging
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** – EV wallbox (AC007-00, AC011E-01, AC22E-01), RS485 via inverter
