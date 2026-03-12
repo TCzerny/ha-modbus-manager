@@ -58,6 +58,7 @@
                     "dual_channel_meter": "Dual-Channel Zähler aktiviert",
                     "meter_type": "Zählertyp",
                     "wallbox_connected": "Wallbox angeschlossen",
+                    "entity_ids_without_prefix": "Entity-IDs ohne Präfix",
                     "sunspec_model_103_address": "SunSpec Model 103 Adresse (Inverter Base - PV Daten) - Optional, nur bei Bedarf ändern",
                     "sunspec_model_160_address": "SunSpec Model 160 Adresse (Multiple MPPT Extension) - Optional, nur bei Bedarf ändern",
                     "sunspec_model_124_address": "SunSpec Model 124 Adresse (Battery Storage Control) - Optional, nur bei Bedarf ändern"
@@ -163,6 +164,7 @@
                     "connection_type": "Verbindungstyp",
                     "meter_type": "Zählertyp",
                     "wallbox_connected": "Wallbox angeschlossen",
+                    "entity_ids_without_prefix": "Entity-IDs ohne Präfix",
                     "battery_config": "Batterie-Konfiguration",
                     "battery_slave_id": "Batterie Slave ID",
                     "timeout": "Timeout in Sekunden",
@@ -258,6 +260,7 @@
                     "connection_type": "Verbindungstyp",
                     "meter_type": "Zählertyp",
                     "wallbox_connected": "Wallbox angeschlossen",
+                    "entity_ids_without_prefix": "Entity-IDs ohne Präfix",
                     "battery_config": "Batterie-Konfiguration",
                     "battery_slave_id": "Batterie Slave ID"
                 }
@@ -298,6 +301,7 @@
                         "connection_type": "Verbindungstyp",
                         "meter_type": "Zählertyp",
                         "wallbox_connected": "Wallbox angeschlossen",
+                        "entity_ids_without_prefix": "Entity-IDs ohne Präfix",
                         "battery_config": "Batterie-Konfiguration",
                         "battery_slave_id": "Batterie Slave ID"
                     }
@@ -463,6 +467,20 @@
         }
     },
     "services": {
+        "add_entity_prefix": {
+            "name": "Entity-Präfix hinzufügen",
+            "description": "Geräte-Präfix zu Entity-IDs hinzufügen (nach Migration von Entity-IDs ohne Präfix)",
+            "fields": {
+                "entry_id": {
+                    "name": "Config-Entry-ID",
+                    "description": "Die Modbus-Manager-Config-Entry-ID (erforderlich)"
+                },
+                "device_entry_id": {
+                    "name": "Geräte-Entry-ID",
+                    "description": "Geräte-Subentry unique_id (optional, für Multi-Device-Hubs)"
+                }
+            }
+        },
         "update_firmware_version": {
             "name": "Firmware-Version aktualisieren",
             "description": "Aktualisiert die Firmware-Version des Geräts.",

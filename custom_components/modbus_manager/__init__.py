@@ -527,13 +527,40 @@ async def _setup_coordinator_entry(hass: HomeAssistant, entry: ConfigEntry) -> b
         return False
 
 
+def _get_unprefixed_subentry_ids(entry: ConfigEntry) -> set:
+    """Return config_subentry_ids for devices with entity_ids_without_prefix=yes."""
+    unprefixed_ids = set()
+    devices = entry.data.get("devices", [])
+    if not isinstance(devices, list):
+        return unprefixed_ids
+    for device in devices:
+        if not isinstance(device, dict):
+            continue
+        if device.get("entity_ids_without_prefix") != "yes":
+            continue
+        device_entry_id = device.get("device_entry_id")
+        if not device_entry_id:
+            continue
+        for subentry in entry.subentries.values():
+            if (
+                subentry.subentry_type == "device"
+                and subentry.unique_id == device_entry_id
+            ):
+                unprefixed_ids.add(subentry.subentry_id)
+                break
+    return unprefixed_ids
+
+
 async def _normalize_binary_sensor_entity_ids(
     hass: HomeAssistant, entry: ConfigEntry
 ) -> None:
-    """Ensure binary_sensor entity_ids include the device prefix."""
+    """Ensure binary_sensor entity_ids include the device prefix.
+
+    Skips entities from devices with entity_ids_without_prefix=yes (entity_ids stay unprefixed).
+    """
     try:
         entity_registry = er.async_get(hass)
-        device_registry = dr.async_get(hass)
+        unprefixed_subentry_ids = _get_unprefixed_subentry_ids(entry)
         updated = 0
 
         for entity_entry in list(entity_registry.entities.values()):
@@ -543,8 +570,28 @@ async def _normalize_binary_sensor_entity_ids(
                 continue
             if not entity_entry.device_id:
                 continue
+            if entity_entry.config_subentry_id in unprefixed_subentry_ids:
+                continue
 
-            prefix = entry.data.get("prefix")
+            devices = entry.data.get("devices", [])
+            prefix = None
+            if isinstance(devices, list):
+                for subentry in entry.subentries.values():
+                    if (
+                        subentry.subentry_type == "device"
+                        and subentry.subentry_id == entity_entry.config_subentry_id
+                    ):
+                        device_entry_id = subentry.unique_id
+                        for dev in devices:
+                            if (
+                                isinstance(dev, dict)
+                                and dev.get("device_entry_id") == device_entry_id
+                            ):
+                                prefix = dev.get("prefix")
+                                break
+                        break
+            if not prefix:
+                prefix = entry.data.get("prefix")
             if not prefix:
                 continue
 
@@ -986,6 +1033,113 @@ async def async_setup_services(hass: HomeAssistant) -> None:
 
     # register_optimize service removed - register optimization is automatic and handled by the coordinator
 
+    async def add_entity_prefix_service(call):
+        """Add prefix to entity_ids (after migration from unprefixed entity_ids).
+
+        Use after running with entity_ids_without_prefix=yes to add prefix to entity_ids.
+        entity_id: sensor.battery_level -> sensor.sg_battery_level)
+        Home Assistant migrates history when entity_id is renamed.
+
+        Service data:
+        - entry_id: Config entry ID (required)
+        - device_entry_id: Device subentry unique_id (optional, for multi-device hubs)
+        """
+        try:
+            entry_id = call.data.get("entry_id") if call.data else None
+            device_entry_id = call.data.get("device_entry_id") if call.data else None
+
+            if not entry_id:
+                _LOGGER.error("add_entity_prefix requires entry_id")
+                return
+
+            config_entry = None
+            for entry in hass.config_entries.async_entries(DOMAIN):
+                if entry.entry_id == entry_id:
+                    config_entry = entry
+                    break
+
+            if not config_entry:
+                _LOGGER.error("Config entry %s not found", entry_id)
+                return
+
+            entity_registry = er.async_get(hass)
+            devices = config_entry.data.get("devices", [])
+            if not isinstance(devices, list):
+                _LOGGER.error("No devices in entry %s", entry_id)
+                return
+
+            # Build device_entry_id -> (prefix, config_subentry_id) for migration devices
+            targets = {}
+            for device in devices:
+                if not isinstance(device, dict):
+                    continue
+                if device.get("entity_ids_without_prefix") != "yes":
+                    continue
+                dev_id = device.get("device_entry_id")
+                prefix = device.get("prefix")
+                if not dev_id or not prefix:
+                    continue
+                if device_entry_id and dev_id != device_entry_id:
+                    continue
+                subentry_id = None
+                for subentry in config_entry.subentries.values():
+                    if (
+                        subentry.subentry_type == "device"
+                        and subentry.unique_id == dev_id
+                    ):
+                        subentry_id = subentry.subentry_id
+                        break
+                if subentry_id:
+                    targets[dev_id] = (prefix.lower(), subentry_id)
+
+            if not targets:
+                _LOGGER.warning(
+                    "No devices with entity_ids_without_prefix=yes found for entry %s",
+                    entry_id,
+                )
+                return
+
+            updated = 0
+            for reg_entry in list(entity_registry.entities.values()):
+                if reg_entry.config_entry_id != entry_id:
+                    continue
+                subentry_id = reg_entry.config_subentry_id
+                if not subentry_id:
+                    continue
+                prefix_info = None
+                for dev_id, (prefix_lower, sid) in targets.items():
+                    if sid == subentry_id:
+                        prefix_info = (prefix_lower, dev_id)
+                        break
+                if not prefix_info:
+                    continue
+                prefix_lower, _ = prefix_info
+                domain, object_id = reg_entry.entity_id.split(".", 1)
+                if object_id.startswith(f"{prefix_lower}_"):
+                    continue
+                new_entity_id = f"{domain}.{prefix_lower}_{object_id}"
+                if entity_registry.async_get(new_entity_id):
+                    _LOGGER.warning(
+                        "Skipping rename due to conflict: %s -> %s",
+                        reg_entry.entity_id,
+                        new_entity_id,
+                    )
+                    continue
+                entity_registry.async_update_entity(
+                    reg_entry.entity_id, new_entity_id=new_entity_id
+                )
+                updated += 1
+
+            _LOGGER.info(
+                "add_entity_prefix: renamed %d entity(ies) for entry %s",
+                updated,
+                entry_id,
+            )
+        except Exception as e:
+            _LOGGER.error(
+                "Error in add_entity_prefix service: %s", str(e), exc_info=True
+            )
+
     async def reload_templates_service(call):
         """Handle template reload service - reload templates and update entity attributes without restart.
 
@@ -1241,6 +1395,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
     )
     hass.services.async_register(DOMAIN, "performance_reset", performance_reset_service)
     # register_optimize removed - optimization is automatic
+    hass.services.async_register(DOMAIN, "add_entity_prefix", add_entity_prefix_service)
     hass.services.async_register(DOMAIN, "reload_templates", reload_templates_service)
 
     _LOGGER.debug("Modbus Manager services registered successfully")

@@ -4,6 +4,8 @@
 
 The **Sungrow SHx Dynamic Template** is a complete, dynamically configurable template for all Sungrow SHx inverter models. Based on the mkaiser implementation, it contains all available registers and supports automatic filtering based on device configuration.
 
+> **Migrating from mkaiser?** See the [Migration Guide](MIGRATION_mkaiser_to_modbus_manager.md) for step-by-step instructions to switch from the [mkaiser YAML-based integration](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant) to this template.
+
 ## 🏭 Supported Inverter Models
 
 The template supports **all 36** following Sungrow SHx models:

@@ -58,6 +58,7 @@
                     "dual_channel_meter": "Dual-Channel Meter Enabled",
                     "meter_type": "Meter Type",
                     "wallbox_connected": "Wallbox Connected",
+                    "entity_ids_without_prefix": "Entity IDs without prefix",
                     "sunspec_model_103_address": "SunSpec Model 103 Address (Inverter Base - PV Data) - Optional, only change if needed",
                     "sunspec_model_160_address": "SunSpec Model 160 Address (Multiple MPPT Extension) - Optional, only change if needed",
                     "sunspec_model_124_address": "SunSpec Model 124 Address (Battery Storage Control) - Optional, only change if needed"
@@ -251,6 +252,7 @@
                     "connection_type": "Connection Type",
                     "meter_type": "Meter Type",
                     "wallbox_connected": "Wallbox Connected",
+                    "entity_ids_without_prefix": "Entity IDs without prefix",
                     "battery_config": "Battery Configuration",
                     "battery_slave_id": "Battery Slave ID"
                 }
@@ -291,6 +293,7 @@
                         "connection_type": "Connection Type",
                         "meter_type": "Meter Type",
                         "wallbox_connected": "Wallbox Connected",
+                        "entity_ids_without_prefix": "Entity IDs without prefix",
                         "battery_config": "Battery Configuration",
                         "battery_slave_id": "Battery Slave ID"
                     }
@@ -327,6 +330,20 @@
         }
     },
     "services": {
+        "add_entity_prefix": {
+            "name": "Add Entity Prefix",
+            "description": "Add device prefix to entity_ids (after migration from unprefixed entity_ids)",
+            "fields": {
+                "entry_id": {
+                    "name": "Config Entry ID",
+                    "description": "The Modbus Manager config entry ID (required)"
+                },
+                "device_entry_id": {
+                    "name": "Device Entry ID",
+                    "description": "Device subentry unique_id (optional, for multi-device hubs)"
+                }
+            }
+        },
         "update_firmware_version": {
             "name": "Update Firmware Version",
             "description": "Updates the firmware version of the device.",

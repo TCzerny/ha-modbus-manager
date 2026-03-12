@@ -133,6 +133,13 @@ dynamic_config:
     options: ["no", "yes"]
     default: "no"
 
+  entity_ids_without_prefix:
+    description: "Entity IDs without prefix (for migration/history retention from integrations using unprefixed entity_ids)"
+    options: ["no", "yes"]
+    default: "no"
+    # When yes: entity_id = template unique_id (e.g. sensor.battery_level), unique_id keeps prefix
+    # Use add_entity_prefix service after migration to add prefix and migrate history
+
   battery_config:
     description: "Battery configuration"
     options: ["none", "standard_battery", "sbr_battery"]

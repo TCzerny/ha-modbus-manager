@@ -101,7 +101,11 @@ def process_template_entities_with_prefix(
 
 
 def replace_template_placeholders(
-    template_string: str, prefix: str, slave_id: int = 1, battery_slave_id: int = 200
+    template_string: str,
+    prefix: str,
+    slave_id: int = 1,
+    battery_slave_id: int = 200,
+    entity_ids_without_prefix: bool = False,
 ) -> str:
     """Replace template placeholders in strings with actual values.
 
@@ -110,6 +114,7 @@ def replace_template_placeholders(
         prefix: Device prefix to replace {PREFIX}
         slave_id: Slave ID to replace {SLAVE_ID} (legacy, no longer used in register definitions)
         battery_slave_id: Battery slave ID to replace {BATTERY_SLAVE_ID} (legacy, no longer used)
+        entity_ids_without_prefix: When True, {PREFIX} and {PREFIX}_ become empty for entity_id refs
 
     Returns:
         String with placeholders replaced
@@ -124,11 +129,20 @@ def replace_template_placeholders(
     # Replace common placeholders
     # Note: {PREFIX} is still actively used, {SLAVE_ID} and {BATTERY_SLAVE_ID} are legacy
     # PREFIX is replaced lowercase for consistency with entity_id format
-    replacements = {
-        "{PREFIX}": prefix.lower(),
-        "{SLAVE_ID}": str(slave_id),  # Legacy - no longer used in templates
-        "{BATTERY_SLAVE_ID}": str(battery_slave_id),  # Legacy - no longer used
-    }
+    # When entity_ids_without_prefix: entity_ids have no prefix, so {PREFIX}_ and {PREFIX} become ""
+    if entity_ids_without_prefix:
+        replacements = {
+            "{PREFIX}_": "",
+            "{PREFIX}": "",
+            "{SLAVE_ID}": str(slave_id),
+            "{BATTERY_SLAVE_ID}": str(battery_slave_id),
+        }
+    else:
+        replacements = {
+            "{PREFIX}": prefix.lower(),
+            "{SLAVE_ID}": str(slave_id),
+            "{BATTERY_SLAVE_ID}": str(battery_slave_id),
+        }
 
     result = template_string
     for placeholder, value in replacements.items():

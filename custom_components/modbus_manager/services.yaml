@@ -21,8 +21,23 @@ performance_reset:
       selector:
         text:
 
-
-
+add_entity_prefix:
+  name: "Add Entity Prefix"
+  description: "Add device prefix to entity_ids (after migration from unprefixed entity_ids)"
+  fields:
+    entry_id:
+      name: "Config Entry ID"
+      description: "The Modbus Manager config entry ID (required)"
+      required: true
+      selector:
+        config_entry:
+          integration: modbus_manager
+    device_entry_id:
+      name: "Device Entry ID"
+      description: "Device subentry unique_id (optional, for multi-device hubs)"
+      required: false
+      selector:
+        text:
 
 
 
