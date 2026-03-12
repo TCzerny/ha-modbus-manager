@@ -140,7 +140,7 @@ Follow the hub wizard to set connection type (TCP for LAN, RTU for serial), host
 3. Enter connection details using **`sg`** as the Prefix and your inverter Slave ID (typically `1`)
 4. Select your **model** from the dropdown (e.g. SH10RT, SH5.0RS)
 5. Configure dynamic options: **Meter Type**, **Wallbox connected**, **Firmware**, **Connection type** (LAN/WINET), **Battery**, etc.
-6. **For history retention:** Set **Entity IDs without prefix** to **yes** (entity_ids will match source integration)
+6. ⚠️ **VERY IMPORTANT – For history retention:** Set **Entity IDs without prefix** to **yes** (entity_ids will match source integration)
 7. Save
 
 ---
