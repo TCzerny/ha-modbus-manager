@@ -170,6 +170,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
             "mppt_count": self.entry.data.get("mppt_count"),
             "string_count": self.entry.data.get("string_count"),
             "modules": self.entry.data.get("modules"),
+            "entity_ids_without_prefix": self.entry.data.get(
+                "entity_ids_without_prefix"
+            ),
         }
         return json.dumps(signature_payload, sort_keys=True, default=str)
 
@@ -591,7 +594,12 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     )
 
                 # Add explicitly handled fields that might not be in template's dynamic_config
-                for key in ["battery_config", "connection_type", "firmware_version"]:
+                for key in [
+                    "battery_config",
+                    "connection_type",
+                    "firmware_version",
+                    "entity_ids_without_prefix",
+                ]:
                     value, source = self._resolve_device_or_entry_value(
                         device, key, None
                     )
@@ -792,8 +800,20 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                     )
 
                 # Process entities with device-specific prefix
-                entity_ids_without_prefix = (
-                    dynamic_config.get("entity_ids_without_prefix", "no") == "yes"
+                entity_ids_without_prefix_val = (
+                    str(dynamic_config.get("entity_ids_without_prefix", "no"))
+                    .strip()
+                    .lower()
+                )
+                entity_ids_without_prefix = entity_ids_without_prefix_val == "yes"
+                _LOGGER.info(
+                    "Device %s: entity_ids_without_prefix=%s (raw=%s) -> %s",
+                    template_name,
+                    entity_ids_without_prefix,
+                    dynamic_config.get("entity_ids_without_prefix"),
+                    "unprefixed entity_ids"
+                    if entity_ids_without_prefix
+                    else "prefixed",
                 )
                 processed_registers = self._process_entities_with_prefix(
                     registers, prefix, template_name, entity_ids_without_prefix
@@ -1164,6 +1184,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
                     "selected_model",
                     "dual_channel_meter",
                     "battery_config",
+                    "entity_ids_without_prefix",
+                    "meter_type",
+                    "wallbox_connected",
                 ]:
                     if field in self.entry.data:
                         main_device[field] = self.entry.data.get(field)

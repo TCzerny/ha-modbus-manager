@@ -15,7 +15,9 @@
         "esbenp.prettier-vscode",
         "ms-azuretools.vscode-docker",
         "ms-python.flake8",
-        "ms-python.black-formatter"
+        "ms-python.black-formatter",
+        "charliermarsh.ruff",
+        "redhat.vscode-yaml"
       ],
       "settings": {
         "python.defaultInterpreterPath": "/usr/local/bin/python",
@@ -25,6 +27,6 @@
       }
     }
   },
-  "postCreateCommand": "pip install pre-commit flake8 black && pre-commit install",
+  "postCreateCommand": "pip install pre-commit flake8 black ruff && pre-commit install && (apk add --no-cache docker-cli 2>/dev/null || (apt-get update && apt-get install -y docker.io) 2>/dev/null || true)",
   "remoteUser": "root"
 }

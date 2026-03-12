@@ -2150,15 +2150,13 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Get inverter template data for version info
             inverter_template_data = await get_template_by_name(self._selected_template)
 
-            # Add inverter device
+            # Add inverter device - copy all dynamic_config fields from _inverter_config
             inverter_device = {
                 "type": "inverter",
-                "template": self._selected_template,  # Use the selected template
+                "template": self._selected_template,
                 "prefix": self._inverter_config.get("prefix"),
                 "slave_id": self._inverter_config.get("slave_id"),
-                "selected_model": self._inverter_config.get(
-                    "selected_model"
-                ),  # Store selected valid model
+                "selected_model": self._inverter_config.get("selected_model"),
                 "template_version": (
                     inverter_template_data.get("version", 1)
                     if inverter_template_data
@@ -2170,6 +2168,18 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     else "1.0.0"
                 ),
             }
+            # Copy all dynamic_config fields (entity_ids_without_prefix, meter_type, etc.)
+            inverter_dynamic_config = inverter_template_data.get("dynamic_config", {})
+            if isinstance(inverter_dynamic_config, dict):
+                for field_name in inverter_dynamic_config.keys():
+                    if field_name in (
+                        "valid_models",
+                        "battery_config",
+                        "battery_slave_id",
+                    ):
+                        continue
+                    if field_name in self._inverter_config:
+                        inverter_device[field_name] = self._inverter_config[field_name]
 
             # Add battery device
             battery_device = {
@@ -2473,6 +2483,12 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                         "selected_model": selected_model,
                     }
                 )
+                # Persist entity_ids_without_prefix at entry level for coordinator fallback
+                entity_ids_opt = config_values.get("dynamic_config", {}).get(
+                    "entity_ids_without_prefix"
+                )
+                if entity_ids_opt is not None:
+                    config_data["entity_ids_without_prefix"] = entity_ids_opt
 
             # Create title based on host:port for grouping (like Philips Hue)
             host = config_data.get("host", "unknown")
@@ -2585,24 +2601,35 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                     _LOGGER.info(
                         "Creating legacy devices array for single device (no battery)"
                     )
+                    legacy_device = {
+                        "type": template_data.get("type", "inverter"),
+                        "prefix": config_data["prefix"],
+                        "template": config_data["template"],
+                        "slave_id": config_data.get("slave_id", 1),
+                        "selected_model": config_data.get("selected_model"),
+                        "template_version": config_data.get("template_version"),
+                        "firmware_version": config_data.get("firmware_version"),
+                        "registers": config_data.get("registers", []),
+                        "calculated_entities": config_data.get(
+                            "calculated_entities", []
+                        ),
+                        "controls": config_data.get("controls", []),
+                        "binary_sensors": config_data.get("binary_sensors", []),
+                    }
+                    # Copy dynamic_config fields (entity_ids_without_prefix, meter_type, etc.)
+                    template_dynamic = template_data.get("dynamic_config", {})
+                    if isinstance(template_dynamic, dict):
+                        for field_name in template_dynamic.keys():
+                            if field_name in (
+                                "valid_models",
+                                "battery_config",
+                                "battery_slave_id",
+                            ):
+                                continue
+                            if field_name in config_data:
+                                legacy_device[field_name] = config_data[field_name]
                     config_data["devices"] = [
-                        self._normalize_device_record(
-                            {
-                                "type": template_data.get("type", "inverter"),
-                                "prefix": config_data["prefix"],
-                                "template": config_data["template"],
-                                "slave_id": config_data.get("slave_id", 1),
-                                "selected_model": config_data.get("selected_model"),
-                                "template_version": config_data.get("template_version"),
-                                "firmware_version": config_data.get("firmware_version"),
-                                "registers": config_data.get("registers", []),
-                                "calculated_entities": config_data.get(
-                                    "calculated_entities", []
-                                ),
-                                "controls": config_data.get("controls", []),
-                                "binary_sensors": config_data.get("binary_sensors", []),
-                            }
-                        )
+                        self._normalize_device_record(legacy_device)
                     ]
                 else:
                     _LOGGER.info(

@@ -1,8 +1,11 @@
 services:
   homeassistant:
     container_name: homeassistant-dev
-    image: ghcr.io/home-assistant/home-assistant:stable
+    # Use 'latest' for newest stable release; 'dev' for bleeding-edge
+    image: ghcr.io/home-assistant/home-assistant:latest
     volumes:
+      # Docker socket for dev tasks (restart HA, etc.)
+      - /var/run/docker.sock:/var/run/docker.sock
       # HA Config
       - ./config:/config
       # Custom Components mounten für Development
@@ -12,5 +15,6 @@ services:
     environment:
       - TZ=Europe/Berlin
     restart: unless-stopped
-    network_mode: host
+    ports:
+      - "8123:8123"
     privileged: true

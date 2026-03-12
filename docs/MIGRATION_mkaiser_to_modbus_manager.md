@@ -59,9 +59,9 @@ With **entity_ids_without_prefix=yes**, entity_ids match the source integration 
    ```
 3. **Remove or comment out** the `modbus_sungrow` line:
    ```yaml
-   homeassistant:
-     packages:
-       # modbus_sungrow: !include integrations/modbus_sungrow.yaml  # Removed for migration
+   # homeassistant:
+   #  packages:
+   #    modbus_sungrow: !include integrations/modbus_sungrow.yaml  # Removed for migration
    ```
 
 ### 1.2 Remove or rename the modbus_sungrow.yaml file

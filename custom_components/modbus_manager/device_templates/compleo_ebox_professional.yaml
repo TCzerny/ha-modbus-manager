@@ -442,13 +442,15 @@ calculated:
     availability: >-
       {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') and
          not is_state('sensor.{PREFIX}_current_phase_2', 'unavailable') and
-         not is_state('sensor.{PREFIX}_current_phase_3', 'unavailable') }}
+         not is_state('sensor.{PREFIX}_current_phase_3', 'unavailable') and
+         not is_state('sensor.{PREFIX}_average_voltage', 'unavailable') }}
     state: >-
       {% set current1 = states('sensor.{PREFIX}_current_phase_1') | float(0) %}
       {% set current2 = states('sensor.{PREFIX}_current_phase_2') | float(0) %}
       {% set current3 = states('sensor.{PREFIX}_current_phase_3') | float(0) %}
-      {% if current1 > 0.11 or current2 > 0.11 or current3 > 0.11 %}
-        {{ ((current1 + current2 + current3) - 0.27) * 230 | round(0) }}
+      {% set average_voltage = states('sensor.{PREFIX}_average_voltage') | float(0) %}
+      {% if current1 > 0.11 or current2 > 0.11 or current3 > 0.11 and average_voltage > 0 %}
+        {{ ((current1 + current2 + current3) - 0.27) * average_voltage | round(0) }}
       {% else %}
         0
       {% endif %}
