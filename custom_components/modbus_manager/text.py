@@ -107,8 +107,20 @@ class ModbusCoordinatorText(TextEntity):
         # Write each update to the state machine, even if the data is the same.
         self._attr_force_update = register_config.get("force_update", False)
 
-        # Text entities should appear under device controls
-        self._attr_entity_category = EntityCategory.CONFIG
+        # Set entity category:
+        # - None (default): Primary sensors that represent main data points.
+        # - diagnostic: Used for read-only information about the device’s health or status.
+        # - config: Used for entities that change how a device behaves.
+        # An entity with a category will:
+        # - Not be exposed to cloud, Alexa, or Google Assistant components.
+        # - Not be included in indirect service calls to devices or areas.
+        entity_category_str = register_config.get("entity_category")
+        if entity_category_str == "diagnostic":
+            self._attr_entity_category = EntityCategory.DIAGNOSTIC
+        elif entity_category_str == "config":
+            self._attr_entity_category = EntityCategory.CONFIG
+        else:
+            self._attr_entity_category = None
 
         # Get device info from register_config (provided by coordinator)
         device_info = register_config.get("device_info")

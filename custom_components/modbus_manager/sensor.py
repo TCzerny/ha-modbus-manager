@@ -39,7 +39,6 @@ async def _handle_group_assignments(
                     registry.async_update_entity(
                         entity_id,
                         entity_category=None,  # Keep existing category
-                        group=sensor._group,
                     )
 
     except Exception as e:
@@ -87,15 +86,19 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
         self._attr_device_class = register_config.get("device_class")
         self._attr_state_class = register_config.get("state_class")
 
-        # Set entity category - diagnostic for register info, None for primary sensors
-        # Diagnostic sensors expose configuration/diagnostics but don't allow changing them
+        # Set entity category:
+        # - None (default): Primary sensors that represent main data points.
+        # - diagnostic: Used for read-only information about the device’s health or status.
+        # - config: Used for entities that change how a device behaves.
+        # An entity with a category will:
+        # - Not be exposed to cloud, Alexa, or Google Assistant components.
+        # - Not be included in indirect service calls to devices or areas.
         entity_category_str = register_config.get("entity_category")
         if entity_category_str == "diagnostic":
             self._attr_entity_category = EntityCategory.DIAGNOSTIC
         elif entity_category_str == "config":
             self._attr_entity_category = EntityCategory.CONFIG
         else:
-            # Default: None for primary sensors (main data points)
             self._attr_entity_category = None
 
         # Store scaling and precision for value processing
