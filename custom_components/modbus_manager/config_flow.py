@@ -26,7 +26,7 @@ from .const import (
     MIN_MESSAGE_WAIT_MS,
     MIN_TIMEOUT,
 )
-from .device_utils import generate_unique_id
+from .device_utils import generate_unique_id, resolve_firmware_profile_version
 from .logger import ModbusManagerLogger
 from .template_loader import (
     _evaluate_condition,
@@ -36,6 +36,46 @@ from .template_loader import (
 )
 
 _LOGGER = ModbusManagerLogger(__name__)
+
+
+def _first_dynamic_option_value(options: Any) -> Any:
+    """First selectable value from dynamic_config options (list/tuple or dict keys)."""
+    if isinstance(options, dict) and options:
+        return next(iter(options))
+    if isinstance(options, (list, tuple)) and options:
+        return options[0]
+    return None
+
+
+def _vol_in_from_dynamic_options(
+    field_config: dict,
+    *,
+    current_value: Any | None = None,
+) -> tuple[Any, vol.In]:
+    """Build default and vol.In for dynamic_config options (list/tuple or value -> label dict)."""
+    options = field_config.get("options", [])
+    if not options:
+        raise ValueError("options required")
+    explicit = field_config.get("default")
+
+    if isinstance(options, dict):
+        keys = list(options.keys())
+        if current_value is not None and current_value in options:
+            default = current_value
+        elif explicit is not None and explicit in options:
+            default = explicit
+        else:
+            default = keys[0]
+        return default, vol.In(options)
+
+    seq = list(options)
+    if current_value is not None and current_value in seq:
+        default = current_value
+    elif explicit is not None and explicit in seq:
+        default = explicit
+    else:
+        default = seq[0]
+    return default, vol.In(options)
 
 
 def _is_prefix_unique_across_hubs(
@@ -759,13 +799,17 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             # Check if this field has options (making it configurable)
             if isinstance(field_config, dict) and "options" in field_config:
                 options = field_config.get("options", [])
-                default = field_config.get("default", options[0] if options else None)
 
                 if options:
-                    # Handle boolean fields specially
-                    if all(isinstance(opt, bool) for opt in options) or (
-                        len(options) == 2 and set(options) == {True, False}
+                    # Handle boolean fields specially (list/tuple only; dict options are labels)
+                    if not isinstance(options, dict) and (
+                        all(isinstance(opt, bool) for opt in options)
+                        or (len(options) == 2 and set(options) == {True, False})
                     ):
+                        default = field_config.get(
+                            "default",
+                            options[0] if options else None,
+                        )
                         # Boolean field with options [true, false] or [True, False]
                         schema_fields[
                             vol.Optional(field_name, default=bool(default))
@@ -776,10 +820,10 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             default,
                         )
                     else:
-                        # Regular options field
+                        default, vol_in = _vol_in_from_dynamic_options(field_config)
                         schema_fields[
                             vol.Optional(field_name, default=default)
-                        ] = vol.In(options)
+                        ] = vol_in
                         _LOGGER.debug(
                             "Added configurable field %s with options: %s, default: %s",
                             field_name,
@@ -841,23 +885,21 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         # Add firmware version if available
         if "firmware_version" in dynamic_config:
-            firmware_options = dynamic_config["firmware_version"].get(
-                "options", ["1.0"]
-            )
-            firmware_default = dynamic_config["firmware_version"].get("default", "1.0")
-            schema_fields[
-                vol.Optional("firmware_version", default=firmware_default)
-            ] = vol.In(firmware_options)
+            fw_cfg = dynamic_config["firmware_version"]
+            if isinstance(fw_cfg, dict) and "options" in fw_cfg:
+                fw_default, fw_in = _vol_in_from_dynamic_options(fw_cfg)
+                schema_fields[
+                    vol.Optional("firmware_version", default=fw_default)
+                ] = fw_in
 
         # Add connection type if available
         if "connection_type" in dynamic_config:
-            connection_options = dynamic_config["connection_type"].get(
-                "options", ["LAN", "WINET"]
-            )
-            connection_default = dynamic_config["connection_type"].get("default", "LAN")
-            schema_fields[
-                vol.Optional("connection_type", default=connection_default)
-            ] = vol.In(connection_options)
+            ct_cfg = dynamic_config["connection_type"]
+            if isinstance(ct_cfg, dict) and "options" in ct_cfg:
+                ct_default, ct_in = _vol_in_from_dynamic_options(ct_cfg)
+                schema_fields[
+                    vol.Optional("connection_type", default=ct_default)
+                ] = ct_in
 
         # Battery slave ID removed - using connection slave_id instead
         # SunSpec model address fields are now handled automatically via dynamic_config
@@ -877,7 +919,14 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         original_sensors = template_data.get("sensors", [])
         original_calculated = template_data.get("calculated", [])
         original_controls = template_data.get("controls", [])
-        dynamic_config = template_data.get("dynamic_config", {})
+        # Deep-copy: template_data may reference the global template cache; in-place
+        # mutation would replace option dicts (meter_type, etc.) with scalars and break
+        # later config flows / schema generation for all templates using that cache entry.
+        _dc_raw = template_data.get("dynamic_config", {})
+        original_dynamic_config = (
+            copy.deepcopy(_dc_raw) if isinstance(_dc_raw, dict) else {}
+        )
+        dynamic_config = copy.deepcopy(_dc_raw) if isinstance(_dc_raw, dict) else {}
 
         processed_sensors = []
         processed_calculated = []
@@ -987,6 +1036,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         firmware_version = user_input.get(
             "firmware_version", template_data.get("firmware_version", "1.0.0")
         )
+        firmware_version = resolve_firmware_profile_version(
+            firmware_version, template_data
+        )
         connection_type = user_input.get("connection_type", "LAN")
 
         # Derive battery settings from battery_config
@@ -1001,37 +1053,6 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         else:
             battery_enabled = battery_config != "none"
             battery_type = battery_config
-
-        # Handle "Latest" firmware version - use the highest available version
-        if firmware_version == "Latest":
-            firmware_config = dynamic_config.get("firmware_version", {})
-            available_firmware = (
-                firmware_config.get("options", [])
-                if isinstance(firmware_config, dict)
-                else []
-            )
-
-            if available_firmware:
-                # Find the highest version (excluding "Latest")
-                numeric_versions = [v for v in available_firmware if v != "Latest"]
-                if numeric_versions:
-                    from packaging import version
-
-                    try:
-                        # Sort by version and take the highest
-                        sorted_versions = sorted(
-                            numeric_versions, key=lambda x: version.parse(x)
-                        )
-                        firmware_version = sorted_versions[-1]
-                        _LOGGER.debug(
-                            "Using latest firmware version: %s", firmware_version
-                        )
-                    except version.InvalidVersion:
-                        # Fallback to first numeric version
-                        firmware_version = numeric_versions[0]
-                        _LOGGER.debug(
-                            "Using fallback firmware version: %s", firmware_version
-                        )
 
         # Add modules to dynamic_config for condition filtering
         if selected_model and model_config:
@@ -1068,8 +1089,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         # Also ensure all fields from dynamic_config with defaults are in dynamic_config
         # This is important for fields that might not be in user_input (e.g., when using defaults)
         # BUT: Don't overwrite values that came from selected_model - those are already set above
-        # We need to check the original template_data, not the already-modified dynamic_config
-        original_dynamic_config = template_data.get("dynamic_config", {})
+        # Use original_dynamic_config snapshot (deepcopy at start) so defaults match YAML schema.
         for field_name, field_config in original_dynamic_config.items():
             if field_name not in [
                 "valid_models",
@@ -2849,12 +2869,8 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             if isinstance(field_config, dict) and "options" in field_config:
                 options = field_config.get("options", [])
                 if options:
-                    default = field_config.get("default", options[0])
-                    if default not in options:
-                        default = options[0]
-                    schema_fields[vol.Optional(field_name, default=default)] = vol.In(
-                        options
-                    )
+                    default, vol_in = _vol_in_from_dynamic_options(field_config)
+                    schema_fields[vol.Optional(field_name, default=default)] = vol_in
             elif isinstance(field_config, dict) and "default" in field_config:
                 default = field_config.get("default")
                 if isinstance(default, bool):
@@ -2988,7 +3004,7 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                 elif "options" in field_config:
                     options = field_config.get("options", [])
                     if options:
-                        dynamic_input[field_name] = options[0]
+                        dynamic_input[field_name] = _first_dynamic_option_value(options)
 
         return dynamic_input
 
@@ -3390,10 +3406,10 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
                     current = selected_device.get(
                         field_name, field_config.get("default")
                     )
-                    default = current if current in options else options[0]
-                    schema_fields[vol.Optional(field_name, default=default)] = vol.In(
-                        options
+                    default, vol_in = _vol_in_from_dynamic_options(
+                        field_config, current_value=current
                     )
+                    schema_fields[vol.Optional(field_name, default=default)] = vol_in
             elif isinstance(field_config, dict) and "default" in field_config:
                 current = selected_device.get(field_name, field_config.get("default"))
                 if isinstance(current, bool):
@@ -3642,7 +3658,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         ):
                             # Field with options - get current value or use first option as default
                             options = field_config.get("options", [])
-                            default_value = options[0] if options else None
+                            default_value = _first_dynamic_option_value(options)
                             current_value = effective_data.get(
                                 field_name, default_value
                             )
@@ -4361,7 +4377,14 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         original_sensors = template_data.get("sensors", [])
         original_calculated = template_data.get("calculated", [])
         original_controls = template_data.get("controls", [])
-        dynamic_config = template_data.get("dynamic_config", {})
+        # Deep-copy: template_data may reference the global template cache; in-place
+        # mutation would replace option dicts (meter_type, etc.) with scalars and break
+        # later config flows / schema generation for all templates using that cache entry.
+        _dc_raw = template_data.get("dynamic_config", {})
+        original_dynamic_config = (
+            copy.deepcopy(_dc_raw) if isinstance(_dc_raw, dict) else {}
+        )
+        dynamic_config = copy.deepcopy(_dc_raw) if isinstance(_dc_raw, dict) else {}
 
         processed_sensors = []
         processed_calculated = []
@@ -4471,6 +4494,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         firmware_version = user_input.get(
             "firmware_version", template_data.get("firmware_version", "1.0.0")
         )
+        firmware_version = resolve_firmware_profile_version(
+            firmware_version, template_data
+        )
         connection_type = user_input.get("connection_type", "LAN")
 
         # Derive battery settings from battery_config
@@ -4485,37 +4511,6 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         else:
             battery_enabled = battery_config != "none"
             battery_type = battery_config
-
-        # Handle "Latest" firmware version - use the highest available version
-        if firmware_version == "Latest":
-            firmware_config = dynamic_config.get("firmware_version", {})
-            available_firmware = (
-                firmware_config.get("options", [])
-                if isinstance(firmware_config, dict)
-                else []
-            )
-
-            if available_firmware:
-                # Find the highest version (excluding "Latest")
-                numeric_versions = [v for v in available_firmware if v != "Latest"]
-                if numeric_versions:
-                    from packaging import version
-
-                    try:
-                        # Sort by version and take the highest
-                        sorted_versions = sorted(
-                            numeric_versions, key=lambda x: version.parse(x)
-                        )
-                        firmware_version = sorted_versions[-1]
-                        _LOGGER.debug(
-                            "Using latest firmware version: %s", firmware_version
-                        )
-                    except version.InvalidVersion:
-                        # Fallback to first numeric version
-                        firmware_version = numeric_versions[0]
-                        _LOGGER.debug(
-                            "Using fallback firmware version: %s", firmware_version
-                        )
 
         # Add modules to dynamic_config for condition filtering
         if selected_model and model_config:
@@ -4558,8 +4553,7 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
         # Also ensure all fields from dynamic_config with defaults are in dynamic_config
         # This is important for fields that might not be in user_input (e.g., when using defaults)
         # BUT: Don't overwrite values that came from selected_model - those are already set above
-        # We need to check the original template_data, not the already-modified dynamic_config
-        original_dynamic_config = template_data.get("dynamic_config", {})
+        # Use original_dynamic_config snapshot (deepcopy at start) so defaults match YAML schema.
         for field_name, field_config in original_dynamic_config.items():
             if field_name not in [
                 "valid_models",

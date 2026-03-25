@@ -23,6 +23,7 @@ from .device_utils import (
     create_device_info_dict,
     generate_unique_id,
     replace_template_placeholders,
+    resolve_firmware_profile_version,
 )
 from .logger import ModbusManagerLogger
 from .modbus_utils import is_valid_modbus_address, registers_to_bytes
@@ -660,6 +661,9 @@ class ModbusCoordinator(DataUpdateCoordinator):
 
                 # Apply firmware version filtering if specified (firmware_min_version parameter)
                 firmware_version = device.get("firmware_version")
+                firmware_version = resolve_firmware_profile_version(
+                    firmware_version, template
+                )
                 if firmware_version:
                     registers = filter_by_firmware_version(registers, firmware_version)
                     controls = filter_by_firmware_version(controls, firmware_version)

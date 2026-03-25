@@ -1,10 +1,78 @@
 """Device utilities for consistent device creation across all platforms."""
 
-from typing import Any, Dict
+import logging
+from typing import Any, Dict, Optional
 
 from homeassistant.core import HomeAssistant
 
 from .const import DOMAIN
+
+_LOGGER = logging.getLogger(__name__)
+
+
+def resolve_firmware_profile_version(
+    firmware_version: Optional[str],
+    template_data: Optional[dict],
+) -> Optional[str]:
+    """Align stored firmware profile with current template options.
+
+    If the configured value is missing or not listed under
+    ``dynamic_config.firmware_version.options`` (removed option, typo, old value),
+    use ``dynamic_config.firmware_version.default``, then template root
+    ``firmware_version`` if that key is still valid, else the first option key.
+    """
+    if not template_data:
+        return firmware_version
+
+    dc = template_data.get("dynamic_config") or {}
+    fw_meta = dc.get("firmware_version")
+    if not isinstance(fw_meta, dict):
+        return firmware_version
+
+    opts = fw_meta.get("options", [])
+    if isinstance(opts, dict):
+        valid_keys = [str(k) for k in opts.keys()]
+    elif isinstance(opts, (list, tuple)):
+        valid_keys = [str(k) for k in opts]
+    else:
+        valid_keys = []
+
+    if not valid_keys:
+        return firmware_version
+
+    current = None if firmware_version is None else str(firmware_version).strip()
+    if current and current in valid_keys:
+        return current
+
+    default = fw_meta.get("default")
+    if default is not None:
+        d = str(default)
+        if d in valid_keys:
+            _LOGGER.info(
+                "Firmware profile %r not in template options; using default %s",
+                firmware_version,
+                d,
+            )
+            return d
+
+    root = template_data.get("firmware_version")
+    if root is not None:
+        r = str(root)
+        if r in valid_keys:
+            _LOGGER.info(
+                "Firmware profile %r not in template options; using template root %s",
+                firmware_version,
+                r,
+            )
+            return r
+
+    fallback = valid_keys[0]
+    _LOGGER.info(
+        "Firmware profile %r not in template options; using first option %s",
+        firmware_version,
+        fallback,
+    )
+    return fallback
 
 
 def generate_unique_id(

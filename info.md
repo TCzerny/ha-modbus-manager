@@ -103,7 +103,6 @@ The following templates were added recently and **have not been tested on real h
 
 ## 🎯 Current Status
 
-### Version 1.0.1 (Current - March 2026)
 - ✅ Core Modbus integration with template system
 - ✅ Advanced data processing and entity types
 - ✅ Performance monitoring and register optimization
@@ -143,7 +142,7 @@ If you find this integration useful, please consider:
 
 ---
 
-**Version**: 1.0.1
+**Version**: 1.0.3
 **Status**: Stable - Active Development
 **Home Assistant**: 2025.4.0+
 **Last Updated**: March 2026

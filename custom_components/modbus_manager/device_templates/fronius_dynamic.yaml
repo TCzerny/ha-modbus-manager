@@ -52,8 +52,9 @@ dynamic_config:
     default: "none"
 
   firmware_version:
-    description: "Firmware version string"
-    options: ["1.19.7-1", "Latest"]
+    description: "Modbus register profile; names differ from the inverter UI — pick by behavior, not by exact string match"
+    options:
+      "1.19.7-1": "Default profile — recommended if unsure"
     default: "1.19.7-1"
 
   # SunSpec model address fields (optional - auto-detection happens at runtime)

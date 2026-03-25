@@ -86,13 +86,17 @@ dynamic_config:
     "SG20KTL": {phases: 3, mppt_count: 2, string_count: 3, type_code: "0x2A", max_ac_output_power: 20000, max_current: 30}
 
   firmware_version:
-    description: "Firmware version string (e.g., 'SAPPHIRE-H_xxx')"
-    options: ["SAPPHIRE-H_xxxx", "Latest"]
+    description: "Modbus register profile; names differ from the inverter UI — pick by behavior, not by exact string match"
+    # Add more keys here when a documented profile needs different register handling; use conditions in YAML with firmware_version == '...'.
+    options:
+      "SAPPHIRE-H_xxxx": "Default profile — recommended if unsure"
     default: "SAPPHIRE-H_xxxx"
 
   connection_type:
-    description: "Connection type (LAN or WINET)"
-    options: ["LAN", "WINET"]
+    description: "Physical Modbus path (LAN vs WiNet-S); affects which registers are available"
+    options:
+      LAN: "Dedicated inverter Ethernet port (RJ45 on the inverter)"
+      WINET: "WiNet-S module — Wi-Fi or cable to the dongle (use this if you connect via the dongle, including its LAN port)"
     default: "LAN"
 
 # Sensors for read access (Input Registers)

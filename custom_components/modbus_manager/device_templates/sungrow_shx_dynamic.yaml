@@ -102,8 +102,10 @@ dynamic_config:
     "MG10RL": {phases: 3, mppt_count: 3, string_count: 1, type_code: "0xD2A", max_charge_power: 10600, max_discharge_power: 10600, max_ac_output_power: 10000}
 
   firmware_version:
-    description: "Firmware version string (e.g., '03011.95.01')"
-    options: ["03011.95.01", "03011.95.10"]
+    description: "Modbus register profile; names differ from the inverter UI — pick by behavior, not by exact string match"
+    options:
+      "03011.95.01": "Default profile — recommended if unsure"
+      "03011.95.10": "Data type changes (03011.95.10)"
     default: "03011.95.01"
     sensor_replacements:
       # Battery power sensor replacement (deprecated - now using recommended register 5214-5215)
@@ -115,8 +117,10 @@ dynamic_config:
           description: "Battery power signed in firmware v2+"
 
   connection_type:
-    description: "Connection type (LAN or WINET)"
-    options: ["LAN", "WINET"]
+    description: "Physical Modbus path (LAN vs WiNet-S); affects which registers are available"
+    options:
+      LAN: "Dedicated inverter Ethernet port (RJ45 on the inverter)"
+      WINET: "WiNet-S module — Wi-Fi or cable to the dongle (use this if you connect via the dongle, including its LAN port)"
     default: "LAN"
 
   meter_type:

@@ -5,6 +5,13 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2026-03-25
+
+### 🐛 Fixed
+
+#### Dynamic configuration form (all templates with `dynamic_config`)
+- **Template cache mutation**: `_process_dynamic_config` no longer mutates the shared cached `dynamic_config` from the template loader. Previously, option metadata (e.g. meter type, wallbox) was overwritten with user values, so later config flows could show only firmware and connection type. Forms now consistently list all dynamic fields after setup or reconfigure.
+
 ## [1.0.2] - 2026-03-18
 
 ### ✨ Added
