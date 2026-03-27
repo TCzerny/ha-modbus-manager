@@ -5,6 +5,12 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### 📚 Documentation
+
+- Removed `docs/MIGRATION_mkaiser_to_modbus_manager.md` and `docs/MIGRATION_mkaiser_unique_id_comparison.md`; mkaiser → Modbus Manager migration content lives only on the [GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) (**Migration from mkaiser**, **Migration mkaiser unique_id comparison**).
+
 ## [1.0.4] - 2026-03-27
 
 ### ✨ Added
