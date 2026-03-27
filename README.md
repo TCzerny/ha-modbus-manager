@@ -71,6 +71,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** – SBR064–SBR256, SBH100-SBH400
 - **[Solvis SC2/SC3](docs/README_solvis_sc3.md)** – Heating controller, temperature sensors, pump controls
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** – EV charger, 3-phase charging
+- **[Victron EV Charging Station](docs/README_victron_ev_charging_station.md)** – EV Charging Station & EV Charging Station NS, Modbus TCP (register list v3.8)
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** – EV wallbox (AC007-00, AC011E-01, AC22E-01), RS485 via inverter
 
 ### ⚠️ Needs Testing
@@ -86,7 +87,8 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **[SolaX Inverter](docs/README_solax_dynamic.md)** – GEN2–GEN6 dynamic template
 
 ### 🔮 Future Support
-- **Kostal** (Piko, Plenticore), **Victron** (MultiPlus, Quattro)
+- **Kostal** (Piko, Plenticore)
+- **Victron** (other products, e.g. MultiPlus, Quattro — **EV Charging Station** is [supported](docs/README_victron_ev_charging_station.md) above)
 
 ## 🔧 Installation
 
@@ -177,6 +179,7 @@ https://github.com/TCzerny/ha-modbus-manager/wiki
 - **[Sungrow SBR Battery](docs/README_sungrow_sbr_battery.md)** - SBR battery template
 - **[Solvis SC3](docs/README_solvis_sc3.md)** - Solvis SC2/SC3 template
 - **[Compleo eBox Professional](docs/README_compleo_ebox_professional.md)** - EV charger template
+- **[Victron EV Charging Station](docs/README_victron_ev_charging_station.md)** - Victron EVCS / EVCS NS (Modbus TCP)
 - **[Sungrow AC011E Wallbox](docs/README_sungrow_ac011e_wallbox.md)** - EV wallbox template (AC007, AC011E, AC22E)
 - **[Heidelberg Energy Control](docs/README_heidelberg_energy_control.md)** - EV charger (Modbus RTU via proxy)
 - **[BYD Battery Box](docs/README_byd_battery_box.md)** - BYD Battery-Box template (BETA)
@@ -194,6 +197,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Home Assistant Community** for the great platform
 - **Device Manufacturers** for Modbus documentation
 - **Community Contributors** for device testing
+- **[Sean Lano](https://github.com/seanlano)** ([@seanlano](https://github.com/seanlano)) for the **Victron EV Charging Station** template ([PR #45](https://github.com/TCzerny/ha-modbus-manager/pull/45))
 - **[mkaiser](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant)** for the outstanding Sungrow SHx Modbus implementation
 - **photovoltaikforum.com** and **forum.iobroker.net** communities for reverse-engineering efforts
 
