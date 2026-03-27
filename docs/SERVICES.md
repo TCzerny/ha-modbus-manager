@@ -85,7 +85,53 @@ service: modbus_manager.performance_reset
 
 ---
 
-### 3. `modbus_manager.reload_templates`
+### 3. `modbus_manager.add_entity_prefix`
+
+**Description:** Renames **entity IDs** so they include the device prefix, for devices that were added with **Entity IDs without prefix** set to **yes** (`entity_ids_without_prefix`). This is the follow-up step after a migration where you matched another integration’s unprefixed `entity_id` values (see [Migration from mkaiser (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser)).
+
+**Behavior:**
+
+- Only affects entities belonging to the given Modbus Manager **config entry** that are tied to a **device** still configured with `entity_ids_without_prefix: yes`.
+- For each matching entity, if the `entity_id` **does not** already start with `{prefix}_`, it is renamed from `domain.object_id` to `domain.{prefix}_object_id` (prefix lowercased), e.g. `sensor.battery_level` → `sensor.sg_battery_level`.
+- **`unique_id` in the registry is unchanged**; only **`entity_id`** is updated. Home Assistant **migrates history** when an `entity_id` is renamed.
+- Entities that **already** have the prefix in `entity_id` are skipped.
+- If the target `entity_id` already exists, that rename is **skipped** (logged as a conflict).
+
+**Service call:**
+
+```yaml
+service: modbus_manager.add_entity_prefix
+data:
+  entry_id: "<modbus_manager_config_entry_id>"  # required
+  # device_entry_id: "<device_subentry_unique_id>"  # optional: only this device on a multi-device hub
+```
+
+**Parameters:**
+
+| Field | Required | Description |
+|--------|----------|-------------|
+| `entry_id` | **Yes** | Modbus Manager integration config entry ID. In **Developer tools → Services**, pick `modbus_manager.add_entity_prefix` and use the **config entry** selector. |
+| `device_entry_id` | No | Device **subentry** `unique_id` (logical device id). Use when the hub has **multiple** devices and you only want to rename entities for **one** of them. Omit to process every device on that entry that still has `entity_ids_without_prefix: yes`. |
+
+**After running the service:**
+
+1. Set **Entity IDs without prefix** to **no** for that device (**Configure** on the device in **Settings → Devices & services**) so future reloads keep prefixed `entity_id` values.
+2. Update automations, dashboards, and scripts to use the **new** `entity_id` values if anything still pointed at the old unprefixed names.
+
+**If nothing is renamed:** Check the logs. Common causes: no device on that entry has `entity_ids_without_prefix: yes`, or wrong `entry_id` / `device_entry_id`.
+
+---
+
+### Removing prefix from entity IDs (no dedicated service)
+
+There is **no** `modbus_manager.remove_entity_prefix` (or similar) service. To work with **unprefixed** `entity_id` values again:
+
+- Prefer **device reconfiguration**: set **Entity IDs without prefix** to **yes** where the template supports it, then reload the integration or follow the flow described in the [migration / SHx Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) for your case.
+- Or **manually** rename entities under **Settings → Devices & services → Entities** (be aware of history and automation references per Home Assistant behavior).
+
+---
+
+### 4. `modbus_manager.reload_templates`
 
 **Description:** Reload device templates and update entity attributes without restarting Home Assistant.
 
@@ -127,7 +173,7 @@ data:
 
 ---
 
-### 4. Device removal via subentry delete
+### 5. Device removal via subentry delete
 
 **Description:** Per-device removal is now handled directly in Home Assistant UI by deleting the device subentry.
 
@@ -203,6 +249,15 @@ automation:
       - service: notify.persistent_notification
         data:
           message: "Performance metrics logged. Check logs for details."
+
+  # After SHx migration with entity_ids_without_prefix: add prefix to entity_ids once
+  - alias: "Add Modbus Manager entity prefix after migration"
+    trigger: []
+    action:
+      - service: modbus_manager.add_entity_prefix
+        data:
+          entry_id: "<your_modbus_manager_config_entry_id>"
+          # device_entry_id: "<optional_subentry_unique_id>"
 ```
 
 ---
