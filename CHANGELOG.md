@@ -5,6 +5,30 @@ All notable changes to the HA-Modbus-Manager project will be documented in this 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.4] - 2026-03-27
+
+### ✨ Added
+
+#### Victron EV Charging Station template
+- New device template **`victron_ev_charging_station.yaml`** for **Victron EV Charging Station** (LCD) and **EV Charging Station NS** (no screen), Modbus TCP, based on Victron register list **v3.8** (firmware **v2.05** tested, single-phase).
+- Sensors: device info, status, energy, **Power Phase 1/2/3** only when **Number of phases** is set to **3** (single-phase UI hides those three), total **Power**, controls (current setpoint, enable, mode, display options when applicable), calculated firmware string, binary sensors for connection/error.
+
+### 🙏 Thanks
+
+- **[Sean Lano](https://github.com/seanlano)** ([@seanlano](https://github.com/seanlano)) for contributing this template in [PR #45](https://github.com/TCzerny/ha-modbus-manager/pull/45).
+
+### 📚 Documentation
+
+- Added `docs/README_victron_ev_charging_station.md`.
+- README: Victron EV chargers listed under supported devices; future Victron line updated.
+
+### 🔧 Changed
+
+- **`victron_ev_charging_station.yaml`** (post-merge after [PR #45](https://github.com/TCzerny/ha-modbus-manager/pull/45)):
+  - Comment clarifying Victron TCP **FC3 / `input_type: holding`** vs read-only cells in the spreadsheet.
+  - **`dynamic_config.display`**: `default` set to string **`"No"`** (was incorrectly a list).
+  - **`unique_id`** spelling fix for light ring brightness entity: `light_ring_brightness`.
+
 ## [1.0.3] - 2026-03-25
 
 ### 🐛 Fixed
