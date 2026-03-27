@@ -285,6 +285,13 @@ If template reload doesn't work:
 2. Ensure the template file is valid YAML
 3. Verify the entry_id is correct (if specified)
 
+### `add_entity_prefix` renames nothing
+
+1. Confirm at least one device on that config entry still has **Entity IDs without prefix** set to **yes**.
+2. Confirm `entry_id` is the Modbus Manager **hub** entry, not another integration.
+3. If you passed `device_entry_id`, it must match the device subentry’s **unique_id** exactly.
+4. Check logs for “Skipping rename due to conflict” (target `entity_id` already taken).
+
 ---
 
 ## Additional Notes
