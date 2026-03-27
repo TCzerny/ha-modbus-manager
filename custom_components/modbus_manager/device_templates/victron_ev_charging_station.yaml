@@ -1,0 +1,545 @@
+name: "Victron EV Charging Station"
+version: 0.1
+# "EV Charging Station" and "EV Charging Station NS" function the same over the Modbus interface
+description: "Victron EV Charging Station (including NS)"
+manufacturer: "Victron"
+model: "EV Charging Station"
+type: "ev_charger"
+firmware_version: "2.05"  # Default firmware version
+default_prefix: "evcs"  # Default prefix for entity names
+default_slave_id: 1
+
+# Dynamic configuration support
+dynamic_config:
+  phases:
+    # The hardware always supports three phases, this is just to hide the extra
+    # sensors for three-phase mode when using single-phase
+    description: "Number of phases"
+    options: [1, 3]
+    default: 1
+
+  display:
+    description: "Charging Station has a screen?"
+    options: ["Yes", "No"]
+    default: ["No"]
+
+  firmware_version:
+    description: "Firmware version"
+    # Version 2.05 corresponds with EVCS-Modbus-TCP-register-list-v3.8.xlsx
+    #   Links:
+    #   https://www.victronenergy.com/upload/documents/EVCS-Modbus-TCP-register-list-v3.8.xlsx
+    #   or
+    #   https://web.archive.org/web/20260317083636/https://www.victronenergy.com/upload/documents/EVCS-Modbus-TCP-register-list-v3.8.xlsx
+    # Other versions not tested!
+    options: ["2.05"]
+    default: "2.05"
+
+sensors:
+  # Device identification
+  - name: "Product ID"
+    unique_id: "id"
+    address: 5000
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:identifier"
+    entity_category: "diagnostic"
+
+  - name: "Serial Number"
+    unique_id: "serial_number"
+    address: 5001
+    input_type: "holding"
+    data_type: "string"
+    count: 6
+    byte_order: "little"
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:barcode"
+    entity_category: "diagnostic"
+
+  - name: "Firmware Version (raw)"
+    unique_id: "firmware_version_raw"
+    address: 5007
+    input_type: "holding"
+    data_type: "uint32"
+    count: 2
+    precision: 0
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:chip"
+    entity_category: "diagnostic"
+
+  - name: "Device Name"
+    unique_id: "device_name"
+    address: 5027
+    input_type: "holding"
+    data_type: "string"
+    count: 22
+    byte_order: "little"
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:rename-outline"
+    entity_category: "diagnostic"
+
+  # Device status
+  - name: "Power Supply Temperature"
+    unique_id: "temperature_power_supply"
+    address: 5127
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    scale: 0.1
+    group: "EV_device_status"
+    icon: "mdi:thermometer"
+    entity_category: "diagnostic"
+
+  # Register 5017 "Max current" is actually a writable register, but it is only
+  # exposed read-only to Home Assistant - use the Victron on-device website or the app
+  # to change the maximum current limit.
+  # IMPORTANT: Do not set the maximum current limit any higher than the EV charger
+  # installation rating!
+  - name: "Charging Current (Maximum)"
+    unique_id: "charging_current_maximum"
+    address: 5017
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_device_status"
+    icon: "mdi:gauge-full"
+    entity_category: "diagnostic"
+
+  - name: "Uptime"
+    unique_id: "uptime"
+    address: 5111
+    input_type: "holding"
+    data_type: "uint32"
+    count: 2
+    precision: 0
+    scan_interval: 10
+    unit_of_measurement: "s"
+    device_class: "duration"
+    state_class: "total"
+    group: "EV_device_status"
+    icon: "mdi:clock"
+    entity_category: "diagnostic"
+
+  - name: "Total Energy"
+    unique_id: "total_energy"
+    address: 5023
+    input_type: "holding"
+    data_type: "uint32"
+    count: 2
+    precision: 0
+    scan_interval: 10
+    scale: 0.01
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total_increasing"
+    group: "EV_measurements"
+    icon: "mdi:battery-clock"
+
+  - name: "Reboot Count"
+    unique_id: "reboot_count"
+    address: 5113
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    state_class: "total_increasing"
+    group: "EV_device_status"
+    icon: "mdi:history"
+    entity_category: "diagnostic"
+
+  - name: "Last Reboot Reason"
+    unique_id: "last_reboot_reason"
+    address: 5114
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "EV_device_status"
+    icon: "mdi:clipboard-text-clock"
+    map:
+      0: "Reset reason can not be determined"
+      1: "Reset due to power-on event"
+      2: "Reset by external pin"
+      3: "Software reset via reboot function"
+      4: "Software reset due to exception/panic"
+      5: "Reset (software or hardware) due to interrupt watchdog"
+      6: "Reset due to task watchdog"
+      7: "Reset due to other watchdogs"
+      8: "Reset after exiting deep sleep mode"
+      9: "Brownout reset (software or hardware)"
+      10: "Reset over SDIO"
+    entity_category: "diagnostic"
+
+  # Charging status
+  - name: "Status (raw)"
+    unique_id: "status_raw"
+    address: 5015
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 5
+    group: "EV_charging_status"
+    icon: "mdi:ev-station"
+    entity_category: "diagnostic"
+
+  - name: "Status"
+    unique_id: "status"
+    address: 5015
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 5
+    group: "EV_charging_status"
+    icon: "mdi:ev-station"
+    map:
+      0: "Disconnected"
+      1: "Connected"
+      2: "Charging"
+      3: "Charged"
+      4: "Waiting for sun"
+      5: "Waiting for RFID"
+      6: "Waiting for start"
+      7: "Low SOC"
+      8: "Ground test error"
+      9: "Welded contacts test error"
+      10: "CP input test error (shorted)"
+      11: "Residual current detected"
+      12: "Undervoltage detected"
+      13: "Overvoltage detected"
+      14: "Overheating detected"
+      20: "Charging limit"
+      21: "Start charging"
+      22: "Switching to 3 phase"
+      23: "Switching to 1 phase"
+      24: "Stop charging"
+
+  # Measurements
+  - name: "Power Phase 1"
+    unique_id: "power_phase_1"
+    address: 5011
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 10
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "EV_measurements"
+    icon: "mdi:lightning-bolt"
+    condition: "phases == 3"
+
+  - name: "Power Phase 2"
+    unique_id: "power_phase_2"
+    address: 5012
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 10
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "EV_measurements"
+    icon: "mdi:lightning-bolt"
+    condition: "phases == 3"
+
+  - name: "Power Phase 3"
+    unique_id: "power_phase_3"
+    address: 5013
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 10
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "EV_measurements"
+    icon: "mdi:lightning-bolt"
+    condition: "phases == 3"
+
+  - name: "Power"
+    unique_id: "power"
+    address: 5014
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 10
+    unit_of_measurement: "W"
+    device_class: "power"
+    state_class: "measurement"
+    group: "EV_measurements"
+    icon: "mdi:lightning-bolt"
+
+  - name: "Current"
+    unique_id: "current"
+    address: 5018
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 10
+    scale: 0.1
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_measurements"
+    icon: "mdi:current-ac"
+
+  - name: "Session Charging Time"
+    unique_id: "session_time"
+    address: 5019
+    input_type: "holding"
+    data_type: "uint32"
+    count: 2
+    precision: 0
+    scan_interval: 10
+    unit_of_measurement: "s"
+    device_class: "duration"
+    state_class: "total"
+    group: "EV_measurements"
+    icon: "mdi:clock-fast"
+
+  - name: "Session Energy"
+    unique_id: "session_energy"
+    address: 5021
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 2
+    scan_interval: 10
+    scale: 0.01
+    unit_of_measurement: "kWh"
+    device_class: "energy"
+    state_class: "total"
+    group: "EV_measurements"
+    icon: "mdi:battery-arrow-up"
+
+controls:
+  - name: "Charging Current Setpoint"
+    unique_id: "charging_current_setpoint"
+    address: 5016
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 5
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_controls"
+    icon: "mdi:gauge"
+    type: "number"
+    min_value: 6
+    max_value: 32
+    step: 1
+
+  - name: "Charging Enabled"
+    unique_id: "charging_enable"
+    address: 5010
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 5
+    group: "EV_controls"
+    icon: "mdi:electric-switch"
+    type: "switch"
+    switch:
+      on: 1    # start
+      off: 0   # stop
+
+  - name: "Charging Auto-start"
+    unique_id: "charging_autostart"
+    address: 5049
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 5
+    group: "EV_controls"
+    icon: "mdi:arrow-decision-auto"
+    type: "switch"
+    switch:
+      on: 1    # autostart enabled
+      off: 0   # autostart disabled
+
+  - name: "Control via display"
+    unique_id: "display_controlled"
+    address: 5050
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "EV_controls"
+    icon: "mdi:gesture-tap-button"
+    type: "switch"
+    switch:
+      on: 1    # autostart enabled
+      off: 0   # autostart disabled
+    condition: "display == 'Yes'"
+    entity_category: "config"
+
+  - name: "Display Backlight (Active)"
+    unique_id: "backlight_active"
+    address: 5051
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    unit_of_measurement: "%"
+    group: "EV_controls"
+    icon: "mdi:brightness-percent"
+    type: "number"
+    min_value: 1
+    max_value: 100
+    step: 1
+    condition: "display == 'Yes'"
+    entity_category: "config"
+
+  - name: "Display Backlight (Idle)"
+    unique_id: "backlight_idle"
+    address: 5052
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    unit_of_measurement: "%"
+    group: "EV_controls"
+    icon: "mdi:brightness-percent"
+    type: "number"
+    min_value: 1
+    max_value: 100
+    step: 1
+    condition: "display == 'Yes'"
+    entity_category: "config"
+
+  - name: "Display Timeout"
+    unique_id: "backlight_timeout"
+    address: 5053
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    unit_of_measurement: "s"
+    group: "EV_controls"
+    icon: "mdi:timer-sand-complete"
+    type: "number"
+    min_value: 1
+    max_value: 65535
+    step: 1
+    condition: "display == 'Yes'"
+    entity_category: "config"
+
+  - name: "Charging Mode"
+    unique_id: "charging_mode"
+    address: 5009
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    group: "EV_controls"
+    icon: "mdi:arrow-decision"
+    type: "select"
+    options:
+      0: "Manual (HA controlled)"
+      1: "Auto (Victron controlled)"
+      2: "Scheduled (Victron controlled)"
+    entity_category: "config"
+
+  - name: "Light Ring Brightness Limit"
+    unique_id: "light_ring_brighness"
+    address: 5132
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    unit_of_measurement: "%"
+    group: "EV_controls"
+    icon: "mdi:brightness-percent"
+    type: "number"
+    min_value: 0
+    max_value: 100
+    step: 1
+    entity_category: "config"
+
+  - name: "Charging Current (Minimum)"
+    unique_id: "charging_current_minimum"
+    address: 5062
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 60
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_controls"
+    icon: "mdi:gauge-empty"
+    type: "number"
+    min_value: 6
+    max_value: 31
+    step: 1
+    entity_category: "diagnostic"
+
+  - name: "Power Calibration"
+    unique_id: "power_calibration"
+    address: 5063
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 60
+    state_class: "measurement"
+    group: "EV_controls"
+    icon: "mdi:gauge-empty"
+    type: "number"
+    scale: 0.01
+    min_value: 0.6
+    max_value: 1.4
+    step: 0.01
+    entity_category: "diagnostic"
+
+  - name: "Restart"
+    unique_id: "restart"
+    address: 5064
+    input_type: "holding"
+    data_type: "uint16"
+    group: "EV_controls"
+    icon: "mdi:restart"
+    type: "button"
+    write_value: 1
+    entity_category: "diagnostic"
+
+calculated:
+  - name: "Firmware Version"
+    unique_id: "firmware_version"
+    type: "sensor"
+    group: "EV_device_info"
+    icon: "mdi:chip"
+    availability: >-
+      {{ states('sensor.{PREFIX}_firmware_version_raw') | is_number and
+        (states('sensor.{PREFIX}_firmware_version_raw') | int) >= 0 }}
+    state: |
+      {% set ver_hex = "%06X" | format(states("sensor.{PREFIX}_firmware_version_raw") | int) | list %}
+      {% set major_ver = ("%s%s" | format(ver_hex[0], ver_hex[1]) | int(base=16)) %}
+      {% set minor_ver = ("%s%s" | format(ver_hex[2], ver_hex[3]) | int(base=16)) %}
+      {% set build_num = ("%s%s" | format(ver_hex[4], ver_hex[5]) | int(base=16)) %}
+      {{ "v%d.%02d.%02d" | format(major_ver, minor_ver, build_num) }}
+    entity_category: "diagnostic"
+
+binary_sensors:
+  - name: "EV Connected"
+    unique_id: "connected"
+    type: "binary_sensor"
+    group: "EV_charging_status"
+    device_class: "plug"
+    availability: >-
+      {{ states('sensor.{PREFIX}_status_raw') | is_number and
+        (states('sensor.{PREFIX}_status_raw') | int) >= 0 }}
+    state: >-
+      {{ (states('sensor.{PREFIX}_status_raw') | int) > 0 }}
+
+  - name: "Error"
+    unique_id: "error_detected"
+    type: "binary_sensor"
+    group: "EV_charging_status"
+    device_class: "problem"
+    availability: >-
+      {{ states('sensor.{PREFIX}_status_raw') | is_number and
+        (states('sensor.{PREFIX}_status_raw') | int) >= 0 }}
+    state: >-
+      {{ (states('sensor.{PREFIX}_status_raw') | int) >= 8 and
+         (states('sensor.{PREFIX}_status_raw') | int) <= 14 }}
