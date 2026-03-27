@@ -94,7 +94,8 @@ The following templates were added recently and **have not been tested on real h
 ## 📚 Documentation & Support
 
 ### Contributing
-- [🤝 Contributing](https://github.com/TCzerny/ha-modbus-manager/blob/main/CONTRIBUTING.md): How to contribute to the project
+- [🤝 Contributing (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Contributing): Workflow, PRs, and testing
+- [CONTRIBUTING.md](https://github.com/TCzerny/ha-modbus-manager/blob/main/CONTRIBUTING.md): Entry point (links to Wiki)
 
 ### Community Support
 - [🐛 Bug Reports](https://github.com/TCzerny/ha-modbus-manager/issues): Report issues and request features

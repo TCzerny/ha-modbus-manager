@@ -153,21 +153,11 @@ See the [Dashboard Examples README](Dashboard-Examples/README.md) for installati
 
 ## 🤝 Contributing
 
-### Adding New Device Templates
+Full workflow (fork, layout, documentation, PRs, testing): **[Contributing (GitHub Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Contributing)**.
 
-1. **Fork** the repository
-2. **Create device template** in `device_templates/`
-3. **Add device documentation** as `docs/README_<device>.md` and link it from this README and the [Wiki home](https://github.com/TCzerny/ha-modbus-manager/wiki)
-4. **Test with real device**
-5. **Create Pull Request**
+Template YAML (fields, types, dynamic config, examples): **[Template Reference (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference)**.
 
-### Template Guidelines
-
-- Use device-specific group prefixes (`PV_`, `EV_`, `BAT_`, etc.)
-- Include all relevant sensors and controls
-- Add calculated sensors for derived values
-- Document register mapping
-- Test with real hardware
+The repo file [`CONTRIBUTING.md`](CONTRIBUTING.md) is a short entry point with the same links.
 
 ## 📚 Documentation
 
