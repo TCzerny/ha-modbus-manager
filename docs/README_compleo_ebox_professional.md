@@ -1,5 +1,7 @@
 # Compleo eBox Professional Template
 
+> **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
+
 ## 📋 Overview
 
 The **Compleo eBox Professional Template** provides complete integration for Compleo eBox Professional EV charging stations. This template supports 3-phase charging control, current monitoring, and comprehensive status tracking.
@@ -15,7 +17,7 @@ The **Compleo eBox Professional Template** provides complete integration for Com
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| **Prefix** | String | Required | Unique prefix for all entities |
+| **Prefix** | String | Required | Unique prefix for all entities from this device (**must be unique among all Modbus Manager devices in Home Assistant**, including other hubs) |
 | **Name** | String | Required | Display name for the device |
 | **Firmware Version** | String | 1.3.38 | Firmware version of your device |
 

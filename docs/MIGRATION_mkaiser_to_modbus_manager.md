@@ -1,5 +1,7 @@
 # Migration Guide: mkaiser Sungrow Modbus → Modbus Manager SH Template
 
+> **Wiki:** The same content is available in the [Modbus Manager Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) for easier reading alongside other guides.
+
 This guide helps you migrate from the [mkaiser Sungrow-SHx-Inverter-Modbus-Home-Assistant](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant) YAML-based integration to the **Modbus Manager** integration with the **Sungrow SHx Dynamic** template.
 
 ---
@@ -17,7 +19,7 @@ This guide helps you migrate from the [mkaiser Sungrow-SHx-Inverter-Modbus-Home-
 
 ### unique_id Alignment
 
-The Modbus Manager SH template uses a **similar naming convention** for `unique_id`s as the mkaiser implementation, **without** the `sg_` prefix. The prefix is configured during setup. With prefix `sg`, many unique_ids align (e.g. `sg_mppt1_voltage`, `sg_daily_pv_gen_battery_discharge`). See [MIGRATION_mkaiser_unique_id_comparison.md](MIGRATION_mkaiser_unique_id_comparison.md) for a detailed comparison.
+The Modbus Manager SH template uses a **similar naming convention** for `unique_id`s as the mkaiser implementation, **without** the `sg_` prefix. The prefix is configured during setup. With prefix `sg`, many unique_ids align (e.g. `sg_mppt1_voltage`, `sg_daily_pv_gen_battery_discharge`). See [Migration mkaiser unique_id comparison (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison) for a detailed comparison.
 
 ### entity_id Difference (Important)
 
@@ -36,9 +38,9 @@ To **preserve history** when migrating from integrations that use unprefixed ent
 2. **After migration is complete**, call the service `modbus_manager.add_entity_prefix` to add the prefix to entity_ids (e.g. `sensor.battery_level` → `sensor.sg_battery_level`). Home Assistant migrates history when entity_ids are renamed.
 3. **Set `entity_ids_without_prefix: no`** in the device configuration (via device reconfigure) so future reloads use prefixed entity_ids.
 
-**Constraint:** Only safe for a **single** Sungrow SH device per hub. With multiple devices, unprefixed entity_ids would collide.
+**Constraint:** Only safe for **at most one** Sungrow SH device using **Entity IDs without prefix** in your **entire** Home Assistant installation. Unprefixed `entity_id` values can collide across **multiple devices on one hub** or **multiple hubs**. Use a **unique prefix per device** (instance-wide) when you add more than one inverter or need guaranteed distinct entity IDs.
 
-**Implementation details:** See [MIGRATION_mkaiser_unique_id_comparison.md](MIGRATION_mkaiser_unique_id_comparison.md) for unique_id vs entity_id alignment.
+**Implementation details:** See [Migration mkaiser unique_id comparison (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison) for unique_id vs entity_id alignment.
 
 ### Automations, Dashboards, Scripts
 
@@ -217,6 +219,6 @@ Entity names may vary by template configuration; use the entity picker to select
 
 - **mkaiser repository:** https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant
 - **mkaiser cleanup guide:** [cleanup_entities.md](https://github.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant/blob/main/doc/cleanup_entities.md)
-- **unique_id comparison (detailed):** [MIGRATION_mkaiser_unique_id_comparison.md](MIGRATION_mkaiser_unique_id_comparison.md)
-- **Modbus Manager SH template docs:** [README_sungrow_shx_dynamic.md](README_sungrow_shx_dynamic.md)
+- **unique_id comparison (detailed):** [Wiki — Migration mkaiser unique_id comparison](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison)
+- **Modbus Manager SH template docs:** [README_sungrow_shx_dynamic.md](README_sungrow_shx_dynamic.md) (repository)
 - **Home Assistant entity registry:** [Entity registry documentation](https://developers.home-assistant.io/docs/entity_registry_index/)

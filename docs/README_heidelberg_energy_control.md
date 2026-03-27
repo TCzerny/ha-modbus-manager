@@ -1,5 +1,7 @@
 # Heidelberg Energy Control Wallbox Template
 
+> **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
+
 ## Overview
 
 The **Heidelberg Energy Control Template** integrates Amperfied's Heidelberg Energy Control Wallbox with Home Assistant via Modbus Manager. The wallbox uses **Modbus RTU** over RS-485 (e.g. via CH340 USB adapter).

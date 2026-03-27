@@ -1,5 +1,7 @@
 ## Sungrow iHomeManager Template
 
+> **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
+
 This document lists the Modbus registers for the standalone iHomeManager EMS
 template: `sungrow_ihomemanager.yaml`.
 

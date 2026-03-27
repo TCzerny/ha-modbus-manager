@@ -1,5 +1,7 @@
 # Victron EV Charging Station Template
 
+> **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
+
 ## Overview
 
 Template for **Victron EV Charging Station** (with LCD) and **EV Charging Station NS** (rounded design, no screen). Both units expose the **same Modbus TCP registers** and behave the same from Modbus Manager’s perspective.
@@ -17,7 +19,7 @@ Contributed by **Sean Lano** ([@seanlano](https://github.com/seanlano)) in [PR #
 | **Charging Station has a screen?** | `Yes` / `No`. Enables display-related controls (backlight, timeout, control via display) when `Yes`. |
 | **Firmware version** | Currently **2.05** (aligned with register list v3.8). |
 
-Default Modbus **slave ID** is **1** (adjust if your installation differs). The YAML **`version`** field for this template is **0.1** (template revision inside the integration, not the Home Assistant integration release).
+Default Modbus **slave ID** is **1** (adjust if your installation differs).
 
 ## Holding registers (FC3)
 

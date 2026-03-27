@@ -1,5 +1,7 @@
 # BYD Battery Box Template
 
+> **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
+
 ## Overview
 
 This template provides support for **BYD Battery-Box** energy storage systems via Modbus RTU over TCP communication. The template supports multiple BYD Battery-Box series including HVS, HVM, HVL, and LVS models.

@@ -1,5 +1,7 @@
 # Modbus Manager Services
 
+> **Context:** For using the integration end-to-end, see the [User Guide (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide). This file lists **service** definitions only.
+
 This document describes all available services provided by the Modbus Manager integration.
 
 ## Available Services

@@ -143,8 +143,7 @@ See the [Dashboard Examples README](Dashboard-Examples/README.md) for installati
 
 ## 📊 Available Templates
 
-The full, up-to-date list of templates is maintained in the project wiki:
-https://github.com/TCzerny/ha-modbus-manager/wiki
+**Device-specific** register and model documentation lives in [`docs/`](docs/) (linked from the [Wiki home](https://github.com/TCzerny/ha-modbus-manager/wiki) and below). **General** guides and the **template YAML reference** are on the [GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki).
 
 ## 🚧 Known Issues
 
@@ -158,7 +157,7 @@ https://github.com/TCzerny/ha-modbus-manager/wiki
 
 1. **Fork** the repository
 2. **Create device template** in `device_templates/`
-3. **Add documentation** in the [GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)
+3. **Add device documentation** as `docs/README_<device>.md` and link it from this README and the [Wiki home](https://github.com/TCzerny/ha-modbus-manager/wiki)
 4. **Test with real device**
 5. **Create Pull Request**
 
@@ -172,7 +171,9 @@ https://github.com/TCzerny/ha-modbus-manager/wiki
 
 ## 📚 Documentation
 
-- **[GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)** - Complete documentation
+- **[GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki)** — User guide, template YAML reference, capabilities, migrations. **Device-specific** register and model docs live only in this repo (`docs/README_*.md` below).
+- **[Template reference (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference)** — Full YAML template documentation
+- **[docs/SERVICES.md](docs/SERVICES.md)** — Integration services reference
 - **[Sungrow SHx Dynamic](docs/README_sungrow_shx_dynamic.md)** - Complete dynamic template documentation
 - **[Sungrow SG Dynamic](docs/README_sungrow_sg_dynamic.md)** - Dynamic SG template documentation
 - **[Sungrow iHomeManager](docs/README_iHomeManager.md)** - iHomeManager register documentation

@@ -1,5 +1,7 @@
 # Sungrow SG Dynamic Template
 
+> **General documentation (Wiki):** [User Guide](https://github.com/TCzerny/ha-modbus-manager/wiki/User-Guide) · [Template reference](https://github.com/TCzerny/ha-modbus-manager/wiki/Template-Reference) · [Capabilities and limits](https://github.com/TCzerny/ha-modbus-manager/wiki/Capabilities-and-Limits) · [Local customization](https://github.com/TCzerny/ha-modbus-manager/wiki/Local-Customization)
+
 ## 📋 Overview
 
 The **Sungrow SG Dynamic Template** is a complete, dynamically configurable template for Sungrow SG series residential and commercial PV grid-connected inverters. Based on Communication Protocol V1.1.53, it supports RS, RT, HX, KTL, KTL-MT, HV/BF, and CX series inverters.

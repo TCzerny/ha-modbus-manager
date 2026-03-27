@@ -1,5 +1,7 @@
 # unique_id Comparison: Modbus Manager SH Template vs mkaiser
 
+> **Wiki:** The same content is available in the [Modbus Manager Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-mkaiser-unique-id-comparison).
+
 This document validates the entity ID compatibility between the Modbus Manager SH template (with prefix `sg`) and the [mkaiser modbus_sungrow.yaml](https://raw.githubusercontent.com/mkaiser/Sungrow-SHx-Inverter-Modbus-Home-Assistant/refs/heads/main/modbus_sungrow.yaml).
 
 ## Important: How entity_id is Generated
@@ -27,7 +29,7 @@ The Home Assistant built-in Modbus integration uses the **entity name** to gener
 
 Modbus Manager uses **unique_id** (with prefix) or a `default_entity_id` parameter if specified for `entity_id`:
 
-- **Multi-device support:** Each device can have multiple entities. The prefix (e.g. `sg`, `sbr`) ensures uniqueness when several devices share the same hub (e.g. inverter + battery).
+- **Multi-device support:** Each device can have many entities. The prefix (e.g. `sg`, `sbr`) must be **unique across your entire Home Assistant instance** for all Modbus Manager devices (all hubs)—e.g. two SHx inverters need two different prefixes. It also separates devices that share one hub (e.g. inverter + battery).
 - **Consistency:** `unique_id` is the single source of truth for both registry identity and entity_id; no mismatch between name and entity_id.
 - **Result:** With prefix `sg`, entities become `sensor.sg_mppt1_voltage`, `number.sg_battery_min_soc`, etc.
 
@@ -42,7 +44,7 @@ Modbus Manager uses **unique_id** (with prefix) or a `default_entity_id` paramet
 - **Behavior:** Entity IDs are generated **without** the prefix (e.g. `sensor.mppt1_voltage`, `sensor.load_power` instead of `sensor.sg_mppt1_voltage`).
 - **Registry:** `unique_id` keeps the prefix (e.g. `sg_mppt1_voltage`) for registry stability.
 - **Pros:** Entity IDs match mkaiser; **history carries over**; automations and dashboards continue to work without changes.
-- **Cons:** Only safe when there is **one** Sungrow SH device per hub. With multiple devices, entity_ids would collide.
+- **Cons:** Only safe when **at most one** Sungrow SH device in the **whole Home Assistant instance** uses this mode. Unprefixed `entity_id` values would collide if two devices (even on different hubs) exposed the same names.
 
 **After migration:** When ready to switch to prefixed entity_ids, call the service `modbus_manager.add_entity_prefix` with your config entry ID. Entity IDs will be renamed (e.g. `sensor.load_power` → `sensor.sg_load_power`). Home Assistant migrates history automatically when entity_ids are renamed.
 
@@ -62,8 +64,8 @@ See [MIGRATION_mkaiser_to_modbus_manager.md](MIGRATION_mkaiser_to_modbus_manager
 
 ### Recommendation
 
-- **Single Sungrow SH device per hub:** Use **Option A** (`entity_ids_without_prefix: yes`) for seamless migration with history retention.
-- **Multiple devices per hub:** Use **Option C** (update references) and document the new entity_ids.
+- **Single Sungrow SH device (instance-wide) with unprefixed entity IDs:** Use **Option A** (`entity_ids_without_prefix: yes`) for seamless migration with history retention.
+- **Multiple Sungrow SH devices or multiple devices that would share `entity_id` values:** Use **Option C** (update references) and **distinct prefixes** per device; document the new entity_ids.
 
 ---
 
@@ -216,7 +218,7 @@ So with prefix `sg`, Modbus Manager entities are `sensor.sg_mppt1_voltage`, whil
 
 ## 4. Recommendation for Migration Guide
 
-1. **Single-device setups:** Use `entity_ids_without_prefix: yes` for history retention and automation compatibility. Call `modbus_manager.add_entity_prefix` when ready to switch to prefixed entity_ids.
-2. **Multi-device setups:** Use default (prefixed) mode. Update automations, dashboards, and scripts to the new entity_ids.
-3. **Prefix `sg`:** Use prefix `sg` for consistency with mkaiser's `sg_` unique_ids and to avoid conflicts with other integrations.
-4. **Full guide:** See [MIGRATION_mkaiser_to_modbus_manager.md](MIGRATION_mkaiser_to_modbus_manager.md) for the complete step-by-step migration process.
+1. **Exactly one Sungrow SH (instance-wide) migrating with unprefixed entity IDs:** Use `entity_ids_without_prefix: yes` for history retention and automation compatibility. Call `modbus_manager.add_entity_prefix` when ready to switch to prefixed entity_ids.
+2. **Multiple devices / multiple hubs:** Use default (prefixed) mode with a **distinct prefix per device** (instance-wide). Update automations, dashboards, and scripts to the new entity_ids.
+3. **Prefix:** Use a prefix consistent with mkaiser's `sg_` unique_ids when you have **one** SH device; if you have **several** Modbus Manager devices (or several SH inverters), each needs a **distinct** prefix **instance-wide** (not only per hub).
+4. **Full guide:** See [Migration from mkaiser (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) for the complete step-by-step migration process.
