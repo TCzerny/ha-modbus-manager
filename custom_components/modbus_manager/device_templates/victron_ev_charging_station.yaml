@@ -1,6 +1,8 @@
 name: "Victron EV Charging Station"
 version: 0.1
 # "EV Charging Station" and "EV Charging Station NS" function the same over the Modbus interface
+# Victron's Modbus TCP register list uses FC3 (read holding / write holding). Home Assistant maps
+# those as input_type: holding even when the spreadsheet labels cells as read-only.
 description: "Victron EV Charging Station (including NS)"
 manufacturer: "Victron"
 model: "EV Charging Station"
@@ -21,7 +23,7 @@ dynamic_config:
   display:
     description: "Charging Station has a screen?"
     options: ["Yes", "No"]
-    default: ["No"]
+    default: "No"
 
   firmware_version:
     description: "Firmware version"
@@ -443,7 +445,7 @@ controls:
     entity_category: "config"
 
   - name: "Light Ring Brightness Limit"
-    unique_id: "light_ring_brighness"
+    unique_id: "light_ring_brightness"
     address: 5132
     input_type: "holding"
     data_type: "uint16"
