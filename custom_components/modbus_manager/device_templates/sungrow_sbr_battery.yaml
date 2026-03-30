@@ -1103,16 +1103,17 @@ calculated:
       {{ max_range | round(5) }}
 
   # Battery 1 Max/Min Voltage Cell Position Info - human-readable interpretation
-  # Note: The position is a unique cell ID from the BMS, not a simple "Module X, Cell Y" coordinate
-  # This sensor provides additional context about the cell position
+  # Register value is uint16: high byte = module index, low byte = cell index (e.g. 1807 = 0x70F → module 7, cell 15)
   - name: "Battery 1 Max Voltage Cell Info"
     unique_id: battery_1_max_voltage_cell_info
     group: "battery_balancing"
     state: >
-      {% set pos = states('sensor.{PREFIX}_battery_1_position_of_max_voltage_cell') | int(0) %}
+      {% set raw = states('sensor.{PREFIX}_battery_1_position_of_max_voltage_cell') | int(0) %}
+      {% set mod = raw // 256 %}
+      {% set cell = raw % 256 %}
       {% set volt = states('sensor.{PREFIX}_battery_1_max_voltage_of_cell') | float(0) %}
-      {% if pos > 0 and volt > 0 %}
-        Cell Position {{ pos }} ({{ "%.4f" | format(volt) }} V)
+      {% if raw > 0 and volt > 0 %}
+        Module {{ mod }}, Cell {{ cell }} ({{ "%.4f" | format(volt) }} V)
       {% else %}
         Unknown
       {% endif %}
@@ -1121,10 +1122,12 @@ calculated:
     unique_id: battery_1_min_voltage_cell_info
     group: "battery_balancing"
     state: >
-      {% set pos = states('sensor.{PREFIX}_battery_1_position_of_min_voltage_cell') | int(0) %}
+      {% set raw = states('sensor.{PREFIX}_battery_1_position_of_min_voltage_cell') | int(0) %}
+      {% set mod = raw // 256 %}
+      {% set cell = raw % 256 %}
       {% set volt = states('sensor.{PREFIX}_battery_1_min_voltage_of_cell') | float(0) %}
-      {% if pos > 0 and volt > 0 %}
-        Cell Position {{ pos }} ({{ "%.4f" | format(volt) }} V)
+      {% if raw > 0 and volt > 0 %}
+        Module {{ mod }}, Cell {{ cell }} ({{ "%.4f" | format(volt) }} V)
       {% else %}
         Unknown
       {% endif %}

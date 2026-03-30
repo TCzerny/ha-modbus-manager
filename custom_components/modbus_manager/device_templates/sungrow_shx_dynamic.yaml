@@ -37,6 +37,8 @@ firmware_version: "03011.95.01"
 # - Meter Channel 2 registers: Only available with DTSU666-20 meter AND not on RS/MG models
 # - Battery capacity register: Only available on SH3.0-6.0RS, SH8.0-10RS, and SH5.0-10RT models
 # - PV Power Limitation control: Only available on SHT models (SH5T-SH25T), not RT/RS models
+# Battery charging/discharging binomials: running_state (reg 13000) is uint16 — use |int + bitwise_and; do not require
+# value > 0 (0 is valid). If state is not numeric (e.g. unavailable), fallback: register 5213 battery_power sign only.
 
 
 # Dynamic configuration support
@@ -4925,9 +4927,8 @@ binary_sensors:
       and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
-        {# use available sensor running_state #}
-        {{ (states('sensor.{PREFIX}_running_state')|int |bitwise_and(0x1)) > 0 }}
+      {% if states('sensor.{PREFIX}_running_state') | is_number %}
+        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x1)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
@@ -4959,51 +4960,24 @@ binary_sensors:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_running_state', 'unavailable')
-      or
-        (   not is_state('sensor.{PREFIX}_ems_mode_selection_raw', 'unavailable')
-        and not is_state('sensor.{PREFIX}_battery_forced_charge_discharge_cmd_raw', 'unavailable')
-        and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
-        and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
-        and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
-        )
+      or not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
-        {# use available sensor running_state #}
-        {% if (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x2)) > 0 %}
+      {% if states('sensor.{PREFIX}_running_state') | is_number %}
+        {% if (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x2)) > 0 %}
           on
         {% else %}
           off
         {% endif %}
       {% else %}
-        {# workaround for SH*RS inverters without working running_state #}
-        {% if (states('sensor.{PREFIX}_ems_mode_selection') ) in ["Forced mode", "VPP"] %}
-          {# EMS forced mode #}
-          {% if (states('sensor.{PREFIX}_battery_forced_charge_discharge_cmd') == "Forced charge") %}
-            {# in mode Forced charge #}
-            {% if (states('sensor.{PREFIX}_battery_power')|int > 0 ) %}
-              {# power flow from/to battery #}
-              on
-            {% else %}
-              {# no power flow from/to battery #}
-              off
-            {% endif %}
-          {% else %}
-            {# in EMS mode, but not in mode Forced charge #}
-            off
-          {% endif %}
+        {# running_state not usable (e.g. SH*RS): register 5213 — negative = charging #}
+        {% set bp = states('sensor.{PREFIX}_battery_power') %}
+        {% if bp in ['unknown', 'unavailable', 'none'] or bp is none %}
+          off
+        {% elif (bp | float(0)) < 0 %}
+          on
         {% else %}
-          {# not in EMS forced mode, assuming self consumption mode #}
-          {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
-          {% set load_power = states('sensor.{PREFIX}_load_power') %}
-          {% if (total_dc_power in ['unknown', 'unavailable', 'none'] or total_dc_power is none) or (load_power in ['unknown', 'unavailable', 'none'] or load_power is none) %}
-            off
-          {% elif (total_dc_power|int) > (load_power|int) %}
-            {# more power generated than consumed. assuming battery charging #}
-            on
-          {% else %}
-            off
-          {% endif %}
+          off
         {% endif %}
       {% endif %}
     device_class: "battery_charging"
@@ -5027,52 +5001,24 @@ binary_sensors:
     availability: >-
       {{
       not is_state('sensor.{PREFIX}_running_state', 'unavailable')
-      or
-        (   not is_state('sensor.{PREFIX}_ems_mode_selection_raw', 'unavailable')
-        and not is_state('sensor.{PREFIX}_battery_forced_charge_discharge_cmd_raw', 'unavailable')
-        and not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
-        and not is_state('sensor.{PREFIX}_total_dc_power', 'unavailable')
-        and not is_state('sensor.{PREFIX}_load_power', 'unavailable')
-        )
+      or not is_state('sensor.{PREFIX}_battery_power', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
-        {# use available sensor running_state #}
-        {% if (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x4)) > 0 %}
+      {% if states('sensor.{PREFIX}_running_state') | is_number %}
+        {% if (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x4)) > 0 %}
           on
         {% else %}
           off
         {% endif %}
       {% else %}
-        {# workaround for SH*RS inverters without working running_state #}
-        {% if (states('sensor.{PREFIX}_ems_mode_selection') ) in ["Forced mode", "VPP"] %}
-          {# EMS forced mode #}
-          {% if (states('sensor.{PREFIX}_battery_forced_charge_discharge_cmd') == "Forced discharge") %}
-            {# in mode Forced discharge #}
-            {% if (states('sensor.{PREFIX}_battery_power')|int > 0 ) %}
-              {# power flow from/to battery #}
-              on
-            {% else %}
-              {# no power flow from/to battery #}
-              off
-            {% endif %}
-          {% else %}
-            {# in EMS mode, but not in mode Forced charge #}
-            off
-          {% endif %}
+        {# running_state not usable: register 5213 — positive = discharging #}
+        {% set bp = states('sensor.{PREFIX}_battery_power') %}
+        {% if bp in ['unknown', 'unavailable', 'none'] or bp is none %}
+          off
+        {% elif (bp | float(0)) > 0 %}
+          on
         {% else %}
-          {# not in EMS forced mode, assuming self consumption mode #}
-          {% set total_dc_power = states('sensor.{PREFIX}_total_dc_power') %}
-          {% set load_power = states('sensor.{PREFIX}_load_power') %}
-          {% set battery_power = states('sensor.{PREFIX}_battery_power') %}
-          {% if ( (total_dc_power in ['unknown', 'unavailable', 'none'] or total_dc_power is none) or (load_power in ['unknown', 'unavailable', 'none'] or load_power is none) or (battery_power in ['unknown', 'unavailable', 'none'] or battery_power is none) ) %}
-            off
-          {% elif ( (total_dc_power|int < load_power|int) ) and (battery_power|int) > 0 %}
-            {# more power consumed than generated and some battery power --> assuming battery discharging #}
-            on
-          {% else %}
-            off
-          {% endif %}
+          off
         {% endif %}
       {% endif %}
     group: "PV_binary_status"
@@ -5096,9 +5042,8 @@ binary_sensors:
       and not is_state('sensor.{PREFIX}_export_power_raw', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
-        {# use available sensor running_state #}
-        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x10)) > 0 }}
+      {% if states('sensor.{PREFIX}_running_state') | is_number %}
+        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x10)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
@@ -5132,9 +5077,8 @@ binary_sensors:
       and not is_state('sensor.{PREFIX}_running_state', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
-        {# use available sensor running_state #}
-        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x20)) > 0 }}
+      {% if states('sensor.{PREFIX}_running_state') | is_number %}
+        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x20)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set export_power = states('sensor.{PREFIX}_export_power_raw') %}
@@ -5167,9 +5111,8 @@ binary_sensors:
       not is_state('sensor.{PREFIX}_running_state', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
-        {# use available sensor running_state #}
-        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x8)) > 0 }}
+      {% if states('sensor.{PREFIX}_running_state') | is_number %}
+        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x8)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set load_power = states('sensor.{PREFIX}_load_power') %}
@@ -5192,9 +5135,8 @@ binary_sensors:
       not is_state('sensor.{PREFIX}_running_state', 'unavailable')
       }}
     state: >-
-      {% if states('sensor.{PREFIX}_running_state')|is_number and states('sensor.{PREFIX}_running_state')|float > 0 %}
-        {# use available sensor running_state #}
-        {{ (states('sensor.{PREFIX}_running_state')|int|bitwise_and(0x80)) > 0 }}
+      {% if states('sensor.{PREFIX}_running_state') | is_number %}
+        {{ (states('sensor.{PREFIX}_running_state') | int | bitwise_and(0x80)) > 0 }}
       {% else %}
         {# workaround for SH*RS inverters without working running_state #}
         {% set load_power = states('sensor.{PREFIX}_load_power') %}
