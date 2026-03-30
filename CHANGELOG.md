@@ -7,9 +7,27 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.5] - 2026-03-30
+
+### ✨ Added
+
+- **Model config in templates**: Calculated and binary sensor `state` / `availability` strings can use placeholders `{KEY_UPPER}` from the selected `valid_models` entry (e.g. `{MAX_AC_OUTPUT_POWER}`). Values are substituted when entities are built; `{MAX_AC_OUTPUT_POWER}`, `{MAX_CHARGE_POWER}`, and `{MAX_DISCHARGE_POWER}` fall back to `0` if absent (`device_utils.replace_template_placeholders`, `coordinator`).
+
+### 🔧 Changed
+
+#### Sungrow SHx (`sungrow_shx_dynamic.yaml`, template **1.2.11**)
+- **PV capacity factor**: Denominator prefers **BDC rated power** (register 5628) when above 100 W; otherwise **`max_ac_output_power`** from the configured model. Removes the previous device-type string ladder.
+- **DC to AC efficiency**: Minimum DC power gate and **0–100 %** clamp to avoid unrealistic spikes (e.g. from async samples or reconstruction edge cases).
+- **Binary sensors using `running_state`**: Use numeric bitmask without requiring `running_state > 0`; drop EMS forced-charge fallback for battery charge/discharge (fallback uses battery power sign only); align export/import/load power binaries; simplify related availability.
+
+#### Sungrow SBR/SBH battery (`sungrow_sbr_battery.yaml`, template **1.1.2**)
+- **Max/min voltage cell info**: Position register decoded as **module** (high byte) and **cell** (low byte).
+- Naming and translations updated to **SBR/SBH** where applicable (`de.json`, `en.json`).
+
 ### 📚 Documentation
 
-- Removed `docs/MIGRATION_mkaiser_to_modbus_manager.md` and `docs/MIGRATION_mkaiser_unique_id_comparison.md`; mkaiser → Modbus Manager migration content lives only on the [GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser) (**Migration from mkaiser**, **Migration mkaiser unique_id comparison**).
+- Repository vs [GitHub Wiki](https://github.com/TCzerny/ha-modbus-manager/wiki) documentation split; CONTRIBUTING and SERVICES notes updated.
+- Removed in-repo mkaiser migration Markdown; canonical migration content is on the Wiki (**Migration from mkaiser**, **Migration mkaiser unique_id comparison**).
 
 ## [1.0.4] - 2026-03-27
 
