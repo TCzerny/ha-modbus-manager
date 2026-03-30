@@ -7,6 +7,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.6] - 2026-03-30
+
+### 🐛 Fixed
+
+#### Sungrow SBR/SBH battery template (`sungrow_sbr_battery.yaml`, template **1.1.3**)
+- **Invalid device name**: Replaced **`/`** in template **`name`** and **`model`** (e.g. `SBR/SBH`) with a safe separator (**`SBR_SBH`**) so Home Assistant entity/device naming no longer receives a forbidden character.
+
 ## [1.0.5] - 2026-03-30
 
 ### ✨ Added
