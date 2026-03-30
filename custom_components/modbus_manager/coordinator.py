@@ -1100,6 +1100,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 slave_id,
                                 0,
                                 entity_ids_without_prefix,
+                                model_config,
                             )
                     all_calculated.append(register)
 
@@ -1119,6 +1120,7 @@ class ModbusCoordinator(DataUpdateCoordinator):
                                 slave_id,
                                 0,
                                 entity_ids_without_prefix,
+                                model_config,
                             )
                     all_binary_sensors.append(register)
 

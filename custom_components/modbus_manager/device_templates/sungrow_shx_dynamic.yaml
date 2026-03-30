@@ -5,7 +5,7 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.10
+version: 1.2.11
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -4133,8 +4133,8 @@ calculated:
       {% set total_ac = states('sensor.{PREFIX}_total_active_power') | float(0) %}
       {% set batt = states('sensor.{PREFIX}_battery_power') | float(0) %}
       {% set meter = states('sensor.{PREFIX}_meter_active_power') | float(0) %}
-      {# Grid: import positive, export negative #}
-      {% set grid_import = meter if meter > 0 else 0 %}
+
+      {% set grid_import = states('sensor.{PREFIX}_import_power') | float(0) %}
       {% set pv_ac = total_ac - batt - grid_import %}
       {% if dc >= dc_min_w and pv_ac > 0 %}
         {% set eff = (pv_ac / dc) * 100 %}
@@ -4601,22 +4601,11 @@ calculated:
       }}
     state: >-
       {% set current_power = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
-      {% set device_type = states('sensor.{PREFIX}_sungrow_device_type_code') | default('') %}
-      {% set max_power = 5000 %}
-      {% if 'SH3.0' in device_type or 'SH3K' in device_type %}
-        {% set max_power = 3000 %}
-      {% elif 'SH3.6' in device_type %}
-        {% set max_power = 3600 %}
-      {% elif 'SH4.0' in device_type %}
-        {% set max_power = 4000 %}
-      {% elif 'SH5.0' in device_type %}
-        {% set max_power = 5000 %}
-      {% elif 'SH6.0' in device_type %}
-        {% set max_power = 6000 %}
-      {% elif 'SH8.0' in device_type %}
-        {% set max_power = 8000 %}
-      {% elif 'SH10' in device_type %}
-        {% set max_power = 10000 %}
+      {# Prefer BDC rated power (reg 5628, W); else max AC nameplate from selected model (valid_models) #}
+      {% set rated_bdc = states('sensor.{PREFIX}_bdc_rated_power') | float(0) %}
+      {% set max_power = rated_bdc if rated_bdc > 100 else 0 %}
+      {% if max_power <= 0 %}
+        {% set max_power = {MAX_AC_OUTPUT_POWER} | int(0) %}
       {% endif %}
       {% if max_power > 0 %}
         {{ (current_power / max_power * 100) | round(1) }}
@@ -4628,7 +4617,7 @@ calculated:
     state_class: "measurement"
     precision: 1
     group: "PV_performance"
-    # Current PV power as percentage of inverter rated capacity
+    # DC power vs nameplate: BDC rated register when valid, else configured model max_ac_output_power (W)
 
   - name: "PV Generation Hours Today"
     unique_id: "pv_generation_hours_today"

@@ -174,6 +174,7 @@ def replace_template_placeholders(
     slave_id: int = 1,
     battery_slave_id: int = 200,
     entity_ids_without_prefix: bool = False,
+    model_config: Optional[Dict[str, Any]] = None,
 ) -> str:
     """Replace template placeholders in strings with actual values.
 
@@ -183,6 +184,9 @@ def replace_template_placeholders(
         slave_id: Slave ID to replace {SLAVE_ID} (legacy, no longer used in register definitions)
         battery_slave_id: Battery slave ID to replace {BATTERY_SLAVE_ID} (legacy, no longer used)
         entity_ids_without_prefix: When True, {PREFIX} and {PREFIX}_ become empty for entity_id refs
+        model_config: If set, numeric fields from valid_models are substituted as {KEY_UPPER},
+            e.g. max_ac_output_power -> {MAX_AC_OUTPUT_POWER}. Used in calculated/binary templates.
+            Remaining {MAX_AC_OUTPUT_POWER}, {MAX_CHARGE_POWER}, {MAX_DISCHARGE_POWER} default to 0.
 
     Returns:
         String with placeholders replaced
@@ -215,6 +219,22 @@ def replace_template_placeholders(
     result = template_string
     for placeholder, value in replacements.items():
         result = result.replace(placeholder, value)
+
+    mc = model_config or {}
+    for key, value in mc.items():
+        if isinstance(value, bool):
+            continue
+        if isinstance(value, (int, float)):
+            token = "{" + key.upper() + "}"
+            if token in result:
+                if isinstance(value, float) and value.is_integer():
+                    result = result.replace(token, str(int(value)))
+                else:
+                    result = result.replace(token, str(value))
+    for key in ("max_ac_output_power", "max_charge_power", "max_discharge_power"):
+        token = "{" + key.upper() + "}"
+        if token in result:
+            result = result.replace(token, "0")
 
     return result
 
