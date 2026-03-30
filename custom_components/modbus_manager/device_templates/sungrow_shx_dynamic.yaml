@@ -5,7 +5,7 @@ name: "Sungrow SH Series Inverter"
 description: "Dynamic template for Sungrow SHx inverters. Supports all 36 SHx models: SHxK6, SHxK-20/V13, SHxK-30, SHx.0RS, SHx.0RT/RT-20/RT-V112/RT-V122, SHxT, MGxRL"
 manufacturer: "Sungrow"
 model: "SHx Series Dynamic"
-version: 1.2.9
+version: 1.2.10
 default_prefix: "SG"
 default_slave_id: 1
 type: "PV_Hybrid_Inverter"
@@ -4123,24 +4123,22 @@ calculated:
 #    precision: 2
 #    group: "PV_efficiency"
 #    # Inverter efficiency: AC output power / DC input power
-# DC → AC Conversion Efficiency (echte Sungrow PV-Effizienz)
+# DC → AC conversion efficiency (reconstructed PV AC vs total DC; clamped 0–100 %)
   - name: "DC to AC Efficiency"
     unique_id: "dc_to_ac_efficiency"
     state: >-
+      {# Ignore low DC: pv_ac/dc explodes with register noise or async samples #}
+      {% set dc_min_w = 300 %}
       {% set dc = states('sensor.{PREFIX}_total_dc_power') | float(0) %}
       {% set total_ac = states('sensor.{PREFIX}_total_active_power') | float(0) %}
       {% set batt = states('sensor.{PREFIX}_battery_power') | float(0) %}
       {% set meter = states('sensor.{PREFIX}_meter_active_power') | float(0) %}
-
-      {# Netzbezug positiv, Einspeisung negativ #}
+      {# Grid: import positive, export negative #}
       {% set grid_import = meter if meter > 0 else 0 %}
-
-      {# PV-AC-Leistung rekonstruieren #}
       {% set pv_ac = total_ac - batt - grid_import %}
-
-      {# Nur gültig wenn PV wirklich produziert #}
-      {% if dc > 0 and pv_ac > 0 %}
-        {{ ((pv_ac / dc) * 100) | round(2) }}
+      {% if dc >= dc_min_w and pv_ac > 0 %}
+        {% set eff = (pv_ac / dc) * 100 %}
+        {{ [[eff, 100] | min, 0] | max | round(2) }}
       {% else %}
         0
       {% endif %}
