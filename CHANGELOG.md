@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.7] - 2026-04-01
+
+### ✨ Added
+
+- **`display_name` in YAML**: `template_loader` now copies non-empty `display_name` into the loaded template dict (was ignored before). Lets templates keep a stable **`name`** (config / `get_template_by_name` key) while showing a different label in the UI.
+
+### 🔧 Changed
+
+- **Config flow**: Initial hub **template** selection and **add-device** template step use `vol.In({ name → display_name })` so the dropdown shows `display_name` when set; the value stored remains **`name`**.
+- **Battery template selection** (setup + options): Resolve labels with `(display_name or "").strip() or template_name` so empty strings fall back safely.
+
+#### Device templates
+
+- **`sungrow_sbr_battery.yaml`**: `name` / `model` restored to **`Sungrow SBR Battery`** / **`SBR Battery`** for compatibility with existing entries; **`display_name`**: `Sungrow SBR / SBH Battery` so users still see both product lines (template **1.1.7**).
+- **All other built-in templates**: Added **`display_name`** (same as `name` where no separate label is needed); patch **version** bumps on edited files (SHx, SG, Victron, Fronius, SMA, SolaX, Growatt, Compleo, iHomeManager, Heidelberg, AC011E wallbox, Solvis SC3, BYD).
+
 ## [1.0.6] - 2026-03-30
 
 ### 🐛 Fixed

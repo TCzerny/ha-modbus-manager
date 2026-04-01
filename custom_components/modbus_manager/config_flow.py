@@ -340,20 +340,25 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 # Device configuration
                 return await self.async_step_final_config(user_input)
 
-            # Show template selection
-            # Sort template names alphabetically for better UX
+            # Show template selection (stored value = template `name`; label = display_name)
             template_names = sorted(list(self._templates.keys()))
+            template_choices = {
+                name: (
+                    (self._templates[name].get("display_name") or "").strip() or name
+                )
+                for name in template_names
+            }
             return self.async_show_form(
                 step_id="user",
                 data_schema=vol.Schema(
                     {
-                        vol.Required("template"): vol.In(template_names),
+                        vol.Required("template"): vol.In(template_choices),
                     }
                 ),
                 description_placeholders={
                     "config_flow_note": "",
                     "template_count": str(len(template_names)),
-                    "template_list": ", ".join(template_names),
+                    "template_list": ", ".join(template_choices.values()),
                 },
             )
 
@@ -1742,7 +1747,9 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                             if note:
                                 filtered_out_notes.append(f"{template_name}: {note}")
                             continue
-                    display_name = template_data.get("display_name", template_name)
+                    display_name = (
+                        template_data.get("display_name") or ""
+                    ).strip() or template_name
                     battery_templates[template_name] = display_name
 
         config_flow_note = ""
@@ -2893,6 +2900,16 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
         if not template_names:
             return self.async_abort(reason="no_templates")
 
+        template_choices = {}
+        for tn in template_names:
+            td = await get_template_by_name(tn)
+            label = (
+                (td.get("display_name") or "").strip() or tn
+                if isinstance(td, dict)
+                else tn
+            )
+            template_choices[tn] = label
+
         default_template = template_names[0]
         self._add_form_template_name = None
         self._add_template_candidate = default_template
@@ -2904,7 +2921,7 @@ class ModbusManagerDeviceSubentryFlow(config_entries.ConfigSubentryFlow):
             data_schema=vol.Schema(
                 {
                     vol.Required("template", default=default_template): vol.In(
-                        template_names
+                        template_choices
                     ),
                 }
             ),
@@ -4014,7 +4031,9 @@ class ModbusManagerOptionsFlow(config_entries.OptionsFlow):
                         required_norm = str(required_conn).strip().upper()
                         if connection_type_norm != required_norm:
                             continue
-                    display_name = template_data.get("display_name", template_name)
+                    display_name = (
+                        template_data.get("display_name") or ""
+                    ).strip() or template_name
                     battery_templates_dict[template_name] = display_name
 
         # Sort battery templates alphabetically by display name for better UX

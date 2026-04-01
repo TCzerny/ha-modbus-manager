@@ -530,10 +530,14 @@ async def load_single_template(
 
         else:
             # Standard template processing
-            raw_registers = data.get("sensors", []) # Process sensors if present
-            calculated_entities = data.get("calculated", []) # Process calculated if present
-            controls = data.get("controls", []) # Process controls if present
-            binary_sensors = data.get("binary_sensors", []) # Process binary sensors if present
+            raw_registers = data.get("sensors", [])  # Process sensors if present
+            calculated_entities = data.get(
+                "calculated", []
+            )  # Process calculated if present
+            controls = data.get("controls", [])  # Process controls if present
+            binary_sensors = data.get(
+                "binary_sensors", []
+            )  # Process binary sensors if present
             if not raw_registers:
                 # Allow empty base templates
                 if "type" in data and data["type"] == "base_template":
@@ -618,6 +622,10 @@ async def load_single_template(
             result["requires_connection_type"] = data["requires_connection_type"]
         if "config_flow_note" in data:
             result["config_flow_note"] = data["config_flow_note"]
+        # Optional UI label in config flow (stored config still uses `name` as template key)
+        display_name = data.get("display_name")
+        if display_name is not None and str(display_name).strip():
+            result["display_name"] = str(display_name).strip()
 
         # Extract SunSpec metadata if present
         if "sunspec_enabled" in data:
