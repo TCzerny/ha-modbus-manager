@@ -1,6 +1,6 @@
 name: "Compleo eBox Professional"
 display_name: "Compleo eBox Professional"
-version: 3.2
+version: 3.3
 description: "Compleo eBox Professional EV Charger (Innogy eBox)"
 manufacturer: "Compleo"
 model: "eBox Professional"
@@ -79,6 +79,35 @@ sensors:
     group: "EV_device_info"
     icon: "mdi:factory"
 
+  - name: "Platform Type"
+    unique_id: "platform_type"
+    address: 125
+    input_type: "input"
+    data_type: "string"
+    count: 25
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:shape"
+
+  - name: "Product Type"
+    unique_id: "product_type"
+    address: 150
+    input_type: "input"
+    data_type: "string"
+    count: 25
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:tag"
+
+  - name: "Modbus Table Version"
+    unique_id: "modbus_table_version"
+    address: 175
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:table"
+
   - name: "Firmware"
     unique_id: "firmware"
     address: 200
@@ -88,6 +117,28 @@ sensors:
     scan_interval: 600
     group: "EV_device_info"
     icon: "mdi:chip"
+
+  - name: "Number Of Sockets"
+    unique_id: "number_of_sockets"
+    address: 225
+    input_type: "input"
+    data_type: "uint16"
+    precision: 0
+    scan_interval: 600
+    group: "EV_device_info"
+    icon: "mdi:power-plug"
+
+  - name: "Ocpp State"
+    unique_id: "ocpp_state"
+    address: 250
+    input_type: "input"
+    data_type: "uint16"
+    scan_interval: 15
+    group: "EV_charging_status"
+    icon: "mdi:web"
+    map:
+      0: "Offline"
+      1: "Online"
 
   # Charging status
   - name: "Status"
@@ -179,44 +230,8 @@ sensors:
     icon: "mdi:meter-electric"
     firmware_min_version: "2.0.35"
 
-  # Current measurements
-  - name: "Current Phase 1"
-    unique_id: "current_phase_1"
-    address: 1006
-    input_type: "input"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    group: "EV_current_measurement"
-    icon: "mdi:lightning-bolt"
-
-  - name: "Current Phase 2"
-    unique_id: "current_phase_2"
-    address: 1008
-    input_type: "input"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    group: "EV_current_measurement"
-    icon: "mdi:lightning-bolt"
-
-  - name: "Current Phase 3"
-    unique_id: "current_phase_3"
-    address: 1010
-    input_type: "input"
-    data_type: "float32"
-    scan_interval: 10
-    unit_of_measurement: "A"
-    device_class: "current"
-    state_class: "measurement"
-    group: "EV_current_measurement"
-    icon: "mdi:lightning-bolt"
-
   # Actual max current (read-only)
+  # The maximum allowed electrical current of the node respectively the electrical fuse protection of the node for phase 1,2,3
   - name: "Actual Max Current Phase 1"
     unique_id: "actual_max_current_phase_1"
     address: 1000
@@ -253,50 +268,181 @@ sensors:
     group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
+  # Current measurements
+  # The electrical current measured by the node on phase 1,2,3
+  - name: "Current Phase 1"
+    unique_id: "current_phase_1"
+    address: 1006
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
 
+  - name: "Current Phase 2"
+    unique_id: "current_phase_2"
+    address: 1008
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
 
+  - name: "Current Phase 3"
+    unique_id: "current_phase_3"
+    address: 1010
+    input_type: "input"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_measurement"
+    icon: "mdi:lightning-bolt"
 
+  # Max current settings (holding registers)
+  - name: "Max Current Phase 1"
+    unique_id: "max_current_phase_1"
+    address: 1012
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 30
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_control"
+    icon: "mdi:gauge"
 
-  # # Max current settings (holding registers)
-  # - name: "Max Current Phase 1"
-  #   unique_id: "max_current_phase_1"
-  #   address: 1012
-  #   input_type: "holding"
-  #   data_type: "uint16"
-  #   scan_interval: 30
-  #   unit_of_measurement: "A"
-  #   device_class: "current"
-  #   state_class: "measurement"
-  #   group: "EV_current_control"
-  #   icon: "mdi:gauge"
+  - name: "Max Current Phase 2"
+    unique_id: "max_current_phase_2"
+    address: 1014
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 30
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_control"
+    icon: "mdi:gauge"
 
-  # - name: "Max Current Phase 2"
-  #   unique_id: "max_current_phase_2"
-  #   address: 1013
-  #   input_type: "holding"
-  #   data_type: "uint16"
-  #   scan_interval: 30
-  #   unit_of_measurement: "A"
-  #   device_class: "current"
-  #   state_class: "measurement"
-  #   group: "EV_current_control"
-  #   icon: "mdi:gauge"
+  - name: "Max Current Phase 3"
+    unique_id: "max_current_phase_3"
+    address: 1016
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 30
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_current_control"
+    icon: "mdi:gauge"
 
-  # - name: "Max Current Phase 3"
-  #   unique_id: "max_current_phase_3"
-  #   address: 1014
-  #   input_type: "holding"
-  #   data_type: "uint16"
-  #   scan_interval: 30
-  #   unit_of_measurement: "A"
-  #   device_class: "current"
-  #   state_class: "measurement"
-  #   group: "EV_current_control"
-  #   icon: "mdi:gauge"
+  # Fallback max current settings
+  # Fallback value for electrical current in case of loss of the TCP connection for phase 1,2,3
+  - name: "Fallback Max Current Phase 1"
+    unique_id: "fallback_max_current_phase_1"
+    address: 1018
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_fallback_current_setting"
+    icon: "mdi:gauge"
+
+  - name: "Fallback Max Current Phase 2"
+    unique_id: "fallback_max_current_phase_2"
+    address: 1020
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_fallback_current_setting"
+    icon: "mdi:gauge"
+
+  - name: "Fallback Max Current Phase 3"
+    unique_id: "fallback_max_current_phase_3"
+    address: 1022
+    input_type: "holding"
+    data_type: "float32"
+    scan_interval: 10
+    unit_of_measurement: "A"
+    device_class: "current"
+    state_class: "measurement"
+    group: "EV_fallback_current_setting"
+    icon: "mdi:gauge"
+
+  # # Fallback timer
+  - name: "Remaining Time Before Fallback"
+    unique_id: "remaining_time_before_fallback"
+    address: 1024
+    input_type: "holding"
+    data_type: "uint16"
+    precision: 0
+    unit_of_measurement: "seconds"
+    device_class: "duration"
+    state_class: "measurement"
+    scale: 1
+    scan_interval: 10
+    group: "EV_fallback_timer"
+    icon: "mdi:timer"
+
+  - name: "Station Phase Setup L1"
+    unique_id: "station_phase_setup_l1"
+    address: 1025
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    precision: 0
+    group: "EV_phase_setup"
+    icon: "mdi:transmission-tower"
+
+  - name: "Station Phase Setup L2"
+    unique_id: "station_phase_setup_l2"
+    address: 1026
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    precision: 0
+    group: "EV_phase_setup"
+    icon: "mdi:transmission-tower"
+
+  - name: "Station Phase Setup L3"
+    unique_id: "station_phase_setup_l3"
+    address: 1027
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 30
+    precision: 0
+    group: "EV_phase_setup"
+    icon: "mdi:transmission-tower"
+
+  - name: "Availability"
+    unique_id: "availability"
+    address: 1028
+    input_type: "holding"
+    data_type: "uint16"
+    scan_interval: 10
+    group: "EV_charging_status"
+    icon: "mdi:power-settings"
+    map:
+      0: "Inoperative"
+      1: "Operative"
+
 
 # Controls (holding registers - read/write)
 controls:
   # Max current settings (holding registers)
+  # The maximum allowed electrical current of the node calculated and distributed by load management system for phase 1,2,3
   - name: "Max Current Phase 1"
     unique_id: "max_current_phase_1"
     address: 1012
@@ -354,6 +500,7 @@ controls:
     # Options: 6, 10, 16, 20, 32 A
 
   # Fallback max current settings
+  # Fallback value for electrical current in case of loss of the TCP connection for phase 1,2,3
   # - name: "Fallback Max Current Phase 1"
   #   unique_id: "fallback_max_current_phase_1"
   #   address: 1018
@@ -399,23 +546,6 @@ controls:
   #   max_value: 16
   #   step: 1
 
-  # # Fallback timer
-  # - name: "Remaining Time Before Fallback"
-  #   unique_id: "remaining_time_before_fallback"
-  #   address: 1024
-  #   input_type: "holding"
-  #   data_type: "uint16"
-  #   precision: 0
-  #   unit_of_measurement: "min"
-  #   device_class: "duration"
-  #   state_class: "measurement"
-  #   scale: 1
-  #   min_value: 0
-  #   max_value: 120
-  #   step: 1
-  #   scan_interval: 10
-  #   group: "EV_fallback_timer"
-  #   icon: "mdi:timer"
 
 # Calculated
 calculated:
