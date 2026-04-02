@@ -9,7 +9,7 @@ display_name: "Sungrow SBR / SBH Battery"
 description: "Template for Sungrow SBR/SBH battery systems (Modbus via inverter). Contains all battery sensors, controls, and diagnostics."
 manufacturer: "Sungrow"
 model: "SBR Battery"
-version: 1.1.7
+version: 1.1.8
 default_prefix: "SBR"
 default_slave_id: 200
 type: "battery"
@@ -1115,7 +1115,7 @@ calculated:
       {% set cell = raw % 256 %}
       {% set volt = states('sensor.{PREFIX}_battery_1_max_voltage_of_cell') | float(0) %}
       {% if raw > 0 and volt > 0 %}
-        Module {{ mod }}, Cell {{ cell }} ({{ "%.4f" | format(volt) }} V)
+        Module {{ mod }}, Cell {{ cell }} ({{ raw }})
       {% else %}
         Unknown
       {% endif %}
@@ -1129,22 +1129,23 @@ calculated:
       {% set cell = raw % 256 %}
       {% set volt = states('sensor.{PREFIX}_battery_1_min_voltage_of_cell') | float(0) %}
       {% if raw > 0 and volt > 0 %}
-        Module {{ mod }}, Cell {{ cell }} ({{ "%.4f" | format(volt) }} V)
+        Module {{ mod }}, Cell {{ cell }} ({{ raw }})
       {% else %}
         Unknown
       {% endif %}
 
-  # Battery 1 Max/Min Temperature Module Position Info - human-readable interpretation
-  # Note: The position is a unique module ID from the BMS
-  # This sensor provides additional context about the module position and temperature
+  # Battery 1 Max/Min Temperature Module Position Info (same uint16 layout as voltage cell position)
+  # High byte = module index, low byte = sensor/index (e.g. 514 = 0x202 → module 2, index 2)
   - name: "Battery 1 Max Temperature Module Info"
     unique_id: battery_1_max_temperature_module_info
     group: "battery_balancing"
     state: >
-      {% set pos = states('sensor.{PREFIX}_battery_1_position_of_max_temperature_of_module') | int(0) %}
+      {% set raw = states('sensor.{PREFIX}_battery_1_position_of_max_temperature_of_module') | int(0) %}
+      {% set mod = raw // 256 %}
+      {% set cell = raw % 256 %}
       {% set temp = states('sensor.{PREFIX}_battery_1_max_temperature_of_module') | float(0) %}
-      {% if pos > 0 and temp > 0 %}
-        Module Position {{ pos }} ({{ "%.1f" | format(temp) }} °C)
+      {% if raw > 0 and temp > 0 %}
+        Module {{ mod }}, Cell {{ cell }} ({{ raw }})
       {% else %}
         Unknown
       {% endif %}
@@ -1153,10 +1154,12 @@ calculated:
     unique_id: battery_1_min_temperature_module_info
     group: "battery_balancing"
     state: >
-      {% set pos = states('sensor.{PREFIX}_battery_1_position_of_min_temperature_of_module') | int(0) %}
+      {% set raw = states('sensor.{PREFIX}_battery_1_position_of_min_temperature_of_module') | int(0) %}
+      {% set mod = raw // 256 %}
+      {% set cell = raw % 256 %}
       {% set temp = states('sensor.{PREFIX}_battery_1_min_temperature_of_module') | float(0) %}
-      {% if pos > 0 and temp > 0 %}
-        Module Position {{ pos }} ({{ "%.1f" | format(temp) }} °C)
+      {% if raw > 0 and temp > 0 %}
+        Module {{ mod }}, Cell {{ cell }} ({{ raw }})
       {% else %}
         Unknown
       {% endif %}
