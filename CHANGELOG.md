@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.8] - 2026-04-02
+
+### 🐛 Fixed
+
+#### Dashboard examples
+
+- **SBR battery dashboards** (`sungrow_sbr_battery_analysis*.yaml`): Entity IDs for module deviation and cell voltage range now use `sensor.{PREFIX}_battery_1_module_N_*` to match template `unique_id` naming ([#47](https://github.com/TCzerny/ha-modbus-manager/issues/47)).
+
+#### Device templates
+
+- **`solvis_sc3.yaml`**: Heating control number entities use **`box`** mode instead of **`slider`** for clearer temperature and curve entry.
+
 ## [1.0.7] - 2026-04-01
 
 ### ✨ Added
