@@ -66,9 +66,9 @@ Standalone dashboard for inverter status and diagnostic registers only (device i
 All dashboards follow the same installation process:
 
 1. Copy the dashboard YAML file to your Home Assistant configuration directory
-2. **Important**: Replace all instances of `{PREFIX}` with your actual device prefix
-   - Battery example: `sensor.{PREFIX}_battery_1_voltage` → `sensor.SBR_battery_1_voltage`
-   - PV example: `sensor.{PREFIX}_total_dc_power` → `sensor.SG_total_dc_power`
+2. **Important**: Replace all instances of `{PREFIX_INVERTER}` resp. `{PREFIX_BATTERY}` with your actual device prefix
+   - Battery example: `sensor.{PREFIX_BATTERY}_battery_1_voltage` → `sensor.SBR_battery_1_voltage`
+   - PV example: `sensor.{PREFIX_INVERTER}_total_dc_power` → `sensor.SG_total_dc_power`
 3. **Adjust for your device configuration**: Review and remove or comment out entities that are not available on your device
    - **Battery dashboards**: If you have fewer modules, remove references to modules you don't have (e.g., if you have 6 modules, remove references to modules 7 and 8)
    - **PV dashboards**: If you have fewer MPPT trackers, remove references to MPPT trackers you don't have (e.g., if you have 2 MPPTs, remove references to MPPT 3 and 4)
@@ -81,7 +81,7 @@ All dashboards follow the same installation process:
 4. Import the dashboard in Home Assistant:
    - Go to **Settings** → **Dashboards** → **+ New Dashboard**
    - Choose **Import from YAML**
-   - Paste the content of the YAML file (after replacing `{PREFIX}` and adjusting for your device)
+   - Paste the content of the YAML file (after replacing the `{PREFIX_*}` and adjusting for your device)
 
 ## Sungrow SBR Battery Analysis Dashboard
 

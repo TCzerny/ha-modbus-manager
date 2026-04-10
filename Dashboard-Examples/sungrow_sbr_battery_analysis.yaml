@@ -4,8 +4,8 @@ icon: mdi:battery-charging-high
 panel: false
 type: dashboard
 
-# IMPORTANT: Replace {PREFIX} with your actual device prefix (e.g., SBR)
-# Example: sensor.{PREFIX}_battery_1_voltage becomes sensor.SBR_battery_1_voltage
+# IMPORTANT: Replace {PREFIX_BATTERY} with your actual device prefix (e.g., SBR)
+# Example: sensor.{PREFIX_BATTERY}_battery_1_voltage becomes sensor.SBR_battery_1_voltage
 
 views:
   - title: Battery Overview
@@ -16,7 +16,7 @@ views:
       - type: vertical-stack
         cards:
           - type: custom:mushroom-entity-card
-            entity: sensor.{PREFIX}_battery_1_soc
+            entity: sensor.{PREFIX_BATTERY}_battery_1_soc
             name: Battery Level
             icon: mdi:battery
             icon_color: |
@@ -37,7 +37,7 @@ views:
             columns: 2
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_voltage
+                entity: sensor.{PREFIX_BATTERY}_battery_1_voltage
                 name: Voltage
                 icon: mdi:lightning-bolt
                 icon_color: blue
@@ -48,7 +48,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_current
+                entity: sensor.{PREFIX_BATTERY}_battery_1_current
                 name: Current
                 icon: mdi:current-ac
                 icon_color: orange
@@ -59,7 +59,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_temperature
+                entity: sensor.{PREFIX_BATTERY}_battery_1_temperature
                 name: Temperature
                 icon: mdi:thermometer
                 icon_color: |
@@ -76,7 +76,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_soh
+                entity: sensor.{PREFIX_BATTERY}_battery_1_soh
                 name: State of Health
                 icon: mdi:heart-pulse
                 icon_color: |
@@ -102,7 +102,7 @@ views:
             columns: 2
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_total_battery_charge
+                entity: sensor.{PREFIX_BATTERY}_battery_1_total_battery_charge
                 name: Total Charged
                 icon: mdi:battery-charging
                 icon_color: green
@@ -113,7 +113,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_total_battery_discharge
+                entity: sensor.{PREFIX_BATTERY}_battery_1_total_battery_discharge
                 name: Total Discharged
                 icon: mdi:battery-minus
                 icon_color: orange
@@ -138,7 +138,7 @@ views:
             columns: 3
             cards:
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_voltage_spread
+                entity: sensor.{PREFIX_BATTERY}_battery_1_voltage_spread
                 name: Battery 1 Voltage Spread
                 icon: mdi:chart-line-variant
                 icon_color: |
@@ -155,7 +155,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_max_module_deviation
+                entity: sensor.{PREFIX_BATTERY}_battery_1_max_module_deviation
                 name: Battery 1 Max Module Deviation
                 icon: mdi:chart-timeline-variant
                 icon_color: |
@@ -172,7 +172,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_voltage_imbalance_percentage
+                entity: sensor.{PREFIX_BATTERY}_battery_1_voltage_imbalance_percentage
                 name: Battery 1 Voltage Imbalance %
                 icon: mdi:percent
                 icon_color: |
@@ -189,7 +189,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_average_module_voltage
+                entity: sensor.{PREFIX_BATTERY}_battery_1_average_module_voltage
                 name: Battery 1 Avg Module Voltage
                 icon: mdi:flash
                 icon_color: blue
@@ -200,7 +200,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_temperature_spread
+                entity: sensor.{PREFIX_BATTERY}_battery_1_temperature_spread
                 name: Battery 1 Temp Spread
                 icon: mdi:thermometer-lines
                 icon_color: orange
@@ -211,7 +211,7 @@ views:
                 secondary_info: name
 
               - type: custom:mushroom-entity-card
-                entity: sensor.{PREFIX}_battery_1_max_module_cell_voltage_range
+                entity: sensor.{PREFIX_BATTERY}_battery_1_max_module_cell_voltage_range
                 name: Battery 1 Max Module Cell Range
                 icon: mdi:chart-box
                 icon_color: |
@@ -262,14 +262,14 @@ views:
           - name: Deviation from Average
             type: bar
             data:
-              - entity: sensor.{PREFIX}_battery_1_module_1_deviation
-              - entity: sensor.{PREFIX}_battery_1_module_2_deviation
-              - entity: sensor.{PREFIX}_battery_1_module_3_deviation
-              - entity: sensor.{PREFIX}_battery_1_module_4_deviation
-              - entity: sensor.{PREFIX}_battery_1_module_5_deviation
-              - entity: sensor.{PREFIX}_battery_1_module_6_deviation
-              - entity: sensor.{PREFIX}_battery_1_module_7_deviation
-              - entity: sensor.{PREFIX}_battery_1_module_8_deviation
+              - entity: sensor.{PREFIX_BATTERY}_battery_1_module_1_deviation
+              - entity: sensor.{PREFIX_BATTERY}_battery_1_module_2_deviation
+              - entity: sensor.{PREFIX_BATTERY}_battery_1_module_3_deviation
+              - entity: sensor.{PREFIX_BATTERY}_battery_1_module_4_deviation
+              - entity: sensor.{PREFIX_BATTERY}_battery_1_module_5_deviation
+              - entity: sensor.{PREFIX_BATTERY}_battery_1_module_6_deviation
+              - entity: sensor.{PREFIX_BATTERY}_battery_1_module_7_deviation
+              - entity: sensor.{PREFIX_BATTERY}_battery_1_module_8_deviation
             xaxis:
               categories:
                 - Battery 1 Module 1
@@ -286,28 +286,28 @@ views:
         title: Battery 1 Module Deviations Detail
         show_header_toggle: false
         entities:
-          - entity: sensor.{PREFIX}_battery_1_module_1_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_1_deviation
             name: Battery 1 Module 1 Deviation
             icon: mdi:battery
-          - entity: sensor.{PREFIX}_battery_1_module_2_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_2_deviation
             name: Battery 1 Module 2 Deviation
             icon: mdi:battery
-          - entity: sensor.{PREFIX}_battery_1_module_3_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_3_deviation
             name: Battery 1 Module 3 Deviation
             icon: mdi:battery
-          - entity: sensor.{PREFIX}_battery_1_module_4_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_4_deviation
             name: Battery 1 Module 4 Deviation
             icon: mdi:battery
-          - entity: sensor.{PREFIX}_battery_1_module_5_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_5_deviation
             name: Battery 1 Module 5 Deviation
             icon: mdi:battery
-          - entity: sensor.{PREFIX}_battery_1_module_6_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_6_deviation
             name: Battery 1 Module 6 Deviation
             icon: mdi:battery
-          - entity: sensor.{PREFIX}_battery_1_module_7_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_7_deviation
             name: Battery 1 Module 7 Deviation
             icon: mdi:battery
-          - entity: sensor.{PREFIX}_battery_1_module_8_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_8_deviation
             name: Battery 1 Module 8 Deviation
             icon: mdi:battery
 
@@ -349,14 +349,14 @@ views:
               - name: Cell Voltage Range
                 type: bar
                 data:
-                  - entity: sensor.{PREFIX}_battery_1_module_1_cell_voltage_range
-                  - entity: sensor.{PREFIX}_battery_1_module_2_cell_voltage_range
-                  - entity: sensor.{PREFIX}_battery_1_module_3_cell_voltage_range
-                  - entity: sensor.{PREFIX}_battery_1_module_4_cell_voltage_range
-                  - entity: sensor.{PREFIX}_battery_1_module_5_cell_voltage_range
-                  - entity: sensor.{PREFIX}_battery_1_module_6_cell_voltage_range
-                  - entity: sensor.{PREFIX}_battery_1_module_7_cell_voltage_range
-                  - entity: sensor.{PREFIX}_battery_1_module_8_cell_voltage_range
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_module_1_cell_voltage_range
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_module_2_cell_voltage_range
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_module_3_cell_voltage_range
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_module_4_cell_voltage_range
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_module_5_cell_voltage_range
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_module_6_cell_voltage_range
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_module_7_cell_voltage_range
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_module_8_cell_voltage_range
             xaxis:
               categories:
                 - Battery 1 Module 1
@@ -373,28 +373,28 @@ views:
         title: Battery 1 Module Cell Voltage Ranges Detail
         show_header_toggle: false
         entities:
-          - entity: sensor.{PREFIX}_battery_1_module_1_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_1_cell_voltage_range
             name: Battery 1 Module 1 Cell Range
             icon: mdi:battery-charging-30
-          - entity: sensor.{PREFIX}_battery_1_module_2_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_2_cell_voltage_range
             name: Battery 1 Module 2 Cell Range
             icon: mdi:battery-charging-30
-          - entity: sensor.{PREFIX}_battery_1_module_3_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_3_cell_voltage_range
             name: Battery 1 Module 3 Cell Range
             icon: mdi:battery-charging-30
-          - entity: sensor.{PREFIX}_battery_1_module_4_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_4_cell_voltage_range
             name: Battery 1 Module 4 Cell Range
             icon: mdi:battery-charging-30
-          - entity: sensor.{PREFIX}_battery_1_module_5_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_5_cell_voltage_range
             name: Battery 1 Module 5 Cell Range
             icon: mdi:battery-charging-30
-          - entity: sensor.{PREFIX}_battery_1_module_6_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_6_cell_voltage_range
             name: Battery 1 Module 6 Cell Range
             icon: mdi:battery-charging-30
-          - entity: sensor.{PREFIX}_battery_1_module_7_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_7_cell_voltage_range
             name: Battery 1 Module 7 Cell Range
             icon: mdi:battery-charging-30
-          - entity: sensor.{PREFIX}_battery_1_module_8_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_module_8_cell_voltage_range
             name: Battery 1 Module 8 Cell Range
             icon: mdi:battery-charging-30
 
@@ -438,25 +438,25 @@ views:
               - name: Max Cell Voltage
                 type: line
                 data:
-                  - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1
-                  - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2
-                  - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3
-                  - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4
-                  - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5
-                  - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6
-                  - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7
-                  - entity: sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_max_cell_voltage_of_module_1
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_max_cell_voltage_of_module_2
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_max_cell_voltage_of_module_3
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_max_cell_voltage_of_module_4
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_max_cell_voltage_of_module_5
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_max_cell_voltage_of_module_6
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_max_cell_voltage_of_module_7
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_max_cell_voltage_of_module_8
               - name: Min Cell Voltage
                 type: line
                 data:
-                  - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_1
-                  - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_2
-                  - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_3
-                  - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_4
-                  - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_5
-                  - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_6
-                  - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_7
-                  - entity: sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_8
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_min_cell_voltage_of_module_1
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_min_cell_voltage_of_module_2
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_min_cell_voltage_of_module_3
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_min_cell_voltage_of_module_4
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_min_cell_voltage_of_module_5
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_min_cell_voltage_of_module_6
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_min_cell_voltage_of_module_7
+                  - entity: sensor.{PREFIX_BATTERY}_battery_1_min_cell_voltage_of_module_8
             xaxis:
               categories:
                 - Battery 1 Module 1
@@ -477,22 +477,22 @@ views:
         title: Battery 1 All Balancing Metrics
         show_header_toggle: false
         entities:
-          - entity: sensor.{PREFIX}_battery_1_voltage_spread
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_voltage_spread
             name: Battery 1 Voltage Spread
             icon: mdi:chart-line-variant
-          - entity: sensor.{PREFIX}_battery_1_temperature_spread
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_temperature_spread
             name: Battery 1 Temperature Spread
             icon: mdi:thermometer-lines
-          - entity: sensor.{PREFIX}_battery_1_average_module_voltage
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_average_module_voltage
             name: Battery 1 Average Module Voltage
             icon: mdi:flash
-          - entity: sensor.{PREFIX}_battery_1_max_module_deviation
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_max_module_deviation
             name: Battery 1 Max Module Deviation
             icon: mdi:chart-timeline-variant
-          - entity: sensor.{PREFIX}_battery_1_voltage_imbalance_percentage
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_voltage_imbalance_percentage
             name: Battery 1 Voltage Imbalance Percentage
             icon: mdi:percent
-          - entity: sensor.{PREFIX}_battery_1_max_module_cell_voltage_range
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_max_module_cell_voltage_range
             name: Battery 1 Max Module Cell Voltage Range
             icon: mdi:chart-box
 
@@ -531,7 +531,7 @@ views:
         series:
           - name: Battery 1 Voltage Spread
             type: area
-            entity: sensor.{PREFIX}_battery_1_voltage_spread
+            entity: sensor.{PREFIX_BATTERY}_battery_1_voltage_spread
             data_generator: |
               return entity.attributes.history.map((entry) => {
                 return [new Date(entry.last_changed).getTime(), entry.state];
@@ -542,16 +542,16 @@ views:
         title: Battery 1 Cell Voltage Extremes
         show_header_toggle: false
         entities:
-          - entity: sensor.{PREFIX}_battery_1_max_voltage_of_cell
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_max_voltage_of_cell
             name: Battery 1 Max Cell Voltage
             icon: mdi:battery-plus-variant
-          - entity: sensor.{PREFIX}_battery_1_min_voltage_of_cell
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_min_voltage_of_cell
             name: Battery 1 Min Cell Voltage
             icon: mdi:battery-minus-variant
-          - entity: sensor.{PREFIX}_battery_1_position_of_max_voltage_cell
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_position_of_max_voltage_cell
             name: Battery 1 Max Voltage Cell Position
             icon: mdi:map-marker
-          - entity: sensor.{PREFIX}_battery_1_position_of_min_voltage_cell
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_position_of_min_voltage_cell
             name: Battery 1 Min Voltage Cell Position
             icon: mdi:map-marker
 
@@ -560,15 +560,15 @@ views:
         title: Battery 1 Module Temperature Extremes
         show_header_toggle: false
         entities:
-          - entity: sensor.{PREFIX}_battery_1_max_temperature_of_module
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_max_temperature_of_module
             name: Battery 1 Max Module Temperature
             icon: mdi:thermometer-high
-          - entity: sensor.{PREFIX}_battery_1_min_temperature_of_module
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_min_temperature_of_module
             name: Battery 1 Min Module Temperature
             icon: mdi:thermometer-low
-          - entity: sensor.{PREFIX}_battery_1_position_of_max_temperature_of_module
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_position_of_max_temperature_of_module
             name: Battery 1 Max Temp Module Position
             icon: mdi:map-marker
-          - entity: sensor.{PREFIX}_battery_1_position_of_min_temperature_of_module
+          - entity: sensor.{PREFIX_BATTERY}_battery_1_position_of_min_temperature_of_module
             name: Battery 1 Min Temp Module Position
             icon: mdi:map-marker

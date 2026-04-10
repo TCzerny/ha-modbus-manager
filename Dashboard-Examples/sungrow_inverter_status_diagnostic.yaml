@@ -2,7 +2,7 @@
 # Shows device identity, versions, running state, and alarm/fault indicators
 # Compatible with SH and SG templates (some entities may vary by model)
 #
-# IMPORTANT: Replace {PREFIX} with your actual device prefix (e.g., SG)
+# IMPORTANT: Replace {PREFIX_INVERTER} with your actual device prefix (e.g., SG)
 # Some entities are conditionally available (e.g., firmware info only on RT/T models)
 # Remove or comment out entities that show as "unavailable" for your setup
 
@@ -24,16 +24,16 @@ views:
             title: Device Information
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_inverter_serial
+              - entity: sensor.{PREFIX_INVERTER}_inverter_serial
                 name: Serial Number
                 icon: mdi:identifier
-              - entity: sensor.{PREFIX}_sungrow_device_type_code
+              - entity: sensor.{PREFIX_INVERTER}_sungrow_device_type_code
                 name: Device Model
                 icon: mdi:solar-power
-              - entity: sensor.{PREFIX}_nominal_output_power
+              - entity: sensor.{PREFIX_INVERTER}_nominal_output_power
                 name: Nominal Output Power
                 icon: mdi:gauge
-              - entity: sensor.{PREFIX}_output_type
+              - entity: sensor.{PREFIX_INVERTER}_output_type
                 name: Output Type
                 icon: mdi:transmission-tower
 
@@ -43,16 +43,16 @@ views:
             title: Protocol Version
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_protocol_version
+              - entity: sensor.{PREFIX_INVERTER}_protocol_version
                 name: Protocol Version
                 icon: mdi:file-document-outline
-              - entity: sensor.{PREFIX}_protocol_version_raw
+              - entity: sensor.{PREFIX_INVERTER}_protocol_version_raw
                 name: Protocol Version Raw
                 icon: mdi:hexadecimal
-              - entity: sensor.{PREFIX}_certification_version_arm_software
+              - entity: sensor.{PREFIX_INVERTER}_certification_version_arm_software
                 name: ARM Certification
                 icon: mdi:certificate
-              - entity: sensor.{PREFIX}_certification_version_dsp_software
+              - entity: sensor.{PREFIX_INVERTER}_certification_version_dsp_software
                 name: DSP Certification
                 icon: mdi:certificate
 
@@ -62,13 +62,13 @@ views:
             title: Firmware Versions
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_inverter_firmware_info
+              - entity: sensor.{PREFIX_INVERTER}_inverter_firmware_info
                 name: Inverter Firmware
                 icon: mdi:chip
-              - entity: sensor.{PREFIX}_communication_module_firmware_info
+              - entity: sensor.{PREFIX_INVERTER}_communication_module_firmware_info
                 name: Communication Module
                 icon: mdi:chip
-              - entity: sensor.{PREFIX}_battery_firmware_info
+              - entity: sensor.{PREFIX_INVERTER}_battery_firmware_info
                 name: Battery Firmware
                 icon: mdi:chip
             # Note: Firmware entities only available on RT/T/K6 models, not RS/MG
@@ -84,13 +84,13 @@ views:
             title: System State
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_system_state
+              - entity: sensor.{PREFIX_INVERTER}_system_state
                 name: System State
                 icon: mdi:flash
-              - entity: sensor.{PREFIX}_running_state
+              - entity: sensor.{PREFIX_INVERTER}_running_state
                 name: Running State
                 icon: mdi:state-machine
-              - entity: sensor.{PREFIX}_inverter_temperature
+              - entity: sensor.{PREFIX_INVERTER}_inverter_temperature
                 name: Inverter Temperature
                 icon: mdi:thermometer
 
@@ -100,13 +100,13 @@ views:
             title: Cascade Configuration
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_master_slave_mode
+              - entity: sensor.{PREFIX_INVERTER}_master_slave_mode
                 name: Master Slave Mode
                 icon: mdi:connection
-              - entity: sensor.{PREFIX}_master_slave_role
+              - entity: sensor.{PREFIX_INVERTER}_master_slave_role
                 name: Master Slave Role
                 icon: mdi:connection
-              - entity: sensor.{PREFIX}_slave_count
+              - entity: sensor.{PREFIX_INVERTER}_slave_count
                 name: Slave Count
                 icon: mdi:numeric
             # Note: May show 65535 (Invalid) on single-inverter setups
@@ -122,16 +122,16 @@ views:
             title: Battery Alarms & Faults
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_battery_fault_raw
+              - entity: sensor.{PREFIX_INVERTER}_battery_fault_raw
                 name: Battery Fault
                 icon: mdi:alert-circle
-              - entity: sensor.{PREFIX}_battery_alarm_raw
+              - entity: sensor.{PREFIX_INVERTER}_battery_alarm_raw
                 name: Battery Alarm
                 icon: mdi:alert
-              - entity: sensor.{PREFIX}_bms_alarm_raw
+              - entity: sensor.{PREFIX_INVERTER}_bms_alarm_raw
                 name: BMS Alarm
                 icon: mdi:alert
-              - entity: sensor.{PREFIX}_bms_fault_1_raw
+              - entity: sensor.{PREFIX_INVERTER}_bms_fault_1_raw
                 name: BMS Fault 1
                 icon: mdi:alert-circle
             # Note: Only available when battery is configured

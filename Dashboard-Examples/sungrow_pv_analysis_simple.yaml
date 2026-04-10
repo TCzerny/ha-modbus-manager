@@ -4,8 +4,8 @@ icon: mdi:solar-power
 panel: false
 type: dashboard
 
-# IMPORTANT: Replace {PREFIX} with your actual device prefix (e.g., SG)
-# Example: sensor.{PREFIX}_total_dc_power becomes sensor.SG_total_dc_power
+# IMPORTANT: Replace {PREFIX_INVERTER} with your actual device prefix (e.g., SG)
+# Example: sensor.{PREFIX_INVERTER}_total_dc_power becomes sensor.SG_total_dc_power
 # This version uses only built-in Home Assistant cards (no custom cards required)
 
 views:
@@ -20,16 +20,16 @@ views:
             title: PV Generation
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_total_dc_power
+              - entity: sensor.{PREFIX_INVERTER}_total_dc_power
                 name: Total DC Power
                 icon: mdi:lightning-bolt
-              - entity: sensor.{PREFIX}_daily_pv_generation
+              - entity: sensor.{PREFIX_INVERTER}_daily_pv_generation
                 name: Daily PV Generation
                 icon: mdi:solar-power
-              - entity: sensor.{PREFIX}_total_pv_generation
+              - entity: sensor.{PREFIX_INVERTER}_total_pv_generation
                 name: Total PV Generation
                 icon: mdi:solar-power
-              - entity: sensor.{PREFIX}_inverter_temperature
+              - entity: sensor.{PREFIX_INVERTER}_inverter_temperature
                 name: Inverter Temperature
                 icon: mdi:thermometer
 
@@ -39,16 +39,16 @@ views:
             title: MPPT 1 & 2
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_mppt1_voltage
+              - entity: sensor.{PREFIX_INVERTER}_mppt1_voltage
                 name: MPPT1 Voltage
                 icon: mdi:lightning-bolt
-              - entity: sensor.{PREFIX}_mppt1_current
+              - entity: sensor.{PREFIX_INVERTER}_mppt1_current
                 name: MPPT1 Current
                 icon: mdi:current-ac
-              - entity: sensor.{PREFIX}_mppt2_voltage
+              - entity: sensor.{PREFIX_INVERTER}_mppt2_voltage
                 name: MPPT2 Voltage
                 icon: mdi:lightning-bolt
-              - entity: sensor.{PREFIX}_mppt2_current
+              - entity: sensor.{PREFIX_INVERTER}_mppt2_current
                 name: MPPT2 Current
                 icon: mdi:current-ac
 
@@ -56,16 +56,16 @@ views:
             title: MPPT 3 & 4
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_mppt3_voltage
+              - entity: sensor.{PREFIX_INVERTER}_mppt3_voltage
                 name: MPPT3 Voltage
                 icon: mdi:lightning-bolt
-              - entity: sensor.{PREFIX}_mppt3_current
+              - entity: sensor.{PREFIX_INVERTER}_mppt3_current
                 name: MPPT3 Current
                 icon: mdi:current-ac
-              - entity: sensor.{PREFIX}_mppt4_voltage
+              - entity: sensor.{PREFIX_INVERTER}_mppt4_voltage
                 name: MPPT4 Voltage
                 icon: mdi:lightning-bolt
-              - entity: sensor.{PREFIX}_mppt4_current
+              - entity: sensor.{PREFIX_INVERTER}_mppt4_current
                 name: MPPT4 Current
                 icon: mdi:current-ac
 
@@ -75,31 +75,31 @@ views:
             title: AC Output
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_phase_a_voltage
+              - entity: sensor.{PREFIX_INVERTER}_phase_a_voltage
                 name: Phase A Voltage
                 icon: mdi:lightning-bolt
-              - entity: sensor.{PREFIX}_phase_a_current
+              - entity: sensor.{PREFIX_INVERTER}_phase_a_current
                 name: Phase A Current
                 icon: mdi:current-ac
-              - entity: sensor.{PREFIX}_phase_a_power
+              - entity: sensor.{PREFIX_INVERTER}_phase_a_power
                 name: Phase A Power
                 icon: mdi:flash
-              - entity: sensor.{PREFIX}_phase_b_voltage
+              - entity: sensor.{PREFIX_INVERTER}_phase_b_voltage
                 name: Phase B Voltage
                 icon: mdi:lightning-bolt
-              - entity: sensor.{PREFIX}_phase_b_current
+              - entity: sensor.{PREFIX_INVERTER}_phase_b_current
                 name: Phase B Current
                 icon: mdi:current-ac
-              - entity: sensor.{PREFIX}_phase_b_power
+              - entity: sensor.{PREFIX_INVERTER}_phase_b_power
                 name: Phase B Power
                 icon: mdi:flash
-              - entity: sensor.{PREFIX}_phase_c_voltage
+              - entity: sensor.{PREFIX_INVERTER}_phase_c_voltage
                 name: Phase C Voltage
                 icon: mdi:lightning-bolt
-              - entity: sensor.{PREFIX}_phase_c_current
+              - entity: sensor.{PREFIX_INVERTER}_phase_c_current
                 name: Phase C Current
                 icon: mdi:current-ac
-              - entity: sensor.{PREFIX}_phase_c_power
+              - entity: sensor.{PREFIX_INVERTER}_phase_c_power
                 name: Phase C Power
                 icon: mdi:flash
 
@@ -109,25 +109,25 @@ views:
             title: System Performance
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_self_consumption_rate
+              - entity: sensor.{PREFIX_INVERTER}_self_consumption_rate
                 name: Self-Consumption Rate
                 icon: mdi:home-lightning-bolt
-              - entity: sensor.{PREFIX}_autarky_rate
+              - entity: sensor.{PREFIX_INVERTER}_autarky_rate
                 name: Autarky Rate
                 icon: mdi:power-plug-off
-              - entity: sensor.{PREFIX}_dc_to_ac_efficiency
+              - entity: sensor.{PREFIX_INVERTER}_dc_to_ac_efficiency
                 name: DC to AC Efficiency
                 icon: mdi:gauge
-              - entity: sensor.{PREFIX}_pv_capacity_factor
+              - entity: sensor.{PREFIX_INVERTER}_pv_capacity_factor
                 name: PV Capacity Factor
                 icon: mdi:percent
-              - entity: sensor.{PREFIX}_mppt_balance
+              - entity: sensor.{PREFIX_INVERTER}_mppt_balance
                 name: MPPT Balance
                 icon: mdi:scale-balance
-              - entity: sensor.{PREFIX}_active_mppt_count
+              - entity: sensor.{PREFIX_INVERTER}_active_mppt_count
                 name: Active MPPTs
                 icon: mdi:counter
-              - entity: sensor.{PREFIX}_pv_generation_hours_today
+              - entity: sensor.{PREFIX_INVERTER}_pv_generation_hours_today
                 name: PV Generation Hours Today
                 icon: mdi:clock-outline
 
@@ -137,28 +137,28 @@ views:
             title: Energy Flow Breakdown
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_pv_to_load_direct
+              - entity: sensor.{PREFIX_INVERTER}_pv_to_load_direct
                 name: PV to Load Direct
                 icon: mdi:solar-power
-              - entity: sensor.{PREFIX}_pv_to_battery
+              - entity: sensor.{PREFIX_INVERTER}_pv_to_battery
                 name: PV to Battery
                 icon: mdi:battery-charging
-              - entity: sensor.{PREFIX}_pv_to_grid
+              - entity: sensor.{PREFIX_INVERTER}_pv_to_grid
                 name: PV to Grid
                 icon: mdi:transmission-tower-export
-              - entity: sensor.{PREFIX}_battery_to_load
+              - entity: sensor.{PREFIX_INVERTER}_battery_to_load
                 name: Battery to Load
                 icon: mdi:battery
-              - entity: sensor.{PREFIX}_battery_to_grid
+              - entity: sensor.{PREFIX_INVERTER}_battery_to_grid
                 name: Battery to Grid
                 icon: mdi:transmission-tower-export
-              - entity: sensor.{PREFIX}_grid_to_load
+              - entity: sensor.{PREFIX_INVERTER}_grid_to_load
                 name: Grid to Load
                 icon: mdi:transmission-tower
-              - entity: sensor.{PREFIX}_grid_to_battery
+              - entity: sensor.{PREFIX_INVERTER}_grid_to_battery
                 name: Grid to Battery
                 icon: mdi:battery-charging
-              - entity: sensor.{PREFIX}_net_consumption
+              - entity: sensor.{PREFIX_INVERTER}_net_consumption
                 name: Net Consumption
                 icon: mdi:flash
 
@@ -168,28 +168,28 @@ views:
             title: MPPT Power
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_mppt1_power
+              - entity: sensor.{PREFIX_INVERTER}_mppt1_power
                 name: MPPT1 Power
                 icon: mdi:flash
-              - entity: sensor.{PREFIX}_mppt2_power
+              - entity: sensor.{PREFIX_INVERTER}_mppt2_power
                 name: MPPT2 Power
                 icon: mdi:flash
-              - entity: sensor.{PREFIX}_mppt3_power
+              - entity: sensor.{PREFIX_INVERTER}_mppt3_power
                 name: MPPT3 Power
                 icon: mdi:flash
-              - entity: sensor.{PREFIX}_mppt4_power
+              - entity: sensor.{PREFIX_INVERTER}_mppt4_power
                 name: MPPT4 Power
                 icon: mdi:flash
-              - entity: sensor.{PREFIX}_total_mppt_power
+              - entity: sensor.{PREFIX_INVERTER}_total_mppt_power
                 name: Total MPPT Power
                 icon: mdi:flash-circle
-              - entity: sensor.{PREFIX}_mppt_power_deviation
+              - entity: sensor.{PREFIX_INVERTER}_mppt_power_deviation
                 name: MPPT Deviation from Average
                 icon: mdi:chart-line-variant
-              - entity: sensor.{PREFIX}_mppt_balance
+              - entity: sensor.{PREFIX_INVERTER}_mppt_balance
                 name: MPPT Balance
                 icon: mdi:scale-balance
-              - entity: sensor.{PREFIX}_active_mppt_count
+              - entity: sensor.{PREFIX_INVERTER}_active_mppt_count
                 name: Active MPPTs
                 icon: mdi:counter
 
@@ -198,9 +198,9 @@ views:
           - type: history-graph
             title: PV Generation (24h)
             entities:
-              - entity: sensor.{PREFIX}_total_dc_power
+              - entity: sensor.{PREFIX_INVERTER}_total_dc_power
                 name: Total DC Power
-              - entity: sensor.{PREFIX}_daily_pv_generation
+              - entity: sensor.{PREFIX_INVERTER}_daily_pv_generation
                 name: Daily PV Generation
             hours_to_show: 24
             refresh_interval: 60
@@ -208,9 +208,9 @@ views:
           - type: history-graph
             title: MPPT Voltages (24h)
             entities:
-              - entity: sensor.{PREFIX}_mppt1_voltage
+              - entity: sensor.{PREFIX_INVERTER}_mppt1_voltage
                 name: MPPT1 Voltage
-              - entity: sensor.{PREFIX}_mppt2_voltage
+              - entity: sensor.{PREFIX_INVERTER}_mppt2_voltage
                 name: MPPT2 Voltage
             hours_to_show: 24
             refresh_interval: 60
@@ -218,9 +218,9 @@ views:
           - type: history-graph
             title: MPPT Currents (24h)
             entities:
-              - entity: sensor.{PREFIX}_mppt1_current
+              - entity: sensor.{PREFIX_INVERTER}_mppt1_current
                 name: MPPT1 Current
-              - entity: sensor.{PREFIX}_mppt2_current
+              - entity: sensor.{PREFIX_INVERTER}_mppt2_current
                 name: MPPT2 Current
             hours_to_show: 24
             refresh_interval: 60
@@ -228,7 +228,7 @@ views:
           - type: history-graph
             title: Inverter Temperature (24h)
             entities:
-              - entity: sensor.{PREFIX}_inverter_temperature
+              - entity: sensor.{PREFIX_INVERTER}_inverter_temperature
                 name: Inverter Temperature
             hours_to_show: 24
             refresh_interval: 60
@@ -237,10 +237,10 @@ views:
             title: Self-Consumption & Autarky (Current)
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_self_consumption_rate
+              - entity: sensor.{PREFIX_INVERTER}_self_consumption_rate
                 name: Self-Consumption Rate
                 icon: mdi:home-lightning-bolt
-              - entity: sensor.{PREFIX}_autarky_rate
+              - entity: sensor.{PREFIX_INVERTER}_autarky_rate
                 name: Autarky Rate
                 icon: mdi:power-plug-off
 
@@ -248,19 +248,19 @@ views:
             title: Self-Consumption & Autarky (Today)
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_self_consumption_rate_today
+              - entity: sensor.{PREFIX_INVERTER}_self_consumption_rate_today
                 name: Self-Consumption Today
                 icon: mdi:home-lightning-bolt
-              - entity: sensor.{PREFIX}_autarky_rate_today
+              - entity: sensor.{PREFIX_INVERTER}_autarky_rate_today
                 name: Autarky Today
                 icon: mdi:power-plug-off
 
           - type: statistics-graph
             title: Self-Consumption & Autarky (30 days)
             entities:
-              - entity: sensor.{PREFIX}_self_consumption_rate
+              - entity: sensor.{PREFIX_INVERTER}_self_consumption_rate
                 name: Self-Consumption Rate
-              - entity: sensor.{PREFIX}_autarky_rate
+              - entity: sensor.{PREFIX_INVERTER}_autarky_rate
                 name: Autarky Rate
             days_to_show: 30
             chart_type: bar
@@ -278,7 +278,7 @@ views:
           - type: statistics-graph
             title: Daily PV Generation (30 days)
             entities:
-              - entity: sensor.{PREFIX}_daily_pv_generation
+              - entity: sensor.{PREFIX_INVERTER}_daily_pv_generation
                 name: Daily PV Generation
             days_to_show: 30
             chart_type: bar
@@ -288,7 +288,7 @@ views:
           - type: history-graph
             title: PV Generation Trend (7 days)
             entities:
-              - entity: sensor.{PREFIX}_daily_pv_generation
+              - entity: sensor.{PREFIX_INVERTER}_daily_pv_generation
                 name: Daily PV Generation
             hours_to_show: 168
             refresh_interval: 3600
@@ -298,13 +298,13 @@ views:
           - type: history-graph
             title: Power Distribution (24h)
             entities:
-              - entity: sensor.{PREFIX}_total_dc_power
+              - entity: sensor.{PREFIX_INVERTER}_total_dc_power
                 name: Total DC Power
-              - entity: sensor.{PREFIX}_phase_a_power
+              - entity: sensor.{PREFIX_INVERTER}_phase_a_power
                 name: Phase A Power
-              - entity: sensor.{PREFIX}_phase_b_power
+              - entity: sensor.{PREFIX_INVERTER}_phase_b_power
                 name: Phase B Power
-              - entity: sensor.{PREFIX}_phase_c_power
+              - entity: sensor.{PREFIX_INVERTER}_phase_c_power
                 name: Phase C Power
             hours_to_show: 24
             refresh_interval: 60
@@ -320,16 +320,16 @@ views:
             title: Energy Management
             show_header_toggle: false
             entities:
-              - entity: select.{PREFIX}_ems_mode_selection
+              - entity: select.{PREFIX_INVERTER}_ems_mode_selection
                 name: EMS Mode
                 icon: mdi:state-machine
-              - entity: select.{PREFIX}_inverter_run_mode
+              - entity: select.{PREFIX_INVERTER}_inverter_run_mode
                 name: Inverter Run Mode
                 icon: mdi:power
-              - entity: select.{PREFIX}_load_adjustment_mode_selection
+              - entity: select.{PREFIX_INVERTER}_load_adjustment_mode_selection
                 name: Load Adjustment Mode
                 icon: mdi:clock-outline
-              - entity: select.{PREFIX}_load_adjustment_mode_on_off_selection
+              - entity: select.{PREFIX_INVERTER}_load_adjustment_mode_on_off_selection
                 name: Load ON/OFF
                 icon: mdi:toggle-switch
 
@@ -339,16 +339,16 @@ views:
             title: SoC & Backup
             show_header_toggle: false
             entities:
-              - entity: number.{PREFIX}_min_soc
+              - entity: number.{PREFIX_INVERTER}_min_soc
                 name: Min SoC
                 icon: mdi:battery-arrow-down
-              - entity: number.{PREFIX}_max_soc
+              - entity: number.{PREFIX_INVERTER}_max_soc
                 name: Max SoC
                 icon: mdi:battery-arrow-up
-              - entity: number.{PREFIX}_reserved_soc_for_backup
+              - entity: number.{PREFIX_INVERTER}_reserved_soc_for_backup
                 name: Reserved SoC for Backup
                 icon: mdi:battery-backup
-              - entity: select.{PREFIX}_backup_mode
+              - entity: select.{PREFIX_INVERTER}_backup_mode
                 name: Backup Mode
                 icon: mdi:backup-restore
 
@@ -356,10 +356,10 @@ views:
             title: Battery Power Limits
             show_header_toggle: false
             entities:
-              - entity: number.{PREFIX}_battery_max_charging_power
+              - entity: number.{PREFIX_INVERTER}_battery_max_charging_power
                 name: Max Charging Power
                 icon: mdi:battery-charging
-              - entity: number.{PREFIX}_battery_max_discharging_power
+              - entity: number.{PREFIX_INVERTER}_battery_max_discharging_power
                 name: Max Discharging Power
                 icon: mdi:battery-charging-high
 
@@ -367,10 +367,10 @@ views:
             title: Forced Charge/Discharge
             show_header_toggle: false
             entities:
-              - entity: select.{PREFIX}_battery_forced_charge_discharge_cmd
+              - entity: select.{PREFIX_INVERTER}_battery_forced_charge_discharge_cmd
                 name: Forced Cmd
                 icon: mdi:battery-sync
-              - entity: number.{PREFIX}_battery_forced_charge_discharge_power
+              - entity: number.{PREFIX_INVERTER}_battery_forced_charge_discharge_power
                 name: Forced Power
                 icon: mdi:flash
 
@@ -380,13 +380,13 @@ views:
             title: Export Control
             show_header_toggle: false
             entities:
-              - entity: select.{PREFIX}_export_power_limit_mode
+              - entity: select.{PREFIX_INVERTER}_export_power_limit_mode
                 name: Export Limit Mode
                 icon: mdi:transmission-tower-export
-              - entity: number.{PREFIX}_export_power_limit
+              - entity: number.{PREFIX_INVERTER}_export_power_limit
                 name: Export Power Limit
                 icon: mdi:gauge
-              - entity: number.{PREFIX}_export_power_limit_ratio
+              - entity: number.{PREFIX_INVERTER}_export_power_limit_ratio
                 name: Export Limit Ratio %
                 icon: mdi:percent
 
@@ -396,22 +396,22 @@ views:
             title: Power & PV Limitation
             show_header_toggle: false
             entities:
-              - entity: select.{PREFIX}_active_power_limitation
+              - entity: select.{PREFIX_INVERTER}_active_power_limitation
                 name: Active Power Limitation
                 icon: mdi:flash-off
-              - entity: number.{PREFIX}_active_power_limit_ratio
+              - entity: number.{PREFIX_INVERTER}_active_power_limit_ratio
                 name: Active Power Limit Ratio %
                 icon: mdi:percent
-              - entity: select.{PREFIX}_pv_power_limitation
+              - entity: select.{PREFIX_INVERTER}_pv_power_limitation
                 name: PV Power Limitation
                 icon: mdi:solar-power
-              - entity: select.{PREFIX}_forced_startup_under_low_soc_standby
+              - entity: select.{PREFIX_INVERTER}_forced_startup_under_low_soc_standby
                 name: Forced Startup (Low SoC)
                 icon: mdi:battery-alert
-              - entity: number.{PREFIX}_battery_charging_start_power
+              - entity: number.{PREFIX_INVERTER}_battery_charging_start_power
                 name: Charging Start Power
                 icon: mdi:battery-charging-50
-              - entity: number.{PREFIX}_battery_discharging_start_power
+              - entity: number.{PREFIX_INVERTER}_battery_discharging_start_power
                 name: Discharging Start Power
                 icon: mdi:battery-discharging
 
@@ -426,16 +426,16 @@ views:
             title: Device Information
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_inverter_serial
+              - entity: sensor.{PREFIX_INVERTER}_inverter_serial
                 name: Serial Number
                 icon: mdi:identifier
-              - entity: sensor.{PREFIX}_sungrow_device_type_code
+              - entity: sensor.{PREFIX_INVERTER}_sungrow_device_type_code
                 name: Device Model
                 icon: mdi:solar-power
-              - entity: sensor.{PREFIX}_nominal_output_power
+              - entity: sensor.{PREFIX_INVERTER}_nominal_output_power
                 name: Nominal Output Power
                 icon: mdi:gauge
-              - entity: sensor.{PREFIX}_output_type
+              - entity: sensor.{PREFIX_INVERTER}_output_type
                 name: Output Type
                 icon: mdi:transmission-tower
 
@@ -445,16 +445,16 @@ views:
             title: Protocol Version
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_protocol_version
+              - entity: sensor.{PREFIX_INVERTER}_protocol_version
                 name: Protocol Version
                 icon: mdi:file-document-outline
-              - entity: sensor.{PREFIX}_protocol_version_raw
+              - entity: sensor.{PREFIX_INVERTER}_protocol_version_raw
                 name: Protocol Version Raw
                 icon: mdi:hexadecimal
-              - entity: sensor.{PREFIX}_certification_version_arm_software
+              - entity: sensor.{PREFIX_INVERTER}_certification_version_arm_software
                 name: ARM Certification
                 icon: mdi:certificate
-              - entity: sensor.{PREFIX}_certification_version_dsp_software
+              - entity: sensor.{PREFIX_INVERTER}_certification_version_dsp_software
                 name: DSP Certification
                 icon: mdi:certificate
 
@@ -464,13 +464,13 @@ views:
             title: Firmware Versions
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_inverter_firmware_info
+              - entity: sensor.{PREFIX_INVERTER}_inverter_firmware_info
                 name: Inverter Firmware
                 icon: mdi:chip
-              - entity: sensor.{PREFIX}_communication_module_firmware_info
+              - entity: sensor.{PREFIX_INVERTER}_communication_module_firmware_info
                 name: Communication Module
                 icon: mdi:chip
-              - entity: sensor.{PREFIX}_battery_firmware_info
+              - entity: sensor.{PREFIX_INVERTER}_battery_firmware_info
                 name: Battery Firmware
                 icon: mdi:chip
 
@@ -480,13 +480,13 @@ views:
             title: System State
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_system_state
+              - entity: sensor.{PREFIX_INVERTER}_system_state
                 name: System State
                 icon: mdi:flash
-              - entity: sensor.{PREFIX}_running_state
+              - entity: sensor.{PREFIX_INVERTER}_running_state
                 name: Running State
                 icon: mdi:state-machine
-              - entity: sensor.{PREFIX}_inverter_temperature
+              - entity: sensor.{PREFIX_INVERTER}_inverter_temperature
                 name: Inverter Temperature
                 icon: mdi:thermometer
 
@@ -496,13 +496,13 @@ views:
             title: Cascade Configuration
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_master_slave_mode
+              - entity: sensor.{PREFIX_INVERTER}_master_slave_mode
                 name: Master Slave Mode
                 icon: mdi:connection
-              - entity: sensor.{PREFIX}_master_slave_role
+              - entity: sensor.{PREFIX_INVERTER}_master_slave_role
                 name: Master Slave Role
                 icon: mdi:connection
-              - entity: sensor.{PREFIX}_slave_count
+              - entity: sensor.{PREFIX_INVERTER}_slave_count
                 name: Slave Count
                 icon: mdi:numeric
 
@@ -512,15 +512,15 @@ views:
             title: Battery Alarms & Faults
             show_header_toggle: false
             entities:
-              - entity: sensor.{PREFIX}_battery_fault_raw
+              - entity: sensor.{PREFIX_INVERTER}_battery_fault_raw
                 name: Battery Fault
                 icon: mdi:alert-circle
-              - entity: sensor.{PREFIX}_battery_alarm_raw
+              - entity: sensor.{PREFIX_INVERTER}_battery_alarm_raw
                 name: Battery Alarm
                 icon: mdi:alert
-              - entity: sensor.{PREFIX}_bms_alarm_raw
+              - entity: sensor.{PREFIX_INVERTER}_bms_alarm_raw
                 name: BMS Alarm
                 icon: mdi:alert
-              - entity: sensor.{PREFIX}_bms_fault_1_raw
+              - entity: sensor.{PREFIX_INVERTER}_bms_fault_1_raw
                 name: BMS Fault 1
                 icon: mdi:alert-circle
