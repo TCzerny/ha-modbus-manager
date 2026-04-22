@@ -36,7 +36,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 600
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:information"
     # Min: 1, Max: 3
 
@@ -46,7 +46,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 600
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:chip"
     entity_category: "diagnostic"
 
@@ -56,7 +56,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 600
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:chip"
     entity_category: "diagnostic"
 
@@ -68,7 +68,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 60
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:message-alert"
 
   # Analog Output Status (Diagnostic)
@@ -80,7 +80,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 60
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:gauge"
     options:
       0: "Auto PWM"
@@ -94,7 +94,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 60
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:pump"
     options:
       0: "Auto PWM"
@@ -108,7 +108,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 60
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:gauge"
     options:
       0: "Auto PWM"
@@ -122,7 +122,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 60
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:gauge"
     options:
       0: "Auto PWM"
@@ -136,7 +136,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 60
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:water-pump"
     options:
       0: "Auto PWM"
@@ -150,7 +150,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 60
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:gauge"
     options:
       0: "Auto PWM"
@@ -195,7 +195,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   - name: "Temperatur S2"
@@ -209,7 +209,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   - name: "Temperatur S3"
@@ -223,7 +223,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   - name: "Temperatur S4"
@@ -237,7 +237,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   # S5-S7: Additional temperatures (available since v0.9, conf option 3)
@@ -252,7 +252,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   - name: "Temperatur S6"
@@ -266,7 +266,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   - name: "Temperatur S7"
@@ -280,7 +280,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   # S8: Typically used for Solar Collector Temperature (available since v0.1, conf option 3)
@@ -296,7 +296,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 30
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:solar-power"
 
   # S9-S12: Additional temperatures (available since v0.1)
@@ -311,7 +311,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   - name: "Temperatur S10"
@@ -325,7 +325,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   - name: "Temperatur S11"
@@ -339,7 +339,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   - name: "Temperatur S12"
@@ -353,7 +353,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   # S13: Available since v1.0.0, conf option 1
@@ -368,7 +368,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   # S14: Available since v1.0.0
@@ -383,7 +383,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   # S15: Available since v0.1
@@ -398,7 +398,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   # S16: Available since v1.0, conf option 2
@@ -413,7 +413,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:thermometer"
 
   # Room Temperatures (per PDF 3.3.2: Holding Registers 34304-34306)
@@ -428,7 +428,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:home-thermometer"
 
   - name: "Raumtemperatur 2"
@@ -442,7 +442,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:home-thermometer"
 
   - name: "Raumtemperatur 3"
@@ -456,7 +456,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_temperatures"
+    mm_group: "heating_temperatures"
     icon: "mdi:home-thermometer"
 
   # Flow Sensors (S17-S18: addresses 33040-33041, l/min)
@@ -470,7 +470,7 @@ sensors:
     device_class: None
     state_class: "measurement"
     scan_interval: 30
-    group: "heating_flow"
+    mm_group: "heating_flow"
     icon: "mdi:water"
     # Available since v0.9, conf option 3
 
@@ -484,7 +484,7 @@ sensors:
     device_class: None
     state_class: "measurement"
     scan_interval: 30
-    group: "heating_flow"
+    mm_group: "heating_flow"
     icon: "mdi:water"
     # Available since v0.1
 
@@ -500,7 +500,7 @@ sensors:
     device_class: None
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_analog"
+    mm_group: "heating_analog"
     icon: "mdi:signal"
 
   - name: "Analog Eingang 2"
@@ -514,7 +514,7 @@ sensors:
     device_class: None
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_analog"
+    mm_group: "heating_analog"
     icon: "mdi:signal"
 
   - name: "Analog Eingang 3"
@@ -528,7 +528,7 @@ sensors:
     device_class: None
     state_class: "measurement"
     scan_interval: 60
-    group: "heating_analog"
+    mm_group: "heating_analog"
     icon: "mdi:signal"
 
   # Digital Input - Faults (available since v1.1.1)
@@ -539,7 +539,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:alert"
 
 # Controls (Holding Registers - Read/Write)
@@ -552,7 +552,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:water-sync"
     options:
       0: "Aus"
@@ -568,7 +568,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:radiator"
     options:
       2: "Automatik"
@@ -586,7 +586,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:radiator"
     options:
       2: "Automatik"
@@ -609,7 +609,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer-water"
 
   # Heating Circuit 1 - Fixed Flow Temperature Settings
@@ -625,7 +625,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -640,7 +640,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   # Heating Circuit 1 - Heating Curve Settings
@@ -656,7 +656,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -671,7 +671,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -686,7 +686,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -701,7 +701,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -715,7 +715,7 @@ controls:
     step: 1
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:chart-line"
 
   # Heating Circuit 2 - Fixed Flow Temperature Settings
@@ -731,7 +731,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -746,7 +746,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   # Heating Circuit 2 - Heating Curve Settings
@@ -762,7 +762,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -777,7 +777,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -792,7 +792,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -807,7 +807,7 @@ controls:
     unit_of_measurement: "°C"
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:thermometer"
 
   - type: "number"
@@ -821,7 +821,7 @@ controls:
     step: 1
     mode: "box"
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:chart-line"
 
   # Hot Water Priority Switches
@@ -836,7 +836,7 @@ controls:
     on_value: 1
     off_value: 0
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:water-boiler-alert"
 
   - type: "switch"
@@ -850,7 +850,7 @@ controls:
     on_value: 1
     off_value: 0
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:water-boiler-alert"
 
   - type: "switch"
@@ -868,14 +868,14 @@ controls:
     on_value: 1
     off_value: 0
     scan_interval: 60
-    group: "heating_control"
+    mm_group: "heating_control"
     icon: "mdi:water-boiler"
 
 # Calculated Sensors
 calculated:
   - name: "Version SC3"
     unique_id: "version_sc3"
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:chip"
     entity_category: "diagnostic"
     template: |
@@ -889,7 +889,7 @@ calculated:
 
   - name: "Version NBG"
     unique_id: "version_nbg"
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:chip"
     entity_category: "diagnostic"
     template: |
@@ -903,7 +903,7 @@ calculated:
 
   - name: "Solarthermie Leistung"
     unique_id: "solarthermie_leistung"
-    group: "heating_calculated"
+    mm_group: "heating_calculated"
     icon: "mdi:solar-power"
     unit_of_measurement: "kW"
     precision: 1
@@ -923,7 +923,7 @@ calculated:
 
   - name: "Solarkollektor Delta T"
     unique_id: "solarkollektor_delta_t"
-    group: "heating_calculated"
+    mm_group: "heating_calculated"
     icon: "mdi:thermometer-lines"
     unit_of_measurement: "°C"
     precision: 1
@@ -942,7 +942,7 @@ calculated:
 
   - name: "Heizkreis 1 Delta T"
     unique_id: "heizkreis_1_delta_t"
-    group: "heating_calculated"
+    mm_group: "heating_calculated"
     icon: "mdi:thermometer-lines"
     unit_of_measurement: "°C"
     precision: 1
@@ -962,7 +962,7 @@ calculated:
 
   - name: "Heizkreis 2 Delta T"
     unique_id: "heizkreis_2_delta_t"
-    group: "heating_calculated"
+    mm_group: "heating_calculated"
     icon: "mdi:thermometer-lines"
     unit_of_measurement: "°C"
     precision: 1
@@ -982,7 +982,7 @@ calculated:
 
   - name: "Heizkreis 1 Leistung"
     unique_id: "heizkreis_1_leistung"
-    group: "heating_calculated"
+    mm_group: "heating_calculated"
     icon: "mdi:radiator"
     unit_of_measurement: "kW"
     precision: 1
@@ -1000,7 +1000,7 @@ calculated:
 
   - name: "Heizkreis 2 Leistung"
     unique_id: "heizkreis_2_leistung"
-    group: "heating_calculated"
+    mm_group: "heating_calculated"
     icon: "mdi:radiator"
     unit_of_measurement: "kW"
     precision: 1
@@ -1018,7 +1018,7 @@ calculated:
 
   - name: "Solar Effizienz"
     unique_id: "solar_effizienz"
-    group: "heating_calculated"
+    mm_group: "heating_calculated"
     icon: "mdi:gauge"
     unit_of_measurement: "%"
     precision: 1
@@ -1047,7 +1047,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "diagnose"
+    mm_group: "diagnose"
     icon: "mdi:alert"
     device_class: "problem"
     assume_off_when_unavailable: true
@@ -1062,7 +1062,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:pump"
     device_class: None
     # Value > 0 means pump is on
@@ -1073,7 +1073,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:pump"
     device_class: None
     # Value > 0 means pump is on
@@ -1084,7 +1084,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:pump"
     device_class: None
     # Value > 0 means pump is on
@@ -1095,7 +1095,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:pump"
     device_class: None
     # Value > 0 means pump is on
@@ -1106,7 +1106,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:gauge"
     device_class: None
     # Value > 0 means output is active
@@ -1117,7 +1117,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:gauge"
     device_class: None
     # Value > 0 means output is active
@@ -1128,7 +1128,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:gauge"
     device_class: None
     # Value > 0 means output is active
@@ -1139,7 +1139,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:valve"
     device_class: None
     # Value > 0 means mixer is open
@@ -1150,7 +1150,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:valve"
     device_class: None
     # Value > 0 means mixer is closed
@@ -1161,7 +1161,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:valve"
     device_class: None
     # Value > 0 means mixer is open
@@ -1172,7 +1172,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:valve"
     device_class: None
     # Value > 0 means mixer is closed
@@ -1183,7 +1183,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:fire"
     device_class: None
     # Value > 0 means burner is on
@@ -1194,7 +1194,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:radiator"
     device_class: None
     # Value > 0 means heating rod is active
@@ -1205,7 +1205,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:valve"
     device_class: None
     # Value > 0 means diverter valve is active
@@ -1217,7 +1217,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:signal"
     device_class: None
     map:
@@ -1232,7 +1232,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:signal"
     device_class: None
     map:
@@ -1247,7 +1247,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:signal"
     device_class: None
     map:
@@ -1262,7 +1262,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:signal"
     device_class: None
     map:
@@ -1277,7 +1277,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:signal"
     device_class: None
     map:
@@ -1292,7 +1292,7 @@ binary_sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 30
-    group: "heating_status"
+    mm_group: "heating_status"
     icon: "mdi:signal"
     device_class: None
     map:

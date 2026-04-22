@@ -15,6 +15,7 @@ from .const import DOMAIN
 from .device_utils import (
     create_base_extra_state_attributes,
     generate_entity_name,
+    get_entity_mm_group,
     is_coordinator_connected,
 )
 
@@ -153,9 +154,9 @@ class ModbusCalculatedSensor(SensorEntity):
                 "Dynamic icon template set for calculated sensor %s", self._attr_name
             )
 
-        # Group for organization - set as attribute so Home Assistant can access it
-        self._group = config.get("group", "calculated")
-        self._attr_group = self._group
+        # Template organization tag (exposed as extra_state_attributes mm_group only;
+        # do not use Entity.group — reserved for HA core Group instances.)
+        self._mm_group = get_entity_mm_group(config) or "calculated"
 
         # Set precision for display formatting
         # This ensures small values are displayed with decimal places (e.g., 0.00234 V instead of 0 V)
@@ -188,10 +189,10 @@ class ModbusCalculatedSensor(SensorEntity):
         self._attr_native_value = None
 
         _LOGGER.debug(
-            "Created calculated sensor: %s (unique_id: %s, group: %s)",
+            "Created calculated sensor: %s (unique_id: %s, mm_group: %s)",
             self._attr_name,
             self._attr_unique_id,
-            self._group,
+            self._mm_group,
         )
 
     # device_info is now handled via _attr_device_info (DeviceInfo object)
@@ -252,7 +253,7 @@ class ModbusCalculatedSensor(SensorEntity):
             "scale": self._config.get("scale"),
             "offset": self._config.get("offset"),
             "precision": self._config.get("precision"),
-            "group": self._group,
+            "mm_group": self._mm_group,
             "scan_interval": self._config.get("scan_interval"),
             "swap": self._config.get("swap"),
         }
@@ -268,11 +269,6 @@ class ModbusCalculatedSensor(SensorEntity):
                 "calculation_type": "state",
             },
         )
-
-    @property
-    def group(self) -> str:
-        """Return the group this sensor belongs to."""
-        return self._group
 
     @property
     def should_poll(self) -> bool:
@@ -528,9 +524,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
         self._attr_device_class = config.get("device_class")
         self._attr_is_on = None
 
-        # Group for organization
-        self._group = config.get("group", "calculated")
-        self._attr_group = self._group
+        self._mm_group = get_entity_mm_group(config) or "calculated"
 
         # Use device_info from config (already attached by coordinator)
         device_info_from_config = config.get("device_info")
@@ -548,10 +542,10 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             raise ValueError("device_info missing from coordinator")
 
         _LOGGER.debug(
-            "Created calculated binary sensor: %s (unique_id: %s, group: %s)",
+            "Created calculated binary sensor: %s (unique_id: %s, mm_group: %s)",
             self._attr_name,
             self._attr_unique_id,
-            self._group,
+            self._mm_group,
         )
 
     # device_info is now handled via _attr_device_info (DeviceInfo object)
@@ -608,7 +602,7 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
             "scale": self._config.get("scale"),
             "offset": self._config.get("offset"),
             "precision": self._config.get("precision"),
-            "group": self._group,
+            "mm_group": self._mm_group,
             "scan_interval": self._config.get("scan_interval"),
             "swap": self._config.get("swap"),
         }
@@ -624,11 +618,6 @@ class ModbusCalculatedBinarySensor(BinarySensorEntity):
                 "calculation_type": "binary_state",
             },
         )
-
-    @property
-    def group(self) -> str:
-        """Return the group this sensor belongs to."""
-        return self._group
 
     @property
     def should_poll(self) -> bool:

@@ -26,7 +26,11 @@ from .const import (
     MIN_MESSAGE_WAIT_MS,
     MIN_TIMEOUT,
 )
-from .device_utils import generate_unique_id, resolve_firmware_profile_version
+from .device_utils import (
+    generate_unique_id,
+    get_entity_mm_group,
+    resolve_firmware_profile_version,
+)
 from .logger import ModbusManagerLogger
 from .template_loader import (
     _evaluate_condition,
@@ -2022,7 +2026,7 @@ class ModbusManagerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
     def _is_battery_group_sensor(self, sensor: dict, battery_groups: list) -> bool:
         """Check if a sensor belongs to a battery-specific group."""
         try:
-            sensor_group = sensor.get("group", "")
+            sensor_group = get_entity_mm_group(sensor) or ""
             if sensor_group in battery_groups:
                 _LOGGER.debug(
                     "Filtering sensor '%s' - belongs to battery group '%s'",

@@ -56,6 +56,7 @@ def _invalidate_cache() -> None:
 
 
 from .const import (
+    CONF_MM_GROUP,
     DEFAULT_MAX_REGISTER_READ,
     DEFAULT_MAX_VALUE,
     DEFAULT_MIN_VALUE,
@@ -65,6 +66,7 @@ from .const import (
     DataType,
     RegisterType,
 )
+from .device_utils import get_entity_mm_group
 from .logger import ModbusManagerLogger
 
 _LOGGER = logging.getLogger(__name__)
@@ -89,7 +91,7 @@ OPTIONAL_FIELDS = {
     "scale": 1.0,
     "swap": False,
     "byte_order": "big",  # Standard byte order (big endian)
-    "group": None,
+    CONF_MM_GROUP: None,
     # Neue Felder aus modbus_connect
     "offset": 0.0,
     "multiplier": 1.0,
@@ -898,7 +900,7 @@ def _should_include_sensor(
             return False
 
     # Battery type specific sensors (SBR Battery)
-    sensor_group = sensor.get("group", "")
+    sensor_group = get_entity_mm_group(sensor) or ""
     if battery_type == "none":
         # No battery selected - exclude all battery sensors (already handled by battery_enabled check above)
         pass

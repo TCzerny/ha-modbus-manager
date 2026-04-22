@@ -5,9 +5,20 @@ from typing import Any, Dict, Optional
 
 from homeassistant.core import HomeAssistant
 
-from .const import DOMAIN
+from .const import CONF_MM_GROUP, DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
+
+
+def get_entity_mm_group(entity_def: Dict[str, Any]) -> Any:
+    """Resolve Modbus Manager template organization tag from entity config.
+
+    Prefers ``mm_group`` when the key is present (including explicit null).
+    Falls back to legacy ``group`` for older templates or stored config data.
+    """
+    if CONF_MM_GROUP in entity_def:
+        return entity_def[CONF_MM_GROUP]
+    return entity_def.get("group")
 
 
 def resolve_firmware_profile_version(
@@ -350,8 +361,9 @@ def create_base_extra_state_attributes(
         base_attributes["offset"] = register_config.get("offset")
     if register_config.get("precision") is not None:
         base_attributes["precision"] = register_config.get("precision")
-    if register_config.get("group") is not None:
-        base_attributes["group"] = register_config.get("group")
+    mm_group = get_entity_mm_group(register_config)
+    if mm_group is not None:
+        base_attributes[CONF_MM_GROUP] = mm_group
     scan_interval_value = scan_interval or register_config.get("scan_interval")
     if scan_interval_value is not None:
         base_attributes["scan_interval"] = scan_interval_value

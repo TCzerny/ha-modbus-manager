@@ -10,9 +10,13 @@ from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import DeviceInfo, EntityCategory
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN
+from .const import CONF_MM_GROUP, DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
+from .device_utils import (
+    create_base_extra_state_attributes,
+    get_entity_mm_group,
+    is_coordinator_connected,
+)
 from .logger import ModbusManagerLogger
 from .modbus_utils import is_valid_modbus_address
 
@@ -236,8 +240,9 @@ class ModbusCoordinatorBinarySensor(BinarySensorEntity):
             self._attr_extra_state_attributes["state_class"] = register_config[
                 "state_class"
             ]
-        if "group" in register_config:
-            self._attr_extra_state_attributes["group"] = register_config["group"]
+        mm_group = get_entity_mm_group(register_config)
+        if mm_group is not None:
+            self._attr_extra_state_attributes[CONF_MM_GROUP] = mm_group
         if "map" in register_config:
             self._attr_extra_state_attributes["map"] = register_config["map"]
         if "flags" in register_config:

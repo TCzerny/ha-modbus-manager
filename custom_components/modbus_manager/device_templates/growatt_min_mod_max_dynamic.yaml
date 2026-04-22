@@ -92,7 +92,7 @@ sensors:
   # Device Information
   - name: Inverter machine status
     unique_id: machine_status
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     address: 3000
     input_type: input
     data_type: uint16
@@ -106,7 +106,7 @@ sensors:
 
   - name: Inverter run status
     unique_id: run_status
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     address: 3000
     input_type: input
     data_type: uint16
@@ -126,7 +126,7 @@ sensors:
   # PV Data (MPPT 1 & 2)
   - name: PV total power
     unique_id: pv_total_power
-    group: "PV_total_power"
+    mm_group: "PV_total_power"
     address: 3001
     input_type: input
     data_type: uint32
@@ -142,7 +142,7 @@ sensors:
 
   - name: PV1 voltage
     unique_id: pv1_voltage
-    group: "PV_mppt_voltage"
+    mm_group: "PV_mppt_voltage"
     address: 3003
     input_type: input
     data_type: uint16
@@ -155,7 +155,7 @@ sensors:
 
   - name: PV1 current
     unique_id: pv1_current
-    group: "PV_mppt_current"
+    mm_group: "PV_mppt_current"
     address: 3004
     input_type: input
     data_type: uint16
@@ -168,7 +168,7 @@ sensors:
 
   - name: PV1 power
     unique_id: pv1_power
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
     address: 3005
     input_type: input
     data_type: uint32
@@ -183,7 +183,7 @@ sensors:
 
   - name: PV2 voltage
     unique_id: pv2_voltage
-    group: "PV_mppt_voltage"
+    mm_group: "PV_mppt_voltage"
     address: 3007
     input_type: input
     data_type: uint16
@@ -196,7 +196,7 @@ sensors:
 
   - name: PV2 current
     unique_id: pv2_current
-    group: "PV_mppt_current"
+    mm_group: "PV_mppt_current"
     address: 3008
     input_type: input
     data_type: uint16
@@ -209,7 +209,7 @@ sensors:
 
   - name: PV2 power
     unique_id: pv2_power
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
     address: 3009
     input_type: input
     data_type: uint32
@@ -225,7 +225,7 @@ sensors:
   # Grid Data
   - name: Output power
     unique_id: output_power
-    group: "PV_output_power"
+    mm_group: "PV_output_power"
     address: 3023
     input_type: input
     data_type: uint32
@@ -240,7 +240,7 @@ sensors:
 
   - name: Grid frequency
     unique_id: grid_frequency
-    group: "PV_grid_status"
+    mm_group: "PV_grid_status"
     address: 3025
     input_type: input
     data_type: uint16
@@ -253,7 +253,7 @@ sensors:
 
   - name: Grid voltage
     unique_id: grid_voltage
-    group: "PV_grid_voltage"
+    mm_group: "PV_grid_voltage"
     address: 3026
     input_type: input
     data_type: uint16
@@ -266,7 +266,7 @@ sensors:
 
   - name: Grid output current
     unique_id: grid_output_current
-    group: "PV_grid_current"
+    mm_group: "PV_grid_current"
     address: 3027
     input_type: input
     data_type: uint16
@@ -279,7 +279,7 @@ sensors:
 
   - name: Grid output apparent power
     unique_id: grid_output_apparent_power
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
     address: 3028
     input_type: input
     data_type: uint32
@@ -295,7 +295,7 @@ sensors:
   # Three Phase Grid Data (will be filtered based on phases)
   - name: Three phase grid voltage (2)
     unique_id: grid_voltage_phase_2
-    group: "PV_grid_voltage"
+    mm_group: "PV_grid_voltage"
     address: 3030
     input_type: input
     data_type: uint16
@@ -309,7 +309,7 @@ sensors:
 
   - name: Three phase grid output current (2)
     unique_id: grid_current_phase_2
-    group: "PV_grid_current"
+    mm_group: "PV_grid_current"
     address: 3031
     input_type: input
     data_type: uint16
@@ -323,7 +323,7 @@ sensors:
 
   - name: Three phase grid output power (2)
     unique_id: grid_power_phase_2
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
     address: 3032
     input_type: input
     data_type: uint32
@@ -339,7 +339,7 @@ sensors:
 
   - name: Three phase grid voltage (3)
     unique_id: grid_voltage_phase_3
-    group: "PV_grid_voltage"
+    mm_group: "PV_grid_voltage"
     address: 3034
     input_type: input
     data_type: uint16
@@ -353,7 +353,7 @@ sensors:
 
   - name: Three phase grid output current (3)
     unique_id: grid_current_phase_3
-    group: "PV_grid_current"
+    mm_group: "PV_grid_current"
     address: 3035
     input_type: input
     data_type: uint16
@@ -367,7 +367,7 @@ sensors:
 
   - name: Three phase grid output power (3)
     unique_id: grid_power_phase_3
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
     address: 3036
     input_type: input
     data_type: uint32
@@ -384,7 +384,7 @@ sensors:
   # Three Phase Line-to-Line Voltages
   - name: Three phase grid voltage RS
     unique_id: grid_voltage_rs
-    group: "PV_grid_voltage"
+    mm_group: "PV_grid_voltage"
     address: 3038
     input_type: input
     data_type: uint16
@@ -398,7 +398,7 @@ sensors:
 
   - name: Three phase grid voltage ST
     unique_id: grid_voltage_st
-    group: "PV_grid_voltage"
+    mm_group: "PV_grid_voltage"
     address: 3039
     input_type: input
     data_type: uint16
@@ -412,7 +412,7 @@ sensors:
 
   - name: Three phase grid voltage TR
     unique_id: grid_voltage_tr
-    group: "PV_grid_voltage"
+    mm_group: "PV_grid_voltage"
     address: 3040
     input_type: input
     data_type: uint16
@@ -427,7 +427,7 @@ sensors:
   # Energy Data
   - name: Total forward power
     unique_id: total_forward_power
-    group: "PV_energy"
+    mm_group: "PV_energy"
     address: 3041
     input_type: input
     data_type: uint32
@@ -442,7 +442,7 @@ sensors:
 
   - name: Total reverse power
     unique_id: total_reverse_power
-    group: "PV_energy"
+    mm_group: "PV_energy"
     address: 3043
     input_type: input
     data_type: uint32
@@ -457,7 +457,7 @@ sensors:
 
   - name: Total load power
     unique_id: total_load_power
-    group: "PV_load_power"
+    mm_group: "PV_load_power"
     address: 3045
     input_type: input
     data_type: uint32
@@ -472,7 +472,7 @@ sensors:
 
   - name: Work time total
     unique_id: work_time_total
-    group: "PV_status"
+    mm_group: "PV_status"
     address: 3047
     input_type: input
     data_type: uint32
@@ -488,7 +488,7 @@ sensors:
 
   - name: Today generate energy
     unique_id: daily_generation_energy
-    group: "PV_daily_energy"
+    mm_group: "PV_daily_energy"
     address: 3049
     input_type: input
     data_type: uint32
@@ -503,7 +503,7 @@ sensors:
 
   - name: Total generate energy
     unique_id: total_generation_energy
-    group: "PV_total_energy"
+    mm_group: "PV_total_energy"
     address: 3051
     input_type: input
     data_type: uint32
@@ -519,7 +519,7 @@ sensors:
 
   - name: PV Energy total
     unique_id: pv_energy_total
-    group: "PV_total_energy"
+    mm_group: "PV_total_energy"
     address: 3053
     input_type: input
     data_type: uint32
@@ -535,7 +535,7 @@ sensors:
 
   - name: PV1 Energy today
     unique_id: pv1_energy_today
-    group: "PV_daily_energy"
+    mm_group: "PV_daily_energy"
     address: 3055
     input_type: input
     data_type: uint32
@@ -550,7 +550,7 @@ sensors:
 
   - name: PV1 Energy total
     unique_id: pv1_energy_total
-    group: "PV_total_energy"
+    mm_group: "PV_total_energy"
     address: 3057
     input_type: input
     data_type: uint32
@@ -566,7 +566,7 @@ sensors:
 
   - name: PV2 Energy today
     unique_id: pv2_energy_today
-    group: "PV_daily_energy"
+    mm_group: "PV_daily_energy"
     address: 3059
     input_type: input
     data_type: uint32
@@ -581,7 +581,7 @@ sensors:
 
   - name: PV2 Energy total
     unique_id: pv2_energy_total
-    group: "PV_total_energy"
+    mm_group: "PV_total_energy"
     address: 3061
     input_type: input
     data_type: uint32
@@ -597,7 +597,7 @@ sensors:
 
   - name: Today energy to user
     unique_id: daily_energy_to_user
-    group: "PV_energy_import"
+    mm_group: "PV_energy_import"
     address: 3067
     input_type: input
     data_type: uint32
@@ -613,7 +613,7 @@ sensors:
 
   - name: Total energy to user
     unique_id: total_energy_to_user
-    group: "PV_energy_import"
+    mm_group: "PV_energy_import"
     address: 3069
     input_type: input
     data_type: uint32
@@ -630,7 +630,7 @@ sensors:
 
   - name: Today energy to grid
     unique_id: daily_energy_to_grid
-    group: "PV_energy_export"
+    mm_group: "PV_energy_export"
     address: 3071
     input_type: input
     data_type: uint32
@@ -646,7 +646,7 @@ sensors:
 
   - name: Total energy to grid
     unique_id: total_energy_to_grid
-    group: "PV_energy_export"
+    mm_group: "PV_energy_export"
     address: 3073
     input_type: input
     data_type: uint32
@@ -663,7 +663,7 @@ sensors:
 
   - name: Today energy of user load
     unique_id: daily_energy_load
-    group: "PV_energy_consumption"
+    mm_group: "PV_energy_consumption"
     address: 3075
     input_type: input
     data_type: uint32
@@ -679,7 +679,7 @@ sensors:
 
   - name: Total energy of user load
     unique_id: total_energy_load
-    group: "PV_energy_consumption"
+    mm_group: "PV_energy_consumption"
     address: 3077
     input_type: input
     data_type: uint32
@@ -697,7 +697,7 @@ sensors:
   # System Status
   - name: Derating mode
     unique_id: derating_mode
-    group: "PV_status"
+    mm_group: "PV_status"
     address: 3086
     input_type: input
     data_type: uint16
@@ -724,7 +724,7 @@ sensors:
   # Temperature Sensors
   - name: Inverter temperature
     unique_id: inverter_temperature
-    group: "PV_temperature"
+    mm_group: "PV_temperature"
     address: 3093
     input_type: input
     data_type: int16
@@ -737,7 +737,7 @@ sensors:
 
   - name: IPM Inverter temperature
     unique_id: ipm_temperature
-    group: "PV_temperature"
+    mm_group: "PV_temperature"
     address: 3094
     input_type: input
     data_type: int16
@@ -750,7 +750,7 @@ sensors:
 
   - name: Boost temperature
     unique_id: boost_temperature
-    group: "PV_temperature"
+    mm_group: "PV_temperature"
     address: 3095
     input_type: input
     data_type: int16
@@ -763,7 +763,7 @@ sensors:
 
   - name: Communications board temperature
     unique_id: comm_board_temperature
-    group: "PV_temperature"
+    mm_group: "PV_temperature"
     address: 3097
     input_type: input
     data_type: int16
@@ -777,7 +777,7 @@ sensors:
   # Bus Voltages
   - name: P Bus inside voltage
     unique_id: p_bus_voltage
-    group: "PV_bus_voltage"
+    mm_group: "PV_bus_voltage"
     address: 3098
     input_type: input
     data_type: uint16
@@ -790,7 +790,7 @@ sensors:
 
   - name: N Bus inside voltage
     unique_id: n_bus_voltage
-    group: "PV_bus_voltage"
+    mm_group: "PV_bus_voltage"
     address: 3099
     input_type: input
     data_type: uint16
@@ -804,7 +804,7 @@ sensors:
   # Power Factor and Status
   - name: Inverter output Power Factor
     unique_id: power_factor
-    group: "PV_power_measurement"
+    mm_group: "PV_power_measurement"
     address: 3100
     input_type: input
     data_type: uint16
@@ -816,7 +816,7 @@ sensors:
 
   - name: Real output power percent
     unique_id: real_output_power_percent
-    group: "PV_power_measurement"
+    mm_group: "PV_power_measurement"
     address: 3101
     input_type: input
     data_type: uint16
@@ -828,7 +828,7 @@ sensors:
 
   - name: Output Maxpower Limited
     unique_id: output_maxpower_limited
-    group: "PV_power_measurement"
+    mm_group: "PV_power_measurement"
     address: 3102
     input_type: input
     data_type: uint32
@@ -843,7 +843,7 @@ sensors:
 
   - name: Inverter standby flag
     unique_id: standby_flag
-    group: "PV_status"
+    mm_group: "PV_status"
     address: 3104
     input_type: input
     data_type: uint16
@@ -851,7 +851,7 @@ sensors:
 
   - name: Fault code
     unique_id: fault_code
-    group: "PV_status"
+    mm_group: "PV_status"
     address: 3105
     input_type: input
     data_type: uint16
@@ -859,7 +859,7 @@ sensors:
 
   - name: Warning code
     unique_id: warning_code
-    group: "PV_status"
+    mm_group: "PV_status"
     address: 3106
     input_type: input
     data_type: uint16
@@ -868,7 +868,7 @@ sensors:
   # Battery Data (will be filtered based on battery_config)
   - name: Today discharge energy
     unique_id: daily_discharge_energy
-    group: "PV_battery_energy"
+    mm_group: "PV_battery_energy"
     address: 3125
     input_type: input
     data_type: uint32
@@ -885,7 +885,7 @@ sensors:
 
   - name: Total discharge energy
     unique_id: total_discharge_energy
-    group: "PV_battery_energy"
+    mm_group: "PV_battery_energy"
     address: 3127
     input_type: input
     data_type: uint32
@@ -903,7 +903,7 @@ sensors:
 
   - name: Today charge energy
     unique_id: daily_charge_energy
-    group: "PV_battery_energy"
+    mm_group: "PV_battery_energy"
     address: 3129
     input_type: input
     data_type: uint32
@@ -920,7 +920,7 @@ sensors:
 
   - name: Total charge energy
     unique_id: total_charge_energy
-    group: "PV_battery_energy"
+    mm_group: "PV_battery_energy"
     address: 3131
     input_type: input
     data_type: uint32
@@ -938,7 +938,7 @@ sensors:
 
   - name: Work mode
     unique_id: work_mode
-    group: "PV_battery_status"
+    mm_group: "PV_battery_status"
     address: 3144
     input_type: input
     data_type: uint16
@@ -951,7 +951,7 @@ sensors:
 
   - name: Storage Fault code
     unique_id: storage_fault_code
-    group: "PV_battery_status"
+    mm_group: "PV_battery_status"
     address: 3167
     input_type: input
     data_type: uint16
@@ -960,7 +960,7 @@ sensors:
 
   - name: Storage Warning code
     unique_id: storage_warning_code
-    group: "PV_battery_status"
+    mm_group: "PV_battery_status"
     address: 3168
     input_type: input
     data_type: uint16
@@ -969,7 +969,7 @@ sensors:
 
   - name: Battery voltage
     unique_id: battery_voltage
-    group: "PV_battery_voltage"
+    mm_group: "PV_battery_voltage"
     address: 3169
     input_type: input
     data_type: uint16
@@ -983,7 +983,7 @@ sensors:
 
   - name: Battery current
     unique_id: battery_current
-    group: "PV_battery_current"
+    mm_group: "PV_battery_current"
     address: 3170
     input_type: input
     data_type: int16
@@ -997,7 +997,7 @@ sensors:
 
   - name: Battery SoC
     unique_id: battery_soc
-    group: "PV_battery_status"
+    mm_group: "PV_battery_status"
     address: 3171
     input_type: input
     data_type: uint16
@@ -1011,7 +1011,7 @@ sensors:
 
   - name: Discharge power
     unique_id: discharge_power
-    group: "PV_battery_power"
+    mm_group: "PV_battery_power"
     address: 3178
     input_type: input
     data_type: uint32
@@ -1027,7 +1027,7 @@ sensors:
 
   - name: Charge power
     unique_id: charge_power
-    group: "PV_battery_power"
+    mm_group: "PV_battery_power"
     address: 3180
     input_type: input
     data_type: uint32
@@ -1053,7 +1053,7 @@ controls:
     options:
       0: "Off"
       1: "On"
-    group: "PV_control"
+    mm_group: "PV_control"
 
   # Device Information (Holding Registers - readable)
   - type: "text"
@@ -1064,7 +1064,7 @@ controls:
     data_type: "string"
     count: 3
     scan_interval: 600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
 
   - type: "text"
     name: "Control firmware version"
@@ -1074,7 +1074,7 @@ controls:
     data_type: "string"
     count: 3
     scan_interval: 600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
 
   - type: "text"
     name: "Serial number"
@@ -1084,7 +1084,7 @@ controls:
     data_type: "string"
     count: 14
     scan_interval: 600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
 
   - type: "number"
     name: "Max output active power"
@@ -1098,7 +1098,7 @@ controls:
     max_value: 100
     step: 1
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
 
   - type: "number"
     name: "Discharge Power Rate (Grid First)"
@@ -1110,7 +1110,7 @@ controls:
     max_value: 255
     step: 1
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
   - type: "number"
@@ -1124,7 +1124,7 @@ controls:
     max_value: 100
     step: 1
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
   - type: "number"
@@ -1137,7 +1137,7 @@ controls:
     max_value: 100
     step: 1
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
   - type: "number"
@@ -1151,7 +1151,7 @@ controls:
     max_value: 100
     step: 1
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
   - type: "switch"
@@ -1164,7 +1164,7 @@ controls:
     options:
       0: "Off"
       1: "On"
-    group: "PV_control"
+    mm_group: "PV_control"
     condition: "battery_config != 'none'"
 
   - type: "select"
@@ -1184,7 +1184,7 @@ controls:
       6: "Polish"
       7: "Portuguese"
       8: "Hungarian"
-    group: "PV_control"
+    mm_group: "PV_control"
 
   - type: "number"
     name: "Communicate address"
@@ -1196,7 +1196,7 @@ controls:
     max_value: 254
     step: 1
     scan_interval: 300
-    group: "PV_control"
+    mm_group: "PV_control"
 
 # Calculated Sensors
 calculated:
@@ -1212,7 +1212,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
 
   - name: "PV2 Power"
     unique_id: "pv2_power_calculated"
@@ -1226,7 +1226,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
 
   - name: "Total PV Power"
     unique_id: "total_pv_power_calculated"
@@ -1240,7 +1240,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "PV_total_power"
+    mm_group: "PV_total_power"
 
   - name: "Battery Power"
     unique_id: "battery_power"
@@ -1254,7 +1254,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "PV_battery_power"
+    mm_group: "PV_battery_power"
     condition: "battery_config != 'none'"
 
 # Binary Sensors
@@ -1276,7 +1276,7 @@ binary_sensors:
         0
       {% endif %}
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Battery charging"
     unique_id: "battery_charging"
@@ -1295,7 +1295,7 @@ binary_sensors:
         0
       {% endif %}
     device_class: "battery_charging"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
     condition: "battery_config != 'none'"
 
   - name: "Battery discharging"
@@ -1315,5 +1315,5 @@ binary_sensors:
         0
       {% endif %}
     device_class: "battery"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
     condition: "battery_config != 'none'"

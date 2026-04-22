@@ -43,7 +43,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:ev-station"
     map:
@@ -57,7 +57,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:sine-wave"
 
@@ -69,7 +69,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:lightning-bolt"
 
   - name: "Phase Switching Status"
@@ -78,7 +78,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 60
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:sine-wave"
     map:
       0: "Three phase"
@@ -94,7 +94,7 @@ sensors:
     unit_of_measurement: "W"
     device_class: "power"
     scan_interval: 60
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
 
   - name: "Maximum Charging Power"
@@ -107,7 +107,7 @@ sensors:
     unit_of_measurement: "W"
     device_class: "power"
     scan_interval: 60
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
 
   - name: "Total Energy"
@@ -122,7 +122,7 @@ sensors:
     state_class: "total_increasing"
     device_class: "energy"
     scan_interval: 600
-    group: "EV_energy"
+    mm_group: "EV_energy"
     icon: "mdi:meter-electric"
 
   - name: "Phase A Charging Voltage"
@@ -135,7 +135,7 @@ sensors:
     device_class: "voltage"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_charging_measurement"
+    mm_group: "EV_charging_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Phase A Charging Current"
@@ -148,7 +148,7 @@ sensors:
     device_class: "current"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_charging_measurement"
+    mm_group: "EV_charging_measurement"
     icon: "mdi:current-dc"
 
   - name: "Phase B Charging Voltage"
@@ -161,7 +161,7 @@ sensors:
     device_class: "voltage"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_charging_measurement"
+    mm_group: "EV_charging_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Phase B Charging Current"
@@ -174,7 +174,7 @@ sensors:
     device_class: "current"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_charging_measurement"
+    mm_group: "EV_charging_measurement"
     icon: "mdi:current-dc"
 
   - name: "Phase C Charging Voltage"
@@ -187,7 +187,7 @@ sensors:
     device_class: "voltage"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_charging_measurement"
+    mm_group: "EV_charging_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Phase C Charging Current"
@@ -200,7 +200,7 @@ sensors:
     device_class: "current"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_charging_measurement"
+    mm_group: "EV_charging_measurement"
     icon: "mdi:current-dc"
 
   - name: "Charging Power"
@@ -213,7 +213,7 @@ sensors:
     device_class: "power"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
 
   - name: "Charging Energy"
@@ -227,7 +227,7 @@ sensors:
     device_class: "energy"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:meter-electric"
 
   - name: "Charging Status"
@@ -236,7 +236,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 10
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     map:
       1: "Idle"
@@ -256,7 +256,7 @@ sensors:
     data_type: uint32
     swap: word
     scan_interval: 60
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     entity_category: "diagnostic"
     icon: "mdi:clock-start"
 
@@ -267,7 +267,7 @@ sensors:
     data_type: uint32
     swap: word
     scan_interval: 60
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     entity_category: "diagnostic"
     icon: "mdi:clock-end"
 
@@ -277,7 +277,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 600
-    group: "EV_settings"
+    mm_group: "EV_settings"
     entity_category: "diagnostic"
     icon: "mdi:play-circle"
     map:
@@ -292,7 +292,7 @@ sensors:
     input_type: holding
     data_type: uint16
     scan_interval: 60
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     entity_category: "diagnostic"
     icon: "mdi:remote"
 
@@ -311,7 +311,7 @@ controls:
     max_value: "{{max_current}}"
     step: 0.1
     scan_interval: 60
-    group: "EV_current_setting"
+    mm_group: "EV_current_setting"
     icon: "mdi:gauge"
 
   - type: "select"
@@ -321,7 +321,7 @@ controls:
     input_type: holding
     data_type: uint16
     scan_interval: 60
-    group: "EV_settings"
+    mm_group: "EV_settings"
     options:
       0: "Three phase"
       1: "Single phase"
@@ -337,7 +337,7 @@ controls:
     on_value: 1
     off_value: 0
     scan_interval: 60
-    group: "EV_settings"
+    mm_group: "EV_settings"
 
   - type: "number"
     name: "Mileage per kWh"
@@ -352,7 +352,7 @@ controls:
     max_value: 500
     step: 0.1
     scan_interval: 60
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:car-cruise-control"
 
   - type: "select"
@@ -362,7 +362,7 @@ controls:
     input_type: holding
     data_type: uint16
     scan_interval: 600
-    group: "EV_settings"
+    mm_group: "EV_settings"
     options:
       0: "Network"
       2: "Plug and Play"
@@ -376,7 +376,7 @@ controls:
     data_type: uint16
     button_press_value: 0
     scan_interval: 60
-    group: "EV_charging_control"
+    mm_group: "EV_charging_control"
     icon: "mdi:play"
 
   - type: "button"
@@ -387,7 +387,7 @@ controls:
     data_type: uint16
     button_press_value: 1
     scan_interval: 60
-    group: "EV_charging_control"
+    mm_group: "EV_charging_control"
     icon: "mdi:stop"
 
 # Calculated sensors
@@ -402,7 +402,7 @@ calculated:
     state: >-
       {{ (states('sensor.{PREFIX}_charging_start_time_raw') | int) | timestamp_custom('%d.%m.%Y %H:%M') }}
     unit_of_measurement: ""
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:clock-start"
 
   - name: "Charging End Time"
@@ -414,7 +414,7 @@ calculated:
     state: >-
       {{ (states('sensor.{PREFIX}_charging_end_time_raw') | int) | timestamp_custom('%d.%m.%Y %H:%M') }}
     unit_of_measurement: ""
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:clock-end"
 
   - name: "Charging Duration"
@@ -429,7 +429,7 @@ calculated:
       {% set sec = (states('sensor.{PREFIX}_charging_end_time_raw') | int) - (states('sensor.{PREFIX}_charging_start_time_raw') | int) %}
       {{ '%d:%02d' | format(sec // 3600, (sec % 3600) // 60) }}
     unit_of_measurement: ""
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:clock-outline"
 
   - name: "Charged Range"
@@ -443,7 +443,7 @@ calculated:
     unit_of_measurement: "km"
     device_class: "distance"
     state_class: "measurement"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:map-marker-distance"
     precision: 1
 
@@ -457,5 +457,5 @@ binary_sensors:
     state: >-
       {{ states('sensor.{PREFIX}_charging_status_raw') == 'Charging' }}
     device_class: "power"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"

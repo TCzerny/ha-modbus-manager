@@ -163,7 +163,7 @@ sensors:
     input_type: holding
     data_type: uint16
     scan_interval: 10
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
     map:
       170: "Enabled"   # 0xAA
@@ -175,7 +175,7 @@ sensors:
     input_type: holding
     data_type: uint16
     scan_interval: 10
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
     map:
       160: "Master"    # 0xA0
@@ -191,7 +191,7 @@ sensors:
     data_type: uint16
     precision: 0
     scan_interval: 10
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   # Device Information
@@ -202,7 +202,7 @@ sensors:
     data_type: string
     count: 10
     scan_interval: 600
-    group: "PV_device_count"
+    mm_group: "PV_device_count"
     entity_category: "diagnostic"
 
   - name: Sungrow device type code
@@ -211,7 +211,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
     # Appendix 1: Device type codes (hex -> decimal)
     map:
@@ -263,7 +263,7 @@ sensors:
       3368: "MG6RL"
       3369: "MG8RL"
       3370: "MG10RL"
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
 
   - name: Protocol version raw
     unique_id: protocol_version_raw
@@ -272,7 +272,7 @@ sensors:
     data_type: uint32
     swap: word
     scan_interval: 600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
     # Note: Format: 0x01010B00 = V1.1.11 (Major.Minor.Patch.Build)
     # For example, 0x01010700 represents the protocol version V1.1.7;
@@ -286,7 +286,7 @@ sensors:
     data_type: string
     count: 15
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     icon: "mdi:certificate"
     entity_category: "diagnostic"
     # Certified version information after finalizing functions such as electrical, safety regulations, and standards for the whole machine
@@ -298,7 +298,7 @@ sensors:
     data_type: string
     count: 15
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     icon: "mdi:certificate"
     entity_category: "diagnostic"
 
@@ -314,7 +314,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   - name: Output type
@@ -323,7 +323,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
     # Protocol Table 3: 0=Single, 1=3P4L, 2=3P3L
     options:
@@ -340,7 +340,7 @@ sensors:
     data_type: string
     count: 15
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
     condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
@@ -352,7 +352,7 @@ sensors:
     data_type: string
     count: 15
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
     condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
@@ -364,7 +364,7 @@ sensors:
     data_type: string
     count: 15
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
     condition: "selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL, MG8RL, MG10RL]"
@@ -409,7 +409,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 10
-    group: "PV_temperature"
+    mm_group: "PV_temperature"
 
   # MPPT Data (will be filtered based on mppt_count)
   - name: MPPT1 voltage
@@ -526,7 +526,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    group: "PV_total_dc_power"
+    mm_group: "PV_total_dc_power"
 
   # Phase Data (will be filtered based on phases)
   - name: Phase A voltage
@@ -578,7 +578,7 @@ sensors:
     scale: 1
     offset: 0
     scan_interval: 10
-    group: "PV_power_measurement"
+    mm_group: "PV_power_measurement"
     entity_category: "diagnostic"
 
   - name: Power factor
@@ -699,7 +699,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    group: "PV_meter_channel_2"
+    mm_group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
     entity_category: "diagnostic"
 
@@ -715,7 +715,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    group: "PV_meter_channel_2"
+    mm_group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
     entity_category: "diagnostic"
 
@@ -731,7 +731,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    group: "PV_meter_channel_2"
+    mm_group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
     entity_category: "diagnostic"
 
@@ -747,7 +747,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    group: "PV_meter_channel_2"
+    mm_group: "PV_meter_channel_2"
     condition: "meter_type == 'DTSU666-20' and selected_model not in [SH3.0RS, SH3.6RS, SH4.0RS, SH5.0RS, SH6.0RS, SH8.0RS, SH10RS, MG5RL, MG6RL]"
     entity_category: "diagnostic"
 
@@ -815,7 +815,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 600
-    group: "PV_control"
+    mm_group: "PV_control"
     entity_category: "diagnostic"
 
   - name: Max Export Power Limit Value
@@ -829,7 +829,7 @@ sensors:
     state_class: measurement
     scale: 0.01
     scan_interval: 600
-    group: "PV_control"
+    mm_group: "PV_control"
     entity_category: "diagnostic"
 
   # Backup Power (will be filtered based on battery_enabled and phases)
@@ -1761,7 +1761,7 @@ sensors:
       0x1800: "Intelligent Station Building Status"
       0x1900: "Safe Mode"
       0x2000: "Open loop"
-    group: "PV_status"
+    mm_group: "PV_status"
 
   - name: "Running state"
     unique_id: "running_state"
@@ -1772,7 +1772,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    group: "PV_status"
+    mm_group: "PV_status"
     # Appendix 3: Power Flow State (bit position = key)
     flags:
       0: "PV Generating"
@@ -1796,7 +1796,7 @@ sensors:
       1: "ON/OFF mode"
       2: "Power optimized mode"
       3: "Disable"
-    group: "PV_modes"
+    mm_group: "PV_modes"
 
   # Energy and power sensors
   - name: Daily PV generation
@@ -1978,7 +1978,7 @@ sensors:
     state_class: measurement
     scale: 1
     scan_interval: 10
-    group: "PV_battery_power"
+    mm_group: "PV_battery_power"
     condition: "battery_enabled == true"
 
   - name: Battery level
@@ -2017,7 +2017,7 @@ sensors:
     state_class: measurement
     scale: 0.1
     scan_interval: 60
-    group: "PV_battery_temperature"
+    mm_group: "PV_battery_temperature"
     condition: "battery_enabled == true"
 
   - name: Daily battery discharge
@@ -2618,7 +2618,7 @@ sensors:
       2: "Forced mode" # The inverter is devised to charge or discharge the battery with the charging and discharging power as much as practicable.
       3: "External EMS mode"
       4: "VPP"
-    group: "PV_modes"
+    mm_group: "PV_modes"
 
   # Battery control sensors
   - name: Battery forced charge discharge cmd raw
@@ -2634,7 +2634,7 @@ sensors:
       0xAA: "Charge"
       0xBB: "Discharge"
       0xCC: "Stop"
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
 
   - name: Battery forced charge discharge power raw
@@ -2681,7 +2681,7 @@ sensors:
     input_type: holding
     data_type: uint16
     scan_interval: 30
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:ev-station"
     map:
       160: "Fast Charge"
@@ -2699,7 +2699,7 @@ sensors:
     precision: 1
     unit_of_measurement: "kWh"
     scan_interval: 30
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:battery-charging"
     condition: "wallbox_connected == 'yes'"
 
@@ -2709,7 +2709,7 @@ sensors:
     input_type: holding
     data_type: uint32
     scan_interval: 30
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:timer-outline"
     entity_category: "diagnostic"
     condition: "wallbox_connected == 'yes'"
@@ -2723,7 +2723,7 @@ sensors:
     precision: 1
     unit_of_measurement: "A"
     scan_interval: 30
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:current-ac"
     condition: "wallbox_connected == 'yes'"
 
@@ -2733,7 +2733,7 @@ sensors:
     input_type: holding
     data_type: uint32
     scan_interval: 30
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:clock-start"
     entity_category: "diagnostic"
     condition: "wallbox_connected == 'yes'"
@@ -2744,7 +2744,7 @@ sensors:
     input_type: holding
     data_type: uint32
     scan_interval: 30
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:clock-end"
     entity_category: "diagnostic"
     condition: "wallbox_connected == 'yes'"
@@ -2755,7 +2755,7 @@ sensors:
     input_type: holding
     data_type: uint16
     scan_interval: 30
-    group: "EV_settings"
+    mm_group: "EV_settings"
     icon: "mdi:transmission-tower-export"
     entity_category: "diagnostic"
     map:
@@ -2776,7 +2776,7 @@ controls:
     options:
       0xCF: "Enabled"
       0xCE: "Shutdown"
-    group: "PV_control"
+    mm_group: "PV_control"
 
   - type: "select"
     name: "EMS Mode Selection"
@@ -2791,7 +2791,7 @@ controls:
       2: "Forced mode"
       3: "External EMS"
       4: "VPP"
-    group: "PV_modes"
+    mm_group: "PV_modes"
 
   - type: "select"
     name: "Battery forced charge discharge cmd"
@@ -2804,7 +2804,7 @@ controls:
       0xAA: "Charge"
       0xBB: "Discharge"
       0xCC: "Stop"
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
 
   - name: Battery forced charge discharge power
@@ -2821,7 +2821,7 @@ controls:
     max_value: "{{max(max_charge_power, max_discharge_power)}}"
     step: 100
     scan_interval: 10
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with maximum of model-specific max_charge_power and max_discharge_power
     # For SH10RT: max(10600, 10600) = 10600 W
@@ -2839,7 +2839,7 @@ controls:
       1: "ON/OFF mode"
       2: "Power optimized"
       3: "Disable"
-    group: "PV_modes"
+    mm_group: "PV_modes"
 
   - type: "number"
     name: "Max SoC"
@@ -2854,7 +2854,7 @@ controls:
     max_value: 100
     step: 1
     scan_interval: 30
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
 
   - type: "number"
@@ -2870,7 +2870,7 @@ controls:
     max_value: 50
     step: 1
     scan_interval: 30
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
 
   - type: "select"
@@ -2883,7 +2883,7 @@ controls:
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
-    group: "PV_modes"
+    mm_group: "PV_modes"
     condition: "battery_enabled == true"
 
   - type: "number"
@@ -2900,7 +2900,7 @@ controls:
     step: 100
     mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
 
   - type: "select"
     name: "Export Power Limit Mode"
@@ -2912,7 +2912,7 @@ controls:
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
-    group: "PV_modes"
+    mm_group: "PV_modes"
 
   - type: "number"
     name: "Export Power Limit Ratio"
@@ -2928,7 +2928,7 @@ controls:
     step: 1
     mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
 
   - type: "select"
     name: "Active Power Limitation"
@@ -2940,7 +2940,7 @@ controls:
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
-    group: "PV_control"
+    mm_group: "PV_control"
 
   - type: "number"
     name: "Active Power Limit Ratio"
@@ -2955,7 +2955,7 @@ controls:
     max_value: 1000
     step: 1
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
 
   - type: "number"
     name: "Reserved SoC for Backup"
@@ -2968,7 +2968,7 @@ controls:
     max_value: 100
     step: 1
     scan_interval: 30
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
 
   - type: "select"
@@ -2982,7 +2982,7 @@ controls:
     options:
       0x55: "OFF"
       0xAA: "ON"
-    group: "PV_modes"
+    mm_group: "PV_modes"
 
   - type: "number"
     name: "Battery Max Charging Power"
@@ -2997,7 +2997,7 @@ controls:
     max_value: "{{max_charge_power}}"
     step: 0.01
     scan_interval: 10
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
     # For SH10RT: 10600 W -> 10.6 kW
@@ -3015,7 +3015,7 @@ controls:
     max_value: "{{max_discharge_power}}"
     step: 0.01
     scan_interval: 10
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
     # For SH10RT: 10600 W -> 10.6 kW
@@ -3034,7 +3034,7 @@ controls:
     step: 0.01
     mode: "box"  # Explicitly set to box for consistent UI display
     scan_interval: 30
-    group: "PV_control"
+    mm_group: "PV_control"
     # Placeholder will be replaced with model-specific value from dynamic_config.valid_models
     # For SH10RT: 10000 W -> 10.0 kW
 
@@ -3053,7 +3053,7 @@ controls:
     state_class: measurement
     scale: 10
     scan_interval: 10
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with 50% of model-specific max_charge_power
     # For SH10RT: 10600 * 0.5 = 5300 W
@@ -3073,7 +3073,7 @@ controls:
     state_class: measurement
     scale: 10
     scan_interval: 10
-    group: "PV_battery_control"
+    mm_group: "PV_battery_control"
     condition: "battery_enabled == true"
     # Placeholder will be replaced with 50% of model-specific max_discharge_power
     # For SH10RT: 10600 * 0.5 = 5300 W
@@ -3088,7 +3088,7 @@ controls:
     options:
       0x55: "Disabled"
       0xAA: "Enabled"
-    group: "PV_control"
+    mm_group: "PV_control"
     condition: "battery_enabled == true"
 
   - type: "select"
@@ -3102,7 +3102,7 @@ controls:
     options:
       0x55: "Disabled"
       0xAA: "Limit PV"
-    group: "PV_control"
+    mm_group: "PV_control"
 
 
   ################################################################
@@ -3120,7 +3120,7 @@ controls:
       161: "PV Surplus"
       162: "Quantity & Time"
       163: "User defined"
-    group: "EV_control"
+    mm_group: "EV_control"
     condition: "wallbox_connected == 'yes'"
 
   - name: "WB Charging Quantity"
@@ -3133,7 +3133,7 @@ controls:
     precision: 0
     unit_of_measurement: "kWh"
     scan_interval: 0
-    group: "EV_control"
+    mm_group: "EV_control"
     condition: "wallbox_connected == 'yes'"
 
   - name: "WB User Defined Charging Current"
@@ -3146,7 +3146,7 @@ controls:
     precision: 0
     unit_of_measurement: "A"
     scan_interval: 10
-    group: "EV_control"
+    mm_group: "EV_control"
     condition: "wallbox_connected == 'yes'"
 
   - type: "select"
@@ -3159,7 +3159,7 @@ controls:
     options:
       85: "PV Surplus with out Grid Power"
       170: "PV Surplus with Grid Power"
-    group: "EV_control"
+    mm_group: "EV_control"
     condition: "wallbox_connected == 'yes'"
 
 # Calculated Sensors
@@ -3178,7 +3178,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
 
   - name: "Import Power"
@@ -3198,7 +3198,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
 
   - name: "Export Power"
     unique_id: "export_power"
@@ -3214,7 +3214,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
 
   - name: "Total Load Power"
     unique_id: "total_load_power"
@@ -3226,7 +3226,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_load_power"
+    mm_group: "PV_load_power"
 
   # Real load from energy flow balance: Load = PV + Import + Battery_Discharge - Export - Battery_Charge
   - name: "Real Load Power"
@@ -3250,7 +3250,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_load_power"
+    mm_group: "PV_load_power"
 
   # System Efficiency Calculations
   - name: "Solar to Grid Efficiency"
@@ -3269,7 +3269,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 1
-    group: "PV_efficiency"
+    mm_group: "PV_efficiency"
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
 
   - name: "Battery to Load Efficiency"
@@ -3300,7 +3300,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 1
-    group: "PV_efficiency"
+    mm_group: "PV_efficiency"
     condition: "battery_enabled == true"
 
   # Power Balance Calculations
@@ -3321,7 +3321,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_power_balance"
+    mm_group: "PV_power_balance"
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
 
   # Phase Power Calculations
@@ -3339,7 +3339,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"
     condition: "meter_type == 'DTSU666' or meter_type == 'DTSU666-20'"
 
   # Individual Phase Power Calculations
@@ -3356,7 +3356,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"
 
   - name: "Phase B Power"
     unique_id: "phase_b_power"
@@ -3371,7 +3371,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"
     condition: "phases > 1"
 
   - name: "Phase C Power"
@@ -3387,7 +3387,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"
     condition: "phases > 1"
 
   # calculated sensor in case the meter is not available (grid is off) and returns 0x7FFFFF
@@ -3428,7 +3428,7 @@ calculated:
     device_class: "power"
     precision: 0
     state_class: "measurement"
-    group: "PV_meter_power"
+    mm_group: "PV_meter_power"
 
   - name: "Meter Phase B Active Power"
     unique_id: "meter_phase_b_active_power"
@@ -3450,7 +3450,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_meter_power"
+    mm_group: "PV_meter_power"
 
   - name: "Meter Phase C Active Power"
     unique_id: "meter_phase_c_active_power"
@@ -3472,7 +3472,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_meter_power"
+    mm_group: "PV_meter_power"
 
   # Meter Channel 2 Calculated Sensors (Protocol V1.1.11)
   # NOTE: These calculated sensors depend on the raw sensors, which are only registered when DTSU666-20 is selected
@@ -3496,7 +3496,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_meter_channel_2"
+    mm_group: "PV_meter_channel_2"
 
   - name: "Meter Channel 2 Phase A Active Power"
     unique_id: "meter_channel_2_phase_a_active_power"
@@ -3518,7 +3518,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_meter_channel_2"
+    mm_group: "PV_meter_channel_2"
 
   - name: "Meter Channel 2 Phase B Active Power"
     unique_id: "meter_channel_2_phase_b_active_power"
@@ -3540,7 +3540,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_meter_channel_2"
+    mm_group: "PV_meter_channel_2"
 
   - name: "Meter Channel 2 Phase C Active Power"
     unique_id: "meter_channel_2_phase_c_active_power"
@@ -3562,7 +3562,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_meter_channel_2"
+    mm_group: "PV_meter_channel_2"
 
   # Calculated Energy Summary Sensors
   - name: "Monthly PV generation (current)"
@@ -3579,7 +3579,7 @@ calculated:
     state_class: "total_increasing"
     precision: 1
     condition: "connection_type == 'LAN'"
-    group: "calculated_energy"
+    mm_group: "calculated_energy"
 
   - name: "Yearly PV generation (current)"
     unique_id: "yearly_pv_generation_current"
@@ -3595,7 +3595,7 @@ calculated:
     state_class: "total_increasing"
     precision: 1
     condition: "connection_type == 'LAN'"
-    group: "calculated_energy"
+    mm_group: "calculated_energy"
 
   - name: "Monthly export (current)"
     unique_id: "monthly_export_current"
@@ -3611,7 +3611,7 @@ calculated:
     state_class: "total_increasing"
     precision: 1
     condition: "connection_type == 'LAN'"
-    group: "calculated_energy"
+    mm_group: "calculated_energy"
 
   - name: "Yearly export (current)"
     unique_id: "yearly_export_current"
@@ -3627,7 +3627,7 @@ calculated:
     state_class: "total_increasing"
     precision: 1
     condition: "connection_type == 'LAN'"
-    group: "calculated_energy"
+    mm_group: "calculated_energy"
 
   # Battery Level and Charge Calculations
   - name: "Battery level (nominal)"
@@ -3653,7 +3653,7 @@ calculated:
     device_class: "battery"
     state_class: "measurement"
     precision: 1
-    group: "battery_level_nominal"
+    mm_group: "battery_level_nominal"
     condition: "battery_enabled == true"
 
   - name: "Battery charge (nominal)"
@@ -3675,7 +3675,7 @@ calculated:
     device_class: "energy_storage"
     state_class: "measurement"
     precision: 1
-    group: "battery_charge_nominal"
+    mm_group: "battery_charge_nominal"
     condition: "battery_enabled == true"
 
   - name: "Battery charge"
@@ -3699,7 +3699,7 @@ calculated:
         * states('sensor.{PREFIX}_battery_level')|float /100
         ) |round(2)
       }}
-    group: "battery_charge"
+    mm_group: "battery_charge"
     icon: "mdi:battery-charging-30"
     condition: "battery_enabled == true"
 
@@ -3723,7 +3723,7 @@ calculated:
     device_class: "energy_storage"
     state_class: "measurement"
     precision: 2
-    group: "battery_charge_health_rated"
+    mm_group: "battery_charge_health_rated"
     condition: "battery_enabled == true"
 
   # Energy Consumption Calculations
@@ -3752,7 +3752,7 @@ calculated:
     device_class: "energy"
     state_class: "total"
     precision: 1
-    group: "calculated_energy"
+    mm_group: "calculated_energy"
 
   - name: "Total consumed energy"
     unique_id: "total_consumed_energy"
@@ -3779,7 +3779,7 @@ calculated:
     device_class: "energy"
     state_class: "total"
     precision: 1
-    group: "calculated_energy"
+    mm_group: "calculated_energy"
 
   # Power Flow Calculations
   - name: "Signed battery power"
@@ -3803,7 +3803,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "battery_power_signed"
+    mm_group: "battery_power_signed"
 
   - name: "Battery charging power"
     unique_id: "battery_charging_power"
@@ -3823,7 +3823,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "battery_power_charging"
+    mm_group: "battery_power_charging"
     condition: "battery_enabled == true"
 
   - name: "Battery discharging power"
@@ -3844,7 +3844,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "battery_power_discharging"
+    mm_group: "battery_power_discharging"
     condition: "battery_enabled == true"
 
   # HA Energy Dashboard compatible sensors
@@ -3866,7 +3866,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "battery_power_energy_dashboard"
+    mm_group: "battery_power_energy_dashboard"
     condition: "battery_enabled == true"
     # Note: battery_power is negative when charging, so we multiply by -1 to get positive when charging
     # This is useful for display purposes (showing positive charging power)
@@ -3880,7 +3880,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "battery_power_energy_dashboard"
+    mm_group: "battery_power_energy_dashboard"
     condition: "battery_enabled == true"
     # Note: battery_power is positive when discharging, which matches HA Energy Dashboard convention
     # Use this sensor for the HA energy dashboard.
@@ -3907,7 +3907,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "grid_power_energy_dashboard"
+    mm_group: "grid_power_energy_dashboard"
     # Note: export_power_raw is positive when exporting, so we multiply by -1
     # Result: Negative when exporting (generation), Positive when importing (consumption)
     # IMPORTANT: Use this sensor for HA Energy Dashboard grid power
@@ -3928,7 +3928,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "grid_power_energy_dashboard"
+    mm_group: "grid_power_energy_dashboard"
     # Note: export_power_raw is positive when exporting, so we multiply by -1 for HA Energy Dashboard
     # Negative values = export to grid (generation)
     # This shows only export power as negative values
@@ -3948,7 +3948,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "grid_power_energy_dashboard"
+    mm_group: "grid_power_energy_dashboard"
     # Note: export_power_raw is negative when importing, so we multiply by -1 to get positive
     # Positive values = import from grid (consumption)
     # This shows only import power as positive values
@@ -3994,7 +3994,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 1
-    group: "PV_analysis"
+    mm_group: "PV_analysis"
     # Percentage of PV generation that is consumed directly (not exported to grid)
 
   - name: "Autarky Rate"
@@ -4039,7 +4039,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 2
-    group: "PV_analysis"
+    mm_group: "PV_analysis"
     # Percentage of load that is supplied by PV/Battery (self-sufficiency)
 
   # Self-Consumption Rate (Today)
@@ -4067,7 +4067,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 1
-    group: "PV_analysis"
+    mm_group: "PV_analysis"
     # (Direct consumption + PV to battery) / PV generation × 100
 
   # Autarky Rate (Today) – standard formula per Klarsolar/GitHub Pages
@@ -4096,7 +4096,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 1
-    group: "PV_analysis"
+    mm_group: "PV_analysis"
     # (Direct consumption + Battery discharge) / Total consumption × 100
 
   # DC to AC Conversion Efficiency
@@ -4163,7 +4163,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
 
   - name: "MPPT2 Power"
     unique_id: "mppt2_power"
@@ -4179,7 +4179,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
 
   - name: "MPPT3 Power"
     unique_id: "mppt3_power"
@@ -4195,7 +4195,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
 
   - name: "MPPT4 Power"
     unique_id: "mppt4_power"
@@ -4211,7 +4211,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
 
   # Total MPPT Power (sum of all MPPT trackers)
   - name: "Total MPPT Power"
@@ -4233,7 +4233,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_mppt_power"
+    mm_group: "PV_mppt_power"
     # Sum of all MPPT tracker powers (should match total_dc_power)
 
   # Energy Flow Analysis
@@ -4270,7 +4270,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_energy_flow"
+    mm_group: "PV_energy_flow"
     # PV power going directly to load (without battery)
 
   - name: "PV to Battery"
@@ -4303,7 +4303,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_energy_flow"
+    mm_group: "PV_energy_flow"
     # PV (DC) charging battery; grid (AC→DC) only after load supplied
 
   - name: "Grid to Battery"
@@ -4336,7 +4336,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_energy_flow"
+    mm_group: "PV_energy_flow"
     # Grid power charging battery; only after load is supplied (AC→DC conversion)
 
   - name: "Battery to Load"
@@ -4362,7 +4362,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_energy_flow"
+    mm_group: "PV_energy_flow"
     # Battery power going to load; excludes battery-to-grid portion
 
   - name: "PV to Grid"
@@ -4387,7 +4387,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_energy_flow"
+    mm_group: "PV_energy_flow"
     # PV excess power exported to grid; excludes battery-to-grid portion
 
   - name: "Battery to Grid"
@@ -4411,7 +4411,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_energy_flow"
+    mm_group: "PV_energy_flow"
     # Battery power exported to grid (e.g. VPP, feed-in when PV insufficient)
 
   - name: "Grid to Load"
@@ -4442,7 +4442,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_energy_flow"
+    mm_group: "PV_energy_flow"
     # Grid power to load (priority); battery charging only from remaining import
 
   - name: "Net Consumption"
@@ -4465,7 +4465,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_analysis"
+    mm_group: "PV_analysis"
     # Net consumption after PV and battery supply (what needs to come from grid)
 
   - name: "Grid Dependency"
@@ -4511,7 +4511,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 2
-    group: "PV_analysis"
+    mm_group: "PV_analysis"
     # Percentage of load that depends on grid (inverse of autarky)
 
   # MPPT Performance Analysis
@@ -4546,7 +4546,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 1
-    group: "PV_mppt_analysis"
+    mm_group: "PV_mppt_analysis"
     # Maximum deviation from average MPPT power (W); indicates string imbalance
 
   - name: "MPPT Balance"
@@ -4569,7 +4569,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 1
-    group: "PV_mppt_analysis"
+    mm_group: "PV_mppt_analysis"
     # 100% = perfectly balanced strings; lower = one string underperforming
 
   - name: "Active MPPT Count"
@@ -4589,7 +4589,7 @@ calculated:
     unit_of_measurement: ""
     state_class: "measurement"
     precision: 0
-    group: "PV_mppt_analysis"
+    mm_group: "PV_mppt_analysis"
     # Number of MPPT channels with power > 10 W (avoids noise); useful for 4-MPPT inverters with fewer strings
 
   # PV System Performance Metrics
@@ -4617,7 +4617,7 @@ calculated:
     device_class: "power_factor"
     state_class: "measurement"
     precision: 1
-    group: "PV_performance"
+    mm_group: "PV_performance"
     # DC power vs nameplate: BDC rated register when valid, else configured model max_ac_output_power (W)
 
   - name: "PV Generation Hours Today"
@@ -4641,7 +4641,7 @@ calculated:
     device_class: "duration"
     state_class: "measurement"
     precision: 2
-    group: "PV_performance"
+    mm_group: "PV_performance"
     # Equivalent generation hours at current power level (approximation)
 
   # Protocol Version (formatted) - extracts directly from raw value using bit operations
@@ -4665,7 +4665,7 @@ calculated:
         V{{ major }}.{{ minor }}.{{ patch }}
       {% endif %}
     icon: "mdi:code-tags"
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   ## some additional calculated sensors ideas
@@ -4780,7 +4780,7 @@ calculated:
       {% else %}
         mdi:power-sleep
       {% endif %}
-    group: "PV_status"
+    mm_group: "PV_status"
 
   - name: "Grid Status"
     unique_id: "grid_status"
@@ -4807,7 +4807,7 @@ calculated:
       {% else %}
         mdi:scale-balance
       {% endif %}
-    group: "PV_grid_status"
+    mm_group: "PV_grid_status"
 
   - name: "Battery Status Indicator"
     unique_id: "battery_status_indicator"
@@ -4863,7 +4863,7 @@ calculated:
           mdi:battery-outline
         {% endif %}
       {% endif %}
-    group: "battery_status"
+    mm_group: "battery_status"
 
 
   - name: "Battery Health Status"
@@ -4901,7 +4901,7 @@ calculated:
       {% else %}
         mdi:battery-alert
       {% endif %}
-    group: "battery_health_status"
+    mm_group: "battery_health_status"
 
 # Binary Sensors
 binary_sensors:
@@ -4929,7 +4929,7 @@ binary_sensors:
         {% endif %}
       {% endif %}
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "PV generating (delay)"
     unique_id: "pv_generating_delay"
@@ -4939,7 +4939,7 @@ binary_sensors:
       seconds: 60
     state: "{{ states('binary_sensor.{PREFIX}_pv_generating') }}"
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Battery charging"
     unique_id: "battery_charging"
@@ -4969,7 +4969,7 @@ binary_sensors:
         {% endif %}
       {% endif %}
     device_class: "battery_charging"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Battery charging (delay)"
     unique_id: "battery_charging_delay"
@@ -4980,7 +4980,7 @@ binary_sensors:
       seconds: 60
     state: "{{ states('binary_sensor.{PREFIX}_battery_charging') }}"
     device_class: "battery_charging"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Battery discharging"
     unique_id: "battery_discharging"
@@ -5009,7 +5009,7 @@ binary_sensors:
           off
         {% endif %}
       {% endif %}
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Battery discharging (delay)"
     unique_id: "battery_discharging_delay"
@@ -5019,7 +5019,7 @@ binary_sensors:
     delay_on:
       seconds: 60
     state: "{{ states('binary_sensor.{PREFIX}_battery_discharging') }}"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Exporting power"
     unique_id: "exporting_power"
@@ -5044,7 +5044,7 @@ binary_sensors:
         {% endif %}
       {% endif %}
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Exporting power (delay)"
     unique_id: "exporting_power_delay"
@@ -5054,7 +5054,7 @@ binary_sensors:
       seconds: 60
     state: "{{ states('binary_sensor.{PREFIX}_exporting_power') }}"
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Importing power"
     unique_id: "importing_power"
@@ -5079,7 +5079,7 @@ binary_sensors:
         {% endif %}
       {% endif %}
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Importing power (delay)"
     unique_id: "importing_power_delay"
@@ -5089,7 +5089,7 @@ binary_sensors:
       seconds: 60
     state: "{{ states('binary_sensor.{PREFIX}_importing_power') }}"
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Positive load power"
     unique_id: "positive_load_power"
@@ -5113,7 +5113,7 @@ binary_sensors:
         {% endif %}
       {% endif %}
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"
 
   - name: "Negative load power"
     unique_id: "negative_load_power"
@@ -5137,4 +5137,4 @@ binary_sensors:
         {% endif %}
       {% endif %}
     device_class: "power"
-    group: "PV_binary_status"
+    mm_group: "PV_binary_status"

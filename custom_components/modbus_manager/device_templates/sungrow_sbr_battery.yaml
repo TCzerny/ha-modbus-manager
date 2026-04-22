@@ -69,7 +69,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     icon: "mdi:battery-outline"
-    group: "battery_voltage"
+    mm_group: "battery_voltage"
 
   - name: Battery 1 Current
     unique_id: battery_1_current
@@ -82,7 +82,7 @@ sensors:
     device_class: "current"
     state_class: measurement
     scan_interval: 10
-    group: "battery_current"
+    mm_group: "battery_current"
 
   - name: Battery 1 Temperature
     unique_id: battery_1_temperature
@@ -95,7 +95,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scan_interval: 30
-    group: "battery_temperature"
+    mm_group: "battery_temperature"
 
   - name: Battery 1 SOC
     unique_id: battery_1_soc
@@ -108,7 +108,7 @@ sensors:
     device_class: "battery"
     state_class: measurement
     scan_interval: 30
-    group: "battery_soc"
+    mm_group: "battery_soc"
 
   - name: Battery 1 SOH
     unique_id: battery_1_soh
@@ -121,7 +121,7 @@ sensors:
     device_class: "battery"
     state_class: measurement
     scan_interval: 60
-    group: "battery_soh"
+    mm_group: "battery_soh"
 
   - name: Battery 1 Total Battery Charge
     unique_id: battery_1_total_battery_charge
@@ -135,7 +135,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scan_interval: 30
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Total Battery Discharge
     unique_id: battery_1_total_battery_discharge
@@ -149,7 +149,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scan_interval: 30
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Max Voltage of Cell
     unique_id: battery_1_max_voltage_of_cell
@@ -163,7 +163,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     icon: "mdi:battery-plus-variant"
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Position of Max Voltage Cell
     unique_id: battery_1_position_of_max_voltage_cell
@@ -173,7 +173,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 10
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Min Voltage of Cell
     unique_id: battery_1_min_voltage_of_cell
@@ -187,7 +187,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     icon: "mdi:battery-minus-variant"
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Position of Min Voltage Cell
     unique_id: battery_1_position_of_min_voltage_cell
@@ -197,7 +197,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 10
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Max Temperature of Module
     unique_id: battery_1_max_temperature_of_module
@@ -210,7 +210,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scan_interval: 10
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Position of Max Temperature of Module
     unique_id: battery_1_position_of_max_temperature_of_module
@@ -220,7 +220,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 10
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Min Temperature of Module
     unique_id: battery_1_min_temperature_of_module
@@ -233,7 +233,7 @@ sensors:
     device_class: "temperature"
     state_class: measurement
     scan_interval: 10
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Position of Min Temperature of Module
     unique_id: battery_1_position_of_min_temperature_of_module
@@ -243,7 +243,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 10
-    group: "battery"
+    mm_group: "battery"
 
   # Cell Voltage Sensors for BALANCING Analysis
   - name: Battery 1 Max Cell Voltage of Module 1
@@ -257,7 +257,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Max Cell Voltage of Module 2
     unique_id: battery_1_max_cell_voltage_of_module_2
@@ -270,7 +270,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Max Cell Voltage of Module 3
     unique_id: battery_1_max_cell_voltage_of_module_3
@@ -283,7 +283,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Max Cell Voltage of Module 4
     unique_id: battery_1_max_cell_voltage_of_module_4
@@ -296,7 +296,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Max Cell Voltage of Module 5
     unique_id: battery_1_max_cell_voltage_of_module_5
@@ -309,7 +309,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Max Cell Voltage of Module 6
     unique_id: battery_1_max_cell_voltage_of_module_6
@@ -322,7 +322,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Max Cell Voltage of Module 7
     unique_id: battery_1_max_cell_voltage_of_module_7
@@ -335,7 +335,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Max Cell Voltage of Module 8
     unique_id: battery_1_max_cell_voltage_of_module_8
@@ -348,7 +348,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Min Cell Voltage of Module 1
     unique_id: battery_1_min_cell_voltage_of_module_1
@@ -361,7 +361,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Min Cell Voltage of Module 2
     unique_id: battery_1_min_cell_voltage_of_module_2
@@ -374,7 +374,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Min Cell Voltage of Module 3
     unique_id: battery_1_min_cell_voltage_of_module_3
@@ -387,7 +387,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Min Cell Voltage of Module 4
     unique_id: battery_1_min_cell_voltage_of_module_4
@@ -400,7 +400,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Min Cell Voltage of Module 5
     unique_id: battery_1_min_cell_voltage_of_module_5
@@ -413,7 +413,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Min Cell Voltage of Module 6
     unique_id: battery_1_min_cell_voltage_of_module_6
@@ -426,7 +426,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Min Cell Voltage of Module 7
     unique_id: battery_1_min_cell_voltage_of_module_7
@@ -439,7 +439,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: Battery 1 Min Cell Voltage of Module 8
     unique_id: battery_1_min_cell_voltage_of_module_8
@@ -452,7 +452,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 10
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   # Cell Type Sensors
   - name: Battery 1 Cell Type of Module 1
@@ -463,7 +463,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Cell Type of Module 2
     unique_id: battery_1_cell_type_of_module_2
@@ -473,7 +473,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Cell Type of Module 3
     unique_id: battery_1_cell_type_of_module_3
@@ -483,7 +483,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Cell Type of Module 4
     unique_id: battery_1_cell_type_of_module_4
@@ -493,7 +493,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Cell Type of Module 5
     unique_id: battery_1_cell_type_of_module_5
@@ -503,7 +503,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Cell Type of Module 6
     unique_id: battery_1_cell_type_of_module_6
@@ -513,7 +513,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Cell Type of Module 7
     unique_id: battery_1_cell_type_of_module_7
@@ -523,7 +523,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 Cell Type of Module 8
     unique_id: battery_1_cell_type_of_module_8
@@ -533,7 +533,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   # DC Switch State
   - name: Battery 1 State of DC Switch
@@ -544,7 +544,7 @@ sensors:
     scale: 1
     precision: 0
     scan_interval: 120
-    group: "battery"
+    mm_group: "battery"
 
   # Module Serial Numbers (dynamisch je nach Modell)
   - name: Battery 1 module 1 serial number
@@ -554,7 +554,7 @@ sensors:
     data_type: string
     count: 9
     scan_interval: 600
-    group: "battery"
+    mm_group: "battery"
     condition: "modules >= 1"
 
   - name: Battery 1 module 2 serial number
@@ -564,7 +564,7 @@ sensors:
     data_type: string
     count: 9
     scan_interval: 600
-    group: "battery"
+    mm_group: "battery"
     condition: "modules >= 2"
 
   - name: Battery 1 module 3 serial number
@@ -574,7 +574,7 @@ sensors:
     data_type: string
     count: 9
     scan_interval: 600
-    group: "battery"
+    mm_group: "battery"
     condition: "modules >= 3"
 
   - name: Battery 1 module 4 serial number
@@ -584,7 +584,7 @@ sensors:
     data_type: string
     count: 9
     scan_interval: 600
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 module 5 serial number
     unique_id: battery_1_module_5_sn
@@ -593,7 +593,7 @@ sensors:
     data_type: string
     count: 9
     scan_interval: 600
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 module 6 serial number
     unique_id: battery_1_module_6_sn
@@ -602,7 +602,7 @@ sensors:
     data_type: string
     count: 9
     scan_interval: 600
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 module 7 serial number
     unique_id: battery_1_module_7_sn
@@ -611,7 +611,7 @@ sensors:
     data_type: string
     count: 9
     scan_interval: 600
-    group: "battery"
+    mm_group: "battery"
 
   - name: Battery 1 module 8 serial number
     unique_id: battery_1_module_8_sn
@@ -620,7 +620,7 @@ sensors:
     data_type: string
     count: 9
     scan_interval: 600
-    group: "battery"
+    mm_group: "battery"
 
   # Battery Status Array
   # - name: Battery 1 Status Array
@@ -649,7 +649,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set max_voltage = states('sensor.{PREFIX}_battery_1_max_voltage_of_cell') | float(0) %}
       {% set min_voltage = states('sensor.{PREFIX}_battery_1_min_voltage_of_cell') | float(0) %}
@@ -664,7 +664,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 1"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -690,7 +690,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 2"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -716,7 +716,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 3"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -742,7 +742,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 4"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -768,7 +768,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 5"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -794,7 +794,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 6"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -820,7 +820,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 7"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -846,7 +846,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 8"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -875,7 +875,7 @@ calculated:
     device_class: temperature
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set max_temp = states('sensor.{PREFIX}_battery_1_max_temperature_of_module') | float(0) %}
       {% set min_temp = states('sensor.{PREFIX}_battery_1_min_temperature_of_module') | float(0) %}
@@ -888,7 +888,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
       {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
@@ -913,7 +913,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
       {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
@@ -947,7 +947,7 @@ calculated:
     unit_of_measurement: "%"
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set v1 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
       {% set v2 = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
@@ -986,7 +986,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 1"
     state: >
       {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) %}
@@ -999,7 +999,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 2"
     state: >
       {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) %}
@@ -1012,7 +1012,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 3"
     state: >
       {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_3') | float(0) %}
@@ -1025,7 +1025,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 4"
     state: >
       {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_4') | float(0) %}
@@ -1038,7 +1038,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 5"
     state: >
       {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_5') | float(0) %}
@@ -1051,7 +1051,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 6"
     state: >
       {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_6') | float(0) %}
@@ -1064,7 +1064,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 7"
     state: >
       {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_7') | float(0) %}
@@ -1077,7 +1077,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     condition: "modules >= 8"
     state: >
       {% set max_v = states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_8') | float(0) %}
@@ -1091,7 +1091,7 @@ calculated:
     device_class: voltage
     state_class: measurement
     precision: 5
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set r1 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_1') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_1') | float(0)) | abs %}
       {% set r2 = (states('sensor.{PREFIX}_battery_1_max_cell_voltage_of_module_2') | float(0) - states('sensor.{PREFIX}_battery_1_min_cell_voltage_of_module_2') | float(0)) | abs %}
@@ -1108,7 +1108,7 @@ calculated:
   # Register value is uint16: high byte = module index, low byte = cell index (e.g. 1807 = 0x70F → module 7, cell 15)
   - name: "Battery 1 Max Voltage Cell Info"
     unique_id: battery_1_max_voltage_cell_info
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set raw = states('sensor.{PREFIX}_battery_1_position_of_max_voltage_cell') | int(0) %}
       {% set mod = raw // 256 %}
@@ -1122,7 +1122,7 @@ calculated:
 
   - name: "Battery 1 Min Voltage Cell Info"
     unique_id: battery_1_min_voltage_cell_info
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set raw = states('sensor.{PREFIX}_battery_1_position_of_min_voltage_cell') | int(0) %}
       {% set mod = raw // 256 %}
@@ -1138,7 +1138,7 @@ calculated:
   # High byte = module index, low byte = sensor/index (e.g. 514 = 0x202 → module 2, index 2)
   - name: "Battery 1 Max Temperature Module Info"
     unique_id: battery_1_max_temperature_module_info
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set raw = states('sensor.{PREFIX}_battery_1_position_of_max_temperature_of_module') | int(0) %}
       {% set mod = raw // 256 %}
@@ -1152,7 +1152,7 @@ calculated:
 
   - name: "Battery 1 Min Temperature Module Info"
     unique_id: battery_1_min_temperature_module_info
-    group: "battery_balancing"
+    mm_group: "battery_balancing"
     state: >
       {% set raw = states('sensor.{PREFIX}_battery_1_position_of_min_temperature_of_module') | int(0) %}
       {% set mod = raw // 256 %}

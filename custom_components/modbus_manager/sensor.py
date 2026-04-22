@@ -14,7 +14,11 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
 from .const import DOMAIN
 from .coordinator import ModbusCoordinator
-from .device_utils import create_base_extra_state_attributes, is_coordinator_connected
+from .device_utils import (
+    create_base_extra_state_attributes,
+    get_entity_mm_group,
+    is_coordinator_connected,
+)
 from .logger import ModbusManagerLogger
 from .template_loader import load_templates
 
@@ -29,9 +33,11 @@ async def _handle_group_assignments(
         registry = entity_registry.async_get(hass)
 
         for sensor in sensors:
-            if hasattr(sensor, "_group") and sensor._group:
+            if hasattr(sensor, "_mm_group") and sensor._mm_group:
                 # Get the entity registry entry
-                entity_id = f"sensor.{sensor.entity_id}"
+                entity_id = sensor.entity_id
+                if entity_id and "." not in entity_id:
+                    entity_id = f"sensor.{entity_id}"
                 entry = registry.async_get(entity_id)
 
                 if entry:
@@ -107,7 +113,7 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
         self._precision = register_config.get("precision")
 
         # Store additional template parameters
-        self._group = register_config.get("group")
+        self._mm_group = get_entity_mm_group(register_config)
         self._scan_interval = register_config.get("scan_interval")
         self._input_type = register_config.get("input_type")
         self._data_type = register_config.get("data_type")
@@ -141,7 +147,7 @@ class ModbusCoordinatorSensor(CoordinatorEntity, SensorEntity):
         # Minimize extra_state_attributes to reduce database size for frequently updating entities
         # Only include static/essential attributes, not frequently changing values
         # scale, offset, precision are static configuration - keep them
-        # group, scan_interval, input_type are static - keep them
+        # mm_group, scan_interval, input_type are static - keep them
         # unit_of_measurement, device_class, state_class are already in entity properties - remove from attributes
         self._attr_extra_state_attributes = create_base_extra_state_attributes(
             unique_id=self._attr_unique_id,

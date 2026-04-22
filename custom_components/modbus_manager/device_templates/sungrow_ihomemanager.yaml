@@ -40,7 +40,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   # Protocol No. (8001-8002): UTF8 string, example "AW0"
@@ -51,7 +51,7 @@ sensors:
     data_type: string
     count: 2
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   # Protocol version (8003-8004): U32, e.g. 0x02000100 = V1.0.2
@@ -62,7 +62,7 @@ sensors:
     data_type: uint32
     swap: word
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   # Communication devices connected only via RS485/WIFI/ETH, excluding devices connected through DO;
@@ -73,7 +73,7 @@ sensors:
     data_type: uint16
     state_class: measurement
     scan_interval: 300
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   - name: Devices in Fault
@@ -83,7 +83,7 @@ sensors:
     data_type: uint16
     state_class: measurement
     scan_interval: 60
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   # System Capacity
@@ -98,7 +98,7 @@ sensors:
     unit_of_measurement: kW
     device_class: "power"
     scan_interval: 300
-    group: "PV_system_capacity"
+    mm_group: "PV_system_capacity"
     entity_category: "diagnostic"
 
   - name: Total Battery Rated Capacity
@@ -112,7 +112,7 @@ sensors:
     unit_of_measurement: kWh
     device_class: "energy"
     scan_interval: 300
-    group: "PV_system_capacity"
+    mm_group: "PV_system_capacity"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
@@ -128,7 +128,7 @@ sensors:
     unit_of_measurement: kW
     device_class: "power"
     scan_interval: 60
-    group: "PV_battery_limits"
+    mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
@@ -142,7 +142,7 @@ sensors:
     unit_of_measurement: kW
     device_class: "power"
     scan_interval: 60
-    group: "PV_battery_limits"
+    mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
@@ -156,7 +156,7 @@ sensors:
     unit_of_measurement: kW
     device_class: "power"
     scan_interval: 60
-    group: "PV_battery_limits"
+    mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
@@ -170,7 +170,7 @@ sensors:
     unit_of_measurement: kW
     device_class: "power"
     scan_interval: 60
-    group: "PV_battery_limits"
+    mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
@@ -184,7 +184,7 @@ sensors:
     unit_of_measurement: kW
     device_class: "power"
     scan_interval: 60
-    group: "PV_battery_limits"
+    mm_group: "PV_battery_limits"
     condition: "battery_enabled == true"
     entity_category: "diagnostic"
 
@@ -202,7 +202,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scan_interval: 10
-    group: "PV_power"
+    mm_group: "PV_power"
 
   # Total Active Power of Grid Connection
   # Note 1：This data is obtained through the GRID.CT sampling port of iHM;
@@ -232,7 +232,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scan_interval: 5
-    group: "PV_power"
+    mm_group: "PV_power"
 
   - name: Battery Power
     unique_id: battery_power
@@ -246,7 +246,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scan_interval: 10
-    group: "PV_battery_power"
+    mm_group: "PV_battery_power"
     condition: "battery_enabled == true"
 
   - name: Battery Level SOC
@@ -260,7 +260,7 @@ sensors:
     device_class: "battery"
     state_class: measurement
     scan_interval: 10
-    group: "PV_battery_state"
+    mm_group: "PV_battery_state"
     condition: "battery_enabled == true"
 
   # Energy Totals
@@ -279,7 +279,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scan_interval: 600
-    group: "PV_energy"
+    mm_group: "PV_energy"
 
   # Export energy at the grid connection point
   # Note 1：This data is obtained through the GRID.CT sampling port of iHM;
@@ -295,7 +295,7 @@ sensors:
     device_class: "energy"
     state_class: total_increasing
     scan_interval: 600
-    group: "PV_energy"
+    mm_group: "PV_energy"
 
   # Application Software Version
   - name: Application Software Version
@@ -305,7 +305,7 @@ sensors:
     data_type: string
     count: 15
     scan_interval: 3600
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   # Charger Status
@@ -316,7 +316,7 @@ sensors:
     data_type: uint16
     state_class: measurement
     scan_interval: 10
-    group: "PV_charger"
+    mm_group: "PV_charger"
     entity_category: "diagnostic"
     condition: "charger_enabled == true"
     options:
@@ -333,7 +333,7 @@ sensors:
     scale: 0.1
     unit_of_measurement: "V"
     scan_interval: 3600
-    group: "PV_meter_ihm"
+    mm_group: "PV_meter_ihm"
     entity_category: "diagnostic"
     options:
       0: "Single"
@@ -355,7 +355,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 60
-    group: "PV_meter_ihm"
+    mm_group: "PV_meter_ihm"
 
   - name: Phase B Voltage
     unique_id: phase_b_voltage
@@ -368,7 +368,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 60
-    group: "PV_meter_ihm"
+    mm_group: "PV_meter_ihm"
 
   - name: Phase C Voltage
     unique_id: phase_c_voltage
@@ -381,7 +381,7 @@ sensors:
     device_class: "voltage"
     state_class: measurement
     scan_interval: 60
-    group: "PV_meter_ihm"
+    mm_group: "PV_meter_ihm"
 
   - name: Grid Frequency
     unique_id: grid_frequency
@@ -394,7 +394,7 @@ sensors:
     device_class: "frequency"
     state_class: measurement
     scan_interval: 60
-    group: "PV_meter_ihm"
+    mm_group: "PV_meter_ihm"
 
   # Note: This data is obtained through the GRID-CT sampling port of iHM
   - name: Meter Phase A Active Power Raw
@@ -452,7 +452,7 @@ sensors:
     device_class: "frequency"
     state_class: measurement
     scan_interval: 60
-    group: "PV_meter_ihm_ch2"
+    mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
   # Grid Meter Channel 2 - Phase Power
@@ -468,7 +468,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scan_interval: 10
-    group: "PV_meter_ihm_ch2"
+    mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
   - name: Phase B Active Power Ch2
@@ -482,7 +482,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scan_interval: 10
-    group: "PV_meter_ihm_ch2"
+    mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
   - name: Phase C Active Power Ch2
@@ -496,7 +496,7 @@ sensors:
     device_class: "power"
     state_class: measurement
     scan_interval: 10
-    group: "PV_meter_ihm_ch2"
+    mm_group: "PV_meter_ihm_ch2"
     condition: "channel_2_enabled == true"
 
 controls:
@@ -512,7 +512,7 @@ controls:
       1: "Self-consumption"
       4: "VPP"
       5: "Compulsory mode"
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
 
   - type: "select"
     name: "Charging/Discharging Command"
@@ -525,7 +525,7 @@ controls:
       0xAA: "Charge"
       0xBB: "Discharge"
       0xCC: "Stop"
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
     condition: "battery_enabled == true"
 
   - type: "number"
@@ -545,7 +545,7 @@ controls:
     step: 0.1
     mode: "box"
     scan_interval: 30
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
     condition: "battery_enabled == true"
 
   - type: "select"
@@ -558,7 +558,7 @@ controls:
     options:
       0: "Off"
       1: "On"
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
 
   - type: "number"
     name: "Feed-in Power Limit Ratio"
@@ -575,7 +575,7 @@ controls:
     step: 1
     mode: "box"
     scan_interval: 30
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
 
   # external VPP heartbeat - commented out for now
   # - name: "External VPP Heartbeat"
@@ -602,7 +602,7 @@ controls:
     options:
       0xCF: "Power-on"
       0xCE: "Power-off"
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
 
   - type: "select"
     name: "Charger Charging Modes"
@@ -614,7 +614,7 @@ controls:
     options:
       0xA0: "Fast charging mode"
       0xA1: "Eco charging mode"
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
     condition: "charger_enabled == true"
 
   - type: "switch"
@@ -628,7 +628,7 @@ controls:
     on_value: 0xAA
     off_value: 0x55
     scan_interval: 30
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
     condition: "charger_enabled == true"
 
   # Setting is allowed when the charging mode is Eco charging mode.
@@ -642,7 +642,7 @@ controls:
     options:
       0xAA: "Enable"
       0x55: "Disable"
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
     condition: "charger_enabled == true"
 
   - type: "switch"
@@ -656,7 +656,7 @@ controls:
     on_value: 0xAA
     off_value: 0x55
     scan_interval: 30
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
 
   - type: "number"
     name: "Active Power Limit Ratio"
@@ -672,7 +672,7 @@ controls:
     step: 1
     mode: "box"
     scan_interval: 30
-    group: "PV_control_ihm"
+    mm_group: "PV_control_ihm"
 
 calculated:
   # Protocol Version (formatted) - U32 e.g. 0x02000100 = V1.0.2
@@ -695,7 +695,7 @@ calculated:
         V{{ major }}.{{ minor }}.{{ patch }}
       {% endif %}
     icon: "mdi:code-tags"
-    group: "PV_device_info"
+    mm_group: "PV_device_info"
     entity_category: "diagnostic"
 
   # Net Grid Power
@@ -709,7 +709,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
 
   # Grid meter convention: positive = import (draw from grid), negative = export (feed to grid)
   - name: "Import Power"
@@ -729,7 +729,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
 
   - name: "Export Power"
     unique_id: "export_power"
@@ -748,7 +748,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_grid_power"
+    mm_group: "PV_grid_power"
 
   # Phase Power Calculations (Channel 1)
   - name: "Total Phase Power"
@@ -770,7 +770,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"
 
   - name: "Phase A Power"
     unique_id: "phase_a_power"
@@ -782,7 +782,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"
 
   - name: "Phase B Power"
     unique_id: "phase_b_power"
@@ -794,7 +794,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"
 
   - name: "Phase C Power"
     unique_id: "phase_c_power"
@@ -806,7 +806,7 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"
 
   # Phase Power Calculations (Channel 2)
   - name: "Total Phase Power Ch2"
@@ -829,4 +829,4 @@ calculated:
     device_class: "power"
     state_class: "measurement"
     precision: 0
-    group: "PV_phase_power"
+    mm_group: "PV_phase_power"

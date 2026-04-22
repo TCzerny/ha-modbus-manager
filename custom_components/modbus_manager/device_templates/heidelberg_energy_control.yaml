@@ -40,7 +40,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 3600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:information"
 
@@ -50,7 +50,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 10
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     map:
       2: "A1"
@@ -76,7 +76,7 @@ sensors:
     device_class: "current"
     state_class: "measurement"
     scan_interval: 10
-    group: "EV_current_measurement"
+    mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Current Phase 2"
@@ -90,7 +90,7 @@ sensors:
     device_class: "current"
     state_class: "measurement"
     scan_interval: 10
-    group: "EV_current_measurement"
+    mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Current Phase 3"
@@ -104,7 +104,7 @@ sensors:
     device_class: "current"
     state_class: "measurement"
     scan_interval: 10
-    group: "EV_current_measurement"
+    mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
   # PCB Temperature (int16, 0.1 °C)
@@ -119,7 +119,7 @@ sensors:
     device_class: "temperature"
     state_class: "measurement"
     scan_interval: 60
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:thermometer"
 
@@ -133,7 +133,7 @@ sensors:
     device_class: "voltage"
     state_class: "measurement"
     scan_interval: 10
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Voltage Phase 2"
@@ -145,7 +145,7 @@ sensors:
     device_class: "voltage"
     state_class: "measurement"
     scan_interval: 10
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Voltage Phase 3"
@@ -157,7 +157,7 @@ sensors:
     device_class: "voltage"
     state_class: "measurement"
     scan_interval: 10
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
 
   # External lock state (0=locked, 1=unlocked)
@@ -167,7 +167,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 30
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:lock"
     map:
@@ -184,7 +184,7 @@ sensors:
     device_class: "power"
     state_class: "measurement"
     scan_interval: 10
-    group: "EV_charging_power"
+    mm_group: "EV_charging_power"
     icon: "mdi:ev-station"
 
   # Energy since PowerOn (reg 15-16, uint32, VAh)
@@ -198,7 +198,7 @@ sensors:
     device_class: "energy"
     state_class: "total_increasing"
     scan_interval: 60
-    group: "EV_meter_reading"
+    mm_group: "EV_meter_reading"
     icon: "mdi:meter-electric"
 
   # Energy since Installation (reg 17-18, V1.0.7+)
@@ -212,7 +212,7 @@ sensors:
     device_class: "energy"
     state_class: "total_increasing"
     scan_interval: 60
-    group: "EV_meter_reading"
+    mm_group: "EV_meter_reading"
     icon: "mdi:meter-electric"
     entity_category: "diagnostic"
     firmware_min_version: "1.0.7"
@@ -226,7 +226,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     scan_interval: 3600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:gauge"
 
@@ -238,7 +238,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     scan_interval: 3600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:gauge"
 
@@ -249,7 +249,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 3600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:chip"
 
@@ -259,7 +259,7 @@ sensors:
     input_type: input
     data_type: uint16
     scan_interval: 3600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     entity_category: "diagnostic"
     icon: "mdi:chip"
 
@@ -274,7 +274,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     scan_interval: 30
-    group: "EV_max_current_actual"
+    mm_group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
   - name: "FailSafe Current"
@@ -287,7 +287,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     scan_interval: 60
-    group: "EV_max_current_actual"
+    mm_group: "EV_max_current_actual"
     entity_category: "config"
     icon: "mdi:shield-alert"
 
@@ -310,7 +310,7 @@ controls:
     step: 0.1
     mode: "slider"
     scan_interval: 30
-    group: "EV_max_current_setting"
+    mm_group: "EV_max_current_setting"
 
   # FailSafe current (0=error state, 60-160=6-16A) (reg 262)
   - type: "number"
@@ -328,7 +328,7 @@ controls:
     max_value_from_register: {register_unique_id: "{PREFIX}_hw_max_current", fallback: 16}
     step: 0.1
     scan_interval: 60
-    group: "EV_max_current_setting"
+    mm_group: "EV_max_current_setting"
     entity_category: "config"
 
   # Remote lock 0=locked, 1=unlocked (reg 259, only if external lock unlocked)
@@ -339,7 +339,7 @@ controls:
     input_type: holding
     data_type: uint16
     scan_interval: 30
-    group: "EV_lock_control"
+    mm_group: "EV_lock_control"
     switch:
       on: 1    # unlocked
       off: 0   # locked
@@ -352,7 +352,7 @@ controls:
     input_type: holding
     data_type: uint16
     scan_interval: 60
-    group: "EV_power_control"
+    mm_group: "EV_power_control"
     options:
       0: "Enable (Power Saving)"
       4: "Disable"
@@ -387,7 +387,7 @@ calculated:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_current_measurement"
+    mm_group: "EV_current_measurement"
     precision: 2
     icon: "mdi:lightning-bolt"
 
@@ -403,7 +403,7 @@ calculated:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     precision: 1
     icon: "mdi:lightning-bolt"
 
@@ -417,7 +417,7 @@ binary_sensors:
     state: >-
       {{ states('sensor.{PREFIX}_status') in ['C1', 'C2'] }}
     device_class: "power"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
 
   - name: "Vehicle Connected"
@@ -428,7 +428,7 @@ binary_sensors:
     state: >-
       {{ states('sensor.{PREFIX}_status') in ['B1', 'B2', 'C1', 'C2'] }}
     device_class: "connectivity"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:car-electric"
 
   - name: "Remote Unlocked"
@@ -439,7 +439,7 @@ binary_sensors:
     state: >-
       {{ states('sensor.{PREFIX}_external_lock_state') == 'Unlocked' }}
     device_class: "lock"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:lock-open"
 
   # Charging enabled when max current > 0 (evcc Enable API)
@@ -451,5 +451,5 @@ binary_sensors:
     state: >-
       {{ states('sensor.{PREFIX}_actual_max_current') | float(0) > 0 }}
     device_class: "power"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"

@@ -46,7 +46,7 @@ sensors:
     data_type: "uint16"
     precision: 0
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:identifier"
     entity_category: "diagnostic"
 
@@ -58,7 +58,7 @@ sensors:
     count: 6
     byte_order: "little"
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:barcode"
     entity_category: "diagnostic"
 
@@ -70,7 +70,7 @@ sensors:
     count: 2
     precision: 0
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:chip"
     entity_category: "diagnostic"
 
@@ -82,7 +82,7 @@ sensors:
     count: 22
     byte_order: "little"
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:rename-outline"
     entity_category: "diagnostic"
 
@@ -94,7 +94,7 @@ sensors:
     data_type: "uint16"
     scan_interval: 60
     scale: 0.1
-    group: "EV_device_status"
+    mm_group: "EV_device_status"
     icon: "mdi:thermometer"
     entity_category: "diagnostic"
 
@@ -113,7 +113,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_device_status"
+    mm_group: "EV_device_status"
     icon: "mdi:gauge-full"
     entity_category: "diagnostic"
 
@@ -128,7 +128,7 @@ sensors:
     unit_of_measurement: "s"
     device_class: "duration"
     state_class: "total"
-    group: "EV_device_status"
+    mm_group: "EV_device_status"
     icon: "mdi:clock"
     entity_category: "diagnostic"
 
@@ -144,7 +144,7 @@ sensors:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
-    group: "EV_measurements"
+    mm_group: "EV_measurements"
     icon: "mdi:battery-clock"
 
   - name: "Reboot Count"
@@ -155,7 +155,7 @@ sensors:
     precision: 0
     scan_interval: 60
     state_class: "total_increasing"
-    group: "EV_device_status"
+    mm_group: "EV_device_status"
     icon: "mdi:history"
     entity_category: "diagnostic"
 
@@ -165,7 +165,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 60
-    group: "EV_device_status"
+    mm_group: "EV_device_status"
     icon: "mdi:clipboard-text-clock"
     map:
       0: "Reset reason can not be determined"
@@ -189,7 +189,7 @@ sensors:
     data_type: "uint16"
     precision: 0
     scan_interval: 5
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     entity_category: "diagnostic"
 
@@ -199,7 +199,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 5
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     map:
       0: "Disconnected"
@@ -234,7 +234,7 @@ sensors:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "EV_measurements"
+    mm_group: "EV_measurements"
     icon: "mdi:lightning-bolt"
     condition: "phases == 3"
 
@@ -248,7 +248,7 @@ sensors:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "EV_measurements"
+    mm_group: "EV_measurements"
     icon: "mdi:lightning-bolt"
     condition: "phases == 3"
 
@@ -262,7 +262,7 @@ sensors:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "EV_measurements"
+    mm_group: "EV_measurements"
     icon: "mdi:lightning-bolt"
     condition: "phases == 3"
 
@@ -276,7 +276,7 @@ sensors:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "EV_measurements"
+    mm_group: "EV_measurements"
     icon: "mdi:lightning-bolt"
 
   - name: "Current"
@@ -289,7 +289,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_measurements"
+    mm_group: "EV_measurements"
     icon: "mdi:current-ac"
 
   - name: "Session Charging Time"
@@ -303,7 +303,7 @@ sensors:
     unit_of_measurement: "s"
     device_class: "duration"
     state_class: "total"
-    group: "EV_measurements"
+    mm_group: "EV_measurements"
     icon: "mdi:clock-fast"
 
   - name: "Session Energy"
@@ -317,7 +317,7 @@ sensors:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total"
-    group: "EV_measurements"
+    mm_group: "EV_measurements"
     icon: "mdi:battery-arrow-up"
 
 controls:
@@ -331,7 +331,7 @@ controls:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:gauge"
     type: "number"
     min_value: 6
@@ -344,7 +344,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 5
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:electric-switch"
     type: "switch"
     switch:
@@ -357,7 +357,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 5
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:arrow-decision-auto"
     type: "switch"
     switch:
@@ -370,7 +370,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 60
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:gesture-tap-button"
     type: "switch"
     switch:
@@ -387,7 +387,7 @@ controls:
     precision: 0
     scan_interval: 60
     unit_of_measurement: "%"
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:brightness-percent"
     type: "number"
     min_value: 1
@@ -404,7 +404,7 @@ controls:
     precision: 0
     scan_interval: 60
     unit_of_measurement: "%"
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:brightness-percent"
     type: "number"
     min_value: 1
@@ -421,7 +421,7 @@ controls:
     precision: 0
     scan_interval: 60
     unit_of_measurement: "s"
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:timer-sand-complete"
     type: "number"
     min_value: 1
@@ -436,7 +436,7 @@ controls:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 60
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:arrow-decision"
     type: "select"
     options:
@@ -453,7 +453,7 @@ controls:
     precision: 0
     scan_interval: 60
     unit_of_measurement: "%"
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:brightness-percent"
     type: "number"
     min_value: 0
@@ -471,7 +471,7 @@ controls:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:gauge-empty"
     type: "number"
     min_value: 6
@@ -486,7 +486,7 @@ controls:
     data_type: "uint16"
     scan_interval: 60
     state_class: "measurement"
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:gauge-empty"
     type: "number"
     scale: 0.01
@@ -500,7 +500,7 @@ controls:
     address: 5064
     input_type: "holding"
     data_type: "uint16"
-    group: "EV_controls"
+    mm_group: "EV_controls"
     icon: "mdi:restart"
     type: "button"
     write_value: 1
@@ -510,7 +510,7 @@ calculated:
   - name: "Firmware Version"
     unique_id: "firmware_version"
     type: "sensor"
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:chip"
     availability: >-
       {{ states('sensor.{PREFIX}_firmware_version_raw') | is_number and
@@ -527,7 +527,7 @@ binary_sensors:
   - name: "EV Connected"
     unique_id: "connected"
     type: "binary_sensor"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     device_class: "plug"
     availability: >-
       {{ states('sensor.{PREFIX}_status_raw') | is_number and
@@ -538,7 +538,7 @@ binary_sensors:
   - name: "Error"
     unique_id: "error_detected"
     type: "binary_sensor"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     device_class: "problem"
     availability: >-
       {{ states('sensor.{PREFIX}_status_raw') | is_number and

@@ -46,7 +46,7 @@ sensors:
     data_type: "string"
     count: 25
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:identifier"
 
   - name: "Serial Number"
@@ -56,7 +56,7 @@ sensors:
     data_type: "string"
     count: 25
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:barcode"
 
   - name: "Active Protocol"
@@ -66,7 +66,7 @@ sensors:
     data_type: "string"
     count: 25
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:protocol"
 
   - name: "Manufacturer"
@@ -76,7 +76,7 @@ sensors:
     data_type: "string"
     count: 25
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:factory"
 
   - name: "Platform Type"
@@ -86,7 +86,7 @@ sensors:
     data_type: "string"
     count: 25
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:shape"
 
   - name: "Product Type"
@@ -96,7 +96,7 @@ sensors:
     data_type: "string"
     count: 25
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:tag"
 
   - name: "Modbus Table Version"
@@ -105,7 +105,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:table"
 
   - name: "Firmware"
@@ -115,7 +115,7 @@ sensors:
     data_type: "string"
     count: 25
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:chip"
 
   - name: "Number Of Sockets"
@@ -125,7 +125,7 @@ sensors:
     data_type: "uint16"
     precision: 0
     scan_interval: 600
-    group: "EV_device_info"
+    mm_group: "EV_device_info"
     icon: "mdi:power-plug"
 
   - name: "Ocpp State"
@@ -134,7 +134,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 15
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:web"
     map:
       0: "Offline"
@@ -148,7 +148,7 @@ sensors:
     data_type: "string"
     count: 25
     scan_interval: 120
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
     map:
       A: "not connected"
@@ -167,7 +167,7 @@ sensors:
     input_type: "input"
     data_type: "uint16"
     scan_interval: 120
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:cable-data"
     map:
       0: "no cable"
@@ -185,7 +185,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
     firmware_min_version: "2.0.35"
 
@@ -198,7 +198,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
     firmware_min_version: "2.0.35"
 
@@ -211,7 +211,7 @@ sensors:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
     firmware_min_version: "2.0.35"
 
@@ -226,7 +226,7 @@ sensors:
     unit_of_measurement: "kWh"
     device_class: "energy"
     state_class: "total_increasing"
-    group: "EV_meter_reading"
+    mm_group: "EV_meter_reading"
     icon: "mdi:meter-electric"
     firmware_min_version: "2.0.35"
 
@@ -241,7 +241,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_max_current_actual"
+    mm_group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
   - name: "Actual Max Current Phase 2"
@@ -253,7 +253,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_max_current_actual"
+    mm_group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
   - name: "Actual Max Current Phase 3"
@@ -265,7 +265,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_max_current_actual"
+    mm_group: "EV_max_current_actual"
     icon: "mdi:gauge"
 
   # Current measurements
@@ -279,7 +279,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_current_measurement"
+    mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Current Phase 2"
@@ -291,7 +291,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_current_measurement"
+    mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
   - name: "Current Phase 3"
@@ -303,7 +303,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_current_measurement"
+    mm_group: "EV_current_measurement"
     icon: "mdi:lightning-bolt"
 
   # Max current settings (holding registers)
@@ -316,7 +316,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_current_control"
+    mm_group: "EV_current_control"
     icon: "mdi:gauge"
 
   - name: "Max Current Phase 2"
@@ -328,7 +328,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_current_control"
+    mm_group: "EV_current_control"
     icon: "mdi:gauge"
 
   - name: "Max Current Phase 3"
@@ -340,7 +340,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_current_control"
+    mm_group: "EV_current_control"
     icon: "mdi:gauge"
 
   # Fallback max current settings
@@ -354,7 +354,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_fallback_current_setting"
+    mm_group: "EV_fallback_current_setting"
     icon: "mdi:gauge"
 
   - name: "Fallback Max Current Phase 2"
@@ -366,7 +366,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_fallback_current_setting"
+    mm_group: "EV_fallback_current_setting"
     icon: "mdi:gauge"
 
   - name: "Fallback Max Current Phase 3"
@@ -378,7 +378,7 @@ sensors:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_fallback_current_setting"
+    mm_group: "EV_fallback_current_setting"
     icon: "mdi:gauge"
 
   # # Fallback timer
@@ -393,7 +393,7 @@ sensors:
     state_class: "measurement"
     scale: 1
     scan_interval: 10
-    group: "EV_fallback_timer"
+    mm_group: "EV_fallback_timer"
     icon: "mdi:timer"
 
   - name: "Station Phase Setup L1"
@@ -403,7 +403,7 @@ sensors:
     data_type: "uint16"
     scan_interval: 30
     precision: 0
-    group: "EV_phase_setup"
+    mm_group: "EV_phase_setup"
     icon: "mdi:transmission-tower"
 
   - name: "Station Phase Setup L2"
@@ -413,7 +413,7 @@ sensors:
     data_type: "uint16"
     scan_interval: 30
     precision: 0
-    group: "EV_phase_setup"
+    mm_group: "EV_phase_setup"
     icon: "mdi:transmission-tower"
 
   - name: "Station Phase Setup L3"
@@ -423,7 +423,7 @@ sensors:
     data_type: "uint16"
     scan_interval: 30
     precision: 0
-    group: "EV_phase_setup"
+    mm_group: "EV_phase_setup"
     icon: "mdi:transmission-tower"
 
   - name: "Availability"
@@ -432,7 +432,7 @@ sensors:
     input_type: "holding"
     data_type: "uint16"
     scan_interval: 10
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:power-settings"
     map:
       0: "Inoperative"
@@ -452,7 +452,7 @@ controls:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_max_current_setting"
+    mm_group: "EV_max_current_setting"
     icon: "mdi:gauge"
     min_value: 0
     max_value: "{{max_current}}"
@@ -472,7 +472,7 @@ controls:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_max_current_setting"
+    mm_group: "EV_max_current_setting"
     icon: "mdi:gauge"
     min_value: 0
     max_value: "{{max_current}}"
@@ -490,7 +490,7 @@ controls:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_max_current_setting"
+    mm_group: "EV_max_current_setting"
     icon: "mdi:gauge"
     min_value: 0
     max_value: "{{max_current}}"
@@ -563,7 +563,7 @@ calculated:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_current_measurement"
+    mm_group: "EV_current_measurement"
     precision: 2
     icon: "mdi:lightning-bolt"
 
@@ -588,7 +588,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "EV_charging_power"
+    mm_group: "EV_charging_power"
     icon: "mdi:ev-station"
     precision: 0
 
@@ -606,7 +606,7 @@ calculated:
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
-    group: "EV_max_current_setting"
+    mm_group: "EV_max_current_setting"
     icon: "mdi:gauge"
     precision: 2
 
@@ -624,7 +624,7 @@ calculated:
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
-    group: "EV_max_charging_power"
+    mm_group: "EV_max_charging_power"
     icon: "mdi:ev-station"
     precision: 0
 
@@ -641,7 +641,7 @@ calculated:
     unit_of_measurement: "%"
     device_class: "power_factor"
     state_class: "measurement"
-    group: "EV_efficiency"
+    mm_group: "EV_efficiency"
     icon: "mdi:gauge"
     precision: 1
 
@@ -661,7 +661,7 @@ calculated:
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     icon: "mdi:lightning-bolt"
     precision: 1
 
@@ -685,7 +685,7 @@ calculated:
       {% endif %}
     unit_of_measurement: "%"
     state_class: "measurement"
-    group: "EV_voltage_measurement"
+    mm_group: "EV_voltage_measurement"
     icon: "mdi:gauge"
     precision: 1
 
@@ -699,7 +699,7 @@ binary_sensors:
     state: >-
       {{ states('sensor.{PREFIX}_charging_power') | float(0) > 0 }}
     device_class: "power"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
 
   - name: "Cable Connected"
@@ -715,5 +715,5 @@ binary_sensors:
         {{ raw_val > 0 }}
       {% endif %}
     device_class: "connectivity"
-    group: "EV_charging_status"
+    mm_group: "EV_charging_status"
     icon: "mdi:cable-data"

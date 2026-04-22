@@ -17,6 +17,7 @@ from .device_utils import (
     create_base_extra_state_attributes,
     create_device_info_dict,
     generate_unique_id,
+    get_entity_mm_group,
     is_coordinator_connected,
 )
 from .logger import ModbusManagerLogger
@@ -78,7 +79,7 @@ class ModbusCoordinatorSelect(CoordinatorEntity, SelectEntity):
         self._scale = register_config.get("scale", 1.0)
         self._offset = register_config.get("offset", 0.0)
         self._precision = register_config.get("precision")
-        self._group = register_config.get("group")
+        self._mm_group = get_entity_mm_group(register_config)
         self._scan_interval = register_config.get("scan_interval")
         self._input_type = register_config.get("input_type")
         self._data_type = register_config.get("data_type")

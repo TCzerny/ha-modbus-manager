@@ -16,6 +16,7 @@ from homeassistant.helpers import entity_registry as er
 
 from .const import DOMAIN, PLATFORMS
 from .coordinator import ModbusCoordinator
+from .device_utils import get_entity_mm_group
 from .logger import ModbusManagerLogger
 from .performance_monitor import PerformanceMonitor
 from .register_optimizer import RegisterOptimizer
@@ -1269,7 +1270,7 @@ async def async_setup_services(hass: HomeAssistant) -> None:
                             continue
 
                         # Get new attributes from template
-                        new_group = entity_def.get("group")
+                        new_group = get_entity_mm_group(entity_def)
                         new_template = entity_def.get("template")
 
                         # Get current attributes
@@ -1290,13 +1291,12 @@ async def async_setup_services(hass: HomeAssistant) -> None:
 
                         if needs_update:
                             # Update the entity in registry
-                            # Note: Entity attributes like 'group' are set at entity creation time
-                            # and stored in the entity's extra_state_attributes
+                            # Note: mm_group is set at entity creation time in extra_state_attributes
                             # We can't directly update them in the registry
                             # Instead, we need to trigger entity re-creation
 
                             _LOGGER.debug(
-                                "📝 Entity %s needs attribute update (group: %s, template: %s)",
+                                "📝 Entity %s needs attribute update (mm_group: %s, template: %s)",
                                 entity_entry.entity_id,
                                 new_group,
                                 new_template,

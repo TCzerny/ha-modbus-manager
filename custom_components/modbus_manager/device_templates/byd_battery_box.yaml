@@ -58,7 +58,7 @@ sensors:
     state_class: measurement
     scan_interval: 30
     icon: "mdi:battery"
-    group: "battery_status"
+    mm_group: "battery_status"
 
   - name: "Max Cell Voltage"
     unique_id: battery_max_cell_voltage
@@ -72,7 +72,7 @@ sensors:
     state_class: measurement
     scan_interval: 30
     icon: "mdi:battery-plus-variant"
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: "Min Cell Voltage"
     unique_id: battery_min_cell_voltage
@@ -86,7 +86,7 @@ sensors:
     state_class: measurement
     scan_interval: 30
     icon: "mdi:battery-minus-variant"
-    group: "battery_cells"
+    mm_group: "battery_cells"
 
   - name: "State of Health"
     unique_id: battery_soh
@@ -100,7 +100,7 @@ sensors:
     state_class: measurement
     scan_interval: 60
     icon: "mdi:battery-heart"
-    group: "battery_status"
+    mm_group: "battery_status"
 
   - name: "Battery Current"
     unique_id: battery_current
@@ -114,7 +114,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     icon: "mdi:current-ac"
-    group: "battery_status"
+    mm_group: "battery_status"
 
   - name: "Battery Voltage"
     unique_id: battery_voltage
@@ -128,7 +128,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     icon: "mdi:battery-outline"
-    group: "battery_status"
+    mm_group: "battery_status"
 
   - name: "Max Cell Temperature"
     unique_id: battery_max_cell_temp
@@ -142,7 +142,7 @@ sensors:
     state_class: measurement
     scan_interval: 30
     icon: "mdi:thermometer-high"
-    group: "battery_temperature"
+    mm_group: "battery_temperature"
 
   - name: "Min Cell Temperature"
     unique_id: battery_min_cell_temp
@@ -156,7 +156,7 @@ sensors:
     state_class: measurement
     scan_interval: 30
     icon: "mdi:thermometer-low"
-    group: "battery_temperature"
+    mm_group: "battery_temperature"
 
   - name: "BMU Temperature"
     unique_id: battery_bmu_temp
@@ -170,7 +170,7 @@ sensors:
     state_class: measurement
     scan_interval: 30
     icon: "mdi:thermometer"
-    group: "battery_temperature"
+    mm_group: "battery_temperature"
 
   - name: "Output Voltage"
     unique_id: battery_output_voltage
@@ -184,7 +184,7 @@ sensors:
     state_class: measurement
     scan_interval: 10
     icon: "mdi:lightning-bolt"
-    group: "battery_status"
+    mm_group: "battery_status"
 
   - name: "Charge Cycles"
     unique_id: battery_charge_cycles
@@ -197,7 +197,7 @@ sensors:
     state_class: total_increasing
     scan_interval: 60
     icon: "mdi:counter"
-    group: "battery_diagnostics"
+    mm_group: "battery_diagnostics"
 
   - name: "Discharge Cycles"
     unique_id: battery_discharge_cycles
@@ -210,7 +210,7 @@ sensors:
     state_class: total_increasing
     scan_interval: 60
     icon: "mdi:counter"
-    group: "battery_diagnostics"
+    mm_group: "battery_diagnostics"
 
   # BMU Configuration Registers (0x0000-0x0065)
   # Use value_processor bit operations (bitmask, bit_range)
@@ -223,7 +223,7 @@ sensors:
     precision: 0
     scan_interval: 300
     icon: "mdi:counter"
-    group: "battery_info"
+    mm_group: "battery_info"
     bitmask: 0x0F
 
   - name: "BMS Count"
@@ -235,7 +235,7 @@ sensors:
     precision: 0
     scan_interval: 300
     icon: "mdi:counter"
-    group: "battery_info"
+    mm_group: "battery_info"
     bit_range: [4, 7]
 
 # Calculated entities: use 'state' with {PREFIX} (replaced at runtime)
@@ -247,7 +247,7 @@ calculated:
     state_class: measurement
     scan_interval: 10
     icon: "mdi:lightning-bolt"
-    group: "battery_status"
+    mm_group: "battery_status"
     state: "{{ (states('sensor.{PREFIX}_battery_current') | default(0) | float * states('sensor.{PREFIX}_battery_output_voltage') | default(0) | float) | round(1) }}"
 
   - name: "Battery Energy Capacity"
@@ -257,7 +257,7 @@ calculated:
     state_class: measurement
     scan_interval: 60
     icon: "mdi:battery-high"
-    group: "battery_status"
+    mm_group: "battery_status"
     state: "{{ (states('sensor.{PREFIX}_battery_voltage') | default(0) | float * states('sensor.{PREFIX}_battery_module_count') | default(1) | float * 0.1) | round(2) }}"
 
 binary_sensors:
@@ -269,7 +269,7 @@ binary_sensors:
     data_type: uint16
     scan_interval: 30
     icon: "mdi:alert-circle"
-    group: "battery_alarms"
+    mm_group: "battery_alarms"
     device_class: "problem"
 
   # Note: Detailed error/warning decoding would require calculated sensors
