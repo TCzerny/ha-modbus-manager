@@ -87,11 +87,11 @@ service: modbus_manager.performance_reset
 
 ### 3. `modbus_manager.add_entity_prefix`
 
-**Description:** Renames **entity IDs** so they include the device prefix, for devices that were added with **Entity IDs without prefix** set to **yes** (`entity_ids_without_prefix`). This is the follow-up step after a migration where you matched another integration’s unprefixed `entity_id` values (see [Migration from mkaiser (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser)).
+**Description:** Renames **entity IDs** so they include the device prefix, for devices that were added with **Entity IDs without prefix** set to **yes** (`entity_ids_without_prefix`), or with **`entity_id_strategy: legacy_unprefixed`** (same intent). This is the follow-up step after a migration where you matched another integration’s unprefixed `entity_id` values (see [Migration from mkaiser (Wiki)](https://github.com/TCzerny/ha-modbus-manager/wiki/Migration-from-mkaiser)).
 
 **Behavior:**
 
-- Only affects entities belonging to the given Modbus Manager **config entry** that are tied to a **device** still configured with `entity_ids_without_prefix: yes`.
+- Only affects entities belonging to the given Modbus Manager **config entry** that are tied to a **device** still configured with `entity_ids_without_prefix: yes` / **`legacy_unprefixed`** (see [Entity ID strategy](ENTITY_ID_STRATEGY.md)).
 - For each matching entity, if the `entity_id` **does not** already start with `{prefix}_`, it is renamed from `domain.object_id` to `domain.{prefix}_object_id` (prefix lowercased), e.g. `sensor.battery_level` → `sensor.sg_battery_level`.
 - **`unique_id` in the registry is unchanged**; only **`entity_id`** is updated. Home Assistant **migrates history** when an `entity_id` is renamed.
 - Entities that **already** have the prefix in `entity_id` are skipped.
@@ -115,7 +115,7 @@ data:
 
 **After running the service:**
 
-1. Set **Entity IDs without prefix** to **no** for that device (**Configure** on the device in **Settings → Devices & services**) so future reloads keep prefixed `entity_id` values.
+1. Set **Entity IDs without prefix** to **no** (or **`entity_id_strategy`** to **`legacy_prefixed`**) for that device (**Configure** on the device in **Settings → Devices & services**) so future reloads keep prefixed `entity_id` values.
 2. Update automations, dashboards, and scripts to use the **new** `entity_id` values if anything still pointed at the old unprefixed names.
 
 **If nothing is renamed:** Check the logs. Common causes: no device on that entry has `entity_ids_without_prefix: yes`, or wrong `entry_id` / `device_entry_id`.

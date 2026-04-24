@@ -7,9 +7,24 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### ✨ Added
+
+- **`entity_id_strategy`** (per device): Replaces the old `entity_ids_without_prefix` boolean with one of `ha_generated`, `legacy_prefixed`, or `legacy_unprefixed`. **`ha_generated`** lets Home Assistant assign `entity_id` (better fit for 2025.6+ “recreate entity IDs” / device rename flows; see [#52](https://github.com/TCzerny/ha-modbus-manager/issues/52)). Legacy values map from existing config on load.
+- **Template markers `[[mm:<domain>:{PREFIX}_<suffix>]]`**: Calculated and template **binary_sensor** resolve cross-entity references via the entity registry (`unique_id` → `entity_id`), so templates work when `entity_id` is not forced. Applied across built-in device templates; coordinator runs Step A (`{PREFIX}` etc.), entities run Step B (registry).
+- **Config flow** `VERSION` **4**: Normalizes devices with `ensure_entity_id_strategy_on_device`.
+- **Documentation:** [docs/ENTITY_ID_STRATEGY.md](docs/ENTITY_ID_STRATEGY.md) explains strategies and `[[mm:…]]`.
+
 ### 🐛 Fixed
 
 - **Flag sensors (255-character state limit)**: Sensors with template `flags` now always publish the numeric bitmask as state; human-readable flag labels are in the `formatted_value` attribute (truncated when needed). Fixes Home Assistant core errors for registers such as BMS alarm/protection/fault raw ([#58](https://github.com/TCzerny/ha-modbus-manager/issues/58)).
+
+### 🔧 Changed
+
+- **`generate_unique_id`**: Normalizes prefix **lowercase** for registry consistency with `[[mm:…]]` expansion.
+- **`device_utils`**: `resolve_mm_registry_markers` / `replace_template_placeholders` aligned with `EntityIdStrategy`; missing registry keys logged at DEBUG at most once until resolved.
+- **Calculated / binary calculated:** `icon_template` and registry marker freeze when all `[[mm:…]]` resolve; reduced repeated registry I/O.
+- **`DEFAULT_MAX_REGISTER_READ`**: Increased from 8 to 64 (Modbus max 125); register merge width uses consistent per-field width (e.g. uint32).
+- **`add_entity_prefix` service**: Resolves devices via `entity_id_strategy` / `legacy_unprefixed` (same intent as `entity_ids_without_prefix: yes`).
 
 ## [1.0.9] - 2026-04-24
 

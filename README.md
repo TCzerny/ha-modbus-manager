@@ -62,6 +62,7 @@ A modular, template-based Modbus Manager for Home Assistant with predefined devi
 - **Template Reload**: Update templates without losing configuration
 - **Modular Architecture**: Easily extensible for new device types
 - **Home Assistant Integration**: Fully integrated into the HA UI
+- **Entity ID strategy**: Per-device choice of HA–generated or legacy forced `entity_id`s; calculated templates can use **`[[mm:…]]`** registry references (see [Entity ID strategy & `[[mm:…]]`](docs/ENTITY_ID_STRATEGY.md))
 
 ## 🔌 Supported Devices
 
