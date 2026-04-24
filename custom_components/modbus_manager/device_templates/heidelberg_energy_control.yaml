@@ -379,11 +379,11 @@ calculated:
     unique_id: "total_current"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_current_phase_1', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_current_phase_1]]', 'unavailable') }}
     state: >-
-      {{ (states('sensor.{PREFIX}_current_phase_1') | float(0) +
-          states('sensor.{PREFIX}_current_phase_2') | float(0) +
-          states('sensor.{PREFIX}_current_phase_3') | float(0)) | round(2) }}
+      {{ (states('[[mm:sensor:{PREFIX}_current_phase_1]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_current_phase_2]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_current_phase_3]]') | float(0)) | round(2) }}
     unit_of_measurement: "A"
     device_class: "current"
     state_class: "measurement"
@@ -395,11 +395,11 @@ calculated:
     unique_id: "average_voltage"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_voltage_phase_1', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_voltage_phase_1]]', 'unavailable') }}
     state: >-
-      {{ ((states('sensor.{PREFIX}_voltage_phase_1') | float(0) +
-          states('sensor.{PREFIX}_voltage_phase_2') | float(0) +
-          states('sensor.{PREFIX}_voltage_phase_3') | float(0)) / 3) | round(1) }}
+      {{ ((states('[[mm:sensor:{PREFIX}_voltage_phase_1]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_voltage_phase_2]]') | float(0) +
+          states('[[mm:sensor:{PREFIX}_voltage_phase_3]]') | float(0)) / 3) | round(1) }}
     unit_of_measurement: "V"
     device_class: "voltage"
     state_class: "measurement"
@@ -413,9 +413,9 @@ binary_sensors:
     unique_id: "charging_active"
     type: "binary_sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_status', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_status]]', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_status') in ['C1', 'C2'] }}
+      {{ states('[[mm:sensor:{PREFIX}_status]]') in ['C1', 'C2'] }}
     device_class: "power"
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"
@@ -424,9 +424,9 @@ binary_sensors:
     unique_id: "vehicle_connected"
     type: "binary_sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_status', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_status]]', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_status') in ['B1', 'B2', 'C1', 'C2'] }}
+      {{ states('[[mm:sensor:{PREFIX}_status]]') in ['B1', 'B2', 'C1', 'C2'] }}
     device_class: "connectivity"
     mm_group: "EV_charging_status"
     icon: "mdi:car-electric"
@@ -435,9 +435,9 @@ binary_sensors:
     unique_id: "remote_unlocked"
     type: "binary_sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_external_lock_state', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_external_lock_state]]', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_external_lock_state') == 'Unlocked' }}
+      {{ states('[[mm:sensor:{PREFIX}_external_lock_state]]') == 'Unlocked' }}
     device_class: "lock"
     mm_group: "EV_charging_status"
     icon: "mdi:lock-open"
@@ -447,9 +447,9 @@ binary_sensors:
     unique_id: "charging_enabled"
     type: "binary_sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_actual_max_current', 'unavailable') }}
+      {{ not is_state('[[mm:sensor:{PREFIX}_actual_max_current]]', 'unavailable') }}
     state: >-
-      {{ states('sensor.{PREFIX}_actual_max_current') | float(0) > 0 }}
+      {{ states('[[mm:sensor:{PREFIX}_actual_max_current]]') | float(0) > 0 }}
     device_class: "power"
     mm_group: "EV_charging_status"
     icon: "mdi:ev-station"

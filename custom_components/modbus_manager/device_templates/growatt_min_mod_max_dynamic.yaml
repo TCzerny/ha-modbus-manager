@@ -1205,10 +1205,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_pv1_voltage', 'unavailable')
-      and not is_state('sensor.{PREFIX}_pv1_current', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_pv1_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_pv1_current]]', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_pv1_voltage') | default(0) | float) * (states('sensor.{PREFIX}_pv1_current') | default(0) | float) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_pv1_voltage]]') | default(0) | float) * (states('[[mm:sensor:{PREFIX}_pv1_current]]') | default(0) | float) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1219,10 +1219,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_pv2_voltage', 'unavailable')
-      and not is_state('sensor.{PREFIX}_pv2_current', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_pv2_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_pv2_current]]', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_pv2_voltage') | default(0) | float) * (states('sensor.{PREFIX}_pv2_current') | default(0) | float) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_pv2_voltage]]') | default(0) | float) * (states('[[mm:sensor:{PREFIX}_pv2_current]]') | default(0) | float) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1233,10 +1233,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_pv1_power', 'unavailable')
-      and not is_state('sensor.{PREFIX}_pv2_power', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_pv1_power]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_pv2_power]]', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_pv1_power') | default(0) | float) + (states('sensor.{PREFIX}_pv2_power') | default(0) | float) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_pv1_power]]') | default(0) | float) + (states('[[mm:sensor:{PREFIX}_pv2_power]]') | default(0) | float) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1247,10 +1247,10 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_battery_voltage', 'unavailable')
-      and not is_state('sensor.{PREFIX}_battery_current', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_battery_voltage]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_battery_current]]', 'unavailable')
       }}
-    state: "{{ (states('sensor.{PREFIX}_battery_voltage') | default(0) | float) * (states('sensor.{PREFIX}_battery_current') | default(0) | float) }}"
+    state: "{{ (states('[[mm:sensor:{PREFIX}_battery_voltage]]') | default(0) | float) * (states('[[mm:sensor:{PREFIX}_battery_current]]') | default(0) | float) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -1264,10 +1264,10 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_pv_total_power', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_pv_total_power]]', 'unavailable')
       }}
     state: >-
-      {% set pv_power = states('sensor.{PREFIX}_pv_total_power') %}
+      {% set pv_power = states('[[mm:sensor:{PREFIX}_pv_total_power]]') %}
       {% if pv_power in ['unknown', 'unavailable', 'none'] or pv_power is none %}
         0
       {% elif (pv_power|int) > 0 %}
@@ -1283,10 +1283,10 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_battery_current', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_battery_current]]', 'unavailable')
       }}
     state: >-
-      {% set bat_current = states('sensor.{PREFIX}_battery_current') %}
+      {% set bat_current = states('[[mm:sensor:{PREFIX}_battery_current]]') %}
       {% if bat_current in ['unknown', 'unavailable', 'none'] or bat_current is none %}
         0
       {% elif (bat_current|int) > 0 %}
@@ -1303,10 +1303,10 @@ binary_sensors:
     type: "binary_sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_battery_current', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_battery_current]]', 'unavailable')
       }}
     state: >-
-      {% set bat_current = states('sensor.{PREFIX}_battery_current') %}
+      {% set bat_current = states('[[mm:sensor:{PREFIX}_battery_current]]') %}
       {% if bat_current in ['unknown', 'unavailable', 'none'] or bat_current is none %}
         0
       {% elif (bat_current|int) < 0 %}

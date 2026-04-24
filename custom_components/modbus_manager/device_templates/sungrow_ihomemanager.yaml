@@ -679,9 +679,9 @@ calculated:
   - name: "Protocol Version"
     unique_id: "protocol_version"
     type: "sensor"
-    availability: "{{ not is_state('sensor.{PREFIX}_protocol_version_raw', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:sensor:{PREFIX}_protocol_version_raw]]', 'unavailable') }}"
     state: >-
-      {% set raw_value = states('sensor.{PREFIX}_protocol_version_raw') %}
+      {% set raw_value = states('[[mm:sensor:{PREFIX}_protocol_version_raw]]') %}
       {% if raw_value in ['unavailable', 'unknown', 'None', ''] %}
         unknown
       {% else %}
@@ -703,8 +703,8 @@ calculated:
     unique_id: "net_grid_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}
-    state: "{{ states('sensor.{PREFIX}_meter_active_power_raw') | float(0) }}"
+      {{ not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable') }}
+    state: "{{ states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') | float(0) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -715,9 +715,9 @@ calculated:
   - name: "Import Power"
     unique_id: "import_power"
     type: "sensor"
-    availability: "{{ not is_state('sensor.{PREFIX}_meter_active_power_raw', 'unavailable') }}"
+    availability: "{{ not is_state('[[mm:sensor:{PREFIX}_meter_active_power_raw]]', 'unavailable') }}"
     state: >-
-      {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') %}
+      {% set grid = states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') %}
       {% if grid in ['unknown', 'unavailable', 'none'] or grid is none %}
         0
       {% elif (grid | int) > 0 %}
@@ -734,9 +734,9 @@ calculated:
   - name: "Export Power"
     unique_id: "export_power"
     type: "sensor"
-    availability: "{{ states('sensor.{PREFIX}_meter_active_power_raw') | is_number }}"
+    availability: "{{ states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') | is_number }}"
     state: >-
-      {% set grid = states('sensor.{PREFIX}_meter_active_power_raw') %}
+      {% set grid = states('[[mm:sensor:{PREFIX}_meter_active_power_raw]]') %}
       {% if grid in ['unknown', 'unavailable', 'none'] or grid is none %}
         0
       {% elif (grid | int) < 0 %}
@@ -756,15 +756,15 @@ calculated:
     type: "sensor"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_meter_phase_a_active_power_raw', 'unavailable')
-      and not is_state('sensor.{PREFIX}_meter_phase_b_active_power_raw', 'unavailable')
-      and not is_state('sensor.{PREFIX}_meter_phase_c_active_power_raw', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]', 'unavailable')
       }}
     state: >-
       {{
-        (states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | float(0))
-        + (states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | float(0))
-        + (states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | float(0))
+        (states('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]') | float(0))
+        + (states('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]') | float(0))
+        + (states('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]') | float(0))
       }}
     unit_of_measurement: "W"
     device_class: "power"
@@ -776,8 +776,8 @@ calculated:
     unique_id: "phase_a_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_meter_phase_a_active_power_raw', 'unavailable') }}
-    state: "{{ states('sensor.{PREFIX}_meter_phase_a_active_power_raw') | float(0) }}"
+      {{ not is_state('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]', 'unavailable') }}
+    state: "{{ states('[[mm:sensor:{PREFIX}_meter_phase_a_active_power_raw]]') | float(0) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -788,8 +788,8 @@ calculated:
     unique_id: "phase_b_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_meter_phase_b_active_power_raw', 'unavailable') }}
-    state: "{{ states('sensor.{PREFIX}_meter_phase_b_active_power_raw') | float(0) }}"
+      {{ not is_state('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]', 'unavailable') }}
+    state: "{{ states('[[mm:sensor:{PREFIX}_meter_phase_b_active_power_raw]]') | float(0) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -800,8 +800,8 @@ calculated:
     unique_id: "phase_c_power"
     type: "sensor"
     availability: >-
-      {{ not is_state('sensor.{PREFIX}_meter_phase_c_active_power_raw', 'unavailable') }}
-    state: "{{ states('sensor.{PREFIX}_meter_phase_c_active_power_raw') | float(0) }}"
+      {{ not is_state('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]', 'unavailable') }}
+    state: "{{ states('[[mm:sensor:{PREFIX}_meter_phase_c_active_power_raw]]') | float(0) }}"
     unit_of_measurement: "W"
     device_class: "power"
     state_class: "measurement"
@@ -815,15 +815,15 @@ calculated:
     condition: "channel_2_enabled == true"
     availability: >-
       {{
-      not is_state('sensor.{PREFIX}_phase_a_active_power_ch2', 'unavailable')
-      and not is_state('sensor.{PREFIX}_phase_b_active_power_ch2', 'unavailable')
-      and not is_state('sensor.{PREFIX}_phase_c_active_power_ch2', 'unavailable')
+      not is_state('[[mm:sensor:{PREFIX}_phase_a_active_power_ch2]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_phase_b_active_power_ch2]]', 'unavailable')
+      and not is_state('[[mm:sensor:{PREFIX}_phase_c_active_power_ch2]]', 'unavailable')
       }}
     state: >-
       {{
-        (states('sensor.{PREFIX}_phase_a_active_power_ch2') | float(0))
-        + (states('sensor.{PREFIX}_phase_b_active_power_ch2') | float(0))
-        + (states('sensor.{PREFIX}_phase_c_active_power_ch2') | float(0))
+        (states('[[mm:sensor:{PREFIX}_phase_a_active_power_ch2]]') | float(0))
+        + (states('[[mm:sensor:{PREFIX}_phase_b_active_power_ch2]]') | float(0))
+        + (states('[[mm:sensor:{PREFIX}_phase_c_active_power_ch2]]') | float(0))
       }}
     unit_of_measurement: "W"
     device_class: "power"
