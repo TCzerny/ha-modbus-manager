@@ -62,7 +62,9 @@ DEFAULT_RETRY_DELAY: Final = 0.1
 
 # Standard-Werte
 DEFAULT_UPDATE_INTERVAL = 10  # Sekunden - Reduced for better control responsiveness
-DEFAULT_MAX_REGISTER_READ = 8  # Maximale Register pro Read
+# Registers merged into one Modbus read (uint16 count). Modbus allows up to 125 per FC3/4;
+# 8 was very conservative; 64 batch typical Sungrow/RS485-TCP well while keeping frames reasonable.
+DEFAULT_MAX_REGISTER_READ = 64
 DEFAULT_PRECISION = 2  # Standard-Präzision
 DEFAULT_MIN_VALUE = 0.0  # Standard-Minimum
 DEFAULT_MAX_VALUE = 100.0  # Standard-Maximum
