@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.9] - 2026-04-24
+
+### 🐛 Fixed
+
+- **Home Assistant 2027.2 compatibility**: Renamed the template attribute `group` to `mm_group` so it no longer conflicts with the reserved `Entity.group` base property. Calculated entities no longer override `group`; `get_entity_mm_group()` keeps a legacy fallback for older saved configs. Sensor group assignment lookup was corrected ([#53](https://github.com/TCzerny/ha-modbus-manager/issues/53)).
+
+#### Device templates
+
+- **`sungrow_sg_dynamic.yaml`**: **SG10RT** added to model conditions for meter phase power, PV load power, and related import/export/consumption energy sensors (via [PR #48](https://github.com/TCzerny/ha-modbus-manager/pull/48)). **Meter Phase B / C power** `unique_id` values corrected to `meter_phase_b_power` and `meter_phase_c_power` (were incorrectly `meter_phase_a_power`).
+
+### 🔧 Changed
+
+#### Dashboard examples
+
+- Placeholders split into **`{PREFIX_INVERTER}`** and **`{PREFIX_BATTERY}`** (replacing a single `{PREFIX}`) so multi-device setups are easier to adapt; `Dashboard-Examples/README.md` updated (via [PR #49](https://github.com/TCzerny/ha-modbus-manager/pull/49)).
+
 ## [1.0.8] - 2026-04-02
 
 ### 🐛 Fixed
