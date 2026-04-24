@@ -6,9 +6,9 @@ This document describes how **Modbus Manager** assigns **entity IDs**, how that 
 
 | Term | Role |
 |------|------|
-| **`unique_id`** | Globally unique string in the Home Assistant entity registry. Modbus Manager always uses a **normalized device prefix** (lowercase) plus template suffix, e.g. `sg_export_power` for prefix `SG` and template `export_power`. **Stable** across renames in many cases; used as the key for `[[mm:…]]` resolution. |
+| **`unique_id`** | Globally unique string in the Home Assistant entity registry. Modbus Manager always uses a **normalized device prefix** (lowercase) plus template suffix, e.g. `sg_export_power` for prefix `SG` and template entity unique_id `export_power`. **Stable** across renames in many cases; used as the key for `[[mm:…]]` resolution. |
 | **`entity_id`** | The ID you use in **automations, dashboards, and `states('sensor.…')`**, e.g. `sensor.sg_export_power` or a HA–assigned name if not forced. |
-| **`default_entity_id` / `self.entity_id`** | When set, the integration **forces** a predictable `entity_id` (used for **legacy** strategies). When **not** set, Home Assistant can assign the entity ID (used for **HA–generated** strategy). |
+| **`default_entity_id` / `self.entity_id`** | When set in the template, the integration **forces** a predictable `entity_id` (used for **legacy** strategies). When **not** set, Home Assistant can assign the entity ID (used for **HA–generated** strategy). |
 
 ## `entity_id_strategy` (per device)
 
